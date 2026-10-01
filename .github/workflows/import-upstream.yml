@@ -1,0 +1,42 @@
+name: Import pinned upstream sources
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - tools/vendor_upstream.py
+      - .github/workflows/import-upstream.yml
+permissions:
+  contents: read
+concurrency:
+  group: upstream-import
+  cancel-in-progress: false
+jobs:
+  import:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          fetch-depth: 1
+          ref: main
+      - name: Import immutable sources without overwriting existing work
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 tools/vendor_upstream.py
+      - name: Commit imported source files and integrity manifest
+        shell: bash
+        run: |
+          set -euo pipefail
+          git add -f WRF external config/imported-sources.json
+          if git diff --cached --quiet; then
+            echo 'No source import changes.'
+            exit 0
+          fi
+          git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Vendor WRF v4.8.0 with physical submodules and pinned RRTMGP sources/data'
+          # A concurrent remote change rejects this normal fast-forward push.
+          # Never force-push or overwrite another contributor's changes.
+          git push origin HEAD:main
