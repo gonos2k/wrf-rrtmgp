@@ -1,0 +1,31 @@
+name: Migrate numerical source files
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['tools/migrate_seed.py', 'migration/**', '.github/workflows/migrate-seed.yml']
+permissions:
+  contents: read
+concurrency:
+  group: source-migration
+  cancel-in-progress: false
+jobs:
+  migrate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: main
+      - name: Restore and verify exact source bytes
+        run: python3 tools/migrate_seed.py
+      - name: Commit readable sources
+        shell: bash
+        run: |
+          set -euo pipefail
+          git add port config/numerical-seed.json
+          if git diff --cached --quiet; then exit 0; fi
+          git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Migrate exact numerical components and real-core backend candidates into port/'
+          git push origin HEAD:main
