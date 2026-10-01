@@ -1,0 +1,65 @@
+name: Validate WRF 37 and RRTMGP core
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'tools/register37.py'
+      - 'tools/validate.py'
+      - 'port/**'
+      - '.github/workflows/validate-port.yml'
+permissions:
+  contents: read
+concurrency:
+  group: validate-port
+  cancel-in-progress: false
+jobs:
+  register:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    outputs:
+      source_sha: ${{ steps.register.outputs.source_sha }}
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - id: register
+        name: Register option 37 and commit guarded host integration
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 tools/register37.py
+          git add WRF/Registry/Registry.EM_COMMON WRF/Registry/registry.rrtmgp37 WRF/phys/module_radiation_driver.F WRF/phys/module_physics_init.F config/registration37.json
+          if ! git diff --cached --quiet; then
+            git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Register paired radiation option 37 in full WRF with explicit unlinked-backend guards'
+            git push origin HEAD:main
+          fi
+          echo "source_sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+  validate:
+    needs: register
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        kind: [registry, core]
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: ${{ needs.register.outputs.source_sha }}
+      - name: Install compilers and NetCDF-C
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y gfortran gcc make libnetcdf-dev python3-numpy python3-scipy
+      - name: Compile and execute validation
+        run: python3 tools/validate.py ${{ matrix.kind }}
+      - name: Save exact logs and result scope
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: validation-${{ matrix.kind }}-${{ github.run_id }}
+          path: |
+            build/${{ matrix.kind }}/run.log
+            build/${{ matrix.kind }}/result.json
+          retention-days: 30
+          if-no-files-found: error
