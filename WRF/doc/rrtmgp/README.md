@@ -1,6 +1,6 @@
 # WRF RRTMGP radiation option 37
 
-WRF v4.8.0에 RTE+RRTMGP CPU 복사 계산을 장파 및 단파 옵션 37로 연결한 개발 이식본이다. WRF의 기존 RRTMG 전처리로 압력, 온도, 기체 체적혼합비, 구름 분율과 수분 경로를 만들고 `phys/module_ra_rrtmgp.F`에서 RRTMGP 기체 광학과 RTE 해법을 호출한다. 계산한 플럭스와 가열률은 기존 WRF 진단 및 온위 경향 배열로 전달된다.
+WRF v4.8.0에 RTE+RRTMGP CPU 복사 계산을 장파 및 단파 옵션 37로 연결한 개발 이식본이다. WRF의 기존 전처리로 압력·온도·기체와 구름 분율을 준비하고, RRTMGP 전용 입력 함수에서 수상별 수분 경로를 만든 뒤 `phys/module_ra_rrtmgp.F`에서 RRTMGP 기체 광학과 RTE 해법을 호출한다. 계산한 플럭스와 가열률은 기존 WRF 진단 및 온위 경향 배열로 전달된다.
 
 ## 사용 설정
 
@@ -24,7 +24,7 @@ WRF v4.8.0에 RTE+RRTMGP CPU 복사 계산을 장파 및 단파 옵션 37로 연
 
 ## 코드와 자료 버전
 
-WRF 기준은 태그 v4.8.0, 커밋 `06d4240ae989cc3e50af412bb472df3d9048783c`이다. 이 저장소의 이식 브랜치는 `rrtmgp-37-backend`이다.
+WRF 기준은 태그 v4.8.0, 커밋 `06d4240ae989cc3e50af412bb472df3d9048783c`이다.
 
 `external/rte_rrtmgp/`는 UFS CCPP 커밋 `3e6660c6df54e95a0871e990c2294dd397ae3860`이 고정한 NCAR RTE+RRTMGP 커밋 `41c5fcd950fed09b8afe186dede266824eca7fd3`의 소스다. 최신 upstream과 API를 섞지 않고 실제 UFS 코드 경로에 맞췄다. 출처 및 로컬 변경은 `external/rte_rrtmgp/SOURCE.json`에 기록했다.
 
@@ -34,20 +34,25 @@ WRF 기준은 태그 v4.8.0, 커밋 `06d4240ae989cc3e50af412bb472df3d9048783c`�
 
 CPU double precision 내부 계산, H2O/CO2/O3/N2O/CH4/O2 여섯 기체, LW 128 및 SW 112 g점, 장파 흡수·방출과 단파 2 stream 해법을 사용한다. 장파 산란은 포함하지 않는다. 액체·빙정·눈의 밴드 광학을 구한 뒤 McICA로 g점에 표본화한다. `cldovrlp=0`은 맑은 하늘, 1은 random, 2는 maximum random, 3은 maximum이다. 표본은 수평 격자 위치와 날짜에 따른 재현 가능한 시드로 만든다.
 
-장파와 단파는 모두 37로 선택해야 한다. 기존 옵션 4는 원래 RRTMG 호출 경로를 사용한다. 37의 all sky 및 clear sky 플럭스, K/day 가열률, 단파 직달·산란과 가시광·근적외 분할을 기존 출력에 연결했다. WRF 래퍼가 K/day를 온위 경향으로 변환한다.
+장파와 단파는 모두 37로 선택해야 한다. 기존 옵션 4는 원래 RRTMG 호출 경로를 사용한다. 37의 all sky 및 clear sky 플럭스, K/day 가열률, 단파 직달·산란과 가시광·근적외 분할을 기존 출력에 연결했다. WRF 래퍼가 K/day를 온위 경향으로 변환한다. 현재 WRF 호출은 기존 scalar seed 정책을 유지한다. 독립 backend API에는 선택적 `column_seeds(:)`가 있어 각 컬럼에 시드를 고정하면 컬럼 재배열에도 표본이 유지되지만, WRF의 실제 컬럼 packing 연동은 아직 구현되지 않았다.
 
 | WRF 입력 | RRTMGP 처리 |
 | --- | --- |
 | hPa 압력, 지면부터 위로 배열 | Pa로 변환, `top_at_1=.false.` |
 | 기체 체적혼합비 | 그대로 전달, 내부 double precision 변환 |
-| 구름 안의 수분 경로 g/m² | 구름 LUT에 전달, 분율은 McICA에 별도 적용 |
-| 액체 유효반경 µm | LUT 유효반경 범위로 제한 |
-| WRF Fu 빙정 크기 | 1.0315 변환을 되돌리고 유효직경으로 변환 |
-| 그 밖의 빙정·눈 유효반경 | 두 배로 유효직경 변환, LUT 범위로 제한 |
+| 구름 수분량 kg/kg와 층 압력 | 일반 경로에서 입력 builder가 `dp × 100 / g × 1000 × q / cf`로 구름 안 경로 g/m²를 구성 |
+| 구름 분율과 경로 | 유한한 `cf`는 0–1이어야 함; 직접 builder/adapter API는 `cf=0`과 응축수를 거부. WRF wrapper는 명시적 예외로 clear optical path 0을 허용하고 누락된 원래 grid-box 경로를 기록 |
+| 액체 유효반경 µm | 반경 그대로 전달; 광학 lookup은 LUT 축 범위로 제한 |
+| 빙정·눈 유효반경 µm | adapter에서 유효직경으로 한 번 변환; WRF 경로는 Fu 1.0315 특수 배율을 적용하지 않음 |
+| 눈 유효반경 누락 | 진단 빙정 반경을 대리값으로 사용(임시 근사) |
 | 지면 장파 방사율 | 회색 또는 16 밴드 입력 |
 | 태양상수 및 천정각 | WRF 계절·일식 보정값 사용 |
 
 SW 밴드 하한 12850 cm⁻¹ 이상을 가시광 출력에, 나머지를 근적외 출력에 누적한다. 이는 계수 밴드 경계에 맞춘 분할이며 정밀한 파장 0.7 µm 절단과 차이가 있다. 에어로졸은 밴드 경계와 순서가 RRTMG와 달라 직접 전달할 수 없다. `aer_opt!=0`, 화학 에어로졸 피드백 및 CMAQ 피드백, `cldovrlp=4,5`를 거부한다. CFC11/12/22 및 CCl4는 이 6 기체 구현에 포함하지 않는다.
+
+구름 입력 검증은 배열 모양, 유한성, 범위, 압력층 순서, 음수 수분량·경로, 활성 수상의 반경을 검사한다. 반경은 비활성 수상에서 유한한 0을 허용하지만 수분량이 양수이면 양수여야 한다. 직접 builder와 adapter는 `cf=0`인데 응축수 경로가 양수인 입력을 엄격히 거부한다. WRF 전처리는 `QCLDMIN` 또는 cloud-fraction cutoff 아래의 trace condensate를 cf=0으로 만들 수 있으므로 WRF wrapper만 이를 허용한다. 해당 층의 광학 경로는 0으로 두며 debug level 100에서 생략된 원래 grid-box 경로와 reason code 6을 층별 진단한다. 양의 cf에서는 경로 builder가 수상별 질량을 보존한다. cf=0 예외에서는 해당 trace condensate가 복사 광학 입력에서 생략되므로 이를 질량 보존 사례로 세지 않는다. 6개 출력 시각을 포함한 5분 적분 로그에서 LW/SW 각각 reason code 6이 793회 기록됐고 최대 생략량은 층·호출당 0.1037024 g/m²였다.
+
+공통 미세물리 전처리는 유지한다. MP5의 10% ice/90% snow partition과 별개로 legacy flag 5는 snow에 기존 0.99 factor 및 130 µm 초과 입자 질량 감소를 적용한다. 이 수정은 RRTMGP 경로에 두 보정을 적용하지 않으며, P3의 qi→snow 변경도 legacy RRTMG 경로에만 둔다. WRF 경로는 일반 유효반경을 전달한다. adapter는 액체 반경을 반경으로 유지하고 ice/snow 반경만 직경으로 변환한다. Fu 특수 크기 변환은 직접 backend API의 flag 3 호환 경로에만 해당한다. 눈 반경 누락 시 빙정 반경 대리값은 잠정 선택으로 남아 있어 실제 WRF 기둥 재생과 광학 민감도 검토가 필요하다.
 
 이 구현은 HAFS 전체 복사 suite의 재현을 목표로 한 결과가 아니다. HAFS의 최적화된 LW 78/SW 75 g점 및 장파 산란, 에어로졸 경로는 추가 이식 대상이다. GPU, 실제 예보 사례, MPI/OpenMP 확장성 및 관측 비교는 별도 검증이 필요하다.
 
@@ -70,13 +75,13 @@ LD_LIBRARY_PATH="$NETCDF/lib:${LD_LIBRARY_PATH:-}" \
   ctest --test-dir build/rrtmgp-test --output-on-failure
 ```
 
-이 명령은 상위 작업 디렉터리에서 실행한다. 시험은 맑은 하늘 all/clear 일치, 흐린 하늘의 clear sky 보존, 구름에 의한 지면 단파 감소, 플럭스와 가열률의 에너지 일관성, 직달·산란 및 가시광·근적외 합계, 시드 재현성 및 야간 영값을 확인한다. 부분 구름과 액체·빙정·눈이 포함된 장면을 중첩 옵션 0~3으로 검사한다. `test/rrtmgp/standalone_wrf_error.f90`는 독립 시험에만 쓰는 오류 처리 대체 함수다.
+이 명령은 상위 작업 디렉터리에서 실행한다. 시험은 맑은 하늘 all/clear 일치, 흐린 하늘의 clear sky 보존, 구름에 의한 지면 단파 감소, 플럭스와 가열률의 에너지 일관성, 직달·산란 및 가시광·근적외 합계, 시드 재현성 및 야간 영값을 확인한다. 구름 builder는 작은 양의 구름분율과 큰 눈 입자 사례를 포함하며, 64컬럼 batch와 단일 컬럼·역순 실행을 비교하고 전체 야간 batch 및 잘못된 입력 거부도 확인한다. 비교 허용치는 `1e-3 + 1e-5 × max(1, |reference|)`이며 bitwise 일치 주장은 아니다. 최종 standalone suite는 28/28 통과했고 64컬럼 batch aggregate max difference는 0이었다. full GNU serial build 후 수정된 4개 backend 모듈을 incremental relink했으며, 37/4 SCM과 6-time cloud diagnostics SCM이 통과했다. 회색 표면 4개 및 `swint_opt=1,2` 거부 시험도 통과했다. 기존 SWDOWN 수정본의 4/4 출력과 최종 4/4 출력의 공통 변수 204개는 bitwise identical였다. `test/rrtmgp/standalone_wrf_error.f90`는 독립 시험에만 쓰는 오류 처리 대체 함수다.
 
 NOAA 사례 및 직접 코드 근거는 [NOAA 적용 사례](NOAA.md)에 정리했다. 실행 검증 결과는 [검증 기록](VALIDATION.md)에 기록한다.
 
 ## WRF 단일 컬럼 실행
 
-기존 WRF configure 메뉴의 GNU serial 구성에서 `em_scm_xy`를 빌드한다. 본 환경은 `/bin/csh`가 없어 PATH의 csh로 compile을 호출했다.
+기존 WRF configure 메뉴의 GNU serial 구성에서 `em_scm_xy`를 빌드한다. GNU serial full build 후 cloud-input 정책 변경 모듈 4개를 다시 컴파일·연결했다. 최종 `run_scm.sh` 37 및 4가 통과했다. 본 환경은 `/bin/csh`가 없어 PATH의 csh로 compile을 호출했다.
 
 ```bash
 export NETCDF="$PWD/build/deps/netcdf"

@@ -4,9 +4,9 @@
 
 ## 현재 상태
 
-37번을 실제 WRF 복사 초기화와 LW/SW 호출 경로에 연결했습니다. 기존 RRTMG 전처리를 재사용하고, RRTMGP 기체·구름 광학 및 RTE 플럭스와 가열률을 WRF 출력·온위 경향에 전달합니다. 장파와 단파는 함께 37로 선택합니다. 에어로졸과 화학 복사 피드백은 명시적으로 거부합니다.
+37번을 실제 WRF 복사 초기화와 LW/SW 호출 경로에 연결했습니다. 압력·온도·기체의 기존 전처리를 재사용하고, 구름·빙정·눈은 RRTMGP 전용 입력 함수에서 준비합니다. 양의 구름분율에서는 수상별 질량을 보존합니다. WRF가 분율을 0으로 진단한 층은 명시적으로 청천 처리하며 제외 질량을 진단합니다. 장파와 단파는 함께 37로 선택하고 에어로졸·화학 피드백은 거부합니다.
 
-독립 컬럼 시험과 GNU serial `em_scm_xy` 실행으로 개발 이식본을 검증합니다. 실제 예보, 관측 비교, MPI/OpenMP, GPU, 전체 WRF CMake 빌드는 아직 검증하지 않았습니다. 사용 설정·지원 범위·재현 명령은 [WRF 이식 안내](WRF/doc/rrtmgp/README.md), [검증 기록](WRF/doc/rrtmgp/VALIDATION.md), [NOAA 적용 사례](WRF/doc/rrtmgp/NOAA.md)에 있습니다.
+로컬 CTest 28개, GNU serial SCM 37/37·4/4, 알베도와 청천 처리 진단 시험이 통과했습니다. 기존 SWDOWN 수정본과의 4/4 비교에서 공통 출력 변수 204개가 비트 단위로 일치했습니다. WRF 호출은 여전히 `ncol=1`이며, 실제 예보·독립 기준 비교·성능·MPI/OpenMP·restart는 후속 검증 대상입니다. 설정과 근거는 [WRF 이식 안내](WRF/doc/rrtmgp/README.md), [검증 기록](WRF/doc/rrtmgp/VALIDATION.md), [NOAA 적용 사례](WRF/doc/rrtmgp/NOAA.md)에 있습니다.
 
 ## 기준 소스와 자료
 

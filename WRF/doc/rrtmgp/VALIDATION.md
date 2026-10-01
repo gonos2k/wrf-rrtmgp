@@ -59,3 +59,20 @@ python3 WRF/test/rrtmgp/validate_scm.py \
 ```bash
 python3 WRF/test/rrtmgp/test_surface_scm.py build/new-surface-scm
 ```
+
+## RRTMGP 전용 구름 입력 수정 검증
+
+기준 main은 `6e7353a096267007892d7960458a86f310c4b38d`이다. GNU serial `em_scm_xy` 전체 빌드에 성공했고, 청천 처리 정책을 반영한 입력 함수·어댑터·LW/SW 래퍼를 같은 빌드 플래그로 재컴파일해 실행 파일을 재링크했다. 최종 실행 파일로 다음을 확인했다.
+
+- CTest 28/28 통과: 수상별 질량 계약, 작은 양의 구름분율, 큰 눈 반경, 입력 오류 거부, 64컬럼 개별·일괄·역순 비교 및 야간 영값. 이번 실행에서 일괄/개별/역순의 최대 절대차는 0이었다. 시험 허용치는 `1e-3 + 1e-5 × max(1,maxabs(a),maxabs(b))`이며 모든 플랫폼의 비트 일치를 보장하지 않는다.
+- 37/37 및 4/4의 5분 SCM과 6개 출력 시각의 유한성·플럭스/경향 합계: 통과. 회색 알베도 0·0.2·0.99·1 SCM 및 `swint_opt=1,2` 거부도 통과했다.
+- 기존 SWDOWN 수정본의 4/4 출력과 새 4/4 출력: 공통 변수 204개가 비트 단위로 일치했다. 공식 원본 WRF와의 회귀 비교는 아니다.
+- `debug_level=100`으로 실행한 원래 LSM2 SCM: LW/SW 각각 793개의 `RRTMGP_CLEAR_CONDENSATE_EXCLUDED` 층별 진단이 있었고 모두 reason=6, 유한한 양의 제외 경로였다. 최대값은 층·복사 호출당 0.1037024 g/m²였다. 이를 전체 기둥 질량이나 시간 누적으로 해석하지 않는다.
+
+양의 분율에서는 정확한 분율을 사용하여 각 수상 질량을 보존한다. WRF는 미량 응축수를 남기고도 구름분율을 0으로 진단하므로, 연결부는 해당 층을 명시적으로 청천 처리한다. 이 층의 응축수는 복사 광학 입력에서 제외되고 제외 질량을 진단하며, 모든 층에서 무조건 질량이 보존되는 구현으로 해석하지 않는다. 직접 입력 함수·어댑터의 기본 계약은 `cf=0`과 양의 경로를 거부한다.
+
+측정 기록은 [`cloud-input.json`](../../../validation/rrtmgp37/cloud-input.json)에 있다. 실제 WRF는 여전히 `ncol=1`이며, 성능 측정·tile packing·MPI/OpenMP·restart·실제 예보와 독립 광학 기준 비교는 후속 검증 대상이다. 실제 WRF의 청천 처리 진단 시험은 다음 명령으로 재현한다.
+
+```bash
+python3 WRF/test/rrtmgp/test_cloud_scm.py build/new-cloud-contract-scm
+```

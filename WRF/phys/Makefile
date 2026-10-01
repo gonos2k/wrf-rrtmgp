@@ -131,6 +131,7 @@ MODULES = \
 	module_ra_goddard.o \
         module_ra_effective_radius.o \
 	module_ra_rrtm.o  \
+	module_ra_rrtmgp_input.o  \
 	module_ra_rrtmgp.o  \
 	module_ra_rrtmg_lw.o  \
 	module_ra_rrtmg_sw.o  \
