@@ -10,6 +10,7 @@ import shlex
 import shutil
 import subprocess
 import time
+from compare_registry import compare_registry
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -72,10 +73,12 @@ def registry(out, log):
     for field in ('swdnb','lwdnb','o3rad','ozmixm','aerod'):
         if 'grid%'+field not in alloc.lower(): raise ValueError('MISSING_ALLOCATION: '+field)
     generated = sorted(p for d in ('inc','frame') for p in (out/d).iterdir() if p.is_file())
+    comparison = compare_registry(ROOT, out, log, execute)
     return {'scope':'FULL_OFFICIAL_SERIAL_EM_REGISTRY_AND_GENERATED_CONSTANT_MODULE',
             'generated_or_copied_inc_frame_files':len(generated),
             'required_generated_files':len(required),
             'allocation_subroutines_generated':32,'deallocation_subroutines_generated':12,
+            'baseline_comparison':comparison,
             'wrf_executable_built':False,'mpi_generator_used':False}
 
 def core(out,log):
@@ -105,7 +108,8 @@ def core(out,log):
         raise ValueError('MISSING_REAL_CORE_SUCCESS_MARKER')
     return {'scope':'REAL_PINNED_RRTMGP_COEFFICIENTS_SYNTHETIC_CLEAR_COLUMNS',
             'sources':provenance,'wrf_executable_built':False,'cloud_aerosol_tested':False,
-            'result_lines':[line for line in text.splitlines() if 'PASS' in line or 'residual' in line or 'CO2' in line]}
+            'result_lines':[line for line in text.splitlines()
+                            if any(key in line for key in ('PASS','RESIDUAL','BASELINE_','CO2'))]}
 
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
