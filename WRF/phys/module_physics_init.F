@@ -1013,7 +1013,7 @@ CHARACTER(LEN=8) :: name
          name = "RRTM"
       ELSE IF ( config_flags%ra_lw_physics .EQ. CAMLWSCHEME         ) THEN
          name = "CAM"
-      ELSE IF ( config_flags%ra_lw_physics .EQ. RRTMG_LWSCHEME      ) THEN
+      ELSE IF ( (config_flags%ra_lw_physics .EQ. RRTMG_LWSCHEME.OR.config_flags%ra_lw_physics .EQ. RRTMGP_LWSCHEME) ) THEN
          name = "RRTMG"
       ELSE IF ( config_flags%ra_lw_physics .EQ. RRTMG_LWSCHEME_FAST ) THEN
          name = "RRTMG"
@@ -1073,7 +1073,7 @@ CHARACTER(LEN=8) :: name
    has_reqi = 0
    has_reqs = 0
    IF ( config_flags%use_mp_re .EQ. 1 ) THEN
-   if (( (config_flags%ra_lw_physics .eq. RRTMG_LWSCHEME ) .or. &
+   if (( (config_flags%ra_lw_physics .eq. RRTMG_LWSCHEME.OR.config_flags%ra_lw_physics .eq. RRTMGP_LWSCHEME ) .or. &
 #if( BUILD_RRTMG_FAST == 1)
          (config_flags%ra_lw_physics .eq. RRTMG_LWSCHEME_FAST ) .or. &
 #endif
@@ -1081,7 +1081,7 @@ CHARACTER(LEN=8) :: name
          (config_flags%ra_lw_physics .eq. RRTMK_LWSCHEME  ) .or. &
 #endif
          (config_flags%ra_lw_physics .eq. goddardlwscheme ) ) .and. &
-       ( (config_flags%ra_sw_physics .eq. RRTMG_SWSCHEME ) .or. &
+       ( (config_flags%ra_sw_physics .eq. RRTMG_SWSCHEME.OR.config_flags%ra_sw_physics .eq. RRTMGP_SWSCHEME ) .or. &
 #if( BUILD_RRTMG_FAST == 1)
          (config_flags%ra_sw_physics .eq. RRTMG_SWSCHEME_FAST ) .or. &
 #endif
@@ -1159,6 +1159,7 @@ CHARACTER(LEN=8) :: name
    CALL wrf_debug ( 100, TRIM(wrf_err_message) )
 
    itf=min0(ite,ide-1)
+
    jtf=min0(jte,jde-1)
    ktf=min0(kte,kde-1)
 
@@ -2175,6 +2176,7 @@ CHARACTER(LEN=8) :: name
                       its, ite, jts, jte, kts, kte                   )
 !---------------------------------------------------------------------
    USE module_ra_rrtm      , ONLY : rrtminit
+   USE module_ra_rrtmgp, ONLY: rrtmgp_init
    USE module_ra_rrtmg_lw  , ONLY : rrtmg_lwinit
    USE module_ra_rrtmg_sw  , ONLY : rrtmg_swinit
 #if( BUILD_RRTMG_FAST == 1)
@@ -2265,17 +2267,13 @@ CHARACTER(LEN=8) :: name
    INTEGER :: i, j, k, itf, jtf, ktf
 !---------------------------------------------------------------------
 
-! RRTMGP37_OFFICIAL_REGISTRATION_ONLY
-   ! The backend is not yet connected to the WRF host. Never use silent fallback.
+! RRTMGP37_PAIRED_SELECTION
+   ! Keep LW/SW option 37 paired as required by this host integration.
    IF ((config_flags%ra_lw_physics == 37) .NEQV. (config_flags%ra_sw_physics == 37)) THEN
       CALL wrf_error_fatal('RRTMGP37_PAIR_REQUIRED: select both LW and SW option 37')
       RETURN
    END IF
-   IF (config_flags%ra_lw_physics == 37 .OR. config_flags%ra_sw_physics == 37) THEN
-      CALL wrf_error_fatal('RRTMGP37_BACKEND_NOT_LINKED: no radiation fallback')
-      RETURN
-   END IF
-! END_RRTMGP37_OFFICIAL_REGISTRATION_ONLY
+! END_RRTMGP37_PAIRED_SELECTION
 
    jtf=min0(jte,jde-1)
    ktf=min0(kte,kde-1)
@@ -2407,7 +2405,8 @@ CHARACTER(LEN=8) :: name
              camlw = .true.
              aclwalloc = .true.
 
-        CASE (RRTMG_LWSCHEME)
+        CASE (RRTMG_LWSCHEME,RRTMGP_LWSCHEME)
+             IF(config_flags%ra_lw_physics==RRTMGP_LWSCHEME) CALL rrtmgp_init(config_flags%rrtmgp_data_path)
              CALL rrtmg_lwinit(                             &
                            p_top, allowed_to_read ,         &
                            ids, ide, jds, jde, kds, kde,    &
@@ -2521,7 +2520,8 @@ CHARACTER(LEN=8) :: name
         CASE (GSFCSWSCHEME)
              CALL gsfc_swinit(cen_lat, allowed_to_read )
 
-        CASE (RRTMG_SWSCHEME)
+        CASE (RRTMG_SWSCHEME,RRTMGP_SWSCHEME)
+             IF(config_flags%ra_sw_physics==RRTMGP_SWSCHEME) CALL rrtmgp_init(config_flags%rrtmgp_data_path)
              CALL rrtmg_swinit(                             &
                            allowed_to_read ,                &
                            ids, ide, jds, jde, kds, kde,    &
@@ -3745,10 +3745,12 @@ CALL lsm_mosaic_init(IVGTYP,config_flags%ISWATER,config_flags%ISURBAN,config_fla
           if(config_flags%bl_pbl_physics .ne. 1)CALL wrf_error_fatal &
            ( 'module_physics_init: use ysu scheme with SSiB' )
 ! Add radiation scheme 4 (RRTMg) for SSiB, By Zhenxin 2011-06-20 ************************
-          if(config_flags%ra_lw_physics .eq. 2 .or. config_flags%ra_lw_physics .gt. 4)CALL wrf_error_fatal &
-           ( 'module_physics_init: SSiB only works with rrtm, cam scheme or rrtmg scheme (lw_phys=1,3,4)' )
-          if(config_flags%ra_sw_physics .eq. 2 .or. config_flags%ra_sw_physics .gt. 4)CALL wrf_error_fatal &
-           ( 'module_physics_init: SSiB only works with rrtm, cam scheme or rrtmg scheme (sw_phys=1,3,4)' )
+          if(config_flags%ra_lw_physics .eq. 2 .or. &
+             (config_flags%ra_lw_physics .gt. 4.and.config_flags%ra_lw_physics.ne.RRTMGP_LWSCHEME))CALL wrf_error_fatal &
+           ( 'module_physics_init: SSiB requires lw_phys=1,3,4,37' )
+          if(config_flags%ra_sw_physics .eq. 2 .or. &
+             (config_flags%ra_sw_physics .gt. 4.and.config_flags%ra_sw_physics.ne.RRTMGP_SWSCHEME))CALL wrf_error_fatal &
+           ( 'module_physics_init: SSiB requires sw_phys=1,3,4,37' )
 ! End of Adding radiation scheme 4 (RRTMg) for SSiB, By Zhenxin 2011-06-20 **************
           IF ( TRIM(mminlu) .EQ. 'NLCD40' ) THEN
              CALL wrf_error_fatal ( 'SSIB does not work with NLCD data. Stop.' )

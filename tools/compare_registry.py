@@ -31,10 +31,21 @@ def compare_registry(root: Path, out: Path, log: Path, execute: Callable) -> dic
     registered = (out / common_name).read_bytes()
     if git_blob(registered) != receipt['patched_blobs'][common_name]:
         raise ValueError('REGISTERED_INPUT_CHANGED_BEFORE_BASELINE')
+    text = registered.decode('utf-8')
+    data_path_pattern = (
+        r'(?im)^[ \t]*rconfig[ \t]+character[ \t]+'
+        r'rrtmgp_data_path\b[^\r\n]*(?:\r?\n|$)')
+    data_path_lines = re.findall(data_path_pattern, text)
+    expected_data_path_lines = 1 if receipt.get('backend') == 'CPU_LINKED' else 0
+    if len(data_path_lines) != expected_data_path_lines:
+        raise ValueError('RRTMGP_DATA_PATH_RCONFIG_COUNT_MISMATCH')
+    if data_path_lines:
+        text = re.sub(data_path_pattern, '', text, count=1)
+    registered_without_data_path = text.encode('utf-8')
     suffix = b'\n\ninclude registry.rrtmgp37\n'
-    if not registered.endswith(suffix):
+    if not registered_without_data_path.endswith(suffix):
         raise ValueError('REGISTRY37_SUFFIX_MISMATCH')
-    prefix = registered[:-len(suffix)]
+    prefix = registered_without_data_path[:-len(suffix)]
     candidates = [prefix + b'\n' * n for n in range(9)]
     valid = [data for data in candidates
              if git_blob(data) == receipt['original_blobs'][common_name]]

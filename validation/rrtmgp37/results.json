@@ -1,0 +1,312 @@
+{
+  "recorded_at_utc": "2026-10-01T04:22:10.364546+00:00",
+  "scope": "Local CPU development-port validation; idealized serial SCM, no real-data forecast validation",
+  "wrf_upstream_commit": "06d4240ae989cc3e50af412bb472df3d9048783c",
+  "environment": {
+    "fortran_compiler": "GNU 13.3.0",
+    "netcdf_c": "4.9.2",
+    "netcdf_fortran": "4.5.4"
+  },
+  "registry": {
+    "status": "PASS",
+    "kind": "registry",
+    "start_unix": 1790828075.8201556,
+    "backend": "CPU_LINKED",
+    "backend_linked_in_wrf": true,
+    "receipt": "config/registration37.json",
+    "wrf_executable_built": false,
+    "validation_scope": "Registry/core component validation only; no WRF runtime execution",
+    "scope": "FULL_OFFICIAL_SERIAL_EM_REGISTRY_AND_GENERATED_CONSTANT_MODULE",
+    "generated_or_copied_inc_frame_files": 224,
+    "required_generated_files": 50,
+    "allocation_subroutines_generated": 32,
+    "deallocation_subroutines_generated": 12,
+    "baseline_comparison": {
+      "scope": "SAME_ORIGINAL_GENERATOR_AND_SERIAL_FLAGS; NOT A MODEL BUILD",
+      "original_common_git_blob": "d0065b60635e6e7b8046523e5048d4b9014a1a7a",
+      "registered_warning_count": 56,
+      "baseline_warning_count": 56,
+      "introduced_warnings": {},
+      "removed_warnings": {},
+      "warnings_identical": true
+    },
+    "mpi_generator_used": false,
+    "end_unix": 1790828080.6596706,
+    "wrf_forecast_validated": false
+  },
+  "existing_core_component": {
+    "status": "PASS",
+    "kind": "core",
+    "start_unix": 1790827954.4049146,
+    "backend": "CPU_LINKED",
+    "backend_linked_in_wrf": true,
+    "receipt": "config/registration37.json",
+    "wrf_executable_built": false,
+    "validation_scope": "Registry/core component validation only; no WRF runtime execution",
+    "scope": "REAL_PINNED_RRTMGP_COEFFICIENTS_SYNTHETIC_CLEAR_COLUMNS",
+    "sources": {
+      "external/rte-rrtmgp": {
+        "commit": "41c5fcd950fed09b8afe186dede266824eca7fd3",
+        "verified_entries": 115,
+        "bytes": 1199071
+      },
+      "external/rrtmgp-data": {
+        "commit": "aafa333a60c06fca2fbf219fbd17e7f432b43e3f",
+        "verified_entries": 10,
+        "bytes": 71539763
+      }
+    },
+    "cloud_aerosol_tested": false,
+    "result_lines": [
+      "COLUMN_ENERGY_RESIDUAL_W_M2=   0.000000000000000E+00",
+      "BASELINE_SWDOWN=   6.450256350646615E+02   0.000000000000000E+00   0.000000000000000E+00",
+      "BASELINE_LWDNB=   3.288522196440316E+02   3.288522196440316E+02   3.288522196440316E+02",
+      "REAL_CORE_SYNTHETIC_COLUMN_ASSERTIONS_PASS=17"
+    ],
+    "end_unix": 1790827956.9041154,
+    "wrf_forecast_validated": false
+  },
+  "standalone_columns": {
+    "status": "PASS",
+    "ctest_tests_passed": 1,
+    "log": "build/review/columns-ctest.log",
+    "cases": "clear, overcast liquid, partial liquid/ice/snow overlap 0-3, nighttime, energy consistency and flux partitions, repeatable cloud masks"
+  },
+  "wrf_build": {
+    "status": "PASS",
+    "configuration": "GNU serial, em_scm_xy, nesting 0",
+    "log": "build/wrf-compile-scm.log",
+    "executables_sha256": {
+      "wrf.exe": "b26b462d60261767b8d78793133c77cbe551a81d8711acb30b761f38dba8ba5e",
+      "ideal.exe": "c9cd3ca071c3192a2813562b58c283608dc8fcd869c0b2951d5d96dd9d956896"
+    }
+  },
+  "scm": {
+    "build/scm-37": {
+      "time_count": 6,
+      "radiation_option_lw": 37,
+      "radiation_option_sw": 37,
+      "history_file": "build/scm-37/wrfout_d01_1999-10-22_19:00:00",
+      "checks": "finite fields, daytime SW, LW, nonzero accumulation, flux/tendency sums",
+      "variables": {
+        "SWDOWN": {
+          "min": 0.0,
+          "max": 284.6548156738281
+        },
+        "GLW": {
+          "min": 0.0,
+          "max": 281.02777099609375
+        },
+        "SWDDIR": {
+          "min": 0.0,
+          "max": 2.947768449783325
+        },
+        "SWDDIF": {
+          "min": 0.0,
+          "max": 281.70709228515625
+        },
+        "SWDNT": {
+          "min": 0.0,
+          "max": 869.3607788085938
+        },
+        "LWUPT": {
+          "min": 0.0,
+          "max": 87.60740661621094
+        },
+        "SWDNB": {
+          "min": 0.0,
+          "max": 284.6548156738281
+        },
+        "LWDNB": {
+          "min": 0.0,
+          "max": 281.02777099609375
+        },
+        "ACSWDNB": {
+          "min": 0.0,
+          "max": 88966.8359375
+        },
+        "ACLWDNB": {
+          "min": 0.0,
+          "max": 83949.75
+        },
+        "RTHRATEN": {
+          "min": -1.8996310245711356e-05,
+          "max": 0.00024822246632538736
+        },
+        "RTHRATLW": {
+          "min": -0.00027139668236486614,
+          "max": 0.00022745845490135252
+        },
+        "RTHRATSW": {
+          "min": 0.0,
+          "max": 0.00027376582147553563
+        }
+      }
+    },
+    "build/scm-4": {
+      "time_count": 6,
+      "radiation_option_lw": 4,
+      "radiation_option_sw": 4,
+      "history_file": "build/scm-4/wrfout_d01_1999-10-22_19:00:00",
+      "checks": "finite fields, daytime SW, LW, nonzero accumulation, flux/tendency sums",
+      "variables": {
+        "SWDOWN": {
+          "min": 0.0,
+          "max": 230.89219665527344
+        },
+        "GLW": {
+          "min": 0.0,
+          "max": 282.6058044433594
+        },
+        "SWDDIR": {
+          "min": 0.0,
+          "max": 2.647048177095712e-06
+        },
+        "SWDDIF": {
+          "min": 0.0,
+          "max": 230.89219665527344
+        },
+        "SWDNT": {
+          "min": 0.0,
+          "max": 869.3621215820312
+        },
+        "LWUPT": {
+          "min": 0.0,
+          "max": 85.44284057617188
+        },
+        "SWDNB": {
+          "min": 0.0,
+          "max": 230.89219665527344
+        },
+        "LWDNB": {
+          "min": 0.0,
+          "max": 282.6058044433594
+        },
+        "ACSWDNB": {
+          "min": 0.0,
+          "max": 73350.3046875
+        },
+        "ACLWDNB": {
+          "min": 0.0,
+          "max": 84431.6484375
+        },
+        "RTHRATEN": {
+          "min": -3.064758493565023e-05,
+          "max": 0.0003074723936151713
+        },
+        "RTHRATLW": {
+          "min": -0.00032950591412372887,
+          "max": 0.0002955867676064372
+        },
+        "RTHRATSW": {
+          "min": 0.0,
+          "max": 0.00029885832918807864
+        }
+      }
+    },
+    "build/scm-37-repeat": {
+      "time_count": 6,
+      "radiation_option_lw": 37,
+      "radiation_option_sw": 37,
+      "history_file": "build/scm-37-repeat/wrfout_d01_1999-10-22_19:00:00",
+      "checks": "finite fields, daytime SW, LW, nonzero accumulation, flux/tendency sums",
+      "variables": {
+        "SWDOWN": {
+          "min": 0.0,
+          "max": 284.6548156738281
+        },
+        "GLW": {
+          "min": 0.0,
+          "max": 281.02777099609375
+        },
+        "SWDDIR": {
+          "min": 0.0,
+          "max": 2.947768449783325
+        },
+        "SWDDIF": {
+          "min": 0.0,
+          "max": 281.70709228515625
+        },
+        "SWDNT": {
+          "min": 0.0,
+          "max": 869.3607788085938
+        },
+        "LWUPT": {
+          "min": 0.0,
+          "max": 87.60740661621094
+        },
+        "SWDNB": {
+          "min": 0.0,
+          "max": 284.6548156738281
+        },
+        "LWDNB": {
+          "min": 0.0,
+          "max": 281.02777099609375
+        },
+        "ACSWDNB": {
+          "min": 0.0,
+          "max": 88966.8359375
+        },
+        "ACLWDNB": {
+          "min": 0.0,
+          "max": 83949.75
+        },
+        "RTHRATEN": {
+          "min": -1.8996310245711356e-05,
+          "max": 0.00024822246632538736
+        },
+        "RTHRATLW": {
+          "min": -0.00027139668236486614,
+          "max": 0.00022745845490135252
+        },
+        "RTHRATSW": {
+          "min": 0.0,
+          "max": 0.00027376582147553563
+        }
+      }
+    }
+  },
+  "repeat": {
+    "status": "PASS",
+    "comparison": "array_equal",
+    "fields": [
+      "SWDOWN",
+      "GLW",
+      "SWDDIR",
+      "SWDDIF",
+      "RTHRATEN",
+      "RTHRATLW",
+      "RTHRATSW",
+      "ACSWDNB",
+      "ACLWDNB",
+      "T",
+      "W"
+    ],
+    "cases": [
+      "build/scm-37",
+      "build/scm-37-repeat"
+    ]
+  },
+  "unsupported_configuration_checks": {
+    "mixed-pair": {
+      "status": "PASS",
+      "rejection_marker": "RRTMGP37_PAIR_REQUIRED",
+      "stage": "wrf",
+      "exit_code": 0
+    },
+    "aerosol": {
+      "status": "PASS",
+      "rejection_marker": "RRTMGP baseline requires",
+      "stage": "ideal",
+      "exit_code": 0
+    },
+    "overlap": {
+      "status": "PASS",
+      "rejection_marker": "RRTMGP baseline requires",
+      "stage": "ideal",
+      "exit_code": 0
+    }
+  },
+  "wrf_forecast_validated": false,
+  "github_ci_status": "Reported separately by pull-request checks; not asserted by this local record"
+}

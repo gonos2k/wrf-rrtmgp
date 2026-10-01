@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
-"""Register option 37 in vendored official WRF; keep execution fail-closed."""
+"""Register option 37 and verify its pinned source receipt without unsafe fallback."""
 import hashlib
+import argparse
 import json
 from pathlib import Path
 import re
@@ -32,15 +33,30 @@ def guard(lw, sw):
 
 '''
 
+def verify_receipt(receipt):
+    previous = json.loads(receipt.read_text())
+    for name, sha in previous['patched_blobs'].items():
+        if blob((WRF / name).read_bytes()) != sha:
+            raise ValueError('MODIFIED_REGISTERED_SOURCE: ' + name)
+    if previous.get('backend') == 'CPU_LINKED':
+        print('REGISTERED37_CPU_LINKED_AND_VERIFIED')
+    else:
+        print('REGISTRATION37_ALREADY_APPLIED_AND_VERIFIED')
+    return previous
+
 def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--check', action='store_true',
+                        help='verify an existing registration receipt without modifying files')
+    args = parser.parse_args()
     receipt = ROOT / 'config/registration37.json'
     if receipt.exists():
-        previous = json.loads(receipt.read_text())
-        for name, sha in previous['patched_blobs'].items():
-            if blob((WRF / name).read_bytes()) != sha:
-                raise ValueError('MODIFIED_REGISTERED_SOURCE: ' + name)
-        print('REGISTRATION37_ALREADY_APPLIED_AND_VERIFIED')
+        previous = verify_receipt(receipt)
+        if args.check and previous.get('backend') != 'CPU_LINKED':
+            raise ValueError('CPU_LINKED_BACKEND_RECEIPT_REQUIRED')
         return
+    if args.check:
+        raise FileNotFoundError('REGISTRATION37_RECEIPT_REQUIRED_FOR_CHECK')
     originals = {}
     for name, expected in ORIGINAL.items():
         data = (WRF / name).read_bytes()
