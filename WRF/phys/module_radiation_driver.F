@@ -1038,6 +1038,19 @@ CONTAINS
    END IF
 ! END_RRTMGP37_PAIRED_SELECTION
 
+   IF (sw_physics == RRTMGP_SWSCHEME) THEN
+      ! Legacy interpolation reconstructs net absorption with a grey albedo;
+      ! FARMS can replace the RRTMGP surface flux. Neither preserves its contract.
+      IF (swint_opt /= 0) THEN
+         CALL wrf_error_fatal('RRTMGP37 requires swint_opt=0; spectral surface interpolation is not supported')
+         RETURN
+      END IF
+      IF (.NOT.PRESENT(SWDNB) .OR. .NOT.PRESENT(SWUPT)) THEN
+         CALL wrf_error_fatal('RRTMGP37 requires surface and TOA shortwave flux diagnostics')
+         RETURN
+      END IF
+   END IF
+
 #if ( WRF_CMAQ == 1 )
    if (firstime) then
       firstime = .false.
@@ -2883,7 +2896,13 @@ CONTAINS
 
         DO j=jts,jte
         DO i=its,ite
-           SWDOWN(I,J)=GSW(I,J)/(1.-ALBEDO(I,J))
+           IF (sw_physics == RRTMGP_SWSCHEME) THEN
+              ! The solver already returns downwelling flux, even at albedo=1.
+              ! A single grey albedo cannot invert spectrally resolved absorption.
+              SWDOWN(I,J)=SWDNB(I,J)
+           ELSE
+              SWDOWN(I,J)=GSW(I,J)/(1.-ALBEDO(I,J))
+           END IF
         ENDDO
         ENDDO
      ENDIF

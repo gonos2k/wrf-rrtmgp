@@ -11,8 +11,9 @@
     "Registry/registry.rrtmgp37": "55ef1db1cdb7ae39a1427286a0245f357946981c",
     "arch/postamble": "618672439f0af6c2b6d4d4d8e6313e466a913547",
     "doc/rrtmgp/NOAA.md": "02e3419ace08a0cefbb0db834ceee36980db1571",
-    "doc/rrtmgp/README.md": "9363eac39cb85f170944c4499ab1fd76faaf4b07",
-    "doc/rrtmgp/VALIDATION.md": "32ef92188cd5648fe0a8bbfe204dadfaa4b39f76",
+    "doc/rrtmgp/README.md": "0e9d40b6c34dfcce75c5b06dca9fc60aa98cc233",
+    "doc/rrtmgp/REVIEW_FOLLOWUP.md": "693c6f6e7c6ef3a896cf23d24318f18c21eade84",
+    "doc/rrtmgp/VALIDATION.md": "c2901bb5a98876b7693d52eefbc8d412c3bc432b",
     "external/CMakeLists.txt": "eeed6ead9fa650def26445046ee7c8a7d70062b7",
     "external/Makefile": "d4f563acc892767d36145fe8ea9354b790c70832",
     "external/rte_rrtmgp/CITATION.cff": "b33e8953961934dc056b055cfddc3ae778ac013d",
@@ -71,21 +72,22 @@
     "phys/module_ra_rrtmg_lw.F": "206a5c6933259a1e95738e8fbbc5ca1850528326",
     "phys/module_ra_rrtmg_sw.F": "88edcf5568ba158b7ec9588113aaf1fcee5e74e5",
     "phys/module_ra_rrtmgp.F": "00698acd6f42455cce38cff4c10d8e21ae005092",
-    "phys/module_radiation_driver.F": "987a5f2e2c82dec7c53457fc5f840f1413d6a282",
+    "phys/module_radiation_driver.F": "8338a75ede219cbeb720758a9716dcc1cc06249f",
     "phys/module_sf_ssib.F": "53db7a2fce364c38b451aa6f2fbcfce9c093e1bb",
     "run/rrtmgp-clouds-lw-bnd.nc": "7a11d1e168f4870e65f3a481aa62bb7e6076679d",
     "run/rrtmgp-clouds-sw-bnd.nc": "9e9a053d0ea5668c44b799095b1d9de03c43e7c5",
     "run/rrtmgp-gas-lw-g128.nc": "7870ac6ab318533dd6687c663de9e3437e9fc766",
     "run/rrtmgp-gas-sw-g112.nc": "dae237da8b77f6b60d517e5fd78590cea8cfb7bb",
-    "share/module_check_a_mundo.F": "ec3b762d645cb4630e77737cab94334be4a49bda",
+    "share/module_check_a_mundo.F": "99a3402b6399d6ce003bfb42a957faa0077921f5",
     "share/wrf_timeseries.F": "7221cd038f8056ad7fea9fc29c885964e8102a23",
     "test/rrtmgp/CMakeLists.txt": "179cdd1bb368f425b1d18ba8a616da3b5e8e8021",
     "test/rrtmgp/namelist.scm37": "d8e7df443b672a1f8f7cb59dc40843247467efd8",
-    "test/rrtmgp/radiation_iofields.txt": "60291bdb29a3b32d4f41e743481f46a1da6a9409",
+    "test/rrtmgp/radiation_iofields.txt": "72ff89251ecbf82157ac91eac006729717696156",
     "test/rrtmgp/run_scm.sh": "5ea1a2411856d9773cc0e0cf8536f077266b9220",
     "test/rrtmgp/standalone_wrf_error.f90": "e05da4fe15f90be2146cea08015f15ec973389f9",
-    "test/rrtmgp/test_columns.f90": "8eea138cdcca57a8428459ae5763370810cbd171",
-    "test/rrtmgp/validate_scm.py": "077ef04417db510666b05b351ad7f31e85d4edad"
+    "test/rrtmgp/test_columns.f90": "0782490170ba9055f0922507c20d6ff773e2e574",
+    "test/rrtmgp/test_surface_scm.py": "a19cdcd92caec58170b2ee62d1825b53b7e6ef39",
+    "test/rrtmgp/validate_scm.py": "294c28584a0828bfd53f9c196828fe0e93181d51"
   },
   "backend": "CPU_LINKED",
   "wrf_forecast_validated": false,
@@ -94,6 +96,9 @@
   "wrf_runtime_data_commit": "ea788bb39876948fa8d2c235665ccff19b4686b5",
   "data_manifest": "WRF/external/rte_rrtmgp/DATA.json",
   "paired_radiation_required": true,
-  "validation_record": "validation/rrtmgp37/results.json",
-  "wrf_scm_validated": true
+  "validation_record": "validation/rrtmgp37/swdown-fix.json",
+  "wrf_scm_validated": true,
+  "swint_opt_supported": [
+    0
+  ]
 }

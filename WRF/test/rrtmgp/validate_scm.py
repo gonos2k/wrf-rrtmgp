@@ -7,7 +7,7 @@ import netCDF4
 import numpy as np
 
 required = ['SWDOWN', 'GLW', 'SWDDIR', 'SWDDIF', 'SWDNT', 'LWUPT',
-            'SWDNB', 'LWDNB', 'ACSWDNB', 'ACLWDNB', 'RTHRATEN', 'RTHRATLW', 'RTHRATSW']
+            'SWDNB', 'GSW', 'SWUPB', 'LWDNB', 'ACSWDNB', 'ACLWDNB', 'RTHRATEN', 'RTHRATLW', 'RTHRATSW']
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('cases', nargs='+', type=Path)
 parser.add_argument('--expected-options', nargs='+', type=int, choices=(4, 37),
@@ -45,12 +45,17 @@ for index, folder in enumerate(args.cases):
         sw = ds['SWDOWN'][:]; split = ds['SWDDIR'][:] + ds['SWDDIF'][:]
         if not np.allclose(sw, split, rtol=2e-5, atol=2e-3):
             raise RuntimeError(f'{folder}: surface direct/diffuse sum mismatch')
+        if lw_option == 37 and sw_option == 37:
+            if not np.allclose(sw, ds['SWDNB'][:], rtol=2e-5, atol=2e-3):
+                raise RuntimeError(f'{folder}: SWDOWN/SWDNB mismatch')
+            if not np.allclose(ds['GSW'][:], ds['SWDNB'][:] - ds['SWUPB'][:], rtol=2e-5, atol=2e-3):
+                raise RuntimeError(f'{folder}: net absorbed shortwave mismatch')
         total = ds['RTHRATEN'][:]
         parts = ds['RTHRATLW'][:] + ds['RTHRATSW'][:]
         if not np.allclose(total, parts, rtol=1e-5, atol=1e-9):
             raise RuntimeError(f'{folder}: radiation tendency sum mismatch')
         if total.shape[0] < 2 or not np.any(np.abs(total[1:]) > 0):
-            raise RuntimeError(f'{folder}: radiation tendencies never applied after initialization')
+            raise RuntimeError(f'{folder}: radiation tendencies never calculated after initialization')
         results[str(folder)] = {'time_count': total.shape[0], 'radiation_option_lw': int(ds.RA_LW_PHYSICS),
                                 'radiation_option_sw': int(ds.RA_SW_PHYSICS), 'history_file': str(paths[-1]),
                                 'checks': 'finite fields, daytime SW, LW, nonzero accumulation, flux/tendency sums',

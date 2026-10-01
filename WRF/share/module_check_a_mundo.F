@@ -2915,6 +2915,8 @@
            model_config_rec%ra_sw_physics(i)==RRTMGP_SWSCHEME) THEN
           IF(model_config_rec%aer_opt/=0.OR.model_config_rec%cldovrlp<0.OR.model_config_rec%cldovrlp>3) &
             CALL wrf_error_fatal('RRTMGP baseline requires aer_opt=0 and cldovrlp=0,1,2,3')
+          IF(model_config_rec%swint_opt/=0) &
+            CALL wrf_error_fatal('RRTMGP37 requires swint_opt=0; spectral surface interpolation is not supported')
         END IF
       END DO
 

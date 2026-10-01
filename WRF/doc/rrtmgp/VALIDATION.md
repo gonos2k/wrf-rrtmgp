@@ -19,7 +19,7 @@
 
 컬럼 시험은 맑은 하늘, 액체 전운량, 부분 구름과 액체·빙정·눈, 중첩 0~3 및 야간을 다룬다. 에너지 일관성, clear sky 보존, 직달·산란 및 가시광·근적외 합계, 표본 시드 재현성을 검사한다. 기존 `port/` core 시험과 실제 연결된 WRF 컬럼 시험은 별도 경로다.
 
-SCM은 1999년 10월 22일 19:00부터 19:05 UTC까지 실행했다. 출력 6개 시각에서 복사 플럭스·누적 에너지·경향이 유한하고 계산·적용되었음을 확인했다. `SWDOWN=SWDDIR+SWDDIF`, `RTHRATEN=RTHRATLW+RTHRATSW`가 성립했다. 검증 스크립트의 `--expected-options`로 출력 파일의 장파·단파 선택이 각각 37/37과 4/4임을 검사했다. 반복 비교는 SWDOWN, GLW, SWDDIR, SWDDIF, 세 복사 경향, ACSWDNB, ACLWDNB, T 및 W를 대상으로 했다.
+SCM은 1999년 10월 22일 19:00부터 19:05 UTC까지 실행했다. 출력 6개 시각에서 복사 플럭스·누적 에너지·경향이 유한하고 출력되었음을 확인했다. `SWDOWN=SWDDIR+SWDDIF`, `RTHRATEN=RTHRATLW+RTHRATSW`가 성립했다. 이 검사는 경향 산출을 확인하며 실제 온위 업데이트의 정확성을 입증하지 않는다. 누적량의 양수 검사도 시간적분 규약을 입증하지 않는다. 검증 스크립트의 `--expected-options`로 출력 파일의 장파·단파 선택이 각각 37/37과 4/4임을 검사했다. 반복 비교는 SWDOWN, GLW, SWDDIR, SWDDIF, 세 복사 경향, ACSWDNB, ACLWDNB, T 및 W를 대상으로 했다.
 
 37번 최대 SWDOWN은 284.65 W/m², 최대 GLW는 281.03 W/m²였다. 4번은 각각 230.89 및 282.61 W/m²였다. 계수·구름 광학·표본화가 다르므로 이 차이를 정확도 개선으로 해석하지 않는다. 4번 실행 성공은 기존 경로가 작동함을 확인하며, 수정 전 WRF와의 비트 단위 회귀 비교는 수행하지 않았다.
 
@@ -43,3 +43,19 @@ python3 WRF/test/rrtmgp/validate_scm.py \
 ```
 
 측정 결과와 실행 파일 SHA256은 저장소의 [`validation/rrtmgp37/results.json`](../../../validation/rrtmgp37/results.json)에 기록했다. 로컬 전체 빌드 로그는 `build/wrf-compile-scm.log`, SCM 로그·출력은 `build/scm-37`, `build/scm-4`, `build/scm-37-repeat`에 있다. 대용량 실행 파일·출력·빌드 로그는 커밋하지 않는다. PR CI는 Registry/core, 컬럼 시험과 GNU serial SCM을 실행하고 빌드·실행 로그 및 결과를 artifact로 보관한다. CI 상태는 로컬 측정 기록과 별도로 보고한다.
+
+## SWDOWN 역산 수정 후 검증
+
+검토 기준 main `7061603` 이후 37번 `SWDOWN=SWDNB` 직접 반환을 적용했다. 수정한 driver와 설정 검사 모듈을 GNU serial 빌드의 동일 플래그로 재컴파일하고 WRF/ideal을 재링크했다. 다음을 실제 실행으로 확인했다.
+
+- 회색 알베도 0·0.2·0.99·1과 분광 네 알베도 입력의 독립 컬럼 주야간 시험: 통과. 실제 solver 상향 플럭스와 알베도로 가중한 가시광·근적외 직달/산란 플럭스도 비교했다.
+- 37/37과 4/4의 기본 5분 SCM: 통과.
+- LSM=0, usemonalb=true 및 prescribed ALBBCK를 사용해 실제 출력 ALBEDO를 일정하게 유지한 네 회색 SCM: 통과. 모든 시각에서 `SWDOWN=SWDNB=SWDDIR+SWDDIF`, `GSW=SWDNB-SWUPB` 및 유한성을 검사했다. 알베도 1에서도 하향 플럭스가 계산됐다.
+- `swint_opt=1,2`: 명시적인 미지원 메시지로 거부됐다.
+- 수정 전 포팅본 4/4와 수정 후 4/4: 공통 출력 변수 203개가 비트 단위로 일치했다. 이 비교는 공식 upstream 원본과의 회귀 시험을 대신하지 않는다.
+
+분광 시험은 어댑터 컬럼 시험이며 SSiB 전체 결합 또는 지형·경사면의 운용 시험은 아니다. 결과는 [`swdown-fix.json`](../../../validation/rrtmgp37/swdown-fix.json)에 기록한다. 추가 WRF 시험은 다음 명령으로 재현한다.
+
+```bash
+python3 WRF/test/rrtmgp/test_surface_scm.py build/new-surface-scm
+```

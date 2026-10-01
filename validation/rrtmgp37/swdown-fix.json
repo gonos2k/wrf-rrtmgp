@@ -1,0 +1,463 @@
+{
+  "recorded_at_utc": "2026-10-01T06:18:42.687252+00:00",
+  "base_commit": "70616032f815fd76be1508f906ada1caa7590a19",
+  "scope": "SWDOWN fix: flat daytime SCM grey albedos, standalone spectral/day/night solver tests; no SSiB or terrain validation",
+  "standalone_columns": {
+    "status": "PASS",
+    "tests_passed": 1,
+    "new_cases": "grey albedo 0,0.2,0.99,1 and distinct visible/NIR direct/diffuse albedos, daytime/night; solver surface reflection checked against weighted band fluxes"
+  },
+  "wrf_build": {
+    "status": "PASS",
+    "scope": "GNU serial SCM build, then modified driver and configuration-check module rebuilt and executables relinked using full-build flags",
+    "log": "build/wrf-swdown-recompile.log",
+    "executables_sha256": {
+      "wrf.exe": "ec4a527579268d1973826b40e66d2e6d5653d71463c7d389b8f0d031847eae71",
+      "ideal.exe": "06ff0975edaa29773a6e270d7a635f39584508b341e3329166b5b7211b4ba7a2"
+    }
+  },
+  "paired_scm": {
+    "build/fix-scm37": {
+      "time_count": 6,
+      "radiation_option_lw": 37,
+      "radiation_option_sw": 37,
+      "history_file": "build/fix-scm37/wrfout_d01_1999-10-22_19:00:00",
+      "checks": "finite fields, daytime SW, LW, nonzero accumulation, flux/tendency sums",
+      "variables": {
+        "SWDOWN": {
+          "min": 0.0,
+          "max": 284.6548156738281
+        },
+        "GLW": {
+          "min": 0.0,
+          "max": 281.02777099609375
+        },
+        "SWDDIR": {
+          "min": 0.0,
+          "max": 2.947768449783325
+        },
+        "SWDDIF": {
+          "min": 0.0,
+          "max": 281.70709228515625
+        },
+        "SWDNT": {
+          "min": 0.0,
+          "max": 869.3607788085938
+        },
+        "LWUPT": {
+          "min": 0.0,
+          "max": 87.60740661621094
+        },
+        "SWDNB": {
+          "min": 0.0,
+          "max": 284.6548156738281
+        },
+        "GSW": {
+          "min": 0.0,
+          "max": 236.26348876953125
+        },
+        "SWUPB": {
+          "min": 0.0,
+          "max": 48.391319274902344
+        },
+        "LWDNB": {
+          "min": 0.0,
+          "max": 281.02777099609375
+        },
+        "ACSWDNB": {
+          "min": 0.0,
+          "max": 88966.8359375
+        },
+        "ACLWDNB": {
+          "min": 0.0,
+          "max": 83949.75
+        },
+        "RTHRATEN": {
+          "min": -1.8996310245711356e-05,
+          "max": 0.00024822246632538736
+        },
+        "RTHRATLW": {
+          "min": -0.00027139668236486614,
+          "max": 0.00022745845490135252
+        },
+        "RTHRATSW": {
+          "min": 0.0,
+          "max": 0.00027376582147553563
+        }
+      }
+    },
+    "build/fix-scm4": {
+      "time_count": 6,
+      "radiation_option_lw": 4,
+      "radiation_option_sw": 4,
+      "history_file": "build/fix-scm4/wrfout_d01_1999-10-22_19:00:00",
+      "checks": "finite fields, daytime SW, LW, nonzero accumulation, flux/tendency sums",
+      "variables": {
+        "SWDOWN": {
+          "min": 0.0,
+          "max": 230.89219665527344
+        },
+        "GLW": {
+          "min": 0.0,
+          "max": 282.6058044433594
+        },
+        "SWDDIR": {
+          "min": 0.0,
+          "max": 2.647048177095712e-06
+        },
+        "SWDDIF": {
+          "min": 0.0,
+          "max": 230.89219665527344
+        },
+        "SWDNT": {
+          "min": 0.0,
+          "max": 869.3621215820312
+        },
+        "LWUPT": {
+          "min": 0.0,
+          "max": 85.44284057617188
+        },
+        "SWDNB": {
+          "min": 0.0,
+          "max": 230.89219665527344
+        },
+        "GSW": {
+          "min": 0.0,
+          "max": 191.64051818847656
+        },
+        "SWUPB": {
+          "min": 0.0,
+          "max": 39.25167465209961
+        },
+        "LWDNB": {
+          "min": 0.0,
+          "max": 282.6058044433594
+        },
+        "ACSWDNB": {
+          "min": 0.0,
+          "max": 73350.3046875
+        },
+        "ACLWDNB": {
+          "min": 0.0,
+          "max": 84431.6484375
+        },
+        "RTHRATEN": {
+          "min": -3.064758493565023e-05,
+          "max": 0.0003074723936151713
+        },
+        "RTHRATLW": {
+          "min": -0.00032950591412372887,
+          "max": 0.0002955867676064372
+        },
+        "RTHRATSW": {
+          "min": 0.0,
+          "max": 0.00029885832918807864
+        }
+      }
+    }
+  },
+  "surface_scm": {
+    "surface_cases": [
+      {
+        "case": "build/surface-fix-3/alpha-0p0",
+        "albedo": 0.0,
+        "radiation_options": [
+          37,
+          37
+        ],
+        "history_file": "build/surface-fix-3/alpha-0p0/wrfout_d01_1999-10-22_19:00:00",
+        "time_count": 6,
+        "checks": [
+          "finite fields",
+          "ALBEDO persistence",
+          "SWDOWN=SWDNB",
+          "SWDOWN=SWDDIR+SWDDIF",
+          "GSW=SWDNB-SWUPB"
+        ]
+      },
+      {
+        "case": "build/surface-fix-3/alpha-0p2",
+        "albedo": 0.2,
+        "radiation_options": [
+          37,
+          37
+        ],
+        "history_file": "build/surface-fix-3/alpha-0p2/wrfout_d01_1999-10-22_19:00:00",
+        "time_count": 6,
+        "checks": [
+          "finite fields",
+          "ALBEDO persistence",
+          "SWDOWN=SWDNB",
+          "SWDOWN=SWDDIR+SWDDIF",
+          "GSW=SWDNB-SWUPB"
+        ]
+      },
+      {
+        "case": "build/surface-fix-3/alpha-0p99",
+        "albedo": 0.99,
+        "radiation_options": [
+          37,
+          37
+        ],
+        "history_file": "build/surface-fix-3/alpha-0p99/wrfout_d01_1999-10-22_19:00:00",
+        "time_count": 6,
+        "checks": [
+          "finite fields",
+          "ALBEDO persistence",
+          "SWDOWN=SWDNB",
+          "SWDOWN=SWDDIR+SWDDIF",
+          "GSW=SWDNB-SWUPB"
+        ]
+      },
+      {
+        "case": "build/surface-fix-3/alpha-1p0",
+        "albedo": 1.0,
+        "radiation_options": [
+          37,
+          37
+        ],
+        "history_file": "build/surface-fix-3/alpha-1p0/wrfout_d01_1999-10-22_19:00:00",
+        "time_count": 6,
+        "checks": [
+          "finite fields",
+          "ALBEDO persistence",
+          "SWDOWN=SWDNB",
+          "SWDOWN=SWDDIR+SWDDIF",
+          "GSW=SWDNB-SWUPB"
+        ]
+      }
+    ],
+    "swint_rejection_cases": [
+      {
+        "case": "build/surface-fix-3/reject-swint-1",
+        "swint_opt": 1,
+        "rejected_during": "ideal.exe",
+        "ideal_returncode": 0,
+        "checks": [
+          "explicit RRTMGP swint_opt rejection in ideal.log"
+        ]
+      },
+      {
+        "case": "build/surface-fix-3/reject-swint-2",
+        "swint_opt": 2,
+        "rejected_during": "ideal.exe",
+        "ideal_returncode": 0,
+        "checks": [
+          "explicit RRTMGP swint_opt rejection in ideal.log"
+        ]
+      }
+    ]
+  },
+  "option4_regression": {
+    "status": "PASS",
+    "scope": "Pre-fix port repository 4/4 versus this SWDOWN fix; not an unmodified-official-WRF comparison",
+    "compared_common_variables": 203,
+    "variable_names": [
+      "ACGRDFLX",
+      "ACHFX",
+      "ACLHF",
+      "ACLWDNB",
+      "ACLWDNBC",
+      "ACLWDNT",
+      "ACLWDNTC",
+      "ACLWUPB",
+      "ACLWUPBC",
+      "ACLWUPT",
+      "ACLWUPTC",
+      "ACSNOM",
+      "ACSWDNB",
+      "ACSWDNBC",
+      "ACSWDNT",
+      "ACSWDNTC",
+      "ACSWUPB",
+      "ACSWUPBC",
+      "ACSWUPT",
+      "ACSWUPTC",
+      "ALBBCK",
+      "ALBEDO",
+      "AREA2D",
+      "BATHYMETRY_FLAG",
+      "C1F",
+      "C1H",
+      "C2F",
+      "C2H",
+      "C3F",
+      "C3H",
+      "C4F",
+      "C4H",
+      "CANWAT",
+      "CF1",
+      "CF2",
+      "CF3",
+      "CFN",
+      "CFN1",
+      "CLAT",
+      "CLDFRA",
+      "COSALPHA",
+      "COSZEN",
+      "DN",
+      "DNW",
+      "DX2D",
+      "DZS",
+      "E",
+      "EMISS",
+      "F",
+      "FNM",
+      "FNP",
+      "GLW",
+      "GOT_VAR_SSO",
+      "GRAUPELNC",
+      "GRDFLX",
+      "HAILNC",
+      "HFX",
+      "HFX_FORCE",
+      "HFX_FORCE_TEND",
+      "HGT",
+      "ISEEDARRAY_SPP_CONV",
+      "ISEEDARRAY_SPP_LSM",
+      "ISEEDARRAY_SPP_PBL",
+      "ISEEDARR_RAND_PERTURB",
+      "ISEEDARR_SKEBS",
+      "ISEEDARR_SPPT",
+      "ISLTYP",
+      "ITIMESTEP",
+      "IVGTYP",
+      "LAI",
+      "LAKEMASK",
+      "LANDMASK",
+      "LH",
+      "LH_FORCE",
+      "LH_FORCE_TEND",
+      "LU_INDEX",
+      "LWDNB",
+      "LWDNBC",
+      "LWDNT",
+      "LWDNTC",
+      "LWUPB",
+      "LWUPBC",
+      "LWUPT",
+      "LWUPTC",
+      "MAPFAC_M",
+      "MAPFAC_MX",
+      "MAPFAC_MY",
+      "MAPFAC_U",
+      "MAPFAC_UX",
+      "MAPFAC_UY",
+      "MAPFAC_V",
+      "MAPFAC_VX",
+      "MAPFAC_VY",
+      "MAX_MSFTX",
+      "MAX_MSFTY",
+      "MF_VX_INV",
+      "MU",
+      "MUB",
+      "NEST_POS",
+      "O3_GFS_DU",
+      "OLR",
+      "P",
+      "P00",
+      "PB",
+      "PBLH",
+      "PC",
+      "PCB",
+      "PH",
+      "PHB",
+      "PSFC",
+      "P_HYD",
+      "P_STRAT",
+      "P_TOP",
+      "Q2",
+      "QCLOUD",
+      "QFX",
+      "QGRAUP",
+      "QICE",
+      "QRAIN",
+      "QSNOW",
+      "QVAPOR",
+      "RAINC",
+      "RAINNC",
+      "RAINSH",
+      "RDN",
+      "RDNW",
+      "RDX",
+      "RDY",
+      "RESM",
+      "RTHRATEN",
+      "RTHRATLW",
+      "RTHRATSW",
+      "SAVE_TOPO_FROM_REAL",
+      "SEAICE",
+      "SFROFF",
+      "SH2O",
+      "SHDAVG",
+      "SHDMAX",
+      "SHDMIN",
+      "SINALPHA",
+      "SMCREL",
+      "SMOIS",
+      "SNOALB",
+      "SNOW",
+      "SNOWC",
+      "SNOWH",
+      "SNOWNC",
+      "SR",
+      "SST",
+      "SSTSK",
+      "SST_INPUT",
+      "SWDDIF",
+      "SWDDIR",
+      "SWDNB",
+      "SWDNBC",
+      "SWDNT",
+      "SWDNTC",
+      "SWDOWN",
+      "SWNORM",
+      "SWUPB",
+      "SWUPBC",
+      "SWUPT",
+      "SWUPTC",
+      "T",
+      "T00",
+      "T2",
+      "TH2",
+      "THIS_IS_AN_IDEAL_RUN",
+      "THM",
+      "TISO",
+      "TLP",
+      "TLP_STRAT",
+      "TMN",
+      "TSK",
+      "TSK_FORCE",
+      "TSK_FORCE_TEND",
+      "TSLB",
+      "Times",
+      "U",
+      "U10",
+      "UDROFF",
+      "UST",
+      "V",
+      "V10",
+      "VAR",
+      "VAR_SSO",
+      "VEGFRA",
+      "W",
+      "WATER_DEPTH",
+      "XICEM",
+      "XLAND",
+      "XLAT",
+      "XLAT_U",
+      "XLAT_V",
+      "XLONG",
+      "XLONG_U",
+      "XLONG_V",
+      "XTIME",
+      "ZETATOP",
+      "ZNT",
+      "ZNU",
+      "ZNW",
+      "ZS"
+    ]
+  },
+  "remaining_work": "WRF/doc/rrtmgp/REVIEW_FOLLOWUP.md",
+  "wrf_forecast_validated": false
+}
