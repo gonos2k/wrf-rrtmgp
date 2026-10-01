@@ -128,6 +128,12 @@ jobs:
           WRF/test/rrtmgp/run_scm.sh build/scm37 37
           WRF/test/rrtmgp/run_scm.sh build/scm4 4
           python3 WRF/test/rrtmgp/validate_scm.py build/scm37 build/scm4 --expected-options 37 4 | tee build/scm-validation.json
+      - name: Check reflecting surfaces and reject unsupported interpolation
+        shell: bash
+        run: |
+          set -euo pipefail
+          export LD_LIBRARY_PATH="$RUNNER_TEMP/netcdf/lib:/usr/lib/x86_64-linux-gnu:${LD_LIBRARY_PATH:-}"
+          python3 WRF/test/rrtmgp/test_surface_scm.py build/surface-scm | tee build/surface-scm-result.json
       - name: Save SCM logs and output checks
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
@@ -139,6 +145,8 @@ jobs:
             build/scm4/ideal.log
             build/scm4/wrf.log
             build/scm-validation.json
+            build/surface-scm-result.json
+            build/surface-scm/**/*.log
             build/wrf-configure.log
             build/wrf-compile-scm.log
           retention-days: 30

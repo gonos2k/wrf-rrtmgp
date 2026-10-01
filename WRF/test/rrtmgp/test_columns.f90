@@ -105,6 +105,13 @@ PROGRAM test_rrtmgp_columns
      ANY(swhrc/=0.).OR.ANY(direct/=0.).OR.ANY(diffuse/=0.).OR.ANY(directc/=0.).OR. &
      ANY(visdir/=0.).OR.ANY(visdif/=0.).OR.ANY(nirdir/=0.).OR.ANY(nirdif/=0.)) CALL fail('night fluxes are nonzero')
 
+  ! Vary real solver albedos, including the existing spectrally distinct case.
+  CALL exercise_albedo(1) ! gray 0.00
+  CALL exercise_albedo(2) ! gray 0.20
+  CALL exercise_albedo(3) ! gray 0.99
+  CALL exercise_albedo(4) ! gray 1.00
+  CALL exercise_albedo(5) ! distinct visible/NIR direct/diffuse albedos
+
   ! Exercise mixed liquid, ice, and snow with partial cloud in all overlap modes.
   ! Mode zero must preserve the clear result even when cloud fields are populated.
   DO overlap=0,3
@@ -167,6 +174,57 @@ CONTAINS
     CALL check_close(TRIM(label)//' SW repeatability',swhr,saved_hr,0.)
     CALL check_close(TRIM(label)//' SW repeatability',direct,saved_direct,0.)
   END SUBROUTINE exercise_overlap
+
+  SUBROUTINE exercise_albedo(albedo_case)
+    INTEGER, INTENT(IN) :: albedo_case
+    CHARACTER(LEN=48) :: label
+    REAL, PARAMETER :: gray_values(4)=[0.,.2,.99,1.]
+    REAL :: gray,reflected(nc,1)
+    cf=0.; lwp=0.; iwp=0.; swp=0.
+    SELECT CASE(albedo_case)
+    CASE(1:4)
+      gray=gray_values(albedo_case)
+      avdir=gray; avdif=gray; andir=gray; andif=gray
+      WRITE(label,'("gray surface albedo ",F4.2)') gray
+    CASE(5)
+      avdir=.15; avdif=.10; andir=.25; andif=.20
+      label='spectrally distinct surface albedo'
+    CASE DEFAULT
+      CALL fail('invalid albedo case')
+    END SELECT
+
+    mu0=.65
+    CALL rrtmgp_sw_column(play,plev,tlay,h2o,co2,o3,n2o,ch4,o2,avdir,avdif,andir,andif,mu0,solar, &
+         cf,lwp,iwp,swp,rel,rei,res,4,2,271,swup,swdn,swhr,swupc,swdnc,swhrc, &
+         direct,diffuse,directc,visdir,visdif,nirdir,nirdif)
+    CALL check_finite(TRIM(label)//' daylight',swup,swdn,swhr)
+    CALL check_finite(TRIM(label)//' daylight clear sky',swupc,swdnc,swhrc)
+    CALL check_close(TRIM(label)//' daylight down flux components',direct+diffuse,swdn,2.e-5)
+    CALL check_close(TRIM(label)//' daylight visible/NIR direct components',visdir+nirdir,direct,2.e-5)
+    CALL check_close(TRIM(label)//' daylight visible/NIR diffuse components',visdif+nirdif,diffuse,2.e-5)
+    CALL check_close(TRIM(label)//' surface down flux sum',direct(:,1:1)+diffuse(:,1:1),swdn(:,1:1),2.e-5)
+
+    ! Surface upward flux must be the solver's reflected incident band flux,
+    ! weighted by each visible/NIR direct/diffuse albedo input.
+    reflected(:,1)=avdir*visdir(:,1)+avdif*visdif(:,1)+andir*nirdir(:,1)+andif*nirdif(:,1)
+    CALL check_close(TRIM(label)//' surface reflected band budget',swup(:,1:1),reflected,4.e-5)
+
+    mu0=0.
+    CALL rrtmgp_sw_column(play,plev,tlay,h2o,co2,o3,n2o,ch4,o2,avdir,avdif,andir,andif,mu0,solar, &
+         cf,lwp,iwp,swp,rel,rei,res,4,2,271,swup,swdn,swhr,swupc,swdnc,swhrc, &
+         direct,diffuse,directc,visdir,visdif,nirdir,nirdif)
+    CALL check_finite(TRIM(label)//' nighttime',swup,swdn,swhr)
+    CALL check_close(TRIM(label)//' nighttime up',swup,0.*swup,0.)
+    CALL check_close(TRIM(label)//' nighttime down',swdn,0.*swdn,0.)
+    CALL check_close(TRIM(label)//' nighttime heating',swhr,0.*swhr,0.)
+    CALL check_close(TRIM(label)//' nighttime clear down',swdnc,0.*swdnc,0.)
+    CALL check_close(TRIM(label)//' nighttime direct',direct,0.*direct,0.)
+    CALL check_close(TRIM(label)//' nighttime diffuse',diffuse,0.*diffuse,0.)
+    CALL check_close(TRIM(label)//' nighttime band partitions',visdir,0.*visdir,0.)
+    CALL check_close(TRIM(label)//' nighttime band partitions',visdif,0.*visdif,0.)
+    CALL check_close(TRIM(label)//' nighttime band partitions',nirdir,0.*nirdir,0.)
+    CALL check_close(TRIM(label)//' nighttime band partitions',nirdif,0.*nirdif,0.)
+  END SUBROUTINE exercise_albedo
 
   SUBROUTINE fail(message)
     CHARACTER(LEN=*), INTENT(IN) :: message
