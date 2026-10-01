@@ -16,6 +16,9 @@ MODULE module_ra_rrtmgp
   USE mo_cloud_sampling, ONLY: sampled_mask_max_ran, draw_samples
   USE mo_load_coefficients, ONLY: load_and_init
   USE mo_load_cloud_coefficients, ONLY: load_cld_lutcoeff
+  USE module_ra_rrtmgp_input, ONLY: rrtmgp_validate_column_inputs, &
+      rrtmgp_check_unit_interval, rrtmgp_check_positive, rrtmgp_check_nonnegative
+  USE, INTRINSIC :: ieee_arithmetic, ONLY: ieee_is_finite
   IMPLICIT NONE
   PRIVATE
   EXTERNAL :: wrf_error_fatal3
@@ -23,6 +26,7 @@ MODULE module_ra_rrtmgp
   TYPE(ty_gas_optics_rrtmgp), SAVE :: gas_lw, gas_sw
   TYPE(ty_cloud_optics_rrtmgp), SAVE :: cloud_lw, cloud_sw
   LOGICAL, SAVE :: ready = .FALSE.
+  CHARACTER(LEN=:), ALLOCATABLE, SAVE :: initialized_path
   CHARACTER(LEN=3), PARAMETER :: names(6) = ['h2o','co2','o3 ','n2o','ch4','o2 ']
 CONTAINS
   SUBROUTINE require(msg)
@@ -33,7 +37,10 @@ CONTAINS
   SUBROUTINE rrtmgp_init(data_path)
     CHARACTER(LEN=*), INTENT(IN) :: data_path
     TYPE(ty_gas_concs) :: gases
-    IF (ready) RETURN
+    IF (ready) THEN
+      IF(TRIM(data_path)/=initialized_path) CALL require('rrtmgp_data_path must be global and unchanged after initialization')
+      RETURN
+    END IF
     CALL require(gases%init(names))
     CALL load_and_init(gas_lw,TRIM(data_path)//'/rrtmgp-gas-lw-g128.nc',gases)
     CALL load_and_init(gas_sw,TRIM(data_path)//'/rrtmgp-gas-sw-g112.nc',gases)
@@ -41,12 +48,22 @@ CONTAINS
     CALL load_cld_lutcoeff(cloud_sw,TRIM(data_path)//'/rrtmgp-clouds-sw-bnd.nc')
     IF (.NOT.cloud_lw%bands_are_equal(gas_lw)) CALL require('LW cloud/gas spectral bands differ')
     IF (.NOT.cloud_sw%bands_are_equal(gas_sw)) CALL require('SW cloud/gas spectral bands differ')
+    initialized_path=TRIM(data_path)
     ready = .TRUE.
   END SUBROUTINE
 
   SUBROUTINE set_gases(gases,h2o,co2,o3,n2o,ch4,o2)
     TYPE(ty_gas_concs), INTENT(INOUT) :: gases
     REAL, INTENT(IN) :: h2o(:,:),co2(:,:),o3(:,:),n2o(:,:),ch4(:,:),o2(:,:)
+    IF(ANY(SHAPE(co2)/=SHAPE(h2o)).OR.ANY(SHAPE(o3)/=SHAPE(h2o)).OR. &
+       ANY(SHAPE(n2o)/=SHAPE(h2o)).OR.ANY(SHAPE(ch4)/=SHAPE(h2o)).OR. &
+       ANY(SHAPE(o2)/=SHAPE(h2o))) CALL require('gas shapes must match column layers')
+    CALL rrtmgp_check_nonnegative('h2o',h2o)
+    CALL rrtmgp_check_nonnegative('co2',co2)
+    CALL rrtmgp_check_nonnegative('o3',o3)
+    CALL rrtmgp_check_nonnegative('n2o',n2o)
+    CALL rrtmgp_check_nonnegative('ch4',ch4)
+    CALL rrtmgp_check_nonnegative('o2',o2)
     CALL require(gases%init(names))
     CALL require(gases%set_vmr('h2o',REAL(h2o,wp)))
     CALL require(gases%set_vmr('co2',REAL(co2,wp)))
@@ -56,16 +73,21 @@ CONTAINS
     CALL require(gases%set_vmr('o2',REAL(o2,wp)))
   END SUBROUTINE
 
-  SUBROUTINE cloud_mask(cf,ngpt,overlap,seed,mask)
+  SUBROUTINE cloud_mask(cf,ngpt,overlap,seed,mask,column_seeds)
     REAL, INTENT(IN) :: cf(:,:)
     INTEGER, INTENT(IN) :: ngpt,overlap,seed
     LOGICAL, INTENT(OUT) :: mask(SIZE(cf,1),SIZE(cf,2),ngpt)
+    INTEGER, OPTIONAL, INTENT(IN) :: column_seeds(:)
     REAL(wp) :: randoms(ngpt,SIZE(cf,2),SIZE(cf,1))
     INTEGER(i8) :: state
     INTEGER :: c,k,g
     IF (overlap<0.OR.overlap>3) CALL require('cloud overlap supported: 0, 1, 2, 3')
+    IF(PRESENT(column_seeds)) THEN
+      IF(SIZE(column_seeds)/=SIZE(cf,1)) CALL require('column_seeds shape must match columns')
+    END IF
     state=MODULO(INT(seed,i8),2147483646_i8)+1_i8
     DO c=1,SIZE(cf,1)
+      IF(PRESENT(column_seeds)) state=MODULO(INT(column_seeds(c),i8),2147483646_i8)+1_i8
       DO k=1,SIZE(cf,2)
         DO g=1,ngpt
           state=MODULO(48271_i8*state,2147483647_i8)
@@ -105,11 +127,12 @@ CONTAINS
 
   SUBROUTINE rrtmgp_lw_column(play,plev,tlay,tlev,tsfc,h2o,co2,o3,n2o,ch4,o2,emis, &
                              cf,lwp,iwp,swp,rel,rei,res,iceflag,overlap,seed, &
-                             up,dn,hr,upc,dnc,hrc)
+                             up,dn,hr,upc,dnc,hrc,column_seeds)
     REAL, INTENT(IN) :: play(:,:),plev(:,:),tlay(:,:),tlev(:,:),tsfc(:),emis(:,:)
     REAL, INTENT(IN) :: h2o(:,:),co2(:,:),o3(:,:),n2o(:,:),ch4(:,:),o2(:,:)
     REAL, INTENT(IN) :: cf(:,:),lwp(:,:),iwp(:,:),swp(:,:),rel(:,:),rei(:,:),res(:,:)
     INTEGER, INTENT(IN) :: iceflag,overlap,seed
+    INTEGER, OPTIONAL, INTENT(IN) :: column_seeds(:)
     REAL, INTENT(OUT) :: up(:,:),dn(:,:),hr(:,:),upc(:,:),dnc(:,:),hrc(:,:)
     TYPE(ty_gas_concs) :: gases
     TYPE(ty_optical_props_1scl) :: atmos,clouds,snow,sampled
@@ -122,7 +145,22 @@ CONTAINS
     LOGICAL :: mask(SIZE(play,1),SIZE(play,2),gas_lw%get_ngpt())
     INTEGER :: nc,nl
     IF(.NOT.ready) CALL require('initialization must precede parallel column calls')
+    CALL rrtmgp_validate_column_inputs(play,plev,tlay,cf,lwp,iwp,swp,rel,rei,res)
+    IF(ANY(SHAPE(h2o)/=SHAPE(play))) CALL require('gas shapes must match column layers')
+    IF(overlap<0.OR.overlap>3) CALL require('cloud overlap supported: 0, 1, 2, 3')
+    IF(PRESENT(column_seeds)) THEN
+      IF(SIZE(column_seeds)/=SIZE(play,1)) CALL require('column_seeds shape must match columns')
+    END IF
+    IF(ANY(SHAPE(up)/=SHAPE(plev)).OR.ANY(SHAPE(dn)/=SHAPE(plev)).OR. &
+       ANY(SHAPE(upc)/=SHAPE(plev)).OR.ANY(SHAPE(dnc)/=SHAPE(plev)).OR. &
+       ANY(SHAPE(hr)/=SHAPE(play)).OR.ANY(SHAPE(hrc)/=SHAPE(play))) &
+       CALL require('output shapes must match columns and interfaces/layers')
     nc=SIZE(play,1); nl=SIZE(play,2); zero=0._wp
+    IF(SIZE(tsfc)/=nc.OR.ANY(SHAPE(tlev)/=SHAPE(plev)).OR.SIZE(emis,1)/=nc) &
+      CALL require('LW surface/interface shapes must match columns')
+    CALL rrtmgp_check_positive('tsfc',RESHAPE(tsfc,[nc,1]))
+    CALL rrtmgp_check_positive('tlev',tlev)
+    CALL rrtmgp_check_unit_interval('emis',emis)
     IF(SIZE(emis,2)==1) THEN
       emissivity=SPREAD(REAL(emis(:,1),wp),1,gas_lw%get_nband())
     ELSE IF(SIZE(emis,2)==gas_lw%get_nband()) THEN
@@ -150,7 +188,7 @@ CONTAINS
       CALL require(cloud_lw%cloud_optics(REAL(lwp,wp),REAL(iwp,wp),rl,di,clouds))
       CALL require(cloud_lw%cloud_optics(zero,REAL(swp,wp),rl,ds,snow))
       CALL require(snow%increment(clouds))
-      CALL cloud_mask(cf,gas_lw%get_ngpt(),overlap,seed,mask)
+      CALL cloud_mask(cf,gas_lw%get_ngpt(),overlap,seed,mask,column_seeds)
       CALL require(draw_samples(mask,clouds,sampled))
       CALL require(sampled%increment(atmos))
     END IF
@@ -163,12 +201,13 @@ CONTAINS
   SUBROUTINE rrtmgp_sw_column(play,plev,tlay,h2o,co2,o3,n2o,ch4,o2, &
                              avdir,avdif,andir,andif,mu0,solar, &
                              cf,lwp,iwp,swp,rel,rei,res,iceflag,overlap,seed, &
-                             up,dn,hr,upc,dnc,hrc,direct,diffuse,directc,visdir,visdif,nirdir,nirdif)
+                             up,dn,hr,upc,dnc,hrc,direct,diffuse,directc,visdir,visdif,nirdir,nirdif,column_seeds)
     REAL, INTENT(IN) :: play(:,:),plev(:,:),tlay(:,:)
     REAL, INTENT(IN) :: h2o(:,:),co2(:,:),o3(:,:),n2o(:,:),ch4(:,:),o2(:,:)
     REAL, INTENT(IN) :: avdir(:),avdif(:),andir(:),andif(:),mu0(:),solar
     REAL, INTENT(IN) :: cf(:,:),lwp(:,:),iwp(:,:),swp(:,:),rel(:,:),rei(:,:),res(:,:)
     INTEGER, INTENT(IN) :: iceflag,overlap,seed
+    INTEGER, OPTIONAL, INTENT(IN) :: column_seeds(:)
     REAL, INTENT(OUT) :: up(:,:),dn(:,:),hr(:,:),upc(:,:),dnc(:,:),hrc(:,:)
     REAL, INTENT(OUT) :: direct(:,:),diffuse(:,:),directc(:,:)
     REAL, INTENT(OUT) :: visdir(:,:),visdif(:,:),nirdir(:,:),nirdif(:,:)
@@ -184,18 +223,44 @@ CONTAINS
     REAL(wp) :: toa(SIZE(play,1),gas_sw%get_ngpt()),albdir(gas_sw%get_nband(),SIZE(play,1)), &
                 albdif(gas_sw%get_nband(),SIZE(play,1)),bands(2,gas_sw%get_nband())
     LOGICAL :: mask(SIZE(play,1),SIZE(play,2),gas_sw%get_ngpt())
-    INTEGER :: nc,nl,b
+    INTEGER :: nc,nl,b,c
     IF(.NOT.ready) CALL require('initialization must precede parallel column calls')
+    CALL rrtmgp_validate_column_inputs(play,plev,tlay,cf,lwp,iwp,swp,rel,rei,res)
+    IF(ANY(SHAPE(h2o)/=SHAPE(play))) CALL require('gas shapes must match column layers')
+    IF(overlap<0.OR.overlap>3) CALL require('cloud overlap supported: 0, 1, 2, 3')
+    IF(PRESENT(column_seeds)) THEN
+      IF(SIZE(column_seeds)/=SIZE(play,1)) CALL require('column_seeds shape must match columns')
+    END IF
+    IF(ANY(SHAPE(up)/=SHAPE(plev)).OR.ANY(SHAPE(dn)/=SHAPE(plev)).OR. &
+       ANY(SHAPE(upc)/=SHAPE(plev)).OR.ANY(SHAPE(dnc)/=SHAPE(plev)).OR. &
+       ANY(SHAPE(hr)/=SHAPE(play)).OR.ANY(SHAPE(hrc)/=SHAPE(play))) &
+       CALL require('output shapes must match columns and interfaces/layers')
     nc=SIZE(play,1); nl=SIZE(play,2); zero=0._wp
     up=0.; dn=0.; hr=0.; upc=0.; dnc=0.; hrc=0.; direct=0.; diffuse=0.; directc=0.
     visdir=0.; visdif=0.; nirdir=0.; nirdif=0.
+    IF(SIZE(mu0)/=nc.OR.SIZE(avdir)/=nc.OR.SIZE(avdif)/=nc.OR.SIZE(andir)/=nc.OR.SIZE(andif)/=nc) &
+      CALL require('SW surface shapes must match columns')
+    CALL rrtmgp_check_unit_interval('avdir',RESHAPE(avdir,[nc,1]))
+    CALL rrtmgp_check_unit_interval('avdif',RESHAPE(avdif,[nc,1]))
+    CALL rrtmgp_check_unit_interval('andir',RESHAPE(andir,[nc,1]))
+    CALL rrtmgp_check_unit_interval('andif',RESHAPE(andif,[nc,1]))
+    IF(.NOT.ALL(ieee_is_finite(mu0))) CALL require('mu0 must be finite')
+    IF(ANY(ABS(mu0)>1.)) CALL require('mu0 must be in [-1,1]')
+    CALL rrtmgp_check_nonnegative('solar',RESHAPE([solar],[1,1]))
+    IF(ANY(SHAPE(direct)/=SHAPE(plev)).OR.ANY(SHAPE(diffuse)/=SHAPE(plev)).OR. &
+       ANY(SHAPE(directc)/=SHAPE(plev)).OR.ANY(SHAPE(visdir)/=SHAPE(plev)).OR. &
+       ANY(SHAPE(visdif)/=SHAPE(plev)).OR.ANY(SHAPE(nirdir)/=SHAPE(plev)).OR. &
+       ANY(SHAPE(nirdif)/=SHAPE(plev))) CALL require('SW diagnostic shapes must match interfaces')
+    CALL set_gases(gases,h2o,co2,o3,n2o,ch4,o2)
     IF(ALL(mu0<=0.)) RETURN
     IF(ANY(mu0<=0.)) CALL require('daylight columns must be packed separately')
-    CALL set_gases(gases,h2o,co2,o3,n2o,ch4,o2)
     CALL require(atmos%alloc_2str(nc,nl,gas_sw))
     CALL require(gas_sw%gas_optics(REAL(play,wp)*100._wp,REAL(plev,wp)*100._wp, &
                                  REAL(tlay,wp),gases,atmos,toa))
-    toa=toa*(REAL(solar,wp)/SUM(toa(1,:)))
+    DO c=1,nc
+      IF(SUM(toa(c,:))<=0._wp) CALL require('TOA solar spectrum must have positive integral')
+      toa(c,:)=toa(c,:)*(REAL(solar,wp)/SUM(toa(c,:)))
+    END DO
     bands=gas_sw%get_band_lims_wavenumber()
     DO b=1,gas_sw%get_nband()
       IF(bands(1,b)>=12850._wp) THEN
@@ -220,7 +285,7 @@ CONTAINS
       CALL require(cloud_sw%cloud_optics(zero,REAL(swp,wp),rl,ds,snow))
       CALL require(snow%increment(clouds))
       CALL require(clouds%delta_scale())
-      CALL cloud_mask(cf,gas_sw%get_ngpt(),overlap,seed,mask)
+      CALL cloud_mask(cf,gas_sw%get_ngpt(),overlap,seed,mask,column_seeds)
       CALL require(draw_samples(mask,clouds,sampled))
       CALL require(sampled%increment(atmos))
     END IF

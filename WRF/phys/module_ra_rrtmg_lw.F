@@ -11610,9 +11610,11 @@ CONTAINS
    USE MODULE_RA_CLWRF_SUPPORT, ONLY : read_CAMgases
 
    USE module_ra_rrtmgp, ONLY: rrtmgp_lw_column
+   USE module_ra_rrtmgp_input, ONLY: rrtmgp_build_cloud_inputs
    IMPLICIT NONE
    LOGICAL, OPTIONAL, INTENT(IN) :: use_rrtmgp
    LOGICAL :: run_rrtmgp
+   CHARACTER(LEN=96) :: gp_context
 !------------------------------------------------------------------
    LOGICAL, INTENT(IN )      ::        warm_rain
    LOGICAL, INTENT(IN )      ::   is_CAMMGMP_used ! Added for CAM5 RRTMG<->CAMMGMP
@@ -11620,6 +11622,9 @@ CONTAINS
    INTEGER, INTENT(IN )      ::        ids,ide, jds,jde, kds,kde, &
                                        ims,ime, jms,jme, kms,kme, &
                                        its,ite, jts,jte, kts,kte
+   REAL, DIMENSION(1:kte-kts+1) :: gp_rel, gp_rei, gp_res, gp_omitted
+   INTEGER, DIMENSION(1:kte-kts+1) :: gp_layer_reason
+   INTEGER :: gp_reason
 
    INTEGER, INTENT(IN )      ::        ICLOUD, GHG_INPUT
    INTEGER, INTENT(IN )      ::        MP_PHYSICS
@@ -12051,7 +12056,7 @@ CONTAINS
               IF ( F_QC) THEN
                  DO K=kts,kte
                     QC1D(K)=QC3D(I,K,J)
-                    QC1D(K)=max(0.,QC1D(K))
+                    IF (.NOT.run_rrtmgp) QC1D(K)=max(0.,QC1D(K))
                  ENDDO
               ENDIF
             ENDIF
@@ -12099,7 +12104,7 @@ CONTAINS
                IF (F_QI) THEN
                   DO K=kts,kte
                      QI1D(K)=QI3D(I,K,J)
-                     QI1D(K)=max(0.,QI1D(K))
+                     IF (.NOT.run_rrtmgp) QI1D(K)=max(0.,QI1D(K))
                   ENDDO
                ENDIF
             ENDIF
@@ -12108,7 +12113,7 @@ CONTAINS
                IF (F_QS) THEN
                   DO K=kts,kte
                      QS1D(K)=QS3D(I,K,J)
-                     QS1D(K)=max(0.,QS1D(K))
+                     IF (.NOT.run_rrtmgp) QS1D(K)=max(0.,QS1D(K))
                   ENDDO
                ENDIF
             ENDIF
@@ -12124,13 +12129,13 @@ CONTAINS
 
 ! mji - For MP option 5
             IF ( PRESENT(F_QI) .and. PRESENT(F_QC) .and. PRESENT(F_QS) .and. PRESENT(F_ICE_PHY) ) THEN
-               IF ( F_QC .and. .not. F_QI .and. F_QS ) THEN
+               IF ( F_QC .and. .not. F_QI .and. F_QS .and. .not.run_rrtmgp ) THEN
                   DO K=kts,kte
                      qi1d(k) = 0.1*qs3d(i,k,j)
                      qs1d(k) = 0.9*qs3d(i,k,j)
                      qc1d(k) = qc3d(i,k,j)
-                     qi1d(k) = max(0.,qi1d(k))
-                     qc1d(k) = max(0.,qc1d(k))
+                     IF (.NOT.run_rrtmgp) qi1d(k) = max(0.,qi1d(k))
+                     IF (.NOT.run_rrtmgp) qc1d(k) = max(0.,qc1d(k))
                   ENDDO
                ENDIF
             ENDIF
@@ -12150,8 +12155,8 @@ CONTAINS
                      qi1d(k) = qi3d(i,k,j)
                      qs1d(k) = 0.0
                      qc1d(k) = qc3d(i,k,j)
-                     qi1d(k) = max(0.,qi1d(k))
-                     qc1d(k) = max(0.,qc1d(k))
+                     IF (.NOT.run_rrtmgp) qi1d(k) = max(0.,qi1d(k))
+                     IF (.NOT.run_rrtmgp) qc1d(k) = max(0.,qc1d(k))
                   ENDDO
         ENDIF
 
@@ -12260,7 +12265,7 @@ CONTAINS
 
 ! special case for P3 microphysics
 ! put ice into snow category for optics, then set ice to zero
-            IF (has_reqs .eq. 0 .and. has_reqi .ne. 0 .and. has_reqc .ne. 0) THEN
+            IF (has_reqs .eq. 0 .and. has_reqi .ne. 0 .and. has_reqc .ne. 0 .and. .not.run_rrtmgp) THEN
                inflglw  = 5
                iceflglw = 5
                DO K=kts,kte
@@ -12492,6 +12497,7 @@ CONTAINS
             snowh(ncol) = 0.001*SNOW(I,J)
             icefrac(ncol) = XICE(I,J)
 
+            IF (.NOT.run_rrtmgp) THEN
 ! From module_ra_cam: Convert liquid and ice mixing ratios to water paths;
 ! pdel is in mb here; convert back to Pa (*100.)
 ! Water paths are in units of g/m2
@@ -12542,6 +12548,8 @@ CONTAINS
               end do
            end if
 
+
+            END IF
 
 !link the aerosol feedback to cloud  -czhao
   if( PRESENT( progn ) ) then
@@ -12606,6 +12614,7 @@ CONTAINS
          end do
       endif
 
+            IF (.NOT.run_rrtmgp) THEN
 ! Limit upper bound of reice for Fu ice parameterization and convert
 ! from effective radius to generalized effective size (*1.0315; Fu, 1996)
             if (iceflglw .eq. 3) then
@@ -12653,6 +12662,42 @@ CONTAINS
                   res(ncol,k) = 10.
                end do
             endif
+
+            ELSE
+               ! Common phase partitioning and diagnosed radii are retained;
+               ! explicit microphysics radii bypass all RRTMG LUT restrictions.
+               gp_rel = reliq(ncol,kts:kte)
+               gp_rei = reice(ncol,kts:kte)
+               IF (has_reqc /= 0) gp_rel = re_cloud(i,kts:kte,j)*1.e6
+               IF (has_reqi /= 0) gp_rei = re_ice(i,kts:kte,j)*1.e6
+               gp_res = gp_rei ! diagnosed ice-radius proxy when snow size is absent
+               IF (has_reqs /= 0) gp_res = re_snow(i,kts:kte,j)*1.e6
+               IF (is_CAMMGMP_used) THEN
+                  gp_rel = lradius(i,kts:kte,j)
+                  gp_rei = iradius(i,kts:kte,j)
+                  gp_res = gp_rei
+               END IF
+               ! Active sizes must be positive; every size must be finite.
+               WRITE(gp_context,'(A,I0,A,I0,A)') 'LW i=',i,' j=',j,':'
+               CALL rrtmgp_build_cloud_inputs(pdel(ncol,kts:kte),cldfrac(ncol,kts:kte), &
+                    qc1d(kts:kte),qi1d(kts:kte),qs1d(kts:kte),gp_rel,gp_rei,gp_res,g, &
+                    clwpth(ncol,kts:kte),ciwpth(ncol,kts:kte),cswpth(ncol,kts:kte),gp_reason, &
+                    column_context=gp_context,allow_clear_condensate=.TRUE., &
+                    omitted_grid_path=gp_omitted,layer_reason=gp_layer_reason)
+               ! WRF can diagnose cf=0 while retaining trace condensate. Exclude
+               ! that layer explicitly and expose its original grid-box mass.
+               DO k=kts,kte
+                  IF(gp_omitted(k-kts+1)>0.) THEN
+                     WRITE(message,'(A,A,I0,A,I0,A,ES14.6)') TRIM(gp_context), &
+                       ' RRTMGP_CLEAR_CONDENSATE_EXCLUDED layer=',k,' reason=',gp_layer_reason(k-kts+1), &
+                       ' grid_path_g_m2=',gp_omitted(k-kts+1)
+                     CALL wrf_debug(100,message)
+                  END IF
+               END DO
+               rel(ncol,kts:kte)=gp_rel
+               rei(ncol,kts:kte)=gp_rei
+               res(ncol,kts:kte)=gp_res
+            END IF
 
 ! Zero out cloud optical properties here; not used when passing physical properties
 ! to radiation and taucld is calculated in radiation 
@@ -12781,7 +12826,7 @@ CONTAINS
 ! Call RRTMG longwave radiation model
          IF(run_rrtmgp) THEN
            CALL rrtmgp_lw_column(play,plev,tlay,tlev,tsfc,h2ovmr,co2vmr,o3vmr,n2ovmr,ch4vmr,o2vmr,emis, &
-             cldfrac,clwpth,ciwpth,cswpth,rel,rei,res,iceflglw,icld, &
+             cldfrac,clwpth,ciwpth,cswpth,rel,rei,res,4,icld, &
              i+104729*j+INT(julian)*1009,uflx,dflx,hr,uflxc,dflxc,hrc)
            uflxcln=uflx; dflxcln=dflx
          ELSE

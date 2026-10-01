@@ -1,0 +1,328 @@
+{
+  "recorded_at_utc": "2026-10-01T07:54:50.981224+00:00",
+  "base_commit": "6e7353a096267007892d7960458a86f310c4b38d",
+  "scope": "RRTMGP-only cloud input builder and validation; multi-column adapter equivalence. WRF still calls ncol=1.",
+  "cloud_policy": {
+    "positive_cf": "Exact fraction; conserve liquid/ice/snow independently without RRTMG 0.99 or (130/r)^2 mass correction.",
+    "zero_cf": "Direct API remains strict. WRF explicitly zeroes optical paths, exports omitted grid-box path and layer reason 6, logs at debug_level=100."
+  },
+  "standalone": {
+    "status": "PASS",
+    "ctest_passed": 28,
+    "log": "build/cloud-ctest.log",
+    "mass_cases": "cf=1,0.3,0.001,1e-6; radii 30,200,260 microns; dry and explicit zero-fraction omission; default zero-fraction wet rejection",
+    "multicolumn": {
+      "columns": 64,
+      "overlap_modes": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "comparisons": "batch versus single columns, reverse ordering with column_seeds; all-night outputs zero",
+      "aggregate_max_absolute_difference": 0.0,
+      "tolerance": "1e-3 + 1e-5 * max(1,maxabs(a),maxabs(b))",
+      "log": "build/multicol-result.log"
+    },
+    "negative_cases": "Builder, common validator and actual LW/SW adapter entry; check both nonzero exit and case-specific diagnostic."
+  },
+  "wrf_build": {
+    "status": "PASS",
+    "scope": "GNU serial em_scm_xy full build, then changed input/backend/LW/SW modules recompiled and WRF/ideal relinked using full-build flags.",
+    "logs": [
+      "build/wrf-cloud-compile.log",
+      "build/wrf-cloud-policy-recompile.log"
+    ],
+    "executables_sha256": {
+      "wrf.exe": "a44409e2e761d43f5943e88ce7c7f71e89127b4d1c74a72e17595beba361c055",
+      "ideal.exe": "265ce87dfd6b0967e567f6f8659601be67775ad1e7fe4d369674b571b77d6b5e"
+    }
+  },
+  "paired_scm": {
+    "build/cloud-final-scm37": {
+      "time_count": 6,
+      "radiation_option_lw": 37,
+      "radiation_option_sw": 37,
+      "history_file": "build/cloud-final-scm37/wrfout_d01_1999-10-22_19:00:00",
+      "checks": "finite fields, daytime SW, LW, nonzero accumulation, flux/tendency sums",
+      "variables": {
+        "SWDOWN": {
+          "min": 0.0,
+          "max": 284.65484619140625
+        },
+        "GLW": {
+          "min": 0.0,
+          "max": 281.02777099609375
+        },
+        "SWDDIR": {
+          "min": 0.0,
+          "max": 2.9477696418762207
+        },
+        "SWDDIF": {
+          "min": 0.0,
+          "max": 281.7070617675781
+        },
+        "SWDNT": {
+          "min": 0.0,
+          "max": 869.3607788085938
+        },
+        "LWUPT": {
+          "min": 0.0,
+          "max": 87.60740661621094
+        },
+        "SWDNB": {
+          "min": 0.0,
+          "max": 284.65484619140625
+        },
+        "GSW": {
+          "min": 0.0,
+          "max": 236.26351928710938
+        },
+        "SWUPB": {
+          "min": 0.0,
+          "max": 48.39132308959961
+        },
+        "LWDNB": {
+          "min": 0.0,
+          "max": 281.02777099609375
+        },
+        "ACSWDNB": {
+          "min": 0.0,
+          "max": 88966.8046875
+        },
+        "ACLWDNB": {
+          "min": 0.0,
+          "max": 83949.75
+        },
+        "RTHRATEN": {
+          "min": -1.899560993479099e-05,
+          "max": 0.00024822240811772645
+        },
+        "RTHRATLW": {
+          "min": -0.0002713967114686966,
+          "max": 0.00022745861497242004
+        },
+        "RTHRATSW": {
+          "min": 0.0,
+          "max": 0.00027376582147553563
+        }
+      }
+    },
+    "build/cloud-final-scm4": {
+      "time_count": 6,
+      "radiation_option_lw": 4,
+      "radiation_option_sw": 4,
+      "history_file": "build/cloud-final-scm4/wrfout_d01_1999-10-22_19:00:00",
+      "checks": "finite fields, daytime SW, LW, nonzero accumulation, flux/tendency sums",
+      "variables": {
+        "SWDOWN": {
+          "min": 0.0,
+          "max": 230.89219665527344
+        },
+        "GLW": {
+          "min": 0.0,
+          "max": 282.6058044433594
+        },
+        "SWDDIR": {
+          "min": 0.0,
+          "max": 2.647048177095712e-06
+        },
+        "SWDDIF": {
+          "min": 0.0,
+          "max": 230.89219665527344
+        },
+        "SWDNT": {
+          "min": 0.0,
+          "max": 869.3621215820312
+        },
+        "LWUPT": {
+          "min": 0.0,
+          "max": 85.44284057617188
+        },
+        "SWDNB": {
+          "min": 0.0,
+          "max": 230.89219665527344
+        },
+        "GSW": {
+          "min": 0.0,
+          "max": 191.64051818847656
+        },
+        "SWUPB": {
+          "min": 0.0,
+          "max": 39.25167465209961
+        },
+        "LWDNB": {
+          "min": 0.0,
+          "max": 282.6058044433594
+        },
+        "ACSWDNB": {
+          "min": 0.0,
+          "max": 73350.3046875
+        },
+        "ACLWDNB": {
+          "min": 0.0,
+          "max": 84431.6484375
+        },
+        "RTHRATEN": {
+          "min": -3.064758493565023e-05,
+          "max": 0.0003074723936151713
+        },
+        "RTHRATLW": {
+          "min": -0.00032950591412372887,
+          "max": 0.0002955867676064372
+        },
+        "RTHRATSW": {
+          "min": 0.0,
+          "max": 0.00029885832918807864
+        }
+      }
+    }
+  },
+  "cloud_policy_scm": {
+    "case": "build/cloud-policy-scm",
+    "status": "PASS",
+    "token": "SUCCESS COMPLETE WRF",
+    "radiation_options": [
+      37,
+      37
+    ],
+    "history_file": "build/cloud-policy-scm/wrfout_d01_1999-10-22_19:00:00",
+    "time_count": 6,
+    "diagnostics": {
+      "LW": {
+        "count": 793,
+        "max_grid_path_g_m2": 0.1037024,
+        "unique_layers": [
+          44,
+          45,
+          46,
+          47,
+          48,
+          49,
+          50,
+          51,
+          52,
+          53
+        ]
+      },
+      "SW": {
+        "count": 793,
+        "max_grid_path_g_m2": 0.1037024,
+        "unique_layers": [
+          44,
+          45,
+          46,
+          47,
+          48,
+          49,
+          50,
+          51,
+          52,
+          53
+        ]
+      }
+    },
+    "checks": "finite fields, daytime SW, LW, nonzero accumulation, flux/tendency sums"
+  },
+  "surface_scm": {
+    "surface_cases": [
+      {
+        "case": "build/cloud-surface-scm/alpha-0p0",
+        "albedo": 0.0,
+        "radiation_options": [
+          37,
+          37
+        ],
+        "history_file": "build/cloud-surface-scm/alpha-0p0/wrfout_d01_1999-10-22_19:00:00",
+        "time_count": 6,
+        "checks": [
+          "finite fields",
+          "ALBEDO persistence",
+          "SWDOWN=SWDNB",
+          "SWDOWN=SWDDIR+SWDDIF",
+          "GSW=SWDNB-SWUPB"
+        ]
+      },
+      {
+        "case": "build/cloud-surface-scm/alpha-0p2",
+        "albedo": 0.2,
+        "radiation_options": [
+          37,
+          37
+        ],
+        "history_file": "build/cloud-surface-scm/alpha-0p2/wrfout_d01_1999-10-22_19:00:00",
+        "time_count": 6,
+        "checks": [
+          "finite fields",
+          "ALBEDO persistence",
+          "SWDOWN=SWDNB",
+          "SWDOWN=SWDDIR+SWDDIF",
+          "GSW=SWDNB-SWUPB"
+        ]
+      },
+      {
+        "case": "build/cloud-surface-scm/alpha-0p99",
+        "albedo": 0.99,
+        "radiation_options": [
+          37,
+          37
+        ],
+        "history_file": "build/cloud-surface-scm/alpha-0p99/wrfout_d01_1999-10-22_19:00:00",
+        "time_count": 6,
+        "checks": [
+          "finite fields",
+          "ALBEDO persistence",
+          "SWDOWN=SWDNB",
+          "SWDOWN=SWDDIR+SWDDIF",
+          "GSW=SWDNB-SWUPB"
+        ]
+      },
+      {
+        "case": "build/cloud-surface-scm/alpha-1p0",
+        "albedo": 1.0,
+        "radiation_options": [
+          37,
+          37
+        ],
+        "history_file": "build/cloud-surface-scm/alpha-1p0/wrfout_d01_1999-10-22_19:00:00",
+        "time_count": 6,
+        "checks": [
+          "finite fields",
+          "ALBEDO persistence",
+          "SWDOWN=SWDNB",
+          "SWDOWN=SWDDIR+SWDDIF",
+          "GSW=SWDNB-SWUPB"
+        ]
+      }
+    ],
+    "swint_rejection_cases": [
+      {
+        "case": "build/cloud-surface-scm/reject-swint-1",
+        "swint_opt": 1,
+        "rejected_during": "ideal.exe",
+        "ideal_returncode": 0,
+        "checks": [
+          "explicit RRTMGP swint_opt rejection in ideal.log"
+        ]
+      },
+      {
+        "case": "build/cloud-surface-scm/reject-swint-2",
+        "swint_opt": 2,
+        "rejected_during": "ideal.exe",
+        "ideal_returncode": 0,
+        "checks": [
+          "explicit RRTMGP swint_opt rejection in ideal.log"
+        ]
+      }
+    ]
+  },
+  "option4_regression": {
+    "status": "PASS",
+    "scope": "Previous SWDOWN-fix SCM 4/4 vs cloud-input change 4/4; not unmodified official WRF",
+    "compared_common_variables": 204,
+    "different_variables": [],
+    "reference_validation_record": "validation/rrtmgp37/swdown-fix.json"
+  },
+  "wrf_forecast_validated": false,
+  "remaining_work": "WRF/doc/rrtmgp/REVIEW_FOLLOWUP.md"
+}
