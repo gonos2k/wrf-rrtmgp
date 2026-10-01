@@ -1,42 +1,54 @@
-name: Validate WRF 37 and RRTMGP core
+name: Validate WRF 37 and RRTMGP
 on:
   workflow_dispatch:
+  pull_request:
+    paths:
+      - 'WRF/Registry/**'
+      - 'WRF/arch/postamble'
+      - 'WRF/external/**'
+      - 'WRF/main/depend.common'
+      - 'WRF/phys/**'
+      - 'WRF/share/**'
+      - 'WRF/test/rrtmgp/**'
+      - 'WRF/run/rrtmgp-*.nc'
+      - 'config/**'
+      - 'port/**'
+      - 'tools/register37.py'
+      - 'tools/compare_registry.py'
+      - 'tools/validate.py'
+      - '.github/workflows/validate-port.yml'
   push:
     branches: [main]
     paths:
-      - 'tools/register37.py'
-      - 'tools/validate.py'
+      - 'WRF/Registry/**'
+      - 'WRF/arch/postamble'
+      - 'WRF/external/**'
+      - 'WRF/main/depend.common'
+      - 'WRF/phys/**'
+      - 'WRF/share/**'
+      - 'WRF/test/rrtmgp/**'
+      - 'WRF/run/rrtmgp-*.nc'
+      - 'config/**'
       - 'port/**'
+      - 'tools/register37.py'
+      - 'tools/compare_registry.py'
+      - 'tools/validate.py'
       - '.github/workflows/validate-port.yml'
 permissions:
   contents: read
 concurrency:
-  group: validate-port
+  group: validate-port-${{ github.ref }}
   cancel-in-progress: false
 jobs:
-  register:
+  registration:
     runs-on: ubuntu-24.04
-    timeout-minutes: 10
-    permissions:
-      contents: write
-    outputs:
-      source_sha: ${{ steps.register.outputs.source_sha }}
+    timeout-minutes: 5
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
-      - id: register
-        name: Register option 37 and commit guarded host integration
-        shell: bash
-        run: |
-          set -euo pipefail
-          python3 tools/register37.py
-          git add WRF/Registry/Registry.EM_COMMON WRF/Registry/registry.rrtmgp37 WRF/phys/module_radiation_driver.F WRF/phys/module_physics_init.F config/registration37.json
-          if ! git diff --cached --quiet; then
-            git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Register paired radiation option 37 in full WRF with explicit unlinked-backend guards'
-            git push origin HEAD:main
-          fi
-          echo "source_sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
-  validate:
-    needs: register
+      - name: Verify registered source hashes without modifying the checkout
+        run: python3 tools/register37.py --check
+  component-validation:
+    needs: registration
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     strategy:
@@ -45,15 +57,13 @@ jobs:
         kind: [registry, core]
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
-        with:
-          ref: ${{ needs.register.outputs.source_sha }}
       - name: Install compilers and NetCDF-C
         run: |
           sudo apt-get update -qq
           sudo apt-get install -y gfortran gcc make libnetcdf-dev python3-numpy python3-scipy
-      - name: Compile and execute validation
+      - name: Compile and execute component validation
         run: python3 tools/validate.py ${{ matrix.kind }}
-      - name: Save exact logs and result scope
+      - name: Save logs and scope
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
@@ -63,3 +73,73 @@ jobs:
             build/${{ matrix.kind }}/result.json
           retention-days: 30
           if-no-files-found: error
+  standalone-columns:
+    needs: registration
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - name: Install compiler, CMake, and NetCDF C/Fortran
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y cmake gfortran gcc libnetcdf-dev libnetcdff-dev
+      - name: Build and run standalone WRF column tests
+        run: |
+          cmake -S WRF/test/rrtmgp -B build/rrtmgp-column-test \
+            -DRRTMGP_DATA_DIR="$GITHUB_WORKSPACE/WRF/run"
+          cmake --build build/rrtmgp-column-test --parallel 2
+          ctest --test-dir build/rrtmgp-column-test --output-on-failure
+  serial-scm:
+    needs: registration
+    runs-on: ubuntu-24.04
+    timeout-minutes: 70
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - name: Install GNU serial WRF and SCM dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y gfortran gcc g++ make cmake csh libnetcdf-dev libnetcdff-dev libhdf5-dev python3-numpy python3-netcdf4 ripgrep
+      - name: Configure and build em_scm_xy
+        shell: bash
+        run: |
+          set -euo pipefail
+          prefix="$RUNNER_TEMP/netcdf"
+          mkdir -p "$prefix/include" "$prefix/lib" "$prefix/bin"
+          mkdir -p build
+          for f in /usr/include/netcdf* /usr/include/typesizes.mod; do
+            [[ -e "$f" ]] && ln -s "$f" "$prefix/include/${f##*/}"
+          done
+          for f in /usr/lib/x86_64-linux-gnu/libnetcdf*; do
+            [[ -e "$f" ]] && ln -s "$f" "$prefix/lib/${f##*/}"
+          done
+          ln -s /usr/bin/nc-config "$prefix/bin/nc-config"
+          ln -s /usr/bin/nf-config "$prefix/bin/nf-config"
+          export NETCDF="$prefix" NETCDF_C="$prefix" NETCDF_classic=1
+          export LD_LIBRARY_PATH="$prefix/lib:/usr/lib/x86_64-linux-gnu:${LD_LIBRARY_PATH:-}"
+          cd WRF
+          printf '32\n0\n' | ./configure 2>&1 | tee ../build/wrf-configure.log
+          csh -f ./compile -j 2 em_scm_xy 2>&1 | tee ../build/wrf-compile-scm.log
+          [[ -x main/wrf.exe && -x main/ideal.exe ]]
+      - name: Run paired 37 and baseline 4 SCMs; check WRF outputs
+        shell: bash
+        run: |
+          set -euo pipefail
+          export LD_LIBRARY_PATH="$RUNNER_TEMP/netcdf/lib:/usr/lib/x86_64-linux-gnu:${LD_LIBRARY_PATH:-}"
+          WRF/test/rrtmgp/run_scm.sh build/scm37 37
+          WRF/test/rrtmgp/run_scm.sh build/scm4 4
+          python3 WRF/test/rrtmgp/validate_scm.py build/scm37 build/scm4 --expected-options 37 4 | tee build/scm-validation.json
+      - name: Save SCM logs and output checks
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: validation-serial-scm-${{ github.run_id }}
+          path: |
+            build/scm37/ideal.log
+            build/scm37/wrf.log
+            build/scm4/ideal.log
+            build/scm4/wrf.log
+            build/scm-validation.json
+            build/wrf-configure.log
+            build/wrf-compile-scm.log
+          retention-days: 30
+          if-no-files-found: warn

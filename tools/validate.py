@@ -14,6 +14,15 @@ from compare_registry import compare_registry
 
 ROOT = Path(__file__).resolve().parents[1]
 
+def registration_state():
+    receipt = json.loads((ROOT / 'config/registration37.json').read_text())
+    return {
+        'backend': receipt.get('backend', 'UNKNOWN'),
+        'backend_linked_in_wrf': receipt.get('backend') == 'CPU_LINKED',
+        'wrf_forecast_validated': bool(receipt.get('wrf_forecast_validated', False)),
+        'receipt': 'config/registration37.json',
+    }
+
 def execute(args, cwd, log):
     text = '+ ' + shlex.join(map(str, args)) + '\n'
     print(text, end='', flush=True)
@@ -119,7 +128,10 @@ def main():
     if out.exists():raise ValueError('REFUSING_EXISTING_BUILD_DIRECTORY: '+str(out))
     out.mkdir(parents=True)
     log=out/'run.log'
-    record={'status':'RUNNING','kind':args.kind,'start_unix':time.time(),'backend_enabled_in_wrf':False}
+    state=registration_state()
+    record={'status':'RUNNING','kind':args.kind,'start_unix':time.time(),**state,
+            'wrf_executable_built':False,
+            'validation_scope':'Registry/core component validation only; no WRF runtime execution'}
     try:
         record.update((registry if args.kind=='registry' else core)(out,log))
         record['status']='PASS'
