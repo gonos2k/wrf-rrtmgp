@@ -1029,6 +1029,18 @@ CONTAINS
    logical, save :: firstime = .true.
    logical, save :: feedback_restart, direct_sw_feedback
 
+! RRTMGP37_OFFICIAL_REGISTRATION_ONLY
+   ! The backend is not yet connected to the WRF host. Never use silent fallback.
+   IF ((lw_physics == 37) .NEQV. (sw_physics == 37)) THEN
+      CALL wrf_error_fatal('RRTMGP37_PAIR_REQUIRED: select both LW and SW option 37')
+      RETURN
+   END IF
+   IF (lw_physics == 37 .OR. sw_physics == 37) THEN
+      CALL wrf_error_fatal('RRTMGP37_BACKEND_NOT_LINKED: no radiation fallback')
+      RETURN
+   END IF
+! END_RRTMGP37_OFFICIAL_REGISTRATION_ONLY
+
 #if ( WRF_CMAQ == 1 )
    if (firstime) then
       firstime = .false.
