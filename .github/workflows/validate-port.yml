@@ -98,7 +98,7 @@ jobs:
       - name: Install GNU serial WRF and SCM dependencies
         run: |
           sudo apt-get update -qq
-          sudo apt-get install -y gfortran gcc g++ make cmake csh libnetcdf-dev libnetcdff-dev libhdf5-dev python3-numpy python3-netcdf4 ripgrep
+          sudo apt-get install -y gfortran gcc g++ make cmake csh libnetcdf-dev libnetcdff-dev libhdf5-dev python3-numpy python3-netcdf4 python3-matplotlib ripgrep
       - name: Configure and build em_scm_xy
         shell: bash
         run: |
@@ -134,6 +134,16 @@ jobs:
           set -euo pipefail
           export LD_LIBRARY_PATH="$RUNNER_TEMP/netcdf/lib:/usr/lib/x86_64-linux-gnu:${LD_LIBRARY_PATH:-}"
           python3 WRF/test/rrtmgp/test_surface_scm.py build/surface-scm | tee build/surface-scm-result.json
+      - name: Compare RRTMG and RRTMGP with identical SCM inputs
+        shell: bash
+        run: |
+          set -euo pipefail
+          export LD_LIBRARY_PATH="$RUNNER_TEMP/netcdf/lib:/usr/lib/x86_64-linux-gnu:${LD_LIBRARY_PATH:-}"
+          export OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1
+          python3 tools/compare_radiation_scm.py --output-directory build/radiation-comparison
+          python3 tools/analyze_radiation_comparison.py \
+            --suite build/radiation-comparison/receipt.json \
+            --output-directory build/radiation-comparison-analysis
       - name: Check zero-cloud-fraction policy in the WRF cloud builder
         shell: bash
         run: |
@@ -176,6 +186,9 @@ jobs:
             build/surface-scm-result.json
             build/cloud-contract-result.json
             build/cloud-contract-scm/*.log
+            build/radiation-comparison/receipt.json
+            build/radiation-comparison/*/*/*.log
+            build/radiation-comparison-analysis/**
             build/surface-scm/**/*.log
             build/wrf-configure.log
             build/wrf-compile-scm.log
