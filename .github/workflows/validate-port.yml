@@ -140,6 +140,25 @@ jobs:
           set -euo pipefail
           export LD_LIBRARY_PATH="$RUNNER_TEMP/netcdf/lib:/usr/lib/x86_64-linux-gnu:${LD_LIBRARY_PATH:-}"
           python3 WRF/test/rrtmgp/test_cloud_scm.py build/cloud-contract-scm | tee build/cloud-contract-result.json
+      - name: Replay real WRF columns with an independent RRTMGP executable
+        shell: bash
+        run: |
+          set -euo pipefail
+          export NETCDF="$RUNNER_TEMP/netcdf"
+          export LD_LIBRARY_PATH="$NETCDF/lib:/usr/lib/x86_64-linux-gnu:${LD_LIBRARY_PATH:-}"
+          cmake -S WRF/test/rrtmgp -B build/replay-reference -DRRTMGP_DATA_DIR="$GITHUB_WORKSPACE/WRF/run"
+          cmake --build build/replay-reference --target reference_column --parallel 2
+          for mp in 2 4 5; do
+            python3 WRF/test/rrtmgp/test_column_replay.py "build/replay-mp${mp}" \
+              build/replay-reference/reference_column --mp-physics "$mp" | tee "build/replay-mp${mp}.json"
+          done
+          for mp in 4 5; do
+            python3 WRF/test/rrtmgp/test_column_replay.py "build/replay-mp${mp}-cloud" \
+              build/replay-reference/reference_column --mp-physics "$mp" --cloud-fixture | tee "build/replay-mp${mp}-cloud.json"
+          done
+          # Snapshot contract only: ETAMPNEW SCM integration is separately reported.
+          python3 WRF/test/rrtmgp/test_column_replay.py build/replay-mp95-cloud \
+            build/replay-reference/reference_column --mp-physics 95 --cloud-fixture --capture-only | tee build/replay-mp95-cloud.json
       - name: Save SCM logs and output checks
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
@@ -150,6 +169,9 @@ jobs:
             build/scm37/wrf.log
             build/scm4/ideal.log
             build/scm4/wrf.log
+            build/replay-mp*.json
+            build/replay-mp*/capture/**
+            build/replay-mp*/*.log
             build/scm-validation.json
             build/surface-scm-result.json
             build/cloud-contract-result.json

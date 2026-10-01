@@ -96,3 +96,9 @@ WRF/test/rrtmgp/run_scm.sh build/scm4 4
 ```
 
 GNU serial 메뉴 번호는 이 플랫폼의 v4.8.0 configure 기준이다. 다른 플랫폼에서는 메뉴를 확인해 선택한다. 실행 스크립트는 새 작업 디렉터리에 WRF SCM 원본 초기 자료와 계수·테이블 링크를 배치하고 1999년 10월 22일 19 UTC부터 시간 간격 10초로 5분을 실행한다. 위의 의존성 경로는 이 작업 공간에서 준비한 로컬 경로이며 다른 환경에서는 설치한 NetCDF 경로를 지정한다.
+
+## 실제 기둥 재생과 미세물리 계약
+
+[미세물리별 분류 계약](MICROPHYSICS_MAPPING.md)과 [기둥 저장·독립 재생 방법](COLUMN_REPLAY.md)을 제공한다. WSM5는 4번이고 Ferrier/Aligo는 5번이며, QS에 frozen water를 저장하는 ETAMPNEW는 95번이다. 37번의 ETAMPNEW 입력은 QC를 액체로 보존하고 QS 전체를 snow 경로에 넣는다. 기존 4번의 10/90 분할은 변경하지 않는다.
+
+현재 독립 재생은 동일한 고정 RTE+RRTMGP 라이브러리와 계수로 실제 엔진 입력·광학·출력과 WRF 변환을 비교한다. 독립 분광모델 정확도 검증은 아니다. 작은 cf의 2,048개 시드 시험 결과도 제공한다. ETAMPNEW 초기 기둥 재생 통과와 후속 SCM 입력 오류를 구분하며, 해당 SCM 예보 성공이나 운용 지원을 주장하지 않는다. 자세한 범위는 [검토 후속 기록](REVIEW_FOLLOWUP.md)에 있다.

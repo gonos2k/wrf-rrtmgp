@@ -76,3 +76,13 @@ python3 WRF/test/rrtmgp/test_surface_scm.py build/new-surface-scm
 ```bash
 python3 WRF/test/rrtmgp/test_cloud_scm.py build/new-cloud-contract-scm
 ```
+
+## c705c44 이후 표본·분류·독립 재생 검증
+
+표준 GNU serial `compile -j 12 em_scm_xy` 빌드가 성공했다. CTest 29/29, 2,048개 시드의 10개 cf sweep, 기존 알베도·보간 거부·청천 제외 시험이 통과했다. 평균·분산은 배정도이며 희박한 분율의 0회 표본을 정확도 증거로 해석하지 않는다.
+
+MP2/4/5의 기본 5분 SCM, MP4/5의 약 248.865 K 수상체 제어 사례(5분), 실제 LW/SW 기둥의 독립 광학·RTE·WRF 변환 비교가 통과했다. 광학 배열·mask는 이 실행에서 정확히 일치했고 반환값은 단정도 허용오차 안에 있었다. 직전 4/4와 새 실행의 공통 변수 204개도 비트 단위로 일치했다.
+
+MP95 제어 사례는 초기 과냉각 QC/QS의 양의 질량·구름 τ·cloudy mask와 독립 재생을 통과했으나 최종 후속 적분은 `RRTMGP_INPUT_PATH_OVERFLOW layer=1`로 종료됐다. 별도 반복에서는 압력 범위와 압력두께 오류도 관측했다. `--capture-only` 결과의 `PASS_COLUMN_REPLAY`는 예보 성공을 의미하지 않으며 `wrf.forecast.status=FAILED_AFTER_CAPTURE`를 함께 저장한다. 같은 SCM 설정의 baseline 4/4 탐색 실행도 segfault로 종료됐다. 이 오류들의 원인을 확정하거나 입력을 clip하지 않았다. Thompson/P3 runtime 시험은 완료된 범위에 포함하지 않는다.
+
+[재생 방법](COLUMN_REPLAY.md), [현재 후속 항목](REVIEW_FOLLOWUP.md), [측정 JSON](../../../validation/rrtmgp37/sampling-replay.json), [표본 CSV](../../../validation/rrtmgp37/small-cf-sampling.csv), [표본 그림](../../../validation/rrtmgp37/small-cf-sampling.svg)에 코드·결과·한계를 구분했다. 로컬 표준 빌드는 기존 checkout에서 의존성을 따라 재빌드했으며 fresh checkout 전체 빌드는 PR CI에서 별도로 확인한다.

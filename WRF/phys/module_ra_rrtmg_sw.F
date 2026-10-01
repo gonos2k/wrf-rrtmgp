@@ -10102,6 +10102,8 @@ CONTAINS
    USE MODULE_RA_CLWRF_SUPPORT, ONLY : read_CAMgases
    USE module_ra_rrtmgp, ONLY: rrtmgp_sw_column
    USE module_ra_rrtmgp_input, ONLY: rrtmgp_build_cloud_inputs
+   USE module_ra_rrtmgp_trace, ONLY: trace_start, trace_active, trace_raw_start, trace_raw, &
+        trace_raw_end, trace_result, trace_end
    IMPLICIT NONE
    LOGICAL, OPTIONAL, INTENT(IN) :: use_rrtmgp
    LOGICAL :: run_rrtmgp
@@ -10742,6 +10744,14 @@ CONTAINS
                      IF (.NOT.run_rrtmgp) qi1d(k) = max(0.,qi1d(k))
                      IF (.NOT.run_rrtmgp) qc1d(k) = max(0.,qc1d(k))
                   ENDDO
+               ELSE IF ( F_QC .and. .not. F_QI .and. F_QS .and. run_rrtmgp ) THEN
+! Combined frozen QS is retained as snow; QC remains liquid, including supercooled QC.
+! The preceding no-QI temperature transfer belongs to WSM3, not this category layout.
+                  DO K=kts,kte
+                     qi1d(k) = 0.
+                     qs1d(k) = qs3d(i,k,j)
+                     qc1d(k) = qc3d(i,k,j)
+                  ENDDO
                ENDIF
             ENDIF
 
@@ -11231,6 +11241,41 @@ CONTAINS
                END IF
                ! Active sizes must be positive; every size must be finite.
                WRITE(gp_context,'(A,I0,A,I0,A)') 'SW i=',i,' j=',j,':'
+               CALL trace_start('SW',i,j)
+               IF(trace_active('SW')) THEN
+                  CALL trace_raw_start('SW',kte-kts+1)
+                  CALL trace_raw('SW','DP_HPA',pdel(ncol,kts:kte))
+                  CALL trace_raw('SW','CF',cldfrac(ncol,kts:kte))
+                  CALL trace_raw('SW','QC',qc1d(kts:kte))
+                  CALL trace_raw('SW','QI',qi1d(kts:kte))
+                  CALL trace_raw('SW','QS',qs1d(kts:kte))
+                  CALL trace_raw('SW','T',t1d(kts:kte))
+                  CALL trace_raw('SW','P_HPA',p1d(kts:kte))
+                  CALL trace_raw('SW','AMD_W', [REAL(amdw)])
+                  CALL trace_raw('SW','SOURCE_T',t3d(i,kts:kte,j))
+                  CALL trace_raw('SW','SOURCE_P_PA',p3d(i,kts:kte,j))
+                  CALL trace_raw('SW','HAS_REQC',[REAL(has_reqc)])
+                  CALL trace_raw('SW','HAS_REQI',[REAL(has_reqi)])
+                  CALL trace_raw('SW','HAS_REQS',[REAL(has_reqs)])
+                  IF(has_reqc/=0) CALL trace_raw('SW','SOURCE_RE_CLOUD',re_cloud(i,kts:kte,j))
+                  IF(has_reqi/=0) CALL trace_raw('SW','SOURCE_RE_ICE',re_ice(i,kts:kte,j))
+                  IF(has_reqs/=0) CALL trace_raw('SW','SOURCE_RE_SNOW',re_snow(i,kts:kte,j))
+                  CALL trace_raw('SW','QV',qv1d(kts:kte))
+                  CALL trace_raw('SW','REL',gp_rel)
+                  CALL trace_raw('SW','REI',gp_rei)
+                  CALL trace_raw('SW','RES',gp_res)
+                  CALL trace_raw('SW','GRAVITY',[g])
+                  CALL trace_raw('SW','MP_PHYSICS',[REAL(mp_physics)])
+                  CALL trace_raw('SW','PI',pi3d(i,kts:kte,j))
+                  IF(PRESENT(QC3D)) CALL trace_raw('SW','SOURCE_QC',qc3d(i,kts:kte,j))
+                  IF(PRESENT(QI3D)) CALL trace_raw('SW','SOURCE_QI',qi3d(i,kts:kte,j))
+                  IF(PRESENT(QS3D)) CALL trace_raw('SW','SOURCE_QS',qs3d(i,kts:kte,j))
+                  IF(PRESENT(QR3D)) CALL trace_raw('SW','SOURCE_QR',qr3d(i,kts:kte,j))
+                  IF(PRESENT(F_QC)) CALL trace_raw('SW','F_QC',[MERGE(1.,0.,F_QC)])
+                  IF(PRESENT(F_QI)) CALL trace_raw('SW','F_QI',[MERGE(1.,0.,F_QI)])
+                  IF(PRESENT(F_QS)) CALL trace_raw('SW','F_QS',[MERGE(1.,0.,F_QS)])
+                  CALL trace_raw_end('SW')
+               END IF
                CALL rrtmgp_build_cloud_inputs(pdel(ncol,kts:kte),cldfrac(ncol,kts:kte), &
                     qc1d(kts:kte),qi1d(kts:kte),qs1d(kts:kte),gp_rel,gp_rei,gp_res,g, &
                     clwpth(ncol,kts:kte),ciwpth(ncol,kts:kte),cswpth(ncol,kts:kte),gp_reason, &
@@ -11616,6 +11661,13 @@ CONTAINS
             tten1d(k) = swhrc(ncol,k)/86400.
             rthratenswc(i,k,j) = tten1d(k)/pi3d(i,k,j)
          enddo
+         IF(trace_active('SW')) THEN
+            CALL trace_result('SW','WRF_THETA_HR',RESHAPE(rthratensw(i,kts:kte,j),[1,kte-kts+1]))
+            CALL trace_result('SW','WRF_GSW',RESHAPE([gsw(i,j)],[1,1]))
+            CALL trace_result('SW','WRF_SWDDIR',RESHAPE([swddir(i,j)],[1,1]))
+            CALL trace_result('SW','WRF_SWDDIF',RESHAPE([swddif(i,j)],[1,1]))
+            CALL trace_end('SW')
+         END IF
       else
 
          if (proceed_cmaq_sw) then   ! this is for WRF-CMAQ twoway coupled model
