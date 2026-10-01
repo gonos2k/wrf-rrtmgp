@@ -4367,5 +4367,8 @@ start_em.o : \
 	../share/module_trajectory.o \
 	../frame/module_wrf_error.o
 
-module_ra_rrtmgp.o: module_ra_rrtmgp_input.o ../frame/module_wrf_error.o
+module_ra_rrtmgp.o: module_ra_rrtmgp_trace.o module_ra_rrtmgp_input.o ../frame/module_wrf_error.o
 module_ra_rrtmgp_input.o: ../frame/module_wrf_error.o
+
+module_ra_rrtmgp_trace.o: ../frame/module_wrf_error.o
+module_ra_rrtmg_lw.o module_ra_rrtmg_sw.o: module_ra_rrtmgp_trace.o

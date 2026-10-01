@@ -18,11 +18,13 @@ MODULE module_ra_rrtmgp
   USE mo_load_cloud_coefficients, ONLY: load_cld_lutcoeff
   USE module_ra_rrtmgp_input, ONLY: rrtmgp_validate_column_inputs, &
       rrtmgp_check_unit_interval, rrtmgp_check_positive, rrtmgp_check_nonnegative
+  USE module_ra_rrtmgp_trace, ONLY: trace_configure, trace_active, trace_input_start, trace_input, trace_input_end, &
+      trace_result_start, trace_result
   USE, INTRINSIC :: ieee_arithmetic, ONLY: ieee_is_finite
   IMPLICIT NONE
   PRIVATE
   EXTERNAL :: wrf_error_fatal3
-  PUBLIC :: rrtmgp_init, rrtmgp_lw_column, rrtmgp_sw_column
+  PUBLIC :: rrtmgp_init, rrtmgp_lw_column, rrtmgp_sw_column, cloud_mask
   TYPE(ty_gas_optics_rrtmgp), SAVE :: gas_lw, gas_sw
   TYPE(ty_cloud_optics_rrtmgp), SAVE :: cloud_lw, cloud_sw
   LOGICAL, SAVE :: ready = .FALSE.
@@ -37,6 +39,7 @@ CONTAINS
   SUBROUTINE rrtmgp_init(data_path)
     CHARACTER(LEN=*), INTENT(IN) :: data_path
     TYPE(ty_gas_concs) :: gases
+    CALL trace_configure()
     IF (ready) THEN
       IF(TRIM(data_path)/=initialized_path) CALL require('rrtmgp_data_path must be global and unchanged after initialization')
       RETURN
@@ -168,17 +171,51 @@ CONTAINS
     ELSE
       CALL require('surface emissivity must be grey or match LW bands')
     END IF
+    IF(trace_active('LW')) THEN
+      CALL trace_input_start('LW',nc,nl,overlap,seed,iceflag)
+      CALL trace_input('LW','SOLAR',RESHAPE([0.],[1,1]))
+      CALL trace_input('LW','PLAY',play)
+      CALL trace_input('LW','PLEV',plev)
+      CALL trace_input('LW','TLAY',tlay)
+      CALL trace_input('LW','TLEV',tlev)
+      CALL trace_input('LW','TSFC',RESHAPE(tsfc,[nc,1]))
+      CALL trace_input('LW','H2O',h2o)
+      CALL trace_input('LW','CO2',co2)
+      CALL trace_input('LW','O3',o3)
+      CALL trace_input('LW','N2O',n2o)
+      CALL trace_input('LW','CH4',ch4)
+      CALL trace_input('LW','O2',o2)
+      CALL trace_input('LW','EMIS',emis)
+      CALL trace_input('LW','AVDIR',RESHAPE(0.*tsfc,[nc,1]))
+      CALL trace_input('LW','AVDIF',RESHAPE(0.*tsfc,[nc,1]))
+      CALL trace_input('LW','ANDIR',RESHAPE(0.*tsfc,[nc,1]))
+      CALL trace_input('LW','ANDIF',RESHAPE(0.*tsfc,[nc,1]))
+      CALL trace_input('LW','MU0',RESHAPE(0.*tsfc,[nc,1]))
+      CALL trace_input('LW','CF',cf)
+      CALL trace_input('LW','LWP',lwp)
+      CALL trace_input('LW','IWP',iwp)
+      CALL trace_input('LW','SWP',swp)
+      CALL trace_input('LW','REL',rel)
+      CALL trace_input('LW','REI',rei)
+      CALL trace_input('LW','RES',res)
+      CALL trace_input_end('LW')
+      CALL trace_result_start('LW',nc,nl)
+    END IF
     CALL set_gases(gases,h2o,co2,o3,n2o,ch4,o2)
     CALL require(atmos%alloc_1scl(nc,nl,gas_lw))
     CALL require(source%alloc(nc,nl,gas_lw))
     CALL require(gas_lw%gas_optics(REAL(play,wp)*100._wp,REAL(plev,wp)*100._wp, &
                  REAL(tlay,wp),REAL(tsfc,wp),gases,atmos,source,tlev=REAL(tlev,wp)))
+    IF(trace_active('LW')) THEN
+      CALL trace_result('LW','GAS_TAU',atmos%tau)
+    END IF
     flux%flux_up=>fu; flux%flux_dn=>fd
     CALL require(rte_lw(atmos,.FALSE.,source,emissivity,flux))
     upc=REAL(fu); dnc=REAL(fd)
     CALL require(compute_heating_rate(fu,fd,REAL(plev,wp)*100._wp,heat))
     hrc=REAL(heat*86400._wp)
-    IF(ANY(cf>0.).AND.overlap/=0) THEN
+    ! A selected replay also records prepared optics for clear/overlap-zero controls.
+    IF((ANY(cf>0.).AND.overlap/=0).OR.trace_active('LW')) THEN
       CALL require(clouds%alloc_1scl(nc,nl,cloud_lw))
       CALL require(snow%alloc_1scl(nc,nl,cloud_lw))
       CALL require(sampled%alloc_1scl(nc,nl,gas_lw))
@@ -188,14 +225,37 @@ CONTAINS
       CALL require(cloud_lw%cloud_optics(REAL(lwp,wp),REAL(iwp,wp),rl,di,clouds))
       CALL require(cloud_lw%cloud_optics(zero,REAL(swp,wp),rl,ds,snow))
       CALL require(snow%increment(clouds))
+    IF(trace_active('LW')) THEN
+      CALL trace_result('LW','CLOUD_TAU',clouds%tau)
+    END IF
+    IF(trace_active('LW')) THEN
+      CALL trace_result('LW','PREPARED_TAU',clouds%tau)
+      CALL trace_result('LW','RL_USED',rl)
+      CALL trace_result('LW','DI_USED',di)
+      CALL trace_result('LW','DS_USED',ds)
+    END IF
       CALL cloud_mask(cf,gas_lw%get_ngpt(),overlap,seed,mask,column_seeds)
+    IF(trace_active('LW')) THEN
+      CALL trace_result('LW','MASK',MERGE(1._wp,0._wp,mask))
+    END IF
       CALL require(draw_samples(mask,clouds,sampled))
-      CALL require(sampled%increment(atmos))
+      IF(ANY(cf>0.).AND.overlap/=0) CALL require(sampled%increment(atmos))
+    END IF
+    IF(trace_active('LW')) THEN
+      CALL trace_result('LW','TOTAL_TAU',atmos%tau)
     END IF
     CALL require(rte_lw(atmos,.FALSE.,source,emissivity,flux))
     up=REAL(fu); dn=REAL(fd)
     CALL require(compute_heating_rate(fu,fd,REAL(plev,wp)*100._wp,heat))
     hr=REAL(heat*86400._wp)
+    IF(trace_active('LW')) THEN
+      CALL trace_result('LW','UP',up)
+      CALL trace_result('LW','DN',dn)
+      CALL trace_result('LW','HR',hr)
+      CALL trace_result('LW','UPC',upc)
+      CALL trace_result('LW','DNC',dnc)
+      CALL trace_result('LW','HRC',hrc)
+    END IF
   END SUBROUTINE
 
   SUBROUTINE rrtmgp_sw_column(play,plev,tlay,h2o,co2,o3,n2o,ch4,o2, &
@@ -254,9 +314,44 @@ CONTAINS
     CALL set_gases(gases,h2o,co2,o3,n2o,ch4,o2)
     IF(ALL(mu0<=0.)) RETURN
     IF(ANY(mu0<=0.)) CALL require('daylight columns must be packed separately')
+    IF(trace_active('SW')) THEN
+      CALL trace_input_start('SW',nc,nl,overlap,seed,iceflag)
+      CALL trace_input('SW','SOLAR',RESHAPE([solar],[1,1]))
+      CALL trace_input('SW','PLAY',play)
+      CALL trace_input('SW','PLEV',plev)
+      CALL trace_input('SW','TLAY',tlay)
+      CALL trace_input('SW','TLEV',0.*plev)
+      CALL trace_input('SW','TSFC',RESHAPE(0.*mu0,[nc,1]))
+      CALL trace_input('SW','H2O',h2o)
+      CALL trace_input('SW','CO2',co2)
+      CALL trace_input('SW','O3',o3)
+      CALL trace_input('SW','N2O',n2o)
+      CALL trace_input('SW','CH4',ch4)
+      CALL trace_input('SW','O2',o2)
+      CALL trace_input('SW','EMIS',RESHAPE(0.*mu0,[nc,1]))
+      CALL trace_input('SW','AVDIR',RESHAPE(avdir,[nc,1]))
+      CALL trace_input('SW','AVDIF',RESHAPE(avdif,[nc,1]))
+      CALL trace_input('SW','ANDIR',RESHAPE(andir,[nc,1]))
+      CALL trace_input('SW','ANDIF',RESHAPE(andif,[nc,1]))
+      CALL trace_input('SW','MU0',RESHAPE(mu0,[nc,1]))
+      CALL trace_input('SW','CF',cf)
+      CALL trace_input('SW','LWP',lwp)
+      CALL trace_input('SW','IWP',iwp)
+      CALL trace_input('SW','SWP',swp)
+      CALL trace_input('SW','REL',rel)
+      CALL trace_input('SW','REI',rei)
+      CALL trace_input('SW','RES',res)
+      CALL trace_input_end('SW')
+      CALL trace_result_start('SW',nc,nl)
+    END IF
     CALL require(atmos%alloc_2str(nc,nl,gas_sw))
     CALL require(gas_sw%gas_optics(REAL(play,wp)*100._wp,REAL(plev,wp)*100._wp, &
                                  REAL(tlay,wp),gases,atmos,toa))
+    IF(trace_active('SW')) THEN
+      CALL trace_result('SW','GAS_TAU',atmos%tau)
+      CALL trace_result('SW','GAS_SSA',atmos%ssa)
+      CALL trace_result('SW','GAS_G',atmos%g)
+    END IF
     DO c=1,nc
       IF(SUM(toa(c,:))<=0._wp) CALL require('TOA solar spectrum must have positive integral')
       toa(c,:)=toa(c,:)*(REAL(solar,wp)/SUM(toa(c,:)))
@@ -274,7 +369,8 @@ CONTAINS
     CALL require(rte_sw(atmos,.FALSE.,REAL(mu0,wp),toa,albdir,albdif,flux))
     upc=REAL(fu); dnc=REAL(fd); directc=REAL(fdir)
     CALL require(compute_heating_rate(fu,fd,REAL(plev,wp)*100._wp,heat)); hrc=REAL(heat*86400._wp)
-    IF(ANY(cf>0.).AND.overlap/=0) THEN
+    ! A selected replay also records prepared optics for clear/overlap-zero controls.
+    IF((ANY(cf>0.).AND.overlap/=0).OR.trace_active('SW')) THEN
       CALL require(clouds%alloc_2str(nc,nl,cloud_sw))
       CALL require(snow%alloc_2str(nc,nl,cloud_sw))
       CALL require(sampled%alloc_2str(nc,nl,gas_sw))
@@ -284,10 +380,31 @@ CONTAINS
       CALL require(cloud_sw%cloud_optics(REAL(lwp,wp),REAL(iwp,wp),rl,di,clouds))
       CALL require(cloud_sw%cloud_optics(zero,REAL(swp,wp),rl,ds,snow))
       CALL require(snow%increment(clouds))
+    IF(trace_active('SW')) THEN
+      CALL trace_result('SW','CLOUD_TAU',clouds%tau)
+      CALL trace_result('SW','CLOUD_SSA',clouds%ssa)
+      CALL trace_result('SW','CLOUD_G',clouds%g)
+    END IF
       CALL require(clouds%delta_scale())
+    IF(trace_active('SW')) THEN
+      CALL trace_result('SW','PREPARED_TAU',clouds%tau)
+      CALL trace_result('SW','PREPARED_SSA',clouds%ssa)
+      CALL trace_result('SW','PREPARED_G',clouds%g)
+      CALL trace_result('SW','RL_USED',rl)
+      CALL trace_result('SW','DI_USED',di)
+      CALL trace_result('SW','DS_USED',ds)
+    END IF
       CALL cloud_mask(cf,gas_sw%get_ngpt(),overlap,seed,mask,column_seeds)
+    IF(trace_active('SW')) THEN
+      CALL trace_result('SW','MASK',MERGE(1._wp,0._wp,mask))
+    END IF
       CALL require(draw_samples(mask,clouds,sampled))
-      CALL require(sampled%increment(atmos))
+      IF(ANY(cf>0.).AND.overlap/=0) CALL require(sampled%increment(atmos))
+    END IF
+    IF(trace_active('SW')) THEN
+      CALL trace_result('SW','TOTAL_TAU',atmos%tau)
+      CALL trace_result('SW','TOTAL_SSA',atmos%ssa)
+      CALL trace_result('SW','TOTAL_G',atmos%g)
     END IF
     CALL require(rte_sw(atmos,.FALSE.,REAL(mu0,wp),toa,albdir,albdif,flux))
     up=REAL(fu); dn=REAL(fd); direct=REAL(fdir); diffuse=REAL(fd-fdir)
@@ -299,5 +416,20 @@ CONTAINS
         nirdir=nirdir+REAL(bdir(:,:,b)); nirdif=nirdif+REAL(bd(:,:,b)-bdir(:,:,b))
       END IF
     END DO
+    IF(trace_active('SW')) THEN
+      CALL trace_result('SW','UP',up)
+      CALL trace_result('SW','DN',dn)
+      CALL trace_result('SW','HR',hr)
+      CALL trace_result('SW','UPC',upc)
+      CALL trace_result('SW','DNC',dnc)
+      CALL trace_result('SW','HRC',hrc)
+      CALL trace_result('SW','DIRECT',direct)
+      CALL trace_result('SW','DIFFUSE',diffuse)
+      CALL trace_result('SW','DIRECTC',directc)
+      CALL trace_result('SW','VISDIR',visdir)
+      CALL trace_result('SW','VISDIF',visdif)
+      CALL trace_result('SW','NIRDIR',nirdir)
+      CALL trace_result('SW','NIRDIF',nirdif)
+    END IF
   END SUBROUTINE
 END MODULE module_ra_rrtmgp
