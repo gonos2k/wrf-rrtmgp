@@ -39,7 +39,7 @@ WRF 기준은 태그 v4.8.0, 커밋 `06d4240ae989cc3e50af412bb472df3d9048783c`�
 
 ## 구현 범위
 
-CPU double precision 내부 계산, H2O/CO2/O3/N2O/CH4/O2 여섯 기체, LW 128 및 SW 112 g점, 장파 흡수·방출과 단파 2 stream 해법을 사용한다. 장파 산란은 포함하지 않는다. 액체·빙정·눈의 밴드 광학을 구한 뒤 McICA로 g점에 표본화한다. `cldovrlp=0`은 맑은 하늘, 1은 random, 2는 maximum random, 3은 maximum이다. 표본은 도메인 ID, 전역 수평 격자 위치, 현재 연도·일자와 LW/SW 구분으로 만든 재현 가능한 시드를 사용한다. 같은 날짜의 복사 호출에서는 고정된 표본을 유지한다. [seed 계약](DOMAIN_CALENDAR_SEEDS.md)을 따른다.
+CPU double precision 내부 계산, SW 6기체·LW 10기체, LW 128 및 SW 112 g점, 장파 흡수·방출과 단파 2 stream 해법을 사용한다. 기본 H2O/CO2/O3/N2O/CH4/O2 외에 장파는 기존 WRF의 CFC11/CFC12/CFC22/CCl4 프로필을 받는다. 장파 산란은 포함하지 않는다. 액체·빙정 LUT와 rain/snow 강수 광학을 합성해 McICA로 g점에 표본화한다. `cldovrlp=0`은 cloud/rain/snow 광학을 제외하고, 1은 random, 2는 maximum random, 3은 maximum이다. 명시적 frozen 실험 모드의 graupel/hail은 구름 mask와 별개로 occurrence=1을 유지한다. 표본은 도메인 ID, 전역 수평 격자 위치, 현재 연도·일자와 LW/SW 구분으로 만든 재현 가능한 시드를 사용한다. 같은 날짜의 복사 호출에서는 고정된 표본을 유지한다. [seed 계약](DOMAIN_CALENDAR_SEEDS.md)을 따른다.
 
 장파와 단파는 모두 37로 선택해야 한다. 기존 옵션 4는 원래 RRTMG 호출 경로를 사용한다. 37의 all sky 및 clear sky 플럭스, K/day 가열률, 단파 직달·산란과 가시광·근적외 분할을 기존 출력에 연결했다. WRF 래퍼가 K/day를 온위 경향으로 변환한다. 현재 WRF 호출은 컬럼별 scalar seed를 사용한다. 독립 backend API에는 선택적 `column_seeds(:)`가 있어 각 컬럼에 시드를 고정하면 컬럼 재배열에도 표본이 유지되지만, WRF의 실제 컬럼 packing 연동은 아직 구현되지 않았다.
 
@@ -58,6 +58,8 @@ CPU double precision 내부 계산, H2O/CO2/O3/N2O/CH4/O2 여섯 기체, LW 128 
 SW는 고정 UFS/CCPP의 밴드 규약을 사용한다. 상한이 12850 cm⁻¹ 이하인 밴드는 NIR, 하한이 16000 cm⁻¹ 이상인 밴드는 VIS이며, 12850–16000 cm⁻¹ 전이 밴드는 VIS/NIR에 각각 절반씩 배분한다. 해당 밴드의 직달·산란 알베도도 두 입력의 산술평균을 사용한다. 이는 정밀한 파장 0.7 µm 절단이 아니며, 기존 RRTMG 4번이 전이 밴드를 모두 NIR로 처리하는 규약과도 다르다. 이 규약으로 처리할 수 없는 전이 밴드 경계는 오류로 거부한다. 에어로졸은 밴드 경계와 순서가 RRTMG와 달라 직접 전달할 수 없다. `aer_opt!=0`, 화학 에어로졸 피드백 및 CMAQ 피드백, `cldovrlp=4,5`를 거부한다. 장파는 기존 WRF 래퍼의 CFC11/12/22 및 CCl4 VMR을 추가로 전달하며, 단파는 해당 흡수 구간이 없는 고정 자료의 6기체 구성을 유지한다. 실제 시간변화 기체값과 동일 상태 A/B 검증 규약은 [LW_TRACE_GASES.md](LW_TRACE_GASES.md)에 기록한다.
 
 현재 수상체 광학은 UDM qc/qi cloud LUT 및 qr/qs precipitation optics다. qg는 제외 질량을 진단하고 qh는 양수이면 거부한다. 다른 미세물리는 초기화에서 거부한다. SSiB+37은 전체 예보 검증이 완료되지 않은 개발 조합이다.
+
+`rrtmgp_udm_frozen_optics=1`과 명시적 조회표 경로를 지정하면 별도 [frozen 실험](UDM_FROZEN_EXPERIMENT.md)을 사용한다. PR20 실험 실행파일의 실제 자료 24시간 MPI4 및 수치 배열이 일치한 12–13시간 restart 근거는 [버전별 실행 기록](../../../validation/rrtmgp37/realdata-parallel/README.md)에 있다. 기본 모드의 지원 범위, 이후 PR21 코드의 장시간 검증 및 관측 정확도와 구분한다.
 
 구름 입력 검증은 배열 모양, 유한성, 범위, 압력층 순서, 음수 수분량·경로, 활성 수상의 반경을 검사한다. 반경은 비활성 수상에서 유한한 0을 허용하지만 수분량이 양수이면 양수여야 한다. 직접 builder와 adapter는 `cf=0`인데 응축수 경로가 양수인 입력을 엄격히 거부한다. WRF 전처리는 `QCLDMIN` 또는 cloud-fraction cutoff 아래의 trace condensate를 cf=0으로 만들 수 있으므로 WRF wrapper만 이를 허용한다. 해당 층의 광학 경로는 0으로 두며 debug level 100에서 생략된 원래 grid-box 경로와 reason code 6을 층별 진단한다. 양의 cf에서는 경로 builder가 수상별 질량을 보존한다. cf=0 예외에서는 해당 trace condensate가 복사 광학 입력에서 생략되므로 이를 질량 보존 사례로 세지 않는다. UDM 전용화 이전의 WSM5 시험에서 6개 출력 시각을 포함한 5분 적분 로그에 LW/SW 각각 reason code 6이 793회 기록됐고 최대 생략량은 층·호출당 0.1037024 g/m²였다.
 

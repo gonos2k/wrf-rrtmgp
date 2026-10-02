@@ -1,0 +1,77 @@
+{
+  "status": "PREPARED_NOT_EXECUTED",
+  "attempt": "v2; prior attempt preserved in unsuffixed directories and failed because restored hourly checkpoint history timer suppressed 12:11 output",
+  "checkpoint": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-frozen-restart-plan/trial-mode1-0to12/wrfrst_d01_2010-06-11_12:00:00",
+    "sha256": "943a53db058f2d9560c6f0d571f3ff9bb8efb407010c5eea2026922a6eeee7b8",
+    "bytes": 348651611,
+    "time": "2010-06-11_12:00:00",
+    "timestep": 720,
+    "xtime_minutes": 720.0,
+    "physics": {
+      "MP_PHYSICS": 27,
+      "RA_LW_PHYSICS": 37,
+      "RA_SW_PHYSICS": 37
+    },
+    "finite_float_variables": 593,
+    "nonfinite_variables": []
+  },
+  "binary": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-lw-trace-gases-dm-sm/WRF/main/wrf.exe",
+    "sha256": "6c0c1e3efc948a68b1579137d58dd972890b6e338a8cfa1c5c96e539c1c0daeb"
+  },
+  "table": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-frozen-runtime-wrf/source/validation/rrtmgp37/frozen-optics-lookup/nine-grid-o128-s50/frozen-ice-psd-moments.nc",
+    "sha256": "8cb00850c3f885f5ec0306563c1ec0a55b512478a7395d626c1c99cebf280583"
+  },
+  "inputs": {
+    "wrfinput_d01": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-frozen-runtime-mpi/case-mode1/wrfinput_d01",
+      "sha256": "5ef7abe34c516fba107f346bdbdb3777edacb5d48493df467ea2dd8bcf6a75ff"
+    },
+    "wrfbdy_d01": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-frozen-runtime-mpi/case-mode1/wrfbdy_d01",
+      "sha256": "e687b73730ab9a2cee4842e1a92b225a4edb074ba080b6053d96d81ec1731a2d"
+    }
+  },
+  "source_namelist_sha256": "cba97f7e3bc5c2418e5b19458847f7b5641c33fb8807480e6b3903e486e993e2",
+  "run_namelist_sha256": "3d5162c4da198ebbd4ade053a81294497b779db0afa8f896a0497e3f0db56475",
+  "physics_run_controls": "Only &time_control timestamps/duration/restart/override_restart_timers/history interval/frames-per-outfile differ; all configs use same generated namelist. override_restart_timers=.true. is required to schedule the requested 1-minute history output rather than restoring the checkpoint hourly history alarm.",
+  "configs": [
+    {
+      "name": "mpi1-omp1-v2",
+      "mpi_ranks": 1,
+      "omp_threads": 1,
+      "case_dir": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-lw-trace-gases-parallel/mpi1-omp1-v2",
+      "namelist_sha256": "3d5162c4da198ebbd4ade053a81294497b779db0afa8f896a0497e3f0db56475",
+      "checkpoint_sha256": "943a53db058f2d9560c6f0d571f3ff9bb8efb407010c5eea2026922a6eeee7b8"
+    },
+    {
+      "name": "mpi2-omp1-v2",
+      "mpi_ranks": 2,
+      "omp_threads": 1,
+      "case_dir": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-lw-trace-gases-parallel/mpi2-omp1-v2",
+      "namelist_sha256": "3d5162c4da198ebbd4ade053a81294497b779db0afa8f896a0497e3f0db56475",
+      "checkpoint_sha256": "943a53db058f2d9560c6f0d571f3ff9bb8efb407010c5eea2026922a6eeee7b8"
+    },
+    {
+      "name": "mpi4-omp1-v2",
+      "mpi_ranks": 4,
+      "omp_threads": 1,
+      "case_dir": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-lw-trace-gases-parallel/mpi4-omp1-v2",
+      "namelist_sha256": "3d5162c4da198ebbd4ade053a81294497b779db0afa8f896a0497e3f0db56475",
+      "checkpoint_sha256": "943a53db058f2d9560c6f0d571f3ff9bb8efb407010c5eea2026922a6eeee7b8"
+    },
+    {
+      "name": "mpi1-omp2-v2",
+      "mpi_ranks": 1,
+      "omp_threads": 2,
+      "case_dir": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-lw-trace-gases-parallel/mpi1-omp2-v2",
+      "namelist_sha256": "3d5162c4da198ebbd4ade053a81294497b779db0afa8f896a0497e3f0db56475",
+      "checkpoint_sha256": "943a53db058f2d9560c6f0d571f3ff9bb8efb407010c5eea2026922a6eeee7b8"
+    }
+  ],
+  "comparison_reference": "mpi1-omp1-v2 at 2010-06-11_12:11:00; metadata/run-control attributes are reported separately from exact numeric fields",
+  "compare_at": "2010-06-11_12:11:00",
+  "execution_authorized_by_cli": false
+}

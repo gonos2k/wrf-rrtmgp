@@ -1,0 +1,31 @@
+{
+  "original_files": {
+    "metrics.json": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-frozen-24h-comparison/metrics.json",
+      "sha256": "4922e4f303a6869382603c7b1a8899d8dad4e6fcbdcbb2a3e42f02b39bd8201a"
+    },
+    "script.py": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-frozen-24h-comparison/script.py",
+      "sha256": "5def85736a77cf91509d18c30027119e63fe49a4d14f373470d0e46c47d0b06f"
+    },
+    "README.md": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-frozen-24h-comparison/README.md",
+      "sha256": "93e68a6c96903c0729245722abee09162c724c4a0c75a0d61c24e88b04c50eaa"
+    }
+  },
+  "original_known_physics_differences": [
+    "RA4 uses legacy native-radius cloud optics; frozen mode 1 uses experimental homogeneous frozen-ice PSD optics for graupel/hail.",
+    "RA4 legacy RRTMG uses six LW trace gases; mode 1 includes four additional LW trace gases (21-gas configuration)."
+  ],
+  "corrected_known_physics_differences": [
+    "RA4 retains its earlier UDM generic-radius behavior and legacy cloud/precipitation optics; PR20 mode 1 uses UDM-native radii, CCPP rain/snow and experimental homogeneous-ice PSD graupel/hail optics.",
+    "PR20 RRTMGP explicitly sets six gas VMRs and omits the four LW CFC11/CFC12/CFC22/CCl4 profiles used by the RRTMG wrapper. The later PR21 correction is absent from this 24-hour executable."
+  ],
+  "difference_convention": "ra4 - mode1 (unchanged calculations, now documented)",
+  "unit_corrections": {
+    "HAILNC": "mm as recorded in source history",
+    "GRAUPELNC": "mm as recorded in source history"
+  },
+  "numeric_metrics_changed": false,
+  "initial_record": "radiation fields zero before first actual calculation, not first-RTE parity"
+}
