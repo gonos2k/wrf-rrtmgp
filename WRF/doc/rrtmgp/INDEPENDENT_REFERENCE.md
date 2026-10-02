@@ -14,7 +14,7 @@
 
 SW 잔차는 수정하지 않은 upstream에서도 동일하다. 이 자료로 그 잔차를 WRF 포팅 때문에 생긴 오류라고 분류할 근거는 없다. 공개 reference는 `RTE-RRTMGP-181204`를 표기하지만, 어느 소스·reference 생성 차이에서 잔차가 생겼는지는 미확정이다. 허용오차를 넓히거나 SW reference 검사를 PASS로 바꾸지 않았다.
 
-공개 reference 비교는 gas g256/g224다. 별도 g128/g112 실행도 양쪽 엔진의 bitwise 일치를 확인했지만, cloud-band LUT와 실제 WRF 입력 변환을 검증하지 않는다. 공식 RFMIP 기체 구성과 상류 기본 상수를 사용하므로 WRF의 6기체 부분집합·host constants 검사도 아니다. 공식 all-sky 예제는 고정 자료의 `diamice_lwr/upr`와 구름 필드명을 읽지 못해 실패했다. 이를 all-sky PASS에 포함하지 않는다. [명령·비교기·원본 해시](../../../validation/rrtmgp37/upstream-reference/README.md)에 재현 방법과 결과를 보존했다.
+공개 reference 비교는 gas g256/g224다. 별도 g128/g112 실행도 양쪽 엔진의 bitwise 일치를 확인했지만, cloud-band LUT와 실제 WRF 입력 변환을 검증하지 않는다. 공식 RFMIP 기체 구성과 상류 기본 상수를 사용하므로 WRF의 6기체 부분집합·host constants 검사도 아니다. 수정하지 않은 공식 all-sky loader는 고정 자료의 `diamice_lwr/upr`와 구름 필드명을 읽지 못해 실패하며, 그 실패 로그를 보존한다. 별도 all-sky 검사는 band 자료에 맞춰 정확히 8개 dataset 문자열만 변경하고, 같은 공식 driver·loader를 upstream과 현재 vendored CPU 구름 계산부에 각각 연결한다. 라이브러리의 구름 객체가 실제로 분리됐는지는 linker map으로 검사한다. 24기둥·72층, roughness 2의 제조 구름 상태에서 저장된 25개 상태·플럭스 배열을 bitwise 대조한다. 광학 배열, UDM 반경·수상체 변환, precipitation·McICA·WRF 상수 및 관측 정확도를 판정하는 시험은 아니다. [all-sky 재현과 검사 범위](../../../validation/rrtmgp37/upstream-reference/ALLSKY.md)를 참고한다. [명령·비교기·원본 해시](../../../validation/rrtmgp37/upstream-reference/README.md)에 재현 방법과 결과를 보존했다.
 
 ## Graupel과 hail의 지원 경계
 

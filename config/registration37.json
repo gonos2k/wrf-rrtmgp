@@ -21,7 +21,7 @@
     "doc/rrtmgp/REVIEW_FOLLOWUP.md": "498295b9bf9cb954f14a66adeab4b512ea852d54",
     "doc/rrtmgp/RUNTIME_CONTRACTS.md": "5f5e905d8fdf9b58f2693537ab795a07e4f7e191",
     "doc/rrtmgp/UDM_ONLY.md": "ac7a47cfd041e72d28afe42763d99e536f785e1e",
-    "doc/rrtmgp/VALIDATION.md": "d035057b282ec0df1f38d215bda105a72418b47b",
+    "doc/rrtmgp/VALIDATION.md": "5d179cfd902c762f4771617653e4ca2503776671",
     "dyn_em/module_first_rk_step_part1.F": "d12ad0893a2d4f5f1e2c8d83998f572fa86d6fec",
     "dyn_em/solve_em.F": "b45110fb17631526991441c05cd1a384bcc6fa54",
     "dyn_em/start_em.F": "86a287c4bb15ed6e79f529e40b3ef931b901426c",
@@ -155,7 +155,7 @@
     "doc/rrtmgp/NEGATIVE_INPUT_CONTRACT.md": "43a8a473e1a6c89399d44bd784a19d5835bfe201",
     "test/rrtmgp/test_udm_negative_policy.py": "4b60ab04b4be413655cb621c49b873563201b09c",
     "test/rrtmgp/test_udm_negative_policy.f90": "3cb9a51fee421af2919faa272fd12d93eadbc140",
-    "doc/rrtmgp/INDEPENDENT_REFERENCE.md": "cbe3a9797724c8ff62af7e43797cc18902066a55"
+    "doc/rrtmgp/INDEPENDENT_REFERENCE.md": "2c8e7e25b8a5ebebcbd74c7c26beb0f4791ae02c"
   },
   "backend": "CPU_LINKED",
   "wrf_forecast_validated": false,
@@ -216,8 +216,10 @@
     "backend_agreement": "BITWISE_PASS_ALL_FOUR_FLUX_ARRAYS_AT_BOTH_RESOLUTIONS",
     "published_reference_lw": "PASS_EXACT",
     "published_reference_sw": "FAIL_AT_UNCHANGED_1E-5_TOLERANCE_IN_BOTH_BACKENDS",
-    "all_sky": "NOT_VALIDATED_LOADER_SCHEMA_FAILURE",
+    "all_sky": "PASS_SYNTHETIC_BAND_CLOUD_ALL_25_ARRAYS_BITWISE_AFTER_8_LOADER_NAME_BINDINGS",
     "record": "validation/rrtmgp37/upstream-reference/README.md",
-    "continuous_check": "fresh pinned upstream versus current vendor g128/g112, independent-rfmip CI"
+    "continuous_check": "fresh pinned upstream versus current vendor g128/g112 clear-sky and adapted-band all-sky, independent-rfmip CI",
+    "all_sky_record": "validation/rrtmgp37/upstream-reference/ALLSKY.md",
+    "all_sky_limits": "No WRF/UDM mapping, native size convention, precipitation, McICA, host constants, aerosol numerical or published-reference accuracy validation"
   }
 }

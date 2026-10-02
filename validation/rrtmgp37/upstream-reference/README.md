@@ -77,7 +77,7 @@ python "$WS/build/pr-wrf-rrtmgp/validation/rrtmgp37/upstream-reference/compare_r
   --output "$ROOT/published-reference-comparison.json"
 ```
 
-The upstream all-sky example was also tried without modifying its source. It fails on the pinned current cloud dataset because it requests `radice_lwr`, while the dataset provides `diamice_lwr`/`diamice_upr` and renamed optical fields. This is an unsupported all-sky loader check, separate from the clear-sky results above.
+The upstream all-sky example was also tried without modifying its source. It fails on the pinned current cloud dataset because it requests `radice_lwr`, while the dataset provides `diamice_lwr`/`diamice_upr` and renamed optical fields. That original failure is retained separately from the clear-sky results above. A subsequent [synthetic band-table all-sky comparison](ALLSKY.md) adapts exactly eight dataset-name bindings and compares pinned upstream against fully vendored cloud/gas/RTE frontends. It does not turn the original loader failure into a pass or claim UDM physical-input accuracy.
 
 `SHA256SUMS.txt` retains the original scratch-artifact paths and hashes. It is not a checksum list for this publication directory: the published inventory corrects raw-GitHub URLs that previously had an extra `data/` component. `publication-manifest.json` records the original and published hashes and this metadata-only correction. The original experiment used vendored source from PR #10 (`ca33525`); it is not presented as a newly rebuilt PR #12 executable.
 

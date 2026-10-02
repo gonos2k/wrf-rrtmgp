@@ -94,3 +94,9 @@ MP95 제어 사례는 초기 과냉각 QC/QS의 양의 질량·구름 τ·cloudy
 ## 독립 upstream RFMIP 기준 비교 (2026-10-03 공개 기록)
 
 공식 RFMIP 1,800 profiles의 네 플럭스 배열에서 pinned upstream과 vendored CPU library가 bitwise 일치했다. 공개 reference에 대한 LW는 PASS지만 SW는 양쪽 모두 동일하게 원래 `1e-5 W/m²` 허용오차를 초과한다. 공개 SW residual을 성공으로 처리하지 않았다. 공개 reference는 g256/g224 청천이며 별도 production gas g128/g112에서도 같은 upstream/vendor 일치를 확인했다. 실제 UDM cloud/precipitation 또는 g128/g112의 독립적인 물리 정확도 시험은 아니다. [독립 검증 범위와 미지원 광학](INDEPENDENT_REFERENCE.md)에 판단과 재현 경로를 구분한다.
+
+## 독립 제조 구름 backend 비교
+
+PR #13의 고정 upstream·자료와 fresh vendored CPU archive로 공식 all-sky driver를 24기둥·72층, gas g128/g112·band cloud LUT, roughness 2에서 비교했다. 원본 loader의 필드명 불일치 실패는 보존하고 정확히 8개 dataset 문자열만 적응했다. vendor link에서 upstream 구름·에어로졸 frontend 객체를 제외하고 linker map으로 archive 객체의 사용을 검사한다.
+
+최종 로컬 실행의 SW 13개·LW 12개 저장 배열과 5개 플럭스가 모두 finite·bitwise 동일하다. 양의 액체·빙정 path가 실제 존재한다. 출력 단위 속성은 없으며, 입력 LUT 단위만 명시 검사한다. 에어로졸 수치 계산은 수행하지 않는다. 실제 출력 복사본의 6개 오류/청천 퇴화 사례를 모두 거부했다. 이 검사는 제조 구름 계산 구현의 일치이고, UDM 반경 의미·mass/path 변환·precipitation·McICA·WRF 상수·관측 정확도 검증은 아니다. [재현·원본 실패·결과](../../../validation/rrtmgp37/upstream-reference/ALLSKY.md)를 별도 범위로 읽는다.
