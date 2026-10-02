@@ -10097,7 +10097,7 @@ CONTAINS
                        ,sw_zbbcddir                               & ! WRF-CMAQ twoway coupled model
                        ,sw_dirdflux                               & ! WRF-CMAQ twoway coupled model
                        ,sw_difdflux                               & ! WRF-CMAQ twoway coupled model
-                        ,use_rrtmgp,qh3d,f_qh,udm_cldfra,udm_cf_step,mcica_seed_override,audit_step,audit_time )
+                        ,use_rrtmgp,qh3d,f_qh,udm_cldfra,udm_cf_step,mcica_seed_override,audit_step,audit_time,udm_dry_layer_mass )
 !------------------------------------------------------------------
    USE MODULE_RA_CLWRF_SUPPORT, ONLY : read_CAMgases
    USE module_mp_udm, ONLY: cldf_diag, udm_radiation_negative_limits
@@ -10110,6 +10110,7 @@ CONTAINS
    LOGICAL, OPTIONAL, INTENT(IN) :: f_qh
    REAL, OPTIONAL, INTENT(IN) :: qh3d(ims:ime,kms:kme,jms:jme)
    REAL, OPTIONAL, INTENT(IN) :: udm_cldfra(ims:ime,kms:kme,jms:jme),audit_time
+   REAL, OPTIONAL, INTENT(IN) :: udm_dry_layer_mass(ims:ime,kms:kme,jms:jme)
    INTEGER, OPTIONAL, INTENT(IN) :: udm_cf_step(ims:ime,jms:jme),mcica_seed_override,audit_step
    INTEGER :: gp_seed,gp_g_count
    REAL(KIND=8) :: gp_g_sum,gp_g_max
@@ -10557,6 +10558,8 @@ CONTAINS
     run_rrtmgp=.FALSE.
     IF(PRESENT(use_rrtmgp)) run_rrtmgp=use_rrtmgp
     IF(run_rrtmgp) THEN
+      IF(.NOT.PRESENT(udm_dry_layer_mass)) &
+        CALL wrf_error_fatal('RRTMGP37 UDM requires native dry-layer mass in kg/m2')
       IF(mp_physics/=27) CALL wrf_error_fatal('RRTMGP37 requires mp_physics=27 (UDM)')
       IF(has_reqc/=1.OR.has_reqi/=1.OR.has_reqs/=1) &
         CALL wrf_error_fatal('RRTMGP37 UDM requires native effective radii')
@@ -11304,6 +11307,7 @@ CONTAINS
                IF(trace_active('SW')) THEN
                   CALL trace_raw_start('SW',kte-kts+1)
                   CALL trace_raw('SW','DP_HPA',pdel(ncol,kts:kte))
+                  CALL trace_raw('SW','DRY_LAYER_MASS_KG_M2',udm_dry_layer_mass(i,kts:kte,j))
                   CALL trace_raw('SW','CF',cldfrac(ncol,kts:kte))
                   CALL trace_raw('SW','RAD_CF_SOURCE',cldfra3d(i,kts:kte,j))
                   IF(PRESENT(udm_cldfra)) CALL trace_raw('SW','UDM_CF_USED',udm_cldfra(i,kts:kte,j))
@@ -11360,13 +11364,14 @@ CONTAINS
                     column_context=gp_context,allow_clear_condensate=.TRUE., &
                     omitted_grid_path=gp_omitted_phase,layer_reason=gp_layer_reason, &
                     negative_q_limits=gp_negative_limits,clipped_negative_q=gp_clipped_q, &
-                    negative_grid_correction=gp_negative_correction)
+                    negative_grid_correction=gp_negative_correction, &
+                    dry_layer_mass_kg_m2=udm_dry_layer_mass(i,kts:kte,j))
                IF(gp_reason==7) THEN
                   DO k=kts,kte
                      IF(gp_qh(k-kts+1)>0.) THEN
                         WRITE(message,'(A,A,I0,A,ES14.6)') TRIM(gp_context), &
                           ' RRTMGP_INPUT_UDM_HAIL_OPTICS_UNSUPPORTED layer=',k, &
-                          ' grid_path_g_m2=',gp_qh(k-kts+1)*pdel(ncol,k)*100./g*1000.
+                          ' grid_path_g_m2=',gp_qh(k-kts+1)*udm_dry_layer_mass(i,k,j)*1000.
                         CALL wrf_error_fatal(TRIM(message))
                      END IF
                   END DO

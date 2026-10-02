@@ -134,6 +134,8 @@ CONTAINS
 
 ! Local
     real :: HYDRO_dt
+    REAL, ALLOCATABLE :: udm_dry_layer_mass(:,:,:)
+    INTEGER :: mass_k
     REAL, DIMENSION( ims:ime, jms:jme ) :: exch_temf  ! 1/7/09 WA
 
     REAL, DIMENSION( ims:ime, jms:jme ) :: ht_loc, mixht
@@ -269,6 +271,24 @@ BENCH_END(phy_prep_tim)
 
       CALL wrf_debug ( 200 , ' call radiation_driver' )
 BENCH_START(rad_driver_tim)
+      ! UDM q fields are mass per dry-air mass. p_hyd_w differences include
+      ! moisture loading and cannot supply that denominator. MUT is the
+      ! current dry column pressure mass (mu_2 + mub); use the native hybrid
+      ! mass coordinate without changing radiation's pressure/gas inputs.
+      IF (config_flags%ra_lw_physics == RRTMGP_LWSCHEME .OR. &
+          config_flags%ra_sw_physics == RRTMGP_SWSCHEME) THEN
+         ALLOCATE(udm_dry_layer_mass(ims:ime,kms:kme,jms:jme))
+         udm_dry_layer_mass=0.
+         DO j=jps,MIN(jpe,jde-1)
+            DO mass_k=k_start,MIN(k_end,kde-1)
+               DO i=ips,MIN(ipe,ide-1)
+                  udm_dry_layer_mass(i,mass_k,j) = &
+                       -grid%dnw(mass_k)*(grid%c1h(mass_k)*grid%mut(i,j)+grid%c2h(mass_k))/g
+               END DO
+            END DO
+         END DO
+      END IF
+
 
       CALL radiation_driver(                                                  &
      &         p_top=grid%p_top & !DJW 140312 added p_top for vertical nesting
@@ -287,6 +307,7 @@ BENCH_START(rad_driver_tim)
      &        ,swint_opt=config_flags%swint_opt                                      &
      &        ,solar_opt=config_flags%solar_diagnostics                              &
      &        ,P8W=grid%p_hyd_w        ,P=grid%p_hyd            ,PI=pi_phy           &
+     &        ,UDM_DRY_LAYER_MASS=udm_dry_layer_mass                                  &
      &        ,RADT=grid%radt          ,RA_CALL_OFFSET=grid%ra_call_offset           &
      &        ,RHO=grid%rho            ,RLWTOA=grid%rlwtoa                           &
      &        ,RSWTOA=grid%rswtoa      ,RTHRATEN=grid%rthraten                       &
@@ -541,6 +562,7 @@ BENCH_START(rad_driver_tim)
 #endif
                                                       )
 
+      IF (ALLOCATED(udm_dry_layer_mass)) DEALLOCATE(udm_dry_layer_mass)
 BENCH_END(rad_driver_tim)
 
 !********* Surface driver

@@ -210,6 +210,17 @@ jobs:
           python3 WRF/test/rrtmgp/test_udm_scm.py build/udm-scm \
             --reference-executable build/replay-reference/reference_column \
             | tee build/udm-scm-result.json
+      - name: Independently reconstruct UDM dry-layer mass from actual WRF coordinates
+        shell: bash
+        run: |
+          set -euo pipefail
+          for case in control mixed; do
+            run_dir="build/udm-scm/$case/ra37-call1"
+            python3 WRF/test/rrtmgp/test_udm_native_mass.py "$run_dir/capture" \
+              "$run_dir/wrfinput_d01" --history "$run_dir/wrfout_d01_1999-10-22_19:00:00" \
+              --time-index 0 --executable WRF/main/wrf.exe \
+              --output "build/udm-scm/$case/native-dry-mass.json"
+          done
       - name: Check every-step accumulation across held radiation fluxes
         shell: bash
         run: |
