@@ -295,7 +295,7 @@ CONTAINS
    USE module_ra_gsfcsw     , ONLY : gsfcswrad
    USE module_ra_rrtm       , ONLY : rrtmlwrad
    USE module_ra_rrtmg_lw   , ONLY : rrtmg_lwrad, rrtmg_lwinit
-   USE module_ra_rrtmgp_audit, ONLY: audit_enabled, audit_samples, audit_native4, audit_moments
+   USE module_ra_rrtmgp_audit, ONLY: audit_enabled, audit_samples, audit_native4, audit_moments, hydro_snapshot
    USE module_ra_rrtmgp_trace, ONLY: trace_suspend
    USE module_ra_rrtmg_sw   , ONLY : rrtmg_swrad
 #if( BUILD_RRTMG_FAST == 1)
@@ -1623,6 +1623,22 @@ CONTAINS
    ENDIF Solar_step
 
    Radiation_step: IF ( run_param ) then
+     ! Observe UDM's actual radiation inputs once for both spectral branches,
+     ! after radiation cloud fraction/feedback preparation and before any
+     ! wrapper clipping or strict validation. This opt-in observer is also
+     ! available on the unchanged 4/4 baseline; it never changes model fields.
+     IF(mp_physics==27.AND.(lw_physics==4.OR.lw_physics==37).AND. &
+        (sw_physics==4.OR.sw_physics==37)) THEN
+       IF(PRESENT(QC).AND.PRESENT(QI).AND.PRESENT(QR).AND.PRESENT(QS).AND. &
+          PRESENT(QG).AND.PRESENT(QH).AND.PRESENT(CLDFRA)) THEN
+         DO ij=1,num_tiles
+           CALL hydro_snapshot(id,itimestep,xtime*60.,lw_physics,sw_physics,g, &
+                ims,ime,kms,kme,jms,jme,i_start(ij),MIN(i_end(ij),ide-1), &
+                kts,MIN(kte,kde-1),j_start(ij),MIN(j_end(ij),jde-1), &
+                p8w,cldfra,qc,qi,qr,qs,qg,qh)
+         END DO
+       END IF
+     END IF
 ! CAM-specific additional radiation frequency - cam_abs_freq_s (=21600s by default)
      STEPABS = nint(cam_abs_freq_s/(dt*STEPRA))*STEPRA
      IF (itimestep .eq. 1 .or. mod(itimestep,STEPABS) .eq. 1 + ra_call_offset &
