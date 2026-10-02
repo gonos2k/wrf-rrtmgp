@@ -4,10 +4,13 @@
 ! serialized wrapper path.  With no WRF_RRTMGP_CAPTURE_DIR it is a no-op.
 MODULE module_ra_rrtmgp_trace
   USE, INTRINSIC :: iso_fortran_env, ONLY: real64
+#ifdef _OPENMP
+  USE omp_lib, ONLY: omp_get_max_threads
+#endif
   IMPLICIT NONE
   PRIVATE
 
-  PUBLIC :: trace_configure, trace_start, trace_active
+  PUBLIC :: trace_configure, trace_start, trace_active, trace_suspend
   PUBLIC :: trace_input_start, trace_input, trace_input_end
   PUBLIC :: trace_result_start, trace_result, trace_raw_start, trace_raw
   PUBLIC :: trace_raw_end, trace_end
@@ -19,12 +22,25 @@ MODULE module_ra_rrtmgp_trace
   CHARACTER(len=2), PARAMETER :: phases(2) = [ CHARACTER(len=2) :: 'lw', 'sw' ]
   CHARACTER(len=1024), SAVE :: capture_dir = ''
   LOGICAL, SAVE :: env_checked = .FALSE., enabled = .FALSE., call_select_set = .FALSE.
+  LOGICAL, SAVE :: capture_all=.FALSE., suspended=.FALSE.
   INTEGER, SAVE :: selected_call = 1, call_count(2) = 0
   LOGICAL, SAVE :: phase_done(2) = .FALSE., phase_active(2) = .FALSE.
   INTEGER, SAVE :: active_i(2) = 0, active_j(2) = 0
   INTEGER, SAVE :: result_unit(2) = 0, raw_unit(2) = 0
 
 CONTAINS
+
+  SUBROUTINE trace_suspend(value)
+    LOGICAL, INTENT(IN) :: value
+    suspended=value
+  END SUBROUTINE
+
+  FUNCTION trace_basename(p) RESULT(name)
+    INTEGER, INTENT(IN) :: p
+    CHARACTER(LEN=32) :: name
+    name=phases(p)
+    IF(capture_all) WRITE(name,'(A,"_",I6.6)') phases(p),call_count(p)
+  END FUNCTION
 
   SUBROUTINE trace_configure()
     ! Call during rrtmgp_init, before any parallel column work begins.
@@ -38,7 +54,7 @@ CONTAINS
 
     CALL trace_initialize()
     p = phase_index(phase)
-    IF (.NOT. enabled) RETURN
+    IF (.NOT. enabled .OR. suspended) RETURN
     IF (p == 0) THEN
       CALL trace_fatal('RRTMGP_TRACE_INVALID_PHASE: phase must be LW or SW')
       RETURN
@@ -47,10 +63,11 @@ CONTAINS
       CALL trace_fatal('RRTMGP_TRACE_INVALID_INDEX: i and j must be positive')
       RETURN
     END IF
-    IF (phase_done(p) .OR. phase_active(p)) RETURN
+    IF (phase_active(p)) RETURN
+    IF (.NOT.capture_all.AND.phase_done(p)) RETURN
     IF (i /= 1 .OR. j /= 1) RETURN
     call_count(p) = call_count(p) + 1
-    IF (call_count(p) /= selected_call) RETURN
+    IF (.NOT.capture_all.AND.call_count(p) /= selected_call) RETURN
     phase_active(p) = .TRUE.
     active_i(p) = i
     active_j(p) = j
@@ -74,7 +91,7 @@ CONTAINS
     p = active_phase(phase)
     IF (p == 0) RETURN
     CALL check_dimensions(nc, nl)
-    filename = trim(capture_dir)//'/'//trim(phases(p))//'.input'
+    filename = trim(capture_dir)//'/'//trim(trace_basename(p))//'.input'
     OPEN(NEWUNIT=unit, FILE=trim(filename), STATUS='replace', ACTION='write', IOSTAT=ios)
     CALL check_io(ios, 'opening input capture')
     v4=.FALSE.
@@ -98,7 +115,7 @@ CONTAINS
     CHARACTER(len=1200) :: filename
     p = active_phase(phase)
     IF (p == 0) RETURN
-    filename = trim(capture_dir)//'/'//trim(phases(p))//'.input'
+    filename = trim(capture_dir)//'/'//trim(trace_basename(p))//'.input'
     OPEN(NEWUNIT=unit, FILE=trim(filename), STATUS='old', POSITION='append', ACTION='write', IOSTAT=ios)
     CALL check_io(ios, 'opening input record')
     WRITE(unit,'(a,1x,i0,1x,i0)',IOSTAT=ios) trim(name), size(values,1), size(values,2)
@@ -126,7 +143,7 @@ CONTAINS
     p = active_phase(phase)
     IF (p == 0) RETURN
     CALL check_dimensions(nc, nl)
-    filename = trim(capture_dir)//'/'//trim(phases(p))//'.result'
+    filename = trim(capture_dir)//'/'//trim(trace_basename(p))//'.result'
     OPEN(NEWUNIT=result_unit(p), FILE=trim(filename), STATUS='replace', ACTION='write', IOSTAT=ios)
     CALL check_io(ios, 'opening result capture')
     WRITE(result_unit(p),'(a)',IOSTAT=ios) 'RRTMGP_RESULT_V1'
@@ -185,7 +202,7 @@ CONTAINS
     p = active_phase(phase)
     IF (p == 0) RETURN
     IF (nl < 1) CALL trace_fatal('RRTMGP_TRACE_INVALID_DIMENSION: nl must be positive')
-    filename = trim(capture_dir)//'/'//trim(phases(p))//'.raw'
+    filename = trim(capture_dir)//'/'//trim(trace_basename(p))//'.raw'
     OPEN(NEWUNIT=raw_unit(p), FILE=trim(filename), STATUS='replace', ACTION='write', IOSTAT=ios)
     CALL check_io(ios, 'opening raw capture')
     WRITE(raw_unit(p),'(a)',IOSTAT=ios) 'RRTMGP_RAW_V1'
@@ -242,6 +259,14 @@ CONTAINS
     CALL GET_ENVIRONMENT_VARIABLE('WRF_RRTMGP_CAPTURE_DIR', capture_dir, STATUS=env_status)
     enabled = env_status == 0 .AND. LEN_TRIM(capture_dir) > 0
     IF (.NOT.enabled) RETURN
+#if defined(DM_PARALLEL)
+    CALL trace_fatal('RRTMGP_TRACE_SERIAL_ONLY: MPI capture is unsupported')
+#endif
+#ifdef _OPENMP
+    IF(omp_get_max_threads()>1) CALL trace_fatal('RRTMGP_TRACE_SERIAL_ONLY: OpenMP capture is unsupported')
+#endif
+    CALL GET_ENVIRONMENT_VARIABLE('WRF_RRTMGP_CAPTURE_ALL',value,STATUS=env_status)
+    capture_all=env_status==0.AND.TRIM(value)=='1'
     CALL GET_ENVIRONMENT_VARIABLE('WRF_RRTMGP_CAPTURE_CALL', value, STATUS=env_status)
     IF (env_status == 0 .AND. LEN_TRIM(value) > 0) THEN
       READ(value,*,IOSTAT=ios) n

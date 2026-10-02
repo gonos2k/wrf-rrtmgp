@@ -98,7 +98,7 @@ CONTAINS
               , lradius,iradius                                           &
 #endif
               , cldfra_dp, cldfra_sh                                      &
-              , re_cloud, re_ice, re_snow                                 &
+              , re_cloud, re_ice, re_snow, udm_cldfra, udm_cf_step           &
               , has_reqc, has_reqi, has_reqs                              &
               , PB                                                        &
               , F_ICE_PHY,F_RAIN_PHY                                      &
@@ -295,6 +295,8 @@ CONTAINS
    USE module_ra_gsfcsw     , ONLY : gsfcswrad
    USE module_ra_rrtm       , ONLY : rrtmlwrad
    USE module_ra_rrtmg_lw   , ONLY : rrtmg_lwrad, rrtmg_lwinit
+   USE module_ra_rrtmgp_audit, ONLY: audit_enabled, audit_samples, audit_native4, audit_moments
+   USE module_ra_rrtmgp_trace, ONLY: trace_suspend
    USE module_ra_rrtmg_sw   , ONLY : rrtmg_swrad
 #if( BUILD_RRTMG_FAST == 1)
    USE module_ra_rrtmg_lwf  , ONLY : rrtmg_lwrad_fast
@@ -847,6 +849,8 @@ CONTAINS
                                                        cldfra_bl
 
 !..G. Thompson
+   REAL, OPTIONAL, INTENT(IN) :: udm_cldfra(ims:ime,kms:kme,jms:jme)
+   INTEGER, OPTIONAL, INTENT(IN) :: udm_cf_step(ims:ime,jms:jme)
    REAL, DIMENSION(ims:ime,kms:kme,jms:jme), INTENT(INOUT):: re_cloud, re_ice, re_snow
    INTEGER, INTENT(INOUT):: has_reqc, has_reqi, has_reqs
 
@@ -2119,7 +2123,155 @@ CONTAINS
                   ITS=its,ITE=ite, JTS=jts,JTE=jte, KTS=kts,KTE=kte,&
                   LWUPFLX=LWUPFLX,LWUPFLXC=LWUPFLXC,                &
                   LWDNFLX=LWDNFLX,LWDNFLXC=LWDNFLXC,                &
-                  mp_physics=mp_physics                             ,USE_RRTMGP=(lw_physics==RRTMGP_LWSCHEME) )
+                  mp_physics=mp_physics                             ,USE_RRTMGP=(lw_physics==RRTMGP_LWSCHEME) , &
+                  udm_cldfra=udm_cldfra,udm_cf_step=udm_cf_step, &
+                  audit_step=itimestep,audit_time=xtime*60. )
+             ! Serialized opt-in diagnostic: scratch outputs never feed the forecast.
+             IF (lw_physics==RRTMGP_LWSCHEME) THEN
+              IF (audit_enabled()) THEN
+               BLOCK
+                USE, INTRINSIC :: iso_fortran_env, ONLY: real64
+                TYPE(audit_moments) :: grid_stats, domain_stats
+                REAL, ALLOCATABLE :: ah(:,:,:,:),af(:,:,:),ao3(:,:,:)
+                REAL(real64), ALLOCATABLE :: x37(:,:,:),x4(:,:,:),op37(:,:,:),op4(:,:,:)
+                REAL(real64), ALLOCATABLE :: d37(:,:,:),d4(:,:,:),dop37(:,:,:),dop4(:,:,:)
+                CHARACTER(LEN=24), ALLOCATABLE :: labels(:)
+                INTEGER :: nmetrics,m,engine,seed,native,ak,ai,aj,slot
+                nmetrics=2+kte-kts+1
+                ALLOCATE(ah(ims:ime,kms:kme,jms:jme,2),af(ims:ime,jms:jme,3),ao3(ims:ime,kms:kme,jms:jme))
+                ALLOCATE(x37(its:ite,jts:jte,nmetrics),x4(its:ite,jts:jte,nmetrics), &
+                  op37(its:ite,jts:jte,nmetrics),op4(its:ite,jts:jte,nmetrics),labels(nmetrics))
+                ALLOCATE(d37(1,1,nmetrics),d4(1,1,nmetrics),dop37(1,1,nmetrics),dop4(1,1,nmetrics))
+                CALL grid_stats%init(ite-its+1,jte-jts+1,nmetrics,its,jts)
+                CALL domain_stats%init(1,1,nmetrics,0,0)
+                labels(1)='SURFACE_DOWN'
+                op37(:,:,1)=REAL(GLW(its:ite,jts:jte),real64)
+                labels(2)='TOA_UP'
+                op37(:,:,2)=REAL(RLWTOA(its:ite,jts:jte),real64)
+                DO ak=kts,kte
+                 slot=2+ak-kts+1
+                 WRITE(labels(slot),'("HEAT_",I0)') ak
+                 op37(:,:,slot)=REAL(RTHRATEN(its:ite,ak,jts:jte)*pi(its:ite,ak,jts:jte)*86400.,real64)
+                END DO
+                CALL trace_suspend(.TRUE.)
+                DO m=0,audit_samples()
+                 seed=m
+                 IF(m==0) seed=-1
+                 DO engine=4,37,33
+                  IF(m==0.AND.engine==37) CYCLE
+                  native=audit_native4()
+                  IF(engine==37) native=1
+                  ah=0.;af=0.;ao3=O3RAD
+                  CALL RRTMG_LWRAD( &
+                    p8w=p8w, &
+                    p3d=p, &
+                    pi3d=pi, &
+                    dz8w=dz8w, &
+                    tsk=tsk, &
+                    t3d=t, &
+                    t8w=t8w, &
+                    rho3d=rho, &
+                    r=R_d, &
+                    g=G, &
+                    icloud=icloud, &
+                    warm_rain=warm_rain, &
+                    cldfra3d=CLDFRA, &
+                    cldovrlp=cldovrlp, &
+                    idcor=idcor, &
+                    xlat=XLAT, &
+                    is_cammgmp_used=.FALSE., &
+                    f_ice_phy=F_ICE_PHY, &
+                    f_rain_phy=F_RAIN_PHY, &
+                    xland=XLAND, &
+                    xice=XICE, &
+                    snow=SNOW, &
+                    qv3d=QV, &
+                    qc3d=QC, &
+                    qr3d=QR, &
+                    qi3d=QI, &
+                    qs3d=QS, &
+                    qg3d=QG, &
+                    qh3d=QH, &
+                    f_qh=F_QH, &
+                    o3input=O3INPUT, &
+                    o33d=ao3, &
+                    f_qv=F_QV, &
+                    f_qc=F_QC, &
+                    f_qr=F_QR, &
+                    f_qi=F_QI, &
+                    f_qs=F_QS, &
+                    f_qg=F_QG, &
+                    re_cloud=re_cloud, &
+                    re_ice=re_ice, &
+                    re_snow=re_snow, &
+                    has_reqc=native, &
+                    has_reqi=native, &
+                    has_reqs=native, &
+                    calc_clean_atm_diag=0, &
+                    yr=YR, &
+                    julian=JULIAN, &
+                    ghg_input=GHG_INPUT, &
+                    ids=ids, &
+                    ide=ide, &
+                    jds=jds, &
+                    jde=jde, &
+                    kds=kds, &
+                    kde=kde, &
+                    ims=ims, &
+                    ime=ime, &
+                    jms=jms, &
+                    jme=jme, &
+                    kms=kms, &
+                    kme=kme, &
+                    its=its, &
+                    ite=ite, &
+                    jts=jts, &
+                    jte=jte, &
+                    kts=kts, &
+                    kte=kte, &
+                    mp_physics=mp_physics, &
+                    emiss=EMISS, &
+                    use_rrtmgp=engine==37, &
+                    mcica_seed_override=seed, &
+                    glw=af(:,:,1), &
+                    olr=af(:,:,2), &
+                    lwcf=af(:,:,3), &
+                    rthratenlw=ah(:,:,:,1), &
+                    rthratenlwc=ah(:,:,:,2) )
+                  IF(engine==4) THEN
+                   x4(:,:,1)=REAL(af(its:ite,jts:jte,1),real64)
+                   x4(:,:,2)=REAL(af(its:ite,jts:jte,2),real64)
+                   DO ak=kts,kte
+                    x4(:,:,2+ak-kts+1)=REAL(ah(its:ite,ak,jts:jte,1)*pi(its:ite,ak,jts:jte)*86400.,real64)
+                   END DO
+                   IF(m==0) op4=x4
+                  ELSE
+                   x37(:,:,1)=REAL(af(its:ite,jts:jte,1),real64)
+                   x37(:,:,2)=REAL(af(its:ite,jts:jte,2),real64)
+                   DO ak=kts,kte
+                    x37(:,:,2+ak-kts+1)=REAL(ah(its:ite,ak,jts:jte,1)*pi(its:ite,ak,jts:jte)*86400.,real64)
+                   END DO
+                  END IF
+                 END DO
+                 IF(m==0) CYCLE
+                 CALL grid_stats%add(x37,x4)
+                 DO slot=1,nmetrics
+                  d37(1,1,slot)=SUM(x37(:,:,slot))/((ite-its+1)*(jte-jts+1))
+                  d4(1,1,slot)=SUM(x4(:,:,slot))/((ite-its+1)*(jte-jts+1))
+                 END DO
+                 CALL domain_stats%add(d37,d4)
+                END DO
+                CALL trace_suspend(.FALSE.)
+                DO slot=1,nmetrics
+                 dop37(1,1,slot)=SUM(op37(:,:,slot))/((ite-its+1)*(jte-jts+1))
+                 dop4(1,1,slot)=SUM(op4(:,:,slot))/((ite-its+1)*(jte-jts+1))
+                END DO
+                CALL grid_stats%write('lw',id,itimestep,xtime*60.,op37,op4,labels)
+                CALL domain_stats%write('lw',id,itimestep,xtime*60.,dop37,dop4,labels)
+               END BLOCK
+              END IF
+             END IF
+
 
 
 #if( BUILD_RRTMK == 1)
@@ -2697,7 +2849,201 @@ CONTAINS
                      sw_zbbcddir=sw_zbbcddir,                           & ! WRF-CMAQ coupled model
                      sw_dirdflux=sw_dirdflux,                           & ! WRF-CMAQ coupled model
                      sw_difdflux=sw_difdflux                            & ! WRF-CMAQ coupled model
-                                                                        ,USE_RRTMGP=(sw_physics==RRTMGP_SWSCHEME) )
+                                                                        ,USE_RRTMGP=(sw_physics==RRTMGP_SWSCHEME) , &
+                  udm_cldfra=udm_cldfra,udm_cf_step=udm_cf_step, &
+                  audit_step=itimestep,audit_time=xtime*60. )
+             ! Serialized opt-in diagnostic: scratch outputs never feed the forecast.
+             IF (sw_physics==RRTMGP_SWSCHEME) THEN
+              IF (audit_enabled()) THEN
+               BLOCK
+                USE, INTRINSIC :: iso_fortran_env, ONLY: real64
+                TYPE(audit_moments) :: grid_stats, domain_stats
+                REAL, ALLOCATABLE :: ah(:,:,:,:),af(:,:,:),ao3(:,:,:)
+                REAL(real64), ALLOCATABLE :: x37(:,:,:),x4(:,:,:),op37(:,:,:),op4(:,:,:)
+                REAL(real64), ALLOCATABLE :: d37(:,:,:),d4(:,:,:),dop37(:,:,:),dop4(:,:,:)
+                CHARACTER(LEN=24), ALLOCATABLE :: labels(:)
+                INTEGER :: nmetrics,m,engine,seed,native,ak,ai,aj,slot
+                nmetrics=4+kte-kts+1
+                ALLOCATE(ah(ims:ime,kms:kme,jms:jme,2),af(ims:ime,jms:jme,21),ao3(ims:ime,kms:kme,jms:jme))
+                ALLOCATE(x37(its:ite,jts:jte,nmetrics),x4(its:ite,jts:jte,nmetrics), &
+                  op37(its:ite,jts:jte,nmetrics),op4(its:ite,jts:jte,nmetrics),labels(nmetrics))
+                ALLOCATE(d37(1,1,nmetrics),d4(1,1,nmetrics),dop37(1,1,nmetrics),dop4(1,1,nmetrics))
+                CALL grid_stats%init(ite-its+1,jte-jts+1,nmetrics,its,jts)
+                CALL domain_stats%init(1,1,nmetrics,0,0)
+                labels(1)='SURFACE_DOWN'
+                op37(:,:,1)=REAL(SWDNB(its:ite,jts:jte),real64)
+                labels(2)='TOA_UP'
+                op37(:,:,2)=REAL(SWUPT(its:ite,jts:jte),real64)
+                labels(3)='SW_NET'
+                op37(:,:,3)=REAL(GSW(its:ite,jts:jte),real64)
+                labels(4)='SW_DIRECT'
+                op37(:,:,4)=REAL(SWDDIR(its:ite,jts:jte),real64)
+                DO ak=kts,kte
+                 slot=4+ak-kts+1
+                 WRITE(labels(slot),'("HEAT_",I0)') ak
+                 op37(:,:,slot)=REAL(RTHRATENSW(its:ite,ak,jts:jte)*pi(its:ite,ak,jts:jte)*86400.,real64)
+                END DO
+                CALL trace_suspend(.TRUE.)
+                DO m=0,audit_samples()
+                 seed=m
+                 IF(m==0) seed=-1
+                 DO engine=4,37,33
+                  IF(m==0.AND.engine==37) CYCLE
+                  native=audit_native4()
+                  IF(engine==37) native=1
+                  ah=0.;af=0.;ao3=O3RAD
+                  CALL RRTMG_SWRAD( &
+                    p8w=p8w, &
+                    p3d=p, &
+                    pi3d=pi, &
+                    dz8w=dz8w, &
+                    tsk=TSK, &
+                    t3d=t, &
+                    t8w=t8w, &
+                    rho3d=rho, &
+                    r=R_D, &
+                    g=G, &
+                    icloud=icloud, &
+                    warm_rain=warm_rain, &
+                    cldfra3d=CLDFRA, &
+                    cldovrlp=cldovrlp, &
+                    idcor=idcor, &
+                    xlat=XLAT, &
+                    is_cammgmp_used=.FALSE., &
+                    f_ice_phy=F_ICE_PHY, &
+                    f_rain_phy=F_RAIN_PHY, &
+                    xland=XLAND, &
+                    xice=XICE, &
+                    snow=SNOW, &
+                    qv3d=qv, &
+                    qc3d=qc, &
+                    qr3d=qr, &
+                    qi3d=qi, &
+                    qs3d=qs, &
+                    qg3d=qg, &
+                    qh3d=QH, &
+                    f_qh=F_QH, &
+                    o3input=O3INPUT, &
+                    o33d=ao3, &
+                    f_qv=f_qv, &
+                    f_qc=f_qc, &
+                    f_qr=f_qr, &
+                    f_qi=f_qi, &
+                    f_qs=f_qs, &
+                    f_qg=f_qg, &
+                    re_cloud=re_cloud, &
+                    re_ice=re_ice, &
+                    re_snow=re_snow, &
+                    has_reqc=native, &
+                    has_reqi=native, &
+                    has_reqs=native, &
+                    calc_clean_atm_diag=0, &
+                    yr=yr, &
+                    julian=julian, &
+                    ghg_input=GHG_INPUT, &
+                    ids=ids, &
+                    ide=ide, &
+                    jds=jds, &
+                    jde=jde, &
+                    kds=kds, &
+                    kde=kde, &
+                    ims=ims, &
+                    ime=ime, &
+                    jms=jms, &
+                    jme=jme, &
+                    kms=kms, &
+                    kme=kme, &
+                    its=its, &
+                    ite=ite, &
+                    jts=jts, &
+                    jte=jte, &
+                    kts=kts, &
+                    kte=kte, &
+                    mp_physics=mp_physics, &
+                    xtime=XTIME, &
+                    gmt=GMT, &
+                    xlong=XLONG, &
+                    radt=RADT, &
+                    degrad=DEGRAD, &
+                    declin=DECLIN, &
+                    julday=JULDAY, &
+                    solcon=SOLCON, &
+                    albedo=ALBEDO, &
+                    aer_opt=AER_OPT, &
+                    tauaer3d_sw=tauaer_sw,ssaaer3d_sw=ssaaer_sw,asyaer3d_sw=asyaer_sw, &
+                    aerod=aerod, &
+                    no_src=no_src_types, &
+                    alswvisdir=alswvisdir, &
+                    alswvisdif=alswvisdif, &
+                    alswnirdir=alswnirdir, &
+                    alswnirdif=alswnirdif, &
+                    sf_surface_physics=sf_surface_physics, &
+                    obscur=obscur_loc, &
+                    xcoszen=coszen, &
+                    proceed_cmaq_sw=proceed_cmaq_sw, &
+                    use_rrtmgp=engine==37, &
+                    mcica_seed_override=seed, &
+                    swdnb=af(:,:,1), &
+                    swupt=af(:,:,2), &
+                    gsw=af(:,:,3), &
+                    swddir=af(:,:,4), &
+                    swcf=af(:,:,5), &
+                    coszr=af(:,:,6), &
+                    swuptc=af(:,:,7), &
+                    swdnt=af(:,:,8), &
+                    swdntc=af(:,:,9), &
+                    swupb=af(:,:,10), &
+                    swupbc=af(:,:,11), &
+                    swdnbc=af(:,:,12), &
+                    swvisdir=af(:,:,13), &
+                    swvisdif=af(:,:,14), &
+                    swnirdir=af(:,:,15), &
+                    swnirdif=af(:,:,16), &
+                    swddni=af(:,:,17), &
+                    swddif=af(:,:,18), &
+                    swdownc=af(:,:,19), &
+                    swddnic=af(:,:,20), &
+                    swddirc=af(:,:,21), &
+                    rthratensw=ah(:,:,:,1), &
+                    rthratenswc=ah(:,:,:,2) )
+                  IF(engine==4) THEN
+                   x4(:,:,1)=REAL(af(its:ite,jts:jte,1),real64)
+                   x4(:,:,2)=REAL(af(its:ite,jts:jte,2),real64)
+                   x4(:,:,3)=REAL(af(its:ite,jts:jte,3),real64)
+                   x4(:,:,4)=REAL(af(its:ite,jts:jte,4),real64)
+                   DO ak=kts,kte
+                    x4(:,:,4+ak-kts+1)=REAL(ah(its:ite,ak,jts:jte,1)*pi(its:ite,ak,jts:jte)*86400.,real64)
+                   END DO
+                   IF(m==0) op4=x4
+                  ELSE
+                   x37(:,:,1)=REAL(af(its:ite,jts:jte,1),real64)
+                   x37(:,:,2)=REAL(af(its:ite,jts:jte,2),real64)
+                   x37(:,:,3)=REAL(af(its:ite,jts:jte,3),real64)
+                   x37(:,:,4)=REAL(af(its:ite,jts:jte,4),real64)
+                   DO ak=kts,kte
+                    x37(:,:,4+ak-kts+1)=REAL(ah(its:ite,ak,jts:jte,1)*pi(its:ite,ak,jts:jte)*86400.,real64)
+                   END DO
+                  END IF
+                 END DO
+                 IF(m==0) CYCLE
+                 CALL grid_stats%add(x37,x4)
+                 DO slot=1,nmetrics
+                  d37(1,1,slot)=SUM(x37(:,:,slot))/((ite-its+1)*(jte-jts+1))
+                  d4(1,1,slot)=SUM(x4(:,:,slot))/((ite-its+1)*(jte-jts+1))
+                 END DO
+                 CALL domain_stats%add(d37,d4)
+                END DO
+                CALL trace_suspend(.FALSE.)
+                DO slot=1,nmetrics
+                 dop37(1,1,slot)=SUM(op37(:,:,slot))/((ite-its+1)*(jte-jts+1))
+                 dop4(1,1,slot)=SUM(op4(:,:,slot))/((ite-its+1)*(jte-jts+1))
+                END DO
+                CALL grid_stats%write('sw',id,itimestep,xtime*60.,op37,op4,labels)
+                CALL domain_stats%write('sw',id,itimestep,xtime*60.,dop37,dop4,labels)
+               END BLOCK
+              END IF
+             END IF
+
 
              ! = WRF-CMAQ twoway coupled model
              if (proceed_cmaq_sw) then

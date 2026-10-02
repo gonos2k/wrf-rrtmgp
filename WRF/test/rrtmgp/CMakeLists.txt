@@ -30,6 +30,11 @@ foreach(test IN ITEMS columns cloud_inputs multicolumn validation adapter_invali
     target_compile_options(test_rrtmgp_${test} PRIVATE -ffree-line-length-none -fcheck=bounds)
   endif()
 endforeach()
+add_executable(test_rrtmgp_delta_policy test_delta_policy.f90)
+target_link_libraries(test_rrtmgp_delta_policy PRIVATE test_rrtmgp_precip wrf_rrtmgp)
+if(CMAKE_Fortran_COMPILER_ID STREQUAL "GNU")
+  target_compile_options(test_rrtmgp_delta_policy PRIVATE -ffree-line-length-none -fcheck=bounds)
+endif()
 if(CMAKE_Fortran_COMPILER_ID STREQUAL "GNU")
   target_compile_options(test_rrtmgp_adapter PRIVATE -ffree-line-length-none -fcheck=bounds)
 endif()
@@ -123,3 +128,13 @@ add_test(NAME udm_precip_adapter COMMAND test_rrtmgp_udm_adapter "${RRTMGP_DATA_
 add_test(NAME udm_precip_replay COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/test_udm_replay.py"
   "${RRTMGP_DATA_DIR}" "$<TARGET_FILE:test_rrtmgp_udm_adapter>" "$<TARGET_FILE:reference_column>"
   --output "${CMAKE_CURRENT_BINARY_DIR}/udm-precip-replay.json")
+
+add_test(NAME delta_policy_benchmark COMMAND test_rrtmgp_delta_policy "${RRTMGP_DATA_DIR}"
+  "${CMAKE_CURRENT_BINARY_DIR}/delta-policy.csv")
+set_tests_properties(delta_policy_benchmark PROPERTIES FIXTURES_SETUP delta_policy)
+add_test(NAME delta_policy_summary COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/analyse_delta_policy.py"
+  "${CMAKE_CURRENT_BINARY_DIR}/delta-policy.csv" --output "${CMAKE_CURRENT_BINARY_DIR}/delta-policy-summary.json")
+set_tests_properties(delta_policy_summary PROPERTIES FIXTURES_REQUIRED delta_policy)
+add_test(NAME udm_sw_delta_policy_replay COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/test_udm_delta_policy.py"
+  "${RRTMGP_DATA_DIR}" "$<TARGET_FILE:test_rrtmgp_udm_adapter>" "$<TARGET_FILE:reference_column>"
+  --output "${CMAKE_CURRENT_BINARY_DIR}/udm-sw-delta-policy.json")

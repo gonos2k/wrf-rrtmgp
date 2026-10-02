@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - 'WRF/Registry/**'
+      - 'WRF/dyn_em/**'
       - 'WRF/arch/postamble'
       - 'WRF/external/**'
       - 'WRF/main/depend.common'
@@ -21,6 +22,7 @@ on:
     branches: [main]
     paths:
       - 'WRF/Registry/**'
+      - 'WRF/dyn_em/**'
       - 'WRF/arch/postamble'
       - 'WRF/external/**'
       - 'WRF/main/depend.common'
@@ -47,6 +49,8 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       - name: Verify registered source hashes without modifying the checkout
         run: python3 tools/register37.py --check
+      - name: Verify WRF UDM module dependency edges schedule under parallel make
+        run: python3 WRF/test/rrtmgp/test_wrf_udm_dependencies.py WRF/main/depend.common
   component-validation:
     needs: registration
     runs-on: ubuntu-24.04
@@ -151,21 +155,46 @@ jobs:
           python3 WRF/test/rrtmgp/test_udm_scm.py build/udm-scm \
             --reference-executable build/replay-reference/reference_column \
             | tee build/udm-scm-result.json
+      - name: Audit same-state UDM radiation and observer invariance
+        shell: bash
+        run: |
+          set -euo pipefail
+          export NETCDF="$RUNNER_TEMP/netcdf"
+          export LD_LIBRARY_PATH="$NETCDF/lib:/usr/lib/x86_64-linux-gnu:${LD_LIBRARY_PATH:-}"
+          python3 WRF/test/rrtmgp/test_udm_physics_audit.py build/udm-physics-audit \
+            --seeds 32 --reference-executable build/replay-reference/reference_column \
+            | tee build/udm-physics-audit-result.json
+      - name: Audit the native-radius RRTMG4 counterfactual and CF/delta replay
+        shell: bash
+        run: |
+          set -euo pipefail
+          export NETCDF="$RUNNER_TEMP/netcdf"
+          export LD_LIBRARY_PATH="$NETCDF/lib:/usr/lib/x86_64-linux-gnu:${LD_LIBRARY_PATH:-}"
+          python3 WRF/test/rrtmgp/test_udm_physics_audit.py build/udm-native4-audit \
+            --native-rrtmg4-counterfactual --seeds 8 \
+            --reference-executable build/replay-reference/reference_column
+          for case in control mixed; do
+            for phase in lw sw; do
+              capture="build/udm-physics-audit/$case/audit-on/capture/${phase}_000006"
+              python3 WRF/test/rrtmgp/test_udm_cf_replay.py WRF/run \
+                build/replay-reference/reference_column "$capture.input" "$capture.raw" \
+                --seeds 8 --cf-policy all --graupel-policy all --delta-policy all \
+                --output "build/udm-physics-audit/$case/${phase}-counterfactual.json"
+            done
+          done
+      - name: Package SCM evidence with original WRF filenames
+        if: always()
+        shell: bash
+        run: |
+          mkdir -p build
+          # WRF history names contain colons, which upload-artifact rejects.
+          # A tar member preserves the original filename and complete bytes.
+          tar -czf validation-serial-scm.tar.gz -C build .
       - name: Save SCM logs and output checks
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: validation-serial-scm-${{ github.run_id }}
-          path: |
-            build/udm-scm-result.json
-            build/udm-scm/**/*.log
-            build/udm-scm/**/capture/**
-            build/make-reproducibility.json
-            build/surface-scm-result.json
-            build/cloud-contract-result.json
-            build/cloud-contract-scm/*.log
-            build/surface-scm/**/*.log
-            build/wrf-configure.log
-            build/wrf-compile-scm.log
+          path: validation-serial-scm.tar.gz
           retention-days: 30
           if-no-files-found: warn

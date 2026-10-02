@@ -17,8 +17,8 @@ PROGRAM rrtmgp_reference_column
   IMPLICIT NONE
 
   CHARACTER(LEN=512) :: data_dir,input_path,output_path
-  CHARACTER(LEN=32) :: magic,phase
-  INTEGER :: nc,nl,overlap,seed,iceflag,u_in,u_out,ios,nemis
+  CHARACTER(LEN=32) :: magic,phase,policy_arg
+  INTEGER :: nc,nl,overlap,seed,iceflag,u_in,u_out,ios,nemis,sw_policy
   INTEGER :: c,k,g,b,ngpt,nbnd
   REAL(wp) :: solar,roughness_value,partition_value,precip_mode,visible_weight
   LOGICAL :: use_precip
@@ -60,8 +60,15 @@ PROGRAM rrtmgp_reference_column
   CALL get_command_argument(1,data_dir)
   CALL get_command_argument(2,input_path)
   CALL get_command_argument(3,output_path)
+  policy_arg=''
+  CALL get_command_argument(4,policy_arg)
   IF(LEN_TRIM(data_dir)==0 .OR. LEN_TRIM(input_path)==0 .OR. LEN_TRIM(output_path)==0) &
-    ERROR STOP 'usage: reference_column DATA_DIR INPUT_FILE OUTPUT_FILE'
+    ERROR STOP 'usage: reference_column DATA_DIR INPUT_FILE OUTPUT_FILE [SW_POLICY 1|2|3]'
+  sw_policy=1
+  IF(LEN_TRIM(policy_arg)>0) THEN
+    READ(policy_arg,*,IOSTAT=ios) sw_policy
+    IF(ios/=0.OR.sw_policy<1.OR.sw_policy>3) ERROR STOP 'SW_POLICY must be 1, 2, or 3'
+  END IF
   OPEN(NEWUNIT=u_in,FILE=TRIM(input_path),STATUS='OLD',ACTION='READ',IOSTAT=ios)
   IF(ios/=0) ERROR STOP 'could not open reference input file'
   READ(u_in,*,IOSTAT=ios) magic
@@ -133,6 +140,8 @@ PROGRAM rrtmgp_reference_column
     use_precip=.TRUE.
   END IF
   CLOSE(u_in)
+  IF(sw_policy/=1.AND.(TRIM(phase)/='SW'.OR..NOT.use_precip)) &
+    ERROR STOP 'SW_POLICY override requires a SW replay with V4 precipitation optics'
 
   ALLOCATE(emissivity(16,nc),avdir(nc),avdif(nc),andir(nc),andif(nc),mu0(nc))
   ALLOCATE(zero(nc,nl),rl(nc,nl),di(nc,nl),ds(nc,nl))
@@ -267,8 +276,9 @@ PROGRAM rrtmgp_reference_column
     IF(use_precip) ds=res ! V4 snow optics use native effective radius, not the cloud-ice LUT diameter.
     CALL check_error(cloud_sw%cloud_optics(lwp,iwp,rl,di,sw_cloud))
     IF(use_precip) THEN
-      CALL check_error(sw_cloud%delta_scale())
-      CALL reference_sw_precip(rwp,swp,res,bands,precip_tau,precip_ssa,precip_g)
+      IF(sw_policy==1) CALL check_error(sw_cloud%delta_scale())
+      CALL reference_sw_precip(rwp,swp,res,bands,precip_tau,precip_ssa,precip_g, &
+                               delta_scaled=(sw_policy/=3))
       DO c=1,nc
         DO k=1,nl
           IF(cf(c,k)==0._wp) THEN
@@ -283,6 +293,7 @@ PROGRAM rrtmgp_reference_column
       sw_precip%ssa=precip_ssa
       sw_precip%g=precip_g
       CALL check_error(sw_precip%increment(sw_cloud))
+      IF(sw_policy==3) CALL check_error(sw_cloud%delta_scale())
       cloud_tau=sw_cloud%tau; cloud_ssa=sw_cloud%ssa; cloud_g=sw_cloud%g
     ELSE
       CALL check_error(cloud_sw%cloud_optics(zero,swp,rl,ds,sw_snow))
@@ -474,10 +485,11 @@ CONTAINS
     END DO
   END SUBROUTINE reference_lw_precip
 
-  SUBROUTINE reference_sw_precip(rain_path,snow_path,snow_radius,band_limits,tau,ssa,asymmetry)
+  SUBROUTINE reference_sw_precip(rain_path,snow_path,snow_radius,band_limits,tau,ssa,asymmetry,delta_scaled)
     ! See the source/validation-scope note above reference_lw_precip.
     REAL(wp), INTENT(IN) :: rain_path(:,:),snow_path(:,:),snow_radius(:,:),band_limits(:,:)
     REAL(wp), INTENT(OUT) :: tau(:,:,:),ssa(:,:,:),asymmetry(:,:,:)
+    LOGICAL, OPTIONAL, INTENT(IN) :: delta_scaled
     REAL(wp), PARAMETER :: expected(2,14)=RESHAPE([ &
       820._wp,2680._wp,2680._wp,3250._wp,3250._wp,4000._wp,4000._wp,4650._wp, &
       4650._wp,5150._wp,5150._wp,6150._wp,6150._wp,7700._wp,7700._wp,8050._wp, &
@@ -497,7 +509,10 @@ CONTAINS
       .970,.970,.970,.700,.700,.700,.700]
     REAL(wp) :: tau_rain,tau_snow,ssa_rain,ssa_snow,asy_rain,asy_snow
     REAL(wp) :: tau_prec,ssa_prec,asy_prec,asyw,ssaw,za1,za2
+    LOGICAL :: apply_delta
     INTEGER :: col,lev,band
+    apply_delta=.TRUE.
+    IF(PRESENT(delta_scaled)) apply_delta=delta_scaled
     IF(SIZE(tau,1)/=SIZE(rain_path,1).OR.SIZE(tau,2)/=SIZE(rain_path,2).OR.SIZE(tau,3)/=14) &
       ERROR STOP 'invalid SW precipitation optics shape'
     IF(ANY(SHAPE(ssa)/=SHAPE(tau)).OR.ANY(SHAPE(asymmetry)/=SHAPE(tau))) &
@@ -526,11 +541,17 @@ CONTAINS
           asy_prec=MAX(1.E-12_wp,asy_rain+asy_snow)
           asyw=asy_prec/MAX(1.E-12_wp,ssa_prec)
           ssaw=MIN(1._wp-1.E-6_wp,ssa_prec/tau_prec)
-          za1=asyw*asyw
-          za2=ssaw*za1
-          tau(col,lev,band)=(1._wp-za2)*tau_prec
-          ssa(col,lev,band)=(ssaw-za2)/(1._wp-za2)
-          asymmetry(col,lev,band)=asyw/(1._wp+asyw)
+          IF(apply_delta) THEN
+            za1=asyw*asyw
+            za2=ssaw*za1
+            tau(col,lev,band)=(1._wp-za2)*tau_prec
+            ssa(col,lev,band)=(ssaw-za2)/(1._wp-za2)
+            asymmetry(col,lev,band)=asyw/(1._wp+asyw)
+          ELSE
+            tau(col,lev,band)=tau_prec
+            ssa(col,lev,band)=ssaw
+            asymmetry(col,lev,band)=asyw
+          END IF
         END DO
       END DO
     END DO

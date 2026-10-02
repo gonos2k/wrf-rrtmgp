@@ -131,6 +131,7 @@ MODULES = \
 	module_ra_goddard.o \
         module_ra_effective_radius.o \
 	module_ra_rrtm.o  \
+	module_ra_rrtmgp_audit.o  \
 	module_ra_rrtmgp_trace.o  \
 	module_ra_rrtmgp_input.o  \
 	module_ra_rrtmgp_precip.o  \

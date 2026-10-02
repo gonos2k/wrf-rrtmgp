@@ -1310,6 +1310,7 @@ endif
 #endif
 #endif
                       ,NoahmpIOdom(grid%id)                                                          &
+                      ,udm_cldfra=grid%udm_cldfra, udm_cf_step=grid%udm_cf_step                     &
                       )
        ENDDO ! loop of tiles for phy_init
 
