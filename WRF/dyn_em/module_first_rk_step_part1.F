@@ -409,7 +409,8 @@ BENCH_START(rad_driver_tim)
      &        , cldovrlp=config_flags%cldovrlp                            &
      &        , idcor=config_flags%idcor                                  &
      &        , qc_bl=grid%qc_bl,qi_bl=grid%qi_bl,cldfra_bl=grid%cldfra_bl&
-     &        , re_cloud=grid%re_cloud, re_ice=grid%re_ice, re_snow=grid%re_snow & ! G. Thompson
+     &        , re_cloud=grid%re_cloud, re_ice=grid%re_ice, re_snow=grid%re_snow &
+     &        ,udm_cldfra=grid%udm_cldfra,udm_cf_step=grid%udm_cf_step & ! G. Thompson
      &        , has_reqc=grid%has_reqc, has_reqi=grid%has_reqi, has_reqs=grid%has_reqs & ! G. Thompson
      &        , PB=grid%pb                                                &
      &        , F_ICE_PHY=grid%f_ice_phy,F_RAIN_PHY=grid%f_rain_phy       &

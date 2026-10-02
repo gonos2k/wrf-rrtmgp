@@ -1,0 +1,298 @@
+{
+  "description": "Exploratory one-layer SW optical composition benchmark; not a forecast validation or production policy selection.",
+  "source_policy": "Pinned CCPP implements C+D(P): precipitation is manually delta-scaled before cloud increment and the later whole-cloud scaling call is commented out.",
+  "grid": {
+    "cases": [
+      "graupel_as_snow_assumed",
+      "graupel_omitted",
+      "ice",
+      "ice_plus_snow",
+      "liquid",
+      "liquid_plus_rain",
+      "mixed",
+      "rain",
+      "snow"
+    ],
+    "roughness": [
+      1,
+      2,
+      3
+    ],
+    "mu0": [
+      0.2,
+      0.5,
+      0.9
+    ],
+    "sw_bands": 14,
+    "rows": 3402
+  },
+  "policy_delta_vs_pinned_ccpp_C_plus_D_P": {
+    "D(C)+D(P)": {
+      "combined_tau": {
+        "absolute": 11.71075687,
+        "signed": -11.71075687,
+        "key": [
+          "liquid_plus_rain",
+          1,
+          0.2,
+          10
+        ]
+      },
+      "combined_ssa": {
+        "absolute": 0.45881771800000004,
+        "signed": -0.45881771800000004,
+        "key": [
+          "ice",
+          1,
+          0.2,
+          1
+        ]
+      },
+      "combined_g": {
+        "absolute": 0.462430667,
+        "signed": -0.462430667,
+        "key": [
+          "ice",
+          1,
+          0.2,
+          1
+        ]
+      },
+      "surface_dn_w_m2": {
+        "absolute": 4.791792999999984,
+        "signed": 4.791792999999984,
+        "key": [
+          "liquid_plus_rain",
+          1,
+          0.9,
+          1
+        ]
+      },
+      "surface_up_w_m2": {
+        "absolute": 0.9583585999999968,
+        "signed": 0.9583585999999968,
+        "key": [
+          "liquid_plus_rain",
+          1,
+          0.9,
+          1
+        ]
+      },
+      "toa_dn_w_m2": {
+        "absolute": 0.0,
+        "signed": 0.0,
+        "key": [
+          "liquid",
+          1,
+          0.2,
+          1
+        ]
+      },
+      "toa_up_w_m2": {
+        "absolute": 17.457339999999988,
+        "signed": 17.457339999999988,
+        "key": [
+          "ice",
+          1,
+          0.9,
+          1
+        ]
+      },
+      "surface_direct_w_m2": {
+        "absolute": 81.66777582,
+        "signed": 81.66777582,
+        "key": [
+          "ice",
+          1,
+          0.9,
+          1
+        ]
+      },
+      "max_abs_heating_k_day": {
+        "absolute": 0.2918196499999999,
+        "signed": -0.2918196499999999,
+        "key": [
+          "ice",
+          1,
+          0.9,
+          1
+        ]
+      }
+    },
+    "D(C+P)": {
+      "combined_tau": {
+        "absolute": 11.71075686,
+        "signed": -11.71075686,
+        "key": [
+          "liquid",
+          1,
+          0.2,
+          10
+        ]
+      },
+      "combined_ssa": {
+        "absolute": 0.45881771800000004,
+        "signed": -0.45881771800000004,
+        "key": [
+          "ice",
+          1,
+          0.2,
+          1
+        ]
+      },
+      "combined_g": {
+        "absolute": 0.462430667,
+        "signed": -0.462430667,
+        "key": [
+          "ice",
+          1,
+          0.2,
+          1
+        ]
+      },
+      "surface_dn_w_m2": {
+        "absolute": 4.790093000000013,
+        "signed": 4.790093000000013,
+        "key": [
+          "liquid_plus_rain",
+          1,
+          0.9,
+          1
+        ]
+      },
+      "surface_up_w_m2": {
+        "absolute": 0.9580186999999967,
+        "signed": 0.9580186999999967,
+        "key": [
+          "liquid_plus_rain",
+          1,
+          0.9,
+          1
+        ]
+      },
+      "toa_dn_w_m2": {
+        "absolute": 0.0,
+        "signed": 0.0,
+        "key": [
+          "liquid",
+          1,
+          0.2,
+          1
+        ]
+      },
+      "toa_up_w_m2": {
+        "absolute": 17.457339999999988,
+        "signed": 17.457339999999988,
+        "key": [
+          "ice",
+          1,
+          0.9,
+          1
+        ]
+      },
+      "surface_direct_w_m2": {
+        "absolute": 81.66777582,
+        "signed": 81.66777582,
+        "key": [
+          "ice",
+          1,
+          0.9,
+          1
+        ]
+      },
+      "max_abs_heating_k_day": {
+        "absolute": 0.2918196499999999,
+        "signed": -0.2918196499999999,
+        "key": [
+          "ice",
+          1,
+          0.9,
+          1
+        ]
+      }
+    }
+  },
+  "graupel_as_snow_minus_omitted_counterfactual": {
+    "combined_tau": {
+      "absolute": 2.60113525,
+      "signed": 2.60113525,
+      "key": {
+        "roughness": 1,
+        "mu0": 0.2,
+        "policy": "D(C)+D(P)"
+      }
+    },
+    "combined_ssa": {
+      "absolute": 0.064877135,
+      "signed": 0.064877135,
+      "key": {
+        "roughness": 1,
+        "mu0": 0.2,
+        "policy": "D(C)+D(P)"
+      }
+    },
+    "combined_g": {
+      "absolute": 0.492385794,
+      "signed": 0.492385794,
+      "key": {
+        "roughness": 1,
+        "mu0": 0.2,
+        "policy": "D(C)+D(P)"
+      }
+    },
+    "surface_dn_w_m2": {
+      "absolute": 337.48331999999994,
+      "signed": -337.48331999999994,
+      "key": {
+        "roughness": 1,
+        "mu0": 0.9,
+        "policy": "D(C)+D(P)"
+      }
+    },
+    "surface_up_w_m2": {
+      "absolute": 67.49666400000001,
+      "signed": -67.49666400000001,
+      "key": {
+        "roughness": 1,
+        "mu0": 0.9,
+        "policy": "D(C)+D(P)"
+      }
+    },
+    "toa_dn_w_m2": {
+      "absolute": 0.0,
+      "signed": 0.0,
+      "key": {
+        "roughness": 1,
+        "mu0": 0.2,
+        "policy": "D(C)+D(P)"
+      }
+    },
+    "toa_up_w_m2": {
+      "absolute": 120.13282800000002,
+      "signed": 120.13282800000002,
+      "key": {
+        "roughness": 1,
+        "mu0": 0.9,
+        "policy": "D(C)+D(P)"
+      }
+    },
+    "surface_direct_w_m2": {
+      "absolute": 639.138668,
+      "signed": -639.138668,
+      "key": {
+        "roughness": 1,
+        "mu0": 0.9,
+        "policy": "D(C)+D(P)"
+      }
+    },
+    "max_abs_heating_k_day": {
+      "absolute": 2.1063984899999997,
+      "signed": 2.1063984899999997,
+      "key": {
+        "roughness": 1,
+        "mu0": 0.9,
+        "policy": "D(C)+D(P)"
+      }
+    }
+  }
+}

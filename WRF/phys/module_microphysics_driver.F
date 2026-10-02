@@ -172,6 +172,7 @@ SUBROUTINE microphysics_driver(                                          &
                       ,f_light_ne                                        &
                       ,f_light_neu                                       &
                       ,lpos,lneg,lneu                                    &
+                      ,udm_cldfra,udm_cf_step                            &
                                                                          )
 
 ! Framework
@@ -764,6 +765,8 @@ REAL, DIMENSION( ims:ime, kms:kme, jms:jme ),                        &
    REAL, DIMENSION(ims:ime,kms:kme,jms:jme), INTENT(INOUT) ::  & ! G. Thompson
                  re_cloud, re_ice, re_snow
    INTEGER, INTENT(IN):: has_reqc, has_reqi, has_reqs
+   REAL, DIMENSION(:,:,:), OPTIONAL, POINTER, INTENT(INOUT) :: udm_cldfra
+   INTEGER, DIMENSION(:,:), OPTIONAL, POINTER, INTENT(INOUT) :: udm_cf_step
 
   INTEGER,           INTENT(IN   )    :: aercu_opt
 # if (EM_CORE == 1)
@@ -799,6 +802,7 @@ REAL, DIMENSION( ims:ime, kms:kme, jms:jme ),                        &
 
    INTEGER :: i,j,k,its,ite,jts,jte,ij,sz,n
    LOGICAL :: channel
+   LOGICAL :: have_udm_cf
    LOGICAL :: nssl_progn = .false.
    REAL    :: z0, z1, z2, w1, w2
 
@@ -2800,6 +2804,58 @@ REAL, DIMENSION( ims:ime, kms:kme, jms:jme ),                        &
                   PRESENT( QNN_CURR ) .AND. PRESENT ( QNC_CURR ) .AND. &
                   PRESENT( QNR_CURR ).AND.                            &
                   PRESENT( RAINNC  ) .AND. PRESENT ( RAINNCV )  ) THEN
+             have_udm_cf = .false.
+             IF (has_reqc==1 .AND. has_reqi==1 .AND. has_reqs==1) THEN
+               IF (PRESENT(udm_cldfra)) THEN
+                 IF (PRESENT(udm_cf_step)) THEN
+                   IF (ASSOCIATED(udm_cldfra)) THEN
+                     IF (ASSOCIATED(udm_cf_step)) have_udm_cf = .true.
+                   ENDIF
+                 ENDIF
+               ENDIF
+             ENDIF
+             IF (have_udm_cf) THEN
+             CALL udm(                                              &
+                  TH=th                                             &
+                 ,Q=qv_curr                                         &
+                 ,QC=qc_curr                                        &
+                 ,QR=qr_curr                                        &
+                 ,QI=qi_curr                                        &
+                 ,QS=qs_curr                                        &
+                 ,QG=qg_curr                                        &
+                 ,QH=qh_curr                                        &
+                 ,NN=qnn_curr                                       &
+                 ,NC=qnc_curr                                       &
+                 ,NR=qnr_curr                                       &
+                 ,DEN=rho,PII=pi_phy,P=p,DELZ=dz8w                  &
+                 ,DELT=dt,G=g,CPD=cp,CPV=cpv,CCN0=ccn_conc          & ! RAS
+                 ,RD=r_d,RV=r_v,T0C=svpt0                           &
+                 ,EP1=ep_1, EP2=ep_2, QMIN=epsilon                  &
+                 ,XLS=xls, XLV0=xlv, XLF0=xlf                       &
+                 ,DEN0=rhoair0, DENR=rhowater                       &
+                 ,CLIQ=cliq,CICE=cice,PSAT=psat                     &
+                 ,xland=xland, xice=xice                            &  ! land mask, 1: land, 2: water
+                 ,RAIN=rainnc ,RAINNCV=rainncv                      &
+                 ,SNOW=snownc ,SNOWNCV=snowncv                      &
+                 ,SR=sr                                             &
+                 ,REFL_10CM=refl_10cm                               &  ! added for radar reflectivity
+                 ,diagflag=diagflag                                 &  ! added for radar reflectivity
+                 ,do_radar_ref=do_radar_ref                         &  ! added for radar reflectivity
+                 ,GRAUPEL=graupelnc ,GRAUPELNCV=graupelncv          &
+                 ,HAIL=hailnc ,HAILNCV=hailncv                      &
+                 ,ITIMESTEP=itimestep                               &
+                 ,udm_cldfra=udm_cldfra, udm_cf_step=udm_cf_step     &
+                 ,has_reqc=has_reqc                                 &  ! for radiation +
+                 ,has_reqi=has_reqi                                 &
+                 ,has_reqs=has_reqs                                 &
+                 ,re_cloud=re_cloud                                 &
+                 ,re_ice=re_ice                                     &
+                 ,re_snow=re_snow                                   &  ! for radiation -
+                 ,IDS=ids,IDE=ide, JDS=jds,JDE=jde, KDS=kds,KDE=kde &
+                 ,IMS=ims,IME=ime, JMS=jms,JME=jme, KMS=kms,KME=kme &
+                 ,ITS=its,ITE=ite, JTS=jts,JTE=jte, KTS=kts,KTE=kte &
+                                                                    )
+             ELSE
              CALL udm(                                              &
                   TH=th                                             &
                  ,Q=qv_curr                                         &
@@ -2839,6 +2895,7 @@ REAL, DIMENSION( ims:ime, kms:kme, jms:jme ),                        &
                  ,IMS=ims,IME=ime, JMS=jms,JME=jme, KMS=kms,KME=kme &
                  ,ITS=its,ITE=ite, JTS=jts,JTE=jte, KTS=kts,KTE=kte &
                                                                     )
+             ENDIF
              ELSE
                CALL wrf_error_fatal ( 'arguments not present for calling udm')
              ENDIF

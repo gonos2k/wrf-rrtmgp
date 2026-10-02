@@ -113,19 +113,28 @@ CONTAINS
   END SUBROUTINE rrtmgp_precip_lw_optics
 
   PURE SUBROUTINE rrtmgp_precip_sw_optics(rwp_gm2, swp_gm2, snow_radius_um, bands, &
-                                          tau, ssa, asymmetry, ierr)
+                                          tau, ssa, asymmetry, ierr, apply_delta_scale, &
+                                          raw_tau, raw_ssa, raw_asymmetry)
     REAL(wp), INTENT(IN) :: rwp_gm2(:,:), swp_gm2(:,:), snow_radius_um(:,:)
     REAL(wp), INTENT(IN) :: bands(2,RRTMGP_SW_NBAND)
     REAL(wp), INTENT(OUT) :: tau(:,:,:), ssa(:,:,:), asymmetry(:,:,:)
     INTEGER, INTENT(OUT) :: ierr
+    LOGICAL, OPTIONAL, INTENT(IN) :: apply_delta_scale
+    REAL(wp), OPTIONAL, INTENT(OUT) :: raw_tau(:,:,:), raw_ssa(:,:,:), raw_asymmetry(:,:,:)
     REAL(wp) :: tau_rain, tau_snow, ssa_rain, ssa_snow, asy_rain, asy_snow
     REAL(wp) :: tau_prec, ssa_prec, asy_prec, asyw, ssaw, za1, za2
+    LOGICAL :: do_delta_scale
     INTEGER :: b,i,k
 
     tau = 0.0_wp
     ssa = 0.0_wp
     asymmetry = 0.0_wp
+    IF(PRESENT(raw_tau)) raw_tau=0.0_wp
+    IF(PRESENT(raw_ssa)) raw_ssa=0.0_wp
+    IF(PRESENT(raw_asymmetry)) raw_asymmetry=0.0_wp
     ierr = RRTMGP_PRECIP_OK
+    do_delta_scale=.TRUE.
+    IF(PRESENT(apply_delta_scale)) do_delta_scale=apply_delta_scale
     IF (SIZE(tau,1) /= SIZE(rwp_gm2,1) .OR. SIZE(tau,1) /= SIZE(swp_gm2,1) .OR. &
         SIZE(tau,1) /= SIZE(snow_radius_um,1) .OR. SIZE(tau,2) /= SIZE(rwp_gm2,2) .OR. &
         SIZE(tau,2) /= SIZE(swp_gm2,2) .OR. SIZE(tau,2) /= SIZE(snow_radius_um,2) .OR. &
@@ -133,6 +142,24 @@ CONTAINS
         ANY(SHAPE(asymmetry) /= SHAPE(tau))) THEN
       ierr = RRTMGP_PRECIP_BAD_SHAPE
       RETURN
+    END IF
+    IF(PRESENT(raw_tau)) THEN
+      IF(ANY(SHAPE(raw_tau)/=SHAPE(tau))) THEN
+        ierr=RRTMGP_PRECIP_BAD_SHAPE
+        RETURN
+      END IF
+    END IF
+    IF(PRESENT(raw_ssa)) THEN
+      IF(ANY(SHAPE(raw_ssa)/=SHAPE(tau))) THEN
+        ierr=RRTMGP_PRECIP_BAD_SHAPE
+        RETURN
+      END IF
+    END IF
+    IF(PRESENT(raw_asymmetry)) THEN
+      IF(ANY(SHAPE(raw_asymmetry)/=SHAPE(tau))) THEN
+        ierr=RRTMGP_PRECIP_BAD_SHAPE
+        RETURN
+      END IF
     END IF
     IF (ANY(.NOT.ieee_is_finite(rwp_gm2)) .OR. ANY(.NOT.ieee_is_finite(swp_gm2)) .OR. &
         ANY(.NOT.ieee_is_finite(snow_radius_um))) THEN
@@ -169,11 +196,20 @@ CONTAINS
           asy_prec = MAX(1.0E-12_wp,asy_rain+asy_snow)
           asyw = asy_prec/MAX(1.0E-12_wp,ssa_prec)
           ssaw = MIN(1.0_wp-1.0E-6_wp,ssa_prec/tau_prec)
-          za1 = asyw*asyw
-          za2 = ssaw*za1
-          tau(i,k,b) = (1.0_wp-za2)*tau_prec
-          ssa(i,k,b) = (ssaw-za2)/(1.0_wp-za2)
-          asymmetry(i,k,b) = asyw/(1.0_wp+asyw)
+          IF(PRESENT(raw_tau)) raw_tau(i,k,b)=tau_prec
+          IF(PRESENT(raw_ssa)) raw_ssa(i,k,b)=ssaw
+          IF(PRESENT(raw_asymmetry)) raw_asymmetry(i,k,b)=asyw
+          IF(do_delta_scale) THEN
+            za1 = asyw*asyw
+            za2 = ssaw*za1
+            tau(i,k,b) = (1.0_wp-za2)*tau_prec
+            ssa(i,k,b) = (ssaw-za2)/(1.0_wp-za2)
+            asymmetry(i,k,b) = asyw/(1.0_wp+asyw)
+          ELSE
+            tau(i,k,b)=tau_prec
+            ssa(i,k,b)=ssaw
+            asymmetry(i,k,b)=asyw
+          END IF
         END DO
       END DO
     END DO

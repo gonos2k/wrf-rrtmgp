@@ -32,7 +32,7 @@ LW는 rain `0.33e-3 × RWP`, snow `1.5 × 1.05756 × SWP / r_s` 광학두께를 
 
 이 구현은 WRF의 기존 CLDFRA를 cloud와 rain/snow occurrence fraction에 함께 사용한다. CCPP의 cloud-fraction cutoff를 이식해 질량을 제거하거나 임의의 cf 하한을 도입하지 않는다. `cf=0`에서 수상체가 남는 WRF 예외는 optical path 0으로 처리하고 L/I/R/S별 제외 grid 질량을 기록한다. 이 제외가 복사적으로 무시 가능하다고 검증한 것은 아니다. qg 제외량과 LW/SW 중복 진단은 별도로 해석해야 한다.
 
-UDM 내부 `cldf_diag` 분율은 현재 radiation으로 export하지 않는다. 기존 CLDFRA와의 동시 계측·장시간 비교 없이 분율 기본값을 바꾸지 않는다. 이 두 분율의 일치, rain/snow precipitation fraction, 시간 고정 McICA seed는 후속 물리 검증 대상이다.
+UDM 내부 `cldf_diag`의 마지막 실제 분율과 source step을 37 전용 진단 상태로 export한다. radiation의 기존 CLDFRA는 그대로 사용하며 현재 상태의 재계산 분율도 별도로 계측한다. 같은 상태의 4/37 표본 평균, 분율·광학 합성 대조 실험은 [PHYSICS_AUDIT.md](PHYSICS_AUDIT.md)를 따른다. 장시간 비교 없이 분율 기본값을 바꾸지 않는다. 이 두 분율의 일치, rain/snow precipitation fraction, 시간 고정 McICA seed는 후속 물리 검증 대상이다.
 
 ## 저장 및 재생
 
@@ -51,4 +51,4 @@ python3 WRF/test/rrtmgp/test_udm_scm.py build/udm-scm --reference-executable bui
 
 수상별 질량/반경 계약, 실제 outer UDM 밀도 회귀, rain/snow 광학 및 actual-column replay를 검증한다. 수정 전 4/4 결과와 bitwise 비교하려면 동일 초기 입력을 가진 실제 baseline 실행 디렉터리를 제공해야 한다. 같은 새 실행 파일의 반복 실행만으로 수정 전 보존을 주장하지 않는다.
 
-짧은 직렬 SCM, 자체 energy/flux 계약 및 독립 replay 성공을 일반 예보 정확도나 NOAA 운영 동등성으로 확대하지 않는다. 1–24시간 이상 real-data 예보, 관측 검증, MPI/OpenMP/restart/nest, UDM cloud fraction 동시 진단, graupel/hail 광학 및 batching은 완료 조건과 별도로 남는다.
+짧은 직렬 SCM, 자체 energy/flux 계약 및 독립 replay 성공을 일반 예보 정확도나 NOAA 운영 동등성으로 확대하지 않는다. 1–24시간 이상 real-data 예보, 관측 검증, MPI/OpenMP/restart/nest, UDM cloud fraction 장시간 평가, graupel/hail 광학 및 batching은 완료 조건과 별도로 남는다.

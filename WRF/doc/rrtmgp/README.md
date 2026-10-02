@@ -111,3 +111,7 @@ GNU serial 메뉴 번호는 이 플랫폼의 v4.8.0 configure 기준이다. 다�
 현재 실행 계약은 [UDM 전용 입력 계약](UDM_ONLY.md)과 [실제 기둥 독립 재생 방법](COLUMN_REPLAY.md)에 정의한다. qc/qi는 native radii를 사용하는 cloud LUT, qr/qs는 고정 CCPP 강수 광학으로 처리한다. qg는 제외량을 진단하고 양의 qh는 거부한다. [과거 미세물리별 분류 기록](MICROPHYSICS_MAPPING.md)은 현재 허용 목록이 아니다.
 
 독립 재생은 같은 고정 RTE+RRTMGP 코어와 계수로 실제 엔진 입력·광학·출력과 WRF 변환을 비교한다. 독립 분광모델 또는 관측 정확도 검증은 아니다. 현재 UDM 검증 결과는 [검증 기록](../../../validation/rrtmgp37/udm-only/REPORT_ko.md)을 참조한다.
+
+## UDM 물리 감사
+
+[PHYSICS_AUDIT.md](PHYSICS_AUDIT.md)는 실제 UDM 내부 CF와 호출 시점 재계산 CF를 구별하고, 같은 상태의 4/37 paired-seed 계산과 CF·graupel·SW delta 정책의 독립 재생을 설명한다. 새 진단은 운영 CLDFRA 및 수상체 처리 정책을 변경하지 않는다. 실제 결과는 [UDM 물리 감사 보고서](../../../validation/rrtmgp37/udm-physics-audit/REPORT_ko.md)에 기록한다.
