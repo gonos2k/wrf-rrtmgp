@@ -1,7 +1,7 @@
 ! Shared validation and cloud-path construction for the WRF RRTMGP adapter.
 ! This module intentionally has no RTE or WRF-module dependencies.
 MODULE module_ra_rrtmgp_input
-  USE, INTRINSIC :: iso_fortran_env, ONLY: real64
+  USE, INTRINSIC :: iso_fortran_env, ONLY: int64, real64
   USE, INTRINSIC :: ieee_arithmetic, ONLY: ieee_is_finite
   IMPLICIT NONE
   PRIVATE
@@ -30,10 +30,36 @@ MODULE module_ra_rrtmgp_input
   PUBLIC :: rrtmgp_check_unit_interval
   PUBLIC :: rrtmgp_check_positive
   PUBLIC :: rrtmgp_check_nonnegative
+  PUBLIC :: rrtmgp_column_seed
 
   EXTERNAL :: wrf_error_fatal3
 
 CONTAINS
+
+  ! Stable engineering hash for a physical column and radiation phase.  The
+  ! 31-bit modulus and multiplier are chosen for deterministic bounded
+  ! arithmetic, not as a guarantee of independent Monte Carlo realizations.
+  ! Products stay below (modulus-1)*48271 and therefore fit signed int64.
+  PURE INTEGER FUNCTION rrtmgp_column_seed(domain_id,i,j,year,day_of_year,phase) RESULT(seed)
+    INTEGER, INTENT(IN) :: domain_id,i,j,year,day_of_year,phase
+    INTEGER(int64), PARAMETER :: modulus=2147483647_int64, multiplier=48271_int64
+    INTEGER(int64) :: state
+    INTEGER(int64) :: fields(6)
+    INTEGER :: k
+
+    seed=-1
+    IF(domain_id<=0 .OR. i<=0 .OR. j<=0 .OR. year<=0) RETURN
+    IF(day_of_year<1 .OR. day_of_year>366) RETURN
+    IF(phase/=1 .AND. phase/=2) RETURN
+
+    fields=[INT(domain_id,int64),INT(i,int64),INT(j,int64),INT(year,int64), &
+            INT(day_of_year,int64),INT(phase,int64)]
+    state=1_int64
+    DO k=1,SIZE(fields)
+      state=1_int64+MODULO(state*multiplier+fields(k),modulus-1_int64)
+    END DO
+    seed=INT(state)
+  END FUNCTION rrtmgp_column_seed
 
   ! UDM's explicit six-species contract.  This routine does not infer phases
   ! from a microphysics scheme: each input species maps only to its named path.

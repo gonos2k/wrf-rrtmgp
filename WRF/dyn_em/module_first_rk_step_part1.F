@@ -308,6 +308,7 @@ BENCH_START(rad_driver_tim)
      &        ,solar_opt=config_flags%solar_diagnostics                              &
      &        ,P8W=grid%p_hyd_w        ,P=grid%p_hyd            ,PI=pi_phy           &
      &        ,UDM_DRY_LAYER_MASS=udm_dry_layer_mass                                  &
+     &        ,UDM_SEED_DAY=day                                                      &
      &        ,RADT=grid%radt          ,RA_CALL_OFFSET=grid%ra_call_offset           &
      &        ,RHO=grid%rho            ,RLWTOA=grid%rlwtoa                           &
      &        ,RSWTOA=grid%rswtoa      ,RTHRATEN=grid%rthraten                       &

@@ -20,7 +20,7 @@ python3 WRF/test/rrtmgp/test_udm_physics_audit.py --help
 
 ## Seed 및 옵션 간 비교 해석
 
-기본 운영 seed 정책은 RRTMG 4에서 LW=150, SW=1이다. RRTMGP 운영 seed는 공간 위치와 날짜에 따라 달라진다. 따라서 paired-seed 감사에서는 같은 표본 인덱스를 두 옵션에 대응시키지만, 이것이 두 엔진에서 동일한 구름 마스크를 만든다는 뜻은 아니다. 특히 마이크로물리 UDM(옵션 27)에서는 비교 시점의 `has_reqc/has_reqi/has_reqs` 설정도 다르다. RRTMG 4 scratch 경로는 해당 native-radius 입력 플래그가 0이고 RRTMGP 37 scratch 경로는 1이다. 이 설정 차이는 감사 조건의 일부이며 두 경로가 완전히 같은 광학 입력을 사용한다고 가정하지 않는다.
+기본 운영 seed 정책은 RRTMG 4에서 LW=150, SW=1이다. RRTMGP 운영 seed는 도메인 ID·전역 격자 위치·현재 연도·일자·LW/SW 구분의 [고정 일별 계약](DOMAIN_CALENDAR_SEEDS.md)을 따른다. 감사의 명시적 seed override는 이 운영 hash를 대체하며 raw capture에 구분해 기록한다. 따라서 paired-seed 감사에서는 같은 표본 인덱스를 두 옵션에 대응시키지만, 이것이 두 엔진에서 동일한 구름 마스크를 만든다는 뜻은 아니다. 특히 마이크로물리 UDM(옵션 27)에서는 비교 시점의 `has_reqc/has_reqi/has_reqs` 설정도 다르다. RRTMG 4 scratch 경로는 해당 native-radius 입력 플래그가 0이고 RRTMGP 37 scratch 경로는 1이다. 이 설정 차이는 감사 조건의 일부이며 두 경로가 완전히 같은 광학 입력을 사용한다고 가정하지 않는다.
 
 `WRF_RRTMGP_AUDIT_NATIVE4=1`은 scratch RRTMG4에만 세 반경 입력 플래그를 켜는 대조 실험이다. 기본값 0은 기존 generic 반경 경로다. CSV의 `radius_mode`에 0/1을 기록한다. 실행기의 `--native-rrtmg4-counterfactual`도 같은 설정을 적용한다. 4/4 예보 자체나 37/37 예보는 변경하지 않는다. 이 실험은 RRTMG의 기존 입자 변환·snow 보정까지 포함하는 반경 입력 경로의 차이를 조사하며, 두 엔진의 광학 입력을 완전히 일치시키는 시험은 아니다. 미세물리 첫 실행 전의 배경 반경과 이후 UDM 진단 반경을 구별해야 한다. 모드 1의 `value4`는 운영 4 출력이 아니라 반경 입력을 켠 대조 결과다.
 
