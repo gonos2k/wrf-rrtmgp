@@ -1,0 +1,664 @@
+{
+  "capture_call": 2,
+  "case": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp/build/port-audit-replay-second-final",
+  "cloud_fixture": {
+    "cold_level_fallback_used": false,
+    "horizontal_cell_count": 4,
+    "layer_index_zero_based": 46,
+    "pressure_pa_mean": 45342.47471618652,
+    "radius_fields_written_m": {},
+    "registered_condensate_fields": {
+      "QCLOUD": {
+        "mapped_species": "QC",
+        "mixing_ratio_kg_kg": 2e-05
+      },
+      "QICE": {
+        "mapped_species": "QI",
+        "mixing_ratio_kg_kg": 1e-05
+      },
+      "QSNOW": {
+        "mapped_species": "QS",
+        "mixing_ratio_kg_kg": 3e-05
+      }
+    },
+    "temperature_k_mean": 248.86530405157768
+  },
+  "fixture_check_scope": "evolved_state",
+  "ice_roughness": 1,
+  "mp_physics": 4,
+  "phase_replay": {
+    "LW": {
+      "adapter_input_checks": {
+        "cloud_paths": {
+          "cf_zero_condensate_omission": {
+            "IWP": {
+              "grid_box_mass_g_m2_by_layer": [],
+              "layers": 0,
+              "max_grid_box_mass_g_m2_per_layer": 0.0,
+              "total_grid_box_mass_g_m2_across_snapshot_layers": 0.0
+            },
+            "LWP": {
+              "grid_box_mass_g_m2_by_layer": [],
+              "layers": 0,
+              "max_grid_box_mass_g_m2_per_layer": 0.0,
+              "total_grid_box_mass_g_m2_across_snapshot_layers": 0.0
+            },
+            "SWP": {
+              "grid_box_mass_g_m2_by_layer": [
+                0.06961197763884805
+              ],
+              "layers": 1,
+              "max_grid_box_mass_g_m2_per_layer": 0.06961197763884805,
+              "total_grid_box_mass_g_m2_across_snapshot_layers": 0.06961197763884805
+            }
+          },
+          "max_adapter_path_differences_g_m2": {
+            "IWP": 6.850060962904081e-07,
+            "LWP": 0.0,
+            "SWP": 1.8314670882091377e-06
+          }
+        },
+        "pressure": {
+          "adapter_layers": 103,
+          "max_cf_raw_adapter_difference": 0.0,
+          "max_play_p_hpa_difference": 0.0,
+          "max_play_source_pressure_difference_hpa": 2.929687502728484e-05,
+          "max_plev_dp_difference_hpa": 0.0,
+          "play_inside_interfaces": true,
+          "plev_strictly_decreasing": true,
+          "raw_wrf_layers": 59
+        },
+        "radii": {
+          "max_difference_um": {
+            "REI": 0.0,
+            "REI_vs_SOURCE_RE_ICE_um": 1.6170088201761246e-06,
+            "REL": 0.0,
+            "REL_vs_SOURCE_RE_CLOUD_um": 3.306195139884949e-08,
+            "RES": 0.0,
+            "RES_vs_SOURCE_RE_SNOW_um": 1.3879034668207169e-06
+          },
+          "selection_counts": {
+            "REI": {
+              "diagnosed_source_layers": 7,
+              "host_background_fallback_layers": 0
+            },
+            "REL": {
+              "diagnosed_source_layers": 0,
+              "host_background_fallback_layers": 0
+            },
+            "RES": {
+              "diagnosed_source_layers": 1,
+              "host_background_fallback_layers": 0
+            }
+          }
+        },
+        "raw_mapped_q_negative_snapshot": {
+          "QC": {
+            "count": 0,
+            "minimum_all": 0.0,
+            "minimum_negative": null,
+            "registered_source": true
+          },
+          "QI": {
+            "count": 0,
+            "minimum_all": 0.0,
+            "minimum_negative": null,
+            "registered_source": true
+          },
+          "QS": {
+            "count": 0,
+            "minimum_all": 0.0,
+            "minimum_negative": null,
+            "registered_source": true
+          }
+        },
+        "state_mapping": {
+          "max_h2o_qv_times_amd_w_difference": 2.1459345411756203e-10,
+          "max_tlay_source_t_difference_k": 0.0,
+          "max_top_tlay_interface_interpolation_difference_k": 7.62939453125e-06,
+          "top_domain_layer_temperature_interpolated_from_tlev": true
+        }
+      },
+      "captured_column": {
+        "i": 1,
+        "j": 1
+      },
+      "cloud_fixture_checks": null,
+      "files": {
+        "input": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp/build/port-audit-replay-second-final/capture/lw.input",
+        "production_result": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp/build/port-audit-replay-second-final/capture/lw.result",
+        "raw": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp/build/port-audit-replay-second-final/capture/lw.raw",
+        "reference_result": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp/build/port-audit-replay-second-final/capture/lw.reference.result"
+      },
+      "microphysics_mapping": {
+        "generic_raw_sources_present": [
+          "SOURCE_QC",
+          "SOURCE_QI",
+          "SOURCE_QS"
+        ],
+        "mapping_checks": [
+          "QC=source_QC",
+          "QI=source_QI",
+          "QS=source_QS"
+        ],
+        "mapping_classification": "mp4_all_species_preserved",
+        "mp_physics": 4,
+        "source_flags": {
+          "QC": true,
+          "QI": true,
+          "QS": true
+        }
+      },
+      "phase": "LW",
+      "reference_comparison": {
+        "failed_sections": [],
+        "max_differences": {
+          "CLOUD_TAU": {
+            "max_abs": 0.0,
+            "max_tolerance": 3.42430951617614e-12,
+            "passed": true,
+            "tolerance": "2e-13 absolute + 2e-12 relative"
+          },
+          "DI_USED": {
+            "max_abs": 0.0,
+            "max_tolerance": 2.2054103393554687e-10,
+            "passed": true,
+            "tolerance": "2e-13 absolute + 2e-12 relative"
+          },
+          "DN": {
+            "max_abs": 1.5243265011122276e-05,
+            "max_tolerance": 0.0001230703125,
+            "passed": true,
+            "tolerance": "4 float32 ULP + 1e-6"
+          },
+          "DNC": {
+            "max_abs": 1.2623621842067223e-05,
+            "max_tolerance": 0.0001230703125,
+            "passed": true,
+            "tolerance": "4 float32 ULP + 1e-6"
+          },
+          "DS_USED": {
+            "max_abs": 0.0,
+            "max_tolerance": 3.602e-10,
+            "passed": true,
+            "tolerance": "2e-13 absolute + 2e-12 relative"
+          },
+          "GAS_TAU": {
+            "max_abs": 0.0,
+            "max_tolerance": 3.96210931472291e-08,
+            "passed": true,
+            "tolerance": "2e-13 absolute + 2e-12 relative"
+          },
+          "HR": {
+            "max_abs": 4.2164504954200765e-07,
+            "max_tolerance": 4.814697265625e-06,
+            "passed": true,
+            "tolerance": "4 float32 ULP + 1e-6"
+          },
+          "HRC": {
+            "max_abs": 1.7802105567454873e-07,
+            "max_tolerance": 4.814697265625e-06,
+            "passed": true,
+            "tolerance": "4 float32 ULP + 1e-6"
+          },
+          "MASK": {
+            "max_abs": 0.0,
+            "passed": true,
+            "tolerance": "exact"
+          },
+          "PREPARED_TAU": {
+            "max_abs": 0.0,
+            "max_tolerance": 3.42430951617614e-12,
+            "passed": true,
+            "tolerance": "2e-13 absolute + 2e-12 relative"
+          },
+          "RL_USED": {
+            "max_abs": 0.0,
+            "max_tolerance": 2.02e-11,
+            "passed": true,
+            "tolerance": "2e-13 absolute + 2e-12 relative"
+          },
+          "TOTAL_TAU": {
+            "max_abs": 0.0,
+            "max_tolerance": 3.96210931472291e-08,
+            "passed": true,
+            "tolerance": "2e-13 absolute + 2e-12 relative"
+          },
+          "UP": {
+            "max_abs": 1.4599898406686407e-05,
+            "max_tolerance": 0.0001230703125,
+            "passed": true,
+            "tolerance": "4 float32 ULP + 1e-6"
+          },
+          "UPC": {
+            "max_abs": 1.5234645502459898e-05,
+            "max_tolerance": 0.0001230703125,
+            "passed": true,
+            "tolerance": "4 float32 ULP + 1e-6"
+          }
+        },
+        "missing_sections": [],
+        "nc": 1,
+        "nl": 103,
+        "passed": true,
+        "production_phase": "LW",
+        "reference_phase": "LW",
+        "sections_compared": 14
+      },
+      "replay_header": {
+        "iceflag": 4,
+        "nc": 1,
+        "nl": 103,
+        "overlap": 2,
+        "seed": 401376
+      },
+      "wrf_diagnostic_checks_max_abs": {
+        "wrf_glw": 0.0,
+        "wrf_olr": 0.0,
+        "wrf_theta_hr": 6.624677342066329e-12
+      }
+    },
+    "SW": {
+      "adapter_input_checks": {
+        "cloud_paths": {
+          "cf_zero_condensate_omission": {
+            "IWP": {
+              "grid_box_mass_g_m2_by_layer": [],
+              "layers": 0,
+              "max_grid_box_mass_g_m2_per_layer": 0.0,
+              "total_grid_box_mass_g_m2_across_snapshot_layers": 0.0
+            },
+            "LWP": {
+              "grid_box_mass_g_m2_by_layer": [],
+              "layers": 0,
+              "max_grid_box_mass_g_m2_per_layer": 0.0,
+              "total_grid_box_mass_g_m2_across_snapshot_layers": 0.0
+            },
+            "SWP": {
+              "grid_box_mass_g_m2_by_layer": [
+                0.06961197763884805
+              ],
+              "layers": 1,
+              "max_grid_box_mass_g_m2_per_layer": 0.06961197763884805,
+              "total_grid_box_mass_g_m2_across_snapshot_layers": 0.06961197763884805
+            }
+          },
+          "max_adapter_path_differences_g_m2": {
+            "IWP": 6.850060962904081e-07,
+            "LWP": 0.0,
+            "SWP": 1.8314670882091377e-06
+          }
+        },
+        "pressure": {
+          "adapter_layers": 60,
+          "max_cf_raw_adapter_difference": 0.0,
+          "max_play_p_hpa_difference": 0.0,
+          "max_play_source_pressure_difference_hpa": 2.929687502728484e-05,
+          "max_plev_dp_difference_hpa": 0.0,
+          "play_inside_interfaces": true,
+          "plev_strictly_decreasing": true,
+          "raw_wrf_layers": 59
+        },
+        "radii": {
+          "max_difference_um": {
+            "REI": 0.0,
+            "REI_vs_SOURCE_RE_ICE_um": 1.6170088201761246e-06,
+            "REL": 0.0,
+            "REL_vs_SOURCE_RE_CLOUD_um": 3.306195139884949e-08,
+            "RES": 0.0,
+            "RES_vs_SOURCE_RE_SNOW_um": 1.3879034668207169e-06
+          },
+          "selection_counts": {
+            "REI": {
+              "diagnosed_source_layers": 7,
+              "host_background_fallback_layers": 0
+            },
+            "REL": {
+              "diagnosed_source_layers": 0,
+              "host_background_fallback_layers": 0
+            },
+            "RES": {
+              "diagnosed_source_layers": 1,
+              "host_background_fallback_layers": 0
+            }
+          }
+        },
+        "raw_mapped_q_negative_snapshot": {
+          "QC": {
+            "count": 0,
+            "minimum_all": 0.0,
+            "minimum_negative": null,
+            "registered_source": true
+          },
+          "QI": {
+            "count": 0,
+            "minimum_all": 0.0,
+            "minimum_negative": null,
+            "registered_source": true
+          },
+          "QS": {
+            "count": 0,
+            "minimum_all": 0.0,
+            "minimum_negative": null,
+            "registered_source": true
+          }
+        },
+        "state_mapping": {
+          "max_h2o_qv_times_amd_w_difference": 2.1459345411756203e-10,
+          "max_tlay_source_t_difference_k": 0.0,
+          "max_top_tlay_interface_interpolation_difference_k": null,
+          "top_domain_layer_temperature_interpolated_from_tlev": false
+        }
+      },
+      "captured_column": {
+        "i": 1,
+        "j": 1
+      },
+      "cloud_fixture_checks": null,
+      "files": {
+        "input": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp/build/port-audit-replay-second-final/capture/sw.input",
+        "production_result": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp/build/port-audit-replay-second-final/capture/sw.result",
+        "raw": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp/build/port-audit-replay-second-final/capture/sw.raw",
+        "reference_result": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp/build/port-audit-replay-second-final/capture/sw.reference.result"
+      },
+      "microphysics_mapping": {
+        "generic_raw_sources_present": [
+          "SOURCE_QC",
+          "SOURCE_QI",
+          "SOURCE_QS"
+        ],
+        "mapping_checks": [
+          "QC=source_QC",
+          "QI=source_QI",
+          "QS=source_QS"
+        ],
+        "mapping_classification": "mp4_all_species_preserved",
+        "mp_physics": 4,
+        "source_flags": {
+          "QC": true,
+          "QI": true,
+          "QS": true
+        }
+      },
+      "phase": "SW",
+      "reference_comparison": {
+        "failed_sections": [],
+        "max_differences": {
+          "CLOUD_G": {
+            "max_abs": 0.0,
+            "max_tolerance": 2.139029818902288e-12,
+            "passed": true,
+            "tolerance": "2e-13 absolute + 2e-12 relative"
+          },
+          "CLOUD_SSA": {
+            "max_abs": 0.0,
+            "max_tolerance": 2.2e-12,
+            "passed": true,
+            "tolerance": "2e-13 absolute + 2e-12 relative"
+          },
+          "CLOUD_TAU": {
+            "max_abs": 0.0,
+            "max_tolerance": 4.581432762323856e-12,
+            "passed": true,
+            "tolerance": "2e-13 absolute + 2e-12 relative"
+          },
+          "DIFFUSE": {
+            "max_abs": 1.5002097143224091e-05,
+            "max_tolerance": 0.0001230703125,
+            "passed": true,
+            "tolerance": "4 float32 ULP + 1e-6"
+          },
+          "DIRECT": {
+            "max_abs": 1.84921664185822e-05,
+            "max_tolerance": 0.000245140625,
+            "passed": true,
+            "tolerance": "4 float32 ULP + 1e-6"
+          },
+          "DIRECTC": {
+            "max_abs": 3.0176070254128717e-05,
+            "max_tolerance": 0.000245140625,
+            "passed": true,
+            "tolerance": "4 float32 ULP + 1e-6"
+          },
+          "DI_USED": {
+            "max_abs": 0.0,
+            "max_tolerance": 2.2054103393554687e-10,
+            "passed": true,
+            "tolerance": "2e-13 absolute + 2e-12 relative"
+          },
+          "DN": {
+            "max_abs": 2.7133686444358318e-05,
+            "max_tolerance": 0.000245140625,
+            "passed": true,
+            "tolerance": "4 float32 ULP + 1e-6"
+          },
+          "DNC": {
+            "max_abs": 2.900613037581934e-05,
+            "max_tolerance": 0.000245140625,
+            "passed": true,
+            "tolerance": "4 float32 ULP + 1e-6"
+          },
+          "DS_USED": {
+            "max_abs": 0.0,
+            "max_tolerance": 3.602e-10,
+            "passed": true,
+            "tolerance": "2e-13 absolute + 2e-12 relative"
+          },
+          "GAS_G": {
+            "max_abs": 0.0,
+            "max_tolerance": 2e-13,
+            "passed": true,
+            "tolerance": "2e-13 absolute + 2e-12 relative"
+          },
+          "GAS_SSA": {
+            "max_abs": 0.0,
+            "max_tolerance": 2.2e-12,
+            "passed": true,
+            "tolerance": "2e-13 absolute + 2e-12 relative"
+          },
+          "GAS_TAU": {
+            "max_abs": 0.0,
+            "max_tolerance": 2.397120227869596e-07,
+            "passed": true,
+            "tolerance": "2e-13 absolute + 2e-12 relative"
+          },
+          "HR": {
+            "max_abs": 3.4985215435767714e-07,
+            "max_tolerance": 4.814697265625e-06,
+            "passed": true,
+            "tolerance": "4 float32 ULP + 1e-6"
+          },
+          "HRC": {
+            "max_abs": 1.1671656441336609e-07,
+            "max_tolerance": 1.9536743164062497e-06,
+            "passed": true,
+            "tolerance": "4 float32 ULP + 1e-6"
+          },
+          "MASK": {
+            "max_abs": 0.0,
+            "passed": true,
+            "tolerance": "exact"
+          },
+          "NIRDIF": {
+            "max_abs": 1.2101964131261411e-05,
+            "max_tolerance": 6.203515625e-05,
+            "passed": true,
+            "tolerance": "4 float32 ULP + 1e-6"
+          },
+          "NIRDIR": {
+            "max_abs": 8.886561147392058e-06,
+            "max_tolerance": 0.0001230703125,
+            "passed": true,
+            "tolerance": "4 float32 ULP + 1e-6"
+          },
+          "PREPARED_G": {
+            "max_abs": 0.0,
+            "max_tolerance": 1.1845215233443685e-12,
+            "passed": true,
+            "tolerance": "2e-13 absolute + 2e-12 relative"
+          },
+          "PREPARED_SSA": {
+            "max_abs": 0.0,
+            "max_tolerance": 2.2e-12,
+            "passed": true,
+            "tolerance": "2e-13 absolute + 2e-12 relative"
+          },
+          "PREPARED_TAU": {
+            "max_abs": 0.0,
+            "max_tolerance": 2.414717121410587e-12,
+            "passed": true,
+            "tolerance": "2e-13 absolute + 2e-12 relative"
+          },
+          "RL_USED": {
+            "max_abs": 0.0,
+            "max_tolerance": 2.02e-11,
+            "passed": true,
+            "tolerance": "2e-13 absolute + 2e-12 relative"
+          },
+          "TOTAL_G": {
+            "max_abs": 0.0,
+            "max_tolerance": 1.18353795946815e-12,
+            "passed": true,
+            "tolerance": "2e-13 absolute + 2e-12 relative"
+          },
+          "TOTAL_SSA": {
+            "max_abs": 0.0,
+            "max_tolerance": 2.2e-12,
+            "passed": true,
+            "tolerance": "2e-13 absolute + 2e-12 relative"
+          },
+          "TOTAL_TAU": {
+            "max_abs": 0.0,
+            "max_tolerance": 2.397120227869596e-07,
+            "passed": true,
+            "tolerance": "2e-13 absolute + 2e-12 relative"
+          },
+          "UP": {
+            "max_abs": 1.4129018609310151e-05,
+            "max_tolerance": 0.0001230703125,
+            "passed": true,
+            "tolerance": "4 float32 ULP + 1e-6"
+          },
+          "UPC": {
+            "max_abs": 7.486185921834476e-06,
+            "max_tolerance": 6.203515625e-05,
+            "passed": true,
+            "tolerance": "4 float32 ULP + 1e-6"
+          },
+          "VISDIF": {
+            "max_abs": 2.3912406561521493e-05,
+            "max_tolerance": 6.203515625e-05,
+            "passed": true,
+            "tolerance": "4 float32 ULP + 1e-6"
+          },
+          "VISDIR": {
+            "max_abs": 4.353832446213346e-05,
+            "max_tolerance": 0.0001230703125,
+            "passed": true,
+            "tolerance": "4 float32 ULP + 1e-6"
+          }
+        },
+        "missing_sections": [],
+        "nc": 1,
+        "nl": 60,
+        "passed": true,
+        "production_phase": "SW",
+        "reference_phase": "SW",
+        "sections_compared": 29
+      },
+      "replay_header": {
+        "iceflag": 4,
+        "nc": 1,
+        "nl": 60,
+        "overlap": 2,
+        "seed": 409295
+      },
+      "wrf_diagnostic_checks_max_abs": {
+        "wrf_gsw": 7.62939453125e-06,
+        "wrf_swddif": 0.0,
+        "wrf_swddir": 0.0,
+        "wrf_theta_hr": 3.432845709625855e-12
+      }
+    }
+  },
+  "run_minutes": 1,
+  "scope_note": "One captured column/call snapshot; negative-Q diagnostics describe that snapshot, not a forecast-wide minimum.",
+  "status": "PASS",
+  "wrf": {
+    "forecast": {
+      "returncode": 0,
+      "scm_validation": {
+        "checks": "finite fields, daytime SW, LW, nonzero accumulation, flux/tendency sums",
+        "history_file": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp/build/port-audit-replay-second-final/wrfout_d01_1999-10-22_19:00:00",
+        "radiation_option_lw": 37,
+        "radiation_option_sw": 37,
+        "time_count": 2,
+        "variables": {
+          "ACLWDNB": {
+            "max": 17305.740234375,
+            "min": 0.0
+          },
+          "ACSWDNB": {
+            "max": 31969.947265625,
+            "min": 0.0
+          },
+          "GLW": {
+            "max": 287.8450012207031,
+            "min": 0.0
+          },
+          "GSW": {
+            "max": 431.8687438964844,
+            "min": 0.0
+          },
+          "LWDNB": {
+            "max": 287.8450012207031,
+            "min": 0.0
+          },
+          "LWUPT": {
+            "max": 153.07003784179688,
+            "min": 0.0
+          },
+          "RTHRATEN": {
+            "max": 0.00018462250591255724,
+            "min": -1.713660458335653e-05
+          },
+          "RTHRATLW": {
+            "max": 0.0001210937844007276,
+            "min": -5.037680239183828e-05
+          },
+          "RTHRATSW": {
+            "max": 0.00014091846242081374,
+            "min": 0.0
+          },
+          "SWDDIF": {
+            "max": 321.0545349121094,
+            "min": 0.0
+          },
+          "SWDDIR": {
+            "max": 202.1356201171875,
+            "min": 0.0
+          },
+          "SWDNB": {
+            "max": 520.3237915039062,
+            "min": 0.0
+          },
+          "SWDNT": {
+            "max": 869.3607788085938,
+            "min": 0.0
+          },
+          "SWDOWN": {
+            "max": 520.3237915039062,
+            "min": 0.0
+          },
+          "SWUPB": {
+            "max": 88.45504760742188,
+            "min": 0.0
+          }
+        }
+      },
+      "status": "PASS",
+      "success_marker": true
+    },
+    "ideal_returncode": 0
+  }
+}

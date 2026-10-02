@@ -297,6 +297,7 @@ def compare_input_to_raw(phase: str, raw: dict[str, np.ndarray],
                            f"{phase}: {name} vs raw {source}", rtol=0.0, atol=0.0)
         for name, source in (("REL", "REL"), ("REI", "REI"), ("RES", "RES"))
     }
+    radius_selection_counts: dict[str, dict[str, int]] = {}
     has_snow_radius: bool | None = None
     for has_name, raw_radius, adapter_radius in (
         ("HAS_REQC", "SOURCE_RE_CLOUD", "REL"),
@@ -310,9 +311,26 @@ def compare_input_to_raw(phase: str, raw: dict[str, np.ndarray],
             if has_explicit and raw_radius not in raw:
                 fail(f"{phase}: {has_name}=1 but {raw_radius} capture is missing")
             if has_explicit:
+                source = raw[raw_radius][:raw_nl]
+                expected_radius = source * 1.0e6
+                fallback_name = "FALLBACK_" + adapter_radius
+                background_m = {"REL": 2.49e-6, "REI": 4.99e-6, "RES": 9.99e-6}[adapter_radius]
+                phase_q = raw[{"REL": "QC", "REI": "QI", "RES": "QS"}[adapter_radius]][:raw_nl]
+                background = ((source.astype(np.float32) == np.float32(background_m)) &
+                              (phase_q > 0.0) & (raw["CF"][:raw_nl] > 0.0))
+                # Old snapshots retain their original direct-source contract.
+                if fallback_name in raw:
+                    if len(raw[fallback_name]) != raw_nl:
+                        fail(f"{phase}: {fallback_name} shape mismatch")
+                    expected_radius[background] = raw[fallback_name][background]
+                wet = (phase_q > 0.0) & (raw["CF"][:raw_nl] > 0.0)
+                radius_selection_counts[adapter_radius] = {
+                    "host_background_fallback_layers": int(np.count_nonzero(background)) if fallback_name in raw else 0,
+                    "diagnosed_source_layers": int(np.count_nonzero(wet & ~background)),
+                }
                 radius_differences[f"{adapter_radius}_vs_{raw_radius}_um"] = assert_close(
-                    inp[adapter_radius][0, :raw_nl], raw[raw_radius][:raw_nl] * 1.0e6,
-                    f"{phase}: explicit {adapter_radius} radius from {raw_radius} in meters",
+                    inp[adapter_radius][0, :raw_nl], expected_radius,
+                    f"{phase}: explicit {adapter_radius} radius with initialized-background fallback",
                     rtol=5.0e-7, atol=1.0e-7,
                 )
     if has_snow_radius is False:
@@ -348,7 +366,8 @@ def compare_input_to_raw(phase: str, raw: dict[str, np.ndarray],
                           "max_h2o_qv_times_amd_w_difference": h2o_error},
         "cloud_paths": {"max_adapter_path_differences_g_m2": path_differences,
                         "cf_zero_condensate_omission": omitted},
-        "radii": {"max_difference_um": radius_differences},
+        "radii": {"max_difference_um": radius_differences,
+                  "selection_counts": radius_selection_counts},
         "raw_mapped_q_negative_snapshot": negative_q,
     }
 
@@ -737,8 +756,17 @@ def main() -> int:
             forecast = {"status": "PASS", "returncode": wrf.returncode,
                         "success_marker": SUCCESS_TOKEN in wrf_log,
                         "scm_validation": validation}
-        reports = {phase: validate_capture(case_dir, phase, args.mp_physics, reference_exe, fixture)
+        # Later calls use evolved microphysics; the initial fixture need not retain each phase.
+        snapshot_fixture = fixture if args.capture_call == 1 else None
+        reports = {phase: validate_capture(case_dir, phase, args.mp_physics, reference_exe, snapshot_fixture)
                    for phase in ("LW", "SW")}
+        if fixture is not None and args.mp_physics == 4 and args.capture_call in (1, 2):
+            count_key = ("host_background_fallback_layers" if args.capture_call == 1 else
+                         "diagnosed_source_layers")
+            count = sum(item[count_key] for row in reports.values()
+                        for item in row["adapter_input_checks"]["radii"]["selection_counts"].values())
+            if count == 0:
+                fail(f"WSM5 capture {args.capture_call} did not exercise {count_key}")
         for phase in ("LW", "SW"):
             *_, captured = read_input(capture / f"{phase.lower()}.input")
             if captured.get("ICE_ROUGHNESS", np.array([[1]])).item() != args.ice_roughness:
@@ -749,6 +777,7 @@ def main() -> int:
             "case": str(case_dir), "mp_physics": args.mp_physics,
             "capture_call": args.capture_call, "run_minutes": args.run_minutes,
             "cloud_fixture": fixture,
+            "fixture_check_scope": "initial_snapshot" if args.capture_call == 1 else "evolved_state",
             "wrf": {"ideal_returncode": ideal.returncode, "forecast": forecast},
             "phase_replay": reports,
             "scope_note": "One captured column/call snapshot; negative-Q diagnostics describe that snapshot, not a forecast-wide minimum.",

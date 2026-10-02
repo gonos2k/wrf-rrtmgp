@@ -1,0 +1,34 @@
+{
+  "audit_baseline_head": "3a69404fbe06486fcaad7ba063d3d8062dc8f2a4",
+  "main_at_audit": "4f7d006e5f378ac8f151c5318172d84ef23c5e5a",
+  "baseline_capture_archive_local_path": "baseline-captures.zip",
+  "baseline_capture_archive_sha256": "c5f1e6a25bcc6b6000a23e8c32a2e471b232154db272b2e02a68c77eb66a6839",
+  "methods": {
+    "paired_scm": 14,
+    "controlled_scm": 28,
+    "reference_variants": 70,
+    "constant_input_fields_identical": true,
+    "instrumentation_history_arrays_bitwise_unchanged": true,
+    "conditional_ica_validity": "one positive-CF layer in each cloudy initial snapshot; hold in-cloud paths fixed",
+    "direct_core_sw_alternative": "not used; standalone smoke failed; actual WRF-initialized core used for every reported RRTMG calculation"
+  },
+  "production_patch_status": "LOCAL_VERIFIED",
+  "post_patch_verification": {
+    "gnu_serial_wrf_build": "PASS",
+    "build_log": "build/port-audit-wrf-patched-build.log",
+    "wrf_sha256": "5084690032ff19469ec802e6ba4976c5413480a40c02e95b72f0c74b8fea5bcd",
+    "ideal_sha256": "2bdc119b24737fcede60c4a9dd4158be8ee6b123ff82a76f7e60416b8b509871",
+    "paired_5min_scm_runs": 14,
+    "paired_5min_status": "PASS",
+    "ra4_bitwise_regression_7_cases": "PASS",
+    "first_background_and_second_diagnosed_radius_replay": "PASS",
+    "regression_record": "post-patch-regression.json",
+    "wrf_source_blobs": {
+      "WRF/phys/module_ra_rrtmg_lw.F": "d609c1da1e0b2348fe15b49f1c993cdc538e62ec",
+      "WRF/phys/module_ra_rrtmg_sw.F": "97dcdf23caa67878dc42e98cc50ee653ec69474c"
+    },
+    "bitwise_comparison": "NetCDF decoded arrays: shape, dtype, and full byte sequence equality; not file container bytes"
+  },
+  "main_after_pr5_merge": "6d03197370b5e0b74fd9e2ad6dc63fb7130a6aa8",
+  "audit_baseline_and_merged_main_tree": "f5df9403a5daf29b4681f472c9df901745c90932"
+}

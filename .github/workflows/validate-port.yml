@@ -178,6 +178,10 @@ jobs:
               build/replay-reference/reference_column --mp-physics 4 --cloud-fixture \
               --ice-roughness "$roughness" | tee "build/replay-roughness-${roughness}.json"
           done
+          # First call exercises initialized BG fallback; second call preserves diagnosed sizes.
+          python3 WRF/test/rrtmgp/test_column_replay.py build/replay-mp4-cloud-second \
+            build/replay-reference/reference_column --mp-physics 4 --cloud-fixture \
+            --capture-call 2 --run-minutes 1 | tee build/replay-mp4-cloud-second.json
           # Snapshot contract only: ETAMPNEW SCM integration is separately reported.
           python3 WRF/test/rrtmgp/test_column_replay.py build/replay-mp95-cloud \
             build/replay-reference/reference_column --mp-physics 95 --cloud-fixture --capture-only | tee build/replay-mp95-cloud.json

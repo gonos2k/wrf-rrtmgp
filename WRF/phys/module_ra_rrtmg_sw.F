@@ -10009,7 +10009,7 @@
 !------------------------------------------------------------------
 MODULE module_ra_rrtmg_sw
 
-use module_model_constants, only : cp
+use module_model_constants, only : cp, RE_QC_BG, RE_QI_BG, RE_QS_BG
 USE module_wrf_error
 #if (HWRF == 1)
 USE module_state_description, ONLY : FER_MP_HIRES, FER_MP_HIRES_ADVECT, ETAMP_HWRF 
@@ -11230,10 +11230,40 @@ CONTAINS
                ! explicit microphysics radii bypass all RRTMG LUT restrictions.
                gp_rel = reliq(ncol,kts:kte)
                gp_rei = reice(ncol,kts:kte)
-               IF (has_reqc /= 0) gp_rel = re_cloud(i,kts:kte,j)*1.e6
-               IF (has_reqi /= 0) gp_rei = re_ice(i,kts:kte,j)*1.e6
+               IF (has_reqc /= 0) THEN
+                  gp_rel = re_cloud(i,kts:kte,j)*1.e6
+                  ! has_req* is a capability flag; RE_*_BG may precede size diagnosis.
+                  ! Wet/cloudy background placeholders use the existing WRF fallback.
+                  IF (ICLOUD /= 0) THEN
+                     WHERE (re_cloud(i,kts:kte,j)==RE_QC_BG .AND. &
+                            qc1d(kts:kte)>0. .AND. cldfrac(ncol,kts:kte)>0.)
+                        gp_rel = recloud1d(ncol,kts:kte)
+                     END WHERE
+                  END IF
+               END IF
+               IF (has_reqi /= 0) THEN
+                  gp_rei = re_ice(i,kts:kte,j)*1.e6
+                  ! has_req* is a capability flag; RE_*_BG may precede size diagnosis.
+                  ! Wet/cloudy background placeholders use the existing WRF fallback.
+                  IF (ICLOUD /= 0) THEN
+                     WHERE (re_ice(i,kts:kte,j)==RE_QI_BG .AND. &
+                            qi1d(kts:kte)>0. .AND. cldfrac(ncol,kts:kte)>0.)
+                        gp_rei = reice1d(ncol,kts:kte)
+                     END WHERE
+                  END IF
+               END IF
                gp_res = gp_rei ! diagnosed ice-radius proxy when snow size is absent
-               IF (has_reqs /= 0) gp_res = re_snow(i,kts:kte,j)*1.e6
+               IF (has_reqs /= 0) THEN
+                  gp_res = re_snow(i,kts:kte,j)*1.e6
+                  ! has_req* is a capability flag; RE_*_BG may precede size diagnosis.
+                  ! Wet/cloudy background placeholders use the existing WRF fallback.
+                  IF (ICLOUD /= 0) THEN
+                     WHERE (re_snow(i,kts:kte,j)==RE_QS_BG .AND. &
+                            qs1d(kts:kte)>0. .AND. cldfrac(ncol,kts:kte)>0.)
+                        gp_res = resnow1d(ncol,kts:kte)
+                     END WHERE
+                  END IF
+               END IF
                IF (is_CAMMGMP_used) THEN
                   gp_rel = lradius(i,kts:kte,j)
                   gp_rei = iradius(i,kts:kte,j)
@@ -11261,6 +11291,10 @@ CONTAINS
                   IF(has_reqi/=0) CALL trace_raw('SW','SOURCE_RE_ICE',re_ice(i,kts:kte,j))
                   IF(has_reqs/=0) CALL trace_raw('SW','SOURCE_RE_SNOW',re_snow(i,kts:kte,j))
                   CALL trace_raw('SW','QV',qv1d(kts:kte))
+                  CALL trace_raw('SW','ICLOUD',[REAL(ICLOUD)])
+                  IF (ICLOUD /= 0) CALL trace_raw('SW','FALLBACK_REL',recloud1d(ncol,kts:kte))
+                  IF (ICLOUD /= 0) CALL trace_raw('SW','FALLBACK_REI',reice1d(ncol,kts:kte))
+                  IF (ICLOUD /= 0) CALL trace_raw('SW','FALLBACK_RES',resnow1d(ncol,kts:kte))
                   CALL trace_raw('SW','REL',gp_rel)
                   CALL trace_raw('SW','REI',gp_rei)
                   CALL trace_raw('SW','RES',gp_res)
