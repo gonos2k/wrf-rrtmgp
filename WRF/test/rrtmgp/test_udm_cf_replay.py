@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
-"""Compare independent V4–V8 LW/SW replays under diagnostic CF policies.
+"""Compare independent V4–V9 LW/SW replays under diagnostic CF policies.
 
 The B and C variants are controlled counterfactuals, not production choices.
 Use a replay input and sibling RRTMGP_RAW_V1 snapshot from the same call. All
-records not explicitly varied (including V8 CFC and optional frozen optics)
-are retained byte-for-byte in counterfactual inputs.
+records not explicitly varied (including CFC and optional frozen optics) are
+retained byte-for-byte. For V9 SW inputs, derived direct-diagnostic records
+are intentionally removed and the variant is projected to the matching
+legacy schema; their values would be stale after changing CF/seed controls.
 """
 from __future__ import annotations
 
@@ -27,7 +29,12 @@ from test_column_replay import (assert_close, corrected_hydrometeor, dry_layer_m
 PATHS = {"LWP": "LWP", "IWP": "IWP", "RWP": "RWP", "SWP": "SWP"}
 SUPPORTED_REPLAY_VERSIONS = {
     "RRTMGP_REPLAY_V4", "RRTMGP_REPLAY_V5", "RRTMGP_REPLAY_V6",
-    "RRTMGP_REPLAY_V7", "RRTMGP_REPLAY_V8",
+    "RRTMGP_REPLAY_V7", "RRTMGP_REPLAY_V8", "RRTMGP_REPLAY_V9",
+}
+V9_DIRECT_RECORDS = {
+    "SW_DIRECT_PREDELTA_POLICY", "TOA_GPOINT", "RAW_GAS_TAU", "MCICA_MASK",
+    "RAW_CLOUD_TAU", "RAW_PRECIP_TAU", "RAW_GRAUPEL_TAU_EXT", "RAW_HAIL_TAU_EXT",
+    "BAND_LIMS_GPOINT", "BAND_LIMS_WAVENUMBER", "VISIBLE_WEIGHT",
 }
 GRID_NAMES = {
     "LWP": ("GRID_LWP", "LWP_GRID"),
@@ -58,19 +65,22 @@ def write_variant(source: Path, destination: Path, updates: dict[str, np.ndarray
     if len(header) != 6:
         fail(f"{source}: invalid replay header")
     header[4] = str(seed)
-    out = [lines[0], " ".join(header)]
+    source_version = lines[0].strip()
+    out = ["RRTMGP_REPLAY_V9" if source_version == "RRTMGP_REPLAY_V9" else source_version,
+           " ".join(header)]
     pos = 2
     seen: set[str] = set()
+    kept: set[str] = set()
     while pos < len(lines):
         fields = lines[pos].split()
-        if len(fields) != 3:
+        if len(fields) not in (3, 4):
             fail(f"{source}:{pos + 1}: invalid section header")
         name = fields[0].upper()
         try:
-            shape = (int(fields[1]), int(fields[2]))
+            shape = tuple(int(value) for value in fields[1:])
         except ValueError as exc:
             raise RuntimeError(f"{source}:{pos + 1}: invalid shape") from exc
-        count = shape[0] * shape[1]
+        count = int(np.prod(shape))
         pos += 1
         values: list[str] = []
         found = 0
@@ -81,18 +91,30 @@ def write_variant(source: Path, destination: Path, updates: dict[str, np.ndarray
         if found != count:
             fail(f"{source}: truncated {name} data")
         seen.add(name)
+        if source_version == "RRTMGP_REPLAY_V9" and name in V9_DIRECT_RECORDS:
+            continue
         if name not in updates:
-            out.append(" ".join([name, str(shape[0]), str(shape[1])]))
+            out.append(" ".join([name, *(str(dim) for dim in shape)]))
             out.extend(values)
+            kept.add(name)
             continue
         array = np.asarray(updates[name], dtype=np.float64)
         if array.shape != shape or not np.isfinite(array).all():
             fail(f"{name} replacement shape or values are invalid")
-        out.append(f"{name} {shape[0]} {shape[1]}")
+        out.append(" ".join([name, *(str(dim) for dim in shape)]))
         out.extend(f"{float(value):.16E}" for value in array.flatten(order="F"))
+        kept.add(name)
     missing = sorted(updates.keys() - seen)
     if missing:
         fail(f"replay input has no sections for updates: {missing}")
+    if source_version == "RRTMGP_REPLAY_V9":
+        frozen = "FROZEN_MODE" in kept
+        if frozen:
+            out[0] = "RRTMGP_REPLAY_V7"
+        elif "NATIVE_DRY_LAYER_MASS_KG_M2" in kept:
+            out[0] = "RRTMGP_REPLAY_V6"
+        else:
+            out[0] = "RRTMGP_REPLAY_V5"
     destination.write_text("\n".join(out) + "\n", encoding="ascii")
 
 
@@ -102,12 +124,14 @@ def assert_variant_preserves_records(source: Path, variant: Path,
     """Ensure variants preserve every input other than the declared controls."""
     _, nc, nl, _, _, _, records = read_input(variant)
     _, source_nc, source_nl, _, _, _, original = read_input(source)
-    if (nc, nl) != (source_nc, source_nl) or records.keys() != original.keys():
+    dropped = V9_DIRECT_RECORDS if source.read_text(encoding="ascii").splitlines()[0].strip() == "RRTMGP_REPLAY_V9" else set()
+    expected_keys = original.keys() - dropped
+    if (nc, nl) != (source_nc, source_nl) or records.keys() != expected_keys:
         fail(f"{variant}: replay dimensions/sections changed while writing policy variant")
     if source_records.keys() != original.keys():
         fail(f"{source}: parsed sections changed unexpectedly")
     for name, values in original.items():
-        if name not in updates and not np.array_equal(records[name], values):
+        if name not in updates and name not in dropped and not np.array_equal(records[name], values):
             fail(f"{variant}: unmodified section {name} changed or was stripped")
     # V8's strict reader already enforces required CFCs and frozen-record
     # completeness. Keep an explicit invariant for fields this test must never

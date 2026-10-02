@@ -24,9 +24,11 @@ MASK_SECTION = "MASK"
 FLOAT_OUTPUT_SECTIONS = {
     "UP", "DN", "HR", "UPC", "DNC", "HRC", "DIRECT", "DIFFUSE", "DIRECTC",
     "VISDIR", "VISDIF", "NIRDIR", "NIRDIF",
+    "DIRECT_PREDELTA", "DIRECTC_PREDELTA", "VISDIR_PREDELTA", "NIRDIR_PREDELTA",
 }
 INTERFACE_SECTIONS = {"UP", "DN", "UPC", "DNC", "DIRECT", "DIFFUSE", "DIRECTC",
-                      "VISDIR", "VISDIF", "NIRDIR", "NIRDIF"}
+                      "VISDIR", "VISDIF", "NIRDIR", "NIRDIF", "DIRECT_PREDELTA",
+                      "DIRECTC_PREDELTA", "VISDIR_PREDELTA", "NIRDIR_PREDELTA"}
 LAYER_SCALAR_SECTIONS = {"RL_USED", "DI_USED", "DS_USED", "HR", "HRC"}
 RADIATION_SECTIONS = (OPTICAL_SECTIONS | FLOAT_OUTPUT_SECTIONS | INTERFACE_SECTIONS |
                       LAYER_SCALAR_SECTIONS | {MASK_SECTION})
@@ -141,6 +143,11 @@ def read_result(path: Path) -> dict:
     missing = sorted(required - set(sections))
     if missing:
         raise ReplayFormatError(f"{path}: missing required sections: {', '.join(missing)}")
+    predelta = {"DIRECT_PREDELTA", "DIRECTC_PREDELTA", "VISDIR_PREDELTA", "NIRDIR_PREDELTA"} & sections.keys()
+    if predelta and predelta != {"DIRECT_PREDELTA", "DIRECTC_PREDELTA", "VISDIR_PREDELTA", "NIRDIR_PREDELTA"}:
+        raise ReplayFormatError(f"{path}: V9 direct-diagnostic result sections must be all present or all absent")
+    if predelta and phase != "SW":
+        raise ReplayFormatError(f"{path}: pre-delta direct-diagnostic sections are SW-only")
     return {"phase": phase, "nc": nc, "nl": nl, "sections": sections}
 
 

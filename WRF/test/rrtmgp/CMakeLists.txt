@@ -59,7 +59,7 @@ add_library(test_rrtmgp_adapter STATIC standalone_wrf_error.f90 "${trace}" "${in
 target_link_libraries(test_rrtmgp_adapter PUBLIC wrf_rrtmgp test_rrtmgp_precip test_rrtmgp_frozen)
 set_target_properties(test_rrtmgp_adapter PROPERTIES Fortran_MODULE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/modules")
 target_include_directories(test_rrtmgp_adapter PUBLIC "${CMAKE_CURRENT_BINARY_DIR}/modules")
-foreach(test IN ITEMS columns cloud_inputs multicolumn validation adapter_invalid small_cf_sampling ice_roughness transparent_overlap spectral_surface udm_inputs precip_optics udm_adapter udm_dry_mass domain_seed native_gas_columns frozen_adapter udm_frozen_inputs lw_trace_gases)
+foreach(test IN ITEMS columns cloud_inputs multicolumn validation adapter_invalid small_cf_sampling ice_roughness transparent_overlap spectral_surface udm_inputs precip_optics udm_adapter udm_dry_mass domain_seed native_gas_columns frozen_adapter udm_frozen_inputs lw_trace_gases sw_predelta_direct)
   add_executable(test_rrtmgp_${test} test_${test}.f90)
   target_link_libraries(test_rrtmgp_${test} PRIVATE test_rrtmgp_adapter)
   if(CMAKE_Fortran_COMPILER_ID STREQUAL "GNU")
@@ -84,6 +84,19 @@ add_test(NAME wrf_rrtmgp_columns COMMAND test_rrtmgp_columns "${RRTMGP_DATA_DIR}
 add_test(NAME cloud_mass_contract COMMAND test_rrtmgp_cloud_inputs)
 add_test(NAME domain_calendar_seed_contract COMMAND test_rrtmgp_domain_seed)
 add_test(NAME multi_column_equivalence COMMAND test_rrtmgp_multicolumn "${RRTMGP_DATA_DIR}")
+foreach(case IN ITEMS clear cloud overlap_zero)
+  add_test(NAME sw_predelta_direct_${case} COMMAND test_rrtmgp_sw_predelta_direct "${RRTMGP_DATA_DIR}" ${case})
+endforeach()
+add_test(NAME sw_predelta_direct_night COMMAND test_rrtmgp_sw_predelta_direct "${RRTMGP_DATA_DIR}" night)
+add_test(NAME reject_sw_predelta_partial_group_a COMMAND "${Python3_EXECUTABLE}"
+  "${CMAKE_CURRENT_SOURCE_DIR}/test_invalid_inputs.py" "$<TARGET_FILE:test_rrtmgp_sw_predelta_direct>"
+  partial_a RRTMGP_SW_PREDELTA_OUTPUTS_MUST_BE_ALL_OR_NONE --data-path "${RRTMGP_DATA_DIR}")
+add_test(NAME reject_sw_predelta_partial_group_b COMMAND "${Python3_EXECUTABLE}"
+  "${CMAKE_CURRENT_SOURCE_DIR}/test_invalid_inputs.py" "$<TARGET_FILE:test_rrtmgp_sw_predelta_direct>"
+  partial_b RRTMGP_SW_PREDELTA_OUTPUTS_MUST_BE_ALL_OR_NONE --data-path "${RRTMGP_DATA_DIR}")
+add_test(NAME reject_sw_predelta_bad_output_shape COMMAND "${Python3_EXECUTABLE}"
+  "${CMAKE_CURRENT_SOURCE_DIR}/test_invalid_inputs.py" "$<TARGET_FILE:test_rrtmgp_sw_predelta_direct>"
+  bad_shape RRTMGP_SW_PREDELTA_OUTPUT_SHAPE_MISMATCH --data-path "${RRTMGP_DATA_DIR}")
 function(reject_input executable case diagnostic)
   add_test(NAME reject_${case} COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/test_invalid_inputs.py"
     "$<TARGET_FILE:${executable}>" "${case}" "${diagnostic}")
@@ -136,6 +149,9 @@ add_test(NAME small_cf_sampling COMMAND test_rrtmgp_small_cf_sampling "${RRTMGP_
 # Independent executable shares the pinned library and data, not the WRF adapter.
 add_executable(reference_column reference_column.f90)
 target_link_libraries(reference_column PRIVATE wrf_rrtmgp test_rrtmgp_frozen)
+add_test(NAME sw_predelta_v9_independent_replay COMMAND "${Python3_EXECUTABLE}"
+  "${CMAKE_CURRENT_SOURCE_DIR}/test_sw_predelta_replay.py" "${RRTMGP_DATA_DIR}"
+  "$<TARGET_FILE:test_rrtmgp_sw_predelta_direct>" "$<TARGET_FILE:reference_column>" "${FROZEN_TABLE}")
 add_test(NAME lw_trace_gases_replay COMMAND "${Python3_EXECUTABLE}"
   "${CMAKE_CURRENT_SOURCE_DIR}/test_lw_trace_gases_replay.py"
   "$<TARGET_FILE:test_rrtmgp_lw_trace_gases>" "$<TARGET_FILE:reference_column>"

@@ -1,0 +1,1670 @@
+{
+  "fixtures": {
+    "control": {
+      "baseline_wrfinput_sha256": "3fb1d9ae78bc0e93d072e646f052e3a39dd83d5215f864bbc89ff030f9cb6d4e",
+      "frozen_g_h_fixture": {
+        "array_shape": [
+          1,
+          59,
+          2,
+          2
+        ],
+        "layer_zero_based": 46,
+        "qgraupel_kg_kg": 1e-06,
+        "qhail_kg_kg": 1e-06
+      },
+      "frozen_wrfinput_sha256": "9825fbfaaa74a117cd4539647a96ca0409bc73fade20d39f0940f869b78a9cee",
+      "initial_udm_fixture": {
+        "layer_index_zero_based": 46,
+        "mixed": false,
+        "pressure_pa_mean": 45342.47471618652,
+        "species_kg_kg": {
+          "QCLOUD": 0.0,
+          "QGRAUP": 0.0,
+          "QHAIL": 0.0,
+          "QICE": 0.0,
+          "QRAIN": 0.0,
+          "QSNOW": 0.0
+        },
+        "temperature_k_mean": 248.86530405157768
+      }
+    },
+    "mixed": {
+      "baseline_wrfinput_sha256": "2dece4c3fdd45422f0dd4b136c99dd1f122f4f5d3bfb7bf1da93c9c3a57704df",
+      "frozen_g_h_fixture": {
+        "array_shape": [
+          1,
+          59,
+          2,
+          2
+        ],
+        "layer_zero_based": 46,
+        "qgraupel_kg_kg": 1e-06,
+        "qhail_kg_kg": 1e-06
+      },
+      "frozen_wrfinput_sha256": "c49037d62e6f32108db61e6b7390c57000188fb15a0c4bcada1d0c68874f9761",
+      "initial_udm_fixture": {
+        "layer_index_zero_based": 46,
+        "mixed": true,
+        "pressure_pa_mean": 45342.47471618652,
+        "species_kg_kg": {
+          "QCLOUD": 2e-05,
+          "QGRAUP": 0.0,
+          "QHAIL": 0.0,
+          "QICE": 1e-05,
+          "QRAIN": 1e-06,
+          "QSNOW": 2e-05
+        },
+        "temperature_k_mean": 248.86530405157768
+      }
+    }
+  },
+  "frozen_mode1_runs": {
+    "control": {
+      "call1": {
+        "call": 1,
+        "capture": {
+          "LW": {
+            "call": 1,
+            "capture_format": "RRTMGP_REPLAY_V8",
+            "frozen_paths": {
+              "graupel": {
+                "clear_cf_positive_layers": 1,
+                "cloudy_cf_positive_layers": 0,
+                "max_grid_path_g_m2": 0.19163211011187856,
+                "positive_layers": 1
+              },
+              "hail": {
+                "clear_cf_positive_layers": 1,
+                "cloudy_cf_positive_layers": 0,
+                "max_grid_path_g_m2": 0.19163211011187856,
+                "positive_layers": 1
+              }
+            },
+            "input_sha256": "c937c9bff0700c8ec36944fb6224b67f6ff7cbe647a8e236764c4b48649c97ed",
+            "native_dry_mass_source": "native_dry_layer_mass",
+            "phase": "LW",
+            "raw_column_i_j": [
+              1,
+              1
+            ],
+            "raw_sha256": "04e421b32c9501407b8bd8bf31b4cbd0a24b04170302b8afcd87c3ccb287c3f3",
+            "reference_sha256": "1a8375588e5f1ef6c1f486b4d518ca76a6ee402495258276daa8e197a792897d",
+            "replay_passed": true,
+            "replay_sections_compared": 20,
+            "result_sha256": "8f08911da22638be42ab4264807bc1a9e590cc11ca67cb7dbd2313a2e205f346"
+          },
+          "SW": {
+            "call": 1,
+            "capture_format": "RRTMGP_REPLAY_V9",
+            "frozen_paths": {
+              "graupel": {
+                "clear_cf_positive_layers": 1,
+                "cloudy_cf_positive_layers": 0,
+                "max_grid_path_g_m2": 0.19163211011187856,
+                "positive_layers": 1
+              },
+              "hail": {
+                "clear_cf_positive_layers": 1,
+                "cloudy_cf_positive_layers": 0,
+                "max_grid_path_g_m2": 0.19163211011187856,
+                "positive_layers": 1
+              }
+            },
+            "input_sha256": "f5fe68a38f3c3956a2147fc072a12bdf070bcde31bcc712e89c3e73b47af8e40",
+            "native_dry_mass_source": "native_dry_layer_mass",
+            "phase": "SW",
+            "raw_column_i_j": [
+              1,
+              1
+            ],
+            "raw_sha256": "2e23236239eaf8b54fa3e1c81703e7ffcbbf50bcf2ece4dcd0cc940152a06312",
+            "reference_sha256": "1724dc8ddc931e23692827886190ef09f15ffbb31a0d6019eb6da7f555314c92",
+            "replay_passed": true,
+            "replay_sections_compared": 46,
+            "result_sha256": "1f50f57af850ba9ef0eab88f0852b48142cfc6d0a76d62c3bcbf33704753a315"
+          }
+        },
+        "case": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-sw-direct-work/build/udm-sw-direct-scm-final2/frozen-control-call1",
+        "history_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-sw-direct-work/build/udm-sw-direct-scm-final2/frozen-control-call1/wrfout_d01_1999-10-22_19:00:00",
+        "history_report": {
+          "checks": "finite fields, daytime SW, LW, nonzero accumulation, flux/tendency sums",
+          "history_file": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-sw-direct-work/build/udm-sw-direct-scm-final2/frozen-control-call1/wrfout_d01_1999-10-22_19:00:00",
+          "history_interval_seconds": 10,
+          "radiation_option_lw": 37,
+          "radiation_option_sw": 37,
+          "time_count": 7,
+          "time_deltas_seconds": [
+            10.0,
+            10.0,
+            10.0,
+            10.0,
+            10.0,
+            10.0
+          ],
+          "variables": {
+            "ACLWDNB": {
+              "max": 16617.212890625,
+              "min": 0.0
+            },
+            "ACSWDNB": {
+              "max": 25097.80078125,
+              "min": 0.0
+            },
+            "GLW": {
+              "max": 280.56121826171875,
+              "min": 0.0
+            },
+            "GSW": {
+              "max": 549.55859375,
+              "min": 0.0
+            },
+            "LWDNB": {
+              "max": 280.56121826171875,
+              "min": 0.0
+            },
+            "LWUPT": {
+              "max": 243.2826385498047,
+              "min": 0.0
+            },
+            "RTHRATEN": {
+              "max": 0.0002796876069623977,
+              "min": -1.9524846720742062e-05
+            },
+            "RTHRATLW": {
+              "max": 0.0002423404366709292,
+              "min": -0.00013117551861796528
+            },
+            "RTHRATSW": {
+              "max": 0.00020933698397129774,
+              "min": 0.0
+            },
+            "SWDDIF": {
+              "max": 364.66497802734375,
+              "min": 0.0
+            },
+            "SWDDIR": {
+              "max": 628.2224731445312,
+              "min": 0.0
+            },
+            "SWDNB": {
+              "max": 686.9482421875,
+              "min": 0.0
+            },
+            "SWDNT": {
+              "max": 870.1965942382812,
+              "min": 0.0
+            },
+            "SWDOWN": {
+              "max": 686.9482421875,
+              "min": 0.0
+            },
+            "SWUPB": {
+              "max": 137.3896484375,
+              "min": 0.0
+            }
+          }
+        },
+        "log_sha256": "1d638b20848eae357076d32f483c74f0dfddf4c236742785107dfddb7496725c",
+        "namelist_sha256": "8c09e3db9caf5f58d9254aa62ba923971b52781836d17dff5ccfa70242eee076",
+        "surface_direct": {
+          "absolute_difference_w_m2": 0.0,
+          "capture_DIRECT_PREDELTA_surface_w_m2": 628.2224731445312,
+          "capture_i_j": [
+            1,
+            1
+          ],
+          "history_SWDDIR_w_m2": 628.2224731445312,
+          "history_record_index": 1,
+          "result_interface_index": 0,
+          "status": "PASS"
+        },
+        "wrfinput_sha256": "9825fbfaaa74a117cd4539647a96ca0409bc73fade20d39f0940f869b78a9cee"
+      },
+      "call2": {
+        "call": 2,
+        "capture": {
+          "LW": {
+            "call": 2,
+            "capture_format": "RRTMGP_REPLAY_V8",
+            "frozen_paths": {
+              "graupel": {
+                "clear_cf_positive_layers": 2,
+                "cloudy_cf_positive_layers": 0,
+                "max_grid_path_g_m2": 0.17326723360358565,
+                "positive_layers": 2
+              },
+              "hail": {
+                "clear_cf_positive_layers": 2,
+                "cloudy_cf_positive_layers": 0,
+                "max_grid_path_g_m2": 0.18544920771625117,
+                "positive_layers": 2
+              }
+            },
+            "input_sha256": "cd2023d3716fad47c4d0011b42b46103932d568ff71ad516eca2a92b0b7b074e",
+            "native_dry_mass_source": "native_dry_layer_mass",
+            "phase": "LW",
+            "raw_column_i_j": [
+              1,
+              1
+            ],
+            "raw_sha256": "0a9c83be83914b3db8f8e3567dab06a5375c25e7eeac8a6b36a24075d8875dc4",
+            "reference_sha256": "7a396390570f87832a2b3a1b6dd2ea2623be2da4010b8a50cd1df6fec729591c",
+            "replay_passed": true,
+            "replay_sections_compared": 20,
+            "result_sha256": "aa73660e3f82c9cfd3bb54938e9d0e8f0b6458a86528a749f0059e2362ddb7c7"
+          },
+          "SW": {
+            "call": 2,
+            "capture_format": "RRTMGP_REPLAY_V9",
+            "frozen_paths": {
+              "graupel": {
+                "clear_cf_positive_layers": 2,
+                "cloudy_cf_positive_layers": 0,
+                "max_grid_path_g_m2": 0.17326723360358565,
+                "positive_layers": 2
+              },
+              "hail": {
+                "clear_cf_positive_layers": 2,
+                "cloudy_cf_positive_layers": 0,
+                "max_grid_path_g_m2": 0.18544920771625117,
+                "positive_layers": 2
+              }
+            },
+            "input_sha256": "5681484cacb647da9fd95fc3c00ad1b3e2062a5e21c5ed4f3b83ed8640ed7fef",
+            "native_dry_mass_source": "native_dry_layer_mass",
+            "phase": "SW",
+            "raw_column_i_j": [
+              1,
+              1
+            ],
+            "raw_sha256": "a248d59e2aa43c407032645c420c3af69a64753a71613ba197381af61442ea16",
+            "reference_sha256": "400a99a3440808836ac15375ba92efe05eba0a0f5ea7eaccf2ce3f960e2512db",
+            "replay_passed": true,
+            "replay_sections_compared": 46,
+            "result_sha256": "1dbe9afd1e8f912ee4849cbb2df2ac2a9c240da5c71a98d88a791283aed38087"
+          }
+        },
+        "case": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-sw-direct-work/build/udm-sw-direct-scm-final2/frozen-control-call2",
+        "history_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-sw-direct-work/build/udm-sw-direct-scm-final2/frozen-control-call2/wrfout_d01_1999-10-22_19:00:00",
+        "history_report": {
+          "checks": "finite fields, daytime SW, LW, nonzero accumulation, flux/tendency sums",
+          "history_file": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-sw-direct-work/build/udm-sw-direct-scm-final2/frozen-control-call2/wrfout_d01_1999-10-22_19:00:00",
+          "history_interval_seconds": 10,
+          "radiation_option_lw": 37,
+          "radiation_option_sw": 37,
+          "time_count": 7,
+          "time_deltas_seconds": [
+            10.0,
+            10.0,
+            10.0,
+            10.0,
+            10.0,
+            10.0
+          ],
+          "variables": {
+            "ACLWDNB": {
+              "max": 16617.212890625,
+              "min": 0.0
+            },
+            "ACSWDNB": {
+              "max": 25097.80078125,
+              "min": 0.0
+            },
+            "GLW": {
+              "max": 280.56121826171875,
+              "min": 0.0
+            },
+            "GSW": {
+              "max": 549.55859375,
+              "min": 0.0
+            },
+            "LWDNB": {
+              "max": 280.56121826171875,
+              "min": 0.0
+            },
+            "LWUPT": {
+              "max": 243.2826385498047,
+              "min": 0.0
+            },
+            "RTHRATEN": {
+              "max": 0.0002796876069623977,
+              "min": -1.9524846720742062e-05
+            },
+            "RTHRATLW": {
+              "max": 0.0002423404366709292,
+              "min": -0.00013117551861796528
+            },
+            "RTHRATSW": {
+              "max": 0.00020933698397129774,
+              "min": 0.0
+            },
+            "SWDDIF": {
+              "max": 364.66497802734375,
+              "min": 0.0
+            },
+            "SWDDIR": {
+              "max": 628.2224731445312,
+              "min": 0.0
+            },
+            "SWDNB": {
+              "max": 686.9482421875,
+              "min": 0.0
+            },
+            "SWDNT": {
+              "max": 870.1965942382812,
+              "min": 0.0
+            },
+            "SWDOWN": {
+              "max": 686.9482421875,
+              "min": 0.0
+            },
+            "SWUPB": {
+              "max": 137.3896484375,
+              "min": 0.0
+            }
+          }
+        },
+        "log_sha256": "3310a56fe78fa4db1bf61e10d0afead388885b2bda4d09708fd5ac826c37b102",
+        "namelist_sha256": "8c09e3db9caf5f58d9254aa62ba923971b52781836d17dff5ccfa70242eee076",
+        "surface_direct": {
+          "absolute_difference_w_m2": 0.0,
+          "capture_DIRECT_PREDELTA_surface_w_m2": 0.22079727053642273,
+          "capture_i_j": [
+            1,
+            1
+          ],
+          "history_SWDDIR_w_m2": 0.22079727053642273,
+          "history_record_index": 2,
+          "result_interface_index": 0,
+          "status": "PASS"
+        },
+        "wrfinput_sha256": "9825fbfaaa74a117cd4539647a96ca0409bc73fade20d39f0940f869b78a9cee"
+      }
+    },
+    "mixed": {
+      "call1": {
+        "call": 1,
+        "capture": {
+          "LW": {
+            "call": 1,
+            "capture_format": "RRTMGP_REPLAY_V8",
+            "frozen_paths": {
+              "graupel": {
+                "clear_cf_positive_layers": 0,
+                "cloudy_cf_positive_layers": 1,
+                "max_grid_path_g_m2": 0.19163211011187856,
+                "positive_layers": 1
+              },
+              "hail": {
+                "clear_cf_positive_layers": 0,
+                "cloudy_cf_positive_layers": 1,
+                "max_grid_path_g_m2": 0.19163211011187856,
+                "positive_layers": 1
+              }
+            },
+            "input_sha256": "2ab0a57aee15e6f5cbc1ed48d053bbf55a937424e1e83a4ddf3cc038da18d681",
+            "native_dry_mass_source": "native_dry_layer_mass",
+            "phase": "LW",
+            "raw_column_i_j": [
+              1,
+              1
+            ],
+            "raw_sha256": "7bbc0f1f045164599a47969dd2168d53c79d2926ae0f796f8620dbb0bbc205c7",
+            "reference_sha256": "0092630299726b88217b2872afe1bc9e8deee618eeb7af172cacf37ba2c5fc66",
+            "replay_passed": true,
+            "replay_sections_compared": 20,
+            "result_sha256": "2eafcef1691a55d1b85f46167c06e720120cc701c6bd1a96ed4ce6e07e3835cb"
+          },
+          "SW": {
+            "call": 1,
+            "capture_format": "RRTMGP_REPLAY_V9",
+            "frozen_paths": {
+              "graupel": {
+                "clear_cf_positive_layers": 0,
+                "cloudy_cf_positive_layers": 1,
+                "max_grid_path_g_m2": 0.19163211011187856,
+                "positive_layers": 1
+              },
+              "hail": {
+                "clear_cf_positive_layers": 0,
+                "cloudy_cf_positive_layers": 1,
+                "max_grid_path_g_m2": 0.19163211011187856,
+                "positive_layers": 1
+              }
+            },
+            "input_sha256": "e22b7588f0a97889738c70c83de9c4e2aa23ad5f4fbf10daaf6ab85bd16396e7",
+            "native_dry_mass_source": "native_dry_layer_mass",
+            "phase": "SW",
+            "raw_column_i_j": [
+              1,
+              1
+            ],
+            "raw_sha256": "f939ff5f19c57dc757109069a09628b09c16d908ee11b55ec6b6f84be8b1c894",
+            "reference_sha256": "7f26108cb762a62d4b8cd58100821fcc89c3fec0c0a187bb6b922c079dc1fe59",
+            "replay_passed": true,
+            "replay_sections_compared": 46,
+            "result_sha256": "8c9bb8318d956200143c1b7d0c2f4cf014ccb249dd2a60e3b4dd78e14348ec27"
+          }
+        },
+        "case": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-sw-direct-work/build/udm-sw-direct-scm-final2/frozen-mixed-call1",
+        "history_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-sw-direct-work/build/udm-sw-direct-scm-final2/frozen-mixed-call1/wrfout_d01_1999-10-22_19:00:00",
+        "history_report": {
+          "checks": "finite fields, daytime SW, LW, nonzero accumulation, flux/tendency sums",
+          "history_file": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-sw-direct-work/build/udm-sw-direct-scm-final2/frozen-mixed-call1/wrfout_d01_1999-10-22_19:00:00",
+          "history_interval_seconds": 10,
+          "radiation_option_lw": 37,
+          "radiation_option_sw": 37,
+          "time_count": 7,
+          "time_deltas_seconds": [
+            10.0,
+            10.0,
+            10.0,
+            10.0,
+            10.0,
+            10.0
+          ],
+          "variables": {
+            "ACLWDNB": {
+              "max": 16938.94140625,
+              "min": 0.0
+            },
+            "ACSWDNB": {
+              "max": 25043.5546875,
+              "min": 0.0
+            },
+            "GLW": {
+              "max": 282.5650329589844,
+              "min": 0.0
+            },
+            "GSW": {
+              "max": 545.5715942382812,
+              "min": 0.0
+            },
+            "LWDNB": {
+              "max": 282.5650329589844,
+              "min": 0.0
+            },
+            "LWUPT": {
+              "max": 240.6621551513672,
+              "min": 0.0
+            },
+            "RTHRATEN": {
+              "max": 0.00027898652479052544,
+              "min": -4.155831629759632e-05
+            },
+            "RTHRATLW": {
+              "max": 0.0002415540802758187,
+              "min": -0.00013391498941928148
+            },
+            "RTHRATSW": {
+              "max": 0.00020934877102263272,
+              "min": 0.0
+            },
+            "SWDDIF": {
+              "max": 364.6781921386719,
+              "min": 0.0
+            },
+            "SWDDIR": {
+              "max": 621.6415405273438,
+              "min": 0.0
+            },
+            "SWDNB": {
+              "max": 681.9644775390625,
+              "min": 0.0
+            },
+            "SWDNT": {
+              "max": 870.1965942382812,
+              "min": 0.0
+            },
+            "SWDOWN": {
+              "max": 681.9644775390625,
+              "min": 0.0
+            },
+            "SWUPB": {
+              "max": 136.3928985595703,
+              "min": 0.0
+            }
+          }
+        },
+        "log_sha256": "be8618ae2da0ac5f25cd22f0febe0ea1585f30587b5e2202c6d206f46db85d82",
+        "namelist_sha256": "8c09e3db9caf5f58d9254aa62ba923971b52781836d17dff5ccfa70242eee076",
+        "surface_direct": {
+          "absolute_difference_w_m2": 0.0,
+          "capture_DIRECT_PREDELTA_surface_w_m2": 588.9683227539062,
+          "capture_i_j": [
+            1,
+            1
+          ],
+          "history_SWDDIR_w_m2": 588.9683227539062,
+          "history_record_index": 1,
+          "result_interface_index": 0,
+          "status": "PASS"
+        },
+        "wrfinput_sha256": "c49037d62e6f32108db61e6b7390c57000188fb15a0c4bcada1d0c68874f9761"
+      },
+      "call2": {
+        "call": 2,
+        "capture": {
+          "LW": {
+            "call": 2,
+            "capture_format": "RRTMGP_REPLAY_V8",
+            "frozen_paths": {
+              "graupel": {
+                "clear_cf_positive_layers": 1,
+                "cloudy_cf_positive_layers": 1,
+                "max_grid_path_g_m2": 0.18363172839287734,
+                "positive_layers": 2
+              },
+              "hail": {
+                "clear_cf_positive_layers": 1,
+                "cloudy_cf_positive_layers": 1,
+                "max_grid_path_g_m2": 0.18635463589854184,
+                "positive_layers": 2
+              }
+            },
+            "input_sha256": "11d4a8b69b693e3db9e720966b8ca188418be699c550d5bc5f4daefdecb31311",
+            "native_dry_mass_source": "native_dry_layer_mass",
+            "phase": "LW",
+            "raw_column_i_j": [
+              1,
+              1
+            ],
+            "raw_sha256": "0187e5c9cd2d5675a3d453d730e9274a5ca67f9e185cce28ff18b175d93bdc62",
+            "reference_sha256": "dd319bb5ffe37a9432654896e116d5d07f01fcde57326dda7253b37d783d28c8",
+            "replay_passed": true,
+            "replay_sections_compared": 20,
+            "result_sha256": "99acaba376d6a0b8be7138fd8352230b41b79db708aefa4675a0f21693980aa7"
+          },
+          "SW": {
+            "call": 2,
+            "capture_format": "RRTMGP_REPLAY_V9",
+            "frozen_paths": {
+              "graupel": {
+                "clear_cf_positive_layers": 1,
+                "cloudy_cf_positive_layers": 1,
+                "max_grid_path_g_m2": 0.18363172839287734,
+                "positive_layers": 2
+              },
+              "hail": {
+                "clear_cf_positive_layers": 1,
+                "cloudy_cf_positive_layers": 1,
+                "max_grid_path_g_m2": 0.18635463589854184,
+                "positive_layers": 2
+              }
+            },
+            "input_sha256": "bf7b7c2f89901ac16d7559cc53b0d8bf80b87d902b6944aa23c27d27a008f3dc",
+            "native_dry_mass_source": "native_dry_layer_mass",
+            "phase": "SW",
+            "raw_column_i_j": [
+              1,
+              1
+            ],
+            "raw_sha256": "5e4799c07e3a7beb95042582db3a88fc2ad590a69d28bcd27bcddcfd0dd0b6d8",
+            "reference_sha256": "0e4ae2a41f6faa7468c63788e9eb1007c0aaa67440819dbde64526d53acb86d6",
+            "replay_passed": true,
+            "replay_sections_compared": 46,
+            "result_sha256": "38dca1944bb69feb5c43e3613c973f0806c1991c37cf4c0d7709fd305388124c"
+          }
+        },
+        "case": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-sw-direct-work/build/udm-sw-direct-scm-final2/frozen-mixed-call2",
+        "history_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-sw-direct-work/build/udm-sw-direct-scm-final2/frozen-mixed-call2/wrfout_d01_1999-10-22_19:00:00",
+        "history_report": {
+          "checks": "finite fields, daytime SW, LW, nonzero accumulation, flux/tendency sums",
+          "history_file": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-sw-direct-work/build/udm-sw-direct-scm-final2/frozen-mixed-call2/wrfout_d01_1999-10-22_19:00:00",
+          "history_interval_seconds": 10,
+          "radiation_option_lw": 37,
+          "radiation_option_sw": 37,
+          "time_count": 7,
+          "time_deltas_seconds": [
+            10.0,
+            10.0,
+            10.0,
+            10.0,
+            10.0,
+            10.0
+          ],
+          "variables": {
+            "ACLWDNB": {
+              "max": 16938.94140625,
+              "min": 0.0
+            },
+            "ACSWDNB": {
+              "max": 25043.5546875,
+              "min": 0.0
+            },
+            "GLW": {
+              "max": 282.5650329589844,
+              "min": 0.0
+            },
+            "GSW": {
+              "max": 545.5715942382812,
+              "min": 0.0
+            },
+            "LWDNB": {
+              "max": 282.5650329589844,
+              "min": 0.0
+            },
+            "LWUPT": {
+              "max": 240.6621551513672,
+              "min": 0.0
+            },
+            "RTHRATEN": {
+              "max": 0.00027898652479052544,
+              "min": -4.155831629759632e-05
+            },
+            "RTHRATLW": {
+              "max": 0.0002415540802758187,
+              "min": -0.00013391498941928148
+            },
+            "RTHRATSW": {
+              "max": 0.00020934877102263272,
+              "min": 0.0
+            },
+            "SWDDIF": {
+              "max": 364.6781921386719,
+              "min": 0.0
+            },
+            "SWDDIR": {
+              "max": 621.6415405273438,
+              "min": 0.0
+            },
+            "SWDNB": {
+              "max": 681.9644775390625,
+              "min": 0.0
+            },
+            "SWDNT": {
+              "max": 870.1965942382812,
+              "min": 0.0
+            },
+            "SWDOWN": {
+              "max": 681.9644775390625,
+              "min": 0.0
+            },
+            "SWUPB": {
+              "max": 136.3928985595703,
+              "min": 0.0
+            }
+          }
+        },
+        "log_sha256": "9cfcbc73694e7e0648716ae7d193511948ad6fb99dd94e277624137d7876b31e",
+        "namelist_sha256": "8c09e3db9caf5f58d9254aa62ba923971b52781836d17dff5ccfa70242eee076",
+        "surface_direct": {
+          "absolute_difference_w_m2": 0.0,
+          "capture_DIRECT_PREDELTA_surface_w_m2": 0.21813373267650604,
+          "capture_i_j": [
+            1,
+            1
+          ],
+          "history_SWDDIR_w_m2": 0.21813373267650604,
+          "history_record_index": 2,
+          "result_interface_index": 0,
+          "status": "PASS"
+        },
+        "wrfinput_sha256": "c49037d62e6f32108db61e6b7390c57000188fb15a0c4bcada1d0c68874f9761"
+      }
+    }
+  },
+  "mode0_parent_bitwise": {
+    "control": {
+      "ra37": {
+        "comparison": {
+          "arrays_compared": [
+            "ACGRDFLX",
+            "ACHFX",
+            "ACLHF",
+            "ACLWDNB",
+            "ACLWDNBC",
+            "ACLWDNT",
+            "ACLWDNTC",
+            "ACLWUPB",
+            "ACLWUPBC",
+            "ACLWUPT",
+            "ACLWUPTC",
+            "ACSNOM",
+            "ACSWDNB",
+            "ACSWDNBC",
+            "ACSWDNT",
+            "ACSWDNTC",
+            "ACSWUPB",
+            "ACSWUPBC",
+            "ACSWUPT",
+            "ACSWUPTC",
+            "ALBBCK",
+            "ALBEDO",
+            "AREA2D",
+            "BATHYMETRY_FLAG",
+            "C1F",
+            "C1H",
+            "C2F",
+            "C2H",
+            "C3F",
+            "C3H",
+            "C4F",
+            "C4H",
+            "CANWAT",
+            "CF1",
+            "CF2",
+            "CF3",
+            "CFN",
+            "CFN1",
+            "CLAT",
+            "CLDFRA",
+            "COSALPHA",
+            "COSZEN",
+            "DN",
+            "DNW",
+            "DX2D",
+            "DZS",
+            "E",
+            "EMISS",
+            "F",
+            "FNM",
+            "FNP",
+            "GLW",
+            "GOT_VAR_SSO",
+            "GRAUPELNC",
+            "GRDFLX",
+            "GSW",
+            "HAILNC",
+            "HFX",
+            "HFX_FORCE",
+            "HFX_FORCE_TEND",
+            "HGT",
+            "ISEEDARRAY_SPP_CONV",
+            "ISEEDARRAY_SPP_LSM",
+            "ISEEDARRAY_SPP_PBL",
+            "ISEEDARR_RAND_PERTURB",
+            "ISEEDARR_SKEBS",
+            "ISEEDARR_SPPT",
+            "ISLTYP",
+            "ITIMESTEP",
+            "IVGTYP",
+            "LAI",
+            "LAKEMASK",
+            "LANDMASK",
+            "LH",
+            "LH_FORCE",
+            "LH_FORCE_TEND",
+            "LU_INDEX",
+            "LWDNB",
+            "LWDNBC",
+            "LWDNT",
+            "LWDNTC",
+            "LWUPB",
+            "LWUPBC",
+            "LWUPT",
+            "LWUPTC",
+            "MAPFAC_M",
+            "MAPFAC_MX",
+            "MAPFAC_MY",
+            "MAPFAC_U",
+            "MAPFAC_UX",
+            "MAPFAC_UY",
+            "MAPFAC_V",
+            "MAPFAC_VX",
+            "MAPFAC_VY",
+            "MAX_MSFTX",
+            "MAX_MSFTY",
+            "MF_VX_INV",
+            "MU",
+            "MUB",
+            "NEST_POS",
+            "O3_GFS_DU",
+            "OLR",
+            "P",
+            "P00",
+            "PB",
+            "PBLH",
+            "PC",
+            "PCB",
+            "PH",
+            "PHB",
+            "PSFC",
+            "P_HYD",
+            "P_STRAT",
+            "P_TOP",
+            "Q2",
+            "QCLOUD",
+            "QFX",
+            "QGRAUP",
+            "QHAIL",
+            "QICE",
+            "QNCCN",
+            "QNCLOUD",
+            "QNRAIN",
+            "QRAIN",
+            "QSNOW",
+            "QVAPOR",
+            "RAINC",
+            "RAINNC",
+            "RAINSH",
+            "RDN",
+            "RDNW",
+            "RDX",
+            "RDY",
+            "RESM",
+            "RTHRATEN",
+            "RTHRATLW",
+            "RTHRATSW",
+            "SAVE_TOPO_FROM_REAL",
+            "SEAICE",
+            "SFROFF",
+            "SH2O",
+            "SHDAVG",
+            "SHDMAX",
+            "SHDMIN",
+            "SINALPHA",
+            "SMCREL",
+            "SMOIS",
+            "SNOALB",
+            "SNOW",
+            "SNOWC",
+            "SNOWH",
+            "SNOWNC",
+            "SR",
+            "SST",
+            "SSTSK",
+            "SST_INPUT",
+            "SWDNB",
+            "SWDNBC",
+            "SWDNT",
+            "SWDNTC",
+            "SWDOWN",
+            "SWNORM",
+            "SWUPB",
+            "SWUPBC",
+            "SWUPT",
+            "SWUPTC",
+            "T",
+            "T00",
+            "T2",
+            "TH2",
+            "THIS_IS_AN_IDEAL_RUN",
+            "THM",
+            "TISO",
+            "TLP",
+            "TLP_STRAT",
+            "TMN",
+            "TSK",
+            "TSK_FORCE",
+            "TSK_FORCE_TEND",
+            "TSLB",
+            "U",
+            "U10",
+            "UDM_CF_STEP",
+            "UDM_CLDFRA",
+            "UDROFF",
+            "UST",
+            "V",
+            "V10",
+            "VAR",
+            "VAR_SSO",
+            "VEGFRA",
+            "W",
+            "WATER_DEPTH",
+            "XICEM",
+            "XLAND",
+            "XLAT",
+            "XLAT_U",
+            "XLAT_V",
+            "XLONG",
+            "XLONG_U",
+            "XLONG_V",
+            "XTIME",
+            "ZETATOP",
+            "ZNT",
+            "ZNU",
+            "ZNW",
+            "ZS"
+          ],
+          "ignored_expected_diagnostic_fields": [
+            "SWDDIF",
+            "SWDDIR"
+          ],
+          "left_only": [],
+          "pre_delta_direct_changed_from_parent": true,
+          "right_only": [],
+          "status": "PASS_BITWISE"
+        },
+        "current": {
+          "case": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-sw-direct-work/build/udm-sw-direct-scm-final2/mode0-control-ra37-current",
+          "history_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-sw-direct-work/build/udm-sw-direct-scm-final2/mode0-control-ra37-current/wrfout_d01_1999-10-22_19:00:00",
+          "wrfinput_sha256": "3fb1d9ae78bc0e93d072e646f052e3a39dd83d5215f864bbc89ff030f9cb6d4e"
+        },
+        "parent": {
+          "case": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-sw-direct-work/build/udm-sw-direct-scm-final2/mode0-control-ra37-parent",
+          "history_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-sw-direct-work/build/udm-sw-direct-scm-final2/mode0-control-ra37-parent/wrfout_d01_1999-10-22_19:00:00"
+        }
+      },
+      "ra4": {
+        "comparison": {
+          "arrays_compared": [
+            "ACGRDFLX",
+            "ACHFX",
+            "ACLHF",
+            "ACLWDNB",
+            "ACLWDNBC",
+            "ACLWDNT",
+            "ACLWDNTC",
+            "ACLWUPB",
+            "ACLWUPBC",
+            "ACLWUPT",
+            "ACLWUPTC",
+            "ACSNOM",
+            "ACSWDNB",
+            "ACSWDNBC",
+            "ACSWDNT",
+            "ACSWDNTC",
+            "ACSWUPB",
+            "ACSWUPBC",
+            "ACSWUPT",
+            "ACSWUPTC",
+            "ALBBCK",
+            "ALBEDO",
+            "AREA2D",
+            "BATHYMETRY_FLAG",
+            "C1F",
+            "C1H",
+            "C2F",
+            "C2H",
+            "C3F",
+            "C3H",
+            "C4F",
+            "C4H",
+            "CANWAT",
+            "CF1",
+            "CF2",
+            "CF3",
+            "CFN",
+            "CFN1",
+            "CLAT",
+            "CLDFRA",
+            "COSALPHA",
+            "COSZEN",
+            "DN",
+            "DNW",
+            "DX2D",
+            "DZS",
+            "E",
+            "EMISS",
+            "F",
+            "FNM",
+            "FNP",
+            "GLW",
+            "GOT_VAR_SSO",
+            "GRAUPELNC",
+            "GRDFLX",
+            "GSW",
+            "HAILNC",
+            "HFX",
+            "HFX_FORCE",
+            "HFX_FORCE_TEND",
+            "HGT",
+            "ISEEDARRAY_SPP_CONV",
+            "ISEEDARRAY_SPP_LSM",
+            "ISEEDARRAY_SPP_PBL",
+            "ISEEDARR_RAND_PERTURB",
+            "ISEEDARR_SKEBS",
+            "ISEEDARR_SPPT",
+            "ISLTYP",
+            "ITIMESTEP",
+            "IVGTYP",
+            "LAI",
+            "LAKEMASK",
+            "LANDMASK",
+            "LH",
+            "LH_FORCE",
+            "LH_FORCE_TEND",
+            "LU_INDEX",
+            "LWDNB",
+            "LWDNBC",
+            "LWDNT",
+            "LWDNTC",
+            "LWUPB",
+            "LWUPBC",
+            "LWUPT",
+            "LWUPTC",
+            "MAPFAC_M",
+            "MAPFAC_MX",
+            "MAPFAC_MY",
+            "MAPFAC_U",
+            "MAPFAC_UX",
+            "MAPFAC_UY",
+            "MAPFAC_V",
+            "MAPFAC_VX",
+            "MAPFAC_VY",
+            "MAX_MSFTX",
+            "MAX_MSFTY",
+            "MF_VX_INV",
+            "MU",
+            "MUB",
+            "NEST_POS",
+            "O3_GFS_DU",
+            "OLR",
+            "P",
+            "P00",
+            "PB",
+            "PBLH",
+            "PC",
+            "PCB",
+            "PH",
+            "PHB",
+            "PSFC",
+            "P_HYD",
+            "P_STRAT",
+            "P_TOP",
+            "Q2",
+            "QCLOUD",
+            "QFX",
+            "QGRAUP",
+            "QHAIL",
+            "QICE",
+            "QNCCN",
+            "QNCLOUD",
+            "QNRAIN",
+            "QRAIN",
+            "QSNOW",
+            "QVAPOR",
+            "RAINC",
+            "RAINNC",
+            "RAINSH",
+            "RDN",
+            "RDNW",
+            "RDX",
+            "RDY",
+            "RESM",
+            "RTHRATEN",
+            "RTHRATLW",
+            "RTHRATSW",
+            "SAVE_TOPO_FROM_REAL",
+            "SEAICE",
+            "SFROFF",
+            "SH2O",
+            "SHDAVG",
+            "SHDMAX",
+            "SHDMIN",
+            "SINALPHA",
+            "SMCREL",
+            "SMOIS",
+            "SNOALB",
+            "SNOW",
+            "SNOWC",
+            "SNOWH",
+            "SNOWNC",
+            "SR",
+            "SST",
+            "SSTSK",
+            "SST_INPUT",
+            "SWDDIF",
+            "SWDDIR",
+            "SWDNB",
+            "SWDNBC",
+            "SWDNT",
+            "SWDNTC",
+            "SWDOWN",
+            "SWNORM",
+            "SWUPB",
+            "SWUPBC",
+            "SWUPT",
+            "SWUPTC",
+            "T",
+            "T00",
+            "T2",
+            "TH2",
+            "THIS_IS_AN_IDEAL_RUN",
+            "THM",
+            "TISO",
+            "TLP",
+            "TLP_STRAT",
+            "TMN",
+            "TSK",
+            "TSK_FORCE",
+            "TSK_FORCE_TEND",
+            "TSLB",
+            "U",
+            "U10",
+            "UDROFF",
+            "UST",
+            "V",
+            "V10",
+            "VAR",
+            "VAR_SSO",
+            "VEGFRA",
+            "W",
+            "WATER_DEPTH",
+            "XICEM",
+            "XLAND",
+            "XLAT",
+            "XLAT_U",
+            "XLAT_V",
+            "XLONG",
+            "XLONG_U",
+            "XLONG_V",
+            "XTIME",
+            "ZETATOP",
+            "ZNT",
+            "ZNU",
+            "ZNW",
+            "ZS"
+          ],
+          "ignored_expected_diagnostic_fields": [],
+          "left_only": [],
+          "right_only": [],
+          "status": "PASS_BITWISE"
+        },
+        "current": {
+          "case": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-sw-direct-work/build/udm-sw-direct-scm-final2/mode0-control-ra4-current",
+          "history_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-sw-direct-work/build/udm-sw-direct-scm-final2/mode0-control-ra4-current/wrfout_d01_1999-10-22_19:00:00",
+          "wrfinput_sha256": "3fb1d9ae78bc0e93d072e646f052e3a39dd83d5215f864bbc89ff030f9cb6d4e"
+        },
+        "parent": {
+          "case": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-sw-direct-work/build/udm-sw-direct-scm-final2/mode0-control-ra4-parent",
+          "history_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-sw-direct-work/build/udm-sw-direct-scm-final2/mode0-control-ra4-parent/wrfout_d01_1999-10-22_19:00:00"
+        }
+      }
+    },
+    "mixed": {
+      "ra37": {
+        "comparison": {
+          "arrays_compared": [
+            "ACGRDFLX",
+            "ACHFX",
+            "ACLHF",
+            "ACLWDNB",
+            "ACLWDNBC",
+            "ACLWDNT",
+            "ACLWDNTC",
+            "ACLWUPB",
+            "ACLWUPBC",
+            "ACLWUPT",
+            "ACLWUPTC",
+            "ACSNOM",
+            "ACSWDNB",
+            "ACSWDNBC",
+            "ACSWDNT",
+            "ACSWDNTC",
+            "ACSWUPB",
+            "ACSWUPBC",
+            "ACSWUPT",
+            "ACSWUPTC",
+            "ALBBCK",
+            "ALBEDO",
+            "AREA2D",
+            "BATHYMETRY_FLAG",
+            "C1F",
+            "C1H",
+            "C2F",
+            "C2H",
+            "C3F",
+            "C3H",
+            "C4F",
+            "C4H",
+            "CANWAT",
+            "CF1",
+            "CF2",
+            "CF3",
+            "CFN",
+            "CFN1",
+            "CLAT",
+            "CLDFRA",
+            "COSALPHA",
+            "COSZEN",
+            "DN",
+            "DNW",
+            "DX2D",
+            "DZS",
+            "E",
+            "EMISS",
+            "F",
+            "FNM",
+            "FNP",
+            "GLW",
+            "GOT_VAR_SSO",
+            "GRAUPELNC",
+            "GRDFLX",
+            "GSW",
+            "HAILNC",
+            "HFX",
+            "HFX_FORCE",
+            "HFX_FORCE_TEND",
+            "HGT",
+            "ISEEDARRAY_SPP_CONV",
+            "ISEEDARRAY_SPP_LSM",
+            "ISEEDARRAY_SPP_PBL",
+            "ISEEDARR_RAND_PERTURB",
+            "ISEEDARR_SKEBS",
+            "ISEEDARR_SPPT",
+            "ISLTYP",
+            "ITIMESTEP",
+            "IVGTYP",
+            "LAI",
+            "LAKEMASK",
+            "LANDMASK",
+            "LH",
+            "LH_FORCE",
+            "LH_FORCE_TEND",
+            "LU_INDEX",
+            "LWDNB",
+            "LWDNBC",
+            "LWDNT",
+            "LWDNTC",
+            "LWUPB",
+            "LWUPBC",
+            "LWUPT",
+            "LWUPTC",
+            "MAPFAC_M",
+            "MAPFAC_MX",
+            "MAPFAC_MY",
+            "MAPFAC_U",
+            "MAPFAC_UX",
+            "MAPFAC_UY",
+            "MAPFAC_V",
+            "MAPFAC_VX",
+            "MAPFAC_VY",
+            "MAX_MSFTX",
+            "MAX_MSFTY",
+            "MF_VX_INV",
+            "MU",
+            "MUB",
+            "NEST_POS",
+            "O3_GFS_DU",
+            "OLR",
+            "P",
+            "P00",
+            "PB",
+            "PBLH",
+            "PC",
+            "PCB",
+            "PH",
+            "PHB",
+            "PSFC",
+            "P_HYD",
+            "P_STRAT",
+            "P_TOP",
+            "Q2",
+            "QCLOUD",
+            "QFX",
+            "QGRAUP",
+            "QHAIL",
+            "QICE",
+            "QNCCN",
+            "QNCLOUD",
+            "QNRAIN",
+            "QRAIN",
+            "QSNOW",
+            "QVAPOR",
+            "RAINC",
+            "RAINNC",
+            "RAINSH",
+            "RDN",
+            "RDNW",
+            "RDX",
+            "RDY",
+            "RESM",
+            "RTHRATEN",
+            "RTHRATLW",
+            "RTHRATSW",
+            "SAVE_TOPO_FROM_REAL",
+            "SEAICE",
+            "SFROFF",
+            "SH2O",
+            "SHDAVG",
+            "SHDMAX",
+            "SHDMIN",
+            "SINALPHA",
+            "SMCREL",
+            "SMOIS",
+            "SNOALB",
+            "SNOW",
+            "SNOWC",
+            "SNOWH",
+            "SNOWNC",
+            "SR",
+            "SST",
+            "SSTSK",
+            "SST_INPUT",
+            "SWDNB",
+            "SWDNBC",
+            "SWDNT",
+            "SWDNTC",
+            "SWDOWN",
+            "SWNORM",
+            "SWUPB",
+            "SWUPBC",
+            "SWUPT",
+            "SWUPTC",
+            "T",
+            "T00",
+            "T2",
+            "TH2",
+            "THIS_IS_AN_IDEAL_RUN",
+            "THM",
+            "TISO",
+            "TLP",
+            "TLP_STRAT",
+            "TMN",
+            "TSK",
+            "TSK_FORCE",
+            "TSK_FORCE_TEND",
+            "TSLB",
+            "U",
+            "U10",
+            "UDM_CF_STEP",
+            "UDM_CLDFRA",
+            "UDROFF",
+            "UST",
+            "V",
+            "V10",
+            "VAR",
+            "VAR_SSO",
+            "VEGFRA",
+            "W",
+            "WATER_DEPTH",
+            "XICEM",
+            "XLAND",
+            "XLAT",
+            "XLAT_U",
+            "XLAT_V",
+            "XLONG",
+            "XLONG_U",
+            "XLONG_V",
+            "XTIME",
+            "ZETATOP",
+            "ZNT",
+            "ZNU",
+            "ZNW",
+            "ZS"
+          ],
+          "ignored_expected_diagnostic_fields": [
+            "SWDDIF",
+            "SWDDIR"
+          ],
+          "left_only": [],
+          "pre_delta_direct_changed_from_parent": true,
+          "right_only": [],
+          "status": "PASS_BITWISE"
+        },
+        "current": {
+          "case": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-sw-direct-work/build/udm-sw-direct-scm-final2/mode0-mixed-ra37-current",
+          "history_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-sw-direct-work/build/udm-sw-direct-scm-final2/mode0-mixed-ra37-current/wrfout_d01_1999-10-22_19:00:00",
+          "wrfinput_sha256": "2dece4c3fdd45422f0dd4b136c99dd1f122f4f5d3bfb7bf1da93c9c3a57704df"
+        },
+        "parent": {
+          "case": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-sw-direct-work/build/udm-sw-direct-scm-final2/mode0-mixed-ra37-parent",
+          "history_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-sw-direct-work/build/udm-sw-direct-scm-final2/mode0-mixed-ra37-parent/wrfout_d01_1999-10-22_19:00:00"
+        }
+      },
+      "ra4": {
+        "comparison": {
+          "arrays_compared": [
+            "ACGRDFLX",
+            "ACHFX",
+            "ACLHF",
+            "ACLWDNB",
+            "ACLWDNBC",
+            "ACLWDNT",
+            "ACLWDNTC",
+            "ACLWUPB",
+            "ACLWUPBC",
+            "ACLWUPT",
+            "ACLWUPTC",
+            "ACSNOM",
+            "ACSWDNB",
+            "ACSWDNBC",
+            "ACSWDNT",
+            "ACSWDNTC",
+            "ACSWUPB",
+            "ACSWUPBC",
+            "ACSWUPT",
+            "ACSWUPTC",
+            "ALBBCK",
+            "ALBEDO",
+            "AREA2D",
+            "BATHYMETRY_FLAG",
+            "C1F",
+            "C1H",
+            "C2F",
+            "C2H",
+            "C3F",
+            "C3H",
+            "C4F",
+            "C4H",
+            "CANWAT",
+            "CF1",
+            "CF2",
+            "CF3",
+            "CFN",
+            "CFN1",
+            "CLAT",
+            "CLDFRA",
+            "COSALPHA",
+            "COSZEN",
+            "DN",
+            "DNW",
+            "DX2D",
+            "DZS",
+            "E",
+            "EMISS",
+            "F",
+            "FNM",
+            "FNP",
+            "GLW",
+            "GOT_VAR_SSO",
+            "GRAUPELNC",
+            "GRDFLX",
+            "GSW",
+            "HAILNC",
+            "HFX",
+            "HFX_FORCE",
+            "HFX_FORCE_TEND",
+            "HGT",
+            "ISEEDARRAY_SPP_CONV",
+            "ISEEDARRAY_SPP_LSM",
+            "ISEEDARRAY_SPP_PBL",
+            "ISEEDARR_RAND_PERTURB",
+            "ISEEDARR_SKEBS",
+            "ISEEDARR_SPPT",
+            "ISLTYP",
+            "ITIMESTEP",
+            "IVGTYP",
+            "LAI",
+            "LAKEMASK",
+            "LANDMASK",
+            "LH",
+            "LH_FORCE",
+            "LH_FORCE_TEND",
+            "LU_INDEX",
+            "LWDNB",
+            "LWDNBC",
+            "LWDNT",
+            "LWDNTC",
+            "LWUPB",
+            "LWUPBC",
+            "LWUPT",
+            "LWUPTC",
+            "MAPFAC_M",
+            "MAPFAC_MX",
+            "MAPFAC_MY",
+            "MAPFAC_U",
+            "MAPFAC_UX",
+            "MAPFAC_UY",
+            "MAPFAC_V",
+            "MAPFAC_VX",
+            "MAPFAC_VY",
+            "MAX_MSFTX",
+            "MAX_MSFTY",
+            "MF_VX_INV",
+            "MU",
+            "MUB",
+            "NEST_POS",
+            "O3_GFS_DU",
+            "OLR",
+            "P",
+            "P00",
+            "PB",
+            "PBLH",
+            "PC",
+            "PCB",
+            "PH",
+            "PHB",
+            "PSFC",
+            "P_HYD",
+            "P_STRAT",
+            "P_TOP",
+            "Q2",
+            "QCLOUD",
+            "QFX",
+            "QGRAUP",
+            "QHAIL",
+            "QICE",
+            "QNCCN",
+            "QNCLOUD",
+            "QNRAIN",
+            "QRAIN",
+            "QSNOW",
+            "QVAPOR",
+            "RAINC",
+            "RAINNC",
+            "RAINSH",
+            "RDN",
+            "RDNW",
+            "RDX",
+            "RDY",
+            "RESM",
+            "RTHRATEN",
+            "RTHRATLW",
+            "RTHRATSW",
+            "SAVE_TOPO_FROM_REAL",
+            "SEAICE",
+            "SFROFF",
+            "SH2O",
+            "SHDAVG",
+            "SHDMAX",
+            "SHDMIN",
+            "SINALPHA",
+            "SMCREL",
+            "SMOIS",
+            "SNOALB",
+            "SNOW",
+            "SNOWC",
+            "SNOWH",
+            "SNOWNC",
+            "SR",
+            "SST",
+            "SSTSK",
+            "SST_INPUT",
+            "SWDDIF",
+            "SWDDIR",
+            "SWDNB",
+            "SWDNBC",
+            "SWDNT",
+            "SWDNTC",
+            "SWDOWN",
+            "SWNORM",
+            "SWUPB",
+            "SWUPBC",
+            "SWUPT",
+            "SWUPTC",
+            "T",
+            "T00",
+            "T2",
+            "TH2",
+            "THIS_IS_AN_IDEAL_RUN",
+            "THM",
+            "TISO",
+            "TLP",
+            "TLP_STRAT",
+            "TMN",
+            "TSK",
+            "TSK_FORCE",
+            "TSK_FORCE_TEND",
+            "TSLB",
+            "U",
+            "U10",
+            "UDROFF",
+            "UST",
+            "V",
+            "V10",
+            "VAR",
+            "VAR_SSO",
+            "VEGFRA",
+            "W",
+            "WATER_DEPTH",
+            "XICEM",
+            "XLAND",
+            "XLAT",
+            "XLAT_U",
+            "XLAT_V",
+            "XLONG",
+            "XLONG_U",
+            "XLONG_V",
+            "XTIME",
+            "ZETATOP",
+            "ZNT",
+            "ZNU",
+            "ZNW",
+            "ZS"
+          ],
+          "ignored_expected_diagnostic_fields": [],
+          "left_only": [],
+          "right_only": [],
+          "status": "PASS_BITWISE"
+        },
+        "current": {
+          "case": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-sw-direct-work/build/udm-sw-direct-scm-final2/mode0-mixed-ra4-current",
+          "history_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-sw-direct-work/build/udm-sw-direct-scm-final2/mode0-mixed-ra4-current/wrfout_d01_1999-10-22_19:00:00",
+          "wrfinput_sha256": "2dece4c3fdd45422f0dd4b136c99dd1f122f4f5d3bfb7bf1da93c9c3a57704df"
+        },
+        "parent": {
+          "case": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-sw-direct-work/build/udm-sw-direct-scm-final2/mode0-mixed-ra4-parent",
+          "history_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-sw-direct-work/build/udm-sw-direct-scm-final2/mode0-mixed-ra4-parent/wrfout_d01_1999-10-22_19:00:00"
+        }
+      }
+    }
+  },
+  "provenance": {
+    "executables_sha256_after": {
+      "baseline_wrf": "08202d056264d3faec4a0fbfb882213ddb16e02befa653bce097c61aa8554803",
+      "ideal": "174b59a09029921afe17095523549c352ae89dbce77fdaf093ae39ac9201c65f",
+      "reference": "aa734a23cfbfea927c8bd25eb6006b39a98b92b3a62b86699c5a43d71c15f88e",
+      "wrf": "097d3486a971de2b67524b6c8fb2bf69a00082393f7058876aed71a04e8e6e6b"
+    },
+    "executables_sha256_before": {
+      "baseline_wrf": "08202d056264d3faec4a0fbfb882213ddb16e02befa653bce097c61aa8554803",
+      "ideal": "174b59a09029921afe17095523549c352ae89dbce77fdaf093ae39ac9201c65f",
+      "reference": "aa734a23cfbfea927c8bd25eb6006b39a98b92b3a62b86699c5a43d71c15f88e",
+      "wrf": "097d3486a971de2b67524b6c8fb2bf69a00082393f7058876aed71a04e8e6e6b"
+    },
+    "source_file_sha256_before_after": {
+      "WRF/Registry/Registry.EM_COMMON": "87e21a476a06b7e0c926b2d939eaf1028810cba8a7d1e6fc585b50b599f99729",
+      "WRF/phys/module_physics_init.F": "c0df1df2c341975fcc5fe5e3207d94e6efa6867dff2f572dbc9a2c241375f663",
+      "WRF/phys/module_ra_rrtmg_lw.F": "d934c066ae06466bca4ed37a9ca506b859f505c5919743bb34de1f6a311abb67",
+      "WRF/phys/module_ra_rrtmg_sw.F": "af506d43332c1b57cf55b6c60ab27d40769ed5ef1ea57c59d34cd72a7bd5d4d7",
+      "WRF/phys/module_ra_rrtmgp.F": "74378cc255088422ff8f770c1f342e135c538436d0bc0dcf67ec7b7abde1f5bb",
+      "WRF/phys/module_ra_rrtmgp_frozen.F": "dc468bf7e9e4f3883a8ad715dc4c25db4c1ff054637810fb178a02029edbed1d",
+      "WRF/phys/module_ra_rrtmgp_input.F": "1460460a23b2b2b552f726c8c01a174a956da7a9d472e8a90b33c2d6ed245eff",
+      "WRF/phys/module_ra_rrtmgp_trace.F": "53ab9c57a605bb929bdb5186b9b2e004044fdf0f2eaeceff042e2ea14ed2e9ae",
+      "WRF/share/module_check_a_mundo.F": "ae798f8a61edd90d938f377ba1117cebac62ddea5b801e449438e9bdcb9aea6c",
+      "WRF/test/rrtmgp/reference_column.f90": "7904425f1446b0ce906c8523df618bcf4dbd4dcb6fe1ef0082fbf0507e4d57d8",
+      "WRF/test/rrtmgp/test_column_replay.py": "92d83380adb940f5a3d32b325fc4daa0ec563ae1ef72504c7b99b36747b5e59d",
+      "WRF/test/rrtmgp/test_frozen_scm.py": "140445cbe18300a564c25e80d24d593071d07f1c29cf759dbe47f8112eeba377"
+    },
+    "source_revision": "e73b353f2b76f323809f99bed19a29eaaf25af02",
+    "table_generation_receipt": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-sw-direct-work/validation/rrtmgp37/frozen-optics-lookup/nine-grid-o128-s50/result.json",
+    "table_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-sw-direct-work/validation/rrtmgp37/frozen-optics-lookup/nine-grid-o128-s50/frozen-ice-psd-moments.nc",
+    "table_sha256_before_after": "8cb00850c3f885f5ec0306563c1ec0a55b512478a7395d626c1c99cebf280583"
+  },
+  "scope": {
+    "cases": [
+      "clear-CF positive G/H",
+      "mixed cloud plus positive G/H"
+    ],
+    "forecast_readiness_claimed": false,
+    "initial_fixture_only": true,
+    "mode1_captures": "LW/SW calls 1 and 2 independently captured and replayed",
+    "runtime_minutes": 1,
+    "scientific_accuracy_claimed": false
+  },
+  "status": "PASS_RUNTIME_EXPERIMENTAL_ONLY"
+}

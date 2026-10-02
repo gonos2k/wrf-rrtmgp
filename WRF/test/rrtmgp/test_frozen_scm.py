@@ -144,7 +144,42 @@ def validate_history(case: Path, option: int) -> dict[str, Any]:
     return test_udm_scm.validate_history(case, option)
 
 
-def compare_history_bytes(left: dict[str, Any], right: dict[str, Any], label: str) -> dict[str, Any]:
+def validate_surface_direct_capture(case: Path, history: dict[str, Any], call: int) -> dict[str, Any]:
+    """Bind captured pre-delta beam at the surface to the corresponding history value."""
+    capture = case / "capture"
+    raw_phase, i, j, _raw = test_column_replay.read_raw(capture / "sw.raw")
+    if raw_phase != "SW":
+        fail(f"{case}: surface-direct check received non-SW raw capture")
+    result = read_result(capture / "sw.result")["sections"]
+    direct = result.get("DIRECT_PREDELTA")
+    if direct is None or direct.ndim != 3 or direct.shape[0] != 1 or direct.shape[2] != 1:
+        fail(f"{case}: V9 DIRECT_PREDELTA result has invalid shape")
+    arrays = history.get("history_arrays", history.get("arrays"))
+    if arrays is None:
+        fail(f"{case}: history arrays are missing")
+    if "SWDDIR" not in arrays:
+        fail(f"{case}: history does not contain SWDDIR")
+    swddir = arrays["SWDDIR"]
+    if swddir.ndim < 2 or call >= swddir.shape[0]:
+        fail(f"{case}: history does not contain output record for radiation call {call}")
+    spatial = np.asarray(swddir[call]).reshape(-1)
+    flat_index = (j - 1) * int(swddir.shape[-1]) + (i - 1)
+    if flat_index < 0 or flat_index >= spatial.size:
+        fail(f"{case}: captured i/j={i}/{j} is outside the history grid")
+    # The captured LW/SW column is at i=j=1. RRTMGP result interfaces are
+    # ordered surface-to-top, so index 0 is the surface beam.
+    actual = float(direct[0, 0, 0])
+    expected = float(spatial[flat_index])
+    if not np.isclose(actual, expected, rtol=0.0, atol=2.e-5):
+        fail(f"{case}: history SWDDIR {expected} does not match captured V9 surface direct {actual}")
+    return {"status": "PASS", "history_record_index": call, "capture_i_j": [i, j],
+            "result_interface_index": 0, "history_SWDDIR_w_m2": expected,
+            "capture_DIRECT_PREDELTA_surface_w_m2": actual,
+            "absolute_difference_w_m2": abs(actual - expected)}
+
+
+def compare_history_bytes(left: dict[str, Any], right: dict[str, Any], label: str,
+                          ignored: set[str] = frozenset()) -> dict[str, Any]:
     a = left.get("history_arrays", left.get("arrays"))
     b = right.get("history_arrays", right.get("arrays"))
     if a is None or b is None:
@@ -152,14 +187,16 @@ def compare_history_bytes(left: dict[str, Any], right: dict[str, Any], label: st
     common = sorted(a.keys() & b.keys())
     left_only, right_only = sorted(a.keys() - b.keys()), sorted(b.keys() - a.keys())
     numeric_kinds = set("iufc")
-    left_numeric = {name for name, value in a.items() if value.dtype.kind in numeric_kinds}
-    right_numeric = {name for name, value in b.items() if value.dtype.kind in numeric_kinds}
+    left_numeric = {name for name, value in a.items() if value.dtype.kind in numeric_kinds and name not in ignored}
+    right_numeric = {name for name, value in b.items() if value.dtype.kind in numeric_kinds and name not in ignored}
     if left_numeric != right_numeric:
         fail(f"{label}: numeric variable sets differ: left-only={sorted(left_numeric-right_numeric)}, "
              f"right-only={sorted(right_numeric-left_numeric)}")
     mismatches: list[str] = []
     compared: list[str] = []
     for name in common:
+        if name in ignored:
+            continue
         if a[name].shape != b[name].shape or a[name].dtype != b[name].dtype:
             mismatches.append(name)
         elif a[name].dtype.kind in "OUS":
@@ -174,22 +211,38 @@ def compare_history_bytes(left: dict[str, Any], right: dict[str, Any], label: st
     if mismatches:
         fail(f"{label}: numeric/history arrays differ: {mismatches[:30]}")
     return {"status": "PASS_BITWISE", "arrays_compared": compared,
-            "left_only": left_only, "right_only": right_only}
+            "left_only": left_only, "right_only": right_only,
+            "ignored_expected_diagnostic_fields": sorted(ignored)}
 
 
 def run_mode0_case(seed: dict[str, Any], case: Path, option: int,
-                   executable: Path) -> dict[str, Any]:
+                   executable: Path, capture: bool = False,
+                   reference_exe: Path | None = None) -> dict[str, Any]:
     make_case(seed, case, option, option)
     input_hash = sha256(case / "wrfinput_d01")
-    run = run_logged(executable, case, "wrf.log", clean_environment())
+    if capture:
+        if reference_exe is None:
+            fail(f"{case}: capture validation requires the independent reference executable")
+        capture_dir = case / "capture"
+        capture_dir.mkdir()
+        env = clean_environment(capture_dir=capture_dir, capture_call=1)
+    else:
+        env = clean_environment()
+    run = run_logged(executable, case, "wrf.log", env)
     if run.returncode != 0:
         fail(f"{case}: WRF returned {run.returncode}; inspect wrf.log")
     history = validate_history(case, option)
+    captured: dict[str, Any] = {}
+    if capture:
+        captured = {phase: test_udm_scm.validate_capture(case, phase, 1, reference_exe)
+                    for phase in ("LW", "SW")}
+        captured["surface_direct"] = validate_surface_direct_capture(case, history, 1)
     if sha256(case / "wrfinput_d01") != input_hash:
         fail(f"{case}: WRF changed its initial input")
     return {"case": str(case), "option": option, "wrfinput_sha256": input_hash,
             "history_path": str(history["path"]), "history_arrays": history["arrays"],
-            "history_report": history["report"], "namelist_sha256": sha256(case / "namelist.input")}
+            "history_report": history["report"], "namelist_sha256": sha256(case / "namelist.input"),
+            "capture": captured}
 
 
 def run_parent_mode0(seed: dict[str, Any], case: Path, option: int,
@@ -282,6 +335,18 @@ def validate_frozen_capture(case: Path, phase: str, call: int, reference_exe: Pa
 
     result_path = capture / f"{phase.lower()}.result"
     production = read_result(result_path)
+    replay_version = input_path.read_text(encoding="ascii").splitlines()[0].strip()
+    if phase == "SW":
+        if replay_version != "RRTMGP_REPLAY_V9":
+            fail(f"{case}: SW direct capture must use V9, got {replay_version}")
+        sections = production["sections"]
+        for name in ("DIRECT_PREDELTA", "DIRECTC_PREDELTA", "VISDIR_PREDELTA", "NIRDIR_PREDELTA"):
+            if name not in sections:
+                fail(f"{case}: V9 result is missing {name}")
+        test_column_replay.assert_close(
+            sections["VISDIR_PREDELTA"] + sections["NIRDIR_PREDELTA"],
+            sections["DIRECT_PREDELTA"], f"{case}: V9 VIS+NIR direct closure",
+            rtol=5.e-7, atol=2.e-5)
     for name in (("GRAUPEL_TAU_ABS", "HAIL_TAU_ABS") if phase == "LW" else
                  ("GRAUPEL_TAU_EXT", "HAIL_TAU_EXT")):
         values = production["sections"].get(name)
@@ -305,7 +370,8 @@ def validate_frozen_capture(case: Path, phase: str, call: int, reference_exe: Pa
     replay = compare(production, read_result(reference_path))
     if not replay.get("passed"):
         fail(f"{case}: independent V7 {phase} replay mismatch: {replay.get('failed_sections')}")
-    return {"phase": phase, "call": call, "raw_column_i_j": [i, j],
+    return {"phase": phase, "call": call, "capture_format": replay_version,
+            "raw_column_i_j": [i, j],
             "replay_passed": True, "replay_sections_compared": replay["sections_compared"],
             "native_dry_mass_source": mass_source, "frozen_paths": phase_report,
             "result_sha256": sha256(result_path), "input_sha256": sha256(input_path),
@@ -331,26 +397,41 @@ def run_frozen_capture(seed: dict[str, Any], case: Path, wrf_exe: Path,
     captures = {phase: validate_frozen_capture(case, phase, call, reference_exe,
                      table, table_model, int(seed["fixture"]["layer_index_zero_based"]))
                 for phase in ("LW", "SW")}
+    surface_direct = validate_surface_direct_capture(case, history, call)
     return {"case": str(case), "call": call, "history_path": str(history["path"]),
             "history_report": history["report"], "wrfinput_sha256": before_input,
             "namelist_sha256": sha256(case / "namelist.input"),
-            "capture": captures, "log_sha256": sha256(case / "wrf.log")}
+            "capture": captures, "surface_direct": surface_direct,
+            "log_sha256": sha256(case / "wrf.log")}
 
 
 def run_mode0_parent_comparisons(seed_map: dict[str, dict[str, Any]], root: Path,
-                                 wrf: Path, baseline: Path | None) -> dict[str, Any]:
+                                 wrf: Path, baseline: Path | None,
+                                 reference: Path) -> dict[str, Any]:
     results: dict[str, Any] = {}
     for tag, seed in seed_map.items():
         results[tag] = {}
         for option in (37, 4):
-            current = run_mode0_case(seed, root / f"mode0-{tag}-ra{option}-current", option, wrf)
+            current = run_mode0_case(seed, root / f"mode0-{tag}-ra{option}-current", option, wrf,
+                                     capture=(option == 37), reference_exe=reference)
             entry: dict[str, Any] = {"current": {"case": current["case"],
                 "wrfinput_sha256": current["wrfinput_sha256"], "history_path": current["history_path"]}}
             if baseline is not None:
                 parent = run_parent_mode0(seed, root / f"mode0-{tag}-ra{option}-parent", option, baseline)
                 if current["wrfinput_sha256"] != parent["wrfinput_sha256"]:
                     fail(f"{tag} RA{option}: current and parent did not use byte-identical wrfinput")
-                comparison = compare_history_bytes(current, parent, f"{tag} mode0 RA{option} parent comparison")
+                ignored = {"SWDDIR", "SWDDIF"} if option == 37 else set()
+                comparison = compare_history_bytes(current, parent,
+                    f"{tag} mode0 RA{option} parent comparison", ignored=ignored)
+                if option == 37:
+                    left_arrays = current["history_arrays"]
+                    right_arrays = parent["history_arrays"]
+                    direct_changed = any(name in left_arrays and name in right_arrays and
+                                         not np.array_equal(left_arrays[name], right_arrays[name])
+                                         for name in ignored)
+                    comparison["pre_delta_direct_changed_from_parent"] = direct_changed
+                    if tag == "mixed" and not direct_changed:
+                        fail("mixed mode0 RA37 fixture did not change SWDDIR/SWDDIF against the pre-fix parent")
                 entry["parent"] = {"case": parent["case"], "history_path": parent["history_path"]}
                 entry["comparison"] = comparison
             else:
@@ -413,7 +494,7 @@ def main() -> int:
             case = root / f"frozen-{tag}-call{call}"
             frozen_runs[tag][f"call{call}"] = run_frozen_capture(
                 seed, case, wrf, reference, table, table_model, call)
-    mode0 = run_mode0_parent_comparisons(seeds, root, wrf, baseline)
+    mode0 = run_mode0_parent_comparisons(seeds, root, wrf, baseline, reference)
     source_hashes_after = hash_sources()
     if source_hashes_before != source_hashes_after:
         fail("tracked WRF/reference source bytes changed during SCM validation")
