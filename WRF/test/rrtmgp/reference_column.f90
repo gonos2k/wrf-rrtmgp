@@ -11,16 +11,19 @@ PROGRAM rrtmgp_reference_column
   USE mo_rte_lw, ONLY: rte_lw
   USE mo_rte_sw, ONLY: rte_sw
   USE mo_heating_rates, ONLY: compute_heating_rate
+  USE mo_gas_optics_constants, ONLY: init_constants
   USE mo_cloud_sampling, ONLY: draw_samples
   USE mo_load_coefficients, ONLY: load_and_init
   USE mo_load_cloud_coefficients, ONLY: load_cld_lutcoeff
   IMPLICIT NONE
 
-  CHARACTER(LEN=512) :: data_dir,input_path,output_path
-  CHARACTER(LEN=32) :: magic,phase,policy_arg
+  CHARACTER(LEN=512) :: data_dir,input_path,output_path,override_path
+  CHARACTER(LEN=32) :: magic,phase,policy_arg,next_section
   INTEGER :: nc,nl,overlap,seed,iceflag,u_in,u_out,ios,nemis,sw_policy
   INTEGER :: c,k,g,b,ngpt,nbnd
+  INTEGER :: override_ncol,override_nlay,override_nband,override_unit,override_ios
   REAL(wp) :: solar,roughness_value,partition_value,precip_mode,visible_weight
+  REAL(wp) :: metadata_gravity,metadata_cp_dry,metadata_mol_weight_dry
   LOGICAL :: use_precip
   INTEGER :: ice_roughness
   REAL(wp), ALLOCATABLE :: play(:,:),plev(:,:),tlay(:,:),tlev(:,:),tsfc(:,:)
@@ -44,6 +47,7 @@ PROGRAM rrtmgp_reference_column
   REAL(wp), ALLOCATABLE :: direct_all(:,:),diffuse_all(:,:),direct_clear(:,:)
   REAL(wp), ALLOCATABLE :: visdir(:,:),visdif(:,:),nirdir(:,:),nirdif(:,:)
   REAL(wp), ALLOCATABLE :: bands(:,:)
+  REAL(wp), ALLOCATABLE :: override_bands(:,:),override_tau(:,:,:),override_ssa(:,:,:),override_asym(:,:,:)
   REAL(wp), ALLOCATABLE, TARGET :: flux_band_dn(:,:,:),flux_band_dir(:,:,:)
   INTEGER(i8) :: rng_state
   TYPE(ty_gas_concs) :: gases
@@ -55,6 +59,7 @@ PROGRAM rrtmgp_reference_column
   TYPE(ty_fluxes_broadband) :: lw_flux
   TYPE(ty_fluxes_byband) :: sw_flux
   CHARACTER(LEN=128) :: err
+  CHARACTER(LEN=256) :: section_line
   CHARACTER(LEN=3), PARAMETER :: gas_names(6)=['h2o','co2','o3 ','n2o','ch4','o2 ']
 
   CALL get_command_argument(1,data_dir)
@@ -62,8 +67,10 @@ PROGRAM rrtmgp_reference_column
   CALL get_command_argument(3,output_path)
   policy_arg=''
   CALL get_command_argument(4,policy_arg)
+  override_path=''
+  CALL get_command_argument(5,override_path)
   IF(LEN_TRIM(data_dir)==0 .OR. LEN_TRIM(input_path)==0 .OR. LEN_TRIM(output_path)==0) &
-    ERROR STOP 'usage: reference_column DATA_DIR INPUT_FILE OUTPUT_FILE [SW_POLICY 1|2|3]'
+    ERROR STOP 'usage: reference_column DATA_DIR INPUT_FILE OUTPUT_FILE [SW_POLICY 1|2|3] [SW_OPTICS_OVERRIDE_FILE]'
   sw_policy=1
   IF(LEN_TRIM(policy_arg)>0) THEN
     READ(policy_arg,*,IOSTAT=ios) sw_policy
@@ -74,7 +81,8 @@ PROGRAM rrtmgp_reference_column
   READ(u_in,*,IOSTAT=ios) magic
   IF(ios/=0) ERROR STOP 'invalid replay input magic'
   IF(TRIM(magic)/='RRTMGP_REPLAY_V1'.AND.TRIM(magic)/='RRTMGP_REPLAY_V2'.AND. &
-     TRIM(magic)/='RRTMGP_REPLAY_V3'.AND.TRIM(magic)/='RRTMGP_REPLAY_V4') &
+     TRIM(magic)/='RRTMGP_REPLAY_V3'.AND.TRIM(magic)/='RRTMGP_REPLAY_V4'.AND. &
+     TRIM(magic)/='RRTMGP_REPLAY_V5') &
     ERROR STOP 'invalid replay input magic'
   READ(u_in,*,IOSTAT=ios) phase,nc,nl,overlap,seed,iceflag
   IF(ios/=0 .OR. (TRIM(phase)/='LW' .AND. TRIM(phase)/='SW')) ERROR STOP 'invalid replay header'
@@ -118,7 +126,8 @@ PROGRAM rrtmgp_reference_column
     ice_roughness=INT(roughness_value)
     IF(REAL(ice_roughness,wp)/=roughness_value) ERROR STOP 'ice roughness must be integer'
   END IF
-  IF((TRIM(magic)=='RRTMGP_REPLAY_V3'.OR.TRIM(magic)=='RRTMGP_REPLAY_V4').AND. &
+  IF((TRIM(magic)=='RRTMGP_REPLAY_V3'.OR.TRIM(magic)=='RRTMGP_REPLAY_V4'.OR. &
+      TRIM(magic)=='RRTMGP_REPLAY_V5').AND. &
      TRIM(phase)=='SW') THEN
     CALL read_scalar_section(u_in,'SW_BAND_PARTITION',partition_value)
     IF(.NOT.ieee_is_finite(partition_value)) ERROR STOP 'non-finite SW band partition'
@@ -138,10 +147,43 @@ PROGRAM rrtmgp_reference_column
     IF(ANY(.NOT.ieee_is_finite(rwp)).OR.ANY(rwp<0._wp)) &
       ERROR STOP 'V4 RWP must be finite and nonnegative'
     use_precip=.TRUE.
+  ELSE IF(TRIM(magic)=='RRTMGP_REPLAY_V5') THEN
+    READ(u_in,'(A)',IOSTAT=ios) section_line
+    IF(ios/=0) ERROR STOP 'V5 input ended before constants metadata'
+    READ(section_line,*,IOSTAT=ios) next_section
+    IF(ios/=0) ERROR STOP 'V5 invalid optional precipitation/constants section'
+    BACKSPACE(u_in)
+    IF(TRIM(next_section)=='PRECIPITATION_OPTICS') THEN
+      CALL read_scalar_section(u_in,'PRECIPITATION_OPTICS',precip_mode)
+      IF(.NOT.ieee_is_finite(precip_mode).OR.precip_mode/=1._wp) &
+        ERROR STOP 'V5 PRECIPITATION_OPTICS must equal one when present'
+      ALLOCATE(rwp(nc,nl))
+      CALL read_section(u_in,'RWP',rwp)
+      IF(ANY(.NOT.ieee_is_finite(rwp)).OR.ANY(rwp<0._wp)) &
+        ERROR STOP 'V5 RWP must be finite and nonnegative'
+      use_precip=.TRUE.
+    ELSE IF(TRIM(next_section)/='GRAVITY') THEN
+      ERROR STOP 'V5 expected optional precipitation or GRAVITY metadata'
+    END IF
+  END IF
+  IF(TRIM(magic)=='RRTMGP_REPLAY_V5') THEN
+    CALL read_scalar_section(u_in,'GRAVITY',metadata_gravity)
+    CALL read_scalar_section(u_in,'CP_DRY',metadata_cp_dry)
+    CALL read_scalar_section(u_in,'MOL_WEIGHT_DRY',metadata_mol_weight_dry)
+    IF(.NOT.ieee_is_finite(metadata_gravity).OR.metadata_gravity<=0._wp) &
+      ERROR STOP 'V5 GRAVITY must be finite and positive'
+    IF(.NOT.ieee_is_finite(metadata_cp_dry).OR.metadata_cp_dry<=0._wp) &
+      ERROR STOP 'V5 CP_DRY must be finite and positive'
+    IF(.NOT.ieee_is_finite(metadata_mol_weight_dry).OR.metadata_mol_weight_dry<=0._wp) &
+      ERROR STOP 'V5 MOL_WEIGHT_DRY must be finite and positive'
+    CALL init_constants(gravity=metadata_gravity, heat_capacity_dry_air=metadata_cp_dry, &
+                        mol_weight_dry_air=metadata_mol_weight_dry)
   END IF
   CLOSE(u_in)
   IF(sw_policy/=1.AND.(TRIM(phase)/='SW'.OR..NOT.use_precip)) &
-    ERROR STOP 'SW_POLICY override requires a SW replay with V4 precipitation optics'
+    ERROR STOP 'SW_POLICY override requires a SW replay with V4/V5 precipitation optics'
+  IF(LEN_TRIM(override_path)>0.AND.TRIM(phase)/='SW') &
+    ERROR STOP 'SW optics override requires an SW replay input'
 
   ALLOCATE(emissivity(16,nc),avdir(nc),avdif(nc),andir(nc),andif(nc),mu0(nc))
   ALLOCATE(zero(nc,nl),rl(nc,nl),di(nc,nl),ds(nc,nl))
@@ -254,7 +296,8 @@ PROGRAM rrtmgp_reference_column
     END DO
     bands=gas_sw%get_band_lims_wavenumber()
     DO b=1,gas_sw%get_nband()
-      IF((TRIM(magic)=='RRTMGP_REPLAY_V3'.OR.TRIM(magic)=='RRTMGP_REPLAY_V4').AND. &
+      IF((TRIM(magic)=='RRTMGP_REPLAY_V3'.OR.TRIM(magic)=='RRTMGP_REPLAY_V4'.OR. &
+          TRIM(magic)=='RRTMGP_REPLAY_V5').AND. &
          bands(1,b)==12850._wp) THEN
         IF(bands(2,b)/=16000._wp) ERROR STOP 'unexpected transition-band upper limit'
         albdir(b,:)=0.5_wp*(andir+avdir); albdif(b,:)=0.5_wp*(andif+avdif)
@@ -301,6 +344,8 @@ PROGRAM rrtmgp_reference_column
       cloud_tau=sw_cloud%tau; cloud_ssa=sw_cloud%ssa; cloud_g=sw_cloud%g
       CALL check_error(sw_cloud%delta_scale())
     END IF
+    IF(LEN_TRIM(override_path)>0) &
+      CALL apply_sw_optics_override(TRIM(override_path),gas_sw,sw_cloud)
     prepared_tau=sw_cloud%tau; prepared_ssa=sw_cloud%ssa; prepared_g=sw_cloud%g
     CALL make_mask(cf,gas_sw%get_ngpt(),overlap,seed,mask,randoms,local_random)
     IF(ANY(cf>0._wp) .AND. overlap/=0) THEN
@@ -314,7 +359,8 @@ PROGRAM rrtmgp_reference_column
     visdir=0._wp; visdif=0._wp; nirdir=0._wp; nirdif=0._wp
     DO b=1,gas_sw%get_nband()
       visible_weight=MERGE(1._wp,0._wp,bands(1,b)>=12850._wp)
-      IF((TRIM(magic)=='RRTMGP_REPLAY_V3'.OR.TRIM(magic)=='RRTMGP_REPLAY_V4').AND. &
+      IF((TRIM(magic)=='RRTMGP_REPLAY_V3'.OR.TRIM(magic)=='RRTMGP_REPLAY_V4'.OR. &
+          TRIM(magic)=='RRTMGP_REPLAY_V5').AND. &
          bands(1,b)==12850._wp) visible_weight=0.5_wp
       visdir=visdir+visible_weight*flux_band_dir(:,:,b)
       visdif=visdif+visible_weight*(flux_band_dn(:,:,b)-flux_band_dir(:,:,b))
@@ -380,6 +426,94 @@ PROGRAM rrtmgp_reference_column
   CLOSE(u_out)
 
 CONTAINS
+  SUBROUTINE apply_sw_optics_override(path,gas_optics,optical_props)
+    USE, INTRINSIC :: iso_fortran_env, ONLY: error_unit
+    CHARACTER(LEN=*), INTENT(IN) :: path
+    TYPE(ty_gas_optics_rrtmgp), INTENT(IN) :: gas_optics
+    TYPE(ty_optical_props_2str), INTENT(INOUT) :: optical_props
+    CHARACTER(LEN=32) :: override_magic,section_name
+    INTEGER :: unit,stat,ncol_file,nlay_file,nband_file,n1,n2,n3,iband,igpt,gpt_bounds(2,gas_optics%get_nband())
+    REAL(wp) :: file_bands(2,gas_optics%get_nband()),core_bands(2,gas_optics%get_nband())
+    LOGICAL :: known_legacy_split
+    REAL(wp), ALLOCATABLE :: tau_band(:,:,:),ssa_band(:,:,:),asym_band(:,:,:)
+
+    OPEN(NEWUNIT=unit,FILE=path,STATUS='OLD',ACTION='READ',IOSTAT=stat)
+    IF(stat/=0) ERROR STOP 'could not open SW optics override file'
+    READ(unit,*,IOSTAT=stat) override_magic
+    IF(stat/=0) ERROR STOP 'could not read SW optics override magic'
+    IF(TRIM(override_magic)/='WRF_SW_OPTICS_OVERRIDE_V1') ERROR STOP 'invalid SW optics override magic'
+    READ(unit,*,IOSTAT=stat) ncol_file,nlay_file,nband_file
+    IF(stat/=0) ERROR STOP 'could not read SW optics override dimensions'
+    IF(ncol_file/=nc.OR.nlay_file/=nl.OR.nband_file/=gas_optics%get_nband()) &
+      ERROR STOP 'SW optics override dimensions do not match replay/core'
+    READ(unit,*,IOSTAT=stat) section_name,n1,n2
+    IF(stat/=0) ERROR STOP 'could not read SW optics override BAND_LIMITS header'
+    IF(TRIM(section_name)/='BAND_LIMITS'.OR.n1/=2.OR.n2/=nband_file) &
+      ERROR STOP 'invalid SW optics override BAND_LIMITS header'
+    READ(unit,*,IOSTAT=stat) file_bands
+    IF(stat/=0) ERROR STOP 'could not read SW optics override BAND_LIMITS values'
+    IF(ANY(.NOT.ieee_is_finite(file_bands))) ERROR STOP 'invalid SW optics override BAND_LIMITS values'
+    IF(ANY(file_bands(2,:)<=file_bands(1,:))) &
+      ERROR STOP 'SW optics override spectral bands must be finite and increasing'
+    core_bands=gas_optics%get_band_lims_wavenumber()
+    known_legacy_split=.FALSE.
+    IF(nband_file==14) THEN
+      known_legacy_split=ALL(ABS(file_bands(:,1)-[820._wp,2600._wp])<1.e-8_wp).AND. &
+        ALL(ABS(file_bands(:,2)-[2600._wp,3250._wp])<1.e-8_wp).AND. &
+        ALL(ABS(core_bands(:,1)-[820._wp,2680._wp])<1.e-8_wp).AND. &
+        ALL(ABS(core_bands(:,2)-[2680._wp,3250._wp])<1.e-8_wp).AND. &
+        ALL(ABS(file_bands(:,3:14)-core_bands(:,3:14))<1.e-8_wp)
+    END IF
+    IF(ANY(ABS(file_bands-core_bands)>1.e-8_wp).AND..NOT.known_legacy_split) &
+      ERROR STOP 'SW optics override bands differ from pinned RRTMGP gas bands'
+    IF(known_legacy_split) &
+      WRITE(error_unit,'(A)') 'WARNING: mapping the known RRTMG 2600 cm-1 split to RRTMGP 2680 cm-1 bands by index; not spectrally identical'
+
+    ALLOCATE(tau_band(ncol_file,nlay_file,nband_file), &
+             ssa_band(ncol_file,nlay_file,nband_file), &
+             asym_band(ncol_file,nlay_file,nband_file))
+    CALL read_override_field(unit,'TAU',tau_band)
+    CALL read_override_field(unit,'SSA',ssa_band)
+    CALL read_override_field(unit,'ASYM',asym_band)
+    READ(unit,*,IOSTAT=stat) section_name
+    IF(stat==0) ERROR STOP 'unexpected trailing SW optics override data'
+    CLOSE(unit)
+    IF(ANY(.NOT.ieee_is_finite(tau_band)).OR.ANY(tau_band<0._wp)) &
+      ERROR STOP 'SW optics override TAU must be finite and nonnegative'
+    IF(ANY(.NOT.ieee_is_finite(ssa_band)).OR.ANY(ssa_band<0._wp).OR.ANY(ssa_band>1._wp)) &
+      ERROR STOP 'SW optics override SSA must be finite and in [0,1]'
+    IF(ANY(.NOT.ieee_is_finite(asym_band)).OR.ANY(asym_band< -1._wp).OR.ANY(asym_band>1._wp)) &
+      ERROR STOP 'SW optics override ASYM must be finite and in [-1,1]'
+
+    IF(optical_props%get_nband()/=nband_file) ERROR STOP 'SW override band count differs from cloud optical properties'
+    gpt_bounds=optical_props%get_band_lims_gpoint()
+    IF(SIZE(optical_props%tau,1)/=ncol_file.OR.SIZE(optical_props%tau,2)/=nlay_file) &
+      ERROR STOP 'SW optics override does not match allocated prepared optical properties'
+    DO iband=1,nband_file
+      IF(gpt_bounds(1,iband)<1.OR.gpt_bounds(2,iband)<gpt_bounds(1,iband).OR. &
+         gpt_bounds(2,iband)>SIZE(optical_props%tau,3)) ERROR STOP 'invalid pinned SW gpoint band bounds'
+      DO igpt=gpt_bounds(1,iband),gpt_bounds(2,iband)
+        optical_props%tau(:,:,igpt)=tau_band(:,:,iband)
+        optical_props%ssa(:,:,igpt)=ssa_band(:,:,iband)
+        optical_props%g(:,:,igpt)=asym_band(:,:,iband)
+      END DO
+    END DO
+  END SUBROUTINE apply_sw_optics_override
+
+  SUBROUTINE read_override_field(unit,wanted,array)
+    INTEGER, INTENT(IN) :: unit
+    CHARACTER(LEN=*), INTENT(IN) :: wanted
+    REAL(wp), INTENT(OUT) :: array(:,:,:)
+    CHARACTER(LEN=32) :: got
+    INTEGER :: n1,n2,n3,stat
+    READ(unit,*,IOSTAT=stat) got,n1,n2,n3
+    IF(stat/=0) ERROR STOP 'could not read SW optics override section header'
+    IF(TRIM(got)/=TRIM(wanted).OR.n1/=SIZE(array,1).OR. &
+       n2/=SIZE(array,2).OR.n3/=SIZE(array,3)) ERROR STOP 'SW optics override section name/shape mismatch'
+    READ(unit,*,IOSTAT=stat) array
+    IF(stat/=0) ERROR STOP 'failed to read SW optics override section values'
+  END SUBROUTINE read_override_field
+
   SUBROUTINE read_section(unit,wanted,array)
     INTEGER, INTENT(IN) :: unit
     CHARACTER(LEN=*), INTENT(IN) :: wanted

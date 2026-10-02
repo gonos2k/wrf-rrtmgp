@@ -24,7 +24,7 @@ module mo_load_coefficients
   use mo_gas_concentrations, only: ty_gas_concs
   use mo_gas_optics_rrtmgp,  only: ty_gas_optics_rrtmgp
   ! --------------------------------------------------
-  use mo_simple_netcdf, only: read_field, read_char_vec, read_logical_vec, var_exists, get_dim_size
+  use mo_simple_netcdf, only: read_field, read_char_vec, read_logical_vec, var_exists, get_dim_size, report_fatal
   use netcdf
   implicit none
   private
@@ -32,14 +32,8 @@ module mo_load_coefficients
 
 contains
   subroutine stop_on_err(msg)
-    use iso_fortran_env, only : error_unit
     character(len=*), intent(in) :: msg
-
-
-    if(msg /= "") then
-      write(error_unit, *) msg
-      error stop 1
-    end if
+    call report_fatal(msg)
   end subroutine
   !--------------------------------------------------------------------------------------------------------------------
   ! read optical coefficients from NetCDF file

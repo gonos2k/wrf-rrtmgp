@@ -30,6 +30,11 @@ foreach(test IN ITEMS columns cloud_inputs multicolumn validation adapter_invali
     target_compile_options(test_rrtmgp_${test} PRIVATE -ffree-line-length-none -fcheck=bounds)
   endif()
 endforeach()
+add_executable(test_rrtmgp_host_constants test_host_constants.f90)
+target_link_libraries(test_rrtmgp_host_constants PRIVATE test_rrtmgp_adapter)
+if(CMAKE_Fortran_COMPILER_ID STREQUAL "GNU")
+  target_compile_options(test_rrtmgp_host_constants PRIVATE -ffree-line-length-none -fcheck=bounds)
+endif()
 add_executable(test_rrtmgp_delta_policy test_delta_policy.f90)
 target_link_libraries(test_rrtmgp_delta_policy PRIVATE test_rrtmgp_precip wrf_rrtmgp)
 if(CMAKE_Fortran_COMPILER_ID STREQUAL "GNU")
@@ -78,6 +83,7 @@ reject_adapter(emissivity_nan RRTMGP_INPUT_EMIS_NOT_FINITE)
 reject_adapter(mu0_nan_night "mu0 must be finite")
 reject_adapter(solar_negative RRTMGP_INPUT_SOLAR_NEGATIVE)
 reject_adapter(changed_init_path "rrtmgp_data_path must be global and unchanged after initialization")
+reject_adapter(coefficient_load_missing "RRTMGP: load_and_init(): can't open file")
 
 add_test(NAME small_cf_sampling COMMAND test_rrtmgp_small_cf_sampling "${RRTMGP_DATA_DIR}")
 
@@ -87,6 +93,12 @@ target_link_libraries(reference_column PRIVATE wrf_rrtmgp)
 if(CMAKE_Fortran_COMPILER_ID STREQUAL "GNU")
   target_compile_options(reference_column PRIVATE -ffree-line-length-none -fcheck=bounds)
 endif()
+add_test(NAME coefficient_load_failure_callbacks COMMAND "${Python3_EXECUTABLE}"
+  "${CMAKE_CURRENT_SOURCE_DIR}/test_coefficient_load_failures.py" "${RRTMGP_DATA_DIR}"
+  "$<TARGET_FILE:reference_column>")
+add_test(NAME sw_optics_override_contract COMMAND "${Python3_EXECUTABLE}"
+  "${CMAKE_CURRENT_SOURCE_DIR}/test_sw_optics_override.py" "${RRTMGP_DATA_DIR}"
+  "$<TARGET_FILE:reference_column>")
 add_test(NAME replay_format_compatibility COMMAND "${Python3_EXECUTABLE}"
   "${CMAKE_CURRENT_SOURCE_DIR}/test_replay_formats.py" "${RRTMGP_DATA_DIR}"
   "$<TARGET_FILE:test_rrtmgp_columns>" "$<TARGET_FILE:reference_column>"
@@ -95,6 +107,7 @@ add_test(NAME replay_format_compatibility COMMAND "${Python3_EXECUTABLE}"
 reject_adapter(roughness_low "rrtmgp_ice_roughness must be 1")
 reject_adapter(roughness_high "rrtmgp_ice_roughness must be 1")
 reject_adapter(changed_init_roughness "rrtmgp_ice_roughness must be global and unchanged")
+reject_adapter(changed_init_constants "RRTMGP gravity, cp_dry, and mol_weight_dry must be global and unchanged")
 add_test(NAME transparent_overlap COMMAND test_rrtmgp_transparent_overlap)
 add_test(NAME spectral_surface_contract COMMAND test_rrtmgp_spectral_surface "${RRTMGP_DATA_DIR}"
   "${CMAKE_CURRENT_BINARY_DIR}/spectral-surface.csv")
@@ -120,6 +133,10 @@ endif()
 add_test(NAME snow_optics_source_comparison COMMAND compare_snow_optics "${RRTMGP_DATA_DIR}")
 
 add_test(NAME udm_mass_contract COMMAND test_rrtmgp_udm_inputs)
+add_test(NAME host_constants_and_column_energy COMMAND test_rrtmgp_host_constants "${RRTMGP_DATA_DIR}")
+add_test(NAME host_constants_replay_v5 COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/test_host_constants_replay.py"
+  "${RRTMGP_DATA_DIR}" "$<TARGET_FILE:test_rrtmgp_host_constants>" "$<TARGET_FILE:reference_column>"
+  --output "${CMAKE_CURRENT_BINARY_DIR}/host-constants-replay.json")
 add_test(NAME udm_precip_optics COMMAND test_rrtmgp_precip_optics)
 
 add_test(NAME udm_native_radii COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/test_udm_native_radii.py" "${WRF_ROOT}" --workdir "${CMAKE_CURRENT_BINARY_DIR}/udm-native-radii")

@@ -46,9 +46,17 @@ build/replay-reference/test_rrtmgp_small_cf_sampling WRF/run build/small-cf-samp
 
 ## 광학 설정 형식
 
-UDM production capture는 V4이며 precipitation policy 및 RWP를 추가한다. [UDM_ONLY.md](UDM_ONLY.md)를 참조한다. 강수 입력이 없는 standalone legacy fixture의 새 capture는 `RRTMGP_REPLAY_V3`를 쓰며 마지막 `RES` 기록 뒤에 `ICE_ROUGHNESS 1 1`과 정수 category를 기록한다. SW는 이어서 `SW_BAND_PARTITION 1 1`과 값 1을 기록한다. 값 1은 고정 CCPP의 12850–16000 cm⁻¹ 전이 밴드 50:50 알베도·진단 분할이다. LW에는 SW 설정이 없다. 독립 reference와 입력 검사기는 V3 SW 설정 누락 또는 1 이외의 값을 거부한다.
+새 capture는 `RRTMGP_REPLAY_V5`이며 `GRAVITY`, `CP_DRY`, `MOL_WEIGHT_DRY`를 배정도 scalar 기록으로 보존한다. 독립 reference는 저장한 상수를 계수 로드와 기체량·가열률 계산 전에 적용한다. UDM capture에는 기존 precipitation policy 및 RWP도 들어 있다. 강수 입력이 없는 fixture는 두 강수 기록을 함께 생략한다. V5에서 하나만 존재하면 거부한다. V4 저장본은 강수 기록을 계속 필수로 요구한다. [UDM_ONLY.md](UDM_ONLY.md)를 참조한다.
 
-기존 V1/V2 저장본도 재생한다. V1은 당시 암묵적 ice category 1, V2는 저장된 1/2/3을 적용한다. 두 구형 형식의 SW는 당시 전이 밴드 전체 VIS 규약을 유지하며 새로운 정책으로 재해석하지 않는다. 결과 형식은 `RRTMGP_RESULT_V1`이다. 형식 회귀 시험은 실제 adapter의 V3 저장본을 독립 재생하고, V1/V2의 동일성과 SW 정책 차이 및 잘못된 V3 설정의 거부를 검사한다.
+`ICE_ROUGHNESS 1 1`은 정수 category를 기록한다. SW의 `SW_BAND_PARTITION 1 1` 값 1은 고정 CCPP의 12850–16000 cm⁻¹ 전이 밴드 50:50 알베도·진단 분할이다. LW에는 SW 설정이 없다. 독립 reference와 입력 검사기는 V3 이상 SW 설정 누락 또는 1 이외의 값을 거부한다.
+
+기존 V1–V4 저장본도 재생하며 당시의 upstream 기본 상수를 유지한다. V1은 당시 암묵적 ice category 1, V2는 저장된 1/2/3을 적용한다. 두 구형 형식의 SW는 당시 전이 밴드 전체 VIS 규약을 유지하며 새로운 정책으로 재해석하지 않는다. 결과 형식은 `RRTMGP_RESULT_V1`이다. 형식 회귀 시험은 V5 독립 재생, 비기본 host 상수의 저장·재생, 기본 상수의 정확한 보존, 구형 형식의 동일성과 SW 정책 차이 및 잘못된 설정 거부를 검사한다.
+
+## 구름 광학 교체 대조
+
+독립 `reference_column`의 선택적 다섯 번째 인자는 `WRF_SW_OPTICS_OVERRIDE_V1` 파일이다. 이미 delta-scaled 상태인 band별 총 구름 광학을 McICA 직전에 넣는다. 기체 광학·표면·난수·중첩·RTE는 바꾸지 않는다. 추가 delta 변환을 적용하지 않는다. 형식은 ncol/nlay/nband, BAND_LIMITS 및 Fortran 순서 TAU/SSA/ASYM 배열이며, 유한성·범위·shape·밴드 정합성을 검사한다.
+
+`rrtmg_sw_optics_bridge.f90`는 실제 빌드한 WRF의 `swcldpr`, `cldprmc_sw`, `reicalc`를 링크한다. RRTMG의 2600 cm⁻¹와 고정 RRTMGP의 2680 cm⁻¹ 경계 차이만 명시적으로 허용하고 경고한다. 이는 같은 순서의 밴드에 광학을 넣는 근사 대조 실험이며, 두 엔진의 완전한 분광 동등성이나 RRTMG RTE 재현을 뜻하지 않는다. 다른 경계 차이는 거부한다. 실행 방법과 판단 범위는 [RUNTIME_CONTRACTS.md](RUNTIME_CONTRACTS.md)에 있다.
 
 ## 초기 배경 반경의 입력 계약
 
