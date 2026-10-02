@@ -182,24 +182,19 @@ jobs:
                 --output "build/udm-physics-audit/$case/${phase}-counterfactual.json"
             done
           done
+      - name: Package SCM evidence with original WRF filenames
+        if: always()
+        shell: bash
+        run: |
+          mkdir -p build
+          # WRF history names contain colons, which upload-artifact rejects.
+          # A tar member preserves the original filename and complete bytes.
+          tar -czf validation-serial-scm.tar.gz -C build .
       - name: Save SCM logs and output checks
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: validation-serial-scm-${{ github.run_id }}
-          path: |
-            build/udm-scm-result.json
-            build/udm-physics-audit-result.json
-            build/udm-physics-audit/**
-            build/udm-native4-audit/**
-            build/udm-scm/**/*.log
-            build/udm-scm/**/capture/**
-            build/make-reproducibility.json
-            build/surface-scm-result.json
-            build/cloud-contract-result.json
-            build/cloud-contract-scm/*.log
-            build/surface-scm/**/*.log
-            build/wrf-configure.log
-            build/wrf-compile-scm.log
+          path: validation-serial-scm.tar.gz
           retention-days: 30
           if-no-files-found: warn
