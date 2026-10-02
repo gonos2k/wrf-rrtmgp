@@ -1,0 +1,258 @@
+{
+  "status": "PASS_EM_REAL_BUILD",
+  "created_utc": "2026-10-02T14:29:46.862376+00:00",
+  "source_checkout": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp",
+  "source_head": "bea2284dbb4d40fcdea691f49a0f9d91fccde93c",
+  "source_tracked_working_status": [
+    " M WRF/doc/rrtmgp/NATIVE_HYDRO_DIAGNOSTICS.md",
+    " M WRF/doc/rrtmgp/RUNTIME_CONTRACTS.md",
+    " M WRF/doc/rrtmgp/UDM_ONLY.md",
+    " M WRF/phys/module_mp_udm.F",
+    " M WRF/phys/module_ra_rrtmg_lw.F",
+    " M WRF/phys/module_ra_rrtmg_sw.F",
+    " M WRF/phys/module_ra_rrtmgp_input.F",
+    " M WRF/test/rrtmgp/test_column_replay.py",
+    " M WRF/test/rrtmgp/test_udm_scm.py"
+  ],
+  "destination_worktree": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/mpi-wrf-udm-contracts",
+  "destination_head": "1fef0f414285d2bbb1a1014dab7c94faf9b481b9",
+  "overlay_rule": "Copy tracked runtime files changed since destination base commit plus current policy branch working files: vendor RRTMGP runtime sources/build metadata and WRF phys sources; no docs, tests, validation artifacts, or runtime data copied.",
+  "runtime_files_count": 28,
+  "runtime_files": [
+    {
+      "path": "WRF/external/rte_rrtmgp/CMakeLists.txt",
+      "before_sha256": "ac24bcc7976a5a7da0331d06f8fb3bf592eed035966d3fc9ec1fe90dae04e004",
+      "source_sha256": "ac24bcc7976a5a7da0331d06f8fb3bf592eed035966d3fc9ec1fe90dae04e004",
+      "after_sha256": "ac24bcc7976a5a7da0331d06f8fb3bf592eed035966d3fc9ec1fe90dae04e004",
+      "match": true
+    },
+    {
+      "path": "WRF/external/rte_rrtmgp/SOURCE.json",
+      "before_sha256": "e74325cafb201a8949a9cdf72a7bd95dc3f2a965fdf607e3d002b49091369336",
+      "source_sha256": "30ce948f8286a4d0c1175e114fb43d15664b80c65f5dd8b7de12682b2139418f",
+      "after_sha256": "30ce948f8286a4d0c1175e114fb43d15664b80c65f5dd8b7de12682b2139418f",
+      "match": true
+    },
+    {
+      "path": "WRF/external/rte_rrtmgp/build/Makefile",
+      "before_sha256": "f2f65df3db294280132a4355144be3ab47fee702cdb5efe2d0a3eab7579b4c17",
+      "source_sha256": "f2f65df3db294280132a4355144be3ab47fee702cdb5efe2d0a3eab7579b4c17",
+      "after_sha256": "f2f65df3db294280132a4355144be3ab47fee702cdb5efe2d0a3eab7579b4c17",
+      "match": true
+    },
+    {
+      "path": "WRF/external/rte_rrtmgp/extensions/mo_fluxes_byband.F90",
+      "before_sha256": "da7102528a93c047d565e15126b6aa263bb8c0c45296c0e45db34b5179c6fac5",
+      "source_sha256": "da7102528a93c047d565e15126b6aa263bb8c0c45296c0e45db34b5179c6fac5",
+      "after_sha256": "da7102528a93c047d565e15126b6aa263bb8c0c45296c0e45db34b5179c6fac5",
+      "match": true
+    },
+    {
+      "path": "WRF/external/rte_rrtmgp/extensions/mo_load_cloud_coefficients.F90",
+      "before_sha256": "330976e71d031dc725a63876947312eda821a9f9e09e4420af3a18caace6399a",
+      "source_sha256": "330976e71d031dc725a63876947312eda821a9f9e09e4420af3a18caace6399a",
+      "after_sha256": "330976e71d031dc725a63876947312eda821a9f9e09e4420af3a18caace6399a",
+      "match": true
+    },
+    {
+      "path": "WRF/external/rte_rrtmgp/extensions/mo_load_coefficients.F90",
+      "before_sha256": "3abc021bf244560f4d7f247be167ad0ecafb6c451f88566a7ce2a0436caebb5b",
+      "source_sha256": "3abc021bf244560f4d7f247be167ad0ecafb6c451f88566a7ce2a0436caebb5b",
+      "after_sha256": "3abc021bf244560f4d7f247be167ad0ecafb6c451f88566a7ce2a0436caebb5b",
+      "match": true
+    },
+    {
+      "path": "WRF/external/rte_rrtmgp/extensions/mo_simple_netcdf.F90",
+      "before_sha256": "b87ac6e7b26634a7433327700637471d38793f3e80207852bc7dd1cb5fb7a1a3",
+      "source_sha256": "b87ac6e7b26634a7433327700637471d38793f3e80207852bc7dd1cb5fb7a1a3",
+      "after_sha256": "b87ac6e7b26634a7433327700637471d38793f3e80207852bc7dd1cb5fb7a1a3",
+      "match": true
+    },
+    {
+      "path": "WRF/external/rte_rrtmgp/gas-optics/mo_gas_concentrations.F90",
+      "before_sha256": "f39394b0fdc7ec27c11c159c71754f2b80c97806d69fcabc4a5140b270be58a1",
+      "source_sha256": "f39394b0fdc7ec27c11c159c71754f2b80c97806d69fcabc4a5140b270be58a1",
+      "after_sha256": "f39394b0fdc7ec27c11c159c71754f2b80c97806d69fcabc4a5140b270be58a1",
+      "match": true
+    },
+    {
+      "path": "WRF/external/rte_rrtmgp/rrtmgp-frontend/mo_aerosol_optics_rrtmgp_merra.F90",
+      "before_sha256": "a41bf3915ab67a876dcdee4a27ad47f22b2892d8526060ffc91925f04385d2c4",
+      "source_sha256": "a41bf3915ab67a876dcdee4a27ad47f22b2892d8526060ffc91925f04385d2c4",
+      "after_sha256": "a41bf3915ab67a876dcdee4a27ad47f22b2892d8526060ffc91925f04385d2c4",
+      "match": true
+    },
+    {
+      "path": "WRF/external/rte_rrtmgp/rrtmgp-frontend/mo_cloud_optics_rrtmgp.F90",
+      "before_sha256": "14dcab00e6dfe1a64d40b5ddf3cf86186380fac2b8d0c0c3aa2e1f466b0446fc",
+      "source_sha256": "14dcab00e6dfe1a64d40b5ddf3cf86186380fac2b8d0c0c3aa2e1f466b0446fc",
+      "after_sha256": "14dcab00e6dfe1a64d40b5ddf3cf86186380fac2b8d0c0c3aa2e1f466b0446fc",
+      "match": true
+    },
+    {
+      "path": "WRF/external/rte_rrtmgp/rrtmgp-frontend/mo_gas_optics_rrtmgp.F90",
+      "before_sha256": "47f1ac34d9fa8f7d23ed2c7ddf2ab8bb59329989ce9dcee7cfe235e0e50f6e54",
+      "source_sha256": "47f1ac34d9fa8f7d23ed2c7ddf2ab8bb59329989ce9dcee7cfe235e0e50f6e54",
+      "after_sha256": "47f1ac34d9fa8f7d23ed2c7ddf2ab8bb59329989ce9dcee7cfe235e0e50f6e54",
+      "match": true
+    },
+    {
+      "path": "WRF/external/rte_rrtmgp/rrtmgp-kernels/accel/mo_gas_optics_rrtmgp_kernels.F90",
+      "before_sha256": "19720dde3108788f27dd0ea8456a0c30cd0d49d2da50b55f04dbc43c5bb88d37",
+      "source_sha256": "19720dde3108788f27dd0ea8456a0c30cd0d49d2da50b55f04dbc43c5bb88d37",
+      "after_sha256": "19720dde3108788f27dd0ea8456a0c30cd0d49d2da50b55f04dbc43c5bb88d37",
+      "match": true
+    },
+    {
+      "path": "WRF/external/rte_rrtmgp/rte-frontend/mo_rte_lw.F90",
+      "before_sha256": "d8ebba055014fc787d33617418a1d8a7f4f00277ab1804541ca6b68e4a5e20ea",
+      "source_sha256": "d8ebba055014fc787d33617418a1d8a7f4f00277ab1804541ca6b68e4a5e20ea",
+      "after_sha256": "d8ebba055014fc787d33617418a1d8a7f4f00277ab1804541ca6b68e4a5e20ea",
+      "match": true
+    },
+    {
+      "path": "WRF/external/rte_rrtmgp/rte-frontend/mo_rte_sw.F90",
+      "before_sha256": "37b3e87281ed51f28891d92b77ed7c0514fa1551ce8ba224e88a428fb847bdd6",
+      "source_sha256": "37b3e87281ed51f28891d92b77ed7c0514fa1551ce8ba224e88a428fb847bdd6",
+      "after_sha256": "37b3e87281ed51f28891d92b77ed7c0514fa1551ce8ba224e88a428fb847bdd6",
+      "match": true
+    },
+    {
+      "path": "WRF/external/rte_rrtmgp/rte-frontend/mo_rte_util_array_validation.F90",
+      "before_sha256": "651b730aea980674157912dcad20120e9f624807dab215ffddf13478ac443a31",
+      "source_sha256": "651b730aea980674157912dcad20120e9f624807dab215ffddf13478ac443a31",
+      "after_sha256": "651b730aea980674157912dcad20120e9f624807dab215ffddf13478ac443a31",
+      "match": true
+    },
+    {
+      "path": "WRF/external/rte_rrtmgp/rte-kernels/accel/mo_optical_props_kernels.F90",
+      "before_sha256": "c7be609db95515deccf85916667db084663e9286ac886905d0f5a9bec6cb841c",
+      "source_sha256": "c7be609db95515deccf85916667db084663e9286ac886905d0f5a9bec6cb841c",
+      "after_sha256": "c7be609db95515deccf85916667db084663e9286ac886905d0f5a9bec6cb841c",
+      "match": true
+    },
+    {
+      "path": "WRF/external/rte_rrtmgp/rte-kernels/accel/mo_rte_solver_kernels.F90",
+      "before_sha256": "23b2299c09fe585692a7be057699fe89e45fa3f3ff145bbf6a6bba0aa752d04c",
+      "source_sha256": "23b2299c09fe585692a7be057699fe89e45fa3f3ff145bbf6a6bba0aa752d04c",
+      "after_sha256": "23b2299c09fe585692a7be057699fe89e45fa3f3ff145bbf6a6bba0aa752d04c",
+      "match": true
+    },
+    {
+      "path": "WRF/external/rte_rrtmgp/rte-kernels/mo_fluxes_broadband_kernels.F90",
+      "before_sha256": "bed38fc538fbb9bd3b6f86e7106dec3ef972e5445cf479f49523fd9e79f8e629",
+      "source_sha256": "bed38fc538fbb9bd3b6f86e7106dec3ef972e5445cf479f49523fd9e79f8e629",
+      "after_sha256": "bed38fc538fbb9bd3b6f86e7106dec3ef972e5445cf479f49523fd9e79f8e629",
+      "match": true
+    },
+    {
+      "path": "WRF/external/rte_rrtmgp/rte-kernels/mo_rte_util_array.F90",
+      "before_sha256": "c59f0737b56b3c8de1e79a04b6ec2533f00aa9018a0ef0684c53016dd53eeb92",
+      "source_sha256": "c59f0737b56b3c8de1e79a04b6ec2533f00aa9018a0ef0684c53016dd53eeb92",
+      "after_sha256": "c59f0737b56b3c8de1e79a04b6ec2533f00aa9018a0ef0684c53016dd53eeb92",
+      "match": true
+    },
+    {
+      "path": "WRF/phys/module_mp_udm.F",
+      "before_sha256": "aebd463bd22da076e78cb87aac5a0360ce4b401290b3528b03fd9b7090222572",
+      "source_sha256": "bb14d9467a738706834c006af41730096d03273399f359163d8845d3caf84bb7",
+      "after_sha256": "bb14d9467a738706834c006af41730096d03273399f359163d8845d3caf84bb7",
+      "match": true
+    },
+    {
+      "path": "WRF/phys/module_physics_init.F",
+      "before_sha256": "ee6b3a0e5bafdcba246faad8325a67a9b7f2cc7fdf6fbbcd3a030c23676fdf05",
+      "source_sha256": "ee6b3a0e5bafdcba246faad8325a67a9b7f2cc7fdf6fbbcd3a030c23676fdf05",
+      "after_sha256": "ee6b3a0e5bafdcba246faad8325a67a9b7f2cc7fdf6fbbcd3a030c23676fdf05",
+      "match": true
+    },
+    {
+      "path": "WRF/phys/module_ra_rrtmg_lw.F",
+      "before_sha256": "e439bc8c5695cea5c9b8fb85db6aacea9fe5e4dd86cb01b7a51024140decce07",
+      "source_sha256": "dd4a1e4434b104b7380ab731efb44f75d2e9ecedeb520894643b6dbca312b65f",
+      "after_sha256": "dd4a1e4434b104b7380ab731efb44f75d2e9ecedeb520894643b6dbca312b65f",
+      "match": true
+    },
+    {
+      "path": "WRF/phys/module_ra_rrtmg_sw.F",
+      "before_sha256": "4ae840fc5cf28245055854f2d5adef55337c0fb5b5369a7166232fbe80225d2c",
+      "source_sha256": "2302edc021b1ab7686820cb4cf0b153de0eab74614962a860f87f652ca7c8f92",
+      "after_sha256": "2302edc021b1ab7686820cb4cf0b153de0eab74614962a860f87f652ca7c8f92",
+      "match": true
+    },
+    {
+      "path": "WRF/phys/module_ra_rrtmgp.F",
+      "before_sha256": "b4a90cbe61be2fd8a6b7442c7e83d68a3f9e76bfe81834fc06356f802f80a62e",
+      "source_sha256": "b4a90cbe61be2fd8a6b7442c7e83d68a3f9e76bfe81834fc06356f802f80a62e",
+      "after_sha256": "b4a90cbe61be2fd8a6b7442c7e83d68a3f9e76bfe81834fc06356f802f80a62e",
+      "match": true
+    },
+    {
+      "path": "WRF/phys/module_ra_rrtmgp_audit.F",
+      "before_sha256": "335b85558d977446218ea8554479e107f9bb15e359eb3a95023efd484f05c929",
+      "source_sha256": "335b85558d977446218ea8554479e107f9bb15e359eb3a95023efd484f05c929",
+      "after_sha256": "335b85558d977446218ea8554479e107f9bb15e359eb3a95023efd484f05c929",
+      "match": true
+    },
+    {
+      "path": "WRF/phys/module_ra_rrtmgp_input.F",
+      "before_sha256": "f02e4b0c5e0e10d3892742e177c3ad4671744de677e09cd95a78f76178e80dbe",
+      "source_sha256": "177fa304642385b56baf30b94d828cd10988d7bdc33946e18455f377b64b66a3",
+      "after_sha256": "177fa304642385b56baf30b94d828cd10988d7bdc33946e18455f377b64b66a3",
+      "match": true
+    },
+    {
+      "path": "WRF/phys/module_ra_rrtmgp_trace.F",
+      "before_sha256": "2df43a055fdb8c65cf5b52edc3f5347a49b46ef68b37c23374ce0db48cf19b54",
+      "source_sha256": "2df43a055fdb8c65cf5b52edc3f5347a49b46ef68b37c23374ce0db48cf19b54",
+      "after_sha256": "2df43a055fdb8c65cf5b52edc3f5347a49b46ef68b37c23374ce0db48cf19b54",
+      "match": true
+    },
+    {
+      "path": "WRF/phys/module_radiation_driver.F",
+      "before_sha256": "b14874361bf62f07edc5b4b905287adeccd0491a820ffd97feedc5c7497d4674",
+      "source_sha256": "b14874361bf62f07edc5b4b905287adeccd0491a820ffd97feedc5c7497d4674",
+      "after_sha256": "b14874361bf62f07edc5b4b905287adeccd0491a820ffd97feedc5c7497d4674",
+      "match": true
+    }
+  ],
+  "frozen_prebuild_executable": {
+    "source": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/mpi-wrf-udm-contracts/WRF/main/wrf.exe",
+    "source_sha256": "4bef94c0c511a50985b51b7b148fc463d2b31f656ab21cf135c9233914f2b1e2",
+    "source_inode": 144117436440904221,
+    "copy": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-negative-input-prebuild-20261002/wrf.exe",
+    "copy_sha256": "4bef94c0c511a50985b51b7b148fc463d2b31f656ab21cf135c9233914f2b1e2",
+    "copy_inode": 144117436440905925,
+    "byte_identical": true
+  },
+  "notes": [
+    "Copy completed only after freezing byte-identical current MPI executable.",
+    "The root checkout contains additional source changes beyond its HEAD; exact SHA is recorded per source file.",
+    "No build or model run has been started yet."
+  ],
+  "build": {
+    "command": "PATH=build/deps/mpich-sock/bin:$PATH NETCDF=build/deps/netcdf NETCDF_classic=1 OMP_NUM_THREADS=1 csh -f ./compile -j 12 em_real",
+    "log": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-negative-input-prebuild-20261002/build-em_real.log",
+    "log_sha256": "00f3f4b95579e76e18cdcf48cf957f645922baa81b5fe048f2638fab68657f77",
+    "success_marker": true,
+    "compiler": "GNU Fortran 13.3.0; MPICH 4.2.0 ch3:sock, Hydra",
+    "flags": {
+      "DM_FC": "mpif90",
+      "FC": "time $(DM_FC)",
+      "OMP": "-fopenmp",
+      "OMPCPP": "-D_OPENMP",
+      "netcdf": "build/deps/netcdf",
+      "NETCDF_classic": "1"
+    },
+    "executable_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/mpi-wrf-udm-contracts/WRF/main/wrf.exe",
+    "executable_sha256": "9648438404ad3da5ccbfe649e71f8f577dd193483d777c9fd12f99d60854a443"
+  },
+  "runtime_overlay_sha256": "50f52eeed69bec4cda963d4e9c6869a15a7232fed126085a234c6d62f5dcc949",
+  "registered_runtime_parity_check": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp/build/negative-input-contract/mpi-runtime-source-check.json",
+    "sha256": "ae300dc63fd8f3a3b5ffb29fb91df1e13cac9f2d0ce92f652b9ab60efde9824f",
+    "files_compared": 51,
+    "all_byte_identical": true,
+    "note": "Independent parent audit covers registered runtime Fortran files already present and unchanged in the isolated base as well as overlaid files."
+  }
+}
