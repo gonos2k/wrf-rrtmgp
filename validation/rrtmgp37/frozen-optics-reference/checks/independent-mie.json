@@ -1,0 +1,754 @@
+{
+  "status": "PASS",
+  "scope": "SOCRATES RealK Mie C-API cross-checked at fixed weak-absorption and general fixtures; no PSD/band-table/model validation",
+  "independent_implementation": {
+    "package": "miepython",
+    "version": "3.0.2",
+    "MIEPYTHON_USE_JIT": "0",
+    "USE_JIT": false,
+    "reference_convention": "miepython uses m=n-ik; SOCRATES bridge accepts positive k and constructs n+ik",
+    "mie_nojit_py_sha256": "9ba345cb42e5385b8f6ae6866f7291919ce5f8a32a7e4f05949ec0a05f31665f",
+    "core_py_sha256": "7ba7c025f996681e7e232a37dab806bc6ed2567d17221849852d5fe9e97a57aa",
+    "source_tree_sha256": {
+      "__init__.py": "aa3d0b3c4a4a6352dba799a65cd977b8a6d9aebdd013786d4ccc7355d739e82a",
+      "bessel.py": "534f78c18ff9445aab5635d980c6da726b7fcaaa4ff0606d459db8f8c37306c5",
+      "core.py": "7ba7c025f996681e7e232a37dab806bc6ed2567d17221849852d5fe9e97a57aa",
+      "examples/01_dielectric.py": "b68d4f8a4aab7f5d92452730fbc8a206942ed75038493d3bc6bb736ffce0b3e1",
+      "examples/02_glass.py": "82e9d7eb26582b0f0e621e7774415818947339d61cb871ebdb970456e70f1dc6",
+      "examples/03_droplets.py": "99e52dc97b8a0175c5f6518b5815984a624f87a78b811758d165192961683c9e",
+      "examples/04_gold.py": "46e419cb1eb761f010d4203a59d54d48749861fa4a2d1c79f30f356ecedaea11",
+      "field.py": "4ecd506421ec4cb908bba8330b0cae3ed1f20bf4965b682080fbf6fbd4479269",
+      "mie_jit.py": "f5809c7961d10c9cbbc788c81d16ebb160551275e98c4a823af2f4d04cfc4e43",
+      "mie_nojit.py": "9ba345cb42e5385b8f6ae6866f7291919ce5f8a32a7e4f05949ec0a05f31665f",
+      "monte_carlo.py": "81e989daf854ca24e0fa1027786456dedca97774853362cbe11da8d540332de0",
+      "rayleigh.py": "f2cd7e25689fea727b39a61711c97c4a89e9871ec211132d9e2539b722900c0e",
+      "util.py": "2d0103909ab3e861d51d8a20d89cd3135d886efda770b78c236d12f088d9cc07",
+      "vsh.py": "7fb5814a8668bbfc3416da588ad97a7139a3ac5a62d21c123a327d5fcb4d1449"
+    }
+  },
+  "SOCRATES": {
+    "source_commit": "3709ddf63086731a9976f0f08ca571760dac15ac",
+    "source_manifest_sha256": "e8a96926d18ddec03ac2e490bf65b14d80fcfde6ec7d42a3e3a9926b8792d512",
+    "generator_sha256": "44e87a513632251c1d5b7c349742e1950a97c710b64a2c1e9f341b341a6c265e",
+    "independent_check_sha256": "c40fbcc525c60ae78b87cbad673b569f68a638c088dae1041b954f368536d69f",
+    "pinned_sources_sha256": {
+      "tools/udm_frozen_optics/socrates/realtype_rd.f90": "b307501f6de8f380b47a74df03268bfe1af14c03b7425ecd76ca0a211101419b",
+      "tools/udm_frozen_optics/socrates/def_std_io_icf.f90": "11ade5462f11d7866954a6be0e44d91945ebb7b81888f3f532a8fe84168e56ac",
+      "tools/udm_frozen_optics/socrates/error_pcf.f90": "d7220382cf98ecf0bf81bcdc4d75aa943fcfdbedf168a0ffb2defd8db82131eb",
+      "tools/udm_frozen_optics/socrates/mie_scatter.f": "1bcf8fce448ffebb1b75bbbfd5ba156efe984f10fa72ae8aa5201f3eef6355f8",
+      "tools/udm_frozen_optics/mie_dynamic_api.f90": "8c06cb8ed4035db8560a12ca6d73de8c0fe644cced6ab89902933bba0ee4b7ea",
+      "tools/udm_frozen_optics/SOURCE.json": "e8a96926d18ddec03ac2e490bf65b14d80fcfde6ec7d42a3e3a9926b8792d512",
+      "tools/udm_frozen_optics/laguerre.py": "6f977679e2e0267ac3efcc9a9079cbee07ce1835e0d2eb67e105c6cab61b1c07"
+    },
+    "local_compiled_adaptation": {
+      "original_sha256": "1bcf8fce448ffebb1b75bbbfd5ba156efe984f10fa72ae8aa5201f3eef6355f8",
+      "compiled_mie_sha256": "e2ff5c81d4956bfcee2542a107d48dac33d7c7be8fd6d1c0a0b79f9f1a428973",
+      "adaptation": "Four CMPLX constructors explicitly preserve KIND=RealK; no other source changes",
+      "constructors": 4
+    },
+    "compiled_adapted_source_sha256": "e2ff5c81d4956bfcee2542a107d48dac33d7c7be8fd6d1c0a0b79f9f1a428973",
+    "library_sha256": "013280ea3a87acb117f2b34087479c229da1441e85cc7a198744006b436b402b",
+    "adaptation_policy": "Only four CMPLX constructors explicitly specify KIND=RealK; original pinned vendored source remains byte-identical."
+  },
+  "comparison_tolerances": {
+    "atol": 2e-09,
+    "rtol": 2e-09,
+    "formula": "abs(SOCRATES-reference) <= atol + rtol*abs(reference)"
+  },
+  "fixture_counts": {
+    "original_weak_absorption_violators": 16,
+    "additional_weak_absorption_failure": 1,
+    "general_regressions": 3
+  },
+  "results": [
+    {
+      "label": "orig_worst_01",
+      "n": 1.3212977752683328,
+      "k": 2.000000000000001e-11,
+      "x": 18.344479763486675,
+      "source_context": {
+        "band_1based": 12,
+        "wavenumber_cm-1": 26250.0,
+        "laguerre_u": 0.044489365833267014,
+        "original_default_complex_Qext": 2.627687923899289,
+        "original_default_complex_Qsca": 2.627687989623038,
+        "original_Qsca_minus_Qext": 6.572374910973622e-08
+      },
+      "socrates": {
+        "Qext": 2.6276879349104054,
+        "Qsca": 2.6276879332263694,
+        "g": 0.8191863931161438,
+        "needed_terms": 45
+      },
+      "miepython": {
+        "Qext": 2.627687934910406,
+        "Qsca": 2.6276879332263703,
+        "g": 0.8191863931161433
+      },
+      "socrates_minus_miepython": {
+        "Qext": -4.440892098500626e-16,
+        "Qsca": -8.881784197001252e-16,
+        "g": 5.551115123125783e-16
+      },
+      "component_tolerance": {
+        "Qext": 7.255375869820812e-09,
+        "Qsca": 7.255375866452741e-09,
+        "g": 3.6383727862322865e-09
+      }
+    },
+    {
+      "label": "orig_worst_02",
+      "n": 1.3202430774879417,
+      "k": 2.0213171793268426e-11,
+      "x": 17.89023550267653,
+      "source_context": {
+        "band_1based": 12,
+        "wavenumber_cm-1": 25600.0,
+        "laguerre_u": 0.044489365833267014,
+        "original_default_complex_Qext": 2.6065031142443793,
+        "original_default_complex_Qsca": 2.6065031786044552,
+        "original_Qsca_minus_Qext": 6.436007593535464e-08
+      },
+      "socrates": {
+        "Qext": 2.606503048936846,
+        "Qsca": 2.606503047446562,
+        "g": 0.851150873342637,
+        "needed_terms": 45
+      },
+      "miepython": {
+        "Qext": 2.606503048936847,
+        "Qsca": 2.6065030474465622,
+        "g": 0.851150873342637
+      },
+      "socrates_minus_miepython": {
+        "Qext": -8.881784197001252e-16,
+        "Qsca": -4.440892098500626e-16,
+        "g": 0.0
+      },
+      "component_tolerance": {
+        "Qext": 7.213006097873694e-09,
+        "Qsca": 7.213006094893124e-09,
+        "g": 3.702301746685274e-09
+      }
+    },
+    {
+      "label": "orig_worst_03",
+      "n": 1.3334898718416064,
+      "k": 2.000000000000001e-11,
+      "x": 23.131515435101296,
+      "source_context": {
+        "band_1based": 13,
+        "wavenumber_cm-1": 33100.0,
+        "laguerre_u": 0.044489365833267014,
+        "original_default_complex_Qext": 2.188714642667646,
+        "original_default_complex_Qsca": 2.1887147066224117,
+        "original_Qsca_minus_Qext": 6.395476592757632e-08
+      },
+      "socrates": {
+        "Qext": 2.1887146107706834,
+        "Qsca": 2.1887146087355136,
+        "g": 0.823851073633915,
+        "needed_terms": 51
+      },
+      "miepython": {
+        "Qext": 2.188714610770651,
+        "Qsca": 2.1887146087354834,
+        "g": 0.8238510736339192
+      },
+      "socrates_minus_miepython": {
+        "Qext": 3.241851231905457e-14,
+        "Qsca": 3.019806626980426e-14,
+        "g": -4.218847493575595e-15
+      },
+      "component_tolerance": {
+        "Qext": 6.377429221541303e-09,
+        "Qsca": 6.377429217470967e-09,
+        "g": 3.6477021472678386e-09
+      }
+    },
+    {
+      "label": "orig_worst_04",
+      "n": 1.3558503886307434,
+      "k": 2.000000000000001e-11,
+      "x": 28.792097762120044,
+      "source_context": {
+        "band_1based": 14,
+        "wavenumber_cm-1": 41200.0,
+        "laguerre_u": 0.044489365833267014,
+        "original_default_complex_Qext": 1.935690455042163,
+        "original_default_complex_Qsca": 1.9356905145492485,
+        "original_Qsca_minus_Qext": 5.9507085481413924e-08
+      },
+      "socrates": {
+        "Qext": 1.9356904177274807,
+        "Qsca": 1.9356904154145234,
+        "g": 0.8145244191939555,
+        "needed_terms": 58
+      },
+      "miepython": {
+        "Qext": 1.9356904177288885,
+        "Qsca": 1.9356904154159318,
+        "g": 0.8145244191942007
+      },
+      "socrates_minus_miepython": {
+        "Qext": -1.4077627952246985e-12,
+        "Qsca": -1.4084289290394736e-12,
+        "g": -2.452482661396971e-13
+      },
+      "component_tolerance": {
+        "Qext": 5.871380835457778e-09,
+        "Qsca": 5.871380830831864e-09,
+        "g": 3.6290488383884017e-09
+      }
+    },
+    {
+      "label": "orig_worst_05",
+      "n": 1.3641763516673038,
+      "k": 2.000000000000001e-11,
+      "x": 30.259656143198978,
+      "source_context": {
+        "band_1based": 14,
+        "wavenumber_cm-1": 43300.0,
+        "laguerre_u": 0.044489365833267014,
+        "original_default_complex_Qext": 2.2196124223988485,
+        "original_default_complex_Qsca": 2.219612481050473,
+        "original_Qsca_minus_Qext": 5.865162444607108e-08
+      },
+      "socrates": {
+        "Qext": 2.2196123530601435,
+        "Qsca": 2.219612349005728,
+        "g": 0.8308547724788125,
+        "needed_terms": 60
+      },
+      "miepython": {
+        "Qext": 2.2196123531117973,
+        "Qsca": 2.2196123490573805,
+        "g": 0.830854772458895
+      },
+      "socrates_minus_miepython": {
+        "Qext": -5.165379235450018e-11,
+        "Qsca": -5.165246008687063e-11,
+        "g": 1.9917401061775308e-11
+      },
+      "component_tolerance": {
+        "Qext": 6.4392247062235955e-09,
+        "Qsca": 6.4392246981147605e-09,
+        "g": 3.6617095449177903e-09
+      }
+    },
+    {
+      "label": "orig_worst_06",
+      "n": 1.3316987978707824,
+      "k": 2.000000000000001e-11,
+      "x": 22.432678110777996,
+      "source_context": {
+        "band_1based": 13,
+        "wavenumber_cm-1": 32100.0,
+        "laguerre_u": 0.044489365833267014,
+        "original_default_complex_Qext": 2.1585927814472674,
+        "original_default_complex_Qsca": 2.158592837255549,
+        "original_Qsca_minus_Qext": 5.580828155160589e-08
+      },
+      "socrates": {
+        "Qext": 2.1585927238333635,
+        "Qsca": 2.158592721439721,
+        "g": 0.7666798883936944,
+        "needed_terms": 50
+      },
+      "miepython": {
+        "Qext": 2.1585927238333458,
+        "Qsca": 2.158592721439705,
+        "g": 0.7666798883936944
+      },
+      "socrates_minus_miepython": {
+        "Qext": 1.7763568394002505e-14,
+        "Qsca": 1.5987211554602254e-14,
+        "g": 0.0
+      },
+      "component_tolerance": {
+        "Qext": 6.317185447666692e-09,
+        "Qsca": 6.317185442879411e-09,
+        "g": 3.533359776787389e-09
+      }
+    },
+    {
+      "label": "orig_worst_07",
+      "n": 1.3220203171890663,
+      "k": 2.000000000000001e-11,
+      "x": 18.658956559432163,
+      "source_context": {
+        "band_1based": 12,
+        "wavenumber_cm-1": 26700.0,
+        "laguerre_u": 0.044489365833267014,
+        "original_default_complex_Qext": 2.427843096493493,
+        "original_default_complex_Qsca": 2.427843152025161,
+        "original_Qsca_minus_Qext": 5.55316681527529e-08
+      },
+      "socrates": {
+        "Qext": 2.427843098900785,
+        "Qsca": 2.4278430973575014,
+        "g": 0.8476215746602717,
+        "needed_terms": 46
+      },
+      "miepython": {
+        "Qext": 2.4278430989007864,
+        "Qsca": 2.4278430973575027,
+        "g": 0.8476215746602715
+      },
+      "socrates_minus_miepython": {
+        "Qext": -1.3322676295501878e-15,
+        "Qsca": -1.3322676295501878e-15,
+        "g": 1.1102230246251565e-16
+      },
+      "component_tolerance": {
+        "Qext": 6.8556861978015735e-09,
+        "Qsca": 6.855686194715005e-09,
+        "g": 3.6952431493205434e-09
+      }
+    },
+    {
+      "label": "orig_worst_08",
+      "n": 1.3343650476179485,
+      "k": 2.000000000000001e-11,
+      "x": 23.411050364830615,
+      "source_context": {
+        "band_1based": 13,
+        "wavenumber_cm-1": 33500.0,
+        "laguerre_u": 0.044489365833267014,
+        "original_default_complex_Qext": 2.213896480686111,
+        "original_default_complex_Qsca": 2.21389653503785,
+        "original_Qsca_minus_Qext": 5.435173910939284e-08
+      },
+      "socrates": {
+        "Qext": 2.2138964563124452,
+        "Qsca": 2.21389645444842,
+        "g": 0.8497946065171555,
+        "needed_terms": 51
+      },
+      "miepython": {
+        "Qext": 2.2138964563124315,
+        "Qsca": 2.213896454448407,
+        "g": 0.8497946065171513
+      },
+      "socrates_minus_miepython": {
+        "Qext": 1.3766765505351941e-14,
+        "Qsca": 1.2878587085651816e-14,
+        "g": 4.218847493575595e-15
+      },
+      "component_tolerance": {
+        "Qext": 6.427792912624864e-09,
+        "Qsca": 6.427792908896814e-09,
+        "g": 3.699589213034303e-09
+      }
+    },
+    {
+      "label": "orig_worst_09",
+      "n": 1.3401650366872218,
+      "k": 2.000000000000001e-11,
+      "x": 24.913550612125714,
+      "source_context": {
+        "band_1based": 13,
+        "wavenumber_cm-1": 35650.0,
+        "laguerre_u": 0.044489365833267014,
+        "original_default_complex_Qext": 2.520795768705988,
+        "original_default_complex_Qsca": 2.5207958230567904,
+        "original_Qsca_minus_Qext": 5.4350802525249264e-08
+      },
+      "socrates": {
+        "Qext": 2.520795736528263,
+        "Qsca": 2.5207957345532073,
+        "g": 0.8613192626716687,
+        "needed_terms": 53
+      },
+      "miepython": {
+        "Qext": 2.5207957365283056,
+        "Qsca": 2.5207957345532495,
+        "g": 0.8613192626716607
+      },
+      "socrates_minus_miepython": {
+        "Qext": -4.263256414560601e-14,
+        "Qsca": -4.218847493575595e-14,
+        "g": 7.993605777301127e-15
+      },
+      "component_tolerance": {
+        "Qext": 7.0415914730566115e-09,
+        "Qsca": 7.0415914691065e-09,
+        "g": 3.7226385253433215e-09
+      }
+    },
+    {
+      "label": "orig_worst_10",
+      "n": 1.3519434672689639,
+      "k": 2.000000000000001e-11,
+      "x": 28.128202304012905,
+      "source_context": {
+        "band_1based": 14,
+        "wavenumber_cm-1": 40250.0,
+        "laguerre_u": 0.044489365833267014,
+        "original_default_complex_Qext": 1.9818540753467675,
+        "original_default_complex_Qsca": 1.9818541293585397,
+        "original_Qsca_minus_Qext": 5.4011772165907246e-08
+      },
+      "socrates": {
+        "Qext": 1.9818541664999019,
+        "Qsca": 1.9818541626779493,
+        "g": 0.7968784351908204,
+        "needed_terms": 57
+      },
+      "miepython": {
+        "Qext": 1.981854166484213,
+        "Qsca": 1.9818541626622608,
+        "g": 0.7968784351985957
+      },
+      "socrates_minus_miepython": {
+        "Qext": 1.5688783605583012e-11,
+        "Qsca": 1.5688561560978087e-11,
+        "g": -7.775335930659821e-12
+      },
+      "component_tolerance": {
+        "Qext": 5.963708332968426e-09,
+        "Qsca": 5.9637083253245226e-09,
+        "g": 3.5937568703971916e-09
+      }
+    },
+    {
+      "label": "orig_worst_11",
+      "n": 1.3197537153679895,
+      "k": 2.2142112358734384e-11,
+      "x": 17.645642439163375,
+      "source_context": {
+        "band_1based": 12,
+        "wavenumber_cm-1": 25250.0,
+        "laguerre_u": 0.044489365833267014,
+        "original_default_complex_Qext": 2.813618174514836,
+        "original_default_complex_Qsca": 2.81361822831942,
+        "original_Qsca_minus_Qext": 5.3804584343453143e-08
+      },
+      "socrates": {
+        "Qext": 2.81361816132761,
+        "Qsca": 2.8136181595464516,
+        "g": 0.8259305006198757,
+        "needed_terms": 45
+      },
+      "miepython": {
+        "Qext": 2.8136181613276094,
+        "Qsca": 2.81361815954645,
+        "g": 0.825930500619876
+      },
+      "socrates_minus_miepython": {
+        "Qext": 4.440892098500626e-16,
+        "Qsca": 1.7763568394002505e-15,
+        "g": -3.3306690738754696e-16
+      },
+      "component_tolerance": {
+        "Qext": 7.62723632265522e-09,
+        "Qsca": 7.6272363190929e-09,
+        "g": 3.6518610012397524e-09
+      }
+    },
+    {
+      "label": "orig_worst_12",
+      "n": 1.3178259148084404,
+      "k": 3.0565920176795446e-11,
+      "x": 16.702212051326917,
+      "source_context": {
+        "band_1based": 12,
+        "wavenumber_cm-1": 23900.0,
+        "laguerre_u": 0.044489365833267014,
+        "original_default_complex_Qext": 2.8542812211073576,
+        "original_default_complex_Qsca": 2.8542812738745,
+        "original_Qsca_minus_Qext": 5.2767142211251894e-08
+      },
+      "socrates": {
+        "Qext": 2.854281225025856,
+        "Qsca": 2.8542812226507457,
+        "g": 0.8164434786636243,
+        "needed_terms": 43
+      },
+      "miepython": {
+        "Qext": 2.854281225025856,
+        "Qsca": 2.854281222650744,
+        "g": 0.8164434786636244
+      },
+      "socrates_minus_miepython": {
+        "Qext": 0.0,
+        "Qsca": 1.7763568394002505e-15,
+        "g": -1.1102230246251565e-16
+      },
+      "component_tolerance": {
+        "Qext": 7.708562450051712e-09,
+        "Qsca": 7.708562445301488e-09,
+        "g": 3.632886957327249e-09
+      }
+    },
+    {
+      "label": "orig_worst_13",
+      "n": 1.3478193027461687,
+      "k": 2.000000000000001e-11,
+      "x": 27.045004451311787,
+      "source_context": {
+        "band_1based": 14,
+        "wavenumber_cm-1": 38700.0,
+        "laguerre_u": 0.044489365833267014,
+        "original_default_complex_Qext": 2.371707337126647,
+        "original_default_complex_Qsca": 2.371707389273413,
+        "original_Qsca_minus_Qext": 5.214676601639212e-08
+      },
+      "socrates": {
+        "Qext": 2.371707319200558,
+        "Qsca": 2.371707315181479,
+        "g": 0.7894207911814518,
+        "needed_terms": 56
+      },
+      "miepython": {
+        "Qext": 2.3717073192051648,
+        "Qsca": 2.371707315186084,
+        "g": 0.7894207911800117
+      },
+      "socrates_minus_miepython": {
+        "Qext": -4.6065373737746995e-12,
+        "Qsca": -4.605205106145149e-12,
+        "g": 1.4400702852412905e-12
+      },
+      "component_tolerance": {
+        "Qext": 6.74341463841033e-09,
+        "Qsca": 6.743414630372169e-09,
+        "g": 3.5788415823600237e-09
+      }
+    },
+    {
+      "label": "orig_worst_14",
+      "n": 1.348778096326691,
+      "k": 2.000000000000001e-11,
+      "x": 27.324539381041106,
+      "source_context": {
+        "band_1based": 14,
+        "wavenumber_cm-1": 39100.0,
+        "laguerre_u": 0.044489365833267014,
+        "original_default_complex_Qext": 2.1145690417133847,
+        "original_default_complex_Qsca": 2.114569093011925,
+        "original_Qsca_minus_Qext": 5.1298540526545366e-08
+      },
+      "socrates": {
+        "Qext": 2.1145690110030126,
+        "Qsca": 2.114569008844187,
+        "g": 0.8303764285356642,
+        "needed_terms": 56
+      },
+      "miepython": {
+        "Qext": 2.114569011004462,
+        "Qsca": 2.114569008845637,
+        "g": 0.8303764285358842
+      },
+      "socrates_minus_miepython": {
+        "Qext": -1.4495071809506044e-12,
+        "Qsca": -1.4499512701604544e-12,
+        "g": -2.2004620348070603e-13
+      },
+      "component_tolerance": {
+        "Qext": 6.229138022008925e-09,
+        "Qsca": 6.229138017691274e-09,
+        "g": 3.6607528570717688e-09
+      }
+    },
+    {
+      "label": "orig_worst_15",
+      "n": 1.3229649899817617,
+      "k": 2.000000000000001e-11,
+      "x": 19.078258954026143,
+      "source_context": {
+        "band_1based": 12,
+        "wavenumber_cm-1": 27300.0,
+        "laguerre_u": 0.044489365833267014,
+        "original_default_complex_Qext": 2.372960782569174,
+        "original_default_complex_Qsca": 2.372960833771439,
+        "original_Qsca_minus_Qext": 5.120226509447434e-08
+      },
+      "socrates": {
+        "Qext": 2.3729607364698686,
+        "Qsca": 2.3729607347084474,
+        "g": 0.8142401440131092,
+        "needed_terms": 46
+      },
+      "miepython": {
+        "Qext": 2.372960736469868,
+        "Qsca": 2.372960734708448,
+        "g": 0.8142401440131087
+      },
+      "socrates_minus_miepython": {
+        "Qext": 4.440892098500626e-16,
+        "Qsca": -4.440892098500626e-16,
+        "g": 4.440892098500626e-16
+      },
+      "component_tolerance": {
+        "Qext": 6.745921472939737e-09,
+        "Qsca": 6.7459214694168955e-09,
+        "g": 3.6284802880262177e-09
+      }
+    },
+    {
+      "label": "orig_worst_16",
+      "n": 1.328039780840841,
+      "k": 2.000000000000001e-11,
+      "x": 21.069945328347554,
+      "source_context": {
+        "band_1based": 13,
+        "wavenumber_cm-1": 30150.0,
+        "laguerre_u": 0.044489365833267014,
+        "original_default_complex_Qext": 1.841945579361134,
+        "original_default_complex_Qsca": 1.8419456296675065,
+        "original_Qsca_minus_Qext": 5.0306372623154516e-08
+      },
+      "socrates": {
+        "Qext": 1.8419455551455006,
+        "Qsca": 1.841945553435554,
+        "g": 0.8205929849645978,
+        "needed_terms": 49
+      },
+      "miepython": {
+        "Qext": 1.8419455551455,
+        "Qsca": 1.841945553435555,
+        "g": 0.8205929849645973
+      },
+      "socrates_minus_miepython": {
+        "Qext": 6.661338147750939e-16,
+        "Qsca": -1.1102230246251565e-15,
+        "g": 4.440892098500626e-16
+      },
+      "component_tolerance": {
+        "Qext": 5.683891110291e-09,
+        "Qsca": 5.6838911068711104e-09,
+        "g": 3.641185969929195e-09
+      }
+    },
+    {
+      "label": "reported_generator_failure",
+      "n": 1.3162090691501627,
+      "k": 6.647598667764746e-11,
+      "x": 15.82866539592279,
+      "source_context": {
+        "band_1based": 12,
+        "wavenumber_cm-1": 22650.0,
+        "laguerre_u": 0.044489365833267014,
+        "original_default_complex_Qext": 2.745629741719146,
+        "original_default_complex_Qsca": 2.74562975138284,
+        "original_Qsca_minus_Qext": 9.663693845141097e-09
+      },
+      "socrates": {
+        "Qext": 2.745629726298191,
+        "Qsca": 2.745629721279663,
+        "g": 0.7921381729779189,
+        "needed_terms": 42
+      },
+      "miepython": {
+        "Qext": 2.7456297262981906,
+        "Qsca": 2.7456297212796623,
+        "g": 0.792138172977919
+      },
+      "socrates_minus_miepython": {
+        "Qext": 4.440892098500626e-16,
+        "Qsca": 8.881784197001252e-16,
+        "g": -1.1102230246251565e-16
+      },
+      "component_tolerance": {
+        "Qext": 7.491259452596381e-09,
+        "Qsca": 7.491259442559325e-09,
+        "g": 3.5842763459558383e-09
+      }
+    },
+    {
+      "label": "general_absorbing_x100",
+      "n": 1.5,
+      "k": 1.0,
+      "x": 100.0,
+      "source_context": {},
+      "socrates": {
+        "Qext": 2.097501755137069,
+        "Qsca": 1.2836970493733482,
+        "g": 0.8502519976527826,
+        "needed_terms": 213
+      },
+      "miepython": {
+        "Qext": 2.097501755137069,
+        "Qsca": 1.2836970493733486,
+        "g": 0.8502519976527821
+      },
+      "socrates_minus_miepython": {
+        "Qext": 0.0,
+        "Qsca": -4.440892098500626e-16,
+        "g": 4.440892098500626e-16
+      },
+      "component_tolerance": {
+        "Qext": 6.195003510274139e-09,
+        "Qsca": 4.567394098746698e-09,
+        "g": 3.7005039953055646e-09
+      }
+    },
+    {
+      "label": "general_large_index_x1",
+      "n": 10.0,
+      "k": 10.0,
+      "x": 1.0,
+      "source_context": {},
+      "socrates": {
+        "Qext": 2.532993077896223,
+        "Qsca": 2.0494050069254803,
+        "g": -0.11066436104552763,
+        "needed_terms": 30
+      },
+      "miepython": {
+        "Qext": 2.5329930778962226,
+        "Qsca": 2.049405006925481,
+        "g": -0.11066436104552754
+      },
+      "socrates_minus_miepython": {
+        "Qext": 4.440892098500626e-16,
+        "Qsca": -8.881784197001252e-16,
+        "g": -8.326672684688674e-17
+      },
+      "component_tolerance": {
+        "Qext": 7.065986155792446e-09,
+        "Qsca": 6.0988100138509635e-09,
+        "g": 2.2213287220910554e-09
+      }
+    },
+    {
+      "label": "general_weak_absorption_x1e5",
+      "n": 1.31,
+      "k": 1e-08,
+      "x": 100000.0,
+      "source_context": {},
+      "socrates": {
+        "Qext": 2.001319768133051,
+        "Qsca": 1.9979743293823353,
+        "g": 0.8927415307978335,
+        "needed_terms": 144115
+      },
+      "miepython": {
+        "Qext": 2.0013197681345822,
+        "Qsca": 1.9979743293822556,
+        "g": 0.8927415307978224
+      },
+      "socrates_minus_miepython": {
+        "Qext": -1.531219595563016e-12,
+        "Qsca": 7.971401316808624e-14,
+        "g": 1.1102230246251565e-14
+      },
+      "component_tolerance": {
+        "Qext": 6.002639536269165e-09,
+        "Qsca": 5.995948658764512e-09,
+        "g": 3.785483061595645e-09
+      }
+    }
+  ],
+  "max_abs_error": {
+    "Qext": 5.165379235450018e-11,
+    "Qsca": 5.165246008687063e-11,
+    "g": 1.9917401061775308e-11
+  },
+  "limits": [
+    "Fixed fixtures reproduce representative near-transparent failures and independent Mie comparisons; they do not constitute a broad precision proof.",
+    "miepython and SOCRATES are distinct implementations of the same Mie theory; agreement is not physical validation of the selected ice material or PSD.",
+    "No frozen optical coefficient table is generated by this check."
+  ]
+}

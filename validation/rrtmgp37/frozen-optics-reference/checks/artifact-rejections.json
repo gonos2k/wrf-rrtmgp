@@ -1,0 +1,114 @@
+{
+  "status": "PASS",
+  "valid_generation_receipt_sha256": "1ead7b7a2e97c6c0e2e089d273624dd79a5c50d0abd6093261f9ae7c0740ef7a",
+  "validator_sha256": "85bef4fb6dc34144e89570da302e266bd93acba987f2e3bd3d8e7202097d210b",
+  "test_sha256": "62459430220c3bacbb1e5f692ad0cb10024979f5ae62fa057cd3201feda922b6",
+  "cases": [
+    {
+      "name": "table-hash",
+      "status": "EXPECTED_REJECTION",
+      "reason": "Table hash differs from receipt"
+    },
+    {
+      "name": "status",
+      "status": "EXPECTED_REJECTION",
+      "reason": "Incomplete generator receipt"
+    },
+    {
+      "name": "lambda-axis",
+      "status": "EXPECTED_REJECTION",
+      "reason": "Lambda axis/receipt mismatch"
+    },
+    {
+      "name": "temperature-axis",
+      "status": "EXPECTED_REJECTION",
+      "reason": "Temperature axis/receipt mismatch"
+    },
+    {
+      "name": "missing-row",
+      "status": "EXPECTED_REJECTION",
+      "reason": "Missing spectral task receipt"
+    },
+    {
+      "name": "duplicate-row",
+      "status": "EXPECTED_REJECTION",
+      "reason": "Duplicate spectral task receipt"
+    },
+    {
+      "name": "task-index",
+      "status": "EXPECTED_REJECTION",
+      "reason": "Unknown spectral task"
+    },
+    {
+      "name": "task-values",
+      "status": "EXPECTED_REJECTION",
+      "reason": "Table does not match task receipt"
+    },
+    {
+      "name": "negative-moment",
+      "status": "EXPECTED_REJECTION",
+      "reason": "Negative optical moment"
+    },
+    {
+      "name": "nonfinite-moment",
+      "status": "EXPECTED_REJECTION",
+      "reason": "Nonfinite lw_scattering_times_density"
+    },
+    {
+      "name": "wrong-units",
+      "status": "EXPECTED_REJECTION",
+      "reason": "Wrong lambda units/dtype"
+    },
+    {
+      "name": "closure",
+      "status": "EXPECTED_REJECTION",
+      "reason": "Extinction=absorption+scattering closure"
+    },
+    {
+      "name": "workspace",
+      "status": "EXPECTED_REJECTION",
+      "reason": "Workspace bound"
+    },
+    {
+      "name": "pruning",
+      "status": "EXPECTED_REJECTION",
+      "reason": "Excessive quadrature pruning"
+    },
+    {
+      "name": "bounds",
+      "status": "EXPECTED_REJECTION",
+      "reason": "SW band contract"
+    },
+    {
+      "name": "generator-source",
+      "status": "EXPECTED_REJECTION",
+      "reason": "Generator source identity differs; use its matching checkout"
+    },
+    {
+      "name": "kernel-source",
+      "status": "EXPECTED_REJECTION",
+      "reason": "Kernel/source-manifest identities differ"
+    },
+    {
+      "name": "input-source",
+      "status": "EXPECTED_REJECTION",
+      "reason": "Pinned input identities differ"
+    },
+    {
+      "name": "adaptation-source",
+      "status": "EXPECTED_REJECTION",
+      "reason": "Compiled precision adaptation identity differs"
+    },
+    {
+      "name": "local-library",
+      "status": "EXPECTED_REJECTION",
+      "reason": "Local compiled library identity differs"
+    },
+    {
+      "name": "local-adaptation",
+      "status": "EXPECTED_REJECTION",
+      "reason": "Local adaptation manifest differs"
+    }
+  ],
+  "scope": "Artifact schema and receipt identities, not material/optical model accuracy"
+}

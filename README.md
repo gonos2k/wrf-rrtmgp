@@ -1,6 +1,8 @@
 # WRF–RRTMGP 37
 
 현재 37번 개발·평가 범위는 **UDM(`mp_physics=27`) 전용**입니다. 장·단파 `37/37`, `use_mp_re=1`을 요구합니다. UDM native radii, qc/qi cloud optics, qr/qs precipitation optics를 연결하며 qg는 제외량 계측, qh는 명시적 미지원으로 처리합니다. [현재 UDM 입력 계약과 검증 한계](WRF/doc/rrtmgp/UDM_ONLY.md) · [UDM 실행·비교 검증 기록](validation/rrtmgp37/udm-only/REPORT_ko.md)를 먼저 확인하십시오. 아래 다른 미세물리 결과는 이전 버전의 검증 기록입니다.
+
+싸락눈·우박 후속 광학에는 [동질 얼음 PSD 수치 기준](validation/rrtmgp37/frozen-optics-reference/README.md)과 [재현 도구](tools/udm_frozen_optics/README.md)를 추가했습니다. 독립 Mie 비교와 질량 정규화를 검사한 실험적 기준이며, 실제 WRF 연결과 전체 적분 수렴은 후속 검증 대상입니다.
 기체 광학의 건조공기량도 WRF native 층 질량에서 변환하도록 보완했습니다. [native gas-column 계약](WRF/doc/rrtmgp/NATIVE_GAS_COLUMNS.md)과 실행 근거에서 적용 범위를 확인하십시오.
 
 
