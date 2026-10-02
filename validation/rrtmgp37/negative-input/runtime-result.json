@@ -1,0 +1,134 @@
+{
+  "status": "EXPECTED_STOP_AT_UNSUPPORTED_POSITIVE_HAIL",
+  "run": {
+    "case": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-negative-input-prebuild-20261002/run-ra37-1h",
+    "requested_duration_seconds": 3600,
+    "actual_advanced_until_seconds": 1200,
+    "radiation_steps_observed_seconds": [
+      0,
+      600,
+      1200
+    ],
+    "mpi_ranks": 4,
+    "omp_threads_per_rank": 1,
+    "hydro_diagnostics_enabled": true,
+    "negative_correction_policy": "bounded process-scale ceilings, explicitly enabled in production wrappers; only within-limit negatives corrected; material/equal-limit negatives still fatal; positive hail remains fatal",
+    "exit_code": 1,
+    "fatal_rank": "0002",
+    "fatal": {
+      "time": "2010-06-11_00:20:00",
+      "i": 106,
+      "j": 114,
+      "diagnostic": "RRTMGP_INPUT_UDM_HAIL_OPTICS_UNSUPPORTED",
+      "layer": 15,
+      "grid_path_g_m2": 1.316034e-05,
+      "exact_log": "LW i=106 j=114: RRTMGP_INPUT_UDM_HAIL_OPTICS_UNSUPPORTED layer=15 grid_path_g_m2=  1.316034E-05",
+      "mpi_abort": true,
+      "fatal_cell_from_history": {
+        "i": 106,
+        "j": 114,
+        "k_fortran": 15,
+        "QHAIL": 4.335706099700687e-11,
+        "QGRAUP": 9.698463827589876e-07,
+        "QSNOW": 1.8808366803568788e-05,
+        "QICE": 2.3186234102468006e-05,
+        "QCLOUD": 0.0003722823166754097,
+        "QRAIN": 8.845224783726735e-07,
+        "CLDFRA": 1.0,
+        "P": 198.828125,
+        "PB": 50255.1015625,
+        "pressure_pa": 50453.9296875
+      }
+    }
+  },
+  "inputs": {
+    "wrfinput_sha256": "5ef7abe34c516fba107f346bdbdb3777edacb5d48493df467ea2dd8bcf6a75ff",
+    "wrfbdy_sha256": "e687b73730ab9a2cee4842e1a92b225a4edb074ba080b6053d96d81ec1731a2d",
+    "namelist_sha256": "490a12ad3c6798928983adeb1230e0e15545db4a0f972c84d10f3799e4565bab",
+    "same_initialized_inputs_as_prebuild": true,
+    "coefficient_tables": {
+      "rrtmgp-clouds-lw-bnd.nc": "09d6704c5b863b4c3ceb417d20bb3076ec492e6bf2dfbcc9f3c5996a3706f0b0",
+      "rrtmgp-clouds-sw-bnd.nc": "7671835992a45afe66244b591a02c0b3df73d7d59ecb746bbffd9763497651cd",
+      "rrtmgp-gas-lw-g128.nc": "70ad65d116531122660318e5da2a2af9db74b425916202860e9527ef2375b8f6",
+      "rrtmgp-gas-sw-g112.nc": "361ed541324068ded28a275a4dd757bcaa0a845aebefa630f43a04678668fe62"
+    }
+  },
+  "executable": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-negative-input-prebuild-20261002/run-ra37-1h/wrf.exe",
+    "sha256": "9648438404ad3da5ccbfe649e71f8f577dd193483d777c9fd12f99d60854a443",
+    "same_as_new_MPI_build": true,
+    "prebuild_frozen_sha256": "4bef94c0c511a50985b51b7b148fc463d2b31f656ab21cf135c9233914f2b1e2"
+  },
+  "diagnostics": {
+    "hydro_tile_csvs": {
+      "hydro_d1_i1-145_j1-95.csv": {
+        "sha256": "dd3e33a9764c0eb1bc255085733b124e76a957d9cb0262e0022c8c9ea1cca4ec",
+        "rows": 26,
+        "complete_summary_species_at_0_600_1200": true
+      },
+      "hydro_d1_i1-145_j96-189.csv": {
+        "sha256": "3fad5bff135d2968ae61bd76b1403aa7b9c91fa6150921321131de8c98e2c09e",
+        "rows": 43,
+        "complete_summary_species_at_0_600_1200": true
+      },
+      "hydro_d1_i146-289_j1-95.csv": {
+        "sha256": "018e5b19fe3c1aacdd573c7edb1184c62a0a68757222165573e6c0a43f35215d",
+        "rows": 27,
+        "complete_summary_species_at_0_600_1200": true
+      },
+      "hydro_d1_i146-289_j96-189.csv": {
+        "sha256": "5447413615f125e9f2c1f52058faee75d7be3358af58cd2605fc646127d13527",
+        "rows": 137,
+        "complete_summary_species_at_0_600_1200": true
+      }
+    },
+    "hydro_aggregate_csv": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-negative-input-prebuild-20261002/hydro-summary-0-600-1200.csv",
+      "sha256": "092e73bcb83cb97612dcc2d5becdfedc23781cd5943ece0dc00f38b06daa6821",
+      "rows": 18
+    },
+    "radiation_events_csv": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-negative-input-prebuild-20261002/radiation-diagnostic-events.csv",
+      "sha256": "e5d25ff00a9df11fe365fbd498d2dc94ea5e16ad972f431ba9afa43390dd82fb",
+      "rows": 58,
+      "time_note": "Raw per-rank diagnostic event records preserve file/line order. For exact activation seconds use the hydro tile CSVs, which contain step and seconds; the WRF log message text itself has no timestamp."
+    },
+    "fatal_by_rank": {
+      "rsl.error.0002": {
+        "phase": "LW",
+        "i": 106,
+        "j": 114,
+        "diagnostic": "RRTMGP_INPUT_UDM_HAIL_OPTICS_UNSUPPORTED",
+        "layer": 15,
+        "grid_path_g_m2": 1.316034e-05,
+        "mpi_abort": true
+      }
+    },
+    "fatal_hail_record_csv": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-negative-input-prebuild-20261002/fatal-hail-record.csv",
+      "sha256": "acd04011f416ebec913f5bc90a1b0434ca24e63b7c627f0231e738f2a4f0cc55"
+    }
+  },
+  "logs": {
+    "build": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-negative-input-prebuild-20261002/build-em_real.log",
+      "sha256": "00f3f4b95579e76e18cdcf48cf957f645922baa81b5fe048f2638fab68657f77",
+      "success_marker": true
+    },
+    "launcher": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-negative-input-prebuild-20261002/run-ra37-1h/hydrodiag-mpiexec.stdout.log",
+      "sha256": "c5ccdd2406062899eebe9d7b9a65a9b145324917dcecd068b8080705cf8c1cff"
+    },
+    "rank_logs": {
+      "rsl.error.0000": "9bb2142e8f41c047a438b46c31fa60ee3410d85096e88637965120f190cb9f73",
+      "rsl.error.0001": "db1a165f2277078c083e575e7339d7a301515806176b8e11f011b7bd74050dec",
+      "rsl.error.0002": "028e13746f1c773dac29c04dfe30a21c53ea2cabd6342522bf47d17ea892a21e",
+      "rsl.error.0003": "08c44ae2f7d3ea3ef96a5cf3f40e94fb27ddb8b647088ea14c005b2fd41965ab",
+      "rsl.out.0000": "2b3d98e853d971245fdff8427a71726226a10ed1ae786b8272a7a600a153dae1",
+      "rsl.out.0001": "2f9b78f7adfedb87db52fb6bc5d327abe534e80664d1c344ba1f8c76c92e8478",
+      "rsl.out.0002": "816c265dce1d098766fc42687bac73267cea572cd6b2dccae2fe3266e9c8dee1",
+      "rsl.out.0003": "48f249ade07fc41179779ac1f67a49cba6722290a88f3fbf8e84794bf6bb6131"
+    }
+  },
+  "interpretation": "At 600s all four tile snapshots were complete: bounded negative-only corrections were reported, and positive graupel was explicitly omitted from RRTMGP optics with counters. At 1200s all four snapshots were written before rank 2 stopped at unsupported positive hail optics; no threshold, physics option, or state was altered to continue."
+}

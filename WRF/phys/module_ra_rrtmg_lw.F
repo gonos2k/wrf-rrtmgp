@@ -11609,7 +11609,7 @@ CONTAINS
 !ccc To use clWRF time varying trace gases
    USE MODULE_RA_CLWRF_SUPPORT, ONLY : read_CAMgases
 
-   USE module_mp_udm, ONLY: cldf_diag
+   USE module_mp_udm, ONLY: cldf_diag, udm_radiation_negative_limits
    USE module_ra_rrtmgp, ONLY: rrtmgp_lw_column
    USE module_ra_rrtmgp_input, ONLY: rrtmgp_build_udm_inputs
    USE module_ra_rrtmgp_trace, ONLY: trace_start, trace_active, trace_raw_start, trace_raw, &
@@ -11622,6 +11622,10 @@ CONTAINS
    INTEGER, OPTIONAL, INTENT(IN) :: udm_cf_step(ims:ime,jms:jme),mcica_seed_override,audit_step
    INTEGER :: gp_seed,gp_g_count
    REAL(KIND=8) :: gp_g_sum,gp_g_max
+   INTEGER :: gp_negative_count(6)
+   REAL(KIND=8) :: gp_negative_sum(6),gp_negative_max_q(6)
+   REAL :: gp_negative_limits(6),gp_clipped_q(kte-kts+1,6),gp_negative_correction(kte-kts+1,6)
+   CHARACTER(LEN=2), PARAMETER :: gp_q_names(6)=[CHARACTER(LEN=2) :: 'QC','QI','QR','QS','QG','QH']
    REAL :: gp_cf_now(1,kte-kts+1)
    LOGICAL :: run_rrtmgp
    CHARACTER(LEN=96) :: gp_context
@@ -12028,6 +12032,9 @@ CONTAINS
 
 ! latitude loop
   gp_g_count=0;gp_g_sum=0.d0;gp_g_max=0.d0
+  gp_negative_count=0;gp_negative_sum=0.d0;gp_negative_max_q=0.d0
+  gp_negative_limits=0.
+  IF(run_rrtmgp) gp_negative_limits=udm_radiation_negative_limits()
   j_loop: do j = jts,jte
 
 ! longitude loop
@@ -12799,7 +12806,9 @@ CONTAINS
                     qc1d(kts:kte),qr1d(kts:kte),qi1d(kts:kte),qs1d(kts:kte),qg1d(kts:kte),gp_qh, &
                     gp_rel,gp_rei,gp_res,g,gp_grid,gp_rad,gp_sizes,gp_reason,gp_errmsg, &
                     column_context=gp_context,allow_clear_condensate=.TRUE., &
-                    omitted_grid_path=gp_omitted_phase,layer_reason=gp_layer_reason)
+                    omitted_grid_path=gp_omitted_phase,layer_reason=gp_layer_reason, &
+                    negative_q_limits=gp_negative_limits,clipped_negative_q=gp_clipped_q, &
+                    negative_grid_correction=gp_negative_correction)
                IF(gp_reason==7) THEN
                   DO k=kts,kte
                      IF(gp_qh(k-kts+1)>0.) THEN
@@ -12810,6 +12819,14 @@ CONTAINS
                      END IF
                   END DO
                END IF
+               ! Correct only radiation-local negatives strictly below the host's
+               ! native process-scale ceilings. Retain q even if its path underflows.
+               DO gp_phase=1,6
+                  gp_negative_count(gp_phase)=gp_negative_count(gp_phase)+COUNT(gp_clipped_q(:,gp_phase)<0.)
+                  gp_negative_sum(gp_phase)=gp_negative_sum(gp_phase)+SUM(REAL(gp_negative_correction(:,gp_phase),8))
+                  gp_negative_max_q(gp_phase)=MAX(gp_negative_max_q(gp_phase), &
+                       MAXVAL(ABS(REAL(gp_clipped_q(:,gp_phase),8))))
+               END DO
                ! Prepared graupel is diagnostic-only; radiation path must be zero.
                gp_omitted_phase(:,5)=gp_grid(:,5)
                gp_rad(:,5)=0.
@@ -12833,7 +12850,11 @@ CONTAINS
                   END IF
                END DO
                IF(trace_active('LW')) THEN
+                  CALL trace_raw('LW','NEGATIVE_Q_LIMITS',gp_negative_limits)
                   DO gp_phase=1,6
+                     CALL trace_raw('LW','NUMERIC_CLIPPED_'//gp_q_names(gp_phase),gp_clipped_q(:,gp_phase))
+                     CALL trace_raw('LW','NEGATIVE_GRID_CORRECTION_'//gp_phase_names(gp_phase), &
+                          gp_negative_correction(:,gp_phase))
                      CALL trace_raw('LW',gp_phase_names(gp_phase)//'_GRID',gp_grid(:,gp_phase))
                      CALL trace_raw('LW',gp_phase_names(gp_phase)//'_RADIATION',gp_rad(:,gp_phase))
                      CALL trace_raw('LW',gp_phase_names(gp_phase)//'_OMITTED',gp_omitted_phase(:,gp_phase))
@@ -13068,6 +13089,25 @@ CONTAINS
       WRITE(message,'(A,I0,A,ES14.6,A,ES14.6)') 'LW RRTMGP_UDM_GRAUPEL_OPTICS_OMITTED layers=', &
          gp_g_count,' sum_grid_path_g_m2=',gp_g_sum,' max_grid_path_g_m2=',gp_g_max
       CALL wrf_debug(0,message)
+     END IF
+    END BLOCK
+   END IF
+
+   IF(run_rrtmgp.AND.ANY(gp_negative_count>0)) THEN
+    BLOCK
+     LOGICAL :: report_negative
+     report_negative=.TRUE.
+     IF(PRESENT(mcica_seed_override)) report_negative=mcica_seed_override<0
+     IF(report_negative) THEN
+      DO gp_phase=1,6
+       IF(gp_negative_count(gp_phase)>0) THEN
+        WRITE(message,'(A,A,A,I0,A,ES14.6,A,ES14.6,A,ES14.6)') &
+          'LW RRTMGP_UDM_NEGATIVE_INPUT_CORRECTED species=',gp_q_names(gp_phase), &
+          ' layers=',gp_negative_count(gp_phase),' sum_grid_correction_g_m2=',gp_negative_sum(gp_phase), &
+          ' max_abs_q_kgkg=',gp_negative_max_q(gp_phase),' limit_kgkg=',gp_negative_limits(gp_phase)
+        CALL wrf_debug(0,message)
+       END IF
+      END DO
      END IF
     END BLOCK
    END IF

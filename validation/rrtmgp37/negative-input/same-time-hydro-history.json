@@ -1,0 +1,1600 @@
+{
+  "purpose": "Same-time comparison of existing history files only; no runs were started or changed.",
+  "case": "NCAR WRF developer test 2010061100; MP27, use_mp_re=1; MPI4 x OMP1 in each case.",
+  "input_state": {
+    "all_three_wrfinput_and_wrfbdy_byte_hashes_equal": true,
+    "wrfinput_sha256": "5ef7abe34c516fba107f346bdbdb3777edacb5d48493df467ea2dd8bcf6a75ff",
+    "wrfbdy_sha256": "e687b73730ab9a2cee4842e1a92b225a4edb074ba080b6053d96d81ec1731a2d",
+    "namelist_equivalence_after_excluding_run_length_end_time_and_radiation_options": true,
+    "ra4_observer_on_off_namelists_identical": true
+  },
+  "samples": [
+    "0s",
+    "600s",
+    "1200s"
+  ],
+  "cell_index_convention": "Same-cell values use WRF 1-based scalar grid i=106,j=114,k=15; full-field min/max indices are also 1-based.",
+  "cases": {
+    "ra37_new_mpi4": {
+      "path": "build/udm-negative-input-prebuild-20261002/run-ra37-1h",
+      "inputs": {},
+      "namelist_sha256": "490a12ad3c6798928983adeb1230e0e15545db4a0f972c84d10f3799e4565bab",
+      "wrfinput_sha256": "5ef7abe34c516fba107f346bdbdb3777edacb5d48493df467ea2dd8bcf6a75ff",
+      "wrfbdy_sha256": "e687b73730ab9a2cee4842e1a92b225a4edb074ba080b6053d96d81ec1731a2d",
+      "namelist_options": {
+        "run_hours": "run_hours                           = 1,",
+        "run_minutes": "run_minutes                         = 0,",
+        "history_interval": "history_interval                    = 10, 10, 10,",
+        "time_step": "time_step                           = 60,",
+        "radt": "radt                                = 10, 10, 10,",
+        "mp_physics": "mp_physics                          = 27, 27, 27,",
+        "ra_lw_physics": "ra_lw_physics                       = 37, 37, 37,",
+        "ra_sw_physics": "ra_sw_physics                       = 37, 37, 37,",
+        "use_mp_re": "use_mp_re                          = 1,"
+      },
+      "snapshots": {
+        "0s": {
+          "file": "build/udm-negative-input-prebuild-20261002/run-ra37-1h/wrfout_d01_2010-06-11_00:00:00",
+          "sha256": "7d14db3fdbbb752160fa459ef711965af91ceaf8e70b8e3977b4ba7c6e1496d1",
+          "bytes": 55427518,
+          "time_utc": "2010-06-11_00:00:00",
+          "fields": {
+            "QCLOUD": {
+              "units": "kg kg-1",
+              "min": 0.0,
+              "min_index_wrf_1based": {
+                "k": 1,
+                "j": 1,
+                "i": 1
+              },
+              "max": 0.0,
+              "max_index_wrf_1based": {
+                "k": 1,
+                "j": 1,
+                "i": 1
+              },
+              "positive_count": 0,
+              "negative_count": 0,
+              "same_cell_value_i106_j114_k15": 0.0
+            },
+            "QICE": {
+              "units": "kg kg-1",
+              "min": 0.0,
+              "min_index_wrf_1based": {
+                "k": 1,
+                "j": 1,
+                "i": 1
+              },
+              "max": 0.0,
+              "max_index_wrf_1based": {
+                "k": 1,
+                "j": 1,
+                "i": 1
+              },
+              "positive_count": 0,
+              "negative_count": 0,
+              "same_cell_value_i106_j114_k15": 0.0
+            },
+            "QRAIN": {
+              "units": "kg kg-1",
+              "min": 0.0,
+              "min_index_wrf_1based": {
+                "k": 1,
+                "j": 1,
+                "i": 1
+              },
+              "max": 0.0,
+              "max_index_wrf_1based": {
+                "k": 1,
+                "j": 1,
+                "i": 1
+              },
+              "positive_count": 0,
+              "negative_count": 0,
+              "same_cell_value_i106_j114_k15": 0.0
+            },
+            "QSNOW": {
+              "units": "kg kg-1",
+              "min": 0.0,
+              "min_index_wrf_1based": {
+                "k": 1,
+                "j": 1,
+                "i": 1
+              },
+              "max": 0.0,
+              "max_index_wrf_1based": {
+                "k": 1,
+                "j": 1,
+                "i": 1
+              },
+              "positive_count": 0,
+              "negative_count": 0,
+              "same_cell_value_i106_j114_k15": 0.0
+            },
+            "QGRAUP": {
+              "units": "kg kg-1",
+              "min": 0.0,
+              "min_index_wrf_1based": {
+                "k": 1,
+                "j": 1,
+                "i": 1
+              },
+              "max": 0.0,
+              "max_index_wrf_1based": {
+                "k": 1,
+                "j": 1,
+                "i": 1
+              },
+              "positive_count": 0,
+              "negative_count": 0,
+              "same_cell_value_i106_j114_k15": 0.0
+            },
+            "QHAIL": {
+              "units": "kg kg-1",
+              "min": 0.0,
+              "min_index_wrf_1based": {
+                "k": 1,
+                "j": 1,
+                "i": 1
+              },
+              "max": 0.0,
+              "max_index_wrf_1based": {
+                "k": 1,
+                "j": 1,
+                "i": 1
+              },
+              "positive_count": 0,
+              "negative_count": 0,
+              "same_cell_value_i106_j114_k15": 0.0
+            },
+            "CLDFRA": {
+              "units": "",
+              "min": 0.0,
+              "min_index_wrf_1based": {
+                "k": 1,
+                "j": 1,
+                "i": 1
+              },
+              "max": 0.0,
+              "max_index_wrf_1based": {
+                "k": 1,
+                "j": 1,
+                "i": 1
+              },
+              "positive_count": 0,
+              "negative_count": 0,
+              "same_cell_value_i106_j114_k15": 0.0
+            }
+          }
+        },
+        "600s": {
+          "file": "build/udm-negative-input-prebuild-20261002/run-ra37-1h/wrfout_d01_2010-06-11_00:10:00",
+          "sha256": "d9bd0c804dc668cb9b0830b2cfa8bae3a4a46c5c07737233e3e82ac1dc8a0328",
+          "bytes": 69667650,
+          "time_utc": "2010-06-11_00:10:00",
+          "fields": {
+            "QCLOUD": {
+              "units": "kg kg-1",
+              "min": -9.111152248788244e-16,
+              "min_index_wrf_1based": {
+                "k": 13,
+                "j": 1,
+                "i": 119
+              },
+              "max": 0.0005079943803139031,
+              "max_index_wrf_1based": {
+                "k": 18,
+                "j": 97,
+                "i": 135
+              },
+              "positive_count": 23468,
+              "negative_count": 17,
+              "same_cell_value_i106_j114_k15": 0.00016963326197583228
+            },
+            "QICE": {
+              "units": "kg kg-1",
+              "min": -2.2040572753225292e-21,
+              "min_index_wrf_1based": {
+                "k": 23,
+                "j": 189,
+                "i": 120
+              },
+              "max": 0.00019099802011623979,
+              "max_index_wrf_1based": {
+                "k": 21,
+                "j": 98,
+                "i": 135
+              },
+              "positive_count": 109544,
+              "negative_count": 42,
+              "same_cell_value_i106_j114_k15": 3.061092684220057e-06
+            },
+            "QRAIN": {
+              "units": "kg kg-1",
+              "min": -6.735263836143764e-31,
+              "min_index_wrf_1based": {
+                "k": 18,
+                "j": 189,
+                "i": 228
+              },
+              "max": 4.892037031822838e-05,
+              "max_index_wrf_1based": {
+                "k": 13,
+                "j": 69,
+                "i": 169
+              },
+              "positive_count": 24372,
+              "negative_count": 17,
+              "same_cell_value_i106_j114_k15": 2.263269379909616e-06
+            },
+            "QSNOW": {
+              "units": "kg kg-1",
+              "min": -5.348970745836201e-27,
+              "min_index_wrf_1based": {
+                "k": 14,
+                "j": 189,
+                "i": 56
+              },
+              "max": 1.632163366593886e-05,
+              "max_index_wrf_1based": {
+                "k": 15,
+                "j": 140,
+                "i": 94
+              },
+              "positive_count": 102614,
+              "negative_count": 5,
+              "same_cell_value_i106_j114_k15": 3.388170171092497e-06
+            },
+            "QGRAUP": {
+              "units": "kg kg-1",
+              "min": -1.7116706386675843e-25,
+              "min_index_wrf_1based": {
+                "k": 14,
+                "j": 189,
+                "i": 56
+              },
+              "max": 4.876503112427599e-07,
+              "max_index_wrf_1based": {
+                "k": 15,
+                "j": 126,
+                "i": 100
+              },
+              "positive_count": 94716,
+              "negative_count": 3,
+              "same_cell_value_i106_j114_k15": 1.966055549473822e-07
+            },
+            "QHAIL": {
+              "units": "kg kg-1",
+              "min": 0.0,
+              "min_index_wrf_1based": {
+                "k": 1,
+                "j": 1,
+                "i": 1
+              },
+              "max": 0.0,
+              "max_index_wrf_1based": {
+                "k": 1,
+                "j": 1,
+                "i": 1
+              },
+              "positive_count": 0,
+              "negative_count": 0,
+              "same_cell_value_i106_j114_k15": 0.0
+            },
+            "CLDFRA": {
+              "units": "",
+              "min": 0.0,
+              "min_index_wrf_1based": {
+                "k": 1,
+                "j": 1,
+                "i": 1
+              },
+              "max": 0.0,
+              "max_index_wrf_1based": {
+                "k": 1,
+                "j": 1,
+                "i": 1
+              },
+              "positive_count": 0,
+              "negative_count": 0,
+              "same_cell_value_i106_j114_k15": 0.0
+            }
+          }
+        },
+        "1200s": {
+          "file": "build/udm-negative-input-prebuild-20261002/run-ra37-1h/wrfout_d01_2010-06-11_00:20:00",
+          "sha256": "c3995bc917e15c4eab9d71ff5ff3da3aba5ed7592f8fb5978a295a64b5ae66fc",
+          "bytes": 72012251,
+          "time_utc": "2010-06-11_00:20:00",
+          "fields": {
+            "QCLOUD": {
+              "units": "kg kg-1",
+              "min": -1.1397036247526614e-21,
+              "min_index_wrf_1based": {
+                "k": 8,
+                "j": 128,
+                "i": 289
+              },
+              "max": 0.0009316428913734853,
+              "max_index_wrf_1based": {
+                "k": 15,
+                "j": 126,
+                "i": 101
+              },
+              "positive_count": 26236,
+              "negative_count": 11,
+              "same_cell_value_i106_j114_k15": 0.0003722823166754097
+            },
+            "QICE": {
+              "units": "kg kg-1",
+              "min": -6.474148785376987e-26,
+              "min_index_wrf_1based": {
+                "k": 24,
+                "j": 135,
+                "i": 289
+              },
+              "max": 0.0002140095311915502,
+              "max_index_wrf_1based": {
+                "k": 20,
+                "j": 43,
+                "i": 126
+              },
+              "positive_count": 123098,
+              "negative_count": 29,
+              "same_cell_value_i106_j114_k15": 2.3186234102468006e-05
+            },
+            "QRAIN": {
+              "units": "kg kg-1",
+              "min": -7.796112799957021e-27,
+              "min_index_wrf_1based": {
+                "k": 17,
+                "j": 189,
+                "i": 233
+              },
+              "max": 5.0553477194625884e-05,
+              "max_index_wrf_1based": {
+                "k": 9,
+                "j": 134,
+                "i": 287
+              },
+              "positive_count": 41618,
+              "negative_count": 29,
+              "same_cell_value_i106_j114_k15": 8.845224783726735e-07
+            },
+            "QSNOW": {
+              "units": "kg kg-1",
+              "min": -4.50917154535396e-20,
+              "min_index_wrf_1based": {
+                "k": 9,
+                "j": 189,
+                "i": 76
+              },
+              "max": 0.0007848457316868007,
+              "max_index_wrf_1based": {
+                "k": 20,
+                "j": 98,
+                "i": 135
+              },
+              "positive_count": 241356,
+              "negative_count": 4,
+              "same_cell_value_i106_j114_k15": 1.8808366803568788e-05
+            },
+            "QGRAUP": {
+              "units": "kg kg-1",
+              "min": -6.277099382564392e-23,
+              "min_index_wrf_1based": {
+                "k": 8,
+                "j": 189,
+                "i": 84
+              },
+              "max": 9.434749517822638e-05,
+              "max_index_wrf_1based": {
+                "k": 19,
+                "j": 99,
+                "i": 135
+              },
+              "positive_count": 231339,
+              "negative_count": 4,
+              "same_cell_value_i106_j114_k15": 9.698463827589876e-07
+            },
+            "QHAIL": {
+              "units": "kg kg-1",
+              "min": 0.0,
+              "min_index_wrf_1based": {
+                "k": 1,
+                "j": 1,
+                "i": 1
+              },
+              "max": 1.1999233828774436e-09,
+              "max_index_wrf_1based": {
+                "k": 18,
+                "j": 118,
+                "i": 106
+              },
+              "positive_count": 407,
+              "negative_count": 0,
+              "same_cell_value_i106_j114_k15": 4.335706099700687e-11
+            },
+            "CLDFRA": {
+              "units": "",
+              "min": 0.0,
+              "min_index_wrf_1based": {
+                "k": 1,
+                "j": 1,
+                "i": 1
+              },
+              "max": 1.0,
+              "max_index_wrf_1based": {
+                "k": 4,
+                "j": 128,
+                "i": 79
+              },
+              "positive_count": 59061,
+              "negative_count": 0,
+              "same_cell_value_i106_j114_k15": 1.0
+            }
+          }
+        }
+      },
+      "outputs_sha256": {
+        "wrfout_d01_2010-06-11_00:00:00": "7d14db3fdbbb752160fa459ef711965af91ceaf8e70b8e3977b4ba7c6e1496d1",
+        "wrfout_d01_2010-06-11_00:10:00": "d9bd0c804dc668cb9b0830b2cfa8bae3a4a46c5c07737233e3e82ac1dc8a0328",
+        "wrfout_d01_2010-06-11_00:20:00": "c3995bc917e15c4eab9d71ff5ff3da3aba5ed7592f8fb5978a295a64b5ae66fc"
+      },
+      "rank_logs": {
+        "rsl.out.0000": {
+          "sha256": "2b3d98e853d971245fdff8427a71726226a10ed1ae786b8272a7a600a153dae1",
+          "success": false,
+          "fatal": false
+        },
+        "rsl.out.0001": {
+          "sha256": "2f9b78f7adfedb87db52fb6bc5d327abe534e80664d1c344ba1f8c76c92e8478",
+          "success": false,
+          "fatal": false
+        },
+        "rsl.out.0002": {
+          "sha256": "816c265dce1d098766fc42687bac73267cea572cd6b2dccae2fe3266e9c8dee1",
+          "success": false,
+          "fatal": true
+        },
+        "rsl.out.0003": {
+          "sha256": "48f249ade07fc41179779ac1f67a49cba6722290a88f3fbf8e84794bf6bb6131",
+          "success": false,
+          "fatal": false
+        },
+        "rsl.error.0000": {
+          "sha256": "9bb2142e8f41c047a438b46c31fa60ee3410d85096e88637965120f190cb9f73",
+          "success": false,
+          "fatal": false
+        },
+        "rsl.error.0001": {
+          "sha256": "db1a165f2277078c083e575e7339d7a301515806176b8e11f011b7bd74050dec",
+          "success": false,
+          "fatal": false
+        },
+        "rsl.error.0002": {
+          "sha256": "028e13746f1c773dac29c04dfe30a21c53ea2cabd6342522bf47d17ea892a21e",
+          "success": false,
+          "fatal": true
+        },
+        "rsl.error.0003": {
+          "sha256": "08c44ae2f7d3ea3ef96a5cf3f40e94fb27ddb8b647088ea14c005b2fd41965ab",
+          "success": false,
+          "fatal": false
+        }
+      }
+    },
+    "ra4_observer_on": {
+      "path": "build/udm-realdata-smoke/hydrodiag20/ra4",
+      "inputs": {},
+      "namelist_sha256": "5826d0405f4e7ec2f528a0fee8847ab445069d622c6819340440d33305179a7f",
+      "wrfinput_sha256": "5ef7abe34c516fba107f346bdbdb3777edacb5d48493df467ea2dd8bcf6a75ff",
+      "wrfbdy_sha256": "e687b73730ab9a2cee4842e1a92b225a4edb074ba080b6053d96d81ec1731a2d",
+      "namelist_options": {
+        "run_hours": "run_hours                           = 0,",
+        "run_minutes": "run_minutes                         = 20,",
+        "history_interval": "history_interval                    = 10, 10, 10,",
+        "time_step": "time_step                           = 60,",
+        "radt": "radt                                = 10, 10, 10,",
+        "mp_physics": "mp_physics                          = 27, 27, 27,",
+        "ra_lw_physics": "ra_lw_physics                       = 4, 4, 4,",
+        "ra_sw_physics": "ra_sw_physics                       = 4, 4, 4,",
+        "use_mp_re": "use_mp_re                          = 1,"
+      },
+      "snapshots": {
+        "0s": {
+          "file": "build/udm-realdata-smoke/hydrodiag20/ra4/wrfout_d01_2010-06-11_00:00:00",
+          "sha256": "c8e0d9c463462b416dd171cb9c0e1b5e307e74510cb13eb36714f7c67f654932",
+          "bytes": 55368657,
+          "time_utc": "2010-06-11_00:00:00",
+          "fields": {
+            "QCLOUD": {
+              "units": "kg kg-1",
+              "min": 0.0,
+              "min_index_wrf_1based": {
+                "k": 1,
+                "j": 1,
+                "i": 1
+              },
+              "max": 0.0,
+              "max_index_wrf_1based": {
+                "k": 1,
+                "j": 1,
+                "i": 1
+              },
+              "positive_count": 0,
+              "negative_count": 0,
+              "same_cell_value_i106_j114_k15": 0.0
+            },
+            "QICE": {
+              "units": "kg kg-1",
+              "min": 0.0,
+              "min_index_wrf_1based": {
+                "k": 1,
+                "j": 1,
+                "i": 1
+              },
+              "max": 0.0,
+              "max_index_wrf_1based": {
+                "k": 1,
+                "j": 1,
+                "i": 1
+              },
+              "positive_count": 0,
+              "negative_count": 0,
+              "same_cell_value_i106_j114_k15": 0.0
+            },
+            "QRAIN": {
+              "units": "kg kg-1",
+              "min": 0.0,
+              "min_index_wrf_1based": {
+                "k": 1,
+                "j": 1,
+                "i": 1
+              },
+              "max": 0.0,
+              "max_index_wrf_1based": {
+                "k": 1,
+                "j": 1,
+                "i": 1
+              },
+              "positive_count": 0,
+              "negative_count": 0,
+              "same_cell_value_i106_j114_k15": 0.0
+            },
+            "QSNOW": {
+              "units": "kg kg-1",
+              "min": 0.0,
+              "min_index_wrf_1based": {
+                "k": 1,
+                "j": 1,
+                "i": 1
+              },
+              "max": 0.0,
+              "max_index_wrf_1based": {
+                "k": 1,
+                "j": 1,
+                "i": 1
+              },
+              "positive_count": 0,
+              "negative_count": 0,
+              "same_cell_value_i106_j114_k15": 0.0
+            },
+            "QGRAUP": {
+              "units": "kg kg-1",
+              "min": 0.0,
+              "min_index_wrf_1based": {
+                "k": 1,
+                "j": 1,
+                "i": 1
+              },
+              "max": 0.0,
+              "max_index_wrf_1based": {
+                "k": 1,
+                "j": 1,
+                "i": 1
+              },
+              "positive_count": 0,
+              "negative_count": 0,
+              "same_cell_value_i106_j114_k15": 0.0
+            },
+            "QHAIL": {
+              "units": "kg kg-1",
+              "min": 0.0,
+              "min_index_wrf_1based": {
+                "k": 1,
+                "j": 1,
+                "i": 1
+              },
+              "max": 0.0,
+              "max_index_wrf_1based": {
+                "k": 1,
+                "j": 1,
+                "i": 1
+              },
+              "positive_count": 0,
+              "negative_count": 0,
+              "same_cell_value_i106_j114_k15": 0.0
+            },
+            "CLDFRA": {
+              "units": "",
+              "min": 0.0,
+              "min_index_wrf_1based": {
+                "k": 1,
+                "j": 1,
+                "i": 1
+              },
+              "max": 0.0,
+              "max_index_wrf_1based": {
+                "k": 1,
+                "j": 1,
+                "i": 1
+              },
+              "positive_count": 0,
+              "negative_count": 0,
+              "same_cell_value_i106_j114_k15": 0.0
+            }
+          }
+        },
+        "600s": {
+          "file": "build/udm-realdata-smoke/hydrodiag20/ra4/wrfout_d01_2010-06-11_00:10:00",
+          "sha256": "085019f13d31fdbf08f2467d8a018c68ad4cbf437c63541aee9e943b8dedccb4",
+          "bytes": 69296327,
+          "time_utc": "2010-06-11_00:10:00",
+          "fields": {
+            "QCLOUD": {
+              "units": "kg kg-1",
+              "min": -4.53401648890854e-17,
+              "min_index_wrf_1based": {
+                "k": 11,
+                "j": 189,
+                "i": 75
+              },
+              "max": 0.0005080836708657444,
+              "max_index_wrf_1based": {
+                "k": 18,
+                "j": 97,
+                "i": 135
+              },
+              "positive_count": 23531,
+              "negative_count": 8,
+              "same_cell_value_i106_j114_k15": 0.0001697718835202977
+            },
+            "QICE": {
+              "units": "kg kg-1",
+              "min": -1.722995405521649e-20,
+              "min_index_wrf_1based": {
+                "k": 12,
+                "j": 189,
+                "i": 50
+              },
+              "max": 0.00019093757146038115,
+              "max_index_wrf_1based": {
+                "k": 21,
+                "j": 98,
+                "i": 135
+              },
+              "positive_count": 109554,
+              "negative_count": 27,
+              "same_cell_value_i106_j114_k15": 3.061110191993066e-06
+            },
+            "QRAIN": {
+              "units": "kg kg-1",
+              "min": -2.1864645472530913e-27,
+              "min_index_wrf_1based": {
+                "k": 15,
+                "j": 189,
+                "i": 226
+              },
+              "max": 4.312319651944563e-05,
+              "max_index_wrf_1based": {
+                "k": 11,
+                "j": 69,
+                "i": 168
+              },
+              "positive_count": 24519,
+              "negative_count": 13,
+              "same_cell_value_i106_j114_k15": 2.263280066472362e-06
+            },
+            "QSNOW": {
+              "units": "kg kg-1",
+              "min": -6.066954096624298e-34,
+              "min_index_wrf_1based": {
+                "k": 7,
+                "j": 189,
+                "i": 79
+              },
+              "max": 1.6322548617608845e-05,
+              "max_index_wrf_1based": {
+                "k": 15,
+                "j": 140,
+                "i": 94
+              },
+              "positive_count": 105207,
+              "negative_count": 5,
+              "same_cell_value_i106_j114_k15": 3.3889987207658123e-06
+            },
+            "QGRAUP": {
+              "units": "kg kg-1",
+              "min": -5.2692261280808826e-21,
+              "min_index_wrf_1based": {
+                "k": 9,
+                "j": 189,
+                "i": 83
+              },
+              "max": 4.977500225322729e-07,
+              "max_index_wrf_1based": {
+                "k": 15,
+                "j": 126,
+                "i": 99
+              },
+              "positive_count": 96922,
+              "negative_count": 2,
+              "same_cell_value_i106_j114_k15": 1.966650273743653e-07
+            },
+            "QHAIL": {
+              "units": "kg kg-1",
+              "min": 0.0,
+              "min_index_wrf_1based": {
+                "k": 1,
+                "j": 1,
+                "i": 1
+              },
+              "max": 0.0,
+              "max_index_wrf_1based": {
+                "k": 1,
+                "j": 1,
+                "i": 1
+              },
+              "positive_count": 0,
+              "negative_count": 0,
+              "same_cell_value_i106_j114_k15": 0.0
+            },
+            "CLDFRA": {
+              "units": "",
+              "min": 0.0,
+              "min_index_wrf_1based": {
+                "k": 1,
+                "j": 1,
+                "i": 1
+              },
+              "max": 0.0,
+              "max_index_wrf_1based": {
+                "k": 1,
+                "j": 1,
+                "i": 1
+              },
+              "positive_count": 0,
+              "negative_count": 0,
+              "same_cell_value_i106_j114_k15": 0.0
+            }
+          }
+        },
+        "1200s": {
+          "file": "build/udm-realdata-smoke/hydrodiag20/ra4/wrfout_d01_2010-06-11_00:20:00",
+          "sha256": "825e51f978be38673fc754c33ba33c07d52e5c0085ae64594afe3e77c183261f",
+          "bytes": 71598460,
+          "time_utc": "2010-06-11_00:20:00",
+          "fields": {
+            "QCLOUD": {
+              "units": "kg kg-1",
+              "min": -2.2696579889458478e-21,
+              "min_index_wrf_1based": {
+                "k": 15,
+                "j": 134,
+                "i": 289
+              },
+              "max": 0.0009310349705629051,
+              "max_index_wrf_1based": {
+                "k": 15,
+                "j": 126,
+                "i": 101
+              },
+              "positive_count": 26337,
+              "negative_count": 17,
+              "same_cell_value_i106_j114_k15": 0.0003739335516002029
+            },
+            "QICE": {
+              "units": "kg kg-1",
+              "min": -1.039767385242191e-24,
+              "min_index_wrf_1based": {
+                "k": 24,
+                "j": 135,
+                "i": 289
+              },
+              "max": 0.00021345762070268393,
+              "max_index_wrf_1based": {
+                "k": 20,
+                "j": 43,
+                "i": 126
+              },
+              "positive_count": 123353,
+              "negative_count": 25,
+              "same_cell_value_i106_j114_k15": 2.3218064598040655e-05
+            },
+            "QRAIN": {
+              "units": "kg kg-1",
+              "min": -1.0062538684420165e-26,
+              "min_index_wrf_1based": {
+                "k": 17,
+                "j": 189,
+                "i": 233
+              },
+              "max": 5.052461347077042e-05,
+              "max_index_wrf_1based": {
+                "k": 9,
+                "j": 134,
+                "i": 287
+              },
+              "positive_count": 41801,
+              "negative_count": 18,
+              "same_cell_value_i106_j114_k15": 8.92606180968869e-07
+            },
+            "QSNOW": {
+              "units": "kg kg-1",
+              "min": -1.3527520452175562e-19,
+              "min_index_wrf_1based": {
+                "k": 9,
+                "j": 189,
+                "i": 76
+              },
+              "max": 0.0007830279064364731,
+              "max_index_wrf_1based": {
+                "k": 20,
+                "j": 98,
+                "i": 135
+              },
+              "positive_count": 241483,
+              "negative_count": 6,
+              "same_cell_value_i106_j114_k15": 1.8825867300620303e-05
+            },
+            "QGRAUP": {
+              "units": "kg kg-1",
+              "min": -3.5154608053651917e-23,
+              "min_index_wrf_1based": {
+                "k": 17,
+                "j": 189,
+                "i": 227
+              },
+              "max": 9.387265163240954e-05,
+              "max_index_wrf_1based": {
+                "k": 19,
+                "j": 99,
+                "i": 135
+              },
+              "positive_count": 233639,
+              "negative_count": 6,
+              "same_cell_value_i106_j114_k15": 9.701768703962443e-07
+            },
+            "QHAIL": {
+              "units": "kg kg-1",
+              "min": 0.0,
+              "min_index_wrf_1based": {
+                "k": 1,
+                "j": 1,
+                "i": 1
+              },
+              "max": 1.1940469724081026e-09,
+              "max_index_wrf_1based": {
+                "k": 18,
+                "j": 118,
+                "i": 106
+              },
+              "positive_count": 406,
+              "negative_count": 0,
+              "same_cell_value_i106_j114_k15": 4.3325440457486764e-11
+            },
+            "CLDFRA": {
+              "units": "",
+              "min": 0.0,
+              "min_index_wrf_1based": {
+                "k": 1,
+                "j": 1,
+                "i": 1
+              },
+              "max": 1.0,
+              "max_index_wrf_1based": {
+                "k": 4,
+                "j": 128,
+                "i": 79
+              },
+              "positive_count": 59086,
+              "negative_count": 0,
+              "same_cell_value_i106_j114_k15": 1.0
+            }
+          }
+        }
+      },
+      "outputs_sha256": {
+        "wrfout_d01_2010-06-11_00:00:00": "c8e0d9c463462b416dd171cb9c0e1b5e307e74510cb13eb36714f7c67f654932",
+        "wrfout_d01_2010-06-11_00:10:00": "085019f13d31fdbf08f2467d8a018c68ad4cbf437c63541aee9e943b8dedccb4",
+        "wrfout_d01_2010-06-11_00:20:00": "825e51f978be38673fc754c33ba33c07d52e5c0085ae64594afe3e77c183261f"
+      },
+      "rank_logs": {
+        "rsl.out.0000": {
+          "sha256": "b14f30cff46e39ecc28dcb9b90737e7dd8085856225d899073932c106a926654",
+          "success": true,
+          "fatal": false
+        },
+        "rsl.out.0001": {
+          "sha256": "a278f99e177d774a2f8d753df1f151bd4f410c1bee9f08a4d47ab1b2c066b1a6",
+          "success": true,
+          "fatal": false
+        },
+        "rsl.out.0002": {
+          "sha256": "a59b0ee279bbe11c4af8421d6f078dae8400e765f219833ce11e375e12b325d7",
+          "success": true,
+          "fatal": false
+        },
+        "rsl.out.0003": {
+          "sha256": "ddf75c0dd833e97cd5c95521e23d796850cd1cabebaedf7f99a38ed3ccaed980",
+          "success": true,
+          "fatal": false
+        },
+        "rsl.error.0000": {
+          "sha256": "dc944e5a820195c093952e462f3b0eec417a418a17a3e6965bdd1f64160d8440",
+          "success": true,
+          "fatal": false
+        },
+        "rsl.error.0001": {
+          "sha256": "6fc00d6072251fa907787fe1ce30376af68d2f1dbf3c6deb6aa0d72bba8653cf",
+          "success": true,
+          "fatal": false
+        },
+        "rsl.error.0002": {
+          "sha256": "8db278db66e97efde6d16582b1973ce9a24afc81f4f4f80b53398b4edca1df4f",
+          "success": true,
+          "fatal": false
+        },
+        "rsl.error.0003": {
+          "sha256": "8d625fdcd40956363c698f128f751fedcea56a390adf55706b86fae78f1c6b39",
+          "success": true,
+          "fatal": false
+        }
+      }
+    },
+    "ra4_observer_off": {
+      "path": "build/udm-realdata-smoke/hydrodiag20/ra4-off",
+      "inputs": {},
+      "namelist_sha256": "5826d0405f4e7ec2f528a0fee8847ab445069d622c6819340440d33305179a7f",
+      "wrfinput_sha256": "5ef7abe34c516fba107f346bdbdb3777edacb5d48493df467ea2dd8bcf6a75ff",
+      "wrfbdy_sha256": "e687b73730ab9a2cee4842e1a92b225a4edb074ba080b6053d96d81ec1731a2d",
+      "namelist_options": {
+        "run_hours": "run_hours                           = 0,",
+        "run_minutes": "run_minutes                         = 20,",
+        "history_interval": "history_interval                    = 10, 10, 10,",
+        "time_step": "time_step                           = 60,",
+        "radt": "radt                                = 10, 10, 10,",
+        "mp_physics": "mp_physics                          = 27, 27, 27,",
+        "ra_lw_physics": "ra_lw_physics                       = 4, 4, 4,",
+        "ra_sw_physics": "ra_sw_physics                       = 4, 4, 4,",
+        "use_mp_re": "use_mp_re                          = 1,"
+      },
+      "snapshots": {
+        "0s": {
+          "file": "build/udm-realdata-smoke/hydrodiag20/ra4-off/wrfout_d01_2010-06-11_00:00:00",
+          "sha256": "c8e0d9c463462b416dd171cb9c0e1b5e307e74510cb13eb36714f7c67f654932",
+          "bytes": 55368657,
+          "time_utc": "2010-06-11_00:00:00",
+          "fields": {
+            "QCLOUD": {
+              "units": "kg kg-1",
+              "min": 0.0,
+              "min_index_wrf_1based": {
+                "k": 1,
+                "j": 1,
+                "i": 1
+              },
+              "max": 0.0,
+              "max_index_wrf_1based": {
+                "k": 1,
+                "j": 1,
+                "i": 1
+              },
+              "positive_count": 0,
+              "negative_count": 0,
+              "same_cell_value_i106_j114_k15": 0.0
+            },
+            "QICE": {
+              "units": "kg kg-1",
+              "min": 0.0,
+              "min_index_wrf_1based": {
+                "k": 1,
+                "j": 1,
+                "i": 1
+              },
+              "max": 0.0,
+              "max_index_wrf_1based": {
+                "k": 1,
+                "j": 1,
+                "i": 1
+              },
+              "positive_count": 0,
+              "negative_count": 0,
+              "same_cell_value_i106_j114_k15": 0.0
+            },
+            "QRAIN": {
+              "units": "kg kg-1",
+              "min": 0.0,
+              "min_index_wrf_1based": {
+                "k": 1,
+                "j": 1,
+                "i": 1
+              },
+              "max": 0.0,
+              "max_index_wrf_1based": {
+                "k": 1,
+                "j": 1,
+                "i": 1
+              },
+              "positive_count": 0,
+              "negative_count": 0,
+              "same_cell_value_i106_j114_k15": 0.0
+            },
+            "QSNOW": {
+              "units": "kg kg-1",
+              "min": 0.0,
+              "min_index_wrf_1based": {
+                "k": 1,
+                "j": 1,
+                "i": 1
+              },
+              "max": 0.0,
+              "max_index_wrf_1based": {
+                "k": 1,
+                "j": 1,
+                "i": 1
+              },
+              "positive_count": 0,
+              "negative_count": 0,
+              "same_cell_value_i106_j114_k15": 0.0
+            },
+            "QGRAUP": {
+              "units": "kg kg-1",
+              "min": 0.0,
+              "min_index_wrf_1based": {
+                "k": 1,
+                "j": 1,
+                "i": 1
+              },
+              "max": 0.0,
+              "max_index_wrf_1based": {
+                "k": 1,
+                "j": 1,
+                "i": 1
+              },
+              "positive_count": 0,
+              "negative_count": 0,
+              "same_cell_value_i106_j114_k15": 0.0
+            },
+            "QHAIL": {
+              "units": "kg kg-1",
+              "min": 0.0,
+              "min_index_wrf_1based": {
+                "k": 1,
+                "j": 1,
+                "i": 1
+              },
+              "max": 0.0,
+              "max_index_wrf_1based": {
+                "k": 1,
+                "j": 1,
+                "i": 1
+              },
+              "positive_count": 0,
+              "negative_count": 0,
+              "same_cell_value_i106_j114_k15": 0.0
+            },
+            "CLDFRA": {
+              "units": "",
+              "min": 0.0,
+              "min_index_wrf_1based": {
+                "k": 1,
+                "j": 1,
+                "i": 1
+              },
+              "max": 0.0,
+              "max_index_wrf_1based": {
+                "k": 1,
+                "j": 1,
+                "i": 1
+              },
+              "positive_count": 0,
+              "negative_count": 0,
+              "same_cell_value_i106_j114_k15": 0.0
+            }
+          }
+        },
+        "600s": {
+          "file": "build/udm-realdata-smoke/hydrodiag20/ra4-off/wrfout_d01_2010-06-11_00:10:00",
+          "sha256": "085019f13d31fdbf08f2467d8a018c68ad4cbf437c63541aee9e943b8dedccb4",
+          "bytes": 69296327,
+          "time_utc": "2010-06-11_00:10:00",
+          "fields": {
+            "QCLOUD": {
+              "units": "kg kg-1",
+              "min": -4.53401648890854e-17,
+              "min_index_wrf_1based": {
+                "k": 11,
+                "j": 189,
+                "i": 75
+              },
+              "max": 0.0005080836708657444,
+              "max_index_wrf_1based": {
+                "k": 18,
+                "j": 97,
+                "i": 135
+              },
+              "positive_count": 23531,
+              "negative_count": 8,
+              "same_cell_value_i106_j114_k15": 0.0001697718835202977
+            },
+            "QICE": {
+              "units": "kg kg-1",
+              "min": -1.722995405521649e-20,
+              "min_index_wrf_1based": {
+                "k": 12,
+                "j": 189,
+                "i": 50
+              },
+              "max": 0.00019093757146038115,
+              "max_index_wrf_1based": {
+                "k": 21,
+                "j": 98,
+                "i": 135
+              },
+              "positive_count": 109554,
+              "negative_count": 27,
+              "same_cell_value_i106_j114_k15": 3.061110191993066e-06
+            },
+            "QRAIN": {
+              "units": "kg kg-1",
+              "min": -2.1864645472530913e-27,
+              "min_index_wrf_1based": {
+                "k": 15,
+                "j": 189,
+                "i": 226
+              },
+              "max": 4.312319651944563e-05,
+              "max_index_wrf_1based": {
+                "k": 11,
+                "j": 69,
+                "i": 168
+              },
+              "positive_count": 24519,
+              "negative_count": 13,
+              "same_cell_value_i106_j114_k15": 2.263280066472362e-06
+            },
+            "QSNOW": {
+              "units": "kg kg-1",
+              "min": -6.066954096624298e-34,
+              "min_index_wrf_1based": {
+                "k": 7,
+                "j": 189,
+                "i": 79
+              },
+              "max": 1.6322548617608845e-05,
+              "max_index_wrf_1based": {
+                "k": 15,
+                "j": 140,
+                "i": 94
+              },
+              "positive_count": 105207,
+              "negative_count": 5,
+              "same_cell_value_i106_j114_k15": 3.3889987207658123e-06
+            },
+            "QGRAUP": {
+              "units": "kg kg-1",
+              "min": -5.2692261280808826e-21,
+              "min_index_wrf_1based": {
+                "k": 9,
+                "j": 189,
+                "i": 83
+              },
+              "max": 4.977500225322729e-07,
+              "max_index_wrf_1based": {
+                "k": 15,
+                "j": 126,
+                "i": 99
+              },
+              "positive_count": 96922,
+              "negative_count": 2,
+              "same_cell_value_i106_j114_k15": 1.966650273743653e-07
+            },
+            "QHAIL": {
+              "units": "kg kg-1",
+              "min": 0.0,
+              "min_index_wrf_1based": {
+                "k": 1,
+                "j": 1,
+                "i": 1
+              },
+              "max": 0.0,
+              "max_index_wrf_1based": {
+                "k": 1,
+                "j": 1,
+                "i": 1
+              },
+              "positive_count": 0,
+              "negative_count": 0,
+              "same_cell_value_i106_j114_k15": 0.0
+            },
+            "CLDFRA": {
+              "units": "",
+              "min": 0.0,
+              "min_index_wrf_1based": {
+                "k": 1,
+                "j": 1,
+                "i": 1
+              },
+              "max": 0.0,
+              "max_index_wrf_1based": {
+                "k": 1,
+                "j": 1,
+                "i": 1
+              },
+              "positive_count": 0,
+              "negative_count": 0,
+              "same_cell_value_i106_j114_k15": 0.0
+            }
+          }
+        },
+        "1200s": {
+          "file": "build/udm-realdata-smoke/hydrodiag20/ra4-off/wrfout_d01_2010-06-11_00:20:00",
+          "sha256": "825e51f978be38673fc754c33ba33c07d52e5c0085ae64594afe3e77c183261f",
+          "bytes": 71598460,
+          "time_utc": "2010-06-11_00:20:00",
+          "fields": {
+            "QCLOUD": {
+              "units": "kg kg-1",
+              "min": -2.2696579889458478e-21,
+              "min_index_wrf_1based": {
+                "k": 15,
+                "j": 134,
+                "i": 289
+              },
+              "max": 0.0009310349705629051,
+              "max_index_wrf_1based": {
+                "k": 15,
+                "j": 126,
+                "i": 101
+              },
+              "positive_count": 26337,
+              "negative_count": 17,
+              "same_cell_value_i106_j114_k15": 0.0003739335516002029
+            },
+            "QICE": {
+              "units": "kg kg-1",
+              "min": -1.039767385242191e-24,
+              "min_index_wrf_1based": {
+                "k": 24,
+                "j": 135,
+                "i": 289
+              },
+              "max": 0.00021345762070268393,
+              "max_index_wrf_1based": {
+                "k": 20,
+                "j": 43,
+                "i": 126
+              },
+              "positive_count": 123353,
+              "negative_count": 25,
+              "same_cell_value_i106_j114_k15": 2.3218064598040655e-05
+            },
+            "QRAIN": {
+              "units": "kg kg-1",
+              "min": -1.0062538684420165e-26,
+              "min_index_wrf_1based": {
+                "k": 17,
+                "j": 189,
+                "i": 233
+              },
+              "max": 5.052461347077042e-05,
+              "max_index_wrf_1based": {
+                "k": 9,
+                "j": 134,
+                "i": 287
+              },
+              "positive_count": 41801,
+              "negative_count": 18,
+              "same_cell_value_i106_j114_k15": 8.92606180968869e-07
+            },
+            "QSNOW": {
+              "units": "kg kg-1",
+              "min": -1.3527520452175562e-19,
+              "min_index_wrf_1based": {
+                "k": 9,
+                "j": 189,
+                "i": 76
+              },
+              "max": 0.0007830279064364731,
+              "max_index_wrf_1based": {
+                "k": 20,
+                "j": 98,
+                "i": 135
+              },
+              "positive_count": 241483,
+              "negative_count": 6,
+              "same_cell_value_i106_j114_k15": 1.8825867300620303e-05
+            },
+            "QGRAUP": {
+              "units": "kg kg-1",
+              "min": -3.5154608053651917e-23,
+              "min_index_wrf_1based": {
+                "k": 17,
+                "j": 189,
+                "i": 227
+              },
+              "max": 9.387265163240954e-05,
+              "max_index_wrf_1based": {
+                "k": 19,
+                "j": 99,
+                "i": 135
+              },
+              "positive_count": 233639,
+              "negative_count": 6,
+              "same_cell_value_i106_j114_k15": 9.701768703962443e-07
+            },
+            "QHAIL": {
+              "units": "kg kg-1",
+              "min": 0.0,
+              "min_index_wrf_1based": {
+                "k": 1,
+                "j": 1,
+                "i": 1
+              },
+              "max": 1.1940469724081026e-09,
+              "max_index_wrf_1based": {
+                "k": 18,
+                "j": 118,
+                "i": 106
+              },
+              "positive_count": 406,
+              "negative_count": 0,
+              "same_cell_value_i106_j114_k15": 4.3325440457486764e-11
+            },
+            "CLDFRA": {
+              "units": "",
+              "min": 0.0,
+              "min_index_wrf_1based": {
+                "k": 1,
+                "j": 1,
+                "i": 1
+              },
+              "max": 1.0,
+              "max_index_wrf_1based": {
+                "k": 4,
+                "j": 128,
+                "i": 79
+              },
+              "positive_count": 59086,
+              "negative_count": 0,
+              "same_cell_value_i106_j114_k15": 1.0
+            }
+          }
+        }
+      },
+      "outputs_sha256": {
+        "wrfout_d01_2010-06-11_00:00:00": "c8e0d9c463462b416dd171cb9c0e1b5e307e74510cb13eb36714f7c67f654932",
+        "wrfout_d01_2010-06-11_00:10:00": "085019f13d31fdbf08f2467d8a018c68ad4cbf437c63541aee9e943b8dedccb4",
+        "wrfout_d01_2010-06-11_00:20:00": "825e51f978be38673fc754c33ba33c07d52e5c0085ae64594afe3e77c183261f"
+      },
+      "rank_logs": {
+        "rsl.out.0000": {
+          "sha256": "c264043875abf1dd23de4dc372ac342f4ca959a1acce10b493cac4b2f67098bd",
+          "success": true,
+          "fatal": false
+        },
+        "rsl.out.0001": {
+          "sha256": "a278f99e177d774a2f8d753df1f151bd4f410c1bee9f08a4d47ab1b2c066b1a6",
+          "success": true,
+          "fatal": false
+        },
+        "rsl.out.0002": {
+          "sha256": "a59b0ee279bbe11c4af8421d6f078dae8400e765f219833ce11e375e12b325d7",
+          "success": true,
+          "fatal": false
+        },
+        "rsl.out.0003": {
+          "sha256": "ddf75c0dd833e97cd5c95521e23d796850cd1cabebaedf7f99a38ed3ccaed980",
+          "success": true,
+          "fatal": false
+        },
+        "rsl.error.0000": {
+          "sha256": "46b49535dce303469293cb9ca249ee26213e6b87dec32d9533dd627550f7bf05",
+          "success": true,
+          "fatal": false
+        },
+        "rsl.error.0001": {
+          "sha256": "6fc00d6072251fa907787fe1ce30376af68d2f1dbf3c6deb6aa0d72bba8653cf",
+          "success": true,
+          "fatal": false
+        },
+        "rsl.error.0002": {
+          "sha256": "8db278db66e97efde6d16582b1973ce9a24afc81f4f4f80b53398b4edca1df4f",
+          "success": true,
+          "fatal": false
+        },
+        "rsl.error.0003": {
+          "sha256": "8d625fdcd40956363c698f128f751fedcea56a390adf55706b86fae78f1c6b39",
+          "success": true,
+          "fatal": false
+        }
+      }
+    }
+  },
+  "observer_on_vs_off": {
+    "requested_fields": [
+      "QCLOUD",
+      "QICE",
+      "QRAIN",
+      "QSNOW",
+      "QGRAUP",
+      "QHAIL",
+      "CLDFRA"
+    ],
+    "all_fields_bitwise_equal_at_all_three_snapshots": true,
+    "details": [
+      {
+        "time": "0s",
+        "variable": "QCLOUD",
+        "bitwise_equal": true,
+        "max_abs_diff": 0.0
+      },
+      {
+        "time": "0s",
+        "variable": "QICE",
+        "bitwise_equal": true,
+        "max_abs_diff": 0.0
+      },
+      {
+        "time": "0s",
+        "variable": "QRAIN",
+        "bitwise_equal": true,
+        "max_abs_diff": 0.0
+      },
+      {
+        "time": "0s",
+        "variable": "QSNOW",
+        "bitwise_equal": true,
+        "max_abs_diff": 0.0
+      },
+      {
+        "time": "0s",
+        "variable": "QGRAUP",
+        "bitwise_equal": true,
+        "max_abs_diff": 0.0
+      },
+      {
+        "time": "0s",
+        "variable": "QHAIL",
+        "bitwise_equal": true,
+        "max_abs_diff": 0.0
+      },
+      {
+        "time": "0s",
+        "variable": "CLDFRA",
+        "bitwise_equal": true,
+        "max_abs_diff": 0.0
+      },
+      {
+        "time": "600s",
+        "variable": "QCLOUD",
+        "bitwise_equal": true,
+        "max_abs_diff": 0.0
+      },
+      {
+        "time": "600s",
+        "variable": "QICE",
+        "bitwise_equal": true,
+        "max_abs_diff": 0.0
+      },
+      {
+        "time": "600s",
+        "variable": "QRAIN",
+        "bitwise_equal": true,
+        "max_abs_diff": 0.0
+      },
+      {
+        "time": "600s",
+        "variable": "QSNOW",
+        "bitwise_equal": true,
+        "max_abs_diff": 0.0
+      },
+      {
+        "time": "600s",
+        "variable": "QGRAUP",
+        "bitwise_equal": true,
+        "max_abs_diff": 0.0
+      },
+      {
+        "time": "600s",
+        "variable": "QHAIL",
+        "bitwise_equal": true,
+        "max_abs_diff": 0.0
+      },
+      {
+        "time": "600s",
+        "variable": "CLDFRA",
+        "bitwise_equal": true,
+        "max_abs_diff": 0.0
+      },
+      {
+        "time": "1200s",
+        "variable": "QCLOUD",
+        "bitwise_equal": true,
+        "max_abs_diff": 0.0
+      },
+      {
+        "time": "1200s",
+        "variable": "QICE",
+        "bitwise_equal": true,
+        "max_abs_diff": 0.0
+      },
+      {
+        "time": "1200s",
+        "variable": "QRAIN",
+        "bitwise_equal": true,
+        "max_abs_diff": 0.0
+      },
+      {
+        "time": "1200s",
+        "variable": "QSNOW",
+        "bitwise_equal": true,
+        "max_abs_diff": 0.0
+      },
+      {
+        "time": "1200s",
+        "variable": "QGRAUP",
+        "bitwise_equal": true,
+        "max_abs_diff": 0.0
+      },
+      {
+        "time": "1200s",
+        "variable": "QHAIL",
+        "bitwise_equal": true,
+        "max_abs_diff": 0.0
+      },
+      {
+        "time": "1200s",
+        "variable": "CLDFRA",
+        "bitwise_equal": true,
+        "max_abs_diff": 0.0
+      }
+    ]
+  },
+  "hail_history_observations": {
+    "ra37_new_mpi4": {
+      "first_positive_snapshot": "1200s",
+      "maximum_qhail_kg_kg": 1.1999233828774436e-09,
+      "maximum_time_snapshot": "1200s"
+    },
+    "ra4_observer_on": {
+      "first_positive_snapshot": "1200s",
+      "maximum_qhail_kg_kg": 1.1940469724081026e-09,
+      "maximum_time_snapshot": "1200s"
+    },
+    "ra4_observer_off": {
+      "first_positive_snapshot": "1200s",
+      "maximum_qhail_kg_kg": 1.1940469724081026e-09,
+      "maximum_time_snapshot": "1200s"
+    }
+  },
+  "new_ra37_hail_fatal_context": {
+    "diagnostic_summary_csv": "build/udm-negative-input-prebuild-20261002/run-ra37-1h/hydro-summary-600-1200.csv",
+    "reported_time_seconds": 1200,
+    "reported_i": 106,
+    "reported_j": 114,
+    "reported_k": 15,
+    "reported_qhail_kg_kg": 4.3357061e-11,
+    "reported_cloud_fraction": 1.0,
+    "terminal_log": "LW i=106 j=114: RRTMGP_INPUT_UDM_HAIL_OPTICS_UNSUPPORTED layer=15 grid_path_g_m2=1.316034E-05"
+  },
+  "interpretation_limits": [
+    "The new 00:20 RRTMGP37 history snapshot precedes its failed radiation evaluation at 1200 s and is not evidence that the 1200-s radiation call completed.",
+    "RA4 and RA37 states diverge because radiation options differ; snapshot differences are coupled-response differences and do not identify a porting error or physical accuracy.",
+    "The 0/600/1200-s records are discrete output snapshots, not microphysics subcycle observations.",
+    "RA4 observer on/off equality is limited to these requested hydrometeor/CLDFRA arrays and timestamps.",
+    "First positive hail means first positive among the sampled 0/600/1200-s records, not exact hail-formation time."
+  ]
+}

@@ -19,8 +19,8 @@
     "doc/rrtmgp/PHYSICS_AUDIT.md": "ef0d7b57946f01578e62c6daa5e01586cd6c5af6",
     "doc/rrtmgp/README.md": "615f9ca14e913cd55979c736f26e5b1db32fe9a7",
     "doc/rrtmgp/REVIEW_FOLLOWUP.md": "498295b9bf9cb954f14a66adeab4b512ea852d54",
-    "doc/rrtmgp/RUNTIME_CONTRACTS.md": "46056a62bc72913645e917c24912ece9c9799cff",
-    "doc/rrtmgp/UDM_ONLY.md": "2c50bae12129479c16d0036804f528e8a4a73ce7",
+    "doc/rrtmgp/RUNTIME_CONTRACTS.md": "5f5e905d8fdf9b58f2693537ab795a07e4f7e191",
+    "doc/rrtmgp/UDM_ONLY.md": "ac7a47cfd041e72d28afe42763d99e536f785e1e",
     "doc/rrtmgp/VALIDATION.md": "4e470aa7f851082e55bc80573ca8ac3874220c5d",
     "dyn_em/module_first_rk_step_part1.F": "d12ad0893a2d4f5f1e2c8d83998f572fa86d6fec",
     "dyn_em/solve_em.F": "b45110fb17631526991441c05cd1a384bcc6fa54",
@@ -80,13 +80,13 @@
     "phys/CMakeLists.txt": "b00333b301e3abbbaaee0feeedcef1ae27bfc29d",
     "phys/Makefile": "3f1cabd6da3fbb256e26b53f6e981850f46df1e7",
     "phys/module_microphysics_driver.F": "10153a29c7683989ad72631106419a03bc558206",
-    "phys/module_mp_udm.F": "8bebe211f0725207b75caca95fa2904b04435e8e",
+    "phys/module_mp_udm.F": "d438aaf477a01f77b13e58dc9ff9d48ad827266d",
     "phys/module_physics_init.F": "c464b17d24ad5c48498ebd711167b62ff676acbf",
-    "phys/module_ra_rrtmg_lw.F": "c4a273c354e422bf8d79c1f8da186ad2a19c2e9c",
-    "phys/module_ra_rrtmg_sw.F": "add20a31a62d7ac19714901445a870aaa2d2023f",
+    "phys/module_ra_rrtmg_lw.F": "6ab0f6c1f17c31c10827085b1727499279066083",
+    "phys/module_ra_rrtmg_sw.F": "2e854a0073cf58a8c7c25f23591812e7eec355ad",
     "phys/module_ra_rrtmgp.F": "9696a9784280de5837e32b8cbe2bca6a55001b0d",
     "phys/module_ra_rrtmgp_audit.F": "07046b900dfd3d26ec49807ad72429e294339f76",
-    "phys/module_ra_rrtmgp_input.F": "8f6e0af9f1671d486968f7d467c7cbe4178ffe5b",
+    "phys/module_ra_rrtmgp_input.F": "29337db21070b9c027eb8b09988c9d72e61613f9",
     "phys/module_ra_rrtmgp_precip.F": "90bec153e8cf1ee1717a0d591223920866cbfd91",
     "phys/module_ra_rrtmgp_trace.F": "0b2cf1bf7858b98d3ddc5adf5a99e601dc7b6acc",
     "phys/module_radiation_driver.F": "6d67b51e3884f0cd8624ede5ee596032f05e7768",
@@ -99,7 +99,7 @@
     "run/rrtmgp-gas-sw-g112.nc": "dae237da8b77f6b60d517e5fd78590cea8cfb7bb",
     "share/module_check_a_mundo.F": "bf01d9632a8340e0ab19cc0c47dc4462a453dfb2",
     "share/wrf_timeseries.F": "7221cd038f8056ad7fea9fc29c885964e8102a23",
-    "test/rrtmgp/CMakeLists.txt": "43a63bb5a6d064c097e36ccc08774dd306c58fe9",
+    "test/rrtmgp/CMakeLists.txt": "2f60cb8d596b0aa7a02bca4175b572441461f7c7",
     "test/rrtmgp/analyse_delta_policy.py": "d886670615185dbe5ad34165fc7ff09f015e8293",
     "test/rrtmgp/analyse_udm_physics_audit.py": "8c6351bc30bf116f38df0581a79208b8c4968166",
     "test/rrtmgp/analyze_ice_roughness.py": "87e47f643eb8d6eeccc5fa5f83063e766a1953bf",
@@ -118,7 +118,7 @@
     "test/rrtmgp/test_cloud_inputs.f90": "bd5dec9855abb8d1ce7dc5cc2f51eb18910c505a",
     "test/rrtmgp/test_cloud_scm.py": "9a970aa13851366ae93e4eee570b79275be1eb0a",
     "test/rrtmgp/test_coefficient_load_failures.py": "3f0a3a9e40ffed23a05ce3ac6257c99cb7f03e21",
-    "test/rrtmgp/test_column_replay.py": "125a8772a07747e40581932a17fda8fcb7f080dd",
+    "test/rrtmgp/test_column_replay.py": "396a3799bee9b3ff3d323f1547e6b1441e8238fa",
     "test/rrtmgp/test_columns.f90": "13201da5eeb10b5cdc79968e7ff5b19daf40926d",
     "test/rrtmgp/test_delta_policy.f90": "ed332bc82266b368bd4d1f4fb94c2624e8a6f601",
     "test/rrtmgp/test_host_constants.f90": "10dd627c3f3dedf8468ac7b202446610474af7c7",
@@ -145,13 +145,16 @@
     "test/rrtmgp/test_udm_native_radii.py": "c0f6f6d29243be55456330ea94a7f0ddc8d56b6d",
     "test/rrtmgp/test_udm_physics_audit.py": "06a44c168886e92fae8c848ec797d9bffb75e5b0",
     "test/rrtmgp/test_udm_replay.py": "151cc1b2b89e8f6146c83775561c75a59816f0a6",
-    "test/rrtmgp/test_udm_scm.py": "361dd5ba2245ffeda56baaae0b79c827ef633919",
+    "test/rrtmgp/test_udm_scm.py": "5cd8d0ce74ddd76b0e0998ed5550cae3ef6b0932",
     "test/rrtmgp/test_validation.f90": "0d2027813b09eeeca5f1d2a34a853c1da66d88f9",
     "test/rrtmgp/validate_scm.py": "294c28584a0828bfd53f9c196828fe0e93181d51",
     "test/rrtmgp/test_hydro_snapshot.f90": "888faa39cfc5935df9fc7faa5e386581fc4c5839",
-    "doc/rrtmgp/NATIVE_HYDRO_DIAGNOSTICS.md": "283697ee01f18de6416de5290d09974fc25f0353",
+    "doc/rrtmgp/NATIVE_HYDRO_DIAGNOSTICS.md": "cb4e10ffed3d9241fabf9a0bce96b746a0300ce8",
     "test/rrtmgp/test_udm_builder_negative.f90": "56656096a6866abb767220386ef7440fd779f711",
-    "test/rrtmgp/test_hydro_snapshot.py": "2c644d0c937ad82be6a94292853c50576da5acc7"
+    "test/rrtmgp/test_hydro_snapshot.py": "2c644d0c937ad82be6a94292853c50576da5acc7",
+    "doc/rrtmgp/NEGATIVE_INPUT_CONTRACT.md": "43a8a473e1a6c89399d44bd784a19d5835bfe201",
+    "test/rrtmgp/test_udm_negative_policy.py": "4b60ab04b4be413655cb621c49b873563201b09c",
+    "test/rrtmgp/test_udm_negative_policy.f90": "3cb9a51fee421af2919faa272fd12d93eadbc140"
   },
   "backend": "CPU_LINKED",
   "wrf_forecast_validated": false,
@@ -182,5 +185,29 @@
   "hydrometeor_optics_diagnostic_only": [
     "qg"
   ],
-  "positive_hail_policy": "FATAL"
+  "positive_hail_policy": "FATAL",
+  "negative_input_policy": {
+    "wrapper": "UDM_NATIVE_PROCESS_SCALE_CEILINGS",
+    "builder_default": "STRICT",
+    "phase_order": [
+      "QC",
+      "QI",
+      "QR",
+      "QS",
+      "QG",
+      "QH"
+    ],
+    "limits_kgkg": [
+      1e-12,
+      1e-12,
+      1e-09,
+      1e-09,
+      1e-09,
+      1e-09
+    ],
+    "acceptance": "finite and -limit < q < 0; radiation-local copy only",
+    "positive_input_policy": "unchanged; positive hail remains unsupported",
+    "interpretation": "operational ceilings, not floating-point error bounds",
+    "validation_record": "validation/rrtmgp37/negative-input/"
+  }
 }

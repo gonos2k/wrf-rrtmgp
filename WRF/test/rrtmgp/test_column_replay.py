@@ -242,6 +242,45 @@ def assert_close(actual: np.ndarray, expected: np.ndarray, label: str,
     return float(difference.max(initial=0.0))
 
 
+def corrected_hydrometeor(raw: dict[str, np.ndarray], q_name: str,
+                          path_name: str, nl: int) -> np.ndarray:
+    """Reconstruct the optional negative-input contract from preserved raw q.
+
+    Legacy captures remain strict; new captures must include the independent
+    correction records even when no negative input was accepted.
+    """
+    q = raw[q_name][:nl]
+    if q.shape != (nl,) or not np.isfinite(q).all():
+        fail(f"{q_name}: wrong shape or nonfinite raw hydrometeor")
+    limits = raw.get("NEGATIVE_Q_LIMITS")
+    if limits is None:
+        if np.any(q < 0.0):
+            fail(f"{q_name}: negative raw q without an explicit negative-input contract")
+        return q
+    if limits.shape != (6,) or not np.isfinite(limits).all() or np.any(limits < 0.0):
+        fail("NEGATIVE_Q_LIMITS must contain six finite nonnegative bounds")
+    base_q_name = q_name.removeprefix("SOURCE_")
+    phase_index = {"QC": 0, "QI": 1, "QR": 2, "QS": 3, "QG": 4, "QH": 5}[base_q_name]
+    clipped_name = f"NUMERIC_CLIPPED_{base_q_name}"
+    correction_name = f"NEGATIVE_GRID_CORRECTION_{path_name}"
+    for name in (clipped_name, correction_name):
+        if name not in raw or raw[name].shape != (nl,) or not np.isfinite(raw[name]).all():
+            fail(f"{name}: missing, wrong shape, or nonfinite correction record")
+    negative = q < 0.0
+    if np.any((-q[negative]) >= limits[phase_index]):
+        fail(f"{q_name}: accepted raw negative exceeds its strict bound")
+    clipped = np.where(negative, q, 0.0)
+    assert_close(raw[clipped_name], clipped, clipped_name, rtol=0.0, atol=0.0)
+    expected_correction = -clipped * raw["DP_HPA"][:nl] * 100.0 / float(raw["GRAVITY"][0]) * 1000.0
+    # Default REAL paths may underflow to zero; clipped q remains available for
+    # counts. This is one representable float32 quantum, not a physics tolerance.
+    quantum = float(np.nextafter(np.float32(0.), np.float32(1.)))
+    assert_close(raw[correction_name], expected_correction, correction_name, rtol=1.e-6, atol=quantum)
+    if np.any(raw[correction_name] < 0.0):
+        fail(f"{correction_name}: correction must be nonnegative")
+    return np.where(negative, 0.0, q)
+
+
 def compare_input_to_raw(phase: str, raw: dict[str, np.ndarray],
                          inp: dict[str, np.ndarray], raw_nl: int) -> dict[str, Any]:
     required = {"PLAY", "PLEV", "TLAY", "TLEV", "H2O", "CF", "LWP", "IWP", "SWP", "REL", "REI", "RES"}
@@ -302,7 +341,7 @@ def compare_input_to_raw(phase: str, raw: dict[str, np.ndarray],
     omitted: dict[str, Any] = {}
     path_differences: dict[str, float] = {}
     for path_name, q_name in (("LWP", "QC"), ("IWP", "QI"), ("SWP", "QS")) + ((("RWP", "QR"),) if "RWP" in inp else ()):
-        q = raw[q_name][:raw_nl]
+        q = corrected_hydrometeor(raw, q_name, path_name, raw_nl)
         grid_path = dp * 100.0 / gravity * 1000.0 * q
         expected = np.zeros(raw_nl, dtype=np.float64)
         wet = cf > 0.0
@@ -318,6 +357,24 @@ def compare_input_to_raw(phase: str, raw: dict[str, np.ndarray],
             "total_grid_box_mass_g_m2_across_snapshot_layers": float(grid_path[excluded].sum()),
             "max_grid_box_mass_g_m2_per_layer": float(grid_path[excluded].max(initial=0.0)),
         }
+    # The six-phase contract includes diagnostic-only graupel and refused
+    # positive hail. Validate their preserved corrections too, even though no
+    # optical input is replayed for these phases.
+    if "NEGATIVE_Q_LIMITS" in raw:
+        for q_name, path_name in (("QG", "GWP"), ("QH", "HWP")):
+            if q_name not in raw:
+                fail(f"{phase}: new six-phase correction contract omitted {q_name}")
+            q = corrected_hydrometeor(raw, q_name, path_name, raw_nl)
+            if q_name == "QH" and np.any(q > 0.0):
+                fail(f"{phase}: positive hail must be refused before optical replay")
+            expected_grid = dp * 100.0 / gravity * 1000.0 * q
+            for suffix, expected in (("GRID", expected_grid), ("OMITTED", expected_grid),
+                                     ("RADIATION", np.zeros_like(expected_grid))):
+                name = f"{path_name}_{suffix}"
+                if name not in raw:
+                    fail(f"{phase}: new six-phase correction contract omitted {name}")
+                path_differences[name] = assert_close(raw[name], expected,
+                    f"{phase}: {name} diagnostic-only mass contract", rtol=1.e-6, atol=1.e-12)
     radius_differences = {
         name: assert_close(inp[name][0, :raw_nl], raw[source][:raw_nl],
                            f"{phase}: {name} vs raw {source}", rtol=0.0, atol=0.0)
