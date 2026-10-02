@@ -12,7 +12,7 @@ add_library(test_rrtmgp_adapter STATIC standalone_wrf_error.f90 "${trace}" "${in
 target_link_libraries(test_rrtmgp_adapter PUBLIC wrf_rrtmgp)
 set_target_properties(test_rrtmgp_adapter PROPERTIES Fortran_MODULE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/modules")
 target_include_directories(test_rrtmgp_adapter PUBLIC "${CMAKE_CURRENT_BINARY_DIR}/modules")
-foreach(test IN ITEMS columns cloud_inputs multicolumn validation adapter_invalid small_cf_sampling ice_roughness transparent_overlap)
+foreach(test IN ITEMS columns cloud_inputs multicolumn validation adapter_invalid small_cf_sampling ice_roughness transparent_overlap spectral_surface)
   add_executable(test_rrtmgp_${test} test_${test}.f90)
   target_link_libraries(test_rrtmgp_${test} PRIVATE test_rrtmgp_adapter)
   if(CMAKE_Fortran_COMPILER_ID STREQUAL "GNU")
@@ -71,11 +71,17 @@ target_link_libraries(reference_column PRIVATE wrf_rrtmgp)
 if(CMAKE_Fortran_COMPILER_ID STREQUAL "GNU")
   target_compile_options(reference_column PRIVATE -ffree-line-length-none -fcheck=bounds)
 endif()
+add_test(NAME replay_format_compatibility COMMAND "${Python3_EXECUTABLE}"
+  "${CMAKE_CURRENT_SOURCE_DIR}/test_replay_formats.py" "${RRTMGP_DATA_DIR}"
+  "$<TARGET_FILE:test_rrtmgp_columns>" "$<TARGET_FILE:reference_column>"
+  --output "${CMAKE_CURRENT_BINARY_DIR}/replay-format-compatibility.json")
 
 reject_adapter(roughness_low "rrtmgp_ice_roughness must be 1")
 reject_adapter(roughness_high "rrtmgp_ice_roughness must be 1")
 reject_adapter(changed_init_roughness "rrtmgp_ice_roughness must be global and unchanged")
 add_test(NAME transparent_overlap COMMAND test_rrtmgp_transparent_overlap)
+add_test(NAME spectral_surface_contract COMMAND test_rrtmgp_spectral_surface "${RRTMGP_DATA_DIR}"
+  "${CMAKE_CURRENT_BINARY_DIR}/spectral-surface.csv")
 foreach(roughness IN ITEMS 1 2 3)
   add_test(NAME ice_roughness_${roughness} COMMAND test_rrtmgp_ice_roughness "${RRTMGP_DATA_DIR}" "${roughness}"
     "${CMAKE_CURRENT_BINARY_DIR}/ice-roughness-${roughness}.csv")

@@ -294,7 +294,8 @@ CONTAINS
     REAL(wp) :: heat(SIZE(play,1),SIZE(play,2)),zero(SIZE(play,1),SIZE(play,2)), &
                 rl(SIZE(play,1),SIZE(play,2)),di(SIZE(play,1),SIZE(play,2)),ds(SIZE(play,1),SIZE(play,2))
     REAL(wp) :: toa(SIZE(play,1),gas_sw%get_ngpt()),albdir(gas_sw%get_nband(),SIZE(play,1)), &
-                albdif(gas_sw%get_nband(),SIZE(play,1)),bands(2,gas_sw%get_nband())
+                albdif(gas_sw%get_nband(),SIZE(play,1)),bands(2,gas_sw%get_nband()), &
+                visible_weight(gas_sw%get_nband())
     LOGICAL :: mask(SIZE(play,1),SIZE(play,2),gas_sw%get_ngpt())
     INTEGER :: nc,nl,b,c
     IF(.NOT.ready) CALL require('initialization must precede parallel column calls')
@@ -355,6 +356,7 @@ CONTAINS
       CALL trace_input('SW','REI',rei)
       CALL trace_input('SW','RES',res)
       CALL trace_input('SW','ICE_ROUGHNESS',RESHAPE([REAL(initialized_ice_roughness)],[1,1]))
+      CALL trace_input('SW','SW_BAND_PARTITION',RESHAPE([1.],[1,1]))
       CALL trace_input_end('SW')
       CALL trace_result_start('SW',nc,nl)
     END IF
@@ -372,11 +374,19 @@ CONTAINS
     END DO
     bands=gas_sw%get_band_lims_wavenumber()
     DO b=1,gas_sw%get_nband()
-      IF(bands(1,b)>=12850._wp) THEN
-        albdir(b,:)=REAL(avdir,wp); albdif(b,:)=REAL(avdif,wp)
+      ! Pinned UFS/CCPP convention: the 12850--16000 cm-1 band is half VIS/NIR.
+      ! This is a band convention, not an exact integration at 0.7 micrometers.
+      IF(bands(2,b)<=12850._wp) THEN
+        visible_weight(b)=0._wp
+      ELSE IF(bands(1,b)>=16000._wp) THEN
+        visible_weight(b)=1._wp
+      ELSE IF(bands(1,b)==12850._wp.AND.bands(2,b)==16000._wp) THEN
+        visible_weight(b)=0.5_wp
       ELSE
-        albdir(b,:)=REAL(andir,wp); albdif(b,:)=REAL(andif,wp)
+        CALL require('SW VIS/NIR partition requires the 12850--16000 cm-1 transition band')
       END IF
+      albdir(b,:)=(1._wp-visible_weight(b))*REAL(andir,wp)+visible_weight(b)*REAL(avdir,wp)
+      albdif(b,:)=(1._wp-visible_weight(b))*REAL(andif,wp)+visible_weight(b)*REAL(avdif,wp)
     END DO
     flux%flux_up=>fu; flux%flux_dn=>fd; flux%flux_dn_dir=>fdir
     flux%bnd_flux_dn=>bd; flux%bnd_flux_dn_dir=>bdir
@@ -424,11 +434,10 @@ CONTAINS
     up=REAL(fu); dn=REAL(fd); direct=REAL(fdir); diffuse=REAL(fd-fdir)
     CALL require(compute_heating_rate(fu,fd,REAL(plev,wp)*100._wp,heat)); hr=REAL(heat*86400._wp)
     DO b=1,gas_sw%get_nband()
-      IF(bands(1,b)>=12850._wp) THEN
-        visdir=visdir+REAL(bdir(:,:,b)); visdif=visdif+REAL(bd(:,:,b)-bdir(:,:,b))
-      ELSE
-        nirdir=nirdir+REAL(bdir(:,:,b)); nirdif=nirdif+REAL(bd(:,:,b)-bdir(:,:,b))
-      END IF
+      visdir=visdir+REAL(visible_weight(b)*bdir(:,:,b))
+      visdif=visdif+REAL(visible_weight(b)*(bd(:,:,b)-bdir(:,:,b)))
+      nirdir=nirdir+REAL((1._wp-visible_weight(b))*bdir(:,:,b))
+      nirdif=nirdif+REAL((1._wp-visible_weight(b))*(bd(:,:,b)-bdir(:,:,b)))
     END DO
     IF(trace_active('SW')) THEN
       CALL trace_result('SW','UP',up)

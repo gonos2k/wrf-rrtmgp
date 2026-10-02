@@ -46,7 +46,9 @@ build/replay-reference/test_rrtmgp_small_cf_sampling WRF/run build/small-cf-samp
 
 ## 광학 설정 형식
 
-새 capture는 `RRTMGP_REPLAY_V2`를 쓰며 마지막 `RES` 기록 뒤에 `ICE_ROUGHNESS 1 1`과 정수 category를 기록한다. 독립 reference는 V2의 1/2/3을 LW/SW LUT에 적용한다. 기존 V1 파일도 지원하며 당시 암묵적 category 1을 사용한다. 입력 검사기는 V2 설정 누락과 범위 오류를 거부한다.
+새 capture는 `RRTMGP_REPLAY_V3`를 쓰며 마지막 `RES` 기록 뒤에 `ICE_ROUGHNESS 1 1`과 정수 category를 기록한다. SW는 이어서 `SW_BAND_PARTITION 1 1`과 값 1을 기록한다. 값 1은 고정 CCPP의 12850–16000 cm⁻¹ 전이 밴드 50:50 알베도·진단 분할이다. LW에는 SW 설정이 없다. 독립 reference와 입력 검사기는 V3 SW 설정 누락 또는 1 이외의 값을 거부한다.
+
+기존 V1/V2 저장본도 재생한다. V1은 당시 암묵적 ice category 1, V2는 저장된 1/2/3을 적용한다. 두 구형 형식의 SW는 당시 전이 밴드 전체 VIS 규약을 유지하며 새로운 정책으로 재해석하지 않는다. 결과 형식은 `RRTMGP_RESULT_V1`이다. 형식 회귀 시험은 실제 adapter의 V3 저장본을 독립 재생하고, V1/V2의 동일성과 SW 정책 차이 및 잘못된 V3 설정의 거부를 검사한다.
 
 ## 초기 배경 반경의 입력 계약
 

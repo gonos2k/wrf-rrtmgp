@@ -2,6 +2,7 @@ PROGRAM test_rrtmgp_columns
   USE, INTRINSIC :: ieee_arithmetic, ONLY: ieee_is_finite
   USE mo_gas_optics_constants, ONLY: cp_dry, grav
   USE module_ra_rrtmgp, ONLY: rrtmgp_init, rrtmgp_lw_column, rrtmgp_sw_column
+  USE module_ra_rrtmgp_trace, ONLY: trace_start, trace_end
   IMPLICIT NONE
   INTEGER, PARAMETER :: nc=1, nl=3, nv=nl+1
   CHARACTER(LEN=512) :: data_path
@@ -37,17 +38,21 @@ PROGRAM test_rrtmgp_columns
   solar=1361.; mu0=.65
 
   CALL rrtmgp_init(TRIM(data_path))
+  CALL trace_start('LW',1,1)
   CALL rrtmgp_lw_column(play,plev,tlay,tlev,tsfc,h2o,co2,o3,n2o,ch4,o2,emis, &
        cf,lwp,iwp,swp,rel,rei,res,4,2,173,lwup,lwdn,lwhr,lwupc,lwdnc,lwhrc)
+  CALL trace_end('LW')
   CALL check_finite('LW clear',lwup,lwdn,lwhr)
   CALL check_close('LW clear/all up',lwup,lwupc,1.e-5)
   CALL check_close('LW clear/all down',lwdn,lwdnc,1.e-5)
   CALL check_heating('LW',plev,lwup,lwdn,lwhr)
   clear_lwup=lwup; clear_lwdn=lwdn
 
+  CALL trace_start('SW',1,1)
   CALL rrtmgp_sw_column(play,plev,tlay,h2o,co2,o3,n2o,ch4,o2,avdir,avdif,andir,andif,mu0,solar, &
        cf,lwp,iwp,swp,rel,rei,res,4,2,173,swup,swdn,swhr,swupc,swdnc,swhrc, &
        direct,diffuse,directc,visdir,visdif,nirdir,nirdif)
+  CALL trace_end('SW')
   CALL check_finite('SW clear',swup,swdn,swhr)
   CALL check_close('SW clear/all up',swup,swupc,1.e-5)
   CALL check_close('SW clear/all down',swdn,swdnc,1.e-5)

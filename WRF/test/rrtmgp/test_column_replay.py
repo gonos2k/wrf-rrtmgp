@@ -160,8 +160,8 @@ def read_raw(path: Path) -> tuple[str, int, int, dict[str, np.ndarray]]:
 
 def read_input(path: Path) -> tuple[str, int, int, int, int, int, dict[str, np.ndarray]]:
     lines = path.read_text(encoding="ascii").splitlines()
-    if len(lines) < 2 or lines[0].strip() not in {"RRTMGP_REPLAY_V1", "RRTMGP_REPLAY_V2"}:
-        fail(f"{path}: expected RRTMGP_REPLAY_V1 or V2 first line")
+    if len(lines) < 2 or lines[0].strip() not in {"RRTMGP_REPLAY_V1", "RRTMGP_REPLAY_V2", "RRTMGP_REPLAY_V3"}:
+        fail(f"{path}: expected RRTMGP_REPLAY_V1, V2, or V3 first line")
     header = lines[1].split()
     if len(header) != 6:
         fail(f"{path}: expected phase/nc/nl/overlap/seed/iceflag on line 2")
@@ -180,12 +180,16 @@ def read_input(path: Path) -> tuple[str, int, int, int, int, int, dict[str, np.n
         _, records = read_records(temporary, "RRTMGP_INPUT_V1", 1)
     finally:
         temporary.unlink(missing_ok=True)
-    if lines[0].strip() == "RRTMGP_REPLAY_V2":
+    if lines[0].strip() != "RRTMGP_REPLAY_V1":
         roughness = records.get("ICE_ROUGHNESS")
         if roughness is None or roughness.shape != (1, 1) or roughness.item() not in (1, 2, 3):
-            fail(f"{path}: V2 requires scalar ICE_ROUGHNESS in {{1, 2, 3}}")
+            fail(f"{path}: V2/V3 requires scalar ICE_ROUGHNESS in {{1, 2, 3}}")
+    if lines[0].strip() == "RRTMGP_REPLAY_V3" and phase == "SW":
+        policy = records.get("SW_BAND_PARTITION")
+        if policy is None or policy.shape != (1, 1) or policy.item() != 1:
+            fail(f"{path}: V3 SW requires scalar SW_BAND_PARTITION=1 (CCPP transition)")
     for name, values in records.items():
-        if name == "ICE_ROUGHNESS":
+        if name in {"ICE_ROUGHNESS", "SW_BAND_PARTITION"}:
             continue
         if values.shape[0] != nc:
             fail(f"{path}: {name} first dimension {values.shape[0]} != nc={nc}")
@@ -677,6 +681,19 @@ def set_run_minutes(namelist: str, run_minutes: int) -> str:
     return namelist[:start] + block + namelist[end:]
 
 
+def check_configuration_warnings(case_dir: Path, mp_physics: int) -> dict[str, bool]:
+    """Check that actual WRF initialization reports the documented support scope."""
+    text = "\n".join((case_dir / name).read_text(errors="replace")
+                     for name in ("ideal.log", "wrf.log"))
+    if "RRTMGP37 has QC/QI/QS cloud optics; separate rain, graupel and hail optics are not implemented" not in text:
+        fail("WRF initialization did not report the known precipitation-optics limitation")
+    unvalidated = f"RRTMGP37 mp_physics={mp_physics} has not passed" in text
+    if mp_physics not in (2, 4, 5) and not unvalidated:
+        fail(f"WRF initialization did not report unvalidated MP{mp_physics}")
+    return {"precipitation_limit_reported": True,
+            "unvalidated_microphysics_reported": unvalidated}
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("case_dir", type=Path, help="new isolated SCM case/capture directory")
@@ -737,6 +754,7 @@ def main() -> int:
         wrf_env["WRF_RRTMGP_CAPTURE_CALL"] = str(args.capture_call)
         wrf = run_logged(WRF_ROOT / "main/wrf.exe", case_dir, "wrf.log", wrf_env)
         wrf_log = (case_dir / "wrf.log").read_text(errors="replace")
+        configuration_scope = check_configuration_warnings(case_dir, args.mp_physics)
         wrf_succeeded = wrf.returncode == 0 and SUCCESS_TOKEN in wrf_log
         if not wrf_succeeded and not args.capture_only:
             fail(f"{case_dir}: wrf.exe returned {wrf.returncode}; inspect wrf.log")
@@ -778,6 +796,7 @@ def main() -> int:
             "capture_call": args.capture_call, "run_minutes": args.run_minutes,
             "cloud_fixture": fixture,
             "fixture_check_scope": "initial_snapshot" if args.capture_call == 1 else "evolved_state",
+            "configuration_scope": configuration_scope,
             "wrf": {"ideal_returncode": ideal.returncode, "forecast": forecast},
             "phase_replay": reports,
             "scope_note": "One captured column/call snapshot; negative-Q diagnostics describe that snapshot, not a forecast-wide minimum.",

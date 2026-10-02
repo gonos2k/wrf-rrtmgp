@@ -20,7 +20,7 @@ PROGRAM rrtmgp_reference_column
   CHARACTER(LEN=32) :: magic,phase
   INTEGER :: nc,nl,overlap,seed,iceflag,u_in,u_out,ios,nemis
   INTEGER :: c,k,g,b,ngpt,nbnd
-  REAL(wp) :: solar,roughness_value
+  REAL(wp) :: solar,roughness_value,partition_value,visible_weight
   INTEGER :: ice_roughness
   REAL(wp), ALLOCATABLE :: play(:,:),plev(:,:),tlay(:,:),tlev(:,:),tsfc(:,:)
   REAL(wp), ALLOCATABLE :: h2o(:,:),co2(:,:),o3(:,:),n2o(:,:),ch4(:,:),o2(:,:)
@@ -64,7 +64,8 @@ PROGRAM rrtmgp_reference_column
   IF(ios/=0) ERROR STOP 'could not open reference input file'
   READ(u_in,*,IOSTAT=ios) magic
   IF(ios/=0) ERROR STOP 'invalid replay input magic'
-  IF(TRIM(magic)/='RRTMGP_REPLAY_V1'.AND.TRIM(magic)/='RRTMGP_REPLAY_V2') &
+  IF(TRIM(magic)/='RRTMGP_REPLAY_V1'.AND.TRIM(magic)/='RRTMGP_REPLAY_V2'.AND. &
+     TRIM(magic)/='RRTMGP_REPLAY_V3') &
     ERROR STOP 'invalid replay input magic'
   READ(u_in,*,IOSTAT=ios) phase,nc,nl,overlap,seed,iceflag
   IF(ios/=0 .OR. (TRIM(phase)/='LW' .AND. TRIM(phase)/='SW')) ERROR STOP 'invalid replay header'
@@ -101,12 +102,17 @@ PROGRAM rrtmgp_reference_column
   CALL read_section(u_in,'REI',rei)
   CALL read_section(u_in,'RES',res)
   ice_roughness=1
-  IF(TRIM(magic)=='RRTMGP_REPLAY_V2') THEN
+  IF(TRIM(magic)/='RRTMGP_REPLAY_V1') THEN
     CALL read_scalar_section(u_in,'ICE_ROUGHNESS',roughness_value)
     IF(.NOT.ieee_is_finite(roughness_value)) ERROR STOP 'non-finite ice roughness'
     IF(roughness_value<1._wp.OR.roughness_value>3._wp) ERROR STOP 'invalid ice roughness'
     ice_roughness=INT(roughness_value)
     IF(REAL(ice_roughness,wp)/=roughness_value) ERROR STOP 'ice roughness must be integer'
+  END IF
+  IF(TRIM(magic)=='RRTMGP_REPLAY_V3'.AND.TRIM(phase)=='SW') THEN
+    CALL read_scalar_section(u_in,'SW_BAND_PARTITION',partition_value)
+    IF(.NOT.ieee_is_finite(partition_value)) ERROR STOP 'non-finite SW band partition'
+    IF(partition_value/=1._wp) ERROR STOP 'V3 requires SW_BAND_PARTITION=1 (CCPP transition)'
   END IF
   CLOSE(u_in)
 
@@ -202,7 +208,10 @@ PROGRAM rrtmgp_reference_column
     END DO
     bands=gas_sw%get_band_lims_wavenumber()
     DO b=1,gas_sw%get_nband()
-      IF(bands(1,b)>=12850._wp) THEN
+      IF(TRIM(magic)=='RRTMGP_REPLAY_V3'.AND.bands(1,b)==12850._wp) THEN
+        IF(bands(2,b)/=16000._wp) ERROR STOP 'unexpected transition-band upper limit'
+        albdir(b,:)=0.5_wp*(andir+avdir); albdif(b,:)=0.5_wp*(andif+avdif)
+      ELSE IF(bands(1,b)>=12850._wp) THEN
         albdir(b,:)=avdir; albdif(b,:)=avdif
       ELSE
         albdir(b,:)=andir; albdif(b,:)=andif
@@ -234,13 +243,12 @@ PROGRAM rrtmgp_reference_column
     hr_all=heat*86400._wp
     visdir=0._wp; visdif=0._wp; nirdir=0._wp; nirdif=0._wp
     DO b=1,gas_sw%get_nband()
-      IF(bands(1,b)>=12850._wp) THEN
-        visdir=visdir+flux_band_dir(:,:,b)
-        visdif=visdif+flux_band_dn(:,:,b)-flux_band_dir(:,:,b)
-      ELSE
-        nirdir=nirdir+flux_band_dir(:,:,b)
-        nirdif=nirdif+flux_band_dn(:,:,b)-flux_band_dir(:,:,b)
-      END IF
+      visible_weight=MERGE(1._wp,0._wp,bands(1,b)>=12850._wp)
+      IF(TRIM(magic)=='RRTMGP_REPLAY_V3'.AND.bands(1,b)==12850._wp) visible_weight=0.5_wp
+      visdir=visdir+visible_weight*flux_band_dir(:,:,b)
+      visdif=visdif+visible_weight*(flux_band_dn(:,:,b)-flux_band_dir(:,:,b))
+      nirdir=nirdir+(1._wp-visible_weight)*flux_band_dir(:,:,b)
+      nirdif=nirdif+(1._wp-visible_weight)*(flux_band_dn(:,:,b)-flux_band_dir(:,:,b))
     END DO
   END IF
 

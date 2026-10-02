@@ -75,7 +75,7 @@ CONTAINS
     filename = trim(capture_dir)//'/'//trim(phases(p))//'.input'
     OPEN(NEWUNIT=unit, FILE=trim(filename), STATUS='replace', ACTION='write', IOSTAT=ios)
     CALL check_io(ios, 'opening input capture')
-    WRITE(unit,'(a)',IOSTAT=ios) 'RRTMGP_REPLAY_V2'
+    WRITE(unit,'(a)',IOSTAT=ios) 'RRTMGP_REPLAY_V3'
     CALL check_io(ios, 'writing input magic')
     WRITE(unit,'(a,5(1x,i0))',IOSTAT=ios) uppercase(phases(p)), nc, nl, overlap, seed, iceflag
     CALL check_io(ios, 'writing input header')

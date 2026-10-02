@@ -2913,6 +2913,17 @@
       DO i=1,model_config_rec%max_dom
         IF(model_config_rec%ra_lw_physics(i)==RRTMGP_LWSCHEME.OR. &
            model_config_rec%ra_sw_physics(i)==RRTMGP_SWSCHEME) THEN
+          CALL wrf_message('--- WARNING: RRTMGP37 has QC/QI/QS cloud optics; separate rain, graupel and hail optics are not implemented.')
+          SELECT CASE(model_config_rec%mp_physics(i))
+          CASE(2,4,5)
+            ! These IDs have short serial SCM evidence, not complete precipitation coverage.
+          CASE DEFAULT
+            WRITE(wrf_err_message,'(A,I0,A)') '--- WARNING: RRTMGP37 mp_physics=', &
+              model_config_rec%mp_physics(i),' has not passed the current end-to-end serial SCM validation matrix.'
+            CALL wrf_message(TRIM(wrf_err_message))
+          END SELECT
+          IF(model_config_rec%sf_surface_physics(i)==8) &
+            CALL wrf_message('--- WARNING: SSiB+RRTMGP37 is experimental; full coupled forecast validation is incomplete.')
           IF(model_config_rec%aer_opt/=0.OR.model_config_rec%cldovrlp<0.OR.model_config_rec%cldovrlp>3) &
             CALL wrf_error_fatal('RRTMGP baseline requires aer_opt=0 and cldovrlp=0,1,2,3')
           IF(model_config_rec%swint_opt/=0) &
