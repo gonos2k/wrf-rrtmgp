@@ -116,7 +116,9 @@ contains
     allocate(this%gas_names(ngas), this%concs(ngas))
     !$acc enter data copyin(this)
     !$acc enter data copyin(this%concs)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target enter data map(to:this%concs)
+#endif
 
     this%gas_names(:) = gas_names(:)
   end function
@@ -154,7 +156,9 @@ contains
     if (associated(this%concs(igas)%conc)) then
       if ( any(shape(this%concs(igas)%conc) /= [1, 1]) ) then
         !$acc exit data delete(this%concs(igas)%conc)
+#ifndef RRTMGP_CPU_ONLY
         !$omp target exit data map(release:this%concs(igas)%conc)
+#endif
         deallocate(this%concs(igas)%conc)
         nullify   (this%concs(igas)%conc)
       end if
@@ -162,19 +166,25 @@ contains
     if (.not. associated(this%concs(igas)%conc)) then
       allocate(this%concs(igas)%conc(1,1))
       !$acc enter data create(this%concs(igas)%conc)
+#ifndef RRTMGP_CPU_ONLY
       !$omp target enter data map(alloc:this%concs(igas)%conc)
+#endif
     end if
 
     p => this%concs(igas)%conc(:,:)
     !$acc kernels
+#ifndef RRTMGP_CPU_ONLY
     !$omp target map(to:w)
+#endif
 #ifdef _CRAYFTN
     p(:,:) = w
 #else
     this%concs(igas)%conc(:,:) = w
 #endif
     !$acc end kernels
+#ifndef RRTMGP_CPU_ONLY
     !$omp end target
+#endif
   end function set_vmr_scalar
   ! -------------------------------------------------------------------------------------
   !> ### Set 1d (function of level) concentrations 
@@ -214,7 +224,9 @@ contains
     if (associated(this%concs(igas)%conc)) then
       if ( any(shape(this%concs(igas)%conc) /= [1, this%nlay]) ) then
         !$acc exit data delete(this%concs(igas)%conc)
+#ifndef RRTMGP_CPU_ONLY
         !$omp target exit data map(release:this%concs(igas)%conc)
+#endif
         deallocate(this%concs(igas)%conc)
         nullify   (this%concs(igas)%conc)
       end if
@@ -222,19 +234,25 @@ contains
     if (.not. associated(this%concs(igas)%conc)) then
       allocate(this%concs(igas)%conc(1,this%nlay))
       !$acc enter data create(this%concs(igas)%conc)
+#ifndef RRTMGP_CPU_ONLY
       !$omp target enter data map(alloc:this%concs(igas)%conc)
+#endif
     end if
 
     p => this%concs(igas)%conc(:,:)
     !$acc kernels copyin(w)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target map(to:w)
+#endif
 #ifdef _CRAYFTN
     p(1,:) = w
 #else
     this%concs(igas)%conc(1,:) = w
 #endif
     !$acc end kernels
+#ifndef RRTMGP_CPU_ONLY
     !$omp end target
+#endif
 
     !$acc exit data delete(w)
   end function set_vmr_1d
@@ -284,7 +302,9 @@ contains
     if (associated(this%concs(igas)%conc)) then
       if ( any(shape(this%concs(igas)%conc) /= [this%ncol,this%nlay]) ) then
         !$acc exit data delete(this%concs(igas)%conc)
+#ifndef RRTMGP_CPU_ONLY
         !$omp target exit data map(release:this%concs(igas)%conc)
+#endif
         deallocate(this%concs(igas)%conc)
         nullify   (this%concs(igas)%conc)
       end if
@@ -292,19 +312,25 @@ contains
     if (.not. associated(this%concs(igas)%conc)) then
       allocate(this%concs(igas)%conc(this%ncol,this%nlay))
       !$acc enter data create(this%concs(igas)%conc)
+#ifndef RRTMGP_CPU_ONLY
       !$omp target enter data map(alloc:this%concs(igas)%conc)
+#endif
     end if
 
     p => this%concs(igas)%conc(:,:)
     !$acc kernels copyin(w)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target map(to:w)
+#endif
 #ifdef _CRAYFTN
     p(:,:) = w(:,:)
 #else
     this%concs(igas)%conc(:,:) = w(:,:)
 #endif
     !$acc end kernels
+#ifndef RRTMGP_CPU_ONLY
     !$omp end target
+#endif
   end function set_vmr_2d
   ! -------------------------------------------------------------------------------------
   !
@@ -341,30 +367,42 @@ contains
 
     p => this%concs(igas)%conc(:,:)
     !$acc data copyout (array) present(this)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target data map(from:array)
+#endif
     if(size(this%concs(igas)%conc, 2) > 1) then
       !$acc kernels default(none) present(p)
+#ifndef RRTMGP_CPU_ONLY
       !$omp target
+#endif
 #ifdef _CRAYFTN
       array(:) = p(1,:)
 #else
       array(:) = this%concs(igas)%conc(1,:)
 #endif
       !$acc end kernels
+#ifndef RRTMGP_CPU_ONLY
       !$omp end target
+#endif
     else
       !$acc kernels default(none) present(p)
+#ifndef RRTMGP_CPU_ONLY
       !$omp target
+#endif
 #ifdef _CRAYFTN
       array(:) = p(1,1)
 #else
       array(:) = this%concs(igas)%conc(1,1)
 #endif
       !$acc end kernels
+#ifndef RRTMGP_CPU_ONLY
       !$omp end target
+#endif
     end if
     !$acc end data
+#ifndef RRTMGP_CPU_ONLY
     !$omp end target data
+#endif
 
   end function get_vmr_1d
   ! -------------------------------------------------------------------------------------
@@ -401,10 +439,14 @@ contains
 
     p => this%concs(igas)%conc(:,:)
     !$acc data copyout (array) present(this, this%concs)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target data map(from:array)
+#endif
     if(size(this%concs(igas)%conc, 1) > 1) then      ! Concentration stored as 2D
       !$acc parallel loop collapse(2) default(none) present(p)
+#ifndef RRTMGP_CPU_ONLY
       !$omp target teams distribute parallel do simd
+#endif
       do ilay = 1, size(array,2)
         do icol = 1, size(array,1)
 #ifdef _CRAYFTN
@@ -416,7 +458,9 @@ contains
       end do
     else if(size(this%concs(igas)%conc, 2) > 1) then ! Concentration stored as 1D
       !$acc parallel loop collapse(2) default(none) present(p)
+#ifndef RRTMGP_CPU_ONLY
       !$omp target teams distribute parallel do simd
+#endif
       do ilay = 1, size(array,2)
         do icol = 1, size(array,1)
 #ifdef _CRAYFTN
@@ -428,7 +472,9 @@ contains
       end do
     else                                             ! Concentration stored as scalar
       !$acc parallel loop collapse(2) default(none) present(p)
+#ifndef RRTMGP_CPU_ONLY
       !$omp target teams distribute parallel do simd
+#endif
       do ilay = 1, size(array,2)
         do icol = 1, size(array,1)
 #ifdef _CRAYFTN
@@ -440,7 +486,9 @@ contains
       end do
     end if
     !$acc end data
+#ifndef RRTMGP_CPU_ONLY
     !$omp end target data
+#endif
 
   end function get_vmr_2d
   ! -------------------------------------------------------------------------------------
@@ -470,7 +518,9 @@ contains
     allocate(subset%gas_names(size(this%gas_names)), &
              subset%concs   (size(this%concs))) ! These two arrays should be the same length
     !$acc enter data create(subset, subset%concs)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target enter data map(alloc:subset%concs)
+#endif
     subset%nlay = this%nlay
     subset%ncol = merge(n, 0, this%ncol > 0)
     subset%gas_names(:)  = this%gas_names(:)
@@ -485,27 +535,37 @@ contains
       p1 => subset%concs(i)%conc(:,:)
       p2 => this%concs(i)%conc(:,:)
       !$acc enter data create(subset%concs(i)%conc)
+#ifndef RRTMGP_CPU_ONLY
       !$omp target enter data map(alloc:subset%concs(i)%conc)
+#endif
       if(size(this%concs(i)%conc, 1) > 1) then      ! Concentration stored as 2D
         !$acc kernels
+#ifndef RRTMGP_CPU_ONLY
         !$omp target
+#endif
 #ifdef _CRAYFTN
         p1(:,:) = p2(start:(start+n-1),:)
 #else
         subset%concs(i)%conc(:,:) = this%concs(i)%conc(start:(start+n-1),:)
 #endif
         !$acc end kernels
+#ifndef RRTMGP_CPU_ONLY
         !$omp end target
+#endif
       else
         !$acc kernels
+#ifndef RRTMGP_CPU_ONLY
         !$omp target
+#endif
 #ifdef _CRAYFTN
         p1(:,:) = p2(:,:)
 #else
         subset%concs(i)%conc(:,:) = this%concs(i)%conc(:,:)
 #endif
         !$acc end kernels
+#ifndef RRTMGP_CPU_ONLY
         !$omp end target
+#endif
       end if
     end do
 
@@ -527,13 +587,17 @@ contains
       do i = 1, size(this%concs)
         if(associated(this%concs(i)%conc)) then
           !$acc exit data delete(this%concs(i)%conc)
+#ifndef RRTMGP_CPU_ONLY
           !$omp target exit data map(release:this%concs(i)%conc)
+#endif
           deallocate(this%concs(i)%conc)
           nullify(this%concs(i)%conc)
         end if
       end do
       !$acc exit data delete(this%concs)
+#ifndef RRTMGP_CPU_ONLY
       !$omp target exit data map(release:this%concs)
+#endif
       deallocate(this%concs)
     end if
   end subroutine reset

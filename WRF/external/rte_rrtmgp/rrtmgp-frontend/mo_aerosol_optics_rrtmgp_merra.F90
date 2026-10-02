@@ -185,11 +185,13 @@ contains
     !$acc            copyin(this%aero_bcar_tbl, this%aero_bcar_rh_tbl)          &
     !$acc            copyin(this%aero_ocar_tbl, this%aero_ocar_rh_tbl)          &
     !$acc            copyin(this%merra_aero_bin_lims, this%aero_rh)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target enter data &
     !$omp map(to:this%aero_dust_tbl, this%aero_salt_tbl, this%aero_sulf_tbl) &
     !$omp map(to:this%aero_bcar_tbl, this%aero_bcar_rh_tbl)                  &
     !$omp map(to:this%aero_ocar_tbl, this%aero_ocar_rh_tbl)                  &
     !$omp map(to:this%merra_aero_bin_lims, this%aero_rh)
+#endif
 
   end function load_lut
   !--------------------------------------------------------------------------------------------------------------------
@@ -204,7 +206,9 @@ contains
     if(allocated(this%merra_aero_bin_lims)) then
       deallocate(this%merra_aero_bin_lims, this%aero_rh)
       !$acc        exit data delete(     this%merra_aero_bin_lims, this%aero_rh) 
+#ifndef RRTMGP_CPU_ONLY
       !$omp target exit data map(release:this%merra_aero_bin_lims, this%aero_rh)
+#endif
     end if
 
     ! Lookup table aerosol optics coefficients
@@ -213,9 +217,11 @@ contains
       !$acc           delete(this%aero_bcar_tbl, this%aero_bcar_rh_tbl) &
       !$acc           delete(this%aero_ocar_tbl, this%aero_ocar_rh_tbl) &
       !$acc           delete(this)
+#ifndef RRTMGP_CPU_ONLY
       !$omp target exit data map(release:this%aero_dust_tbl, this%aero_salt_tbl, this%aero_sulf_tbl) &
       !$omp                  map(release:this%aero_bcar_tbl, this%aero_bcar_rh_tbl)                  & 
       !$omp                  map(release:this%aero_ocar_tbl, this%aero_ocar_rh_tbl) 
+#endif
       deallocate(this%aero_dust_tbl, this%aero_salt_tbl, this%aero_sulf_tbl, &
                  this%aero_bcar_tbl, this%aero_bcar_rh_tbl, &
                  this%aero_ocar_tbl, this%aero_ocar_rh_tbl)
@@ -287,7 +293,9 @@ contains
     nbnd = size(this%aero_dust_tbl,3)
 
     !$acc        update host(this%merra_aero_bin_lims)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target update from(this%merra_aero_bin_lims)
+#endif
     minSize = this%merra_aero_bin_lims(1,1)
     maxSize = this%merra_aero_bin_lims(2,nbin)
 
@@ -323,14 +331,20 @@ contains
     end if
 
     !$acc data        copyin(aero_type, aero_size, aero_mass, relhum) 
+#ifndef RRTMGP_CPU_ONLY
     !$omp target data map(to:aero_type, aero_size, aero_mass, relhum) 
+#endif
     !
     ! Aerosol mask; don't need aerosol optics if there's no aerosol
     !
     !$acc data           create(aeromsk)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target data map(alloc:aeromsk) 
+#endif
     !$acc              parallel loop default(present) collapse(2)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target teams distribute parallel do simd collapse(2)
+#endif
     do ilay = 1, nlay
       do icol = 1, ncol
         aeromsk(icol,ilay) = aero_type(icol,ilay) > 0
@@ -348,11 +362,15 @@ contains
     end if
     ! Release aerosol mask 
     !$acc end data
+#ifndef RRTMGP_CPU_ONLY
     !$omp end target data 
+#endif
 
     if(error_msg == "") then
       !$acc data           create(atau, ataussa, ataussag)
+#ifndef RRTMGP_CPU_ONLY
       !$omp target data map(alloc:atau, ataussa, ataussag) 
+#endif
       !
       !
       ! ----------------------------------------
@@ -386,8 +404,10 @@ contains
       type is (ty_optical_props_1scl)
         !$acc parallel loop gang vector default(present) collapse(3) &
         !$acc               copyin(optical_props) copyout(optical_props%tau)
+#ifndef RRTMGP_CPU_ONLY
         !$omp target teams distribute parallel do simd collapse(3) &
         !$omp map(from:optical_props%tau)
+#endif
         do ibnd = 1, nbnd
           do ilay = 1, nlay
             do icol = 1, ncol
@@ -399,8 +419,10 @@ contains
       type is (ty_optical_props_2str)
         !$acc parallel loop gang vector default(present) collapse(3) &
         !$acc               copyin(optical_props) copyout(optical_props%tau, optical_props%ssa, optical_props%g)
+#ifndef RRTMGP_CPU_ONLY
         !$omp target teams distribute parallel do simd collapse(3) &
         !$omp map(from:optical_props%tau, optical_props%ssa, optical_props%g)
+#endif
         do ibnd = 1, nbnd
           do ilay = 1, nlay
             do icol = 1, ncol
@@ -417,10 +439,14 @@ contains
         error_msg = "aerosol optics: n-stream calculations not yet supported"
       end select
       !$acc end data
+#ifndef RRTMGP_CPU_ONLY
       !$omp end target data
+#endif
     end if 
     !$acc end data
+#ifndef RRTMGP_CPU_ONLY
     !$omp end target data 
+#endif
   end function aerosol_optics
   !--------------------------------------------------------------------------------------------------------------------
   !
@@ -464,7 +490,9 @@ contains
     real(wp) :: t, ts, tsg  ! tau, tau*ssa, tau*ssa*g
     ! ---------------------------
     !$acc parallel loop gang vector default(present) collapse(3)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target teams distribute parallel do simd collapse(3)
+#endif
     do ibnd = 1, nbnd
       do ilay = 1,nlay
         do icol = 1, ncol
@@ -565,7 +593,9 @@ contains
   !
   function linear_interp_aero_table(table, index1, index2, weight) result(value)
     !$acc routine seq
+#ifndef RRTMGP_CPU_ONLY
     !$omp declare target
+#endif
 
     integer,                intent(in) :: index1, index2
     real(wp),               intent(in) :: weight
@@ -584,11 +614,15 @@ contains
     integer :: minValue, maxValue
 
     !$acc kernels copyin(array)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target map(to:array) map(from:minValue, maxValue)
+#endif
     minValue = minval(array)
     maxValue = maxval(array)
     !$acc end kernels
+#ifndef RRTMGP_CPU_ONLY
     !$omp end target
+#endif
     any_int_vals_outside_2D = minValue < checkMin .or. maxValue > checkMax
 
   end function any_int_vals_outside_2D

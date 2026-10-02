@@ -56,10 +56,14 @@ contains
     real(wp) :: minValue
 
     !$acc kernels copyin(array)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target map(to:array) map(from:minValue)
+#endif
     minValue = minval(array)
     !$acc end kernels
+#ifndef RRTMGP_CPU_ONLY
     !$omp end target
+#endif
 
     any_vals_less_than_1D = (minValue < check_value)
 
@@ -72,10 +76,14 @@ contains
     real(wp) :: minValue
 
     !$acc kernels copyin(array)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target map(to:array) map(from:minValue)
+#endif
     minValue = minval(array)
     !$acc end kernels
+#ifndef RRTMGP_CPU_ONLY
     !$omp end target
+#endif
 
     any_vals_less_than_2D = (minValue < check_value)
 
@@ -93,9 +101,11 @@ contains
     dim2 = size(array,2)
     dim3 = size(array,3)
     minValue = check_value + epsilon(check_value) ! initialize to some value
+#ifndef RRTMGP_CPU_ONLY
     !$omp target teams map(to:array) &
     !$omp defaultmap(tofrom:scalar) reduction(min:minValue)
     !$omp distribute parallel do simd reduction(min:minValue)
+#endif
     do i = 1, dim1
        do j = 1, dim2
           do k = 1, dim3
@@ -103,7 +113,9 @@ contains
           enddo
        enddo
     enddo
+#ifndef RRTMGP_CPU_ONLY
     !$omp end target teams
+#endif
 #else
     !$acc kernels copyin(array)
     minValue = minval(array)
@@ -124,10 +136,14 @@ contains
     real(wp) :: minValue
 
     !$acc kernels copyin(array, mask)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target map(to: array, mask) map(from:minValue)
+#endif
     minValue = minval(array, mask=mask)
     !$acc end kernels
+#ifndef RRTMGP_CPU_ONLY
     !$omp end target
+#endif
 
     any_vals_less_than_1D_masked = (minValue < check_value)
 
@@ -141,10 +157,14 @@ contains
     real(wp) :: minValue
 
     !$acc kernels copyin(array, mask)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target map(to: array, mask) map(from:minValue)
+#endif
     minValue = minval(array, mask=mask)
     !$acc end kernels
+#ifndef RRTMGP_CPU_ONLY
     !$omp end target
+#endif
 
     any_vals_less_than_2D_masked = (minValue < check_value)
 
@@ -158,10 +178,14 @@ contains
     real(wp) :: minValue
 
     !$acc kernels copyin(array, mask)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target map(to: array, mask) map(from:minValue)
+#endif
     minValue = minval(array, mask=mask)
     !$acc end kernels
+#ifndef RRTMGP_CPU_ONLY
     !$omp end target
+#endif
 
     any_vals_less_than_3D_masked = (minValue < check_value)
 
@@ -176,11 +200,15 @@ contains
     real(wp) :: minValue, maxValue
 
     !$acc kernels copyin(array)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target map(to:array) map(from:minValue, maxValue)
+#endif
     minValue = minval(array)
     maxValue = maxval(array)
     !$acc end kernels
+#ifndef RRTMGP_CPU_ONLY
     !$omp end target
+#endif
     any_vals_outside_1D = minValue < checkMin .or. maxValue > checkMax
 
   end function any_vals_outside_1D
@@ -192,11 +220,15 @@ contains
     real(wp) :: minValue, maxValue
 
     !$acc kernels copyin(array)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target map(to:array) map(from:minValue, maxValue)
+#endif
     minValue = minval(array)
     maxValue = maxval(array)
     !$acc end kernels
+#ifndef RRTMGP_CPU_ONLY
     !$omp end target
+#endif
     any_vals_outside_2D = minValue < checkMin .or. maxValue > checkMax
 
   end function any_vals_outside_2D
@@ -217,9 +249,11 @@ contains
     dim3 = size(array,3)
     minValue = checkMin + epsilon(checkMin) ! initialize to some value
     maxValue = checkMax - epsilon(checkMax) ! initialize to some value
+#ifndef RRTMGP_CPU_ONLY
     !$omp target teams map(to:array) &
     !$omp defaultmap(tofrom:scalar) reduction(min:minValue) reduction(max:maxValue)
     !$omp distribute parallel do simd reduction(min:minValue) reduction(max:maxValue)
+#endif
     do i= 1, dim1
        do j = 1, dim2
           do k = 1, dim3
@@ -228,7 +262,9 @@ contains
           enddo
        enddo
     enddo
+#ifndef RRTMGP_CPU_ONLY
     !$omp end target teams
+#endif
 #else
     !$acc kernels copyin(array)
     minValue = minval(array)
@@ -250,11 +286,15 @@ contains
     real(wp) :: minValue, maxValue
 
     !$acc kernels copyin(array, mask)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target map(to: array, mask) map(from:minValue, maxValue)
+#endif
     minValue = minval(array, mask=mask)
     maxValue = maxval(array, mask=mask)
     !$acc end kernels
+#ifndef RRTMGP_CPU_ONLY
     !$omp end target
+#endif
     any_vals_outside_1D_masked = minValue < checkMin .or. maxValue > checkMax
 
   end function any_vals_outside_1D_masked
@@ -267,11 +307,15 @@ contains
     real(wp) :: minValue, maxValue
 
     !$acc kernels copyin(array, mask)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target map(to: array, mask) map(from:minValue, maxValue)
+#endif
     minValue = minval(array, mask=mask)
     maxValue = maxval(array, mask=mask)
     !$acc end kernels
+#ifndef RRTMGP_CPU_ONLY
     !$omp end target
+#endif
     any_vals_outside_2D_masked = minValue < checkMin .or. maxValue > checkMax
 
   end function any_vals_outside_2D_masked
@@ -284,11 +328,15 @@ contains
     real(wp) :: minValue, maxValue
 
     !$acc kernels copyin(array, mask)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target map(to: array, mask) map(from:minValue, maxValue)
+#endif
     minValue = minval(array, mask=mask)
     maxValue = maxval(array, mask=mask)
     !$acc end kernels
+#ifndef RRTMGP_CPU_ONLY
     !$omp end target
+#endif
     any_vals_outside_3D_masked = minValue < checkMin .or. maxValue > checkMax
 
   end function any_vals_outside_3D_masked

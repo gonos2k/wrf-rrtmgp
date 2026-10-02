@@ -102,7 +102,9 @@ contains
 
     ! -------
     !$acc enter data copyin(band_lims)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target enter data map(to:band_lims)
+#endif
     ! Band-by-band fluxes
     ! Up flux
     if(associated(this%bnd_flux_up)) then
@@ -133,7 +135,9 @@ contains
       end if
     end if
     !$acc exit data delete(band_lims)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target exit data map(release:band_lims)
+#endif
   end function reduce_byband
   ! --------------------------------------------------------------------------------------
   ! Are any fluxes desired from this set of g-point fluxes? We can tell because memory will
@@ -164,7 +168,9 @@ contains
 
     integer :: icol, ilev, igpt, ibnd
     !$acc parallel loop collapse(3) copyin(spectral_flux, band_lims) copyout(byband_flux)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target teams distribute parallel do collapse(3) map(to:spectral_flux, band_lims) map(from:byband_flux)
+#endif
     do ibnd = 1, nbnd
       do ilev = 1, nlev
         do icol = 1, ncol
@@ -190,7 +196,9 @@ contains
     integer :: icol, ilev, igpt, ibnd
 
     !$acc parallel loop collapse(3) copyin(spectral_flux_dn, spectral_flux_up, band_lims) copyout(byband_flux_net)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target teams distribute parallel do collapse(3) map(to:spectral_flux_dn, spectral_flux_up, band_lims) map(from:byband_flux_net)
+#endif
     do ibnd = 1, nbnd
       do ilev = 1, nlev
         do icol = 1, ncol

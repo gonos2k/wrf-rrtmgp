@@ -41,9 +41,13 @@ contains
     real(wp) :: bb_flux_s ! local scalar version
 
     !$acc enter data copyin(spectral_flux) create(broadband_flux)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target enter data map(to:spectral_flux) map(alloc:broadband_flux)
+#endif
     !$acc parallel loop gang vector collapse(2)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target teams distribute parallel do simd collapse(2)
+#endif
     do ilev = 1, nlev
       do icol = 1, ncol
 
@@ -57,7 +61,9 @@ contains
       end do
     end do
     !$acc exit data delete(spectral_flux) copyout(broadband_flux)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target exit data map(release:spectral_flux) map(from:broadband_flux)
+#endif
   end subroutine sum_broadband
   ! ----------------------------------------------------------------------------
   !>
@@ -76,9 +82,13 @@ contains
     real(wp) :: diff
 
     !$acc enter data copyin(spectral_flux_dn, spectral_flux_up) create(broadband_flux_net)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target enter data map(to:spectral_flux_dn, spectral_flux_up) map(alloc:broadband_flux_net)
+#endif
     !$acc parallel loop collapse(2)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target teams distribute parallel do simd collapse(2)
+#endif
     do ilev = 1, nlev
       do icol = 1, ncol
         diff = spectral_flux_dn(icol, ilev, 1   ) - spectral_flux_up(icol, ilev,     1)
@@ -86,19 +96,25 @@ contains
       end do
     end do
     !$acc parallel loop collapse(3)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target teams distribute parallel do simd collapse(3)
+#endif
     do igpt = 2, ngpt
       do ilev = 1, nlev
         do icol = 1, ncol
           diff = spectral_flux_dn(icol, ilev, igpt) - spectral_flux_up(icol, ilev, igpt)
           !$acc atomic update
+#ifndef RRTMGP_CPU_ONLY
           !$omp atomic update
+#endif
           broadband_flux_net(icol, ilev) = broadband_flux_net(icol, ilev) + diff
         end do
       end do
     end do
     !$acc exit data delete(spectral_flux_dn, spectral_flux_up) copyout(broadband_flux_net)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target exit data map(release:spectral_flux_dn, spectral_flux_up) map(from:broadband_flux_net)
+#endif
   end subroutine net_broadband_full
   ! ----------------------------------------------------------------------------
   !>
@@ -115,16 +131,22 @@ contains
 
     integer  :: icol, ilev
     !$acc enter data copyin(flux_dn, flux_up) create(broadband_flux_net)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target enter data map(to:flux_dn, flux_up) map(alloc:broadband_flux_net)
+#endif
     !$acc parallel loop collapse(2)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target teams distribute parallel do simd collapse(2)
+#endif
     do ilev = 1, nlev
       do icol = 1, ncol
          broadband_flux_net(icol,ilev) = flux_dn(icol,ilev) - flux_up(icol,ilev)
        end do
     end do
     !$acc exit data delete(flux_dn, flux_up) copyout(broadband_flux_net)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target exit data map(release:flux_dn, flux_up) map(from:broadband_flux_net)
+#endif
   end subroutine net_broadband_precalc
   ! ----------------------------------------------------------------------------
 end module mo_fluxes_broadband_kernels

@@ -260,11 +260,15 @@ contains
     if (present(inc_flux)) then
       inc_flux_diffuse => inc_flux
       !$acc        enter data copyin(   inc_flux_diffuse)
+#ifndef RRTMGP_CPU_ONLY
       !$omp target enter data map(to:   inc_flux_diffuse)
+#endif
     else
       allocate(inc_flux_diffuse(ncol, ngpt))
       !$acc        enter data create(   inc_flux_diffuse)
+#ifndef RRTMGP_CPU_ONLY
       !$omp target enter data map(alloc:inc_flux_diffuse)
+#endif
       call zero_array(ncol, ngpt, inc_flux_diffuse)
     end if
 
@@ -298,7 +302,9 @@ contains
           allocate(flux_dn_loc(ncol, nlay+1))
         end if
         !$acc        enter data create(   flux_up_loc, flux_dn_loc)
+#ifndef RRTMGP_CPU_ONLY
         !$omp target enter data map(alloc:flux_up_loc, flux_dn_loc)
+#endif
       class default
         !
         ! If broadband integrals aren't being computed, allocate working space
@@ -313,7 +319,9 @@ contains
     ! Compute the radiative transfer...
     !
     !$acc        data create(   sfc_emis_gpt, flux_up_loc, flux_dn_loc, gpt_flux_up, gpt_flux_dn)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target data map(alloc:sfc_emis_gpt, flux_up_loc, flux_dn_loc, gpt_flux_up, gpt_flux_dn)
+#endif
     call expand_and_transpose(optical_props, sfc_emis, sfc_emis_gpt)
     if(check_values) error_msg =  optical_props%validate()
     if(len_trim(error_msg) == 0) then ! Can't do an early return within OpenACC/MP data regions
@@ -328,10 +336,14 @@ contains
           !
           allocate(secants(ncol, ngpt, n_quad_angs))
           !$acc        data create(   secants)
+#ifndef RRTMGP_CPU_ONLY
           !$omp target data map(alloc:secants)
+#endif
           if (present(lw_Ds)) then
             !$acc                         parallel loop    collapse(2) copyin(lw_Ds)
+#ifndef RRTMGP_CPU_ONLY
             !$omp target teams distribute parallel do simd collapse(2)
+#endif
             ! nmu is 1
             do igpt = 1, ngpt
               do icol = 1, ncol
@@ -343,7 +355,9 @@ contains
             !   Is there an alternative to making ncol x ngpt copies of each value?
             !
             !$acc                         parallel loop    collapse(3)
+#ifndef RRTMGP_CPU_ONLY
             !$omp target teams distribute parallel do simd collapse(3)
+#endif
             do imu = 1, n_quad_angs
               do igpt = 1, ngpt
                 do icol = 1, ncol
@@ -367,7 +381,9 @@ contains
                                                       ! The last two arguments won't be used since the
                                                       ! third-to-last is .false. but need valid addresses
           !$acc        end data
+#ifndef RRTMGP_CPU_ONLY
           !$omp end target data
+#endif
         class is (ty_optical_props_2str)
           if (using_2stream) then
             !
@@ -382,9 +398,13 @@ contains
           else
             allocate(secants(ncol, ngpt, n_quad_angs))
             !$acc        data create(   secants)
+#ifndef RRTMGP_CPU_ONLY
             !$omp target data map(alloc:secants)
+#endif
             !$acc                         parallel loop    collapse(3)
+#ifndef RRTMGP_CPU_ONLY
             !$omp target teams distribute parallel do simd collapse(3)
+#endif
             do imu = 1, n_quad_angs
               do igpt = 1, ngpt
                 do icol = 1, ncol
@@ -408,7 +428,9 @@ contains
                                   logical(do_Jacobians, wl), sources%sfc_source_Jac, jacobian, &
                                   logical(.true., wl),  optical_props%ssa, optical_props%g)
             !$acc        end data
+#ifndef RRTMGP_CPU_ONLY
             !$omp end target data
+#endif
           endif
         class is (ty_optical_props_nstr)
           !
@@ -427,7 +449,9 @@ contains
             ! FIXME: Do we need the create/copyout here?
             !
             !$acc parallel loop    collapse(2) copyin(fluxes) copyout( fluxes%flux_net)
+#ifndef RRTMGP_CPU_ONLY
             !$omp target teams distribute parallel do simd collapse(2) map(from:fluxes%flux_net)
+#endif
             do ilev = 1, nlay+1
               do icol = 1, ncol
                 fluxes%flux_net(icol,ilev) = flux_dn_loc(icol,ilev) - flux_up_loc(icol,ilev)
@@ -442,17 +466,23 @@ contains
       end select
     end if ! no error message from validation
     !$acc        end data
+#ifndef RRTMGP_CPU_ONLY
     !$omp end target data
+#endif
 
     if(.not. present(inc_flux)) then
       !$acc        exit data delete(     inc_flux_diffuse)
+#ifndef RRTMGP_CPU_ONLY
       !$omp target exit data map(release:inc_flux_diffuse)
+#endif
       deallocate(inc_flux_diffuse)
     end if
     select type(fluxes)
       type is (ty_fluxes_broadband)
         !$acc        exit data copyout( flux_up_loc, flux_dn_loc)
+#ifndef RRTMGP_CPU_ONLY
         !$omp target exit data map(from:flux_up_loc, flux_dn_loc)
+#endif
         if(.not. associated(flux_up_loc, fluxes%flux_up)) deallocate(flux_up_loc)
         if(.not. associated(flux_dn_loc, fluxes%flux_dn)) deallocate(flux_dn_loc)
     end select
@@ -475,7 +505,9 @@ contains
     ngpt  = ops%get_ngpt()
     limits = ops%get_band_lims_gpoint()
     !$acc                         parallel loop    collapse(2) copyin(arr_in, limits)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target teams distribute parallel do simd collapse(2) map(to:arr_in, limits)
+#endif
     do iband = 1, nband
       do icol = 1, ncol
         do igpt = limits(1, iband), limits(2, iband)

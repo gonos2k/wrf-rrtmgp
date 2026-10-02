@@ -1,3 +1,6 @@
+# WRF CPU backend: outer WRF OpenMP remains enabled; GPU target directives
+# are excluded without removing -fopenmp and its thread-local compilation.
+override FCFLAGS += -DRRTMGP_CPU_ONLY
 include Makefile.upstream
 VPATH += ../extensions
 FCINCLUDE += -I$(NETCDFPATH)/include
