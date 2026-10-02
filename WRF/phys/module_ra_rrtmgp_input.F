@@ -14,9 +14,10 @@ MODULE module_ra_rrtmgp_input
   INTEGER, PARAMETER, PUBLIC :: RRTMGP_INPUT_OVERFLOW = 5
   INTEGER, PARAMETER, PUBLIC :: RRTMGP_INPUT_CLEAR_CONDENSATE = 6
   INTEGER, PARAMETER, PUBLIC :: RRTMGP_INPUT_UDM_HAIL_UNSUPPORTED = 7
+  INTEGER, PARAMETER, PUBLIC :: RRTMGP_INPUT_UDM_FROZEN_INVALID = 8
 
   ! Column indices for the UDM-only six-phase path arrays, in g/m2.
-  ! The graupel column is diagnostic only; this adapter has no graupel optics.
+  ! G/H are diagnostic-only unless the caller explicitly selects frozen mode.
   INTEGER, PARAMETER, PUBLIC :: RRTMGP_UDM_LIQUID = 1, RRTMGP_UDM_ICE = 2
   INTEGER, PARAMETER, PUBLIC :: RRTMGP_UDM_RAIN = 3, RRTMGP_UDM_SNOW = 4
   INTEGER, PARAMETER, PUBLIC :: RRTMGP_UDM_GRAUPEL = 5, RRTMGP_UDM_HAIL = 6
@@ -31,6 +32,7 @@ MODULE module_ra_rrtmgp_input
   PUBLIC :: rrtmgp_check_positive
   PUBLIC :: rrtmgp_check_nonnegative
   PUBLIC :: rrtmgp_column_seed
+  PUBLIC :: rrtmgp_udm_frozen_lambdas
 
   EXTERNAL :: wrf_error_fatal3
 
@@ -61,6 +63,61 @@ CONTAINS
     seed=INT(state)
   END FUNCTION rrtmgp_column_seed
 
+  ! Diagnostic PSD slope for the experimental homogeneous-ice G/H optics.
+  ! This does not alter the UDM process state or suppress positive path mass.
+  ! A sub-cutoff positive q uses the 20000 m-1 cap as a size sentinel.
+  PURE SUBROUTINE rrtmgp_udm_frozen_lambdas(qg,qh,rho,lambda_g,lambda_h,reason,errmsg)
+    REAL, INTENT(IN) :: qg(:),qh(:),rho(:)
+    REAL, INTENT(OUT) :: lambda_g(:),lambda_h(:)
+    INTEGER, INTENT(OUT) :: reason
+    CHARACTER(LEN=*), INTENT(OUT) :: errmsg
+    REAL(real64), PARAMETER :: pi64=3.1415926535897932384626433832795_real64
+    REAL(real64), PARAMETER :: cutoff=1.0e-9_real64, cap=20000.0_real64
+    REAL(real64), PARAMETER :: graupel_n0=4.0e6_real64, graupel_rho=500.0_real64
+    REAL(real64), PARAMETER :: hail_n0=4.0e4_real64, hail_rho=912.0_real64
+    REAL(real64) :: lg,lh
+    INTEGER :: k,n
+    reason=RRTMGP_INPUT_OK
+    errmsg=''
+    lambda_g=0.; lambda_h=0.
+    n=SIZE(qg)
+    IF(SIZE(qh)/=n .OR. SIZE(rho)/=n .OR. SIZE(lambda_g)/=n .OR. SIZE(lambda_h)/=n) THEN
+      reason=RRTMGP_INPUT_SHAPE
+      errmsg='RRTMGP_INPUT_SHAPE_MISMATCH in UDM frozen lambda inputs'
+      RETURN
+    END IF
+    DO k=1,n
+      IF(.NOT.ieee_is_finite(qg(k)) .OR. .NOT.ieee_is_finite(qh(k)) .OR. .NOT.ieee_is_finite(rho(k))) THEN
+        reason=RRTMGP_INPUT_UDM_FROZEN_INVALID
+        WRITE(errmsg,'(A,I0)') 'RRTMGP_INPUT_UDM_FROZEN_NOT_FINITE layer=',k
+        RETURN
+      END IF
+      IF(qg(k)<0. .OR. qh(k)<0. .OR. rho(k)<=0.) THEN
+        reason=RRTMGP_INPUT_UDM_FROZEN_INVALID
+        WRITE(errmsg,'(A,I0)') 'RRTMGP_INPUT_UDM_FROZEN_Q_OR_RHO_OUT_OF_RANGE layer=',k
+        RETURN
+      END IF
+      lg=cap; lh=cap
+      IF(qg(k)>cutoff) THEN
+        lg=EXP(0.25_real64*(LOG(pi64)+LOG(graupel_rho)+LOG(graupel_n0)- &
+                            LOG(REAL(rho(k),real64))-LOG(REAL(qg(k),real64))))
+        lg=MIN(lg,cap)
+      END IF
+      IF(qh(k)>cutoff) THEN
+        lh=EXP(0.25_real64*(LOG(pi64)+LOG(hail_rho)+LOG(hail_n0)- &
+                            LOG(REAL(rho(k),real64))-LOG(REAL(qh(k),real64))))
+        lh=MIN(lh,cap)
+      END IF
+      IF(.NOT.ieee_is_finite(lg) .OR. .NOT.ieee_is_finite(lh) .OR. lg<=0. .OR. lh<=0. .OR. &
+         lg>REAL(HUGE(0.),real64) .OR. lh>REAL(HUGE(0.),real64)) THEN
+        reason=RRTMGP_INPUT_UDM_FROZEN_INVALID
+        WRITE(errmsg,'(A,I0)') 'RRTMGP_INPUT_UDM_FROZEN_LAMBDA_INVALID layer=',k
+        RETURN
+      END IF
+      lambda_g(k)=REAL(lg); lambda_h(k)=REAL(lh)
+    END DO
+  END SUBROUTINE rrtmgp_udm_frozen_lambdas
+
   ! UDM's explicit six-species contract.  This routine does not infer phases
   ! from a microphysics scheme: each input species maps only to its named path.
   ! grid_path and omitted_grid_path columns are L/I/R/S/G/H; radius_um columns
@@ -71,7 +128,8 @@ CONTAINS
                                     grid_path,incloud_path,radius_um,reason,errmsg, &
                                     column_context,allow_clear_condensate, &
                                     omitted_grid_path,layer_reason,negative_q_limits, &
-                                    clipped_negative_q,negative_grid_correction,dry_layer_mass_kg_m2)
+                                    clipped_negative_q,negative_grid_correction,dry_layer_mass_kg_m2, &
+                                    frozen_uniform)
     REAL, INTENT(IN) :: dp_hpa(:),cf(:),qc(:),qr(:),qi(:),qs(:),qg(:),qh(:)
     REAL, INTENT(IN) :: re_cloud_um(:),re_ice_um(:),re_snow_um(:),gravity
     REAL, INTENT(OUT) :: grid_path(:,:),incloud_path(:,:),radius_um(:,:)
@@ -91,10 +149,11 @@ CONTAINS
     ! If absent, direct legacy callers explicitly retain their pressure/g
     ! approximation; WRF option 37 callers require the native array.
     REAL, OPTIONAL, INTENT(IN) :: dry_layer_mass_kg_m2(:)
+    LOGICAL, OPTIONAL, INTENT(IN) :: frozen_uniform
     REAL(real64) :: q(6),path64,radius64,mass64,g64,correction64
     REAL :: masses(SIZE(dp_hpa),6),clipped(SIZE(dp_hpa),6),limits(6)
     INTEGER :: n,k,p
-    LOGICAL :: allow_clear,clear_column,omitted_any
+    LOGICAL :: allow_clear,clear_column,omitted_any,uniform_frozen,omitted_layer
     CHARACTER(LEN=8), PARAMETER :: qnames(6)=[CHARACTER(LEN=8) :: 'QC','QI','QR','QS','QG','QH']
     CHARACTER(LEN=160) :: input_label
     INTEGER, PARAMETER :: q_to_path(6)=[RRTMGP_UDM_LIQUID,RRTMGP_UDM_ICE, &
@@ -105,6 +164,8 @@ CONTAINS
     errmsg=''
     allow_clear=.FALSE.
     IF(PRESENT(allow_clear_condensate)) allow_clear=allow_clear_condensate
+    uniform_frozen=.FALSE.
+    IF(PRESENT(frozen_uniform)) uniform_frozen=frozen_uniform
     n=SIZE(dp_hpa)
     IF(n<1 .OR. SIZE(cf)/=n .OR. SIZE(qc)/=n .OR. SIZE(qr)/=n .OR. &
        SIZE(qi)/=n .OR. SIZE(qs)/=n .OR. SIZE(qg)/=n .OR. SIZE(qh)/=n .OR. &
@@ -247,7 +308,7 @@ CONTAINS
 
     ! No hail optics are available. Return a machine-readable refusal before
     ! producing paths that a caller could accidentally pass to radiation.
-    IF(ANY(qh>0.0)) THEN
+    IF(.NOT.uniform_frozen .AND. ANY(qh>0.0)) THEN
       reason=RRTMGP_INPUT_UDM_HAIL_UNSUPPORTED
       errmsg='RRTMGP_INPUT_UDM_HAIL_OPTICS_UNSUPPORTED'
       RETURN
@@ -258,7 +319,9 @@ CONTAINS
     DO k=1,n
       q=REAL(masses(k,:),real64)
       IF(cf(k)>0.0 .OR. ANY(q>0.0_real64)) clear_column=.FALSE.
-      IF(cf(k)==0.0 .AND. ANY(q>0.0_real64)) THEN
+      omitted_layer=ANY(q(1:4)>0.0_real64)
+      IF(.NOT.uniform_frozen) omitted_layer=ANY(q>0.0_real64)
+      IF(cf(k)==0.0 .AND. omitted_layer) THEN
         IF(.NOT.allow_clear) THEN
           CALL fail_builder_layer(reason,RRTMGP_INPUT_INVALID, &
                'RRTMGP_INPUT_ZERO_CLOUD_FRACTION_WITH_CONDENSATE',k,column_context)
@@ -287,14 +350,19 @@ CONTAINS
         END IF
         IF(PRESENT(negative_grid_correction)) negative_grid_correction(k,q_to_path(p))=REAL(correction64)
         grid_path(k,q_to_path(p))=REAL(path64)
-        IF(cf(k)>0.0) THEN
+        IF(uniform_frozen .AND. p>=5) THEN
+          ! Uniform G/H occurrence is one, so the radiation path equals the
+          ! grid path and is never divided by cloud fraction.
+          incloud_path(k,q_to_path(p))=REAL(path64)
+        ELSE IF(cf(k)>0.0) THEN
           radius64=path64/REAL(cf(k),real64)
           IF(.NOT.ieee_is_finite(radius64) .OR. radius64>REAL(HUGE(0.0),real64)) THEN
             CALL fail_builder_layer(reason,RRTMGP_INPUT_OVERFLOW,'RRTMGP_INPUT_PATH_OVERFLOW',k,column_context)
             RETURN
           END IF
           incloud_path(k,q_to_path(p))=REAL(radius64)
-        ELSE IF(path64>0.0_real64 .AND. PRESENT(omitted_grid_path)) THEN
+        ELSE IF(path64>0.0_real64 .AND. PRESENT(omitted_grid_path) .AND. &
+                (.NOT.uniform_frozen .OR. p<=4)) THEN
           omitted_grid_path(k,q_to_path(p))=REAL(path64)
         END IF
       END DO

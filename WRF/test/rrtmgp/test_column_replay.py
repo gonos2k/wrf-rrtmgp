@@ -164,7 +164,7 @@ def read_raw(path: Path) -> tuple[str, int, int, dict[str, np.ndarray]]:
 
 def read_input(path: Path) -> tuple[str, int, int, int, int, int, dict[str, np.ndarray]]:
     lines = path.read_text(encoding="ascii").splitlines()
-    if len(lines) < 2 or lines[0].strip() not in {"RRTMGP_REPLAY_V1", "RRTMGP_REPLAY_V2", "RRTMGP_REPLAY_V3", "RRTMGP_REPLAY_V4", "RRTMGP_REPLAY_V5", "RRTMGP_REPLAY_V6"}:
+    if len(lines) < 2 or lines[0].strip() not in {"RRTMGP_REPLAY_V1", "RRTMGP_REPLAY_V2", "RRTMGP_REPLAY_V3", "RRTMGP_REPLAY_V4", "RRTMGP_REPLAY_V5", "RRTMGP_REPLAY_V6", "RRTMGP_REPLAY_V7"}:
         fail(f"{path}: unsupported replay format version")
     header = lines[1].split()
     if len(header) != 6:
@@ -188,7 +188,7 @@ def read_input(path: Path) -> tuple[str, int, int, int, int, int, dict[str, np.n
         roughness = records.get("ICE_ROUGHNESS")
         if roughness is None or roughness.shape != (1, 1) or roughness.item() not in (1, 2, 3):
             fail(f"{path}: V2/V3 requires scalar ICE_ROUGHNESS in {{1, 2, 3}}")
-    if lines[0].strip() in {"RRTMGP_REPLAY_V3", "RRTMGP_REPLAY_V4", "RRTMGP_REPLAY_V5", "RRTMGP_REPLAY_V6"} and phase == "SW":
+    if lines[0].strip() in {"RRTMGP_REPLAY_V3", "RRTMGP_REPLAY_V4", "RRTMGP_REPLAY_V5", "RRTMGP_REPLAY_V6", "RRTMGP_REPLAY_V7"} and phase == "SW":
         policy = records.get("SW_BAND_PARTITION")
         if policy is None or policy.shape != (1, 1) or policy.item() != 1:
             fail(f"{path}: V3 SW requires scalar SW_BAND_PARTITION=1 (CCPP transition)")
@@ -199,29 +199,64 @@ def read_input(path: Path) -> tuple[str, int, int, int, int, int, dict[str, np.n
         rain = records.get("RWP")
         if rain is None or rain.shape != (nc, nl) or np.any(rain < 0):
             fail(f"{path}: V4 requires nonnegative RWP matching column layers")
-    if lines[0].strip() in {"RRTMGP_REPLAY_V5", "RRTMGP_REPLAY_V6"}:
+    if lines[0].strip() in {"RRTMGP_REPLAY_V5", "RRTMGP_REPLAY_V6", "RRTMGP_REPLAY_V7"}:
         policy = records.get("PRECIPITATION_OPTICS")
         rain = records.get("RWP")
         if (policy is None) != (rain is None):
-            fail(f"{path}: V5/V6 precipitation policy and RWP must appear together")
+            fail(f"{path}: V5/V6/V7 precipitation policy and RWP must appear together")
         if policy is not None and (policy.shape != (1, 1) or policy.item() != 1):
-            fail(f"{path}: V5/V6 PRECIPITATION_OPTICS must be one when present")
+            fail(f"{path}: V5/V6/V7 PRECIPITATION_OPTICS must be one when present")
         if rain is not None and (rain.shape != (nc, nl) or np.any(~np.isfinite(rain)) or np.any(rain < 0)):
-            fail(f"{path}: V5/V6 RWP must be finite/nonnegative and match column layers")
+            fail(f"{path}: V5/V6/V7 RWP must be finite/nonnegative and match column layers")
     if lines[0].strip() == "RRTMGP_REPLAY_V6":
         native = records.get("NATIVE_DRY_LAYER_MASS_KG_M2")
         if native is None or native.shape[0] != nc or not 1 <= native.shape[1] <= nl:
             fail(f"{path}: V6 requires NATIVE_DRY_LAYER_MASS_KG_M2 shape (nc, nnative), 1 <= nnative <= nl")
         if not np.isfinite(native).all() or np.any(native <= 0):
             fail(f"{path}: V6 native dry layer mass must be finite and positive")
-    if lines[0].strip() in {"RRTMGP_REPLAY_V5", "RRTMGP_REPLAY_V6"}:
+    if lines[0].strip() in {"RRTMGP_REPLAY_V5", "RRTMGP_REPLAY_V6", "RRTMGP_REPLAY_V7"}:
         for name in ("GRAVITY", "CP_DRY", "MOL_WEIGHT_DRY"):
             value = records.get(name)
             if value is None or value.shape != (1, 1) or not np.isfinite(value).all() or value.item() <= 0:
-                fail(f"{path}: V5/V6 requires positive finite scalar {name}")
+                fail(f"{path}: V5/V6/V7 requires positive finite scalar {name}")
+    version = lines[0].strip()
+    frozen_names = {"GWP", "HWP", "LAMBDA_G", "LAMBDA_H", "FROZEN_MODE",
+                    "FROZEN_OCCURRENCE", "FROZEN_TABLE_SHA256_BYTES"}
+    if version == "RRTMGP_REPLAY_V7":
+        required = frozen_names
+        missing = required - records.keys()
+        if missing:
+            fail(f"{path}: V7 missing required frozen metadata/input records: {', '.join(sorted(missing))}")
+        for name in ("GWP", "HWP", "LAMBDA_G", "LAMBDA_H"):
+            values = records[name]
+            if values.shape != (nc, nl):
+                fail(f"{path}: V7 {name} must have shape (nc,nl)")
+            if name in {"GWP", "HWP"} and np.any(values < 0.0):
+                fail(f"{path}: V7 {name} must be nonnegative")
+            if name in {"LAMBDA_G", "LAMBDA_H"} and np.any(values <= 0.0):
+                fail(f"{path}: V7 {name} must be positive")
+        for name in ("FROZEN_MODE", "FROZEN_OCCURRENCE"):
+            values = records[name]
+            if values.shape != (1, 1) or values.item() != 1.0:
+                fail(f"{path}: V7 {name} must be scalar one")
+        hash_bytes = records["FROZEN_TABLE_SHA256_BYTES"]
+        if hash_bytes.shape != (64, 1) or not np.isfinite(hash_bytes).all():
+            fail(f"{path}: V7 SHA bytes must have shape (64,1)")
+        if np.any(hash_bytes != np.floor(hash_bytes)) or np.any((hash_bytes < 48) | (hash_bytes > 102)):
+            fail(f"{path}: V7 SHA bytes must be integer lowercase-hex ASCII")
+        digest = "".join(chr(int(value)) for value in hash_bytes[:, 0])
+        if len(digest) != 64 or any(char not in "0123456789abcdef" for char in digest):
+            fail(f"{path}: V7 SHA bytes are not lowercase hexadecimal")
+        native = records.get("NATIVE_DRY_LAYER_MASS_KG_M2")
+        if native is not None and (native.shape[0] != nc or not 1 <= native.shape[1] <= nl
+                                   or not np.isfinite(native).all() or np.any(native <= 0.0)):
+            fail(f"{path}: V7 optional native dry mass has invalid shape or values")
+    elif frozen_names & records.keys():
+        fail(f"{path}: frozen-optics records require RRTMGP_REPLAY_V7")
     for name, values in records.items():
         if name in {"ICE_ROUGHNESS", "SW_BAND_PARTITION", "PRECIPITATION_OPTICS",
-                    "GRAVITY", "CP_DRY", "MOL_WEIGHT_DRY", "SOLAR"}:
+                    "GRAVITY", "CP_DRY", "MOL_WEIGHT_DRY", "SOLAR", "FROZEN_MODE",
+                    "FROZEN_OCCURRENCE", "FROZEN_TABLE_SHA256_BYTES"}:
             continue
         if values.shape[0] != nc:
             fail(f"{path}: {name} first dimension {values.shape[0]} != nc={nc}")

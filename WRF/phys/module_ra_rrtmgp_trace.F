@@ -29,6 +29,9 @@ MODULE module_ra_rrtmgp_trace
   INTEGER, SAVE :: result_unit(2) = 0, raw_unit(2) = 0
   LOGICAL, SAVE :: constants_pending(2)=.FALSE.
   REAL(real64), SAVE :: replay_gravity(2),replay_cp_dry(2),replay_mol_weight_dry(2)
+  LOGICAL, SAVE :: frozen_pending(2)=.FALSE.
+  INTEGER, SAVE :: replay_frozen_mode(2)=0
+  CHARACTER(len=64), SAVE :: replay_frozen_sha256(2)=''
 
 CONTAINS
 
@@ -83,13 +86,17 @@ CONTAINS
     IF (p /= 0) trace_active = phase_active(p)
   END FUNCTION trace_active
 
-  SUBROUTINE trace_input_start(phase, nc, nl, overlap, seed, iceflag,udm_precip,gravity,cp_dry,mol_weight_dry,native_dry_mass)
+  SUBROUTINE trace_input_start(phase, nc, nl, overlap, seed, iceflag,udm_precip,gravity,cp_dry,mol_weight_dry, &
+                               native_dry_mass,frozen_mode,frozen_table_sha256)
     CHARACTER(len=*), INTENT(IN) :: phase
     INTEGER, INTENT(IN) :: nc, nl, overlap, seed, iceflag
     LOGICAL, OPTIONAL, INTENT(IN) :: udm_precip,native_dry_mass
     REAL(real64), OPTIONAL, INTENT(IN) :: gravity,cp_dry,mol_weight_dry
-    LOGICAL :: v4,v5,v6
-    INTEGER :: p, unit, ios
+    INTEGER, OPTIONAL, INTENT(IN) :: frozen_mode
+    CHARACTER(len=*), OPTIONAL, INTENT(IN) :: frozen_table_sha256
+    LOGICAL :: v4,v5,v6,v7
+    INTEGER :: p, unit, ios, selected_frozen_mode
+    CHARACTER(len=64) :: selected_frozen_sha256
     CHARACTER(len=1200) :: filename
     p = active_phase(phase)
     IF (p == 0) RETURN
@@ -103,7 +110,23 @@ CONTAINS
     v6=.FALSE.
     IF(PRESENT(native_dry_mass)) v6=native_dry_mass
     IF(v6.AND..NOT.v5) CALL trace_fatal('RRTMGP_TRACE_V6_REQUIRES_HOST_CONSTANTS')
-    IF(v6) THEN
+    selected_frozen_mode=0
+    IF(PRESENT(frozen_mode)) selected_frozen_mode=frozen_mode
+    selected_frozen_sha256=''
+    IF(PRESENT(frozen_table_sha256)) THEN
+      IF(selected_frozen_mode==1.AND.LEN(frozen_table_sha256)/=64) &
+        CALL trace_fatal('RRTMGP_TRACE_FROZEN_SHA256_LENGTH')
+      selected_frozen_sha256=frozen_table_sha256
+    END IF
+    IF(selected_frozen_mode<0.OR.selected_frozen_mode>1) &
+      CALL trace_fatal('RRTMGP_TRACE_FROZEN_MODE_UNSUPPORTED')
+    v7=selected_frozen_mode==1
+    IF(v7.AND..NOT.v5) CALL trace_fatal('RRTMGP_TRACE_V7_REQUIRES_HOST_CONSTANTS')
+    IF(v7.AND..NOT.PRESENT(frozen_table_sha256)) CALL trace_fatal('RRTMGP_TRACE_V7_REQUIRES_FROZEN_SHA256')
+    IF(v7) CALL validate_frozen_sha256(selected_frozen_sha256)
+    IF(v7) THEN
+      WRITE(unit,'(a)',IOSTAT=ios) 'RRTMGP_REPLAY_V7'
+    ELSE IF(v6) THEN
       WRITE(unit,'(a)',IOSTAT=ios) 'RRTMGP_REPLAY_V6'
     ELSE IF(v5) THEN
       WRITE(unit,'(a)',IOSTAT=ios) 'RRTMGP_REPLAY_V5'
@@ -121,6 +144,9 @@ CONTAINS
       constants_pending(p)=.TRUE.
       replay_gravity(p)=gravity; replay_cp_dry(p)=cp_dry; replay_mol_weight_dry(p)=mol_weight_dry
     END IF
+    frozen_pending(p)=v7
+    replay_frozen_mode(p)=selected_frozen_mode
+    replay_frozen_sha256(p)=selected_frozen_sha256
   END SUBROUTINE trace_input_start
 
   SUBROUTINE trace_input(phase, name, values)
@@ -156,6 +182,12 @@ CONTAINS
       CALL trace_input_real64_scalar(phase,'MOL_WEIGHT_DRY',replay_mol_weight_dry(p))
       constants_pending(p)=.FALSE.
     END IF
+    IF(frozen_pending(p)) THEN
+      CALL trace_input_real64_scalar(phase,'FROZEN_MODE',REAL(replay_frozen_mode(p),real64))
+      CALL trace_input_real64_scalar(phase,'FROZEN_OCCURRENCE',1._real64)
+      CALL trace_input_real64_vector(phase,'FROZEN_TABLE_SHA256_BYTES',replay_frozen_sha256(p))
+      frozen_pending(p)=.FALSE.
+    END IF
   END SUBROUTINE trace_input_end
 
   SUBROUTINE trace_input_real64_scalar(phase,name,value)
@@ -175,6 +207,37 @@ CONTAINS
     CLOSE(unit,IOSTAT=ios)
     CALL check_io(ios,'closing real64 metadata record')
   END SUBROUTINE trace_input_real64_scalar
+
+  SUBROUTINE trace_input_real64_vector(phase,name,value)
+    CHARACTER(len=*), INTENT(IN) :: phase,name
+    CHARACTER(len=*), INTENT(IN) :: value
+    INTEGER :: p,unit,ios,i
+    CHARACTER(len=1200) :: filename
+    p=active_phase(phase)
+    IF(p==0) RETURN
+    filename=trim(capture_dir)//'/'//trim(trace_basename(p))//'.input'
+    OPEN(NEWUNIT=unit,FILE=trim(filename),STATUS='old',POSITION='append',ACTION='write',IOSTAT=ios)
+    CALL check_io(ios,'opening character-byte metadata record')
+    WRITE(unit,'(a,1x,i0,1x,i0)',IOSTAT=ios) trim(name),len(value),1
+    CALL check_io(ios,'writing character-byte metadata header')
+    DO i=1,len(value)
+      WRITE(unit,'(es25.16e3)',IOSTAT=ios) REAL(IACHAR(value(i:i)),real64)
+      CALL check_io(ios,'writing character-byte metadata value')
+    END DO
+    CLOSE(unit,IOSTAT=ios)
+    CALL check_io(ios,'closing character-byte metadata record')
+  END SUBROUTINE trace_input_real64_vector
+
+  SUBROUTINE validate_frozen_sha256(value)
+    CHARACTER(len=64), INTENT(IN) :: value
+    INTEGER :: i,code
+    DO i=1,len(value)
+      code=IACHAR(value(i:i))
+      IF(.NOT.((code>=IACHAR('0').AND.code<=IACHAR('9')).OR. &
+               (code>=IACHAR('a').AND.code<=IACHAR('f')))) &
+        CALL trace_fatal('RRTMGP_TRACE_FROZEN_SHA256_MUST_BE_LOWERCASE_HEX')
+    END DO
+  END SUBROUTINE validate_frozen_sha256
 
   SUBROUTINE trace_result_start(phase, nc, nl)
     CHARACTER(len=*), INTENT(IN) :: phase

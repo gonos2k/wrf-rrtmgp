@@ -101,10 +101,71 @@ def rewrite_default_v5_as_v4(source: Path, destination: Path) -> None:
     destination.write_text("\n".join(output) + "\n", encoding="ascii")
 
 
+def make_v7_from_legacy_capture(source: Path, destination: Path) -> str:
+    """Build a schema-valid V7 input for reader/rejection checks (not optics)."""
+    lines = source.read_text(encoding="ascii").splitlines()
+    header = lines[1].split()
+    nc, nl = int(header[1]), int(header[2])
+    records: list[list[str]] = []
+    pos = 2
+    while pos < len(lines):
+        fields = lines[pos].split()
+        name = fields[0].upper()
+        count = int(fields[1]) * int(fields[2])
+        record = [lines[pos]]
+        pos += 1
+        values = 0
+        while values < count and pos < len(lines):
+            row = lines[pos]
+            record.append(row)
+            values += len(row.split())
+            pos += 1
+        if values != count:
+            fail(f"{source}: truncated {name}")
+        records.append(record)
+
+    constants = {"GRAVITY", "CP_DRY", "MOL_WEIGHT_DRY"}
+    common = [record for record in records if record[0].split()[0].upper() not in constants]
+    host = [record for record in records if record[0].split()[0].upper() in constants]
+    digest = "0123456789abcdef" * 4
+
+    def numeric_record(name: str, rows: int, cols: int, values: np.ndarray) -> list[str]:
+        result = [f"{name} {rows} {cols}"]
+        result.extend(f"{float(value):.16E}" for value in np.asarray(values).reshape(-1, order="F"))
+        return result
+
+    output = ["RRTMGP_REPLAY_V7", lines[1]]
+    for record in common:
+        output.extend(record)
+    output.extend(numeric_record("GWP", nc, nl, np.ones((nc, nl))))
+    output.extend(numeric_record("HWP", nc, nl, np.zeros((nc, nl))))
+    output.extend(numeric_record("LAMBDA_G", nc, nl, np.full((nc, nl), 3.0e4)))
+    output.extend(numeric_record("LAMBDA_H", nc, nl, np.full((nc, nl), 4.0e4)))
+    output.extend(host[0])
+    output.extend(host[1])
+    output.extend(host[2])
+    output.extend(numeric_record("FROZEN_MODE", 1, 1, np.array([[1.0]])))
+    output.extend(numeric_record("FROZEN_OCCURRENCE", 1, 1, np.array([[1.0]])))
+    output.extend(numeric_record("FROZEN_TABLE_SHA256_BYTES", 64, 1,
+                                 np.array([ord(char) for char in digest])))
+    destination.write_text("\n".join(output) + "\n", encoding="ascii")
+    return digest
+
+
+def replace_record_value(path: Path, name: str, value: str) -> None:
+    lines = path.read_text(encoding="ascii").splitlines()
+    for pos, line in enumerate(lines[:-1]):
+        if line.split() and line.split()[0].upper() == name:
+            lines[pos + 1] = value
+            path.write_text("\n".join(lines) + "\n", encoding="ascii")
+            return
+    fail(f"{path}: record {name} not found")
+
+
 def run_reference(executable: Path, data_dir: Path, input_path: Path,
-                  output_path: Path) -> subprocess.CompletedProcess[str]:
+                  output_path: Path, env: dict[str, str] | None = None) -> subprocess.CompletedProcess[str]:
     return subprocess.run([str(executable), str(data_dir), str(input_path), str(output_path)],
-                          text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, check=False)
+                          env=env, text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, check=False)
 
 
 def assert_result_match(actual: Path, expected: Path, label: str) -> dict[str, Any]:
@@ -158,6 +219,13 @@ def must_reject_reference(executable: Path, data_dir: Path, path: Path,
         fail(f"reference_column rejected {label} without a partition diagnostic: {run.stdout[-1200:]}")
 
 
+def must_reject_v7_reference(executable: Path, data_dir: Path, path: Path,
+                             output_path: Path, expected: str, env: dict[str, str]) -> None:
+    run = run_reference(executable, data_dir, path, output_path, env=env)
+    if run.returncode == 0 or expected not in run.stdout:
+        fail(f"reference_column V7 rejection expected {expected!r}, got rc={run.returncode}: {run.stdout[-1200:]}")
+
+
 def old_policy_differences(new_result: Path, old_result: Path) -> dict[str, float]:
     new = read_result(new_result)["sections"]
     old = read_result(old_result)["sections"]
@@ -190,7 +258,8 @@ def main() -> int:
         if not path.exists():
             parser.error(f"required path does not exist: {path}")
 
-    summary: dict[str, Any] = {"status": "FAIL", "phases": {}, "invalid_v3_rejections": []}
+    summary: dict[str, Any] = {"status": "FAIL", "phases": {}, "invalid_v3_rejections": [],
+                               "invalid_v7_rejections": []}
     with tempfile.TemporaryDirectory(prefix="rrtmgp-replay-formats-") as temporary:
         root = Path(temporary)
         capture = root / "capture"
@@ -253,6 +322,53 @@ def main() -> int:
                 results[version][phase] = legacy_output
             results["V3"][phase] = v3_output
             inputs[phase] = v3_input
+
+        # V7 is a required new semantics boundary. Validate the complete
+        # record set, then prove malformed V7 inputs reject before environment
+        # lookup instead of falling through to legacy replay behavior.
+        v7_input = root / "lw.v7.input"
+        v7_digest = make_v7_from_legacy_capture(inputs["LW"], v7_input)
+        parsed = read_input(v7_input)
+        if parsed[-1]["FROZEN_MODE"].item() != 1.0 or len(v7_digest) != 64:
+            fail("Python V7 parser did not retain frozen metadata")
+        no_frozen_env = os.environ.copy()
+        no_frozen_env.pop("WRF_RRTMGP_FROZEN_TABLE", None)
+        valid_no_env = run_reference(reference_exe, data_dir, v7_input,
+                                     root / "lw.v7.no-table.result", env=no_frozen_env)
+        if valid_no_env.returncode == 0 or "WRF_RRTMGP_FROZEN_TABLE" not in valid_no_env.stdout:
+            fail(f"V7 did not require its table path: {valid_no_env.stdout[-1200:]}")
+        summary["invalid_v7_rejections"].append("missing_table_path")
+
+        invalid_mode = root / "lw.v7.invalid-mode.input"
+        rewrite_input(v7_input, invalid_mode, "RRTMGP_REPLAY_V7",
+                      replacements={"FROZEN_MODE": "0.0000000000000000E+000"})
+        must_reject_python(invalid_mode, "V7 frozen mode zero")
+        must_reject_v7_reference(reference_exe, data_dir, invalid_mode,
+                                 root / "lw.v7.invalid-mode.result", "FROZEN_MODE must equal one", no_frozen_env)
+        summary["invalid_v7_rejections"].append("frozen_mode_zero")
+
+        missing_gwp = root / "lw.v7.missing-gwp.input"
+        rewrite_input(v7_input, missing_gwp, "RRTMGP_REPLAY_V7", remove={"GWP"})
+        must_reject_python(missing_gwp, "V7 missing GWP")
+        must_reject_v7_reference(reference_exe, data_dir, missing_gwp,
+                                 root / "lw.v7.missing-gwp.result", "section name or shape mismatch", no_frozen_env)
+        summary["invalid_v7_rejections"].append("missing_gwp")
+
+        invalid_hash = root / "lw.v7.invalid-hash-byte.input"
+        rewrite_input(v7_input, invalid_hash, "RRTMGP_REPLAY_V7")
+        replace_record_value(invalid_hash, "FROZEN_TABLE_SHA256_BYTES", "4.8500000000000000E+001")
+        must_reject_python(invalid_hash, "V7 noninteger hash byte")
+        must_reject_v7_reference(reference_exe, data_dir, invalid_hash,
+                                 root / "lw.v7.invalid-hash-byte.result", "integer ASCII", no_frozen_env)
+        summary["invalid_v7_rejections"].append("noninteger_hash_byte")
+
+        nonfinite_hash = root / "lw.v7.nonfinite-hash-byte.input"
+        rewrite_input(v7_input, nonfinite_hash, "RRTMGP_REPLAY_V7")
+        replace_record_value(nonfinite_hash, "FROZEN_TABLE_SHA256_BYTES", "NaN")
+        must_reject_python(nonfinite_hash, "V7 nonfinite hash byte")
+        must_reject_v7_reference(reference_exe, data_dir, nonfinite_hash,
+                                 root / "lw.v7.nonfinite-hash-byte.result", "SHA bytes must be finite", no_frozen_env)
+        summary["invalid_v7_rejections"].append("nonfinite_hash_byte")
 
         for phase in ("LW", "SW"):
             legacy_comparison = compare(read_result(results["V1"][phase]), read_result(results["V2"][phase]))

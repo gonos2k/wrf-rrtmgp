@@ -12,7 +12,7 @@ get_filename_component(WRF_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/../.." ABSOLUTE)
 add_subdirectory("${WRF_ROOT}/external/rte_rrtmgp" rte_rrtmgp)
 # Compile isolated copies so traditional WRF .mod files beside source cannot
 # shadow the standalone interface. configure_file tracks source changes.
-foreach(name IN ITEMS module_ra_rrtmgp module_ra_rrtmgp_input module_ra_rrtmgp_trace module_ra_rrtmgp_precip)
+foreach(name IN ITEMS module_ra_rrtmgp module_ra_rrtmgp_input module_ra_rrtmgp_trace module_ra_rrtmgp_precip module_ra_rrtmgp_hash module_ra_rrtmgp_frozen)
   configure_file("${WRF_ROOT}/phys/${name}.F" "${CMAKE_CURRENT_BINARY_DIR}/src/${name}.F" COPYONLY)
 endforeach()
 set(precip "${CMAKE_CURRENT_BINARY_DIR}/src/module_ra_rrtmgp_precip.F")
@@ -21,15 +21,45 @@ add_library(test_rrtmgp_precip STATIC "${precip}")
 target_link_libraries(test_rrtmgp_precip PUBLIC wrf_rrtmgp)
 set_target_properties(test_rrtmgp_precip PROPERTIES Fortran_MODULE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/precip_modules")
 target_include_directories(test_rrtmgp_precip PUBLIC "${CMAKE_CURRENT_BINARY_DIR}/precip_modules")
+set(frozen "${CMAKE_CURRENT_BINARY_DIR}/src/module_ra_rrtmgp_frozen.F")
+set(hash "${CMAKE_CURRENT_BINARY_DIR}/src/module_ra_rrtmgp_hash.F")
+set_source_files_properties("${frozen}" "${hash}" PROPERTIES Fortran_FORMAT FREE Fortran_PREPROCESS ON)
+add_library(test_rrtmgp_frozen STATIC "${hash}" "${frozen}")
+if(TARGET netCDF::netcdff)
+  target_link_libraries(test_rrtmgp_frozen PUBLIC netCDF::netcdff)
+else()
+  find_path(FROZEN_NETCDF_INCLUDE netcdf.mod HINTS "${NETCDF_INCLUDE_DIR}" REQUIRED)
+  find_library(FROZEN_NETCDFF netcdff HINTS "${NETCDF_LIBRARY_DIR}" REQUIRED)
+  find_library(FROZEN_NETCDF netcdf HINTS "${NETCDF_LIBRARY_DIR}" REQUIRED)
+  target_include_directories(test_rrtmgp_frozen PRIVATE "${FROZEN_NETCDF_INCLUDE}")
+  target_link_libraries(test_rrtmgp_frozen PUBLIC "${FROZEN_NETCDFF}" "${FROZEN_NETCDF}")
+endif()
+set_target_properties(test_rrtmgp_frozen PROPERTIES Fortran_MODULE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/frozen_modules")
+target_include_directories(test_rrtmgp_frozen PUBLIC "${CMAKE_CURRENT_BINARY_DIR}/frozen_modules")
+if(CMAKE_Fortran_COMPILER_ID STREQUAL "GNU")
+  target_compile_options(test_rrtmgp_frozen PRIVATE -ffree-line-length-none -fcheck=bounds)
+endif()
+add_executable(test_rrtmgp_hash test_hash.f90)
+target_link_libraries(test_rrtmgp_hash PRIVATE test_rrtmgp_frozen)
+add_test(NAME frozen_file_sha256 COMMAND test_rrtmgp_hash)
+add_executable(test_rrtmgp_frozen_lookup test_frozen_lookup.f90)
+target_link_libraries(test_rrtmgp_frozen_lookup PRIVATE test_rrtmgp_frozen)
+get_filename_component(REPO_ROOT "${WRF_ROOT}/.." ABSOLUTE)
+set(FROZEN_TABLE "${REPO_ROOT}/validation/rrtmgp37/frozen-optics-lookup/nine-grid-o128-s50/frozen-ice-psd-moments.nc"
+  CACHE FILEPATH "Experimental frozen optics table for integration tests")
+add_test(NAME frozen_fortran_python_lookup COMMAND "${Python3_EXECUTABLE}"
+  "${REPO_ROOT}/tools/udm_frozen_optics/test_fortran_lookup.py" --executable "$<TARGET_FILE:test_rrtmgp_frozen_lookup>"
+  --generation "${REPO_ROOT}/validation/rrtmgp37/frozen-optics-lookup/nine-grid-o128-s50"
+  --ctest-output-root "${CMAKE_CURRENT_BINARY_DIR}/frozen-lookup-equivalence-runs")
 set(adapter "${CMAKE_CURRENT_BINARY_DIR}/src/module_ra_rrtmgp.F")
 set(trace "${CMAKE_CURRENT_BINARY_DIR}/src/module_ra_rrtmgp_trace.F")
 set(input_builder "${CMAKE_CURRENT_BINARY_DIR}/src/module_ra_rrtmgp_input.F")
 set_source_files_properties("${adapter}" "${input_builder}" "${trace}" PROPERTIES Fortran_FORMAT FREE Fortran_PREPROCESS ON)
 add_library(test_rrtmgp_adapter STATIC standalone_wrf_error.f90 "${trace}" "${input_builder}" "${adapter}")
-target_link_libraries(test_rrtmgp_adapter PUBLIC wrf_rrtmgp test_rrtmgp_precip)
+target_link_libraries(test_rrtmgp_adapter PUBLIC wrf_rrtmgp test_rrtmgp_precip test_rrtmgp_frozen)
 set_target_properties(test_rrtmgp_adapter PROPERTIES Fortran_MODULE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/modules")
 target_include_directories(test_rrtmgp_adapter PUBLIC "${CMAKE_CURRENT_BINARY_DIR}/modules")
-foreach(test IN ITEMS columns cloud_inputs multicolumn validation adapter_invalid small_cf_sampling ice_roughness transparent_overlap spectral_surface udm_inputs precip_optics udm_adapter udm_dry_mass domain_seed native_gas_columns)
+foreach(test IN ITEMS columns cloud_inputs multicolumn validation adapter_invalid small_cf_sampling ice_roughness transparent_overlap spectral_surface udm_inputs precip_optics udm_adapter udm_dry_mass domain_seed native_gas_columns frozen_adapter udm_frozen_inputs)
   add_executable(test_rrtmgp_${test} test_${test}.f90)
   target_link_libraries(test_rrtmgp_${test} PRIVATE test_rrtmgp_adapter)
   if(CMAKE_Fortran_COMPILER_ID STREQUAL "GNU")
@@ -105,7 +135,7 @@ add_test(NAME small_cf_sampling COMMAND test_rrtmgp_small_cf_sampling "${RRTMGP_
 
 # Independent executable shares the pinned library and data, not the WRF adapter.
 add_executable(reference_column reference_column.f90)
-target_link_libraries(reference_column PRIVATE wrf_rrtmgp)
+target_link_libraries(reference_column PRIVATE wrf_rrtmgp test_rrtmgp_frozen)
 if(CMAKE_Fortran_COMPILER_ID STREQUAL "GNU")
   target_compile_options(reference_column PRIVATE -ffree-line-length-none -fcheck=bounds)
 endif()
@@ -184,6 +214,12 @@ if(RRTMGP_TEST_OPENMP)
   if(CMAKE_Fortran_COMPILER_ID STREQUAL "GNU")
     target_compile_options(test_rrtmgp_openmp PRIVATE -ffree-line-length-none -fcheck=bounds)
   endif()
+  add_executable(test_rrtmgp_frozen_openmp test_frozen_openmp.f90)
+  target_link_libraries(test_rrtmgp_frozen_openmp PRIVATE test_rrtmgp_frozen OpenMP::OpenMP_Fortran)
+  if(CMAKE_Fortran_COMPILER_ID STREQUAL "GNU")
+    target_compile_options(test_rrtmgp_frozen_openmp PRIVATE -ffree-line-length-none -fcheck=bounds)
+  endif()
+  add_test(NAME frozen_openmp_queries COMMAND test_rrtmgp_frozen_openmp "${FROZEN_TABLE}")
   add_test(NAME cpu_openmp_reentrancy COMMAND test_rrtmgp_openmp "${RRTMGP_DATA_DIR}")
   set_tests_properties(cpu_openmp_reentrancy PROPERTIES ENVIRONMENT "OMP_NUM_THREADS=1;OMP_DYNAMIC=FALSE")
 endif()
@@ -195,3 +231,25 @@ add_test(NAME native_gas_columns_v6 COMMAND "${Python3_EXECUTABLE}"
   --data-dir "${RRTMGP_DATA_DIR}"
   --output-dir "${CMAKE_CURRENT_BINARY_DIR}/native-gas-columns"
   --output "${CMAKE_CURRENT_BINARY_DIR}/native-gas-columns.json")
+
+foreach(case IN ITEMS zero tiny graupel hail mixed mixed_cloud overlap_zero)
+  add_test(NAME frozen_adapter_${case} COMMAND test_rrtmgp_frozen_adapter "${RRTMGP_DATA_DIR}" "${FROZEN_TABLE}" ${case})
+endforeach()
+foreach(pair IN ITEMS "missing_inputs|RRTMGP_FROZEN_INPUTS_REQUIRED_IN_MODE_1" "mode_zero_input|RRTMGP_FROZEN_INPUTS_REQUIRE_MODE_1"
+  "bad_mode|rrtmgp_udm_frozen_optics must be 0 or 1" "changed_path|UDM frozen optics mode and table path must be global and unchanged"
+  "lambda_range|RRTMGP_FROZEN_LW_GRAUPEL" "temperature_range|RRTMGP_FROZEN_LW_HAIL")
+  string(REPLACE "|" ";" fields "${pair}")
+  list(GET fields 0 case)
+  list(GET fields 1 diagnostic)
+  add_test(NAME frozen_reject_${case} COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/test_frozen_invalid.py"
+    "$<TARGET_FILE:test_rrtmgp_frozen_adapter>" "${RRTMGP_DATA_DIR}" "${FROZEN_TABLE}" "${case}" "${diagnostic}")
+endforeach()
+
+add_test(NAME udm_frozen_input_contract COMMAND test_rrtmgp_udm_frozen_inputs)
+
+add_test(NAME frozen_reject_missing_table COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/test_frozen_invalid.py"
+  "$<TARGET_FILE:test_rrtmgp_frozen_adapter>" "${RRTMGP_DATA_DIR}" "${FROZEN_TABLE}.missing" "mixed" "RRTMGP_FROZEN_TABLE")
+
+add_test(NAME frozen_independent_replay COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/test_frozen_replay.py"
+  "${RRTMGP_DATA_DIR}" "${FROZEN_TABLE}" "$<TARGET_FILE:test_rrtmgp_frozen_adapter>" "$<TARGET_FILE:reference_column>"
+  --output "${CMAKE_CURRENT_BINARY_DIR}/frozen-independent-replay.json")
