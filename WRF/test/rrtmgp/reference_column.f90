@@ -31,10 +31,11 @@ PROGRAM rrtmgp_reference_column
   REAL(wp) :: solar,roughness_value,partition_value,precip_mode,visible_weight
   REAL(wp) :: frozen_mode_value,frozen_occurrence
   REAL(wp) :: metadata_gravity,metadata_cp_dry,metadata_mol_weight_dry
-  LOGICAL :: use_precip,has_native_mass
+  LOGICAL :: use_precip,has_native_mass,frozen_enabled
   INTEGER :: ice_roughness
   REAL(wp), ALLOCATABLE :: play(:,:),plev(:,:),tlay(:,:),tlev(:,:),tsfc(:,:)
   REAL(wp), ALLOCATABLE :: h2o(:,:),co2(:,:),o3(:,:),n2o(:,:),ch4(:,:),o2(:,:)
+  REAL(wp), ALLOCATABLE :: vmr_cfc11(:,:),vmr_cfc12(:,:),vmr_cfc22(:,:),vmr_ccl4(:,:)
   REAL(wp), ALLOCATABLE :: col_dry(:,:),native_dry_mass(:,:)
   REAL(wp), ALLOCATABLE :: gwp(:,:),hwp(:,:),lambda_g(:,:),lambda_h(:,:),frozen_hash_bytes(:,:)
   REAL(real64), ALLOCATABLE :: frozen_gt(:,:,:),frozen_ht(:,:,:),frozen_gw(:,:,:),frozen_hw(:,:,:)
@@ -62,7 +63,7 @@ PROGRAM rrtmgp_reference_column
   REAL(wp), ALLOCATABLE :: override_bands(:,:),override_tau(:,:,:),override_ssa(:,:,:),override_asym(:,:,:)
   REAL(wp), ALLOCATABLE, TARGET :: flux_band_dn(:,:,:),flux_band_dir(:,:,:)
   INTEGER(i8) :: rng_state
-  TYPE(ty_gas_concs) :: gases
+  TYPE(ty_gas_concs) :: gases_lw,gases_sw
   TYPE(ty_gas_optics_rrtmgp) :: gas_lw,gas_sw
   TYPE(ty_cloud_optics_rrtmgp) :: cloud_lw,cloud_sw
   TYPE(ty_optical_props_1scl) :: lw_atmos,lw_cloud,lw_snow,lw_precip,lw_sampled
@@ -74,7 +75,9 @@ PROGRAM rrtmgp_reference_column
   TYPE(ty_fluxes_byband) :: sw_flux
   CHARACTER(LEN=128) :: err
   CHARACTER(LEN=256) :: section_line
-  CHARACTER(LEN=3), PARAMETER :: gas_names(6)=['h2o','co2','o3 ','n2o','ch4','o2 ']
+  CHARACTER(LEN=3), PARAMETER :: gas_names_sw(6)=['h2o','co2','o3 ','n2o','ch4','o2 ']
+  CHARACTER(LEN=5), PARAMETER :: gas_names_lw(10)=['h2o  ','co2  ','o3   ','n2o  ','ch4  ', &
+                                                    'o2   ','cfc11','cfc12','cfc22','ccl4 ']
 
   CALL get_command_argument(1,data_dir)
   CALL get_command_argument(2,input_path)
@@ -97,10 +100,11 @@ PROGRAM rrtmgp_reference_column
   IF(TRIM(magic)/='RRTMGP_REPLAY_V1'.AND.TRIM(magic)/='RRTMGP_REPLAY_V2'.AND. &
      TRIM(magic)/='RRTMGP_REPLAY_V3'.AND.TRIM(magic)/='RRTMGP_REPLAY_V4'.AND. &
      TRIM(magic)/='RRTMGP_REPLAY_V5'.AND.TRIM(magic)/='RRTMGP_REPLAY_V6'.AND. &
-     TRIM(magic)/='RRTMGP_REPLAY_V7') &
+     TRIM(magic)/='RRTMGP_REPLAY_V7'.AND.TRIM(magic)/='RRTMGP_REPLAY_V8') &
     ERROR STOP 'invalid replay input magic'
   READ(u_in,*,IOSTAT=ios) phase,nc,nl,overlap,seed,iceflag
   IF(ios/=0 .OR. (TRIM(phase)/='LW' .AND. TRIM(phase)/='SW')) ERROR STOP 'invalid replay header'
+  IF(TRIM(magic)=='RRTMGP_REPLAY_V8'.AND.TRIM(phase)/='LW') ERROR STOP 'V8 is only valid for LW'
   IF(nc<1 .OR. nl<1) ERROR STOP 'replay dimensions must be positive'
 
   ALLOCATE(play(nc,nl),plev(nc,nl+1),tlay(nc,nl),tlev(nc,nl+1),tsfc(nc,1))
@@ -120,6 +124,21 @@ PROGRAM rrtmgp_reference_column
   CALL read_section(u_in,'N2O',n2o)
   CALL read_section(u_in,'CH4',ch4)
   CALL read_section(u_in,'O2',o2)
+  IF(TRIM(magic)=='RRTMGP_REPLAY_V8') THEN
+    ALLOCATE(vmr_cfc11(nc,nl),vmr_cfc12(nc,nl),vmr_cfc22(nc,nl),vmr_ccl4(nc,nl))
+    CALL read_section(u_in,'VMR_CFC11',vmr_cfc11)
+    CALL read_section(u_in,'VMR_CFC12',vmr_cfc12)
+    CALL read_section(u_in,'VMR_CFC22',vmr_cfc22)
+    CALL read_section(u_in,'VMR_CCL4',vmr_ccl4)
+    IF(ANY(.NOT.ieee_is_finite(vmr_cfc11)).OR.ANY(vmr_cfc11<0._wp)) &
+      ERROR STOP 'V8 VMR_CFC11 must be finite/nonnegative'
+    IF(ANY(.NOT.ieee_is_finite(vmr_cfc12)).OR.ANY(vmr_cfc12<0._wp)) &
+      ERROR STOP 'V8 VMR_CFC12 must be finite/nonnegative'
+    IF(ANY(.NOT.ieee_is_finite(vmr_cfc22)).OR.ANY(vmr_cfc22<0._wp)) &
+      ERROR STOP 'V8 VMR_CFC22 must be finite/nonnegative'
+    IF(ANY(.NOT.ieee_is_finite(vmr_ccl4)).OR.ANY(vmr_ccl4<0._wp)) &
+      ERROR STOP 'V8 VMR_CCL4 must be finite/nonnegative'
+  END IF
   CALL read_section_flexible(u_in,'EMIS',emis_in,nemis)
   CALL read_section(u_in,'AVDIR',avdir_in)
   CALL read_section(u_in,'AVDIF',avdif_in)
@@ -143,7 +162,7 @@ PROGRAM rrtmgp_reference_column
   END IF
   IF((TRIM(magic)=='RRTMGP_REPLAY_V3'.OR.TRIM(magic)=='RRTMGP_REPLAY_V4'.OR. &
       TRIM(magic)=='RRTMGP_REPLAY_V5'.OR.TRIM(magic)=='RRTMGP_REPLAY_V6'.OR. &
-      TRIM(magic)=='RRTMGP_REPLAY_V7').AND. &
+      TRIM(magic)=='RRTMGP_REPLAY_V7'.OR.TRIM(magic)=='RRTMGP_REPLAY_V8').AND. &
      TRIM(phase)=='SW') THEN
     CALL read_scalar_section(u_in,'SW_BAND_PARTITION',partition_value)
     IF(.NOT.ieee_is_finite(partition_value)) ERROR STOP 'non-finite SW band partition'
@@ -193,7 +212,105 @@ PROGRAM rrtmgp_reference_column
     IF(ANY(native_dry_mass(:,1:n_native)<=0._wp)) &
       ERROR STOP 'V6 native dry layer mass must be finite and positive'
   END IF
+  frozen_enabled=.FALSE.
+  IF(TRIM(magic)=='RRTMGP_REPLAY_V8') THEN
+    ! V8 adds four recorded LW gas VMR profiles before any optional frozen
+    ! optics profile and the host constants appended by trace_input_end.
+    DO i=1,2
+      READ(u_in,'(A)',IOSTAT=ios) section_line
+      IF(ios/=0) ERROR STOP 'V8 ended before LW trace-gas inputs'
+      READ(section_line,*,IOSTAT=ios) next_section
+      IF(ios/=0) ERROR STOP 'V8 invalid optional precipitation/mass section'
+      BACKSPACE(u_in)
+      IF(TRIM(next_section)=='PRECIPITATION_OPTICS') THEN
+        IF(use_precip) ERROR STOP 'V8 duplicate precipitation metadata'
+        CALL read_scalar_section(u_in,'PRECIPITATION_OPTICS',precip_mode)
+        IF(.NOT.ieee_is_finite(precip_mode).OR.precip_mode/=1._wp) &
+          ERROR STOP 'V8 PRECIPITATION_OPTICS must equal one'
+        ALLOCATE(rwp(nc,nl))
+        CALL read_section(u_in,'RWP',rwp)
+        IF(ANY(.NOT.ieee_is_finite(rwp)).OR.ANY(rwp<0._wp)) ERROR STOP 'V8 RWP must be finite/nonnegative'
+        use_precip=.TRUE.
+      ELSE IF(TRIM(next_section)=='NATIVE_DRY_LAYER_MASS_KG_M2') THEN
+        IF(has_native_mass) ERROR STOP 'V8 duplicate native dry mass metadata'
+        ALLOCATE(native_dry_mass(nc,nl))
+        CALL read_section_flexible(u_in,'NATIVE_DRY_LAYER_MASS_KG_M2',native_dry_mass,n_native)
+        IF(n_native<1.OR.n_native>nl) ERROR STOP 'V8 native dry mass layer count must be within 1:nl'
+        IF(ANY(.NOT.ieee_is_finite(native_dry_mass(:,1:n_native))).OR. &
+           ANY(native_dry_mass(:,1:n_native)<=0._wp)) ERROR STOP 'V8 native dry layer mass must be finite/positive'
+        has_native_mass=.TRUE.
+      ELSE
+        EXIT
+      END IF
+    END DO
+    READ(u_in,'(A)',IOSTAT=ios) section_line
+    IF(ios/=0) ERROR STOP 'V8 ended before constants metadata'
+    READ(section_line,*,IOSTAT=ios) next_section
+    IF(ios/=0) ERROR STOP 'V8 invalid constants/frozen section header'
+    BACKSPACE(u_in)
+    IF(TRIM(next_section)=='GWP') THEN
+      ALLOCATE(gwp(nc,nl),hwp(nc,nl),lambda_g(nc,nl),lambda_h(nc,nl))
+      CALL read_section(u_in,'GWP',gwp)
+      CALL read_section(u_in,'HWP',hwp)
+      CALL read_section(u_in,'LAMBDA_G',lambda_g)
+      CALL read_section(u_in,'LAMBDA_H',lambda_h)
+      IF(ANY(.NOT.ieee_is_finite(gwp)).OR.ANY(gwp<0._wp)) ERROR STOP 'V8 GWP must be finite/nonnegative'
+      IF(ANY(.NOT.ieee_is_finite(hwp)).OR.ANY(hwp<0._wp)) ERROR STOP 'V8 HWP must be finite/nonnegative'
+      IF(ANY(.NOT.ieee_is_finite(lambda_g)).OR.ANY(lambda_g<=0._wp)) ERROR STOP 'V8 LAMBDA_G must be finite/positive'
+      IF(ANY(.NOT.ieee_is_finite(lambda_h)).OR.ANY(lambda_h<=0._wp)) ERROR STOP 'V8 LAMBDA_H must be finite/positive'
+      frozen_enabled=.TRUE.
+    END IF
+    CALL read_scalar_section(u_in,'GRAVITY',metadata_gravity)
+    CALL read_scalar_section(u_in,'CP_DRY',metadata_cp_dry)
+    CALL read_scalar_section(u_in,'MOL_WEIGHT_DRY',metadata_mol_weight_dry)
+    IF(.NOT.ieee_is_finite(metadata_gravity).OR.metadata_gravity<=0._wp) ERROR STOP 'V8 GRAVITY must be finite/positive'
+    IF(.NOT.ieee_is_finite(metadata_cp_dry).OR.metadata_cp_dry<=0._wp) ERROR STOP 'V8 CP_DRY must be finite/positive'
+    IF(.NOT.ieee_is_finite(metadata_mol_weight_dry).OR.metadata_mol_weight_dry<=0._wp) &
+      ERROR STOP 'V8 MOL_WEIGHT_DRY must be finite/positive'
+    CALL init_constants(gravity=metadata_gravity,heat_capacity_dry_air=metadata_cp_dry, &
+                        mol_weight_dry_air=metadata_mol_weight_dry)
+    IF(frozen_enabled) THEN
+      ALLOCATE(frozen_hash_bytes(64,1))
+      CALL read_scalar_section(u_in,'FROZEN_MODE',frozen_mode_value)
+      IF(.NOT.ieee_is_finite(frozen_mode_value).OR.frozen_mode_value/=1._wp) &
+        ERROR STOP 'V8 FROZEN_MODE must equal one when frozen records are present'
+      CALL read_scalar_section(u_in,'FROZEN_OCCURRENCE',frozen_occurrence)
+      IF(.NOT.ieee_is_finite(frozen_occurrence).OR.frozen_occurrence/=1._wp) &
+        ERROR STOP 'V8 FROZEN_OCCURRENCE must equal one'
+      CALL read_section(u_in,'FROZEN_TABLE_SHA256_BYTES',frozen_hash_bytes)
+      IF(ANY(.NOT.ieee_is_finite(frozen_hash_bytes))) ERROR STOP 'V8 frozen table SHA bytes must be finite'
+      frozen_sha_recorded=''
+      DO i=1,64
+        IF(frozen_hash_bytes(i,1)<0._wp.OR.frozen_hash_bytes(i,1)>127._wp) &
+          ERROR STOP 'V8 frozen table SHA bytes must be integer ASCII'
+        IF(frozen_hash_bytes(i,1)/=REAL(NINT(frozen_hash_bytes(i,1)),wp)) &
+          ERROR STOP 'V8 frozen table SHA bytes must be integer ASCII'
+        frozen_sha_recorded(i:i)=ACHAR(NINT(frozen_hash_bytes(i,1)))
+        IF(.NOT.((frozen_sha_recorded(i:i)>='0'.AND.frozen_sha_recorded(i:i)<='9').OR. &
+                 (frozen_sha_recorded(i:i)>='a'.AND.frozen_sha_recorded(i:i)<='f'))) &
+          ERROR STOP 'V8 frozen table SHA must be lowercase hexadecimal'
+      END DO
+      frozen_table_env=''
+      CALL GET_ENVIRONMENT_VARIABLE('WRF_RRTMGP_FROZEN_TABLE',frozen_table_env,STATUS=env_status)
+      IF(env_status/=0.OR.LEN_TRIM(frozen_table_env)==0) ERROR STOP 'V8 requires WRF_RRTMGP_FROZEN_TABLE'
+      CALL rrtmgp_file_sha256(TRIM(frozen_table_env),frozen_sha_raw,frozen_status,frozen_message)
+      IF(frozen_status/=0) THEN
+        WRITE(*,'(A)') TRIM(frozen_message)
+        ERROR STOP 'V8 frozen table file cannot be hashed'
+      END IF
+      IF(frozen_sha_raw/=frozen_sha_recorded) ERROR STOP 'V8 frozen table SHA256 does not match input'
+      CALL initialize_frozen(TRIM(frozen_table_env),frozen_status,frozen_message)
+      IF(frozen_status/=0) THEN
+        WRITE(*,'(A)') TRIM(frozen_message)
+        ERROR STOP 'V8 frozen table initialization failed'
+      END IF
+      IF(frozen_table_sha256()/=frozen_sha_recorded) ERROR STOP 'V8 loaded table identity differs from input'
+    END IF
+    READ(u_in,'(A)',IOSTAT=ios) section_line
+    IF(ios>=0) ERROR STOP 'V8 contains trailing or unsupported records'
+  END IF
   IF(TRIM(magic)=='RRTMGP_REPLAY_V7') THEN
+    frozen_enabled=.TRUE.
     ! V7 keeps optional V5/V6 extras before the four immutable-optics inputs.
     DO i=1,2
       READ(u_in,'(A)',IOSTAT=ios) section_line
@@ -323,20 +440,34 @@ PROGRAM rrtmgp_reference_column
   END IF
   avdir=avdir_in(:,1); avdif=avdif_in(:,1); andir=andir_in(:,1); andif=andif_in(:,1)
   mu0=mu0_in(:,1)
-  CALL check_error(gases%init(gas_names))
-  CALL load_and_init(gas_lw,TRIM(data_dir)//'/rrtmgp-gas-lw-g128.nc',gases)
-  CALL load_and_init(gas_sw,TRIM(data_dir)//'/rrtmgp-gas-sw-g112.nc',gases)
+  CALL check_error(gases_lw%init(gas_names_lw))
+  CALL check_error(gases_sw%init(gas_names_sw))
+  CALL load_and_init(gas_lw,TRIM(data_dir)//'/rrtmgp-gas-lw-g128.nc',gases_lw)
+  CALL load_and_init(gas_sw,TRIM(data_dir)//'/rrtmgp-gas-sw-g112.nc',gases_sw)
   CALL load_cld_lutcoeff(cloud_lw,TRIM(data_dir)//'/rrtmgp-clouds-lw-bnd.nc')
   CALL load_cld_lutcoeff(cloud_sw,TRIM(data_dir)//'/rrtmgp-clouds-sw-bnd.nc')
   CALL check_error(cloud_lw%set_ice_roughness(ice_roughness))
   CALL check_error(cloud_sw%set_ice_roughness(ice_roughness))
-  CALL check_error(gases%init(gas_names))
-  CALL check_error(gases%set_vmr('h2o',h2o))
-  CALL check_error(gases%set_vmr('co2',co2))
-  CALL check_error(gases%set_vmr('o3',o3))
-  CALL check_error(gases%set_vmr('n2o',n2o))
-  CALL check_error(gases%set_vmr('ch4',ch4))
-  CALL check_error(gases%set_vmr('o2',o2))
+  CALL check_error(gases_lw%set_vmr('h2o',h2o))
+  CALL check_error(gases_lw%set_vmr('co2',co2))
+  CALL check_error(gases_lw%set_vmr('o3',o3))
+  CALL check_error(gases_lw%set_vmr('n2o',n2o))
+  CALL check_error(gases_lw%set_vmr('ch4',ch4))
+  CALL check_error(gases_lw%set_vmr('o2',o2))
+  CALL check_error(gases_sw%set_vmr('h2o',h2o))
+  CALL check_error(gases_sw%set_vmr('co2',co2))
+  CALL check_error(gases_sw%set_vmr('o3',o3))
+  CALL check_error(gases_sw%set_vmr('n2o',n2o))
+  CALL check_error(gases_sw%set_vmr('ch4',ch4))
+  CALL check_error(gases_sw%set_vmr('o2',o2))
+  IF(.NOT.ALLOCATED(vmr_cfc11)) THEN
+    ALLOCATE(vmr_cfc11(nc,nl),vmr_cfc12(nc,nl),vmr_cfc22(nc,nl),vmr_ccl4(nc,nl))
+    vmr_cfc11=0._wp; vmr_cfc12=0._wp; vmr_cfc22=0._wp; vmr_ccl4=0._wp
+  END IF
+  CALL check_error(gases_lw%set_vmr('cfc11',vmr_cfc11))
+  CALL check_error(gases_lw%set_vmr('cfc12',vmr_cfc12))
+  CALL check_error(gases_lw%set_vmr('cfc22',vmr_cfc22))
+  CALL check_error(gases_lw%set_vmr('ccl4',vmr_ccl4))
 
   ! V1-V5 retain historical pressure-derived dry columns. V6/V7 replace the
   ! host-provided native prefix when that optional independent mass is present.
@@ -358,7 +489,7 @@ PROGRAM rrtmgp_reference_column
     CALL check_error(lw_snow%alloc_1scl(nc,nl,cloud_lw))
     CALL check_error(lw_sampled%alloc_1scl(nc,nl,gas_lw))
     CALL check_error(lw_source%alloc(nc,nl,gas_lw))
-    CALL check_error(gas_lw%gas_optics(play*100._wp,plev*100._wp,tlay,tsfc(:,1),gases, &
+    CALL check_error(gas_lw%gas_optics(play*100._wp,plev*100._wp,tlay,tsfc(:,1),gases_lw, &
                                       lw_atmos,lw_source,col_dry=col_dry,tlev=tlev))
     gas_tau=lw_atmos%tau
     emissivity=MAX(0._wp,MIN(1._wp,emissivity))
@@ -395,7 +526,7 @@ PROGRAM rrtmgp_reference_column
       CALL check_error(draw_samples(mask,lw_cloud,lw_sampled))
       CALL check_error(lw_sampled%increment(lw_atmos))
     END IF
-    IF(TRIM(magic)=='RRTMGP_REPLAY_V7') THEN
+    IF(frozen_enabled) THEN
       ALLOCATE(frozen_gt(nc,nl,cloud_lw%get_nband()),frozen_ht(nc,nl,cloud_lw%get_nband()))
       ALLOCATE(frozen_tau(nc,nl,cloud_lw%get_nband()))
       CALL query_lw(FROZEN_GRAUPEL,REAL(lambda_g,real64),REAL(tlay,real64),REAL(gwp,real64), &
@@ -441,7 +572,7 @@ PROGRAM rrtmgp_reference_column
     CALL check_error(sw_cloud%alloc_2str(nc,nl,cloud_sw))
     CALL check_error(sw_snow%alloc_2str(nc,nl,cloud_sw))
     CALL check_error(sw_sampled%alloc_2str(nc,nl,gas_sw))
-    CALL check_error(gas_sw%gas_optics(play*100._wp,plev*100._wp,tlay,gases,sw_atmos,toa,col_dry=col_dry))
+    CALL check_error(gas_sw%gas_optics(play*100._wp,plev*100._wp,tlay,gases_sw,sw_atmos,toa,col_dry=col_dry))
     gas_tau=sw_atmos%tau; gas_ssa=sw_atmos%ssa; gas_g=sw_atmos%g
     DO c=1,nc
       IF(SUM(toa(c,:))<=0._wp) ERROR STOP 'TOA solar spectrum integral must be positive'
@@ -564,6 +695,7 @@ PROGRAM rrtmgp_reference_column
   WRITE(u_out,'(A,1X,I0,1X,I0)') TRIM(phase),nc,nl
   CALL write3(u_out,'GAS_COL_DRY',RESHAPE(col_dry,[nc,nl,1]))
   CALL write3(u_out,'GAS_TAU',gas_tau)
+  IF(TRIM(magic)=='RRTMGP_REPLAY_V8') CALL write3(u_out,'GAS_TAU_RAW',gas_tau)
   IF(TRIM(phase)=='SW') THEN
     CALL write3(u_out,'GAS_SSA',gas_ssa); CALL write3(u_out,'GAS_G',gas_g)
   END IF
@@ -577,7 +709,7 @@ PROGRAM rrtmgp_reference_column
   IF(TRIM(phase)=='SW') THEN
     CALL write3(u_out,'CLOUD_SSA',cloud_ssa); CALL write3(u_out,'CLOUD_G',cloud_g)
   END IF
-  IF(TRIM(magic)=='RRTMGP_REPLAY_V7') THEN
+  IF(frozen_enabled) THEN
     IF(TRIM(phase)=='LW') THEN
       CALL write3(u_out,'GRAUPEL_TAU_ABS',REAL(frozen_gt,wp))
       CALL write3(u_out,'HAIL_TAU_ABS',REAL(frozen_ht,wp))

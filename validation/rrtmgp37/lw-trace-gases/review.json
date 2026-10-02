@@ -1,0 +1,22 @@
+{
+  "scope": "read-only source review of UDM27 LW trace-gas integration",
+  "result": "NO_BLOCKING_SOURCE_DEFECT_FOUND",
+  "checks": [
+    "existing wrapper inputs are mol/mol and forwarded without unit conversion",
+    "existing model-top extension preserved",
+    "LW ten-gas versus SW six-gas loading",
+    "all-or-none optional group, exact shape, finite/nonnegative values before capture/core",
+    "V8 section ordering and legacy zero compatibility",
+    "GAS_TAU_RAW sampled before cloud/precipitation addition"
+  ],
+  "limits": [
+    "source review does not prove runtime CAM-table consumption",
+    "ideal SCM skips CAM-file initialization and exercises fallback values",
+    "experimental frozen precipitation is not observation validated"
+  ],
+  "reviewer": "reference_inventory independent read-only agent",
+  "reviewed_sha256": {
+    "WRF/phys/module_ra_rrtmgp.F": "9a298be32db3af8b4405315d3c21e0e720f23098a89c2303d808becc9174bcdf",
+    "WRF/phys/module_ra_rrtmg_lw.F": "d934c066ae06466bca4ed37a9ca506b859f505c5919743bb34de1f6a311abb67"
+  }
+}

@@ -87,14 +87,15 @@ CONTAINS
   END FUNCTION trace_active
 
   SUBROUTINE trace_input_start(phase, nc, nl, overlap, seed, iceflag,udm_precip,gravity,cp_dry,mol_weight_dry, &
-                               native_dry_mass,frozen_mode,frozen_table_sha256)
+                               native_dry_mass,frozen_mode,frozen_table_sha256,trace_gases_present)
     CHARACTER(len=*), INTENT(IN) :: phase
     INTEGER, INTENT(IN) :: nc, nl, overlap, seed, iceflag
     LOGICAL, OPTIONAL, INTENT(IN) :: udm_precip,native_dry_mass
     REAL(real64), OPTIONAL, INTENT(IN) :: gravity,cp_dry,mol_weight_dry
     INTEGER, OPTIONAL, INTENT(IN) :: frozen_mode
     CHARACTER(len=*), OPTIONAL, INTENT(IN) :: frozen_table_sha256
-    LOGICAL :: v4,v5,v6,v7
+    LOGICAL, OPTIONAL, INTENT(IN) :: trace_gases_present
+    LOGICAL :: v4,v5,v6,v7,v8
     INTEGER :: p, unit, ios, selected_frozen_mode
     CHARACTER(len=64) :: selected_frozen_sha256
     CHARACTER(len=1200) :: filename
@@ -121,10 +122,16 @@ CONTAINS
     IF(selected_frozen_mode<0.OR.selected_frozen_mode>1) &
       CALL trace_fatal('RRTMGP_TRACE_FROZEN_MODE_UNSUPPORTED')
     v7=selected_frozen_mode==1
+    v8=.FALSE.
+    IF(PRESENT(trace_gases_present)) v8=trace_gases_present
+    IF(v8.AND.uppercase(phase)/='LW') CALL trace_fatal('RRTMGP_TRACE_V8_LW_ONLY')
+    IF(v8.AND..NOT.v5) CALL trace_fatal('RRTMGP_TRACE_V8_REQUIRES_HOST_CONSTANTS')
     IF(v7.AND..NOT.v5) CALL trace_fatal('RRTMGP_TRACE_V7_REQUIRES_HOST_CONSTANTS')
     IF(v7.AND..NOT.PRESENT(frozen_table_sha256)) CALL trace_fatal('RRTMGP_TRACE_V7_REQUIRES_FROZEN_SHA256')
     IF(v7) CALL validate_frozen_sha256(selected_frozen_sha256)
-    IF(v7) THEN
+    IF(v8) THEN
+      WRITE(unit,'(a)',IOSTAT=ios) 'RRTMGP_REPLAY_V8'
+    ELSE IF(v7) THEN
       WRITE(unit,'(a)',IOSTAT=ios) 'RRTMGP_REPLAY_V7'
     ELSE IF(v6) THEN
       WRITE(unit,'(a)',IOSTAT=ios) 'RRTMGP_REPLAY_V6'
@@ -144,7 +151,7 @@ CONTAINS
       constants_pending(p)=.TRUE.
       replay_gravity(p)=gravity; replay_cp_dry(p)=cp_dry; replay_mol_weight_dry(p)=mol_weight_dry
     END IF
-    frozen_pending(p)=v7
+    frozen_pending(p)=v7.OR.(v8.AND.selected_frozen_mode==1)
     replay_frozen_mode(p)=selected_frozen_mode
     replay_frozen_sha256(p)=selected_frozen_sha256
   END SUBROUTINE trace_input_start

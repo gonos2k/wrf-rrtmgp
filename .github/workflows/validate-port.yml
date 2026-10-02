@@ -391,6 +391,16 @@ jobs:
             --reference build/replay-reference/reference_column \
             --table validation/rrtmgp37/frozen-optics-lookup/nine-grid-o128-s50 \
             --output-dir build/frozen-runtime-scm > build/frozen-runtime-scm.log
+      - name: Replay actual LW trace gases and isolate their contribution
+        shell: bash
+        run: |
+          set -euo pipefail
+          export LD_LIBRARY_PATH="$RUNNER_TEMP/netcdf/lib:/usr/lib/x86_64-linux-gnu:${LD_LIBRARY_PATH:-}"
+          export OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1
+          python3 WRF/test/rrtmgp/test_lw_trace_gases_scm.py \
+            --wrf WRF/main/wrf.exe --ideal WRF/main/ideal.exe \
+            --reference build/replay-reference/reference_column \
+            --output-dir build/lw-trace-gases-scm > build/lw-trace-gases-scm.log
       - name: Package SCM evidence with original WRF filenames
         if: always()
         shell: bash

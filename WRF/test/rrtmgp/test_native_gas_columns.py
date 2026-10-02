@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
-"""Test native dry-mass gas columns in the real adapter and V6 replay.
+"""Test native dry-mass gas columns in the real adapter and replay formats.
 
 Standalone mode runs the Fortran solver fixture, validates its V6 captures,
 replays them through the independent reference executable, and probes invalid
-native-mass inputs.  Capture mode validates production SCM captures with the
-same independent mass and pressure-derived-extension formulas.
+native-mass inputs. Capture mode accepts current V6/V7/V8 production captures
+and validates them with the same independent mass and pressure-derived-
+extension formulas. V8 must contain all four LW trace-gas profiles.
 """
 from __future__ import annotations
 
@@ -28,6 +29,7 @@ M_H2O_KG_MOL = 0.018016
 SHAPE_ERROR = "RRTMGP_INPUT_NATIVE_DRY_MASS_SHAPE"
 VALUE_ERROR = "RRTMGP_INPUT_NATIVE_DRY_MASS_NOT_POSITIVE_FINITE"
 REFERENCE_VALUE_ERROR = "V6 native dry layer mass must be finite and positive"
+SUPPORTED_INPUT_MAGICS = {"RRTMGP_REPLAY_V6", "RRTMGP_REPLAY_V7", "RRTMGP_REPLAY_V8"}
 PHASES = ("LW", "SW")
 
 
@@ -81,27 +83,74 @@ def parse_trace(path: Path, magic_expected: str, section_dimensions: int) -> tup
 
 def read_input(path: Path) -> tuple[dict[str, Any], dict[str, np.ndarray]]:
     lines = path.read_text(encoding="ascii").splitlines()
-    if len(lines) < 2 or lines[0].strip() != "RRTMGP_REPLAY_V6":
-        raise ValueError(f"{path}: expected RRTMGP_REPLAY_V6")
+    if len(lines) < 2 or lines[0].strip() not in SUPPORTED_INPUT_MAGICS:
+        raise ValueError(f"{path}: expected one of {', '.join(sorted(SUPPORTED_INPUT_MAGICS))}")
     h = lines[1].split()
     if len(h) != 6:
-        raise ValueError(f"{path}: malformed V6 header")
+        raise ValueError(f"{path}: malformed replay header")
     phase, nc, nl, overlap, seed, iceflag = h[0], *(int(x) for x in h[1:])
-    _, sections = parse_trace_records(lines[2:], path)
+    # Use the shared strict replay parser so V8 cannot silently pass with a
+    # missing/invalid CFC profile and V7/V8 frozen metadata keeps its contract.
+    from test_column_replay import read_input as read_strict_replay_input
+    try:
+        strict_phase, strict_nc, strict_nl, strict_overlap, strict_seed, strict_iceflag, sections = \
+            read_strict_replay_input(path)
+    except (RuntimeError, ValueError) as exc:
+        raise ValueError(str(exc)) from exc
+    if (phase.upper(), nc, nl, overlap, seed, iceflag) != \
+       (strict_phase, strict_nc, strict_nl, strict_overlap, strict_seed, strict_iceflag):
+        raise ValueError(f"{path}: replay header changed during strict validation")
     native = sections.get("NATIVE_DRY_LAYER_MASS_KG_M2")
     if native is None or native.shape[0] != nc or not 1 <= native.shape[1] <= nl:
         raise ValueError(f"{path}: invalid native dry-mass shape")
     if not np.isfinite(native).all() or np.any(native <= 0):
         raise ValueError(f"{path}: native dry mass must be finite and positive")
-    for key in ("PLEV", "H2O", "GRAVITY", "MOL_WEIGHT_DRY"):
+    for key in ("PLEV", "H2O", "GRAVITY", "CP_DRY", "MOL_WEIGHT_DRY"):
         if key not in sections:
             raise ValueError(f"{path}: missing {key}")
     if sections["PLEV"].shape != (nc, nl + 1) or sections["H2O"].shape != (nc, nl):
         raise ValueError(f"{path}: pressure/vapor dimensions do not match header")
-    if sections["GRAVITY"].shape != (1, 1) or sections["MOL_WEIGHT_DRY"].shape != (1, 1):
+    if any(sections[key].shape != (1, 1) for key in ("GRAVITY", "CP_DRY", "MOL_WEIGHT_DRY")):
         raise ValueError(f"{path}: constants metadata must be scalar")
-    return {"phase": phase.upper(), "nc": nc, "nl": nl, "overlap": overlap,
+    return {"phase": strict_phase, "nc": nc, "nl": nl, "overlap": overlap,
             "seed": seed, "iceflag": iceflag, "magic": lines[0].strip()}, sections
+
+
+def reject_missing_v8_cfc(path: Path) -> bool:
+    """Prove the strict parser rejects a V8 capture missing one required gas."""
+    lines = path.read_text(encoding="ascii").splitlines()
+    if not lines or lines[0].strip() != "RRTMGP_REPLAY_V8":
+        return False
+    output: list[str] = []
+    cursor = 0
+    removed = False
+    while cursor < len(lines):
+        fields = lines[cursor].split()
+        if len(fields) == 3 and fields[0].upper() == "VMR_CCL4":
+            count = int(fields[1]) * int(fields[2])
+            cursor += 1
+            consumed = 0
+            while cursor < len(lines) and consumed < count:
+                consumed += len(lines[cursor].split())
+                cursor += 1
+            if consumed != count:
+                raise ValueError(f"{path}: malformed VMR_CCL4 fixture while testing rejection")
+            removed = True
+            continue
+        output.append(lines[cursor])
+        cursor += 1
+    if not removed:
+        raise ValueError(f"{path}: V8 capture lacks VMR_CCL4 to exercise missing-gas rejection")
+    with tempfile.TemporaryDirectory(prefix="native-gas-v8-missing-") as scratch:
+        corrupted = Path(scratch) / "missing-ccl4.input"
+        corrupted.write_text("\n".join(output) + "\n", encoding="ascii")
+        try:
+            read_input(corrupted)
+        except ValueError as exc:
+            if "V8 missing required LW gas records" not in str(exc):
+                raise
+            return True
+        raise RuntimeError("strict parser accepted V8 replay missing VMR_CCL4")
 
 
 def parse_trace_records(lines: list[str], path: Path) -> tuple[None, dict[str, np.ndarray]]:
@@ -214,6 +263,7 @@ def expected_columns(input_records: dict[str, np.ndarray], nc: int, nl: int) -> 
 def validate_pair(capture: Path, phase: str, *, require_raw: bool) -> dict[str, Any]:
     inp_path, result_path = capture / f"{phase.lower()}.input", capture / f"{phase.lower()}.result"
     meta, inputs = read_input(inp_path)
+    missing_v8_cfc_rejected = reject_missing_v8_cfc(inp_path) if meta["magic"] == "RRTMGP_REPLAY_V8" else None
     result_meta, result = read_result(result_path)
     if (meta["phase"], meta["nc"], meta["nl"]) != (phase, result_meta["nc"], result_meta["nl"]):
         raise ValueError(f"{capture}: {phase} input/result headers differ")
@@ -245,6 +295,7 @@ def validate_pair(capture: Path, phase: str, *, require_raw: bool) -> dict[str, 
     elif require_raw:
         raise ValueError(f"{capture}: missing actual SCM raw trace {raw_path.name}")
     return {"phase": phase, "nc": meta["nc"], "nl": meta["nl"], "native_layers": n_native,
+            "magic": meta["magic"], "missing_v8_cfc_rejected": missing_v8_cfc_rejected,
             "native_mass_exact_raw_match": native_exact,
             "gas_col_dry_max_abs_error": float(np.max(np.abs(gas_col - expected))),
             "gas_col_dry_relative_max_error": float(np.max(np.abs(gas_col - expected) /

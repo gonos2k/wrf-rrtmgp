@@ -12804,6 +12804,10 @@ CONTAINS
                   IF(has_reqi/=0) CALL trace_raw('LW','SOURCE_RE_ICE',re_ice(i,kts:kte,j))
                   IF(has_reqs/=0) CALL trace_raw('LW','SOURCE_RE_SNOW',re_snow(i,kts:kte,j))
                   CALL trace_raw('LW','QV',qv1d(kts:kte))
+                  CALL trace_raw('LW','VMR_CFC11',cfc11vmr(ncol,kts:kte))
+                  CALL trace_raw('LW','VMR_CFC12',cfc12vmr(ncol,kts:kte))
+                  CALL trace_raw('LW','VMR_CFC22',cfc22vmr(ncol,kts:kte))
+                  CALL trace_raw('LW','VMR_CCL4',ccl4vmr(ncol,kts:kte))
                   CALL trace_raw('LW','ICLOUD',[REAL(ICLOUD)])
                   IF (ICLOUD /= 0) CALL trace_raw('LW','FALLBACK_REL',recloud1d(ncol,kts:kte))
                   IF (ICLOUD /= 0) CALL trace_raw('LW','FALLBACK_REI',reice1d(ncol,kts:kte))
@@ -13046,13 +13050,15 @@ CONTAINS
              CALL rrtmgp_lw_column(play,plev,tlay,tlev,tsfc,h2ovmr,co2vmr,o3vmr,n2ovmr,ch4vmr,o2vmr,emis, &
                cldfrac,clwpth,ciwpth,cswpth,rel,rei,res,4,icld, &
                gp_seed,uflx,dflx,hr,uflxc,dflxc,hrc,rwp=gp_rwp, &
-               native_dry_layer_mass_kg_m2=RESHAPE(udm_dry_layer_mass(i,kts:kte,j),[1,kte-kts+1]), &
-               gwp=gp_gwp,hwp=gp_hwp,lambda_g=gp_lambda_g,lambda_h=gp_lambda_h,frozen_context=gp_context)
+             native_dry_layer_mass_kg_m2=RESHAPE(udm_dry_layer_mass(i,kts:kte,j),[1,kte-kts+1]), &
+               gwp=gp_gwp,hwp=gp_hwp,lambda_g=gp_lambda_g,lambda_h=gp_lambda_h,frozen_context=gp_context, &
+               cfc11vmr=cfc11vmr,cfc12vmr=cfc12vmr,cfc22vmr=cfc22vmr,ccl4vmr=ccl4vmr)
            ELSE
              CALL rrtmgp_lw_column(play,plev,tlay,tlev,tsfc,h2ovmr,co2vmr,o3vmr,n2ovmr,ch4vmr,o2vmr,emis, &
                cldfrac,clwpth,ciwpth,cswpth,rel,rei,res,4,icld, &
                gp_seed,uflx,dflx,hr,uflxc,dflxc,hrc,rwp=gp_rwp, &
-               native_dry_layer_mass_kg_m2=RESHAPE(udm_dry_layer_mass(i,kts:kte,j),[1,kte-kts+1]))
+               native_dry_layer_mass_kg_m2=RESHAPE(udm_dry_layer_mass(i,kts:kte,j),[1,kte-kts+1]), &
+               cfc11vmr=cfc11vmr,cfc12vmr=cfc12vmr,cfc22vmr=cfc22vmr,ccl4vmr=ccl4vmr)
            END IF
            uflxcln=uflx; dflxcln=dflx
          ELSE
