@@ -64,11 +64,11 @@ def main() -> int:
             if (parsed_phase, nc, nl) != (phase, 1, 3):
                 fail(f"unexpected V4/V5 {phase} input header {(parsed_phase, nc, nl)}")
             replay_version = replay.read_text(encoding="ascii").splitlines()[0].strip()
-            if replay_version not in {"RRTMGP_REPLAY_V4", "RRTMGP_REPLAY_V5"}:
-                fail(f"{phase} capture did not use replay V4 or V5")
+            if replay_version not in {"RRTMGP_REPLAY_V4", "RRTMGP_REPLAY_V5", "RRTMGP_REPLAY_V6"}:
+                fail(f"{phase} capture did not use replay V4, V5, or V6")
             rwp = records.get("RWP")
             if rwp is None or rwp.shape != (nc, nl) or not np.any(rwp > 0.0):
-                fail(f"{phase} V4/V5 must retain positive in-cloud rain paths")
+                fail(f"{phase} V4/V5/V6 must retain positive in-cloud rain paths")
             res = records["RES"]
             if not np.array_equal(res[0], np.asarray([25.0, 300.0, 999.0])):
                 fail(f"{phase} test did not preserve native snow radii")
@@ -76,10 +76,10 @@ def main() -> int:
             reference_path = root / f"{phase.lower()}.reference.result"
             ref_run = run_reference(reference, data_dir, replay, reference_path)
             if ref_run.returncode != 0:
-                fail(f"reference rejected V4/V5 {phase}: {ref_run.stdout[-1600:]}")
+                fail(f"reference rejected V4/V5/V6 {phase}: {ref_run.stdout[-1600:]}")
             report = compare(read_result(production_path), read_result(reference_path))
             if not report.get("passed"):
-                fail(f"V4/V5 {phase} adapter/reference mismatch: {report.get('failed_sections')}")
+                fail(f"V4/V5/V6 {phase} adapter/reference mismatch: {report.get('failed_sections')}")
             production = read_result(production_path)["sections"]
             expected_radii = production["DS_USED"][:, :, 0]
             if not np.array_equal(expected_radii, res):

@@ -221,6 +221,15 @@ jobs:
               --time-index 0 --executable WRF/main/wrf.exe \
               --output "build/udm-scm/$case/native-dry-mass.json"
           done
+      - name: Independently verify native gas molecular columns and upper extensions
+        shell: bash
+        run: |
+          set -euo pipefail
+          for case in control mixed; do
+            python3 WRF/test/rrtmgp/test_native_gas_columns.py \
+              --capture-dir "build/udm-scm/$case/ra37-call1/capture" \
+              --output "build/udm-scm/$case/native-gas-columns.json"
+          done
       - name: Independently verify actual UDM domain/calendar McICA seeds
         shell: bash
         run: |
