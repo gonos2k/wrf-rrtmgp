@@ -1,0 +1,91 @@
+{
+  "status": "PASS_NUMERICAL_ONLY",
+  "quadrature_sha256": "6f977679e2e0267ac3efcc9a9079cbee07ce1835e0d2eb67e105c6cab61b1c07",
+  "test_sha256": "356f05925379fd0d2c7b367cd0c078f00f60df04eb88010171ce32101cf44a81",
+  "rule": "Golub-Welsch, alpha=0, fixed LAPACK STEV",
+  "cases": [
+    {
+      "order": 4,
+      "max_polynomial_moment_relative_error": 1.1102230246251565e-15,
+      "finite": true,
+      "scipy_special_node_max_absolute_difference": 8.881784197001252e-16,
+      "scipy_special_weight_max_absolute_difference": 2.220446049250313e-16
+    },
+    {
+      "order": 16,
+      "max_polynomial_moment_relative_error": 8.881784197001252e-16,
+      "finite": true,
+      "scipy_special_node_max_absolute_difference": 1.4210854715202004e-14,
+      "scipy_special_weight_max_absolute_difference": 7.771561172376096e-16
+    },
+    {
+      "order": 32,
+      "max_polynomial_moment_relative_error": 1.2212453270876722e-15,
+      "finite": true,
+      "scipy_special_node_max_absolute_difference": 8.526512829121202e-14,
+      "scipy_special_weight_max_absolute_difference": 5.773159728050814e-15
+    },
+    {
+      "order": 64,
+      "max_polynomial_moment_relative_error": 1.4432899320127035e-15,
+      "finite": true,
+      "scipy_special_node_max_absolute_difference": 1.9895196601282805e-13,
+      "scipy_special_weight_max_absolute_difference": 1.9498291869979312e-14
+    },
+    {
+      "order": 128,
+      "max_polynomial_moment_relative_error": 2.220446049250313e-15,
+      "finite": true,
+      "scipy_special_node_max_absolute_difference": 5.115907697472721e-13,
+      "scipy_special_weight_max_absolute_difference": 2.4192453595972552e-14
+    },
+    {
+      "order": 256,
+      "max_polynomial_moment_relative_error": 1.5543122344752192e-15,
+      "finite": true,
+      "scipy_special_node_max_absolute_difference": 1.2505552149377763e-12,
+      "scipy_special_weight_max_absolute_difference": 6.152023335204149e-14
+    },
+    {
+      "order": 512,
+      "max_polynomial_moment_relative_error": 1.4432899320127035e-15,
+      "finite": true
+    },
+    {
+      "order": 1024,
+      "max_polynomial_moment_relative_error": 4.884981308350689e-15,
+      "finite": true
+    }
+  ],
+  "rejected_rules": [
+    {
+      "case": "nan-node",
+      "reason": "Nonfinite Laguerre nodes or weights"
+    },
+    {
+      "case": "nan-weight",
+      "reason": "Nonfinite Laguerre nodes or weights"
+    },
+    {
+      "case": "zero-rule",
+      "reason": "Laguerre normalization/area/mass polynomial moments failed"
+    },
+    {
+      "case": "bad-mass",
+      "reason": "Laguerre normalization/area/mass polynomial moments failed"
+    },
+    {
+      "case": "negative-weight",
+      "reason": "Invalid Laguerre node/weight range"
+    },
+    {
+      "case": "shape",
+      "reason": "Invalid Laguerre rule shape"
+    }
+  ],
+  "old_scipy_special_512_finite": false,
+  "old_scipy_warnings": [
+    "overflow encountered in multiply"
+  ],
+  "scope": "Polynomial quadrature moments and independent rule agreement, not convergence of oscillatory Mie integrands"
+}

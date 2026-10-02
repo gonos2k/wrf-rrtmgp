@@ -1,0 +1,123 @@
+{
+  "status": "PASS",
+  "cases": [
+    {
+      "name": "lambda-nan",
+      "options": [
+        "--lambda-grid",
+        "nan"
+      ],
+      "status": "EXPECTED_ARGUMENT_REJECTION"
+    },
+    {
+      "name": "lambda-zero",
+      "options": [
+        "--lambda-grid",
+        "0"
+      ],
+      "status": "EXPECTED_ARGUMENT_REJECTION"
+    },
+    {
+      "name": "lambda-order",
+      "options": [
+        "--lambda-grid",
+        "2000",
+        "300"
+      ],
+      "status": "EXPECTED_ARGUMENT_REJECTION"
+    },
+    {
+      "name": "lambda-duplicate",
+      "options": [
+        "--lambda-grid",
+        "300",
+        "300"
+      ],
+      "status": "EXPECTED_ARGUMENT_REJECTION"
+    },
+    {
+      "name": "temperature-inf",
+      "options": [
+        "--temperatures",
+        "233",
+        "inf"
+      ],
+      "status": "EXPECTED_ARGUMENT_REJECTION"
+    },
+    {
+      "name": "temperature-zero",
+      "options": [
+        "--temperatures",
+        "0"
+      ],
+      "status": "EXPECTED_ARGUMENT_REJECTION"
+    },
+    {
+      "name": "order-low",
+      "options": [
+        "--order",
+        "3"
+      ],
+      "status": "EXPECTED_ARGUMENT_REJECTION"
+    },
+    {
+      "name": "order-high",
+      "options": [
+        "--order",
+        "513"
+      ],
+      "status": "EXPECTED_ARGUMENT_REJECTION"
+    },
+    {
+      "name": "workers-zero",
+      "options": [
+        "--workers",
+        "0"
+      ],
+      "status": "EXPECTED_ARGUMENT_REJECTION"
+    },
+    {
+      "name": "recurrence-low",
+      "options": [
+        "--max-terms",
+        "15"
+      ],
+      "status": "EXPECTED_ARGUMENT_REJECTION"
+    },
+    {
+      "name": "recurrence-c-int-wrap",
+      "options": [
+        "--max-terms",
+        "4294967296"
+      ],
+      "status": "EXPECTED_ARGUMENT_REJECTION"
+    },
+    {
+      "name": "chunk-zero",
+      "options": [
+        "--spectral-chunk-size",
+        "0"
+      ],
+      "status": "EXPECTED_ARGUMENT_REJECTION"
+    },
+    {
+      "name": "spectral-zero",
+      "options": [
+        "--spectral-step",
+        "0"
+      ],
+      "status": "EXPECTED_ARGUMENT_REJECTION"
+    },
+    {
+      "name": "spectral-nan",
+      "options": [
+        "--spectral-step",
+        "nan"
+      ],
+      "status": "EXPECTED_ARGUMENT_REJECTION"
+    }
+  ],
+  "generator_sha256": "44e87a513632251c1d5b7c349742e1950a97c710b64a2c1e9f341b341a6c265e",
+  "test_sha256": "f3ae845dff78f530ff38e86aabb3b4c4cba49927cf2168e32476aab4dadf464a",
+  "scope": "Numerical control range/ordering, including c_int wrapping; no model validation"
+}
