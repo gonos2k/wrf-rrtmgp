@@ -188,6 +188,8 @@ target_sources(
                   module_ra_rrtmgp_audit.F
                   module_ra_rrtmgp_trace.F
                   module_ra_rrtmgp_input.F
+                  module_ra_rrtmgp_hash.F
+                  module_ra_rrtmgp_frozen.F
                   module_ra_rrtmgp_precip.F
                   module_ra_rrtmgp.F
                   module_ra_rrtmg_lw.F

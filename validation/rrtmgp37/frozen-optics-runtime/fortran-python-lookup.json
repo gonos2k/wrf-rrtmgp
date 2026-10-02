@@ -1,0 +1,122 @@
+{
+  "status": "PASS_FORTRAN_PYTHON_LOOKUP_EQUIVALENCE",
+  "scope": "Fortran/Python implementation parity and input rejection only; not interpolation accuracy or physical validation",
+  "generation_receipt_sha256": "c5116f4a3bb4e77dc8bed481ce52c07b29ee5f8d65fa6a5657a324c51e9a619c",
+  "table_sha256": "8cb00850c3f885f5ec0306563c1ec0a55b512478a7395d626c1c99cebf280583",
+  "lookup_algorithm": "NORMALIZED_MOMENTS_LOG_LAMBDA_LINEAR_T_V1",
+  "query_axes": {
+    "lambda_m_inv": [
+      300.0,
+      380.285570867522,
+      380.28557086752227,
+      482.05705136679074,
+      482.05705136679103,
+      611.0644698991152,
+      611.0644698991155,
+      774.5966692414826,
+      774.5966692414834,
+      981.8931218485955,
+      981.8931218485961,
+      1244.665954576956,
+      1244.6659545769567,
+      1577.7616769188899,
+      1577.7616769188912,
+      1577.7616769188917,
+      1999.9999999999982,
+      1999.9999999999998,
+      2000.0,
+      2667.0428643266446,
+      2667.042864326647,
+      2667.042864326648,
+      3556.558820077843,
+      3556.5588200778457,
+      4742.747411323309,
+      4742.747411323311,
+      6324.555320336759,
+      6324.555320336761,
+      8433.930068571639,
+      8433.930068571646,
+      11246.826503806958,
+      11246.826503806979,
+      11246.826503806982,
+      14997.884186649097,
+      14997.884186649117,
+      14997.884186649122,
+      19454.3991445486,
+      19999.99999999998,
+      20000.0
+    ],
+    "temperature_k": [
+      180.0,
+      206.5,
+      233.0,
+      241.5,
+      250.0,
+      275.0,
+      300.0
+    ],
+    "path_g_m2_pattern": [
+      0.0,
+      1e-12,
+      1e-08,
+      0.25,
+      1.0,
+      50.0,
+      100.0
+    ],
+    "species": [
+      "graupel",
+      "hail"
+    ]
+  },
+  "shape": {
+    "ncol": 2,
+    "nlay": 137,
+    "sw_bands": 14,
+    "lw_bands": 16
+  },
+  "accuracy_tolerance": {
+    "rtol": 5e-12,
+    "atol": 1e-24,
+    "sw_tau_abs": "not an independent comparison; checked as ext-minus-scattering closure"
+  },
+  "fortran_stdout": "FROZEN_LOOKUP_FORTRAN_PASS",
+  "expected_rejections": [
+    "nonfinite lambda",
+    "out-of-range lambda",
+    "zero lambda",
+    "negative/nonfinite path",
+    "invalid species",
+    "shape mismatch",
+    "nonfinite/out-of-range temperature",
+    "wrong table status",
+    "missing table",
+    "_FillValue metadata",
+    "missing_value metadata",
+    "fill-value moment data"
+  ],
+  "max_abs_diff": {
+    "tau_ext": 4.163336342344337e-17,
+    "tau_scat": 4.163336342344337e-17,
+    "tau_scat_g": 5.551115123125783e-17,
+    "tau_abs": 4.440892098500626e-16
+  },
+  "max_relative_diff": {
+    "tau_ext": 4.531455716270305e-16,
+    "tau_scat": 6.178802880642124e-16,
+    "tau_scat_g": 4.564480196735895e-16,
+    "tau_abs": 5.202295579362196e-16
+  },
+  "compared_values": {
+    "tau_ext": 1092,
+    "tau_scat": 1092,
+    "tau_scat_g": 1092,
+    "tau_abs": 8736
+  },
+  "max_sw_absorption_closure_residual": 0.0,
+  "units": {
+    "moments": "kappa*rho_bulk [m-1]",
+    "path": "g m-2",
+    "tau": "dimensionless; (kappa*rho_bulk)*path[g m-2]*1e-3/rho_bulk[kg m-3]"
+  }
+}

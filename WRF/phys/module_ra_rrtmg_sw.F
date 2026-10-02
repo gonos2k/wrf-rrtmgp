@@ -10101,8 +10101,8 @@ CONTAINS
 !------------------------------------------------------------------
    USE MODULE_RA_CLWRF_SUPPORT, ONLY : read_CAMgases
    USE module_mp_udm, ONLY: cldf_diag, udm_radiation_negative_limits
-   USE module_ra_rrtmgp, ONLY: rrtmgp_sw_column
-   USE module_ra_rrtmgp_input, ONLY: rrtmgp_build_udm_inputs, rrtmgp_column_seed
+   USE module_ra_rrtmgp, ONLY: rrtmgp_sw_column, rrtmgp_frozen_enabled
+   USE module_ra_rrtmgp_input, ONLY: rrtmgp_build_udm_inputs, rrtmgp_column_seed, rrtmgp_udm_frozen_lambdas
    USE module_ra_rrtmgp_trace, ONLY: trace_start, trace_active, trace_raw_start, trace_raw, &
         trace_raw_end, trace_result, trace_end
    IMPLICIT NONE
@@ -10120,7 +10120,7 @@ CONTAINS
    REAL :: gp_negative_limits(6),gp_clipped_q(kte-kts+1,6),gp_negative_correction(kte-kts+1,6)
    CHARACTER(LEN=2), PARAMETER :: gp_q_names(6)=[CHARACTER(LEN=2) :: 'QC','QI','QR','QS','QG','QH']
    REAL :: gp_cf_now(1,kte-kts+1)
-   LOGICAL :: run_rrtmgp
+   LOGICAL :: run_rrtmgp,gp_frozen
    CHARACTER(LEN=96) :: gp_context
 !------------------------------------------------------------------
    LOGICAL, INTENT(IN )      ::        warm_rain
@@ -10135,7 +10135,9 @@ CONTAINS
    CHARACTER(LEN=3), PARAMETER :: gp_phase_names(6) = [CHARACTER(LEN=3) :: "LWP","IWP","RWP","SWP","GWP","HWP"]
    INTEGER :: gp_reason
    REAL :: gp_grid(kte-kts+1,6),gp_rad(kte-kts+1,6),gp_sizes(kte-kts+1,3)
-   REAL :: gp_omitted_phase(kte-kts+1,6),gp_qh(kte-kts+1)
+   REAL :: gp_omitted_phase(kte-kts+1,6),gp_qh(kte-kts+1),gp_qg(kte-kts+1)
+   REAL :: gp_gwp(1,kts:kte+1),gp_hwp(1,kts:kte+1)
+   REAL :: gp_lambda_g(1,kts:kte+1),gp_lambda_h(1,kts:kte+1)
    REAL :: gp_rwp(1,kts:kte+1)
    CHARACTER(LEN=256) :: gp_errmsg
 
@@ -10558,6 +10560,8 @@ CONTAINS
 !------------------------------------------------------------------
     run_rrtmgp=.FALSE.
     IF(PRESENT(use_rrtmgp)) run_rrtmgp=use_rrtmgp
+    gp_frozen=.FALSE.
+    IF(run_rrtmgp) gp_frozen=rrtmgp_frozen_enabled()
     IF(run_rrtmgp) THEN
       IF(.NOT.PRESENT(rrtmgp_domain_id).OR..NOT.PRESENT(rrtmgp_calendar_day)) &
         CALL wrf_error_fatal('RRTMGP37 requires domain id and current calendar day for McICA')
@@ -10576,6 +10580,7 @@ CONTAINS
         IF(.NOT.f_qh) CALL wrf_error_fatal('RRTMGP37 UDM requires a registered hail field')
       END IF
       gp_rwp=0.
+      gp_gwp=0.; gp_hwp=0.; gp_lambda_g=20000.; gp_lambda_h=20000.
 
       IF(cldovrlp<0.OR.cldovrlp>3) CALL wrf_error_fatal('RRTMGP supports cldovrlp=0,1,2,3')
       IF(PRESENT(aer_ra_feedback)) THEN
@@ -11377,7 +11382,7 @@ CONTAINS
                     omitted_grid_path=gp_omitted_phase,layer_reason=gp_layer_reason, &
                     negative_q_limits=gp_negative_limits,clipped_negative_q=gp_clipped_q, &
                     negative_grid_correction=gp_negative_correction, &
-                    dry_layer_mass_kg_m2=udm_dry_layer_mass(i,kts:kte,j))
+                    dry_layer_mass_kg_m2=udm_dry_layer_mass(i,kts:kte,j),frozen_uniform=gp_frozen)
                IF(gp_reason==7) THEN
                   DO k=kts,kte
                      IF(gp_qh(k-kts+1)>0.) THEN
@@ -11396,9 +11401,25 @@ CONTAINS
                   gp_negative_max_q(gp_phase)=MAX(gp_negative_max_q(gp_phase), &
                        MAXVAL(ABS(REAL(gp_clipped_q(:,gp_phase),8))))
                END DO
-               ! Prepared graupel is diagnostic-only; radiation path must be zero.
-               gp_omitted_phase(:,5)=gp_grid(:,5)
-               gp_rad(:,5)=0.
+               ! Mode 0 preserves omitted G/H. The experimental mode supplies
+               ! grid-mean G/H paths with uniform occurrence, independent of CF.
+               IF(gp_frozen) THEN
+                  gp_qg=qg1d(kts:kte)-gp_clipped_q(:,5)
+                  gp_qh=gp_qh-gp_clipped_q(:,6)
+                  CALL rrtmgp_udm_frozen_lambdas(gp_qg,gp_qh,rho3d(i,kts:kte,j), &
+                       gp_lambda_g(1,kts:kte),gp_lambda_h(1,kts:kte),gp_reason,gp_errmsg)
+                  IF(gp_reason/=0) CALL wrf_error_fatal(TRIM(gp_context)//' '//TRIM(gp_errmsg))
+                  gp_gwp(1,kts:kte)=gp_grid(:,5); gp_hwp(1,kts:kte)=gp_grid(:,6)
+                  gp_rad(:,5)=gp_grid(:,5); gp_rad(:,6)=gp_grid(:,6)
+                  IF(trace_active('SW')) THEN
+                     CALL trace_raw('SW','FROZEN_LAMBDA_G_M-1',gp_lambda_g(1,kts:kte))
+                     CALL trace_raw('SW','FROZEN_LAMBDA_H_M-1',gp_lambda_h(1,kts:kte))
+                  END IF
+               ELSE
+                  gp_omitted_phase(:,5)=gp_grid(:,5)
+                  gp_omitted_phase(:,6)=gp_grid(:,6)
+                  gp_rad(:,5)=0.; gp_rad(:,6)=0.
+               END IF
                clwpth(ncol,kts:kte)=gp_rad(:,1)
                ciwpth(ncol,kts:kte)=gp_rad(:,2)
                gp_rwp(ncol,kts:kte)=gp_rad(:,3)
@@ -11406,7 +11427,7 @@ CONTAINS
                gp_omitted=SUM(gp_omitted_phase(:,1:4),DIM=2)
                ! Graupel is measured, never silently mapped to snow or hail.
                DO k=kts,kte
-                  IF(gp_grid(k-kts+1,5)>0.) THEN
+                  IF(.NOT.gp_frozen .AND. gp_grid(k-kts+1,5)>0.) THEN
                      gp_g_count=gp_g_count+1
                      gp_g_sum=gp_g_sum+REAL(gp_grid(k-kts+1,5),8)
                      gp_g_max=MAX(gp_g_max,REAL(gp_grid(k-kts+1,5),8))
@@ -11720,11 +11741,20 @@ CONTAINS
            IF(mcica_seed_override>=0) gp_seed=mcica_seed_override
          END IF
          IF(run_rrtmgp) THEN
-           CALL rrtmgp_sw_column(play,plev,tlay,h2ovmr,co2vmr,o3vmr,n2ovmr,ch4vmr,o2vmr, &
-             asdir,asdif,aldir,aldif,coszen,scon,cldfrac,clwpth,ciwpth,cswpth,rel,rei,res,4,icld, &
-             gp_seed,swuflx,swdflx,swhr,swuflxc,swdflxc,swhrc, &
-             swdkdir,swdkdif,swdkdirc,sibvisdir,sibvisdif,sibnirdir,sibnirdif,rwp=gp_rwp, &
-             native_dry_layer_mass_kg_m2=RESHAPE(udm_dry_layer_mass(i,kts:kte,j),[1,kte-kts+1]))
+           IF(gp_frozen) THEN
+             CALL rrtmgp_sw_column(play,plev,tlay,h2ovmr,co2vmr,o3vmr,n2ovmr,ch4vmr,o2vmr, &
+               asdir,asdif,aldir,aldif,coszen,scon,cldfrac,clwpth,ciwpth,cswpth,rel,rei,res,4,icld, &
+               gp_seed,swuflx,swdflx,swhr,swuflxc,swdflxc,swhrc, &
+               swdkdir,swdkdif,swdkdirc,sibvisdir,sibvisdif,sibnirdir,sibnirdif,rwp=gp_rwp, &
+               native_dry_layer_mass_kg_m2=RESHAPE(udm_dry_layer_mass(i,kts:kte,j),[1,kte-kts+1]), &
+               gwp=gp_gwp,hwp=gp_hwp,lambda_g=gp_lambda_g,lambda_h=gp_lambda_h,frozen_context=gp_context)
+           ELSE
+             CALL rrtmgp_sw_column(play,plev,tlay,h2ovmr,co2vmr,o3vmr,n2ovmr,ch4vmr,o2vmr, &
+               asdir,asdif,aldir,aldif,coszen,scon,cldfrac,clwpth,ciwpth,cswpth,rel,rei,res,4,icld, &
+               gp_seed,swuflx,swdflx,swhr,swuflxc,swdflxc,swhrc, &
+               swdkdir,swdkdif,swdkdirc,sibvisdir,sibvisdif,sibnirdir,sibnirdif,rwp=gp_rwp, &
+               native_dry_layer_mass_kg_m2=RESHAPE(udm_dry_layer_mass(i,kts:kte,j),[1,kte-kts+1]))
+           END IF
            swuflxcln=swuflx; swdflxcln=swdflx
            loc_sw_zbbcddir=swdkdirc(1,1); loc_sw_dirdflux=swdkdir(1,1); loc_sw_difdflux=swdkdif(1,1)
          ELSE
@@ -11878,7 +11908,7 @@ CONTAINS
 
 !-------------------------------------------------------------------
 
-   IF(run_rrtmgp.AND.gp_g_count>0) THEN
+   IF(run_rrtmgp.AND..NOT.gp_frozen.AND.gp_g_count>0) THEN
     BLOCK
      LOGICAL :: report_graupel
      report_graupel=.TRUE.

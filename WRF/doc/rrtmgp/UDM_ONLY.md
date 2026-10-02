@@ -54,3 +54,13 @@ python3 WRF/test/rrtmgp/test_udm_scm.py build/udm-scm --reference-executable bui
 수상별 질량/반경 계약, 실제 outer UDM 밀도 회귀, rain/snow 광학 및 actual-column replay를 검증한다. 수정 전 4/4 결과와 bitwise 비교하려면 동일 초기 입력을 가진 실제 baseline 실행 디렉터리를 제공해야 한다. 같은 새 실행 파일의 반복 실행만으로 수정 전 보존을 주장하지 않는다.
 
 짧은 직렬 SCM, 자체 energy/flux 계약 및 독립 replay 성공을 일반 예보 정확도나 NOAA 운영 동등성으로 확대하지 않는다. [후속 실행 근거](CPU_OPENMP.md)에서 실제 OMP1/2 SCM, 10분 MPI1/2·MPI2/OMP2, 계수 누락 MPI 종료 및 직렬 restart 계약을 확인했다. 37번의 24시간 시도는 음수 QI 입력으로 중단됐으며, [native 진단](NATIVE_HYDRO_DIAGNOSTICS.md)으로 크기와 위치를 측정한다. 장시간 예보·관측 검증·MPI restart·nest·UDM cloud fraction 장시간 평가·graupel/hail 광학 및 batching은 남은 조건이다.
+
+## Opt-in frozen precipitation experiment
+
+The default contract above still omits graupel with diagnostics and rejects
+positive hail. `rrtmgp_udm_frozen_optics=1` selects a separate homogeneous-ice
+sphere exponential-PSD table for G/H with uniform occurrence=1, preserving
+positive grid paths without a cloud-fraction divisor. This is an explicit
+research configuration; see [UDM_FROZEN_EXPERIMENT.md](UDM_FROZEN_EXPERIMENT.md)
+for table identity, size reconstruction, optics and replay contracts.
+Default mode and RRTMG4 behavior are preserved and tested separately.

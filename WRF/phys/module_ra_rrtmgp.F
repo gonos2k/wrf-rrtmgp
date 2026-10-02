@@ -19,6 +19,8 @@ MODULE module_ra_rrtmgp
   USE mo_load_coefficients, ONLY: load_and_init
   USE mo_load_cloud_coefficients, ONLY: load_cld_lutcoeff
   USE mo_simple_netcdf, ONLY: set_fatal_handler
+  USE module_ra_rrtmgp_frozen, ONLY: initialize_frozen=>initialize, query_sw, query_lw, &
+      frozen_table_sha256, FROZEN_GRAUPEL, FROZEN_HAIL
   USE module_ra_rrtmgp_precip, ONLY: rrtmgp_precip_lw_optics, rrtmgp_precip_sw_optics
   USE module_ra_rrtmgp_input, ONLY: rrtmgp_validate_column_inputs, &
       rrtmgp_check_unit_interval, rrtmgp_check_positive, rrtmgp_check_nonnegative
@@ -28,7 +30,7 @@ MODULE module_ra_rrtmgp
   IMPLICIT NONE
   PRIVATE
   EXTERNAL :: wrf_error_fatal3
-  PUBLIC :: rrtmgp_init, rrtmgp_lw_column, rrtmgp_sw_column, cloud_mask
+  PUBLIC :: rrtmgp_init, rrtmgp_lw_column, rrtmgp_sw_column, cloud_mask, rrtmgp_frozen_enabled
   TYPE(ty_gas_optics_rrtmgp), SAVE :: gas_lw, gas_sw
   TYPE(ty_cloud_optics_rrtmgp), SAVE :: cloud_lw, cloud_sw
   LOGICAL, SAVE :: ready = .FALSE.
@@ -36,6 +38,8 @@ MODULE module_ra_rrtmgp
   REAL(wp), SAVE :: initialized_gravity = 9.80665_wp
   REAL(wp), SAVE :: initialized_cp_dry = 1004.64_wp
   REAL(wp), SAVE :: initialized_mol_weight_dry = 0.028964_wp
+  INTEGER, SAVE :: initialized_frozen_mode = 0
+  CHARACTER(LEN=:), ALLOCATABLE, SAVE :: initialized_frozen_path
   CHARACTER(LEN=:), ALLOCATABLE, SAVE :: initialized_path
   CHARACTER(LEN=3), PARAMETER :: names(6) = ['h2o','co2','o3 ','n2o','ch4','o2 ']
 CONTAINS
@@ -49,13 +53,24 @@ CONTAINS
     CALL wrf_error_fatal3('module_ra_rrtmgp.F',0,'RRTMGP: '//TRIM(message))
   END SUBROUTINE
 
-  SUBROUTINE rrtmgp_init(data_path,ice_roughness,gravity,cp_dry,mol_weight_dry)
+  SUBROUTINE rrtmgp_init(data_path,ice_roughness,gravity,cp_dry,mol_weight_dry,frozen_optics,frozen_table)
     CHARACTER(LEN=*), INTENT(IN) :: data_path
     INTEGER, OPTIONAL, INTENT(IN) :: ice_roughness
     REAL, OPTIONAL, INTENT(IN) :: gravity,cp_dry,mol_weight_dry
+    INTEGER, OPTIONAL, INTENT(IN) :: frozen_optics
+    CHARACTER(LEN=*), OPTIONAL, INTENT(IN) :: frozen_table
+    INTEGER :: selected_mode,frozen_status
+    CHARACTER(LEN=:), ALLOCATABLE :: selected_table
+    CHARACTER(LEN=1024) :: frozen_message
     INTEGER :: selected_roughness
     REAL(wp) :: selected_gravity,selected_cp,selected_mol_weight
     TYPE(ty_gas_concs) :: gases
+    selected_mode=0; selected_table=""
+    IF(PRESENT(frozen_optics)) selected_mode=frozen_optics
+    IF(PRESENT(frozen_table)) selected_table=TRIM(frozen_table)
+    IF(selected_mode<0.OR.selected_mode>1) CALL require("rrtmgp_udm_frozen_optics must be 0 or 1")
+    IF(selected_mode==1.AND.LEN_TRIM(selected_table)==0) &
+      CALL require("experimental UDM frozen optics requires rrtmgp_udm_frozen_table")
     selected_roughness=1
     IF(PRESENT(ice_roughness)) selected_roughness=ice_roughness
     selected_gravity=rte_grav; selected_cp=rte_cp_dry; selected_mol_weight=rte_m_dry
@@ -70,6 +85,8 @@ CONTAINS
       CALL require('RRTMGP mol_weight_dry must be finite and positive in kg/mol')
     CALL trace_configure()
     IF (ready) THEN
+      IF(selected_mode/=initialized_frozen_mode.OR.selected_table/=initialized_frozen_path) &
+        CALL require("UDM frozen optics mode and table path must be global and unchanged")
       IF(TRIM(data_path)/=initialized_path) CALL require('rrtmgp_data_path must be global and unchanged after initialization')
       IF(selected_roughness/=initialized_ice_roughness) &
         CALL require('rrtmgp_ice_roughness must be global and unchanged after initialization')
@@ -89,12 +106,112 @@ CONTAINS
     CALL require(cloud_sw%set_ice_roughness(selected_roughness))
     IF (.NOT.cloud_lw%bands_are_equal(gas_lw)) CALL require('LW cloud/gas spectral bands differ')
     IF (.NOT.cloud_sw%bands_are_equal(gas_sw)) CALL require('SW cloud/gas spectral bands differ')
+    IF(selected_mode==1) THEN
+      CALL initialize_frozen(selected_table,frozen_status,frozen_message)
+      IF(frozen_status/=0) CALL require("RRTMGP_FROZEN_TABLE: "//TRIM(frozen_message))
+    END IF
+    initialized_frozen_mode=selected_mode
+    initialized_frozen_path=selected_table
     initialized_ice_roughness=selected_roughness
     initialized_gravity=selected_gravity
     initialized_cp_dry=selected_cp
     initialized_mol_weight_dry=selected_mol_weight
     initialized_path=TRIM(data_path)
     ready = .TRUE.
+  END SUBROUTINE
+
+  PURE LOGICAL FUNCTION rrtmgp_frozen_enabled()
+    rrtmgp_frozen_enabled=initialized_frozen_mode==1
+  END FUNCTION
+
+  SUBROUTINE validate_frozen_inputs(expected_shape,gwp,hwp,lambda_g,lambda_h,frozen_context)
+    INTEGER, INTENT(IN) :: expected_shape(2)
+    REAL, OPTIONAL, INTENT(IN) :: gwp(:,:),hwp(:,:),lambda_g(:,:),lambda_h(:,:)
+    CHARACTER(LEN=*), OPTIONAL, INTENT(IN) :: frozen_context
+    LOGICAL :: any_input,all_input
+    any_input=PRESENT(gwp).OR.PRESENT(hwp).OR.PRESENT(lambda_g).OR.PRESENT(lambda_h)
+    all_input=PRESENT(gwp).AND.PRESENT(hwp).AND.PRESENT(lambda_g).AND.PRESENT(lambda_h)
+    IF(rrtmgp_frozen_enabled()) THEN
+      IF(.NOT.all_input) CALL require('RRTMGP_FROZEN_INPUTS_REQUIRED_IN_MODE_1')
+      IF(ANY(SHAPE(gwp)/=expected_shape).OR.ANY(SHAPE(hwp)/=expected_shape).OR. &
+         ANY(SHAPE(lambda_g)/=expected_shape).OR.ANY(SHAPE(lambda_h)/=expected_shape)) &
+        CALL require('RRTMGP_FROZEN_INPUT_SHAPE_MISMATCH')
+      CALL rrtmgp_check_nonnegative('gwp',gwp)
+      CALL rrtmgp_check_nonnegative('hwp',hwp)
+      CALL rrtmgp_check_positive('lambda_g',lambda_g)
+      CALL rrtmgp_check_positive('lambda_h',lambda_h)
+    ELSE IF(any_input) THEN
+      CALL require('RRTMGP_FROZEN_INPUTS_REQUIRE_MODE_1')
+    END IF
+  END SUBROUTINE
+
+  FUNCTION frozen_error(label,message,context) RESULT(error_message)
+    CHARACTER(LEN=*), INTENT(IN) :: label,message
+    CHARACTER(LEN=*), OPTIONAL, INTENT(IN) :: context
+    CHARACTER(LEN=:), ALLOCATABLE :: error_message
+    error_message=TRIM(label)//': '//TRIM(message)
+    IF(PRESENT(context)) error_message=TRIM(context)//' '//error_message
+  END FUNCTION
+
+  SUBROUTINE add_frozen_lw(atmos,tlay,gwp,hwp,lambda_g,lambda_h,frozen_context)
+    TYPE(ty_optical_props_1scl), INTENT(INOUT) :: atmos
+    REAL, INTENT(IN) :: tlay(:,:),gwp(:,:),hwp(:,:),lambda_g(:,:),lambda_h(:,:)
+    CHARACTER(LEN=*), OPTIONAL, INTENT(IN) :: frozen_context
+    TYPE(ty_optical_props_1scl) :: frozen
+    REAL(real64) :: gt(SIZE(tlay,1),SIZE(tlay,2),16),ht(SIZE(tlay,1),SIZE(tlay,2),16)
+    INTEGER :: status
+    CHARACTER(LEN=1024) :: message
+    CALL query_lw(FROZEN_GRAUPEL,REAL(lambda_g,real64),REAL(tlay,real64),REAL(gwp,real64),gt,status,message)
+    IF(status/=0) CALL require(frozen_error('RRTMGP_FROZEN_LW_GRAUPEL',message,frozen_context))
+    CALL query_lw(FROZEN_HAIL,REAL(lambda_h,real64),REAL(tlay,real64),REAL(hwp,real64),ht,status,message)
+    IF(status/=0) CALL require(frozen_error('RRTMGP_FROZEN_LW_HAIL',message,frozen_context))
+    CALL require(frozen%alloc_1scl(SIZE(tlay,1),SIZE(tlay,2),cloud_lw))
+    frozen%tau=REAL(gt+ht,wp)
+    IF(trace_active('LW')) THEN
+      CALL trace_result('LW','GRAUPEL_TAU_ABS',gt)
+      CALL trace_result('LW','HAIL_TAU_ABS',ht)
+      CALL trace_result('LW','FROZEN_TAU',frozen%tau)
+    END IF
+    ! Uniform grid-mean precipitation is independent of cloud McICA sampling.
+    ! Increment only after the gas-only clear-sky calculation.
+    CALL require(frozen%increment(atmos))
+  END SUBROUTINE
+
+  SUBROUTINE add_frozen_sw(atmos,gwp,hwp,lambda_g,lambda_h,frozen_context)
+    TYPE(ty_optical_props_2str), INTENT(INOUT) :: atmos
+    REAL, INTENT(IN) :: gwp(:,:),hwp(:,:),lambda_g(:,:),lambda_h(:,:)
+    CHARACTER(LEN=*), OPTIONAL, INTENT(IN) :: frozen_context
+    TYPE(ty_optical_props_2str) :: frozen
+    REAL(real64) :: gt(SIZE(gwp,1),SIZE(gwp,2),14),gw(SIZE(gwp,1),SIZE(gwp,2),14), &
+                    gmg(SIZE(gwp,1),SIZE(gwp,2),14),ht(SIZE(gwp,1),SIZE(gwp,2),14), &
+                    hw(SIZE(gwp,1),SIZE(gwp,2),14),hmg(SIZE(gwp,1),SIZE(gwp,2),14)
+    INTEGER :: status
+    CHARACTER(LEN=1024) :: message
+    CALL query_sw(FROZEN_GRAUPEL,REAL(lambda_g,real64),REAL(gwp,real64),gt,gw,gmg,status,message)
+    IF(status/=0) CALL require(frozen_error('RRTMGP_FROZEN_SW_GRAUPEL',message,frozen_context))
+    CALL query_sw(FROZEN_HAIL,REAL(lambda_h,real64),REAL(hwp,real64),ht,hw,hmg,status,message)
+    IF(status/=0) CALL require(frozen_error('RRTMGP_FROZEN_SW_HAIL',message,frozen_context))
+    CALL require(frozen%alloc_2str(SIZE(gwp,1),SIZE(gwp,2),cloud_sw))
+    frozen%tau=REAL(gt+ht,wp)
+    frozen%ssa=REAL((gw+hw)/MAX(gt+ht,TINY(1._real64)),wp)
+    frozen%g=REAL((gmg+hmg)/MAX(gw+hw,TINY(1._real64)),wp)
+    IF(trace_active('SW')) THEN
+      CALL trace_result('SW','GRAUPEL_TAU_EXT',gt)
+      CALL trace_result('SW','GRAUPEL_TAU_SCA',gw)
+      CALL trace_result('SW','GRAUPEL_TAU_SCA_G',gmg)
+      CALL trace_result('SW','HAIL_TAU_EXT',ht)
+      CALL trace_result('SW','HAIL_TAU_SCA',hw)
+      CALL trace_result('SW','HAIL_TAU_SCA_G',hmg)
+    END IF
+    ! Raw band moments are combined in tau/tau*ssa/tau*ssa*g space,
+    ! then delta scaled exactly once, separately from cloud/rain/snow.
+    CALL require(frozen%delta_scale())
+    IF(trace_active('SW')) THEN
+      CALL trace_result('SW','FROZEN_TAU',frozen%tau)
+      CALL trace_result('SW','FROZEN_SSA',frozen%ssa)
+      CALL trace_result('SW','FROZEN_G',frozen%g)
+    END IF
+    CALL require(frozen%increment(atmos))
   END SUBROUTINE
 
   SUBROUTINE set_gases(gases,h2o,co2,o3,n2o,ch4,o2)
@@ -186,13 +303,15 @@ CONTAINS
 
   SUBROUTINE rrtmgp_lw_column(play,plev,tlay,tlev,tsfc,h2o,co2,o3,n2o,ch4,o2,emis, &
                              cf,lwp,iwp,swp,rel,rei,res,iceflag,overlap,seed, &
-                             up,dn,hr,upc,dnc,hrc,column_seeds,rwp,native_dry_layer_mass_kg_m2)
+                             up,dn,hr,upc,dnc,hrc,column_seeds,rwp,native_dry_layer_mass_kg_m2,gwp,hwp,lambda_g,lambda_h,frozen_context)
     REAL, INTENT(IN) :: play(:,:),plev(:,:),tlay(:,:),tlev(:,:),tsfc(:),emis(:,:)
     REAL, INTENT(IN) :: h2o(:,:),co2(:,:),o3(:,:),n2o(:,:),ch4(:,:),o2(:,:)
     REAL, INTENT(IN) :: cf(:,:),lwp(:,:),iwp(:,:),swp(:,:),rel(:,:),rei(:,:),res(:,:)
     INTEGER, INTENT(IN) :: iceflag,overlap,seed
     INTEGER, OPTIONAL, INTENT(IN) :: column_seeds(:)
     REAL, OPTIONAL, INTENT(IN) :: rwp(:,:),native_dry_layer_mass_kg_m2(:,:)
+    REAL, OPTIONAL, INTENT(IN) :: gwp(:,:),hwp(:,:),lambda_g(:,:),lambda_h(:,:)
+    CHARACTER(LEN=*), OPTIONAL, INTENT(IN) :: frozen_context
     REAL, INTENT(OUT) :: up(:,:),dn(:,:),hr(:,:),upc(:,:),dnc(:,:),hrc(:,:)
     TYPE(ty_gas_concs) :: gases
     TYPE(ty_optical_props_1scl) :: atmos,clouds,snow,sampled
@@ -206,6 +325,7 @@ CONTAINS
     LOGICAL :: mask(SIZE(play,1),SIZE(play,2),gas_lw%get_ngpt())
     INTEGER :: nc,nl,precip_status
     IF(.NOT.ready) CALL require('initialization must precede parallel column calls')
+    CALL validate_frozen_inputs(SHAPE(play),gwp,hwp,lambda_g,lambda_h,frozen_context)
     CALL rrtmgp_validate_column_inputs(play,plev,tlay,cf,lwp,iwp,swp,rel,rei,res)
     IF(PRESENT(native_dry_layer_mass_kg_m2)) THEN
       IF(SIZE(native_dry_layer_mass_kg_m2,1)/=SIZE(play,1).OR. &
@@ -247,7 +367,8 @@ CONTAINS
       CALL trace_input_start('LW',nc,nl,overlap,seed,iceflag,udm_precip=PRESENT(rwp), &
            gravity=REAL(initialized_gravity,real64),cp_dry=REAL(initialized_cp_dry,real64), &
            mol_weight_dry=REAL(initialized_mol_weight_dry,real64), &
-           native_dry_mass=PRESENT(native_dry_layer_mass_kg_m2))
+           native_dry_mass=PRESENT(native_dry_layer_mass_kg_m2), &
+           frozen_mode=initialized_frozen_mode,frozen_table_sha256=frozen_table_sha256())
       CALL trace_input('LW','SOLAR',RESHAPE([0.],[1,1]))
       CALL trace_input('LW','PLAY',play)
       CALL trace_input('LW','PLEV',plev)
@@ -280,6 +401,12 @@ CONTAINS
       END IF
       IF(PRESENT(native_dry_layer_mass_kg_m2)) &
         CALL trace_input('LW','NATIVE_DRY_LAYER_MASS_KG_M2',native_dry_layer_mass_kg_m2)
+      IF(rrtmgp_frozen_enabled()) THEN
+        CALL trace_input('LW','GWP',gwp)
+        CALL trace_input('LW','HWP',hwp)
+        CALL trace_input('LW','LAMBDA_G',lambda_g)
+        CALL trace_input('LW','LAMBDA_H',lambda_h)
+      END IF
       CALL trace_input_end('LW')
       CALL trace_result_start('LW',nc,nl)
     END IF
@@ -333,6 +460,7 @@ CONTAINS
       CALL require(draw_samples(mask,clouds,sampled))
       IF(ANY(cf>0.).AND.overlap/=0) CALL require(sampled%increment(atmos))
     END IF
+    IF(rrtmgp_frozen_enabled()) CALL add_frozen_lw(atmos,tlay,gwp,hwp,lambda_g,lambda_h,frozen_context)
     IF(trace_active('LW')) THEN
       CALL trace_result('LW','TOTAL_TAU',atmos%tau)
     END IF
@@ -353,7 +481,7 @@ CONTAINS
   SUBROUTINE rrtmgp_sw_column(play,plev,tlay,h2o,co2,o3,n2o,ch4,o2, &
                              avdir,avdif,andir,andif,mu0,solar, &
                              cf,lwp,iwp,swp,rel,rei,res,iceflag,overlap,seed, &
-                             up,dn,hr,upc,dnc,hrc,direct,diffuse,directc,visdir,visdif,nirdir,nirdif,column_seeds,rwp,native_dry_layer_mass_kg_m2)
+                             up,dn,hr,upc,dnc,hrc,direct,diffuse,directc,visdir,visdif,nirdir,nirdif,column_seeds,rwp,native_dry_layer_mass_kg_m2,gwp,hwp,lambda_g,lambda_h,frozen_context)
     REAL, INTENT(IN) :: play(:,:),plev(:,:),tlay(:,:)
     REAL, INTENT(IN) :: h2o(:,:),co2(:,:),o3(:,:),n2o(:,:),ch4(:,:),o2(:,:)
     REAL, INTENT(IN) :: avdir(:),avdif(:),andir(:),andif(:),mu0(:),solar
@@ -361,6 +489,8 @@ CONTAINS
     INTEGER, INTENT(IN) :: iceflag,overlap,seed
     INTEGER, OPTIONAL, INTENT(IN) :: column_seeds(:)
     REAL, OPTIONAL, INTENT(IN) :: rwp(:,:),native_dry_layer_mass_kg_m2(:,:)
+    REAL, OPTIONAL, INTENT(IN) :: gwp(:,:),hwp(:,:),lambda_g(:,:),lambda_h(:,:)
+    CHARACTER(LEN=*), OPTIONAL, INTENT(IN) :: frozen_context
     REAL, INTENT(OUT) :: up(:,:),dn(:,:),hr(:,:),upc(:,:),dnc(:,:),hrc(:,:)
     REAL, INTENT(OUT) :: direct(:,:),diffuse(:,:),directc(:,:)
     REAL, INTENT(OUT) :: visdir(:,:),visdif(:,:),nirdir(:,:),nirdif(:,:)
@@ -380,6 +510,7 @@ CONTAINS
     LOGICAL :: mask(SIZE(play,1),SIZE(play,2),gas_sw%get_ngpt())
     INTEGER :: nc,nl,b,c,precip_status
     IF(.NOT.ready) CALL require('initialization must precede parallel column calls')
+    CALL validate_frozen_inputs(SHAPE(play),gwp,hwp,lambda_g,lambda_h,frozen_context)
     CALL rrtmgp_validate_column_inputs(play,plev,tlay,cf,lwp,iwp,swp,rel,rei,res)
     IF(PRESENT(native_dry_layer_mass_kg_m2)) THEN
       IF(SIZE(native_dry_layer_mass_kg_m2,1)/=SIZE(play,1).OR. &
@@ -428,7 +559,8 @@ CONTAINS
       CALL trace_input_start('SW',nc,nl,overlap,seed,iceflag,udm_precip=PRESENT(rwp), &
            gravity=REAL(initialized_gravity,real64),cp_dry=REAL(initialized_cp_dry,real64), &
            mol_weight_dry=REAL(initialized_mol_weight_dry,real64), &
-           native_dry_mass=PRESENT(native_dry_layer_mass_kg_m2))
+           native_dry_mass=PRESENT(native_dry_layer_mass_kg_m2), &
+           frozen_mode=initialized_frozen_mode,frozen_table_sha256=frozen_table_sha256())
       CALL trace_input('SW','SOLAR',RESHAPE([solar],[1,1]))
       CALL trace_input('SW','PLAY',play)
       CALL trace_input('SW','PLEV',plev)
@@ -462,6 +594,12 @@ CONTAINS
       END IF
       IF(PRESENT(native_dry_layer_mass_kg_m2)) &
         CALL trace_input('SW','NATIVE_DRY_LAYER_MASS_KG_M2',native_dry_layer_mass_kg_m2)
+      IF(rrtmgp_frozen_enabled()) THEN
+        CALL trace_input('SW','GWP',gwp)
+        CALL trace_input('SW','HWP',hwp)
+        CALL trace_input('SW','LAMBDA_G',lambda_g)
+        CALL trace_input('SW','LAMBDA_H',lambda_h)
+      END IF
       CALL trace_input_end('SW')
       CALL trace_result_start('SW',nc,nl)
     END IF
@@ -552,6 +690,7 @@ CONTAINS
       CALL require(draw_samples(mask,clouds,sampled))
       IF(ANY(cf>0.).AND.overlap/=0) CALL require(sampled%increment(atmos))
     END IF
+    IF(rrtmgp_frozen_enabled()) CALL add_frozen_sw(atmos,gwp,hwp,lambda_g,lambda_h,frozen_context)
     IF(trace_active('SW')) THEN
       CALL trace_result('SW','TOTAL_TAU',atmos%tau)
       CALL trace_result('SW','TOTAL_SSA',atmos%ssa)

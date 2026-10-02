@@ -41,6 +41,8 @@ def main() -> int:
     args = parser.parse_args()
     rules = dependency_rules(args.depend_common)
     required = {
+        "module_ra_rrtmgp_frozen.o": {"module_ra_rrtmgp_hash.o"},
+        "module_ra_rrtmgp.o": {"module_ra_rrtmgp_frozen.o"},
         "module_mp_udm.o": {"module_mp_radar.o", "module_gfs_machine.o"},
         "module_physics_init.o": {"module_mp_udm.o"},
         "module_microphysics_driver.o": {"module_mp_udm.o"},
@@ -62,7 +64,7 @@ def main() -> int:
         log = root / "order.log"
         makefile = root / "Makefile"
         lines = [f"LOG := {log}", ".PHONY: all " + " ".join(sorted(nodes)),
-                 "all: module_physics_init.o module_microphysics_driver.o module_ra_rrtmg_lw.o module_ra_rrtmg_sw.o"]
+                 "all: " + " ".join(sorted(required))]
         for target in sorted(nodes):
             prereqs = required.get(target, set())
             lines.append(f"{target}: {' '.join(sorted(prereqs))}".rstrip())

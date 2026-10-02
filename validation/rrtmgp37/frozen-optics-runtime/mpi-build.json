@@ -1,0 +1,166 @@
+{
+  "status": "BUILD_PASS_PREPARED_MODE1_CASE_NOT_RUN",
+  "source_base_commit": "f8cbfeea7f4c59e5e0655bd2f23e3b424b8359b3",
+  "source_overlay_receipt": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-frozen-runtime-mpi/frozen-overlay-receipt.json",
+  "production_sources": [
+    {
+      "path": "WRF/Registry/Registry.EM_COMMON",
+      "sha256": "87e21a476a06b7e0c926b2d939eaf1028810cba8a7d1e6fc585b50b599f99729",
+      "bytes": 448359
+    },
+    {
+      "path": "WRF/main/depend.common",
+      "sha256": "6295f05721b3867af6a42f9bb3593f292467c6146c020dd8d01e54e851c87089",
+      "bytes": 99071
+    },
+    {
+      "path": "WRF/phys/CMakeLists.txt",
+      "sha256": "45a9eb2511a5a1d4dd26df9f4852dcc5e007871fa53ee9ec117086b6c79313b7",
+      "bytes": 21685
+    },
+    {
+      "path": "WRF/phys/Makefile",
+      "sha256": "6387734fa2b60a8fa6644b3cf89fb866274b0803e4ab6b78b217a0a6c36a91ef",
+      "bytes": 19799
+    },
+    {
+      "path": "WRF/phys/module_physics_init.F",
+      "sha256": "c0df1df2c341975fcc5fe5e3207d94e6efa6867dff2f572dbc9a2c241375f663",
+      "bytes": 315801
+    },
+    {
+      "path": "WRF/phys/module_ra_rrtmg_lw.F",
+      "sha256": "526afe545b1710c4ccd9607fb5681bd1c1dc0c0be668a20ba62e4a4c9be25c0e",
+      "bytes": 671306
+    },
+    {
+      "path": "WRF/phys/module_ra_rrtmg_sw.F",
+      "sha256": "5de4a4995442182fc3ba2c31ab327de0736a97720da27b83e3768a10808b142b",
+      "bytes": 627272
+    },
+    {
+      "path": "WRF/phys/module_ra_rrtmgp.F",
+      "sha256": "c64031b1d273b64b61e9d631f0d39e10f9e9eb10334b00a9d35fa63d71e4dd08",
+      "bytes": 38483
+    },
+    {
+      "path": "WRF/phys/module_ra_rrtmgp_frozen.F",
+      "sha256": "dc468bf7e9e4f3883a8ad715dc4c25db4c1ff054637810fb178a02029edbed1d",
+      "bytes": 26288
+    },
+    {
+      "path": "WRF/phys/module_ra_rrtmgp_hash.F",
+      "sha256": "4bf4fd8dbeaf3309c2f4193ccd78ee2a8abf47fc228f5023a63798cc5ee993f6",
+      "bytes": 7874
+    },
+    {
+      "path": "WRF/phys/module_ra_rrtmgp_input.F",
+      "sha256": "1460460a23b2b2b552f726c8c01a174a956da7a9d472e8a90b33c2d6ed245eff",
+      "bytes": 32625
+    },
+    {
+      "path": "WRF/phys/module_ra_rrtmgp_trace.F",
+      "sha256": "81f62b0e00f0067281d25741a08cf08d0789a199b434db1ce0b61fe49b904357",
+      "bytes": 18142
+    },
+    {
+      "path": "WRF/share/module_check_a_mundo.F",
+      "sha256": "ae798f8a61edd90d938f377ba1117cebac62ddea5b801e449438e9bdcb9aea6c",
+      "bytes": 184002
+    }
+  ],
+  "compiler": {
+    "fortran": "GNU Fortran (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0",
+    "mpi": "MPICH 4.2.0 ch3:sock",
+    "mpich_prefix": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/mpich-sock",
+    "netcdf_prefix": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/netcdf"
+  },
+  "configure": {
+    "selection": 34,
+    "mode": "GNU dmpar",
+    "nesting_prompt": 1,
+    "nesting_label": "basic",
+    "DMPARALLEL": 1,
+    "OMP": "",
+    "configure_wrf_sha256": "a69fc6a62c2d54b9cef8b0e2fe29295caeb62e6007cc9a4c9d15324788c2cd4b",
+    "configure_log": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-frozen-runtime-mpi/WRF/configure.out"
+  },
+  "build": {
+    "command": "csh ./compile -j 12 em_real",
+    "final_binary_build": "after refreshing module_ra_rrtmgp_trace.F to final SHA; full em_real target completed successfully",
+    "flags": "-O2 -ftree-vectorize -funroll-loops; -w -ffree-form -ffree-line-length-none -fconvert=big-endian -frecord-marker=4 -fallow-argument-mismatch -fallow-invalid-boz",
+    "logs": {
+      "build-em_real.log": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-frozen-runtime-mpi/build-logs/build-em_real.log",
+        "sha256": "36103020dd8aefbeac7492f21c50fb6e6c906b2c6689c7a5121ab26f999d5935"
+      },
+      "rebuild-trace-em_real.log": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-frozen-runtime-mpi/build-logs/rebuild-trace-em_real.log",
+        "sha256": "b6f3c3fe24abd50eb1eaa15e8e5288563ec9951bacd3285b99c5d4c718d41fc5"
+      }
+    }
+  },
+  "executables": {
+    "wrf.exe": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-frozen-runtime-mpi/WRF/main/wrf.exe",
+      "sha256": "4c979fb248b26d8ce61f05fd602f55e0492e173a312e3532021fecda508e2503",
+      "bytes": 58431848
+    },
+    "real.exe": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-frozen-runtime-mpi/WRF/main/real.exe",
+      "sha256": "adc10b7b407d781c66151e903f1334e8c3d9af9652bd1714fecf9a2bbd18608d",
+      "bytes": 43283576
+    },
+    "tc.exe": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-frozen-runtime-mpi/WRF/main/tc.exe",
+      "sha256": "e02f4b01588edc0a3d3091ebd1888c79aa07a4a72c8c260176362ff261be8110",
+      "bytes": 42407176
+    },
+    "ndown.exe": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-frozen-runtime-mpi/WRF/main/ndown.exe",
+      "sha256": "8e7580fa50562763261a999ae559c9efdd9a92bd2e53a5b56ba85effff8c0656",
+      "bytes": 47100656
+    }
+  },
+  "case": {
+    "status": "PREPARED_NOT_RUN",
+    "baseline_case": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-realdata-24h/ra4",
+    "prepared_case": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-frozen-runtime-mpi/case-mode1",
+    "binary_expected": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-frozen-runtime-mpi/WRF/main/wrf.exe",
+    "table": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-frozen-runtime-wrf/source/validation/rrtmgp37/frozen-optics-lookup/nine-grid-o128-s50/frozen-ice-psd-moments.nc",
+    "table_sha256": "8cb00850c3f885f5ec0306563c1ec0a55b512478a7395d626c1c99cebf280583",
+    "base_inputs": {
+      "wrfinput_d01": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-realdata-24h/ra4/wrfinput_d01",
+        "sha256": "5ef7abe34c516fba107f346bdbdb3777edacb5d48493df467ea2dd8bcf6a75ff"
+      },
+      "wrfbdy_d01": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-realdata-24h/ra4/wrfbdy_d01",
+        "sha256": "e687b73730ab9a2cee4842e1a92b225a4edb074ba080b6053d96d81ec1731a2d"
+      }
+    },
+    "prepared_inputs": {
+      "wrfinput_d01": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-frozen-runtime-mpi/case-mode1/wrfinput_d01",
+        "sha256": "5ef7abe34c516fba107f346bdbdb3777edacb5d48493df467ea2dd8bcf6a75ff"
+      },
+      "wrfbdy_d01": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-frozen-runtime-mpi/case-mode1/wrfbdy_d01",
+        "sha256": "e687b73730ab9a2cee4842e1a92b225a4edb074ba080b6053d96d81ec1731a2d"
+      }
+    },
+    "namelist_changes": [
+      "ra_lw_physics 4->37",
+      "ra_sw_physics 4->37",
+      "added rrtmgp_udm_frozen_optics=1 and rrtmgp_udm_frozen_table"
+    ],
+    "namelist_sha256": "cba97f7e3bc5c2418e5b19458847f7b5641c33fb8807480e6b3903e486e993e2"
+  },
+  "runtime_env": {
+    "PATH_prefix": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/mpich-sock/bin",
+    "LD_LIBRARY_PATH": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/mpich-sock/lib:/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/netcdf/lib:/usr/lib/x86_64-linux-gnu",
+    "mpiexec": "-launcher fork -iface lo -n 4 (proposed only; no forecast launched)"
+  },
+  "dynamic_link_resolution": "ldd wrf.exe resolved workspace libmpifort.so.12, libmpi.so.12, libnetcdff.so.7 and libnetcdf.so.19; system HDF5 libs resolved; no not-found entries.",
+  "scope": "No 24-hour model run was launched; awaiting parent review of final source/binary hashes and frozen-optics SCM result."
+}
