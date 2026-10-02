@@ -1,3 +1,5 @@
+> 현재 production 37번은 UDM27 전용이다. 아래 내용은 UDM 전용화 이전의 소스 추적·시험 기록이며 다른 미세물리의 현재 사용을 허용하지 않는다. 현재 계약: [UDM_ONLY.md](UDM_ONLY.md).
+
 # WRF microphysics inputs mapped to RRTMGP cloud paths
 
 This note describes the current `use_rrtmgp` path in the WRF longwave and shortwave wrappers, `RRTMG_LWRAD` and `RRTMG_SWRAD`. The species passed to `rrtmgp_build_cloud_inputs` are the wrapper's prepared `qc1d`, `qi1d`, and `qs1d` arrays at the builder call. They are not necessarily copies of the model's original prognostic arrays: shared phase handling and scheme-specific overrides run first.

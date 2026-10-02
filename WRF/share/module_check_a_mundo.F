@@ -2913,15 +2913,14 @@
       DO i=1,model_config_rec%max_dom
         IF(model_config_rec%ra_lw_physics(i)==RRTMGP_LWSCHEME.OR. &
            model_config_rec%ra_sw_physics(i)==RRTMGP_SWSCHEME) THEN
-          CALL wrf_message('--- WARNING: RRTMGP37 has QC/QI/QS cloud optics; separate rain, graupel and hail optics are not implemented.')
-          SELECT CASE(model_config_rec%mp_physics(i))
-          CASE(2,4,5)
-            ! These IDs have short serial SCM evidence, not complete precipitation coverage.
-          CASE DEFAULT
-            WRITE(wrf_err_message,'(A,I0,A)') '--- WARNING: RRTMGP37 mp_physics=', &
-              model_config_rec%mp_physics(i),' has not passed the current end-to-end serial SCM validation matrix.'
-            CALL wrf_message(TRIM(wrf_err_message))
-          END SELECT
+          IF(model_config_rec%ra_lw_physics(i)/=RRTMGP_LWSCHEME.OR. &
+             model_config_rec%ra_sw_physics(i)/=RRTMGP_SWSCHEME) &
+            CALL wrf_error_fatal('RRTMGP37 requires paired ra_lw_physics=37 and ra_sw_physics=37')
+          IF(model_config_rec%mp_physics(i)/=UDMSCHEME) &
+            CALL wrf_error_fatal('RRTMGP37 requires mp_physics=27 (UDM)')
+          IF(model_config_rec%use_mp_re/=1) &
+            CALL wrf_error_fatal('RRTMGP37 UDM requires use_mp_re=1 for native effective radii')
+          CALL wrf_message('--- WARNING: RRTMGP37 UDM: graupel optics are diagnostic-only; any positive hail path is unsupported.')
           IF(model_config_rec%sf_surface_physics(i)==8) &
             CALL wrf_message('--- WARNING: SSiB+RRTMGP37 is experimental; full coupled forecast validation is incomplete.')
           IF(model_config_rec%aer_opt/=0.OR.model_config_rec%cldovrlp<0.OR.model_config_rec%cldovrlp>3) &

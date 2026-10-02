@@ -1,0 +1,239 @@
+{
+  "status": "PASS",
+  "test": "actual outer module_mp_udm.udm plus missing-density negative control",
+  "wrf_root": "WRF",
+  "compiler": "/usr/bin/gfortran",
+  "flags": [
+    "-O0",
+    "-g",
+    "-ffree-form",
+    "-ffree-line-length-none",
+    "-fcheck=all",
+    "-finit-real=snan",
+    "-ffpe-trap=invalid,zero,overflow"
+  ],
+  "source_sha256": "f673c484c75e4bbb37767d6e0469f9258f5ae7a64c3266fbe8803507ef97a02c",
+  "driver_sha256": "e0bfafcb185fc18fe9fdd7657f71d66e950e104bff2dfca89304f8a864ead7f2",
+  "positive": {
+    "compile": [
+      {
+        "command": [
+          "/usr/bin/gfortran",
+          "-O0",
+          "-ffixed-form",
+          "-c",
+          "WRF/phys/module_gfs_machine.F",
+          "-o",
+          "build/cloud-column-check/udm-native-radii/fixed/module_gfs_machine.o",
+          "-I",
+          "build/cloud-column-check/udm-native-radii/fixed",
+          "-J",
+          "build/cloud-column-check/udm-native-radii/fixed"
+        ],
+        "returncode": 0,
+        "output": ""
+      },
+      {
+        "command": [
+          "/usr/bin/gfortran",
+          "-O0",
+          "-ffree-form",
+          "-ffree-line-length-none",
+          "-c",
+          "build/cloud-column-check/udm-native-radii/fixed/module_wrf_error.f90",
+          "-o",
+          "build/cloud-column-check/udm-native-radii/fixed/module_wrf_error.o",
+          "-I",
+          "build/cloud-column-check/udm-native-radii/fixed",
+          "-J",
+          "build/cloud-column-check/udm-native-radii/fixed"
+        ],
+        "returncode": 0,
+        "output": ""
+      },
+      {
+        "command": [
+          "/usr/bin/gfortran",
+          "-O0",
+          "-ffree-form",
+          "-ffree-line-length-none",
+          "-c",
+          "WRF/phys/module_mp_radar.F",
+          "-o",
+          "build/cloud-column-check/udm-native-radii/fixed/module_mp_radar.o",
+          "-I",
+          "build/cloud-column-check/udm-native-radii/fixed",
+          "-J",
+          "build/cloud-column-check/udm-native-radii/fixed"
+        ],
+        "returncode": 0,
+        "output": ""
+      },
+      {
+        "command": [
+          "/usr/bin/gfortran",
+          "-O0",
+          "-g",
+          "-ffree-form",
+          "-ffree-line-length-none",
+          "-fcheck=all",
+          "-finit-real=snan",
+          "-ffpe-trap=invalid,zero,overflow",
+          "-I",
+          "build/cloud-column-check/udm-native-radii/fixed",
+          "-J",
+          "build/cloud-column-check/udm-native-radii/fixed",
+          "-c",
+          "build/cloud-column-check/udm-native-radii/fixed/module_mp_udm.F",
+          "-o",
+          "build/cloud-column-check/udm-native-radii/fixed/module_mp_udm.o"
+        ],
+        "returncode": 0,
+        "output": ""
+      }
+    ],
+    "link": {
+      "command": [
+        "/usr/bin/gfortran",
+        "-O0",
+        "-g",
+        "-ffree-form",
+        "-ffree-line-length-none",
+        "-fcheck=all",
+        "-finit-real=snan",
+        "-ffpe-trap=invalid,zero,overflow",
+        "-I",
+        "build/cloud-column-check/udm-native-radii/fixed",
+        "-J",
+        "build/cloud-column-check/udm-native-radii/fixed",
+        "WRF/test/rrtmgp/test_udm_native_radii.f90",
+        "build/cloud-column-check/udm-native-radii/fixed/module_mp_udm.o",
+        "build/cloud-column-check/udm-native-radii/fixed/module_mp_radar.o",
+        "build/cloud-column-check/udm-native-radii/fixed/module_wrf_error.o",
+        "-o",
+        "build/cloud-column-check/udm-native-radii/fixed/test_udm_native_radii"
+      ],
+      "returncode": 0,
+      "output": ""
+    },
+    "execution": {
+      "command": [
+        "build/cloud-column-check/udm-native-radii/fixed/test_udm_native_radii"
+      ],
+      "returncode": 0,
+      "output": "CASE 1   1.0737E-05   8.1822E-05   3.1847E-04   2.5100E-06   1.0737E-05   5.0100E-06   8.1822E-05   2.5000E-05   3.1847E-04\nCASE 2   1.2118E-05   8.1822E-05   3.5013E-04   2.5100E-06   1.2118E-05   5.0100E-06   8.1822E-05   2.5000E-05   3.5013E-04\nUDM_NATIVE_RADII   1.073728E-05   1.211799E-05   8.182174E-05   8.182181E-05   3.184695E-04   3.501253E-04\nUDM_DIRECT_DENSITY_RESPONSE   1.240701E-05   8.839049E-05   2.652040E-04   1.400241E-05   8.964201E-05   2.903903E-04\nUDM_DIRECT_NUMBER_RESPONSE   1.240701E-05   9.847447E-06\nUDM outer-call native-density test passed\n"
+    }
+  },
+  "negative_control": {
+    "compile": [
+      {
+        "command": [
+          "/usr/bin/gfortran",
+          "-O0",
+          "-ffixed-form",
+          "-c",
+          "WRF/phys/module_gfs_machine.F",
+          "-o",
+          "build/cloud-column-check/udm-native-radii/missing-density/module_gfs_machine.o",
+          "-I",
+          "build/cloud-column-check/udm-native-radii/missing-density",
+          "-J",
+          "build/cloud-column-check/udm-native-radii/missing-density"
+        ],
+        "returncode": 0,
+        "output": ""
+      },
+      {
+        "command": [
+          "/usr/bin/gfortran",
+          "-O0",
+          "-ffree-form",
+          "-ffree-line-length-none",
+          "-c",
+          "build/cloud-column-check/udm-native-radii/missing-density/module_wrf_error.f90",
+          "-o",
+          "build/cloud-column-check/udm-native-radii/missing-density/module_wrf_error.o",
+          "-I",
+          "build/cloud-column-check/udm-native-radii/missing-density",
+          "-J",
+          "build/cloud-column-check/udm-native-radii/missing-density"
+        ],
+        "returncode": 0,
+        "output": ""
+      },
+      {
+        "command": [
+          "/usr/bin/gfortran",
+          "-O0",
+          "-ffree-form",
+          "-ffree-line-length-none",
+          "-c",
+          "WRF/phys/module_mp_radar.F",
+          "-o",
+          "build/cloud-column-check/udm-native-radii/missing-density/module_mp_radar.o",
+          "-I",
+          "build/cloud-column-check/udm-native-radii/missing-density",
+          "-J",
+          "build/cloud-column-check/udm-native-radii/missing-density"
+        ],
+        "returncode": 0,
+        "output": ""
+      },
+      {
+        "command": [
+          "/usr/bin/gfortran",
+          "-O0",
+          "-g",
+          "-ffree-form",
+          "-ffree-line-length-none",
+          "-fcheck=all",
+          "-finit-real=snan",
+          "-ffpe-trap=invalid,zero,overflow",
+          "-I",
+          "build/cloud-column-check/udm-native-radii/missing-density",
+          "-J",
+          "build/cloud-column-check/udm-native-radii/missing-density",
+          "-c",
+          "build/cloud-column-check/udm-native-radii/missing-density/module_mp_udm_missing_density.F",
+          "-o",
+          "build/cloud-column-check/udm-native-radii/missing-density/module_mp_udm.o"
+        ],
+        "returncode": 0,
+        "output": ""
+      }
+    ],
+    "link": {
+      "command": [
+        "/usr/bin/gfortran",
+        "-O0",
+        "-g",
+        "-ffree-form",
+        "-ffree-line-length-none",
+        "-fcheck=all",
+        "-finit-real=snan",
+        "-ffpe-trap=invalid,zero,overflow",
+        "-I",
+        "build/cloud-column-check/udm-native-radii/missing-density",
+        "-J",
+        "build/cloud-column-check/udm-native-radii/missing-density",
+        "WRF/test/rrtmgp/test_udm_native_radii.f90",
+        "build/cloud-column-check/udm-native-radii/missing-density/module_mp_udm.o",
+        "build/cloud-column-check/udm-native-radii/missing-density/module_mp_radar.o",
+        "build/cloud-column-check/udm-native-radii/missing-density/module_wrf_error.o",
+        "-o",
+        "build/cloud-column-check/udm-native-radii/missing-density/test_udm_native_radii"
+      ],
+      "returncode": 0,
+      "output": ""
+    },
+    "execution": {
+      "command": [
+        "build/cloud-column-check/udm-native-radii/missing-density/test_udm_native_radii"
+      ],
+      "returncode": -8,
+      "output": "\nProgram received signal SIGFPE: Floating-point exception - erroneous arithmetic operation.\n\nBacktrace for this error:\n#0  0x7e912828ce59 in ???\n#1  0x7e912828be75 in ???\n#2  0x7e9127f8532f in ???\n\tat ./signal/../sysdeps/unix/sysv/linux/x86_64/libc_sigaction.c:0\n#3  0x5ae957fad114 in __module_mp_udm_MOD_udm_mp_effective_radius\n\tat build/cloud-column-check/udm-native-radii/missing-density/module_mp_udm_missing_density.F:3636\n#4  0x5ae958065b1e in __module_mp_udm_MOD_udm\n\tat build/cloud-column-check/udm-native-radii/missing-density/module_mp_udm_missing_density.F:413\n#5  0x5ae957f9b83e in test_udm_native_radii\n\tat WRF/test/rrtmgp/test_udm_native_radii.f90:46\n#6  0x5ae957f9d19b in main\n\tat WRF/test/rrtmgp/test_udm_native_radii.f90:3\n"
+    }
+  },
+  "expected_negative_control": "nonzero termination in udm_mp_effective_radius due to signaling-NaN den1d",
+  "elapsed_seconds": 9.783738613128662
+}

@@ -1,0 +1,104 @@
+{
+  "status": "PASS_LOCAL_UDM27_VALIDATION",
+  "validation_date": "2026-10-02",
+  "base_main_commit": "9d7b5922079654d890454e4e1cbd5cccee28ff0b",
+  "local_spectral_parent_commit": "76488b65ea3128316c02810bb527134af330aff4",
+  "production_scope": {
+    "mp_physics": 27,
+    "ra_lw_physics": 37,
+    "ra_sw_physics": 37,
+    "use_mp_re": 1,
+    "optics": [
+      "qc",
+      "qi",
+      "qr",
+      "qs"
+    ],
+    "qg": "diagnostic-only",
+    "positive_qh": "fatal"
+  },
+  "standalone_tests_passed": 45,
+  "wrf_build": "GNU serial em_scm_xy, full build",
+  "scm_duration_seconds": 60,
+  "historical_4_baseline": "saved pre-change prior-port UDM4 executable; not original official WRF",
+  "historical_4_arrays_bitwise": {
+    "control": 208,
+    "mixed": 208
+  },
+  "source_sha256": {
+    "WRF/phys/module_mp_udm.F": "f673c484c75e4bbb37767d6e0469f9258f5ae7a64c3266fbe8803507ef97a02c",
+    "WRF/phys/module_physics_init.F": "5aca6c1ea17500c230fc1204043d8d89d11d0ada332c6dc56e82ecf60ffcb6ac",
+    "WRF/phys/module_ra_rrtmg_lw.F": "87d743dc78bc55f4e5b6f2aca40d39a91358d7c92c03daddf2296ded4fba1338",
+    "WRF/phys/module_ra_rrtmg_sw.F": "e368e840fdb72d6435f59ea92e7fcd7c47b7c98ffd5007bcdd62c6a409caae30",
+    "WRF/phys/module_ra_rrtmgp.F": "8bc355812ce08b221a6cee36b484285aa4350445237f4b537e42b72242f6a72e",
+    "WRF/phys/module_ra_rrtmgp_input.F": "d11da593f46a1fda7507b32c01bfc364938fbb9d787f573e751f6942af95e665",
+    "WRF/phys/module_ra_rrtmgp_trace.F": "2753fd5344120ececfe10435e25274babe40bec11a356c916c7d148826069eaf",
+    "WRF/phys/module_ra_rrtmgp_precip.F": "1f3cf10d16ff0608d1aefb2512b96cd965f2393ae1a1300628d2e3d22f17bdc4",
+    "WRF/phys/module_radiation_driver.F": "36122c4f4641a3734bd089b5a90bfb1fe145653feb3f21d0d2bdf2744bb8bb12"
+  },
+  "executables_sha256": {
+    "WRF/main/wrf.exe": "f6300f27463a16ff1d7c38346ecbd7806f0584ec395504e358d2b9868e70dc0a",
+    "WRF/main/ideal.exe": "751901ff0d839c807e321f9476dfa87bde625dcb3d7af991c5129503d10d618c",
+    "build/replay-reference/reference_column": "3e31d2f79c65d958acea0229c387416ee2e4bd09cf625fe84a299d6766c4e8f6"
+  },
+  "baseline_wrf_sha256": "f27dcb61862fc99818bbda48771900266685878a44209305bd403e08ff147b51",
+  "local_evidence": {
+    "registry": {
+      "path": "build/registry/result.json",
+      "sha256": "9f9f1d1dab06643461bac398cb171faef243bd981be15db758e83e5c2c98015e"
+    },
+    "core": {
+      "path": "build/core/result.json",
+      "sha256": "27ac5d299bbd14a7e3d829ec867fe54ce072a108f171adf9d8c5b531146dab96"
+    },
+    "scm": {
+      "path": "build/udm-scm-final-reviewed/udm-scm-result.json",
+      "sha256": "24f2dfb65f3895c6f9defbcca18c1fb1816af27044d27a5eb157f2e9c59f7dbc"
+    },
+    "native-radii": {
+      "path": "build/cloud-column-check/udm-native-radii/receipt.json",
+      "sha256": "2fe21aa4ae2860e2bb0b39a47560c582b0c16bf9736f95a6218508984055a9b1"
+    },
+    "precip-replay": {
+      "path": "build/cloud-column-check/udm-precip-replay.json",
+      "sha256": "54f877d53b3b25b5b92664891b48b9a6b6f93c0e5927942a7bac49fed9069003"
+    },
+    "surface": {
+      "path": "build/udm-surface-final-reviewed.json",
+      "sha256": "0f90945344b04c23b1fb8307a5a5dbbc765a07ff65fcf7e241ba05eb3d8ca485"
+    },
+    "cloud": {
+      "path": "build/udm-cloud-final-reviewed.json",
+      "sha256": "d80f3b1ba103ad1339b62480c463bef8bc74322bad8d83ce6414348b31de0691"
+    },
+    "ctest": {
+      "path": "build/udm-columns-final-reviewed-ctest.log",
+      "sha256": "20a27289d3b26da1aa946521afb66c6bc83f490264261e31730336446021430b"
+    },
+    "wrf-build": {
+      "path": "build/udm-wrf-build-final-reviewed.log",
+      "sha256": "b72ffc127a9a7110aba95c4da59108e527a00923cc6f2dd244be72a36f0015a7"
+    },
+    "radiation-comparison": {
+      "path": "build/udm-radiation-comparison.json",
+      "sha256": "e9f6c4c50c6ec5a5c3d1cf074db99dbc5e4434e3ed35218f9ab33f1ec3b39fed"
+    },
+    "generated-scm": {
+      "path": "build/udm-scm-generated-final-reviewed/udm-scm-result.json",
+      "sha256": "c9357b82a7d7498ef9f36f5a0c1ec371346942a2cf3ea1fff6a1d40d71acfc1d"
+    }
+  },
+  "remote_ci": "pending submission; local receipts are not a GitHub CI result",
+  "forecast_validated": false,
+  "unvalidated": [
+    "same-time offline 4-vs-37 attribution",
+    "graupel/hail optics",
+    "UDM internal cloud fraction export",
+    "seed time/domain policy",
+    "long real-data forecast and observations",
+    "MPI/OpenMP/restart/nesting",
+    "column batching",
+    "full WRF CMake"
+  ],
+  "generated_ci_style_scm": "PASS; no historical baseline available in this fresh-fixture run"
+}

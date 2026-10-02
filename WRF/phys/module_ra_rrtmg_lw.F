@@ -11604,17 +11604,19 @@ CONTAINS
                        ims,ime, jms,jme, kms,kme,                 &
                        its,ite, jts,jte, kts,kte,                 &
                        lwupflx, lwupflxc, lwdnflx, lwdnflxc       &
-                                                                   ,use_rrtmgp )
+                                                                   ,use_rrtmgp,qh3d,f_qh )
 !------------------------------------------------------------------
 !ccc To use clWRF time varying trace gases
    USE MODULE_RA_CLWRF_SUPPORT, ONLY : read_CAMgases
 
    USE module_ra_rrtmgp, ONLY: rrtmgp_lw_column
-   USE module_ra_rrtmgp_input, ONLY: rrtmgp_build_cloud_inputs
+   USE module_ra_rrtmgp_input, ONLY: rrtmgp_build_udm_inputs
    USE module_ra_rrtmgp_trace, ONLY: trace_start, trace_active, trace_raw_start, trace_raw, &
         trace_raw_end, trace_result, trace_end
    IMPLICIT NONE
    LOGICAL, OPTIONAL, INTENT(IN) :: use_rrtmgp
+   LOGICAL, OPTIONAL, INTENT(IN) :: f_qh
+   REAL, OPTIONAL, INTENT(IN) :: qh3d(ims:ime,kms:kme,jms:jme)
    LOGICAL :: run_rrtmgp
    CHARACTER(LEN=96) :: gp_context
 !------------------------------------------------------------------
@@ -11626,7 +11628,13 @@ CONTAINS
                                        its,ite, jts,jte, kts,kte
    REAL, DIMENSION(1:kte-kts+1) :: gp_rel, gp_rei, gp_res, gp_omitted
    INTEGER, DIMENSION(1:kte-kts+1) :: gp_layer_reason
+   INTEGER :: gp_phase
+   CHARACTER(LEN=3), PARAMETER :: gp_phase_names(6) = [CHARACTER(LEN=3) :: "LWP","IWP","RWP","SWP","GWP","HWP"]
    INTEGER :: gp_reason
+   REAL :: gp_grid(kte-kts+1,6),gp_rad(kte-kts+1,6),gp_sizes(kte-kts+1,3)
+   REAL :: gp_omitted_phase(kte-kts+1,6),gp_qh(kte-kts+1)
+   REAL :: gp_rwp(1,kts:nlayers)
+   CHARACTER(LEN=256) :: gp_errmsg
 
    INTEGER, INTENT(IN )      ::        ICLOUD, GHG_INPUT
    INTEGER, INTENT(IN )      ::        MP_PHYSICS
@@ -11944,6 +11952,16 @@ CONTAINS
     run_rrtmgp=.FALSE.
     IF(PRESENT(use_rrtmgp)) run_rrtmgp=use_rrtmgp
     IF(run_rrtmgp) THEN
+      IF(mp_physics/=27) CALL wrf_error_fatal('RRTMGP37 requires mp_physics=27 (UDM)')
+      IF(has_reqc/=1.OR.has_reqi/=1.OR.has_reqs/=1) &
+        CALL wrf_error_fatal('RRTMGP37 UDM requires native effective radii')
+      IF(.NOT.PRESENT(qh3d).OR..NOT.PRESENT(f_qh)) &
+        CALL wrf_error_fatal('RRTMGP37 UDM requires explicit hail input')
+      IF(PRESENT(f_qh)) THEN
+        IF(.NOT.f_qh) CALL wrf_error_fatal('RRTMGP37 UDM requires a registered hail field')
+      END IF
+      gp_rwp=0.
+
       IF(cldovrlp<0.OR.cldovrlp>3) CALL wrf_error_fatal('RRTMGP supports cldovrlp=0,1,2,3')
       IF(PRESENT(aer_ra_feedback)) THEN
         IF(aer_ra_feedback/=0) CALL wrf_error_fatal('RRTMGP aerosol feedback is not yet supported')
@@ -12067,7 +12085,7 @@ CONTAINS
               IF ( F_QR) THEN
                  DO K=kts,kte
                     QR1D(K)=QR3D(I,K,J)
-                    QR1D(K)=max(0.,QR1D(K))
+                    IF (.NOT.run_rrtmgp) QR1D(K)=max(0.,QR1D(K))
                  ENDDO
               ENDIF
             ENDIF
@@ -12124,7 +12142,7 @@ CONTAINS
                IF (F_QG) THEN
                   DO K=kts,kte
                      QG1D(K)=QG3D(I,K,J)
-                     QG1D(K)=max(0.,QG1D(K))
+                     IF(.NOT.run_rrtmgp) QG1D(K)=max(0.,QG1D(K))
                   ENDDO
                ENDIF
             ENDIF
@@ -12712,11 +12730,8 @@ CONTAINS
                      END WHERE
                   END IF
                END IF
-               IF (is_CAMMGMP_used) THEN
-                  gp_rel = lradius(i,kts:kte,j)
-                  gp_rei = iradius(i,kts:kte,j)
-                  gp_res = gp_rei
-               END IF
+               ! UDM-only: no CAM/P3/other microphysics radius override.
+               gp_qh=qh3d(i,kts:kte,j)
                ! Active sizes must be positive; every size must be finite.
                WRITE(gp_context,'(A,I0,A,I0,A)') 'LW i=',i,' j=',j,':'
                CALL trace_start('LW',i,j)
@@ -12727,6 +12742,10 @@ CONTAINS
                   CALL trace_raw('LW','QC',qc1d(kts:kte))
                   CALL trace_raw('LW','QI',qi1d(kts:kte))
                   CALL trace_raw('LW','QS',qs1d(kts:kte))
+                  CALL trace_raw('LW','QR',qr1d(kts:kte))
+                  CALL trace_raw('LW','QG',qg1d(kts:kte))
+                  CALL trace_raw('LW','QH',gp_qh)
+                  CALL trace_raw('LW','RHO',rho3d(i,kts:kte,j))
                   CALL trace_raw('LW','T',t1d(kts:kte))
                   CALL trace_raw('LW','P_HPA',p1d(kts:kte))
                   CALL trace_raw('LW','AMD_W', [REAL(amdw)])
@@ -12756,16 +12775,39 @@ CONTAINS
                   IF(PRESENT(F_QC)) CALL trace_raw('LW','F_QC',[MERGE(1.,0.,F_QC)])
                   IF(PRESENT(F_QI)) CALL trace_raw('LW','F_QI',[MERGE(1.,0.,F_QI)])
                   IF(PRESENT(F_QS)) CALL trace_raw('LW','F_QS',[MERGE(1.,0.,F_QS)])
-                  CALL trace_raw_end('LW')
+                  ! Keep raw capture open through UDM path preparation.
                END IF
-               CALL rrtmgp_build_cloud_inputs(pdel(ncol,kts:kte),cldfrac(ncol,kts:kte), &
-                    qc1d(kts:kte),qi1d(kts:kte),qs1d(kts:kte),gp_rel,gp_rei,gp_res,g, &
-                    clwpth(ncol,kts:kte),ciwpth(ncol,kts:kte),cswpth(ncol,kts:kte),gp_reason, &
+               CALL rrtmgp_build_udm_inputs(pdel(ncol,kts:kte),cldfrac(ncol,kts:kte), &
+                    qc1d(kts:kte),qr1d(kts:kte),qi1d(kts:kte),qs1d(kts:kte),qg1d(kts:kte),gp_qh, &
+                    gp_rel,gp_rei,gp_res,g,gp_grid,gp_rad,gp_sizes,gp_reason,gp_errmsg, &
                     column_context=gp_context,allow_clear_condensate=.TRUE., &
-                    omitted_grid_path=gp_omitted,layer_reason=gp_layer_reason)
-               ! WRF can diagnose cf=0 while retaining trace condensate. Exclude
-               ! that layer explicitly and expose its original grid-box mass.
+                    omitted_grid_path=gp_omitted_phase,layer_reason=gp_layer_reason)
+               IF(gp_reason==7) THEN
+                  DO k=kts,kte
+                     IF(gp_qh(k-kts+1)>0.) THEN
+                        WRITE(message,'(A,A,I0,A,ES14.6)') TRIM(gp_context), &
+                          ' RRTMGP_INPUT_UDM_HAIL_OPTICS_UNSUPPORTED layer=',k, &
+                          ' grid_path_g_m2=',gp_qh(k-kts+1)*pdel(ncol,k)*100./g*1000.
+                        CALL wrf_error_fatal(TRIM(message))
+                     END IF
+                  END DO
+               END IF
+               ! Prepared graupel is diagnostic-only; radiation path must be zero.
+               gp_omitted_phase(:,5)=gp_grid(:,5)
+               gp_rad(:,5)=0.
+               clwpth(ncol,kts:kte)=gp_rad(:,1)
+               ciwpth(ncol,kts:kte)=gp_rad(:,2)
+               gp_rwp(ncol,kts:kte)=gp_rad(:,3)
+               cswpth(ncol,kts:kte)=gp_rad(:,4)
+               gp_omitted=SUM(gp_omitted_phase(:,1:4),DIM=2)
+               ! Graupel is measured, never silently mapped to snow or hail.
                DO k=kts,kte
+                  IF(gp_grid(k-kts+1,5)>0.) THEN
+                     WRITE(message,'(A,A,I0,A,ES14.6)') TRIM(gp_context), &
+                       ' RRTMGP_UDM_GRAUPEL_OPTICS_OMITTED layer=',k, &
+                       ' grid_path_g_m2=',gp_grid(k-kts+1,5)
+                     CALL wrf_debug(0,message)
+                  END IF
                   IF(gp_omitted(k-kts+1)>0.) THEN
                      WRITE(message,'(A,A,I0,A,I0,A,ES14.6)') TRIM(gp_context), &
                        ' RRTMGP_CLEAR_CONDENSATE_EXCLUDED layer=',k,' reason=',gp_layer_reason(k-kts+1), &
@@ -12773,6 +12815,14 @@ CONTAINS
                      CALL wrf_debug(100,message)
                   END IF
                END DO
+               IF(trace_active('LW')) THEN
+                  DO gp_phase=1,6
+                     CALL trace_raw('LW',gp_phase_names(gp_phase)//'_GRID',gp_grid(:,gp_phase))
+                     CALL trace_raw('LW',gp_phase_names(gp_phase)//'_RADIATION',gp_rad(:,gp_phase))
+                     CALL trace_raw('LW',gp_phase_names(gp_phase)//'_OMITTED',gp_omitted_phase(:,gp_phase))
+                  END DO
+                  CALL trace_raw_end('LW')
+               END IF
                rel(ncol,kts:kte)=gp_rel
                rei(ncol,kts:kte)=gp_rei
                res(ncol,kts:kte)=gp_res
@@ -12906,7 +12956,7 @@ CONTAINS
          IF(run_rrtmgp) THEN
            CALL rrtmgp_lw_column(play,plev,tlay,tlev,tsfc,h2ovmr,co2vmr,o3vmr,n2ovmr,ch4vmr,o2vmr,emis, &
              cldfrac,clwpth,ciwpth,cswpth,rel,rei,res,4,icld, &
-             i+104729*j+INT(julian)*1009,uflx,dflx,hr,uflxc,dflxc,hrc)
+             i+104729*j+INT(julian)*1009,uflx,dflx,hr,uflxc,dflxc,hrc,rwp=gp_rwp)
            uflxcln=uflx; dflxcln=dflx
          ELSE
          call rrtmg_lw &

@@ -13,8 +13,19 @@ MODULE module_ra_rrtmgp_input
   INTEGER, PARAMETER, PUBLIC :: RRTMGP_INPUT_RANGE = 4
   INTEGER, PARAMETER, PUBLIC :: RRTMGP_INPUT_OVERFLOW = 5
   INTEGER, PARAMETER, PUBLIC :: RRTMGP_INPUT_CLEAR_CONDENSATE = 6
+  INTEGER, PARAMETER, PUBLIC :: RRTMGP_INPUT_UDM_HAIL_UNSUPPORTED = 7
+
+  ! Column indices for the UDM-only six-phase path arrays, in g/m2.
+  ! The graupel column is diagnostic only; this adapter has no graupel optics.
+  INTEGER, PARAMETER, PUBLIC :: RRTMGP_UDM_LIQUID = 1, RRTMGP_UDM_ICE = 2
+  INTEGER, PARAMETER, PUBLIC :: RRTMGP_UDM_RAIN = 3, RRTMGP_UDM_SNOW = 4
+  INTEGER, PARAMETER, PUBLIC :: RRTMGP_UDM_GRAUPEL = 5, RRTMGP_UDM_HAIL = 6
+  ! Radius output columns (micrometers): cloud, ice, snow.
+  INTEGER, PARAMETER, PUBLIC :: RRTMGP_UDM_CLOUD_RADIUS = 1, RRTMGP_UDM_ICE_RADIUS = 2
+  INTEGER, PARAMETER, PUBLIC :: RRTMGP_UDM_SNOW_RADIUS = 3
 
   PUBLIC :: rrtmgp_build_cloud_inputs
+  PUBLIC :: rrtmgp_build_udm_inputs
   PUBLIC :: rrtmgp_validate_column_inputs
   PUBLIC :: rrtmgp_check_unit_interval
   PUBLIC :: rrtmgp_check_positive
@@ -23,6 +34,169 @@ MODULE module_ra_rrtmgp_input
   EXTERNAL :: wrf_error_fatal3
 
 CONTAINS
+
+  ! UDM's explicit six-species contract.  This routine does not infer phases
+  ! from a microphysics scheme: each input species maps only to its named path.
+  ! grid_path and omitted_grid_path columns are L/I/R/S/G/H; radius_um columns
+  ! are cloud/ice/snow.  Input radii are already micrometres and are copied
+  ! unchanged, without clipping or a Fu conversion.
+  SUBROUTINE rrtmgp_build_udm_inputs(dp_hpa,cf,qc,qr,qi,qs,qg,qh, &
+                                    re_cloud_um,re_ice_um,re_snow_um,gravity, &
+                                    grid_path,incloud_path,radius_um,reason,errmsg, &
+                                    column_context,allow_clear_condensate, &
+                                    omitted_grid_path,layer_reason)
+    REAL, INTENT(IN) :: dp_hpa(:),cf(:),qc(:),qr(:),qi(:),qs(:),qg(:),qh(:)
+    REAL, INTENT(IN) :: re_cloud_um(:),re_ice_um(:),re_snow_um(:),gravity
+    REAL, INTENT(OUT) :: grid_path(:,:),incloud_path(:,:),radius_um(:,:)
+    INTEGER, INTENT(OUT) :: reason
+    CHARACTER(LEN=*), INTENT(OUT) :: errmsg
+    CHARACTER(LEN=*), OPTIONAL, INTENT(IN) :: column_context
+    LOGICAL, OPTIONAL, INTENT(IN) :: allow_clear_condensate
+    REAL, OPTIONAL, INTENT(OUT) :: omitted_grid_path(:,:)
+    INTEGER, OPTIONAL, INTENT(OUT) :: layer_reason(:)
+    REAL(real64) :: q(6),path64,radius64,dp64,g64
+    REAL :: masses(SIZE(dp_hpa),6)
+    INTEGER :: n,k,p
+    LOGICAL :: allow_clear,clear_column,omitted_any
+    CHARACTER(LEN=8), PARAMETER :: qnames(6)=[CHARACTER(LEN=8) :: 'QC','QI','QR','QS','QG','QH']
+    INTEGER, PARAMETER :: q_to_path(6)=[RRTMGP_UDM_LIQUID,RRTMGP_UDM_ICE, &
+                                        RRTMGP_UDM_RAIN,RRTMGP_UDM_SNOW, &
+                                        RRTMGP_UDM_GRAUPEL,RRTMGP_UDM_HAIL]
+
+    reason=RRTMGP_INPUT_OK
+    errmsg=''
+    allow_clear=.FALSE.
+    IF(PRESENT(allow_clear_condensate)) allow_clear=allow_clear_condensate
+    n=SIZE(dp_hpa)
+    IF(n<1 .OR. SIZE(cf)/=n .OR. SIZE(qc)/=n .OR. SIZE(qr)/=n .OR. &
+       SIZE(qi)/=n .OR. SIZE(qs)/=n .OR. SIZE(qg)/=n .OR. SIZE(qh)/=n .OR. &
+       SIZE(re_cloud_um)/=n .OR. SIZE(re_ice_um)/=n .OR. SIZE(re_snow_um)/=n .OR. &
+       SIZE(grid_path,1)/=n .OR. SIZE(grid_path,2)/=6 .OR. &
+       SIZE(incloud_path,1)/=n .OR. SIZE(incloud_path,2)/=6 .OR. &
+       SIZE(radius_um,1)/=n .OR. SIZE(radius_um,2)/=3) THEN
+      reason=RRTMGP_INPUT_SHAPE
+      CALL fatal_builder_message('RRTMGP_INPUT_SHAPE_MISMATCH in rrtmgp_build_udm_inputs',column_context)
+      RETURN
+    END IF
+    IF(PRESENT(omitted_grid_path)) THEN
+      IF(SIZE(omitted_grid_path,1)/=n .OR. SIZE(omitted_grid_path,2)/=6) THEN
+        reason=RRTMGP_INPUT_SHAPE
+        CALL fatal_builder_message('RRTMGP_INPUT_SHAPE_MISMATCH in UDM omitted_grid_path',column_context)
+        RETURN
+      END IF
+    END IF
+    IF(PRESENT(layer_reason)) THEN
+      IF(SIZE(layer_reason)/=n) THEN
+        reason=RRTMGP_INPUT_SHAPE
+        CALL fatal_builder_message('RRTMGP_INPUT_SHAPE_MISMATCH in UDM layer_reason',column_context)
+        RETURN
+      END IF
+    END IF
+
+    grid_path=0.0; incloud_path=0.0; radius_um=0.0
+    IF(PRESENT(omitted_grid_path)) omitted_grid_path=0.0
+    IF(PRESENT(layer_reason)) layer_reason=RRTMGP_INPUT_OK
+    IF(.NOT.ieee_is_finite(gravity) .OR. gravity<=0.0) THEN
+      reason=RRTMGP_INPUT_INVALID
+      CALL fatal_builder_message('RRTMGP_INPUT_GRAVITY_NOT_POSITIVE',column_context)
+      RETURN
+    END IF
+
+    CALL rrtmgp_check_positive('dp_hpa',RESHAPE(dp_hpa,[n,1]))
+    CALL rrtmgp_check_unit_interval('cf',RESHAPE(cf,[n,1]))
+    masses(:,1) = qc
+    masses(:,2) = qi
+    masses(:,3) = qr
+    masses(:,4) = qs
+    masses(:,5) = qg
+    masses(:,6) = qh
+    DO p=1,6
+      CALL rrtmgp_check_nonnegative('UDM_'//TRIM(qnames(p)),RESHAPE(masses(:,p),[n,1]))
+    END DO
+    CALL check_finite('UDM_RE_CLOUD',RESHAPE(re_cloud_um,[n,1]))
+    CALL check_finite('UDM_RE_ICE',RESHAPE(re_ice_um,[n,1]))
+    CALL check_finite('UDM_RE_SNOW',RESHAPE(re_snow_um,[n,1]))
+    DO k=1,n
+      IF(qc(k)>0.0 .AND. re_cloud_um(k)<=0.0) THEN
+        CALL fail_builder_layer(reason,RRTMGP_INPUT_RANGE,'RRTMGP_INPUT_UDM_RE_CLOUD_NOT_POSITIVE',k,column_context)
+        RETURN
+      END IF
+      IF(qi(k)>0.0 .AND. re_ice_um(k)<=0.0) THEN
+        CALL fail_builder_layer(reason,RRTMGP_INPUT_RANGE,'RRTMGP_INPUT_UDM_RE_ICE_NOT_POSITIVE',k,column_context)
+        RETURN
+      END IF
+      IF(qs(k)>0.0 .AND. re_snow_um(k)<=0.0) THEN
+        CALL fail_builder_layer(reason,RRTMGP_INPUT_RANGE,'RRTMGP_INPUT_UDM_RE_SNOW_NOT_POSITIVE',k,column_context)
+        RETURN
+      END IF
+    END DO
+
+    ! No hail optics are available. Return a machine-readable refusal before
+    ! producing paths that a caller could accidentally pass to radiation.
+    IF(ANY(qh>0.0)) THEN
+      reason=RRTMGP_INPUT_UDM_HAIL_UNSUPPORTED
+      errmsg='RRTMGP_INPUT_UDM_HAIL_OPTICS_UNSUPPORTED'
+      RETURN
+    END IF
+
+    g64=REAL(gravity,real64)
+    clear_column=.TRUE.; omitted_any=.FALSE.
+    DO k=1,n
+      q=[REAL(qc(k),real64),REAL(qi(k),real64),REAL(qr(k),real64), &
+         REAL(qs(k),real64),REAL(qg(k),real64),REAL(qh(k),real64)]
+      IF(cf(k)>0.0 .OR. ANY(q>0.0_real64)) clear_column=.FALSE.
+      IF(cf(k)==0.0 .AND. ANY(q>0.0_real64)) THEN
+        IF(.NOT.allow_clear) THEN
+          CALL fail_builder_layer(reason,RRTMGP_INPUT_INVALID, &
+               'RRTMGP_INPUT_ZERO_CLOUD_FRACTION_WITH_CONDENSATE',k,column_context)
+          RETURN
+        END IF
+        omitted_any=.TRUE.
+        IF(PRESENT(layer_reason)) layer_reason(k)=RRTMGP_INPUT_CLEAR_CONDENSATE
+      ELSE IF(cf(k)==0.0) THEN
+        IF(PRESENT(layer_reason)) layer_reason(k)=RRTMGP_INPUT_CLEAR
+      END IF
+      dp64=REAL(dp_hpa(k),real64)*100.0_real64/g64*1000.0_real64
+      DO p=1,6
+        path64=q(p)*dp64
+        IF(.NOT.ieee_is_finite(path64) .OR. path64>REAL(HUGE(0.0),real64)) THEN
+          CALL fail_builder_layer(reason,RRTMGP_INPUT_OVERFLOW,'RRTMGP_INPUT_PATH_OVERFLOW',k,column_context)
+          RETURN
+        END IF
+        grid_path(k,q_to_path(p))=REAL(path64)
+        IF(cf(k)>0.0) THEN
+          radius64=path64/REAL(cf(k),real64)
+          IF(.NOT.ieee_is_finite(radius64) .OR. radius64>REAL(HUGE(0.0),real64)) THEN
+            CALL fail_builder_layer(reason,RRTMGP_INPUT_OVERFLOW,'RRTMGP_INPUT_PATH_OVERFLOW',k,column_context)
+            RETURN
+          END IF
+          incloud_path(k,q_to_path(p))=REAL(radius64)
+        ELSE IF(path64>0.0_real64 .AND. PRESENT(omitted_grid_path)) THEN
+          omitted_grid_path(k,q_to_path(p))=REAL(path64)
+        END IF
+      END DO
+      radius64=REAL(re_cloud_um(k),real64)
+      IF(.NOT.ieee_is_finite(radius64) .OR. ABS(radius64)>REAL(HUGE(0.0),real64)) THEN
+        CALL fail_builder_layer(reason,RRTMGP_INPUT_OVERFLOW,'RRTMGP_INPUT_UDM_RADIUS_OVERFLOW',k,column_context)
+        RETURN
+      END IF
+      radius_um(k,RRTMGP_UDM_CLOUD_RADIUS)=REAL(radius64)
+      radius64=REAL(re_ice_um(k),real64)
+      IF(.NOT.ieee_is_finite(radius64) .OR. ABS(radius64)>REAL(HUGE(0.0),real64)) THEN
+        CALL fail_builder_layer(reason,RRTMGP_INPUT_OVERFLOW,'RRTMGP_INPUT_UDM_RADIUS_OVERFLOW',k,column_context)
+        RETURN
+      END IF
+      radius_um(k,RRTMGP_UDM_ICE_RADIUS)=REAL(radius64)
+      radius64=REAL(re_snow_um(k),real64)
+      IF(.NOT.ieee_is_finite(radius64) .OR. ABS(radius64)>REAL(HUGE(0.0),real64)) THEN
+        CALL fail_builder_layer(reason,RRTMGP_INPUT_OVERFLOW,'RRTMGP_INPUT_UDM_RADIUS_OVERFLOW',k,column_context)
+        RETURN
+      END IF
+      radius_um(k,RRTMGP_UDM_SNOW_RADIUS)=REAL(radius64)
+    END DO
+    IF(clear_column) reason=RRTMGP_INPUT_CLEAR
+    IF(omitted_any) reason=RRTMGP_INPUT_CLEAR_CONDENSATE
+  END SUBROUTINE rrtmgp_build_udm_inputs
 
   SUBROUTINE rrtmgp_build_cloud_inputs(dp_hpa,cf,qc,qi,qs,rliq,rice,rsnow,gravity, &
                                        lwp,iwp,swp,reason,column_context,allow_clear_condensate, &

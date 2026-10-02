@@ -160,7 +160,7 @@ def read_raw(path: Path) -> tuple[str, int, int, dict[str, np.ndarray]]:
 
 def read_input(path: Path) -> tuple[str, int, int, int, int, int, dict[str, np.ndarray]]:
     lines = path.read_text(encoding="ascii").splitlines()
-    if len(lines) < 2 or lines[0].strip() not in {"RRTMGP_REPLAY_V1", "RRTMGP_REPLAY_V2", "RRTMGP_REPLAY_V3"}:
+    if len(lines) < 2 or lines[0].strip() not in {"RRTMGP_REPLAY_V1", "RRTMGP_REPLAY_V2", "RRTMGP_REPLAY_V3", "RRTMGP_REPLAY_V4"}:
         fail(f"{path}: expected RRTMGP_REPLAY_V1, V2, or V3 first line")
     header = lines[1].split()
     if len(header) != 6:
@@ -184,12 +184,19 @@ def read_input(path: Path) -> tuple[str, int, int, int, int, int, dict[str, np.n
         roughness = records.get("ICE_ROUGHNESS")
         if roughness is None or roughness.shape != (1, 1) or roughness.item() not in (1, 2, 3):
             fail(f"{path}: V2/V3 requires scalar ICE_ROUGHNESS in {{1, 2, 3}}")
-    if lines[0].strip() == "RRTMGP_REPLAY_V3" and phase == "SW":
+    if lines[0].strip() in {"RRTMGP_REPLAY_V3", "RRTMGP_REPLAY_V4"} and phase == "SW":
         policy = records.get("SW_BAND_PARTITION")
         if policy is None or policy.shape != (1, 1) or policy.item() != 1:
             fail(f"{path}: V3 SW requires scalar SW_BAND_PARTITION=1 (CCPP transition)")
+    if lines[0].strip() == "RRTMGP_REPLAY_V4":
+        policy = records.get("PRECIPITATION_OPTICS")
+        if policy is None or policy.shape != (1, 1) or policy.item() != 1:
+            fail(f"{path}: V4 requires scalar PRECIPITATION_OPTICS=1")
+        rain = records.get("RWP")
+        if rain is None or rain.shape != (nc, nl) or np.any(rain < 0):
+            fail(f"{path}: V4 requires nonnegative RWP matching column layers")
     for name, values in records.items():
-        if name in {"ICE_ROUGHNESS", "SW_BAND_PARTITION"}:
+        if name in {"ICE_ROUGHNESS", "SW_BAND_PARTITION", "PRECIPITATION_OPTICS"}:
             continue
         if values.shape[0] != nc:
             fail(f"{path}: {name} first dimension {values.shape[0]} != nc={nc}")
@@ -279,7 +286,7 @@ def compare_input_to_raw(phase: str, raw: dict[str, np.ndarray],
     path_expected: dict[str, np.ndarray] = {}
     omitted: dict[str, Any] = {}
     path_differences: dict[str, float] = {}
-    for path_name, q_name in (("LWP", "QC"), ("IWP", "QI"), ("SWP", "QS")):
+    for path_name, q_name in (("LWP", "QC"), ("IWP", "QI"), ("SWP", "QS")) + ((("RWP", "QR"),) if "RWP" in inp else ()):
         q = raw[q_name][:raw_nl]
         grid_path = dp * 100.0 / gravity * 1000.0 * q
         expected = np.zeros(raw_nl, dtype=np.float64)
@@ -386,6 +393,7 @@ def check_microphysics_mapping(mp_physics: int, raw: dict[str, np.ndarray],
     checks: list[str] = []
     expected_flags = {
         4: {"QC": True, "QI": True, "QS": True},
+        27: {"QC": True, "QI": True, "QS": True},
         5: {"QC": True, "QI": True, "QS": False},
         15: {"QC": True, "QI": True, "QS": False},
         85: {"QC": True, "QI": True, "QS": False},
@@ -393,7 +401,7 @@ def check_microphysics_mapping(mp_physics: int, raw: dict[str, np.ndarray],
     }
     if mp_physics in expected_flags and flags != expected_flags[mp_physics]:
         fail(f"{phase}: MP{mp_physics} source flags {flags} != expected {expected_flags[mp_physics]}")
-    if mp_physics == 4:
+    if mp_physics in (4, 27):
         for q in Q_NAMES:
             source = SOURCE_NAMES[q]
             if source not in raw:
@@ -401,7 +409,7 @@ def check_microphysics_mapping(mp_physics: int, raw: dict[str, np.ndarray],
             assert_close(raw[q][:raw_nl], raw[source][:raw_nl], f"{phase}: MP4 preserved {q}",
                          rtol=0.0, atol=0.0)
             checks.append(f"{q}=source_{q}")
-        mapping = "mp4_all_species_preserved"
+        mapping = "udm_all_native_species_preserved" if mp_physics == 27 else "mp4_all_species_preserved"
     elif mp_physics in {5, 15, 85}:
         for q in ("QC", "QI"):
             source = SOURCE_NAMES[q]
@@ -494,6 +502,7 @@ def check_wrf_diagnostics(phase: str, result: dict[str, Any], raw: dict[str, np.
 def initialize_cloud_fixture(wrfinput: Path, mp_physics: int) -> dict[str, Any]:
     """Insert registered condensate into a cold, interior wrfinput layer."""
     fields_by_scheme = {
+        27: {"QCLOUD": ("QC", 2.0e-5), "QICE": ("QI", 1.0e-5), "QSNOW": ("QS", 3.0e-5)},
         4: {"QCLOUD": ("QC", 2.0e-5), "QICE": ("QI", 1.0e-5), "QSNOW": ("QS", 3.0e-5)},
         5: {"QCLOUD": ("QC", 2.0e-5), "QICE": ("QI", 1.0e-5)},
         15: {"QCLOUD": ("QC", 2.0e-5), "QICE": ("QI", 1.0e-5)},
@@ -531,7 +540,7 @@ def initialize_cloud_fixture(wrfinput: Path, mp_physics: int) -> dict[str, Any]:
             values[0, layer, :, :] = mixing_ratio
             ds.variables[variable][:] = values
             mapping[variable] = {"mapped_species": source, "mixing_ratio_kg_kg": mixing_ratio}
-        radius_values = {"RE_CLOUD": 10.0e-6, "RE_ICE": 30.0e-6, "RE_SNOW": 60.0e-6}
+        radius_values = {} if mp_physics == 27 else {"RE_CLOUD": 10.0e-6, "RE_ICE": 30.0e-6, "RE_SNOW": 60.0e-6}
         radius_written: dict[str, float] = {}
         lower_names = {name.lower(): name for name in ds.variables}
         for name, radius_m in radius_values.items():
@@ -682,23 +691,20 @@ def set_run_minutes(namelist: str, run_minutes: int) -> str:
 
 
 def check_configuration_warnings(case_dir: Path, mp_physics: int) -> dict[str, bool]:
-    """Check that actual WRF initialization reports the documented support scope."""
     text = "\n".join((case_dir / name).read_text(errors="replace")
                      for name in ("ideal.log", "wrf.log"))
-    if "RRTMGP37 has QC/QI/QS cloud optics; separate rain, graupel and hail optics are not implemented" not in text:
-        fail("WRF initialization did not report the known precipitation-optics limitation")
-    unvalidated = f"RRTMGP37 mp_physics={mp_physics} has not passed" in text
-    if mp_physics not in (2, 4, 5) and not unvalidated:
-        fail(f"WRF initialization did not report unvalidated MP{mp_physics}")
-    return {"precipitation_limit_reported": True,
-            "unvalidated_microphysics_reported": unvalidated}
+    if mp_physics != 27:
+        fail("RRTMGP37 now supports only UDM27")
+    if "RRTMGP37 UDM: graupel optics are diagnostic-only; any positive hail path is unsupported" not in text:
+        fail("missing explicit UDM precipitation support scope")
+    return {"udm_precipitation_limit_reported": True}
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("case_dir", type=Path, help="new isolated SCM case/capture directory")
     parser.add_argument("reference_exe", type=Path, help="built reference_column executable")
-    parser.add_argument("--mp-physics", type=int, default=4)
+    parser.add_argument("--mp-physics", type=int, choices=(27,), default=27)
     parser.add_argument("--ice-roughness", type=int, choices=(1, 2, 3), default=1)
     parser.add_argument("--capture-call", type=int, default=1)
     parser.add_argument("--run-minutes", type=int, default=5,

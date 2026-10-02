@@ -1,0 +1,248 @@
+{
+  "aggregation": {
+    "first_active": "first non-initial history record (10 s); flux statistics average the 2x2 domain",
+    "mean_window": "arithmetic mean over six equally spaced records from 10 through 60 s and all 2x2 cells",
+    "tendency_rms_max": "RMS and maximum absolute 37-minus-4 tendency across all domain, layer, and selected time values"
+  },
+  "interpretation": "These are coupled one-minute SCM differences. Radiation changes feed back on the evolving model state and include each solver’s cloud/sampling behavior. They are not same-time offline column comparisons and do not rank either solver by accuracy.",
+  "scenarios": {
+    "control": {
+      "case_directories": {
+        "option37": "build/udm-scm-final-reviewed/control/ra37-call1",
+        "option4": "build/udm-scm-final-reviewed/control/ra4"
+      },
+      "history_time_seconds": [
+        0,
+        10,
+        20,
+        30,
+        40,
+        50,
+        60
+      ],
+      "initial_wrfinput_sha256": {
+        "identical_within_pair": true,
+        "option37": "3fb1d9ae78bc0e93d072e646f052e3a39dd83d5215f864bbc89ff030f9cb6d4e",
+        "option4": "3fb1d9ae78bc0e93d072e646f052e3a39dd83d5215f864bbc89ff030f9cb6d4e"
+      },
+      "metrics": {
+        "first_active_time_seconds": 10,
+        "fluxes_w_m2": {
+          "GLW": {
+            "first_active": {
+              "domain_max_delta": 0.24786376953125,
+              "domain_mean_delta_37_minus_4": 0.24786376953125,
+              "domain_min_delta": 0.24786376953125
+            },
+            "mean_10_to_60_seconds": {
+              "space_time_max_delta": 0.24786376953125,
+              "space_time_mean_delta_37_minus_4": -1.4452311197916667,
+              "space_time_min_delta": -1.792327880859375
+            }
+          },
+          "GSW": {
+            "first_active": {
+              "domain_max_delta": -0.41522216796875,
+              "domain_mean_delta_37_minus_4": -0.41522216796875,
+              "domain_min_delta": -0.41522216796875
+            },
+            "mean_10_to_60_seconds": {
+              "space_time_max_delta": 45.57366943359375,
+              "space_time_mean_delta_37_minus_4": 37.57030232747396,
+              "space_time_min_delta": -0.41522216796875
+            }
+          },
+          "LWUPT": {
+            "first_active": {
+              "domain_max_delta": 0.9390411376953125,
+              "domain_mean_delta_37_minus_4": 0.9390411376953125,
+              "domain_min_delta": 0.9390411376953125
+            },
+            "mean_10_to_60_seconds": {
+              "space_time_max_delta": 6.0540924072265625,
+              "space_time_mean_delta_37_minus_4": 5.1070556640625,
+              "space_time_min_delta": 0.9390411376953125
+            }
+          },
+          "SWDOWN": {
+            "first_active": {
+              "domain_max_delta": -0.51898193359375,
+              "domain_mean_delta_37_minus_4": -0.51898193359375,
+              "domain_min_delta": -0.51898193359375
+            },
+            "mean_10_to_60_seconds": {
+              "space_time_max_delta": 54.90802001953125,
+              "space_time_mean_delta_37_minus_4": 45.262298583984375,
+              "space_time_min_delta": -0.51898193359375
+            }
+          }
+        },
+        "mean_window_seconds": [
+          10,
+          60
+        ],
+        "tendencies": {
+          "RTHRATEN": {
+            "10_to_60_seconds": {
+              "max_abs_delta": 7.895770249888301e-05,
+              "mean_delta_37_minus_4": 1.91832140967916e-06,
+              "rms_delta": 1.5794035369220897e-05
+            },
+            "first_active": {
+              "max_abs_delta": 2.8596705305972137e-06,
+              "mean_delta_37_minus_4": 6.79137810004126e-07,
+              "rms_delta": 1.2117808743027368e-06
+            },
+            "units": "K s-1"
+          },
+          "RTHRATLW": {
+            "10_to_60_seconds": {
+              "max_abs_delta": 8.655511192046106e-05,
+              "mean_delta_37_minus_4": 1.5819360114385046e-08,
+              "rms_delta": 1.6174562874744733e-05
+            },
+            "first_active": {
+              "max_abs_delta": 2.1759187802672386e-06,
+              "mean_delta_37_minus_4": -8.256236101568887e-09,
+              "rms_delta": 1.0541707973217758e-06
+            },
+            "units": "K s-1"
+          },
+          "RTHRATSW": {
+            "10_to_60_seconds": {
+              "max_abs_delta": 2.175747067667544e-05,
+              "mean_delta_37_minus_4": 1.9025019779384543e-06,
+              "rms_delta": 4.173543065603694e-06
+            },
+            "first_active": {
+              "max_abs_delta": 1.365753632853739e-06,
+              "mean_delta_37_minus_4": 6.873940145527802e-07,
+              "rms_delta": 7.636658414881478e-07
+            },
+            "units": "K s-1"
+          }
+        }
+      }
+    },
+    "mixed": {
+      "case_directories": {
+        "option37": "build/udm-scm-final-reviewed/mixed/ra37-call1",
+        "option4": "build/udm-scm-final-reviewed/mixed/ra4"
+      },
+      "history_time_seconds": [
+        0,
+        10,
+        20,
+        30,
+        40,
+        50,
+        60
+      ],
+      "initial_wrfinput_sha256": {
+        "identical_within_pair": true,
+        "option37": "9e167c8b99d9a2cacba70c18fe111e0c6785a5cdca5a858aaf372474a5ffc36f",
+        "option4": "9e167c8b99d9a2cacba70c18fe111e0c6785a5cdca5a858aaf372474a5ffc36f"
+      },
+      "metrics": {
+        "first_active_time_seconds": 10,
+        "fluxes_w_m2": {
+          "GLW": {
+            "first_active": {
+              "domain_max_delta": 16.246856689453125,
+              "domain_mean_delta_37_minus_4": 2.55438232421875,
+              "domain_min_delta": -8.309112548828125
+            },
+            "mean_10_to_60_seconds": {
+              "space_time_max_delta": 16.246856689453125,
+              "space_time_mean_delta_37_minus_4": 0.3971875508626302,
+              "space_time_min_delta": -8.309112548828125
+            }
+          },
+          "GSW": {
+            "first_active": {
+              "domain_max_delta": 12.3984375,
+              "domain_mean_delta_37_minus_4": 2.232025146484375,
+              "domain_min_delta": -7.8861083984375
+            },
+            "mean_10_to_60_seconds": {
+              "space_time_max_delta": 46.40412902832031,
+              "space_time_mean_delta_37_minus_4": 37.99324417114258,
+              "space_time_min_delta": -7.8861083984375
+            }
+          },
+          "LWUPT": {
+            "first_active": {
+              "domain_max_delta": 10.242645263671875,
+              "domain_mean_delta_37_minus_4": -1.8716850280761719,
+              "domain_min_delta": -14.67437744140625
+            },
+            "mean_10_to_60_seconds": {
+              "space_time_max_delta": 10.242645263671875,
+              "space_time_mean_delta_37_minus_4": 4.543688774108887,
+              "space_time_min_delta": -14.67437744140625
+            }
+          },
+          "SWDOWN": {
+            "first_active": {
+              "domain_max_delta": 15.498046875,
+              "domain_mean_delta_37_minus_4": 2.7900543212890625,
+              "domain_min_delta": -9.85760498046875
+            },
+            "mean_10_to_60_seconds": {
+              "space_time_max_delta": 55.908599853515625,
+              "space_time_mean_delta_37_minus_4": 45.791805267333984,
+              "space_time_min_delta": -9.85760498046875
+            }
+          }
+        },
+        "mean_window_seconds": [
+          10,
+          60
+        ],
+        "tendencies": {
+          "RTHRATEN": {
+            "10_to_60_seconds": {
+              "max_abs_delta": 0.00011149725469294935,
+              "mean_delta_37_minus_4": 1.8789478447659931e-06,
+              "rms_delta": 1.647727299662565e-05
+            },
+            "first_active": {
+              "max_abs_delta": 4.516320950642694e-05,
+              "mean_delta_37_minus_4": 8.721950803926787e-07,
+              "rms_delta": 4.175393834094392e-06
+            },
+            "units": "K s-1"
+          },
+          "RTHRATLW": {
+            "10_to_60_seconds": {
+              "max_abs_delta": 0.00012358464300632477,
+              "mean_delta_37_minus_4": -3.4110298369915654e-08,
+              "rms_delta": 1.7078264254521058e-05
+            },
+            "first_active": {
+              "max_abs_delta": 5.40758301212918e-05,
+              "mean_delta_37_minus_4": 2.091798427730444e-07,
+              "rms_delta": 5.270057467909131e-06
+            },
+            "units": "K s-1"
+          },
+          "RTHRATSW": {
+            "10_to_60_seconds": {
+              "max_abs_delta": 2.3483315089833923e-05,
+              "mean_delta_37_minus_4": 1.913058064163299e-06,
+              "rms_delta": 4.2544631975207795e-06
+            },
+            "first_active": {
+              "max_abs_delta": 2.3483315089833923e-05,
+              "mean_delta_37_minus_4": 6.630151805654613e-07,
+              "rms_delta": 2.1109273873746993e-06
+            },
+            "units": "K s-1"
+          }
+        }
+      }
+    }
+  },
+  "source_cases_root": "build/udm-scm-final-reviewed",
+  "title": "UDM mp_physics=27 coupled SCM comparison: RRTMG4/4 vs RRTMGP37/37"
+}

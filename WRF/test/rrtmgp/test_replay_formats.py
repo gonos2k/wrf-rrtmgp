@@ -90,7 +90,7 @@ def must_reject_reference(executable: Path, data_dir: Path, path: Path,
     run = run_reference(executable, data_dir, path, output_path)
     if run.returncode == 0:
         fail(f"reference_column accepted invalid {label}")
-    if label != "missing" and "V3 requires" not in run.stdout:
+    if label != "missing" and "SW_BAND_PARTITION" not in run.stdout:
         fail(f"reference_column rejected {label} without a partition diagnostic: {run.stdout[-1200:]}")
 
 

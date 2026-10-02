@@ -20,7 +20,8 @@ PROGRAM rrtmgp_reference_column
   CHARACTER(LEN=32) :: magic,phase
   INTEGER :: nc,nl,overlap,seed,iceflag,u_in,u_out,ios,nemis
   INTEGER :: c,k,g,b,ngpt,nbnd
-  REAL(wp) :: solar,roughness_value,partition_value,visible_weight
+  REAL(wp) :: solar,roughness_value,partition_value,precip_mode,visible_weight
+  LOGICAL :: use_precip
   INTEGER :: ice_roughness
   REAL(wp), ALLOCATABLE :: play(:,:),plev(:,:),tlay(:,:),tlev(:,:),tsfc(:,:)
   REAL(wp), ALLOCATABLE :: h2o(:,:),co2(:,:),o3(:,:),n2o(:,:),ch4(:,:),o2(:,:)
@@ -30,6 +31,7 @@ PROGRAM rrtmgp_reference_column
   REAL(wp), ALLOCATABLE :: emissivity(:,:),avdir(:),avdif(:),andir(:),andif(:),mu0(:),albdir(:,:),albdif(:,:)
   REAL(wp), ALLOCATABLE :: zero(:,:),rl(:,:),di(:,:),ds(:,:),toa(:,:)
   REAL(wp), ALLOCATABLE :: gas_tau(:,:,:),gas_ssa(:,:,:),gas_g(:,:,:)
+  REAL(wp), ALLOCATABLE :: rwp(:,:),precip_tau(:,:,:),precip_ssa(:,:,:),precip_g(:,:,:)
   REAL(wp), ALLOCATABLE :: mask_values(:,:,:)
   REAL(wp), ALLOCATABLE :: cloud_tau(:,:,:),cloud_ssa(:,:,:),cloud_g(:,:,:)
   REAL(wp), ALLOCATABLE :: prepared_tau(:,:,:),prepared_ssa(:,:,:),prepared_g(:,:,:)
@@ -47,8 +49,8 @@ PROGRAM rrtmgp_reference_column
   TYPE(ty_gas_concs) :: gases
   TYPE(ty_gas_optics_rrtmgp) :: gas_lw,gas_sw
   TYPE(ty_cloud_optics_rrtmgp) :: cloud_lw,cloud_sw
-  TYPE(ty_optical_props_1scl) :: lw_atmos,lw_cloud,lw_snow,lw_sampled
-  TYPE(ty_optical_props_2str) :: sw_atmos,sw_cloud,sw_snow,sw_sampled
+  TYPE(ty_optical_props_1scl) :: lw_atmos,lw_cloud,lw_snow,lw_precip,lw_sampled
+  TYPE(ty_optical_props_2str) :: sw_atmos,sw_cloud,sw_snow,sw_precip,sw_sampled
   TYPE(ty_source_func_lw) :: lw_source
   TYPE(ty_fluxes_broadband) :: lw_flux
   TYPE(ty_fluxes_byband) :: sw_flux
@@ -65,7 +67,7 @@ PROGRAM rrtmgp_reference_column
   READ(u_in,*,IOSTAT=ios) magic
   IF(ios/=0) ERROR STOP 'invalid replay input magic'
   IF(TRIM(magic)/='RRTMGP_REPLAY_V1'.AND.TRIM(magic)/='RRTMGP_REPLAY_V2'.AND. &
-     TRIM(magic)/='RRTMGP_REPLAY_V3') &
+     TRIM(magic)/='RRTMGP_REPLAY_V3'.AND.TRIM(magic)/='RRTMGP_REPLAY_V4') &
     ERROR STOP 'invalid replay input magic'
   READ(u_in,*,IOSTAT=ios) phase,nc,nl,overlap,seed,iceflag
   IF(ios/=0 .OR. (TRIM(phase)/='LW' .AND. TRIM(phase)/='SW')) ERROR STOP 'invalid replay header'
@@ -109,10 +111,26 @@ PROGRAM rrtmgp_reference_column
     ice_roughness=INT(roughness_value)
     IF(REAL(ice_roughness,wp)/=roughness_value) ERROR STOP 'ice roughness must be integer'
   END IF
-  IF(TRIM(magic)=='RRTMGP_REPLAY_V3'.AND.TRIM(phase)=='SW') THEN
+  IF((TRIM(magic)=='RRTMGP_REPLAY_V3'.OR.TRIM(magic)=='RRTMGP_REPLAY_V4').AND. &
+     TRIM(phase)=='SW') THEN
     CALL read_scalar_section(u_in,'SW_BAND_PARTITION',partition_value)
     IF(.NOT.ieee_is_finite(partition_value)) ERROR STOP 'non-finite SW band partition'
-    IF(partition_value/=1._wp) ERROR STOP 'V3 requires SW_BAND_PARTITION=1 (CCPP transition)'
+    IF(partition_value/=1._wp) THEN
+      IF(TRIM(magic)=='RRTMGP_REPLAY_V3') &
+        ERROR STOP 'V3 requires SW_BAND_PARTITION=1 (CCPP transition)'
+      ERROR STOP 'V4 requires SW_BAND_PARTITION=1 (CCPP transition)'
+    END IF
+  END IF
+  use_precip=.FALSE.
+  IF(TRIM(magic)=='RRTMGP_REPLAY_V4') THEN
+    CALL read_scalar_section(u_in,'PRECIPITATION_OPTICS',precip_mode)
+    IF(.NOT.ieee_is_finite(precip_mode).OR.precip_mode/=1._wp) &
+      ERROR STOP 'V4 requires PRECIPITATION_OPTICS=1'
+    ALLOCATE(rwp(nc,nl))
+    CALL read_section(u_in,'RWP',rwp)
+    IF(ANY(.NOT.ieee_is_finite(rwp)).OR.ANY(rwp<0._wp)) &
+      ERROR STOP 'V4 RWP must be finite and nonnegative'
+    use_precip=.TRUE.
   END IF
   CLOSE(u_in)
 
@@ -150,6 +168,7 @@ PROGRAM rrtmgp_reference_column
     ALLOCATE(gas_tau(nc,nl,gas_lw%get_ngpt()),cloud_tau(nc,nl,cloud_lw%get_nband()))
     ALLOCATE(mask(nc,nl,gas_lw%get_ngpt()),randoms(gas_lw%get_ngpt(),nl,nc))
     ALLOCATE(local_random(gas_lw%get_ngpt()))
+    IF(use_precip) ALLOCATE(precip_tau(nc,nl,cloud_lw%get_nband()))
     CALL check_error(lw_atmos%alloc_1scl(nc,nl,gas_lw))
     CALL check_error(lw_cloud%alloc_1scl(nc,nl,cloud_lw))
     CALL check_error(lw_snow%alloc_1scl(nc,nl,cloud_lw))
@@ -167,9 +186,23 @@ PROGRAM rrtmgp_reference_column
     rl=MAX(cloud_lw%get_min_radius_liq(),MIN(cloud_lw%get_max_radius_liq(),rel))
     di=MAX(cloud_lw%get_min_radius_ice(),MIN(cloud_lw%get_max_radius_ice(),ice_diameter(rei,iceflag)))
     ds=MAX(cloud_lw%get_min_radius_ice(),MIN(cloud_lw%get_max_radius_ice(),2._wp*res))
+    IF(use_precip) ds=res ! V4 snow optics use native effective radius, not the cloud-ice LUT diameter.
     CALL check_error(cloud_lw%cloud_optics(lwp,iwp,rl,di,lw_cloud))
-    CALL check_error(cloud_lw%cloud_optics(zero,swp,rl,ds,lw_snow))
-    CALL check_error(lw_snow%increment(lw_cloud))
+    IF(.NOT.use_precip) THEN
+      CALL check_error(cloud_lw%cloud_optics(zero,swp,rl,ds,lw_snow))
+      CALL check_error(lw_snow%increment(lw_cloud))
+    END IF
+    IF(use_precip) THEN
+      CALL reference_lw_precip(rwp,swp,res,gas_lw%get_band_lims_wavenumber(),precip_tau)
+      DO c=1,nc
+        DO k=1,nl
+          IF(cf(c,k)==0._wp) precip_tau(c,k,:)=0._wp
+        END DO
+      END DO
+      CALL check_error(lw_precip%alloc_1scl(nc,nl,cloud_lw))
+      lw_precip%tau=precip_tau
+      CALL check_error(lw_precip%increment(lw_cloud))
+    END IF
     cloud_tau=lw_cloud%tau
     ALLOCATE(prepared_tau(nc,nl,cloud_lw%get_nband()))
     prepared_tau=lw_cloud%tau
@@ -186,6 +219,10 @@ PROGRAM rrtmgp_reference_column
     ALLOCATE(gas_tau(nc,nl,gas_sw%get_ngpt()),gas_ssa(nc,nl,gas_sw%get_ngpt()),gas_g(nc,nl,gas_sw%get_ngpt()))
     ALLOCATE(cloud_tau(nc,nl,cloud_sw%get_nband()),cloud_ssa(nc,nl,cloud_sw%get_nband()), &
              cloud_g(nc,nl,cloud_sw%get_nband()))
+    IF(use_precip) THEN
+      ALLOCATE(precip_tau(nc,nl,cloud_sw%get_nband()),precip_ssa(nc,nl,cloud_sw%get_nband()), &
+               precip_g(nc,nl,cloud_sw%get_nband()))
+    END IF
     ALLOCATE(prepared_tau(nc,nl,cloud_sw%get_nband()),prepared_ssa(nc,nl,cloud_sw%get_nband()), &
              prepared_g(nc,nl,cloud_sw%get_nband()))
     ALLOCATE(mask(nc,nl,gas_sw%get_ngpt()),randoms(gas_sw%get_ngpt(),nl,nc))
@@ -208,7 +245,8 @@ PROGRAM rrtmgp_reference_column
     END DO
     bands=gas_sw%get_band_lims_wavenumber()
     DO b=1,gas_sw%get_nband()
-      IF(TRIM(magic)=='RRTMGP_REPLAY_V3'.AND.bands(1,b)==12850._wp) THEN
+      IF((TRIM(magic)=='RRTMGP_REPLAY_V3'.OR.TRIM(magic)=='RRTMGP_REPLAY_V4').AND. &
+         bands(1,b)==12850._wp) THEN
         IF(bands(2,b)/=16000._wp) ERROR STOP 'unexpected transition-band upper limit'
         albdir(b,:)=0.5_wp*(andir+avdir); albdif(b,:)=0.5_wp*(andif+avdif)
       ELSE IF(bands(1,b)>=12850._wp) THEN
@@ -226,11 +264,32 @@ PROGRAM rrtmgp_reference_column
     rl=MAX(cloud_sw%get_min_radius_liq(),MIN(cloud_sw%get_max_radius_liq(),rel))
     di=MAX(cloud_sw%get_min_radius_ice(),MIN(cloud_sw%get_max_radius_ice(),ice_diameter(rei,iceflag)))
     ds=MAX(cloud_sw%get_min_radius_ice(),MIN(cloud_sw%get_max_radius_ice(),2._wp*res))
+    IF(use_precip) ds=res ! V4 snow optics use native effective radius, not the cloud-ice LUT diameter.
     CALL check_error(cloud_sw%cloud_optics(lwp,iwp,rl,di,sw_cloud))
-    CALL check_error(cloud_sw%cloud_optics(zero,swp,rl,ds,sw_snow))
-    CALL check_error(sw_snow%increment(sw_cloud))
-    cloud_tau=sw_cloud%tau; cloud_ssa=sw_cloud%ssa; cloud_g=sw_cloud%g
-    CALL check_error(sw_cloud%delta_scale())
+    IF(use_precip) THEN
+      CALL check_error(sw_cloud%delta_scale())
+      CALL reference_sw_precip(rwp,swp,res,bands,precip_tau,precip_ssa,precip_g)
+      DO c=1,nc
+        DO k=1,nl
+          IF(cf(c,k)==0._wp) THEN
+            precip_tau(c,k,:)=0._wp
+            precip_ssa(c,k,:)=0._wp
+            precip_g(c,k,:)=0._wp
+          END IF
+        END DO
+      END DO
+      CALL check_error(sw_precip%alloc_2str(nc,nl,cloud_sw))
+      sw_precip%tau=precip_tau
+      sw_precip%ssa=precip_ssa
+      sw_precip%g=precip_g
+      CALL check_error(sw_precip%increment(sw_cloud))
+      cloud_tau=sw_cloud%tau; cloud_ssa=sw_cloud%ssa; cloud_g=sw_cloud%g
+    ELSE
+      CALL check_error(cloud_sw%cloud_optics(zero,swp,rl,ds,sw_snow))
+      CALL check_error(sw_snow%increment(sw_cloud))
+      cloud_tau=sw_cloud%tau; cloud_ssa=sw_cloud%ssa; cloud_g=sw_cloud%g
+      CALL check_error(sw_cloud%delta_scale())
+    END IF
     prepared_tau=sw_cloud%tau; prepared_ssa=sw_cloud%ssa; prepared_g=sw_cloud%g
     CALL make_mask(cf,gas_sw%get_ngpt(),overlap,seed,mask,randoms,local_random)
     IF(ANY(cf>0._wp) .AND. overlap/=0) THEN
@@ -244,7 +303,8 @@ PROGRAM rrtmgp_reference_column
     visdir=0._wp; visdif=0._wp; nirdir=0._wp; nirdif=0._wp
     DO b=1,gas_sw%get_nband()
       visible_weight=MERGE(1._wp,0._wp,bands(1,b)>=12850._wp)
-      IF(TRIM(magic)=='RRTMGP_REPLAY_V3'.AND.bands(1,b)==12850._wp) visible_weight=0.5_wp
+      IF((TRIM(magic)=='RRTMGP_REPLAY_V3'.OR.TRIM(magic)=='RRTMGP_REPLAY_V4').AND. &
+         bands(1,b)==12850._wp) visible_weight=0.5_wp
       visdir=visdir+visible_weight*flux_band_dir(:,:,b)
       visdif=visdif+visible_weight*(flux_band_dn(:,:,b)-flux_band_dir(:,:,b))
       nirdir=nirdir+(1._wp-visible_weight)*flux_band_dir(:,:,b)
@@ -266,6 +326,12 @@ PROGRAM rrtmgp_reference_column
   CALL write3(u_out,'GAS_TAU',gas_tau)
   IF(TRIM(phase)=='SW') THEN
     CALL write3(u_out,'GAS_SSA',gas_ssa); CALL write3(u_out,'GAS_G',gas_g)
+  END IF
+  IF(use_precip) THEN
+    CALL write3(u_out,'PRECIP_TAU',precip_tau)
+    IF(TRIM(phase)=='SW') THEN
+      CALL write3(u_out,'PRECIP_SSA',precip_ssa); CALL write3(u_out,'PRECIP_G',precip_g)
+    END IF
   END IF
   CALL write3(u_out,'CLOUD_TAU',cloud_tau)
   IF(TRIM(phase)=='SW') THEN
@@ -372,6 +438,103 @@ CONTAINS
     diameter=2._wp*radius
     IF(flag==3) diameter=diameter/1.0315_wp
   END FUNCTION
+
+  SUBROUTINE reference_lw_precip(rain_path,snow_path,snow_radius,band_limits,tau)
+    ! Independent replay implementation copied from the pinned public CCPP
+    ! RRTMGP source commit 3e6660c6df54e95a0871e990c2294dd397ae3860.
+    ! It intentionally does not call module_ra_rrtmgp_precip; results validate
+    ! array assembly and core/RTE replay, but not the shared source formula.
+    REAL(wp), INTENT(IN) :: rain_path(:,:),snow_path(:,:),snow_radius(:,:),band_limits(:,:)
+    REAL(wp), INTENT(OUT) :: tau(:,:,:)
+    REAL(wp), PARAMETER :: expected(2,16)=RESHAPE([ &
+      10._wp,250._wp,250._wp,500._wp,500._wp,630._wp,630._wp,700._wp, &
+      700._wp,820._wp,820._wp,980._wp,980._wp,1080._wp,1080._wp,1180._wp, &
+      1180._wp,1390._wp,1390._wp,1480._wp,1480._wp,1800._wp,1800._wp,2080._wp, &
+      2080._wp,2250._wp,2250._wp,2390._wp,2390._wp,2680._wp,2680._wp,3250._wp], [2,16])
+    REAL(wp) :: tau_rain,tau_snow
+    INTEGER :: col,lev
+    IF(SIZE(tau,1)/=SIZE(rain_path,1).OR.SIZE(tau,2)/=SIZE(rain_path,2).OR.SIZE(tau,3)/=16) &
+      ERROR STOP 'invalid LW precipitation optics shape'
+    IF(ANY(SHAPE(rain_path)/=SHAPE(snow_path)).OR.ANY(SHAPE(rain_path)/=SHAPE(snow_radius))) &
+      ERROR STOP 'LW precipitation inputs have inconsistent shapes'
+    IF(ANY(SHAPE(band_limits)/=SHAPE(expected)).OR.ANY(band_limits/=expected)) &
+      ERROR STOP 'LW precipitation bands differ from pinned CCPP order'
+    IF(ANY(rain_path<0._wp).OR.ANY(snow_path<0._wp).OR. &
+       ANY(.NOT.ieee_is_finite(rain_path)).OR.ANY(.NOT.ieee_is_finite(snow_path)).OR. &
+       ANY(.NOT.ieee_is_finite(snow_radius))) ERROR STOP 'invalid LW precipitation input'
+    IF(ANY(snow_path>0._wp.AND.snow_radius<=0._wp)) ERROR STOP 'active snow radius must be positive'
+    DO lev=1,SIZE(rain_path,2)
+      DO col=1,SIZE(rain_path,1)
+        tau_rain=0.33E-3_wp*rain_path(col,lev)
+        tau_snow=0._wp
+        IF(snow_path(col,lev)>0._wp.AND.snow_radius(col,lev)>10._wp) &
+          tau_snow=1.5_wp*1.05756_wp*snow_path(col,lev)/snow_radius(col,lev)
+        tau(col,lev,:)=tau_rain+tau_snow
+      END DO
+    END DO
+  END SUBROUTINE reference_lw_precip
+
+  SUBROUTINE reference_sw_precip(rain_path,snow_path,snow_radius,band_limits,tau,ssa,asymmetry)
+    ! See the source/validation-scope note above reference_lw_precip.
+    REAL(wp), INTENT(IN) :: rain_path(:,:),snow_path(:,:),snow_radius(:,:),band_limits(:,:)
+    REAL(wp), INTENT(OUT) :: tau(:,:,:),ssa(:,:,:),asymmetry(:,:,:)
+    REAL(wp), PARAMETER :: expected(2,14)=RESHAPE([ &
+      820._wp,2680._wp,2680._wp,3250._wp,3250._wp,4000._wp,4000._wp,4650._wp, &
+      4650._wp,5150._wp,5150._wp,6150._wp,6150._wp,7700._wp,7700._wp,8050._wp, &
+      8050._wp,12850._wp,12850._wp,16000._wp,16000._wp,22650._wp,22650._wp,29000._wp, &
+      29000._wp,38000._wp,38000._wp,50000._wp], [2,14])
+    ! The upstream tables assign default-real literals into kind(wp) arrays;
+    ! preserve that conversion order for exact parity with the pinned source.
+    REAL(wp), PARAMETER :: b0r(14)=[.496,.466,.437,.416,.391,.374,.352, &
+      .183,.048,.012,0.,0.,0.,0.]
+    REAL(wp), PARAMETER :: b0s(14)=[.460,.460,.460,.460,.460,.460,.460, &
+      .460,0.,0.,0.,0.,0.,0.]
+    REAL(wp), PARAMETER :: b1s(14)=[0.,0.,0.,0.,0.,0.,0.,0., &
+      1.62E-5,1.62E-5,0.,0.,0.,0.]
+    REAL(wp), PARAMETER :: c0r(14)=[.980,.975,.965,.960,.955,.952,.950, &
+      .944,.894,.884,.883,.883,.883,.883]
+    REAL(wp), PARAMETER :: c0s(14)=[.970,.970,.970,.970,.970,.970,.970, &
+      .970,.970,.970,.700,.700,.700,.700]
+    REAL(wp) :: tau_rain,tau_snow,ssa_rain,ssa_snow,asy_rain,asy_snow
+    REAL(wp) :: tau_prec,ssa_prec,asy_prec,asyw,ssaw,za1,za2
+    INTEGER :: col,lev,band
+    IF(SIZE(tau,1)/=SIZE(rain_path,1).OR.SIZE(tau,2)/=SIZE(rain_path,2).OR.SIZE(tau,3)/=14) &
+      ERROR STOP 'invalid SW precipitation optics shape'
+    IF(ANY(SHAPE(ssa)/=SHAPE(tau)).OR.ANY(SHAPE(asymmetry)/=SHAPE(tau))) &
+      ERROR STOP 'SW precipitation optics output shapes differ'
+    IF(ANY(SHAPE(rain_path)/=SHAPE(snow_path)).OR.ANY(SHAPE(rain_path)/=SHAPE(snow_radius))) &
+      ERROR STOP 'SW precipitation inputs have inconsistent shapes'
+    IF(ANY(SHAPE(band_limits)/=SHAPE(expected)).OR.ANY(band_limits/=expected)) &
+      ERROR STOP 'SW precipitation bands differ from pinned CCPP coefficient order'
+    IF(ANY(rain_path<0._wp).OR.ANY(snow_path<0._wp).OR. &
+       ANY(.NOT.ieee_is_finite(rain_path)).OR.ANY(.NOT.ieee_is_finite(snow_path)).OR. &
+       ANY(.NOT.ieee_is_finite(snow_radius))) ERROR STOP 'invalid SW precipitation input'
+    IF(ANY(snow_path>0._wp.AND.snow_radius<=0._wp)) ERROR STOP 'active snow radius must be positive'
+    DO lev=1,SIZE(rain_path,2)
+      DO col=1,SIZE(rain_path,1)
+        tau_rain=rain_path(col,lev)*3.07E-3_wp
+        tau_snow=0._wp
+        IF(snow_path(col,lev)>0._wp.AND.snow_radius(col,lev)>10._wp) &
+          tau_snow=snow_path(col,lev)*1.09087_wp*(1.5_wp/(1.0315_wp*snow_radius(col,lev)))
+        DO band=1,14
+          ssa_rain=tau_rain*(1._wp-b0r(band))
+          asy_rain=ssa_rain*c0r(band)
+          ssa_snow=tau_snow*(1._wp-(b0s(band)+b1s(band)*1.0315_wp*snow_radius(col,lev)))
+          asy_snow=ssa_snow*c0s(band)
+          tau_prec=MAX(1.E-12_wp,tau_rain+tau_snow)
+          ssa_prec=MAX(1.E-12_wp,ssa_rain+ssa_snow)
+          asy_prec=MAX(1.E-12_wp,asy_rain+asy_snow)
+          asyw=asy_prec/MAX(1.E-12_wp,ssa_prec)
+          ssaw=MIN(1._wp-1.E-6_wp,ssa_prec/tau_prec)
+          za1=asyw*asyw
+          za2=ssaw*za1
+          tau(col,lev,band)=(1._wp-za2)*tau_prec
+          ssa(col,lev,band)=(ssaw-za2)/(1._wp-za2)
+          asymmetry(col,lev,band)=asyw/(1._wp+asyw)
+        END DO
+      END DO
+    END DO
+  END SUBROUTINE reference_sw_precip
 
   SUBROUTINE make_mask(frac,npoint,mode,base_seed,cloud_mask,rand,local)
     REAL(wp), INTENT(IN) :: frac(:,:)

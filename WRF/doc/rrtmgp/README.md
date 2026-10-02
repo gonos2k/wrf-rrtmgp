@@ -2,10 +2,14 @@
 
 WRF v4.8.0에 RTE+RRTMGP CPU 복사 계산을 장파 및 단파 옵션 37로 연결한 개발 이식본이다. WRF의 기존 전처리로 압력·온도·기체와 구름 분율을 준비하고, RRTMGP 전용 입력 함수에서 수상별 수분 경로를 만든 뒤 `phys/module_ra_rrtmgp.F`에서 RRTMGP 기체 광학과 RTE 해법을 호출한다. 계산한 플럭스와 가열률은 기존 WRF 진단 및 온위 경향 배열로 전달된다.
 
+현재 production 개발·평가 범위는 **UDM(option 27) 전용**이다. `37/37 + mp_physics=27 + use_mp_re=1`만 허용한다. UDM 밀도 배열을 수정하고 native radii 및 rain/snow precipitation optics를 연결했다. 수상체별 지원과 검증 한계는 [UDM_ONLY.md](UDM_ONLY.md)에 정의한다. 아래의 과거 범용 미세물리 시험 결과는 역사적 기록이며 현재 지원 선언이 아니다.
+
 ## 사용 설정
 
 ```fortran
 &physics
+ mp_physics = 27,
+ use_mp_re = 1,
  ra_lw_physics = 37,
  ra_sw_physics = 37,
  aer_opt = 0,
@@ -46,18 +50,18 @@ CPU double precision 내부 계산, H2O/CO2/O3/N2O/CH4/O2 여섯 기체, LW 128 
 | 구름 수분량 kg/kg와 층 압력 | 일반 경로에서 입력 builder가 `dp × 100 / g × 1000 × q / cf`로 구름 안 경로 g/m²를 구성 |
 | 구름 분율과 경로 | 유한한 `cf`는 0–1이어야 함; 직접 builder/adapter API는 `cf=0`과 응축수를 거부. WRF wrapper는 명시적 예외로 clear optical path 0을 허용하고 누락된 원래 grid-box 경로를 기록 |
 | 액체 유효반경 µm | 반경 그대로 전달; 광학 lookup은 LUT 축 범위로 제한 |
-| 빙정·눈 유효반경 µm | adapter에서 유효직경으로 한 번 변환; WRF 경로는 Fu 1.0315 특수 배율을 적용하지 않음 |
-| 눈 유효반경 누락 | 진단 빙정 반경을 대리값으로 사용(임시 근사) |
+| UDM 빙정 반경 µm | adapter에서 유효직경으로 한 번 변환; Fu 배율 없음 |
+| UDM 눈 반경 µm | CCPP snow precipitation 식에 반경 그대로 전달; ice LUT 미사용 |
 | 지면 장파 방사율 | 회색 또는 16 밴드 입력 |
 | 태양상수 및 천정각 | WRF 계절·일식 보정값 사용 |
 
 SW는 고정 UFS/CCPP의 밴드 규약을 사용한다. 상한이 12850 cm⁻¹ 이하인 밴드는 NIR, 하한이 16000 cm⁻¹ 이상인 밴드는 VIS이며, 12850–16000 cm⁻¹ 전이 밴드는 VIS/NIR에 각각 절반씩 배분한다. 해당 밴드의 직달·산란 알베도도 두 입력의 산술평균을 사용한다. 이는 정밀한 파장 0.7 µm 절단이 아니며, 기존 RRTMG 4번이 전이 밴드를 모두 NIR로 처리하는 규약과도 다르다. 이 규약으로 처리할 수 없는 전이 밴드 경계는 오류로 거부한다. 에어로졸은 밴드 경계와 순서가 RRTMG와 달라 직접 전달할 수 없다. `aer_opt!=0`, 화학 에어로졸 피드백 및 CMAQ 피드백, `cldovrlp=4,5`를 거부한다. CFC11/12/22 및 CCl4는 이 6 기체 구현에 포함하지 않는다.
 
-현재 수상체 광학은 QC/QI/QS에 한정되며 별도 rain/graupel/hail 광학은 없다. MP2/4/5의 짧은 직렬 SCM 실행 성공은 강수 종 전체 지원을 뜻하지 않는다. 초기화는 이 누락을 경고하고, 현재 실행 검증 목록 밖의 미세물리와 SSiB 결합에는 추가 경고를 출력한다. 종별 지원과 실행 근거는 [MICROPHYSICS_MAPPING.md](MICROPHYSICS_MAPPING.md)에 구분한다. SSiB+37은 분광 입력 계약을 검사한 개발 조합이며 전체 예보 검증이 완료되지 않았다.
+현재 수상체 광학은 UDM qc/qi cloud LUT 및 qr/qs precipitation optics다. qg는 제외 질량을 진단하고 qh는 양수이면 거부한다. 다른 미세물리는 초기화에서 거부한다. SSiB+37은 전체 예보 검증이 완료되지 않은 개발 조합이다.
 
-구름 입력 검증은 배열 모양, 유한성, 범위, 압력층 순서, 음수 수분량·경로, 활성 수상의 반경을 검사한다. 반경은 비활성 수상에서 유한한 0을 허용하지만 수분량이 양수이면 양수여야 한다. 직접 builder와 adapter는 `cf=0`인데 응축수 경로가 양수인 입력을 엄격히 거부한다. WRF 전처리는 `QCLDMIN` 또는 cloud-fraction cutoff 아래의 trace condensate를 cf=0으로 만들 수 있으므로 WRF wrapper만 이를 허용한다. 해당 층의 광학 경로는 0으로 두며 debug level 100에서 생략된 원래 grid-box 경로와 reason code 6을 층별 진단한다. 양의 cf에서는 경로 builder가 수상별 질량을 보존한다. cf=0 예외에서는 해당 trace condensate가 복사 광학 입력에서 생략되므로 이를 질량 보존 사례로 세지 않는다. 6개 출력 시각을 포함한 5분 적분 로그에서 LW/SW 각각 reason code 6이 793회 기록됐고 최대 생략량은 층·호출당 0.1037024 g/m²였다.
+구름 입력 검증은 배열 모양, 유한성, 범위, 압력층 순서, 음수 수분량·경로, 활성 수상의 반경을 검사한다. 반경은 비활성 수상에서 유한한 0을 허용하지만 수분량이 양수이면 양수여야 한다. 직접 builder와 adapter는 `cf=0`인데 응축수 경로가 양수인 입력을 엄격히 거부한다. WRF 전처리는 `QCLDMIN` 또는 cloud-fraction cutoff 아래의 trace condensate를 cf=0으로 만들 수 있으므로 WRF wrapper만 이를 허용한다. 해당 층의 광학 경로는 0으로 두며 debug level 100에서 생략된 원래 grid-box 경로와 reason code 6을 층별 진단한다. 양의 cf에서는 경로 builder가 수상별 질량을 보존한다. cf=0 예외에서는 해당 trace condensate가 복사 광학 입력에서 생략되므로 이를 질량 보존 사례로 세지 않는다. UDM 전용화 이전의 WSM5 시험에서 6개 출력 시각을 포함한 5분 적분 로그에 LW/SW 각각 reason code 6이 793회 기록됐고 최대 생략량은 층·호출당 0.1037024 g/m²였다.
 
-미세물리 종 플래그의 분류 계약은 [MICROPHYSICS_MAPPING.md](MICROPHYSICS_MAPPING.md)에 정의한다. WSM5는 option 4, Ferrier/Aligo는 option 5이며, 오래된 “MP option 5” 주석의 10% ice/90% snow 재분류는 37번에서 수행하지 않는다. ETAMPNEW는 QC/QS를 보존하고 Ferrier는 통합 frozen QI를 한 번 IWP에 넣는다. Legacy flag 5의 snow 0.99 factor 및 130 µm 초과 질량 감소도 37번에는 적용하지 않으며, P3의 qi→snow 변경도 legacy RRTMG 경로에만 둔다. WRF 경로는 일반 유효반경을 전달한다. adapter는 액체 반경을 반경으로 유지하고 ice/snow 반경만 직경으로 변환한다. Fu 특수 크기 변환은 직접 backend API의 flag 3 호환 경로에만 해당한다. 눈 반경 누락 시 빙정 반경 대리값은 잠정 선택으로 남아 있어 실제 WRF 기둥 재생과 광학 민감도 검토가 필요하다. `has_req*`는 반경 제공 기능을 나타내므로 첫 복사 호출의 초기 배경값(`RE_QC_BG/RE_QI_BG/RE_QS_BG`)까지 유효 진단값으로 볼 수는 없다. 양의 수분량·구름분율을 가진 층에서 배경값과 정확히 같은 입력만 기존 WRF 진단 반경으로 보완하며 다른 값은 보존한다. 이 처리는 RRTMG의 일반 LUT 제한이나 질량 보정을 복원하지 않는다.
+UDM 원래 qc/qi/qr/qs 범주를 보존한다. 37 전용 native-radius 활성화는 기존 4/4를 변경하지 않는다. 초기 배경 반경 보완, 질량 및 광학 합성 계약은 [UDM_ONLY.md](UDM_ONLY.md)를 따른다. 과거 범용 mapping 기록은 [MICROPHYSICS_MAPPING.md](MICROPHYSICS_MAPPING.md)에 남긴다.
 
 이 구현은 HAFS 전체 복사 suite의 재현을 목표로 한 결과가 아니다. HAFS의 최적화된 LW 78/SW 75 g점 및 장파 산란, 에어로졸 경로는 추가 이식 대상이다. GPU, 실제 예보 사례, MPI/OpenMP 확장성 및 관측 비교는 별도 검증이 필요하다.
 
@@ -104,6 +108,6 @@ GNU serial 메뉴 번호는 이 플랫폼의 v4.8.0 configure 기준이다. 다�
 
 ## 실제 기둥 재생과 미세물리 계약
 
-[미세물리별 분류 계약](MICROPHYSICS_MAPPING.md)과 [기둥 저장·독립 재생 방법](COLUMN_REPLAY.md)을 제공한다. WSM5는 4번이고 Ferrier/Aligo는 5번이며, QS에 frozen water를 저장하는 ETAMPNEW는 95번이다. 37번의 ETAMPNEW 입력은 QC를 액체로 보존하고 QS 전체를 snow 경로에 넣는다. 기존 4번의 10/90 분할은 변경하지 않는다.
+현재 실행 계약은 [UDM 전용 입력 계약](UDM_ONLY.md)과 [실제 기둥 독립 재생 방법](COLUMN_REPLAY.md)에 정의한다. qc/qi는 native radii를 사용하는 cloud LUT, qr/qs는 고정 CCPP 강수 광학으로 처리한다. qg는 제외량을 진단하고 양의 qh는 거부한다. [과거 미세물리별 분류 기록](MICROPHYSICS_MAPPING.md)은 현재 허용 목록이 아니다.
 
-현재 독립 재생은 동일한 고정 RTE+RRTMGP 라이브러리와 계수로 실제 엔진 입력·광학·출력과 WRF 변환을 비교한다. 독립 분광모델 정확도 검증은 아니다. 작은 cf의 2,048개 시드 시험 결과도 제공한다. ETAMPNEW 초기 기둥 재생 통과와 후속 SCM 입력 오류를 구분하며, 해당 SCM 예보 성공이나 운용 지원을 주장하지 않는다. 자세한 범위는 [검토 후속 기록](REVIEW_FOLLOWUP.md)에 있다.
+독립 재생은 같은 고정 RTE+RRTMGP 코어와 계수로 실제 엔진 입력·광학·출력과 WRF 변환을 비교한다. 독립 분광모델 또는 관측 정확도 검증은 아니다. 현재 UDM 검증 결과는 [검증 기록](../../../validation/rrtmgp37/udm-only/REPORT_ko.md)을 참조한다.
