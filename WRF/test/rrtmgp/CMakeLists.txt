@@ -155,3 +155,19 @@ set_tests_properties(delta_policy_summary PROPERTIES FIXTURES_REQUIRED delta_pol
 add_test(NAME udm_sw_delta_policy_replay COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/test_udm_delta_policy.py"
   "${RRTMGP_DATA_DIR}" "$<TARGET_FILE:test_rrtmgp_udm_adapter>" "$<TARGET_FILE:reference_column>"
   --output "${CMAKE_CURRENT_BINARY_DIR}/udm-sw-delta-policy.json")
+
+# A separate CI build enables host OpenMP in both the library and adapter.
+# GPU target directives stay disabled by the WRF CPU backend contract.
+option(RRTMGP_TEST_OPENMP "Build the concurrent CPU adapter stress test" OFF)
+if(RRTMGP_TEST_OPENMP)
+  find_package(OpenMP REQUIRED COMPONENTS Fortran)
+  target_link_libraries(wrf_rrtmgp PUBLIC OpenMP::OpenMP_Fortran)
+  target_link_libraries(test_rrtmgp_adapter PUBLIC OpenMP::OpenMP_Fortran)
+  add_executable(test_rrtmgp_openmp test_openmp_reentrancy.f90)
+  target_link_libraries(test_rrtmgp_openmp PRIVATE test_rrtmgp_adapter OpenMP::OpenMP_Fortran)
+  if(CMAKE_Fortran_COMPILER_ID STREQUAL "GNU")
+    target_compile_options(test_rrtmgp_openmp PRIVATE -ffree-line-length-none -fcheck=bounds)
+  endif()
+  add_test(NAME cpu_openmp_reentrancy COMMAND test_rrtmgp_openmp "${RRTMGP_DATA_DIR}")
+  set_tests_properties(cpu_openmp_reentrancy PROPERTIES ENVIRONMENT "OMP_NUM_THREADS=1;OMP_DYNAMIC=FALSE")
+endif()
