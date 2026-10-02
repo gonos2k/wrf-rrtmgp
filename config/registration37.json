@@ -22,10 +22,10 @@
     "doc/rrtmgp/NOAA.md": "02e3419ace08a0cefbb0db834ceee36980db1571",
     "doc/rrtmgp/OPTICS_COMPARISON.md": "36dc7ba15ff66cd401a9222ddd8422e4f0bf89bf",
     "doc/rrtmgp/PHYSICS_AUDIT.md": "e2c858b8ebc03197740ac7f8087c3b924c0c504a",
-    "doc/rrtmgp/README.md": "891e4f90c640c8bae2f166789255417b4e6ef68c",
+    "doc/rrtmgp/README.md": "ba19646ad65291be95d1e8ea98de53b62840dc88",
     "doc/rrtmgp/REVIEW_FOLLOWUP.md": "498295b9bf9cb954f14a66adeab4b512ea852d54",
     "doc/rrtmgp/RUNTIME_CONTRACTS.md": "5f5e905d8fdf9b58f2693537ab795a07e4f7e191",
-    "doc/rrtmgp/UDM_ONLY.md": "b07dbb58d43ab441700a95131200080a0a82a931",
+    "doc/rrtmgp/UDM_ONLY.md": "4618f2a105d815e05cafb982fff2905061f54e7b",
     "doc/rrtmgp/VALIDATION.md": "348bc3aec5013603c8542f445753761fdc9c0b5b",
     "dyn_em/module_first_rk_step_part1.F": "1ca82e5d48a8a350872955050f54ec6f7e610e89",
     "dyn_em/solve_em.F": "b45110fb17631526991441c05cd1a384bcc6fa54",
@@ -167,7 +167,7 @@
     "doc/rrtmgp/NATIVE_GAS_COLUMNS.md": "59d9933ae5471f0092a1596d9db2173abda9aeba",
     "phys/module_ra_rrtmgp_hash.F": "3de3c376eccb0f81311cf9b645631bb6db6769e8",
     "phys/module_ra_rrtmgp_frozen.F": "bbe291787fc3caec638671f27a97d93184ba495e",
-    "doc/rrtmgp/UDM_FROZEN_EXPERIMENT.md": "7bd82e91c401e488e13b37e658043f1138710541",
+    "doc/rrtmgp/UDM_FROZEN_EXPERIMENT.md": "3ab00c4542f1e2c6f0ea7ed0a28c61c944714029",
     "test/rrtmgp/test_hash.f90": "425712562535c21b7056e9eb36e8c94cafd41213",
     "test/rrtmgp/test_frozen_lookup.f90": "093b64be643bbd9b11c6ef01692cd76447a29eaa",
     "test/rrtmgp/test_frozen_openmp.f90": "b38cea73bb1d55935c152f72d59f8457d9cc4b53",
@@ -185,7 +185,7 @@
   },
   "backend": "CPU_LINKED",
   "wrf_forecast_validated": false,
-  "validation_scope": "UDM27-only CPU option37. Current native gas column change: 68 GNU checked standalone tests, actual V6 replay, native WRF coordinate and gas-column oracles, one-minute serial control/mixed SCM, saved parent option4 208-array bitwise regression, 8-seed all-call audit and 120-second serial restart across 13 times x 210 variables including a retimed calendar boundary. Earlier pristine option4, independent upstream optics, accumulation and MPI/OpenMP checks are recorded separately and are not new validation of this patch. qg optics remain omitted and positive qh fatal; completed long option37 real-data forecasts and observational accuracy remain unvalidated.",
+  "validation_scope": "UDM27-only CPU option37. PR20 explicit frozen experiment: 24-hour MPI4 actual-domain run with positive G/H, all 25 hourly history outputs finite; separate 12-hour checkpoint and 12-to-13-hour restart all204numericvariables exact with START_DATE metadata mismatch retained. This older PR20 binary predates the PR21 LW trace-gas correction. PR21 fresh dm+sm same-checkpoint 12:00-to12:11 trials: MPI1/2 and OMP1/2 numeric arrays exact; MPI4 2x2 differs in83variables, origin under investigation. Do not claim complete decomposition equivalence. Default mode still omits qg and refuses positive qh; experimental ice-sphere PSD is not observation validated. Earlier pristine4/reference/SCM tests retain their own versioned scope.",
   "rte_rrtmgp_commit": "41c5fcd950fed09b8afe186dede266824eca7fd3",
   "wrf_runtime_data_commit": "ea788bb39876948fa8d2c235665ccff19b4686b5",
   "data_manifest": "WRF/external/rte_rrtmgp/DATA.json",
@@ -301,5 +301,26 @@
     "standalone_omitted_optional_group": "explicit zero compatibility",
     "replay_version": "V8 LW; legacy LW zero compatibility",
     "accuracy_validated": false
+  },
+  "actual_domain_runtime_validation": {
+    "record": "validation/rrtmgp37/realdata-parallel/README.md",
+    "commit": "9ecf7e1eca9c2612420f8874f03961467a7497de",
+    "configuration": "UDM27/RRTMGP37 experimental frozen mode1",
+    "hours": 24,
+    "mpi_ranks": 4,
+    "history_outputs": 25,
+    "restart_numeric_equivalence": "204 variables / 54,643,036 numeric values exact at13h after12hcheckpoint",
+    "restart_metadata_equivalence": "FAIL_START_DATE_ONLY",
+    "accuracy_validated": false,
+    "validates_later_pr21_over_24_hours": false,
+    "later_pr21_matrix": {
+      "record": "validation/rrtmgp37/realdata-parallel/pr21-parallel-result.json",
+      "commit": "e73b353f2b76f323809f99bed19a29eaaf25af02",
+      "run": "same PR20 12h checkpoint restarted12:00 to12:11 using PR21 fresh dm+sm binary",
+      "mpi2_omp1": "NUMERIC_EXACT_204_VARIABLES",
+      "mpi1_omp2": "NUMERIC_AND_METADATA_EXACT_TWO_WRF_WORKERS",
+      "mpi4_omp1": "FAIL_83_VARIABLES_DIFFER_ALL_FIELDS_FINITE",
+      "decomposition_equivalence_validated": false
+    }
   }
 }

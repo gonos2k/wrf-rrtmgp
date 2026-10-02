@@ -64,3 +64,12 @@ positive grid paths without a cloud-fraction divisor. This is an explicit
 research configuration; see [UDM_FROZEN_EXPERIMENT.md](UDM_FROZEN_EXPERIMENT.md)
 for table identity, size reconstruction, optics and replay contracts.
 Default mode and RRTMG4 behavior are preserved and tested separately.
+
+PR20's explicit mode-1 executable completed a four-rank 24-hour real-data
+trial with positive graupel and hail. A separate 12-hour checkpoint and
+12-to-13-hour restart reproduced every numeric field of the continuous
+13-hour output exactly; global `START_DATE` differs and the strict overall
+metadata comparison therefore does not pass. These scoped runtime results
+supersede the earlier failed mode-0 long-run attempt for this experimental
+configuration only. They do not validate observation accuracy or the later
+PR21 trace-gas correction over 24 hours. See the [actual-domain receipts](../../../validation/rrtmgp37/realdata-parallel/README.md).
