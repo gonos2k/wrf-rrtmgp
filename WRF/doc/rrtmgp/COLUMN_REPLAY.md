@@ -47,3 +47,7 @@ build/replay-reference/test_rrtmgp_small_cf_sampling WRF/run build/small-cf-samp
 ## 광학 설정 형식
 
 새 capture는 `RRTMGP_REPLAY_V2`를 쓰며 마지막 `RES` 기록 뒤에 `ICE_ROUGHNESS 1 1`과 정수 category를 기록한다. 독립 reference는 V2의 1/2/3을 LW/SW LUT에 적용한다. 기존 V1 파일도 지원하며 당시 암묵적 category 1을 사용한다. 입력 검사기는 V2 설정 누락과 범위 오류를 거부한다.
+
+## 초기 배경 반경의 입력 계약
+
+새 `.raw`는 `ICLOUD`와 기존 WRF의 `FALLBACK_REL/REI/RES`를 함께 기록한다. 반경 제공 플래그만 참이고 원래 반경이 `RE_*_BG`인 wet/cloudy 층에서는 해당 host 진단 반경을 사용한다. 그 외 정상 반경은 원래 값을 전달한다. A→B 검사기는 두 경우를 분리하여 검사하며 기존 저장본의 직접 전달 계약도 재생한다. 첫 cloudy 호출과 미세물리 진단 이후 호출을 따로 저장해 확인한다. 이번 수정의 인과 분해와 실행 증거는 저장소의 `validation/rrtmgp37/port-audit/REPORT_ko.md`에 기록한다.
