@@ -4,7 +4,7 @@
 MODULE module_ra_rrtmgp
   USE mo_rte_kind, ONLY: wp, i8
   USE, INTRINSIC :: iso_fortran_env, ONLY: real64
-  USE mo_gas_optics_rrtmgp, ONLY: ty_gas_optics_rrtmgp
+  USE mo_gas_optics_rrtmgp, ONLY: ty_gas_optics_rrtmgp, get_col_dry
   USE mo_gas_concentrations, ONLY: ty_gas_concs
   USE mo_optical_props, ONLY: ty_optical_props_1scl, ty_optical_props_2str
   USE mo_source_functions, ONLY: ty_source_func_lw
@@ -13,7 +13,7 @@ MODULE module_ra_rrtmgp
   USE mo_rte_lw, ONLY: rte_lw
   USE mo_rte_sw, ONLY: rte_sw
   USE mo_heating_rates, ONLY: compute_heating_rate
-  USE mo_gas_optics_constants, ONLY: init_constants, rte_grav=>grav, rte_cp_dry=>cp_dry, rte_m_dry=>m_dry
+  USE mo_gas_optics_constants, ONLY: init_constants, rte_grav=>grav, rte_cp_dry=>cp_dry, rte_m_dry=>m_dry, avogad
   USE mo_cloud_optics_rrtmgp, ONLY: ty_cloud_optics_rrtmgp
   USE mo_cloud_sampling, ONLY: sampled_mask_max_ran, draw_samples
   USE mo_load_coefficients, ONLY: load_and_init
@@ -170,21 +170,36 @@ CONTAINS
     IF(iceflag==3) d=d/1.0315_wp
   END FUNCTION
 
+  FUNCTION gas_dry_column(h2o,plev,native_mass) RESULT(col_dry)
+    ! Bottom-first WRF layers: kg dry air m-2 to dry molecules cm-2.
+    ! Above the native model top, retain the pressure/VMR extension policy.
+    ! The optional prefix leaves historical standalone callers unchanged.
+    REAL, INTENT(IN) :: h2o(:,:),plev(:,:)
+    REAL, OPTIONAL, INTENT(IN) :: native_mass(:,:)
+    REAL(wp) :: col_dry(SIZE(h2o,1),SIZE(h2o,2))
+    col_dry=get_col_dry(REAL(h2o,wp),REAL(plev,wp)*100._wp)
+    IF(PRESENT(native_mass)) THEN
+      col_dry(:,1:SIZE(native_mass,2))=REAL(native_mass,wp)* &
+        (avogad/(initialized_mol_weight_dry*10000._wp))
+    END IF
+  END FUNCTION gas_dry_column
+
   SUBROUTINE rrtmgp_lw_column(play,plev,tlay,tlev,tsfc,h2o,co2,o3,n2o,ch4,o2,emis, &
                              cf,lwp,iwp,swp,rel,rei,res,iceflag,overlap,seed, &
-                             up,dn,hr,upc,dnc,hrc,column_seeds,rwp)
+                             up,dn,hr,upc,dnc,hrc,column_seeds,rwp,native_dry_layer_mass_kg_m2)
     REAL, INTENT(IN) :: play(:,:),plev(:,:),tlay(:,:),tlev(:,:),tsfc(:),emis(:,:)
     REAL, INTENT(IN) :: h2o(:,:),co2(:,:),o3(:,:),n2o(:,:),ch4(:,:),o2(:,:)
     REAL, INTENT(IN) :: cf(:,:),lwp(:,:),iwp(:,:),swp(:,:),rel(:,:),rei(:,:),res(:,:)
     INTEGER, INTENT(IN) :: iceflag,overlap,seed
     INTEGER, OPTIONAL, INTENT(IN) :: column_seeds(:)
-    REAL, OPTIONAL, INTENT(IN) :: rwp(:,:)
+    REAL, OPTIONAL, INTENT(IN) :: rwp(:,:),native_dry_layer_mass_kg_m2(:,:)
     REAL, INTENT(OUT) :: up(:,:),dn(:,:),hr(:,:),upc(:,:),dnc(:,:),hrc(:,:)
     TYPE(ty_gas_concs) :: gases
     TYPE(ty_optical_props_1scl) :: atmos,clouds,snow,sampled
     TYPE(ty_source_func_lw) :: source
     TYPE(ty_fluxes_broadband) :: flux
     REAL(wp), TARGET :: fu(SIZE(plev,1),SIZE(plev,2)),fd(SIZE(plev,1),SIZE(plev,2))
+    REAL(wp) :: col_dry(SIZE(play,1),SIZE(play,2))
     REAL(wp) :: heat(SIZE(play,1),SIZE(play,2)),zero(SIZE(play,1),SIZE(play,2))
     REAL(wp) :: emissivity(gas_lw%get_nband(),SIZE(play,1))
     REAL(wp) :: rl(SIZE(play,1),SIZE(play,2)),di(SIZE(play,1),SIZE(play,2)),ds(SIZE(play,1),SIZE(play,2))
@@ -192,6 +207,15 @@ CONTAINS
     INTEGER :: nc,nl,precip_status
     IF(.NOT.ready) CALL require('initialization must precede parallel column calls')
     CALL rrtmgp_validate_column_inputs(play,plev,tlay,cf,lwp,iwp,swp,rel,rei,res)
+    IF(PRESENT(native_dry_layer_mass_kg_m2)) THEN
+      IF(SIZE(native_dry_layer_mass_kg_m2,1)/=SIZE(play,1).OR. &
+         SIZE(native_dry_layer_mass_kg_m2,2)<1.OR.SIZE(native_dry_layer_mass_kg_m2,2)>SIZE(play,2)) &
+        CALL require('RRTMGP_INPUT_NATIVE_DRY_MASS_SHAPE')
+      IF(.NOT.ALL(ieee_is_finite(native_dry_layer_mass_kg_m2))) &
+        CALL require('RRTMGP_INPUT_NATIVE_DRY_MASS_NOT_POSITIVE_FINITE')
+      IF(ANY(native_dry_layer_mass_kg_m2<=0.)) &
+        CALL require('RRTMGP_INPUT_NATIVE_DRY_MASS_NOT_POSITIVE_FINITE')
+    END IF
     IF(PRESENT(rwp)) THEN
       IF(ANY(SHAPE(rwp)/=SHAPE(play))) CALL require('RRTMGP_INPUT_RWP_SHAPE_MISMATCH')
       CALL rrtmgp_check_nonnegative('rwp',rwp)
@@ -222,7 +246,8 @@ CONTAINS
     IF(trace_active('LW')) THEN
       CALL trace_input_start('LW',nc,nl,overlap,seed,iceflag,udm_precip=PRESENT(rwp), &
            gravity=REAL(initialized_gravity,real64),cp_dry=REAL(initialized_cp_dry,real64), &
-           mol_weight_dry=REAL(initialized_mol_weight_dry,real64))
+           mol_weight_dry=REAL(initialized_mol_weight_dry,real64), &
+           native_dry_mass=PRESENT(native_dry_layer_mass_kg_m2))
       CALL trace_input('LW','SOLAR',RESHAPE([0.],[1,1]))
       CALL trace_input('LW','PLAY',play)
       CALL trace_input('LW','PLEV',plev)
@@ -253,15 +278,19 @@ CONTAINS
         CALL trace_input('LW','PRECIPITATION_OPTICS',RESHAPE([1.],[1,1]))
         CALL trace_input('LW','RWP',rwp)
       END IF
+      IF(PRESENT(native_dry_layer_mass_kg_m2)) &
+        CALL trace_input('LW','NATIVE_DRY_LAYER_MASS_KG_M2',native_dry_layer_mass_kg_m2)
       CALL trace_input_end('LW')
       CALL trace_result_start('LW',nc,nl)
     END IF
     CALL set_gases(gases,h2o,co2,o3,n2o,ch4,o2)
+    col_dry=gas_dry_column(h2o,plev,native_dry_layer_mass_kg_m2)
     CALL require(atmos%alloc_1scl(nc,nl,gas_lw))
     CALL require(source%alloc(nc,nl,gas_lw))
     CALL require(gas_lw%gas_optics(REAL(play,wp)*100._wp,REAL(plev,wp)*100._wp, &
-                 REAL(tlay,wp),REAL(tsfc,wp),gases,atmos,source,tlev=REAL(tlev,wp)))
+                 REAL(tlay,wp),REAL(tsfc,wp),gases,atmos,source,col_dry=col_dry,tlev=REAL(tlev,wp)))
     IF(trace_active('LW')) THEN
+      CALL trace_result('LW','GAS_COL_DRY',col_dry)
       CALL trace_result('LW','GAS_TAU',atmos%tau)
     END IF
     flux%flux_up=>fu; flux%flux_dn=>fd
@@ -324,14 +353,14 @@ CONTAINS
   SUBROUTINE rrtmgp_sw_column(play,plev,tlay,h2o,co2,o3,n2o,ch4,o2, &
                              avdir,avdif,andir,andif,mu0,solar, &
                              cf,lwp,iwp,swp,rel,rei,res,iceflag,overlap,seed, &
-                             up,dn,hr,upc,dnc,hrc,direct,diffuse,directc,visdir,visdif,nirdir,nirdif,column_seeds,rwp)
+                             up,dn,hr,upc,dnc,hrc,direct,diffuse,directc,visdir,visdif,nirdir,nirdif,column_seeds,rwp,native_dry_layer_mass_kg_m2)
     REAL, INTENT(IN) :: play(:,:),plev(:,:),tlay(:,:)
     REAL, INTENT(IN) :: h2o(:,:),co2(:,:),o3(:,:),n2o(:,:),ch4(:,:),o2(:,:)
     REAL, INTENT(IN) :: avdir(:),avdif(:),andir(:),andif(:),mu0(:),solar
     REAL, INTENT(IN) :: cf(:,:),lwp(:,:),iwp(:,:),swp(:,:),rel(:,:),rei(:,:),res(:,:)
     INTEGER, INTENT(IN) :: iceflag,overlap,seed
     INTEGER, OPTIONAL, INTENT(IN) :: column_seeds(:)
-    REAL, OPTIONAL, INTENT(IN) :: rwp(:,:)
+    REAL, OPTIONAL, INTENT(IN) :: rwp(:,:),native_dry_layer_mass_kg_m2(:,:)
     REAL, INTENT(OUT) :: up(:,:),dn(:,:),hr(:,:),upc(:,:),dnc(:,:),hrc(:,:)
     REAL, INTENT(OUT) :: direct(:,:),diffuse(:,:),directc(:,:)
     REAL, INTENT(OUT) :: visdir(:,:),visdif(:,:),nirdir(:,:),nirdif(:,:)
@@ -342,6 +371,7 @@ CONTAINS
                         fdir(SIZE(plev,1),SIZE(plev,2)), &
                         bd(SIZE(plev,1),SIZE(plev,2),gas_sw%get_nband()), &
                         bdir(SIZE(plev,1),SIZE(plev,2),gas_sw%get_nband())
+    REAL(wp) :: col_dry(SIZE(play,1),SIZE(play,2))
     REAL(wp) :: heat(SIZE(play,1),SIZE(play,2)),zero(SIZE(play,1),SIZE(play,2)), &
                 rl(SIZE(play,1),SIZE(play,2)),di(SIZE(play,1),SIZE(play,2)),ds(SIZE(play,1),SIZE(play,2))
     REAL(wp) :: toa(SIZE(play,1),gas_sw%get_ngpt()),albdir(gas_sw%get_nband(),SIZE(play,1)), &
@@ -351,6 +381,15 @@ CONTAINS
     INTEGER :: nc,nl,b,c,precip_status
     IF(.NOT.ready) CALL require('initialization must precede parallel column calls')
     CALL rrtmgp_validate_column_inputs(play,plev,tlay,cf,lwp,iwp,swp,rel,rei,res)
+    IF(PRESENT(native_dry_layer_mass_kg_m2)) THEN
+      IF(SIZE(native_dry_layer_mass_kg_m2,1)/=SIZE(play,1).OR. &
+         SIZE(native_dry_layer_mass_kg_m2,2)<1.OR.SIZE(native_dry_layer_mass_kg_m2,2)>SIZE(play,2)) &
+        CALL require('RRTMGP_INPUT_NATIVE_DRY_MASS_SHAPE')
+      IF(.NOT.ALL(ieee_is_finite(native_dry_layer_mass_kg_m2))) &
+        CALL require('RRTMGP_INPUT_NATIVE_DRY_MASS_NOT_POSITIVE_FINITE')
+      IF(ANY(native_dry_layer_mass_kg_m2<=0.)) &
+        CALL require('RRTMGP_INPUT_NATIVE_DRY_MASS_NOT_POSITIVE_FINITE')
+    END IF
     IF(PRESENT(rwp)) THEN
       IF(ANY(SHAPE(rwp)/=SHAPE(play))) CALL require('RRTMGP_INPUT_RWP_SHAPE_MISMATCH')
       CALL rrtmgp_check_nonnegative('rwp',rwp)
@@ -382,12 +421,14 @@ CONTAINS
        ANY(SHAPE(visdif)/=SHAPE(plev)).OR.ANY(SHAPE(nirdir)/=SHAPE(plev)).OR. &
        ANY(SHAPE(nirdif)/=SHAPE(plev))) CALL require('SW diagnostic shapes must match interfaces')
     CALL set_gases(gases,h2o,co2,o3,n2o,ch4,o2)
+    col_dry=gas_dry_column(h2o,plev,native_dry_layer_mass_kg_m2)
     IF(ALL(mu0<=0.)) RETURN
     IF(ANY(mu0<=0.)) CALL require('daylight columns must be packed separately')
     IF(trace_active('SW')) THEN
       CALL trace_input_start('SW',nc,nl,overlap,seed,iceflag,udm_precip=PRESENT(rwp), &
            gravity=REAL(initialized_gravity,real64),cp_dry=REAL(initialized_cp_dry,real64), &
-           mol_weight_dry=REAL(initialized_mol_weight_dry,real64))
+           mol_weight_dry=REAL(initialized_mol_weight_dry,real64), &
+           native_dry_mass=PRESENT(native_dry_layer_mass_kg_m2))
       CALL trace_input('SW','SOLAR',RESHAPE([solar],[1,1]))
       CALL trace_input('SW','PLAY',play)
       CALL trace_input('SW','PLEV',plev)
@@ -419,13 +460,16 @@ CONTAINS
         CALL trace_input('SW','PRECIPITATION_OPTICS',RESHAPE([1.],[1,1]))
         CALL trace_input('SW','RWP',rwp)
       END IF
+      IF(PRESENT(native_dry_layer_mass_kg_m2)) &
+        CALL trace_input('SW','NATIVE_DRY_LAYER_MASS_KG_M2',native_dry_layer_mass_kg_m2)
       CALL trace_input_end('SW')
       CALL trace_result_start('SW',nc,nl)
     END IF
     CALL require(atmos%alloc_2str(nc,nl,gas_sw))
     CALL require(gas_sw%gas_optics(REAL(play,wp)*100._wp,REAL(plev,wp)*100._wp, &
-                                 REAL(tlay,wp),gases,atmos,toa))
+                                 REAL(tlay,wp),gases,atmos,toa,col_dry=col_dry))
     IF(trace_active('SW')) THEN
+      CALL trace_result('SW','GAS_COL_DRY',col_dry)
       CALL trace_result('SW','GAS_TAU',atmos%tau)
       CALL trace_result('SW','GAS_SSA',atmos%ssa)
       CALL trace_result('SW','GAS_G',atmos%g)

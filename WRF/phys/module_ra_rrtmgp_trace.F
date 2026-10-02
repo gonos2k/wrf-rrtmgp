@@ -83,12 +83,12 @@ CONTAINS
     IF (p /= 0) trace_active = phase_active(p)
   END FUNCTION trace_active
 
-  SUBROUTINE trace_input_start(phase, nc, nl, overlap, seed, iceflag,udm_precip,gravity,cp_dry,mol_weight_dry)
+  SUBROUTINE trace_input_start(phase, nc, nl, overlap, seed, iceflag,udm_precip,gravity,cp_dry,mol_weight_dry,native_dry_mass)
     CHARACTER(len=*), INTENT(IN) :: phase
     INTEGER, INTENT(IN) :: nc, nl, overlap, seed, iceflag
-    LOGICAL, OPTIONAL, INTENT(IN) :: udm_precip
+    LOGICAL, OPTIONAL, INTENT(IN) :: udm_precip,native_dry_mass
     REAL(real64), OPTIONAL, INTENT(IN) :: gravity,cp_dry,mol_weight_dry
-    LOGICAL :: v4,v5
+    LOGICAL :: v4,v5,v6
     INTEGER :: p, unit, ios
     CHARACTER(len=1200) :: filename
     p = active_phase(phase)
@@ -100,7 +100,12 @@ CONTAINS
     v4=.FALSE.
     IF(PRESENT(udm_precip)) v4=udm_precip
     v5=PRESENT(gravity).AND.PRESENT(cp_dry).AND.PRESENT(mol_weight_dry)
-    IF(v5) THEN
+    v6=.FALSE.
+    IF(PRESENT(native_dry_mass)) v6=native_dry_mass
+    IF(v6.AND..NOT.v5) CALL trace_fatal('RRTMGP_TRACE_V6_REQUIRES_HOST_CONSTANTS')
+    IF(v6) THEN
+      WRITE(unit,'(a)',IOSTAT=ios) 'RRTMGP_REPLAY_V6'
+    ELSE IF(v5) THEN
       WRITE(unit,'(a)',IOSTAT=ios) 'RRTMGP_REPLAY_V5'
     ELSE IF(v4) THEN
       WRITE(unit,'(a)',IOSTAT=ios) 'RRTMGP_REPLAY_V4'
