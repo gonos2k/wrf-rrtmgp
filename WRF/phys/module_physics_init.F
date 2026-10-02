@@ -2406,7 +2406,8 @@ CHARACTER(LEN=8) :: name
              aclwalloc = .true.
 
         CASE (RRTMG_LWSCHEME,RRTMGP_LWSCHEME)
-             IF(config_flags%ra_lw_physics==RRTMGP_LWSCHEME) CALL rrtmgp_init(config_flags%rrtmgp_data_path)
+             IF(config_flags%ra_lw_physics==RRTMGP_LWSCHEME) &
+                  CALL rrtmgp_init(config_flags%rrtmgp_data_path,config_flags%rrtmgp_ice_roughness)
              CALL rrtmg_lwinit(                             &
                            p_top, allowed_to_read ,         &
                            ids, ide, jds, jde, kds, kde,    &
@@ -2521,7 +2522,8 @@ CHARACTER(LEN=8) :: name
              CALL gsfc_swinit(cen_lat, allowed_to_read )
 
         CASE (RRTMG_SWSCHEME,RRTMGP_SWSCHEME)
-             IF(config_flags%ra_sw_physics==RRTMGP_SWSCHEME) CALL rrtmgp_init(config_flags%rrtmgp_data_path)
+             IF(config_flags%ra_sw_physics==RRTMGP_SWSCHEME) &
+                  CALL rrtmgp_init(config_flags%rrtmgp_data_path,config_flags%rrtmgp_ice_roughness)
              CALL rrtmg_swinit(                             &
                            allowed_to_read ,                &
                            ids, ide, jds, jde, kds, kde,    &

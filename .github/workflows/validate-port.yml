@@ -120,6 +120,13 @@ jobs:
           printf '32\n0\n' | ./configure 2>&1 | tee ../build/wrf-configure.log
           csh -f ./compile -j 2 em_scm_xy 2>&1 | tee ../build/wrf-compile-scm.log
           [[ -x main/wrf.exe && -x main/ideal.exe ]]
+      - name: Check RRTMGP compiler/flags/object inventory rebuilds
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 WRF/test/rrtmgp/test_make_reproducibility.py \
+            --netcdf-prefix "$RUNNER_TEMP/netcdf" --compiler gfortran \
+            --output-dir build/make-reproducibility | tee build/make-reproducibility.json
       - name: Run paired 37 and baseline 4 SCMs; check WRF outputs
         shell: bash
         run: |
@@ -166,6 +173,11 @@ jobs:
             python3 WRF/test/rrtmgp/test_column_replay.py "build/replay-mp${mp}-cloud" \
               build/replay-reference/reference_column --mp-physics "$mp" --cloud-fixture | tee "build/replay-mp${mp}-cloud.json"
           done
+          for roughness in 2 3; do
+            python3 WRF/test/rrtmgp/test_column_replay.py "build/replay-roughness-${roughness}-cloud" \
+              build/replay-reference/reference_column --mp-physics 4 --cloud-fixture \
+              --ice-roughness "$roughness" | tee "build/replay-roughness-${roughness}.json"
+          done
           # Snapshot contract only: ETAMPNEW SCM integration is separately reported.
           python3 WRF/test/rrtmgp/test_column_replay.py build/replay-mp95-cloud \
             build/replay-reference/reference_column --mp-physics 95 --cloud-fixture --capture-only | tee build/replay-mp95-cloud.json
@@ -179,6 +191,10 @@ jobs:
             build/scm37/wrf.log
             build/scm4/ideal.log
             build/scm4/wrf.log
+            build/make-reproducibility.json
+            build/replay-roughness*.json
+            build/replay-roughness*/capture/**
+            build/replay-roughness*/*.log
             build/replay-mp*.json
             build/replay-mp*/capture/**
             build/replay-mp*/*.log

@@ -1,0 +1,47 @@
+{
+  "status": "PASS",
+  "base_main": "4f7d006e5f378ac8f151c5318172d84ef23c5e5a",
+  "wrf_build": {
+    "method": "csh -f ./clean '' ; csh -f ./compile -j 12 em_scm_xy",
+    "status": "PASS",
+    "compiler": "GNU Fortran 13.3.0",
+    "wrf_sha256": "a8e40a8f42ee51119ebdfec53aab6b3fb28d6cc6e2b804f9ab4f15ab03894267",
+    "ideal_sha256": "e261b98499d90a12c067cb144fd32cb5dd597de2e044007dc036545c0a89d4ed",
+    "log": "build/optics-wrf-clean-build.log",
+    "incremental_attempts": "Registry cache then incompatible old derived-type modules required a clean rebuild; failed attempts are not counted as passed builds."
+  },
+  "ctest": {
+    "status": "PASS",
+    "count": 38,
+    "log": "build/optics-ctest.log",
+    "final_snow_source_check": "build/optics-snow-final-ctest.log"
+  },
+  "registry": {
+    "status": "PASS",
+    "warnings_registered": 56,
+    "warnings_original": 56,
+    "introduced_warnings": 0
+  },
+  "comparison": {
+    "status": "PASS",
+    "scenarios": 7,
+    "scm_runs": 14,
+    "run_minutes": 5,
+    "record": "rrtmg-comparison.json",
+    "previous_port_bitwise_regression": "previous-port-regression.json"
+  },
+  "roughness_replay": {
+    "status": "PASS",
+    "categories": [
+      2,
+      3
+    ],
+    "mp_physics": 4,
+    "run_minutes": 5,
+    "description": "Real WRF cloudy fixtures: gas/cloud optics and masks exact; flux/heating agree within float32 output tolerance; independent reference shares pinned spectroscopy/core."
+  },
+  "make": "make-reproducibility.json",
+  "source_coefficients": "ccpp-snow-coefficient-source-check.json",
+  "scope": "GNU serial SCM and controlled optics/sampling tests. Snow production remains the ice-LUT approximation, WRF ncol=1. No independent spectral truth, original official WRF runtime regression, MPI/OpenMP/restart/nest, or operational forecast validation.",
+  "legacy_v1_replay": "legacy-v1-replay.json"
+}
