@@ -7,7 +7,7 @@
 ## 이번 코드 변경
 
 - 전역 namelist `rrtmgp_ice_roughness=1/2/3`을 Registry와 초기화에 연결했다. LW/SW 모두 LUT load 후 명시 설정하고, 범위 오류·초기화 후 변경을 거부한다. 기본 1은 이전 결과 보존을 위한 선택이다. 고정 UFSATM의 기본 3과 reference example의 2를 구분한다.
-- V2 컬럼 capture에 roughness를 기록하고 독립 reference에 전달했다. 기존 V1 capture는 당시의 1로 재생한다. 실제 WRF의 cloudy WSM5 5분 실행에서 roughness 2·3의 LW/SW 광학·mask는 독립 계산과 정확히 일치하고, 플럭스·가열률은 float32 반환 허용오차 안에서 일치했다. 같은 고정 라이브러리·분광자료를 공유하므로 독립 분광 정확도 평가가 아니다.
+- V2 컬럼 capture에 roughness를 기록하고 독립 reference에 전달했다. 기존 V1 capture는 당시의 1로 재생한다. 저장된 실제 cloudy WSM5 V1 기둥도 새 reference로 재생해 LW 14개·SW 29개 비교 항목이 통과했다([호환 검증](legacy-v1-replay.json)). 실제 WRF의 cloudy WSM5 5분 실행에서 roughness 2·3의 LW/SW 광학·mask는 독립 계산과 정확히 일치하고, 플럭스·가열률은 float32 반환 허용오차 안에서 일치했다. 같은 고정 라이브러리·분광자료를 공유하므로 독립 분광 정확도 평가가 아니다.
 - 1/2/3 민감도, CF-only maximum-random의 transparent-layer 상관, 컴파일 설정 변경에 따른 객체 재빌드·명시 archive 목록 시험을 추가했다. Snow에는 기존 ice LUT를 계속 사용하며 비교 실행 파일에서 별도 CCPP 식과 대조했다.
 
 ## Roughness 민감도
