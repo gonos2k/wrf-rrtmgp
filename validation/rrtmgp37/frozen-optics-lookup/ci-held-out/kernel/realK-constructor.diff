@@ -1,0 +1,31 @@
+--- pinned/mie_scatter.f
++++ local/mie_scatter_realK.f
+@@ -156,7 +156,7 @@
+ !
+ !     Calculate the logarithmic derivatives, D, by downward recurrence.
+ !     D(N_DOWN) is initialized to 0.
+-      d(n_down)=CMPLX(0.0_RealK, 0.0_RealK)
++      d(n_down)=CMPLX(0.0_RealK, 0.0_RealK, KIND=RealK)
+       DO i_term=n_down-1, 1, -1
+          c=(REAL(i_term, RealK)+1.0_RealK)/y
+          d(i_term)=c-1.0_RealK/(d(i_term+1)+c)
+@@ -170,8 +170,8 @@
+       psi_nm1=sin(x)
+       chi_nm2=-sin(x)
+       chi_nm1=cos(x)
+-      ksi_nm2=CMPLX(psi_nm2, -chi_nm2)
+-      ksi_nm1=CMPLX(psi_nm1, -chi_nm1)
++      ksi_nm2=CMPLX(psi_nm2, -chi_nm2, KIND=RealK)
++      ksi_nm1=CMPLX(psi_nm1, -chi_nm1, KIND=RealK)
+       q_scatter=0.0_RealK
+       q_ext=0.0_RealK
+       asymmetry=0.0_RealK
+@@ -194,7 +194,7 @@
+ !       Compute new psi and ksi by recurrence.
+         psi_n=(2.0_RealK*r-1.0_RealK)*psi_nm1/x-psi_nm2
+         chi_n=(2.0_RealK*r-1.0_RealK)*chi_nm1/x-chi_nm2
+-        ksi_n=CMPLX(psi_n, -chi_n)
++        ksi_n=CMPLX(psi_n, -chi_n, KIND=RealK)
+         a=((d(i_term)/n_relative+rx)*psi_n-psi_nm1)
+      &    /((d(i_term)/n_relative+rx)*ksi_n-ksi_nm1)
+         b=((n_relative*d(i_term)+rx)*psi_n-psi_nm1)
