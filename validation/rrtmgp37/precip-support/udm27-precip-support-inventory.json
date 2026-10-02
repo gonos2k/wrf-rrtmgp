@@ -1,0 +1,104 @@
+{
+  "scope": "Read-only evidence inventory for UDM (WRF mp_physics=27) precipitation radiative support. No production source was changed for this inventory.",
+  "checked_at": "2026-10-02",
+  "findings": {
+    "udm_native_species": [
+      "rain",
+      "snow",
+      "graupel",
+      "hail"
+    ],
+    "udm_native_units": "WRF Registry declares qs, qg, qh as kg kg-1 mixing ratios.",
+    "ccpp_generic_mapping": "The pinned CCPP GFS cloud_mp_uni maps slot 4 to snow + graupel when ncnd > 2. Its path is grid-mean g m-2 from mixing ratio and layer pressure thickness; it does not divide by cloud fraction. For supplied effective radii, it supplies only cld_resnow (snow effective radius), not separate graupel size.",
+    "ccpp_mapping_scope": "This is the generic cloud_mp_uni mapping, not universal to all CCPP host mappings. The same pinned source's cloud_mp_thompson maps slot 4 from snow only.",
+    "udm_native_snow_radius": "udm_mp_effective_radius accepts qs but not qg/qh and computes re_qs from qs, air density, temperature-dependent n0s, then clips the radius to [25, 999] micrometres. It is therefore not a size parameterization for qs+qg or hail.",
+    "hail_radiative_mapping": "No qh/hail field or hail optical coefficients are present in the inspected pinned CCPP RRTMGP LW/SW interfaces or generic cloud mapping. WRF UDM supplies qh and a native hail PSD, but no hail radiative effective radius or validated shortwave/longwave optical mapping was found in the inspected public primary sources.",
+    "hail_options": "Published research demonstrates possible hail optical approaches (e.g. band-fitted Mie properties in SOCRATES; Mie on equivalent effective-radius spheres in an EarthCARE UV-IR simulator), but neither is a validated drop-in UDM/CCPP/RRTMGP coefficient mapping. A qh-to-snow proxy or coefficients cannot be justified from these sources.",
+    "remaining_inputs_for_a_validated_hail_model": [
+      "particle-size distribution choice and its relation to UDM qh, N0h, density, and air density",
+      "particle habit/shape and bulk density assumptions",
+      "ice refractive index versus wavelength and temperature, including liquid coating/melting treatment",
+      "effective radius or size-bin definition consistent with the chosen PSD",
+      "spectrally integrated extinction, single-scattering albedo, asymmetry/phase function remapped to the target RRTMGP bands",
+      "validation against independent observations or a trusted radiative transfer dataset"
+    ]
+  },
+  "sources": [
+    {
+      "repository": "gonos2k/wrf-rrtmgp",
+      "commit": "bea2284dbb4d40fcdea691f49a0f9d91fccde93c",
+      "path": "WRF/phys/module_mp_udm.F",
+      "permalink": "https://github.com/gonos2k/wrf-rrtmgp/blob/bea2284dbb4d40fcdea691f49a0f9d91fccde93c/WRF/phys/module_mp_udm.F",
+      "sha256": "aebd463bd22da076e78cb87aac5a0360ce4b401290b3528b03fd9b7090222572",
+      "evidence_lines": {
+        "native_species_constants": "14-44",
+        "graupel_psd_slope": "2863-2907",
+        "hail_psd_slope": "2912-2956",
+        "native_snow_radius": "3618-3716"
+      }
+    },
+    {
+      "repository": "gonos2k/wrf-rrtmgp",
+      "commit": "bea2284dbb4d40fcdea691f49a0f9d91fccde93c",
+      "path": "WRF/Registry/Registry.EM_COMMON",
+      "permalink": "https://github.com/gonos2k/wrf-rrtmgp/blob/bea2284dbb4d40fcdea691f49a0f9d91fccde93c/WRF/Registry/Registry.EM_COMMON",
+      "evidence_lines": {
+        "mixing_ratio_units": "468-473",
+        "udm_package_fields": "3093"
+      }
+    },
+    {
+      "repository": "NCAR/ccpp-physics",
+      "commit": "3e6660c6df54e95a0871e990c2294dd397ae3860",
+      "path": "physics/Interstitials/UFS_SCM_NEPTUNE/GFS_rrtmgp_cloud_mp.F90",
+      "permalink": "https://github.com/NCAR/ccpp-physics/blob/3e6660c6df54e95a0871e990c2294dd397ae3860/physics/Interstitials/UFS_SCM_NEPTUNE/GFS_rrtmgp_cloud_mp.F90",
+      "sha256": "fc181d76a91854248df82e5658020f1299b46398f02aa26e83d9df51eeaafa51",
+      "evidence_lines": {
+        "generic_snow_plus_graupel": "576-600",
+        "grid_path_formula": "588-600",
+        "provided_sizes": "605-640",
+        "thompson_snow_only": "657-739"
+      }
+    },
+    {
+      "repository": "NCAR/ccpp-physics",
+      "commit": "3e6660c6df54e95a0871e990c2294dd397ae3860",
+      "path": "physics/Radiation/RRTMGP/rrtmgp_sw_main.F90",
+      "permalink": "https://github.com/NCAR/ccpp-physics/blob/3e6660c6df54e95a0871e990c2294dd397ae3860/physics/Radiation/RRTMGP/rrtmgp_sw_main.F90",
+      "sha256": "b810f4493358d8a0dff1def577cc6c5c86857a15c5b36898570fc9b190b08054",
+      "evidence_lines": {
+        "interface_and_precip_fields": "83-142",
+        "precip_optics_call": "443-476"
+      }
+    },
+    {
+      "repository": "NCAR/ccpp-physics",
+      "commit": "3e6660c6df54e95a0871e990c2294dd397ae3860",
+      "path": "physics/Radiation/RRTMGP/rrtmgp_lw_main.F90",
+      "permalink": "https://github.com/NCAR/ccpp-physics/blob/3e6660c6df54e95a0871e990c2294dd397ae3860/physics/Radiation/RRTMGP/rrtmgp_lw_main.F90",
+      "sha256": "87571198247ca7ffa539334e27c502d0e5cedaf987a11eec3f4f22936ca0d572",
+      "evidence_lines": {
+        "interface_precip_fraction_note": "86-140",
+        "precip_optics_call": "396-421"
+      }
+    },
+    {
+      "repository": "NOAA-EMC/ufsatm",
+      "commit": "6f461419f091c109d18b826ab88595da00ab336c",
+      "path": "ccpp/physics (submodule pin)",
+      "permalink": "https://github.com/NOAA-EMC/ufsatm/tree/6f461419f091c109d18b826ab88595da00ab336c",
+      "evidence": "This UFS application pin points to NCAR/ccpp-physics commit 3e6660c6df54e95a0871e990c2294dd397ae3860."
+    },
+    {
+      "source": "Hill et al. (2018), Journal of Advances in Modeling Earth Systems, DOI 10.1029/2018MS001415",
+      "url": "https://doi.org/10.1029/2018MS001415",
+      "evidence": "Research parameterizes rain/graupel/hail single-scattering properties using Mie theory and fits extinction, SSA, and asymmetry by SOCRATES spectral bands. This is not an RRTMGP/UDM-validated coefficient set."
+    },
+    {
+      "source": "Donovan et al. (2023), Atmospheric Measurement Techniques 16, 5327-5350",
+      "url": "https://doi.org/10.5194/amt-16-5327-2023",
+      "evidence": "The EarthCARE simulation system describes UV-IR graupel/hail optics from Mie calculations on equivalent effective-radius spheres, while noting limitations in phase functions. It does not define an UDM-to-RRTMGP mapping."
+    }
+  ],
+  "interpretation_limit": "The generic CCPP snow+graupel slot is evidence for a particular host path, not proof that mapping UDM qg into an existing RRTMGP snow optical parameter is physically equivalent. Existing UDM qs-only radius cannot establish the effective radius of a qs+qg mixture. No public qh-to-optics mapping was identified in the bounded source set."
+}

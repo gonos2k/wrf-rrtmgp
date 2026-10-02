@@ -1,0 +1,537 @@
+{
+  "status": "PASS_G128_G112_UPSTREAM_VENDOR_BITWISE",
+  "scope": "Independent clear-sky RFMIP run using WRF-production gas coefficient resolution (LW g128, SW g112); no WRF adapter/forecast.",
+  "comparison_rule": "The only pass/fail assertion is equality of upstream and vendored outputs with identical g128/g112 inputs. Differences from prior g256/g224 runs are descriptive resolution sensitivity only and are not compared to high-resolution published reference as accuracy criteria.",
+  "source_pins": {
+    "rte_rrtmgp": "41c5fcd950fed09b8afe186dede266824eca7fd3",
+    "rrtmgp_data": "ea788bb39876948fa8d2c235665ccff19b4686b5"
+  },
+  "driver_and_configuration": {
+    "input_profile_count": 1800,
+    "input_shape_verified_from_outputs": [
+      18,
+      100,
+      61
+    ],
+    "same_upstream_driver_source_for_both_engines": true,
+    "blocksize_argument": 8,
+    "LW_driver_args_suffix": [
+      "1",
+      "1"
+    ],
+    "SW_driver_args_suffix": [
+      "1"
+    ],
+    "gas_coefficients": {
+      "LW": "rrtmgp-gas-lw-g128.nc",
+      "SW": "rrtmgp-gas-sw-g112.nc"
+    },
+    "optimization_flags": "-O0 -ffree-line-length-none",
+    "compiler": "GNU Fortran (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0",
+    "netcdf_runtime_library_dir": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/root/usr/lib/x86_64-linux-gnu",
+    "run_commands": [
+      {
+        "engine": "upstream",
+        "phase": "LW",
+        "command": [
+          "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/official-rrtmgp-reference/source/examples/rfmip-clear-sky/rrtmgp_rfmip_lw",
+          "8",
+          "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/official-rrtmgp-reference/data/examples/rfmip-clear-sky/inputs/multiple_input4MIPs_radiation_RFMIP_UColorado-RFMIP-1-2_none.nc",
+          "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/official-rrtmgp-reference/data/rrtmgp-gas-lw-g128.nc",
+          "1",
+          "1"
+        ],
+        "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/official-rrtmgp-reference/run-upstream-g128-g112",
+        "log": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/official-rrtmgp-reference/run-upstream-g128-g112/lw-run.log",
+        "log_sha256": "13e7a361c83a75561cdf55610918b9bf0201804ed67478189a253d76565f596f",
+        "exit_code": 0,
+        "start_utc": "2026-10-02T15:15:34.588106+00:00",
+        "elapsed_seconds_wall": 1.3652714267373085,
+        "outputs": {
+          "rld_Efx_RTE-RRTMGP-181204_rad-irf_r1i1p1f1_gn.nc": "c696c63115e73b8c3bfe9a631357f5e5b63116e20dd996091fb26ad57697cc4c",
+          "rlu_Efx_RTE-RRTMGP-181204_rad-irf_r1i1p1f1_gn.nc": "fbb55ad1171e7a5ea4114667c783162c4b3abae19853b36f88d1ba6be9f95495",
+          "rsd_Efx_RTE-RRTMGP-181204_rad-irf_r1i1p1f1_gn.nc": "f9b0313fdf74598859a7caf27a5d1395b7fe1e445c9620a66856cc19eaf5e5b9",
+          "rsu_Efx_RTE-RRTMGP-181204_rad-irf_r1i1p1f1_gn.nc": "0ea3f4272d9ef088db6ffd07153587863a052e3cf8b3bf04bfb7c9288ed8b324"
+        }
+      },
+      {
+        "engine": "upstream",
+        "phase": "SW",
+        "command": [
+          "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/official-rrtmgp-reference/source/examples/rfmip-clear-sky/rrtmgp_rfmip_sw",
+          "8",
+          "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/official-rrtmgp-reference/data/examples/rfmip-clear-sky/inputs/multiple_input4MIPs_radiation_RFMIP_UColorado-RFMIP-1-2_none.nc",
+          "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/official-rrtmgp-reference/data/rrtmgp-gas-sw-g112.nc",
+          "1"
+        ],
+        "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/official-rrtmgp-reference/run-upstream-g128-g112",
+        "log": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/official-rrtmgp-reference/run-upstream-g128-g112/sw-run.log",
+        "log_sha256": "2eab4adc787b770fdf34727dfede34ce61457eeaf5c66fc31a562ce7076df939",
+        "exit_code": 0,
+        "start_utc": "2026-10-02T15:15:35.956845+00:00",
+        "elapsed_seconds_wall": 1.4593532849103212,
+        "outputs": {
+          "rld_Efx_RTE-RRTMGP-181204_rad-irf_r1i1p1f1_gn.nc": "c696c63115e73b8c3bfe9a631357f5e5b63116e20dd996091fb26ad57697cc4c",
+          "rlu_Efx_RTE-RRTMGP-181204_rad-irf_r1i1p1f1_gn.nc": "fbb55ad1171e7a5ea4114667c783162c4b3abae19853b36f88d1ba6be9f95495",
+          "rsd_Efx_RTE-RRTMGP-181204_rad-irf_r1i1p1f1_gn.nc": "2e1bf671f335615ddec853e04d7db6b3d541ab48dcfc3b8ce30e5f94ac03bd0e",
+          "rsu_Efx_RTE-RRTMGP-181204_rad-irf_r1i1p1f1_gn.nc": "6830f933eb53ad62f19d4db2f6cec4d61729814e3861970ec70152648df984d4"
+        }
+      },
+      {
+        "engine": "wrf_cpu",
+        "phase": "LW",
+        "command": [
+          "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/official-rrtmgp-reference/rrtmgp_rfmip_lw_wrf_cpu",
+          "8",
+          "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/official-rrtmgp-reference/data/examples/rfmip-clear-sky/inputs/multiple_input4MIPs_radiation_RFMIP_UColorado-RFMIP-1-2_none.nc",
+          "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/official-rrtmgp-reference/data/rrtmgp-gas-lw-g128.nc",
+          "1",
+          "1"
+        ],
+        "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/official-rrtmgp-reference/run-wrf-cpu-g128-g112",
+        "log": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/official-rrtmgp-reference/run-wrf-cpu-g128-g112/lw-run.log",
+        "log_sha256": "13e7a361c83a75561cdf55610918b9bf0201804ed67478189a253d76565f596f",
+        "exit_code": 0,
+        "start_utc": "2026-10-02T15:15:37.418519+00:00",
+        "elapsed_seconds_wall": 1.3537770416587591,
+        "outputs": {
+          "rld_Efx_RTE-RRTMGP-181204_rad-irf_r1i1p1f1_gn.nc": "c696c63115e73b8c3bfe9a631357f5e5b63116e20dd996091fb26ad57697cc4c",
+          "rlu_Efx_RTE-RRTMGP-181204_rad-irf_r1i1p1f1_gn.nc": "fbb55ad1171e7a5ea4114667c783162c4b3abae19853b36f88d1ba6be9f95495",
+          "rsd_Efx_RTE-RRTMGP-181204_rad-irf_r1i1p1f1_gn.nc": "f9b0313fdf74598859a7caf27a5d1395b7fe1e445c9620a66856cc19eaf5e5b9",
+          "rsu_Efx_RTE-RRTMGP-181204_rad-irf_r1i1p1f1_gn.nc": "0ea3f4272d9ef088db6ffd07153587863a052e3cf8b3bf04bfb7c9288ed8b324"
+        }
+      },
+      {
+        "engine": "wrf_cpu",
+        "phase": "SW",
+        "command": [
+          "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/official-rrtmgp-reference/rrtmgp_rfmip_sw_wrf_cpu",
+          "8",
+          "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/official-rrtmgp-reference/data/examples/rfmip-clear-sky/inputs/multiple_input4MIPs_radiation_RFMIP_UColorado-RFMIP-1-2_none.nc",
+          "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/official-rrtmgp-reference/data/rrtmgp-gas-sw-g112.nc",
+          "1"
+        ],
+        "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/official-rrtmgp-reference/run-wrf-cpu-g128-g112",
+        "log": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/official-rrtmgp-reference/run-wrf-cpu-g128-g112/sw-run.log",
+        "log_sha256": "2eab4adc787b770fdf34727dfede34ce61457eeaf5c66fc31a562ce7076df939",
+        "exit_code": 0,
+        "start_utc": "2026-10-02T15:15:38.775021+00:00",
+        "elapsed_seconds_wall": 1.4778220169246197,
+        "outputs": {
+          "rld_Efx_RTE-RRTMGP-181204_rad-irf_r1i1p1f1_gn.nc": "c696c63115e73b8c3bfe9a631357f5e5b63116e20dd996091fb26ad57697cc4c",
+          "rlu_Efx_RTE-RRTMGP-181204_rad-irf_r1i1p1f1_gn.nc": "fbb55ad1171e7a5ea4114667c783162c4b3abae19853b36f88d1ba6be9f95495",
+          "rsd_Efx_RTE-RRTMGP-181204_rad-irf_r1i1p1f1_gn.nc": "2e1bf671f335615ddec853e04d7db6b3d541ab48dcfc3b8ce30e5f94ac03bd0e",
+          "rsu_Efx_RTE-RRTMGP-181204_rad-irf_r1i1p1f1_gn.nc": "6830f933eb53ad62f19d4db2f6cec4d61729814e3861970ec70152648df984d4"
+        }
+      }
+    ],
+    "input_dimensions": {
+      "expt": 18,
+      "level": 61,
+      "layer": 60,
+      "site": 100
+    },
+    "profile_samples": 1800,
+    "output_shape_explanation": "18 experiment cases \u00d7 100 sites \u00d7 61 levels = output shape (18,100,61)."
+  },
+  "binary_and_input_hashes": {
+    "upstream_executable_lw": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/official-rrtmgp-reference/source/examples/rfmip-clear-sky/rrtmgp_rfmip_lw",
+      "sha256": "b0f8877b9b824675472419d68fc473d559a92711161497bde21ca03abe161db7",
+      "bytes": 607600
+    },
+    "upstream_executable_sw": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/official-rrtmgp-reference/source/examples/rfmip-clear-sky/rrtmgp_rfmip_sw",
+      "sha256": "fcebb76288fec0fceba4d720f61001f495819489a975769eec7de57ca8daa74f",
+      "bytes": 592520
+    },
+    "upstream_driver_object_lw": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/official-rrtmgp-reference/source/examples/rfmip-clear-sky/rrtmgp_rfmip_lw.o",
+      "sha256": "5532e7a42624ff5e415024c5b3a5f017739ef40c6f482ac8358080f221e2db76",
+      "bytes": 27328
+    },
+    "upstream_driver_object_sw": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/official-rrtmgp-reference/source/examples/rfmip-clear-sky/rrtmgp_rfmip_sw.o",
+      "sha256": "51cd5e50eefd3d803b88c338c0c988efaeec6d581ca8696adce17f315bc7afe8",
+      "bytes": 28576
+    },
+    "rfmip_io_object": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/official-rrtmgp-reference/source/examples/rfmip-clear-sky/mo_rfmip_io.o",
+      "sha256": "1dc0bf26e5b90cc2c0c2b911383fcc183cf8396c429e9459b51bc18ebcb19fbb",
+      "bytes": 68296
+    },
+    "simple_netcdf_object": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/official-rrtmgp-reference/source/examples/rfmip-clear-sky/mo_simple_netcdf.o",
+      "sha256": "ba7fa4bef03c56c77eb0e1851b7d3a3a0e6e93707ce3a4e18460840b1b50ac75",
+      "bytes": 33816
+    },
+    "coeff_loader_object": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/official-rrtmgp-reference/source/examples/rfmip-clear-sky/mo_load_coefficients.o",
+      "sha256": "e7f1ea15ea3dcd6176481002d43675ceb9494f5bf0c4df9af095c875d3715fb1",
+      "bytes": 29480
+    },
+    "upstream_librte": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/official-rrtmgp-reference/source/build/librte.a",
+      "sha256": "228d414f8f5816439bf2d128fc991692e99d93824889f149eae5402ca2c4acc6",
+      "bytes": 342350
+    },
+    "upstream_librtef": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/official-rrtmgp-reference/source/build/librtef.a",
+      "sha256": "a2f654d039c3de9b6de2c14b50ef4da34bdbc2ee6b44a9334cadfd89fd01e064",
+      "bytes": 234448
+    },
+    "upstream_librrtmgp": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/official-rrtmgp-reference/source/build/librrtmgp.a",
+      "sha256": "42f5409a6b98ae0911a93ea4acc34a66be2047953d9610537e2ba40579b23b42",
+      "bytes": 290164
+    },
+    "upstream_librrtmgpf": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/official-rrtmgp-reference/source/build/librrtmgpf.a",
+      "sha256": "c31ee8a2f28853ae234a7b32aa2cdcdd7d04faa5598921e23749e8c4bfb9c96b",
+      "bytes": 255836
+    },
+    "vendor_archive": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/official-rrtmgp-reference/wrf-cpu-lib/libwrf_rrtmgp.a",
+      "sha256": "619531ecacf7b8b0be05344979ab39726c9972e77eb98c604bb3ea542b1ee239",
+      "bytes": 973668
+    },
+    "vendor_executable_lw": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/official-rrtmgp-reference/rrtmgp_rfmip_lw_wrf_cpu",
+      "sha256": "c6a8073d77aed798687a28efdb88ecd7642e6c9dea5688878eb2c11c7a7e9d63",
+      "bytes": 623968
+    },
+    "vendor_executable_sw": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/official-rrtmgp-reference/rrtmgp_rfmip_sw_wrf_cpu",
+      "sha256": "a59367eadde85233451c737d11224e9f84a794552552c21a379f1e9a75e775fa",
+      "bytes": 608888
+    },
+    "input_profiles": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/official-rrtmgp-reference/data/examples/rfmip-clear-sky/inputs/multiple_input4MIPs_radiation_RFMIP_UColorado-RFMIP-1-2_none.nc",
+      "sha256": "b8dc05d7cd2e0e6354b4a6198771ddf3bc09f18d72b49f20a41e2024e2fd51f4",
+      "bytes": 1859666
+    },
+    "lw_coeff_g128": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/official-rrtmgp-reference/data/rrtmgp-gas-lw-g128.nc",
+      "sha256": "70ad65d116531122660318e5da2a2af9db74b425916202860e9527ef2375b8f6",
+      "bytes": 11679993
+    },
+    "sw_coeff_g112": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/official-rrtmgp-reference/data/rrtmgp-gas-sw-g112.nc",
+      "sha256": "361ed541324068ded28a275a4dd757bcaa0a845aebefa630f43a04678668fe62",
+      "bytes": 5949944
+    },
+    "upstream_output_rld": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/official-rrtmgp-reference/run-upstream-g128-g112/rld_Efx_RTE-RRTMGP-181204_rad-irf_r1i1p1f1_gn.nc",
+      "sha256": "c696c63115e73b8c3bfe9a631357f5e5b63116e20dd996091fb26ad57697cc4c",
+      "bytes": 484462
+    },
+    "upstream_output_rlu": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/official-rrtmgp-reference/run-upstream-g128-g112/rlu_Efx_RTE-RRTMGP-181204_rad-irf_r1i1p1f1_gn.nc",
+      "sha256": "fbb55ad1171e7a5ea4114667c783162c4b3abae19853b36f88d1ba6be9f95495",
+      "bytes": 484460
+    },
+    "upstream_output_rsd": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/official-rrtmgp-reference/run-upstream-g128-g112/rsd_Efx_RTE-RRTMGP-181204_rad-irf_r1i1p1f1_gn.nc",
+      "sha256": "2e1bf671f335615ddec853e04d7db6b3d541ab48dcfc3b8ce30e5f94ac03bd0e",
+      "bytes": 485284
+    },
+    "upstream_output_rsu": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/official-rrtmgp-reference/run-upstream-g128-g112/rsu_Efx_RTE-RRTMGP-181204_rad-irf_r1i1p1f1_gn.nc",
+      "sha256": "6830f933eb53ad62f19d4db2f6cec4d61729814e3861970ec70152648df984d4",
+      "bytes": 485284
+    },
+    "vendor_output_rld": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/official-rrtmgp-reference/run-wrf-cpu-g128-g112/rld_Efx_RTE-RRTMGP-181204_rad-irf_r1i1p1f1_gn.nc",
+      "sha256": "c696c63115e73b8c3bfe9a631357f5e5b63116e20dd996091fb26ad57697cc4c",
+      "bytes": 484462
+    },
+    "vendor_output_rlu": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/official-rrtmgp-reference/run-wrf-cpu-g128-g112/rlu_Efx_RTE-RRTMGP-181204_rad-irf_r1i1p1f1_gn.nc",
+      "sha256": "fbb55ad1171e7a5ea4114667c783162c4b3abae19853b36f88d1ba6be9f95495",
+      "bytes": 484460
+    },
+    "vendor_output_rsd": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/official-rrtmgp-reference/run-wrf-cpu-g128-g112/rsd_Efx_RTE-RRTMGP-181204_rad-irf_r1i1p1f1_gn.nc",
+      "sha256": "2e1bf671f335615ddec853e04d7db6b3d541ab48dcfc3b8ce30e5f94ac03bd0e",
+      "bytes": 485284
+    },
+    "vendor_output_rsu": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/official-rrtmgp-reference/run-wrf-cpu-g128-g112/rsu_Efx_RTE-RRTMGP-181204_rad-irf_r1i1p1f1_gn.nc",
+      "sha256": "6830f933eb53ad62f19d4db2f6cec4d61729814e3861970ec70152648df984d4",
+      "bytes": 485284
+    },
+    "upstream_driver_source_lw": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/official-rrtmgp-reference/source/examples/rfmip-clear-sky/rrtmgp_rfmip_lw.F90",
+      "sha256": "00c6f83b5c8618c8c9992296520f7c0fa304d1b5250cd2066128a90a9fc945c8",
+      "bytes": 11969
+    },
+    "upstream_driver_source_sw": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/official-rrtmgp-reference/source/examples/rfmip-clear-sky/rrtmgp_rfmip_sw.F90",
+      "sha256": "ec874da7f2891f12b389d03243d58211a66bcee331a0618a0d7ae46c1a835821",
+      "bytes": 13770
+    },
+    "upstream_io_source": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/official-rrtmgp-reference/source/examples/rfmip-clear-sky/mo_rfmip_io.F90",
+      "sha256": "a51e3d0c851836e770a262b5e9b5f70f068adb8d27e74d54a5ee446a227acb23",
+      "bytes": 22972
+    },
+    "vendor_source_manifest": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp/WRF/external/rte_rrtmgp/SOURCE.json",
+      "sha256": "30ce948f8286a4d0c1175e114fb43d15664b80c65f5dd8b7de12682b2139418f",
+      "bytes": 830
+    },
+    "vendor_CMakeLists": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp/WRF/external/rte_rrtmgp/CMakeLists.txt",
+      "sha256": "ac24bcc7976a5a7da0331d06f8fb3bf592eed035966d3fc9ec1fe90dae04e004",
+      "bytes": 1405
+    },
+    "upstream_library_librrtmgp.a": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/official-rrtmgp-reference/source/build/librrtmgp.a",
+      "sha256": "42f5409a6b98ae0911a93ea4acc34a66be2047953d9610537e2ba40579b23b42",
+      "bytes": 290164
+    },
+    "upstream_library_librrtmgpf.a": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/official-rrtmgp-reference/source/build/librrtmgpf.a",
+      "sha256": "c31ee8a2f28853ae234a7b32aa2cdcdd7d04faa5598921e23749e8c4bfb9c96b",
+      "bytes": 255836
+    },
+    "upstream_library_librrtmgpkernels.a": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/official-rrtmgp-reference/source/build/librrtmgpkernels.a",
+      "sha256": "c3360137299a1b2a7d0afbe4469905e4c9f0b26078176034c73f31badefad869",
+      "bytes": 34460
+    },
+    "upstream_library_librte.a": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/official-rrtmgp-reference/source/build/librte.a",
+      "sha256": "228d414f8f5816439bf2d128fc991692e99d93824889f149eae5402ca2c4acc6",
+      "bytes": 342350
+    },
+    "upstream_library_librtef.a": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/official-rrtmgp-reference/source/build/librtef.a",
+      "sha256": "a2f654d039c3de9b6de2c14b50ef4da34bdbc2ee6b44a9334cadfd89fd01e064",
+      "bytes": 234448
+    },
+    "upstream_library_librtekernels.a": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/official-rrtmgp-reference/source/build/librtekernels.a",
+      "sha256": "d48371b29b62394ab02741823c797a5c6c4afa17a8036e13d9392cca02b8a175",
+      "bytes": 108038
+    }
+  },
+  "variables": {
+    "rld": {
+      "upstream_metadata": {
+        "dims": [
+          "expt",
+          "site",
+          "level"
+        ],
+        "shape": [
+          18,
+          100,
+          61
+        ],
+        "dtype": "float32",
+        "units": "W m-2"
+      },
+      "vendor_metadata": {
+        "dims": [
+          "expt",
+          "site",
+          "level"
+        ],
+        "shape": [
+          18,
+          100,
+          61
+        ],
+        "dtype": "float32",
+        "units": "W m-2"
+      },
+      "all_finite_both": true,
+      "upstream_vs_vendor": {
+        "bitwise_equal": true,
+        "max_abs_difference": 0.0,
+        "mean_abs_difference": 0.0,
+        "rmse": 0.0,
+        "different_values": 0
+      },
+      "resolution_sensitivity_descriptive_only": {
+        "upstream_g128g112_vs_prior_g256g224": {
+          "max_abs_difference": 1.172607421875,
+          "mean_abs_difference": 0.14076720697197975,
+          "rmse": 0.18549477115790786,
+          "different_values": 107999
+        },
+        "vendor_g128g112_vs_prior_g256g224": {
+          "max_abs_difference": 1.172607421875,
+          "mean_abs_difference": 0.14076720697197975,
+          "rmse": 0.18549477115790786,
+          "different_values": 107999
+        }
+      }
+    },
+    "rlu": {
+      "upstream_metadata": {
+        "dims": [
+          "expt",
+          "site",
+          "level"
+        ],
+        "shape": [
+          18,
+          100,
+          61
+        ],
+        "dtype": "float32",
+        "units": "W m-2"
+      },
+      "vendor_metadata": {
+        "dims": [
+          "expt",
+          "site",
+          "level"
+        ],
+        "shape": [
+          18,
+          100,
+          61
+        ],
+        "dtype": "float32",
+        "units": "W m-2"
+      },
+      "all_finite_both": true,
+      "upstream_vs_vendor": {
+        "bitwise_equal": true,
+        "max_abs_difference": 0.0,
+        "mean_abs_difference": 0.0,
+        "rmse": 0.0,
+        "different_values": 0
+      },
+      "resolution_sensitivity_descriptive_only": {
+        "upstream_g128g112_vs_prior_g256g224": {
+          "max_abs_difference": 0.600830078125,
+          "mean_abs_difference": 0.1358431362020079,
+          "rmse": 0.17036937863329374,
+          "different_values": 109794
+        },
+        "vendor_g128g112_vs_prior_g256g224": {
+          "max_abs_difference": 0.600830078125,
+          "mean_abs_difference": 0.1358431362020079,
+          "rmse": 0.17036937863329374,
+          "different_values": 109794
+        }
+      }
+    },
+    "rsd": {
+      "upstream_metadata": {
+        "dims": [
+          "expt",
+          "site",
+          "level"
+        ],
+        "shape": [
+          18,
+          100,
+          61
+        ],
+        "dtype": "float32",
+        "units": "W m-2"
+      },
+      "vendor_metadata": {
+        "dims": [
+          "expt",
+          "site",
+          "level"
+        ],
+        "shape": [
+          18,
+          100,
+          61
+        ],
+        "dtype": "float32",
+        "units": "W m-2"
+      },
+      "all_finite_both": true,
+      "upstream_vs_vendor": {
+        "bitwise_equal": true,
+        "max_abs_difference": 0.0,
+        "mean_abs_difference": 0.0,
+        "rmse": 0.0,
+        "different_values": 0
+      },
+      "resolution_sensitivity_descriptive_only": {
+        "upstream_g128g112_vs_prior_g256g224": {
+          "max_abs_difference": 2.155670166015625,
+          "mean_abs_difference": 0.07058564288585781,
+          "rmse": 0.17360222186825128,
+          "different_values": 55079
+        },
+        "vendor_g128g112_vs_prior_g256g224": {
+          "max_abs_difference": 2.155670166015625,
+          "mean_abs_difference": 0.07058564288585781,
+          "rmse": 0.17360222186825128,
+          "different_values": 55079
+        }
+      }
+    },
+    "rsu": {
+      "upstream_metadata": {
+        "dims": [
+          "expt",
+          "site",
+          "level"
+        ],
+        "shape": [
+          18,
+          100,
+          61
+        ],
+        "dtype": "float32",
+        "units": "W m-2"
+      },
+      "vendor_metadata": {
+        "dims": [
+          "expt",
+          "site",
+          "level"
+        ],
+        "shape": [
+          18,
+          100,
+          61
+        ],
+        "dtype": "float32",
+        "units": "W m-2"
+      },
+      "all_finite_both": true,
+      "upstream_vs_vendor": {
+        "bitwise_equal": true,
+        "max_abs_difference": 0.0,
+        "mean_abs_difference": 0.0,
+        "rmse": 0.0,
+        "different_values": 0
+      },
+      "resolution_sensitivity_descriptive_only": {
+        "upstream_g128g112_vs_prior_g256g224": {
+          "max_abs_difference": 0.8131256103515625,
+          "mean_abs_difference": 0.05992554314040964,
+          "rmse": 0.1135372206513614,
+          "different_values": 55997
+        },
+        "vendor_g128g112_vs_prior_g256g224": {
+          "max_abs_difference": 0.8131256103515625,
+          "mean_abs_difference": 0.05992554314040964,
+          "rmse": 0.1135372206513614,
+          "different_values": 55997
+        }
+      }
+    }
+  },
+  "all_four_flux_arrays_upstream_vendor_bitwise_equal": true,
+  "wall_timing_seconds": {
+    "upstream_lw": 1.3652714267373085,
+    "upstream_sw": 1.4593532849103212,
+    "wrf_cpu_lw": 1.3537770416587591,
+    "wrf_cpu_sw": 1.4778220169246197
+  },
+  "previous_high_resolution_comparison": "build/official-rrtmgp-reference/rfmip-comparison.json (g256/g224); only used for the labeled descriptive sensitivity calculations above."
+}

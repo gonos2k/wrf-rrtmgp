@@ -17,11 +17,11 @@
     "doc/rrtmgp/NOAA.md": "02e3419ace08a0cefbb0db834ceee36980db1571",
     "doc/rrtmgp/OPTICS_COMPARISON.md": "36dc7ba15ff66cd401a9222ddd8422e4f0bf89bf",
     "doc/rrtmgp/PHYSICS_AUDIT.md": "ef0d7b57946f01578e62c6daa5e01586cd6c5af6",
-    "doc/rrtmgp/README.md": "615f9ca14e913cd55979c736f26e5b1db32fe9a7",
+    "doc/rrtmgp/README.md": "e337400000b656779f9b523e38a5785d3df1296d",
     "doc/rrtmgp/REVIEW_FOLLOWUP.md": "498295b9bf9cb954f14a66adeab4b512ea852d54",
     "doc/rrtmgp/RUNTIME_CONTRACTS.md": "5f5e905d8fdf9b58f2693537ab795a07e4f7e191",
     "doc/rrtmgp/UDM_ONLY.md": "ac7a47cfd041e72d28afe42763d99e536f785e1e",
-    "doc/rrtmgp/VALIDATION.md": "4e470aa7f851082e55bc80573ca8ac3874220c5d",
+    "doc/rrtmgp/VALIDATION.md": "d035057b282ec0df1f38d215bda105a72418b47b",
     "dyn_em/module_first_rk_step_part1.F": "d12ad0893a2d4f5f1e2c8d83998f572fa86d6fec",
     "dyn_em/solve_em.F": "b45110fb17631526991441c05cd1a384bcc6fa54",
     "dyn_em/start_em.F": "86a287c4bb15ed6e79f529e40b3ef931b901426c",
@@ -154,7 +154,8 @@
     "test/rrtmgp/test_hydro_snapshot.py": "2c644d0c937ad82be6a94292853c50576da5acc7",
     "doc/rrtmgp/NEGATIVE_INPUT_CONTRACT.md": "43a8a473e1a6c89399d44bd784a19d5835bfe201",
     "test/rrtmgp/test_udm_negative_policy.py": "4b60ab04b4be413655cb621c49b873563201b09c",
-    "test/rrtmgp/test_udm_negative_policy.f90": "3cb9a51fee421af2919faa272fd12d93eadbc140"
+    "test/rrtmgp/test_udm_negative_policy.f90": "3cb9a51fee421af2919faa272fd12d93eadbc140",
+    "doc/rrtmgp/INDEPENDENT_REFERENCE.md": "cbe3a9797724c8ff62af7e43797cc18902066a55"
   },
   "backend": "CPU_LINKED",
   "wrf_forecast_validated": false,
@@ -209,5 +210,14 @@
     "positive_input_policy": "unchanged; positive hail remains unsupported",
     "interpretation": "operational ceilings, not floating-point error bounds",
     "validation_record": "validation/rrtmgp37/negative-input/"
+  },
+  "independent_reference_validation": {
+    "scope": "RFMIP clear-sky, g256 LW/g224 SW and g128 LW/g112 SW, same upstream drivers; frozen vendor backend from ca33525",
+    "backend_agreement": "BITWISE_PASS_ALL_FOUR_FLUX_ARRAYS_AT_BOTH_RESOLUTIONS",
+    "published_reference_lw": "PASS_EXACT",
+    "published_reference_sw": "FAIL_AT_UNCHANGED_1E-5_TOLERANCE_IN_BOTH_BACKENDS",
+    "all_sky": "NOT_VALIDATED_LOADER_SCHEMA_FAILURE",
+    "record": "validation/rrtmgp37/upstream-reference/README.md",
+    "continuous_check": "fresh pinned upstream versus current vendor g128/g112, independent-rfmip CI"
   }
 }

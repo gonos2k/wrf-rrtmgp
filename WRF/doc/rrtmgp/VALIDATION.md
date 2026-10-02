@@ -90,3 +90,7 @@ MP95 제어 사례는 초기 과냉각 QC/QS의 양의 질량·구름 τ·cloudy
 ## UDM 동일 상태 물리 감사 (2026-10-02)
 
 새 감사는 현재 타일의 UDM 내부 CF와 source step을 보존하고, live WRF 입력을 실제 4/37 wrapper에 다시 넣는다. 1,024개 결정론적 시드 집합, 모든 LW/SW 호출의 독립 재생, audit ON/OFF history 비트 비교 및 기존 4/37 저장본과의 공통 배열 회귀를 실행했다. 현재 standalone CTest는 48개이며 모두 통과했다. 반경 입력 경로·CF·graupel·delta 정책별 숫자와 해석은 [UDM 물리 감사 보고서](../../../validation/rrtmgp37/udm-physics-audit/REPORT_ko.md)를 참조한다. 저장본 4/4 회귀는 이전 포팅 실행파일과의 비교이며 pristine 공식 WRF와의 직접 실행 비교가 아니다.
+
+## 독립 upstream RFMIP 기준 비교 (2026-10-03 공개 기록)
+
+공식 RFMIP 1,800 profiles의 네 플럭스 배열에서 pinned upstream과 vendored CPU library가 bitwise 일치했다. 공개 reference에 대한 LW는 PASS지만 SW는 양쪽 모두 동일하게 원래 `1e-5 W/m²` 허용오차를 초과한다. 공개 SW residual을 성공으로 처리하지 않았다. 공개 reference는 g256/g224 청천이며 별도 production gas g128/g112에서도 같은 upstream/vendor 일치를 확인했다. 실제 UDM cloud/precipitation 또는 g128/g112의 독립적인 물리 정확도 시험은 아니다. [독립 검증 범위와 미지원 광학](INDEPENDENT_REFERENCE.md)에 판단과 재현 경로를 구분한다.

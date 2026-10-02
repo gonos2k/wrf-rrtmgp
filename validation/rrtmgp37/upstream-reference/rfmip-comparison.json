@@ -1,0 +1,264 @@
+{
+  "scope": "Scratch-only independent upstream RFMIP clear-sky regression; no WRF adapter, production edits, or commits.",
+  "code_source": {
+    "repo": "https://github.com/earth-system-radiation/rte-rrtmgp",
+    "commit": "41c5fcd950fed09b8afe186dede266824eca7fd3",
+    "url": "https://github.com/earth-system-radiation/rte-rrtmgp/tree/41c5fcd950fed09b8afe186dede266824eca7fd3"
+  },
+  "coefficient_data": {
+    "repo": "https://github.com/earth-system-radiation/rrtmgp-data",
+    "commit": "ea788bb39876948fa8d2c235665ccff19b4686b5",
+    "url": "https://github.com/earth-system-radiation/rrtmgp-data/tree/ea788bb39876948fa8d2c235665ccff19b4686b5"
+  },
+  "compiler": {
+    "version": "GNU Fortran 13.3.0",
+    "build": "serial; gfortran -O0 -ffree-line-length-none; no RTE_USE_SP define",
+    "wp": "mo_rte_kind maps wp to dp=c_double when RTE_USE_SP is undefined (64-bit floating point); NetCDF flux variables are float32"
+  },
+  "inputs": {
+    "rfmip": "data/examples/rfmip-clear-sky/inputs/multiple_input4MIPs_radiation_RFMIP_UColorado-RFMIP-1-2_none.nc",
+    "sha256": "b8dc05d7cd2e0e6354b4a6198771ddf3bc09f18d72b49f20a41e2024e2fd51f4",
+    "profiles": 1800,
+    "block_size": 8,
+    "lw_coeff": "rrtmgp-gas-lw-g256.nc",
+    "lw_sha256": "4048360199d1917ed8f2ccaae2ec097d0f990da3bbad9830337b739b4fa01be7",
+    "sw_coeff": "rrtmgp-gas-sw-g224.nc",
+    "sw_sha256": "584f1dd41ea9fc07d4ee3754eb1dafbd46ad3161cd6fd20fa06b6922b6f0702e"
+  },
+  "vendor_backend": {
+    "source": "build/pr-wrf-rrtmgp/WRF/external/rte_rrtmgp",
+    "build_dir": "build/official-rrtmgp-reference/wrf-cpu-lib",
+    "defines": [
+      "RRTMGP_CPU_ONLY"
+    ],
+    "same_upstream_driver_io_and_input": true,
+    "upstream_and_vendor_output_differences": {
+      "rld": {
+        "shape": [
+          18,
+          100,
+          61
+        ],
+        "netcdf_dtype": "float32",
+        "metrics": {
+          "wrf_cpu_vs_upstream": {
+            "max_abs": 0.0,
+            "mean_abs": 0.0,
+            "count_gt_1e-5": 0,
+            "allclose_atol_1e-5_rtol_0": true
+          },
+          "upstream_vs_published": {
+            "max_abs": 0.0,
+            "mean_abs": 0.0,
+            "count_gt_1e-5": 0,
+            "allclose_atol_1e-5_rtol_0": true
+          }
+        }
+      },
+      "rlu": {
+        "shape": [
+          18,
+          100,
+          61
+        ],
+        "netcdf_dtype": "float32",
+        "metrics": {
+          "wrf_cpu_vs_upstream": {
+            "max_abs": 0.0,
+            "mean_abs": 0.0,
+            "count_gt_1e-5": 0,
+            "allclose_atol_1e-5_rtol_0": true
+          },
+          "upstream_vs_published": {
+            "max_abs": 0.0,
+            "mean_abs": 0.0,
+            "count_gt_1e-5": 0,
+            "allclose_atol_1e-5_rtol_0": true
+          }
+        }
+      },
+      "rsd": {
+        "shape": [
+          18,
+          100,
+          61
+        ],
+        "netcdf_dtype": "float32",
+        "metrics": {
+          "wrf_cpu_vs_upstream": {
+            "max_abs": 0.0,
+            "mean_abs": 0.0,
+            "count_gt_1e-5": 0,
+            "allclose_atol_1e-5_rtol_0": true
+          },
+          "upstream_vs_published": {
+            "max_abs": 0.0006103515625,
+            "mean_abs": 7.467256000567438e-05,
+            "count_gt_1e-5": 52972,
+            "allclose_atol_1e-5_rtol_0": false
+          }
+        }
+      },
+      "rsu": {
+        "shape": [
+          18,
+          100,
+          61
+        ],
+        "netcdf_dtype": "float32",
+        "metrics": {
+          "wrf_cpu_vs_upstream": {
+            "max_abs": 0.0,
+            "mean_abs": 0.0,
+            "count_gt_1e-5": 0,
+            "allclose_atol_1e-5_rtol_0": true
+          },
+          "upstream_vs_published": {
+            "max_abs": 0.00018310546875,
+            "mean_abs": 2.3464895988422664e-05,
+            "count_gt_1e-5": 51099,
+            "allclose_atol_1e-5_rtol_0": false
+          }
+        }
+      }
+    },
+    "wrf_repository_commit": "ca33525ad69af58302608d93362a83e698f37698",
+    "vendored_rte_source_manifest": "build/pr-wrf-rrtmgp/WRF/external/rte_rrtmgp/SOURCE.json",
+    "vendored_rte_upstream_pin": "41c5fcd950fed09b8afe186dede266824eca7fd3",
+    "vendored_local_modifications": "See SOURCE.json: current cloud field names/diameter coordinates, fatal callback, and CPU-only target directive guards. The RFMIP arrays tested here remain bitwise identical.",
+    "static_library_sha256": "619531ecacf7b8b0be05344979ab39726c9972e77eb98c604bb3ea542b1ee239",
+    "lw_executable_sha256": "c6a8073d77aed798687a28efdb88ecd7642e6c9dea5688878eb2c11c7a7e9d63",
+    "sw_executable_sha256": "a59367eadde85233451c737d11224e9f84a794552552c21a379f1e9a75e775fa",
+    "driver_source_sha256": {
+      "rrtmgp_rfmip_lw.F90": "00c6f83b5c8618c8c9992296520f7c0fa304d1b5250cd2066128a90a9fc945c8",
+      "rrtmgp_rfmip_sw.F90": "ec874da7f2891f12b389d03243d58211a66bcee331a0618a0d7ae46c1a835821",
+      "mo_rfmip_io.F90": "a51e3d0c851836e770a262b5e9b5f70f068adb8d27e74d54a5ee446a227acb23"
+    }
+  },
+  "upstream_published_reference": {
+    "tolerance": "abs(error) <= 1e-5; rtol=0 (upstream compare-to-reference.py policy)",
+    "metrics": {
+      "rld": {
+        "max_abs": 0.0,
+        "mean_abs": 0.0,
+        "count_gt_1e-5": 0,
+        "allclose_atol_1e-5_rtol_0": true
+      },
+      "rlu": {
+        "max_abs": 0.0,
+        "mean_abs": 0.0,
+        "count_gt_1e-5": 0,
+        "allclose_atol_1e-5_rtol_0": true
+      },
+      "rsd": {
+        "max_abs": 0.0006103515625,
+        "mean_abs": 7.467256000567438e-05,
+        "count_gt_1e-5": 52972,
+        "allclose_atol_1e-5_rtol_0": false
+      },
+      "rsu": {
+        "max_abs": 0.00018310546875,
+        "mean_abs": 2.3464895988422664e-05,
+        "count_gt_1e-5": 51099,
+        "allclose_atol_1e-5_rtol_0": false
+      }
+    },
+    "interpretation": "LW fluxes pass exactly; SW reference comparisons fail the unmodified 1e-5 threshold. WRF-vendored backend is bitwise identical to pinned upstream executable for all four output arrays, and therefore has the same SW residual. Published outputs identify RTE-RRTMGP-181204; attribution of SW residual specifically to code revision versus reference generation is unresolved."
+  },
+  "resolution_scope": "RFMIP test uses g256 LW / g224 SW coefficients, unlike WRF g128/g112 and WRF band-cloud files; this is an upstream code-port comparison only, not a direct WRF-resolution accuracy test.",
+  "outputs": {
+    "rld": {
+      "shape": [
+        18,
+        100,
+        61
+      ],
+      "netcdf_dtype": "float32",
+      "metrics": {
+        "wrf_cpu_vs_upstream": {
+          "max_abs": 0.0,
+          "mean_abs": 0.0,
+          "count_gt_1e-5": 0,
+          "allclose_atol_1e-5_rtol_0": true
+        },
+        "upstream_vs_published": {
+          "max_abs": 0.0,
+          "mean_abs": 0.0,
+          "count_gt_1e-5": 0,
+          "allclose_atol_1e-5_rtol_0": true
+        }
+      }
+    },
+    "rlu": {
+      "shape": [
+        18,
+        100,
+        61
+      ],
+      "netcdf_dtype": "float32",
+      "metrics": {
+        "wrf_cpu_vs_upstream": {
+          "max_abs": 0.0,
+          "mean_abs": 0.0,
+          "count_gt_1e-5": 0,
+          "allclose_atol_1e-5_rtol_0": true
+        },
+        "upstream_vs_published": {
+          "max_abs": 0.0,
+          "mean_abs": 0.0,
+          "count_gt_1e-5": 0,
+          "allclose_atol_1e-5_rtol_0": true
+        }
+      }
+    },
+    "rsd": {
+      "shape": [
+        18,
+        100,
+        61
+      ],
+      "netcdf_dtype": "float32",
+      "metrics": {
+        "wrf_cpu_vs_upstream": {
+          "max_abs": 0.0,
+          "mean_abs": 0.0,
+          "count_gt_1e-5": 0,
+          "allclose_atol_1e-5_rtol_0": true
+        },
+        "upstream_vs_published": {
+          "max_abs": 0.0006103515625,
+          "mean_abs": 7.467256000567438e-05,
+          "count_gt_1e-5": 52972,
+          "allclose_atol_1e-5_rtol_0": false
+        }
+      }
+    },
+    "rsu": {
+      "shape": [
+        18,
+        100,
+        61
+      ],
+      "netcdf_dtype": "float32",
+      "metrics": {
+        "wrf_cpu_vs_upstream": {
+          "max_abs": 0.0,
+          "mean_abs": 0.0,
+          "count_gt_1e-5": 0,
+          "allclose_atol_1e-5_rtol_0": true
+        },
+        "upstream_vs_published": {
+          "max_abs": 0.00018310546875,
+          "mean_abs": 2.3464895988422664e-05,
+          "count_gt_1e-5": 51099,
+          "allclose_atol_1e-5_rtol_0": false
+        }
+      }
+    }
+  },
+  "commands": {
+    "run_upstream": "In separate output directory with published NetCDF files copied as writable templates: rrtmgp_rfmip_lw 8 <RFMIP input> <rrtmgp-gas-lw-g256.nc> 1 1; rrtmgp_rfmip_sw 8 <RFMIP input> <rrtmgp-gas-sw-g224.nc> 1. Both with LD_LIBRARY_PATH set to netCDF Fortran/C libraries.",
+    "run_wrf_vendored_cpu": "Same exact arguments and driver/helper object files; link against build/official-rrtmgp-reference/wrf-cpu-lib/libwrf_rrtmgp.a.",
+    "compare": "Compare NetCDF variables rld, rlu, rsd, rsu to pinned published outputs and each other; shape/finite checks, abs tolerance 1e-5, relative tolerance 0."
+  }
+}

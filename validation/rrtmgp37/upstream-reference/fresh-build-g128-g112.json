@@ -1,0 +1,217 @@
+{
+  "scope": "Fresh-pinned-source and current vendored library clear-sky g128/g112 run; no adapter, host constants, six-gas subset, cloud or precipitation validation",
+  "status": "PASS_ALL_FOUR_FLUX_ARRAYS_BITWISE",
+  "build_directory": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp/build/independent-rfmip-local-pr13",
+  "source_pin": "41c5fcd950fed09b8afe186dede266824eca7fd3",
+  "data_pin": "ea788bb39876948fa8d2c235665ccff19b4686b5",
+  "compiler_flags": "GNU13.3 serial -O0 -ffree-line-length-none",
+  "run_log_sha256": "416fb55f37dbb820ae498e46b19d364c471cc1dd222fb35998e2cb82db0338b2",
+  "source_manifest_capture": "Post-run capture, no intervening vendored source edits; wrapper/doc/workflow edits are not in the linked library",
+  "vendor_sources": {
+    "WRF/external/rte_rrtmgp/extensions/mo_cloud_sampling.F90": "f0b38e2af5022432f9d9e64b05a79dc03f55dae912e1f6823e2ff8cb304894af",
+    "WRF/external/rte_rrtmgp/extensions/mo_fluxes_byband.F90": "da7102528a93c047d565e15126b6aa263bb8c0c45296c0e45db34b5179c6fac5",
+    "WRF/external/rte_rrtmgp/extensions/mo_heating_rates.F90": "cfe6d07d50b51a6beb2773b21af032d9707302381c383c2423a3a174ef037dad",
+    "WRF/external/rte_rrtmgp/extensions/mo_load_cloud_coefficients.F90": "330976e71d031dc725a63876947312eda821a9f9e09e4420af3a18caace6399a",
+    "WRF/external/rte_rrtmgp/extensions/mo_load_coefficients.F90": "3abc021bf244560f4d7f247be167ad0ecafb6c451f88566a7ce2a0436caebb5b",
+    "WRF/external/rte_rrtmgp/extensions/mo_simple_netcdf.F90": "b87ac6e7b26634a7433327700637471d38793f3e80207852bc7dd1cb5fb7a1a3",
+    "WRF/external/rte_rrtmgp/gas-optics/mo_gas_concentrations.F90": "f39394b0fdc7ec27c11c159c71754f2b80c97806d69fcabc4a5140b270be58a1",
+    "WRF/external/rte_rrtmgp/gas-optics/mo_gas_optics.F90": "01a8c8cd777b98e3ab498458ed0b62848f9ca03a0616722b810333d0192fa47e",
+    "WRF/external/rte_rrtmgp/gas-optics/mo_gas_optics_constants.F90": "255cdd77fa39892bdec92440ae4dbc35b79fb338fdfff6d6b28bdf62f01c94b8",
+    "WRF/external/rte_rrtmgp/gas-optics/mo_gas_optics_util_string.F90": "42817d83bcd6a55ae896fcc412a7a0dd318d73bafc91bff3a329a0356aeceedb",
+    "WRF/external/rte_rrtmgp/rrtmgp-frontend/mo_aerosol_optics_rrtmgp_merra.F90": "a41bf3915ab67a876dcdee4a27ad47f22b2892d8526060ffc91925f04385d2c4",
+    "WRF/external/rte_rrtmgp/rrtmgp-frontend/mo_cloud_optics_rrtmgp.F90": "14dcab00e6dfe1a64d40b5ddf3cf86186380fac2b8d0c0c3aa2e1f466b0446fc",
+    "WRF/external/rte_rrtmgp/rrtmgp-frontend/mo_gas_optics_rrtmgp.F90": "47f1ac34d9fa8f7d23ed2c7ddf2ab8bb59329989ce9dcee7cfe235e0e50f6e54",
+    "WRF/external/rte_rrtmgp/rrtmgp-kernels/accel/mo_gas_optics_rrtmgp_kernels.F90": "19720dde3108788f27dd0ea8456a0c30cd0d49d2da50b55f04dbc43c5bb88d37",
+    "WRF/external/rte_rrtmgp/rrtmgp-kernels/api/mo_gas_optics_rrtmgp_kernels.F90": "6958c56c0d7c680dc7e425944428508bd850f279ae4959f85fc98c7216d13ddc",
+    "WRF/external/rte_rrtmgp/rrtmgp-kernels/mo_gas_optics_rrtmgp_kernels.F90": "d0751c5c0a43fd7a9fac79b99be0645763c549f08052d1e7c55d54992a43afb8",
+    "WRF/external/rte_rrtmgp/rte-frontend/mo_fluxes.F90": "fc21a4e12b5b60c1f8b4982c617dff5f7264726845d05996f9930b021eb6b672",
+    "WRF/external/rte_rrtmgp/rte-frontend/mo_optical_props.F90": "e7694fc26e98aada9a7fad96e8768de413193f0a5ece73b3726501bf95bf4c87",
+    "WRF/external/rte_rrtmgp/rte-frontend/mo_rte_config.F90": "5874905ff8063be26fb9823a7b06ff145a5c6a19fdd7e7c6da1f95a7d6af070a",
+    "WRF/external/rte_rrtmgp/rte-frontend/mo_rte_kind.F90": "9a8eac358827448fbf2f8704930a40ec4c2104d8ed0a762f2c15292718addfe9",
+    "WRF/external/rte_rrtmgp/rte-frontend/mo_rte_lw.F90": "d8ebba055014fc787d33617418a1d8a7f4f00277ab1804541ca6b68e4a5e20ea",
+    "WRF/external/rte_rrtmgp/rte-frontend/mo_rte_sw.F90": "37b3e87281ed51f28891d92b77ed7c0514fa1551ce8ba224e88a428fb847bdd6",
+    "WRF/external/rte_rrtmgp/rte-frontend/mo_rte_util_array_validation.F90": "651b730aea980674157912dcad20120e9f624807dab215ffddf13478ac443a31",
+    "WRF/external/rte_rrtmgp/rte-frontend/mo_source_functions.F90": "f6de6b9b764144161fb16cc55323d799f43e4e1083338225edd63213c39e0384",
+    "WRF/external/rte_rrtmgp/rte-kernels/accel/mo_optical_props_kernels.F90": "c7be609db95515deccf85916667db084663e9286ac886905d0f5a9bec6cb841c",
+    "WRF/external/rte_rrtmgp/rte-kernels/accel/mo_rte_solver_kernels.F90": "23b2299c09fe585692a7be057699fe89e45fa3f3ff145bbf6a6bba0aa752d04c",
+    "WRF/external/rte_rrtmgp/rte-kernels/api/mo_fluxes_broadband_kernels.F90": "39e63b14fd2cd57c18a82ef02876a3a0a87ee3a7c8d2cfb31cbac2b51657e7f9",
+    "WRF/external/rte_rrtmgp/rte-kernels/api/mo_optical_props_kernels.F90": "afae7d2621e1de17f7a07a29a337ef35fda14db6d55500ea6e22177e771a8d49",
+    "WRF/external/rte_rrtmgp/rte-kernels/api/mo_rte_solver_kernels.F90": "23aba1d86ab475c2182f8107bc7c55d042e9dc98a02b70df8cafa9c2869fe425",
+    "WRF/external/rte_rrtmgp/rte-kernels/api/mo_rte_util_array.F90": "274e776f012c7cb645943092a78342037927ce947c170e902551cf9a2e110830",
+    "WRF/external/rte_rrtmgp/rte-kernels/mo_fluxes_broadband_kernels.F90": "bed38fc538fbb9bd3b6f86e7106dec3ef972e5445cf479f49523fd9e79f8e629",
+    "WRF/external/rte_rrtmgp/rte-kernels/mo_optical_props_kernels.F90": "471f8ab3f39c6fae59389d1f652663a0ee5cc2672df7820c4060b519d00c4e74",
+    "WRF/external/rte_rrtmgp/rte-kernels/mo_rte_solver_kernels.F90": "d73a6588a6041044bf923b09e58b939b443976903c49a07a17a5020a69dcf677",
+    "WRF/external/rte_rrtmgp/rte-kernels/mo_rte_util_array.F90": "c59f0737b56b3c8de1e79a04b6ec2533f00aa9018a0ef0684c53016dd53eeb92",
+    "WRF/external/rte_rrtmgp/CMakeLists.txt": "ac24bcc7976a5a7da0331d06f8fb3bf592eed035966d3fc9ec1fe90dae04e004",
+    "WRF/external/rte_rrtmgp/SOURCE.json": "30ce948f8286a4d0c1175e114fb43d15664b80c65f5dd8b7de12682b2139418f"
+  },
+  "binary_hashes": "619531ecacf7b8b0be05344979ab39726c9972e77eb98c604bb3ea542b1ee239  /NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp/build/independent-rfmip-local-pr13/vendor/libwrf_rrtmgp.a\nc6a8073d77aed798687a28efdb88ecd7642e6c9dea5688878eb2c11c7a7e9d63  /NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp/build/independent-rfmip-local-pr13/vendor-rfmip-lw\na59367eadde85233451c737d11224e9f84a794552552c21a379f1e9a75e775fa  /NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp/build/independent-rfmip-local-pr13/vendor-rfmip-sw\n1e65105ffc3681669eae9d81ea13de49930175c2f718b998d1f5ed16c1b95e15  /NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp/build/independent-rfmip-local-pr13/source/examples/rfmip-clear-sky/rrtmgp_rfmip_lw\nfb3bcb664181e25bfc818c0a4a0544c3ab9a5e7b421814e184c133f219050961  /NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp/build/independent-rfmip-local-pr13/source/examples/rfmip-clear-sky/rrtmgp_rfmip_sw\n",
+  "input_hashes": "b8dc05d7cd2e0e6354b4a6198771ddf3bc09f18d72b49f20a41e2024e2fd51f4  /NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp/build/independent-rfmip-local-pr13/data/examples/rfmip-clear-sky/inputs/multiple_input4MIPs_radiation_RFMIP_UColorado-RFMIP-1-2_none.nc\n70ad65d116531122660318e5da2a2af9db74b425916202860e9527ef2375b8f6  /NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp/build/independent-rfmip-local-pr13/data/rrtmgp-gas-lw-g128.nc\n361ed541324068ded28a275a4dd757bcaa0a845aebefa630f43a04678668fe62  /NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp/build/independent-rfmip-local-pr13/data/rrtmgp-gas-sw-g112.nc\n",
+  "comparison": {
+    "reference_atol_w_m2": 1e-05,
+    "reference_rtol": 0,
+    "published_reference_checked": false,
+    "scope": "Clear-sky RFMIP fluxes; no WRF adapter or cloudy/precipitation validation",
+    "fields": {
+      "rld": {
+        "upstream": {
+          "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp/build/independent-rfmip-local-pr13/run-upstream/rld_Efx_RTE-RRTMGP-181204_rad-irf_r1i1p1f1_gn.nc",
+          "sha256": "c696c63115e73b8c3bfe9a631357f5e5b63116e20dd996091fb26ad57697cc4c",
+          "shape": [
+            18,
+            100,
+            61
+          ],
+          "dimensions": [
+            "expt",
+            "site",
+            "level"
+          ],
+          "dtype": "float32"
+        },
+        "vendor": {
+          "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp/build/independent-rfmip-local-pr13/run-vendor/rld_Efx_RTE-RRTMGP-181204_rad-irf_r1i1p1f1_gn.nc",
+          "sha256": "c696c63115e73b8c3bfe9a631357f5e5b63116e20dd996091fb26ad57697cc4c",
+          "shape": [
+            18,
+            100,
+            61
+          ],
+          "dimensions": [
+            "expt",
+            "site",
+            "level"
+          ],
+          "dtype": "float32"
+        },
+        "vendor_vs_upstream": {
+          "bitwise_equal": true,
+          "max_abs_w_m2": 0.0,
+          "mean_abs_w_m2": 0.0,
+          "count_above_reference_atol": 0,
+          "published_tolerance_pass": true
+        }
+      },
+      "rlu": {
+        "upstream": {
+          "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp/build/independent-rfmip-local-pr13/run-upstream/rlu_Efx_RTE-RRTMGP-181204_rad-irf_r1i1p1f1_gn.nc",
+          "sha256": "fbb55ad1171e7a5ea4114667c783162c4b3abae19853b36f88d1ba6be9f95495",
+          "shape": [
+            18,
+            100,
+            61
+          ],
+          "dimensions": [
+            "expt",
+            "site",
+            "level"
+          ],
+          "dtype": "float32"
+        },
+        "vendor": {
+          "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp/build/independent-rfmip-local-pr13/run-vendor/rlu_Efx_RTE-RRTMGP-181204_rad-irf_r1i1p1f1_gn.nc",
+          "sha256": "fbb55ad1171e7a5ea4114667c783162c4b3abae19853b36f88d1ba6be9f95495",
+          "shape": [
+            18,
+            100,
+            61
+          ],
+          "dimensions": [
+            "expt",
+            "site",
+            "level"
+          ],
+          "dtype": "float32"
+        },
+        "vendor_vs_upstream": {
+          "bitwise_equal": true,
+          "max_abs_w_m2": 0.0,
+          "mean_abs_w_m2": 0.0,
+          "count_above_reference_atol": 0,
+          "published_tolerance_pass": true
+        }
+      },
+      "rsd": {
+        "upstream": {
+          "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp/build/independent-rfmip-local-pr13/run-upstream/rsd_Efx_RTE-RRTMGP-181204_rad-irf_r1i1p1f1_gn.nc",
+          "sha256": "2e1bf671f335615ddec853e04d7db6b3d541ab48dcfc3b8ce30e5f94ac03bd0e",
+          "shape": [
+            18,
+            100,
+            61
+          ],
+          "dimensions": [
+            "expt",
+            "site",
+            "level"
+          ],
+          "dtype": "float32"
+        },
+        "vendor": {
+          "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp/build/independent-rfmip-local-pr13/run-vendor/rsd_Efx_RTE-RRTMGP-181204_rad-irf_r1i1p1f1_gn.nc",
+          "sha256": "2e1bf671f335615ddec853e04d7db6b3d541ab48dcfc3b8ce30e5f94ac03bd0e",
+          "shape": [
+            18,
+            100,
+            61
+          ],
+          "dimensions": [
+            "expt",
+            "site",
+            "level"
+          ],
+          "dtype": "float32"
+        },
+        "vendor_vs_upstream": {
+          "bitwise_equal": true,
+          "max_abs_w_m2": 0.0,
+          "mean_abs_w_m2": 0.0,
+          "count_above_reference_atol": 0,
+          "published_tolerance_pass": true
+        }
+      },
+      "rsu": {
+        "upstream": {
+          "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp/build/independent-rfmip-local-pr13/run-upstream/rsu_Efx_RTE-RRTMGP-181204_rad-irf_r1i1p1f1_gn.nc",
+          "sha256": "6830f933eb53ad62f19d4db2f6cec4d61729814e3861970ec70152648df984d4",
+          "shape": [
+            18,
+            100,
+            61
+          ],
+          "dimensions": [
+            "expt",
+            "site",
+            "level"
+          ],
+          "dtype": "float32"
+        },
+        "vendor": {
+          "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp/build/independent-rfmip-local-pr13/run-vendor/rsu_Efx_RTE-RRTMGP-181204_rad-irf_r1i1p1f1_gn.nc",
+          "sha256": "6830f933eb53ad62f19d4db2f6cec4d61729814e3861970ec70152648df984d4",
+          "shape": [
+            18,
+            100,
+            61
+          ],
+          "dimensions": [
+            "expt",
+            "site",
+            "level"
+          ],
+          "dtype": "float32"
+        },
+        "vendor_vs_upstream": {
+          "bitwise_equal": true,
+          "max_abs_w_m2": 0.0,
+          "mean_abs_w_m2": 0.0,
+          "count_above_reference_atol": 0,
+          "published_tolerance_pass": true
+        }
+      }
+    },
+    "backend_status": "PASS",
+    "published_reference_status": "NOT_RUN"
+  },
+  "runner_note": "Only source-file receipt logging and dependency list were added after this successful run; numeric build/run/comparison commands unchanged."
+}
