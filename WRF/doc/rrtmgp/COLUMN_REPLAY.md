@@ -1,6 +1,6 @@
 # 실제 WRF 기둥의 저장과 독립 재생
 
-검토 기준은 main `c705c4474d965db1b1cb78066e8c07d3c31a518d`이다. 재생 실행 파일은 WRF 어댑터·입력 builder·WRF 오류 stub을 링크하지 않고, 고정된 RTE+RRTMGP 라이브러리와 같은 계수만 사용한다. 독립 작성된 난수·중첩 구현과 직접 gas/cloud optics 및 RTE 호출을 통해 연결부를 검사한다. 다른 복사 모델이나 다른 계수에 대한 정확도 검증은 아니다.
+현재 production 대상은 UDM27 + RRTMGP37/37이다. 아래 V1–V3 및 과거 미세물리 설명은 historical replay 기록이다. 재생 실행 파일은 WRF 어댑터·입력 builder·WRF 오류 stub을 링크하지 않고, 고정된 RTE+RRTMGP 라이브러리와 같은 계수만 사용한다. 독립 작성된 난수·중첩 구현과 직접 gas/cloud optics 및 RTE 호출을 통해 연결부를 검사한다. 다른 복사 모델이나 다른 계수에 대한 정확도 검증은 아니다.
 
 ## 재현
 
@@ -9,11 +9,11 @@ GNU serial `em_scm_xy`와 NetCDF C/Fortran 개발 파일, Python NumPy/netCDF4�
 ```bash
 cmake -S WRF/test/rrtmgp -B build/replay-reference
 cmake --build build/replay-reference --target reference_column --parallel 2
-python3 WRF/test/rrtmgp/test_column_replay.py build/replay-mp4 \
-  build/replay-reference/reference_column --mp-physics 4
+python3 WRF/test/rrtmgp/test_column_replay.py build/replay-udm27 \
+  build/replay-reference/reference_column --mp-physics 27
 ```
 
-새 작업 디렉터리를 지정한다. 실행기는 5분 SCM을 초기화·실행하고 `.raw`, `.input`, `.result`를 독립 실행 파일에 전달해 비교한다. `--cloud-fixture`는 약 250 K의 WRF 층에 등록된 QC/QI/QS만 제어 입력으로 넣어 양의 광학·질량을 검사한다. `--run-minutes`의 기본값은 5다. ETAMPNEW 초기 분류만 확인할 때 사용하는 `--capture-only`는 후속 예보 실패를 숨기지 않고 `PASS_COLUMN_REPLAY` / `FAILED_AFTER_CAPTURE`를 함께 반환한다. 이것은 완주한 SCM 검증과 구별한다.
+새 작업 디렉터리를 지정한다. 실행기는 5분 SCM을 초기화·실행하고 `.raw`, `.input`, `.result`를 독립 실행 파일에 전달해 비교한다. `--cloud-fixture`는 약 250 K의 WRF 층에 등록된 QC/QI/QS만 제어 입력으로 넣어 양의 광학·질량을 검사한다. `--run-minutes`의 기본값은 5다. `--capture-only` 결과는 전체 적분 성공과 구별한다. ETAMPNEW 등 과거 미세물리 저장본은 재생 형식으로 지원하지만 현재 WRF 실행기는 UDM만 허용한다.
 
 `--capture-call N`은 같은 i=1,j=1의 N번째 복사 호출을 선택한다. SW는 WRF 래퍼의 낮 계산만 저장한다. LW의 대기 상단 확장층과 마지막 모델층 온도 재구성은 원래 층 검사와 구분한다. 이 옵션은 시드나 구름분율 정책을 변경하지 않는다.
 
@@ -46,7 +46,9 @@ build/replay-reference/test_rrtmgp_small_cf_sampling WRF/run build/small-cf-samp
 
 ## 광학 설정 형식
 
-새 capture는 `RRTMGP_REPLAY_V2`를 쓰며 마지막 `RES` 기록 뒤에 `ICE_ROUGHNESS 1 1`과 정수 category를 기록한다. 독립 reference는 V2의 1/2/3을 LW/SW LUT에 적용한다. 기존 V1 파일도 지원하며 당시 암묵적 category 1을 사용한다. 입력 검사기는 V2 설정 누락과 범위 오류를 거부한다.
+UDM production capture는 V4이며 precipitation policy 및 RWP를 추가한다. [UDM_ONLY.md](UDM_ONLY.md)를 참조한다. 강수 입력이 없는 standalone legacy fixture의 새 capture는 `RRTMGP_REPLAY_V3`를 쓰며 마지막 `RES` 기록 뒤에 `ICE_ROUGHNESS 1 1`과 정수 category를 기록한다. SW는 이어서 `SW_BAND_PARTITION 1 1`과 값 1을 기록한다. 값 1은 고정 CCPP의 12850–16000 cm⁻¹ 전이 밴드 50:50 알베도·진단 분할이다. LW에는 SW 설정이 없다. 독립 reference와 입력 검사기는 V3 SW 설정 누락 또는 1 이외의 값을 거부한다.
+
+기존 V1/V2 저장본도 재생한다. V1은 당시 암묵적 ice category 1, V2는 저장된 1/2/3을 적용한다. 두 구형 형식의 SW는 당시 전이 밴드 전체 VIS 규약을 유지하며 새로운 정책으로 재해석하지 않는다. 결과 형식은 `RRTMGP_RESULT_V1`이다. 형식 회귀 시험은 실제 adapter의 V3 저장본을 독립 재생하고, V1/V2의 동일성과 SW 정책 차이 및 잘못된 V3 설정의 거부를 검사한다.
 
 ## 초기 배경 반경의 입력 계약
 

@@ -4,15 +4,26 @@ enable_testing()
 find_package(Python3 REQUIRED COMPONENTS Interpreter)
 get_filename_component(WRF_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/../.." ABSOLUTE)
 add_subdirectory("${WRF_ROOT}/external/rte_rrtmgp" rte_rrtmgp)
-set(adapter "${WRF_ROOT}/phys/module_ra_rrtmgp.F")
-set(trace "${WRF_ROOT}/phys/module_ra_rrtmgp_trace.F")
-set(input_builder "${WRF_ROOT}/phys/module_ra_rrtmgp_input.F")
+# Compile isolated copies so traditional WRF .mod files beside source cannot
+# shadow the standalone interface. configure_file tracks source changes.
+foreach(name IN ITEMS module_ra_rrtmgp module_ra_rrtmgp_input module_ra_rrtmgp_trace module_ra_rrtmgp_precip)
+  configure_file("${WRF_ROOT}/phys/${name}.F" "${CMAKE_CURRENT_BINARY_DIR}/src/${name}.F" COPYONLY)
+endforeach()
+set(precip "${CMAKE_CURRENT_BINARY_DIR}/src/module_ra_rrtmgp_precip.F")
+set_source_files_properties("${precip}" PROPERTIES Fortran_FORMAT FREE Fortran_PREPROCESS ON)
+add_library(test_rrtmgp_precip STATIC "${precip}")
+target_link_libraries(test_rrtmgp_precip PUBLIC wrf_rrtmgp)
+set_target_properties(test_rrtmgp_precip PROPERTIES Fortran_MODULE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/precip_modules")
+target_include_directories(test_rrtmgp_precip PUBLIC "${CMAKE_CURRENT_BINARY_DIR}/precip_modules")
+set(adapter "${CMAKE_CURRENT_BINARY_DIR}/src/module_ra_rrtmgp.F")
+set(trace "${CMAKE_CURRENT_BINARY_DIR}/src/module_ra_rrtmgp_trace.F")
+set(input_builder "${CMAKE_CURRENT_BINARY_DIR}/src/module_ra_rrtmgp_input.F")
 set_source_files_properties("${adapter}" "${input_builder}" "${trace}" PROPERTIES Fortran_FORMAT FREE Fortran_PREPROCESS ON)
 add_library(test_rrtmgp_adapter STATIC standalone_wrf_error.f90 "${trace}" "${input_builder}" "${adapter}")
-target_link_libraries(test_rrtmgp_adapter PUBLIC wrf_rrtmgp)
+target_link_libraries(test_rrtmgp_adapter PUBLIC wrf_rrtmgp test_rrtmgp_precip)
 set_target_properties(test_rrtmgp_adapter PROPERTIES Fortran_MODULE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/modules")
 target_include_directories(test_rrtmgp_adapter PUBLIC "${CMAKE_CURRENT_BINARY_DIR}/modules")
-foreach(test IN ITEMS columns cloud_inputs multicolumn validation adapter_invalid small_cf_sampling ice_roughness transparent_overlap)
+foreach(test IN ITEMS columns cloud_inputs multicolumn validation adapter_invalid small_cf_sampling ice_roughness transparent_overlap spectral_surface udm_inputs precip_optics udm_adapter)
   add_executable(test_rrtmgp_${test} test_${test}.f90)
   target_link_libraries(test_rrtmgp_${test} PRIVATE test_rrtmgp_adapter)
   if(CMAKE_Fortran_COMPILER_ID STREQUAL "GNU")
@@ -71,11 +82,17 @@ target_link_libraries(reference_column PRIVATE wrf_rrtmgp)
 if(CMAKE_Fortran_COMPILER_ID STREQUAL "GNU")
   target_compile_options(reference_column PRIVATE -ffree-line-length-none -fcheck=bounds)
 endif()
+add_test(NAME replay_format_compatibility COMMAND "${Python3_EXECUTABLE}"
+  "${CMAKE_CURRENT_SOURCE_DIR}/test_replay_formats.py" "${RRTMGP_DATA_DIR}"
+  "$<TARGET_FILE:test_rrtmgp_columns>" "$<TARGET_FILE:reference_column>"
+  --output "${CMAKE_CURRENT_BINARY_DIR}/replay-format-compatibility.json")
 
 reject_adapter(roughness_low "rrtmgp_ice_roughness must be 1")
 reject_adapter(roughness_high "rrtmgp_ice_roughness must be 1")
 reject_adapter(changed_init_roughness "rrtmgp_ice_roughness must be global and unchanged")
 add_test(NAME transparent_overlap COMMAND test_rrtmgp_transparent_overlap)
+add_test(NAME spectral_surface_contract COMMAND test_rrtmgp_spectral_surface "${RRTMGP_DATA_DIR}"
+  "${CMAKE_CURRENT_BINARY_DIR}/spectral-surface.csv")
 foreach(roughness IN ITEMS 1 2 3)
   add_test(NAME ice_roughness_${roughness} COMMAND test_rrtmgp_ice_roughness "${RRTMGP_DATA_DIR}" "${roughness}"
     "${CMAKE_CURRENT_BINARY_DIR}/ice-roughness-${roughness}.csv")
@@ -96,3 +113,13 @@ if(CMAKE_Fortran_COMPILER_ID STREQUAL "GNU")
   target_compile_options(compare_snow_optics PRIVATE -ffree-line-length-none -fcheck=bounds)
 endif()
 add_test(NAME snow_optics_source_comparison COMMAND compare_snow_optics "${RRTMGP_DATA_DIR}")
+
+add_test(NAME udm_mass_contract COMMAND test_rrtmgp_udm_inputs)
+add_test(NAME udm_precip_optics COMMAND test_rrtmgp_precip_optics)
+
+add_test(NAME udm_native_radii COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/test_udm_native_radii.py" "${WRF_ROOT}" --workdir "${CMAKE_CURRENT_BINARY_DIR}/udm-native-radii")
+
+add_test(NAME udm_precip_adapter COMMAND test_rrtmgp_udm_adapter "${RRTMGP_DATA_DIR}")
+add_test(NAME udm_precip_replay COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/test_udm_replay.py"
+  "${RRTMGP_DATA_DIR}" "$<TARGET_FILE:test_rrtmgp_udm_adapter>" "$<TARGET_FILE:reference_column>"
+  --output "${CMAKE_CURRENT_BINARY_DIR}/udm-precip-replay.json")

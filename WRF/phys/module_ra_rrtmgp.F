@@ -16,6 +16,7 @@ MODULE module_ra_rrtmgp
   USE mo_cloud_sampling, ONLY: sampled_mask_max_ran, draw_samples
   USE mo_load_coefficients, ONLY: load_and_init
   USE mo_load_cloud_coefficients, ONLY: load_cld_lutcoeff
+  USE module_ra_rrtmgp_precip, ONLY: rrtmgp_precip_lw_optics, rrtmgp_precip_sw_optics
   USE module_ra_rrtmgp_input, ONLY: rrtmgp_validate_column_inputs, &
       rrtmgp_check_unit_interval, rrtmgp_check_positive, rrtmgp_check_nonnegative
   USE module_ra_rrtmgp_trace, ONLY: trace_configure, trace_active, trace_input_start, trace_input, trace_input_end, &
@@ -142,12 +143,13 @@ CONTAINS
 
   SUBROUTINE rrtmgp_lw_column(play,plev,tlay,tlev,tsfc,h2o,co2,o3,n2o,ch4,o2,emis, &
                              cf,lwp,iwp,swp,rel,rei,res,iceflag,overlap,seed, &
-                             up,dn,hr,upc,dnc,hrc,column_seeds)
+                             up,dn,hr,upc,dnc,hrc,column_seeds,rwp)
     REAL, INTENT(IN) :: play(:,:),plev(:,:),tlay(:,:),tlev(:,:),tsfc(:),emis(:,:)
     REAL, INTENT(IN) :: h2o(:,:),co2(:,:),o3(:,:),n2o(:,:),ch4(:,:),o2(:,:)
     REAL, INTENT(IN) :: cf(:,:),lwp(:,:),iwp(:,:),swp(:,:),rel(:,:),rei(:,:),res(:,:)
     INTEGER, INTENT(IN) :: iceflag,overlap,seed
     INTEGER, OPTIONAL, INTENT(IN) :: column_seeds(:)
+    REAL, OPTIONAL, INTENT(IN) :: rwp(:,:)
     REAL, INTENT(OUT) :: up(:,:),dn(:,:),hr(:,:),upc(:,:),dnc(:,:),hrc(:,:)
     TYPE(ty_gas_concs) :: gases
     TYPE(ty_optical_props_1scl) :: atmos,clouds,snow,sampled
@@ -158,9 +160,14 @@ CONTAINS
     REAL(wp) :: emissivity(gas_lw%get_nband(),SIZE(play,1))
     REAL(wp) :: rl(SIZE(play,1),SIZE(play,2)),di(SIZE(play,1),SIZE(play,2)),ds(SIZE(play,1),SIZE(play,2))
     LOGICAL :: mask(SIZE(play,1),SIZE(play,2),gas_lw%get_ngpt())
-    INTEGER :: nc,nl
+    INTEGER :: nc,nl,precip_status
     IF(.NOT.ready) CALL require('initialization must precede parallel column calls')
     CALL rrtmgp_validate_column_inputs(play,plev,tlay,cf,lwp,iwp,swp,rel,rei,res)
+    IF(PRESENT(rwp)) THEN
+      IF(ANY(SHAPE(rwp)/=SHAPE(play))) CALL require('RRTMGP_INPUT_RWP_SHAPE_MISMATCH')
+      CALL rrtmgp_check_nonnegative('rwp',rwp)
+      IF(ANY(cf==0..AND.rwp>0.)) CALL require('RRTMGP_INPUT_ZERO_CLOUD_FRACTION_WITH_RAIN_PATH')
+    END IF
     IF(ANY(SHAPE(h2o)/=SHAPE(play))) CALL require('gas shapes must match column layers')
     IF(overlap<0.OR.overlap>3) CALL require('cloud overlap supported: 0, 1, 2, 3')
     IF(PRESENT(column_seeds)) THEN
@@ -184,7 +191,7 @@ CONTAINS
       CALL require('surface emissivity must be grey or match LW bands')
     END IF
     IF(trace_active('LW')) THEN
-      CALL trace_input_start('LW',nc,nl,overlap,seed,iceflag)
+      CALL trace_input_start('LW',nc,nl,overlap,seed,iceflag,udm_precip=PRESENT(rwp))
       CALL trace_input('LW','SOLAR',RESHAPE([0.],[1,1]))
       CALL trace_input('LW','PLAY',play)
       CALL trace_input('LW','PLEV',plev)
@@ -211,6 +218,10 @@ CONTAINS
       CALL trace_input('LW','REI',rei)
       CALL trace_input('LW','RES',res)
       CALL trace_input('LW','ICE_ROUGHNESS',RESHAPE([REAL(initialized_ice_roughness)],[1,1]))
+      IF(PRESENT(rwp)) THEN
+        CALL trace_input('LW','PRECIPITATION_OPTICS',RESHAPE([1.],[1,1]))
+        CALL trace_input('LW','RWP',rwp)
+      END IF
       CALL trace_input_end('LW')
       CALL trace_result_start('LW',nc,nl)
     END IF
@@ -236,7 +247,15 @@ CONTAINS
       di=MAX(cloud_lw%get_min_radius_ice(),MIN(cloud_lw%get_max_radius_ice(),ice_diameter(rei,iceflag)))
       ds=MAX(cloud_lw%get_min_radius_ice(),MIN(cloud_lw%get_max_radius_ice(),2._wp*REAL(res,wp)))
       CALL require(cloud_lw%cloud_optics(REAL(lwp,wp),REAL(iwp,wp),rl,di,clouds))
-      CALL require(cloud_lw%cloud_optics(zero,REAL(swp,wp),rl,ds,snow))
+      IF(PRESENT(rwp)) THEN
+        ds=REAL(res,wp) ! Native UDM snow radius, never ice diameter/LUT clipping.
+        CALL rrtmgp_precip_lw_optics(REAL(rwp,wp),REAL(swp,wp),ds, &
+             gas_lw%get_band_lims_wavenumber(),snow%tau,precip_status)
+        IF(precip_status/=0) CALL require('RRTMGP_UDM_PRECIP_LW_INVALID_INPUT_OR_BANDS')
+        IF(trace_active('LW')) CALL trace_result('LW','PRECIP_TAU',snow%tau)
+      ELSE
+        CALL require(cloud_lw%cloud_optics(zero,REAL(swp,wp),rl,ds,snow))
+      END IF
       CALL require(snow%increment(clouds))
     IF(trace_active('LW')) THEN
       CALL trace_result('LW','CLOUD_TAU',clouds%tau)
@@ -274,13 +293,14 @@ CONTAINS
   SUBROUTINE rrtmgp_sw_column(play,plev,tlay,h2o,co2,o3,n2o,ch4,o2, &
                              avdir,avdif,andir,andif,mu0,solar, &
                              cf,lwp,iwp,swp,rel,rei,res,iceflag,overlap,seed, &
-                             up,dn,hr,upc,dnc,hrc,direct,diffuse,directc,visdir,visdif,nirdir,nirdif,column_seeds)
+                             up,dn,hr,upc,dnc,hrc,direct,diffuse,directc,visdir,visdif,nirdir,nirdif,column_seeds,rwp)
     REAL, INTENT(IN) :: play(:,:),plev(:,:),tlay(:,:)
     REAL, INTENT(IN) :: h2o(:,:),co2(:,:),o3(:,:),n2o(:,:),ch4(:,:),o2(:,:)
     REAL, INTENT(IN) :: avdir(:),avdif(:),andir(:),andif(:),mu0(:),solar
     REAL, INTENT(IN) :: cf(:,:),lwp(:,:),iwp(:,:),swp(:,:),rel(:,:),rei(:,:),res(:,:)
     INTEGER, INTENT(IN) :: iceflag,overlap,seed
     INTEGER, OPTIONAL, INTENT(IN) :: column_seeds(:)
+    REAL, OPTIONAL, INTENT(IN) :: rwp(:,:)
     REAL, INTENT(OUT) :: up(:,:),dn(:,:),hr(:,:),upc(:,:),dnc(:,:),hrc(:,:)
     REAL, INTENT(OUT) :: direct(:,:),diffuse(:,:),directc(:,:)
     REAL, INTENT(OUT) :: visdir(:,:),visdif(:,:),nirdir(:,:),nirdif(:,:)
@@ -294,11 +314,17 @@ CONTAINS
     REAL(wp) :: heat(SIZE(play,1),SIZE(play,2)),zero(SIZE(play,1),SIZE(play,2)), &
                 rl(SIZE(play,1),SIZE(play,2)),di(SIZE(play,1),SIZE(play,2)),ds(SIZE(play,1),SIZE(play,2))
     REAL(wp) :: toa(SIZE(play,1),gas_sw%get_ngpt()),albdir(gas_sw%get_nband(),SIZE(play,1)), &
-                albdif(gas_sw%get_nband(),SIZE(play,1)),bands(2,gas_sw%get_nband())
+                albdif(gas_sw%get_nband(),SIZE(play,1)),bands(2,gas_sw%get_nband()), &
+                visible_weight(gas_sw%get_nband())
     LOGICAL :: mask(SIZE(play,1),SIZE(play,2),gas_sw%get_ngpt())
-    INTEGER :: nc,nl,b,c
+    INTEGER :: nc,nl,b,c,precip_status
     IF(.NOT.ready) CALL require('initialization must precede parallel column calls')
     CALL rrtmgp_validate_column_inputs(play,plev,tlay,cf,lwp,iwp,swp,rel,rei,res)
+    IF(PRESENT(rwp)) THEN
+      IF(ANY(SHAPE(rwp)/=SHAPE(play))) CALL require('RRTMGP_INPUT_RWP_SHAPE_MISMATCH')
+      CALL rrtmgp_check_nonnegative('rwp',rwp)
+      IF(ANY(cf==0..AND.rwp>0.)) CALL require('RRTMGP_INPUT_ZERO_CLOUD_FRACTION_WITH_RAIN_PATH')
+    END IF
     IF(ANY(SHAPE(h2o)/=SHAPE(play))) CALL require('gas shapes must match column layers')
     IF(overlap<0.OR.overlap>3) CALL require('cloud overlap supported: 0, 1, 2, 3')
     IF(PRESENT(column_seeds)) THEN
@@ -328,7 +354,7 @@ CONTAINS
     IF(ALL(mu0<=0.)) RETURN
     IF(ANY(mu0<=0.)) CALL require('daylight columns must be packed separately')
     IF(trace_active('SW')) THEN
-      CALL trace_input_start('SW',nc,nl,overlap,seed,iceflag)
+      CALL trace_input_start('SW',nc,nl,overlap,seed,iceflag,udm_precip=PRESENT(rwp))
       CALL trace_input('SW','SOLAR',RESHAPE([solar],[1,1]))
       CALL trace_input('SW','PLAY',play)
       CALL trace_input('SW','PLEV',plev)
@@ -355,6 +381,11 @@ CONTAINS
       CALL trace_input('SW','REI',rei)
       CALL trace_input('SW','RES',res)
       CALL trace_input('SW','ICE_ROUGHNESS',RESHAPE([REAL(initialized_ice_roughness)],[1,1]))
+      CALL trace_input('SW','SW_BAND_PARTITION',RESHAPE([1.],[1,1]))
+      IF(PRESENT(rwp)) THEN
+        CALL trace_input('SW','PRECIPITATION_OPTICS',RESHAPE([1.],[1,1]))
+        CALL trace_input('SW','RWP',rwp)
+      END IF
       CALL trace_input_end('SW')
       CALL trace_result_start('SW',nc,nl)
     END IF
@@ -372,11 +403,19 @@ CONTAINS
     END DO
     bands=gas_sw%get_band_lims_wavenumber()
     DO b=1,gas_sw%get_nband()
-      IF(bands(1,b)>=12850._wp) THEN
-        albdir(b,:)=REAL(avdir,wp); albdif(b,:)=REAL(avdif,wp)
+      ! Pinned UFS/CCPP convention: the 12850--16000 cm-1 band is half VIS/NIR.
+      ! This is a band convention, not an exact integration at 0.7 micrometers.
+      IF(bands(2,b)<=12850._wp) THEN
+        visible_weight(b)=0._wp
+      ELSE IF(bands(1,b)>=16000._wp) THEN
+        visible_weight(b)=1._wp
+      ELSE IF(bands(1,b)==12850._wp.AND.bands(2,b)==16000._wp) THEN
+        visible_weight(b)=0.5_wp
       ELSE
-        albdir(b,:)=REAL(andir,wp); albdif(b,:)=REAL(andif,wp)
+        CALL require('SW VIS/NIR partition requires the 12850--16000 cm-1 transition band')
       END IF
+      albdir(b,:)=(1._wp-visible_weight(b))*REAL(andir,wp)+visible_weight(b)*REAL(avdir,wp)
+      albdif(b,:)=(1._wp-visible_weight(b))*REAL(andif,wp)+visible_weight(b)*REAL(avdif,wp)
     END DO
     flux%flux_up=>fu; flux%flux_dn=>fd; flux%flux_dn_dir=>fdir
     flux%bnd_flux_dn=>bd; flux%bnd_flux_dn_dir=>bdir
@@ -392,14 +431,35 @@ CONTAINS
       di=MAX(cloud_sw%get_min_radius_ice(),MIN(cloud_sw%get_max_radius_ice(),ice_diameter(rei,iceflag)))
       ds=MAX(cloud_sw%get_min_radius_ice(),MIN(cloud_sw%get_max_radius_ice(),2._wp*REAL(res,wp)))
       CALL require(cloud_sw%cloud_optics(REAL(lwp,wp),REAL(iwp,wp),rl,di,clouds))
-      CALL require(cloud_sw%cloud_optics(zero,REAL(swp,wp),rl,ds,snow))
+      IF(PRESENT(rwp)) THEN
+        ds=REAL(res,wp) ! Native UDM snow radius in micrometers.
+        CALL rrtmgp_precip_sw_optics(REAL(rwp,wp),REAL(swp,wp),ds,bands, &
+             snow%tau,snow%ssa,snow%g,precip_status)
+        IF(precip_status/=0) CALL require('RRTMGP_UDM_PRECIP_SW_INVALID_INPUT_OR_BANDS')
+        ! CCPP precipitation is already delta scaled: scale cloud exactly once.
+        CALL require(clouds%delta_scale())
+        DO b=1,gas_sw%get_nband()
+          WHERE(cf==0.)
+            snow%tau(:,:,b)=0._wp
+            snow%ssa(:,:,b)=0._wp
+            snow%g(:,:,b)=0._wp
+          END WHERE
+        END DO
+        IF(trace_active('SW')) THEN
+          CALL trace_result('SW','PRECIP_TAU',snow%tau)
+          CALL trace_result('SW','PRECIP_SSA',snow%ssa)
+          CALL trace_result('SW','PRECIP_G',snow%g)
+        END IF
+      ELSE
+        CALL require(cloud_sw%cloud_optics(zero,REAL(swp,wp),rl,ds,snow))
+      END IF
       CALL require(snow%increment(clouds))
     IF(trace_active('SW')) THEN
       CALL trace_result('SW','CLOUD_TAU',clouds%tau)
       CALL trace_result('SW','CLOUD_SSA',clouds%ssa)
       CALL trace_result('SW','CLOUD_G',clouds%g)
     END IF
-      CALL require(clouds%delta_scale())
+      IF(.NOT.PRESENT(rwp)) CALL require(clouds%delta_scale())
     IF(trace_active('SW')) THEN
       CALL trace_result('SW','PREPARED_TAU',clouds%tau)
       CALL trace_result('SW','PREPARED_SSA',clouds%ssa)
@@ -424,11 +484,10 @@ CONTAINS
     up=REAL(fu); dn=REAL(fd); direct=REAL(fdir); diffuse=REAL(fd-fdir)
     CALL require(compute_heating_rate(fu,fd,REAL(plev,wp)*100._wp,heat)); hr=REAL(heat*86400._wp)
     DO b=1,gas_sw%get_nband()
-      IF(bands(1,b)>=12850._wp) THEN
-        visdir=visdir+REAL(bdir(:,:,b)); visdif=visdif+REAL(bd(:,:,b)-bdir(:,:,b))
-      ELSE
-        nirdir=nirdir+REAL(bdir(:,:,b)); nirdif=nirdif+REAL(bd(:,:,b)-bdir(:,:,b))
-      END IF
+      visdir=visdir+REAL(visible_weight(b)*bdir(:,:,b))
+      visdif=visdif+REAL(visible_weight(b)*(bd(:,:,b)-bdir(:,:,b)))
+      nirdir=nirdir+REAL((1._wp-visible_weight(b))*bdir(:,:,b))
+      nirdif=nirdif+REAL((1._wp-visible_weight(b))*(bd(:,:,b)-bdir(:,:,b)))
     END DO
     IF(trace_active('SW')) THEN
       CALL trace_result('SW','UP',up)

@@ -1,0 +1,92 @@
+{
+  "surface_cases": [
+    {
+      "case": "build/udm-surface-final-reviewed/alpha-0p0",
+      "albedo": 0.0,
+      "radiation_options": [
+        37,
+        37
+      ],
+      "history_file": "build/udm-surface-final-reviewed/alpha-0p0/wrfout_d01_1999-10-22_19:00:00",
+      "time_count": 6,
+      "checks": [
+        "finite fields",
+        "ALBEDO persistence",
+        "SWDOWN=SWDNB",
+        "SWDOWN=SWDDIR+SWDDIF",
+        "GSW=SWDNB-SWUPB"
+      ]
+    },
+    {
+      "case": "build/udm-surface-final-reviewed/alpha-0p2",
+      "albedo": 0.2,
+      "radiation_options": [
+        37,
+        37
+      ],
+      "history_file": "build/udm-surface-final-reviewed/alpha-0p2/wrfout_d01_1999-10-22_19:00:00",
+      "time_count": 6,
+      "checks": [
+        "finite fields",
+        "ALBEDO persistence",
+        "SWDOWN=SWDNB",
+        "SWDOWN=SWDDIR+SWDDIF",
+        "GSW=SWDNB-SWUPB"
+      ]
+    },
+    {
+      "case": "build/udm-surface-final-reviewed/alpha-0p99",
+      "albedo": 0.99,
+      "radiation_options": [
+        37,
+        37
+      ],
+      "history_file": "build/udm-surface-final-reviewed/alpha-0p99/wrfout_d01_1999-10-22_19:00:00",
+      "time_count": 6,
+      "checks": [
+        "finite fields",
+        "ALBEDO persistence",
+        "SWDOWN=SWDNB",
+        "SWDOWN=SWDDIR+SWDDIF",
+        "GSW=SWDNB-SWUPB"
+      ]
+    },
+    {
+      "case": "build/udm-surface-final-reviewed/alpha-1p0",
+      "albedo": 1.0,
+      "radiation_options": [
+        37,
+        37
+      ],
+      "history_file": "build/udm-surface-final-reviewed/alpha-1p0/wrfout_d01_1999-10-22_19:00:00",
+      "time_count": 6,
+      "checks": [
+        "finite fields",
+        "ALBEDO persistence",
+        "SWDOWN=SWDNB",
+        "SWDOWN=SWDDIR+SWDDIF",
+        "GSW=SWDNB-SWUPB"
+      ]
+    }
+  ],
+  "swint_rejection_cases": [
+    {
+      "case": "build/udm-surface-final-reviewed/reject-swint-1",
+      "swint_opt": 1,
+      "rejected_during": "ideal.exe",
+      "ideal_returncode": 0,
+      "checks": [
+        "explicit RRTMGP swint_opt rejection in ideal.log"
+      ]
+    },
+    {
+      "case": "build/udm-surface-final-reviewed/reject-swint-2",
+      "swint_opt": 2,
+      "rejected_during": "ideal.exe",
+      "ideal_returncode": 0,
+      "checks": [
+        "explicit RRTMGP swint_opt rejection in ideal.log"
+      ]
+    }
+  ]
+}

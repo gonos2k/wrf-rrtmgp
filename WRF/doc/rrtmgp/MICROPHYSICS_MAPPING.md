@@ -1,3 +1,5 @@
+> 현재 production 37번은 UDM27 전용이다. 아래 내용은 UDM 전용화 이전의 소스 추적·시험 기록이며 다른 미세물리의 현재 사용을 허용하지 않는다. 현재 계약: [UDM_ONLY.md](UDM_ONLY.md).
+
 # WRF microphysics inputs mapped to RRTMGP cloud paths
 
 This note describes the current `use_rrtmgp` path in the WRF longwave and shortwave wrappers, `RRTMG_LWRAD` and `RRTMG_SWRAD`. The species passed to `rrtmgp_build_cloud_inputs` are the wrapper's prepared `qc1d`, `qi1d`, and `qs1d` arrays at the builder call. They are not necessarily copies of the model's original prognostic arrays: shared phase handling and scheme-specific overrides run first.
@@ -55,4 +57,20 @@ The default `gp_rel` and `gp_rei` values come from the wrappers' diagnosed `reli
 
 The Registry identities and fields are declared in [`Registry.EM_COMMON`](../../Registry/Registry.EM_COMMON#L3073) (WSM3 3, WSM5 4, Ferrier 5/15, ETAMPNEW 95). The relevant implementation is in [`RRTMG_LWRAD`](../../phys/module_ra_rrtmg_lw.F#L11584) and [`RRTMG_SWRAD`](../../phys/module_ra_rrtmg_sw.F#L10048). The common phase/read branches are near LW lines 12055–12158 and SW lines 10664–10763; the “MP option 5” block with legacy split and RRTMGP ETAMPNEW restoration is near LW line 12131 and SW line 10736. Ferrier/Aligo overrides are near LW line 12150 and SW line 10750. Radius selection and the builder call are near LW lines 12667–12684 and SW lines 11221–11236.
 
-These statements document the source-derived mapping contract; they do not claim that the planned phase-specific runtime matrix or capture/replay validation has run.
+These rows describe source-derived mappings. The runtime evidence below is narrower than the set of source branches and is not an operational or observational accuracy claim.
+
+## Execution evidence and hydrometeor coverage
+
+| Scheme | Current runtime evidence | Categories absent from separate radiation paths |
+| --- | --- | --- |
+| Lin 2 | Short serial SCM integration and captured-column replay | Rain and graupel; its Registry includes both QR and QG |
+| WSM5 4 | Short serial SCM, controlled QC/QI/QS, first/background and second/diagnosed-radius replay | Rain |
+| Ferrier/Aligo 5 | Short serial SCM and controlled liquid/combined-frozen replay | Rain; QI contains ice+snow, not rain |
+| ETAMPNEW 95 | Initial controlled-column replay; subsequent integration failed in the recorded fixture | Rain; complete forecast validation remains absent |
+| WSM3 3, Ferrier variants 15/85, Thompson, P3 and other schemes | Source contracts only; not in the current end-to-end SCM matrix | Scheme-specific rain/graupel/hail mapping and runtime checks remain necessary |
+
+The 2/4/5 list is an execution-validation list, not a complete precipitation-optics allowlist. Every option-37 initialization warns that separate rain, graupel and hail optics are absent; configurations outside this short-run matrix emit an additional warning. No arbitrary species-completeness claim or fatal microphysics allowlist is inferred from an otherwise successful SCM run. SSiB+37 is marked experimental at initialization.
+
+Legacy option 4 also normally builds optics from QC and QI+QS, without independent rain/graupel paths. Their omission is therefore not a new arithmetic error unique to option 37, but it remains a material limitation relative to the pinned CCPP precipitation configuration. The cold-phase rain transfer described above is a limited exception.
+
+The pinned CCPP unified mapper has separate rain water path and combines snow+graupel; its Thompson-specific branch does not make the same graupel addition. Its shown upstream paths are grid-box g/m² without division by cloud fraction, whereas the WRF builder supplies in-cloud paths. A production precipitation port must define those units, occurrence fraction, size definition, and scheme-specific category mapping together; replacing only the snow formula cannot establish NOAA host equivalence. See [OPTICS_COMPARISON.md](OPTICS_COMPARISON.md).

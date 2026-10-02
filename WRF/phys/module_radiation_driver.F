@@ -2090,7 +2090,7 @@ CONTAINS
                   F_ICE_PHY=F_ICE_PHY,F_RAIN_PHY=F_RAIN_PHY,        &
                   XLAND=XLAND,XICE=XICE,SNOW=SNOW,                  &
                   QV3D=QV,QC3D=QC,QR3D=QR,                          &
-                  QI3D=QI,QS3D=QS,QG3D=QG,                          &
+                  QI3D=QI,QS3D=QS,QG3D=QG,QH3D=QH,F_QH=F_QH,                          &
                   O3INPUT=O3INPUT,O33D=O3RAD,                       &
                   F_QV=F_QV,F_QC=F_QC,F_QR=F_QR,                    &
                   F_QI=F_QI,F_QS=F_QS,F_QG=F_QG,                    &
@@ -2619,7 +2619,7 @@ CONTAINS
                      F_ICE_PHY=F_ICE_PHY,F_RAIN_PHY=F_RAIN_PHY,        &
                      XLAND=XLAND,XICE=XICE,SNOW=SNOW,                  &
                      QV3D=qv,QC3D=qc,QR3D=qr,                          &
-                     QI3D=qi,QS3D=qs,QG3D=qg,                          &
+                     QI3D=qi,QS3D=qs,QG3D=qg,QH3D=QH,F_QH=F_QH,                          &
                      O3INPUT=O3INPUT,O33D=O3RAD,                       &
                      AER_OPT=AER_OPT,aerod=aerod,no_src=no_src_types,  &
                      ALSWVISDIR=alswvisdir ,ALSWVISDIF=alswvisdif,     &  !Zhenxin ssib alb comp (06/2010)

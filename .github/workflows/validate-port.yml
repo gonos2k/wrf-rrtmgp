@@ -82,7 +82,7 @@ jobs:
       - name: Install compiler, CMake, and NetCDF C/Fortran
         run: |
           sudo apt-get update -qq
-          sudo apt-get install -y cmake gfortran gcc libnetcdf-dev libnetcdff-dev
+          sudo apt-get install -y cmake gfortran gcc libnetcdf-dev libnetcdff-dev python3-numpy python3-netcdf4
       - name: Build and run standalone WRF column tests
         run: |
           cmake -S WRF/test/rrtmgp -B build/rrtmgp-column-test \
@@ -127,37 +127,19 @@ jobs:
           python3 WRF/test/rrtmgp/test_make_reproducibility.py \
             --netcdf-prefix "$RUNNER_TEMP/netcdf" --compiler gfortran \
             --output-dir build/make-reproducibility | tee build/make-reproducibility.json
-      - name: Run paired 37 and baseline 4 SCMs; check WRF outputs
-        shell: bash
-        run: |
-          set -euo pipefail
-          export LD_LIBRARY_PATH="$RUNNER_TEMP/netcdf/lib:/usr/lib/x86_64-linux-gnu:${LD_LIBRARY_PATH:-}"
-          WRF/test/rrtmgp/run_scm.sh build/scm37 37
-          WRF/test/rrtmgp/run_scm.sh build/scm4 4
-          python3 WRF/test/rrtmgp/validate_scm.py build/scm37 build/scm4 --expected-options 37 4 | tee build/scm-validation.json
       - name: Check reflecting surfaces and reject unsupported interpolation
         shell: bash
         run: |
           set -euo pipefail
           export LD_LIBRARY_PATH="$RUNNER_TEMP/netcdf/lib:/usr/lib/x86_64-linux-gnu:${LD_LIBRARY_PATH:-}"
           python3 WRF/test/rrtmgp/test_surface_scm.py build/surface-scm | tee build/surface-scm-result.json
-      - name: Compare RRTMG and RRTMGP with identical SCM inputs
-        shell: bash
-        run: |
-          set -euo pipefail
-          export LD_LIBRARY_PATH="$RUNNER_TEMP/netcdf/lib:/usr/lib/x86_64-linux-gnu:${LD_LIBRARY_PATH:-}"
-          export OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1
-          python3 tools/compare_radiation_scm.py --output-directory build/radiation-comparison
-          python3 tools/analyze_radiation_comparison.py \
-            --suite build/radiation-comparison/receipt.json \
-            --output-directory build/radiation-comparison-analysis
       - name: Check zero-cloud-fraction policy in the WRF cloud builder
         shell: bash
         run: |
           set -euo pipefail
           export LD_LIBRARY_PATH="$RUNNER_TEMP/netcdf/lib:/usr/lib/x86_64-linux-gnu:${LD_LIBRARY_PATH:-}"
           python3 WRF/test/rrtmgp/test_cloud_scm.py build/cloud-contract-scm | tee build/cloud-contract-result.json
-      - name: Replay real WRF columns with an independent RRTMGP executable
+      - name: Validate UDM-only paired SCM and replay captured columns
         shell: bash
         run: |
           set -euo pipefail
@@ -165,50 +147,23 @@ jobs:
           export LD_LIBRARY_PATH="$NETCDF/lib:/usr/lib/x86_64-linux-gnu:${LD_LIBRARY_PATH:-}"
           cmake -S WRF/test/rrtmgp -B build/replay-reference -DRRTMGP_DATA_DIR="$GITHUB_WORKSPACE/WRF/run"
           cmake --build build/replay-reference --target reference_column --parallel 2
-          for mp in 2 4 5; do
-            python3 WRF/test/rrtmgp/test_column_replay.py "build/replay-mp${mp}" \
-              build/replay-reference/reference_column --mp-physics "$mp" | tee "build/replay-mp${mp}.json"
-          done
-          for mp in 4 5; do
-            python3 WRF/test/rrtmgp/test_column_replay.py "build/replay-mp${mp}-cloud" \
-              build/replay-reference/reference_column --mp-physics "$mp" --cloud-fixture | tee "build/replay-mp${mp}-cloud.json"
-          done
-          for roughness in 2 3; do
-            python3 WRF/test/rrtmgp/test_column_replay.py "build/replay-roughness-${roughness}-cloud" \
-              build/replay-reference/reference_column --mp-physics 4 --cloud-fixture \
-              --ice-roughness "$roughness" | tee "build/replay-roughness-${roughness}.json"
-          done
-          # First call exercises initialized BG fallback; second call preserves diagnosed sizes.
-          python3 WRF/test/rrtmgp/test_column_replay.py build/replay-mp4-cloud-second \
-            build/replay-reference/reference_column --mp-physics 4 --cloud-fixture \
-            --capture-call 2 --run-minutes 1 | tee build/replay-mp4-cloud-second.json
-          # Snapshot contract only: ETAMPNEW SCM integration is separately reported.
-          python3 WRF/test/rrtmgp/test_column_replay.py build/replay-mp95-cloud \
-            build/replay-reference/reference_column --mp-physics 95 --cloud-fixture --capture-only | tee build/replay-mp95-cloud.json
+          export LD_LIBRARY_PATH="$NETCDF/lib:/usr/lib/x86_64-linux-gnu:${LD_LIBRARY_PATH:-}"
+          python3 WRF/test/rrtmgp/test_udm_scm.py build/udm-scm \
+            --reference-executable build/replay-reference/reference_column \
+            | tee build/udm-scm-result.json
       - name: Save SCM logs and output checks
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: validation-serial-scm-${{ github.run_id }}
           path: |
-            build/scm37/ideal.log
-            build/scm37/wrf.log
-            build/scm4/ideal.log
-            build/scm4/wrf.log
+            build/udm-scm-result.json
+            build/udm-scm/**/*.log
+            build/udm-scm/**/capture/**
             build/make-reproducibility.json
-            build/replay-roughness*.json
-            build/replay-roughness*/capture/**
-            build/replay-roughness*/*.log
-            build/replay-mp*.json
-            build/replay-mp*/capture/**
-            build/replay-mp*/*.log
-            build/scm-validation.json
             build/surface-scm-result.json
             build/cloud-contract-result.json
             build/cloud-contract-scm/*.log
-            build/radiation-comparison/receipt.json
-            build/radiation-comparison/*/*/*.log
-            build/radiation-comparison-analysis/**
             build/surface-scm/**/*.log
             build/wrf-configure.log
             build/wrf-compile-scm.log

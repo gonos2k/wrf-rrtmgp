@@ -1,0 +1,22 @@
+{
+  "repository": "https://github.com/NCAR/ccpp-physics",
+  "commit": "3e6660c6df54e95a0871e990c2294dd397ae3860",
+  "directory": "physics/Radiation/RRTMGP",
+  "license_path": "WRF/phys/rrtmgp_precip_LICENSE",
+  "license_sha256": "9b5dc915a61e4dd5d5723c989c22a6c6be37cb8d94f1c6b1919693730f2f9d5c",
+  "license_url": "https://raw.githubusercontent.com/NCAR/ccpp-physics/3e6660c6df54e95a0871e990c2294dd397ae3860/LICENSE",
+  "source_sha256": {
+    "rrtmgp_sw_main.F90": "b810f4493358d8a0dff1def577cc6c5c86857a15c5b36898570fc9b190b08054",
+    "rrtmgp_lw_main.F90": "87571198247ca7ffa539334e27c502d0e5cedaf987a11eec3f4f22936ca0d572",
+    "rrtmgp_sw_cloud_optics.F90": "b549f7afa2775dde04b4975341adfb114f5a260a4a79a3d5481de758a0a6cc8f",
+    "rrtmgp_lw_cloud_optics.F90": "db9d0cb0d548bf00dd056d5ede2e04b1eef02c23ab79f914bee32d87198076d5"
+  },
+  "license": "Apache-2.0",
+  "local_policy": [
+    "UDM27 only; in-cloud paths in g/m2 and snow radius in micrometers",
+    "cloud fraction gate and path conversion owned by WRF UDM input builder",
+    "precipitation SW delta scaling applied exactly once; cloud delta scaling applied separately before merge",
+    "graupel diagnosis only; hail fail closed; no inferred NOAA internal UDM mapping",
+    "constant decimal evaluation uses RTE wp, coefficient array default-real literal rounding retained; not a bitwise recreation of compiler-dependent CCPP arithmetic"
+  ]
+}

@@ -1112,6 +1112,16 @@ CHARACTER(LEN=8) :: name
       has_reqs = 1
    endif
 
+! UDM-native radii are enabled only for the dedicated 37/37 coupling.
+! Existing UDM RRTMG4 behavior remains unchanged.
+   IF (config_flags%mp_physics == UDMSCHEME .AND. &
+       config_flags%ra_lw_physics == RRTMGP_LWSCHEME .AND. &
+       config_flags%ra_sw_physics == RRTMGP_SWSCHEME) THEN
+      has_reqc = 1
+      has_reqi = 1
+      has_reqs = 1
+   END IF
+
 ! for P3, to ensure correct coupling with predicted effective radii
    if (config_flags%mp_physics .eq. P3_1CATEGORY .or.       &
        config_flags%mp_physics .eq. P3_1CATEGORY_NC .or.    &

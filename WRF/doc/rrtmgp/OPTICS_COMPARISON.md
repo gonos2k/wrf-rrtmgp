@@ -13,6 +13,9 @@ UFSATM commit `6f461419f091c109d18b826ab88595da00ab336c`은 CCPP `3e6660c6df54e9
 | Snow | 현재 ice LUT에 별도 SWP와 `2*r_s` 입력 | Fu 계열 별도 강수 광학식 |
 | Rain/graupel | 별도 rain/graupel 광학 입력 없음 | rain/snow+graupel 광학 경로 |
 | 강수 발생 분율 | snow를 cloud fraction과 같은 McICA mask로 표본화 | `precip_frac` 인자는 있으나 이 고정 main 식은 cloud fraction으로 gate |
+| SW VIS/NIR 전이 밴드 | 12850–16000 cm⁻¹을 알베도·진단 모두 50:50으로 분할 | 동일한 50:50 규약 |
+
+전이 밴드 규약은 [고정 SW main의 알베도](https://github.com/NCAR/ccpp-physics/blob/3e6660c6df54e95a0871e990c2294dd397ae3860/physics/Radiation/RRTMGP/rrtmgp_sw_main.F90#L368)와 같은 파일의 clear/all-sky 분광 진단에서 확인한다. 이전 37번은 이 밴드를 전부 VIS, 활성 RRTMG 4번은 전부 NIR로 처리했다. 회색 알베도에서는 broadband 결과가 같지만 분광 알베도에서는 다를 수 있다. `spectral_surface_contract`는 고정 14개 밴드의 순서·경계를 확인하고 독립 RTE로 48개 청천/구름·알베도·태양각 조건을 비교한다. SSiB 전체 결합이나 관측 정확도 검증을 대신하지 않는다.
 
 1=none/smooth, 2=medium, 3=high이다. UFS host 기본 3은 [GFS_typedefs.F90](https://github.com/NOAA-EMC/ufsatm/blob/6f461419f091c109d18b826ab88595da00ab336c/ccpp/data/GFS_typedefs.F90#L3659)에 있다. SW/LW의 선택 전달은 [SW cloud loader](https://github.com/NCAR/ccpp-physics/blob/3e6660c6df54e95a0871e990c2294dd397ae3860/physics/Radiation/RRTMGP/rrtmgp_sw_cloud_optics.F90#L241), [LW cloud loader](https://github.com/NCAR/ccpp-physics/blob/3e6660c6df54e95a0871e990c2294dd397ae3860/physics/Radiation/RRTMGP/rrtmgp_lw_cloud_optics.F90)에 구현돼 있다. 기본 2를 “NOAA와 일치”라고 부르면 안 된다.
 

@@ -64,9 +64,11 @@ CONTAINS
     IF (p /= 0) trace_active = phase_active(p)
   END FUNCTION trace_active
 
-  SUBROUTINE trace_input_start(phase, nc, nl, overlap, seed, iceflag)
+  SUBROUTINE trace_input_start(phase, nc, nl, overlap, seed, iceflag,udm_precip)
     CHARACTER(len=*), INTENT(IN) :: phase
     INTEGER, INTENT(IN) :: nc, nl, overlap, seed, iceflag
+    LOGICAL, OPTIONAL, INTENT(IN) :: udm_precip
+    LOGICAL :: v4
     INTEGER :: p, unit, ios
     CHARACTER(len=1200) :: filename
     p = active_phase(phase)
@@ -75,7 +77,13 @@ CONTAINS
     filename = trim(capture_dir)//'/'//trim(phases(p))//'.input'
     OPEN(NEWUNIT=unit, FILE=trim(filename), STATUS='replace', ACTION='write', IOSTAT=ios)
     CALL check_io(ios, 'opening input capture')
-    WRITE(unit,'(a)',IOSTAT=ios) 'RRTMGP_REPLAY_V2'
+    v4=.FALSE.
+    IF(PRESENT(udm_precip)) v4=udm_precip
+    IF(v4) THEN
+      WRITE(unit,'(a)',IOSTAT=ios) 'RRTMGP_REPLAY_V4'
+    ELSE
+      WRITE(unit,'(a)',IOSTAT=ios) 'RRTMGP_REPLAY_V3'
+    END IF
     CALL check_io(ios, 'writing input magic')
     WRITE(unit,'(a,5(1x,i0))',IOSTAT=ios) uppercase(phases(p)), nc, nl, overlap, seed, iceflag
     CALL check_io(ios, 'writing input header')

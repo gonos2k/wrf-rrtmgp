@@ -403,6 +403,7 @@ subroutine udm(th, q, qc, qr, qi, qs, qg, qh                                  &
               re_qi(k) = reimin
               re_qs(k) = resmin
               t1d(k)  = th(i,k,j)*pii(i,k,j)
+              den1d(k)= den(i,k,j)
               qc1d(k) = qc(i,k,j)
               qi1d(k) = qi(i,k,j)
               qs1d(k) = qs(i,k,j)

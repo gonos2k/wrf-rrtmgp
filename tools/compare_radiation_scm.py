@@ -394,14 +394,14 @@ def environment_record(wrf_exe: Path, ideal_exe: Path, env: dict[str, str]) -> d
 
 
 def scenarios() -> list[dict[str, Any]]:
+    # The production option-37 interface is deliberately UDM27-only.
     return [
-        {"name": "mp2-control", "mp_physics": 2, "overlap": 2, "species": None},
-        {"name": "mp2-clear-sky-overlap0", "mp_physics": 2, "overlap": 0, "species": None},
-        {"name": "mp4-mixed", "mp_physics": 4, "overlap": 2, "species": "mixed"},
-        {"name": "mp4-liquid-only", "mp_physics": 4, "overlap": 2, "species": "liquid-only"},
-        {"name": "mp4-ice-only", "mp_physics": 4, "overlap": 2, "species": "ice-only"},
-        {"name": "mp4-snow-only", "mp_physics": 4, "overlap": 2, "species": "snow-only"},
-        {"name": "mp5-mixed", "mp_physics": 5, "overlap": 2, "species": "mixed"},
+        {"name": "udm-control", "mp_physics": 27, "overlap": 2, "species": None},
+        {"name": "udm-clear-sky-overlap0", "mp_physics": 27, "overlap": 0, "species": None},
+        {"name": "udm-mixed", "mp_physics": 27, "overlap": 2, "species": "mixed"},
+        {"name": "udm-liquid-only", "mp_physics": 27, "overlap": 2, "species": "liquid-only"},
+        {"name": "udm-ice-only", "mp_physics": 27, "overlap": 2, "species": "ice-only"},
+        {"name": "udm-snow-only", "mp_physics": 27, "overlap": 2, "species": "snow-only"},
     ]
 
 
