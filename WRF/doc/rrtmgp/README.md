@@ -12,8 +12,11 @@ WRF v4.8.0에 RTE+RRTMGP CPU 복사 계산을 장파 및 단파 옵션 37로 연
  swint_opt = 0,
  cldovrlp = 2,
  rrtmgp_data_path = '.',
+ rrtmgp_ice_roughness = 1,
 /
 ```
+
+`rrtmgp_ice_roughness`는 1=smooth, 2=medium, 3=high이며 LW/SW ice LUT에 명시적으로 적용한다. 기본 1은 이전 포팅 결과를 보존한다. 이 설정과 `rrtmgp_data_path`는 초기화 후 변경할 수 없는 전역 설정이다. 고정 UFSATM의 기본은 3이지만, 그것만으로 이 WRF 구현의 snow 광학까지 NOAA와 같아지는 것은 아니다. [광학 비교](OPTICS_COMPARISON.md)를 참고한다.
 
 `rrtmgp_data_path`는 모든 도메인이 공유하는 계수 디렉터리다. `run/`에 다음 파일이 포함되어 있다. 실행 디렉터리로 복사하거나 이 디렉터리의 경로를 지정한다. 기존 WRF 복사 전처리에 필요한 `RRTMG_LW_DATA`, `RRTMG_SW_DATA`, 오존 및 온실기체 자료도 기존 방식으로 배치한다.
 
@@ -52,7 +55,7 @@ SW 밴드 하한 12850 cm⁻¹ 이상을 가시광 출력에, 나머지를 근�
 
 구름 입력 검증은 배열 모양, 유한성, 범위, 압력층 순서, 음수 수분량·경로, 활성 수상의 반경을 검사한다. 반경은 비활성 수상에서 유한한 0을 허용하지만 수분량이 양수이면 양수여야 한다. 직접 builder와 adapter는 `cf=0`인데 응축수 경로가 양수인 입력을 엄격히 거부한다. WRF 전처리는 `QCLDMIN` 또는 cloud-fraction cutoff 아래의 trace condensate를 cf=0으로 만들 수 있으므로 WRF wrapper만 이를 허용한다. 해당 층의 광학 경로는 0으로 두며 debug level 100에서 생략된 원래 grid-box 경로와 reason code 6을 층별 진단한다. 양의 cf에서는 경로 builder가 수상별 질량을 보존한다. cf=0 예외에서는 해당 trace condensate가 복사 광학 입력에서 생략되므로 이를 질량 보존 사례로 세지 않는다. 6개 출력 시각을 포함한 5분 적분 로그에서 LW/SW 각각 reason code 6이 793회 기록됐고 최대 생략량은 층·호출당 0.1037024 g/m²였다.
 
-공통 미세물리 전처리는 유지한다. MP5의 10% ice/90% snow partition과 별개로 legacy flag 5는 snow에 기존 0.99 factor 및 130 µm 초과 입자 질량 감소를 적용한다. 이 수정은 RRTMGP 경로에 두 보정을 적용하지 않으며, P3의 qi→snow 변경도 legacy RRTMG 경로에만 둔다. WRF 경로는 일반 유효반경을 전달한다. adapter는 액체 반경을 반경으로 유지하고 ice/snow 반경만 직경으로 변환한다. Fu 특수 크기 변환은 직접 backend API의 flag 3 호환 경로에만 해당한다. 눈 반경 누락 시 빙정 반경 대리값은 잠정 선택으로 남아 있어 실제 WRF 기둥 재생과 광학 민감도 검토가 필요하다.
+미세물리 종 플래그의 분류 계약은 [MICROPHYSICS_MAPPING.md](MICROPHYSICS_MAPPING.md)에 정의한다. WSM5는 option 4, Ferrier/Aligo는 option 5이며, 오래된 “MP option 5” 주석의 10% ice/90% snow 재분류는 37번에서 수행하지 않는다. ETAMPNEW는 QC/QS를 보존하고 Ferrier는 통합 frozen QI를 한 번 IWP에 넣는다. Legacy flag 5의 snow 0.99 factor 및 130 µm 초과 질량 감소도 37번에는 적용하지 않으며, P3의 qi→snow 변경도 legacy RRTMG 경로에만 둔다. WRF 경로는 일반 유효반경을 전달한다. adapter는 액체 반경을 반경으로 유지하고 ice/snow 반경만 직경으로 변환한다. Fu 특수 크기 변환은 직접 backend API의 flag 3 호환 경로에만 해당한다. 눈 반경 누락 시 빙정 반경 대리값은 잠정 선택으로 남아 있어 실제 WRF 기둥 재생과 광학 민감도 검토가 필요하다.
 
 이 구현은 HAFS 전체 복사 suite의 재현을 목표로 한 결과가 아니다. HAFS의 최적화된 LW 78/SW 75 g점 및 장파 산란, 에어로졸 경로는 추가 이식 대상이다. GPU, 실제 예보 사례, MPI/OpenMP 확장성 및 관측 비교는 별도 검증이 필요하다.
 

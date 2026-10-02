@@ -28,6 +28,7 @@ MODULE module_ra_rrtmgp
   TYPE(ty_gas_optics_rrtmgp), SAVE :: gas_lw, gas_sw
   TYPE(ty_cloud_optics_rrtmgp), SAVE :: cloud_lw, cloud_sw
   LOGICAL, SAVE :: ready = .FALSE.
+  INTEGER, SAVE :: initialized_ice_roughness = 1
   CHARACTER(LEN=:), ALLOCATABLE, SAVE :: initialized_path
   CHARACTER(LEN=3), PARAMETER :: names(6) = ['h2o','co2','o3 ','n2o','ch4','o2 ']
 CONTAINS
@@ -36,12 +37,20 @@ CONTAINS
     IF (LEN_TRIM(msg)>0) CALL wrf_error_fatal3('module_ra_rrtmgp.F',0,'RRTMGP: '//TRIM(msg))
   END SUBROUTINE
 
-  SUBROUTINE rrtmgp_init(data_path)
+  SUBROUTINE rrtmgp_init(data_path,ice_roughness)
     CHARACTER(LEN=*), INTENT(IN) :: data_path
+    INTEGER, OPTIONAL, INTENT(IN) :: ice_roughness
+    INTEGER :: selected_roughness
     TYPE(ty_gas_concs) :: gases
+    selected_roughness=1
+    IF(PRESENT(ice_roughness)) selected_roughness=ice_roughness
+    IF(selected_roughness<1.OR.selected_roughness>3) &
+      CALL require('rrtmgp_ice_roughness must be 1 (smooth), 2 (medium), or 3 (high)')
     CALL trace_configure()
     IF (ready) THEN
       IF(TRIM(data_path)/=initialized_path) CALL require('rrtmgp_data_path must be global and unchanged after initialization')
+      IF(selected_roughness/=initialized_ice_roughness) &
+        CALL require('rrtmgp_ice_roughness must be global and unchanged after initialization')
       RETURN
     END IF
     CALL require(gases%init(names))
@@ -49,8 +58,11 @@ CONTAINS
     CALL load_and_init(gas_sw,TRIM(data_path)//'/rrtmgp-gas-sw-g112.nc',gases)
     CALL load_cld_lutcoeff(cloud_lw,TRIM(data_path)//'/rrtmgp-clouds-lw-bnd.nc')
     CALL load_cld_lutcoeff(cloud_sw,TRIM(data_path)//'/rrtmgp-clouds-sw-bnd.nc')
+    CALL require(cloud_lw%set_ice_roughness(selected_roughness))
+    CALL require(cloud_sw%set_ice_roughness(selected_roughness))
     IF (.NOT.cloud_lw%bands_are_equal(gas_lw)) CALL require('LW cloud/gas spectral bands differ')
     IF (.NOT.cloud_sw%bands_are_equal(gas_sw)) CALL require('SW cloud/gas spectral bands differ')
+    initialized_ice_roughness=selected_roughness
     initialized_path=TRIM(data_path)
     ready = .TRUE.
   END SUBROUTINE
@@ -198,6 +210,7 @@ CONTAINS
       CALL trace_input('LW','REL',rel)
       CALL trace_input('LW','REI',rei)
       CALL trace_input('LW','RES',res)
+      CALL trace_input('LW','ICE_ROUGHNESS',RESHAPE([REAL(initialized_ice_roughness)],[1,1]))
       CALL trace_input_end('LW')
       CALL trace_result_start('LW',nc,nl)
     END IF
@@ -341,6 +354,7 @@ CONTAINS
       CALL trace_input('SW','REL',rel)
       CALL trace_input('SW','REI',rei)
       CALL trace_input('SW','RES',res)
+      CALL trace_input('SW','ICE_ROUGHNESS',RESHAPE([REAL(initialized_ice_roughness)],[1,1]))
       CALL trace_input_end('SW')
       CALL trace_result_start('SW',nc,nl)
     END IF

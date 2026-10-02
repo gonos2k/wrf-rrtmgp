@@ -160,8 +160,8 @@ def read_raw(path: Path) -> tuple[str, int, int, dict[str, np.ndarray]]:
 
 def read_input(path: Path) -> tuple[str, int, int, int, int, int, dict[str, np.ndarray]]:
     lines = path.read_text(encoding="ascii").splitlines()
-    if len(lines) < 2 or lines[0].strip() != "RRTMGP_REPLAY_V1":
-        fail(f"{path}: expected RRTMGP_REPLAY_V1 first line")
+    if len(lines) < 2 or lines[0].strip() not in {"RRTMGP_REPLAY_V1", "RRTMGP_REPLAY_V2"}:
+        fail(f"{path}: expected RRTMGP_REPLAY_V1 or V2 first line")
     header = lines[1].split()
     if len(header) != 6:
         fail(f"{path}: expected phase/nc/nl/overlap/seed/iceflag on line 2")
@@ -180,7 +180,13 @@ def read_input(path: Path) -> tuple[str, int, int, int, int, int, dict[str, np.n
         _, records = read_records(temporary, "RRTMGP_INPUT_V1", 1)
     finally:
         temporary.unlink(missing_ok=True)
+    if lines[0].strip() == "RRTMGP_REPLAY_V2":
+        roughness = records.get("ICE_ROUGHNESS")
+        if roughness is None or roughness.shape != (1, 1) or roughness.item() not in (1, 2, 3):
+            fail(f"{path}: V2 requires scalar ICE_ROUGHNESS in {{1, 2, 3}}")
     for name, values in records.items():
+        if name == "ICE_ROUGHNESS":
+            continue
         if values.shape[0] != nc:
             fail(f"{path}: {name} first dimension {values.shape[0]} != nc={nc}")
     return phase, nc, nl, overlap, seed, iceflag, records
@@ -657,6 +663,7 @@ def main() -> int:
     parser.add_argument("case_dir", type=Path, help="new isolated SCM case/capture directory")
     parser.add_argument("reference_exe", type=Path, help="built reference_column executable")
     parser.add_argument("--mp-physics", type=int, default=4)
+    parser.add_argument("--ice-roughness", type=int, choices=(1, 2, 3), default=1)
     parser.add_argument("--capture-call", type=int, default=1)
     parser.add_argument("--run-minutes", type=int, default=5,
                         help="SCM integration duration in minutes (default: 5)")
@@ -691,6 +698,10 @@ def main() -> int:
         test_surface_scm.prepare_case(case_dir, swint_opt=0)
         namelist = set_mp_physics(test_cloud_scm.original_lsm2_namelist(), args.mp_physics)
         namelist = set_run_minutes(namelist, args.run_minutes)
+        namelist, count = re.subn(r"(?m)^(\s*rrtmgp_data_path\s*=.*)$",
+            lambda match: match.group(0) + f"\n rrtmgp_ice_roughness = {args.ice_roughness},", namelist)
+        if count != 1:
+            fail("SCM template must contain one rrtmgp_data_path assignment")
         (case_dir / "namelist.input").write_text(namelist, encoding="utf-8")
         capture = case_dir / "capture"
         capture.mkdir()
@@ -728,7 +739,12 @@ def main() -> int:
                         "scm_validation": validation}
         reports = {phase: validate_capture(case_dir, phase, args.mp_physics, reference_exe, fixture)
                    for phase in ("LW", "SW")}
+        for phase in ("LW", "SW"):
+            *_, captured = read_input(capture / f"{phase.lower()}.input")
+            if captured.get("ICE_ROUGHNESS", np.array([[1]])).item() != args.ice_roughness:
+                fail(f"{phase}: captured roughness differs from requested setting")
         report = {
+            "ice_roughness": args.ice_roughness,
             "status": "PASS" if wrf_succeeded else "PASS_COLUMN_REPLAY",
             "case": str(case_dir), "mp_physics": args.mp_physics,
             "capture_call": args.capture_call, "run_minutes": args.run_minutes,

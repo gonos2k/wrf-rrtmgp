@@ -1,5 +1,6 @@
 PROGRAM rrtmgp_reference_column
   USE mo_rte_kind, ONLY: wp,i8
+  USE, INTRINSIC :: ieee_arithmetic, ONLY: ieee_is_finite
   USE mo_gas_concentrations, ONLY: ty_gas_concs
   USE mo_gas_optics_rrtmgp, ONLY: ty_gas_optics_rrtmgp
   USE mo_cloud_optics_rrtmgp, ONLY: ty_cloud_optics_rrtmgp
@@ -19,7 +20,8 @@ PROGRAM rrtmgp_reference_column
   CHARACTER(LEN=32) :: magic,phase
   INTEGER :: nc,nl,overlap,seed,iceflag,u_in,u_out,ios,nemis
   INTEGER :: c,k,g,b,ngpt,nbnd
-  REAL(wp) :: solar
+  REAL(wp) :: solar,roughness_value
+  INTEGER :: ice_roughness
   REAL(wp), ALLOCATABLE :: play(:,:),plev(:,:),tlay(:,:),tlev(:,:),tsfc(:,:)
   REAL(wp), ALLOCATABLE :: h2o(:,:),co2(:,:),o3(:,:),n2o(:,:),ch4(:,:),o2(:,:)
   REAL(wp), ALLOCATABLE :: emis_in(:,:),cf(:,:),lwp(:,:),iwp(:,:),swp(:,:)
@@ -61,7 +63,9 @@ PROGRAM rrtmgp_reference_column
   OPEN(NEWUNIT=u_in,FILE=TRIM(input_path),STATUS='OLD',ACTION='READ',IOSTAT=ios)
   IF(ios/=0) ERROR STOP 'could not open reference input file'
   READ(u_in,*,IOSTAT=ios) magic
-  IF(ios/=0 .OR. TRIM(magic)/='RRTMGP_REPLAY_V1') ERROR STOP 'invalid replay input magic'
+  IF(ios/=0) ERROR STOP 'invalid replay input magic'
+  IF(TRIM(magic)/='RRTMGP_REPLAY_V1'.AND.TRIM(magic)/='RRTMGP_REPLAY_V2') &
+    ERROR STOP 'invalid replay input magic'
   READ(u_in,*,IOSTAT=ios) phase,nc,nl,overlap,seed,iceflag
   IF(ios/=0 .OR. (TRIM(phase)/='LW' .AND. TRIM(phase)/='SW')) ERROR STOP 'invalid replay header'
   IF(nc<1 .OR. nl<1) ERROR STOP 'replay dimensions must be positive'
@@ -96,6 +100,14 @@ PROGRAM rrtmgp_reference_column
   CALL read_section(u_in,'REL',rel)
   CALL read_section(u_in,'REI',rei)
   CALL read_section(u_in,'RES',res)
+  ice_roughness=1
+  IF(TRIM(magic)=='RRTMGP_REPLAY_V2') THEN
+    CALL read_scalar_section(u_in,'ICE_ROUGHNESS',roughness_value)
+    IF(.NOT.ieee_is_finite(roughness_value)) ERROR STOP 'non-finite ice roughness'
+    IF(roughness_value<1._wp.OR.roughness_value>3._wp) ERROR STOP 'invalid ice roughness'
+    ice_roughness=INT(roughness_value)
+    IF(REAL(ice_roughness,wp)/=roughness_value) ERROR STOP 'ice roughness must be integer'
+  END IF
   CLOSE(u_in)
 
   ALLOCATE(emissivity(16,nc),avdir(nc),avdif(nc),andir(nc),andif(nc),mu0(nc))
@@ -115,6 +127,8 @@ PROGRAM rrtmgp_reference_column
   CALL load_and_init(gas_sw,TRIM(data_dir)//'/rrtmgp-gas-sw-g112.nc',gases)
   CALL load_cld_lutcoeff(cloud_lw,TRIM(data_dir)//'/rrtmgp-clouds-lw-bnd.nc')
   CALL load_cld_lutcoeff(cloud_sw,TRIM(data_dir)//'/rrtmgp-clouds-sw-bnd.nc')
+  CALL check_error(cloud_lw%set_ice_roughness(ice_roughness))
+  CALL check_error(cloud_sw%set_ice_roughness(ice_roughness))
   CALL check_error(gases%init(gas_names))
   CALL check_error(gases%set_vmr('h2o',h2o))
   CALL check_error(gases%set_vmr('co2',co2))

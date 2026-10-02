@@ -1,0 +1,685 @@
+{
+  "capture_call": 1,
+  "case": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp/build/optics-replay-roughness3",
+  "cloud_fixture": {
+    "cold_level_fallback_used": false,
+    "horizontal_cell_count": 4,
+    "layer_index_zero_based": 46,
+    "pressure_pa_mean": 45342.47471618652,
+    "radius_fields_written_m": {},
+    "registered_condensate_fields": {
+      "QCLOUD": {
+        "mapped_species": "QC",
+        "mixing_ratio_kg_kg": 2e-05
+      },
+      "QICE": {
+        "mapped_species": "QI",
+        "mixing_ratio_kg_kg": 1e-05
+      },
+      "QSNOW": {
+        "mapped_species": "QS",
+        "mixing_ratio_kg_kg": 3e-05
+      }
+    },
+    "temperature_k_mean": 248.86530405157768
+  },
+  "ice_roughness": 3,
+  "mp_physics": 4,
+  "phase_replay": {
+    "LW": {
+      "adapter_input_checks": {
+        "cloud_paths": {
+          "cf_zero_condensate_omission": {
+            "IWP": {
+              "grid_box_mass_g_m2_by_layer": [],
+              "layers": 0,
+              "max_grid_box_mass_g_m2_per_layer": 0.0,
+              "total_grid_box_mass_g_m2_across_snapshot_layers": 0.0
+            },
+            "LWP": {
+              "grid_box_mass_g_m2_by_layer": [],
+              "layers": 0,
+              "max_grid_box_mass_g_m2_per_layer": 0.0,
+              "total_grid_box_mass_g_m2_across_snapshot_layers": 0.0
+            },
+            "SWP": {
+              "grid_box_mass_g_m2_by_layer": [],
+              "layers": 0,
+              "max_grid_box_mass_g_m2_per_layer": 0.0,
+              "total_grid_box_mass_g_m2_across_snapshot_layers": 0.0
+            }
+          },
+          "max_adapter_path_differences_g_m2": {
+            "IWP": 9.40007673477794e-07,
+            "LWP": 1.880015346955588e-06,
+            "SWP": 9.126743947263094e-07
+          }
+        },
+        "pressure": {
+          "adapter_layers": 103,
+          "max_cf_raw_adapter_difference": 0.0,
+          "max_play_p_hpa_difference": 0.0,
+          "max_play_source_pressure_difference_hpa": 2.929687502728484e-05,
+          "max_plev_dp_difference_hpa": 0.0,
+          "play_inside_interfaces": true,
+          "plev_strictly_decreasing": true,
+          "raw_wrf_layers": 59
+        },
+        "radii": {
+          "max_difference_um": {
+            "REI": 0.0,
+            "REI_vs_SOURCE_RE_ICE_um": 2.0832521840929985e-07,
+            "REL": 0.0,
+            "REL_vs_SOURCE_RE_CLOUD_um": 3.306195139884949e-08,
+            "RES": 0.0,
+            "RES_vs_SOURCE_RE_SNOW_um": 8.201459422707558e-08
+          }
+        },
+        "raw_mapped_q_negative_snapshot": {
+          "QC": {
+            "count": 0,
+            "minimum_all": 0.0,
+            "minimum_negative": null,
+            "registered_source": true
+          },
+          "QI": {
+            "count": 0,
+            "minimum_all": 0.0,
+            "minimum_negative": null,
+            "registered_source": true
+          },
+          "QS": {
+            "count": 0,
+            "minimum_all": 0.0,
+            "minimum_negative": null,
+            "registered_source": true
+          }
+        },
+        "state_mapping": {
+          "max_h2o_qv_times_amd_w_difference": 2.1999752020107621e-10,
+          "max_tlay_source_t_difference_k": 0.0,
+          "max_top_tlay_interface_interpolation_difference_k": 7.62939453125e-06,
+          "top_domain_layer_temperature_interpolated_from_tlev": true
+        }
+      },
+      "captured_column": {
+        "i": 1,
+        "j": 1
+      },
+      "cloud_fixture_checks": {
+        "active_species_mass_path": {
+          "QC": {
+            "captured_mixing_ratio_kg_kg": 1.9999999494757503e-05,
+            "cloud_fraction": 0.09485458582639694,
+            "grid_box_mass_g_m2": 3.833250199109204,
+            "in_cloud_path_g_m2": 40.411861419677734,
+            "requested_mixing_ratio_kg_kg": 2e-05
+          },
+          "QI": {
+            "captured_mixing_ratio_kg_kg": 9.999999747378752e-06,
+            "cloud_fraction": 0.09485458582639694,
+            "grid_box_mass_g_m2": 1.916625099554602,
+            "in_cloud_path_g_m2": 20.205930709838867,
+            "requested_mixing_ratio_kg_kg": 1e-05
+          },
+          "QS": {
+            "captured_mixing_ratio_kg_kg": 2.9999999242136255e-05,
+            "cloud_fraction": 0.09485458582639694,
+            "grid_box_mass_g_m2": 5.749875298663805,
+            "in_cloud_path_g_m2": 60.61779022216797,
+            "requested_mixing_ratio_kg_kg": 3e-05
+          }
+        },
+        "cloud_tau_max": 17.662240697689533,
+        "fixture_layer_index_zero_based": 46,
+        "mask_cloudy_points": 13
+      },
+      "files": {
+        "input": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp/build/optics-replay-roughness3/capture/lw.input",
+        "production_result": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp/build/optics-replay-roughness3/capture/lw.result",
+        "raw": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp/build/optics-replay-roughness3/capture/lw.raw",
+        "reference_result": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp/build/optics-replay-roughness3/capture/lw.reference.result"
+      },
+      "microphysics_mapping": {
+        "generic_raw_sources_present": [
+          "SOURCE_QC",
+          "SOURCE_QI",
+          "SOURCE_QS"
+        ],
+        "mapping_checks": [
+          "QC=source_QC",
+          "QI=source_QI",
+          "QS=source_QS"
+        ],
+        "mapping_classification": "mp4_all_species_preserved",
+        "mp_physics": 4,
+        "source_flags": {
+          "QC": true,
+          "QI": true,
+          "QS": true
+        }
+      },
+      "phase": "LW",
+      "reference_comparison": {
+        "failed_sections": [],
+        "max_differences": {
+          "CLOUD_TAU": {
+            "max_abs": 0.0,
+            "max_tolerance": 3.552448139537907e-11,
+            "passed": true,
+            "tolerance": "2e-13 absolute + 2e-12 relative"
+          },
+          "DI_USED": {
+            "max_abs": 0.0,
+            "max_tolerance": 4.02e-11,
+            "passed": true,
+            "tolerance": "2e-13 absolute + 2e-12 relative"
+          },
+          "DN": {
+            "max_abs": 7.5952595750550245e-06,
+            "max_tolerance": 0.0001230703125,
+            "passed": true,
+            "tolerance": "4 float32 ULP + 1e-6"
+          },
+          "DNC": {
+            "max_abs": 9.184916450521996e-06,
+            "max_tolerance": 0.0001230703125,
+            "passed": true,
+            "tolerance": "4 float32 ULP + 1e-6"
+          },
+          "DS_USED": {
+            "max_abs": 0.0,
+            "max_tolerance": 4.02e-11,
+            "passed": true,
+            "tolerance": "2e-13 absolute + 2e-12 relative"
+          },
+          "GAS_TAU": {
+            "max_abs": 0.0,
+            "max_tolerance": 3.962109130066851e-08,
+            "passed": true,
+            "tolerance": "2e-13 absolute + 2e-12 relative"
+          },
+          "HR": {
+            "max_abs": 2.347733376595329e-07,
+            "max_tolerance": 2.9073486328124997e-06,
+            "passed": true,
+            "tolerance": "4 float32 ULP + 1e-6"
+          },
+          "HRC": {
+            "max_abs": 1.8019848546657613e-07,
+            "max_tolerance": 2.9073486328124997e-06,
+            "passed": true,
+            "tolerance": "4 float32 ULP + 1e-6"
+          },
+          "MASK": {
+            "max_abs": 0.0,
+            "passed": true,
+            "tolerance": "exact"
+          },
+          "PREPARED_TAU": {
+            "max_abs": 0.0,
+            "max_tolerance": 3.552448139537907e-11,
+            "passed": true,
+            "tolerance": "2e-13 absolute + 2e-12 relative"
+          },
+          "RL_USED": {
+            "max_abs": 0.0,
+            "max_tolerance": 2.02e-11,
+            "passed": true,
+            "tolerance": "2e-13 absolute + 2e-12 relative"
+          },
+          "TOTAL_TAU": {
+            "max_abs": 0.0,
+            "max_tolerance": 3.962109130066851e-08,
+            "passed": true,
+            "tolerance": "2e-13 absolute + 2e-12 relative"
+          },
+          "UP": {
+            "max_abs": 1.4839240407127363e-05,
+            "max_tolerance": 0.0001230703125,
+            "passed": true,
+            "tolerance": "4 float32 ULP + 1e-6"
+          },
+          "UPC": {
+            "max_abs": 1.5136440026708442e-05,
+            "max_tolerance": 0.0001230703125,
+            "passed": true,
+            "tolerance": "4 float32 ULP + 1e-6"
+          }
+        },
+        "missing_sections": [],
+        "nc": 1,
+        "nl": 103,
+        "passed": true,
+        "production_phase": "LW",
+        "reference_phase": "LW",
+        "sections_compared": 14
+      },
+      "replay_header": {
+        "iceflag": 4,
+        "nc": 1,
+        "nl": 103,
+        "overlap": 2,
+        "seed": 401376
+      },
+      "wrf_diagnostic_checks_max_abs": {
+        "wrf_glw": 0.0,
+        "wrf_olr": 0.0,
+        "wrf_theta_hr": 2.170051559779139e-12
+      }
+    },
+    "SW": {
+      "adapter_input_checks": {
+        "cloud_paths": {
+          "cf_zero_condensate_omission": {
+            "IWP": {
+              "grid_box_mass_g_m2_by_layer": [],
+              "layers": 0,
+              "max_grid_box_mass_g_m2_per_layer": 0.0,
+              "total_grid_box_mass_g_m2_across_snapshot_layers": 0.0
+            },
+            "LWP": {
+              "grid_box_mass_g_m2_by_layer": [],
+              "layers": 0,
+              "max_grid_box_mass_g_m2_per_layer": 0.0,
+              "total_grid_box_mass_g_m2_across_snapshot_layers": 0.0
+            },
+            "SWP": {
+              "grid_box_mass_g_m2_by_layer": [],
+              "layers": 0,
+              "max_grid_box_mass_g_m2_per_layer": 0.0,
+              "total_grid_box_mass_g_m2_across_snapshot_layers": 0.0
+            }
+          },
+          "max_adapter_path_differences_g_m2": {
+            "IWP": 9.40007673477794e-07,
+            "LWP": 1.880015346955588e-06,
+            "SWP": 9.126743947263094e-07
+          }
+        },
+        "pressure": {
+          "adapter_layers": 60,
+          "max_cf_raw_adapter_difference": 0.0,
+          "max_play_p_hpa_difference": 0.0,
+          "max_play_source_pressure_difference_hpa": 2.929687502728484e-05,
+          "max_plev_dp_difference_hpa": 0.0,
+          "play_inside_interfaces": true,
+          "plev_strictly_decreasing": true,
+          "raw_wrf_layers": 59
+        },
+        "radii": {
+          "max_difference_um": {
+            "REI": 0.0,
+            "REI_vs_SOURCE_RE_ICE_um": 2.0832521840929985e-07,
+            "REL": 0.0,
+            "REL_vs_SOURCE_RE_CLOUD_um": 3.306195139884949e-08,
+            "RES": 0.0,
+            "RES_vs_SOURCE_RE_SNOW_um": 8.201459422707558e-08
+          }
+        },
+        "raw_mapped_q_negative_snapshot": {
+          "QC": {
+            "count": 0,
+            "minimum_all": 0.0,
+            "minimum_negative": null,
+            "registered_source": true
+          },
+          "QI": {
+            "count": 0,
+            "minimum_all": 0.0,
+            "minimum_negative": null,
+            "registered_source": true
+          },
+          "QS": {
+            "count": 0,
+            "minimum_all": 0.0,
+            "minimum_negative": null,
+            "registered_source": true
+          }
+        },
+        "state_mapping": {
+          "max_h2o_qv_times_amd_w_difference": 2.1999752020107621e-10,
+          "max_tlay_source_t_difference_k": 0.0,
+          "max_top_tlay_interface_interpolation_difference_k": null,
+          "top_domain_layer_temperature_interpolated_from_tlev": false
+        }
+      },
+      "captured_column": {
+        "i": 1,
+        "j": 1
+      },
+      "cloud_fixture_checks": {
+        "active_species_mass_path": {
+          "QC": {
+            "captured_mixing_ratio_kg_kg": 1.9999999494757503e-05,
+            "cloud_fraction": 0.09485458582639694,
+            "grid_box_mass_g_m2": 3.833250199109204,
+            "in_cloud_path_g_m2": 40.411861419677734,
+            "requested_mixing_ratio_kg_kg": 2e-05
+          },
+          "QI": {
+            "captured_mixing_ratio_kg_kg": 9.999999747378752e-06,
+            "cloud_fraction": 0.09485458582639694,
+            "grid_box_mass_g_m2": 1.916625099554602,
+            "in_cloud_path_g_m2": 20.205930709838867,
+            "requested_mixing_ratio_kg_kg": 1e-05
+          },
+          "QS": {
+            "captured_mixing_ratio_kg_kg": 2.9999999242136255e-05,
+            "cloud_fraction": 0.09485458582639694,
+            "grid_box_mass_g_m2": 5.749875298663805,
+            "in_cloud_path_g_m2": 60.61779022216797,
+            "requested_mixing_ratio_kg_kg": 3e-05
+          }
+        },
+        "cloud_tau_max": 54.3615959205009,
+        "fixture_layer_index_zero_based": 46,
+        "mask_cloudy_points": 8
+      },
+      "files": {
+        "input": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp/build/optics-replay-roughness3/capture/sw.input",
+        "production_result": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp/build/optics-replay-roughness3/capture/sw.result",
+        "raw": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp/build/optics-replay-roughness3/capture/sw.raw",
+        "reference_result": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp/build/optics-replay-roughness3/capture/sw.reference.result"
+      },
+      "microphysics_mapping": {
+        "generic_raw_sources_present": [
+          "SOURCE_QC",
+          "SOURCE_QI",
+          "SOURCE_QS"
+        ],
+        "mapping_checks": [
+          "QC=source_QC",
+          "QI=source_QI",
+          "QS=source_QS"
+        ],
+        "mapping_classification": "mp4_all_species_preserved",
+        "mp_physics": 4,
+        "source_flags": {
+          "QC": true,
+          "QI": true,
+          "QS": true
+        }
+      },
+      "phase": "SW",
+      "reference_comparison": {
+        "failed_sections": [],
+        "max_differences": {
+          "CLOUD_G": {
+            "max_abs": 0.0,
+            "max_tolerance": 1.98793689536095e-12,
+            "passed": true,
+            "tolerance": "2e-13 absolute + 2e-12 relative"
+          },
+          "CLOUD_SSA": {
+            "max_abs": 0.0,
+            "max_tolerance": 2.2e-12,
+            "passed": true,
+            "tolerance": "2e-13 absolute + 2e-12 relative"
+          },
+          "CLOUD_TAU": {
+            "max_abs": 0.0,
+            "max_tolerance": 1.089231918410018e-10,
+            "passed": true,
+            "tolerance": "2e-13 absolute + 2e-12 relative"
+          },
+          "DIFFUSE": {
+            "max_abs": 1.8264843220094917e-06,
+            "max_tolerance": 1.62587890625e-05,
+            "passed": true,
+            "tolerance": "4 float32 ULP + 1e-6"
+          },
+          "DIRECT": {
+            "max_abs": 2.9505030511245423e-05,
+            "max_tolerance": 0.000245140625,
+            "passed": true,
+            "tolerance": "4 float32 ULP + 1e-6"
+          },
+          "DIRECTC": {
+            "max_abs": 2.9505030511245423e-05,
+            "max_tolerance": 0.000245140625,
+            "passed": true,
+            "tolerance": "4 float32 ULP + 1e-6"
+          },
+          "DI_USED": {
+            "max_abs": 0.0,
+            "max_tolerance": 4.02e-11,
+            "passed": true,
+            "tolerance": "2e-13 absolute + 2e-12 relative"
+          },
+          "DN": {
+            "max_abs": 2.9461195936164586e-05,
+            "max_tolerance": 0.000245140625,
+            "passed": true,
+            "tolerance": "4 float32 ULP + 1e-6"
+          },
+          "DNC": {
+            "max_abs": 2.995141221617814e-05,
+            "max_tolerance": 0.000245140625,
+            "passed": true,
+            "tolerance": "4 float32 ULP + 1e-6"
+          },
+          "DS_USED": {
+            "max_abs": 0.0,
+            "max_tolerance": 4.02e-11,
+            "passed": true,
+            "tolerance": "2e-13 absolute + 2e-12 relative"
+          },
+          "GAS_G": {
+            "max_abs": 0.0,
+            "max_tolerance": 2e-13,
+            "passed": true,
+            "tolerance": "2e-13 absolute + 2e-12 relative"
+          },
+          "GAS_SSA": {
+            "max_abs": 0.0,
+            "max_tolerance": 2.2e-12,
+            "passed": true,
+            "tolerance": "2e-13 absolute + 2e-12 relative"
+          },
+          "GAS_TAU": {
+            "max_abs": 0.0,
+            "max_tolerance": 2.9378038732349263e-07,
+            "passed": true,
+            "tolerance": "2e-13 absolute + 2e-12 relative"
+          },
+          "HR": {
+            "max_abs": 1.6796127688678553e-07,
+            "max_tolerance": 2.9073486328124997e-06,
+            "passed": true,
+            "tolerance": "4 float32 ULP + 1e-6"
+          },
+          "HRC": {
+            "max_abs": 1.1195843363509539e-07,
+            "max_tolerance": 1.9536743164062497e-06,
+            "passed": true,
+            "tolerance": "4 float32 ULP + 1e-6"
+          },
+          "MASK": {
+            "max_abs": 0.0,
+            "passed": true,
+            "tolerance": "exact"
+          },
+          "NIRDIF": {
+            "max_abs": 1.5043056578178948e-07,
+            "max_tolerance": 1.9536743164062497e-06,
+            "passed": true,
+            "tolerance": "4 float32 ULP + 1e-6"
+          },
+          "NIRDIR": {
+            "max_abs": 3.175973381530639e-05,
+            "max_tolerance": 0.0001230703125,
+            "passed": true,
+            "tolerance": "4 float32 ULP + 1e-6"
+          },
+          "PREPARED_G": {
+            "max_abs": 0.0,
+            "max_tolerance": 1.1440161991878054e-12,
+            "passed": true,
+            "tolerance": "2e-13 absolute + 2e-12 relative"
+          },
+          "PREPARED_SSA": {
+            "max_abs": 0.0,
+            "max_tolerance": 2.2e-12,
+            "passed": true,
+            "tolerance": "2e-13 absolute + 2e-12 relative"
+          },
+          "PREPARED_TAU": {
+            "max_abs": 0.0,
+            "max_tolerance": 5.276486518958077e-11,
+            "passed": true,
+            "tolerance": "2e-13 absolute + 2e-12 relative"
+          },
+          "RL_USED": {
+            "max_abs": 0.0,
+            "max_tolerance": 2.02e-11,
+            "passed": true,
+            "tolerance": "2e-13 absolute + 2e-12 relative"
+          },
+          "TOTAL_G": {
+            "max_abs": 0.0,
+            "max_tolerance": 1.1440158136850578e-12,
+            "passed": true,
+            "tolerance": "2e-13 absolute + 2e-12 relative"
+          },
+          "TOTAL_SSA": {
+            "max_abs": 0.0,
+            "max_tolerance": 2.2e-12,
+            "passed": true,
+            "tolerance": "2e-13 absolute + 2e-12 relative"
+          },
+          "TOTAL_TAU": {
+            "max_abs": 0.0,
+            "max_tolerance": 2.9378038732349263e-07,
+            "passed": true,
+            "tolerance": "2e-13 absolute + 2e-12 relative"
+          },
+          "UP": {
+            "max_abs": 7.518099920389432e-06,
+            "max_tolerance": 6.203515625e-05,
+            "passed": true,
+            "tolerance": "4 float32 ULP + 1e-6"
+          },
+          "UPC": {
+            "max_abs": 7.4888529582040064e-06,
+            "max_tolerance": 6.203515625e-05,
+            "passed": true,
+            "tolerance": "4 float32 ULP + 1e-6"
+          },
+          "VISDIF": {
+            "max_abs": 4.098749776915156e-06,
+            "max_tolerance": 1.62587890625e-05,
+            "passed": true,
+            "tolerance": "4 float32 ULP + 1e-6"
+          },
+          "VISDIR": {
+            "max_abs": 4.686777884899129e-05,
+            "max_tolerance": 0.0001230703125,
+            "passed": true,
+            "tolerance": "4 float32 ULP + 1e-6"
+          }
+        },
+        "missing_sections": [],
+        "nc": 1,
+        "nl": 60,
+        "passed": true,
+        "production_phase": "SW",
+        "reference_phase": "SW",
+        "sections_compared": 29
+      },
+      "replay_header": {
+        "iceflag": 4,
+        "nc": 1,
+        "nl": 60,
+        "overlap": 2,
+        "seed": 409295
+      },
+      "wrf_diagnostic_checks_max_abs": {
+        "wrf_gsw": 1.52587890625e-05,
+        "wrf_swddif": 0.0,
+        "wrf_swddir": 0.0,
+        "wrf_theta_hr": 1.9027891174044735e-12
+      }
+    }
+  },
+  "run_minutes": 5,
+  "scope_note": "One captured column/call snapshot; negative-Q diagnostics describe that snapshot, not a forecast-wide minimum.",
+  "status": "PASS",
+  "wrf": {
+    "forecast": {
+      "returncode": 0,
+      "scm_validation": {
+        "checks": "finite fields, daytime SW, LW, nonzero accumulation, flux/tendency sums",
+        "history_file": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp/build/optics-replay-roughness3/wrfout_d01_1999-10-22_19:00:00",
+        "radiation_option_lw": 37,
+        "radiation_option_sw": 37,
+        "time_count": 6,
+        "variables": {
+          "ACLWDNB": {
+            "max": 83490.9921875,
+            "min": 0.0
+          },
+          "ACSWDNB": {
+            "max": 156525.4375,
+            "min": 0.0
+          },
+          "GLW": {
+            "max": 287.88189697265625,
+            "min": 0.0
+          },
+          "GSW": {
+            "max": 434.79107666015625,
+            "min": 0.0
+          },
+          "LWDNB": {
+            "max": 287.88189697265625,
+            "min": 0.0
+          },
+          "LWUPT": {
+            "max": 153.05393981933594,
+            "min": 0.0
+          },
+          "RTHRATEN": {
+            "max": 0.00018987484509125352,
+            "min": -1.7398813724867068e-05
+          },
+          "RTHRATLW": {
+            "max": 0.0001258483243873343,
+            "min": -5.049525498179719e-05
+          },
+          "RTHRATSW": {
+            "max": 0.00013880970072932541,
+            "min": 0.0
+          },
+          "SWDDIF": {
+            "max": 322.8116455078125,
+            "min": 0.0
+          },
+          "SWDDIR": {
+            "max": 212.80862426757812,
+            "min": 0.0
+          },
+          "SWDNB": {
+            "max": 523.8446655273438,
+            "min": 0.0
+          },
+          "SWDNT": {
+            "max": 869.3607788085938,
+            "min": 0.0
+          },
+          "SWDOWN": {
+            "max": 523.8446655273438,
+            "min": 0.0
+          },
+          "SWUPB": {
+            "max": 89.05359649658203,
+            "min": 0.0
+          }
+        }
+      },
+      "status": "PASS",
+      "success_marker": true
+    },
+    "ideal_returncode": 0
+  }
+}

@@ -12,7 +12,7 @@ add_library(test_rrtmgp_adapter STATIC standalone_wrf_error.f90 "${trace}" "${in
 target_link_libraries(test_rrtmgp_adapter PUBLIC wrf_rrtmgp)
 set_target_properties(test_rrtmgp_adapter PROPERTIES Fortran_MODULE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/modules")
 target_include_directories(test_rrtmgp_adapter PUBLIC "${CMAKE_CURRENT_BINARY_DIR}/modules")
-foreach(test IN ITEMS columns cloud_inputs multicolumn validation adapter_invalid small_cf_sampling)
+foreach(test IN ITEMS columns cloud_inputs multicolumn validation adapter_invalid small_cf_sampling ice_roughness transparent_overlap)
   add_executable(test_rrtmgp_${test} test_${test}.f90)
   target_link_libraries(test_rrtmgp_${test} PRIVATE test_rrtmgp_adapter)
   if(CMAKE_Fortran_COMPILER_ID STREQUAL "GNU")
@@ -71,3 +71,28 @@ target_link_libraries(reference_column PRIVATE wrf_rrtmgp)
 if(CMAKE_Fortran_COMPILER_ID STREQUAL "GNU")
   target_compile_options(reference_column PRIVATE -ffree-line-length-none -fcheck=bounds)
 endif()
+
+reject_adapter(roughness_low "rrtmgp_ice_roughness must be 1")
+reject_adapter(roughness_high "rrtmgp_ice_roughness must be 1")
+reject_adapter(changed_init_roughness "rrtmgp_ice_roughness must be global and unchanged")
+add_test(NAME transparent_overlap COMMAND test_rrtmgp_transparent_overlap)
+foreach(roughness IN ITEMS 1 2 3)
+  add_test(NAME ice_roughness_${roughness} COMMAND test_rrtmgp_ice_roughness "${RRTMGP_DATA_DIR}" "${roughness}"
+    "${CMAKE_CURRENT_BINARY_DIR}/ice-roughness-${roughness}.csv")
+  set_tests_properties(ice_roughness_${roughness} PROPERTIES FIXTURES_SETUP ice_roughness_${roughness})
+endforeach()
+add_test(NAME ice_roughness_invariance COMMAND "${Python3_EXECUTABLE}"
+  "${CMAKE_CURRENT_SOURCE_DIR}/analyze_ice_roughness.py"
+  --run 1 "${CMAKE_CURRENT_BINARY_DIR}/ice-roughness-1.csv"
+  --run 2 "${CMAKE_CURRENT_BINARY_DIR}/ice-roughness-2.csv"
+  --run 3 "${CMAKE_CURRENT_BINARY_DIR}/ice-roughness-3.csv"
+  --output "${CMAKE_CURRENT_BINARY_DIR}/ice-roughness-summary.json")
+set_tests_properties(ice_roughness_invariance PROPERTIES FIXTURES_REQUIRED "ice_roughness_1;ice_roughness_2;ice_roughness_3")
+
+# Exploratory optics comparison uses the core directly, with no WRF adapter.
+add_executable(compare_snow_optics compare_snow_optics.f90)
+target_link_libraries(compare_snow_optics PRIVATE wrf_rrtmgp)
+if(CMAKE_Fortran_COMPILER_ID STREQUAL "GNU")
+  target_compile_options(compare_snow_optics PRIVATE -ffree-line-length-none -fcheck=bounds)
+endif()
+add_test(NAME snow_optics_source_comparison COMMAND compare_snow_optics "${RRTMGP_DATA_DIR}")

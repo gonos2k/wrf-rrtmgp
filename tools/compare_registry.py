@@ -41,6 +41,15 @@ def compare_registry(root: Path, out: Path, log: Path, execute: Callable) -> dic
         raise ValueError('RRTMGP_DATA_PATH_RCONFIG_COUNT_MISMATCH')
     if data_path_lines:
         text = re.sub(data_path_pattern, '', text, count=1)
+    roughness_pattern = (
+        r'(?im)^[ \t]*rconfig[ \t]+integer[ \t]+'
+        r'rrtmgp_ice_roughness\b[^\r\n]*(?:\r?\n|$)')
+    roughness_lines = re.findall(roughness_pattern, text)
+    expected_roughness = int('rrtmgp_ice_roughness' in receipt.get('global_rconfig', []))
+    if len(roughness_lines) != expected_roughness:
+        raise ValueError('RRTMGP_ICE_ROUGHNESS_RCONFIG_COUNT_MISMATCH')
+    if roughness_lines:
+        text = re.sub(roughness_pattern, '', text, count=1)
     registered_without_data_path = text.encode('utf-8')
     suffix = b'\n\ninclude registry.rrtmgp37\n'
     if not registered_without_data_path.endswith(suffix):

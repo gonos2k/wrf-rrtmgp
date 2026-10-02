@@ -433,9 +433,13 @@ $(LIBTARGET) : rrtmgp
 	(cd .. && ./tools/manage_externals/checkout_externals --externals ./arch/Externals.cfg)
 	$(MAKE) $(J) non_nmm ; \
 	$(AR) $(ARFLAGS) ../main/$(LIBWRFLIB) $(MODULES) $(OBJS)  \
-		$(FIRE_MODULES) $(DIAGNOSTIC_MODULES_EM) $(PHYSMMM_MODULES) $(NOAHMP_MODULES) ../external/rte_rrtmgp/build/*.o
+		$(FIRE_MODULES) $(DIAGNOSTIC_MODULES_EM) $(PHYSMMM_MODULES) $(NOAHMP_MODULES) $(RRTMGP_ARCHIVE_OBJECTS)
 
 include ../configure.wrf
+
+# Ask the RRTMGP build for its declared object inventory.  This keeps the WRF
+# archive independent of incidental files in the external build directory.
+RRTMGP_ARCHIVE_OBJECTS = $(addprefix ../external/rte_rrtmgp/build/,$(shell $(MAKE) --no-print-directory -s -C ../external/rte_rrtmgp/build FC="$(SFC)" FCFLAGS="$(PROMOTION) $(FCOPTIM) $(FCBASEOPTS) $(OMP)" NETCDFPATH="$(NETCDFPATH)" print-wrf-objects))
 
 non_nmm : $(MODULES) $(FIRE_MODULES) $(OBJS) $(DIAGNOSTIC_MODULES_EM) $(NOAHMP_MODULES)
 

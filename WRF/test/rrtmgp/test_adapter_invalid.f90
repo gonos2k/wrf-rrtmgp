@@ -44,6 +44,12 @@ PROGRAM test_rrtmgp_adapter_invalid
   CASE('solar_negative')
     solar=-1.
     CALL run_sw(2)
+  CASE('roughness_low')
+    CALL rrtmgp_init(TRIM(data_path),0)
+  CASE('roughness_high')
+    CALL rrtmgp_init(TRIM(data_path),4)
+  CASE('changed_init_roughness')
+    CALL rrtmgp_init(TRIM(data_path),2)
   CASE('changed_init_path')
     CALL rrtmgp_init(TRIM(data_path)//'/different-global-path')
   CASE DEFAULT
