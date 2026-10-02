@@ -42,7 +42,7 @@ def main() -> int:
         if not required.exists():
             parser.error(f"required path does not exist: {required}")
 
-    summary: dict[str, Any] = {"status": "FAIL", "phases": {}, "invalid_v4_rejections": []}
+    summary: dict[str, Any] = {"status": "FAIL", "phases": {}, "invalid_precip_rejections": []}
     with tempfile.TemporaryDirectory(prefix="rrtmgp-udm-replay-") as temporary:
         root = Path(temporary)
         capture = root / "capture"
@@ -59,15 +59,16 @@ def main() -> int:
             replay = capture / f"{phase.lower()}.input"
             production_path = capture / f"{phase.lower()}.result"
             if not replay.is_file() or not production_path.is_file():
-                fail(f"adapter did not capture V4 {phase} input/result")
+                fail(f"adapter did not capture V4/V5 {phase} input/result")
             parsed_phase, nc, nl, overlap, seed, iceflag, records = read_input(replay)
             if (parsed_phase, nc, nl) != (phase, 1, 3):
-                fail(f"unexpected V4 {phase} input header {(parsed_phase, nc, nl)}")
-            if replay.read_text(encoding="ascii").splitlines()[0].strip() != "RRTMGP_REPLAY_V4":
-                fail(f"{phase} capture did not use replay V4")
+                fail(f"unexpected V4/V5 {phase} input header {(parsed_phase, nc, nl)}")
+            replay_version = replay.read_text(encoding="ascii").splitlines()[0].strip()
+            if replay_version not in {"RRTMGP_REPLAY_V4", "RRTMGP_REPLAY_V5"}:
+                fail(f"{phase} capture did not use replay V4 or V5")
             rwp = records.get("RWP")
             if rwp is None or rwp.shape != (nc, nl) or not np.any(rwp > 0.0):
-                fail(f"{phase} V4 must retain positive in-cloud rain paths")
+                fail(f"{phase} V4/V5 must retain positive in-cloud rain paths")
             res = records["RES"]
             if not np.array_equal(res[0], np.asarray([25.0, 300.0, 999.0])):
                 fail(f"{phase} test did not preserve native snow radii")
@@ -75,10 +76,10 @@ def main() -> int:
             reference_path = root / f"{phase.lower()}.reference.result"
             ref_run = run_reference(reference, data_dir, replay, reference_path)
             if ref_run.returncode != 0:
-                fail(f"reference rejected V4 {phase}: {ref_run.stdout[-1600:]}")
+                fail(f"reference rejected V4/V5 {phase}: {ref_run.stdout[-1600:]}")
             report = compare(read_result(production_path), read_result(reference_path))
             if not report.get("passed"):
-                fail(f"V4 {phase} adapter/reference mismatch: {report.get('failed_sections')}")
+                fail(f"V4/V5 {phase} adapter/reference mismatch: {report.get('failed_sections')}")
             production = read_result(production_path)["sections"]
             expected_radii = production["DS_USED"][:, :, 0]
             if not np.array_equal(expected_radii, res):
@@ -99,7 +100,7 @@ def main() -> int:
                 ("bad_policy", set(), {"PRECIPITATION_OPTICS": "2"}),
             ):
                 invalid = root / f"{phase.lower()}.{label}.input"
-                rewrite_input(replay, invalid, "RRTMGP_REPLAY_V4", remove=remove, replacements=replacements)
+                rewrite_input(replay, invalid, replay_version, remove=remove, replacements=replacements)
                 try:
                     read_input(invalid)
                 except ReplayError:
@@ -109,7 +110,7 @@ def main() -> int:
                 invalid_run = run_reference(reference, data_dir, invalid, root / f"{phase.lower()}.{label}.result")
                 if invalid_run.returncode == 0:
                     fail(f"reference accepted invalid {phase} V4 case {label}")
-                summary["invalid_v4_rejections"].append(f"{phase}:{label}")
+            summary["invalid_precip_rejections"].append(f"{phase}:{label}")
 
         summary["status"] = "PASS"
 

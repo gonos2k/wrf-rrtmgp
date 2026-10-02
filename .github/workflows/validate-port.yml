@@ -155,6 +155,14 @@ jobs:
           python3 WRF/test/rrtmgp/test_udm_scm.py build/udm-scm \
             --reference-executable build/replay-reference/reference_column \
             | tee build/udm-scm-result.json
+      - name: Check every-step accumulation across held radiation fluxes
+        shell: bash
+        run: |
+          set -euo pipefail
+          export LD_LIBRARY_PATH="$RUNNER_TEMP/netcdf/lib:/usr/lib/x86_64-linux-gnu:${LD_LIBRARY_PATH:-}"
+          python3 WRF/test/rrtmgp/test_rrtmgp_accumulation.py --run-hold-case \
+            --seed-dir build/udm-scm/control/ra37-call1 \
+            --case-dir build/accumulation-contract-hold
       - name: Audit same-state UDM radiation and observer invariance
         shell: bash
         run: |
@@ -182,6 +190,21 @@ jobs:
                 --output "build/udm-physics-audit/$case/${phase}-counterfactual.json"
             done
           done
+      - name: Attribute overcast ice differences with actual WRF RRTMG cloud optics
+        shell: bash
+        run: |
+          set -euo pipefail
+          export LD_LIBRARY_PATH="$RUNNER_TEMP/netcdf/lib:/usr/lib/x86_64-linux-gnu:${LD_LIBRARY_PATH:-}"
+          python3 WRF/test/rrtmgp/build_rrtmg_optics_bridge.py \
+            --netcdf-prefix "$RUNNER_TEMP/netcdf" --output-dir build/rrtmg-cloud-bridge
+          python3 WRF/test/rrtmgp/test_rrtmg_optics_attribution.py \
+            --data-dir WRF/run --reference-executable build/replay-reference/reference_column \
+            --bridge-executable build/rrtmg-cloud-bridge/rrtmg_sw_optics_bridge \
+            --captures build/udm-native4-audit/control/audit-on/capture/sw_000002.input \
+                       build/udm-native4-audit/control/audit-on/capture/sw_000006.input \
+            --audit-csv build/udm-native4-audit/control/audit-on/audit/same_state.csv \
+            --output-dir build/rrtmg-cloud-bridge/attribution-control \
+            > build/rrtmg-cloud-bridge/attribution-control.log
       - name: Package SCM evidence with original WRF filenames
         if: always()
         shell: bash

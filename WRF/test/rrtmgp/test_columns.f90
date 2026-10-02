@@ -1,6 +1,7 @@
 PROGRAM test_rrtmgp_columns
   USE, INTRINSIC :: ieee_arithmetic, ONLY: ieee_is_finite
-  USE mo_gas_optics_constants, ONLY: cp_dry, grav
+  USE mo_rte_kind, ONLY: wp
+  USE mo_gas_optics_constants, ONLY: cp_dry, grav, m_dry
   USE module_ra_rrtmgp, ONLY: rrtmgp_init, rrtmgp_lw_column, rrtmgp_sw_column
   USE module_ra_rrtmgp_trace, ONLY: trace_start, trace_end
   IMPLICIT NONE
@@ -38,6 +39,8 @@ PROGRAM test_rrtmgp_columns
   solar=1361.; mu0=.65
 
   CALL rrtmgp_init(TRIM(data_path))
+  IF(grav/=9.80665_wp.OR.cp_dry/=1004.64_wp.OR.m_dry/=0.028964_wp) &
+    ERROR STOP 'no-argument init must preserve exact upstream wp constants'
   CALL trace_start('LW',1,1)
   CALL rrtmgp_lw_column(play,plev,tlay,tlev,tsfc,h2o,co2,o3,n2o,ch4,o2,emis, &
        cf,lwp,iwp,swp,rel,rei,res,4,2,173,lwup,lwdn,lwhr,lwupc,lwdnc,lwhrc)

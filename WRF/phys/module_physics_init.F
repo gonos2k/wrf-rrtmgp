@@ -2431,7 +2431,8 @@ CHARACTER(LEN=8) :: name
 
         CASE (RRTMG_LWSCHEME,RRTMGP_LWSCHEME)
              IF(config_flags%ra_lw_physics==RRTMGP_LWSCHEME) &
-                  CALL rrtmgp_init(config_flags%rrtmgp_data_path,config_flags%rrtmgp_ice_roughness)
+                  CALL rrtmgp_init(config_flags%rrtmgp_data_path,config_flags%rrtmgp_ice_roughness, &
+                       gravity=g,cp_dry=cp,mol_weight_dry=mwdry*1.e-3)
              CALL rrtmg_lwinit(                             &
                            p_top, allowed_to_read ,         &
                            ids, ide, jds, jde, kds, kde,    &
@@ -2547,7 +2548,8 @@ CHARACTER(LEN=8) :: name
 
         CASE (RRTMG_SWSCHEME,RRTMGP_SWSCHEME)
              IF(config_flags%ra_sw_physics==RRTMGP_SWSCHEME) &
-                  CALL rrtmgp_init(config_flags%rrtmgp_data_path,config_flags%rrtmgp_ice_roughness)
+                  CALL rrtmgp_init(config_flags%rrtmgp_data_path,config_flags%rrtmgp_ice_roughness, &
+                       gravity=g,cp_dry=cp,mol_weight_dry=mwdry*1.e-3)
              CALL rrtmg_swinit(                             &
                            allowed_to_read ,                &
                            ids, ide, jds, jde, kds, kde,    &

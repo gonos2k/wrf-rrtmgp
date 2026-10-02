@@ -27,6 +27,8 @@ MODULE module_ra_rrtmgp_trace
   LOGICAL, SAVE :: phase_done(2) = .FALSE., phase_active(2) = .FALSE.
   INTEGER, SAVE :: active_i(2) = 0, active_j(2) = 0
   INTEGER, SAVE :: result_unit(2) = 0, raw_unit(2) = 0
+  LOGICAL, SAVE :: constants_pending(2)=.FALSE.
+  REAL(real64), SAVE :: replay_gravity(2),replay_cp_dry(2),replay_mol_weight_dry(2)
 
 CONTAINS
 
@@ -81,11 +83,12 @@ CONTAINS
     IF (p /= 0) trace_active = phase_active(p)
   END FUNCTION trace_active
 
-  SUBROUTINE trace_input_start(phase, nc, nl, overlap, seed, iceflag,udm_precip)
+  SUBROUTINE trace_input_start(phase, nc, nl, overlap, seed, iceflag,udm_precip,gravity,cp_dry,mol_weight_dry)
     CHARACTER(len=*), INTENT(IN) :: phase
     INTEGER, INTENT(IN) :: nc, nl, overlap, seed, iceflag
     LOGICAL, OPTIONAL, INTENT(IN) :: udm_precip
-    LOGICAL :: v4
+    REAL(real64), OPTIONAL, INTENT(IN) :: gravity,cp_dry,mol_weight_dry
+    LOGICAL :: v4,v5
     INTEGER :: p, unit, ios
     CHARACTER(len=1200) :: filename
     p = active_phase(phase)
@@ -96,7 +99,10 @@ CONTAINS
     CALL check_io(ios, 'opening input capture')
     v4=.FALSE.
     IF(PRESENT(udm_precip)) v4=udm_precip
-    IF(v4) THEN
+    v5=PRESENT(gravity).AND.PRESENT(cp_dry).AND.PRESENT(mol_weight_dry)
+    IF(v5) THEN
+      WRITE(unit,'(a)',IOSTAT=ios) 'RRTMGP_REPLAY_V5'
+    ELSE IF(v4) THEN
       WRITE(unit,'(a)',IOSTAT=ios) 'RRTMGP_REPLAY_V4'
     ELSE
       WRITE(unit,'(a)',IOSTAT=ios) 'RRTMGP_REPLAY_V3'
@@ -106,6 +112,10 @@ CONTAINS
     CALL check_io(ios, 'writing input header')
     CLOSE(unit, IOSTAT=ios)
     CALL check_io(ios, 'closing input header')
+    IF(v5) THEN
+      constants_pending(p)=.TRUE.
+      replay_gravity(p)=gravity; replay_cp_dry(p)=cp_dry; replay_mol_weight_dry(p)=mol_weight_dry
+    END IF
   END SUBROUTINE trace_input_start
 
   SUBROUTINE trace_input(phase, name, values)
@@ -132,8 +142,34 @@ CONTAINS
 
   SUBROUTINE trace_input_end(phase)
     CHARACTER(len=*), INTENT(IN) :: phase
-    IF (active_phase(phase) == 0) RETURN
+    INTEGER :: p
+    p=active_phase(phase)
+    IF(p==0) RETURN
+    IF(constants_pending(p)) THEN
+      CALL trace_input_real64_scalar(phase,'GRAVITY',replay_gravity(p))
+      CALL trace_input_real64_scalar(phase,'CP_DRY',replay_cp_dry(p))
+      CALL trace_input_real64_scalar(phase,'MOL_WEIGHT_DRY',replay_mol_weight_dry(p))
+      constants_pending(p)=.FALSE.
+    END IF
   END SUBROUTINE trace_input_end
+
+  SUBROUTINE trace_input_real64_scalar(phase,name,value)
+    CHARACTER(len=*), INTENT(IN) :: phase,name
+    REAL(real64), INTENT(IN) :: value
+    INTEGER :: p,unit,ios
+    CHARACTER(len=1200) :: filename
+    p=active_phase(phase)
+    IF(p==0) RETURN
+    filename=trim(capture_dir)//'/'//trim(trace_basename(p))//'.input'
+    OPEN(NEWUNIT=unit,FILE=trim(filename),STATUS='old',POSITION='append',ACTION='write',IOSTAT=ios)
+    CALL check_io(ios,'opening real64 metadata record')
+    WRITE(unit,'(a,1x,i0,1x,i0)',IOSTAT=ios) trim(name),1,1
+    CALL check_io(ios,'writing real64 metadata header')
+    WRITE(unit,'(es25.16e3)',IOSTAT=ios) value
+    CALL check_io(ios,'writing real64 metadata value')
+    CLOSE(unit,IOSTAT=ios)
+    CALL check_io(ios,'closing real64 metadata record')
+  END SUBROUTINE trace_input_real64_scalar
 
   SUBROUTINE trace_result_start(phase, nc, nl)
     CHARACTER(len=*), INTENT(IN) :: phase

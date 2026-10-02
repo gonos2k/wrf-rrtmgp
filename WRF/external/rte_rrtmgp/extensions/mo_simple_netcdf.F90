@@ -4,6 +4,14 @@ module mo_simple_netcdf
   implicit none
   private
 
+  abstract interface
+    subroutine fatal_handler(message)
+      character(len=*), intent(in) :: message
+    end subroutine fatal_handler
+  end interface
+
+  procedure(fatal_handler), pointer, save :: fatal_callback => default_fatal
+
   interface read_field
     module procedure read_scalar, read_1d_field, read_2d_field, read_3d_field, read_4d_field
   end interface
@@ -12,10 +20,34 @@ module mo_simple_netcdf
                      write_1d_field, write_2d_field, write_3d_field, write_4d_field
   end interface
 
+  public :: set_fatal_handler, report_fatal
   public :: dim_exists, get_dim_size, create_dim, &
             var_exists, get_var_size, create_var, &
             read_field, read_string, read_char_vec, read_logical_vec, write_field
 contains
+  ! Install a host-model fatal routine before coefficient files are loaded.
+  ! The default remains a standalone Fortran stop for non-WRF applications.
+  subroutine set_fatal_handler(handler)
+    procedure(fatal_handler) :: handler
+    fatal_callback => handler
+  end subroutine set_fatal_handler
+
+  subroutine report_fatal(message)
+    character(len=*), intent(in) :: message
+    if (len_trim(message) == 0) return
+    call fatal_callback(trim(message))
+    ! A fatal callback is required not to return. Preserve fail-closed behavior
+    ! if a host callback unexpectedly does return.
+    call default_fatal('fatal callback returned: ' // trim(message))
+  end subroutine report_fatal
+
+  subroutine default_fatal(message)
+    use iso_fortran_env, only: error_unit
+    character(len=*), intent(in) :: message
+    write(error_unit,*) trim(message)
+    error stop 1
+  end subroutine default_fatal
+
   !--------------------------------------------------------------------------------------------------------------------
   function read_scalar(ncid, varName)
     integer,          intent(in) :: ncid
@@ -402,12 +434,8 @@ contains
     !
     ! Print error message and stop
     !
-    use iso_fortran_env, only : error_unit
     character(len=*), intent(in) :: msg
-    if(len_trim(msg) > 0) then
-      write(error_unit,*) trim(msg)
-      error stop 1
-    end if
+    call report_fatal(msg)
   end subroutine
   !--------------------------------------------------------------------------------------------------------------------
 end module mo_simple_netcdf

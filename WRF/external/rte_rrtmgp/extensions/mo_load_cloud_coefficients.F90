@@ -8,7 +8,7 @@ module mo_load_cloud_coefficients
   use mo_cloud_optics_rrtmgp, & 
                         only: ty_cloud_optics_rrtmgp
   use mo_simple_netcdf, only: read_field, read_string, var_exists, get_dim_size, &
-                              write_field, create_dim, create_var
+                              write_field, create_dim, create_var, report_fatal
   use netcdf
 
   implicit none
@@ -175,12 +175,8 @@ contains
       !
       ! Print error message and stop
       !
-      use iso_fortran_env, only : error_unit
       character(len=*), intent(in) :: msg
-      if(len_trim(msg) > 0) then
-        write (error_unit,*) trim(msg)
-        error stop 1
-      end if
+      call report_fatal(msg)
     end subroutine
 
 end module
