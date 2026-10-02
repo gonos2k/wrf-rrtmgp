@@ -27,6 +27,16 @@ def load(directory: Path):
     receipt_path = directory/'result.json'
     receipt = json.loads(receipt_path.read_text())
     require(receipt['status']=='COMPLETE_NUMERICAL_GENERATION_NOT_MODEL_VALIDATION','Incomplete generator receipt')
+    for name,low,high in [('order',4,512),('max_terms',16,np.iinfo(np.int32).max),
+                          ('workers',1,np.iinfo(np.int32).max),('spectral_chunk_size',1,np.iinfo(np.int32).max)]:
+        value=receipt[name]
+        require(type(value) is int and low<=value<=high,f'Invalid receipt control: {name}')
+    step=receipt['max_spectral_step_cm_inv']
+    require(type(step) in (int,float) and math.isfinite(step) and step>0,'Invalid spectral spacing control')
+    require(receipt['kernel_flags']==['-O3','-fPIC','-shared','-ffree-line-length-none'],'Compiled flag contract differs')
+    require(receipt['quadrature_algorithm']=='Golub-Welsch alpha=0, LAPACK STEV; polynomial moments checked before work',
+            'Quadrature algorithm contract differs')
+    require(receipt['quadrature_area_weight_pruning_threshold']==1e-16,'Quadrature pruning contract differs')
     require(receipt['generator_sha256']==gen.sha(gen.HERE/'generate.py'),'Generator source identity differs; use its matching checkout')
     require(receipt['input_sources']==gen.INPUTS,'Pinned input identities differ')
     source_files=[gen.HERE/'socrates'/p for p in ('realtype_rd.f90','def_std_io_icf.f90','error_pcf.f90','mie_scatter.f')]
