@@ -28,10 +28,10 @@ PROGRAM rrtmgp_reference_column
   INTEGER :: nc,nl,overlap,seed,iceflag,u_in,u_out,ios,nemis,sw_policy
   INTEGER :: c,k,g,b,i,ngpt,nbnd,n_native,frozen_status,env_status
   INTEGER :: override_ncol,override_nlay,override_nband,override_unit,override_ios
-  REAL(wp) :: solar,roughness_value,partition_value,precip_mode,visible_weight
+  REAL(wp) :: solar,roughness_value,partition_value,precip_mode,visible_weight,raw_direct_tau
   REAL(wp) :: frozen_mode_value,frozen_occurrence
   REAL(wp) :: metadata_gravity,metadata_cp_dry,metadata_mol_weight_dry
-  LOGICAL :: use_precip,has_native_mass,frozen_enabled
+  LOGICAL :: use_precip,has_native_mass,frozen_enabled,sw_direct_enabled
   INTEGER :: ice_roughness
   REAL(wp), ALLOCATABLE :: play(:,:),plev(:,:),tlay(:,:),tlev(:,:),tsfc(:,:)
   REAL(wp), ALLOCATABLE :: h2o(:,:),co2(:,:),o3(:,:),n2o(:,:),ch4(:,:),o2(:,:)
@@ -60,6 +60,14 @@ PROGRAM rrtmgp_reference_column
   REAL(wp), ALLOCATABLE :: direct_all(:,:),diffuse_all(:,:),direct_clear(:,:)
   REAL(wp), ALLOCATABLE :: visdir(:,:),visdif(:,:),nirdir(:,:),nirdif(:,:)
   REAL(wp), ALLOCATABLE :: bands(:,:)
+  REAL(wp), ALLOCATABLE :: v9_toa(:,:),v9_gas_tau(:,:,:),v9_mask(:,:,:)
+  REAL(wp), ALLOCATABLE :: v9_cloud_tau(:,:,:),v9_precip_tau(:,:,:),v9_graupel_tau(:,:,:),v9_hail_tau(:,:,:)
+  REAL(wp), ALLOCATABLE :: v9_band_limits(:,:),v9_wavenumbers(:,:),v9_visible(:,:)
+  REAL(wp), ALLOCATABLE :: raw_cloud_tau_check(:,:,:),raw_precip_tau_check(:,:,:)
+  REAL(wp), ALLOCATABLE :: direct_predelta(:,:),directc_predelta(:,:),visdir_predelta(:,:),nirdir_predelta(:,:)
+  REAL(wp), ALLOCATABLE :: direct_predelta_gpt(:,:,:),direct_predelta_band(:,:,:)
+  INTEGER, ALLOCATABLE :: gpoint_bands(:),band_limits_gpt(:,:)
+  REAL(wp), ALLOCATABLE :: visible_weights(:)
   REAL(wp), ALLOCATABLE :: override_bands(:,:),override_tau(:,:,:),override_ssa(:,:,:),override_asym(:,:,:)
   REAL(wp), ALLOCATABLE, TARGET :: flux_band_dn(:,:,:),flux_band_dir(:,:,:)
   INTEGER(i8) :: rng_state
@@ -100,11 +108,14 @@ PROGRAM rrtmgp_reference_column
   IF(TRIM(magic)/='RRTMGP_REPLAY_V1'.AND.TRIM(magic)/='RRTMGP_REPLAY_V2'.AND. &
      TRIM(magic)/='RRTMGP_REPLAY_V3'.AND.TRIM(magic)/='RRTMGP_REPLAY_V4'.AND. &
      TRIM(magic)/='RRTMGP_REPLAY_V5'.AND.TRIM(magic)/='RRTMGP_REPLAY_V6'.AND. &
-     TRIM(magic)/='RRTMGP_REPLAY_V7'.AND.TRIM(magic)/='RRTMGP_REPLAY_V8') &
+     TRIM(magic)/='RRTMGP_REPLAY_V7'.AND.TRIM(magic)/='RRTMGP_REPLAY_V8'.AND. &
+     TRIM(magic)/='RRTMGP_REPLAY_V9') &
     ERROR STOP 'invalid replay input magic'
   READ(u_in,*,IOSTAT=ios) phase,nc,nl,overlap,seed,iceflag
   IF(ios/=0 .OR. (TRIM(phase)/='LW' .AND. TRIM(phase)/='SW')) ERROR STOP 'invalid replay header'
+  sw_direct_enabled=.FALSE.
   IF(TRIM(magic)=='RRTMGP_REPLAY_V8'.AND.TRIM(phase)/='LW') ERROR STOP 'V8 is only valid for LW'
+  IF(TRIM(magic)=='RRTMGP_REPLAY_V9'.AND.TRIM(phase)/='SW') ERROR STOP 'V9 is only valid for SW'
   IF(nc<1 .OR. nl<1) ERROR STOP 'replay dimensions must be positive'
 
   ALLOCATE(play(nc,nl),plev(nc,nl+1),tlay(nc,nl),tlev(nc,nl+1),tsfc(nc,1))
@@ -162,7 +173,8 @@ PROGRAM rrtmgp_reference_column
   END IF
   IF((TRIM(magic)=='RRTMGP_REPLAY_V3'.OR.TRIM(magic)=='RRTMGP_REPLAY_V4'.OR. &
       TRIM(magic)=='RRTMGP_REPLAY_V5'.OR.TRIM(magic)=='RRTMGP_REPLAY_V6'.OR. &
-      TRIM(magic)=='RRTMGP_REPLAY_V7'.OR.TRIM(magic)=='RRTMGP_REPLAY_V8').AND. &
+      TRIM(magic)=='RRTMGP_REPLAY_V7'.OR.TRIM(magic)=='RRTMGP_REPLAY_V8'.OR. &
+      TRIM(magic)=='RRTMGP_REPLAY_V9').AND. &
      TRIM(phase)=='SW') THEN
     CALL read_scalar_section(u_in,'SW_BAND_PARTITION',partition_value)
     IF(.NOT.ieee_is_finite(partition_value)) ERROR STOP 'non-finite SW band partition'
@@ -309,6 +321,110 @@ PROGRAM rrtmgp_reference_column
     READ(u_in,'(A)',IOSTAT=ios) section_line
     IF(ios>=0) ERROR STOP 'V8 contains trailing or unsupported records'
   END IF
+  IF(TRIM(magic)=='RRTMGP_REPLAY_V9') THEN
+    use_precip=.FALSE.; frozen_enabled=.FALSE.; has_native_mass=.FALSE.
+    DO i=1,2
+      READ(u_in,'(A)',IOSTAT=ios) section_line
+      IF(ios/=0) ERROR STOP 'V9 ended before direct-diagnostic inputs'
+      READ(section_line,*,IOSTAT=ios) next_section
+      IF(ios/=0) ERROR STOP 'V9 invalid optional precipitation/mass/frozen header'
+      BACKSPACE(u_in)
+      IF(TRIM(next_section)=='PRECIPITATION_OPTICS') THEN
+        IF(use_precip) ERROR STOP 'V9 duplicate precipitation metadata'
+        CALL read_scalar_section(u_in,'PRECIPITATION_OPTICS',precip_mode)
+        IF(.NOT.ieee_is_finite(precip_mode)) ERROR STOP 'V9 PRECIPITATION_OPTICS must be finite'
+        IF(precip_mode/=1._wp) ERROR STOP 'V9 PRECIPITATION_OPTICS must equal one'
+        ALLOCATE(rwp(nc,nl)); CALL read_section(u_in,'RWP',rwp)
+        IF(ANY(.NOT.ieee_is_finite(rwp))) ERROR STOP 'V9 RWP must be finite'
+        IF(ANY(rwp<0._wp)) ERROR STOP 'V9 RWP must be nonnegative'
+        use_precip=.TRUE.
+      ELSE IF(TRIM(next_section)=='NATIVE_DRY_LAYER_MASS_KG_M2') THEN
+        IF(has_native_mass) ERROR STOP 'V9 duplicate native dry mass'
+        ALLOCATE(native_dry_mass(nc,nl))
+        CALL read_section_flexible(u_in,'NATIVE_DRY_LAYER_MASS_KG_M2',native_dry_mass,n_native)
+        IF(n_native<1.OR.n_native>nl) ERROR STOP 'V9 native dry mass layer count out of range'
+        IF(ANY(.NOT.ieee_is_finite(native_dry_mass(:,1:n_native)))) ERROR STOP 'V9 native mass must be finite'
+        IF(ANY(native_dry_mass(:,1:n_native)<=0._wp)) ERROR STOP 'V9 native mass must be positive'
+        has_native_mass=.TRUE.
+      ELSE
+        EXIT
+      END IF
+    END DO
+    READ(u_in,'(A)',IOSTAT=ios) section_line
+    IF(ios/=0) ERROR STOP 'V9 ended before constants/frozen metadata'
+    READ(section_line,*,IOSTAT=ios) next_section
+    IF(ios/=0) ERROR STOP 'V9 invalid constants/frozen metadata header'
+    BACKSPACE(u_in)
+    IF(TRIM(next_section)=='GWP') THEN
+      ALLOCATE(gwp(nc,nl),hwp(nc,nl),lambda_g(nc,nl),lambda_h(nc,nl))
+      CALL read_section(u_in,'GWP',gwp); CALL read_section(u_in,'HWP',hwp)
+      CALL read_section(u_in,'LAMBDA_G',lambda_g); CALL read_section(u_in,'LAMBDA_H',lambda_h)
+      IF(ANY(.NOT.ieee_is_finite(gwp))) ERROR STOP 'V9 GWP must be finite'
+      IF(ANY(gwp<0._wp)) ERROR STOP 'V9 GWP must be nonnegative'
+      IF(ANY(.NOT.ieee_is_finite(hwp))) ERROR STOP 'V9 HWP must be finite'
+      IF(ANY(hwp<0._wp)) ERROR STOP 'V9 HWP must be nonnegative'
+      IF(ANY(.NOT.ieee_is_finite(lambda_g))) ERROR STOP 'V9 LAMBDA_G must be finite'
+      IF(ANY(lambda_g<=0._wp)) ERROR STOP 'V9 LAMBDA_G must be positive'
+      IF(ANY(.NOT.ieee_is_finite(lambda_h))) ERROR STOP 'V9 LAMBDA_H must be finite'
+      IF(ANY(lambda_h<=0._wp)) ERROR STOP 'V9 LAMBDA_H must be positive'
+      frozen_enabled=.TRUE.
+    END IF
+    CALL read_scalar_section(u_in,'GRAVITY',metadata_gravity)
+    CALL read_scalar_section(u_in,'CP_DRY',metadata_cp_dry)
+    CALL read_scalar_section(u_in,'MOL_WEIGHT_DRY',metadata_mol_weight_dry)
+    IF(.NOT.ieee_is_finite(metadata_gravity)) ERROR STOP 'V9 GRAVITY must be finite'
+    IF(metadata_gravity<=0._wp) ERROR STOP 'V9 GRAVITY must be positive'
+    IF(.NOT.ieee_is_finite(metadata_cp_dry)) ERROR STOP 'V9 CP_DRY must be finite'
+    IF(metadata_cp_dry<=0._wp) ERROR STOP 'V9 CP_DRY must be positive'
+    IF(.NOT.ieee_is_finite(metadata_mol_weight_dry)) ERROR STOP 'V9 MOL_WEIGHT_DRY must be finite'
+    IF(metadata_mol_weight_dry<=0._wp) ERROR STOP 'V9 MOL_WEIGHT_DRY must be positive'
+    CALL init_constants(gravity=metadata_gravity,heat_capacity_dry_air=metadata_cp_dry, &
+                        mol_weight_dry_air=metadata_mol_weight_dry)
+    IF(frozen_enabled) THEN
+      ALLOCATE(frozen_hash_bytes(64,1))
+      CALL read_scalar_section(u_in,'FROZEN_MODE',frozen_mode_value)
+      IF(.NOT.ieee_is_finite(frozen_mode_value)) ERROR STOP 'V9 FROZEN_MODE must be finite'
+      IF(frozen_mode_value/=1._wp) ERROR STOP 'V9 FROZEN_MODE must equal one'
+      CALL read_scalar_section(u_in,'FROZEN_OCCURRENCE',frozen_occurrence)
+      IF(.NOT.ieee_is_finite(frozen_occurrence)) ERROR STOP 'V9 FROZEN_OCCURRENCE must be finite'
+      IF(frozen_occurrence/=1._wp) ERROR STOP 'V9 FROZEN_OCCURRENCE must equal one'
+      CALL read_section(u_in,'FROZEN_TABLE_SHA256_BYTES',frozen_hash_bytes)
+      IF(ANY(.NOT.ieee_is_finite(frozen_hash_bytes))) ERROR STOP 'V9 frozen SHA bytes must be finite'
+      frozen_sha_recorded=''
+      DO i=1,64
+        IF(frozen_hash_bytes(i,1)<0._wp.OR.frozen_hash_bytes(i,1)>127._wp) ERROR STOP 'V9 invalid SHA byte'
+        IF(frozen_hash_bytes(i,1)/=REAL(NINT(frozen_hash_bytes(i,1)),wp)) ERROR STOP 'V9 SHA byte is not integer'
+        frozen_sha_recorded(i:i)=ACHAR(NINT(frozen_hash_bytes(i,1)))
+        IF(.NOT.((frozen_sha_recorded(i:i)>='0'.AND.frozen_sha_recorded(i:i)<='9').OR. &
+                 (frozen_sha_recorded(i:i)>='a'.AND.frozen_sha_recorded(i:i)<='f'))) ERROR STOP 'V9 invalid SHA hex'
+      END DO
+      frozen_table_env=''
+      CALL GET_ENVIRONMENT_VARIABLE('WRF_RRTMGP_FROZEN_TABLE',frozen_table_env,STATUS=env_status)
+      IF(env_status/=0.OR.LEN_TRIM(frozen_table_env)==0) ERROR STOP 'V9 frozen mode requires WRF_RRTMGP_FROZEN_TABLE'
+      CALL rrtmgp_file_sha256(TRIM(frozen_table_env),frozen_sha_raw,frozen_status,frozen_message)
+      IF(frozen_status/=0) ERROR STOP 'V9 frozen table could not be hashed'
+      IF(frozen_sha_raw/=frozen_sha_recorded) ERROR STOP 'V9 frozen table hash differs from input'
+      CALL initialize_frozen(TRIM(frozen_table_env),frozen_status,frozen_message)
+      IF(frozen_status/=0) ERROR STOP 'V9 frozen table initialization failed'
+      IF(frozen_table_sha256()/=frozen_sha_recorded) ERROR STOP 'V9 loaded frozen table hash differs'
+    END IF
+    CALL read_scalar_section(u_in,'SW_DIRECT_PREDELTA_POLICY',partition_value)
+    IF(.NOT.ieee_is_finite(partition_value)) ERROR STOP 'V9 direct policy must be finite'
+    IF(partition_value/=1._wp) ERROR STOP 'V9 direct policy must equal one'
+    CALL read_section2_alloc(u_in,'TOA_GPOINT',v9_toa)
+    CALL read_section3_alloc(u_in,'RAW_GAS_TAU',v9_gas_tau)
+    CALL read_section3_alloc(u_in,'MCICA_MASK',v9_mask)
+    CALL read_section3_alloc(u_in,'RAW_CLOUD_TAU',v9_cloud_tau)
+    CALL read_section3_alloc(u_in,'RAW_PRECIP_TAU',v9_precip_tau)
+    CALL read_section3_alloc(u_in,'RAW_GRAUPEL_TAU_EXT',v9_graupel_tau)
+    CALL read_section3_alloc(u_in,'RAW_HAIL_TAU_EXT',v9_hail_tau)
+    CALL read_section2_alloc(u_in,'BAND_LIMS_GPOINT',v9_band_limits)
+    CALL read_section2_alloc(u_in,'BAND_LIMS_WAVENUMBER',v9_wavenumbers)
+    CALL read_section2_alloc(u_in,'VISIBLE_WEIGHT',v9_visible)
+    READ(u_in,'(A)',IOSTAT=ios) section_line
+    IF(ios>=0) ERROR STOP 'V9 contains trailing or unsupported records'
+    sw_direct_enabled=.TRUE.
+  END IF
   IF(TRIM(magic)=='RRTMGP_REPLAY_V7') THEN
     frozen_enabled=.TRUE.
     ! V7 keeps optional V5/V6 extras before the four immutable-optics inputs.
@@ -410,7 +526,7 @@ PROGRAM rrtmgp_reference_column
     CALL init_constants(gravity=metadata_gravity, heat_capacity_dry_air=metadata_cp_dry, &
                         mol_weight_dry_air=metadata_mol_weight_dry)
   END IF
-  IF(TRIM(magic)/='RRTMGP_REPLAY_V7') THEN
+  IF(TRIM(magic)/='RRTMGP_REPLAY_V7'.AND.TRIM(magic)/='RRTMGP_REPLAY_V9') THEN
     READ(u_in,'(A)',IOSTAT=ios) section_line
     IF(ios==0) THEN
       READ(section_line,*,IOSTAT=ios) next_section
@@ -567,6 +683,7 @@ PROGRAM rrtmgp_reference_column
     ALLOCATE(visdir(nc,nl+1),visdif(nc,nl+1),nirdir(nc,nl+1),nirdif(nc,nl+1))
     ALLOCATE(bands(2,gas_sw%get_nband()),flux_band_dn(nc,nl+1,gas_sw%get_nband()), &
              flux_band_dir(nc,nl+1,gas_sw%get_nband()))
+    ALLOCATE(visible_weights(gas_sw%get_nband()))
     ALLOCATE(albdir(gas_sw%get_nband(),nc),albdif(gas_sw%get_nband(),nc))
     CALL check_error(sw_atmos%alloc_2str(nc,nl,gas_sw))
     CALL check_error(sw_cloud%alloc_2str(nc,nl,cloud_sw))
@@ -579,17 +696,50 @@ PROGRAM rrtmgp_reference_column
       toa(c,:)=toa(c,:)*(REAL(solar,wp)/SUM(toa(c,:)))
     END DO
     bands=gas_sw%get_band_lims_wavenumber()
+    IF(sw_direct_enabled) THEN
+      IF(SIZE(v9_toa,1)/=nc.OR.SIZE(v9_toa,2)/=gas_sw%get_ngpt()) ERROR STOP 'V9 TOA_GPOINT shape mismatch'
+      IF(ANY(SHAPE(v9_gas_tau)/=[nc,nl,gas_sw%get_ngpt()])) ERROR STOP 'V9 RAW_GAS_TAU shape mismatch'
+      IF(ANY(SHAPE(v9_mask)/=[nc,nl,gas_sw%get_ngpt()])) ERROR STOP 'V9 MCICA_MASK shape mismatch'
+      IF(ANY(SHAPE(v9_cloud_tau)/=[nc,nl,gas_sw%get_nband()])) ERROR STOP 'V9 RAW_CLOUD_TAU shape mismatch'
+      IF(ANY(SHAPE(v9_precip_tau)/=[nc,nl,gas_sw%get_nband()])) ERROR STOP 'V9 RAW_PRECIP_TAU shape mismatch'
+      IF(ANY(SHAPE(v9_graupel_tau)/=[nc,nl,gas_sw%get_nband()])) ERROR STOP 'V9 RAW_GRAUPEL_TAU_EXT shape mismatch'
+      IF(ANY(SHAPE(v9_hail_tau)/=[nc,nl,gas_sw%get_nband()])) ERROR STOP 'V9 RAW_HAIL_TAU_EXT shape mismatch'
+      IF(ANY(SHAPE(v9_band_limits)/=[2,gas_sw%get_nband()])) ERROR STOP 'V9 BAND_LIMS_GPOINT shape mismatch'
+      IF(ANY(SHAPE(v9_wavenumbers)/=SHAPE(bands))) ERROR STOP 'V9 BAND_LIMS_WAVENUMBER shape mismatch'
+      IF(ANY(SHAPE(v9_visible)/=[gas_sw%get_nband(),1])) ERROR STOP 'V9 VISIBLE_WEIGHT shape mismatch'
+      IF(ANY(v9_toa/=REAL(toa))) ERROR STOP 'V9 recorded TOA spectrum differs from independent gas optics'
+      IF(ANY(v9_gas_tau/=REAL(gas_tau))) ERROR STOP 'V9 recorded gas optical depth differs from independent gas optics'
+      band_limits_gpt=gas_sw%get_band_lims_gpoint(); gpoint_bands=gas_sw%get_gpoint_bands()
+      IF(ANY(v9_band_limits/=REAL(band_limits_gpt,wp))) ERROR STOP 'V9 g-point band mapping mismatch'
+      IF(ANY(v9_wavenumbers/=bands)) ERROR STOP 'V9 wavenumber bands mismatch'
+      ALLOCATE(raw_cloud_tau_check(nc,nl,gas_sw%get_nband()), &
+               raw_precip_tau_check(nc,nl,gas_sw%get_nband()))
+      raw_cloud_tau_check=0._wp; raw_precip_tau_check=0._wp
+      ALLOCATE(direct_predelta(nc,nl+1),directc_predelta(nc,nl+1), &
+               visdir_predelta(nc,nl+1),nirdir_predelta(nc,nl+1), &
+               direct_predelta_gpt(nc,nl+1,gas_sw%get_ngpt()), &
+               direct_predelta_band(nc,nl+1,gas_sw%get_nband()))
+      direct_predelta=0._wp; directc_predelta=0._wp; visdir_predelta=0._wp; nirdir_predelta=0._wp
+      direct_predelta_gpt=0._wp; direct_predelta_band=0._wp
+    END IF
     DO b=1,gas_sw%get_nband()
       IF((TRIM(magic)=='RRTMGP_REPLAY_V3'.OR.TRIM(magic)=='RRTMGP_REPLAY_V4'.OR. &
           TRIM(magic)=='RRTMGP_REPLAY_V5'.OR.TRIM(magic)=='RRTMGP_REPLAY_V6'.OR. &
-          TRIM(magic)=='RRTMGP_REPLAY_V7').AND. &
+          TRIM(magic)=='RRTMGP_REPLAY_V7'.OR.TRIM(magic)=='RRTMGP_REPLAY_V9').AND. &
          bands(1,b)==12850._wp) THEN
         IF(bands(2,b)/=16000._wp) ERROR STOP 'unexpected transition-band upper limit'
+        visible_weight=0.5_wp
         albdir(b,:)=0.5_wp*(andir+avdir); albdif(b,:)=0.5_wp*(andif+avdif)
       ELSE IF(bands(1,b)>=12850._wp) THEN
+        visible_weight=1._wp
         albdir(b,:)=avdir; albdif(b,:)=avdif
       ELSE
+        visible_weight=0._wp
         albdir(b,:)=andir; albdif(b,:)=andif
+      END IF
+      visible_weights(b)=visible_weight
+      IF(sw_direct_enabled) THEN
+        IF(v9_visible(b,1)/=visible_weight) ERROR STOP 'V9 visible/NIR band weights mismatch'
       END IF
     END DO
     sw_flux%flux_up=>fu; sw_flux%flux_dn=>fd; sw_flux%flux_dn_dir=>fdir
@@ -603,10 +753,21 @@ PROGRAM rrtmgp_reference_column
     ds=MAX(cloud_sw%get_min_radius_ice(),MIN(cloud_sw%get_max_radius_ice(),2._wp*res))
     IF(use_precip) ds=res ! V4 snow optics use native effective radius, not the cloud-ice LUT diameter.
     CALL check_error(cloud_sw%cloud_optics(lwp,iwp,rl,di,sw_cloud))
+    IF(sw_direct_enabled) raw_cloud_tau_check=sw_cloud%tau
     IF(use_precip) THEN
       IF(sw_policy==1) CALL check_error(sw_cloud%delta_scale())
-      CALL reference_sw_precip(rwp,swp,res,bands,precip_tau,precip_ssa,precip_g, &
-                               delta_scaled=(sw_policy/=3))
+      IF(sw_direct_enabled) THEN
+        CALL reference_sw_precip(rwp,swp,res,bands,precip_tau,precip_ssa,precip_g, &
+                                 delta_scaled=(sw_policy/=3),raw_tau_out=raw_precip_tau_check)
+        DO b=1,gas_sw%get_nband()
+          WHERE(rwp==0._wp.AND.swp==0._wp)
+            raw_precip_tau_check(:,:,b)=0._wp
+          END WHERE
+        END DO
+      ELSE
+        CALL reference_sw_precip(rwp,swp,res,bands,precip_tau,precip_ssa,precip_g, &
+                                 delta_scaled=(sw_policy/=3))
+      END IF
       DO c=1,nc
         DO k=1,nl
           IF(cf(c,k)==0._wp) THEN
@@ -627,17 +788,23 @@ PROGRAM rrtmgp_reference_column
       CALL check_error(cloud_sw%cloud_optics(zero,swp,rl,ds,sw_snow))
       CALL check_error(sw_snow%increment(sw_cloud))
       cloud_tau=sw_cloud%tau; cloud_ssa=sw_cloud%ssa; cloud_g=sw_cloud%g
+      IF(sw_direct_enabled) raw_cloud_tau_check=sw_cloud%tau
       CALL check_error(sw_cloud%delta_scale())
     END IF
     IF(LEN_TRIM(override_path)>0) &
       CALL apply_sw_optics_override(TRIM(override_path),gas_sw,sw_cloud)
     prepared_tau=sw_cloud%tau; prepared_ssa=sw_cloud%ssa; prepared_g=sw_cloud%g
     CALL make_mask(cf,gas_sw%get_ngpt(),overlap,seed,mask,randoms,local_random)
+    IF(sw_direct_enabled) THEN
+      IF(ANY(v9_mask/=REAL(MERGE(1._wp,0._wp,mask)))) ERROR STOP 'V9 recorded MCICA mask differs from independent seed'
+      IF(ANY(v9_cloud_tau/=REAL(raw_cloud_tau_check))) ERROR STOP 'V9 raw cloud tau differs from independent optics'
+      IF(ANY(v9_precip_tau/=REAL(raw_precip_tau_check))) ERROR STOP 'V9 raw precipitation tau differs from independent optics'
+    END IF
     IF(ANY(cf>0._wp) .AND. overlap/=0) THEN
       CALL check_error(draw_samples(mask,sw_cloud,sw_sampled))
       CALL check_error(sw_sampled%increment(sw_atmos))
     END IF
-    IF(TRIM(magic)=='RRTMGP_REPLAY_V7') THEN
+    IF(TRIM(magic)=='RRTMGP_REPLAY_V7'.OR.(TRIM(magic)=='RRTMGP_REPLAY_V9'.AND.frozen_enabled)) THEN
       ALLOCATE(frozen_gt(nc,nl,cloud_sw%get_nband()),frozen_gw(nc,nl,cloud_sw%get_nband()), &
                frozen_gmg(nc,nl,cloud_sw%get_nband()),frozen_ht(nc,nl,cloud_sw%get_nband()), &
                frozen_hw(nc,nl,cloud_sw%get_nband()),frozen_hmg(nc,nl,cloud_sw%get_nband()))
@@ -655,6 +822,10 @@ PROGRAM rrtmgp_reference_column
         WRITE(*,'(A)') TRIM(frozen_message)
         ERROR STOP 'V7 frozen SW hail query failed'
       END IF
+      IF(sw_direct_enabled) THEN
+        IF(ANY(v9_graupel_tau/=REAL(frozen_gt)).OR.ANY(v9_hail_tau/=REAL(frozen_ht))) &
+          ERROR STOP 'V9 raw frozen extinction differs from independent table query'
+      END IF
       CALL check_error(sw_frozen%alloc_2str(nc,nl,cloud_sw))
       frozen_tau=REAL(frozen_gt+frozen_ht,wp)
       frozen_ssa=REAL((frozen_gw+frozen_hw)/MAX(frozen_gt+frozen_ht,TINY(1._real64)),wp)
@@ -663,6 +834,9 @@ PROGRAM rrtmgp_reference_column
       CALL check_error(sw_frozen%delta_scale())
       frozen_tau=sw_frozen%tau; frozen_ssa=sw_frozen%ssa; frozen_g=sw_frozen%g
       CALL check_error(sw_frozen%increment(sw_atmos))
+    ELSE IF(sw_direct_enabled) THEN
+      IF(ANY(v9_graupel_tau/=0._wp).OR.ANY(v9_hail_tau/=0._wp)) &
+        ERROR STOP 'V9 raw frozen extinction must be zero when frozen optics are disabled'
     END IF
     CALL check_error(rte_sw(sw_atmos,.FALSE.,mu0,toa,albdir,albdif,sw_flux))
     up_all=fu; dn_all=fd; direct_all=fdir; diffuse_all=fd-fdir
@@ -673,13 +847,41 @@ PROGRAM rrtmgp_reference_column
       visible_weight=MERGE(1._wp,0._wp,bands(1,b)>=12850._wp)
       IF((TRIM(magic)=='RRTMGP_REPLAY_V3'.OR.TRIM(magic)=='RRTMGP_REPLAY_V4'.OR. &
           TRIM(magic)=='RRTMGP_REPLAY_V5'.OR.TRIM(magic)=='RRTMGP_REPLAY_V6'.OR. &
-          TRIM(magic)=='RRTMGP_REPLAY_V7').AND. &
+          TRIM(magic)=='RRTMGP_REPLAY_V7'.OR.TRIM(magic)=='RRTMGP_REPLAY_V9').AND. &
          bands(1,b)==12850._wp) visible_weight=0.5_wp
       visdir=visdir+visible_weight*flux_band_dir(:,:,b)
       visdif=visdif+visible_weight*(flux_band_dn(:,:,b)-flux_band_dir(:,:,b))
       nirdir=nirdir+(1._wp-visible_weight)*flux_band_dir(:,:,b)
       nirdif=nirdif+(1._wp-visible_weight)*(flux_band_dn(:,:,b)-flux_band_dir(:,:,b))
     END DO
+    IF(sw_direct_enabled) THEN
+      directc_predelta=direct_clear
+      DO c=1,nc
+        DO g=1,gas_sw%get_ngpt()
+          direct_predelta_gpt(c,nl+1,g)=toa(c,g)*mu0(c)
+          b=gpoint_bands(g)
+          DO k=nl,1,-1
+            raw_direct_tau=gas_tau(c,k,g)
+            IF(overlap/=0.AND.mask(c,k,g)) &
+              raw_direct_tau=raw_direct_tau+raw_cloud_tau_check(c,k,b)+raw_precip_tau_check(c,k,b)
+            IF(frozen_enabled) raw_direct_tau=raw_direct_tau+REAL(frozen_gt(c,k,b)+frozen_ht(c,k,b),wp)
+            IF(.NOT.ieee_is_finite(raw_direct_tau)) ERROR STOP 'V9 reference direct extinction is non-finite'
+            IF(raw_direct_tau<0._wp) ERROR STOP 'V9 reference direct extinction is negative'
+            direct_predelta_gpt(c,k,g)=direct_predelta_gpt(c,k+1,g)*EXP(-raw_direct_tau/mu0(c))
+          END DO
+          DO k=1,nl+1
+            direct_predelta_band(c,k,b)=direct_predelta_band(c,k,b)+direct_predelta_gpt(c,k,g)
+          END DO
+        END DO
+      END DO
+      DO k=1,nl+1
+        direct_predelta(:,k)=SUM(direct_predelta_gpt(:,k,:),DIM=2)
+        DO b=1,gas_sw%get_nband()
+          visdir_predelta(:,k)=visdir_predelta(:,k)+visible_weights(b)*direct_predelta_band(:,k,b)
+          nirdir_predelta(:,k)=nirdir_predelta(:,k)+(1._wp-visible_weights(b))*direct_predelta_band(:,k,b)
+        END DO
+      END DO
+    END IF
   END IF
 
   ALLOCATE(mask_values(nc,nl,SIZE(mask,3)))
@@ -754,6 +956,12 @@ PROGRAM rrtmgp_reference_column
     CALL write3(u_out,'VISDIF',RESHAPE(visdif,[nc,nl+1,1]))
     CALL write3(u_out,'NIRDIR',RESHAPE(nirdir,[nc,nl+1,1]))
     CALL write3(u_out,'NIRDIF',RESHAPE(nirdif,[nc,nl+1,1]))
+    IF(sw_direct_enabled) THEN
+      CALL write3(u_out,'DIRECT_PREDELTA',RESHAPE(direct_predelta,[nc,nl+1,1]))
+      CALL write3(u_out,'DIRECTC_PREDELTA',RESHAPE(directc_predelta,[nc,nl+1,1]))
+      CALL write3(u_out,'VISDIR_PREDELTA',RESHAPE(visdir_predelta,[nc,nl+1,1]))
+      CALL write3(u_out,'NIRDIR_PREDELTA',RESHAPE(nirdir_predelta,[nc,nl+1,1]))
+    END IF
   END IF
   CLOSE(u_out)
 
@@ -862,6 +1070,34 @@ CONTAINS
     IF(stat/=0) ERROR STOP 'failed to read replay section values'
   END SUBROUTINE
 
+  SUBROUTINE read_section2_alloc(unit,wanted,array)
+    INTEGER, INTENT(IN) :: unit
+    CHARACTER(LEN=*), INTENT(IN) :: wanted
+    REAL(wp), ALLOCATABLE, INTENT(OUT) :: array(:,:)
+    CHARACTER(LEN=64) :: got
+    INTEGER :: rows,cols,stat
+    READ(unit,*,IOSTAT=stat) got,rows,cols
+    IF(stat/=0) ERROR STOP 'failed to read dynamic rank2 section header'
+    IF(TRIM(got)/=TRIM(wanted).OR.rows<1.OR.cols<1) ERROR STOP 'dynamic rank2 section shape/name invalid'
+    ALLOCATE(array(rows,cols))
+    READ(unit,*,IOSTAT=stat) array
+    IF(stat/=0) ERROR STOP 'failed to read dynamic rank2 section values'
+  END SUBROUTINE
+
+  SUBROUTINE read_section3_alloc(unit,wanted,array)
+    INTEGER, INTENT(IN) :: unit
+    CHARACTER(LEN=*), INTENT(IN) :: wanted
+    REAL(wp), ALLOCATABLE, INTENT(OUT) :: array(:,:,:)
+    CHARACTER(LEN=64) :: got
+    INTEGER :: n1,n2,n3,stat
+    READ(unit,*,IOSTAT=stat) got,n1,n2,n3
+    IF(stat/=0) ERROR STOP 'failed to read dynamic rank3 section header'
+    IF(TRIM(got)/=TRIM(wanted).OR.MIN(n1,n2,n3)<1) ERROR STOP 'dynamic rank3 section shape/name invalid'
+    ALLOCATE(array(n1,n2,n3))
+    READ(unit,*,IOSTAT=stat) array
+    IF(stat/=0) ERROR STOP 'failed to read dynamic rank3 section values'
+  END SUBROUTINE
+
   SUBROUTINE read_section_flexible(unit,wanted,array,ncols_read)
     INTEGER, INTENT(IN) :: unit
     CHARACTER(LEN=*), INTENT(IN) :: wanted
@@ -954,11 +1190,12 @@ CONTAINS
     END DO
   END SUBROUTINE reference_lw_precip
 
-  SUBROUTINE reference_sw_precip(rain_path,snow_path,snow_radius,band_limits,tau,ssa,asymmetry,delta_scaled)
+  SUBROUTINE reference_sw_precip(rain_path,snow_path,snow_radius,band_limits,tau,ssa,asymmetry,delta_scaled,raw_tau_out)
     ! See the source/validation-scope note above reference_lw_precip.
     REAL(wp), INTENT(IN) :: rain_path(:,:),snow_path(:,:),snow_radius(:,:),band_limits(:,:)
     REAL(wp), INTENT(OUT) :: tau(:,:,:),ssa(:,:,:),asymmetry(:,:,:)
     LOGICAL, OPTIONAL, INTENT(IN) :: delta_scaled
+    REAL(wp), OPTIONAL, INTENT(OUT) :: raw_tau_out(:,:,:)
     REAL(wp), PARAMETER :: expected(2,14)=RESHAPE([ &
       820._wp,2680._wp,2680._wp,3250._wp,3250._wp,4000._wp,4000._wp,4650._wp, &
       4650._wp,5150._wp,5150._wp,6150._wp,6150._wp,7700._wp,7700._wp,8050._wp, &
@@ -986,6 +1223,10 @@ CONTAINS
       ERROR STOP 'invalid SW precipitation optics shape'
     IF(ANY(SHAPE(ssa)/=SHAPE(tau)).OR.ANY(SHAPE(asymmetry)/=SHAPE(tau))) &
       ERROR STOP 'SW precipitation optics output shapes differ'
+    IF(PRESENT(raw_tau_out)) THEN
+      IF(ANY(SHAPE(raw_tau_out)/=SHAPE(tau))) ERROR STOP 'SW raw precipitation output shapes differ'
+      raw_tau_out=0._wp
+    END IF
     IF(ANY(SHAPE(rain_path)/=SHAPE(snow_path)).OR.ANY(SHAPE(rain_path)/=SHAPE(snow_radius))) &
       ERROR STOP 'SW precipitation inputs have inconsistent shapes'
     IF(ANY(SHAPE(band_limits)/=SHAPE(expected)).OR.ANY(band_limits/=expected)) &
@@ -1007,6 +1248,7 @@ CONTAINS
           ssa_snow=tau_snow*(1._wp-(b0s(band)+b1s(band)*1.0315_wp*snow_radius(col,lev)))
           asy_snow=ssa_snow*c0s(band)
           tau_prec=MAX(1.E-12_wp,tau_rain+tau_snow)
+          IF(PRESENT(raw_tau_out)) raw_tau_out(col,lev,band)=tau_prec
           ssa_prec=MAX(1.E-12_wp,ssa_rain+ssa_snow)
           asy_prec=MAX(1.E-12_wp,asy_rain+asy_snow)
           asyw=asy_prec/MAX(1.E-12_wp,ssa_prec)

@@ -48,6 +48,8 @@ build/replay-reference/test_rrtmgp_small_cf_sampling WRF/run build/small-cf-samp
 
 Production capture는 `RRTMGP_REPLAY_V6`이며 native 물리층의 `NATIVE_DRY_LAYER_MASS_KG_M2` 행렬과 `GRAVITY`, `CP_DRY`, `MOL_WEIGHT_DRY` 배정도 scalar를 보존한다. 독립 reference는 저장한 상수를 계수 로드 전에 적용하고 native 질량을 기체 건조분자 기둥으로 변환한다. 모델 상단 위 확장층과 native 질량이 없는 V1–V5 저장본은 기존 pressure/VMR 기둥 계산을 유지한다. 결과의 `GAS_COL_DRY`는 native·확장층 모두의 molecules cm⁻²이다. [NATIVE_GAS_COLUMNS.md](NATIVE_GAS_COLUMNS.md)를 참조한다. UDM capture에는 기존 precipitation policy 및 RWP도 들어 있다. 강수 입력이 없는 fixture는 두 강수 기록을 함께 생략한다. V5/V6에서 하나만 존재하면 거부한다. V4 저장본은 강수 기록을 계속 필수로 요구한다. [UDM_ONLY.md](UDM_ONLY.md)를 참조한다.
 
+SW direct-flux 진단을 선택한 adapter capture는 `RRTMGP_REPLAY_V9`이다. 이 버전은 raw extinction, MCICA mask와 band mapping을 저장해 delta-scaling 이전 direct beam을 독립 재현한다. 기존 SW solver flux/heating과 legacy adapter 호출은 그대로 둔다. 자세한 식과 cloud/frozen mask 정책은 [SW_DIRECT_DIAGNOSTIC.md](SW_DIRECT_DIAGNOSTIC.md)에 정리되어 있다.
+
 `ICE_ROUGHNESS 1 1`은 정수 category를 기록한다. SW의 `SW_BAND_PARTITION 1 1` 값 1은 고정 CCPP의 12850–16000 cm⁻¹ 전이 밴드 50:50 알베도·진단 분할이다. LW에는 SW 설정이 없다. 독립 reference와 입력 검사기는 V3 이상 SW 설정 누락 또는 1 이외의 값을 거부한다.
 
 기존 V1–V4 저장본도 재생하며 당시의 upstream 기본 상수를 유지한다. V1은 당시 암묵적 ice category 1, V2는 저장된 1/2/3을 적용한다. 두 구형 형식의 SW는 당시 전이 밴드 전체 VIS 규약을 유지하며 새로운 정책으로 재해석하지 않는다. 결과 형식은 `RRTMGP_RESULT_V1`이다. 형식 회귀 시험은 V5 독립 재생, 비기본 host 상수의 저장·재생, 기본 상수의 정확한 보존, 구형 형식의 동일성과 SW 정책 차이 및 잘못된 설정 거부를 검사한다.

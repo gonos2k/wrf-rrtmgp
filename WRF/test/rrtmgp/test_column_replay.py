@@ -67,18 +67,18 @@ def read_records(path: Path, magic: str, header_count: int) -> tuple[list[str], 
         line_no = pos + 1
         fields = lines[pos].split()
         pos += 1
-        if len(fields) != 3:
-            fail(f"{path}:{line_no}: expected name and two dimensions")
+        if len(fields) not in (3, 4):
+            fail(f"{path}:{line_no}: expected name and two or three dimensions")
         name = fields[0].upper()
         if name in records:
             fail(f"{path}:{line_no}: duplicate record {name}")
         try:
-            nrow, ncol = int(fields[1]), int(fields[2])
+            shape = tuple(int(value) for value in fields[1:])
         except ValueError as exc:
             raise ReplayError(f"{path}:{line_no}: invalid dimensions for {name}") from exc
-        if nrow < 1 or ncol < 1:
+        if min(shape) < 1:
             fail(f"{path}:{line_no}: nonpositive dimensions for {name}")
-        count = nrow * ncol
+        count = int(np.prod(shape))
         values: list[float] = []
         while len(values) < count and pos < len(lines):
             row_line = pos + 1
@@ -89,7 +89,7 @@ def read_records(path: Path, magic: str, header_count: int) -> tuple[list[str], 
                 fail(f"{path}:{row_line}: too many values in {name}")
         if len(values) != count:
             fail(f"{path}: {name} expected {count} values, found {len(values)}")
-        records[name] = np.asarray(values, dtype=np.float64).reshape((nrow, ncol), order="F")
+        records[name] = np.asarray(values, dtype=np.float64).reshape(shape, order="F")
     return first, records
 
 
@@ -164,7 +164,7 @@ def read_raw(path: Path) -> tuple[str, int, int, dict[str, np.ndarray]]:
 
 def read_input(path: Path) -> tuple[str, int, int, int, int, int, dict[str, np.ndarray]]:
     lines = path.read_text(encoding="ascii").splitlines()
-    if len(lines) < 2 or lines[0].strip() not in {"RRTMGP_REPLAY_V1", "RRTMGP_REPLAY_V2", "RRTMGP_REPLAY_V3", "RRTMGP_REPLAY_V4", "RRTMGP_REPLAY_V5", "RRTMGP_REPLAY_V6", "RRTMGP_REPLAY_V7", "RRTMGP_REPLAY_V8"}:
+    if len(lines) < 2 or lines[0].strip() not in {"RRTMGP_REPLAY_V1", "RRTMGP_REPLAY_V2", "RRTMGP_REPLAY_V3", "RRTMGP_REPLAY_V4", "RRTMGP_REPLAY_V5", "RRTMGP_REPLAY_V6", "RRTMGP_REPLAY_V7", "RRTMGP_REPLAY_V8", "RRTMGP_REPLAY_V9"}:
         fail(f"{path}: unsupported replay format version")
     header = lines[1].split()
     if len(header) != 6:
@@ -188,7 +188,7 @@ def read_input(path: Path) -> tuple[str, int, int, int, int, int, dict[str, np.n
         roughness = records.get("ICE_ROUGHNESS")
         if roughness is None or roughness.shape != (1, 1) or roughness.item() not in (1, 2, 3):
             fail(f"{path}: V2/V3 requires scalar ICE_ROUGHNESS in {{1, 2, 3}}")
-    if lines[0].strip() in {"RRTMGP_REPLAY_V3", "RRTMGP_REPLAY_V4", "RRTMGP_REPLAY_V5", "RRTMGP_REPLAY_V6", "RRTMGP_REPLAY_V7", "RRTMGP_REPLAY_V8"} and phase == "SW":
+    if lines[0].strip() in {"RRTMGP_REPLAY_V3", "RRTMGP_REPLAY_V4", "RRTMGP_REPLAY_V5", "RRTMGP_REPLAY_V6", "RRTMGP_REPLAY_V7", "RRTMGP_REPLAY_V8", "RRTMGP_REPLAY_V9"} and phase == "SW":
         policy = records.get("SW_BAND_PARTITION")
         if policy is None or policy.shape != (1, 1) or policy.item() != 1:
             fail(f"{path}: V3 SW requires scalar SW_BAND_PARTITION=1 (CCPP transition)")
@@ -199,26 +199,26 @@ def read_input(path: Path) -> tuple[str, int, int, int, int, int, dict[str, np.n
         rain = records.get("RWP")
         if rain is None or rain.shape != (nc, nl) or np.any(rain < 0):
             fail(f"{path}: V4 requires nonnegative RWP matching column layers")
-    if lines[0].strip() in {"RRTMGP_REPLAY_V5", "RRTMGP_REPLAY_V6", "RRTMGP_REPLAY_V7", "RRTMGP_REPLAY_V8"}:
+    if lines[0].strip() in {"RRTMGP_REPLAY_V5", "RRTMGP_REPLAY_V6", "RRTMGP_REPLAY_V7", "RRTMGP_REPLAY_V8", "RRTMGP_REPLAY_V9"}:
         policy = records.get("PRECIPITATION_OPTICS")
         rain = records.get("RWP")
         if (policy is None) != (rain is None):
-            fail(f"{path}: V5-V8 precipitation policy and RWP must appear together")
+            fail(f"{path}: V5-V9 precipitation policy and RWP must appear together")
         if policy is not None and (policy.shape != (1, 1) or policy.item() != 1):
-            fail(f"{path}: V5-V8 PRECIPITATION_OPTICS must be one when present")
+            fail(f"{path}: V5-V9 PRECIPITATION_OPTICS must be one when present")
         if rain is not None and (rain.shape != (nc, nl) or np.any(~np.isfinite(rain)) or np.any(rain < 0)):
-            fail(f"{path}: V5-V8 RWP must be finite/nonnegative and match column layers")
+            fail(f"{path}: V5-V9 RWP must be finite/nonnegative and match column layers")
     if lines[0].strip() == "RRTMGP_REPLAY_V6":
         native = records.get("NATIVE_DRY_LAYER_MASS_KG_M2")
         if native is None or native.shape[0] != nc or not 1 <= native.shape[1] <= nl:
             fail(f"{path}: V6 requires NATIVE_DRY_LAYER_MASS_KG_M2 shape (nc, nnative), 1 <= nnative <= nl")
         if not np.isfinite(native).all() or np.any(native <= 0):
             fail(f"{path}: V6 native dry layer mass must be finite and positive")
-    if lines[0].strip() in {"RRTMGP_REPLAY_V5", "RRTMGP_REPLAY_V6", "RRTMGP_REPLAY_V7", "RRTMGP_REPLAY_V8"}:
+    if lines[0].strip() in {"RRTMGP_REPLAY_V5", "RRTMGP_REPLAY_V6", "RRTMGP_REPLAY_V7", "RRTMGP_REPLAY_V8", "RRTMGP_REPLAY_V9"}:
         for name in ("GRAVITY", "CP_DRY", "MOL_WEIGHT_DRY"):
             value = records.get(name)
             if value is None or value.shape != (1, 1) or not np.isfinite(value).all() or value.item() <= 0:
-                fail(f"{path}: V5-V8 requires positive finite scalar {name}")
+                fail(f"{path}: V5-V9 requires positive finite scalar {name}")
     version = lines[0].strip()
     frozen_names = {"GWP", "HWP", "LAMBDA_G", "LAMBDA_H", "FROZEN_MODE",
                     "FROZEN_OCCURRENCE", "FROZEN_TABLE_SHA256_BYTES"}
@@ -291,11 +291,81 @@ def read_input(path: Path) -> tuple[str, int, int, int, int, int, dict[str, np.n
             if any(char not in "0123456789abcdef" for char in digest):
                 fail(f"{path}: V8 SHA bytes are not lowercase hexadecimal")
     elif frozen_names & records.keys():
-        fail(f"{path}: frozen-optics records require RRTMGP_REPLAY_V7 or V8")
+        if version != "RRTMGP_REPLAY_V9":
+            fail(f"{path}: frozen-optics records require RRTMGP_REPLAY_V7, V8, or V9")
+    if version == "RRTMGP_REPLAY_V9":
+        if phase != "SW":
+            fail(f"{path}: V9 is only valid for SW")
+        names = {"SW_DIRECT_PREDELTA_POLICY", "TOA_GPOINT", "RAW_GAS_TAU", "MCICA_MASK",
+                 "RAW_CLOUD_TAU", "RAW_PRECIP_TAU", "RAW_GRAUPEL_TAU_EXT", "RAW_HAIL_TAU_EXT",
+                 "BAND_LIMS_GPOINT", "BAND_LIMS_WAVENUMBER", "VISIBLE_WEIGHT"}
+        missing = names - records.keys()
+        if missing:
+            fail(f"{path}: V9 missing direct-diagnostic records: {', '.join(sorted(missing))}")
+        scalar = records["SW_DIRECT_PREDELTA_POLICY"]
+        if scalar.shape != (1, 1) or scalar.item() != 1.0:
+            fail(f"{path}: V9 SW_DIRECT_PREDELTA_POLICY must equal one")
+        present_frozen = frozen_names & records.keys()
+        if present_frozen and present_frozen != frozen_names:
+            fail(f"{path}: V9 frozen inputs/metadata must be complete when present")
+        if present_frozen:
+            for name in ("GWP", "HWP", "LAMBDA_G", "LAMBDA_H"):
+                values = records[name]
+                if values.shape != (nc, nl) or not np.isfinite(values).all():
+                    fail(f"{path}: V9 {name} must be finite with shape (nc,nl)")
+                if name in {"GWP", "HWP"} and np.any(values < 0.0):
+                    fail(f"{path}: V9 {name} must be nonnegative")
+                if name in {"LAMBDA_G", "LAMBDA_H"} and np.any(values <= 0.0):
+                    fail(f"{path}: V9 {name} must be positive")
+            for name in ("FROZEN_MODE", "FROZEN_OCCURRENCE"):
+                values = records[name]
+                if values.shape != (1, 1) or not np.isfinite(values).all() or values.item() != 1.0:
+                    fail(f"{path}: V9 {name} must be scalar one")
+            hash_bytes = records["FROZEN_TABLE_SHA256_BYTES"]
+            if hash_bytes.shape != (64, 1) or not np.isfinite(hash_bytes).all() or \
+                    np.any(hash_bytes != np.floor(hash_bytes)) or np.any((hash_bytes < 48) | (hash_bytes > 102)):
+                fail(f"{path}: V9 frozen table SHA bytes must be lowercase-hex ASCII")
+            digest = "".join(chr(int(value)) for value in hash_bytes[:, 0])
+            if any(char not in "0123456789abcdef" for char in digest):
+                fail(f"{path}: V9 frozen table SHA is not lowercase hexadecimal")
+        toa, gas_tau, mask = records["TOA_GPOINT"], records["RAW_GAS_TAU"], records["MCICA_MASK"]
+        if toa.ndim != 2 or toa.shape[0] != nc or toa.shape[1] < 1:
+            fail(f"{path}: V9 TOA_GPOINT must have shape (nc,ngpt)")
+        if gas_tau.shape != (nc, nl, toa.shape[1]) or mask.shape != gas_tau.shape:
+            fail(f"{path}: V9 gas tau and mask must match (nc,nl,ngpt)")
+        if np.any(toa < 0.0) or np.any(gas_tau < 0.0) or np.any((mask != 0.0) & (mask != 1.0)):
+            fail(f"{path}: V9 TOA/tau must be nonnegative and mask must be binary")
+        bands = records["BAND_LIMS_GPOINT"]
+        wavenumbers = records["BAND_LIMS_WAVENUMBER"]
+        visible = records["VISIBLE_WEIGHT"]
+        if bands.ndim != 2 or bands.shape[0] != 2 or bands.shape[1] < 1 or \
+                wavenumbers.shape != bands.shape or visible.shape != (bands.shape[1], 1):
+            fail(f"{path}: V9 band mapping, wavenumber limits, and visible weights have inconsistent shapes")
+        if np.any(~np.isfinite(bands)) or np.any(bands != np.floor(bands)) or \
+                np.any(~np.isfinite(wavenumbers)) or np.any(wavenumbers <= 0.0) or \
+                np.any(~np.isfinite(visible)) or np.any((visible < 0.0) | (visible > 1.0)):
+            fail(f"{path}: V9 spectral metadata has invalid values")
+        expected_band = 1
+        for lo, hi in bands.T.astype(int):
+            if lo != expected_band or hi < lo or hi > toa.shape[1]:
+                fail(f"{path}: V9 g-point band limits must be contiguous, ordered, and in range")
+            expected_band = hi + 1
+        if expected_band != toa.shape[1] + 1:
+            fail(f"{path}: V9 g-point band limits do not cover every g-point")
+        for name in ("RAW_CLOUD_TAU", "RAW_PRECIP_TAU", "RAW_GRAUPEL_TAU_EXT", "RAW_HAIL_TAU_EXT"):
+            values = records[name]
+            if values.ndim != 3 or values.shape[:2] != (nc, nl) or values.shape[2] != bands.shape[1]:
+                fail(f"{path}: V9 {name} must have shape (nc,nl,nband)")
+            if np.any(values < 0.0):
+                fail(f"{path}: V9 {name} must be nonnegative")
+        if not present_frozen and (np.any(records["RAW_GRAUPEL_TAU_EXT"] != 0.0) or
+                                   np.any(records["RAW_HAIL_TAU_EXT"] != 0.0)):
+            fail(f"{path}: V9 frozen extinction must be zero without frozen metadata")
     for name, values in records.items():
         if name in {"ICE_ROUGHNESS", "SW_BAND_PARTITION", "PRECIPITATION_OPTICS",
                     "GRAVITY", "CP_DRY", "MOL_WEIGHT_DRY", "SOLAR", "FROZEN_MODE",
-                    "FROZEN_OCCURRENCE", "FROZEN_TABLE_SHA256_BYTES"}:
+                    "FROZEN_OCCURRENCE", "FROZEN_TABLE_SHA256_BYTES", "SW_DIRECT_PREDELTA_POLICY",
+                    "BAND_LIMS_GPOINT", "BAND_LIMS_WAVENUMBER", "VISIBLE_WEIGHT"}:
             continue
         if values.shape[0] != nc:
             fail(f"{path}: {name} first dimension {values.shape[0]} != nc={nc}")
@@ -667,10 +737,14 @@ def check_wrf_diagnostics(phase: str, result: dict[str, Any], raw: dict[str, np.
         surface_net = sections["DN"][:, :1, :] - sections["UP"][:, :1, :]
         errors["wrf_gsw"] = assert_close(sections["WRF_GSW"], surface_net, "SW: WRF_GSW vs DN-UP",
                                          rtol=5.0e-7, atol=2.0e-5)
-        errors["wrf_swddir"] = assert_close(sections["WRF_SWDDIR"], sections["DIRECT"][:, :1, :],
-                                           "SW: WRF_SWDDIR vs direct", rtol=5.0e-7, atol=2.0e-5)
-        errors["wrf_swddif"] = assert_close(sections["WRF_SWDDIF"], sections["DIFFUSE"][:, :1, :],
-                                           "SW: WRF_SWDDIF vs diffuse", rtol=5.0e-7, atol=2.0e-5)
+        predelta = sections.get("DIRECT_PREDELTA", sections["DIRECT"])
+        errors["wrf_swddir"] = assert_close(sections["WRF_SWDDIR"], predelta[:, :1, :],
+                                           "SW: WRF_SWDDIR vs configured direct diagnostic",
+                                           rtol=5.0e-7, atol=2.0e-5)
+        expected_diffuse = sections["DN"][:, :1, :] - predelta[:, :1, :]
+        errors["wrf_swddif"] = assert_close(sections["WRF_SWDDIF"], expected_diffuse,
+                                           "SW: WRF_SWDDIF vs total-down minus configured direct",
+                                           rtol=5.0e-7, atol=2.0e-5)
     return errors
 
 
