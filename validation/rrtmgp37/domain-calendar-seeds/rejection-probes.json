@@ -1,0 +1,29 @@
+{
+  "status": "PASS",
+  "probes": [
+    {
+      "probe": "domain-corrupt",
+      "exit_code": 1,
+      "rejected": true,
+      "message": "domain seed capture validation failed: build/pr-wrf-rrtmgp/build/udm-domain-seeds-pr16/scm/domain-seed-validation/probes/domain-corrupt/capture/lw.raw: domain 2 != expected 1"
+    },
+    {
+      "probe": "year-corrupt",
+      "exit_code": 1,
+      "rejected": true,
+      "message": "domain seed capture validation failed: build/pr-wrf-rrtmgp/build/udm-domain-seeds-pr16/scm/domain-seed-validation/probes/year-corrupt/capture/lw.raw: calendar year 2000 != expected 1999"
+    },
+    {
+      "probe": "day-corrupt",
+      "exit_code": 1,
+      "rejected": true,
+      "message": "domain seed capture validation failed: build/pr-wrf-rrtmgp/build/udm-domain-seeds-pr16/scm/domain-seed-validation/probes/day-corrupt/capture/lw.raw: day-of-year 296 != expected 295"
+    },
+    {
+      "probe": "header-seed-corrupt",
+      "exit_code": 1,
+      "rejected": true,
+      "message": "domain seed capture validation failed: build/pr-wrf-rrtmgp/build/udm-domain-seeds-pr16/scm/domain-seed-validation/probes/header-seed-corrupt/capture/lw.raw: header seed 679102814 != independent domain/calendar hash 679102813"
+    }
+  ]
+}
