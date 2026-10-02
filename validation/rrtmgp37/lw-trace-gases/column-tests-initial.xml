@@ -1,0 +1,786 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="(empty)"
+	tests="89"
+	failures="1"
+	disabled="0"
+	skipped="0"
+	hostname=""
+	time="44"
+	timestamp="2026-10-03T06:26:05"
+	>
+	<testcase name="native_hydro_snapshot" classname="native_hydro_snapshot" time="0.550707" status="run">
+		<properties/>
+		<system-out>PASS: actual audit module preserves tile-local water paths, negative evidence, input bits, append semantics, disabled behavior, invalid-value counts, and builder fatal context
+</system-out>
+	</testcase>
+	<testcase name="udm_negative_input_contract" classname="udm_negative_input_contract" time="0.889467" status="run">
+		<properties/>
+		<system-out>PASS: strict/bounded negative-q policy, conservation outputs, bitwise inputs, underflow, atomic hail refusal, fatal diagnostics, and Python raw-capture evidence
+</system-out>
+	</testcase>
+	<testcase name="frozen_file_sha256" classname="frozen_file_sha256" time="0.0131915" status="run">
+		<properties/>
+		<system-out>test_hash: PASS
+</system-out>
+	</testcase>
+	<testcase name="frozen_fortran_python_lookup" classname="frozen_fortran_python_lookup" time="1.32321" status="run">
+		<properties/>
+		<system-out>{"status": "PASS_FORTRAN_PYTHON_LOOKUP_EQUIVALENCE", "compared_values": {"tau_ext": 1092, "tau_scat": 1092, "tau_scat_g": 1092, "tau_abs": 8736}, "max_abs_diff": {"tau_ext": 4.163336342344337e-17, "tau_scat": 4.163336342344337e-17, "tau_scat_g": 5.551115123125783e-17, "tau_abs": 4.440892098500626e-16}}
+</system-out>
+	</testcase>
+	<testcase name="wrf_rrtmgp_columns" classname="wrf_rrtmgp_columns" time="0.115559" status="run">
+		<properties/>
+		<system-out>RRTMGP column smoke/regression checks passed.
+</system-out>
+	</testcase>
+	<testcase name="cloud_mass_contract" classname="cloud_mass_contract" time="0.00133251" status="run">
+		<properties/>
+		<system-out>RRTMGP_CLOUD_INPUT_POSITIVE_ASSERTIONS_PASS
+</system-out>
+	</testcase>
+	<testcase name="domain_calendar_seed_contract" classname="domain_calendar_seed_contract" time="0.00129063" status="run">
+		<properties/>
+		<system-out>DOMAIN_SEED_FIXTURE_PASS
+</system-out>
+	</testcase>
+	<testcase name="multi_column_equivalence" classname="multi_column_equivalence" time="0.257562" status="run">
+		<properties/>
+		<system-out>RRTMGP multicolumn checks passed; aggregate max difference   0.0000E+00
+</system-out>
+	</testcase>
+	<testcase name="udm_dry_mass_native_mixed" classname="udm_dry_mass_native_mixed" time="0.00194486" status="run">
+		<properties/>
+		<system-out>UDM_DRY_MASS_FIXTURE_PASS native_mixed
+</system-out>
+	</testcase>
+	<testcase name="udm_dry_mass_native_clear_omission" classname="udm_dry_mass_native_clear_omission" time="0.00153161" status="run">
+		<properties/>
+		<system-out>UDM_DRY_MASS_FIXTURE_PASS native_clear_omission
+</system-out>
+	</testcase>
+	<testcase name="udm_dry_mass_native_hail_tiny" classname="udm_dry_mass_native_hail_tiny" time="0.00124963" status="run">
+		<properties/>
+		<system-out>UDM_DRY_MASS_FIXTURE_PASS native_hail_tiny
+</system-out>
+	</testcase>
+	<testcase name="udm_dry_mass_legacy_pressure_gravity" classname="udm_dry_mass_legacy_pressure_gravity" time="0.00106206" status="run">
+		<properties/>
+		<system-out>UDM_DRY_MASS_FIXTURE_PASS legacy_pressure_gravity
+</system-out>
+	</testcase>
+	<testcase name="reject_dry_shape" classname="reject_dry_shape" time="0.0810952" status="run">
+		<properties/>
+		<system-out>PASS: dry_shape failed with expected diagnostic 'RRTMGP_INPUT_SHAPE_MISMATCH'
+</system-out>
+	</testcase>
+	<testcase name="reject_dry_zero" classname="reject_dry_zero" time="0.0803077" status="run">
+		<properties/>
+		<system-out>PASS: dry_zero failed with expected diagnostic 'RRTMGP_INPUT_UDM_DRY_LAYER_MASS_NOT_POSITIVE_FINITE'
+</system-out>
+	</testcase>
+	<testcase name="reject_dry_negative" classname="reject_dry_negative" time="0.0792035" status="run">
+		<properties/>
+		<system-out>PASS: dry_negative failed with expected diagnostic 'RRTMGP_INPUT_UDM_DRY_LAYER_MASS_NOT_POSITIVE_FINITE'
+</system-out>
+	</testcase>
+	<testcase name="reject_dry_nan" classname="reject_dry_nan" time="0.0830084" status="run">
+		<properties/>
+		<system-out>PASS: dry_nan failed with expected diagnostic 'RRTMGP_INPUT_UDM_DRY_LAYER_MASS_NOT_POSITIVE_FINITE'
+</system-out>
+	</testcase>
+	<testcase name="reject_dry_inf" classname="reject_dry_inf" time="0.0806629" status="run">
+		<properties/>
+		<system-out>PASS: dry_inf failed with expected diagnostic 'RRTMGP_INPUT_UDM_DRY_LAYER_MASS_NOT_POSITIVE_FINITE'
+</system-out>
+	</testcase>
+	<testcase name="reject_dry_path_overflow" classname="reject_dry_path_overflow" time="0.0776313" status="run">
+		<properties/>
+		<system-out>PASS: dry_path_overflow failed with expected diagnostic 'RRTMGP_INPUT_PATH_OVERFLOW'
+</system-out>
+	</testcase>
+	<testcase name="reject_cf_negative" classname="reject_cf_negative" time="0.0796926" status="run">
+		<properties/>
+		<system-out>PASS: cf_negative failed with expected diagnostic 'RRTMGP_INPUT_CF_OUT_OF_RANGE'
+</system-out>
+	</testcase>
+	<testcase name="reject_cf_above_one" classname="reject_cf_above_one" time="0.0785631" status="run">
+		<properties/>
+		<system-out>PASS: cf_above_one failed with expected diagnostic 'RRTMGP_INPUT_CF_OUT_OF_RANGE'
+</system-out>
+	</testcase>
+	<testcase name="reject_cf_nan" classname="reject_cf_nan" time="0.0764519" status="run">
+		<properties/>
+		<system-out>PASS: cf_nan failed with expected diagnostic 'RRTMGP_INPUT_CF_NOT_FINITE'
+</system-out>
+	</testcase>
+	<testcase name="reject_qc_negative" classname="reject_qc_negative" time="0.079343" status="run">
+		<properties/>
+		<system-out>PASS: qc_negative failed with expected diagnostic 'RRTMGP_INPUT_QC_NEGATIVE'
+</system-out>
+	</testcase>
+	<testcase name="reject_qc_nan" classname="reject_qc_nan" time="0.0753913" status="run">
+		<properties/>
+		<system-out>PASS: qc_nan failed with expected diagnostic 'RRTMGP_INPUT_QC_NOT_FINITE'
+</system-out>
+	</testcase>
+	<testcase name="reject_dp_negative" classname="reject_dp_negative" time="0.0830215" status="run">
+		<properties/>
+		<system-out>PASS: dp_negative failed with expected diagnostic 'RRTMGP_INPUT_DP_NOT_POSITIVE'
+</system-out>
+	</testcase>
+	<testcase name="reject_cf_zero_wet" classname="reject_cf_zero_wet" time="0.0762003" status="run">
+		<properties/>
+		<system-out>PASS: cf_zero_wet failed with expected diagnostic 'RRTMGP_INPUT_ZERO_CLOUD_FRACTION_WITH_CONDENSATE'
+</system-out>
+	</testcase>
+	<testcase name="reject_tiny_cf_overflow" classname="reject_tiny_cf_overflow" time="0.0756161" status="run">
+		<properties/>
+		<system-out>PASS: tiny_cf_overflow failed with expected diagnostic 'RRTMGP_INPUT_PATH_OVERFLOW'
+</system-out>
+	</testcase>
+	<testcase name="common_input_validation" classname="common_input_validation" time="0.00126893" status="run">
+		<properties/>
+		<system-out>RRTMGP_INPUT_VALIDATION_POSITIVE_ASSERTIONS_PASS
+</system-out>
+	</testcase>
+	<testcase name="reject_cf_range" classname="reject_cf_range" time="0.0755636" status="run">
+		<properties/>
+		<system-out>PASS: cf_range failed with expected diagnostic 'RRTMGP_INPUT_CF_OUT_OF_RANGE'
+</system-out>
+	</testcase>
+	<testcase name="reject_path_negative" classname="reject_path_negative" time="0.0816772" status="run">
+		<properties/>
+		<system-out>PASS: path_negative failed with expected diagnostic 'RRTMGP_INPUT_LWP_NEGATIVE'
+</system-out>
+	</testcase>
+	<testcase name="reject_cf_zero_path" classname="reject_cf_zero_path" time="0.0808458" status="run">
+		<properties/>
+		<system-out>PASS: cf_zero_path failed with expected diagnostic 'RRTMGP_INPUT_ZERO_CLOUD_FRACTION_WITH_PATH'
+</system-out>
+	</testcase>
+	<testcase name="reject_pressure_order" classname="reject_pressure_order" time="0.0818554" status="run">
+		<properties/>
+		<system-out>PASS: pressure_order failed with expected diagnostic 'RRTMGP_INPUT_PLEV_NOT_STRICTLY_DECREASING'
+</system-out>
+	</testcase>
+	<testcase name="reject_radius_inactive_nan" classname="reject_radius_inactive_nan" time="0.0816388" status="run">
+		<properties/>
+		<system-out>PASS: radius_inactive_nan failed with expected diagnostic 'RRTMGP_INPUT_RES_NOT_FINITE'
+</system-out>
+	</testcase>
+	<testcase name="reject_radius_active_zero" classname="reject_radius_active_zero" time="0.0821969" status="run">
+		<properties/>
+		<system-out>PASS: radius_active_zero failed with expected diagnostic 'RRTMGP_INPUT_REI_NOT_POSITIVE'
+</system-out>
+	</testcase>
+	<testcase name="reject_shape" classname="reject_shape" time="0.0786522" status="run">
+		<properties/>
+		<system-out>PASS: shape failed with expected diagnostic 'RRTMGP_INPUT_SHAPE_MISMATCH'
+</system-out>
+	</testcase>
+	<testcase name="reject_validation_cf_nan" classname="reject_validation_cf_nan" time="0.0779385" status="run">
+		<properties/>
+		<system-out>PASS: cf_nan failed with expected diagnostic 'RRTMGP_INPUT_CF_NOT_FINITE'
+</system-out>
+	</testcase>
+	<testcase name="reject_adapter_cf_overlap1" classname="reject_adapter_cf_overlap1" time="0.197997" status="run">
+		<properties/>
+		<system-out>PASS: cf_overlap1 failed with expected diagnostic 'RRTMGP_INPUT_CF_OUT_OF_RANGE'
+</system-out>
+	</testcase>
+	<testcase name="reject_adapter_cf_overlap3" classname="reject_adapter_cf_overlap3" time="0.201258" status="run">
+		<properties/>
+		<system-out>PASS: cf_overlap3 failed with expected diagnostic 'RRTMGP_INPUT_CF_OUT_OF_RANGE'
+</system-out>
+	</testcase>
+	<testcase name="reject_adapter_gas_nan" classname="reject_adapter_gas_nan" time="0.202882" status="run">
+		<properties/>
+		<system-out>PASS: gas_nan failed with expected diagnostic 'RRTMGP_INPUT_H2O_NOT_FINITE'
+</system-out>
+	</testcase>
+	<testcase name="reject_adapter_albedo_above_one" classname="reject_adapter_albedo_above_one" time="0.202249" status="run">
+		<properties/>
+		<system-out>PASS: albedo_above_one failed with expected diagnostic 'RRTMGP_INPUT_AVDIR_OUT_OF_RANGE'
+</system-out>
+	</testcase>
+	<testcase name="reject_adapter_emissivity_nan" classname="reject_adapter_emissivity_nan" time="0.199954" status="run">
+		<properties/>
+		<system-out>PASS: emissivity_nan failed with expected diagnostic 'RRTMGP_INPUT_EMIS_NOT_FINITE'
+</system-out>
+	</testcase>
+	<testcase name="reject_adapter_mu0_nan_night" classname="reject_adapter_mu0_nan_night" time="0.196714" status="run">
+		<properties/>
+		<system-out>PASS: mu0_nan_night failed with expected diagnostic 'mu0 must be finite'
+</system-out>
+	</testcase>
+	<testcase name="reject_adapter_solar_negative" classname="reject_adapter_solar_negative" time="0.195063" status="run">
+		<properties/>
+		<system-out>PASS: solar_negative failed with expected diagnostic 'RRTMGP_INPUT_SOLAR_NEGATIVE'
+</system-out>
+	</testcase>
+	<testcase name="reject_adapter_changed_init_path" classname="reject_adapter_changed_init_path" time="0.196399" status="run">
+		<properties/>
+		<system-out>PASS: changed_init_path failed with expected diagnostic 'rrtmgp_data_path must be global and unchanged after initialization'
+</system-out>
+	</testcase>
+	<testcase name="reject_adapter_coefficient_load_missing" classname="reject_adapter_coefficient_load_missing" time="0.090125" status="run">
+		<properties/>
+		<system-out>PASS: coefficient_load_missing failed with expected diagnostic "RRTMGP: load_and_init(): can't open file"
+</system-out>
+	</testcase>
+	<testcase name="small_cf_sampling" classname="small_cf_sampling" time="9.95541" status="run">
+		<properties/>
+		<system-out>cf,expected_lw_cloud_points,actual_lw_cloud_points,lw_zero_gpoint_fraction,lw_zero_column_fraction,expected_sw_cloud_points,actual_sw_cloud_points,sw_zero_gpoint_fraction,sw_zero_column_fraction,lw_dn_surface_mean,lw_dn_surface_sd,lw_dn_surface_se,lw_dn_surface_endpoint_bernoulli_se_envelope,lw_dn_surface_ica,lw_up_toa_mean,lw_up_toa_sd,lw_up_toa_se,lw_up_toa_endpoint_bernoulli_se_envelope,lw_up_toa_ica,sw_up_toa_mean,sw_up_toa_sd,sw_up_toa_se,sw_up_toa_endpoint_bernoulli_se_envelope,sw_up_toa_ica,sw_dn_surface_mean,sw_dn_surface_sd,sw_dn_surface_se,sw_dn_surface_endpoint_bernoulli_se_envelope,sw_dn_surface_ica,lw_hr_layer1_mean,lw_hr_layer1_sd,lw_hr_layer1_se,lw_hr_layer1_endpoint_bernoulli_se_envelope,lw_hr_layer1_ica,lw_hr_layer2_mean,lw_hr_layer2_sd,lw_hr_layer2_se,lw_hr_layer2_endpoint_bernoulli_se_envelope,lw_hr_layer2_ica,lw_hr_layer3_mean,lw_hr_layer3_sd,lw_hr_layer3_se,lw_hr_layer3_endpoint_bernoulli_se_envelope,lw_hr_layer3_ica,sw_hr_layer1_mean,sw_hr_layer1_sd,sw_hr_layer1_se,sw_hr_layer1_endpoint_...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="lw_trace_gases_replay" classname="lw_trace_gases_replay" time="0.471551" status="fail">
+		<failure message="Failed"/>
+		<properties/>
+		<system-out>VMR_CFC11 does not match synthetic fixture for cfc11
+</system-out>
+	</testcase>
+	<testcase name="coefficient_load_failure_callbacks" classname="coefficient_load_failure_callbacks" time="0.577209" status="run">
+		<properties/>
+		<system-out>PASS: missing/corrupt gas and cloud coefficients reached the standalone fatal handler
+</system-out>
+	</testcase>
+	<testcase name="sw_optics_override_contract" classname="sw_optics_override_contract" time="1.36516" status="run">
+		<properties/>
+		<system-out>PASS: synthetic bandwise SW optics override identity and negative-input checks
+</system-out>
+	</testcase>
+	<testcase name="replay_format_compatibility" classname="replay_format_compatibility" time="1.67549" status="run">
+		<properties/>
+		<system-out>{
+  "invalid_v3_rejections": [
+    "missing",
+    "zero",
+    "two"
+  ],
+  "invalid_v7_rejections": [
+    "missing_table_path",
+    "frozen_mode_zero",
+    "missing_gwp",
+    "noninteger_hash_byte",
+    "nonfinite_hash_byte"
+  ],
+  "legacy_v1_v2_results_match": true,
+  "phases": {
+    "LW": {
+      "default_v5_vs_v4_sections_compared": 14,
+      "header": [
+        "LW",
+        1,
+        3,
+        2,
+        173,
+        4
+      ],
+      "v5_sections_compared": 15
+    },
+    "SW": {
+      "default_v5_vs_v4_sections_compared": 29,
+      "header": [
+        "SW",
+        1,
+        3,
+        2,
+        173,
+        4
+      ],
+      "v5_sections_compared": 30
+    }
+  },
+  "status": "PASS",
+  "sw_v3_vs_legacy": {
+    "near_ir_direct_max_w_m2": 70.22549271989442,
+    "surface_up_w_m2": 5.730836083534598,
+    "visible_direct_max_w_m2": 70.22546637464171
+  },
+  "v8_parser_contract": {
+    "rejections": [
+      "negative",
+      "nonfinite",
+      "missing",
+      "v7_magic",
+      "partial_frozen"
+    ],
+    "va...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="reject_adapter_roughness_low" classname="reject_adapter_roughness_low" time="0.198784" status="run">
+		<properties/>
+		<system-out>PASS: roughness_low failed with expected diagnostic 'rrtmgp_ice_roughness must be 1'
+</system-out>
+	</testcase>
+	<testcase name="reject_adapter_roughness_high" classname="reject_adapter_roughness_high" time="0.197071" status="run">
+		<properties/>
+		<system-out>PASS: roughness_high failed with expected diagnostic 'rrtmgp_ice_roughness must be 1'
+</system-out>
+	</testcase>
+	<testcase name="reject_adapter_changed_init_roughness" classname="reject_adapter_changed_init_roughness" time="0.198344" status="run">
+		<properties/>
+		<system-out>PASS: changed_init_roughness failed with expected diagnostic 'rrtmgp_ice_roughness must be global and unchanged'
+</system-out>
+	</testcase>
+	<testcase name="reject_adapter_changed_init_constants" classname="reject_adapter_changed_init_constants" time="0.193272" status="run">
+		<properties/>
+		<system-out>PASS: changed_init_constants failed with expected diagnostic 'RRTMGP gravity, cp_dry, and mol_weight_dry must be global and unchanged'
+</system-out>
+	</testcase>
+	<testcase name="transparent_overlap" classname="transparent_overlap" time="0.059787" status="run">
+		<properties/>
+		<system-out>case,ngpt,columns,samples,joint_count,joint_fraction,expected_fraction,tolerance
+LW_A,128,2048,262144,65395, 0.2494621, 0.25, 0.0060744
+LW_B,128,2048,262144,131046, 0.4999008, 0.50, 0.0068594
+SW_A,112,2048,229376,57565, 0.2509635, 0.25, 0.0064247
+SW_B,112,2048,229376,114724, 0.5001569, 0.50, 0.0072639
+NOTE: current cloud_mask samples max-random overlap from CF only; zero-path CF=.5 in B remains mask-cloudy.
+transparent-overlap statistics passed
+</system-out>
+	</testcase>
+	<testcase name="spectral_surface_contract" classname="spectral_surface_contract" time="0.162191" status="run">
+		<properties/>
+		<system-out>spectral surface contract passed; cases=48; max old-policy surface-up difference (W/m2)=  4.1059E+01
+</system-out>
+	</testcase>
+	<testcase name="ice_roughness_1" classname="ice_roughness_1" time="0.211015" status="run">
+		<properties/>
+		<system-out>RRTMGP ice-roughness cases completed for category 1
+</system-out>
+	</testcase>
+	<testcase name="ice_roughness_2" classname="ice_roughness_2" time="0.211988" status="run">
+		<properties/>
+		<system-out>RRTMGP ice-roughness cases completed for category 2
+</system-out>
+	</testcase>
+	<testcase name="ice_roughness_3" classname="ice_roughness_3" time="0.204063" status="run">
+		<properties/>
+		<system-out>RRTMGP ice-roughness cases completed for category 3
+</system-out>
+	</testcase>
+	<testcase name="ice_roughness_invariance" classname="ice_roughness_invariance" time="0.0266023" status="run">
+		<properties/>
+		<system-out>wrote /NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp/build/udm-lw-trace-gases-column/ice-roughness-summary.json
+</system-out>
+	</testcase>
+	<testcase name="snow_optics_source_comparison" classname="snow_optics_source_comparison" time="0.0116885" status="run">
+		<properties/>
+		<system-out>phase,band,wavenumber_low_cm1,wavenumber_high_cm1,snow_radius_um,input_diameter_um,used_diameter_um,roughness,lut_raw_tau,lut_raw_ssa,lut_raw_g,lut_scaled_tau,lut_scaled_ssa,lut_scaled_g,ccpp_raw_tau,ccpp_raw_ssa,ccpp_raw_g,ccpp_scaled_tau,ccpp_scaled_ssa,ccpp_scaled_g
+SW,1, 8.20000000E+002, 2.68000000E+003, 1.00000000E+001, 2.00000000E+001, 2.00000000E+001, 1.00000000E+000, 8.27718005E+000, 6.94473386E-001, 8.78030062E-001, 3.84561855E+000, 3.42394791E-001, 4.67527160E-001, 1.00000000E-012, 9.99999000E-001, 1.00000000E+000, 1.00000000E-018, 0.00000000E+000, 5.00000000E-001
+SW,2, 2.68000000E+003, 3.25000000E+003, 1.00000000E+001, 2.00000000E+001, 2.00000000E+001, 1.00000000E+000, 8.19269121E+000, 6.13158405E-001, 8.82950008E-001, 4.27643135E+000, 2.58897553E-001, 4.68918455E-001, 1.00000000E-012, 9.99999000E-001, 1.00000000E+000, 1.00000000E-018, 0.00000000E+000, 5.00000000E-001
+SW,3, 3.25000000E+003, 4.00000000E+003, 1.00000000E+001, 2.00000000E+001, 2.00000000E+001, 1.00000000E+000, 7.66634718E+000, 7.53366...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="udm_mass_contract" classname="udm_mass_contract" time="0.00229351" status="run">
+		<properties/>
+		<system-out>UDM path builder tests passed: clear, independent phases, mixed/tiny-CF closure, radii, hail refusal.
+</system-out>
+	</testcase>
+	<testcase name="host_constants_and_column_energy" classname="host_constants_and_column_energy" time="0.110122" status="run">
+		<properties/>
+		<system-out>HOST_CONSTANTS_OK   9.810000E+00   1.004500E+03   2.896600E-02
+</system-out>
+	</testcase>
+	<testcase name="host_constants_replay_v5" classname="host_constants_replay_v5" time="0.425313" status="run">
+		<properties/>
+		<system-out>{"constants": {"cp_dry_j_kg_k": 1004.5, "gravity_m_s2": 9.81, "mol_weight_dry_kg_mol": 0.028966}, "phases": {"LW": {"failed_sections": [], "max_differences": {"CLOUD_TAU": {"max_abs": 0.0, "max_tolerance": 2e-13, "passed": true, "tolerance": "2e-13 absolute + 2e-12 relative"}, "DI_USED": {"max_abs": 0.0, "max_tolerance": 4.02e-11, "passed": true, "tolerance": "2e-13 absolute + 2e-12 relative"}, "DN": {"max_abs": 1.5986344692464627e-06, "max_tolerance": 0.0001230703125, "passed": true, "tolerance": "4 float32 ULP + 1e-6"}, "DNC": {"max_abs": 1.5986344692464627e-06, "max_tolerance": 0.0001230703125, "passed": true, "tolerance": "4 float32 ULP + 1e-6"}, "DS_USED": {"max_abs": 0.0, "max_tolerance": 4.02e-11, "passed": true, "tolerance": "2e-13 absolute + 2e-12 relative"}, "GAS_COL_DRY": {"max_abs": 0.0, "max_tolerance": 16922858862865.855, "passed": true, "tolerance": "2e-13 absolute + 2e-12 relative"}, "GAS_TAU": {"max_abs": 0.0, "max_tolerance": 1.8578146776712874e-06, "passed": true, "tolerance": "2e-13 absolu...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="udm_precip_optics" classname="udm_precip_optics" time="0.00199465" status="run">
+		<properties/>
+		<system-out>CCPP rain/snow optical formulas, bands and invalid inputs passed.
+</system-out>
+	</testcase>
+	<testcase name="udm_native_radii" classname="udm_native_radii" time="9.94516" status="run">
+		<properties/>
+		<system-out>CASE 1   1.0737E-05   8.1822E-05   3.1847E-04   2.5100E-06   1.0737E-05   5.0100E-06   8.1822E-05   2.5000E-05   3.1847E-04
+CASE 2   1.2118E-05   8.1822E-05   3.5013E-04   2.5100E-06   1.2118E-05   5.0100E-06   8.1822E-05   2.5000E-05   3.5013E-04
+UDM_NATIVE_RADII   1.073728E-05   1.211799E-05   8.182174E-05   8.182181E-05   3.184695E-04   3.501253E-04
+UDM_DIRECT_DENSITY_RESPONSE   1.240701E-05   8.839049E-05   2.652040E-04   1.400241E-05   8.964201E-05   2.903903E-04
+UDM_DIRECT_NUMBER_RESPONSE   1.240701E-05   9.847447E-06
+UDM outer-call native-density test passed
+UDM missing-density negative control failed as expected inside udm_mp_effective_radius
+</system-out>
+	</testcase>
+	<testcase name="udm_precip_adapter" classname="udm_precip_adapter" time="0.114902" status="run">
+		<properties/>
+		<system-out>UDM precipitation adapter checks passed.
+</system-out>
+	</testcase>
+	<testcase name="udm_precip_replay" classname="udm_precip_replay" time="0.71543" status="run">
+		<properties/>
+		<system-out>{
+  "invalid_precip_rejections": [
+    "LW:bad_policy",
+    "SW:bad_policy"
+  ],
+  "phases": {
+    "LW": {
+      "header": [
+        "LW",
+        1,
+        3,
+        2,
+        771,
+        4
+      ],
+      "max_differences": {
+        "CLOUD_TAU": {
+          "max_abs": 0.0,
+          "max_tolerance": 1.4855719999999998e-12,
+          "passed": true,
+          "tolerance": "2e-13 absolute + 2e-12 relative"
+        },
+        "DI_USED": {
+          "max_abs": 0.0,
+          "max_tolerance": 1.202e-10,
+          "passed": true,
+          "tolerance": "2e-13 absolute + 2e-12 relative"
+        },
+        "DN": {
+          "max_abs": 1.308401249389135e-05,
+          "max_tolerance": 0.0001230703125,
+          "passed": true,
+          "tolerance": "4 float32 ULP + 1e-6"
+        },
+        "DNC": {
+          "max_abs": 1.0246130614177673e-05,
+          "max_tolerance": 0.0001230703125,
+          "passed": true,
+          "tolerance": "4 float32 ULP + 1e-6"
+        },
+        "DS_USED": {
+          "max_abs": 0....
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="delta_policy_benchmark" classname="delta_policy_benchmark" time="0.0788123" status="run">
+		<properties/>
+		<system-out>Delta policy benchmark written: /NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp/build/udm-lw-trace-gases-column/delta-policy.csv
+</system-out>
+	</testcase>
+	<testcase name="delta_policy_summary" classname="delta_policy_summary" time="0.0441411" status="run">
+		<properties/>
+		<system-out>Wrote delta-policy summary to /NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp/build/udm-lw-trace-gases-column/delta-policy-summary.json
+</system-out>
+	</testcase>
+	<testcase name="udm_sw_delta_policy_replay" classname="udm_sw_delta_policy_replay" time="0.677574" status="run">
+		<properties/>
+		<system-out>Wrote V4 SW policy replay summary to /NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp/build/udm-lw-trace-gases-column/udm-sw-delta-policy.json
+</system-out>
+	</testcase>
+	<testcase name="frozen_openmp_queries" classname="frozen_openmp_queries" time="0.0151429" status="run">
+		<properties/>
+		<system-out>FROZEN_OPENMP_READONLY_PASS
+</system-out>
+	</testcase>
+	<testcase name="cpu_openmp_reentrancy" classname="cpu_openmp_reentrancy" time="0.41851" status="run">
+		<properties/>
+		<system-out>PASS threads=1 maxdiff=  0.0000E+00
+PASS threads=2 maxdiff=  0.0000E+00
+PASS threads=4 maxdiff=  0.0000E+00
+</system-out>
+	</testcase>
+	<testcase name="native_gas_columns_v6" classname="native_gas_columns_v6" time="5.05236" status="run">
+		<properties/>
+		<system-out>{
+  "status": "PASS",
+  "phases": [
+    {
+      "call": 1,
+      "phase": "LW",
+      "nc": 2,
+      "nl": 4,
+      "native_layers": 3,
+      "native_mass_exact_raw_match": null,
+      "gas_col_dry_max_abs_error": 33554432.0,
+      "gas_col_dry_relative_max_error": 1.3448575392869649e-16,
+      "native_mass_sha256": "5eef2385acae495d2b95f283577ca88ed2bff69091c54c87f8592e001ecdbd39",
+      "input_sha256": "45e97aa0636134bd6db0d2f47e8c4debb0f59511b007e97411ed82027a0d6137",
+      "result_sha256": "f37cce3c1a9f097c860f9ad2caa52ed5bda4550c161b09538daa1853e54f1809"
+    },
+    {
+      "call": 2,
+      "phase": "LW",
+      "nc": 2,
+      "nl": 4,
+      "native_layers": 3,
+      "native_mass_exact_raw_match": null,
+      "gas_col_dry_max_abs_error": 33554432.0,
+      "gas_col_dry_relative_max_error": 1.3448575392869649e-16,
+      "native_mass_sha256": "5eef2385acae495d2b95f283577ca88ed2bff69091c54c87f8592e001ecdbd39",
+      "input_sha256": "fe0506c240b407fe020c943280665852d22cdd9d417b94fdb6539ecb61ce798b",
+      "resu...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="frozen_adapter_zero" classname="frozen_adapter_zero" time="0.120466" status="run">
+		<properties/>
+		<system-out>EXPERIMENTAL frozen adapter contract PASS: zero
+</system-out>
+	</testcase>
+	<testcase name="frozen_adapter_tiny" classname="frozen_adapter_tiny" time="0.12041" status="run">
+		<properties/>
+		<system-out>EXPERIMENTAL frozen adapter contract PASS: tiny
+</system-out>
+	</testcase>
+	<testcase name="frozen_adapter_graupel" classname="frozen_adapter_graupel" time="0.117615" status="run">
+		<properties/>
+		<system-out>EXPERIMENTAL frozen adapter contract PASS: graupel
+</system-out>
+	</testcase>
+	<testcase name="frozen_adapter_hail" classname="frozen_adapter_hail" time="0.119409" status="run">
+		<properties/>
+		<system-out>EXPERIMENTAL frozen adapter contract PASS: hail
+</system-out>
+	</testcase>
+	<testcase name="frozen_adapter_mixed" classname="frozen_adapter_mixed" time="0.117834" status="run">
+		<properties/>
+		<system-out>EXPERIMENTAL frozen adapter contract PASS: mixed
+</system-out>
+	</testcase>
+	<testcase name="frozen_adapter_mixed_cloud" classname="frozen_adapter_mixed_cloud" time="0.114555" status="run">
+		<properties/>
+		<system-out>EXPERIMENTAL frozen adapter contract PASS: mixed_cloud
+</system-out>
+	</testcase>
+	<testcase name="frozen_adapter_overlap_zero" classname="frozen_adapter_overlap_zero" time="0.114465" status="run">
+		<properties/>
+		<system-out>EXPERIMENTAL frozen adapter contract PASS: overlap_zero
+</system-out>
+	</testcase>
+	<testcase name="frozen_reject_missing_inputs" classname="frozen_reject_missing_inputs" time="0.216063" status="run">
+		<properties/>
+		<system-out>module_ra_rrtmgp.F:0: RRTMGP: RRTMGP_FROZEN_INPUTS_REQUIRED_IN_MODE_1
+ERROR STOP 1
+
+Error termination. Backtrace:
+#0  0x7cc3b06c7e59 in ???
+#1  0x7cc3b06c8a71 in ???
+#2  0x7cc3b06ca17a in ???
+#3  0x6272aa3f634f in ???
+#4  0x6272aa3f61e8 in ???
+#5  0x6272aa3f388e in ???
+#6  0x6272aa3b330a in ???
+#7  0x6272aa36fb22 in ???
+#8  0x6272aa37246e in ???
+#9  0x7cc3b03d31c9 in __libc_start_call_main
+	at ../sysdeps/nptl/libc_start_call_main.h:58
+#10  0x7cc3b03d328a in __libc_start_main_impl
+	at ../csu/libc-start.c:360
+#11  0x6272aa36c564 in ???
+#12  0xffffffffffffffff in ???
+
+</system-out>
+	</testcase>
+	<testcase name="frozen_reject_mode_zero_input" classname="frozen_reject_mode_zero_input" time="0.189216" status="run">
+		<properties/>
+		<system-out>module_ra_rrtmgp.F:0: RRTMGP: RRTMGP_FROZEN_INPUTS_REQUIRE_MODE_1
+ERROR STOP 1
+
+Error termination. Backtrace:
+#0  0x7492603d5e59 in ???
+#1  0x7492603d6a71 in ???
+#2  0x7492603d817a in ???
+#3  0x58d91259434f in ???
+#4  0x58d9125941e8 in ???
+#5  0x58d912592e99 in ???
+#6  0x58d91255130a in ???
+#7  0x58d91251042b in ???
+#8  0x58d91250db51 in ???
+#9  0x58d91251046e in ???
+#10  0x7492600e11c9 in __libc_start_call_main
+	at ../sysdeps/nptl/libc_start_call_main.h:58
+#11  0x7492600e128a in __libc_start_main_impl
+	at ../csu/libc-start.c:360
+#12  0x58d91250a564 in ???
+#13  0xffffffffffffffff in ???
+
+</system-out>
+	</testcase>
+	<testcase name="frozen_reject_bad_mode" classname="frozen_reject_bad_mode" time="0.0840292" status="run">
+		<properties/>
+		<system-out>module_ra_rrtmgp.F:0: RRTMGP: rrtmgp_udm_frozen_optics must be 0 or 1
+ERROR STOP 1
+
+Error termination. Backtrace:
+#0  0x7d308c62de59 in ???
+#1  0x7d308c62ea71 in ???
+#2  0x7d308c63017a in ???
+#3  0x5d93ba15734f in ???
+#4  0x5d93ba1571e8 in ???
+#5  0x5d93ba1561df in ???
+#6  0x5d93ba0cf89c in ???
+#7  0x5d93ba0d346e in ???
+#8  0x7d308c3391c9 in __libc_start_call_main
+	at ../sysdeps/nptl/libc_start_call_main.h:58
+#9  0x7d308c33928a in __libc_start_main_impl
+	at ../csu/libc-start.c:360
+#10  0x5d93ba0cd564 in ???
+#11  0xffffffffffffffff in ???
+
+</system-out>
+	</testcase>
+	<testcase name="frozen_reject_changed_path" classname="frozen_reject_changed_path" time="0.191453" status="run">
+		<properties/>
+		<system-out>module_ra_rrtmgp.F:0: RRTMGP: UDM frozen optics mode and table path must be global and unchanged
+ERROR STOP 1
+
+Error termination. Backtrace:
+#0  0x76c98f815e59 in ???
+#1  0x76c98f816a71 in ???
+#2  0x76c98f81817a in ???
+#3  0x608cc440034f in ???
+#4  0x608cc44001e8 in ???
+#5  0x608cc43ff490 in ???
+#6  0x608cc4378a3b in ???
+#7  0x608cc437c46e in ???
+#8  0x76c98f5211c9 in __libc_start_call_main
+	at ../sysdeps/nptl/libc_start_call_main.h:58
+#9  0x76c98f52128a in __libc_start_main_impl
+	at ../csu/libc-start.c:360
+#10  0x608cc4376564 in ???
+#11  0xffffffffffffffff in ???
+
+</system-out>
+	</testcase>
+	<testcase name="frozen_reject_lambda_range" classname="frozen_reject_lambda_range" time="0.19312" status="run">
+		<properties/>
+		<system-out>module_ra_rrtmgp.F:0: RRTMGP: RRTMGP_FROZEN_LW_GRAUPEL: LW lambda outside table range; extrapolation forbidden species=graupel column=1 layer=1 lambda_m_inv=  2.990000E+02 temperature_k=  2.850000E+02 path_g_m2=  1.000000E-10 axis_m_inv=[  3.000000E+02,  2.000000E+04]
+Note: The following floating-point exceptions are signalling: IEEE_UNDERFLOW_FLAG IEEE_DENORMAL
+ERROR STOP 1
+
+Error termination. Backtrace:
+#0  0x767ce01eee59 in ???
+#1  0x767ce01efa71 in ???
+#2  0x767ce01f117a in ???
+#3  0x5fd3d3e6434f in ???
+#4  0x5fd3d3e641e8 in ???
+#5  0x5fd3d3e5ef58 in ???
+#6  0x5fd3d3e3f3ad in ???
+#7  0x5fd3d3de042b in ???
+#8  0x5fd3d3dde40e in ???
+#9  0x5fd3d3de046e in ???
+#10  0x767cdfefa1c9 in __libc_start_call_main
+	at ../sysdeps/nptl/libc_start_call_main.h:58
+#11  0x767cdfefa28a in __libc_start_main_impl
+	at ../csu/libc-start.c:360
+#12  0x5fd3d3dda564 in ???
+#13  0xffffffffffffffff in ???
+
+</system-out>
+	</testcase>
+	<testcase name="frozen_reject_temperature_range" classname="frozen_reject_temperature_range" time="0.194296" status="run">
+		<properties/>
+		<system-out>module_ra_rrtmgp.F:0: RRTMGP: RRTMGP_FROZEN_LW_HAIL: LW temperature outside table range; extrapolation forbidden species=hail column=1 layer=1 lambda_m_inv=  2.000000E+04 temperature_k=  3.010000E+02 path_g_m2=  1.000000E-10 axis_K=[  1.800000E+02,  3.000000E+02]
+Note: The following floating-point exceptions are signalling: IEEE_UNDERFLOW_FLAG IEEE_DENORMAL
+ERROR STOP 1
+
+Error termination. Backtrace:
+#0  0x72b127ea7e59 in ???
+#1  0x72b127ea8a71 in ???
+#2  0x72b127eaa17a in ???
+#3  0x60145c85534f in ???
+#4  0x60145c8551e8 in ???
+#5  0x60145c850c6d in ???
+#6  0x60145c8303ad in ???
+#7  0x60145c7d142b in ???
+#8  0x60145c7cf40e in ???
+#9  0x60145c7d146e in ???
+#10  0x72b127bb31c9 in __libc_start_call_main
+	at ../sysdeps/nptl/libc_start_call_main.h:58
+#11  0x72b127bb328a in __libc_start_main_impl
+	at ../csu/libc-start.c:360
+#12  0x60145c7cb564 in ???
+#13  0xffffffffffffffff in ???
+
+</system-out>
+	</testcase>
+	<testcase name="udm_frozen_input_contract" classname="udm_frozen_input_contract" time="0.00157354" status="run">
+		<properties/>
+		<system-out>UDM_FROZEN_INPUTS_PASS
+</system-out>
+	</testcase>
+	<testcase name="frozen_reject_missing_table" classname="frozen_reject_missing_table" time="0.187014" status="run">
+		<properties/>
+		<system-out>module_ra_rrtmgp.F:0: RRTMGP: RRTMGP_FROZEN_TABLE: table hash failed: open failed for /NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp/validation/rrtmgp37/frozen-optics-lookup/nine-grid-o128-s50/frozen-ice-psd-moments.nc.missing
+ERROR STOP 1
+
+Error termination. Backtrace:
+#0  0x70ef6583fe59 in ???
+#1  0x70ef65840a71 in ???
+#2  0x70ef6584217a in ???
+#3  0x5b4f8017634f in ???
+#4  0x5b4f801761e8 in ???
+#5  0x5b4f80175d8e in ???
+#6  0x5b4f800ee970 in ???
+#7  0x5b4f800f246e in ???
+#8  0x70ef6554b1c9 in __libc_start_call_main
+	at ../sysdeps/nptl/libc_start_call_main.h:58
+#9  0x70ef6554b28a in __libc_start_main_impl
+	at ../csu/libc-start.c:360
+#10  0x5b4f800ec564 in ???
+#11  0xffffffffffffffff in ???
+
+</system-out>
+	</testcase>
+	<testcase name="frozen_independent_replay" classname="frozen_independent_replay" time="2.8064" status="run">
+		<properties/>
+		<system-out>{
+  "cases": {
+    "graupel": {
+      "phases": {
+        "LW": {
+          "frozen_input_records": {
+            "GWP": {
+              "max": 50.0,
+              "min": 50.0,
+              "shape": [
+                2,
+                3
+              ]
+            },
+            "HWP": {
+              "max": 0.0,
+              "min": 0.0,
+              "shape": [
+                2,
+                3
+              ]
+            },
+            "LAMBDA_G": {
+              "max": 2000.0,
+              "min": 2000.0,
+              "shape": [
+                2,
+                3
+              ]
+            },
+            "LAMBDA_H": {
+              "max": 20000.0,
+              "min": 20000.0,
+              "shape": [
+                2,
+                3
+              ]
+            }
+          },
+          "frozen_result_fields_compared": [
+            "FROZEN_TAU",
+            "GRAUPEL_TAU_ABS",
+            "HAIL_TAU_ABS"
+          ],
+          "header": [
+            "LW",
+            2,
+            3
+         ...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+</testsuite>

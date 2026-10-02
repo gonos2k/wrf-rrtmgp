@@ -1,0 +1,126 @@
+{
+  "scope": "Read-only audit of LW trace-gas coverage in the current option-37 adapter. No isolated flux/OLR/heating residual was computed in this audit.",
+  "coefficient_provenance": {
+    "repository": "earth-system-radiation/rrtmgp-data",
+    "commit": "ea788bb39876948fa8d2c235665ccff19b4686b5",
+    "lw_file": "WRF/run/rrtmgp-gas-lw-g128.nc",
+    "lw_sha256": "70ad65d116531122660318e5da2a2af9db74b425916202860e9527ef2375b8f6",
+    "sw_file": "WRF/run/rrtmgp-gas-sw-g112.nc",
+    "sw_sha256": "361ed541324068ded28a275a4dd757bcaa0a845aebefa630f43a04678668fe62"
+  },
+  "current_adapter": {
+    "provided_gases": [
+      "h2o",
+      "co2",
+      "o3",
+      "n2o",
+      "ch4",
+      "o2"
+    ],
+    "source": "WRF/phys/module_ra_rrtmgp.F:44,217-236,413,554",
+    "missing_legacy_lw_trace_gases": [
+      "cfc11",
+      "cfc12",
+      "cfc22",
+      "ccl4"
+    ],
+    "legacy_call_passes_them": "WRF/phys/module_ra_rrtmg_lw.F:13059-13062 (legacy RRTMG call argument list); RRTMGP call at 13046-13055 has only six gases"
+  },
+  "coefficient_support": {
+    "lw_gas_names_count": 19,
+    "lw_gas_names_include": [
+      "ccl4",
+      "cfc11",
+      "cfc12",
+      "cfc22"
+    ],
+    "lw_minor_absorber_bands": {
+      "ccl4": [
+        5
+      ],
+      "cfc11": [
+        6
+      ],
+      "cfc12": [
+        6,
+        8
+      ],
+      "cfc22": [
+        5,
+        8
+      ]
+    },
+    "sw_gas_names_include_these_four": true,
+    "sw_minor_absorber_intervals_for_these_four": 0,
+    "sw_key_species_for_these_four": false,
+    "interpretation": "The pinned files contain supported minor-gas coefficients for all four in LW. In SW their names occur in metadata but none of the minor intervals or key-species slots use them, so passing these VMRs is expected to affect LW only."
+  },
+  "omission_mechanism": {
+    "source": "WRF/external/rte_rrtmgp/rrtmgp-frontend/mo_gas_optics_rrtmgp.F90:1969-2054",
+    "behavior": "reduce_minor_arrays filters minor terms by whether their gas is present in available_gases. Since current available gases are only the six adapter names, the CFC/CCl4 minor intervals are removed at coefficient initialization, not merely given zero VMR at call time."
+  },
+  "legacy_vmr_source": {
+    "source": "WRF/phys/module_ra_rrtmg_lw.F:12027-12046,11869-11875,12348-12358",
+    "dynamic_when_GHG_INPUT_1": "read_CAMgases supplies CO2/N2O/CH4/CFC11/CFC12 using the host CAM trace-gas file; the same four radiative VMR fields are populated per layer at 12355-12358.",
+    "defaults_when_GHG_INPUT_0": {
+      "cfc11_vmr": 2.51e-10,
+      "cfc12_vmr": 5.38e-10,
+      "cfc22_vmr": 1.69e-10,
+      "ccl4_vmr": 9.3e-11
+    },
+    "note": "These are existing WRF fallback constants, not values assumed for every run. cfc22 and ccl4 are set as static wrapper constants in the inspected source even on the GHG_INPUT=1 path."
+  },
+  "quantification_status": {
+    "isolated_lw_flux_residual": "not measured",
+    "why": "The current RRTMGP adapter API and replay record do not carry the four missing VMR arrays. Existing total RRTMG4-vs-RRTMGP37 differences combine gas, spectral discretization, cloud optics, solar partition, and solver changes, so they cannot be attributed to CFC omission.",
+    "structural_quantification": "4 supported LW minor absorbers are omitted; their coefficients occupy LW bands 5, 6 and 8; no corresponding SW intervals were found."
+  },
+  "proposed_isolated_experiment": [
+    "Use one saved WRF raw column with matching play/plev/tlay/tlev/tsfc, six common gas VMRs, surface emissivity, cloud paths/fractions, and seed. Preserve the source run\u2019s exact cfc11/12 CAM-interpolated VMRs plus cfc22/ccl4 wrapper constants; do not substitute arbitrary climatology.",
+    "Build two scratch RRTMGP runs with identical pinned code/data and all inputs: A current six-gas behavior (four trace VMRs absent/zero); B provide cfc11/cfc12/cfc22/ccl4. Compare gas tau by g-point, LW upward/downward flux at surface and TOA, and heating-rate profile. Use clear-sky first to avoid cloud-mask sampling; repeat actual cloud state with fixed mask/seed if required.",
+    "Only after the within-RRTMGP A/B effect is measured, report RRTMG4-vs-RRTMGP37 with the same trace-gas VMRs as a separate composite engine comparison. A passing A/B checks wiring; it does not establish equal full-system physics."
+  ],
+  "local_file_sha256": {
+    "WRF/run/rrtmgp-gas-lw-g128.nc": {
+      "sha256": "70ad65d116531122660318e5da2a2af9db74b425916202860e9527ef2375b8f6",
+      "size_bytes": 11679993
+    },
+    "WRF/run/rrtmgp-gas-sw-g112.nc": {
+      "sha256": "361ed541324068ded28a275a4dd757bcaa0a845aebefa630f43a04678668fe62",
+      "size_bytes": 5949944
+    },
+    "WRF/run/CAMtr_volume_mixing_ratio": {
+      "sha256": "9a427fd106f8e36b30e0b29266bff1398b025b82af5b878e5a7a8e9dfe268ca7",
+      "size_bytes": 42780
+    },
+    "WRF/phys/module_ra_rrtmgp.F": {
+      "sha256": "c64031b1d273b64b61e9d631f0d39e10f9e9eb10334b00a9d35fa63d71e4dd08",
+      "size_bytes": 38483
+    },
+    "WRF/phys/module_ra_rrtmg_lw.F": {
+      "sha256": "526afe545b1710c4ccd9607fb5681bd1c1dc0c0be668a20ba62e4a4c9be25c0e",
+      "size_bytes": 671306
+    },
+    "WRF/phys/module_ra_clWRF_support.F": {
+      "sha256": "b249f472550dd2d8e594fb5d2474e280f423e5e339a9ff393d42c261098d5182",
+      "size_bytes": 19715
+    },
+    "WRF/external/rte_rrtmgp/rrtmgp-frontend/mo_gas_optics_rrtmgp.F90": {
+      "sha256": "47f1ac34d9fa8f7d23ed2c7ddf2ab8bb59329989ce9dcee7cfe235e0e50f6e54",
+      "size_bytes": 107686
+    },
+    "WRF/external/rte_rrtmgp/DATA.json": {
+      "sha256": "c29615af763369684e0f577dfa5b4c369a2e99d9aa644da160ac56f720fd1398",
+      "size_bytes": 1972
+    }
+  },
+  "source_references": {
+    "coefficient_pin": "WRF/external/rte_rrtmgp/DATA.json:1-16",
+    "legacy_dynamic_and_defaults": "WRF/phys/module_ra_rrtmg_lw.F:12027-12046,11869-11875",
+    "legacy_per-layer arrays": "WRF/phys/module_ra_rrtmg_lw.F:12348-12358",
+    "current six-gas names and setter": "WRF/phys/module_ra_rrtmgp.F:44,217-236",
+    "RRTMGP wrapper six-gas calls": "WRF/phys/module_ra_rrtmgp.F:413,554",
+    "legacy vs new driver call": "WRF/phys/module_ra_rrtmg_lw.F:13046-13062",
+    "minor-gas filtering": "WRF/external/rte_rrtmgp/rrtmgp-frontend/mo_gas_optics_rrtmgp.F90:1969-2054"
+  }
+}

@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
-"""Compare independent V4/V5 LW/SW replays under diagnostic cloud-fraction policies.
+"""Compare independent V4–V8 LW/SW replays under diagnostic CF policies.
 
 The B and C variants are controlled counterfactuals, not production choices.
-Use a V4/V5 input and the sibling RRTMGP_RAW_V1 snapshot from the same call.
+Use a replay input and sibling RRTMGP_RAW_V1 snapshot from the same call. All
+records not explicitly varied (including V8 CFC and optional frozen optics)
+are retained byte-for-byte in counterfactual inputs.
 """
 from __future__ import annotations
 
@@ -23,6 +25,10 @@ from test_column_replay import (assert_close, corrected_hydrometeor, dry_layer_m
 
 
 PATHS = {"LWP": "LWP", "IWP": "IWP", "RWP": "RWP", "SWP": "SWP"}
+SUPPORTED_REPLAY_VERSIONS = {
+    "RRTMGP_REPLAY_V4", "RRTMGP_REPLAY_V5", "RRTMGP_REPLAY_V6",
+    "RRTMGP_REPLAY_V7", "RRTMGP_REPLAY_V8",
+}
 GRID_NAMES = {
     "LWP": ("GRID_LWP", "LWP_GRID"),
     "IWP": ("GRID_IWP", "IWP_GRID"),
@@ -47,7 +53,7 @@ def write_variant(source: Path, destination: Path, updates: dict[str, np.ndarray
                   seed: int) -> None:
     lines = source.read_text(encoding="ascii").splitlines()
     if len(lines) < 2:
-        fail(f"{source}: truncated V4 replay")
+        fail(f"{source}: truncated replay input")
     header = lines[1].split()
     if len(header) != 6:
         fail(f"{source}: invalid replay header")
@@ -86,8 +92,31 @@ def write_variant(source: Path, destination: Path, updates: dict[str, np.ndarray
         out.extend(f"{float(value):.16E}" for value in array.flatten(order="F"))
     missing = sorted(updates.keys() - seen)
     if missing:
-        fail(f"V4 input has no sections for updates: {missing}")
+        fail(f"replay input has no sections for updates: {missing}")
     destination.write_text("\n".join(out) + "\n", encoding="ascii")
+
+
+def assert_variant_preserves_records(source: Path, variant: Path,
+                                     updates: dict[str, np.ndarray],
+                                     source_records: dict[str, np.ndarray]) -> None:
+    """Ensure variants preserve every input other than the declared controls."""
+    _, nc, nl, _, _, _, records = read_input(variant)
+    _, source_nc, source_nl, _, _, _, original = read_input(source)
+    if (nc, nl) != (source_nc, source_nl) or records.keys() != original.keys():
+        fail(f"{variant}: replay dimensions/sections changed while writing policy variant")
+    if source_records.keys() != original.keys():
+        fail(f"{source}: parsed sections changed unexpectedly")
+    for name, values in original.items():
+        if name not in updates and not np.array_equal(records[name], values):
+            fail(f"{variant}: unmodified section {name} changed or was stripped")
+    # V8's strict reader already enforces required CFCs and frozen-record
+    # completeness. Keep an explicit invariant for fields this test must never
+    # rewrite, even if their values happen to be all zero.
+    for name in ("VMR_CFC11", "VMR_CFC12", "VMR_CFC22", "VMR_CCL4",
+                 "GWP", "HWP", "LAMBDA_G", "LAMBDA_H", "FROZEN_MODE",
+                 "FROZEN_OCCURRENCE", "FROZEN_TABLE_SHA256_BYTES"):
+        if name in original and (name in updates or not np.array_equal(records[name], original[name])):
+            fail(f"{variant}: protected gas/frozen section {name} was changed")
 
 
 def run_reference(executable: Path, data_dir: Path, input_path: Path,
@@ -108,7 +137,7 @@ def raw_grid_paths(raw: dict[str, np.ndarray], inputs: dict[str, np.ndarray],
         if input_name not in inputs:
             if path_name == "RWP":
                 continue
-            fail(f"V4 input is missing {input_name}")
+                fail(f"replay input is missing {input_name}")
         path = inputs[input_name][0, :raw_nl]
         reconstructed = original_cf * path
         direct = first_field(raw, GRID_NAMES[path_name])
@@ -128,7 +157,7 @@ def raw_grid_paths(raw: dict[str, np.ndarray], inputs: dict[str, np.ndarray],
             wet_path_error[path_name] = float(np.max(np.abs(direct[wet] - reconstructed[wet]), initial=0.0))
             scale = max(1.0, float(np.max(np.abs(direct[wet]), initial=0.0)))
             if not np.allclose(direct[wet], reconstructed[wet], rtol=5.0e-6, atol=1.0e-5 * scale):
-                fail(f"raw grid {path_name} disagrees with original CF times V4 in-cloud path")
+                fail(f"raw grid {path_name} disagrees with original CF times replay in-cloud path")
             grid[path_name] = direct.copy()
             continue
         missing_clear = (original_cf == 0.0) & (path <= 0.0)
@@ -199,9 +228,10 @@ def main() -> int:
     phase, raw_i, raw_j, raw = read_raw(raw_path)
     phase_in, nc, nl, overlap, base_seed, iceflag, input_records = read_input(input_path)
     if phase != phase_in or nc != 1 or nl < len(raw["DP_HPA"]):
-        fail("expected paired one-column LW/SW raw/V4 input covering the native raw layers")
-    if input_path.read_text(encoding="ascii").splitlines()[0].strip() not in {"RRTMGP_REPLAY_V4", "RRTMGP_REPLAY_V5", "RRTMGP_REPLAY_V6"}:
-        fail("input must be RRTMGP_REPLAY_V4, V5, or V6")
+        fail("expected paired one-column LW/SW replay input covering the native raw layers")
+    replay_version = input_path.read_text(encoding="ascii").splitlines()[0].strip()
+    if replay_version not in SUPPORTED_REPLAY_VERSIONS:
+        fail(f"unsupported replay format {replay_version}")
     raw_nl = len(raw["DP_HPA"])
     if raw_i < 1 or raw_j < 1:
         fail("raw snapshot has invalid source indices")
@@ -210,7 +240,7 @@ def main() -> int:
         fail("raw gravity must be finite and positive")
     original_cf = input_records["CF"][0, :raw_nl].copy()
     if np.any((original_cf < 0.0) | (original_cf > 1.0)):
-        fail("V4 input CF outside [0,1]")
+        fail("replay input CF outside [0,1]")
     grid_paths, wet_reconstruction_errors = raw_grid_paths(raw, input_records, raw_nl, gravity)
 
     cf_modes = ("A", "B", "B_now", "C") if args.cf_policy == "all" else (args.cf_policy,)
@@ -301,14 +331,14 @@ def main() -> int:
                 graupel_diag.update({"raw_grid_mass_available": True, "optical_mapping": "omitted"})
             else:
                 if "SWP" not in updates:
-                    fail("as-snow mapping requires SWP in the V4 replay input")
+                    fail("as-snow mapping requires SWP in the replay input")
                 if "RES" not in input_records or "RES" not in raw:
                     fail("as-snow mapping requires the native UDM snow radius RES")
                 native_res = raw["RES"][:raw_nl]
                 if native_res.size != raw_nl or not np.allclose(
                     input_records["RES"][0, :raw_nl], native_res, rtol=0.0, atol=0.0
                 ):
-                    fail("V4 RES differs from raw native UDM snow radii")
+                    fail("replay RES differs from raw native UDM snow radii")
                 qg_path = np.zeros(raw_nl, dtype=np.float64)
                 positive_cf = cf_mode > 0.0
                 if mode == "C":
@@ -370,10 +400,14 @@ def main() -> int:
         for mode, variants in mode_inputs.items():
             for graupel_mode, (updates, _graupel_diag) in variants.items():
                 variant_path = tmp / f"cf-{mode}-graupel-{graupel_mode}.input"
+                variant_verified = False
                 for policy in sw_policies:
                     for seed_offset, seed in enumerate(seed_values):
                         run_index += 1
                         write_variant(input_path, variant_path, updates, seed)
+                        if not variant_verified:
+                            assert_variant_preserves_records(input_path, variant_path, updates, input_records)
+                            variant_verified = True
                         out_path = tmp / f"{mode}-{graupel_mode}-{policy}-{seed_offset}.result"
                         run = run_reference(reference, data_dir, variant_path, out_path, policy)
                         if run.returncode:
@@ -387,7 +421,7 @@ def main() -> int:
                                 text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, check=False,
                             )
                             if default_run.returncode:
-                                fail(f"default V4 reference failed: {default_run.stdout[-1400:]}")
+                                fail(f"default reference failed: {default_run.stdout[-1400:]}")
                             report = compare(read_result(default_path), result)
                             if not report.get("passed"):
                                 fail("explicit delta policy 1 differs from the default reference path")
@@ -423,14 +457,22 @@ def main() -> int:
                     }
     summary = {
         "status": "PASS" if mode_inputs else "SKIPPED_SENTINEL_MINUS_ONE",
-        "experiment": f"V4 {phase} replay with common captured microphysics paths and independent cloud-mask seeds",
-        "source_capture": {"input": str(input_path), "raw": str(raw_path), "i": raw_i, "j": raw_j,
+        "experiment": f"{replay_version} {phase} replay with common captured microphysics paths and independent cloud-mask seeds",
+        "source_capture": {"input": str(input_path), "input_format": replay_version,
+                           "cfc_records_preserved": all(name in input_records for name in
+                               ("VMR_CFC11", "VMR_CFC12", "VMR_CFC22", "VMR_CCL4"))
+                               if replay_version == "RRTMGP_REPLAY_V8" else None,
+                           "frozen_metadata_present": any(name in input_records for name in
+                               ("GWP", "HWP", "LAMBDA_G", "LAMBDA_H", "FROZEN_MODE",
+                                "FROZEN_OCCURRENCE", "FROZEN_TABLE_SHA256_BYTES")),
+                           "variant_unmodified_records_preserved_exactly": True,
+                           "raw": str(raw_path), "i": raw_i, "j": raw_j,
                            "native_raw_layers": raw_nl, "extended_replay_layers": nl},
         "dry_layer_mass_source": ("native_dry_layer_mass" if "DRY_LAYER_MASS_KG_M2" in raw
                                   else "legacy_dp_over_gravity"),
         "seed_ensemble": {"count": args.seeds, "seeds": seed_values},
         "policy_labels": {
-            "A": "original V4 radiation CF and in-cloud paths",
+            "A": "original captured radiation CF and in-cloud paths",
             "B": "last actual UDM_CF_USED; recompute in-cloud paths from preserved grid-box mass; zero-CF grid mass is omitted",
             "B_now": "current-state UDM_CF_RECOMPUTED; recompute paths from preserved grid-box mass; zero-CF grid mass is omitted",
             "C": "original radiation CF with grid-mean paths passed as in-cloud paths; intentionally non-mass-preserving counterfactual",
