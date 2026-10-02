@@ -143,6 +143,10 @@ def read_raw(path: Path) -> tuple[str, int, int, dict[str, np.ndarray]]:
         fail(f"{path}: raw snapshot missing required fields: {', '.join(absent)}")
     if len(records["DP_HPA"]) != nl:
         fail(f"{path}: DP_HPA count differs from raw nl={nl}")
+    if "DRY_LAYER_MASS_KG_M2" in records:
+        dry_mass = records["DRY_LAYER_MASS_KG_M2"]
+        if dry_mass.shape != (nl,) or not np.isfinite(dry_mass).all() or np.any(dry_mass <= 0.0):
+            fail(f"{path}: DRY_LAYER_MASS_KG_M2 must contain nl finite positive values")
     for field in ("CF", "QC", "QI", "QS", "T", "QV", "REL", "REI", "RES", "P_HPA", "SOURCE_T",
                   "SOURCE_P_PA", "PI"):
         if field == "SOURCE_P_PA" and field not in records:
@@ -242,6 +246,26 @@ def assert_close(actual: np.ndarray, expected: np.ndarray, label: str,
     return float(difference.max(initial=0.0))
 
 
+def dry_layer_mass_kg_m2(raw: dict[str, np.ndarray], nl: int,
+                         require_native: bool = False) -> tuple[np.ndarray, str]:
+    """Return dry-air layer mass; historical captures use their explicit dp/g contract."""
+    native = raw.get("DRY_LAYER_MASS_KG_M2")
+    if native is not None:
+        values = np.asarray(native, dtype=np.float64)
+        if values.shape != (nl,) or not np.isfinite(values).all() or np.any(values <= 0.0):
+            fail("DRY_LAYER_MASS_KG_M2 must contain nl finite positive values")
+        return values.copy(), "native_dry_layer_mass"
+    if require_native:
+        fail("fresh UDM raw capture is missing DRY_LAYER_MASS_KG_M2")
+    dp = np.asarray(raw["DP_HPA"][:nl], dtype=np.float64)
+    gravity = float(raw["GRAVITY"][0])
+    if dp.shape != (nl,) or not np.isfinite(dp).all() or np.any(dp <= 0.0):
+        fail("legacy DP_HPA must contain nl finite positive values")
+    if not np.isfinite(gravity) or gravity <= 0.0:
+        fail("legacy GRAVITY must be finite and positive")
+    return dp * 100.0 / gravity, "legacy_dp_over_gravity"
+
+
 def corrected_hydrometeor(raw: dict[str, np.ndarray], q_name: str,
                           path_name: str, nl: int) -> np.ndarray:
     """Reconstruct the optional negative-input contract from preserved raw q.
@@ -271,7 +295,8 @@ def corrected_hydrometeor(raw: dict[str, np.ndarray], q_name: str,
         fail(f"{q_name}: accepted raw negative exceeds its strict bound")
     clipped = np.where(negative, q, 0.0)
     assert_close(raw[clipped_name], clipped, clipped_name, rtol=0.0, atol=0.0)
-    expected_correction = -clipped * raw["DP_HPA"][:nl] * 100.0 / float(raw["GRAVITY"][0]) * 1000.0
+    dry_mass, _ = dry_layer_mass_kg_m2(raw, nl)
+    expected_correction = -clipped * dry_mass * 1000.0
     # Default REAL paths may underflow to zero; clipped q remains available for
     # counts. This is one representable float32 quantum, not a physics tolerance.
     quantum = float(np.nextafter(np.float32(0.), np.float32(1.)))
@@ -332,17 +357,14 @@ def compare_input_to_raw(phase: str, raw: dict[str, np.ndarray],
     cf_error = assert_close(inp["CF"][:, :raw_nl], raw["CF"][None, :raw_nl],
                             f"{phase}: adapter CF vs raw CF", rtol=0.0, atol=0.0)
 
-    gravity = float(raw["GRAVITY"][0])
-    if not np.isfinite(gravity) or gravity <= 0.0:
-        fail(f"{phase}: raw gravity must be finite and positive")
+    dry_mass, dry_mass_source = dry_layer_mass_kg_m2(raw, raw_nl)
     cf = raw["CF"][:raw_nl]
-    dp = raw["DP_HPA"][:raw_nl]
     path_expected: dict[str, np.ndarray] = {}
     omitted: dict[str, Any] = {}
     path_differences: dict[str, float] = {}
     for path_name, q_name in (("LWP", "QC"), ("IWP", "QI"), ("SWP", "QS")) + ((("RWP", "QR"),) if "RWP" in inp else ()):
         q = corrected_hydrometeor(raw, q_name, path_name, raw_nl)
-        grid_path = dp * 100.0 / gravity * 1000.0 * q
+        grid_path = dry_mass * 1000.0 * q
         expected = np.zeros(raw_nl, dtype=np.float64)
         wet = cf > 0.0
         expected[wet] = grid_path[wet] / cf[wet]
@@ -367,7 +389,7 @@ def compare_input_to_raw(phase: str, raw: dict[str, np.ndarray],
             q = corrected_hydrometeor(raw, q_name, path_name, raw_nl)
             if q_name == "QH" and np.any(q > 0.0):
                 fail(f"{phase}: positive hail must be refused before optical replay")
-            expected_grid = dp * 100.0 / gravity * 1000.0 * q
+            expected_grid = dry_mass * 1000.0 * q
             for suffix, expected in (("GRID", expected_grid), ("OMITTED", expected_grid),
                                      ("RADIATION", np.zeros_like(expected_grid))):
                 name = f"{path_name}_{suffix}"
@@ -448,7 +470,8 @@ def compare_input_to_raw(phase: str, raw: dict[str, np.ndarray],
                           "top_domain_layer_temperature_interpolated_from_tlev": phase == "LW",
                           "max_h2o_qv_times_amd_w_difference": h2o_error},
         "cloud_paths": {"max_adapter_path_differences_g_m2": path_differences,
-                        "cf_zero_condensate_omission": omitted},
+                        "cf_zero_condensate_omission": omitted,
+                        "dry_layer_mass_source": dry_mass_source},
         "radii": {"max_difference_um": radius_differences,
                   "selection_counts": radius_selection_counts},
         "raw_mapped_q_negative_snapshot": negative_q,
@@ -650,7 +673,8 @@ def validate_cloud_fixture_phase(phase: str, fixture: dict[str, Any], raw: dict[
         actual_q = float(raw[source][layer])
         if actual_q <= 0.0:
             fail(f"{phase}: cloud fixture {source} is not positive at layer {layer}: {actual_q}")
-        raw_grid_mass = actual_q * float(raw["DP_HPA"][layer]) * 100.0 / float(raw["GRAVITY"][0]) * 1000.0
+        dry_mass, _ = dry_layer_mass_kg_m2(raw, raw_nl)
+        raw_grid_mass = actual_q * float(dry_mass[layer]) * 1000.0
         q_name, path_name = path_names[source]
         path = float(adapter[path_name][0, layer])
         if raw["CF"][layer] <= 0.0 or path <= 0.0:

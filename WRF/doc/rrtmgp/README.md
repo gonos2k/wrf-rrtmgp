@@ -47,7 +47,7 @@ CPU double precision 내부 계산, H2O/CO2/O3/N2O/CH4/O2 여섯 기체, LW 128 
 | --- | --- |
 | hPa 압력, 지면부터 위로 배열 | Pa로 변환, `top_at_1=.false.` |
 | 기체 체적혼합비 | 그대로 전달, 내부 double precision 변환 |
-| 구름 수분량 kg/kg와 층 압력 | 일반 경로에서 입력 builder가 `dp × 100 / g × 1000 × q / cf`로 구름 안 경로 g/m²를 구성 |
+| UDM 수분량 kg/kg dry air와 native 건조층 질량 | 37번 builder가 `Mdry × 1000 × q / cf`로 구름 안 경로 g/m²를 구성; [분모 및 독립 검사](NATIVE_DRY_MASS.md) |
 | 구름 분율과 경로 | 유한한 `cf`는 0–1이어야 함; 직접 builder/adapter API는 `cf=0`과 응축수를 거부. WRF wrapper는 명시적 예외로 clear optical path 0을 허용하고 누락된 원래 grid-box 경로를 기록 |
 | 액체 유효반경 µm | 반경 그대로 전달; 광학 lookup은 LUT 축 범위로 제한 |
 | UDM 빙정 반경 µm | adapter에서 유효직경으로 한 번 변환; Fu 배율 없음 |

@@ -99,6 +99,7 @@ CONTAINS
 #endif
               , cldfra_dp, cldfra_sh                                      &
               , re_cloud, re_ice, re_snow, udm_cldfra, udm_cf_step           &
+              , udm_dry_layer_mass                                         &
               , has_reqc, has_reqi, has_reqs                              &
               , PB                                                        &
               , F_ICE_PHY,F_RAIN_PHY                                      &
@@ -850,6 +851,7 @@ CONTAINS
 
 !..G. Thompson
    REAL, OPTIONAL, INTENT(IN) :: udm_cldfra(ims:ime,kms:kme,jms:jme)
+   REAL, OPTIONAL, INTENT(IN) :: udm_dry_layer_mass(ims:ime,kms:kme,jms:jme)
    INTEGER, OPTIONAL, INTENT(IN) :: udm_cf_step(ims:ime,jms:jme)
    REAL, DIMENSION(ims:ime,kms:kme,jms:jme), INTENT(INOUT):: re_cloud, re_ice, re_snow
    INTEGER, INTENT(INOUT):: has_reqc, has_reqi, has_reqs
@@ -2141,6 +2143,7 @@ CONTAINS
                   LWDNFLX=LWDNFLX,LWDNFLXC=LWDNFLXC,                &
                   mp_physics=mp_physics                             ,USE_RRTMGP=(lw_physics==RRTMGP_LWSCHEME) , &
                   udm_cldfra=udm_cldfra,udm_cf_step=udm_cf_step, &
+                  udm_dry_layer_mass=udm_dry_layer_mass, &
                   audit_step=itimestep,audit_time=xtime*60. )
              ! Serialized opt-in diagnostic: scratch outputs never feed the forecast.
              IF (lw_physics==RRTMGP_LWSCHEME) THEN
@@ -2248,6 +2251,7 @@ CONTAINS
                     mp_physics=mp_physics, &
                     emiss=EMISS, &
                     use_rrtmgp=engine==37, &
+                    udm_dry_layer_mass=udm_dry_layer_mass, &
                     mcica_seed_override=seed, &
                     glw=af(:,:,1), &
                     olr=af(:,:,2), &
@@ -2867,6 +2871,7 @@ CONTAINS
                      sw_difdflux=sw_difdflux                            & ! WRF-CMAQ coupled model
                                                                         ,USE_RRTMGP=(sw_physics==RRTMGP_SWSCHEME) , &
                   udm_cldfra=udm_cldfra,udm_cf_step=udm_cf_step, &
+                  udm_dry_layer_mass=udm_dry_layer_mass, &
                   audit_step=itimestep,audit_time=xtime*60. )
              ! Serialized opt-in diagnostic: scratch outputs never feed the forecast.
              IF (sw_physics==RRTMGP_SWSCHEME) THEN
@@ -2998,6 +3003,7 @@ CONTAINS
                     xcoszen=coszen, &
                     proceed_cmaq_sw=proceed_cmaq_sw, &
                     use_rrtmgp=engine==37, &
+                    udm_dry_layer_mass=udm_dry_layer_mass, &
                     mcica_seed_override=seed, &
                     swdnb=af(:,:,1), &
                     swupt=af(:,:,2), &

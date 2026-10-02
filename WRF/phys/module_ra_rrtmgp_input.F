@@ -45,7 +45,7 @@ CONTAINS
                                     grid_path,incloud_path,radius_um,reason,errmsg, &
                                     column_context,allow_clear_condensate, &
                                     omitted_grid_path,layer_reason,negative_q_limits, &
-                                    clipped_negative_q,negative_grid_correction)
+                                    clipped_negative_q,negative_grid_correction,dry_layer_mass_kg_m2)
     REAL, INTENT(IN) :: dp_hpa(:),cf(:),qc(:),qr(:),qi(:),qs(:),qg(:),qh(:)
     REAL, INTENT(IN) :: re_cloud_um(:),re_ice_um(:),re_snow_um(:),gravity
     REAL, INTENT(OUT) :: grid_path(:,:),incloud_path(:,:),radius_um(:,:)
@@ -61,7 +61,11 @@ CONTAINS
     ! corrected negatives and the positive addition to signed grid water path.
     REAL, OPTIONAL, INTENT(IN) :: negative_q_limits(:)
     REAL, OPTIONAL, INTENT(OUT) :: clipped_negative_q(:,:),negative_grid_correction(:,:)
-    REAL(real64) :: q(6),path64,radius64,dp64,g64,correction64
+    ! Physical host layers may supply exact native dry-air mass (kg/m2).
+    ! If absent, direct legacy callers explicitly retain their pressure/g
+    ! approximation; WRF option 37 callers require the native array.
+    REAL, OPTIONAL, INTENT(IN) :: dry_layer_mass_kg_m2(:)
+    REAL(real64) :: q(6),path64,radius64,mass64,g64,correction64
     REAL :: masses(SIZE(dp_hpa),6),clipped(SIZE(dp_hpa),6),limits(6)
     INTEGER :: n,k,p
     LOGICAL :: allow_clear,clear_column,omitted_any
@@ -85,6 +89,20 @@ CONTAINS
       reason=RRTMGP_INPUT_SHAPE
       CALL fatal_builder_message('RRTMGP_INPUT_SHAPE_MISMATCH in rrtmgp_build_udm_inputs',column_context)
       RETURN
+    END IF
+    IF(PRESENT(dry_layer_mass_kg_m2)) THEN
+      IF(SIZE(dry_layer_mass_kg_m2)/=n) THEN
+        reason=RRTMGP_INPUT_SHAPE
+        CALL fatal_builder_message('RRTMGP_INPUT_SHAPE_MISMATCH in UDM dry_layer_mass_kg_m2',column_context)
+        RETURN
+      END IF
+      DO k=1,n
+        IF(.NOT.ieee_is_finite(dry_layer_mass_kg_m2(k)) .OR. dry_layer_mass_kg_m2(k)<=0.) THEN
+          CALL fail_builder_layer(reason,RRTMGP_INPUT_INVALID, &
+               'RRTMGP_INPUT_UDM_DRY_LAYER_MASS_NOT_POSITIVE_FINITE',k,column_context)
+          RETURN
+        END IF
+      END DO
     END IF
     IF(PRESENT(omitted_grid_path)) THEN
       IF(SIZE(omitted_grid_path,1)/=n .OR. SIZE(omitted_grid_path,2)/=6) THEN
@@ -218,14 +236,18 @@ CONTAINS
       ELSE IF(cf(k)==0.0) THEN
         IF(PRESENT(layer_reason)) layer_reason(k)=RRTMGP_INPUT_CLEAR
       END IF
-      dp64=REAL(dp_hpa(k),real64)*100.0_real64/g64*1000.0_real64
+      IF(PRESENT(dry_layer_mass_kg_m2)) THEN
+        mass64=REAL(dry_layer_mass_kg_m2(k),real64)*1000.0_real64
+      ELSE
+        mass64=REAL(dp_hpa(k),real64)*100.0_real64/g64*1000.0_real64
+      END IF
       DO p=1,6
-        path64=q(p)*dp64
+        path64=q(p)*mass64
         IF(.NOT.ieee_is_finite(path64) .OR. path64>REAL(HUGE(0.0),real64)) THEN
           CALL fail_builder_layer(reason,RRTMGP_INPUT_OVERFLOW,'RRTMGP_INPUT_PATH_OVERFLOW',k,column_context)
           RETURN
         END IF
-        correction64=-REAL(clipped(k,p),real64)*dp64
+        correction64=-REAL(clipped(k,p),real64)*mass64
         IF(.NOT.ieee_is_finite(correction64) .OR. correction64>REAL(HUGE(0.0),real64)) THEN
           CALL fail_builder_layer(reason,RRTMGP_INPUT_OVERFLOW,'RRTMGP_INPUT_PATH_OVERFLOW',k,column_context)
           RETURN

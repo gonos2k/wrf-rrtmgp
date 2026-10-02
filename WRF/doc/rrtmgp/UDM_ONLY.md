@@ -20,7 +20,7 @@ UDM 기준은 공개 WRF `06d4240ae989cc3e50af412bb472df3d9048783c`의 `phys/mod
 | qh | 양의 질량이면 WRF fatal | 광학 미지원; 근거 없는 허용 하한 없음 |
 | qnc/qnr/qnn | UDM 미세물리 내부 | qnc는 native liquid radius 계산에 사용 |
 
-`rrtmgp_build_udm_inputs`의 6개 phase 열은 L/I/R/S/G/H 순서다. `WP_grid=q×dp_hPa×100/g×1000` (g/m²), `cf>0`에서 `WP_in=WP_grid/cf`를 계산한다. 크기와 질량을 RRTMG의 0.99 계수, 130 µm 제한, Fu 크기 배율로 다시 보정하지 않는다. builder는 qg의 준비 경로도 계산하지만 production wrapper가 실제 `GWP_RADIATION=0` 및 `GWP_OMITTED=GWP_GRID`로 기록한다.
+`rrtmgp_build_udm_inputs`의 6개 phase 열은 L/I/R/S/G/H 순서다. production 37은 native 건조층 질량으로 `WP_grid=q×Mdry×1000` (g/m²), `cf>0`에서 `WP_in=WP_grid/cf`를 계산한다. `Mdry=-DNW×(C1H×MUT+C2H)/g`이며 moisture-loaded `P8W` 차분을 질량분모로 쓰지 않는다. 직접 historical builder 호출의 배열 생략만 과거 `Δp/g` 근사를 유지한다. [분모·전달·독립 검사](NATIVE_DRY_MASS.md)를 따른다. 크기와 질량을 RRTMG의 0.99 계수, 130 µm 제한, Fu 크기 배율로 다시 보정하지 않는다. builder는 qg의 준비 경로도 계산하지만 production wrapper가 실제 `GWP_RADIATION=0` 및 `GWP_OMITTED=GWP_GRID`로 기록한다.
 
 음수 입력은 [UDM process-scale 계약](NEGATIVE_INPUT_CONTRACT.md)에 따라 37번의 복사 입력 복사본에서만 제한적으로 0으로 보정한다. 원래 음수값과 phase별 수분경로 보정량을 보존하며 상한 이상의 음수와 모든 양의 hail은 계속 거부한다. 이는 부동소수점 오차가 입증됐다는 의미가 아니다.
 

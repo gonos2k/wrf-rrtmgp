@@ -1,5 +1,9 @@
 # WRF RRTMGP 37 실행 검증
 
+## Native dry-mass 분모 수정
+
+[건조질량 계약](NATIVE_DRY_MASS.md)은 production 37 수분 경로를 native hybrid 건조층 질량으로 구성한다. GNU 직렬 WRF 재빌드, standalone 66/66, paired UDM SCM·실제 LW/SW replay 및 초기 NetCDF 좌표의 독립 재계산이 통과했다. 수정 전 frozen 실행파일 대비 4/4는 control/mixed 각각 208개 배열이 bitwise 동일했다. 이는 이번 분모 수정의 직렬 회귀 근거이며 새 병렬·restart·장시간·관측 검증을 뜻하지 않는다. [실행·해시 기록](../../../validation/rrtmgp37/native-dry-mass/README.md)을 참고한다. 아래는 각 이전 단계의 역사적 검증 기록이다.
+
 2026년 10월 1일, 이 저장소의 실제 연결 코드로 GNU Fortran 13.3.0, NetCDF C 4.9.2와 Fortran 4.5.4에서 검증했다. 결과는 CPU 계산과 WRF 출력 계약을 확인한다. 예보 정확도, 다른 컴파일러, MPI/OpenMP 및 GPU는 검증하지 않았다.
 
 ## 이 저장소에서 완료한 확인
