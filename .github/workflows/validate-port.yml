@@ -49,6 +49,8 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       - name: Verify registered source hashes without modifying the checkout
         run: python3 tools/register37.py --check
+      - name: Verify WRF UDM module dependency edges schedule under parallel make
+        run: python3 WRF/test/rrtmgp/test_wrf_udm_dependencies.py WRF/main/depend.common
   component-validation:
     needs: registration
     runs-on: ubuntu-24.04
