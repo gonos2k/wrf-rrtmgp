@@ -3047,7 +3047,11 @@ CONTAINS
                         chs(i,j)  = ( chs(i,j)  * XICE(i,j) ) + ( (1.0-XICE(i,j)) * chs_sea(i,j)  )
                         qsfc(i,j) = ( qsfc(i,j) * XICE(i,j) ) + ( (1.0-XICE(i,j)) * qsfc_sea(i,j) )
                         qgh(i,j)  = ( qgh(i,j)  * XICE(i,j) ) + ( (1.0-XICE(i,j)) * qgh_sea(i,j)  )
-                        qz0(i,j)  = ( qz0(i,j)  * XICE(i,j) ) + ( (1.0-XICE(i,j)) * qz0_sea(i,j)  )
+                        ! QZ0_SEA is produced only by the MYJ/QNSE surface-layer wrappers.
+                        IF ( myj ) THEN
+                           qz0(i,j) = ( qz0(i,j) * XICE(i,j) ) + &
+                                      ( (1.0-XICE(i,j)) * qz0_sea(i,j) )
+                        ENDIF
                                                             !  print *,'hfx =',hfx_sea(170,20)
                                                             !   print *,'XICE =',XICE(170,20)
                                                             !    print *,'QSFC =',QSFC(170,20)
@@ -3407,7 +3411,11 @@ CONTAINS
                         chs(i,j)  = ( chs(i,j)  * XICE(i,j) ) + ( (1.0-XICE(i,j)) * chs_sea(i,j)  )
                         qsfc(i,j) = ( qsfc(i,j) * XICE(i,j) ) + ( (1.0-XICE(i,j)) * qsfc_sea(i,j) )
                         qgh(i,j)  = ( qgh(i,j)  * XICE(i,j) ) + ( (1.0-XICE(i,j)) * qgh_sea(i,j)  )
-                        qz0(i,j)  = ( qz0(i,j)  * XICE(i,j) ) + ( (1.0-XICE(i,j)) * qz0_sea(i,j)  )
+                        ! QZ0_SEA is produced only by the MYJ/QNSE surface-layer wrappers.
+                        IF ( myj ) THEN
+                           qz0(i,j) = ( qz0(i,j) * XICE(i,j) ) + &
+                                      ( (1.0-XICE(i,j)) * qz0_sea(i,j) )
+                        ENDIF
                         hfx(i,j)  = ( hfx(i,j)  * XICE(i,j) ) + ( (1.0-XICE(i,j)) * hfx_sea(i,j)  )
                         qfx(i,j)  = ( qfx(i,j)  * XICE(i,j) ) + ( (1.0-XICE(i,j)) * qfx_sea(i,j)  )
                         lh(i,j)   = ( lh(i,j)   * XICE(i,j) ) + ( (1.0-XICE(i,j)) * lh_sea(i,j)   )
@@ -4015,7 +4023,11 @@ CONTAINS
                         chs(i,j)  = ( chs(i,j)  * XICE(i,j) ) + ( (1.0-XICE(i,j)) * chs_sea(i,j)  )
                         qsfc(i,j) = ( qsfc(i,j) * XICE(i,j) ) + ( (1.0-XICE(i,j)) * qsfc_sea(i,j) )
                         qgh(i,j)  = ( qgh(i,j)  * XICE(i,j) ) + ( (1.0-XICE(i,j)) * qgh_sea(i,j)  )
-                        qz0(i,j)  = ( qz0(i,j)  * XICE(i,j) ) + ( (1.0-XICE(i,j)) * qz0_sea(i,j)  )
+                        ! QZ0_SEA is produced only by the MYJ/QNSE surface-layer wrappers.
+                        IF ( myj ) THEN
+                           qz0(i,j) = ( qz0(i,j) * XICE(i,j) ) + &
+                                      ( (1.0-XICE(i,j)) * qz0_sea(i,j) )
+                        ENDIF
                         hfx(i,j)  = ( hfx(i,j)  * XICE(i,j) ) + ( (1.0-XICE(i,j)) * hfx_sea(i,j)  )
                         qfx(i,j)  = ( qfx(i,j)  * XICE(i,j) ) + ( (1.0-XICE(i,j)) * qfx_sea(i,j)  )
                         lh(i,j)   = ( lh(i,j)   * XICE(i,j) ) + ( (1.0-XICE(i,j)) * lh_sea(i,j)   )
@@ -4230,7 +4242,11 @@ CONTAINS
                         chs(i,j)  = ( chs(i,j)  * XICE(i,j) ) + ( (1.0-XICE(i,j)) * chs_sea(i,j)  )
                         qsfc(i,j) = ( qsfc(i,j) * XICE(i,j) ) + ( (1.0-XICE(i,j)) * qsfc_sea(i,j) )
                         qgh(i,j)  = ( qgh(i,j)  * XICE(i,j) ) + ( (1.0-XICE(i,j)) * qgh_sea(i,j)  )
-                        qz0(i,j)  = ( qz0(i,j)  * XICE(i,j) ) + ( (1.0-XICE(i,j)) * qz0_sea(i,j)  )
+                        ! QZ0_SEA is produced only by the MYJ/QNSE surface-layer wrappers.
+                        IF ( myj ) THEN
+                           qz0(i,j) = ( qz0(i,j) * XICE(i,j) ) + &
+                                      ( (1.0-XICE(i,j)) * qz0_sea(i,j) )
+                        ENDIF
                                                             !  print *,'hfx =',hfx_sea(170,20)
                                                             !   print *,'XICE =',XICE(170,20)
                                                             !    print *,'QSFC =',QSFC(170,20)
@@ -6129,6 +6145,7 @@ CONTAINS
                                                 TH2_SEA,          &
                                                 U10_SEA,          &
                                                 USTM_SEA,         &
+                                                USTM_HOLD,        &
                                                 V10_SEA
 
      REAL,     DIMENSION( ims:ime, jms:jme ) ::                   &
@@ -6174,8 +6191,14 @@ CONTAINS
                              SST, TSK, TSK_SEA, TSK_LOCAL )
 
 
-! INTENT (INOUT) to SFCLAY:  Save the variables before the first call
-! (for land/frozen water) to SFCLAY, to keep from double-counting the
+! INTENT (INOUT) to SFCLAY: Save the variables before the first call
+! (for land/frozen water) to SFCLAY, to keep from double-counting effects.
+! USTM is also INOUT. Preserve its pre-ice state for the open-water call.
+     IF ( PRESENT(USTM) ) THEN
+        USTM_HOLD(its:ite,jts:jte) = USTM(its:ite,jts:jte)
+     ELSE
+        USTM_HOLD(its:ite,jts:jte) = 0.0
+     ENDIF
      BR_HOLD(its:ite,jts:jte)     = BR(its:ite,jts:jte)
      CHS2_HOLD(its:ite,jts:jte)   = CHS2(its:ite,jts:jte)
      CHS_HOLD(its:ite,jts:jte)    = CHS(its:ite,jts:jte)
@@ -6219,7 +6242,6 @@ CONTAINS
      ! T2
      ! TH2
      ! U10
-     ! USTM
      ! V10
 
 
@@ -6311,7 +6333,8 @@ CONTAINS
      ZNT_SEA(its:ite,jts:jte)    = ZNT_HOLD(its:ite,jts:jte)
      QSFC_SEA(its:ite,jts:jte)   = QSFC_HOLD(its:ite,jts:jte)
 !
-     ! open-water call
+     ! open-water call: start from the same pre-ice INOUT USTM state.
+     USTM_SEA(its:ite,jts:jte) = USTM_HOLD(its:ite,jts:jte)
      call sfclayrev(U3D,V3D,T3D,QV3D,P3D,dz8w,                    & ! I
                  CP,G,ROVCP,R,XLV,PSFC,                        & ! I
                  CHS_SEA,CHS2_SEA,CQS2_SEA,CPM_SEA,            & ! I/O
@@ -6565,6 +6588,7 @@ ITIMESTEP,TICE2TSK_IF2COLD,XICE_THRESHOLD,                         &
                                                 TH2_SEA,          &
                                                 U10_SEA,          &
                                                 USTM_SEA,         &
+                                                USTM_HOLD,        &
                                                 V10_SEA
 
      REAL,     DIMENSION( ims:ime, jms:jme ) ::                   &
@@ -6606,9 +6630,14 @@ ITIMESTEP,TICE2TSK_IF2COLD,XICE_THRESHOLD,                         &
                              SST, TSK, TSK_SEA, TSK_LOCAL )
 
 
-! INTENT (INOUT) to SFCLAY:  Save the variables before the first call
-! (for land/frozen water) to SFCLAY, to keep from double-counting the
-! effects of that routine
+! INTENT (INOUT) to SFCLAY: Save the variables before the first call
+! (for land/frozen water) to SFCLAY, to keep from double-counting effects.
+! USTM is also INOUT. Preserve its pre-ice state for the open-water call.
+     IF ( PRESENT(USTM) ) THEN
+        USTM_HOLD(its:ite,jts:jte) = USTM(its:ite,jts:jte)
+     ELSE
+        USTM_HOLD(its:ite,jts:jte) = 0.0
+     ENDIF
      BR_HOLD(its:ite,jts:jte)     = BR(its:ite,jts:jte)
      CHS2_HOLD(its:ite,jts:jte)   = CHS2(its:ite,jts:jte)
      CHS_HOLD(its:ite,jts:jte)    = CHS(its:ite,jts:jte)
@@ -6652,7 +6681,6 @@ ITIMESTEP,TICE2TSK_IF2COLD,XICE_THRESHOLD,                         &
      ! T2
      ! TH2
      ! U10
-     ! USTM
      ! V10
 
 
@@ -6743,7 +6771,8 @@ ITIMESTEP,TICE2TSK_IF2COLD,XICE_THRESHOLD,                         &
      ZNT_SEA(its:ite,jts:jte)    = ZNT_HOLD(its:ite,jts:jte)
      QSFC_SEA(its:ite,jts:jte)   = QSFC_HOLD(its:ite,jts:jte)
 !
-     ! open-water call
+     ! open-water call: start from the same pre-ice INOUT USTM state.
+     USTM_SEA(its:ite,jts:jte) = USTM_HOLD(its:ite,jts:jte)
      call sfclay(U3D,V3D,T3D,QV3D,P3D,dz8w,                    & ! I
                  CP,G,ROVCP,R,XLV,PSFC,                        & ! I
                  CHS_SEA,CHS2_SEA,CQS2_SEA,CPM_SEA,            & ! I/O

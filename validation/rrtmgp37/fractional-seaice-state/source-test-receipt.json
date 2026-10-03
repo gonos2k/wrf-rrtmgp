@@ -1,0 +1,52 @@
+{
+  "status": "PASS",
+  "scope": "four MYJ-only QZ0 blends guarded; both wrappers initialize open-water USTM input; actual SFCLAY1D INOUT recurrence compiled and exercised",
+  "optional_ustm_absence": "wrapper scratch is deterministic, but full EM_CORE SFCLAY optional-absent entry is not claimed supported because the entry forwards USTM(ims,j) unguarded",
+  "sfclayrev_scope": "same INOUT scratch defect guarded in wrapper; only SFCLAY1 is evidenced as active in the winter run",
+  "source_sha256": {
+    "WRF/phys/module_surface_driver.F": "fc99b8e6837573ed2335b6dd7bf62071c2da91348e4c5bf8668d780933f7c6cd",
+    "WRF/phys/module_sf_sfclay.F": "dfd7aae5ef1f0bd979246480af5276a1ee956bc216ec8dc6e82eb963ded761dc",
+    "WRF/phys/module_sf_sfclayrev.F": "64da720d495f6eb801bbd03c21ea69554ed3b9953a0cc2a6e1e9044111c9b691"
+  },
+  "qz0_blend_sites": 4,
+  "sfclay_probe": {
+    "updated_ustm_from_0_1": 0.09330353885889053,
+    "updated_ustm_from_0_5": 0.29330354928970337,
+    "repeated_ustm_from_0_5": 0.29330354928970337,
+    "actual_source_probe_stdout": "9.3303538858890533E-02   2.9330354928970337E-01   2.9330354928970337E-01"
+  },
+  "source_extracted_wrapper_probe": {
+    "control": "patched",
+    "partial_ice": 0.25,
+    "full_ice": 0.25,
+    "no_ice": 0.25,
+    "optional_ustm_absent_wrapper_scratch": 0.0,
+    "repeated_step": 0.32499998807907104,
+    "myj_false_qz0_unchanged": 0.006000000052154064,
+    "myj_true_qz0_partial_weight": 0.007949999533593655,
+    "myj_true_qz0_full_ice": 0.006000000052154064,
+    "nan_flags": {
+      "partial_ice": false,
+      "full_ice": false,
+      "myj_false_qz0": false
+    },
+    "actual_extracted_code": "2.5000000000000000E-01   2.5000000000000000E-01   2.5000000000000000E-01   3.2499998807907104E-01   0.0000000000000000E+00   6.0000000521540642E-03   7.9499995335936546E-03   6.0000000521540642E-03"
+  },
+  "unfixed_source_negative_control": {
+    "control": "unfixed-source-derived-sentinel-control",
+    "partial_ice": "NaN",
+    "full_ice": "NaN",
+    "no_ice": 0.25,
+    "optional_ustm_absent_wrapper_scratch": 0.0,
+    "repeated_step": "NaN",
+    "myj_false_qz0_unchanged": "NaN",
+    "myj_true_qz0_partial_weight": 0.007949999533593655,
+    "myj_true_qz0_full_ice": 0.006000000052154064,
+    "nan_flags": {
+      "partial_ice": true,
+      "full_ice": true,
+      "myj_false_qz0": true
+    },
+    "actual_extracted_code": "NaN                      NaN   2.5000000000000000E-01                      NaN   0.0000000000000000E+00                      NaN   7.9499995335936546E-03   6.0000000521540642E-03"
+  }
+}

@@ -4,7 +4,8 @@
     "Registry/Registry.EM_COMMON": "d0065b60635e6e7b8046523e5048d4b9014a1a7a",
     "phys/module_physics_init.F": "9e604a4f37ec2871035a93491fa07f7bfe873c1b",
     "phys/module_radiation_driver.F": "00cfd82f25ef3e1586b9c5c41a8a71d1c6e6e496",
-    "phys/module_mp_udm.F": "40d235faef4d24af4b4254538aa6682cbaf0dbf2"
+    "phys/module_mp_udm.F": "40d235faef4d24af4b4254538aa6682cbaf0dbf2",
+    "phys/module_surface_driver.F": "22f96580fb2fb448f21997864f75d8a4c7694b70"
   },
   "patched_blobs": {
     ".gitignore": "0b7f60a0291ceb7886983068519384b3331bb51b",
@@ -104,7 +105,7 @@
     "run/rrtmgp-gas-sw-g112.nc": "dae237da8b77f6b60d517e5fd78590cea8cfb7bb",
     "share/module_check_a_mundo.F": "fa3bdb3a522939dde398a6888562ec151b9be07d",
     "share/wrf_timeseries.F": "7221cd038f8056ad7fea9fc29c885964e8102a23",
-    "test/rrtmgp/CMakeLists.txt": "72d9e253882738a235c71c799789076c3f5c114d",
+    "test/rrtmgp/CMakeLists.txt": "8fa697fa64353811281315122cfc091da56db2a4",
     "test/rrtmgp/analyse_delta_policy.py": "d886670615185dbe5ad34165fc7ff09f015e8293",
     "test/rrtmgp/analyse_udm_physics_audit.py": "aca75ea46d768b27d5ae6f7d231f89726c87f31f",
     "test/rrtmgp/analyze_ice_roughness.py": "87e47f643eb8d6eeccc5fa5f83063e766a1953bf",
@@ -200,7 +201,9 @@
     "doc/rrtmgp/COLUMN_WORKSPACE.md": "bf39d2fc7a0836796befe142ba1a3194c762d2b5",
     "test/rrtmgp/test_phase_path_stats.f90": "3ecc3fc952d65848453ba9c6955215c48f0510a9",
     "doc/rrtmgp/PHASE_PATH_DIAGNOSTICS.md": "a19745ec037d09ce1e8fcf9c626fb2b1fb75523f",
-    "test/rrtmgp/test_frozen_raw_replay_contract.py": "50836583b1b4d4f347b6715e2a32722d006d1894"
+    "test/rrtmgp/test_frozen_raw_replay_contract.py": "50836583b1b4d4f347b6715e2a32722d006d1894",
+    "phys/module_surface_driver.F": "378bfdc7329601415ce578e9515e56a6f325291a",
+    "test/rrtmgp/test_fractional_seaice_state.py": "1daca594d8eb4c983400c67a5d0da07bf095af93"
   },
   "backend": "CPU_LINKED",
   "wrf_forecast_validated": false,
@@ -368,5 +371,16 @@
       "evidence": "validation/rrtmgp37/udm-cu-cloud-populations/README.md",
       "operational_accuracy_established": false
     }
+  },
+  "fractional_seaice_restart_followup": {
+    "status": "SOURCE_REGRESSION_PASS_FULL_WRF_PENDING",
+    "base": "8ab95cfa984235622687bf708f94385c2774ceac",
+    "baseline_surface_sha256": "8eb9e3414d7acbfdb51395257a3f972c3b99c14f9f9bfac5d54836ab986c7f71",
+    "surface_sha256": "fc99b8e6837573ed2335b6dd7bf62071c2da91348e4c5bf8668d780933f7c6cd",
+    "scope": "QZ0 blend only for MYJ/QNSE producers; independent ice/water SFCLAY and SFCLAYREV calls receive the same prior USTM. Surface formulas, radiation sources, coefficients and namelist physics unchanged. Source-only regression is not corrected forecast/restart certification.",
+    "original_checkpoint_failure_preserved": true,
+    "fresh_full_wrf_build": "NOT_RUN",
+    "corrected_winter24h": "NOT_RUN",
+    "corrected_restart": "NOT_RUN"
   }
 }

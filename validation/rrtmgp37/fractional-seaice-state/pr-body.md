@@ -1,0 +1,5 @@
+Initialize fractional-sea-ice wrapper state before open-water calls. SFCLAY and SFCLAYREV USTM scratch now starts from the wrapper's incoming state; four QZ0_SEA blends run only on the existing MYJ/QNSE paths that produce that value. The existing sea-ice weighting and six CU/radiation source files remain unchanged. This separate surface PR is stacked on `fix-udm-cu-cloud-optics` (PR46).
+
+Validation compiles and calls actual SFCLAY1D, then exercises source-extracted initialization/blending statements for no/partial/full ice and repeated calls. Controlled removal of only the new statements reproduces NaN propagation. The focused CTest and 24 synthetic runner controls pass. SFCLAYREV evidence is static; full optional-argument ABI support and forecast/checkpoint causality are not established by these tests.
+
+The retained evidence preserves the earlier RA37 checkpoint FAIL, exact source/test pins and independent review. At this draft's preparation, the fresh full GNU dm+sm build is RUNNING; new winter24h and own-restart checks are NOT_RUN. No full forecast/restart PASS or pristine-checkpoint parity is claimed.

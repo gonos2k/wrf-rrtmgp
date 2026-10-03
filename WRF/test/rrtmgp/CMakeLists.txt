@@ -9,6 +9,11 @@ add_test(NAME frozen_raw_replay_contract COMMAND "${Python3_EXECUTABLE}"
 add_test(NAME cu_population_replay_contract COMMAND "${Python3_EXECUTABLE}"
   "${CMAKE_CURRENT_SOURCE_DIR}/test_cu_population_replay.py")
 if(CMAKE_Fortran_COMPILER_ID STREQUAL "GNU")
+  add_test(NAME fractional_seaice_state_contract COMMAND "${Python3_EXECUTABLE}"
+    "${CMAKE_CURRENT_SOURCE_DIR}/test_fractional_seaice_state.py"
+    --repo "${WRF_ROOT}/.."
+    --compiler "${CMAKE_Fortran_COMPILER}"
+    --output-root "${CMAKE_CURRENT_BINARY_DIR}/fractional-seaice-state-runs")
   add_test(NAME rrtmgp_column_selection_contract COMMAND "${Python3_EXECUTABLE}"
     "${CMAKE_CURRENT_SOURCE_DIR}/test_column_selection.py" "${WRF_ROOT}")
   add_test(NAME native_hydro_snapshot COMMAND "${Python3_EXECUTABLE}"
