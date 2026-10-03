@@ -1,0 +1,290 @@
+{
+  "adapter_input_checks": {
+    "cloud_paths": {
+      "cf_zero_condensate_omission": {
+        "IWP": {
+          "grid_box_mass_g_m2_by_layer": [],
+          "layers": 0,
+          "max_grid_box_mass_g_m2_per_layer": 0.0,
+          "total_grid_box_mass_g_m2_across_snapshot_layers": 0.0
+        },
+        "LWP": {
+          "grid_box_mass_g_m2_by_layer": [],
+          "layers": 0,
+          "max_grid_box_mass_g_m2_per_layer": 0.0,
+          "total_grid_box_mass_g_m2_across_snapshot_layers": 0.0
+        },
+        "RWP": {
+          "grid_box_mass_g_m2_by_layer": [],
+          "layers": 0,
+          "max_grid_box_mass_g_m2_per_layer": 0.0,
+          "total_grid_box_mass_g_m2_across_snapshot_layers": 0.0
+        },
+        "SWP": {
+          "grid_box_mass_g_m2_by_layer": [],
+          "layers": 0,
+          "max_grid_box_mass_g_m2_per_layer": 0.0,
+          "total_grid_box_mass_g_m2_across_snapshot_layers": 0.0
+        }
+      },
+      "dry_layer_mass_source": "native_dry_layer_mass",
+      "max_adapter_path_differences_g_m2": {
+        "GWP": 0.0,
+        "GWP_GRID": 0.0,
+        "GWP_OMITTED": 0.0,
+        "GWP_RADIATION": 0.0,
+        "GWP_grid_to_radiation": 0.0,
+        "GWP_padded": 0.0,
+        "GWP_radiation_to_adapter": 0.0,
+        "HWP": 0.0,
+        "HWP_GRID": 0.0,
+        "HWP_OMITTED": 0.0,
+        "HWP_RADIATION": 0.0,
+        "HWP_grid_to_radiation": 0.0,
+        "HWP_padded": 0.0,
+        "HWP_radiation_to_adapter": 0.0,
+        "IWP": 0.0,
+        "LAMBDA_G": 0.0,
+        "LAMBDA_H": 0.0,
+        "LWP": 3.485141810699588e-07,
+        "NATIVE_DRY_LAYER_MASS_KG_M2": 0.0,
+        "RWP": 0.0,
+        "SWP": 0.0
+      }
+    },
+    "pressure": {
+      "adapter_layers": 47,
+      "max_cf_raw_adapter_difference": 0.0,
+      "max_play_p_hpa_difference": 0.0,
+      "max_play_source_pressure_difference_hpa": 2.6855468718167685e-05,
+      "max_plev_dp_difference_hpa": 0.0,
+      "play_inside_interfaces": true,
+      "plev_strictly_decreasing": true,
+      "raw_wrf_layers": 39
+    },
+    "radii": {
+      "max_difference_um": {
+        "REI": 0.0,
+        "REI_vs_SOURCE_RE_ICE_um": 6.199115887284279e-09,
+        "REL": 0.0,
+        "REL_vs_SOURCE_RE_CLOUD_um": 6.80010998621583e-08,
+        "RES": 0.0,
+        "RES_vs_SOURCE_RE_SNOW_um": 6.315531209111214e-07
+      },
+      "selection_counts": {
+        "REI": {
+          "diagnosed_source_layers": 0,
+          "host_background_fallback_layers": 0
+        },
+        "REL": {
+          "diagnosed_source_layers": 1,
+          "host_background_fallback_layers": 0
+        },
+        "RES": {
+          "diagnosed_source_layers": 0,
+          "host_background_fallback_layers": 0
+        }
+      }
+    },
+    "raw_mapped_q_negative_snapshot": {
+      "QC": {
+        "count": 0,
+        "minimum_all": 0.0,
+        "minimum_negative": null,
+        "registered_source": true
+      },
+      "QI": {
+        "count": 0,
+        "minimum_all": 0.0,
+        "minimum_negative": null,
+        "registered_source": true
+      },
+      "QS": {
+        "count": 0,
+        "minimum_all": 0.0,
+        "minimum_negative": null,
+        "registered_source": true
+      }
+    },
+    "state_mapping": {
+      "max_h2o_qv_times_amd_w_difference": 1.6125205615225013e-09,
+      "max_tlay_source_t_difference_k": 0.0,
+      "max_top_tlay_interface_interpolation_difference_k": 7.62939453125e-06,
+      "top_domain_layer_temperature_interpolated_from_tlev": true
+    }
+  },
+  "captured_column": {
+    "i": 268,
+    "j": 27
+  },
+  "cloud_fixture_checks": null,
+  "files": {
+    "input": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-stratified-replacement-captures-v1/daylight_unclipped_liquid_cloud_control/capture/lw.input",
+    "production_result": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-stratified-replacement-captures-v1/daylight_unclipped_liquid_cloud_control/capture/lw.result",
+    "raw": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-stratified-replacement-captures-v1/daylight_unclipped_liquid_cloud_control/capture/lw.raw",
+    "reference_result": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-stratified-replacement-captures-v1/daylight_unclipped_liquid_cloud_control/capture/lw.reference.result"
+  },
+  "microphysics_mapping": {
+    "generic_raw_sources_present": [
+      "SOURCE_QC",
+      "SOURCE_QI",
+      "SOURCE_QS"
+    ],
+    "mapping_checks": [
+      "QC=source_QC",
+      "QI=source_QI",
+      "QS=source_QS"
+    ],
+    "mapping_classification": "udm_all_native_species_preserved",
+    "mp_physics": 27,
+    "source_flags": {
+      "QC": true,
+      "QI": true,
+      "QS": true
+    }
+  },
+  "phase": "LW",
+  "reference_comparison": {
+    "failed_sections": [],
+    "max_differences": {
+      "CLOUD_TAU": {
+        "max_abs": 0.0,
+        "max_tolerance": 5.9082765012058936e-12,
+        "passed": true,
+        "tolerance": "2e-13 absolute + 2e-12 relative"
+      },
+      "DI_USED": {
+        "max_abs": 0.0,
+        "max_tolerance": 4.02e-11,
+        "passed": true,
+        "tolerance": "2e-13 absolute + 2e-12 relative"
+      },
+      "DN": {
+        "max_abs": 1.3513221858829638e-05,
+        "max_tolerance": 0.0001230703125,
+        "passed": true,
+        "tolerance": "4 float32 ULP + 1e-6"
+      },
+      "DNC": {
+        "max_abs": 1.180657596933088e-05,
+        "max_tolerance": 0.0001230703125,
+        "passed": true,
+        "tolerance": "4 float32 ULP + 1e-6"
+      },
+      "DS_USED": {
+        "max_abs": 0.0,
+        "max_tolerance": 5.0200000000000005e-11,
+        "passed": true,
+        "tolerance": "2e-13 absolute + 2e-12 relative"
+      },
+      "FROZEN_TAU": {
+        "max_abs": 0.0,
+        "max_tolerance": 2e-13,
+        "passed": true,
+        "tolerance": "2e-13 absolute + 2e-12 relative"
+      },
+      "GAS_COL_DRY": {
+        "max_abs": 134217728.0,
+        "max_tolerance": 2009649087116.9656,
+        "passed": true,
+        "tolerance": "2e-13 absolute + 2e-12 relative"
+      },
+      "GAS_TAU": {
+        "max_abs": 1.8189894035458565e-12,
+        "max_tolerance": 4.0741686206860853e-07,
+        "passed": true,
+        "tolerance": "2e-13 absolute + 2e-12 relative"
+      },
+      "GAS_TAU_RAW": {
+        "max_abs": 1.8189894035458565e-12,
+        "max_tolerance": 4.0741686206860853e-07,
+        "passed": true,
+        "tolerance": "2e-13 absolute + 2e-12 relative"
+      },
+      "GRAUPEL_TAU_ABS": {
+        "max_abs": 0.0,
+        "max_tolerance": 2e-13,
+        "passed": true,
+        "tolerance": "2e-13 absolute + 2e-12 relative"
+      },
+      "HAIL_TAU_ABS": {
+        "max_abs": 0.0,
+        "max_tolerance": 2e-13,
+        "passed": true,
+        "tolerance": "2e-13 absolute + 2e-12 relative"
+      },
+      "HR": {
+        "max_abs": 2.783135499839773e-07,
+        "max_tolerance": 4.814697265625e-06,
+        "passed": true,
+        "tolerance": "4 float32 ULP + 1e-6"
+      },
+      "HRC": {
+        "max_abs": 2.3530749260203265e-07,
+        "max_tolerance": 2.9073486328124997e-06,
+        "passed": true,
+        "tolerance": "4 float32 ULP + 1e-6"
+      },
+      "MASK": {
+        "max_abs": 0.0,
+        "passed": true,
+        "tolerance": "exact"
+      },
+      "PRECIP_TAU": {
+        "max_abs": 0.0,
+        "max_tolerance": 2e-13,
+        "passed": true,
+        "tolerance": "2e-13 absolute + 2e-12 relative"
+      },
+      "PREPARED_TAU": {
+        "max_abs": 0.0,
+        "max_tolerance": 5.9082765012058936e-12,
+        "passed": true,
+        "tolerance": "2e-13 absolute + 2e-12 relative"
+      },
+      "RL_USED": {
+        "max_abs": 0.0,
+        "max_tolerance": 2.02e-11,
+        "passed": true,
+        "tolerance": "2e-13 absolute + 2e-12 relative"
+      },
+      "TOTAL_TAU": {
+        "max_abs": 1.8189894035458565e-12,
+        "max_tolerance": 4.0741686206860853e-07,
+        "passed": true,
+        "tolerance": "2e-13 absolute + 2e-12 relative"
+      },
+      "UP": {
+        "max_abs": 1.4985420023094775e-05,
+        "max_tolerance": 0.0001230703125,
+        "passed": true,
+        "tolerance": "4 float32 ULP + 1e-6"
+      },
+      "UPC": {
+        "max_abs": 1.4656385360467539e-05,
+        "max_tolerance": 0.0001230703125,
+        "passed": true,
+        "tolerance": "4 float32 ULP + 1e-6"
+      }
+    },
+    "missing_sections": [],
+    "nc": 1,
+    "nl": 47,
+    "passed": true,
+    "production_phase": "LW",
+    "reference_phase": "LW",
+    "sections_compared": 20
+  },
+  "replay_header": {
+    "iceflag": 4,
+    "nc": 1,
+    "nl": 47,
+    "overlap": 2,
+    "seed": 606638890
+  },
+  "wrf_diagnostic_checks_max_abs": {
+    "wrf_glw": 0.0,
+    "wrf_olr": 0.0,
+    "wrf_theta_hr": 3.108065095168335e-12
+  }
+}
