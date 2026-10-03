@@ -1,0 +1,11 @@
+--- build/udm-phase-path-sensitivity-work/ensemble/run_seed_ensemble.py	2026-10-03 13:23:28.000000000 +0900
++++ build/udm-phase-path-sensitivity-work/ensemble/run_seed_ensemble_bounded.py	2026-10-03 13:31:05.000000000 +0900
+@@ -49,7 +49,7 @@
+  return [str(exe),str(data),str(inp),str(out),'1','',str(sidecar) if sidecar is not None else '',
+          str(seed) if seed is not None else '']
+ def run_one(args,env,logpath):
+- t=time.time();p=subprocess.run(args,env=env,stdout=subprocess.PIPE,stderr=subprocess.STDOUT,text=True)
++ t=time.time();p=subprocess.run(args,env=env,stdout=subprocess.PIPE,stderr=subprocess.STDOUT,text=True,timeout=180)
+  logpath.write_text(p.stdout,encoding='utf-8')
+  if p.returncode:raise RuntimeError(f'command failed ({p.returncode}); see {logpath}')
+  return p.stdout,time.time()-t
