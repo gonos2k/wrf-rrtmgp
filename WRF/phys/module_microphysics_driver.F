@@ -172,7 +172,7 @@ SUBROUTINE microphysics_driver(                                          &
                       ,f_light_ne                                        &
                       ,f_light_neu                                       &
                       ,lpos,lneg,lneu                                    &
-                      ,udm_cldfra,udm_cf_step                            &
+                      ,udm_cldfra,udm_cf_step,udm_cf_top                 &
                                                                          )
 
 ! Framework
@@ -767,6 +767,7 @@ REAL, DIMENSION( ims:ime, kms:kme, jms:jme ),                        &
    INTEGER, INTENT(IN):: has_reqc, has_reqi, has_reqs
    REAL, DIMENSION(:,:,:), OPTIONAL, POINTER, INTENT(INOUT) :: udm_cldfra
    INTEGER, DIMENSION(:,:), OPTIONAL, POINTER, INTENT(INOUT) :: udm_cf_step
+   INTEGER, DIMENSION(:,:), OPTIONAL, POINTER, INTENT(INOUT) :: udm_cf_top
 
   INTEGER,           INTENT(IN   )    :: aercu_opt
 # if (EM_CORE == 1)
@@ -2809,7 +2810,11 @@ REAL, DIMENSION( ims:ime, kms:kme, jms:jme ),                        &
                IF (PRESENT(udm_cldfra)) THEN
                  IF (PRESENT(udm_cf_step)) THEN
                    IF (ASSOCIATED(udm_cldfra)) THEN
-                     IF (ASSOCIATED(udm_cf_step)) have_udm_cf = .true.
+                     IF (ASSOCIATED(udm_cf_step)) THEN
+                       IF (PRESENT(udm_cf_top)) THEN
+                         IF (ASSOCIATED(udm_cf_top)) have_udm_cf = .true.
+                       ENDIF
+                     ENDIF
                    ENDIF
                  ENDIF
                ENDIF
@@ -2845,6 +2850,7 @@ REAL, DIMENSION( ims:ime, kms:kme, jms:jme ),                        &
                  ,HAIL=hailnc ,HAILNCV=hailncv                      &
                  ,ITIMESTEP=itimestep                               &
                  ,udm_cldfra=udm_cldfra, udm_cf_step=udm_cf_step     &
+                 ,udm_cf_top=udm_cf_top                             &
                  ,has_reqc=has_reqc                                 &  ! for radiation +
                  ,has_reqi=has_reqi                                 &
                  ,has_reqs=has_reqs                                 &

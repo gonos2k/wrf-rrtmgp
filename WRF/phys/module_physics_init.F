@@ -292,7 +292,7 @@ CONTAINS
 #endif
 #endif
                          ,NoahmpIO                                                &
-                         ,udm_cldfra, udm_cf_step                                &
+                         ,udm_cldfra, udm_cf_step, udm_cf_top                                &
                          )
 
 !-----------------------------------------------------------------
@@ -312,6 +312,7 @@ CONTAINS
    TYPE (grid_config_rec_type)              :: config_flags
    REAL, DIMENSION(:,:,:), OPTIONAL, POINTER, INTENT(INOUT) :: udm_cldfra
    INTEGER, DIMENSION(:,:), OPTIONAL, POINTER, INTENT(INOUT) :: udm_cf_step
+   INTEGER, DIMENSION(:,:), OPTIONAL, POINTER, INTENT(INOUT) :: udm_cf_top
 
    INTEGER , INTENT(IN)        :: id
    INTEGER , INTENT(IN) ,OPTIONAL       :: tmn_update
@@ -1169,6 +1170,9 @@ CHARACTER(LEN=8) :: name
       ENDIF
       IF (PRESENT(udm_cf_step)) THEN
          IF (ASSOCIATED(udm_cf_step)) udm_cf_step = -1
+      ENDIF
+      IF (PRESENT(udm_cf_top)) THEN
+         IF (ASSOCIATED(udm_cf_top)) udm_cf_top = -1
       ENDIF
    ENDIF
 

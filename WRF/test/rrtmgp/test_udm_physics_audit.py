@@ -268,7 +268,7 @@ def validate_raw_calls(case: Path, expected_calls: int) -> dict[str, Any]:
             raw_phase, i, j, values = test_column_replay.read_raw(path)
             if raw_phase != phase.upper() or (i, j) != (1, 1):
                 fail(f"{path}: unexpected raw capture identity {raw_phase}/{i}/{j}")
-            required = ("UDM_CF_USED", "UDM_CF_SOURCE_STEP", "RADIATION_STEP", "CF")
+            required = ("UDM_CF_USED", "UDM_CF_SOURCE_STEP", "UDM_CF_TOP", "RADIATION_STEP", "CF")
             missing = [key for key in required if key not in values]
             if missing:
                 fail(f"{path}: missing UDM audit evidence {missing}")
@@ -277,20 +277,27 @@ def validate_raw_calls(case: Path, expected_calls: int) -> dict[str, Any]:
             if used.shape != cf.shape:
                 fail(f"{path}: UDM_CF_USED and radiation CF dimensions differ")
             source_step = float(values["UDM_CF_SOURCE_STEP"][0])
+            source_top = float(values["UDM_CF_TOP"][0])
             radiation_step = float(values["RADIATION_STEP"][0])
             if index == 1:
-                if not np.all(used == -1.0):
-                    fail(f"{path}: first-use UDM_CF_USED must be the -1 sentinel")
+                if not np.all(used == -1.0) or source_step != -1.0 or source_top != -1.0:
+                    fail(f"{path}: first-use UDM CF, step and top must all be not-called sentinels")
             else:
                 if (not np.isfinite(used).all() or np.any((used < -1.0) | (used > 1.0)) or
                     np.any((used == -1.0) & (cf > 0.0))):
                     fail(f"{path}: later UDM_CF_USED must be valid for cloudy layers; -1 is allowed only when CF is clear")
                 if not np.any(used >= 0.0):
                     fail(f"{path}: later UDM_CF_USED contains no valid prior microphysics CF")
+                if (not np.isfinite(source_top) or source_top != np.floor(source_top) or
+                    source_top < 0 or source_top > used.size):
+                    fail(f"{path}: later UDM_CF_TOP must be an exact extent in [0,native_layers]")
                 if source_step < 0.0 or source_step >= radiation_step:
                     fail(f"{path}: source step {source_step} must precede radiation step {radiation_step}")
             per_call.append({"file": path.name, "radiation_step": radiation_step,
                              "udm_cf_source_step": source_step,
+                             "udm_cf_top": source_top,
+                             "udm_cf_diagnosed_layers": max(0, int(source_top)),
+                             "udm_cf_extent_unknown_layers": int(used.size - max(0, int(source_top))),
                              "used_min": float(np.min(used)), "used_max": float(np.max(used)),
                              "first_use_sentinel": bool(index == 1)})
         report[phase.upper()] = {"count": len(paths), "calls": per_call}
@@ -399,8 +406,8 @@ def history_equal(a: dict[str, Any], b: dict[str, Any], label: str) -> dict[str,
             differing.append(name)
     if differing:
         fail(f"{label}: audit changed history arrays: {differing[:25]}")
-    if len(common) != 210:
-        fail(f"{label}: expected all 210 history variables in this build, found {len(common)}")
+    if len(common) != 211:
+        fail(f"{label}: expected all 211 history variables including UDM_CF_TOP, found {len(common)}")
     return {"status": "PASS_BITWISE", "variables": len(common),
             "left_only": sorted(left.keys() - right.keys()), "right_only": sorted(right.keys() - left.keys())}
 
