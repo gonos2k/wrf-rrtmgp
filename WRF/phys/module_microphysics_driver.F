@@ -765,9 +765,8 @@ REAL, DIMENSION( ims:ime, kms:kme, jms:jme ),                        &
    REAL, DIMENSION(ims:ime,kms:kme,jms:jme), INTENT(INOUT) ::  & ! G. Thompson
                  re_cloud, re_ice, re_snow
    INTEGER, INTENT(IN):: has_reqc, has_reqi, has_reqs
-   REAL, DIMENSION(:,:,:), OPTIONAL, POINTER, INTENT(INOUT) :: udm_cldfra
-   INTEGER, DIMENSION(:,:), OPTIONAL, POINTER, INTENT(INOUT) :: udm_cf_step
-   INTEGER, DIMENSION(:,:), OPTIONAL, POINTER, INTENT(INOUT) :: udm_cf_top
+   REAL, DIMENSION(ims:,kms:,jms:), OPTIONAL, INTENT(INOUT) :: udm_cldfra
+   INTEGER, DIMENSION(ims:,jms:), OPTIONAL, INTENT(INOUT) :: udm_cf_step, udm_cf_top
 
   INTEGER,           INTENT(IN   )    :: aercu_opt
 # if (EM_CORE == 1)
@@ -2807,17 +2806,8 @@ REAL, DIMENSION( ims:ime, kms:kme, jms:jme ),                        &
                   PRESENT( RAINNC  ) .AND. PRESENT ( RAINNCV )  ) THEN
              have_udm_cf = .false.
              IF (has_reqc==1 .AND. has_reqi==1 .AND. has_reqs==1) THEN
-               IF (PRESENT(udm_cldfra)) THEN
-                 IF (PRESENT(udm_cf_step)) THEN
-                   IF (ASSOCIATED(udm_cldfra)) THEN
-                     IF (ASSOCIATED(udm_cf_step)) THEN
-                       IF (PRESENT(udm_cf_top)) THEN
-                         IF (ASSOCIATED(udm_cf_top)) have_udm_cf = .true.
-                       ENDIF
-                     ENDIF
-                   ENDIF
-                 ENDIF
-               ENDIF
+               IF (PRESENT(udm_cldfra) .AND. PRESENT(udm_cf_step) .AND. &
+                   PRESENT(udm_cf_top)) have_udm_cf = .true.
              ENDIF
              IF (have_udm_cf) THEN
              CALL udm(                                              &
