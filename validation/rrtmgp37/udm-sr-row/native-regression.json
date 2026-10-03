@@ -1,0 +1,233 @@
+{
+  "schema": "UDM_SR_ROW_TEST_V1",
+  "status": "PASS",
+  "test": "actual outer UDM legacy has_req*=0, two active j rows, clear columns",
+  "source_provenance": {
+    "base_commit": "faf3ea0c6b37bee97e089b7c2a102d19d8557e80",
+    "production_source_sha256": "7564be3e5ad7b26ffc00c2680eb632745850baeac01529d48d6bc8393cb9e53d",
+    "driver_sha256": "ca7e7f9db91498a65d9fede9c6621bdf26b73b86e18c18e5b071f82ccec330df",
+    "runner_sha256": "f829fb7285187ffd5efbcf15010904f72664e891193536fd115f386aee50eff0"
+  },
+  "wrf_root": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-sr-row-work/WRF",
+  "compiler": "/usr/bin/gfortran",
+  "flags": [
+    "-O0",
+    "-g",
+    "-ffree-form",
+    "-ffree-line-length-none",
+    "-fcheck=all",
+    "-finit-real=snan",
+    "-ffpe-trap=invalid,zero,overflow"
+  ],
+  "production_source_sha256": "7564be3e5ad7b26ffc00c2680eb632745850baeac01529d48d6bc8393cb9e53d",
+  "driver_sha256": "ca7e7f9db91498a65d9fede9c6621bdf26b73b86e18c18e5b071f82ccec330df",
+  "fixed": {
+    "source_sha256": "7564be3e5ad7b26ffc00c2680eb632745850baeac01529d48d6bc8393cb9e53d",
+    "compile": [
+      {
+        "command": [
+          "/usr/bin/gfortran",
+          "-O0",
+          "-ffixed-form",
+          "-c",
+          "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-sr-row-work/WRF/phys/module_gfs_machine.F",
+          "-o",
+          "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-sr-row-work/build/udm-sr-row-native-test/run-20261003T004251-1790988171482943938/fixed/module_gfs_machine.o",
+          "-I",
+          "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-sr-row-work/build/udm-sr-row-native-test/run-20261003T004251-1790988171482943938/fixed",
+          "-J",
+          "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-sr-row-work/build/udm-sr-row-native-test/run-20261003T004251-1790988171482943938/fixed"
+        ],
+        "returncode": 0,
+        "output": ""
+      },
+      {
+        "command": [
+          "/usr/bin/gfortran",
+          "-O0",
+          "-ffree-form",
+          "-ffree-line-length-none",
+          "-c",
+          "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-sr-row-work/build/udm-sr-row-native-test/run-20261003T004251-1790988171482943938/fixed/module_wrf_error.f90",
+          "-o",
+          "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-sr-row-work/build/udm-sr-row-native-test/run-20261003T004251-1790988171482943938/fixed/module_wrf_error.o",
+          "-I",
+          "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-sr-row-work/build/udm-sr-row-native-test/run-20261003T004251-1790988171482943938/fixed",
+          "-J",
+          "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-sr-row-work/build/udm-sr-row-native-test/run-20261003T004251-1790988171482943938/fixed"
+        ],
+        "returncode": 0,
+        "output": ""
+      },
+      {
+        "command": [
+          "/usr/bin/gfortran",
+          "-O0",
+          "-ffree-form",
+          "-ffree-line-length-none",
+          "-c",
+          "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-sr-row-work/WRF/phys/module_mp_radar.F",
+          "-o",
+          "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-sr-row-work/build/udm-sr-row-native-test/run-20261003T004251-1790988171482943938/fixed/module_mp_radar.o",
+          "-I",
+          "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-sr-row-work/build/udm-sr-row-native-test/run-20261003T004251-1790988171482943938/fixed",
+          "-J",
+          "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-sr-row-work/build/udm-sr-row-native-test/run-20261003T004251-1790988171482943938/fixed"
+        ],
+        "returncode": 0,
+        "output": ""
+      },
+      {
+        "command": [
+          "/usr/bin/gfortran",
+          "-O0",
+          "-g",
+          "-ffree-form",
+          "-ffree-line-length-none",
+          "-fcheck=all",
+          "-finit-real=snan",
+          "-ffpe-trap=invalid,zero,overflow",
+          "-I",
+          "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-sr-row-work/build/udm-sr-row-native-test/run-20261003T004251-1790988171482943938/fixed",
+          "-J",
+          "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-sr-row-work/build/udm-sr-row-native-test/run-20261003T004251-1790988171482943938/fixed",
+          "-c",
+          "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-sr-row-work/build/udm-sr-row-native-test/run-20261003T004251-1790988171482943938/fixed/module_mp_udm.F",
+          "-o",
+          "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-sr-row-work/build/udm-sr-row-native-test/run-20261003T004251-1790988171482943938/fixed/module_mp_udm.o"
+        ],
+        "returncode": 0,
+        "output": ""
+      }
+    ],
+    "link": {
+      "returncode": 0,
+      "output": ""
+    },
+    "execution": {
+      "returncode": 0,
+      "output": "UDM_SR_ROWS_RESET   0.0000E+00   0.0000E+00   0.0000E+00   0.0000E+00\n"
+    }
+  },
+  "reverted_bug_control": {
+    "source_sha256": "079cce9ddb7a71d36b6fcd02fe2a8b85886c8c222ee50dff77a1eb7f212f1efd",
+    "compile": [
+      {
+        "command": [
+          "/usr/bin/gfortran",
+          "-O0",
+          "-ffixed-form",
+          "-c",
+          "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-sr-row-work/WRF/phys/module_gfs_machine.F",
+          "-o",
+          "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-sr-row-work/build/udm-sr-row-native-test/run-20261003T004251-1790988171482943938/reverted-sr-row/module_gfs_machine.o",
+          "-I",
+          "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-sr-row-work/build/udm-sr-row-native-test/run-20261003T004251-1790988171482943938/reverted-sr-row",
+          "-J",
+          "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-sr-row-work/build/udm-sr-row-native-test/run-20261003T004251-1790988171482943938/reverted-sr-row"
+        ],
+        "returncode": 0,
+        "output": ""
+      },
+      {
+        "command": [
+          "/usr/bin/gfortran",
+          "-O0",
+          "-ffree-form",
+          "-ffree-line-length-none",
+          "-c",
+          "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-sr-row-work/build/udm-sr-row-native-test/run-20261003T004251-1790988171482943938/reverted-sr-row/module_wrf_error.f90",
+          "-o",
+          "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-sr-row-work/build/udm-sr-row-native-test/run-20261003T004251-1790988171482943938/reverted-sr-row/module_wrf_error.o",
+          "-I",
+          "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-sr-row-work/build/udm-sr-row-native-test/run-20261003T004251-1790988171482943938/reverted-sr-row",
+          "-J",
+          "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-sr-row-work/build/udm-sr-row-native-test/run-20261003T004251-1790988171482943938/reverted-sr-row"
+        ],
+        "returncode": 0,
+        "output": ""
+      },
+      {
+        "command": [
+          "/usr/bin/gfortran",
+          "-O0",
+          "-ffree-form",
+          "-ffree-line-length-none",
+          "-c",
+          "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-sr-row-work/WRF/phys/module_mp_radar.F",
+          "-o",
+          "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-sr-row-work/build/udm-sr-row-native-test/run-20261003T004251-1790988171482943938/reverted-sr-row/module_mp_radar.o",
+          "-I",
+          "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-sr-row-work/build/udm-sr-row-native-test/run-20261003T004251-1790988171482943938/reverted-sr-row",
+          "-J",
+          "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-sr-row-work/build/udm-sr-row-native-test/run-20261003T004251-1790988171482943938/reverted-sr-row"
+        ],
+        "returncode": 0,
+        "output": ""
+      },
+      {
+        "command": [
+          "/usr/bin/gfortran",
+          "-O0",
+          "-g",
+          "-ffree-form",
+          "-ffree-line-length-none",
+          "-fcheck=all",
+          "-finit-real=snan",
+          "-ffpe-trap=invalid,zero,overflow",
+          "-I",
+          "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-sr-row-work/build/udm-sr-row-native-test/run-20261003T004251-1790988171482943938/reverted-sr-row",
+          "-J",
+          "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-sr-row-work/build/udm-sr-row-native-test/run-20261003T004251-1790988171482943938/reverted-sr-row",
+          "-c",
+          "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-sr-row-work/build/udm-sr-row-native-test/run-20261003T004251-1790988171482943938/reverted-sr-row/module_mp_udm.F",
+          "-o",
+          "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-sr-row-work/build/udm-sr-row-native-test/run-20261003T004251-1790988171482943938/reverted-sr-row/module_mp_udm.o"
+        ],
+        "returncode": 0,
+        "output": ""
+      }
+    ],
+    "link": {
+      "returncode": 0,
+      "output": ""
+    },
+    "execution": {
+      "returncode": 1,
+      "output": "UDM_SR_ROW_FAILURE j=2 observed=   2.1000E+01   2.2000E+01\nNote: The following floating-point exceptions are signalling: IEEE_UNDERFLOW_FLAG IEEE_DENORMAL\nERROR STOP legacy UDM path failed to reset SR row\n\nError termination. Backtrace:\n#0  0x7eefb8030e59 in ???\n#1  0x7eefb8031a71 in ???\n#2  0x7eefb803310b in ???\n#3  0x64304b0366e1 in test_udm_sr_rows\n\tat /NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-sr-row-work/WRF/test/rrtmgp/test_udm_sr_rows.f90:44\n#4  0x64304b036920 in main\n\tat /NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-sr-row-work/WRF/test/rrtmgp/test_udm_sr_rows.f90:2\n"
+    },
+    "expected_failure": "second j row retains distinct initial SR sentinels"
+  },
+  "physics_fixture": {
+    "active_j_rows": 2,
+    "active_i_columns": 2,
+    "k_layers": 2,
+    "has_reqc_reqi_reqs": [
+      0,
+      0,
+      0
+    ],
+    "hydrometeor_state": "clear",
+    "initial_sr_by_j": [
+      [
+        11.0,
+        12.0
+      ],
+      [
+        21.0,
+        22.0
+      ]
+    ],
+    "expected_sr_by_j_after_udm": [
+      [
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0
+      ]
+    ]
+  },
+  "elapsed_seconds": 9.769698858261108
+}

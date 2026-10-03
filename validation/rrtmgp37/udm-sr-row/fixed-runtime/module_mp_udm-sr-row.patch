@@ -1,0 +1,13 @@
+diff --git a/WRF/phys/module_mp_udm.F b/WRF/phys/module_mp_udm.F
+index 880c471..cb86cd2 100644
+--- a/WRF/phys/module_mp_udm.F
++++ b/WRF/phys/module_mp_udm.F
+@@ -411,7 +411,7 @@ subroutine udm(th, q, qc, qr, qi, qs, qg, qh                                  &
+                     ,j                                             &
+                     ,slimsk(its,j)                                 &
+                     ,rain(ims,j),rainncv(ims,j)                    &
+-                    ,sr                                            &
++                    ,sr(ims,j)                                     &
+                     ,ids,ide, jds,jde, kds,kde                     &
+                     ,ims,ime, jms,jme, kms,kme                     &
+                     ,its,ite, jts,jte, kts,kte                     &

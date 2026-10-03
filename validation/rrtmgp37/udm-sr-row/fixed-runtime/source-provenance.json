@@ -1,0 +1,97 @@
+{
+  "purpose": "Fresh GNU dm+sm build of UDM CF25 source with only the legacy SR row argument corrected; build only, no runtime.",
+  "repository": {
+    "url": "git@github.com:gonos2k/wrf-rrtmgp.git",
+    "base_commit": "faf3ea0c6b37bee97e089b7c2a102d19d8557e80",
+    "build_patch_commit": "e7c97ed661403b3922fcf752300c052611ef89cd",
+    "parent_commit": "faf3ea0c6b37bee97e089b7c2a102d19d8557e80",
+    "tree": "40d849aaec67ab00f3e78c1585c889acbc026d4b",
+    "patch": {
+      "path": "WRF/phys/module_mp_udm.F",
+      "summary": "Pass sr(ims,j), matching the rank-1 udm2d dummy in the legacy branch",
+      "sha256": "7564be3e5ad7b26ffc00c2680eb632745850baeac01529d48d6bc8393cb9e53d",
+      "diff_check": "PASS",
+      "local_scratch_commit_only": true
+    }
+  },
+  "wrf_source": {
+    "version": "WRF v4.8.0 source embedded in the pinned fork tree",
+    "tree_object": "90a83988f155e10e130acbf5408c6f3d4926f691",
+    "gitmodules_sha256": "ca1338b73e8ddbdf8bf191d73fc9b52ebe5b781cf86dafdc1d5e0ee100b84ebf",
+    "gitlink_count": 0,
+    "gitlink_note": "The embedded WRF/.gitmodules lists upstream modules, but this snapshot stores those directories as ordinary trees rather than gitlinks; git submodule status is empty. No independent submodule commit IDs are represented in this build source tree.",
+    "rte_rrtmgp": {
+      "repo": "https://github.com/NCAR/rte-rrtmgp",
+      "commit": "41c5fcd950fed09b8afe186dede266824eca7fd3",
+      "ufs_ccpp_commit": "3e6660c6df54e95a0871e990c2294dd397ae3860",
+      "source_json_sha256": "30ce948f8286a4d0c1175e114fb43d15664b80c65f5dd8b7de12682b2139418f",
+      "data_repo": "earth-system-radiation/rrtmgp-data",
+      "data_commit": "ea788bb39876948fa8d2c235665ccff19b4686b5",
+      "data_json_sha256": "c29615af763369684e0f577dfa5b4c369a2e99d9aa644da160ac56f720fd1398"
+    }
+  },
+  "configuration": {
+    "configure_answers": [
+      35,
+      1
+    ],
+    "description": "GNU dm+sm, nesting option 1",
+    "configure_wrf_sha256": "44f85b7fc9b6994cb3784567e69d310580740a021b5f1ab1efb0586f25cfcba2",
+    "pristine_configure_wrf_sha256": "5f06ce4a1b7906dc41612d21b56771cbf762b5958fece8070b6e025209317242",
+    "config_diff_note": "Compared with the official-pristine configure.wrf, the only textual difference is the added -I$(WRF_SRC_ROOT_DIR)/external/rte_rrtmgp/build include path required by the vendored RRTMGP module.",
+    "key_flags": {
+      "FCOPTIM": "-O2 -ftree-vectorize -funroll-loops",
+      "OMP": "-fopenmp",
+      "RWORDSIZE": "4",
+      "byte_order": "-fconvert=big-endian -frecord-marker=4",
+      "MPI": "MPICH Hydra 4.2.0",
+      "netcdf_fortran": "4.5.4"
+    }
+  },
+  "toolchain": {
+    "log": "buildlogs/toolchain.txt",
+    "sha256": "b802201b76c5edb5b0452ef40f937818b74e9e552873cd3c0986b011be74e4c7",
+    "versions": [
+      "GNU Fortran (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0",
+      "GNU Fortran (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0",
+      "HYDRA build details:",
+      "    Version:                                 4.2.0",
+      "netCDF-Fortran 4.5.4"
+    ]
+  },
+  "build": {
+    "purpose": "Fresh isolated GNU dm+sm WRF build of the corrected SR-row source; runtime not launched.",
+    "base_commit": "faf3ea0c6b37bee97e089b7c2a102d19d8557e80",
+    "patch_commit": "e7c97ed661403b3922fcf752300c052611ef89cd",
+    "source_tree": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-sr-row-dm-sm/source/WRF",
+    "configure_selection": 35,
+    "nesting_option": 1,
+    "build_command": "csh -f ./compile -j 12 em_real",
+    "build_parallelism": 12,
+    "start_utc": "2026-10-03T00:47:51Z",
+    "end_utc": "2026-10-03T00:55:31Z",
+    "exit_code": 0,
+    "status": "BUILD_PASS_NO_RUNTIME_LAUNCHED",
+    "wrf_sha256": "176f589d657ca87df670cef3429d7474e674f3e44445eb7886aed871e36bef8f",
+    "real_sha256": "9e9964953b427eb3561ef1f2ffeb03f497e90b6063f14e2bd425e3158fb80b6d",
+    "log": "buildlogs/compile-j12.log"
+  },
+  "source_integrity": {
+    "module_mp_udm_sha256_before_build": "7564be3e5ad7b26ffc00c2680eb632745850baeac01529d48d6bc8393cb9e53d",
+    "module_mp_udm_sha256_after_build": "7564be3e5ad7b26ffc00c2680eb632745850baeac01529d48d6bc8393cb9e53d",
+    "configure_wrf_sha256_before_build": "44f85b7fc9b6994cb3784567e69d310580740a021b5f1ab1efb0586f25cfcba2",
+    "configure_wrf_sha256_after_build": "44f85b7fc9b6994cb3784567e69d310580740a021b5f1ab1efb0586f25cfcba2",
+    "tracked_diff_clean_after_build": true,
+    "index_clean_after_build": true,
+    "post_build_status": "Only compiler/registry generated untracked files; no tracked source modifications.",
+    "generated_untracked_count": 55
+  },
+  "evidence_hashes": {
+    "configure_log_sha256": "0c34511e4361ea8e3da434e8bda31b00b2863c525191a54e2d1e0e40e1a7bf46",
+    "compile_log_sha256": "b61ebcdf52a2facd84aa64a4ece25be524826a9d04b3c6b587dfd22fca2e802d",
+    "build_result_sha256": "aabb3152877b31300d502400d8e04c2541ab1d4693c8d9fbe64142985931a47b",
+    "source_hashes_before_sha256": "bf0a66e342dac74b4a2e5a716df737f615f9eaaaa1375e57d5c665ff92397cbb",
+    "source_hashes_after_sha256": "5d2db100fc0658ecd5899d190b6524c6ebd71f7e9f9ae7326cd2cc33cc0d1375",
+    "runtime_launched": false
+  }
+}

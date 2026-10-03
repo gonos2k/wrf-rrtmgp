@@ -1,0 +1,404 @@
+{
+  "purpose": "One-step 12:00\u219212:01 validation of the isolated corrected UDM SR-row build against official WRF v4.8.0 RA4 restart cases; no longer forecast run.",
+  "source": {
+    "base_commit": "faf3ea0c6b37bee97e089b7c2a102d19d8557e80",
+    "corrected_scratch_commit": "e7c97ed661403b3922fcf752300c052611ef89cd",
+    "patch": "legacy udm2d call changed from rank-2 sr to row sr(ims,j)",
+    "module_sha256": "7564be3e5ad7b26ffc00c2680eb632745850baeac01529d48d6bc8393cb9e53d",
+    "binary_sha256": "176f589d657ca87df670cef3429d7474e674f3e44445eb7886aed871e36bef8f"
+  },
+  "inputs": {
+    "namelist_sha256": "330147a57cbd26506e4a9553b53b9f024542d2e5f1ede7c290ebef3ae27b0599",
+    "checkpoint_sha256": "943a53db058f2d9560c6f0d571f3ff9bb8efb407010c5eea2026922a6eeee7b8",
+    "verified_runtime_links_per_case": 88,
+    "all_link_hashes_match_official_preflight_and_pr21": true,
+    "asset_receipt_sha256": "85981990f75b14c7df7252f1b6b0cc98feb0c44a376a9b94ce322f197084d38d",
+    "mpi_layout": "one case with 1 rank and one with 4 ranks, automatic WRF decomposition; same dt=60s and radt=10min"
+  },
+  "runs": {
+    "restart12-fixed-mpi1": {
+      "case": "restart12-fixed-mpi1",
+      "ranks": 1,
+      "exit_code": 0,
+      "start_utc": "2026-10-03T01:03:05Z",
+      "end_utc": "2026-10-03T01:03:41Z",
+      "source_commit": "e7c97ed661403b3922fcf752300c052611ef89cd",
+      "source_file_sha256": "7564be3e5ad7b26ffc00c2680eb632745850baeac01529d48d6bc8393cb9e53d",
+      "binary_sha256": "176f589d657ca87df670cef3429d7474e674f3e44445eb7886aed871e36bef8f",
+      "namelist_sha256": "330147a57cbd26506e4a9553b53b9f024542d2e5f1ede7c290ebef3ae27b0599",
+      "checkpoint_sha256": "943a53db058f2d9560c6f0d571f3ff9bb8efb407010c5eea2026922a6eeee7b8",
+      "command": "mpiexec -launcher fork -iface lo -n 1 ./wrf.exe",
+      "omp_num_threads": 1,
+      "mpich_interface_hostname": "127.0.0.1",
+      "per_rank_success": {
+        "rsl.error.0000": true
+      },
+      "all_ranks_success": true,
+      "outputs": [
+        {
+          "path": "wrfout_d01_2010-06-11_12:01:00",
+          "sha256": "ad642aafd9c7aab1a33765c6fca9a781b0583a95dce5424c1d024b92486f7ce9",
+          "bytes": 81787254
+        }
+      ],
+      "rsl_error_files": [
+        "rsl.error.0000"
+      ],
+      "log": "run.log"
+    },
+    "restart12-fixed-mpi4": {
+      "case": "restart12-fixed-mpi4",
+      "ranks": 4,
+      "exit_code": 0,
+      "start_utc": "2026-10-03T01:03:47Z",
+      "end_utc": "2026-10-03T01:04:03Z",
+      "source_commit": "e7c97ed661403b3922fcf752300c052611ef89cd",
+      "source_file_sha256": "7564be3e5ad7b26ffc00c2680eb632745850baeac01529d48d6bc8393cb9e53d",
+      "binary_sha256": "176f589d657ca87df670cef3429d7474e674f3e44445eb7886aed871e36bef8f",
+      "namelist_sha256": "330147a57cbd26506e4a9553b53b9f024542d2e5f1ede7c290ebef3ae27b0599",
+      "checkpoint_sha256": "943a53db058f2d9560c6f0d571f3ff9bb8efb407010c5eea2026922a6eeee7b8",
+      "command": "mpiexec -launcher fork -iface lo -n 4 ./wrf.exe",
+      "omp_num_threads": 1,
+      "mpich_interface_hostname": "127.0.0.1",
+      "per_rank_success": {
+        "rsl.error.0000": true,
+        "rsl.error.0001": true,
+        "rsl.error.0002": true,
+        "rsl.error.0003": true
+      },
+      "all_ranks_success": true,
+      "outputs": [
+        {
+          "path": "wrfout_d01_2010-06-11_12:01:00",
+          "sha256": "80137d0508cc1a038192d5a12b1f2c095321198f2e43f7cb270be77672549b1f",
+          "bytes": 81787309
+        }
+      ],
+      "rsl_error_files": [
+        "rsl.error.0000",
+        "rsl.error.0001",
+        "rsl.error.0002",
+        "rsl.error.0003"
+      ],
+      "log": "run.log"
+    }
+  },
+  "strict_comparison": {
+    "method": "raw bytes for every variable after disabling NetCDF auto mask/scale; exact variable dims/shapes/dtypes, explicit _FillValue/missing_value mask comparison, finite check on unmasked numeric values; no tolerances; global/variable attributes reported separately",
+    "official_reference_variable_count": 202,
+    "status_overall": "FAIL",
+    "pairs": {
+      "official_mpi1_vs_pr21_mpi1": {
+        "official_reference_fields": 202,
+        "common_fields": 202,
+        "all_official_fields_exact": false,
+        "unequal_raw_value_fields": [
+          "SR"
+        ],
+        "shape_dtype_mismatch": [],
+        "mask_mismatch": [],
+        "unmasked_nonfinite_fields": {},
+        "missing_left": [],
+        "missing_right": [],
+        "extra_left": [],
+        "extra_right": [],
+        "metadata_differences": {
+          "global": {},
+          "variables": {}
+        }
+      },
+      "official_mpi4_vs_pr21_mpi4": {
+        "official_reference_fields": 202,
+        "common_fields": 202,
+        "all_official_fields_exact": false,
+        "unequal_raw_value_fields": [
+          "SR"
+        ],
+        "shape_dtype_mismatch": [],
+        "mask_mismatch": [],
+        "unmasked_nonfinite_fields": {},
+        "missing_left": [],
+        "missing_right": [],
+        "extra_left": [],
+        "extra_right": [],
+        "metadata_differences": {
+          "global": {},
+          "variables": {}
+        }
+      },
+      "official_mpi1_vs_corrected_mpi1": {
+        "official_reference_fields": 202,
+        "common_fields": 202,
+        "all_official_fields_exact": true,
+        "unequal_raw_value_fields": [],
+        "shape_dtype_mismatch": [],
+        "mask_mismatch": [],
+        "unmasked_nonfinite_fields": {},
+        "missing_left": [],
+        "missing_right": [],
+        "extra_left": [],
+        "extra_right": [],
+        "metadata_differences": {
+          "global": {},
+          "variables": {}
+        }
+      },
+      "official_mpi4_vs_corrected_mpi4": {
+        "official_reference_fields": 202,
+        "common_fields": 202,
+        "all_official_fields_exact": true,
+        "unequal_raw_value_fields": [],
+        "shape_dtype_mismatch": [],
+        "mask_mismatch": [],
+        "unmasked_nonfinite_fields": {},
+        "missing_left": [],
+        "missing_right": [],
+        "extra_left": [],
+        "extra_right": [],
+        "metadata_differences": {
+          "global": {},
+          "variables": {}
+        }
+      },
+      "corrected_mpi1_vs_corrected_mpi4": {
+        "official_reference_fields": 202,
+        "common_fields": 202,
+        "all_official_fields_exact": false,
+        "unequal_raw_value_fields": [
+          "ACGRDFLX",
+          "ACHFX",
+          "ACLHF",
+          "ACSWDNB",
+          "ACSWDNBC",
+          "ACSWDNT",
+          "ACSWDNTC",
+          "ACSWUPB",
+          "ACSWUPBC",
+          "ACSWUPT",
+          "ACSWUPTC",
+          "CANWAT",
+          "CLDFRA",
+          "COSZEN",
+          "GLW",
+          "GRDFLX",
+          "HFX",
+          "LH",
+          "LWDNB",
+          "LWDNBC",
+          "LWUPB",
+          "LWUPBC",
+          "LWUPT",
+          "LWUPTC",
+          "MU",
+          "OLR",
+          "P",
+          "PBLH",
+          "PH",
+          "Q2",
+          "QCLOUD",
+          "QFX",
+          "QGRAUP",
+          "QHAIL",
+          "QICE",
+          "QNCCN",
+          "QNCLOUD",
+          "QNRAIN",
+          "QRAIN",
+          "QSNOW",
+          "QVAPOR",
+          "RAINNC",
+          "SWDNB",
+          "SWDNBC",
+          "SWDNT",
+          "SWDNTC",
+          "SWDOWN",
+          "SWUPB",
+          "SWUPBC",
+          "SWUPT",
+          "SWUPTC",
+          "T",
+          "T2",
+          "TH2",
+          "THM",
+          "TSK",
+          "U",
+          "U10",
+          "UST",
+          "V",
+          "V10",
+          "W",
+          "ZNT"
+        ],
+        "shape_dtype_mismatch": [],
+        "mask_mismatch": [],
+        "unmasked_nonfinite_fields": {},
+        "missing_left": [],
+        "missing_right": [],
+        "extra_left": [],
+        "extra_right": [],
+        "metadata_differences": {
+          "global": {
+            "NTASKS_TOTAL": {
+              "left": "1",
+              "right": "4"
+            },
+            "NTASKS_X": {
+              "left": "1",
+              "right": "2"
+            },
+            "NTASKS_Y": {
+              "left": "1",
+              "right": "2"
+            }
+          },
+          "variables": {}
+        }
+      },
+      "official_mpi1_vs_official_mpi4": {
+        "official_reference_fields": 202,
+        "common_fields": 202,
+        "all_official_fields_exact": false,
+        "unequal_raw_value_fields": [
+          "ACGRDFLX",
+          "ACHFX",
+          "ACLHF",
+          "ACSWDNB",
+          "ACSWDNBC",
+          "ACSWDNT",
+          "ACSWDNTC",
+          "ACSWUPB",
+          "ACSWUPBC",
+          "ACSWUPT",
+          "ACSWUPTC",
+          "CANWAT",
+          "CLDFRA",
+          "COSZEN",
+          "GLW",
+          "GRDFLX",
+          "HFX",
+          "LH",
+          "LWDNB",
+          "LWDNBC",
+          "LWUPB",
+          "LWUPBC",
+          "LWUPT",
+          "LWUPTC",
+          "MU",
+          "OLR",
+          "P",
+          "PBLH",
+          "PH",
+          "Q2",
+          "QCLOUD",
+          "QFX",
+          "QGRAUP",
+          "QHAIL",
+          "QICE",
+          "QNCCN",
+          "QNCLOUD",
+          "QNRAIN",
+          "QRAIN",
+          "QSNOW",
+          "QVAPOR",
+          "RAINNC",
+          "SWDNB",
+          "SWDNBC",
+          "SWDNT",
+          "SWDNTC",
+          "SWDOWN",
+          "SWUPB",
+          "SWUPBC",
+          "SWUPT",
+          "SWUPTC",
+          "T",
+          "T2",
+          "TH2",
+          "THM",
+          "TSK",
+          "U",
+          "U10",
+          "UST",
+          "V",
+          "V10",
+          "W",
+          "ZNT"
+        ],
+        "shape_dtype_mismatch": [],
+        "mask_mismatch": [],
+        "unmasked_nonfinite_fields": {},
+        "missing_left": [],
+        "missing_right": [],
+        "extra_left": [],
+        "extra_right": [],
+        "metadata_differences": {
+          "global": {
+            "NTASKS_TOTAL": {
+              "left": "1",
+              "right": "4"
+            },
+            "NTASKS_X": {
+              "left": "1",
+              "right": "2"
+            },
+            "NTASKS_Y": {
+              "left": "1",
+              "right": "2"
+            }
+          },
+          "variables": {}
+        }
+      },
+      "pr21_mpi1_vs_corrected_mpi1": {
+        "official_reference_fields": 202,
+        "common_fields": 202,
+        "all_official_fields_exact": false,
+        "unequal_raw_value_fields": [
+          "SR"
+        ],
+        "shape_dtype_mismatch": [],
+        "mask_mismatch": [],
+        "unmasked_nonfinite_fields": {},
+        "missing_left": [],
+        "missing_right": [],
+        "extra_left": [],
+        "extra_right": [],
+        "metadata_differences": {
+          "global": {},
+          "variables": {}
+        }
+      },
+      "pr21_mpi4_vs_corrected_mpi4": {
+        "official_reference_fields": 202,
+        "common_fields": 202,
+        "all_official_fields_exact": false,
+        "unequal_raw_value_fields": [
+          "SR"
+        ],
+        "shape_dtype_mismatch": [],
+        "mask_mismatch": [],
+        "unmasked_nonfinite_fields": {},
+        "missing_left": [],
+        "missing_right": [],
+        "extra_left": [],
+        "extra_right": [],
+        "metadata_differences": {
+          "global": {},
+          "variables": {}
+        }
+      }
+    }
+  },
+  "interpretation": {
+    "same_rank_official_vs_corrected": "PASS: all 202 output variables (201 numeric plus Times) are byte-identical for each MPI layout; no field, type, dimension, mask, or metadata differences. Entire output file SHA256 also matches the official pristine run for each corresponding rank count.",
+    "prior_row_bug": "The pre-fix PR21 outputs differ from official only in SR: all-zero SR (0 nonzero cells) versus official/corrected SR with 317 nonzero cells. Correcting row argument restores SR exactly and restores complete output-file hashes for both same-rank comparisons.",
+    "mpi1_vs_mpi4": "STRICT FAIL in both pristine and corrected builds: same 63 fields differ exactly, 139 of 202 fields remain byte-identical. No shape/dtype, mask, missing/extra field, or unmasked nonfinite discrepancies. Global metadata differs only in NTASKS_TOTAL/NTASKS_X/NTASKS_Y. This one-step run does not establish MPI decomposition reproducibility."
+  },
+  "artifacts": {
+    "strict_comparison": "runtime/strict-history-comparison.json",
+    "comparison_script": "runtime/strict_history_compare.py",
+    "runtime_readme": "README.md",
+    "build_manifest": "source-provenance.json",
+    "build_receipt": "buildlogs/build-result.json",
+    "runtime_input_manifest": "runtime/prepared-assets.json"
+  }
+}
