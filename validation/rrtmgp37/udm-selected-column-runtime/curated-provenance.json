@@ -1,0 +1,137 @@
+{
+  "schema": "UDM_SELECTED_COLUMN_RUNTIME_CURATED_PROVENANCE_V1",
+  "status": "READY_FOR_ROOT_REVIEW_ALL_NATIVE_VALIDATIONS_PASS",
+  "source_tree_manifest": {
+    "workspace_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-selected-real-wrf/source-manifest.json",
+    "sha256": "3ebea7488f102853417339847d4b2d63f0573b686755ba2bc128f6e428203da7",
+    "note": "Full source manifest intentionally not copied; hash and base commit are recorded."
+  },
+  "build_receipt_v2_sha256": "80659541dce34804fe6687a3d08af0ce905aea901c5ec07366dae7544eebb485",
+  "source_base_commit": "faf3ea0c6b37bee97e089b7c2a102d19d8557e80",
+  "wrf_executable_sha256": "ef315a64dac9e52315c414868caa9434e3b6e4b3adfbb353140f4895407c2c9e",
+  "wrf_executable_bytes": 49858072,
+  "real_executable_sha256": "c23fa2a37f0486b743f7acd8b083a5b6f51167acd7b8a5f873cabd33748caca8",
+  "restart_sha256": "943a53db058f2d9560c6f0d571f3ff9bb8efb407010c5eea2026922a6eeee7b8",
+  "wrfinput_sha256": "5ef7abe34c516fba107f346bdbdb3777edacb5d48493df467ea2dd8bcf6a75ff",
+  "wrfbdy_sha256": "e687b73730ab9a2cee4842e1a92b225a4edb074ba080b6053d96d81ec1731a2d",
+  "frozen_table_sha256": "8cb00850c3f885f5ec0306563c1ec0a55b512478a7395d626c1c99cebf280583",
+  "gas_and_cloud_coefficients": {
+    "rrtmgp-gas-lw-g128.nc": "70ad65d116531122660318e5da2a2af9db74b425916202860e9527ef2375b8f6",
+    "rrtmgp-clouds-lw-bnd.nc": "09d6704c5b863b4c3ceb417d20bb3076ec492e6bf2dfbcc9f3c5996a3706f0b0",
+    "rrtmgp-gas-sw-g112.nc": "361ed541324068ded28a275a4dd757bcaa0a845aebefa630f43a04678668fe62",
+    "rrtmgp-clouds-sw-bnd.nc": "7671835992a45afe66244b591a02c0b3df73d7d59ecb746bbffd9763497651cd"
+  },
+  "selected_point": [
+    169,
+    80
+  ],
+  "activation_map": [
+    {
+      "source_seconds": 43200,
+      "step": 721
+    },
+    {
+      "source_seconds": 43800,
+      "step": 731
+    }
+  ],
+  "history_mapping": "history XTIME*60 = audit source time + actual dt (60 s); restart is 12:00 and first history is 12:01",
+  "layer_mapping": {
+    "raw_native_model_layers": 39,
+    "lw_engine_layers": 47,
+    "sw_engine_layers": 40,
+    "note": "Do not conflate 39 native layers with the replay engine stacked-layer counts."
+  },
+  "external_executable_assets": {
+    "reference_column_sha256": "0795dcadd9cec5134559ebc1a9b1e8d8da30010788aa1f1c46183aa9cf69c392",
+    "not_copied": "reference executable and build tree; reproducibility inputs/source/library pins are retained in reference-provenance.json"
+  },
+  "script_sha256": {
+    "scripts/off-launch-runner.py": "a14457ad920d00a06588ad6b3e8aba53b4086a74c22ef2245d1edb7460094aa6",
+    "scripts/on-launch-runner-frozen.py": "450f92677ef4d3c90b11a91cb3f8716fb651ed3ac075c7af01570085910ed0d7",
+    "scripts/offline-runner-validator.py": "5fc3ac4c48b9d9ad287d5011d1a0e3a4255b84f0f5ee8a8c7d9d5156b5e52cc8",
+    "scripts/offline-pair-validator.py": "12463f97bad9480674178af9cc81dda50b7cf3b8c051eb729c8f6cc36dada62f",
+    "scripts/independent-capture-validator.py": "ca6615a80547c43682f4af34bd5156d83b5ec5e6d2f9a2d9e691a3581f6d051f",
+    "scripts/native-gas-columns-validator.py": "46e38590a8a757113eca0f976c57b7a49ab85dcc386391a8795b0119a993bb45",
+    "scripts/native-mass-history-validator.py": "dd74ff6d2f17bd81a02d7856a700099d9471f2531715eedc9252a2f118a98674"
+  },
+  "curated_file_sha256": {
+    "README.md": "df8ea92eb6e4b091a7942d36005585f71e325a1f28af6381885bad15304ee73a",
+    "analysis/same_state.csv": "f5d06ab9befa3ac115f2848f3319b62536e1da5c1ab88b4ff121e67090bb2b96",
+    "analysis/selected-ensemble-analysis-v1.json": "ab8308b56fbcec7848ddfb636c6a4e129b343f5550a8cae33258e463f9f65121",
+    "analysis/selected-ensemble-analysis-v1.md": "5ffa5e5234c9e550d4956ac839db28de5a4032e80d8cab03cf2b99494fe7bc83",
+    "analysis/verify_selected_ensemble.py": "af3c39171c99613aeecab09a7e4a1186af35acbafe5c5ac713550622a7789a4a",
+    "captures/on/lw.input": "fb1b13524f8c91d77733952b4f90c04d23a88a0159549e8a0fd5d8a3552d2e8e",
+    "captures/on/lw.raw": "9d80009bc3c1233fbb48d9dd7f1a7f9c8979e658aa8d84b11bf9a395652f0c50",
+    "captures/on/lw.result": "d77c1127ec7d5c2f84d4c6279f8175f411c90a1e2e1a734329222b7d6191e6f0",
+    "captures/on/sw.input": "22411a2484006c19632afdb6a9d5387850867f90c7b725836e3d3ee1fc87288a",
+    "captures/on/sw.raw": "4cb62a01af182accaa5bf802ccc39aa5052ff133430d0a7abf32c658adae744c",
+    "captures/on/sw.result": "fc9a67c9170449ca3037510bf1898ed88d3b84c5c6960df67b1b33ccb4882658",
+    "independent-reference/lw-reference-result.txt": "ba5ab9ba0e077f8dcb54521f147f28bcf73a2572139b642841f25b7f5596bcb6",
+    "independent-reference/sw-reference-result.txt": "0a1e0020a596f10fa14f411cdb27e53562f687ddc3d7806f2a9fe2090f8e1883",
+    "receipts/build-receipt-v2.json": "80659541dce34804fe6687a3d08af0ce905aea901c5ec07366dae7544eebb485",
+    "receipts/native-gas-columns.json": "d24db98255bfed4c97e27125bbed5f41f7ada9bc4a684967393ec8ac024b0b38",
+    "receipts/native-mass-history.json": "34258ff00db9cc00725caa1eb823a96f374a4486d582ce89cb9a0fb501be12f3",
+    "receipts/off/derived-plan.json": "c7707c22b4bc6adde42041af16adb52c6286a05e638c2a64bdf35073750a6edf",
+    "receipts/off/receipt.json": "21f1a28c2f56d1a9723b23d68727a7b2c70446bc7c1e59e689eb69c246afb26e",
+    "receipts/off/run-progress.json": "daa95d051ffc062ab5af8c05ad797919e40670ad327108b300ab0de539cc05f3",
+    "receipts/offline-validation-v4-superseded.json": "177413dc7cd2599ad76c0e65355a7edc339d459135cfd738ec4677829cf3b2d2",
+    "receipts/offline-validation-v5-authoritative.json": "177413dc7cd2599ad76c0e65355a7edc339d459135cfd738ec4677829cf3b2d2",
+    "receipts/offline-validation-v5.json": "177413dc7cd2599ad76c0e65355a7edc339d459135cfd738ec4677829cf3b2d2",
+    "receipts/on/derived-plan.json": "c7707c22b4bc6adde42041af16adb52c6286a05e638c2a64bdf35073750a6edf",
+    "receipts/on/original-launch-receipt-fail.json": "32e0bbacb70f8e78f88e168827d44951c12aa5e36bad65e72524a45969727d9f",
+    "receipts/on/run-progress.json": "59e79ea1a03c85c16e9406ab45b1b7ccb7368c5dca12a12f91c3f48e827eedf4",
+    "receipts/preflight/v1-plan.json": "c7707c22b4bc6adde42041af16adb52c6286a05e638c2a64bdf35073750a6edf",
+    "receipts/preflight/v1-receipt.json": "d01ee17203ffadda4a72ea6086f7106cbba1f11b1521905b82aa2760f5da5dc6",
+    "receipts/preflight/v2-plan.json": "c7707c22b4bc6adde42041af16adb52c6286a05e638c2a64bdf35073750a6edf",
+    "receipts/preflight/v2-receipt.json": "828b88451cc8f1ad108d8c420de33e585e35b6fa56553c29be5675f551142df8",
+    "receipts/reference-provenance.json": "274674c23362c2117aaffb5eefd77439b80ed16108b9862fd9b2843b23f4e29a",
+    "receipts/reference-selected-point-summary.json": "51c905a5376a4e6d710353c127d8d6a47258aa3f7ab878980f517229ea119244",
+    "receipts/reference-selected-point.json": "3e508267853ceee38dc89688190f25b71f05f46ad388c6d8f8d422738a4ebf27",
+    "receipts/root-native-validator-provenance.json": "ef20706cc0d97d3b5a1bc9973fdd36a5789898695e1b1b661650d7313e3b7b5d",
+    "receipts/root-wholefile-comparison.json": "aef68c41eb0f3b6be878df0474d0232f021958c9864a3811c764861bcecd9252",
+    "scripts/compare_column_replay.py": "300c25de26330c0ac413c6e3d82434374457b10fbae1da77680d2d9db3601454",
+    "scripts/independent-capture-validator.py": "ca6615a80547c43682f4af34bd5156d83b5ec5e6d2f9a2d9e691a3581f6d051f",
+    "scripts/native-gas-columns-validator.py": "46e38590a8a757113eca0f976c57b7a49ab85dcc386391a8795b0119a993bb45",
+    "scripts/native-mass-history-validator.py": "dd74ff6d2f17bd81a02d7856a700099d9471f2531715eedc9252a2f118a98674",
+    "scripts/off-launch-runner.py": "a14457ad920d00a06588ad6b3e8aba53b4086a74c22ef2245d1edb7460094aa6",
+    "scripts/offline-pair-validator.py": "12463f97bad9480674178af9cc81dda50b7cf3b8c051eb729c8f6cc36dada62f",
+    "scripts/offline-runner-validator.py": "5fc3ac4c48b9d9ad287d5011d1a0e3a4255b84f0f5ee8a8c7d9d5156b5e52cc8",
+    "scripts/on-launch-runner-frozen.py": "450f92677ef4d3c90b11a91cb3f8716fb651ed3ac075c7af01570085910ed0d7",
+    "scripts/test_column_replay.py": "4b42cc8abe8fc2f7aa8bfb5765107c71d19b4ab7328c30326bf1141efdbb22d0"
+  },
+  "native_validation": {
+    "gas_columns_receipt_sha256": "d24db98255bfed4c97e27125bbed5f41f7ada9bc4a684967393ec8ac024b0b38",
+    "mass_history_receipt_sha256": "34258ff00db9cc00725caa1eb823a96f374a4486d582ce89cb9a0fb501be12f3",
+    "gas_columns_script_sha256": "46e38590a8a757113eca0f976c57b7a49ab85dcc386391a8795b0119a993bb45",
+    "mass_history_script_sha256": "dd74ff6d2f17bd81a02d7856a700099d9471f2531715eedc9252a2f118a98674",
+    "gas_columns_script_source": "WRF/test/rrtmgp/test_native_gas_columns.py in the selected-column PR worktree",
+    "mass_history_script_source": "WRF/test/rrtmgp/test_udm_native_mass.py in the selected-column PR worktree",
+    "capture_history": "12:10 history record paired with call-2 captures; raw capture native source fields and history state compared by validators",
+    "scope": "actual selected point only; one matched LW/SW call; not domain-wide",
+    "status": "PASS_BOTH",
+    "checks": [
+      "native gas validator: dry-mass trace prefix bitwise-equals raw capture, native GAS_COL_DRY formula and extended pressure/H2O gas columns pass for LW and SW",
+      "native mass validator: same-time 12:10 history q fields/profile and coordinate-derived mass check passes for the two captured phases",
+      "six water-path species LWP/IWP/RWP/SWP/GWP/HWP checked against history-derived native input; clear-CF and above-top extension behavior checked",
+      "negative probes reject missing CFC V8 input, corrupted native mass, and mismatched source-q input"
+    ],
+    "dependency_script_sha256": {
+      "test_column_replay.py": "4b42cc8abe8fc2f7aa8bfb5765107c71d19b4ab7328c30326bf1141efdbb22d0",
+      "compare_column_replay.py": "300c25de26330c0ac413c6e3d82434374457b10fbae1da77680d2d9db3601454"
+    }
+  },
+  "root_native_validator_provenance_sha256": "ef20706cc0d97d3b5a1bc9973fdd36a5789898695e1b1b661650d7313e3b7b5d",
+  "ensemble_analysis": {
+    "source_csv": "analysis/same_state.csv",
+    "source_csv_sha256": "f5d06ab9befa3ac115f2848f3319b62536e1da5c1ab88b4ff121e67090bb2b96",
+    "source_csv_bytes": 79213,
+    "archived_analysis_json_sha256": "ab8308b56fbcec7848ddfb636c6a4e129b343f5550a8cae33258e463f9f65121",
+    "archived_analysis_markdown_sha256": "5ffa5e5234c9e550d4956ac839db28de5a4032e80d8cab03cf2b99494fe7bc83",
+    "posthoc_verifier": "analysis/verify_selected_ensemble.py",
+    "posthoc_verifier_sha256": "af3c39171c99613aeecab09a7e4a1186af35acbafe5c5ac713550622a7789a4a",
+    "historical_generator": "No standalone generator snapshot was retained with the original scratch analysis; archived JSON/Markdown were produced from the audit summary rows. The included verifier rechecks that the archived derived statistics follow from same_state.csv.",
+    "command": "python3 analysis/verify_selected_ensemble.py analysis/same_state.csv analysis/selected-ensemble-analysis-v1.json",
+    "selection": "domain=1, i=169, j=80, scope=selected_column; exclude (0,0) aggregate; radius_mode=0; 32 samples; steps 721 and 731"
+  }
+}

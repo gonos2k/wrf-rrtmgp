@@ -14,6 +14,7 @@ MODULE module_ra_rrtmgp_trace
   PUBLIC :: trace_input_start, trace_input, trace_input_end
   PUBLIC :: trace_result_start, trace_result, trace_raw_start, trace_raw
   PUBLIC :: trace_raw_end, trace_end
+  PUBLIC :: trace_column_selection, trace_column_in_tile
 
   INTERFACE trace_result
     MODULE PROCEDURE trace_result_real2, trace_result_real64_2, trace_result_real64_3
@@ -26,6 +27,8 @@ MODULE module_ra_rrtmgp_trace
   CHARACTER(len=2), PARAMETER :: phases(2) = [ CHARACTER(len=2) :: 'lw', 'sw' ]
   CHARACTER(len=1024), SAVE :: capture_dir = ''
   LOGICAL, SAVE :: env_checked = .FALSE., enabled = .FALSE., call_select_set = .FALSE.
+  LOGICAL, SAVE :: column_checked=.FALSE.,column_select_set=.FALSE.
+  INTEGER, SAVE :: column_i=1,column_j=1
   LOGICAL, SAVE :: capture_all=.FALSE., suspended=.FALSE.
   INTEGER, SAVE :: selected_call = 1, call_count(2) = 0
   LOGICAL, SAVE :: phase_done(2) = .FALSE., phase_active(2) = .FALSE.
@@ -56,10 +59,13 @@ CONTAINS
     CALL trace_initialize()
   END SUBROUTINE trace_configure
 
-  SUBROUTINE trace_start(phase, i, j)
+  SUBROUTINE trace_start(phase, i, j, ids, ide, jds, jde)
     CHARACTER(len=*), INTENT(IN) :: phase
     INTEGER, INTENT(IN) :: i, j
+    INTEGER, OPTIONAL, INTENT(IN) :: ids,ide,jds,jde
     INTEGER :: p
+    LOGICAL :: selected
+    INTEGER :: target_i,target_j
 
     CALL trace_initialize()
     p = phase_index(phase)
@@ -74,13 +80,88 @@ CONTAINS
     END IF
     IF (phase_active(p)) RETURN
     IF (.NOT.capture_all.AND.phase_done(p)) RETURN
-    IF (i /= 1 .OR. j /= 1) RETURN
+    IF(PRESENT(ids).AND.PRESENT(ide).AND.PRESENT(jds).AND.PRESENT(jde)) THEN
+      CALL trace_column_selection(ids,ide,jds,jde,selected,target_i,target_j)
+      IF(selected) THEN
+        IF(i/=target_i.OR.j/=target_j) RETURN
+      ELSE
+        IF(i/=1.OR.j/=1) RETURN
+      END IF
+    ELSE
+      CALL column_selection_configure()
+      IF(column_select_set) THEN
+        IF(i/=column_i.OR.j/=column_j) RETURN
+      ELSE
+        IF(i/=1.OR.j/=1) RETURN
+      END IF
+    END IF
     call_count(p) = call_count(p) + 1
     IF (.NOT.capture_all.AND.call_count(p) /= selected_call) RETURN
     phase_active(p) = .TRUE.
     active_i(p) = i
     active_j(p) = j
   END SUBROUTINE trace_start
+
+  ! Shared diagnostic-only selection used by the radiation trace and same-state
+  ! audit. WRF's staggered IDE/JDE bounds include the extra edge point; physical
+  ! mass columns end at IDE-1/JDE-1.
+  SUBROUTINE trace_column_selection(ids,ide,jds,jde,selected,i,j)
+    INTEGER,INTENT(IN) :: ids,ide,jds,jde
+    LOGICAL,INTENT(OUT) :: selected
+    INTEGER,INTENT(OUT) :: i,j
+    CALL column_selection_configure()
+    selected=column_select_set
+    i=column_i;j=column_j
+    IF(selected) THEN
+      IF(ide<=ids.OR.jde<=jds) CALL trace_fatal('RRTMGP_COLUMN_SELECTION_INVALID_DOMAIN_BOUNDS')
+      IF(i<ids.OR.i>ide-1.OR.j<jds.OR.j>jde-1) &
+        CALL trace_fatal('RRTMGP_COLUMN_SELECTION_OUT_OF_DOMAIN: expected physical mass column IDS:IDE-1,JDS:JDE-1')
+    END IF
+  END SUBROUTINE trace_column_selection
+
+  LOGICAL FUNCTION trace_column_in_tile(ids,ide,jds,jde,its,ite,jts,jte)
+    INTEGER,INTENT(IN) :: ids,ide,jds,jde,its,ite,jts,jte
+    INTEGER :: i,j
+    LOGICAL :: selected
+    CALL trace_column_selection(ids,ide,jds,jde,selected,i,j)
+    trace_column_in_tile=.TRUE.
+    IF(selected) trace_column_in_tile=i>=its.AND.i<=ite.AND.j>=jts.AND.j<=jte
+  END FUNCTION trace_column_in_tile
+
+  SUBROUTINE column_selection_configure()
+    CHARACTER(LEN=64) :: value_i,value_j
+    INTEGER :: status_i,status_j,length_i,length_j,ios
+    IF(column_checked) RETURN
+    column_checked=.TRUE.
+    CALL GET_ENVIRONMENT_VARIABLE('WRF_RRTMGP_COLUMN_I',value_i,LENGTH=length_i,STATUS=status_i)
+    CALL GET_ENVIRONMENT_VARIABLE('WRF_RRTMGP_COLUMN_J',value_j,LENGTH=length_j,STATUS=status_j)
+    IF(status_i==1.AND.status_j==1) RETURN
+    IF(status_i/=0.AND.status_i/=1) CALL trace_fatal('RRTMGP_COLUMN_SELECTION_INVALID_I: expected a positive decimal integer')
+    IF(status_j/=0.AND.status_j/=1) CALL trace_fatal('RRTMGP_COLUMN_SELECTION_INVALID_J: expected a positive decimal integer')
+    IF((status_i==0).NEQV.(status_j==0)) &
+      CALL trace_fatal('RRTMGP_COLUMN_SELECTION_PAIR_REQUIRED: set both WRF_RRTMGP_COLUMN_I and WRF_RRTMGP_COLUMN_J')
+    IF(length_i<1.OR.length_i>LEN(value_i)) CALL trace_fatal('RRTMGP_COLUMN_SELECTION_INVALID_I: expected a positive decimal integer')
+    IF(length_j<1.OR.length_j>LEN(value_j)) CALL trace_fatal('RRTMGP_COLUMN_SELECTION_INVALID_J: expected a positive decimal integer')
+    IF(.NOT.decimal_digits(value_i(:length_i))) CALL trace_fatal('RRTMGP_COLUMN_SELECTION_INVALID_I: expected a positive decimal integer')
+    IF(.NOT.decimal_digits(value_j(:length_j))) CALL trace_fatal('RRTMGP_COLUMN_SELECTION_INVALID_J: expected a positive decimal integer')
+    READ(value_i(:length_i),*,IOSTAT=ios) column_i
+    IF(ios/=0) CALL trace_fatal('RRTMGP_COLUMN_SELECTION_INVALID_I: expected a positive decimal integer')
+    IF(column_i<=0) CALL trace_fatal('RRTMGP_COLUMN_SELECTION_INVALID_I: expected a positive decimal integer')
+    READ(value_j(:length_j),*,IOSTAT=ios) column_j
+    IF(ios/=0) CALL trace_fatal('RRTMGP_COLUMN_SELECTION_INVALID_J: expected a positive decimal integer')
+    IF(column_j<=0) CALL trace_fatal('RRTMGP_COLUMN_SELECTION_INVALID_J: expected a positive decimal integer')
+    column_select_set=.TRUE.
+  END SUBROUTINE column_selection_configure
+
+  LOGICAL FUNCTION decimal_digits(value)
+    CHARACTER(LEN=*),INTENT(IN) :: value
+    INTEGER :: k,code
+    decimal_digits=LEN(value)>0
+    DO k=1,LEN(value)
+      code=IACHAR(value(k:k))
+      IF(code<IACHAR('0').OR.code>IACHAR('9')) decimal_digits=.FALSE.
+    END DO
+  END FUNCTION decimal_digits
 
   LOGICAL FUNCTION trace_active(phase)
     CHARACTER(len=*), INTENT(IN) :: phase
