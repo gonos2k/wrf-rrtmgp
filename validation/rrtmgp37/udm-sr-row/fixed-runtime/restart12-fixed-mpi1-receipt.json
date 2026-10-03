@@ -1,0 +1,30 @@
+{
+  "case": "restart12-fixed-mpi1",
+  "ranks": 1,
+  "exit_code": 0,
+  "start_utc": "2026-10-03T01:03:05Z",
+  "end_utc": "2026-10-03T01:03:41Z",
+  "source_commit": "e7c97ed661403b3922fcf752300c052611ef89cd",
+  "source_file_sha256": "7564be3e5ad7b26ffc00c2680eb632745850baeac01529d48d6bc8393cb9e53d",
+  "binary_sha256": "176f589d657ca87df670cef3429d7474e674f3e44445eb7886aed871e36bef8f",
+  "namelist_sha256": "330147a57cbd26506e4a9553b53b9f024542d2e5f1ede7c290ebef3ae27b0599",
+  "checkpoint_sha256": "943a53db058f2d9560c6f0d571f3ff9bb8efb407010c5eea2026922a6eeee7b8",
+  "command": "mpiexec -launcher fork -iface lo -n 1 ./wrf.exe",
+  "omp_num_threads": 1,
+  "mpich_interface_hostname": "127.0.0.1",
+  "per_rank_success": {
+    "rsl.error.0000": true
+  },
+  "all_ranks_success": true,
+  "outputs": [
+    {
+      "path": "wrfout_d01_2010-06-11_12:01:00",
+      "sha256": "ad642aafd9c7aab1a33765c6fca9a781b0583a95dce5424c1d024b92486f7ce9",
+      "bytes": 81787254
+    }
+  ],
+  "rsl_error_files": [
+    "rsl.error.0000"
+  ],
+  "log": "run.log"
+}

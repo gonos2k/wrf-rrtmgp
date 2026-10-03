@@ -206,6 +206,7 @@ add_test(NAME host_constants_replay_v5 COMMAND "${Python3_EXECUTABLE}" "${CMAKE_
 add_test(NAME udm_precip_optics COMMAND test_rrtmgp_precip_optics)
 
 add_test(NAME udm_native_radii COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/test_udm_native_radii.py" "${WRF_ROOT}" --workdir "${CMAKE_CURRENT_BINARY_DIR}/udm-native-radii")
+add_test(NAME udm_surface_rain_row COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/test_udm_sr_rows.py" "${WRF_ROOT}" --workdir "${CMAKE_CURRENT_BINARY_DIR}/udm-sr-row")
 add_test(NAME udm_cldf_partial_output COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/test_udm_cldf_extent.py" "${WRF_ROOT}" --workdir "${CMAKE_CURRENT_BINARY_DIR}/udm-cldf-partial-output")
 
 add_test(NAME udm_cf_extent_parser COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/test_udm_cf_extent.py")

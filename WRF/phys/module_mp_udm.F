@@ -411,7 +411,7 @@ subroutine udm(th, q, qc, qr, qi, qs, qg, qh                                  &
                     ,j                                             &
                     ,slimsk(its,j)                                 &
                     ,rain(ims,j),rainncv(ims,j)                    &
-                    ,sr                                            &
+                    ,sr(ims,j)                                     &
                     ,ids,ide, jds,jde, kds,kde                     &
                     ,ims,ime, jms,jme, kms,kme                     &
                     ,its,ite, jts,jte, kts,kte                     &
