@@ -1,0 +1,195 @@
+{
+  "external_model_output_inventory": {
+    "continuous_histories": 20,
+    "continuous_selected_checkpoints": 4,
+    "csv": "reports/external-output-inventory.csv",
+    "model_files_in_package": false,
+    "restart_final_checkpoints": 2,
+    "restart_histories": 12
+  },
+  "limitations": [
+    "The verifier authenticates package files and embedded reports, but cannot reopen absent model NetCDF outputs to independently recompute their array values.",
+    "This is scoped nested/restart state evidence, not observational validation or fine-grid child-local CU/radiation validation.",
+    "Both model processes returned zero and all four ranks reported success, but original strict execution receipts remain FAIL_PRESERVED."
+  ],
+  "model_execution": {
+    "continuous": {
+      "all_four_ranks_success": true,
+      "fatal": false,
+      "invocations": 1,
+      "original_strict_status": "FAIL_PRESERVED",
+      "receipt": "receipts/continuous-execution.json",
+      "returncode": 0,
+      "strict_error": "continuous output contract rejected missing RTHRATLW and RTHRATSW history variables"
+    },
+    "own_restart": {
+      "all_four_ranks_success": true,
+      "fatal": false,
+      "invocations": 1,
+      "original_strict_status": "FAIL_PRESERVED",
+      "receipt": "receipts/restart-execution.json",
+      "returncode": 0,
+      "strict_error": "WRF_ALARM_SECS_TIL_NEXT_RING_51 global-attribute mismatch"
+    }
+  },
+  "per_variable_hashes": {
+    "changed_rows": 6,
+    "csv": "reports/restart-variable-raw-hashes.csv",
+    "exact_rows": 3777,
+    "external_netcdf_arrays_in_package": false,
+    "rows": 3783
+  },
+  "posthoc": {
+    "all_final_checkpoint_variables_exact": true,
+    "checkpoint_variable_comparisons": 1299,
+    "continuous_receipt_status": "FAIL_PRESERVED",
+    "continuous_status": "PASS_POSTHOC_CONTINUOUS_READBACK",
+    "exact_history_variable_comparisons": 2478,
+    "final_checkpoint_pairs": 2,
+    "history_pairs": 12,
+    "history_variable_comparisons": 2484,
+    "initial_diagnostic_reset_rows": 6,
+    "negative_control_cases": {
+      "additional_quality_rejections": 5,
+      "quality_receipt": "receipts/root-quality-controls-v1.json",
+      "root_script_cases": 13,
+      "root_script_positive_controls": 3,
+      "root_script_rejected_mutations": 10,
+      "total": 18
+    },
+    "reset_variables": [
+      "UDM_CF_STEP",
+      "UDM_CF_TOP",
+      "UDM_CLDFRA"
+    ],
+    "restart_status": "PASS_SCOPED_RESTART_PARITY_WITH_INITIAL_DIAGNOSTIC_RESET_AND_FINAL_RESTART_ALARM_METADATA",
+    "restart_strict_status": "FAIL_PRESERVED"
+  },
+  "provenance": {
+    "build_attestation_external": {
+      "path": "../udm-ccn-runtime/retained/udm37-ccn-tile-init-gnu-v1/posthoc-v3/posthoc-attestation-v3.json",
+      "sha256": "6cb009bdaf649ac1add2dc26acc73315746824b4c256c47cbaa87730fda7b081",
+      "size_bytes": 11609
+    },
+    "preflight_model_invocations": 0,
+    "restart_comparator": "tools/compare_restart_v11.py",
+    "restart_comparator_freeze": "receipts/root-attribution-freeze-v1.json",
+    "restart_comparator_v10_for_13_controls": "tools/compare_restart.py",
+    "restart_comparator_v11_for_root_readback": "tools/compare_restart_v11.py",
+    "root_readback": {
+      "file": "reports/restart-root-report-v11.json",
+      "scope": "root-frozen v11 read-only stored-state comparison; no model rerun",
+      "sha256": "b81b28c507a7b80a977e1a888b3efc5533593a5fde9db113588a55b6de0e18ae"
+    },
+    "runtime_helper": "tools/nested_runtime.py",
+    "runtime_preflight": "receipts/runtime-preflight-final-v9.json",
+    "runtime_preflight_status": "PASS_POSTHOC_BUILD_IDENTITY",
+    "runtime_root_freeze": "receipts/runtime-root-freeze-v1.json",
+    "source_executable_coefficients_and_shared_libraries": "Exact source, binary, coefficient, input, namelist and resolved-library pins are in stage and posthoc reports; large external payloads are not copied.",
+    "stage_receipt": "receipts/stage.json",
+    "static_runtime_pins": {
+      "build_attestation_status": "POSTHOC_BUILD_ATTESTED_ORIGINAL_RUNNER_FAILURE_PRESERVED",
+      "coefficient_files": [
+        {
+          "name": "rrtmgp-gas-lw-g128.nc",
+          "sha256": "70ad65d116531122660318e5da2a2af9db74b425916202860e9527ef2375b8f6",
+          "size_bytes": 11679993
+        },
+        {
+          "name": "rrtmgp-gas-sw-g112.nc",
+          "sha256": "361ed541324068ded28a275a4dd757bcaa0a845aebefa630f43a04678668fe62",
+          "size_bytes": 5949944
+        },
+        {
+          "name": "rrtmgp-clouds-lw-bnd.nc",
+          "sha256": "09d6704c5b863b4c3ceb417d20bb3076ec492e6bf2dfbcc9f3c5996a3706f0b0",
+          "size_bytes": 49919
+        },
+        {
+          "name": "rrtmgp-clouds-sw-bnd.nc",
+          "sha256": "7671835992a45afe66244b591a02c0b3df73d7d59ecb746bbffd9763497651cd",
+          "size_bytes": 47659
+        }
+      ],
+      "fresh_rebuild_performed_for_this_nested_runtime": false,
+      "resolved_libraries_unchanged": true,
+      "resolved_library_file_count": 51,
+      "runtime_assets": [
+        {
+          "name": "wrf.exe",
+          "sha256": "c694e0bb05b5fa5b20ea6d0a6a7b07573572ebc9c79f976499808eb820b12658",
+          "size_bytes": 59010648
+        },
+        {
+          "name": "wrfinput_d01",
+          "sha256": "5ef7abe34c516fba107f346bdbdb3777edacb5d48493df467ea2dd8bcf6a75ff",
+          "size_bytes": 59605892
+        },
+        {
+          "name": "wrfbdy_d01",
+          "sha256": "e687b73730ab9a2cee4842e1a92b225a4edb074ba080b6053d96d81ec1731a2d",
+          "size_bytes": 23384921
+        },
+        {
+          "name": "frozen-ice-psd-moments.nc",
+          "sha256": "8cb00850c3f885f5ec0306563c1ec0a55b512478a7395d626c1c99cebf280583",
+          "size_bytes": 58629
+        },
+        {
+          "name": "namelist.input",
+          "sha256": "83b5e85c423d441a14d7393844eed3ec0a75735c736fd8c6b0cfe5ef37d5827a",
+          "size_bytes": 5421
+        }
+      ],
+      "source_base_commit": "4394845667db52c258dab62719abc87402dd731f",
+      "source_manifest": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-ccn-tile-init-gnu-v1/source-manifest-v1.json",
+        "sha256": "da7f8daeb1a7a07be284f84d1a0252f1b41a31d7ee6d9ab029e3b8afd90feda1",
+        "size_bytes": 1778491
+      },
+      "wrf_executable": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-ccn-tile-init-gnu-v1/source/WRF/main/wrf.exe",
+        "sha256": "c694e0bb05b5fa5b20ea6d0a6a7b07573572ebc9c79f976499808eb820b12658",
+        "size_bytes": 59010648
+      }
+    }
+  },
+  "publication_context": {
+    "base_head": "8dfdfdc9829d052b188b7693452961efa79fd845",
+    "package_role": "additive nested-runtime evidence; source/build evidence reused from sibling udm-ccn-runtime",
+    "pull_request": 50
+  },
+  "restart_input_links": {
+    "count": 2,
+    "csv": "reports/restart-input-checkpoint-links.csv",
+    "timestamp": "2010-06-11_01:10:00"
+  },
+  "schema": "udm37-ccn-nested-runtime-ledger-v1",
+  "scope": {
+    "continuous_end_utc": "2010-06-11_02:00:00",
+    "continuous_start_utc": "2010-06-11_00:00:00",
+    "domains": {
+      "d01": {
+        "cu_physics": 1,
+        "cu_rad_feedback": true,
+        "grid_spacing_m": 20000
+      },
+      "d02": {
+        "cu_physics": 0,
+        "cu_rad_feedback": false,
+        "grid_spacing_m": 6666.666666666667,
+        "parent_grid_ratio": 3,
+        "start_utc": "2010-06-11_01:00:00"
+      }
+    },
+    "experiment": "current UDM27 + RRTMGP37 nested two-domain runtime with parent CU scheme 1 and child CU off",
+    "interpretation": "The nested child is static/interpolated with CU disabled; this does not exercise child-local CU radiation or validate fine-child geography.",
+    "radiation_interval_minutes": 10,
+    "restart_end_utc": "2010-06-11_02:00:00",
+    "restart_start_utc": "2010-06-11_01:10:00",
+    "timestep_seconds": [
+      60,
+      20
+    ]
+  }
+}
