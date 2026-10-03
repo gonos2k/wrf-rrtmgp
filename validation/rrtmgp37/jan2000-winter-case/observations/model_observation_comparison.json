@@ -1,0 +1,535 @@
+{
+  "status": "OBSERVATION_COMPARISON_SCOPED_TO_AVAILABLE_HISTORIES",
+  "claim_limit": "One-day, three-site point-to-grid comparison. RA4 covers 24 hourly intervals; RA37 covers only 12:00,13:00,14:00 UTC outputs (two intervals) before the recorded forecast failure. The 2-hour paired differences do not establish general forecast skill or a winner.",
+  "method": {
+    "observed_values": "NOAA SURFRAD pre-2009 3-minute one-second-sample means; end-time stamped UTC, QC0 only; 20 records per complete hourly bin.",
+    "model_values": "hourly increment in WRF cumulative radiative energy (J m-2) divided by 3600 s; not instantaneous SWDOWN/GLW.",
+    "model_accumulation_source": "WRF Registry declares AC* radiation accumulators J m-2; radiation driver accumulates flux*DT each dynamics timestep; namelist output BUCKET_J=-1 and source derives bucketf_opt=0, so no bucket rollover applies.",
+    "model_timestep_s": 60,
+    "radiation_timestep_min": 10,
+    "hourly_output_min": 60,
+    "variables": {
+      "down_sw": "ACSWDNB vs SURFRAD dw_solar",
+      "down_lw": "ACLWDNB vs SURFRAD dw_ir",
+      "net_sw_surface": "(ACSWDNB\u2212ACSWUPB) vs (dw_solar\u2212uw_solar); both are same-window surface down-minus-up budgets."
+    }
+  },
+  "observation_provenance": {
+    "directory": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-jan2000-surfrad",
+    "verified_receipt_sha256": "f56901a79d32547507c8ef91d26c3755b411787e5a2c33eb78d99f364d08e4bf",
+    "hourly_csv_sha256": "69fb3a088ff803b08273bfeb3f9c7c91bd0ed99e93df2672a12d57f7e3f05067",
+    "raw_sha256": {
+      "gwn00024.dat": "6c3edac924706826370fa7efe415ec555773c9210dea190bd7e49c563ab431c0",
+      "gwn00025.dat": "e18725d4a106fdbc666b89e82e02c244990630708671cba406f6569b8694060b",
+      "psu00024.dat": "803bb4be1b1606b4fe26d1b1afd4f2c3970052f85826a6bf77b2f3a1cceac383",
+      "psu00025.dat": "cc70d05546f14f3b2c79ce646404909d074dd971e67c5cb9934294dcbf8fff72",
+      "bon00024.dat": "62d1ad850b1b970e2882cb8b8e9f07c1b98886c9b3ccbfe8a69dd144c881eca4",
+      "bon00025.dat": "429d7deeda5ae70d620b0b207bf0f0d341ad49cf8ad0f4ea0d5bc0c7269be795"
+    }
+  },
+  "analysis_script": {
+    "path": "compare_wrf_outputs.py",
+    "sha256": "12f19c4c78e0998c521b1a620582dade1d17ca5f4799360aac044770a9d98c15",
+    "python": "3.12.3"
+  },
+  "offline_fixture_checks": {
+    "status": "PASS",
+    "synthetic_flux_W_m-2": 123.0,
+    "synthetic_accumulator_delta_J_m-2": 442800.0,
+    "derived_hourly_mean_W_m-2": 123.0,
+    "gap_times": "rejected",
+    "repeated_times": "rejected",
+    "engine_executed": false
+  },
+  "immutable_inputs_sha256_before_after": {
+    "same": true,
+    "sha256": {
+      "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-jan2000-surfrad/verified_observations.json": "f56901a79d32547507c8ef91d26c3755b411787e5a2c33eb78d99f364d08e4bf",
+      "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-jan2000-surfrad/hourly_observations.csv": "69fb3a088ff803b08273bfeb3f9c7c91bd0ed99e93df2672a12d57f7e3f05067",
+      "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-alternate-jan2000-data/paired-forecast-v2/pair-plan.json": "27cd0b601366d0feca0eb4330a1a0f31981d95f8ffc5ad8b74404340eabb7b40",
+      "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-alternate-jan2000-data/paired-forecast-v2/run-receipt.json": "f394b6885d1cccba785dc426158a6e671feb6ddd2f536c881e651188e0209a57",
+      "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-jan2000-surfrad/raw/bon00024.dat": "62d1ad850b1b970e2882cb8b8e9f07c1b98886c9b3ccbfe8a69dd144c881eca4",
+      "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-jan2000-surfrad/raw/bon00025.dat": "429d7deeda5ae70d620b0b207bf0f0d341ad49cf8ad0f4ea0d5bc0c7269be795",
+      "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-jan2000-surfrad/raw/gwn00024.dat": "6c3edac924706826370fa7efe415ec555773c9210dea190bd7e49c563ab431c0",
+      "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-jan2000-surfrad/raw/gwn00025.dat": "e18725d4a106fdbc666b89e82e02c244990630708671cba406f6569b8694060b",
+      "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-jan2000-surfrad/raw/psu00024.dat": "803bb4be1b1606b4fe26d1b1afd4f2c3970052f85826a6bf77b2f3a1cceac383",
+      "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-jan2000-surfrad/raw/psu00025.dat": "cc70d05546f14f3b2c79ce646404909d074dd971e67c5cb9934294dcbf8fff72",
+      "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-alternate-jan2000-data/paired-forecast-v2/ra4/wrfout_d01_2000-01-24_12:00:00": "edf0cfbf4efeecbbf69e979c8f4fc21a19a436f4329a3e11330a2c569ea0bcc4",
+      "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-alternate-jan2000-data/paired-forecast-v2/ra37/wrfout_d01_2000-01-24_12:00:00": "e3fa7be56062c640e52f66c73aaa0bd798d56f0809c1d4501e3b4a0c9c227e4c",
+      "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-alternate-jan2000-data/paired-forecast-v2/ra4/wrfinput_d01": "0cc7e188ef585a93ab52550816c6af236932254820fb1bc6937f464bfed38637",
+      "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-alternate-jan2000-data/paired-forecast-v2/ra37/wrfinput_d01": "0cc7e188ef585a93ab52550816c6af236932254820fb1bc6937f464bfed38637",
+      "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-alternate-jan2000-data/paired-forecast-v2/ra4/wrfbdy_d01": "ba4241de4f4661a77733cf157f0c87f90668f107df86f8c92d092b56d7bd7bd4",
+      "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-alternate-jan2000-data/paired-forecast-v2/ra37/wrfbdy_d01": "ba4241de4f4661a77733cf157f0c87f90668f107df86f8c92d092b56d7bd7bd4"
+    }
+  },
+  "grid": {
+    "input_sha256": "0cc7e188ef585a93ab52550816c6af236932254820fb1bc6937f464bfed38637",
+    "domain": [
+      73,
+      60
+    ],
+    "spacing_m": [
+      30000,
+      30000
+    ],
+    "cells": {
+      "GWN": {
+        "i": 11,
+        "j": 24,
+        "dist_m": 9734.86318398203
+      },
+      "PSU": {
+        "i": 41,
+        "j": 53,
+        "dist_m": 11045.3492229176
+      },
+      "BON": {
+        "i": 13,
+        "j": 46,
+        "dist_m": 12262.293896813933
+      }
+    }
+  },
+  "model_provenance": {
+    "pair_plan_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-alternate-jan2000-data/paired-forecast-v2/pair-plan.json",
+    "pair_plan_sha256": "27cd0b601366d0feca0eb4330a1a0f31981d95f8ffc5ad8b74404340eabb7b40",
+    "run_receipt_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-alternate-jan2000-data/paired-forecast-v2/run-receipt.json",
+    "run_receipt_sha256": "f394b6885d1cccba785dc426158a6e671feb6ddd2f536c881e651188e0209a57",
+    "arms": {
+      "ra4": {
+        "wrf_exe_sha256": "176f589d657ca87df670cef3429d7474e674f3e44445eb7886aed871e36bef8f",
+        "wrfinput_sha256": "0cc7e188ef585a93ab52550816c6af236932254820fb1bc6937f464bfed38637",
+        "wrfbdy_sha256": "ba4241de4f4661a77733cf157f0c87f90668f107df86f8c92d092b56d7bd7bd4",
+        "namelist_sha256": "e22b0df372e3d909d21ea50881fb8429f3a76a7bd433c1d583ebfd2af2754320",
+        "mode": 0,
+        "ra_lw": 4,
+        "ra_sw": 4
+      },
+      "ra37": {
+        "wrf_exe_sha256": "176f589d657ca87df670cef3429d7474e674f3e44445eb7886aed871e36bef8f",
+        "wrfinput_sha256": "0cc7e188ef585a93ab52550816c6af236932254820fb1bc6937f464bfed38637",
+        "wrfbdy_sha256": "ba4241de4f4661a77733cf157f0c87f90668f107df86f8c92d092b56d7bd7bd4",
+        "namelist_sha256": "37806b6230d9a9479bae32611b6b70d0318ce852fe3931af84ba1e7a15bdcc58",
+        "mode": 1,
+        "ra_lw": 37,
+        "ra_sw": 37
+      }
+    },
+    "histories": {
+      "RA4": {
+        "history_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-alternate-jan2000-data/paired-forecast-v2/ra4/wrfout_d01_2000-01-24_12:00:00",
+        "history_sha256": "edf0cfbf4efeecbbf69e979c8f4fc21a19a436f4329a3e11330a2c569ea0bcc4",
+        "history_bytes": 192549864,
+        "times": [
+          "2000-01-24_12:00:00",
+          "2000-01-24_13:00:00",
+          "2000-01-24_14:00:00",
+          "2000-01-24_15:00:00",
+          "2000-01-24_16:00:00",
+          "2000-01-24_17:00:00",
+          "2000-01-24_18:00:00",
+          "2000-01-24_19:00:00",
+          "2000-01-24_20:00:00",
+          "2000-01-24_21:00:00",
+          "2000-01-24_22:00:00",
+          "2000-01-24_23:00:00",
+          "2000-01-25_00:00:00",
+          "2000-01-25_01:00:00",
+          "2000-01-25_02:00:00",
+          "2000-01-25_03:00:00",
+          "2000-01-25_04:00:00",
+          "2000-01-25_05:00:00",
+          "2000-01-25_06:00:00",
+          "2000-01-25_07:00:00",
+          "2000-01-25_08:00:00",
+          "2000-01-25_09:00:00",
+          "2000-01-25_10:00:00",
+          "2000-01-25_11:00:00",
+          "2000-01-25_12:00:00"
+        ],
+        "units": {
+          "ACSWDNB": "J m-2",
+          "ACLWDNB": "J m-2",
+          "ACSWUPB": "J m-2"
+        },
+        "DX": "30000.0",
+        "DY": "30000.0",
+        "run_status": "FORECAST_PASS",
+        "returncode": 0,
+        "run_log_sha256": "9e84bee07e49a84f49b64d2c3382ec26b1059e88bb1ad882ad85373925716459"
+      },
+      "RA37": {
+        "history_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-alternate-jan2000-data/paired-forecast-v2/ra37/wrfout_d01_2000-01-24_12:00:00",
+        "history_sha256": "e3fa7be56062c640e52f66c73aaa0bd798d56f0809c1d4501e3b4a0c9c227e4c",
+        "history_bytes": 21298954,
+        "times": [
+          "2000-01-24_12:00:00",
+          "2000-01-24_13:00:00",
+          "2000-01-24_14:00:00"
+        ],
+        "units": {
+          "ACSWDNB": "J m-2",
+          "ACLWDNB": "J m-2",
+          "ACSWUPB": "J m-2"
+        },
+        "DX": "30000.0",
+        "DY": "30000.0",
+        "run_status": "FORECAST_FAILED",
+        "returncode": 1,
+        "run_log_sha256": "472f10d9816df322484173ac403478ee516cb75ff25a86a402bb417b2511cc4d"
+      }
+    }
+  },
+  "scores_all_available_intervals": {
+    "RA4": {
+      "GWN": {
+        "down_sw": {
+          "n": 24,
+          "bias_model_minus_obs_W_m-2": 15.96364583333334,
+          "MAE_W_m-2": 15.96364583333334,
+          "RMSE_W_m-2": 25.144090847647586,
+          "min_error_W_m-2": 2.2,
+          "max_error_W_m-2": 85.86869791666669
+        },
+        "down_lw": {
+          "n": 24,
+          "bias_model_minus_obs_W_m-2": -10.002013888888888,
+          "MAE_W_m-2": 10.453107638888891,
+          "RMSE_W_m-2": 17.587527980604435,
+          "min_error_W_m-2": -46.45116319444443,
+          "max_error_W_m-2": 1.8463888888888675
+        },
+        "net_sw_surface": {
+          "n": 24,
+          "bias_model_minus_obs_W_m-2": 14.324765624999998,
+          "MAE_W_m-2": 14.324765624999998,
+          "RMSE_W_m-2": 22.05854332629193,
+          "min_error_W_m-2": 2.34,
+          "max_error_W_m-2": 72.31616970486112
+        }
+      },
+      "PSU": {
+        "down_sw": {
+          "n": 24,
+          "bias_model_minus_obs_W_m-2": 18.80123842592593,
+          "MAE_W_m-2": 18.80123842592593,
+          "RMSE_W_m-2": 28.820850740988938,
+          "min_error_W_m-2": 2.1,
+          "max_error_W_m-2": 83.58227430555556
+        },
+        "down_lw": {
+          "n": 24,
+          "bias_model_minus_obs_W_m-2": -20.169236111111108,
+          "MAE_W_m-2": 20.169236111111108,
+          "RMSE_W_m-2": 25.64463660351323,
+          "min_error_W_m-2": -62.05944444444444,
+          "max_error_W_m-2": -2.497638888888872
+        },
+        "net_sw_surface": {
+          "n": 24,
+          "bias_model_minus_obs_W_m-2": 46.89833912037037,
+          "MAE_W_m-2": 46.89833912037037,
+          "RMSE_W_m-2": 78.9347508737301,
+          "min_error_W_m-2": 0.47500000000000053,
+          "max_error_W_m-2": 169.98347222222225
+        }
+      },
+      "BON": {
+        "down_sw": {
+          "n": 24,
+          "bias_model_minus_obs_W_m-2": 11.470682870370373,
+          "MAE_W_m-2": 11.470682870370373,
+          "RMSE_W_m-2": 15.642492729691945,
+          "min_error_W_m-2": 2.105,
+          "max_error_W_m-2": 31.004522569444447
+        },
+        "down_lw": {
+          "n": 24,
+          "bias_model_minus_obs_W_m-2": -19.621574074074072,
+          "MAE_W_m-2": 19.839212962962964,
+          "RMSE_W_m-2": 32.40750871345864,
+          "min_error_W_m-2": -88.4038888888889,
+          "max_error_W_m-2": 2.1544444444444366
+        },
+        "net_sw_surface": {
+          "n": 24,
+          "bias_model_minus_obs_W_m-2": 26.566585648148152,
+          "MAE_W_m-2": 26.566585648148152,
+          "RMSE_W_m-2": 41.78048998588306,
+          "min_error_W_m-2": 2.065,
+          "max_error_W_m-2": 91.21944444444449
+        }
+      }
+    },
+    "RA37": {
+      "GWN": {
+        "down_sw": {
+          "n": 2,
+          "bias_model_minus_obs_W_m-2": 17.244147135416668,
+          "MAE_W_m-2": 17.244147135416668,
+          "RMSE_W_m-2": 22.88420794915053,
+          "min_error_W_m-2": 2.2,
+          "max_error_W_m-2": 32.28829427083333
+        },
+        "down_lw": {
+          "n": 2,
+          "bias_model_minus_obs_W_m-2": -19.672326388888877,
+          "MAE_W_m-2": 25.051145833333322,
+          "RMSE_W_m-2": 31.852163711652416,
+          "min_error_W_m-2": -44.7234722222222,
+          "max_error_W_m-2": 5.378819444444446
+        },
+        "net_sw_surface": {
+          "n": 2,
+          "bias_model_minus_obs_W_m-2": 14.479716254340278,
+          "MAE_W_m-2": 14.479716254340278,
+          "RMSE_W_m-2": 18.681903239544187,
+          "min_error_W_m-2": 2.6750000000000003,
+          "max_error_W_m-2": 26.284432508680556
+        }
+      },
+      "PSU": {
+        "down_sw": {
+          "n": 2,
+          "bias_model_minus_obs_W_m-2": 15.145954861111115,
+          "MAE_W_m-2": 15.145954861111115,
+          "RMSE_W_m-2": 16.506495375918117,
+          "min_error_W_m-2": 8.583604600694443,
+          "max_error_W_m-2": 21.708305121527786
+        },
+        "down_lw": {
+          "n": 2,
+          "bias_model_minus_obs_W_m-2": -12.389322916666657,
+          "MAE_W_m-2": 12.389322916666657,
+          "RMSE_W_m-2": 16.397123874986384,
+          "min_error_W_m-2": -23.13038194444445,
+          "max_error_W_m-2": -1.648263888888863
+        },
+        "net_sw_surface": {
+          "n": 2,
+          "bias_model_minus_obs_W_m-2": 26.73598958333333,
+          "MAE_W_m-2": 26.73598958333333,
+          "RMSE_W_m-2": 34.07235712496041,
+          "min_error_W_m-2": 5.614616970486111,
+          "max_error_W_m-2": 47.857362196180546
+        }
+      },
+      "BON": {
+        "down_sw": {
+          "n": 2,
+          "bias_model_minus_obs_W_m-2": 5.981705729166666,
+          "MAE_W_m-2": 5.981705729166666,
+          "RMSE_W_m-2": 6.901169593375023,
+          "min_error_W_m-2": 2.54,
+          "max_error_W_m-2": 9.423411458333334
+        },
+        "down_lw": {
+          "n": 2,
+          "bias_model_minus_obs_W_m-2": -2.059409722222213,
+          "MAE_W_m-2": 2.059409722222213,
+          "RMSE_W_m-2": 2.059733643589082,
+          "min_error_W_m-2": -2.095937499999991,
+          "max_error_W_m-2": -2.0228819444444355
+        },
+        "net_sw_surface": {
+          "n": 2,
+          "bias_model_minus_obs_W_m-2": 12.124510633680558,
+          "MAE_W_m-2": 12.124510633680558,
+          "RMSE_W_m-2": 15.754285521576822,
+          "min_error_W_m-2": 2.065,
+          "max_error_W_m-2": 22.184021267361114
+        }
+      }
+    }
+  },
+  "scores_common_two_hours_and_pair_difference": {
+    "GWN": {
+      "down_sw": {
+        "n_intervals": 2,
+        "RA37_minus_RA4_mean_W_m-2": -1.1595768229166659,
+        "RA4_common_2h": {
+          "n": 2,
+          "bias_model_minus_obs_W_m-2": 18.403723958333334,
+          "MAE_W_m-2": 18.403723958333334,
+          "RMSE_W_m-2": 24.52055720517782,
+          "min_error_W_m-2": 2.2,
+          "max_error_W_m-2": 34.607447916666665
+        },
+        "RA37_common_2h": {
+          "n": 2,
+          "bias_model_minus_obs_W_m-2": 17.244147135416668,
+          "MAE_W_m-2": 17.244147135416668,
+          "RMSE_W_m-2": 22.88420794915053,
+          "min_error_W_m-2": 2.2,
+          "max_error_W_m-2": 32.28829427083333
+        }
+      },
+      "down_lw": {
+        "n_intervals": 2,
+        "RA37_minus_RA4_mean_W_m-2": 3.986406250000016,
+        "RA4_common_2h": {
+          "n": 2,
+          "bias_model_minus_obs_W_m-2": -23.658732638888893,
+          "MAE_W_m-2": 23.658732638888893,
+          "RMSE_W_m-2": 32.85164410966746,
+          "min_error_W_m-2": -46.45116319444443,
+          "max_error_W_m-2": -0.8663020833333519
+        },
+        "RA37_common_2h": {
+          "n": 2,
+          "bias_model_minus_obs_W_m-2": -19.672326388888877,
+          "MAE_W_m-2": 25.051145833333322,
+          "RMSE_W_m-2": 31.852163711652416,
+          "min_error_W_m-2": -44.7234722222222,
+          "max_error_W_m-2": 5.378819444444446
+        }
+      },
+      "net_sw_surface": {
+        "n_intervals": 2,
+        "RA37_minus_RA4_mean_W_m-2": -0.929685872395833,
+        "RA4_common_2h": {
+          "n": 2,
+          "bias_model_minus_obs_W_m-2": 15.409402126736111,
+          "MAE_W_m-2": 15.409402126736111,
+          "RMSE_W_m-2": 19.99036446463347,
+          "min_error_W_m-2": 2.6750000000000003,
+          "max_error_W_m-2": 28.143804253472222
+        },
+        "RA37_common_2h": {
+          "n": 2,
+          "bias_model_minus_obs_W_m-2": 14.479716254340278,
+          "MAE_W_m-2": 14.479716254340278,
+          "RMSE_W_m-2": 18.681903239544187,
+          "min_error_W_m-2": 2.6750000000000003,
+          "max_error_W_m-2": 26.284432508680556
+        }
+      }
+    },
+    "PSU": {
+      "down_sw": {
+        "n_intervals": 2,
+        "RA37_minus_RA4_mean_W_m-2": -0.5729079861111055,
+        "RA4_common_2h": {
+          "n": 2,
+          "bias_model_minus_obs_W_m-2": 15.718862847222221,
+          "MAE_W_m-2": 15.718862847222221,
+          "RMSE_W_m-2": 17.148007421508726,
+          "min_error_W_m-2": 8.865286458333333,
+          "max_error_W_m-2": 22.57243923611111
+        },
+        "RA37_common_2h": {
+          "n": 2,
+          "bias_model_minus_obs_W_m-2": 15.145954861111115,
+          "MAE_W_m-2": 15.145954861111115,
+          "RMSE_W_m-2": 16.506495375918117,
+          "min_error_W_m-2": 8.583604600694443,
+          "max_error_W_m-2": 21.708305121527786
+        }
+      },
+      "down_lw": {
+        "n_intervals": 2,
+        "RA37_minus_RA4_mean_W_m-2": 0.9102256944444491,
+        "RA4_common_2h": {
+          "n": 2,
+          "bias_model_minus_obs_W_m-2": -13.299548611111106,
+          "MAE_W_m-2": 13.299548611111106,
+          "RMSE_W_m-2": 17.13357075761928,
+          "min_error_W_m-2": -24.10145833333334,
+          "max_error_W_m-2": -2.497638888888872
+        },
+        "RA37_common_2h": {
+          "n": 2,
+          "bias_model_minus_obs_W_m-2": -12.389322916666657,
+          "MAE_W_m-2": 12.389322916666657,
+          "RMSE_W_m-2": 16.397123874986384,
+          "min_error_W_m-2": -23.13038194444445,
+          "max_error_W_m-2": -1.648263888888863
+        }
+      },
+      "net_sw_surface": {
+        "n_intervals": 2,
+        "RA37_minus_RA4_mean_W_m-2": -0.2747873263888905,
+        "RA4_common_2h": {
+          "n": 2,
+          "bias_model_minus_obs_W_m-2": 27.010776909722217,
+          "MAE_W_m-2": 27.010776909722217,
+          "RMSE_W_m-2": 34.37460311242376,
+          "min_error_W_m-2": 5.749749891493056,
+          "max_error_W_m-2": 48.27180392795138
+        },
+        "RA37_common_2h": {
+          "n": 2,
+          "bias_model_minus_obs_W_m-2": 26.73598958333333,
+          "MAE_W_m-2": 26.73598958333333,
+          "RMSE_W_m-2": 34.07235712496041,
+          "min_error_W_m-2": 5.614616970486111,
+          "max_error_W_m-2": 47.857362196180546
+        }
+      }
+    },
+    "BON": {
+      "down_sw": {
+        "n_intervals": 2,
+        "RA37_minus_RA4_mean_W_m-2": -0.2839583333333344,
+        "RA4_common_2h": {
+          "n": 2,
+          "bias_model_minus_obs_W_m-2": 6.265664062500001,
+          "MAE_W_m-2": 6.265664062500001,
+          "RMSE_W_m-2": 7.289658349381543,
+          "min_error_W_m-2": 2.54,
+          "max_error_W_m-2": 9.991328125000003
+        },
+        "RA37_common_2h": {
+          "n": 2,
+          "bias_model_minus_obs_W_m-2": 5.981705729166666,
+          "MAE_W_m-2": 5.981705729166666,
+          "RMSE_W_m-2": 6.901169593375023,
+          "min_error_W_m-2": 2.54,
+          "max_error_W_m-2": 9.423411458333334
+        }
+      },
+      "down_lw": {
+        "n_intervals": 2,
+        "RA37_minus_RA4_mean_W_m-2": 1.2036111111111154,
+        "RA4_common_2h": {
+          "n": 2,
+          "bias_model_minus_obs_W_m-2": -3.2630208333333286,
+          "MAE_W_m-2": 3.2630208333333286,
+          "RMSE_W_m-2": 3.2630788713487777,
+          "min_error_W_m-2": -3.2824826388888937,
+          "max_error_W_m-2": -3.2435590277777635
+        },
+        "RA37_common_2h": {
+          "n": 2,
+          "bias_model_minus_obs_W_m-2": -2.059409722222213,
+          "MAE_W_m-2": 2.059409722222213,
+          "RMSE_W_m-2": 2.059733643589082,
+          "min_error_W_m-2": -2.095937499999991,
+          "max_error_W_m-2": -2.0228819444444355
+        }
+      },
+      "net_sw_surface": {
+        "n_intervals": 2,
+        "RA37_minus_RA4_mean_W_m-2": -0.09650716145833282,
+        "RA4_common_2h": {
+          "n": 2,
+          "bias_model_minus_obs_W_m-2": 12.22101779513889,
+          "MAE_W_m-2": 12.22101779513889,
+          "RMSE_W_m-2": 15.890184813408533,
+          "min_error_W_m-2": 2.065,
+          "max_error_W_m-2": 22.377035590277778
+        },
+        "RA37_common_2h": {
+          "n": 2,
+          "bias_model_minus_obs_W_m-2": 12.124510633680558,
+          "MAE_W_m-2": 12.124510633680558,
+          "RMSE_W_m-2": 15.754285521576822,
+          "min_error_W_m-2": 2.065,
+          "max_error_W_m-2": 22.184021267361114
+        }
+      }
+    }
+  },
+  "csv": "model_hourly_comparison.csv",
+  "csv_sha256": "8d46596348e00ae2625be8d1cecb104aea1baeae9d7d877f94cab1048f6e6653"
+}
