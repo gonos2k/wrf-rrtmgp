@@ -1,0 +1,386 @@
+{
+  "schema": "udm37-column-batching-interpretation-evidence-v3",
+  "status": "FINAL_DIAGNOSTIC_EVIDENCE_NOT_PRODUCTION_ACCEPTANCE",
+  "model_counts": {
+    "known_total_actual_models": 39,
+    "references": 16,
+    "candidates": 23,
+    "benchmark_models": 0,
+    "models_launched_for_package_curation": 0
+  },
+  "firststep_unshimmed": {
+    "model_invocations": 4,
+    "arms": {
+      "b1-omp1": {
+        "batch_size": 1,
+        "omp_threads": 1,
+        "returncode": 0,
+        "status": "CASE_VALIDATED"
+      },
+      "b1-omp2": {
+        "batch_size": 1,
+        "omp_threads": 2,
+        "returncode": 0,
+        "status": "CASE_VALIDATED"
+      },
+      "b32-omp1": {
+        "batch_size": 32,
+        "omp_threads": 1,
+        "returncode": 0,
+        "status": "CASE_VALIDATED"
+      },
+      "b32-omp2": {
+        "batch_size": 32,
+        "omp_threads": 2,
+        "returncode": 0,
+        "status": "CASE_VALIDATED"
+      }
+    },
+    "strict_comparisons": {
+      "b1-omp1__b32-omp1": {
+        "identical_all": false,
+        "files": [
+          "wrfout_d01_2010-06-11_00:00:00",
+          "wrfout_d01_2010-06-11_00:01:00",
+          "wrfout_d01_2010-06-11_00:02:00",
+          "wrfrst_d01_2010-06-11_00:02:00"
+        ],
+        "receipt_sha256": "b150578e4784b344c6f77ec0202891fb27ced9f80795d5466a3e7956fa8b00d7"
+      },
+      "b1-omp2__b1-omp1": {
+        "identical_all": true,
+        "files": [
+          "wrfout_d01_2010-06-11_00:00:00",
+          "wrfout_d01_2010-06-11_00:01:00",
+          "wrfout_d01_2010-06-11_00:02:00",
+          "wrfrst_d01_2010-06-11_00:02:00"
+        ],
+        "receipt_sha256": "407642e13c1cbcddf31919c9dd1812fef9359573874fb1adcd5e5f2a10c201e0"
+      },
+      "b1-omp2__b32-omp2": {
+        "identical_all": false,
+        "files": [
+          "wrfout_d01_2010-06-11_00:00:00",
+          "wrfout_d01_2010-06-11_00:01:00",
+          "wrfout_d01_2010-06-11_00:02:00",
+          "wrfrst_d01_2010-06-11_00:02:00"
+        ],
+        "receipt_sha256": "e3b328e475ce29d0cb0a98ecd6b77acc277cdb5a4b360864159578fcf7ea567f"
+      },
+      "b32-omp2__b32-omp1": {
+        "identical_all": true,
+        "files": [
+          "wrfout_d01_2010-06-11_00:00:00",
+          "wrfout_d01_2010-06-11_00:01:00",
+          "wrfout_d01_2010-06-11_00:02:00",
+          "wrfrst_d01_2010-06-11_00:02:00"
+        ],
+        "receipt_sha256": "38bc056514ec94abfee2689d2f2ba4cb2265c634fb5336342a90bbec2314f480"
+      }
+    },
+    "original_runner_status": "FAILED_POSTFLIGHT due to tuple/list representation mismatch in prior-v4 bookkeeping across 12 pairs. Posthoc revalidated output quality.",
+    "separate_earlier_observation": "An earlier v1 one-model attempt used incorrect history-variable names; it was not the v3 failure cause.",
+    "sparse_difference_rows": 378,
+    "scope": "Short actual WRF diagnostic; strict B1/B32 differences retained."
+  },
+  "firststep_shim_intervention": {
+    "status": "DIAGNOSTIC_VALIDATED_SHIM_BATCH_EQUAL",
+    "fresh_model_invocations": 1,
+    "b1_arm_reused_and_posthoc_validated": true,
+    "b32_arm": {
+      "batch_size": 32,
+      "omp_threads": 2,
+      "returncode": 0,
+      "elapsed_seconds": 37.37048511765897,
+      "status": "CASE_VALIDATED_WITH_SHIM"
+    },
+    "immutable_postflight": "PASS",
+    "rank_vector_math_evidence": {
+      "rank_count": 4,
+      "positive_vector_counter_ranks": 4
+    },
+    "strict_comparisons": {
+      "shim_b1__shim_b32": {
+        "arms": [
+          "b1-omp2",
+          "b32-omp2"
+        ],
+        "file_count": 4,
+        "all_files_and_vars_raw_decoded_metadata_equal": true,
+        "by_category": {
+          "other": {
+            "different_variables": 0,
+            "max_abs_difference": 0.0
+          },
+          "radiation": {
+            "different_variables": 0,
+            "max_abs_difference": 0.0
+          }
+        }
+      },
+      "shim_b1__unshimmed_v3_b1": {
+        "arms": [
+          "b1-omp2",
+          "b1-omp2"
+        ],
+        "file_count": 4,
+        "all_files_and_vars_raw_decoded_metadata_equal": true,
+        "by_category": {
+          "other": {
+            "different_variables": 0,
+            "max_abs_difference": 0.0
+          },
+          "radiation": {
+            "different_variables": 0,
+            "max_abs_difference": 0.0
+          }
+        }
+      },
+      "shim_b32__unshimmed_v3_b32": {
+        "arms": [
+          "b32-omp2",
+          "b32-omp2"
+        ],
+        "file_count": 4,
+        "all_files_and_vars_raw_decoded_metadata_equal": false,
+        "by_category": {
+          "other": {
+            "different_variables": 166,
+            "max_abs_difference": 187096.0
+          },
+          "radiation": {
+            "different_variables": 23,
+            "max_abs_difference": 1.52587890625e-05
+          }
+        }
+      }
+    },
+    "interpretation": "All three comparisons cover 3 histories plus checkpoint, all variables, raw/decoded values, and metadata. Shimmed B1 equals shimmed B32; shimmed B1 equals unshimmed B1; shimmed B32 differs from unshimmed B32. This is strong process-wide vector-math intervention evidence consistent with a mechanism affecting the batch-32 path, but does not prove an RRTMGP-only call-site cause, generalize beyond this run, establish production acceptance, or supersede the original unshimmed numerical failure. The shim interposes process-wide.",
+    "b32_quality_summary": {
+      "status": "CASE_VALIDATED",
+      "validated_history_count": 3,
+      "history_names": [
+        "wrfout_d01_2010-06-11_00:00:00",
+        "wrfout_d01_2010-06-11_00:01:00",
+        "wrfout_d01_2010-06-11_00:02:00"
+      ],
+      "checkpoint_validated": true,
+      "rank_success_log_count": 4,
+      "omp_threads": 2
+    }
+  },
+  "v9_actual_wrf_matrix": {
+    "status": "FAILED_NUMERICAL_COMPARISON",
+    "model_invocations": 7,
+    "reused_reference_invocations": 1,
+    "batch_32_64_128_payload_identical": true,
+    "pair_summaries": [
+      {
+        "arms": [
+          "ra37-b1",
+          "ra37-b32"
+        ],
+        "different_values_sum": 173649489,
+        "different_variable_file_pairs": 530,
+        "identical_all": false,
+        "maximum_absolute_difference": 563755904.0,
+        "status": "DIFFERENCES_RECORDED"
+      },
+      {
+        "arms": [
+          "ra37-b1",
+          "ra37-b64"
+        ],
+        "different_values_sum": 173649489,
+        "different_variable_file_pairs": 530,
+        "identical_all": false,
+        "maximum_absolute_difference": 563755904.0,
+        "status": "DIFFERENCES_RECORDED"
+      },
+      {
+        "arms": [
+          "ra37-b1",
+          "ra37-b128"
+        ],
+        "different_values_sum": 173649489,
+        "different_variable_file_pairs": 530,
+        "identical_all": false,
+        "maximum_absolute_difference": 563755904.0,
+        "status": "DIFFERENCES_RECORDED"
+      },
+      {
+        "arms": [
+          "ra37-prebatch-scalar",
+          "ra37-b1"
+        ],
+        "different_values_sum": 0,
+        "different_variable_file_pairs": 0,
+        "identical_all": true,
+        "maximum_absolute_difference": 0.0,
+        "status": "DEFAULT_PRESERVED_BITWISE"
+      },
+      {
+        "arms": [
+          "ra4-prebatch-scalar",
+          "ra4-default"
+        ],
+        "different_values_sum": 0,
+        "different_variable_file_pairs": 0,
+        "identical_all": true,
+        "maximum_absolute_difference": 0.0,
+        "status": "LEGACY_RA4_PRESERVED_BITWISE"
+      },
+      {
+        "arms": [
+          "ra4-default",
+          "ra4-b128"
+        ],
+        "different_values_sum": 0,
+        "different_variable_file_pairs": 0,
+        "identical_all": true,
+        "maximum_absolute_difference": 0.0,
+        "status": "LEGACY_BATCH_ENV_INVARIANT"
+      }
+    ],
+    "first_00_10_radiation": {
+      "GLW": {
+        "different_cells": 0,
+        "dtype": "float32",
+        "exact_equal": true,
+        "examples": [],
+        "max_abs_difference": 0.0
+      },
+      "OLR": {
+        "different_cells": 0,
+        "dtype": "float32",
+        "exact_equal": true,
+        "examples": [],
+        "max_abs_difference": 0.0
+      },
+      "SWDOWN": {
+        "different_cells": 1,
+        "dtype": "float32",
+        "exact_equal": false,
+        "examples": [
+          {
+            "abs_diff": 1.52587890625e-05,
+            "b1": 222.74366760253906,
+            "b32": 222.74368286132812,
+            "index_zero_based": [
+              0,
+              60,
+              152
+            ],
+            "ulp32_distance": 1
+          }
+        ],
+        "max_abs_difference": 1.52587890625e-05
+      },
+      "SWUPB": {
+        "different_cells": 1,
+        "dtype": "float32",
+        "exact_equal": false,
+        "examples": [
+          {
+            "abs_diff": 7.62939453125e-06,
+            "b1": 96.96531677246094,
+            "b32": 96.96532440185547,
+            "index_zero_based": [
+              0,
+              151,
+              113
+            ],
+            "ulp32_distance": 1
+          }
+        ],
+        "max_abs_difference": 7.62939453125e-06
+      }
+    },
+    "unexplained_fields": [
+      "QNCCN",
+      "QNCLOUD",
+      "QNRAIN"
+    ],
+    "scope": "Strict numerical mismatch remains; no tolerance changes, no cause assigned, timing blocked."
+  },
+  "offline_replays": {
+    "sw_actual_profile_repeated": {
+      "status": "PASS_ACTUAL_CAPTURE_BATCH_SHAPE_REPLAY",
+      "ncol": [
+        1,
+        32,
+        64,
+        128
+      ],
+      "groups": 18,
+      "all_repeated_outputs_bitwise_equal": true,
+      "scope": "Offline adapter SW calculation, exact one-column V11 captured state repeated verbatim with identical seed. No WRF packing, heterogeneous multi-column state, forecast, MPI/OpenMP decomposition, restart, or performance claim."
+    },
+    "sw_heterogeneous_synthetic": {
+      "status": "PASS_FINITE_REPEATED_ACTUAL_STATE_HETEROGENEOUS_BATCH_VS_SCALAR",
+      "ncol": [
+        32,
+        64
+      ],
+      "batch_scalar_exact": true,
+      "scope": "Offline adapter-only diagnostic: one captured SW V11 profile is synthetically perturbed and repeated. No actual WRF columns, host packing, or forecast equivalence claim."
+    },
+    "lw_actual_profile_repeated": {
+      "status": "PASS_LW_CAPTURE_REPEATED_COLUMN_SHAPE_REPLAY",
+      "ncol": [
+        1,
+        32,
+        64,
+        128
+      ],
+      "returned_groups": 7,
+      "groups_detail": "six flux/heating outputs plus MCICA mask",
+      "all_repeated_outputs_bitwise_equal": true,
+      "capture_mask_available": false,
+      "scalar_vs_capture_real32": {
+        "UP": true,
+        "DN": true,
+        "HR": true,
+        "UPC": true,
+        "DNC": true,
+        "HRC": true,
+        "THETA_HR": true
+      },
+      "scope": "Offline RRTMGP LW adapter call on one captured column repeated with identical per-column seeds; no WRF packing/forecast/tile or heterogeneous columns tested. API-returned REAL32 flux/heating and isolated wrapper-style heating conversion were checked; the actual host radiation-driver accumulation/postprocessing path is not executed."
+    },
+    "lw_synthetic_heterogeneous": {
+      "status": "PASS_LW_HETEROGENEOUS_BATCH_VS_SCALAR",
+      "scope": "Offline adapter/RTE object-core test using explicitly synthetic perturbations of one captured V10 LW profile; does not represent actual WRF tile columns or validate WRF host scatter/driver tendencies/forecast.",
+      "summary": {},
+      "note": "Offline synthetic perturbation of an actual captured LW profile; not actual host heterogeneous columns, WRF packing, or driver execution."
+    }
+  },
+  "math_probe": {
+    "scope": "Isolated libm scalar/vector comparison and static symbol evidence only; does not establish which path caused WRF batch-vs-scalar model divergence.",
+    "shim_preparation_status": "PASS_SCOPED_PREPARATION_ONLY",
+    "interpretation": "Candidate mechanism; the intervention provides stronger evidence for process-wide vector-math sensitivity but not RRTMGP-only attribution."
+  },
+  "limitations": [
+    "Only this short first-step case was shimmed; no production acceptance or whole-forecast validation.",
+    "Original unshimmed B1/B32 mismatch remains valid and unresolved as a production behavior.",
+    "Process-wide shim can affect vector math outside RRTMGP.",
+    "Offline repeated-column tests do not establish host packing or real heterogeneous tile equivalence.",
+    "No performance model runs were executed."
+  ],
+  "package_policy": {
+    "no_large_model_outputs_copied": true,
+    "draft_v1_immutable": true,
+    "manifest_added_after_final_shim_receipt": true,
+    "no_source_changes_or_model_runs_during_curation": true
+  },
+  "ledger_v5": {
+    "external_receipt": "build/udm-cu-current-omp-evidence-plan-v7/after-freeze-notes-v5.json",
+    "sha256": "c9033fb9004e643016fc5072e8f5ea51c8c7785346c2d7ac47df4b037323bcbd",
+    "scope": "8-rank SUCCESS/output pin ledger; 39 total model invocations (16 references, 23 candidates), zero benchmark models."
+  },
+  "source_audit": {
+    "external_receipt": "build/udm37-batching-source-audit-v1/source-audit.json",
+    "sha256": "6dff8acb897f7d2910454901fade17e46041c6e70eb885acbf935edc5e75c9f5",
+    "summary": "No concrete unchanged heating/driver accumulation/gather/scatter/seed fault found in reviewed code; tail-temporary/workspace-resize risk remains untested and is not asserted as cause."
+  }
+}
