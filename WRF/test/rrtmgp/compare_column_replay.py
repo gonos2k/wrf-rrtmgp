@@ -19,6 +19,8 @@ OPTICAL_SECTIONS = {
     "TOTAL_G", "RL_USED", "DI_USED", "DS_USED", "PRECIP_TAU", "PRECIP_SSA", "PRECIP_G",
     "GRAUPEL_TAU_ABS", "HAIL_TAU_ABS", "GRAUPEL_TAU_EXT", "GRAUPEL_TAU_SCA", "GRAUPEL_TAU_SCA_G",
     "HAIL_TAU_EXT", "HAIL_TAU_SCA", "HAIL_TAU_SCA_G", "FROZEN_TAU", "FROZEN_SSA", "FROZEN_G",
+    "NATIVE_CLOUD_TAU", "CU_CLOUD_TAU", "NATIVE_CLOUD_SSA", "NATIVE_CLOUD_G",
+    "CU_CLOUD_SSA", "CU_CLOUD_G", "CU_RL_USED", "CU_DI_USED",
 }
 MASK_SECTION = "MASK"
 FLOAT_OUTPUT_SECTIONS = {
@@ -148,6 +150,17 @@ def read_result(path: Path) -> dict:
         raise ReplayFormatError(f"{path}: V9 direct-diagnostic result sections must be all present or all absent")
     if predelta and phase != "SW":
         raise ReplayFormatError(f"{path}: pre-delta direct-diagnostic sections are SW-only")
+    cu_lw = {"NATIVE_CLOUD_TAU", "CU_CLOUD_TAU"} & sections.keys()
+    cu_sw_names = {"NATIVE_CLOUD_TAU", "CU_CLOUD_TAU", "NATIVE_CLOUD_SSA", "NATIVE_CLOUD_G",
+                   "CU_CLOUD_SSA", "CU_CLOUD_G"}
+    cu_sw = cu_sw_names & sections.keys()
+    cu_radii = {"CU_RL_USED", "CU_DI_USED"} & sections.keys()
+    if phase == "LW" and cu_lw and cu_lw != {"NATIVE_CLOUD_TAU", "CU_CLOUD_TAU"}:
+        raise ReplayFormatError(f"{path}: LW CU component optics must be present together")
+    if phase == "SW" and cu_sw and cu_sw != cu_sw_names:
+        raise ReplayFormatError(f"{path}: SW native/CU tau, SSA, and g components must be present together")
+    if bool(cu_lw or cu_sw) != (cu_radii == {"CU_RL_USED", "CU_DI_USED"}):
+        raise ReplayFormatError(f"{path}: CU component optics require both CU radius records")
     return {"phase": phase, "nc": nc, "nl": nl, "sections": sections}
 
 

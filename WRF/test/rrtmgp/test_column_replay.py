@@ -190,9 +190,127 @@ def validate_udm_cf_extent(records: dict[str, np.ndarray], nl: int, path: Path) 
     return top
 
 
+def _exact_real_storage(actual: np.ndarray, expected: np.ndarray, label: str, path: Path) -> None:
+    """Require exact default-real or real64 storage of a stated arithmetic identity."""
+    actual = np.asarray(actual, dtype=np.float64)
+    expected = np.asarray(expected, dtype=np.float64)
+    if actual.shape != expected.shape:
+        fail(f"{path}: {label} shape {actual.shape} != expected {expected.shape}")
+    expected_single = expected.astype(np.float32).astype(np.float64)
+    actual_bytes = np.ascontiguousarray(actual, dtype=np.float64).tobytes()
+    expected_bytes = np.ascontiguousarray(expected, dtype=np.float64).tobytes()
+    single_bytes = np.ascontiguousarray(expected_single, dtype=np.float64).tobytes()
+    if actual_bytes not in {expected_bytes, single_bytes}:
+        delta = float(np.max(np.abs(actual - expected), initial=0.0))
+        fail(f"{path}: {label} fails exact host-real/real64 identity (max abs {delta})")
+
+
+def validate_cu_population_records(records: dict[str, np.ndarray], nc: int, nl: int,
+                                   phase: str, version: str, path: Path) -> None:
+    """Validate adapter-side CU policy/profiles and V11 raw optical decomposition."""
+    if (version, phase) not in {("RRTMGP_REPLAY_V10", "LW"), ("RRTMGP_REPLAY_V11", "SW")}:
+        fail(f"{path}: CU replay version/phase mismatch")
+    scalars = ("CU_POPULATION_POLICY", "CU_RADIUS_POLICY", "CU_OCCURRENCE_POLICY")
+    for name in scalars:
+        value = records.get(name)
+        if value is None or value.shape != (1, 1) or not np.isfinite(value).all() or value.item() != 1.0:
+            fail(f"{path}: {version} requires scalar {name}=1")
+    matrices = ("CU_LWP", "CU_IWP", "CU_REL", "CU_REI")
+    for name in matrices:
+        value = records.get(name)
+        if value is None or value.shape != (nc, nl):
+            fail(f"{path}: {version} {name} must have shape (nc,nl)")
+        if not np.isfinite(value).all():
+            fail(f"{path}: {version} {name} must be finite")
+    for name in ("CU_LWP", "CU_IWP"):
+        if np.any(records[name] < 0.0):
+            fail(f"{path}: {version} {name} must be nonnegative")
+    for name in ("CU_REL", "CU_REI"):
+        if np.any(records[name] <= 0.0):
+            fail(f"{path}: {version} {name} must be positive finite radii")
+    if version == "RRTMGP_REPLAY_V11":
+        components = ("RAW_CLOUD_TAU", "RAW_NATIVE_CLOUD_TAU", "RAW_CU_CLOUD_TAU")
+        for name in components:
+            value = records.get(name)
+            if value is None or value.ndim != 3 or value.shape[:2] != (nc, nl):
+                fail(f"{path}: V11 {name} must have shape (nc,nl,nband)")
+            if not np.isfinite(value).all() or np.any(value < 0.0):
+                fail(f"{path}: V11 {name} must be finite and nonnegative")
+        combined = (records["RAW_NATIVE_CLOUD_TAU"].astype(np.float64) +
+                    records["RAW_CU_CLOUD_TAU"].astype(np.float64)).astype(np.float32).astype(np.float64)
+        _exact_real_storage(records["RAW_CLOUD_TAU"], combined,
+                            "RAW_CLOUD_TAU=native+CU", path)
+    elif {"RAW_NATIVE_CLOUD_TAU", "RAW_CU_CLOUD_TAU"} & records.keys():
+        fail(f"{path}: raw native/CU optical decomposition is only valid in V11")
+
+
+def validate_cu_population_raw(raw: dict[str, np.ndarray], adapter: dict[str, np.ndarray],
+                               nl: int, path: Path) -> None:
+    """Check raw microphysics provenance, signed q closure and native path partition."""
+    required = (
+        "CF", "NATIVE_QC", "NATIVE_QI", "CU_QC", "CU_QI", "DP_CU", "SH_CU", "CF_CU",
+        "DRY_MASS_KG_M2", "SOURCE_QC", "SOURCE_QI", "CU_ACCEPTED_GRID_LWP", "CU_ACCEPTED_GRID_IWP",
+        "CU_REJECTED_GRID_LWP", "CU_REJECTED_GRID_IWP", "CU_OMITTED_CF0_LWP", "CU_OMITTED_CF0_IWP",
+        "CU_REL_RAW", "CU_REI_RAW",
+    )
+    for name in required:
+        value = raw.get(name)
+        if value is None or value.shape != (nl,) or not np.isfinite(value).all():
+            fail(f"{path}: CU raw record {name} must be present, finite, and length nl")
+    for name in ("CU_POPULATION_POLICY", "CU_RADIUS_POLICY", "CU_OCCURRENCE_POLICY"):
+        value = raw.get(name)
+        if value is None or value.shape != (1,) or not np.isfinite(value).all() or value.item() != 1.0:
+            fail(f"{path}: raw {name} must be scalar one")
+        if name not in adapter or adapter[name].shape != (1, 1) or adapter[name].item() != value.item():
+            fail(f"{path}: raw and adapter {name} disagree")
+    for name in ("CF", "CF_CU", "DP_CU", "SH_CU"):
+        if np.any((raw[name] < 0.0) | (raw[name] > 1.0)):
+            fail(f"{path}: CU raw {name} must lie in [0,1]")
+    if np.any(raw["DRY_MASS_KG_M2"] <= 0.0):
+        fail(f"{path}: CU raw dry mass must be positive")
+    dp_sh = raw["DP_CU"].astype(np.float32) + raw["SH_CU"].astype(np.float32)
+    _exact_real_storage(raw["CF_CU"], dp_sh.astype(np.float64), "CF_CU=DP_CU+SH_CU", path)
+    if np.any((raw["CF"] == 0.0) & (raw["CF_CU"] > 0.0)):
+        fail(f"{path}: CU fraction is positive in clear combined-cloud layer")
+    if np.any(raw["CF_CU"] > raw["CF"]):
+        fail(f"{path}: CU fraction exceeds combined cloud fraction")
+    for species in ("QC", "QI"):
+        native = raw[f"NATIVE_{species}"].astype(np.float32)
+        qcu = raw[f"CU_{species}"].astype(np.float32)
+        cfcu = raw["CF_CU"].astype(np.float32)
+        # This reproduces the host's binary32 multiply followed by add.
+        expected_source = (native + qcu * cfcu).astype(np.float64)
+        _exact_real_storage(raw[f"SOURCE_{species}"], expected_source,
+                            f"SOURCE_{species}=NATIVE_{species}+CU_{species}*CF_CU", path)
+        _exact_real_storage(raw[species], raw[f"NATIVE_{species}"],
+                            f"working {species}=native {species}", path)
+    for suffix, species in (("LWP", "QC"), ("IWP", "QI")):
+        qcu = raw[f"CU_{species}"].astype(np.float64)
+        accepted = (raw["DRY_MASS_KG_M2"] * 1000.0 * raw["CF_CU"] * np.maximum(qcu, 0.0))
+        rejected = (raw["DRY_MASS_KG_M2"] * 1000.0 * raw["CF_CU"] * np.maximum(-qcu, 0.0))
+        _exact_real_storage(raw[f"CU_ACCEPTED_GRID_{suffix}"], accepted,
+                            f"CU_ACCEPTED_GRID_{suffix}", path)
+        _exact_real_storage(raw[f"CU_REJECTED_GRID_{suffix}"], rejected,
+                            f"CU_REJECTED_GRID_{suffix}", path)
+        omitted = np.where(raw["CF"] == 0.0, accepted, 0.0)
+        _exact_real_storage(raw[f"CU_OMITTED_CF0_{suffix}"], omitted,
+                            f"CU_OMITTED_CF0_{suffix}", path)
+        expected_incloud = np.zeros(nl, dtype=np.float64)
+        cloudy = raw["CF"] > 0.0
+        expected_incloud[cloudy] = accepted[cloudy] / raw["CF"][cloudy]
+        _exact_real_storage(adapter[f"CU_{suffix}"][0, :nl], expected_incloud,
+                            f"adapter CU_{suffix}=grid path/CF", path)
+        if np.any(raw["CU_REL_RAW"] <= 0.0) or np.any(raw["CU_REI_RAW"] <= 0.0):
+            fail(f"{path}: raw CU radii must be positive")
+        _exact_real_storage(adapter[f"CU_{suffix}"][0, :nl], expected_incloud,
+                            f"adapter CU_{suffix} grid-path closure", path)
+    _exact_real_storage(adapter["CU_REL"][0, :nl], raw["CU_REL_RAW"], "adapter CU_REL raw-radius mapping", path)
+    _exact_real_storage(adapter["CU_REI"][0, :nl], raw["CU_REI_RAW"], "adapter CU_REI raw-radius mapping", path)
+
+
 def read_input(path: Path) -> tuple[str, int, int, int, int, int, dict[str, np.ndarray]]:
     lines = path.read_text(encoding="ascii").splitlines()
-    if len(lines) < 2 or lines[0].strip() not in {"RRTMGP_REPLAY_V1", "RRTMGP_REPLAY_V2", "RRTMGP_REPLAY_V3", "RRTMGP_REPLAY_V4", "RRTMGP_REPLAY_V5", "RRTMGP_REPLAY_V6", "RRTMGP_REPLAY_V7", "RRTMGP_REPLAY_V8", "RRTMGP_REPLAY_V9"}:
+    if len(lines) < 2 or lines[0].strip() not in {"RRTMGP_REPLAY_V1", "RRTMGP_REPLAY_V2", "RRTMGP_REPLAY_V3", "RRTMGP_REPLAY_V4", "RRTMGP_REPLAY_V5", "RRTMGP_REPLAY_V6", "RRTMGP_REPLAY_V7", "RRTMGP_REPLAY_V8", "RRTMGP_REPLAY_V9", "RRTMGP_REPLAY_V10", "RRTMGP_REPLAY_V11"}:
         fail(f"{path}: unsupported replay format version")
     header = lines[1].split()
     if len(header) != 6:
@@ -216,7 +334,7 @@ def read_input(path: Path) -> tuple[str, int, int, int, int, int, dict[str, np.n
         roughness = records.get("ICE_ROUGHNESS")
         if roughness is None or roughness.shape != (1, 1) or roughness.item() not in (1, 2, 3):
             fail(f"{path}: V2/V3 requires scalar ICE_ROUGHNESS in {{1, 2, 3}}")
-    if lines[0].strip() in {"RRTMGP_REPLAY_V3", "RRTMGP_REPLAY_V4", "RRTMGP_REPLAY_V5", "RRTMGP_REPLAY_V6", "RRTMGP_REPLAY_V7", "RRTMGP_REPLAY_V8", "RRTMGP_REPLAY_V9"} and phase == "SW":
+    if lines[0].strip() in {"RRTMGP_REPLAY_V3", "RRTMGP_REPLAY_V4", "RRTMGP_REPLAY_V5", "RRTMGP_REPLAY_V6", "RRTMGP_REPLAY_V7", "RRTMGP_REPLAY_V8", "RRTMGP_REPLAY_V9", "RRTMGP_REPLAY_V11"} and phase == "SW":
         policy = records.get("SW_BAND_PARTITION")
         if policy is None or policy.shape != (1, 1) or policy.item() != 1:
             fail(f"{path}: V3 SW requires scalar SW_BAND_PARTITION=1 (CCPP transition)")
@@ -227,7 +345,7 @@ def read_input(path: Path) -> tuple[str, int, int, int, int, int, dict[str, np.n
         rain = records.get("RWP")
         if rain is None or rain.shape != (nc, nl) or np.any(rain < 0):
             fail(f"{path}: V4 requires nonnegative RWP matching column layers")
-    if lines[0].strip() in {"RRTMGP_REPLAY_V5", "RRTMGP_REPLAY_V6", "RRTMGP_REPLAY_V7", "RRTMGP_REPLAY_V8", "RRTMGP_REPLAY_V9"}:
+    if lines[0].strip() in {"RRTMGP_REPLAY_V5", "RRTMGP_REPLAY_V6", "RRTMGP_REPLAY_V7", "RRTMGP_REPLAY_V8", "RRTMGP_REPLAY_V9", "RRTMGP_REPLAY_V10", "RRTMGP_REPLAY_V11"}:
         policy = records.get("PRECIPITATION_OPTICS")
         rain = records.get("RWP")
         if (policy is None) != (rain is None):
@@ -242,18 +360,22 @@ def read_input(path: Path) -> tuple[str, int, int, int, int, int, dict[str, np.n
             fail(f"{path}: V6 requires NATIVE_DRY_LAYER_MASS_KG_M2 shape (nc, nnative), 1 <= nnative <= nl")
         if not np.isfinite(native).all() or np.any(native <= 0):
             fail(f"{path}: V6 native dry layer mass must be finite and positive")
-    if lines[0].strip() in {"RRTMGP_REPLAY_V5", "RRTMGP_REPLAY_V6", "RRTMGP_REPLAY_V7", "RRTMGP_REPLAY_V8", "RRTMGP_REPLAY_V9"}:
+    if lines[0].strip() in {"RRTMGP_REPLAY_V5", "RRTMGP_REPLAY_V6", "RRTMGP_REPLAY_V7", "RRTMGP_REPLAY_V8", "RRTMGP_REPLAY_V9", "RRTMGP_REPLAY_V10", "RRTMGP_REPLAY_V11"}:
         for name in ("GRAVITY", "CP_DRY", "MOL_WEIGHT_DRY"):
             value = records.get(name)
             if value is None or value.shape != (1, 1) or not np.isfinite(value).all() or value.item() <= 0:
                 fail(f"{path}: V5-V9 requires positive finite scalar {name}")
     version = lines[0].strip()
+    cu_input_names = {"CU_POPULATION_POLICY", "CU_RADIUS_POLICY", "CU_OCCURRENCE_POLICY",
+                      "CU_LWP", "CU_IWP", "CU_REL", "CU_REI"}
+    if version not in {"RRTMGP_REPLAY_V10", "RRTMGP_REPLAY_V11"} and cu_input_names & records.keys():
+        fail(f"{path}: CU population records require RRTMGP_REPLAY_V10/V11")
     frozen_names = {"GWP", "HWP", "LAMBDA_G", "LAMBDA_H", "FROZEN_MODE",
                     "FROZEN_OCCURRENCE", "FROZEN_TABLE_SHA256_BYTES"}
     trace_gas_names = {"VMR_CFC11", "VMR_CFC12", "VMR_CFC22", "VMR_CCL4"}
-    if version == "RRTMGP_REPLAY_V8":
+    if version in {"RRTMGP_REPLAY_V8", "RRTMGP_REPLAY_V10"}:
         if phase != "LW":
-            fail(f"{path}: V8 is only valid for LW")
+            fail(f"{path}: V8/V10 are only valid for LW")
         missing = trace_gas_names - records.keys()
         if missing:
             fail(f"{path}: V8 missing required LW gas records: {', '.join(sorted(missing))}")
@@ -292,7 +414,7 @@ def read_input(path: Path) -> tuple[str, int, int, int, int, int, dict[str, np.n
         if native is not None and (native.shape[0] != nc or not 1 <= native.shape[1] <= nl
                                    or not np.isfinite(native).all() or np.any(native <= 0.0)):
             fail(f"{path}: V7 optional native dry mass has invalid shape or values")
-    elif version == "RRTMGP_REPLAY_V8":
+    elif version in {"RRTMGP_REPLAY_V8", "RRTMGP_REPLAY_V10"}:
         present_frozen = frozen_names & records.keys()
         if present_frozen and present_frozen != frozen_names:
             fail(f"{path}: V8 frozen-optics metadata must be complete when present")
@@ -319,20 +441,20 @@ def read_input(path: Path) -> tuple[str, int, int, int, int, int, dict[str, np.n
             if any(char not in "0123456789abcdef" for char in digest):
                 fail(f"{path}: V8 SHA bytes are not lowercase hexadecimal")
     elif frozen_names & records.keys():
-        if version != "RRTMGP_REPLAY_V9":
-            fail(f"{path}: frozen-optics records require RRTMGP_REPLAY_V7, V8, or V9")
-    if version == "RRTMGP_REPLAY_V9":
+        if version not in {"RRTMGP_REPLAY_V9", "RRTMGP_REPLAY_V10", "RRTMGP_REPLAY_V11"}:
+            fail(f"{path}: frozen-optics records require RRTMGP_REPLAY_V7 through V11")
+    if version in {"RRTMGP_REPLAY_V9", "RRTMGP_REPLAY_V11"}:
         if phase != "SW":
-            fail(f"{path}: V9 is only valid for SW")
+            fail(f"{path}: V9/V11 are only valid for SW")
         names = {"SW_DIRECT_PREDELTA_POLICY", "TOA_GPOINT", "RAW_GAS_TAU", "MCICA_MASK",
                  "RAW_CLOUD_TAU", "RAW_PRECIP_TAU", "RAW_GRAUPEL_TAU_EXT", "RAW_HAIL_TAU_EXT",
                  "BAND_LIMS_GPOINT", "BAND_LIMS_WAVENUMBER", "VISIBLE_WEIGHT"}
         missing = names - records.keys()
         if missing:
-            fail(f"{path}: V9 missing direct-diagnostic records: {', '.join(sorted(missing))}")
+            fail(f"{path}: V9/V11 missing direct-diagnostic records: {', '.join(sorted(missing))}")
         scalar = records["SW_DIRECT_PREDELTA_POLICY"]
         if scalar.shape != (1, 1) or scalar.item() != 1.0:
-            fail(f"{path}: V9 SW_DIRECT_PREDELTA_POLICY must equal one")
+            fail(f"{path}: V9/V11 SW_DIRECT_PREDELTA_POLICY must equal one")
         present_frozen = frozen_names & records.keys()
         if present_frozen and present_frozen != frozen_names:
             fail(f"{path}: V9 frozen inputs/metadata must be complete when present")
@@ -389,10 +511,13 @@ def read_input(path: Path) -> tuple[str, int, int, int, int, int, dict[str, np.n
         if not present_frozen and (np.any(records["RAW_GRAUPEL_TAU_EXT"] != 0.0) or
                                    np.any(records["RAW_HAIL_TAU_EXT"] != 0.0)):
             fail(f"{path}: V9 frozen extinction must be zero without frozen metadata")
+    if version in {"RRTMGP_REPLAY_V10", "RRTMGP_REPLAY_V11"}:
+        validate_cu_population_records(records, nc, nl, phase, version, path)
     for name, values in records.items():
         if name in {"ICE_ROUGHNESS", "SW_BAND_PARTITION", "PRECIPITATION_OPTICS",
                     "GRAVITY", "CP_DRY", "MOL_WEIGHT_DRY", "SOLAR", "FROZEN_MODE",
                     "FROZEN_OCCURRENCE", "FROZEN_TABLE_SHA256_BYTES", "SW_DIRECT_PREDELTA_POLICY",
+                    "CU_POPULATION_POLICY", "CU_RADIUS_POLICY", "CU_OCCURRENCE_POLICY",
                     "BAND_LIMS_GPOINT", "BAND_LIMS_WAVENUMBER", "VISIBLE_WEIGHT"}:
             continue
         if values.shape[0] != nc:
@@ -644,8 +769,12 @@ def compare_input_to_raw(phase: str, raw: dict[str, np.ndarray],
     path_expected: dict[str, np.ndarray] = {}
     omitted: dict[str, Any] = {}
     path_differences: dict[str, float] = {}
+    cu_native_names = {"NATIVE_QC", "NATIVE_QI"} <= raw.keys()
     for path_name, q_name in (("LWP", "QC"), ("IWP", "QI"), ("SWP", "QS")) + ((("RWP", "QR"),) if "RWP" in inp else ()):
-        q = corrected_hydrometeor(raw, q_name, path_name, raw_nl)
+        q_raw = dict(raw)
+        if cu_native_names and q_name in {"QC", "QI"}:
+            q_raw[q_name] = raw[f"NATIVE_{q_name}"]
+        q = corrected_hydrometeor(q_raw, q_name, path_name, raw_nl)
         grid_path = dry_mass * 1000.0 * q
         expected = np.zeros(raw_nl, dtype=np.float64)
         wet = cf > 0.0
@@ -749,6 +878,7 @@ def check_microphysics_mapping(mp_physics: int, raw: dict[str, np.ndarray],
     if missing_flags:
         fail(f"{phase}: raw snapshot missing source flags: {', '.join(missing_flags)}")
     flags = {q: bool(raw.get(FLAG_NAMES[q], np.array([0.0]))[0] != 0.0) for q in Q_NAMES}
+    cu_native_names = {"NATIVE_QC", "NATIVE_QI"} <= raw.keys()
     present_sources = sorted(SOURCE_NAMES[q] for q in Q_NAMES if SOURCE_NAMES[q] in raw)
     checks: list[str] = []
     expected_flags = {
@@ -766,18 +896,20 @@ def check_microphysics_mapping(mp_physics: int, raw: dict[str, np.ndarray],
             source = SOURCE_NAMES[q]
             if source not in raw:
                 fail(f"{phase}: MP4 mapping needs {source} capture")
-            assert_close(raw[q][:raw_nl], raw[source][:raw_nl], f"{phase}: MP4 preserved {q}",
+            compare_name = f"NATIVE_{q}" if cu_native_names and q in {"QC", "QI"} else source
+            assert_close(raw[q][:raw_nl], raw[compare_name][:raw_nl], f"{phase}: MP4 preserved {q}",
                          rtol=0.0, atol=0.0)
-            checks.append(f"{q}=source_{q}")
+            checks.append(f"{q}={compare_name.lower()}")
         mapping = "udm_all_native_species_preserved" if mp_physics == 27 else "mp4_all_species_preserved"
     elif mp_physics in {5, 15, 85}:
         for q in ("QC", "QI"):
             source = SOURCE_NAMES[q]
             if source not in raw:
                 fail(f"{phase}: MP{mp_physics} mapping needs {source} capture")
-            assert_close(raw[q][:raw_nl], raw[source][:raw_nl], f"{phase}: MP{mp_physics} mapped {q}",
+            compare_name = f"NATIVE_{q}" if cu_native_names and q in {"QC", "QI"} else source
+            assert_close(raw[q][:raw_nl], raw[compare_name][:raw_nl], f"{phase}: MP{mp_physics} mapped {q}",
                          rtol=0.0, atol=0.0)
-            checks.append(f"{q}=source_{q}")
+            checks.append(f"{q}={compare_name.lower()}")
         assert_close(raw["QS"][:raw_nl], np.zeros_like(raw["QS"][:raw_nl]),
                      f"{phase}: MP{mp_physics} snow path source must be zero", rtol=0.0, atol=0.0)
         checks.append("QS=0 (Ferrier ice field carries frozen condensate)")
@@ -787,9 +919,10 @@ def check_microphysics_mapping(mp_physics: int, raw: dict[str, np.ndarray],
             source = SOURCE_NAMES[q]
             if source not in raw:
                 fail(f"{phase}: MP95 mapping needs {source} capture")
-            assert_close(raw[q][:raw_nl], raw[source][:raw_nl], f"{phase}: MP95 restored/retained {q}",
+            compare_name = f"NATIVE_{q}" if cu_native_names and q in {"QC", "QI"} else source
+            assert_close(raw[q][:raw_nl], raw[compare_name][:raw_nl], f"{phase}: MP95 restored/retained {q}",
                          rtol=0.0, atol=0.0)
-            checks.append(f"{q}=source_{q}")
+            checks.append(f"{q}={compare_name.lower()}")
         assert_close(raw["QI"][:raw_nl], np.zeros_like(raw["QI"][:raw_nl]),
                      f"{phase}: MP95 QI must be zero", rtol=0.0, atol=0.0)
         checks.append("QI=0 (combined ice/snow remains in QS)")
@@ -802,9 +935,10 @@ def check_microphysics_mapping(mp_physics: int, raw: dict[str, np.ndarray],
             if flags[q]:
                 if source not in raw:
                     fail(f"{phase}: flagged {q} source has no {source} capture")
-                assert_close(raw[q][:raw_nl], raw[source][:raw_nl],
+                compare_name = f"NATIVE_{q}" if cu_native_names and q in {"QC", "QI"} else source
+                assert_close(raw[q][:raw_nl], raw[compare_name][:raw_nl],
                              f"{phase}: flagged source mapping {q}", rtol=0.0, atol=0.0)
-                checks.append(f"{q}=source_{q}")
+                checks.append(f"{q}={compare_name.lower()}")
         mapping = "generic_source_and_flag_report"
     return {"mp_physics": mp_physics, "source_flags": flags,
             "generic_raw_sources_present": present_sources,
@@ -939,7 +1073,8 @@ def validate_cloud_fixture_phase(phase: str, fixture: dict[str, Any], raw: dict[
     path_names = {"QC": ("QC", "LWP"), "QI": ("QI", "IWP"), "QS": ("QS", "SWP")}
     path_masses: dict[str, Any] = {}
     for source, expected_q in active_paths.items():
-        actual_q = float(raw[source][layer])
+        native_name = f"NATIVE_{source}"
+        actual_q = float(raw[native_name if native_name in raw else source][layer])
         if actual_q <= 0.0:
             fail(f"{phase}: cloud fixture {source} is not positive at layer {layer}: {actual_q}")
         dry_mass, _ = dry_layer_mass_kg_m2(raw, raw_nl)
@@ -981,6 +1116,12 @@ def validate_capture(case_dir: Path, phase: str, mp_physics: int,
         fail(f"{phase}: captured MP_PHYSICS={captured_mp}, requested {mp_physics}")
     if nc != 1 or nl < raw_nl:
         fail(f"{phase}: expected one captured WRF column and adapter nl>={raw_nl}; got {nc}x{nl}")
+    if input_phase == phase and any(name in adapter for name in
+                                    ("CU_POPULATION_POLICY", "CU_LWP", "CU_IWP", "CU_REL", "CU_REI")):
+        if not all(name in adapter for name in
+                   ("CU_POPULATION_POLICY", "CU_LWP", "CU_IWP", "CU_REL", "CU_REI")):
+            fail(f"{phase}: partial CU population input records")
+        validate_cu_population_raw(raw, adapter, raw_nl, capture / f"{phase.lower()}.raw")
     verify_frozen_table(adapter, nc, nl, case_dir)
     adapter_checks = compare_input_to_raw(phase, raw, adapter, raw_nl)
     mapping = check_microphysics_mapping(mp_physics, raw, adapter, phase, raw_nl)

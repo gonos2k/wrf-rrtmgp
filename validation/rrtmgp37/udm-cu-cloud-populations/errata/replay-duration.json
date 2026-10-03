@@ -1,0 +1,9 @@
+{
+  "status": "SCOPE_ERRATUM",
+  "applies_to": [
+    "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-cu-actual-sw-replay-v1/run-20261003T113736Z/validation.json",
+    "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-cu-actual-lw-replay-v1/run-20261003T201000Z/validation.json"
+  ],
+  "correction": "The phrase 'one-minute serial ... capture' describes a radiation capture cadence, not the duration of the source forecast. The SW capture was produced by a six-hour serial run from 12:00 to 18:00 with 60-second timesteps. The reused LW capture came from a separate 2-hour-51-minute serial run, also at 60-second timesteps.",
+  "scope": "The SW offline replay result remains unchanged. The SW and reused LW column records are byte-identical to the selection receipt, but they are not from a shared forecast trajectory. No model or reference replay was repeated for this correction."
+}

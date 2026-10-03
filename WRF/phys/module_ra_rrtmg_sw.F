@@ -10098,15 +10098,17 @@ CONTAINS
                        ,sw_dirdflux                               & ! WRF-CMAQ twoway coupled model
                        ,sw_difdflux                               & ! WRF-CMAQ twoway coupled model
                        ,use_rrtmgp,qh3d,f_qh,udm_cldfra,udm_cf_step,udm_cf_top, &
-                        mcica_seed_override,audit_step,audit_time,udm_dry_layer_mass,rrtmgp_domain_id,rrtmgp_calendar_day )
+                        mcica_seed_override,audit_step,audit_time,udm_dry_layer_mass,rrtmgp_domain_id,rrtmgp_calendar_day, &
+                        native_qc3d,native_qi3d,cu_qc3d,cu_qi3d,cu_cf3d,cu_dp3d,cu_sh3d,cu_population_policy )
 !------------------------------------------------------------------
    USE MODULE_RA_CLWRF_SUPPORT, ONLY : read_CAMgases
    USE module_mp_udm, ONLY: cldf_diag, udm_radiation_negative_limits
    USE mo_rte_kind, ONLY: wp
    USE module_ra_rrtmgp, ONLY: rrtmgp_sw_column, rrtmgp_frozen_enabled, &
         ty_rrtmgp_sw_workspace,rrtmgp_release_workspace, rrtmgp_cloud_lut_bounds, rrtmgp_ice_lut_coordinate
-   USE module_ra_rrtmgp_input, ONLY: rrtmgp_build_udm_inputs, rrtmgp_column_seed, &
-        rrtmgp_udm_frozen_lambdas, rrtmgp_summarize_path_clipping
+   USE module_ra_rrtmgp_input, ONLY: rrtmgp_build_udm_inputs, rrtmgp_build_cu_inputs, &
+        rrtmgp_summarize_cu_filter, &
+        rrtmgp_column_seed, rrtmgp_udm_frozen_lambdas, rrtmgp_summarize_path_clipping
    USE module_ra_rrtmgp_trace, ONLY: trace_start, trace_active, trace_raw_start, trace_raw, &
         trace_raw_end, trace_result, trace_end
    IMPLICIT NONE
@@ -10116,8 +10118,12 @@ CONTAINS
    REAL, OPTIONAL, INTENT(IN) :: qh3d(ims:ime,kms:kme,jms:jme)
    REAL, OPTIONAL, INTENT(IN) :: udm_cldfra(ims:ime,kms:kme,jms:jme),audit_time
    REAL, OPTIONAL, INTENT(IN) :: udm_dry_layer_mass(ims:ime,kms:kme,jms:jme)
+   REAL, OPTIONAL, INTENT(IN) :: native_qc3d(ims:ime,kms:kme,jms:jme),native_qi3d(ims:ime,kms:kme,jms:jme)
+   REAL, OPTIONAL, INTENT(IN) :: cu_qc3d(ims:ime,kms:kme,jms:jme),cu_qi3d(ims:ime,kms:kme,jms:jme)
+   REAL, OPTIONAL, INTENT(IN) :: cu_cf3d(ims:ime,kms:kme,jms:jme),cu_dp3d(ims:ime,kms:kme,jms:jme)
+   REAL, OPTIONAL, INTENT(IN) :: cu_sh3d(ims:ime,kms:kme,jms:jme)
    INTEGER, OPTIONAL, INTENT(IN) :: udm_cf_step(ims:ime,jms:jme),udm_cf_top(ims:ime,jms:jme),mcica_seed_override,audit_step
-   INTEGER, OPTIONAL, INTENT(IN) :: rrtmgp_domain_id,rrtmgp_calendar_day
+   INTEGER, OPTIONAL, INTENT(IN) :: rrtmgp_domain_id,rrtmgp_calendar_day,cu_population_policy
    INTEGER :: gp_seed,gp_g_count,gp_seed_overridden
    REAL(KIND=8) :: gp_g_sum,gp_g_max
    INTEGER(KIND=8) :: gp_cf0_count(4),gp_clip_low_count(2),gp_clip_high_count(2)
@@ -10132,7 +10138,21 @@ CONTAINS
    REAL :: gp_negative_limits(6),gp_clipped_q(kte-kts+1,6),gp_negative_correction(kte-kts+1,6)
    CHARACTER(LEN=2), PARAMETER :: gp_q_names(6)=[CHARACTER(LEN=2) :: 'QC','QI','QR','QS','QG','QH']
    REAL :: gp_cf_now(1,kte-kts+1)
-   LOGICAL :: run_rrtmgp,gp_frozen
+   REAL :: gp_cu_grid(kte-kts+1,2),gp_cu_incloud(kte-kts+1,2)
+   REAL :: gp_cu_rejected(kte-kts+1,2),gp_cu_omitted(kte-kts+1,2)
+   INTEGER(KIND=8) :: gp_cu_negative_source(2),gp_cu_negative_active(2),gp_cu_omitted_count(2)
+   INTEGER(KIND=8) :: gp_cu_negative_source_tmp(2),gp_cu_negative_active_tmp(2)
+   INTEGER(KIND=8) :: gp_cu_clip_low_count(2),gp_cu_clip_high_count(2)
+   REAL(KIND=8) :: gp_cu_rejected_sum(2),gp_cu_rejected_max(2),gp_cu_accepted_sum(2), &
+                   gp_cu_omitted_sum(2),gp_cu_omitted_max(2)
+   REAL(KIND=8) :: gp_cu_rejected_sum_tmp(2),gp_cu_rejected_max_tmp(2),gp_cu_accepted_sum_tmp(2)
+   REAL(KIND=8) :: gp_cu_clip_low_sum(2),gp_cu_clip_low_max(2),gp_cu_clip_high_sum(2), &
+                   gp_cu_clip_high_max(2),gp_cu_clip_total(2)
+   REAL :: gp_cu_lwp(1,kts:kte+1),gp_cu_iwp(1,kts:kte+1)
+   REAL :: gp_cu_rel(1,kts:kte+1),gp_cu_rei(1,kts:kte+1)
+   REAL :: gp_cu_reliq(1,kts:kte),gp_cu_reice(1,kts:kte)
+   LOGICAL :: run_rrtmgp,gp_frozen,use_cu_population,cu_bundle_present
+   INTEGER :: gp_cu_reason
    CHARACTER(LEN=96) :: gp_context
 !------------------------------------------------------------------
    LOGICAL, INTENT(IN )      ::        warm_rain
@@ -10578,6 +10598,28 @@ CONTAINS
     IF(PRESENT(use_rrtmgp)) run_rrtmgp=use_rrtmgp
     gp_frozen=.FALSE.
     IF(run_rrtmgp) gp_frozen=rrtmgp_frozen_enabled()
+    cu_bundle_present=PRESENT(native_qc3d).OR.PRESENT(native_qi3d).OR.PRESENT(cu_qc3d).OR. &
+                      PRESENT(cu_qi3d).OR.PRESENT(cu_cf3d).OR.PRESENT(cu_dp3d).OR. &
+                      PRESENT(cu_sh3d).OR.PRESENT(cu_population_policy)
+    use_cu_population=.FALSE.
+    IF(cu_bundle_present) THEN
+      IF(.NOT.PRESENT(native_qc3d).OR..NOT.PRESENT(native_qi3d).OR..NOT.PRESENT(cu_qc3d).OR. &
+         .NOT.PRESENT(cu_qi3d).OR..NOT.PRESENT(cu_cf3d).OR..NOT.PRESENT(cu_dp3d).OR. &
+         .NOT.PRESENT(cu_sh3d).OR..NOT.PRESENT(cu_population_policy)) &
+        CALL wrf_error_fatal('RRTMGP_INPUT_CU_PARTIAL_BUNDLE')
+      IF(cu_population_policy==1) THEN
+        IF(.NOT.run_rrtmgp.OR.mp_physics/=27) &
+          CALL wrf_error_fatal('RRTMGP_INPUT_CU_REQUIRES_ACTIVE_UDM_RRTMGP')
+        IF(.NOT.PRESENT(f_qc).OR..NOT.PRESENT(f_qi)) &
+          CALL wrf_error_fatal('RRTMGP_INPUT_CU_REQUIRES_NATIVE_QC_QI_FLAGS')
+        IF(.NOT.f_qc.OR..NOT.f_qi) CALL wrf_error_fatal('RRTMGP_INPUT_CU_REQUIRES_NATIVE_QC_QI')
+        IF(.NOT.PRESENT(udm_dry_layer_mass)) &
+          CALL wrf_error_fatal('RRTMGP_INPUT_CU_REQUIRES_NATIVE_DRY_MASS')
+        use_cu_population=.TRUE.
+      ELSE IF(cu_population_policy/=0) THEN
+        CALL wrf_error_fatal('RRTMGP_INPUT_CU_POPULATION_POLICY_UNSUPPORTED')
+      END IF
+    END IF
     IF(run_rrtmgp) THEN
       IF(.NOT.PRESENT(rrtmgp_domain_id).OR..NOT.PRESENT(rrtmgp_calendar_day)) &
         CALL wrf_error_fatal('RRTMGP37 requires domain id and current calendar day for McICA')
@@ -10658,6 +10700,12 @@ CONTAINS
   gp_clip_low_sum=0.d0;gp_clip_low_max=0.d0;gp_clip_high_sum=0.d0;gp_clip_high_max=0.d0;gp_clip_total=0.d0
   IF(run_rrtmgp) CALL rrtmgp_cloud_lut_bounds('SW',gp_liq_min,gp_liq_max,gp_ice_min,gp_ice_max)
   gp_negative_count=0;gp_negative_sum=0.d0;gp_negative_max_q=0.d0
+  gp_cu_negative_source=0;gp_cu_negative_active=0;gp_cu_omitted_count=0
+  gp_cu_rejected_sum=0.d0;gp_cu_rejected_max=0.d0;gp_cu_accepted_sum=0.d0
+  gp_cu_omitted_sum=0.d0;gp_cu_omitted_max=0.d0
+  gp_cu_clip_low_count=0;gp_cu_clip_high_count=0
+  gp_cu_clip_low_sum=0.d0;gp_cu_clip_low_max=0.d0;gp_cu_clip_high_sum=0.d0
+  gp_cu_clip_high_max=0.d0;gp_cu_clip_total=0.d0
   gp_negative_limits=0.
   IF(run_rrtmgp) gp_negative_limits=udm_radiation_negative_limits()
   j_loop: do j = jts,jte
@@ -10729,7 +10777,11 @@ CONTAINS
             IF (PRESENT(F_QC) .AND. PRESENT(QC3D)) THEN
               IF ( F_QC) THEN
                  DO K=kts,kte
-                    QC1D(K)=QC3D(I,K,J)
+                    IF(use_cu_population) THEN
+                      QC1D(K)=native_qc3d(I,K,J)
+                    ELSE
+                      QC1D(K)=QC3D(I,K,J)
+                    END IF
                     IF (.NOT.run_rrtmgp) QC1D(K)=max(0.,QC1D(K))
                  ENDDO
               ENDIF
@@ -10777,7 +10829,11 @@ CONTAINS
             IF (PRESENT(F_QI) .AND. PRESENT(QI3D)) THEN
                IF (F_QI) THEN
                   DO K=kts,kte
-                     QI1D(K)=QI3D(I,K,J)
+                     IF(use_cu_population) THEN
+                       QI1D(K)=native_qi3d(I,K,J)
+                     ELSE
+                       QI1D(K)=QI3D(I,K,J)
+                     END IF
                      IF (.NOT.run_rrtmgp) QI1D(K)=max(0.,QI1D(K))
                   ENDDO
                ENDIF
@@ -11209,6 +11265,10 @@ CONTAINS
 
 ! following Kristjansson and Mitchell
       call reicalc(ncol, pcols, pver, tlay, reice)
+      IF(use_cu_population) THEN
+         CALL relcalc(ncol,pcols,pver,tlay,landfrac,landm,icefrac,gp_cu_reliq,snowh)
+         CALL reicalc(ncol,pcols,pver,tlay,gp_cu_reice)
+      END IF
 
 
 
@@ -11389,6 +11449,19 @@ CONTAINS
                   CALL trace_raw('SW','PI',pi3d(i,kts:kte,j))
                   IF(PRESENT(QC3D)) CALL trace_raw('SW','SOURCE_QC',qc3d(i,kts:kte,j))
                   IF(PRESENT(QI3D)) CALL trace_raw('SW','SOURCE_QI',qi3d(i,kts:kte,j))
+                  IF(use_cu_population) THEN
+                     CALL trace_raw('SW','CU_POPULATION_POLICY',[REAL(cu_population_policy)])
+                     CALL trace_raw('SW','CU_RADIUS_POLICY',[1.])
+                     CALL trace_raw('SW','CU_OCCURRENCE_POLICY',[1.])
+                     CALL trace_raw('SW','NATIVE_QC',native_qc3d(i,kts:kte,j))
+                     CALL trace_raw('SW','NATIVE_QI',native_qi3d(i,kts:kte,j))
+                     CALL trace_raw('SW','CU_QC',cu_qc3d(i,kts:kte,j))
+                     CALL trace_raw('SW','CU_QI',cu_qi3d(i,kts:kte,j))
+                     CALL trace_raw('SW','DP_CU',cu_dp3d(i,kts:kte,j))
+                     CALL trace_raw('SW','SH_CU',cu_sh3d(i,kts:kte,j))
+                     CALL trace_raw('SW','CF_CU',cu_cf3d(i,kts:kte,j))
+                     CALL trace_raw('SW','DRY_MASS_KG_M2',udm_dry_layer_mass(i,kts:kte,j))
+                  END IF
                   IF(PRESENT(QS3D)) CALL trace_raw('SW','SOURCE_QS',qs3d(i,kts:kte,j))
                   IF(PRESENT(QR3D)) CALL trace_raw('SW','SOURCE_QR',qr3d(i,kts:kte,j))
                   IF(PRESENT(F_QC)) CALL trace_raw('SW','F_QC',[MERGE(1.,0.,F_QC)])
@@ -11396,7 +11469,17 @@ CONTAINS
                   IF(PRESENT(F_QS)) CALL trace_raw('SW','F_QS',[MERGE(1.,0.,F_QS)])
                   ! Keep raw capture open through UDM path preparation.
                END IF
-               CALL rrtmgp_build_udm_inputs(pdel(ncol,kts:kte),cldfrac(ncol,kts:kte), &
+               IF(use_cu_population) THEN
+                  CALL rrtmgp_build_udm_inputs(pdel(ncol,kts:kte),cldfrac(ncol,kts:kte), &
+                    native_qc3d(i,kts:kte,j),qr1d(kts:kte),native_qi3d(i,kts:kte,j),qs1d(kts:kte), &
+                    qg1d(kts:kte),gp_qh,gp_rel,gp_rei,gp_res,g,gp_grid,gp_rad,gp_sizes,gp_reason,gp_errmsg, &
+                    column_context=gp_context,allow_clear_condensate=.TRUE., &
+                    omitted_grid_path=gp_omitted_phase,layer_reason=gp_layer_reason, &
+                    negative_q_limits=gp_negative_limits,clipped_negative_q=gp_clipped_q, &
+                    negative_grid_correction=gp_negative_correction, &
+                    dry_layer_mass_kg_m2=udm_dry_layer_mass(i,kts:kte,j),frozen_uniform=gp_frozen)
+               ELSE
+                  CALL rrtmgp_build_udm_inputs(pdel(ncol,kts:kte),cldfrac(ncol,kts:kte), &
                     qc1d(kts:kte),qr1d(kts:kte),qi1d(kts:kte),qs1d(kts:kte),qg1d(kts:kte),gp_qh, &
                     gp_rel,gp_rei,gp_res,g,gp_grid,gp_rad,gp_sizes,gp_reason,gp_errmsg, &
                     column_context=gp_context,allow_clear_condensate=.TRUE., &
@@ -11404,6 +11487,62 @@ CONTAINS
                     negative_q_limits=gp_negative_limits,clipped_negative_q=gp_clipped_q, &
                     negative_grid_correction=gp_negative_correction, &
                     dry_layer_mass_kg_m2=udm_dry_layer_mass(i,kts:kte,j),frozen_uniform=gp_frozen)
+               END IF
+               IF(use_cu_population) THEN
+                  CALL rrtmgp_build_cu_inputs(cldfrac(ncol,kts:kte),cu_cf3d(i,kts:kte,j), &
+                    cu_dp3d(i,kts:kte,j),cu_sh3d(i,kts:kte,j),cu_qc3d(i,kts:kte,j),cu_qi3d(i,kts:kte,j), &
+                    udm_dry_layer_mass(i,kts:kte,j),gp_cu_grid,gp_cu_incloud,gp_cu_rejected,gp_cu_omitted, &
+                    gp_cu_reason,column_context=gp_context)
+                  CALL rrtmgp_summarize_cu_filter(cu_qc3d(i,kts:kte,j),cu_qi3d(i,kts:kte,j), &
+                    cu_cf3d(i,kts:kte,j),gp_cu_grid,gp_cu_rejected,gp_cu_negative_source_tmp,gp_cu_negative_active_tmp, &
+                    gp_cu_rejected_sum_tmp,gp_cu_rejected_max_tmp,gp_cu_accepted_sum_tmp)
+                  gp_cu_negative_source=gp_cu_negative_source+gp_cu_negative_source_tmp
+                  gp_cu_negative_active=gp_cu_negative_active+gp_cu_negative_active_tmp
+                  gp_cu_rejected_sum=gp_cu_rejected_sum+gp_cu_rejected_sum_tmp
+                  gp_cu_rejected_max=MAX(gp_cu_rejected_max,gp_cu_rejected_max_tmp)
+                  gp_cu_accepted_sum=gp_cu_accepted_sum+gp_cu_accepted_sum_tmp
+                  CALL rrtmgp_summarize_path_clipping(gp_cu_grid(:,1),cu_cf3d(i,kts:kte,j), &
+                    REAL(gp_cu_reliq(ncol,kts:kte),8),REAL(gp_liq_min,8),REAL(gp_liq_max,8), &
+                    gp_nlow_tmp,gp_slow_tmp,gp_mlow_tmp,gp_nhigh_tmp,gp_shigh_tmp,gp_mhigh_tmp,gp_total_tmp)
+                  gp_cu_clip_low_count(1)=gp_cu_clip_low_count(1)+gp_nlow_tmp
+                  gp_cu_clip_low_sum(1)=gp_cu_clip_low_sum(1)+gp_slow_tmp
+                  gp_cu_clip_low_max(1)=MAX(gp_cu_clip_low_max(1),gp_mlow_tmp)
+                  gp_cu_clip_high_count(1)=gp_cu_clip_high_count(1)+gp_nhigh_tmp
+                  gp_cu_clip_high_sum(1)=gp_cu_clip_high_sum(1)+gp_shigh_tmp
+                  gp_cu_clip_high_max(1)=MAX(gp_cu_clip_high_max(1),gp_mhigh_tmp)
+                  gp_cu_clip_total(1)=gp_cu_clip_total(1)+gp_total_tmp
+                  CALL rrtmgp_summarize_path_clipping(gp_cu_grid(:,2),cu_cf3d(i,kts:kte,j), &
+                    2.d0*REAL(gp_cu_reice(ncol,kts:kte),8),REAL(gp_ice_min,8),REAL(gp_ice_max,8), &
+                    gp_nlow_tmp,gp_slow_tmp,gp_mlow_tmp,gp_nhigh_tmp,gp_shigh_tmp,gp_mhigh_tmp,gp_total_tmp)
+                  gp_cu_clip_low_count(2)=gp_cu_clip_low_count(2)+gp_nlow_tmp
+                  gp_cu_clip_low_sum(2)=gp_cu_clip_low_sum(2)+gp_slow_tmp
+                  gp_cu_clip_low_max(2)=MAX(gp_cu_clip_low_max(2),gp_mlow_tmp)
+                  gp_cu_clip_high_count(2)=gp_cu_clip_high_count(2)+gp_nhigh_tmp
+                  gp_cu_clip_high_sum(2)=gp_cu_clip_high_sum(2)+gp_shigh_tmp
+                  gp_cu_clip_high_max(2)=MAX(gp_cu_clip_high_max(2),gp_mhigh_tmp)
+                  gp_cu_clip_total(2)=gp_cu_clip_total(2)+gp_total_tmp
+                  DO gp_phase=1,2
+                     gp_cu_omitted_count(gp_phase)=gp_cu_omitted_count(gp_phase)+COUNT(gp_cu_omitted(:,gp_phase)>0.)
+                     gp_cu_omitted_sum(gp_phase)=gp_cu_omitted_sum(gp_phase)+SUM(REAL(gp_cu_omitted(:,gp_phase),8))
+                     IF(ANY(gp_cu_omitted(:,gp_phase)>0.)) gp_cu_omitted_max(gp_phase)= &
+                       MAX(gp_cu_omitted_max(gp_phase),MAXVAL(REAL(gp_cu_omitted(:,gp_phase),8)))
+                  END DO
+                  gp_cu_lwp=0.; gp_cu_iwp=0.; gp_cu_rel=10.; gp_cu_rei=10.
+                  gp_cu_lwp(1,kts:kte)=gp_cu_incloud(:,1)
+                  gp_cu_iwp(1,kts:kte)=gp_cu_incloud(:,2)
+                  gp_cu_rel(1,kts:kte)=gp_cu_reliq(ncol,kts:kte)
+                  gp_cu_rei(1,kts:kte)=gp_cu_reice(ncol,kts:kte)
+                  IF(trace_active('SW')) THEN
+                     CALL trace_raw('SW','CU_ACCEPTED_GRID_LWP',gp_cu_grid(:,1))
+                     CALL trace_raw('SW','CU_ACCEPTED_GRID_IWP',gp_cu_grid(:,2))
+                     CALL trace_raw('SW','CU_REJECTED_GRID_LWP',gp_cu_rejected(:,1))
+                     CALL trace_raw('SW','CU_REJECTED_GRID_IWP',gp_cu_rejected(:,2))
+                     CALL trace_raw('SW','CU_OMITTED_CF0_LWP',gp_cu_omitted(:,1))
+                     CALL trace_raw('SW','CU_OMITTED_CF0_IWP',gp_cu_omitted(:,2))
+                     CALL trace_raw('SW','CU_REL_RAW',gp_cu_reliq(ncol,kts:kte))
+                     CALL trace_raw('SW','CU_REI_RAW',gp_cu_reice(ncol,kts:kte))
+                  END IF
+               END IF
                DO gp_phase=1,4
                   gp_cf0_count(gp_phase)=gp_cf0_count(gp_phase)+COUNT(gp_omitted_phase(:,gp_phase)>0.)
                   gp_cf0_sum(gp_phase)=gp_cf0_sum(gp_phase)+SUM(REAL(gp_omitted_phase(:,gp_phase),8))
@@ -11792,22 +11931,45 @@ CONTAINS
          END IF
          IF(run_rrtmgp) THEN
            IF(gp_frozen) THEN
-             CALL rrtmgp_sw_column(play,plev,tlay,h2ovmr,co2vmr,o3vmr,n2ovmr,ch4vmr,o2vmr, &
-               asdir,asdif,aldir,aldif,coszen,scon,cldfrac,clwpth,ciwpth,cswpth,rel,rei,res,4,icld, &
-               gp_seed,swuflx,swdflx,swhr,swuflxc,swdflxc,swhrc, &
-               swdkdir,swdkdif,swdkdirc,sibvisdir,sibvisdif,sibnirdir,sibnirdif,rwp=gp_rwp, &
-               native_dry_layer_mass_kg_m2=RESHAPE(udm_dry_layer_mass(i,kts:kte,j),[1,kte-kts+1]), &
-               gwp=gp_gwp,hwp=gp_hwp,lambda_g=gp_lambda_g,lambda_h=gp_lambda_h,frozen_context=gp_context, &
-               direct_unscaled=swdkdir_predelta,directc_unscaled=swdkdirc_predelta, &
-               visdir_unscaled=sibvisdir_predelta,nirdir_unscaled=sibnirdir_predelta,workspace=gp_workspace)
+             IF(use_cu_population) THEN
+               CALL rrtmgp_sw_column(play,plev,tlay,h2ovmr,co2vmr,o3vmr,n2ovmr,ch4vmr,o2vmr, &
+                 asdir,asdif,aldir,aldif,coszen,scon,cldfrac,clwpth,ciwpth,cswpth,rel,rei,res,4,icld, &
+                 gp_seed,swuflx,swdflx,swhr,swuflxc,swdflxc,swhrc, &
+                 swdkdir,swdkdif,swdkdirc,sibvisdir,sibvisdif,sibnirdir,sibnirdif,rwp=gp_rwp, &
+                 native_dry_layer_mass_kg_m2=RESHAPE(udm_dry_layer_mass(i,kts:kte,j),[1,kte-kts+1]), &
+                 gwp=gp_gwp,hwp=gp_hwp,lambda_g=gp_lambda_g,lambda_h=gp_lambda_h,frozen_context=gp_context, &
+                 direct_unscaled=swdkdir_predelta,directc_unscaled=swdkdirc_predelta, &
+                 visdir_unscaled=sibvisdir_predelta,nirdir_unscaled=sibnirdir_predelta,workspace=gp_workspace, &
+                 cu_lwp=gp_cu_lwp,cu_iwp=gp_cu_iwp,cu_rel=gp_cu_rel,cu_rei=gp_cu_rei)
+             ELSE
+               CALL rrtmgp_sw_column(play,plev,tlay,h2ovmr,co2vmr,o3vmr,n2ovmr,ch4vmr,o2vmr, &
+                 asdir,asdif,aldir,aldif,coszen,scon,cldfrac,clwpth,ciwpth,cswpth,rel,rei,res,4,icld, &
+                 gp_seed,swuflx,swdflx,swhr,swuflxc,swdflxc,swhrc, &
+                 swdkdir,swdkdif,swdkdirc,sibvisdir,sibvisdif,sibnirdir,sibnirdif,rwp=gp_rwp, &
+                 native_dry_layer_mass_kg_m2=RESHAPE(udm_dry_layer_mass(i,kts:kte,j),[1,kte-kts+1]), &
+                 gwp=gp_gwp,hwp=gp_hwp,lambda_g=gp_lambda_g,lambda_h=gp_lambda_h,frozen_context=gp_context, &
+                 direct_unscaled=swdkdir_predelta,directc_unscaled=swdkdirc_predelta, &
+                 visdir_unscaled=sibvisdir_predelta,nirdir_unscaled=sibnirdir_predelta,workspace=gp_workspace)
+             END IF
            ELSE
-             CALL rrtmgp_sw_column(play,plev,tlay,h2ovmr,co2vmr,o3vmr,n2ovmr,ch4vmr,o2vmr, &
-               asdir,asdif,aldir,aldif,coszen,scon,cldfrac,clwpth,ciwpth,cswpth,rel,rei,res,4,icld, &
-               gp_seed,swuflx,swdflx,swhr,swuflxc,swdflxc,swhrc, &
-               swdkdir,swdkdif,swdkdirc,sibvisdir,sibvisdif,sibnirdir,sibnirdif,rwp=gp_rwp, &
-               native_dry_layer_mass_kg_m2=RESHAPE(udm_dry_layer_mass(i,kts:kte,j),[1,kte-kts+1]), &
-               direct_unscaled=swdkdir_predelta,directc_unscaled=swdkdirc_predelta, &
-               visdir_unscaled=sibvisdir_predelta,nirdir_unscaled=sibnirdir_predelta,workspace=gp_workspace)
+             IF(use_cu_population) THEN
+               CALL rrtmgp_sw_column(play,plev,tlay,h2ovmr,co2vmr,o3vmr,n2ovmr,ch4vmr,o2vmr, &
+                 asdir,asdif,aldir,aldif,coszen,scon,cldfrac,clwpth,ciwpth,cswpth,rel,rei,res,4,icld, &
+                 gp_seed,swuflx,swdflx,swhr,swuflxc,swdflxc,swhrc, &
+                 swdkdir,swdkdif,swdkdirc,sibvisdir,sibvisdif,sibnirdir,sibnirdif,rwp=gp_rwp, &
+                 native_dry_layer_mass_kg_m2=RESHAPE(udm_dry_layer_mass(i,kts:kte,j),[1,kte-kts+1]), &
+                 direct_unscaled=swdkdir_predelta,directc_unscaled=swdkdirc_predelta, &
+                 visdir_unscaled=sibvisdir_predelta,nirdir_unscaled=sibnirdir_predelta,workspace=gp_workspace, &
+                 cu_lwp=gp_cu_lwp,cu_iwp=gp_cu_iwp,cu_rel=gp_cu_rel,cu_rei=gp_cu_rei)
+             ELSE
+               CALL rrtmgp_sw_column(play,plev,tlay,h2ovmr,co2vmr,o3vmr,n2ovmr,ch4vmr,o2vmr, &
+                 asdir,asdif,aldir,aldif,coszen,scon,cldfrac,clwpth,ciwpth,cswpth,rel,rei,res,4,icld, &
+                 gp_seed,swuflx,swdflx,swhr,swuflxc,swdflxc,swhrc, &
+                 swdkdir,swdkdif,swdkdirc,sibvisdir,sibvisdif,sibnirdir,sibnirdif,rwp=gp_rwp, &
+                 native_dry_layer_mass_kg_m2=RESHAPE(udm_dry_layer_mass(i,kts:kte,j),[1,kte-kts+1]), &
+                 direct_unscaled=swdkdir_predelta,directc_unscaled=swdkdirc_predelta, &
+                 visdir_unscaled=sibvisdir_predelta,nirdir_unscaled=sibnirdir_predelta,workspace=gp_workspace)
+             END IF
            END IF
            swuflxcln=swuflx; swdflxcln=swdflx
            DO k=kts,kte+2
@@ -12010,6 +12172,44 @@ CONTAINS
           ' high_clipped_layer_wp_sum_g_m2=',gp_clip_high_sum(gp_phase),' eligible_layer_wp_sum_g_m2=',gp_clip_total(gp_phase), &
           ' clip_grid_wp_fraction=',(gp_clip_low_sum(gp_phase)+gp_clip_high_sum(gp_phase))/gp_clip_total(gp_phase), &
           ' max_low_g_m2=',gp_clip_low_max(gp_phase),' max_high_g_m2=',gp_clip_high_max(gp_phase)
+        CALL wrf_debug(0,message)
+       END IF
+      END DO
+     END IF
+   END BLOCK
+   END IF
+
+   IF(use_cu_population) THEN
+    BLOCK
+     LOGICAL :: report_cu
+     CHARACTER(LEN=4), PARAMETER :: cu_phase_labels(2)=[CHARACTER(LEN=4) :: 'LIQ','ICE']
+     report_cu=.TRUE.
+     IF(PRESENT(mcica_seed_override)) report_cu=mcica_seed_override<0
+     IF(report_cu) THEN
+      DO gp_phase=1,2
+       IF(gp_cu_accepted_sum(gp_phase)>0.d0.OR.gp_cu_rejected_sum(gp_phase)>0.d0.OR. &
+          gp_cu_omitted_sum(gp_phase)>0.d0.OR.gp_cu_negative_source(gp_phase)>0) THEN
+        WRITE(message,*) 'SW RRTMGP_CU_POPULATION phase=',TRIM(cu_phase_labels(gp_phase)), &
+          ' tile_i=',its,':',ite,' tile_j=',jts,':',jte, &
+          ' accepted_grid_sum_g_m2=',gp_cu_accepted_sum(gp_phase), &
+          ' rejected_grid_sum_g_m2=',gp_cu_rejected_sum(gp_phase), &
+          ' rejected_grid_max_g_m2=',gp_cu_rejected_max(gp_phase), &
+          ' omitted_cf0_count=',gp_cu_omitted_count(gp_phase), &
+          ' omitted_cf0_sum_g_m2=',gp_cu_omitted_sum(gp_phase), &
+          ' omitted_cf0_max_g_m2=',gp_cu_omitted_max(gp_phase), &
+          ' negative_source_count=',gp_cu_negative_source(gp_phase), &
+          ' negative_active_count=',gp_cu_negative_active(gp_phase)
+        CALL wrf_debug(0,message)
+       END IF
+       IF(gp_cu_clip_total(gp_phase)>0.d0.AND. &
+          (gp_cu_clip_low_sum(gp_phase)>0.d0.OR.gp_cu_clip_high_sum(gp_phase)>0.d0)) THEN
+        WRITE(message,*) 'SW RRTMGP_CU_LUT_CLIP phase=',TRIM(cu_phase_labels(gp_phase)), &
+          ' low_layers=',gp_cu_clip_low_count(gp_phase),' low_grid_path_g_m2=',gp_cu_clip_low_sum(gp_phase), &
+          ' high_layers=',gp_cu_clip_high_count(gp_phase),' high_grid_path_g_m2=',gp_cu_clip_high_sum(gp_phase), &
+          ' eligible_grid_path_g_m2=',gp_cu_clip_total(gp_phase), &
+          ' clipped_grid_path_fraction=',(gp_cu_clip_low_sum(gp_phase)+gp_cu_clip_high_sum(gp_phase))/ &
+                                          gp_cu_clip_total(gp_phase), &
+          ' max_low_g_m2=',gp_cu_clip_low_max(gp_phase),' max_high_g_m2=',gp_cu_clip_high_max(gp_phase)
         CALL wrf_debug(0,message)
        END IF
       END DO
