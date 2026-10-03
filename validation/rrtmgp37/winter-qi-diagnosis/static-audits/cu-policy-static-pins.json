@@ -1,0 +1,99 @@
+{
+  "scope": "read-only policy audit; conditional, no measured CU component attribution",
+  "actual_wrf_head": "e7c97ed661403b3922fcf752300c052611ef89cd",
+  "local_ccpp_head": "3e6660c6df54e95a0871e990c2294dd397ae3860",
+  "local_ccpp_tracked_clean": true,
+  "files": [
+    {
+      "path": "build/udm-winter-qi-hook/source/WRF/phys/module_radiation_driver.F",
+      "sha256": "147ee5a48f0ac0af2bcca512bdf5d1516191bf1f43210ba3472f04a9dc19d2a7",
+      "bytes": 268858
+    },
+    {
+      "path": "build/udm-winter-qi-hook/source/WRF/phys/module_physics_init.F",
+      "sha256": "5d2f86eeeb07431d6e9784eef0106989d275cd8f5c37d0433c0d462087db356c",
+      "bytes": 315989
+    },
+    {
+      "path": "build/udm-winter-qi-hook/source/WRF/phys/module_cu_kfeta.F",
+      "sha256": "e6376c2d85c45470f49d545b25d513b5ec111bf36b87beebc740bf42825c6e5f",
+      "bytes": 120219
+    },
+    {
+      "path": "build/udm-winter-qi-hook/source/WRF/phys/module_cumulus_driver.F",
+      "sha256": "2cab31622b43b151265977e561a9dfcb4c7ef6bd9c7a7f0f8308ceffc2a56dfc",
+      "bytes": 93864
+    },
+    {
+      "path": "build/udm-winter-qi-hook/source/WRF/phys/module_ra_rrtmg_lw.F",
+      "sha256": "28ad145fdd507a7e80e8a8cc8006a35224667b47f774d9395c3e58d286117a7c",
+      "bytes": 673184
+    },
+    {
+      "path": "build/udm-winter-qi-hook/source/WRF/phys/module_ra_rrtmg_sw.F",
+      "sha256": "c47edb82415dbe8ddf52c52f744b34baec3835cff76f9cd68683224837baf2df",
+      "bytes": 628438
+    },
+    {
+      "path": "build/udm-winter-qi-hook/source/WRF/phys/module_ra_rrtmgp_input.F",
+      "sha256": "1460460a23b2b2b552f726c8c01a174a956da7a9d472e8a90b33c2d6ed245eff",
+      "bytes": 32625
+    },
+    {
+      "path": "build/udm-winter-qi-hook/source/WRF/phys/module_ra_rrtm.F",
+      "sha256": "9f54e70db6258a521921d89ada864857a45c7b0cd134e25f498350f5aa49428e",
+      "bytes": 534284
+    },
+    {
+      "path": "build/udm-winter-qi-hook/source/WRF/phys/module_ra_cam.F",
+      "sha256": "b0484d38338d9c7925d8011889f5a57280870febe451cfdce843b1e9ae669e32",
+      "bytes": 338499
+    },
+    {
+      "path": "build/udm-winter-qi-hook/source/WRF/phys/module_ra_goddard.F",
+      "sha256": "0917531726cbed5a128e05c45e70ee292c209dbcd1ae2bad17db6e46b8d3a5ad",
+      "bytes": 609892
+    },
+    {
+      "path": "build/udm-winter-qi-hook/source/WRF/dyn_em/module_first_rk_step_part1.F",
+      "sha256": "bb1384a82aad375f9f8392da2a16046571919556a2deacf1523992dacc49891f",
+      "bytes": 142390
+    },
+    {
+      "path": "external/ccpp-physics/physics/Radiation/radiation_clouds.f",
+      "sha256": "ed293db77d844d8580cbaccf9a28bef3ff18fd0852e62b9483dbd95d579e8a1f",
+      "bytes": 143576
+    },
+    {
+      "path": "external/ccpp-physics/physics/Interstitials/UFS_SCM_NEPTUNE/GFS_rrtmgp_cloud_mp.F90",
+      "sha256": "fc181d76a91854248df82e5658020f1299b46398f02aa26e83d9df51eeaafa51",
+      "bytes": 44513
+    },
+    {
+      "path": "build/udm-winter-qi-hook/replay-v8/ra37/namelist.output",
+      "sha256": "03b647a5f40a7d39719be07f1428d1fe484c6c7cb0bc89062197d6e9c40b21d5",
+      "bytes": 89223
+    },
+    {
+      "path": "build/udm-winter-qi-hook/source/WRF/phys/module_mp_udm.F",
+      "sha256": "7564be3e5ad7b26ffc00c2680eb632745850baeac01529d48d6bc8393cb9e53d",
+      "bytes": 192295
+    },
+    {
+      "path": "build/udm-winter-qi-hook/source/WRF/share/module_model_constants.F",
+      "sha256": "5b80377fecdc18a5f0ad38d3b6c15cfc86ad5d76701adbbbb08a08698d0f7062",
+      "bytes": 8280
+    },
+    {
+      "path": "build/udm-winter-qi-hook/root-replay-v8-trajectory-readback.json",
+      "sha256": "45c6c8e9a27ea8e86add1bafd08cdf4f747fa2ff0284ea2e569df51035a2f33f",
+      "bytes": 15610
+    }
+  ],
+  "graph_query": {
+    "cwd": "analysis/wrf-radiation",
+    "command": "graphify query \"radiation driver convection cloud ice feedback and RRTMGP native UDM radii\" --budget 900",
+    "graph_nodes": 523,
+    "note": "Graph located driver and cloud-adjustment architecture; actual pinned source controls all line references."
+  }
+}

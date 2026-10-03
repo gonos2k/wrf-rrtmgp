@@ -1,0 +1,105 @@
+--- a/WRF/phys/module_radiation_driver.F
++++ b/WRF/phys/module_radiation_driver.F
+@@ -968,6 +968,9 @@
+    REAL, DIMENSION( ims:ime, alevsiz, jms:jme, 1:no_src_types )  ::    aerodt
+ 
+    REAL    ::    DECLIN,SOLCON,XXLAT,TLOCTM,XT24, CEN_LAT, cldfra_cup_mod
++   REAL    ::    winter_qi_pre_cu, winter_qc_pre_cu, winter_qi_saved, winter_qc_saved
++   REAL    ::    winter_qi_bl, winter_cldfra_bl, winter_cu_values(14)
++   INTEGER ::    winter_cu_flags(14)
+    INTEGER ::    i,j,k,its,ite,jts,jte,ij
+    INTEGER ::    STEPABS
+    LOGICAL ::    gfdl_lw,gfdl_sw, compute_cldfra_cup
+@@ -1372,8 +1375,46 @@
+                 CLDFRA(i,k,j)=(1.-cldfra_cu(i,k,j))*CLDFRA(i,k,j)  ! Update resolved cloud fraction for Cu punch-through
+                 CLDFRA(i,k,j)=CLDFRA(i,k,j)+cldfra_cu(i,k,j)       ! New total cloud fraction
+                 CLDFRA(i,k,j)=AMIN1(1.0,CLDFRA(i,k,j))
++                IF (i==17 .AND. j==58 .AND. k>=6 .AND. k<=8 .AND. &
++                    xtime*60.>=10020. .AND. xtime*60.<=10200.) THEN
++                   winter_qc_pre_cu = qc(i,k,j)
++                   winter_qi_pre_cu = qi(i,k,j)
++                END IF
+                 qc(i,k,j) = qc(i,k,j)+qc_cu(i,k,j)*cldfra_cu(i,k,j)
+                 qi(i,k,j) = qi(i,k,j)+qi_cu(i,k,j)*cldfra_cu(i,k,j)
++                IF (i==17 .AND. j==58 .AND. k>=6 .AND. k<=8 .AND. &
++                    xtime*60.>=10020. .AND. xtime*60.<=10200.) THEN
++                   winter_qi_saved = -999.
++                   winter_qc_saved = -999.
++                   IF (F_QI) winter_qi_saved = qi_save(i,k,j)
++                   IF (F_QC) winter_qc_saved = qc_save(i,k,j)
++                   winter_qi_bl = -999.
++                   winter_cldfra_bl = -999.
++                   winter_cu_flags = 0
++                   winter_cu_flags(1) = icloud_cu
++                   winter_cu_flags(2) = cu_physics
++                   winter_cu_flags(3) = MERGE(1,0,PRESENT(icloud_bl))
++                   winter_cu_flags(4) = -1
++                   IF (PRESENT(icloud_bl)) winter_cu_flags(4) = icloud_bl
++                   winter_cu_flags(5) = MERGE(1,0,F_QI)
++                   winter_cu_flags(6) = MERGE(1,0,PRESENT(qi_bl))
++                   winter_cu_flags(7) = MERGE(1,0,PRESENT(qc_bl))
++                   winter_cu_flags(8) = MERGE(1,0,PRESENT(cldfra_bl))
++                   IF (PRESENT(icloud_bl)) THEN
++                      IF (icloud_bl>0 .AND. PRESENT(qi_bl) .AND. &
++                          PRESENT(qc_bl) .AND. PRESENT(cldfra_bl)) THEN
++                         winter_qi_bl = qi_bl(i,k,j)
++                         winter_cldfra_bl = cldfra_bl(i,k,j)
++                      END IF
++                   END IF
++                   winter_cu_values = (/ winter_qi_saved, winter_qi_pre_cu, &
++                        qi_cu(i,k,j), cldfra_dp(i,k,j), cldfra_sh(i,k,j), &
++                        cldfra_cu(i,k,j), qi_cu(i,k,j)*cldfra_cu(i,k,j), &
++                        qi(i,k,j), winter_qc_saved, winter_qc_pre_cu, &
++                        qc_cu(i,k,j), winter_qi_bl, winter_cldfra_bl, REAL(aercu_opt) /)
++                   CALL udm_winter_capture_cu_adjustment(itimestep,xtime*60., &
++                        i,j,k,winter_cu_flags,winter_cu_values)
++                END IF
+              ENDDO
+              ENDDO
+              ENDDO
+--- a/WRF/phys/udm_winter_capture.F
++++ b/WRF/phys/udm_winter_capture.F
+@@ -34,3 +34,43 @@
+        ims,ime,jms,jme,kms,kme,its,ite,jts,jte,kts,kte
+   CLOSE(unit)
+ END SUBROUTINE udm_winter_capture
++
++! Scratch-only observation of the temporary CU contribution to QI immediately
++! after radiation_driver's qi = qi + qi_cu * (cldfra_dp+cldfra_sh).
++! Record schema, in order:
++! tag, rank, domain(1 for this single-domain replay), step, i,j,k,
++! icloud_cu,cu_physics,icloud_bl_present,icloud_bl,F_QI,qi_bl_present,
++! qc_bl_present,cldfra_bl_present, seconds,
++! qi_saved,qi_before_cu,qi_cu,cldfra_dp,cldfra_sh,cu_fraction,
++! qi_cu_increment,qi_after_cu,qc_saved,qc_before_cu,qc_cu,qi_bl,
++! cldfra_bl,aercu_opt. Absent optional values and unsaved hydrometeors use
++! -999 sentinels; this routine never modifies model state.
++SUBROUTINE udm_winter_capture_cu_adjustment(step, seconds, i, j, k, flags, values)
++  IMPLICIT NONE
++  INTEGER, INTENT(IN) :: step,i,j,k,flags(8)
++  REAL, INTENT(IN) :: seconds,values(14)
++  CHARACTER(LEN=1024) :: outdir,filename
++  INTEGER :: stat,unit,rank
++  LOGICAL, SAVE :: configured=.FALSE., enabled=.FALSE.
++  CHARACTER(LEN=1024), SAVE :: cached_dir
++  !$OMP CRITICAL(udm_winter_cu_capture_config)
++  IF (.NOT.configured) THEN
++    CALL GET_ENVIRONMENT_VARIABLE('WRF_UDM_CU_CAPTURE_DIR',cached_dir,STATUS=stat)
++    enabled=(stat==0 .AND. LEN_TRIM(cached_dir)>0)
++    configured=.TRUE.
++  END IF
++  !$OMP END CRITICAL(udm_winter_cu_capture_config)
++  IF (.NOT.enabled) RETURN
++  IF (step<167 .OR. step>171) RETURN
++  IF (seconds<10020. .OR. seconds>10200.) RETURN
++  IF (i/=17 .OR. j/=58 .OR. k<6 .OR. k>8) RETURN
++  CALL wrf_get_myproc(rank)
++  outdir=TRIM(cached_dir)
++  WRITE(filename,'(A,"/cu_qi_adjust_rank",I4.4,".csv")') TRIM(outdir),rank
++  OPEN(NEWUNIT=unit,FILE=TRIM(filename),STATUS='UNKNOWN',POSITION='APPEND', &
++       ACTION='WRITE',IOSTAT=stat)
++  IF (stat/=0) RETURN
++  WRITE(unit,'(A,1X,14(I0,1X),15(ES25.16E3,1X))',IOSTAT=stat) &
++       'CU_QI_ADJUST_V1',rank,1,step,i,j,k,flags,seconds,values
++  CLOSE(unit)
++END SUBROUTINE udm_winter_capture_cu_adjustment

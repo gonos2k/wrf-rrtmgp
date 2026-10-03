@@ -1,0 +1,15 @@
+{
+  "status": "HISTORICAL_RECEIPT_ERRATUM",
+  "attempt": "replay-v10 preflight case was mistakenly invoked with --execute while its case receipt already existed; no MPI subprocess was launched.",
+  "command": "python3 run_capture_cu_replay.py --case replay-v10/ra37 --execute --timeout-seconds 600",
+  "evidence": {
+    "current_receipt_sha256": "0b15aa36e493db0fa9e94195364da008e58dc9c935b6f1611b12ccae67a93338",
+    "current_receipt_status": "PREPARATION_OR_REPLAY_ERROR",
+    "current_receipt_error": "FileExistsError('refusing to overwrite replay receipt: /NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-winter-cu-adjustment/replay-v10/ra37.receipt.json')",
+    "current_receipt_model_executed_field_is_incorrect": true,
+    "no_mpi_launch_evidence": "No rank rsl.error files or launch.log were created in replay-v10/ra37 by the refused invocation; directory artifacts pre-existed.",
+    "prior_preflight_receipt_bytes": "Not recoverable from this scratch directory; the existing receipt was overwritten by the old exception handler. No replacement PASS receipt is fabricated."
+  },
+  "correction": "Runner now checks existing case/receipt before entering receipt-writing error handling and marks model_executed only after subprocess.Popen succeeds.",
+  "preserve": "Do not overwrite replay-v10 artifacts."
+}

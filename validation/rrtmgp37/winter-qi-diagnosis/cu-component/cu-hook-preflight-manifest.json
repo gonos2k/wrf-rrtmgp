@@ -1,0 +1,96 @@
+{
+  "build": {
+    "command": "env PATH=<repo>/build/deps/mpich-sock/bin:$PATH NETCDF=<repo>/build/deps/netcdf LD_LIBRARY_PATH=<repo>/build/deps/netcdf/lib:<repo>/build/deps/root/usr/lib/x86_64-linux-gnu:<repo>/build/deps/mpich-sock/lib csh -f ./compile -j 12 em_real",
+    "configure_sha256": "44f85b7fc9b6994cb3784567e69d310580740a021b5f1ab1efb0586f25cfcba2",
+    "executable": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-winter-cu-adjustment/source/WRF/main/wrf.exe",
+    "executable_sha256": "640d0128e099aaaebf30b5d2a2fdd8f29772d328cb946b4f1b88d99ae5d2c6a8",
+    "ldd": "resolved with the recorded local NetCDF and MPICH paths; no missing shared objects",
+    "log": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-winter-cu-adjustment/compile-cu-hook-owner-final.log",
+    "log_sha256": "c99d0b009f0bff0510f0b437b0ee982df37f253f82e9bfbcbd4229f29f816360",
+    "success_marker": "Executables successfully built"
+  },
+  "capture_schema": {
+    "environment": "WRF_UDM_CU_CAPTURE_DIR",
+    "filename": "cu_qi_adjust_rankNNNN.csv",
+    "integer_fields": [
+      "rank",
+      "domain_id_fixed_1_for_single_domain_case",
+      "step",
+      "i",
+      "j",
+      "k",
+      "icloud_cu",
+      "cu_physics",
+      "icloud_bl_present",
+      "icloud_bl_or_minus1",
+      "F_QI",
+      "qi_bl_present",
+      "qc_bl_present",
+      "cldfra_bl_present"
+    ],
+    "real_fields": [
+      "elapsed_seconds",
+      "QI_SAVED_NATIVE",
+      "QI_BEFORE_CU",
+      "QI_CU",
+      "CLDFRA_DP",
+      "CLDFRA_SH",
+      "CU_FRACTION_SUM",
+      "QI_CU_INCREMENT",
+      "QI_AFTER_CU",
+      "QC_SAVED_NATIVE",
+      "QC_BEFORE_CU",
+      "QC_CU",
+      "QI_BL_IF_ACTIVE_OR_MINUS999",
+      "CLDFRA_BL_IF_ACTIVE_OR_MINUS999",
+      "AERCU_OPT_AS_REAL"
+    ],
+    "record": "CU_QI_ADJUST_V1",
+    "scope_note": "Optional/inactive BL values use -999; presence and activation context are diagnostic only, not proof those optional arrays were initialized or used."
+  },
+  "hook": {
+    "capture_helper_sha256": "3c67a4a476fe0cfae56af90eebd7c091b1be6e1176a3567fd661b27bbe1e168e",
+    "diff": "cu-adjustment-hook.diff",
+    "diff_sha256": "ccfa6e0290031a3802b43eaee427e4683b1520d06194524bc21a0066641e1e0f",
+    "driver_sha256": "560b9e13ff95ff93e6e08f28152140be2442863b6bbfeab3e6f2c6d3f5a90af5",
+    "files": [
+      "source/WRF/phys/module_radiation_driver.F",
+      "source/WRF/phys/udm_winter_capture.F"
+    ],
+    "semantics": "One observational call immediately after qi=qi+qi_cu*(cldfra_dp+cldfra_sh), selected only for elapsed seconds 10020..10200 and global i=17,j=58,k=6..8. Emits separate CU_QI_ADJUST_V1 rank file, without model-state writes. Existing RAD_PRE_BUILDER captures final driver QI later, after optional BL adjustment."
+  },
+  "preflight": {
+    "inputs": {
+      "boundary": "ba4241de4f4661a77733cf157f0c87f90668f107df86f8c92d092b56d7bd7bd4",
+      "executable": "640d0128e099aaaebf30b5d2a2fdd8f29772d328cb946b4f1b88d99ae5d2c6a8",
+      "fatal_log": "2d70d7d1ad0472450bf824eeef8a504e88b67c03c6c2ed3a05173f260caef0cc",
+      "history": "e3fa7be56062c640e52f66c73aaa0bd798d56f0809c1d4501e3b4a0c9c227e4c",
+      "input": "0cc7e188ef585a93ab52550816c6af236932254820fb1bc6937f464bfed38637",
+      "namelist": "37806b6230d9a9479bae32611b6b70d0318ce852fe3931af84ba1e7a15bdcc58",
+      "table": "8cb00850c3f885f5ec0306563c1ec0a55b512478a7395d626c1c99cebf280583"
+    },
+    "model_executed": false,
+    "receipt": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-winter-cu-adjustment/replay-v10/ra37.receipt.json",
+    "receipt_sha256": "a783bf3848b2b84e78a7f7aac649d60fda9c8d6f41b176da9476cda59d8c8e0f",
+    "runner": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-winter-cu-adjustment/run_capture_cu_replay.py",
+    "runner_sha256": "fa2dfcad261bc5afab99d67da7b72471c11f2ba33ca8a3c7773d7e59fcd6bb66",
+    "runtime_link_count": 92,
+    "source_inputs_and_runtime_assets_match_expected": true,
+    "status": "PREFLIGHT_PASS_NOT_EXECUTED"
+  },
+  "proposed_single_run": {
+    "acceptance": "Expected 14:50 fatal capture, match CU-adjustment row to RAD_PRE_BUILDER final QI and frozen fatal value; compare complete candidate history to original by whole-file SHA or full NetCDF readback; pin checks before/after. Stop on setup/schema/pin failure; no model retry.",
+    "case": "replay-v10/ra37",
+    "command": "python3 run_capture_cu_replay.py --case replay-v10/ra37 --execute --timeout-seconds 600",
+    "mpi": "4 ranks, pinned MPICH fork launcher on lo",
+    "omp": "OMP_NUM_THREADS=1, OMP_DYNAMIC=FALSE, OMP_STACKSIZE=512M",
+    "physics_and_namelist": "same Jan-2000 RA37/37 source case, unchanged inputs/table/config/timestep; scratch observer env opt-in only"
+  },
+  "scratch_root": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-winter-cu-adjustment",
+  "status": "PREPARED_FOR_REVIEW_NO_MODEL_RUN",
+  "v8_snapshot": {
+    "cu_extension_baseline": true,
+    "manifest": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-winter-cu-adjustment/v8-source-snapshot.json",
+    "manifest_sha256": "9e5c85c0b2e14bbc0df9d02cd3a88a5536063d31ad5f58a3d77cf6e9d28ba9e9"
+  }
+}
