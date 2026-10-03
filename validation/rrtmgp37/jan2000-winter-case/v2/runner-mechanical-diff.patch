@@ -1,0 +1,63 @@
+--- build/udm-alternate-jan2000-data/paired-forecast/run_pair.py	2026-10-03 15:26:12.000000000 +0900
++++ build/udm-alternate-jan2000-data/paired-forecast-v2/run_pair.py	2026-10-03 15:43:05.000000000 +0900
+@@ -131,6 +131,20 @@
+         p = case / name
+         if not p.is_symlink() or p.resolve() != target:
+             raise RuntimeError(f"{mode}: radiation data link {name} changed")
++    plan = json.loads((HERE / "pair-plan.json").read_text())
++    expected_targets = plan["runtime_directory_targets"]
++    expected_data_hashes = plan["runtime_directory_files_sha256"]
++    for name, target in expected_targets.items():
++        link = case / name
++        if not link.is_symlink() or not link.exists():
++            raise RuntimeError(f"{mode}: required top-level runtime asset link is missing or dangling: {name}")
++        if str(link.resolve()) != target:
++            raise RuntimeError(f"{mode}: runtime link {name} resolves to an unexpected target")
++        if sha(link.resolve()) != expected_data_hashes[name]:
++            raise RuntimeError(f"{mode}: runtime link target content hash changed for {name}")
++    for owned_name in plan["runtime_directory_case_owned"]:
++        if not (case / owned_name).exists():
++            raise RuntimeError(f"{mode}: required case-owned runtime name is absent: {owned_name}")
+     if sha(case / "wrfinput_d01") != sha(PREP / "case/wrfinput_d01"):
+         raise RuntimeError(f"{mode}: initialized input differs from common REAL state")
+     if sha(case / "wrfbdy_d01") != sha(PREP / "case/wrfbdy_d01"):
+@@ -155,6 +169,10 @@
+         result[arm] = {name: sha(case / name) for name in
+                        ("namelist.input", "wrfinput_d01", "wrfbdy_d01", "wrf.exe",
+                         "radiation_iofields.txt", "frozen-ice-psd-moments.nc")}
++        result[arm]["runtime_link_targets"] = {
++            name: str((case / name).resolve())
++            for name in json.loads((HERE / "pair-plan.json").read_text())["runtime_directory_targets"]
++        }
+     return result
+ 
+ 
+@@ -251,7 +269,7 @@
+                "timeout_seconds_per_arm": 1800, "arms": {}, "errors": []}
+     receipt_written_this_run = False
+     tracked_paths = [HERE / "run_pair.py", HERE / "run-paired-forecast.sh", HERE / "pair-plan.json",
+-                     HERE / "ra4/namelist.input", HERE / "ra37/namelist.input"]
++                     HERE / "runtime-link-manifest.json", HERE / "ra4/namelist.input", HERE / "ra37/namelist.input"]
+     frozen_runner_plan_before = None
+ 
+     def runner_plan_hashes() -> dict[str, str]:
+@@ -316,6 +334,10 @@
+                 raise RuntimeError(f"{arm}: initial/boundary file does not match frozen pair-plan SHA256")
+             if sha(HERE / arm / "radiation_iofields.txt") != item["radiation_iofields_sha256"]:
+                 raise RuntimeError(f"{arm}: radiation output field request differs from frozen pair-plan SHA256")
++            if sha(HERE / arm / "wrf.exe") != item["wrf_exe_sha256"]:
++                raise RuntimeError(f"{arm}: executable differs from frozen pair-plan SHA256")
++        if plan.get("runtime-link-manifest.json_sha256") != sha(HERE / "runtime-link-manifest.json"):
++            raise RuntimeError("top-level runtime asset link manifest differs from frozen pair plan")
+         if RUN_RECEIPT.exists():
+             raise FileExistsError(f"refusing to overwrite {RUN_RECEIPT}")
+         for arm in ("ra4", "ra37"):
+@@ -345,6 +367,8 @@
+         if n4norm != n37norm:
+             diff = "".join(difflib.unified_diff(n4norm.splitlines(True), n37norm.splitlines(True), fromfile="ra4", tofile="ra37"))
+             raise RuntimeError("forecast namelists differ beyond RA selectors/frozen mode:\n" + diff)
++        receipt["normalized_namelist_sha256"] = hashlib.sha256(n4norm.encode()).hexdigest()
++        receipt["normalized_namelist_comparison"] = "equal after replacing per-arm path roots and only ra_lw_physics, ra_sw_physics, rrtmgp_udm_frozen_optics"
+         runtime_env = os.environ.copy()
+         for key in list(runtime_env):
+             if key.startswith("WRF_RRTMGP_") or key.startswith("WRF_UDM_BOUNDARY_CAPTURE"):

@@ -1,0 +1,157 @@
+{
+  "purpose": "Isolated official pristine WRF v4.8.0 GNU dm+sm build for later bounded MPI decomposition regression; runtime remains pending preflight.",
+  "source": {
+    "repository": "https://github.com/wrf-model/WRF",
+    "commit": "06d4240ae989cc3e50af412bb472df3d9048783c",
+    "worktree": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pristine-wrf-dm-sm/WRF",
+    "tracked_diff_clean": true,
+    "submodules": [
+      {
+        "commit": "043a4b6711e7f7d6dd41bd932e6e7336334e9a53",
+        "path": ".ci/hpc-workflows"
+      },
+      {
+        "commit": "873b414670323ae766ec4fe1f4b6b5ab891358ed",
+        "path": "phys/GFL"
+      },
+      {
+        "commit": "8f8e8b59021249949c04d1686edc5a02ca325627",
+        "path": "phys/MYNN-EDMF"
+      },
+      {
+        "commit": "b66187f54a0c169e36592552634867474e603ac0",
+        "path": "phys/MYNN-SFC"
+      },
+      {
+        "commit": "881614f68aa65de8f383d56139162049baf600fa",
+        "path": "phys/TEMPO"
+      },
+      {
+        "commit": "eb7758055a5d436f022a634cae780f5512c42bb5",
+        "path": "phys/fire_behavior"
+      },
+      {
+        "commit": "5da0b241e48ecfd9a2a1bd667ed554765856d589",
+        "path": "phys/noahmp"
+      },
+      {
+        "commit": "550b5b494758ad2756394e93cb08b5709b8feb83",
+        "path": "phys/physics_mmm"
+      }
+    ]
+  },
+  "configure": {
+    "answers": [
+      "35",
+      "1"
+    ],
+    "meaning": "GNU dm+sm, 32-bit, one nesting level",
+    "file": "WRF/configure.wrf",
+    "sha256": "5f06ce4a1b7906dc41612d21b56771cbf762b5958fece8070b6e025209317242",
+    "generated_utc": "2026-10-03T08:59:28+09:00",
+    "build_flags": "-O2 -ftree-vectorize -funroll-loops -fopenmp -fconvert=big-endian -frecord-marker=4 -fallow-argument-mismatch -fallow-invalid-boz",
+    "SFC": "gfortran",
+    "DM_FC": "mpif90 (MPICH wrapper; gfortran backend)",
+    "DMPARALLEL": 1,
+    "OpenMP": true,
+    "RWORDSIZE": 4,
+    "netcdf": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/netcdf"
+  },
+  "toolchain": {
+    "gfortran": "GNU Fortran (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0",
+    "mpif90_show": "gfortran -I/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/mpich-sock/include -I/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/mpich-sock/include -L/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/mpich-sock/lib -lmpifort -Wl,-rpath -Wl,/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/mpich-sock/lib -Wl,--enable-new-dtags -lmpi",
+    "mpich": [
+      "HYDRA build details:",
+      "    Version:                                 4.2.0",
+      "    Release Date:                            Fri Feb  9 12:29:21 CST 2024",
+      "    CC:                              gcc      "
+    ],
+    "netcdf_fortran": "4.5.4"
+  },
+  "build": {
+    "script": "build_dm_sm_j1.sh",
+    "script_sha256": "724e87831475be7abd98d2402f3775e604829e0695e41ebfd90b23fca2126127",
+    "command": "csh -f ./compile -j 1 em_real",
+    "parallelism": 1,
+    "lock": "buildlogs/build.lock",
+    "environment": {
+      "OMP_NUM_THREADS": "1",
+      "WRF_RRTMGP_*": "unset",
+      "LD_LIBRARY_PATH": "build/deps/netcdf/lib:build/deps/mpich-sock/lib:build/deps/root/usr/lib/x86_64-linux-gnu"
+    },
+    "log": "buildlogs/compile-j1.log",
+    "started_utc": "2026-10-03T00:01:52Z",
+    "status": "BUILD_PASS_NO_RUNTIME_LAUNCHED",
+    "start_log_sha256": "eb10e4def2ee702d05a5f8bad6a6decf09bc88c55b038b8e88ebf04f7e1d3be4",
+    "end_utc": "2026-10-03T00:20:51Z",
+    "exit_code": 0,
+    "wrf_executable": {
+      "path": "WRF/main/wrf.exe",
+      "sha256": "865a687d9c1dcf67ad69488541ca459b321b0e9e0f20e755dc0a358a6aaca503",
+      "bytes": 57356768
+    },
+    "real_executable": {
+      "path": "WRF/main/real.exe",
+      "sha256": "797c89f33165481d847627c5c783b6a2a82319511058e43e579ed30fa0946032",
+      "bytes": 42037008
+    },
+    "archive": {
+      "path": "runtime-preflight/archive/wrf.exe",
+      "sha256": "865a687d9c1dcf67ad69488541ca459b321b0e9e0f20e755dc0a358a6aaca503",
+      "bytes": 57356768
+    },
+    "source_commit_reverified": "06d4240ae989cc3e50af412bb472df3d9048783c",
+    "tracked_source_clean": true,
+    "configure_sha256_reverified": "5f06ce4a1b7906dc41612d21b56771cbf762b5958fece8070b6e025209317242"
+  },
+  "resources_at_preflight": {
+    "filesystem_available": "36T",
+    "memory_available": "1.6TiB",
+    "quota": "not reported by quota utility"
+  },
+  "checkpoint_audit": {
+    "result": "Extra fields absent from pristine Registry are not enumerated as restart state variables by the stock input reader. This does not establish compatibility for registered fields, file metadata, stream selection, or actual runtime.",
+    "evidence": [
+      {
+        "path": "WRF/share/module_io_domain.F",
+        "lines": "115-116",
+        "sha256": "1dde269826435be2935883a0a477e9aa30cb852b67bc5b6b931c98e080dbe5ad",
+        "detail": "input_restart delegates to input_wrf(..., restart_only, ...)."
+      },
+      {
+        "path": "WRF/share/input_wrf.F",
+        "lines": "1290-1306 and registry loop through 1790",
+        "sha256": "54f646fb6a36c919db3d6869c14943b2cc32e9d360628092dff81f1721981f12",
+        "detail": "input_wrf iterates grid%head_statevars and reads selected Restart/stream variables by Registry state variable names."
+      },
+      {
+        "path": "WRF/share/input_wrf.F",
+        "lines": "1840-1902",
+        "detail": "file acceptance checks TITLE and V4 marker, not arbitrary variable list."
+      }
+    ],
+    "runtime_policy": "Use identical fresh wrfinput and namelist controls for MPI1/MPI4. Do not reuse RRTMGP restart absent separate variable/metadata validation."
+  },
+  "reference_regression": {
+    "existing_official_serial_binary_sha256": "cbd07fbc9458aca0861e1ed08976501ab6ae02931a05234596996869d7b12b02",
+    "existing_serial_fixture": "build/pristine-udm4-runtime/pristine-comparison.json",
+    "scope": "Existing serial RRTMG4 histories match 208/208 variables in control and mixed cases; does not establish MPI behavior."
+  },
+  "no_runtime_launched": true,
+  "runtime_preflight": {
+    "directory": "runtime-preflight",
+    "manifest": "runtime-preflight/runtime-preflight.json",
+    "status": "COMPLETED_APPROVED_ONE_STEP_MPI1_MPI4",
+    "restart12_manifest": "runtime-preflight/restart12-preflight.json",
+    "restart12_checkpoint_sha256": "943a53db058f2d9560c6f0d571f3ff9bb8efb407010c5eea2026922a6eeee7b8",
+    "restart12_manifest_sha256": "f1241b5a0387752e21398c3de97e479af728310d6ef5398c6fa51ca3ab04bc8e",
+    "runtime_assets_manifest": "runtime-preflight/restart12-assets.json",
+    "runtime_asset_comparison": "runtime-preflight/restart12-asset-comparison.json",
+    "summary": "runtime-preflight/pristine-mpi1-mpi4-summary.json",
+    "summary_sha256": "ad9c2b07446fa21fe33f7c325d7052db8aef66bf18f2be95ab99ce0ce85039fe",
+    "raw_comparison": "runtime-preflight/history-comparison.json",
+    "run_script": "runtime-preflight/run_case.sh",
+    "binary_archive_sha256": "865a687d9c1dcf67ad69488541ca459b321b0e9e0f20e755dc0a358a6aaca503"
+  },
+  "readme_sha256": "602e5c404adf88f980f4c85397ceb44a7bfd4ff789d447f2cfe374fde2a0b7a2"
+}

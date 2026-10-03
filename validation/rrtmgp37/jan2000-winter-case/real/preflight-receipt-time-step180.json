@@ -1,0 +1,67 @@
+{
+  "status": "PREPARED_NOT_EXECUTED",
+  "scope": "d01-only REAL initialization preflight; no forecast",
+  "archive_receipt": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-alternate-jan2000-data/download-receipt.json",
+  "met_em_count": 9,
+  "met_em_sha256": {
+    "met_em.d01.2000-01-24_12:00:00.nc": "6acd419fa0272634b0ca6076d5f82c478b357323e67c4260aaf7281b84e02705",
+    "met_em.d01.2000-01-24_15:00:00.nc": "8bfb2533eed4146d4ae1443492aaf7db0ce4ffb48c2e6caa155e1ef282a25179",
+    "met_em.d01.2000-01-24_18:00:00.nc": "2a8bef6fe5728d24c9b921980db7af0c39b4af744931c8360538a4465e31716f",
+    "met_em.d01.2000-01-24_21:00:00.nc": "129c1d57a3ffc5e4205ce3ac1f7f51e1c6ff01f3086c837597880dc52fb19adf",
+    "met_em.d01.2000-01-25_00:00:00.nc": "91806e34a051911f66c1e2edee6db16cd808d98f8f186cdc07600632f8d28999",
+    "met_em.d01.2000-01-25_03:00:00.nc": "74fac751657056603fd442db5e48cfd52fb12029354e256e296238b9d6218827",
+    "met_em.d01.2000-01-25_06:00:00.nc": "d17254fa9ec9540264d7e667fe7780577350fa2bea2165aa231ac0bcd12d2489",
+    "met_em.d01.2000-01-25_09:00:00.nc": "dd0c02c6bbdcb3789f0294f05eb32aa00efe2f24e97301ff0e64c642fcf6856a",
+    "met_em.d01.2000-01-25_12:00:00.nc": "1e3868e2d50c23c51db40e01a7bfb810bbf9cfca400e2b74fa0f963f40067156"
+  },
+  "namelist": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-alternate-jan2000-data/real-preflight/case/namelist.input",
+  "namelist_sha256": "898a6ce4122dce1b8d3463a603c4dda7b6be1acaa9ff8ca4f8be5b08d7103b79",
+  "namelist_template": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-sr-row-dm-sm/source/WRF/test/em_real/namelist.input.jan00",
+  "namelist_template_sha256": "da6d23fe0c082353fa138ab22ce61690605a9fe0d8a4b33bb7dd6bcb1df3c03c",
+  "real_executable": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-sr-row-dm-sm/source/WRF/main/real.exe",
+  "real_executable_sha256": "9e9964953b427eb3561ef1f2ffeb03f497e90b6063f14e2bd425e3158fb80b6d",
+  "wrf_executable_sha256": "176f589d657ca87df670cef3429d7474e674f3e44445eb7886aed871e36bef8f",
+  "build_receipt": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-sr-row-dm-sm/buildlogs/build-result.json",
+  "source_commit": "faf3ea0c6b37bee97e089b7c2a102d19d8557e80 + scratch SR-row correction e7c97ed661403b3922fcf752300c052611ef89cd",
+  "toolchain": {
+    "configure_selection": 35,
+    "mode": "GNU dmpar",
+    "nesting_option": 1,
+    "Fortran": "GNU Fortran 13.3.0",
+    "MPICH": "4.2.0 ch3:sock",
+    "configure_sha256": "44f85b7fc9b6994cb3784567e69d310580740a021b5f1ab1efb0586f25cfcba2"
+  },
+  "proposed_namelist_contract": {
+    "e_we": 74,
+    "e_sn": 61,
+    "e_vert": 33,
+    "p_top_requested_pa": 5000,
+    "num_metgrid_levels": 27,
+    "num_metgrid_soil_levels": 4,
+    "num_land_cat": 24,
+    "max_dom": 1,
+    "interval_seconds": 10800,
+    "start": "2000-01-24_12:00:00",
+    "end": "2000-01-25_12:00:00",
+    "mp_physics": 27,
+    "ra_lw_physics": 4,
+    "ra_sw_physics": 4,
+    "use_mp_re": 1,
+    "rrtmgp_udm_frozen_optics": 0,
+    "radt_minutes": 10,
+    "time_step_seconds": 180
+  },
+  "executor_candidate": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-alternate-jan2000-data/real-preflight/run-real-preflight.sh",
+  "execution_gate": "script refuses unless explicit --execute; not invoked",
+  "dynamic_libraries": {
+    "libnetcdff": "local build/deps/netcdf/lib",
+    "MPICH": "local build/deps/mpich-sock/lib",
+    "WRF runtime root libs": "build/deps/root/usr/lib/x86_64-linux-gnu"
+  },
+  "validation_pending": [
+    "verify REAL success and generated wrfinput_d01/wrfbdy_d01",
+    "validate dimensions, all relevant UDM native fields, attrs, raw+decoded finite/unmasked/no-fill values",
+    "verify exact bdy schedule coverage to 2000-01-25_12:00:00",
+    "retain met_em humidity/other source values unchanged and report ranges"
+  ]
+}
