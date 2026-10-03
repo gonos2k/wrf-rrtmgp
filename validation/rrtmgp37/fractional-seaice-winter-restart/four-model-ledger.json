@@ -1,0 +1,2072 @@
+{
+  "build_eligibility": "BUILD_PASS_POSTHOC_ATTESTED",
+  "code_head_pr47": "4394845667db52c258dab62719abc87402dd731f",
+  "compiler_backend": {
+    "path": "/usr/libexec/gcc/x86_64-linux-gnu/13/f951",
+    "sha256": "fad425e8691102776f779bc11a884d440ad18632ee462e8549e64528c82f0354",
+    "size_bytes": 31989288
+  },
+  "configure": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-seaice-fresh-gnu-dm-sm-v1/source/WRF/configure.wrf",
+    "sha256": "44f85b7fc9b6994cb3784567e69d310580740a021b5f1ab1efb0586f25cfcba2",
+    "size_bytes": 21191
+  },
+  "derived_utc": "2026-10-03T13:32:04.520485+00:00",
+  "executable": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-seaice-fresh-gnu-dm-sm-v1/source/WRF/main/wrf.exe",
+    "sha256": "3f868da917910ad1be5b1fed9e603c588c56936edebdc1bd7906d54113fe0b9c",
+    "size_bytes": 59010648
+  },
+  "executables": {
+    "ndown.exe": {
+      "file": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-seaice-fresh-gnu-dm-sm-v1/source/WRF/main/ndown.exe",
+        "sha256": "43c6055eb988012c24af951026454dae17402d90e3f901a04ba16dac61fdfcf9",
+        "size_bytes": 47495648
+      },
+      "nonempty_executable_ELF": true
+    },
+    "real.exe": {
+      "file": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-seaice-fresh-gnu-dm-sm-v1/source/WRF/main/real.exe",
+        "sha256": "38768c0d45b03b7b71770e33a3df9ba5fcdfcc2f9a390703a14a435042fcb08c",
+        "size_bytes": 43674320
+      },
+      "nonempty_executable_ELF": true
+    },
+    "tc.exe": {
+      "file": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-seaice-fresh-gnu-dm-sm-v1/source/WRF/main/tc.exe",
+        "sha256": "90d268b6b67836f7361547bb9dbeb8c90790fa6976d1b3d869d20eb4f7449374",
+        "size_bytes": 42797928
+      },
+      "nonempty_executable_ELF": true
+    },
+    "wrf.exe": {
+      "file": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-seaice-fresh-gnu-dm-sm-v1/source/WRF/main/wrf.exe",
+        "sha256": "3f868da917910ad1be5b1fed9e603c588c56936edebdc1bd7906d54113fe0b9c",
+        "size_bytes": 59010648
+      },
+      "nonempty_executable_ELF": true
+    }
+  },
+  "launcher": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/mpich-sock/bin/mpiexec.hydra",
+    "sha256": "7cbfc90b3903375252de00c92fd0ec8d51274da76365028de5c6edd645416946",
+    "size_bytes": 1856368
+  },
+  "launcher_libraries": {
+    "libraries": [
+      {
+        "path": "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2",
+        "sha256": "6222a16be7f2d458d6870efe6e715fc0c8d45766fb79cf7dcc3125538d703e28",
+        "size_bytes": 236616
+      },
+      {
+        "path": "/usr/lib/x86_64-linux-gnu/libc.so.6",
+        "sha256": "511f825ee075610ac9c0f7f91e2c13de2000d0f7b859f6461137e809a0a009d0",
+        "size_bytes": 2125328
+      },
+      {
+        "path": "/usr/lib/x86_64-linux-gnu/libm.so.6",
+        "sha256": "f06f2ce1f1833df5f41cf13b6447ff07bea993ad9b27297d3428c2f70ab3f0e7",
+        "size_bytes": 952616
+      }
+    ],
+    "normalized_ldd": "\tlinux-vdso.so.1 (ASLR_ADDRESS)\n\tlibm.so.6 => /lib/x86_64-linux-gnu/libm.so.6 (ASLR_ADDRESS)\n\tlibc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (ASLR_ADDRESS)\n\t/lib64/ld-linux-x86-64.so.2 (ASLR_ADDRESS)\n"
+  },
+  "models": [
+    {
+      "actual_model_invocations": 1,
+      "after_pins_valid": true,
+      "arm": "ra4",
+      "before_pins_valid": true,
+      "history": {
+        "all_variable_names_canonical_sha256": "cb44301740ad6e18a552061d640521e29d9dafa3cc959d6aec8b5ee947f41a29",
+        "data_model": "NETCDF4",
+        "decoded_nonfinite": 0,
+        "default_fill_policy": "netCDF4 masked read rejects default fill even without _FillValue",
+        "dimensions": {
+          "DateStrLen": {
+            "size": 19,
+            "unlimited": false
+          },
+          "Time": {
+            "size": 25,
+            "unlimited": true
+          },
+          "bottom_top": {
+            "size": 32,
+            "unlimited": false
+          },
+          "bottom_top_stag": {
+            "size": 33,
+            "unlimited": false
+          },
+          "seed_dim_stag": {
+            "size": 8,
+            "unlimited": false
+          },
+          "soil_layers_stag": {
+            "size": 4,
+            "unlimited": false
+          },
+          "south_north": {
+            "size": 60,
+            "unlimited": false
+          },
+          "south_north_stag": {
+            "size": 61,
+            "unlimited": false
+          },
+          "west_east": {
+            "size": 73,
+            "unlimited": false
+          },
+          "west_east_stag": {
+            "size": 74,
+            "unlimited": false
+          }
+        },
+        "expected_times": [
+          "2000-01-24_12:00:00",
+          "2000-01-24_13:00:00",
+          "2000-01-24_14:00:00",
+          "2000-01-24_15:00:00",
+          "2000-01-24_16:00:00",
+          "2000-01-24_17:00:00",
+          "2000-01-24_18:00:00",
+          "2000-01-24_19:00:00",
+          "2000-01-24_20:00:00",
+          "2000-01-24_21:00:00",
+          "2000-01-24_22:00:00",
+          "2000-01-24_23:00:00",
+          "2000-01-25_00:00:00",
+          "2000-01-25_01:00:00",
+          "2000-01-25_02:00:00",
+          "2000-01-25_03:00:00",
+          "2000-01-25_04:00:00",
+          "2000-01-25_05:00:00",
+          "2000-01-25_06:00:00",
+          "2000-01-25_07:00:00",
+          "2000-01-25_08:00:00",
+          "2000-01-25_09:00:00",
+          "2000-01-25_10:00:00",
+          "2000-01-25_11:00:00",
+          "2000-01-25_12:00:00"
+        ],
+        "explicit_fill_or_missing_hits": 0,
+        "file": {
+          "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-seaice-winter-validation-v3/ra4-24h-v1/case/wrfout_d01_2000-01-24_12:00:00",
+          "sha256": "edf0cfbf4efeecbbf69e979c8f4fc21a19a436f4329a3e11330a2c569ea0bcc4",
+          "size_bytes": 192549864
+        },
+        "full_metadata_canonical_sha256": "facd04a0b2af5536f8c48d39ad02f2d579c69c5b2dc1015d9415a29b8f09a56b",
+        "geometry": {
+          "bottom_top": 32,
+          "south_north": 60,
+          "west_east": 73
+        },
+        "global_attribute_count": 136,
+        "mask_hits": 0,
+        "numeric_raw_array_pins_canonical_sha256": "a8a2d644085c1e7585d97f7ec3691f5baad6f11f272815cce834b5e0428278b0",
+        "numeric_variable_count": 221,
+        "numeric_variables_all_strict_pass": true,
+        "ordered_times": [
+          "2000-01-24_12:00:00",
+          "2000-01-24_13:00:00",
+          "2000-01-24_14:00:00",
+          "2000-01-24_15:00:00",
+          "2000-01-24_16:00:00",
+          "2000-01-24_17:00:00",
+          "2000-01-24_18:00:00",
+          "2000-01-24_19:00:00",
+          "2000-01-24_20:00:00",
+          "2000-01-24_21:00:00",
+          "2000-01-24_22:00:00",
+          "2000-01-24_23:00:00",
+          "2000-01-25_00:00:00",
+          "2000-01-25_01:00:00",
+          "2000-01-25_02:00:00",
+          "2000-01-25_03:00:00",
+          "2000-01-25_04:00:00",
+          "2000-01-25_05:00:00",
+          "2000-01-25_06:00:00",
+          "2000-01-25_07:00:00",
+          "2000-01-25_08:00:00",
+          "2000-01-25_09:00:00",
+          "2000-01-25_10:00:00",
+          "2000-01-25_11:00:00",
+          "2000-01-25_12:00:00"
+        ],
+        "passed": true,
+        "physics": {
+          "MP_PHYSICS": 27,
+          "RA_LW_PHYSICS": 4,
+          "RA_SW_PHYSICS": 4
+        },
+        "raw_nonfinite": 0,
+        "variable_count": 222
+      },
+      "history_preservation": {
+        "all_metadata_equal": true,
+        "all_variable_raw_bytes_equal": true,
+        "baseline": {
+          "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-alternate-jan2000-data/paired-forecast-v2/ra4/wrfout_d01_2000-01-24_12:00:00",
+          "sha256": "edf0cfbf4efeecbbf69e979c8f4fc21a19a436f4329a3e11330a2c569ea0bcc4",
+          "size_bytes": 192549864
+        },
+        "candidate": {
+          "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-seaice-winter-validation-v3/ra4-24h-v1/case/wrfout_d01_2000-01-24_12:00:00",
+          "sha256": "edf0cfbf4efeecbbf69e979c8f4fc21a19a436f4329a3e11330a2c569ea0bcc4",
+          "size_bytes": 192549864
+        },
+        "passed": true,
+        "raw_mismatches": {},
+        "whole_file_byte_identity": true
+      },
+      "kind": "24h",
+      "model": {
+        "cleared_inherited_env_names": [
+          "OMP_NUM_THREADS"
+        ],
+        "command": [
+          "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/mpich-sock/bin/mpiexec.hydra",
+          "-launcher",
+          "fork",
+          "-iface",
+          "lo",
+          "-n",
+          "4",
+          "./wrf.exe"
+        ],
+        "elapsed_seconds": 147.4286347012967,
+        "ended_utc": "2026-10-03T13:18:12.691663+00:00",
+        "model_completed": true,
+        "rank_logs": [
+          {
+            "fatal": false,
+            "file": {
+              "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-seaice-winter-validation-v3/ra4-24h-v1/case/rsl.error.0000",
+              "sha256": "2b4b8548a8cb38e2944633b1f75607654bb2b9cf5195a7d1f692a2f82d70719c",
+              "size_bytes": 128025
+            },
+            "success": true
+          },
+          {
+            "fatal": false,
+            "file": {
+              "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-seaice-winter-validation-v3/ra4-24h-v1/case/rsl.error.0001",
+              "sha256": "667167deeddb661631e6ded164cbbb227a96fea73a689c297da7e57a2f29839a",
+              "size_bytes": 2557
+            },
+            "success": true
+          },
+          {
+            "fatal": false,
+            "file": {
+              "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-seaice-winter-validation-v3/ra4-24h-v1/case/rsl.error.0002",
+              "sha256": "cc0b3df58f6a817724677e4492e4d457387a73f56fd638d03a6fe8d7d796f219",
+              "size_bytes": 2557
+            },
+            "success": true
+          },
+          {
+            "fatal": false,
+            "file": {
+              "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-seaice-winter-validation-v3/ra4-24h-v1/case/rsl.error.0003",
+              "sha256": "562780dd618f7fc515de0368398ee163dad68f0569a571ef829ce909f9497562",
+              "size_bytes": 2557
+            },
+            "success": true
+          }
+        ],
+        "returncode": 0,
+        "stack_limit_soft_hard_bytes": [
+          536870912,
+          536870912
+        ],
+        "started_utc": "2026-10-03T13:15:45.262172+00:00",
+        "stdout": {
+          "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-seaice-winter-validation-v3/ra4-24h-v1/case/runner.stdout.log",
+          "sha256": "9500367e0d5ff6f2be217c996c4abb2609a784ee4f122beab80dfcf50d6061e4",
+          "size_bytes": 196
+        },
+        "timed_out": false,
+        "timeout_seconds": 1200
+      },
+      "named_binding_count": 98,
+      "named_bindings_retained": "assets/ra4-named-runtime-bindings.json",
+      "named_snapshot_canonical_sha256": "a2fbf9a9265d9976a54f5e8eac478f83919d60f1e5d28dbd7ba622cb55e776e6",
+      "namelist": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-seaice-winter-validation-v3/ra4-24h-v1/case/namelist.input",
+        "sha256": "e22b0df372e3d909d21ea50881fb8429f3a76a7bd433c1d583ebfd2af2754320",
+        "size_bytes": 5140
+      },
+      "own_checkpoints": [
+        {
+          "all_variable_names_canonical_sha256": "273719dab09a8249018c9f63cc7a2e8806ccf11bc4b2681d3d0ce661a37f5212",
+          "data_model": "NETCDF4",
+          "decoded_nonfinite": 0,
+          "default_fill_policy": "netCDF4 masked read rejects default fill even without _FillValue",
+          "dimensions": {
+            "DIM0010": {
+              "size": 5,
+              "unlimited": false
+            },
+            "DIM0014": {
+              "size": 7501,
+              "unlimited": false
+            },
+            "DateStrLen": {
+              "size": 19,
+              "unlimited": false
+            },
+            "Time": {
+              "size": 1,
+              "unlimited": true
+            },
+            "bottom_top": {
+              "size": 32,
+              "unlimited": false
+            },
+            "bottom_top_stag": {
+              "size": 33,
+              "unlimited": false
+            },
+            "dust_erosion_dimension": {
+              "size": 3,
+              "unlimited": false
+            },
+            "ensemble_stag": {
+              "size": 144,
+              "unlimited": false
+            },
+            "iit": {
+              "size": 2,
+              "unlimited": false
+            },
+            "lagday": {
+              "size": 150,
+              "unlimited": false
+            },
+            "land_cat_stag": {
+              "size": 24,
+              "unlimited": false
+            },
+            "num_ext_model_couple_dom_stag": {
+              "size": 1,
+              "unlimited": false
+            },
+            "num_pert_3d": {
+              "size": 15,
+              "unlimited": false
+            },
+            "seed_dim_stag": {
+              "size": 8,
+              "unlimited": false
+            },
+            "soil_cat_stag": {
+              "size": 16,
+              "unlimited": false
+            },
+            "soil_layers": {
+              "size": 4,
+              "unlimited": false
+            },
+            "soil_layers_stag": {
+              "size": 4,
+              "unlimited": false
+            },
+            "south_north": {
+              "size": 60,
+              "unlimited": false
+            },
+            "south_north_stag": {
+              "size": 61,
+              "unlimited": false
+            },
+            "west_east": {
+              "size": 73,
+              "unlimited": false
+            },
+            "west_east_stag": {
+              "size": 74,
+              "unlimited": false
+            }
+          },
+          "expected_times": [
+            "2000-01-25_00:00:00"
+          ],
+          "explicit_fill_or_missing_hits": 0,
+          "file": {
+            "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-seaice-winter-validation-v3/ra4-24h-v1/case/wrfrst_d01_2000-01-25_00:00:00",
+            "sha256": "1739f25c9537b94c776723285b97e76878f82070bec76bb35a562d3de0da4d57",
+            "size_bytes": 28392636
+          },
+          "full_metadata_canonical_sha256": "1f3955176ca9c22f8c879ec2fb8d4fcf677c19650c52edc30e00790feabea026",
+          "geometry": {
+            "bottom_top": 32,
+            "south_north": 60,
+            "west_east": 73
+          },
+          "global_attribute_count": 198,
+          "mask_hits": 0,
+          "numeric_raw_array_pins_canonical_sha256": "e209fc594aa2eaa8fce1136aa59b78792e4421a5fc899f96bf6f95947a992c28",
+          "numeric_variable_count": 663,
+          "numeric_variables_all_strict_pass": true,
+          "ordered_times": [
+            "2000-01-25_00:00:00"
+          ],
+          "passed": true,
+          "physics": {
+            "MP_PHYSICS": 27,
+            "RA_LW_PHYSICS": 4,
+            "RA_SW_PHYSICS": 4
+          },
+          "raw_nonfinite": 0,
+          "repaired_diagnostics": {
+            "QZ0": {
+              "finite_count": 4380,
+              "max": 0.0,
+              "min": 0.0,
+              "negative_count": 0,
+              "nonzero_count": 0,
+              "old_failure_site_raw_ieee_hex": "00000000",
+              "old_failure_site_value": 0.0,
+              "passed": true,
+              "quantiles": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "signed_negative_zero_count": 0,
+              "total_count": 4380
+            },
+            "USTM": {
+              "finite_count": 4380,
+              "max": 1.4951775074005127,
+              "min": 0.004005328752100468,
+              "negative_count": 0,
+              "nonzero_count": 4380,
+              "old_failure_site_raw_ieee_hex": "3a62823e",
+              "old_failure_site_value": 0.254655659198761,
+              "passed": true,
+              "quantiles": [
+                0.004005328752100468,
+                0.22533505037426949,
+                0.42762406170368195,
+                0.6115455329418182,
+                1.4951775074005127
+              ],
+              "signed_negative_zero_count": 0,
+              "total_count": 4380
+            },
+            "passed": true
+          },
+          "variable_count": 664
+        },
+        {
+          "all_variable_names_canonical_sha256": "273719dab09a8249018c9f63cc7a2e8806ccf11bc4b2681d3d0ce661a37f5212",
+          "data_model": "NETCDF4",
+          "decoded_nonfinite": 0,
+          "default_fill_policy": "netCDF4 masked read rejects default fill even without _FillValue",
+          "dimensions": {
+            "DIM0010": {
+              "size": 5,
+              "unlimited": false
+            },
+            "DIM0014": {
+              "size": 7501,
+              "unlimited": false
+            },
+            "DateStrLen": {
+              "size": 19,
+              "unlimited": false
+            },
+            "Time": {
+              "size": 1,
+              "unlimited": true
+            },
+            "bottom_top": {
+              "size": 32,
+              "unlimited": false
+            },
+            "bottom_top_stag": {
+              "size": 33,
+              "unlimited": false
+            },
+            "dust_erosion_dimension": {
+              "size": 3,
+              "unlimited": false
+            },
+            "ensemble_stag": {
+              "size": 144,
+              "unlimited": false
+            },
+            "iit": {
+              "size": 2,
+              "unlimited": false
+            },
+            "lagday": {
+              "size": 150,
+              "unlimited": false
+            },
+            "land_cat_stag": {
+              "size": 24,
+              "unlimited": false
+            },
+            "num_ext_model_couple_dom_stag": {
+              "size": 1,
+              "unlimited": false
+            },
+            "num_pert_3d": {
+              "size": 15,
+              "unlimited": false
+            },
+            "seed_dim_stag": {
+              "size": 8,
+              "unlimited": false
+            },
+            "soil_cat_stag": {
+              "size": 16,
+              "unlimited": false
+            },
+            "soil_layers": {
+              "size": 4,
+              "unlimited": false
+            },
+            "soil_layers_stag": {
+              "size": 4,
+              "unlimited": false
+            },
+            "south_north": {
+              "size": 60,
+              "unlimited": false
+            },
+            "south_north_stag": {
+              "size": 61,
+              "unlimited": false
+            },
+            "west_east": {
+              "size": 73,
+              "unlimited": false
+            },
+            "west_east_stag": {
+              "size": 74,
+              "unlimited": false
+            }
+          },
+          "expected_times": [
+            "2000-01-25_12:00:00"
+          ],
+          "explicit_fill_or_missing_hits": 0,
+          "file": {
+            "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-seaice-winter-validation-v3/ra4-24h-v1/case/wrfrst_d01_2000-01-25_12:00:00",
+            "sha256": "73c3a6ba8fe12e8e37d50e3e36517ffa77c3fecc0fb88dc00f4ee962987bd11f",
+            "size_bytes": 28446088
+          },
+          "full_metadata_canonical_sha256": "e59a4c52c6cb1c28263306f56aa89313056678c63cc44a40045e15445abfa9d9",
+          "geometry": {
+            "bottom_top": 32,
+            "south_north": 60,
+            "west_east": 73
+          },
+          "global_attribute_count": 198,
+          "mask_hits": 0,
+          "numeric_raw_array_pins_canonical_sha256": "a6ae4a018a6e1e9d16209b15d6c086f19d5ee570805768130c789ea00722becf",
+          "numeric_variable_count": 663,
+          "numeric_variables_all_strict_pass": true,
+          "ordered_times": [
+            "2000-01-25_12:00:00"
+          ],
+          "passed": true,
+          "physics": {
+            "MP_PHYSICS": 27,
+            "RA_LW_PHYSICS": 4,
+            "RA_SW_PHYSICS": 4
+          },
+          "raw_nonfinite": 0,
+          "repaired_diagnostics": {
+            "QZ0": {
+              "finite_count": 4380,
+              "max": 0.0,
+              "min": 0.0,
+              "negative_count": 0,
+              "nonzero_count": 0,
+              "old_failure_site_raw_ieee_hex": "00000000",
+              "old_failure_site_value": 0.0,
+              "passed": true,
+              "quantiles": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "signed_negative_zero_count": 0,
+              "total_count": 4380
+            },
+            "USTM": {
+              "finite_count": 4380,
+              "max": 1.8807621002197266,
+              "min": 0.0017281669424846768,
+              "negative_count": 0,
+              "nonzero_count": 4380,
+              "old_failure_site_raw_ieee_hex": "51904a3e",
+              "old_failure_site_value": 0.1978161484003067,
+              "passed": true,
+              "quantiles": [
+                0.0017281669424846768,
+                0.25196654349565506,
+                0.44262273609638214,
+                0.7106896340847015,
+                1.8807621002197266
+              ],
+              "signed_negative_zero_count": 0,
+              "total_count": 4380
+            },
+            "passed": true
+          },
+          "variable_count": 664
+        }
+      ],
+      "receipt": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-seaice-winter-validation-v3/ra4-24h-v1/execution-receipt-v1.json",
+        "sha256": "4073ad6101c06b0f81ac9e2dd4f2dd94b095dac642a79e1e1fab49133bfa8647",
+        "size_bytes": 1978422
+      },
+      "runtime_settings": {
+        "ld_library_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/netcdf/lib:/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/root/usr/lib/x86_64-linux-gnu:/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/mpich-sock/lib",
+        "master_stack_bytes": 536870912,
+        "omp_threads": 1,
+        "ranks": 4,
+        "timeout_seconds": 1200
+      },
+      "stage_receipt": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-seaice-winter-validation-v3/ra4-24h-v1/stage-receipt-v1.json",
+        "sha256": "7f321871064b8dc518b4c6125e526cd494242f80e7900f63d8cdeb9407c857fd",
+        "size_bytes": 132474
+      },
+      "status": "PASS_RA4_24H"
+    },
+    {
+      "actual_model_invocations": 1,
+      "after_pins_valid": true,
+      "arm": "ra4",
+      "before_pins_valid": true,
+      "comparison": {
+        "all_dimensions_match_expected_slice": true,
+        "all_field_details_canonical_sha256": "53ad1ba3ed092e18cdc804a8c8611a81b19cea632abe4b1a7620e9ea0baae150",
+        "all_metadata_matches_explicit_contract": true,
+        "all_raw_dtype_shape_dimensions_bytes_equal": true,
+        "all_variable_names_equal": true,
+        "candidate": {
+          "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-seaice-winter-validation-v3/ra4-own12-to13h-v1/case/wrfout_d01_2000-01-25_01:00:00",
+          "sha256": "d38767fd5bb260986f5327dd366426388cbc55e26e87da80cdbaca0955d2b014",
+          "size_bytes": 8512852
+        },
+        "candidate_full_metadata_canonical_sha256": "9105727178bafd01929153df4739c775cf6d139e2efb763e13cbfd99bf9b0d3e",
+        "continuous_reference": {
+          "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-seaice-winter-validation-v3/ra4-24h-v1/case/wrfout_d01_2000-01-24_12:00:00",
+          "sha256": "edf0cfbf4efeecbbf69e979c8f4fc21a19a436f4329a3e11330a2c569ea0bcc4",
+          "size_bytes": 192549864
+        },
+        "dimension_differences": {
+          "Time": {
+            "continuous": {
+              "size": 25,
+              "unlimited": true
+            },
+            "restart": {
+              "size": 1,
+              "unlimited": true
+            }
+          }
+        },
+        "expected_run_control_differences": {
+          "START_DATE": {
+            "continuous": {
+              "string": "2000-01-24_12:00:00"
+            },
+            "restart": {
+              "string": "2000-01-25_00:00:00"
+            }
+          }
+        },
+        "expected_time_slice_dimension_difference": {
+          "continuous_Time": {
+            "size": 25,
+            "unlimited": true
+          },
+          "restart_Time": {
+            "size": 1,
+            "unlimited": true
+          }
+        },
+        "global_attribute_differences": {
+          "START_DATE": {
+            "continuous": {
+              "string": "2000-01-24_12:00:00"
+            },
+            "restart": {
+              "string": "2000-01-25_00:00:00"
+            }
+          }
+        },
+        "passed": true,
+        "reference_index": 13,
+        "reference_time": "2000-01-25_01:00:00",
+        "retained_raw_field_pin_table": "restart-ra4-raw-field-pins.csv",
+        "unexplained_global_attribute_differences": {},
+        "variable_attribute_differences": {},
+        "variable_count_expected": 222,
+        "variable_count_observed": 222
+      },
+      "history": {
+        "all_variable_names_canonical_sha256": "cb44301740ad6e18a552061d640521e29d9dafa3cc959d6aec8b5ee947f41a29",
+        "data_model": "NETCDF4",
+        "decoded_nonfinite": 0,
+        "default_fill_policy": "netCDF4 masked read rejects default fill even without _FillValue",
+        "dimensions": {
+          "DateStrLen": {
+            "size": 19,
+            "unlimited": false
+          },
+          "Time": {
+            "size": 1,
+            "unlimited": true
+          },
+          "bottom_top": {
+            "size": 32,
+            "unlimited": false
+          },
+          "bottom_top_stag": {
+            "size": 33,
+            "unlimited": false
+          },
+          "seed_dim_stag": {
+            "size": 8,
+            "unlimited": false
+          },
+          "soil_layers_stag": {
+            "size": 4,
+            "unlimited": false
+          },
+          "south_north": {
+            "size": 60,
+            "unlimited": false
+          },
+          "south_north_stag": {
+            "size": 61,
+            "unlimited": false
+          },
+          "west_east": {
+            "size": 73,
+            "unlimited": false
+          },
+          "west_east_stag": {
+            "size": 74,
+            "unlimited": false
+          }
+        },
+        "expected_times": [
+          "2000-01-25_01:00:00"
+        ],
+        "explicit_fill_or_missing_hits": 0,
+        "file": {
+          "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-seaice-winter-validation-v3/ra4-own12-to13h-v1/case/wrfout_d01_2000-01-25_01:00:00",
+          "sha256": "d38767fd5bb260986f5327dd366426388cbc55e26e87da80cdbaca0955d2b014",
+          "size_bytes": 8512852
+        },
+        "full_metadata_canonical_sha256": "9105727178bafd01929153df4739c775cf6d139e2efb763e13cbfd99bf9b0d3e",
+        "geometry": {
+          "bottom_top": 32,
+          "south_north": 60,
+          "west_east": 73
+        },
+        "global_attribute_count": 136,
+        "mask_hits": 0,
+        "numeric_raw_array_pins_canonical_sha256": "acad6dcb5264eb36c49db4420aae221775a047c41425500278b7222acef8a9a3",
+        "numeric_variable_count": 221,
+        "numeric_variables_all_strict_pass": true,
+        "ordered_times": [
+          "2000-01-25_01:00:00"
+        ],
+        "passed": true,
+        "physics": {
+          "MP_PHYSICS": 27,
+          "RA_LW_PHYSICS": 4,
+          "RA_SW_PHYSICS": 4
+        },
+        "raw_nonfinite": 0,
+        "variable_count": 222
+      },
+      "kind": "own12_to13h",
+      "metadata_limit": "Only exact START_DATE transition; all variable attributes and all other global attributes equal. Time25\u21921 explicitly normalized.",
+      "model": {
+        "cleared_inherited_env_names": [
+          "OMP_NUM_THREADS"
+        ],
+        "command": [
+          "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/mpich-sock/bin/mpiexec.hydra",
+          "-launcher",
+          "fork",
+          "-iface",
+          "lo",
+          "-n",
+          "4",
+          "./wrf.exe"
+        ],
+        "elapsed_seconds": 10.03971966356039,
+        "ended_utc": "2026-10-03T13:21:45.902073+00:00",
+        "model_completed": true,
+        "rank_logs": [
+          {
+            "fatal": false,
+            "file": {
+              "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-seaice-winter-validation-v3/ra4-own12-to13h-v1/case/rsl.error.0000",
+              "sha256": "966e2237b9caff352cb9106d870d575cb5c1965270782eaf0ef26cf19caa2380",
+              "size_bytes": 9265
+            },
+            "success": true
+          },
+          {
+            "fatal": false,
+            "file": {
+              "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-seaice-winter-validation-v3/ra4-own12-to13h-v1/case/rsl.error.0001",
+              "sha256": "048c35ce3b36244a2f9c91dba66752448dd22501617d0a010205fa46c9bc1190",
+              "size_bytes": 2899
+            },
+            "success": true
+          },
+          {
+            "fatal": false,
+            "file": {
+              "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-seaice-winter-validation-v3/ra4-own12-to13h-v1/case/rsl.error.0002",
+              "sha256": "15d5f536531ce850e33db7ed8c0257c77076b7e2450d497f6336b2d8a5db0956",
+              "size_bytes": 2899
+            },
+            "success": true
+          },
+          {
+            "fatal": false,
+            "file": {
+              "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-seaice-winter-validation-v3/ra4-own12-to13h-v1/case/rsl.error.0003",
+              "sha256": "7483fdea0ae29087d6168eb1f275a3e4474f98f9f1af2505caac4c68d0ee9d5f",
+              "size_bytes": 2899
+            },
+            "success": true
+          }
+        ],
+        "returncode": 0,
+        "stack_limit_soft_hard_bytes": [
+          536870912,
+          536870912
+        ],
+        "started_utc": "2026-10-03T13:21:35.861482+00:00",
+        "stdout": {
+          "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-seaice-winter-validation-v3/ra4-own12-to13h-v1/case/runner.stdout.log",
+          "sha256": "8f564da3beef568b7f118385a8ec97169939b63742582512eff04435afd05b59",
+          "size_bytes": 196
+        },
+        "timed_out": false,
+        "timeout_seconds": 1200
+      },
+      "own_input_checkpoint": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-seaice-winter-validation-v3/ra4-24h-v1/case/wrfrst_d01_2000-01-25_00:00:00",
+        "sha256": "1739f25c9537b94c776723285b97e76878f82070bec76bb35a562d3de0da4d57",
+        "size_bytes": 28392636
+      },
+      "receipt": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-seaice-winter-validation-v3/ra4-own12-to13h-v1/restart-execution-v1.json",
+        "sha256": "234a2d0950970c4b9455923068749d7fb0c9bce25014cf87e7df382a5461fa58",
+        "size_bytes": 883203
+      },
+      "stage_receipt": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-seaice-winter-validation-v3/ra4-own12-to13h-v1/restart-stage-v1.json",
+        "sha256": "70b915c892b1f31aba0f89512d7eea6d1e4ef097399e07675e6bdf1161b0e663",
+        "size_bytes": 446115
+      },
+      "status": "PASS_RA4_OWN_RESTART13H"
+    },
+    {
+      "actual_model_invocations": 1,
+      "after_pins_valid": true,
+      "arm": "ra37",
+      "before_pins_valid": true,
+      "history": {
+        "all_variable_names_canonical_sha256": "97c347957eb21bda4749b899a77ad903ad41e733ab01e821c4704d048092117d",
+        "data_model": "NETCDF4",
+        "decoded_nonfinite": 0,
+        "default_fill_policy": "netCDF4 masked read rejects default fill even without _FillValue",
+        "dimensions": {
+          "DateStrLen": {
+            "size": 19,
+            "unlimited": false
+          },
+          "Time": {
+            "size": 25,
+            "unlimited": true
+          },
+          "bottom_top": {
+            "size": 32,
+            "unlimited": false
+          },
+          "bottom_top_stag": {
+            "size": 33,
+            "unlimited": false
+          },
+          "seed_dim_stag": {
+            "size": 8,
+            "unlimited": false
+          },
+          "soil_layers_stag": {
+            "size": 4,
+            "unlimited": false
+          },
+          "south_north": {
+            "size": 60,
+            "unlimited": false
+          },
+          "south_north_stag": {
+            "size": 61,
+            "unlimited": false
+          },
+          "west_east": {
+            "size": 73,
+            "unlimited": false
+          },
+          "west_east_stag": {
+            "size": 74,
+            "unlimited": false
+          }
+        },
+        "expected_times": [
+          "2000-01-24_12:00:00",
+          "2000-01-24_13:00:00",
+          "2000-01-24_14:00:00",
+          "2000-01-24_15:00:00",
+          "2000-01-24_16:00:00",
+          "2000-01-24_17:00:00",
+          "2000-01-24_18:00:00",
+          "2000-01-24_19:00:00",
+          "2000-01-24_20:00:00",
+          "2000-01-24_21:00:00",
+          "2000-01-24_22:00:00",
+          "2000-01-24_23:00:00",
+          "2000-01-25_00:00:00",
+          "2000-01-25_01:00:00",
+          "2000-01-25_02:00:00",
+          "2000-01-25_03:00:00",
+          "2000-01-25_04:00:00",
+          "2000-01-25_05:00:00",
+          "2000-01-25_06:00:00",
+          "2000-01-25_07:00:00",
+          "2000-01-25_08:00:00",
+          "2000-01-25_09:00:00",
+          "2000-01-25_10:00:00",
+          "2000-01-25_11:00:00",
+          "2000-01-25_12:00:00"
+        ],
+        "explicit_fill_or_missing_hits": 0,
+        "file": {
+          "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-seaice-winter-validation-v3/ra37-24h-v1/case/wrfout_d01_2000-01-24_12:00:00",
+          "sha256": "2f916abf9689affd608c20f106877f9c23b4ba149610f104630adda56d3deddb",
+          "size_bytes": 194031874
+        },
+        "full_metadata_canonical_sha256": "35f19ca8f67a45d84faa75aaa14c65e0163ede9221db82318e6df663269ab928",
+        "geometry": {
+          "bottom_top": 32,
+          "south_north": 60,
+          "west_east": 73
+        },
+        "global_attribute_count": 136,
+        "mask_hits": 0,
+        "numeric_raw_array_pins_canonical_sha256": "ec969b239fb82beb571622a691197188555d5801c973a0b2d75aff02a37d7e6a",
+        "numeric_variable_count": 224,
+        "numeric_variables_all_strict_pass": true,
+        "ordered_times": [
+          "2000-01-24_12:00:00",
+          "2000-01-24_13:00:00",
+          "2000-01-24_14:00:00",
+          "2000-01-24_15:00:00",
+          "2000-01-24_16:00:00",
+          "2000-01-24_17:00:00",
+          "2000-01-24_18:00:00",
+          "2000-01-24_19:00:00",
+          "2000-01-24_20:00:00",
+          "2000-01-24_21:00:00",
+          "2000-01-24_22:00:00",
+          "2000-01-24_23:00:00",
+          "2000-01-25_00:00:00",
+          "2000-01-25_01:00:00",
+          "2000-01-25_02:00:00",
+          "2000-01-25_03:00:00",
+          "2000-01-25_04:00:00",
+          "2000-01-25_05:00:00",
+          "2000-01-25_06:00:00",
+          "2000-01-25_07:00:00",
+          "2000-01-25_08:00:00",
+          "2000-01-25_09:00:00",
+          "2000-01-25_10:00:00",
+          "2000-01-25_11:00:00",
+          "2000-01-25_12:00:00"
+        ],
+        "passed": true,
+        "physics": {
+          "MP_PHYSICS": 27,
+          "RA_LW_PHYSICS": 37,
+          "RA_SW_PHYSICS": 37
+        },
+        "raw_nonfinite": 0,
+        "variable_count": 225
+      },
+      "history_preservation": {
+        "all_metadata_equal": true,
+        "all_variable_raw_bytes_equal": true,
+        "baseline": {
+          "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-cu-winter24h-v1/staged-v2/ra37-jan24h-mpi4/wrfout_d01_2000-01-24_12:00:00",
+          "sha256": "2f916abf9689affd608c20f106877f9c23b4ba149610f104630adda56d3deddb",
+          "size_bytes": 194031874
+        },
+        "candidate": {
+          "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-seaice-winter-validation-v3/ra37-24h-v1/case/wrfout_d01_2000-01-24_12:00:00",
+          "sha256": "2f916abf9689affd608c20f106877f9c23b4ba149610f104630adda56d3deddb",
+          "size_bytes": 194031874
+        },
+        "passed": true,
+        "raw_mismatches": {},
+        "whole_file_byte_identity": true
+      },
+      "kind": "24h",
+      "model": {
+        "cleared_inherited_env_names": [
+          "OMP_NUM_THREADS"
+        ],
+        "command": [
+          "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/mpich-sock/bin/mpiexec.hydra",
+          "-launcher",
+          "fork",
+          "-iface",
+          "lo",
+          "-n",
+          "4",
+          "./wrf.exe"
+        ],
+        "elapsed_seconds": 200.55296375602484,
+        "ended_utc": "2026-10-03T13:22:42.041261+00:00",
+        "model_completed": true,
+        "rank_logs": [
+          {
+            "fatal": false,
+            "file": {
+              "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-seaice-winter-validation-v3/ra37-24h-v1/case/rsl.error.0000",
+              "sha256": "9b4993ca28165bc40a42acdd4d5ec66c4c7bcac168f17251cc20d4364d7241aa",
+              "size_bytes": 793715
+            },
+            "success": true
+          },
+          {
+            "fatal": false,
+            "file": {
+              "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-seaice-winter-validation-v3/ra37-24h-v1/case/rsl.error.0001",
+              "sha256": "2f1a63326ee590b3da4466440a26a7fa0f0cbdbb6e3db54e71d21cad1154e283",
+              "size_bytes": 675303
+            },
+            "success": true
+          },
+          {
+            "fatal": false,
+            "file": {
+              "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-seaice-winter-validation-v3/ra37-24h-v1/case/rsl.error.0002",
+              "sha256": "a02588c30e0d52e20169a6f7f7104d03d7b4b62d49bac6f64714f29e904a3fda",
+              "size_bytes": 618163
+            },
+            "success": true
+          },
+          {
+            "fatal": false,
+            "file": {
+              "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-seaice-winter-validation-v3/ra37-24h-v1/case/rsl.error.0003",
+              "sha256": "114ca199ad19ea5ce9135933ae6ee64245cc659c25f7f63183a58e77b40bd701",
+              "size_bytes": 709444
+            },
+            "success": true
+          }
+        ],
+        "returncode": 0,
+        "stack_limit_soft_hard_bytes": [
+          536870912,
+          536870912
+        ],
+        "started_utc": "2026-10-03T13:19:21.487144+00:00",
+        "stdout": {
+          "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-seaice-winter-validation-v3/ra37-24h-v1/case/runner.stdout.log",
+          "sha256": "8f564da3beef568b7f118385a8ec97169939b63742582512eff04435afd05b59",
+          "size_bytes": 196
+        },
+        "timed_out": false,
+        "timeout_seconds": 1200
+      },
+      "named_binding_count": 98,
+      "named_bindings_retained": "assets/ra37-named-runtime-bindings.json",
+      "named_snapshot_canonical_sha256": "24e9dcf89ef30512c025c467b244780aa261f13575cd401180e10444dd0e4f3e",
+      "namelist": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-seaice-winter-validation-v3/ra37-24h-v1/case/namelist.input",
+        "sha256": "37806b6230d9a9479bae32611b6b70d0318ce852fe3931af84ba1e7a15bdcc58",
+        "size_bytes": 5144
+      },
+      "own_checkpoints": [
+        {
+          "all_variable_names_canonical_sha256": "273719dab09a8249018c9f63cc7a2e8806ccf11bc4b2681d3d0ce661a37f5212",
+          "data_model": "NETCDF4",
+          "decoded_nonfinite": 0,
+          "default_fill_policy": "netCDF4 masked read rejects default fill even without _FillValue",
+          "dimensions": {
+            "DIM0010": {
+              "size": 5,
+              "unlimited": false
+            },
+            "DIM0014": {
+              "size": 7501,
+              "unlimited": false
+            },
+            "DateStrLen": {
+              "size": 19,
+              "unlimited": false
+            },
+            "Time": {
+              "size": 1,
+              "unlimited": true
+            },
+            "bottom_top": {
+              "size": 32,
+              "unlimited": false
+            },
+            "bottom_top_stag": {
+              "size": 33,
+              "unlimited": false
+            },
+            "dust_erosion_dimension": {
+              "size": 3,
+              "unlimited": false
+            },
+            "ensemble_stag": {
+              "size": 144,
+              "unlimited": false
+            },
+            "iit": {
+              "size": 2,
+              "unlimited": false
+            },
+            "lagday": {
+              "size": 150,
+              "unlimited": false
+            },
+            "land_cat_stag": {
+              "size": 24,
+              "unlimited": false
+            },
+            "num_ext_model_couple_dom_stag": {
+              "size": 1,
+              "unlimited": false
+            },
+            "num_pert_3d": {
+              "size": 15,
+              "unlimited": false
+            },
+            "seed_dim_stag": {
+              "size": 8,
+              "unlimited": false
+            },
+            "soil_cat_stag": {
+              "size": 16,
+              "unlimited": false
+            },
+            "soil_layers": {
+              "size": 4,
+              "unlimited": false
+            },
+            "soil_layers_stag": {
+              "size": 4,
+              "unlimited": false
+            },
+            "south_north": {
+              "size": 60,
+              "unlimited": false
+            },
+            "south_north_stag": {
+              "size": 61,
+              "unlimited": false
+            },
+            "west_east": {
+              "size": 73,
+              "unlimited": false
+            },
+            "west_east_stag": {
+              "size": 74,
+              "unlimited": false
+            }
+          },
+          "expected_times": [
+            "2000-01-25_00:00:00"
+          ],
+          "explicit_fill_or_missing_hits": 0,
+          "file": {
+            "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-seaice-winter-validation-v3/ra37-24h-v1/case/wrfrst_d01_2000-01-25_00:00:00",
+            "sha256": "2ec116f1837ab68609be40682b2ff5dafcb7f7e568dedd95d4429c8b38055261",
+            "size_bytes": 28593834
+          },
+          "full_metadata_canonical_sha256": "870f957e9972638493d272f8bcaaac8f80e0a37cd6ad16903ba8bcb38743bff4",
+          "geometry": {
+            "bottom_top": 32,
+            "south_north": 60,
+            "west_east": 73
+          },
+          "global_attribute_count": 198,
+          "mask_hits": 0,
+          "numeric_raw_array_pins_canonical_sha256": "8dfa1c858c1858a8a9afc93085ba4d729ab6abb85b8d4b4d60a02ab5a65df716",
+          "numeric_variable_count": 663,
+          "numeric_variables_all_strict_pass": true,
+          "ordered_times": [
+            "2000-01-25_00:00:00"
+          ],
+          "passed": true,
+          "physics": {
+            "MP_PHYSICS": 27,
+            "RA_LW_PHYSICS": 37,
+            "RA_SW_PHYSICS": 37
+          },
+          "raw_nonfinite": 0,
+          "repaired_diagnostics": {
+            "QZ0": {
+              "finite_count": 4380,
+              "max": 0.0,
+              "min": 0.0,
+              "negative_count": 0,
+              "nonzero_count": 0,
+              "old_failure_site_raw_ieee_hex": "00000000",
+              "old_failure_site_value": 0.0,
+              "passed": true,
+              "quantiles": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "signed_negative_zero_count": 0,
+              "total_count": 4380
+            },
+            "USTM": {
+              "finite_count": 4380,
+              "max": 1.490538239479065,
+              "min": 0.004084787797182798,
+              "negative_count": 0,
+              "nonzero_count": 4380,
+              "old_failure_site_raw_ieee_hex": "2c61823e",
+              "old_failure_site_value": 0.2546476125717163,
+              "passed": true,
+              "quantiles": [
+                0.004084787797182798,
+                0.22115249186754227,
+                0.42744311690330505,
+                0.6155568510293961,
+                1.490538239479065
+              ],
+              "signed_negative_zero_count": 0,
+              "total_count": 4380
+            },
+            "passed": true
+          },
+          "variable_count": 664
+        },
+        {
+          "all_variable_names_canonical_sha256": "273719dab09a8249018c9f63cc7a2e8806ccf11bc4b2681d3d0ce661a37f5212",
+          "data_model": "NETCDF4",
+          "decoded_nonfinite": 0,
+          "default_fill_policy": "netCDF4 masked read rejects default fill even without _FillValue",
+          "dimensions": {
+            "DIM0010": {
+              "size": 5,
+              "unlimited": false
+            },
+            "DIM0014": {
+              "size": 7501,
+              "unlimited": false
+            },
+            "DateStrLen": {
+              "size": 19,
+              "unlimited": false
+            },
+            "Time": {
+              "size": 1,
+              "unlimited": true
+            },
+            "bottom_top": {
+              "size": 32,
+              "unlimited": false
+            },
+            "bottom_top_stag": {
+              "size": 33,
+              "unlimited": false
+            },
+            "dust_erosion_dimension": {
+              "size": 3,
+              "unlimited": false
+            },
+            "ensemble_stag": {
+              "size": 144,
+              "unlimited": false
+            },
+            "iit": {
+              "size": 2,
+              "unlimited": false
+            },
+            "lagday": {
+              "size": 150,
+              "unlimited": false
+            },
+            "land_cat_stag": {
+              "size": 24,
+              "unlimited": false
+            },
+            "num_ext_model_couple_dom_stag": {
+              "size": 1,
+              "unlimited": false
+            },
+            "num_pert_3d": {
+              "size": 15,
+              "unlimited": false
+            },
+            "seed_dim_stag": {
+              "size": 8,
+              "unlimited": false
+            },
+            "soil_cat_stag": {
+              "size": 16,
+              "unlimited": false
+            },
+            "soil_layers": {
+              "size": 4,
+              "unlimited": false
+            },
+            "soil_layers_stag": {
+              "size": 4,
+              "unlimited": false
+            },
+            "south_north": {
+              "size": 60,
+              "unlimited": false
+            },
+            "south_north_stag": {
+              "size": 61,
+              "unlimited": false
+            },
+            "west_east": {
+              "size": 73,
+              "unlimited": false
+            },
+            "west_east_stag": {
+              "size": 74,
+              "unlimited": false
+            }
+          },
+          "expected_times": [
+            "2000-01-25_12:00:00"
+          ],
+          "explicit_fill_or_missing_hits": 0,
+          "file": {
+            "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-seaice-winter-validation-v3/ra37-24h-v1/case/wrfrst_d01_2000-01-25_12:00:00",
+            "sha256": "da3dd074261af6c2005c1db02277fda2bb83f1d2e025f0e4343386d41ec7280d",
+            "size_bytes": 28629153
+          },
+          "full_metadata_canonical_sha256": "bb683a754109995ba1e29ca807a8642b94c13955e8ce3afb6ec03e90b0c12166",
+          "geometry": {
+            "bottom_top": 32,
+            "south_north": 60,
+            "west_east": 73
+          },
+          "global_attribute_count": 198,
+          "mask_hits": 0,
+          "numeric_raw_array_pins_canonical_sha256": "bb308a97e9ec06c164467978ef3265458e7656610e3b5a33d2f629e83dc8a181",
+          "numeric_variable_count": 663,
+          "numeric_variables_all_strict_pass": true,
+          "ordered_times": [
+            "2000-01-25_12:00:00"
+          ],
+          "passed": true,
+          "physics": {
+            "MP_PHYSICS": 27,
+            "RA_LW_PHYSICS": 37,
+            "RA_SW_PHYSICS": 37
+          },
+          "raw_nonfinite": 0,
+          "repaired_diagnostics": {
+            "QZ0": {
+              "finite_count": 4380,
+              "max": 0.0,
+              "min": 0.0,
+              "negative_count": 0,
+              "nonzero_count": 0,
+              "old_failure_site_raw_ieee_hex": "00000000",
+              "old_failure_site_value": 0.0,
+              "passed": true,
+              "quantiles": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "signed_negative_zero_count": 0,
+              "total_count": 4380
+            },
+            "USTM": {
+              "finite_count": 4380,
+              "max": 1.8813142776489258,
+              "min": 0.0007456299499608576,
+              "negative_count": 0,
+              "nonzero_count": 4380,
+              "old_failure_site_raw_ieee_hex": "70aa493e",
+              "old_failure_site_value": 0.19693922996520996,
+              "passed": true,
+              "quantiles": [
+                0.0007456299499608576,
+                0.25006431341171265,
+                0.44360190629959106,
+                0.7110418379306793,
+                1.8813142776489258
+              ],
+              "signed_negative_zero_count": 0,
+              "total_count": 4380
+            },
+            "passed": true
+          },
+          "variable_count": 664
+        }
+      ],
+      "receipt": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-seaice-winter-validation-v3/ra37-24h-v1/execution-receipt-v1.json",
+        "sha256": "150313d70a2a9e3274aed66703e671a22b40338cb5439bb32fb4770324eeabef",
+        "size_bytes": 1982111
+      },
+      "runtime_settings": {
+        "ld_library_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/netcdf/lib:/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/root/usr/lib/x86_64-linux-gnu:/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/mpich-sock/lib",
+        "master_stack_bytes": 536870912,
+        "omp_threads": 1,
+        "ranks": 4,
+        "timeout_seconds": 1200
+      },
+      "stage_receipt": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-seaice-winter-validation-v3/ra37-24h-v1/stage-receipt-v1.json",
+        "sha256": "24ccc17c82593d3ff28c87b6827259670f58575425a075bf8b7b70166a5fdccd",
+        "size_bytes": 132494
+      },
+      "status": "PASS_RA37_24H"
+    },
+    {
+      "actual_model_invocations": 1,
+      "after_pins_valid": true,
+      "arm": "ra37",
+      "before_pins_valid": true,
+      "comparison": {
+        "all_dimensions_match_expected_slice": true,
+        "all_field_details_canonical_sha256": "a08b6e16422e58118fd3d0fe05538e0599bc3e0b0b24e985abf7ccff9a193037",
+        "all_metadata_matches_explicit_contract": true,
+        "all_raw_dtype_shape_dimensions_bytes_equal": true,
+        "all_variable_names_equal": true,
+        "candidate": {
+          "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-seaice-winter-validation-v3/ra37-own12-to13h-v1/case/wrfout_d01_2000-01-25_01:00:00",
+          "sha256": "b2e1c0b86490fb1fb1f2d1c32123050da8e62baa9c855aaedd2b320d3a6a79a3",
+          "size_bytes": 8578539
+        },
+        "candidate_full_metadata_canonical_sha256": "b5ce1d8d5bf42e04d3c196b8737edec0bd1db739c35257c687a79344d3ff162d",
+        "continuous_reference": {
+          "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-seaice-winter-validation-v3/ra37-24h-v1/case/wrfout_d01_2000-01-24_12:00:00",
+          "sha256": "2f916abf9689affd608c20f106877f9c23b4ba149610f104630adda56d3deddb",
+          "size_bytes": 194031874
+        },
+        "dimension_differences": {
+          "Time": {
+            "continuous": {
+              "size": 25,
+              "unlimited": true
+            },
+            "restart": {
+              "size": 1,
+              "unlimited": true
+            }
+          }
+        },
+        "expected_run_control_differences": {
+          "START_DATE": {
+            "continuous": {
+              "string": "2000-01-24_12:00:00"
+            },
+            "restart": {
+              "string": "2000-01-25_00:00:00"
+            }
+          }
+        },
+        "expected_time_slice_dimension_difference": {
+          "continuous_Time": {
+            "size": 25,
+            "unlimited": true
+          },
+          "restart_Time": {
+            "size": 1,
+            "unlimited": true
+          }
+        },
+        "global_attribute_differences": {
+          "START_DATE": {
+            "continuous": {
+              "string": "2000-01-24_12:00:00"
+            },
+            "restart": {
+              "string": "2000-01-25_00:00:00"
+            }
+          }
+        },
+        "passed": true,
+        "reference_index": 13,
+        "reference_time": "2000-01-25_01:00:00",
+        "retained_raw_field_pin_table": "restart-ra37-raw-field-pins.csv",
+        "unexplained_global_attribute_differences": {},
+        "variable_attribute_differences": {},
+        "variable_count_expected": 225,
+        "variable_count_observed": 225
+      },
+      "history": {
+        "all_variable_names_canonical_sha256": "97c347957eb21bda4749b899a77ad903ad41e733ab01e821c4704d048092117d",
+        "data_model": "NETCDF4",
+        "decoded_nonfinite": 0,
+        "default_fill_policy": "netCDF4 masked read rejects default fill even without _FillValue",
+        "dimensions": {
+          "DateStrLen": {
+            "size": 19,
+            "unlimited": false
+          },
+          "Time": {
+            "size": 1,
+            "unlimited": true
+          },
+          "bottom_top": {
+            "size": 32,
+            "unlimited": false
+          },
+          "bottom_top_stag": {
+            "size": 33,
+            "unlimited": false
+          },
+          "seed_dim_stag": {
+            "size": 8,
+            "unlimited": false
+          },
+          "soil_layers_stag": {
+            "size": 4,
+            "unlimited": false
+          },
+          "south_north": {
+            "size": 60,
+            "unlimited": false
+          },
+          "south_north_stag": {
+            "size": 61,
+            "unlimited": false
+          },
+          "west_east": {
+            "size": 73,
+            "unlimited": false
+          },
+          "west_east_stag": {
+            "size": 74,
+            "unlimited": false
+          }
+        },
+        "expected_times": [
+          "2000-01-25_01:00:00"
+        ],
+        "explicit_fill_or_missing_hits": 0,
+        "file": {
+          "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-seaice-winter-validation-v3/ra37-own12-to13h-v1/case/wrfout_d01_2000-01-25_01:00:00",
+          "sha256": "b2e1c0b86490fb1fb1f2d1c32123050da8e62baa9c855aaedd2b320d3a6a79a3",
+          "size_bytes": 8578539
+        },
+        "full_metadata_canonical_sha256": "b5ce1d8d5bf42e04d3c196b8737edec0bd1db739c35257c687a79344d3ff162d",
+        "geometry": {
+          "bottom_top": 32,
+          "south_north": 60,
+          "west_east": 73
+        },
+        "global_attribute_count": 136,
+        "mask_hits": 0,
+        "numeric_raw_array_pins_canonical_sha256": "2ced7b6c71b84bdd23b801c0a3229dda4bb069173c2093c93281646af08041ec",
+        "numeric_variable_count": 224,
+        "numeric_variables_all_strict_pass": true,
+        "ordered_times": [
+          "2000-01-25_01:00:00"
+        ],
+        "passed": true,
+        "physics": {
+          "MP_PHYSICS": 27,
+          "RA_LW_PHYSICS": 37,
+          "RA_SW_PHYSICS": 37
+        },
+        "raw_nonfinite": 0,
+        "variable_count": 225
+      },
+      "kind": "own12_to13h",
+      "metadata_limit": "Only exact START_DATE transition; all variable attributes and all other global attributes equal. Time25\u21921 explicitly normalized.",
+      "model": {
+        "cleared_inherited_env_names": [
+          "OMP_NUM_THREADS"
+        ],
+        "command": [
+          "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/mpich-sock/bin/mpiexec.hydra",
+          "-launcher",
+          "fork",
+          "-iface",
+          "lo",
+          "-n",
+          "4",
+          "./wrf.exe"
+        ],
+        "elapsed_seconds": 11.06450092792511,
+        "ended_utc": "2026-10-03T13:24:45.503107+00:00",
+        "model_completed": true,
+        "rank_logs": [
+          {
+            "fatal": false,
+            "file": {
+              "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-seaice-winter-validation-v3/ra37-own12-to13h-v1/case/rsl.error.0000",
+              "sha256": "3a8967ae8664baffb80838fc581033860055c57c840ed4b1d635901b99d6db29",
+              "size_bytes": 28277
+            },
+            "success": true
+          },
+          {
+            "fatal": false,
+            "file": {
+              "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-seaice-winter-validation-v3/ra37-own12-to13h-v1/case/rsl.error.0001",
+              "sha256": "109c3b34888c5ee579ba65b5664b692b61dca3e87ce39593a03a8f6ae59ff42f",
+              "size_bytes": 22697
+            },
+            "success": true
+          },
+          {
+            "fatal": false,
+            "file": {
+              "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-seaice-winter-validation-v3/ra37-own12-to13h-v1/case/rsl.error.0002",
+              "sha256": "b262aea7bab4c3a5a34f02e3f672ac498ac7223df087b6dec24d0613c50372cf",
+              "size_bytes": 20556
+            },
+            "success": true
+          },
+          {
+            "fatal": false,
+            "file": {
+              "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-seaice-winter-validation-v3/ra37-own12-to13h-v1/case/rsl.error.0003",
+              "sha256": "fdf1b1f677d0ccf73f31788a9be0d9f178a34ff9d5e3340841eb92ddc85a2f9f",
+              "size_bytes": 23673
+            },
+            "success": true
+          }
+        ],
+        "returncode": 0,
+        "stack_limit_soft_hard_bytes": [
+          536870912,
+          536870912
+        ],
+        "started_utc": "2026-10-03T13:24:34.436483+00:00",
+        "stdout": {
+          "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-seaice-winter-validation-v3/ra37-own12-to13h-v1/case/runner.stdout.log",
+          "sha256": "8f564da3beef568b7f118385a8ec97169939b63742582512eff04435afd05b59",
+          "size_bytes": 196
+        },
+        "timed_out": false,
+        "timeout_seconds": 1200
+      },
+      "own_input_checkpoint": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-seaice-winter-validation-v3/ra37-24h-v1/case/wrfrst_d01_2000-01-25_00:00:00",
+        "sha256": "2ec116f1837ab68609be40682b2ff5dafcb7f7e568dedd95d4429c8b38055261",
+        "size_bytes": 28593834
+      },
+      "receipt": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-seaice-winter-validation-v3/ra37-own12-to13h-v1/restart-execution-v1.json",
+        "sha256": "ed6b029155f55aea2f5b183b4aa53ef11c8f67f9c5d2242e0f7a9f10fb69537a",
+        "size_bytes": 895437
+      },
+      "stage_receipt": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-seaice-winter-validation-v3/ra37-own12-to13h-v1/restart-stage-v1.json",
+        "sha256": "a9205ff8f6c588e06b5aa2cef8fd8e080f2b0614e950c34b378776678eb8b46a",
+        "size_bytes": 451352
+      },
+      "status": "PASS_RA37_OWN_RESTART13H"
+    }
+  ],
+  "new_builds_during_curation": 0,
+  "new_model_invocations": 4,
+  "original_build_status": "BUILD_FAIL_PRESERVED",
+  "posthoc_attestation": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-seaice-fresh-gnu-dm-sm-v1/posthoc-build-attestation-v1.json",
+    "sha256": "6ab254abda1997fe2a4b5e713f59d178e51247859530699a6803c005ff3d9fa5",
+    "size_bytes": 6185
+  },
+  "production7_sha256": {
+    "WRF/phys/module_ra_rrtmg_lw.F": "64dddfeecf7eff123aa6eadc776999584f6aa4822eb24cb46f3774213d8ba090",
+    "WRF/phys/module_ra_rrtmg_sw.F": "6710853e098b2dbbd8c613c728ab949102a76665442fae419498be48cbbf6f59",
+    "WRF/phys/module_ra_rrtmgp.F": "07d9de67948bcaa6aae1c1da44c945974850397715564055e73548aa5aa022ac",
+    "WRF/phys/module_ra_rrtmgp_input.F": "47dcd1fbe84ec2f5bc21598e05024f38b9f4a4a7decb51cb7e51f7e21d01357f",
+    "WRF/phys/module_ra_rrtmgp_trace.F": "f9d7f16566881b3b4a9351290e6750e87f8212647db7479a45be53659facc53a",
+    "WRF/phys/module_radiation_driver.F": "6790dc884c53fff201f15713d60197f54b43dc53b545ed44eb2397e9d2d3687f",
+    "WRF/phys/module_surface_driver.F": "fc99b8e6837573ed2335b6dd7bf62071c2da91348e4c5bf8668d780933f7c6cd"
+  },
+  "resolved_libraries": {
+    "libraries": [
+      {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/mpich-sock/lib/libmpi.so.12.4.0",
+        "sha256": "76a5bf3c52b9143a05f67319fb82fa2cf8d31276df694c4a4e3c2d2aad491cf0",
+        "size_bytes": 5402592
+      },
+      {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/mpich-sock/lib/libmpifort.so.12.4.0",
+        "sha256": "eb479b245c600e206d10991dac5f459147c556c16cb74e22b851a27c58e15016",
+        "size_bytes": 1234712
+      },
+      {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/root/usr/lib/x86_64-linux-gnu/libnetcdf.so.19",
+        "sha256": "04fc972259131718fd96f0ea876654fe0a410a4af1635349dc8ec1590764f0f5",
+        "size_bytes": 1395960
+      },
+      {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/root/usr/lib/x86_64-linux-gnu/libnetcdff.so.7.1.0",
+        "sha256": "9e8fe96709d71af61b88ad88caff7db8899369162b96aee66ecd6a553a5370f9",
+        "size_bytes": 653744
+      },
+      {
+        "path": "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2",
+        "sha256": "6222a16be7f2d458d6870efe6e715fc0c8d45766fb79cf7dcc3125538d703e28",
+        "size_bytes": 236616
+      },
+      {
+        "path": "/usr/lib/x86_64-linux-gnu/libaec.so.0.1.2",
+        "sha256": "4fd52145f7a3f0648b3f5a9527bc3143f96e47768bb68acd62bd12399871ddcc",
+        "size_bytes": 34808
+      },
+      {
+        "path": "/usr/lib/x86_64-linux-gnu/libbrotlicommon.so.1.1.0",
+        "sha256": "a91ead095d2c80520c55a89057bbe10b031a075340442e63f44b310f93883a1b",
+        "size_bytes": 141640
+      },
+      {
+        "path": "/usr/lib/x86_64-linux-gnu/libbrotlidec.so.1.1.0",
+        "sha256": "64d8a5019d4c294b89fde1193343ea324bbd8603652554e5545f0a01595fa2c5",
+        "size_bytes": 51512
+      },
+      {
+        "path": "/usr/lib/x86_64-linux-gnu/libc.so.6",
+        "sha256": "511f825ee075610ac9c0f7f91e2c13de2000d0f7b859f6461137e809a0a009d0",
+        "size_bytes": 2125328
+      },
+      {
+        "path": "/usr/lib/x86_64-linux-gnu/libcom_err.so.2.1",
+        "sha256": "022943b3b11c860b049bce41342f1c2594941b7b401d95dfdf235521099fee08",
+        "size_bytes": 18504
+      },
+      {
+        "path": "/usr/lib/x86_64-linux-gnu/libcrypto.so.3",
+        "sha256": "c19c2cf8d7cf91c4f273b1d3bbc56a9d19c91a739bfe57ad630756ee8ede7b77",
+        "size_bytes": 5305304
+      },
+      {
+        "path": "/usr/lib/x86_64-linux-gnu/libcurl-gnutls.so.4.8.0",
+        "sha256": "25a1efac8eb6e18913a29baf0d5340ae842398cb944c9e847bed7cb2a7a8f765",
+        "size_bytes": 765856
+      },
+      {
+        "path": "/usr/lib/x86_64-linux-gnu/libcurl.so.4.8.0",
+        "sha256": "bc0f65f0c1574a232b9cbd90bd5b45e04a1a263a04eae36007336dd5bbb2293c",
+        "size_bytes": 786336
+      },
+      {
+        "path": "/usr/lib/x86_64-linux-gnu/libffi.so.8.1.4",
+        "sha256": "00f593fe192f2851b8ce23b25cec2488d769beb5a8f63e8c9e563071e1075153",
+        "size_bytes": 47672
+      },
+      {
+        "path": "/usr/lib/x86_64-linux-gnu/libgcc_s.so.1",
+        "sha256": "02f3f192bf5f79b811f1e34a650fea443d407408703448906585232383957f60",
+        "size_bytes": 183024
+      },
+      {
+        "path": "/usr/lib/x86_64-linux-gnu/libgfortran.so.5.0.0",
+        "sha256": "5b574c8ad93f1d816afa2d53fb33684ff8f9a0de0fcbe51e0ec21ddf0a56a028",
+        "size_bytes": 3263912
+      },
+      {
+        "path": "/usr/lib/x86_64-linux-gnu/libgmp.so.10.5.0",
+        "sha256": "0ccdfb6d6f5c039465f6d002cf7e4c072d48ac6a2cffc8dd6c748dec31592804",
+        "size_bytes": 534896
+      },
+      {
+        "path": "/usr/lib/x86_64-linux-gnu/libgnutls.so.30.37.1",
+        "sha256": "96137275400f39510c9a533c6ad8a921e94266e664e7e09c9ad6ea9f23277c23",
+        "size_bytes": 2057632
+      },
+      {
+        "path": "/usr/lib/x86_64-linux-gnu/libgomp.so.1.0.0",
+        "sha256": "16c68465193c58900805106b70b26eecd6da5da42155f237ccddb922a3280ee6",
+        "size_bytes": 352304
+      },
+      {
+        "path": "/usr/lib/x86_64-linux-gnu/libgssapi_krb5.so.2.2",
+        "sha256": "b9a20df712d206654477c079f03b568276933e91cbe237e62af791f0f3ab8d8b",
+        "size_bytes": 338696
+      },
+      {
+        "path": "/usr/lib/x86_64-linux-gnu/libhdf5_serial.so.103.4.0",
+        "sha256": "aa9c9c402261b73469d0b79fe0d585537bdea8d4b5dab872fab613640277db0e",
+        "size_bytes": 3613632
+      },
+      {
+        "path": "/usr/lib/x86_64-linux-gnu/libhdf5_serial_hl.so.100.1.7",
+        "sha256": "f7612eea5f3df4d0fb7b7d8d0840b79ee25958e00da8d4934fe869ae36431a2b",
+        "size_bytes": 142800
+      },
+      {
+        "path": "/usr/lib/x86_64-linux-gnu/libhogweed.so.6.8",
+        "sha256": "c3c606139d4f7776efa4dbd4a6b62e30c916b07a0cafd8c3ef173d6f093607e3",
+        "size_bytes": 288920
+      },
+      {
+        "path": "/usr/lib/x86_64-linux-gnu/libicudata.so.74.2",
+        "sha256": "ddbb3718b8bd9cbd780e5ab08b4503c30a6c4fa0706ebe5d074ed6b596c1714e",
+        "size_bytes": 30795392
+      },
+      {
+        "path": "/usr/lib/x86_64-linux-gnu/libicuuc.so.74.2",
+        "sha256": "7560aadde38e5f4237a47a1ddd5891f9b36768a77a60faae30beee003ac01901",
+        "size_bytes": 2140336
+      },
+      {
+        "path": "/usr/lib/x86_64-linux-gnu/libidn2.so.0.4.0",
+        "sha256": "6e632fd9a3125db60bbc623719bbc17b0470330321c5b1c57f1ff7190e5551ad",
+        "size_bytes": 133192
+      },
+      {
+        "path": "/usr/lib/x86_64-linux-gnu/libk5crypto.so.3.1",
+        "sha256": "8394027f2be7c2cc7b2da4797476a8b688a21f75ee231941fa2df8d00ba79d08",
+        "size_bytes": 178648
+      },
+      {
+        "path": "/usr/lib/x86_64-linux-gnu/libkeyutils.so.1.10",
+        "sha256": "f48214417757f18793ed6e180cc14ee1d6f04252a518fc7270e8ca1d0b4260fe",
+        "size_bytes": 22600
+      },
+      {
+        "path": "/usr/lib/x86_64-linux-gnu/libkrb5.so.3.3",
+        "sha256": "52c143c9c77a223a4dac5449eac41fd2490e37c8a30430f1559c1421f4f8ed73",
+        "size_bytes": 823488
+      },
+      {
+        "path": "/usr/lib/x86_64-linux-gnu/libkrb5support.so.0.1",
+        "sha256": "8e1ef5a40f7b0d5b0fbcd6e4f28dd50b263650338a2bb72503be34632f3629d6",
+        "size_bytes": 47904
+      },
+      {
+        "path": "/usr/lib/x86_64-linux-gnu/liblber.so.2.0.200",
+        "sha256": "6f6935b26c962d5b51ef2011332472cfd96ff244a4edc9d47120be6faa70e602",
+        "size_bytes": 59888
+      },
+      {
+        "path": "/usr/lib/x86_64-linux-gnu/libldap.so.2.0.200",
+        "sha256": "4a0664ab6a8a66c685e78d5604b79df330f5710f0c5e2c382536a8325dc4c2a4",
+        "size_bytes": 372400
+      },
+      {
+        "path": "/usr/lib/x86_64-linux-gnu/liblzma.so.5.4.5",
+        "sha256": "a9793942a8a5f6f4d0f523ef9e0a5be4f0033f2c6c28520cd2b4e706d53c6e17",
+        "size_bytes": 202904
+      },
+      {
+        "path": "/usr/lib/x86_64-linux-gnu/libm.so.6",
+        "sha256": "f06f2ce1f1833df5f41cf13b6447ff07bea993ad9b27297d3428c2f70ab3f0e7",
+        "size_bytes": 952616
+      },
+      {
+        "path": "/usr/lib/x86_64-linux-gnu/libmvec.so.1",
+        "sha256": "2f435206d0df590a958be1a0bb06457b8a284d27608280644b7a22238d300b45",
+        "size_bytes": 1018144
+      },
+      {
+        "path": "/usr/lib/x86_64-linux-gnu/libnettle.so.8.8",
+        "sha256": "a245ed916229583d6fe0b07657b3ed945bc148c28cc08b5266295f620d2b91cc",
+        "size_bytes": 342280
+      },
+      {
+        "path": "/usr/lib/x86_64-linux-gnu/libnghttp2.so.14.26.0",
+        "sha256": "398c6d2025210279f4c7413ebdb7f4c63bc5afda5ec3b1ccc58885a65acc2b78",
+        "size_bytes": 170352
+      },
+      {
+        "path": "/usr/lib/x86_64-linux-gnu/libp11-kit.so.0.3.1",
+        "sha256": "c6b469a006685ebf2075e200180c3b21f41b88ad722c5697d736ea558cfe3ea1",
+        "size_bytes": 1714008
+      },
+      {
+        "path": "/usr/lib/x86_64-linux-gnu/libpsl.so.5.3.4",
+        "sha256": "ae6c5a9aecc249fc66e03c16ec6c4385d09d7e12e0ea7694bb831ab4fee8133c",
+        "size_bytes": 75768
+      },
+      {
+        "path": "/usr/lib/x86_64-linux-gnu/libresolv.so.2",
+        "sha256": "878e927be164fde61bf85f44c27901a1d569526f5c8f058990e8a4edc3df1fa0",
+        "size_bytes": 68104
+      },
+      {
+        "path": "/usr/lib/x86_64-linux-gnu/librtmp.so.1",
+        "sha256": "15a2a75e8c437b9c99971b5ee10278ab110beef1a56d1d9e5d6759ea140e98ac",
+        "size_bytes": 121848
+      },
+      {
+        "path": "/usr/lib/x86_64-linux-gnu/libsasl2.so.2.0.25",
+        "sha256": "a0f410ad093236856eee59c4ff2838dc04d932ea0993400f23ed77d67d85af34",
+        "size_bytes": 101200
+      },
+      {
+        "path": "/usr/lib/x86_64-linux-gnu/libssh.so.4.9.6",
+        "sha256": "ed3828e179eaea8effe1b6b001ae827b38de4575d2fa768c04489dc74b54ccde",
+        "size_bytes": 458264
+      },
+      {
+        "path": "/usr/lib/x86_64-linux-gnu/libssl.so.3",
+        "sha256": "63597a81ef19496ad0423cbaaf04d5b0244c7a9e261e331a5a7f3ac0fcdb9590",
+        "size_bytes": 696512
+      },
+      {
+        "path": "/usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.33",
+        "sha256": "a68762c86d371e6041f03f03a33a78fa235809ae7d81c90185940c93c3535aed",
+        "size_bytes": 2592224
+      },
+      {
+        "path": "/usr/lib/x86_64-linux-gnu/libsz.so.2.0.1",
+        "sha256": "e73fa40252e84d38d64f9b3268ae6679530a777a55d6478d6b24de176d845c4b",
+        "size_bytes": 14256
+      },
+      {
+        "path": "/usr/lib/x86_64-linux-gnu/libtasn1.so.6.6.3",
+        "sha256": "7c9c7830afbaac7b07ec21ddaa6b4d606423432c264efd2636e8ca9734b4d7b6",
+        "size_bytes": 88216
+      },
+      {
+        "path": "/usr/lib/x86_64-linux-gnu/libunistring.so.5.0.0",
+        "sha256": "7bcf825cd449892db5105ad2aed91dcf94a27b796426600c765720c584c54dd1",
+        "size_bytes": 1755312
+      },
+      {
+        "path": "/usr/lib/x86_64-linux-gnu/libxml2.so.2.9.14",
+        "sha256": "0ec89f65e1868cb79caa8a4cd5f47194ce95ac09f7a1d49e76049f391254a3a3",
+        "size_bytes": 1967424
+      },
+      {
+        "path": "/usr/lib/x86_64-linux-gnu/libz.so.1.3",
+        "sha256": "9b64150b28505a33d6bc3ecf709c279f6de97a1c184dbda65d06ee4537f6d286",
+        "size_bytes": 113000
+      },
+      {
+        "path": "/usr/lib/x86_64-linux-gnu/libzstd.so.1.5.5",
+        "sha256": "0a2128bc10841fb29e76d08d945864dfb0b6a66da5df6df5d8299197439e54bb",
+        "size_bytes": 755864
+      }
+    ],
+    "normalized_ldd": "\tlinux-vdso.so.1 (ASLR_ADDRESS)\n\tlibnetcdff.so.7 => /NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/netcdf/lib/libnetcdff.so.7 (ASLR_ADDRESS)\n\tlibgfortran.so.5 => /lib/x86_64-linux-gnu/libgfortran.so.5 (ASLR_ADDRESS)\n\tlibm.so.6 => /lib/x86_64-linux-gnu/libm.so.6 (ASLR_ADDRESS)\n\tlibmvec.so.1 => /lib/x86_64-linux-gnu/libmvec.so.1 (ASLR_ADDRESS)\n\tlibmpifort.so.12 => /NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/mpich-sock/lib/libmpifort.so.12 (ASLR_ADDRESS)\n\tlibmpi.so.12 => /NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/mpich-sock/lib/libmpi.so.12 (ASLR_ADDRESS)\n\tlibgomp.so.1 => /lib/x86_64-linux-gnu/libgomp.so.1 (ASLR_ADDRESS)\n\tlibgcc_s.so.1 => /lib/x86_64-linux-gnu/libgcc_s.so.1 (ASLR_ADDRESS)\n\tlibc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (ASLR_ADDRESS)\n\tlibnetcdf.so.19 => /NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/netcdf/lib/libnetcdf.so.19 (ASLR_ADDRESS)\n\t/lib64/ld-linux-x86-64.so.2 (ASLR_ADDRESS)\n\tlibhdf5_serial_hl.so.100 => /lib/x86_64-linux-gnu/libhdf5_serial_hl.so.100 (ASLR_ADDRESS)\n\tlibhdf5_serial.so.103 => /lib/x86_64-linux-gnu/libhdf5_serial.so.103 (ASLR_ADDRESS)\n\tlibcurl-gnutls.so.4 => /lib/x86_64-linux-gnu/libcurl-gnutls.so.4 (ASLR_ADDRESS)\n\tlibxml2.so.2 => /lib/x86_64-linux-gnu/libxml2.so.2 (ASLR_ADDRESS)\n\tlibcrypto.so.3 => /lib/x86_64-linux-gnu/libcrypto.so.3 (ASLR_ADDRESS)\n\tlibcurl.so.4 => /lib/x86_64-linux-gnu/libcurl.so.4 (ASLR_ADDRESS)\n\tlibsz.so.2 => /lib/x86_64-linux-gnu/libsz.so.2 (ASLR_ADDRESS)\n\tlibz.so.1 => /lib/x86_64-linux-gnu/libz.so.1 (ASLR_ADDRESS)\n\tlibnghttp2.so.14 => /lib/x86_64-linux-gnu/libnghttp2.so.14 (ASLR_ADDRESS)\n\tlibidn2.so.0 => /lib/x86_64-linux-gnu/libidn2.so.0 (ASLR_ADDRESS)\n\tlibrtmp.so.1 => /lib/x86_64-linux-gnu/librtmp.so.1 (ASLR_ADDRESS)\n\tlibssh.so.4 => /lib/x86_64-linux-gnu/libssh.so.4 (ASLR_ADDRESS)\n\tlibpsl.so.5 => /lib/x86_64-linux-gnu/libpsl.so.5 (ASLR_ADDRESS)\n\tlibnettle.so.8 => /lib/x86_64-linux-gnu/libnettle.so.8 (ASLR_ADDRESS)\n\tlibgnutls.so.30 => /lib/x86_64-linux-gnu/libgnutls.so.30 (ASLR_ADDRESS)\n\tlibgssapi_krb5.so.2 => /lib/x86_64-linux-gnu/libgssapi_krb5.so.2 (ASLR_ADDRESS)\n\tlibldap.so.2 => /lib/x86_64-linux-gnu/libldap.so.2 (ASLR_ADDRESS)\n\tliblber.so.2 => /lib/x86_64-linux-gnu/liblber.so.2 (ASLR_ADDRESS)\n\tlibzstd.so.1 => /lib/x86_64-linux-gnu/libzstd.so.1 (ASLR_ADDRESS)\n\tlibbrotlidec.so.1 => /lib/x86_64-linux-gnu/libbrotlidec.so.1 (ASLR_ADDRESS)\n\tlibicuuc.so.74 => /lib/x86_64-linux-gnu/libicuuc.so.74 (ASLR_ADDRESS)\n\tliblzma.so.5 => /lib/x86_64-linux-gnu/liblzma.so.5 (ASLR_ADDRESS)\n\tlibssl.so.3 => /lib/x86_64-linux-gnu/libssl.so.3 (ASLR_ADDRESS)\n\tlibaec.so.0 => /lib/x86_64-linux-gnu/libaec.so.0 (ASLR_ADDRESS)\n\tlibunistring.so.5 => /lib/x86_64-linux-gnu/libunistring.so.5 (ASLR_ADDRESS)\n\tlibhogweed.so.6 => /lib/x86_64-linux-gnu/libhogweed.so.6 (ASLR_ADDRESS)\n\tlibgmp.so.10 => /lib/x86_64-linux-gnu/libgmp.so.10 (ASLR_ADDRESS)\n\tlibp11-kit.so.0 => /lib/x86_64-linux-gnu/libp11-kit.so.0 (ASLR_ADDRESS)\n\tlibtasn1.so.6 => /lib/x86_64-linux-gnu/libtasn1.so.6 (ASLR_ADDRESS)\n\tlibkrb5.so.3 => /lib/x86_64-linux-gnu/libkrb5.so.3 (ASLR_ADDRESS)\n\tlibk5crypto.so.3 => /lib/x86_64-linux-gnu/libk5crypto.so.3 (ASLR_ADDRESS)\n\tlibcom_err.so.2 => /lib/x86_64-linux-gnu/libcom_err.so.2 (ASLR_ADDRESS)\n\tlibkrb5support.so.0 => /lib/x86_64-linux-gnu/libkrb5support.so.0 (ASLR_ADDRESS)\n\tlibsasl2.so.2 => /lib/x86_64-linux-gnu/libsasl2.so.2 (ASLR_ADDRESS)\n\tlibbrotlicommon.so.1 => /lib/x86_64-linux-gnu/libbrotlicommon.so.1 (ASLR_ADDRESS)\n\tlibicudata.so.74 => /lib/x86_64-linux-gnu/libicudata.so.74 (ASLR_ADDRESS)\n\tlibstdc++.so.6 => /lib/x86_64-linux-gnu/libstdc++.so.6 (ASLR_ADDRESS)\n\tlibffi.so.8 => /lib/x86_64-linux-gnu/libffi.so.8 (ASLR_ADDRESS)\n\tlibkeyutils.so.1 => /lib/x86_64-linux-gnu/libkeyutils.so.1 (ASLR_ADDRESS)\n\tlibresolv.so.2 => /lib/x86_64-linux-gnu/libresolv.so.2 (ASLR_ADDRESS)\n"
+  },
+  "root_accepted_readback": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-seaice-restart-v1/root-corrected-runtime-readback-v1.json",
+    "sha256": "692d909fe4a8bda8c34e7996154ed8c2ab437d96e4d46cf05ad7097a75126980",
+    "size_bytes": 1464717
+  },
+  "schema": "surface-winter-four-model-ledger-v1",
+  "shared_dependencies": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-seaice-fresh-gnu-dm-sm-v1/shared-dependencies-before-v1.json",
+    "sha256": "e49061863c79e836747d21559950b90e2f6d40b798dbbc8d08895d1cf4a87290",
+    "size_bytes": 482273
+  },
+  "shared_dependency_entries": 1582,
+  "source_base_commit": "8ab95cfa984235622687bf708f94385c2774ceac",
+  "source_entry_count": 6735,
+  "source_manifest": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-seaice-fresh-gnu-dm-sm-v1/source-manifest-v1.json",
+    "sha256": "560aa6b5c88f0b056ac26141d03921f0853f3e14cd8e7e463738cf95ef85c453",
+    "size_bytes": 1355054
+  },
+  "source_symlink_count": 17,
+  "toolchain_versions": {
+    "gfortran": "GNU Fortran (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0\nCopyright (C) 2023 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n",
+    "mpiexec": "HYDRA build details:\n    Version:                                 4.2.0\n    Release Date:                            Fri Feb  9 12:29:21 CST 2024\n    CC:                              gcc      \n    Configure options:                       '--disable-option-checking' '--prefix=/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/mpich-sock' '--with-hwloc=embedded' '--with-device=ch3:sock' '--with-pm=hydra' '--disable-cxx' '--disable-romio' '--cache-file=/dev/null' '--srcdir=.' 'CC=gcc' 'CFLAGS= -O2' 'LDFLAGS=' 'LIBS=' 'CPPFLAGS= -I/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/mpich-source/mpich-4.2.0/src/mpl/include -I/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/mpich-source/mpich-4.2.0/modules/json-c -I/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/mpich-source/mpich-4.2.0/modules/hwloc/include -D_REENTRANT -I/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/mpich-source/mpich-4.2.0/src/pmi/include'\n    Process Manager:                         pmi\n    Launchers available:                     ssh rsh fork slurm ll lsf sge manual persist\n    Topology libraries available:            hwloc\n    Resource management kernels available:   user slurm ll lsf sge pbs cobalt\n    Demux engines available:                 poll select\n",
+    "mpif90_show": "gfortran -I/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/mpich-sock/include -I/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/mpich-sock/include -L/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/mpich-sock/lib -lmpifort -Wl,-rpath -Wl,/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/mpich-sock/lib -Wl,--enable-new-dtags -lmpi\n"
+  },
+  "tools": {
+    "ar": {
+      "path": "/usr/bin/x86_64-linux-gnu-ar",
+      "sha256": "534681ac11c18868cfc4fdf98770aa0ba8973eedc90c231e94e6ba96e1a04f27",
+      "size_bytes": 55792
+    },
+    "cpp": {
+      "path": "/usr/bin/x86_64-linux-gnu-cpp-13",
+      "sha256": "a1d872b2ddb58bfdce21e16e2ecfdf9ca4aec921f7106523101759bfaa913c6f",
+      "size_bytes": 1027128
+    },
+    "csh": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/Library/bin/tcsh",
+      "sha256": "13694df7b7bd6dc672e0a3ac7b2da7ddddd5ea9ed3f03c57cd3f0b11f37b1ae9",
+      "size_bytes": 466744
+    },
+    "gcc": {
+      "path": "/usr/bin/x86_64-linux-gnu-gcc-13",
+      "sha256": "6117c52522997d2aaccb2b52b3c6bf42c0a6c5edb1d718431fed6b2fc5fec234",
+      "size_bytes": 1023032
+    },
+    "gfortran": {
+      "path": "/usr/bin/x86_64-linux-gnu-gfortran-13",
+      "sha256": "7e292e9d5da17a37bb1c17a06afb6463db786c70827fd6893ed31a86715b03c3",
+      "size_bytes": 1027128
+    },
+    "make": {
+      "path": "/usr/bin/make",
+      "sha256": "d78b8f1d099fbcfb6f2f49ab87223b9b68fb3956642f92d6ec6de812e8afa965",
+      "size_bytes": 259808
+    },
+    "mpicc": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/mpich-sock/bin/mpicc",
+      "sha256": "1e15e834e903d9de68c9d19c392c3ad46c2c7eb910e757afe5d77e8dd455cc70",
+      "size_bytes": 11531
+    },
+    "mpiexec": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/mpich-sock/bin/mpiexec.hydra",
+      "sha256": "7cbfc90b3903375252de00c92fd0ec8d51274da76365028de5c6edd645416946",
+      "size_bytes": 1856368
+    },
+    "mpif90": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/mpich-sock/bin/mpifort",
+      "sha256": "5355c30d6218cb8826b25c4d5dd891f0672d7c0b262ea89bc3e178a750c5a443",
+      "size_bytes": 13966
+    },
+    "perl": {
+      "path": "/usr/bin/perl",
+      "sha256": "56e5ea41974eb1eff0f7ea64677578b1938053d29818c2810bcb21e2ca68cafa",
+      "size_bytes": 4019312
+    },
+    "python3": {
+      "path": "/usr/bin/python3.12",
+      "sha256": "1319c137ea5d30f1d7599943cb0e72666648c20a94cf5932dd095364d07dafeb",
+      "size_bytes": 8016832
+    }
+  }
+}
