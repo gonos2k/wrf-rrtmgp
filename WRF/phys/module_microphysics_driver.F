@@ -902,6 +902,39 @@ REAL, DIMENSION( ims:ime, kms:kme, jms:jme ),                        &
    ELSE
 #endif
 
+! Determine the option-37 UDM coupling once, before the shared tile loop.
+! The diagnostic pointers and native-radius flags are specific to this path.
+   have_udm_cf = .false.
+   IF (mp_physics == UDMSCHEME) THEN
+     IF (has_reqc==1 .AND. has_reqi==1 .AND. has_reqs==1) THEN
+       IF (PRESENT(udm_cldfra)) THEN
+         IF (PRESENT(udm_cf_step)) THEN
+           IF (ASSOCIATED(udm_cldfra)) THEN
+             IF (ASSOCIATED(udm_cf_step)) THEN
+               IF (PRESENT(udm_cf_top)) THEN
+                 IF (ASSOCIATED(udm_cf_top)) have_udm_cf = .true.
+               ENDIF
+             ENDIF
+           ENDIF
+         ENDIF
+       ENDIF
+     ENDIF
+   ENDIF
+! The legacy UDM reset writes the full memory domain from every tile. For the
+! option-37 call, initialize once including halos/storage, then skip the tile
+! reset. Other radiation paths retain the legacy call below.
+   IF (have_udm_cf .AND. itimestep == 1 .AND. num_tiles > 0) THEN
+     IF ( PRESENT( QV_CURR ) .AND. PRESENT ( QC_CURR ) .AND.  &
+          PRESENT( QR_CURR ) .AND. PRESENT ( QI_CURR ) .AND.  &
+          PRESENT( QS_CURR ) .AND. PRESENT ( QG_CURR ) .AND.  &
+          PRESENT( QH_CURR ) .AND.                            &
+          PRESENT( QNN_CURR ) .AND. PRESENT ( QNC_CURR ) .AND. &
+          PRESENT( QNR_CURR ) .AND.                           &
+          PRESENT( RAINNC ) .AND. PRESENT( RAINNCV ) ) THEN
+       QNN_CURR(ims:ime,kms:kme,jms:jme) = ccn_conc
+     ENDIF
+   ENDIF
+
    !$OMP PARALLEL DO   &
    !$OMP PRIVATE ( ij, its, ite, jts, jte, i,j,k,n )
 
@@ -2805,20 +2838,6 @@ REAL, DIMENSION( ims:ime, kms:kme, jms:jme ),                        &
                   PRESENT( QNN_CURR ) .AND. PRESENT ( QNC_CURR ) .AND. &
                   PRESENT( QNR_CURR ).AND.                            &
                   PRESENT( RAINNC  ) .AND. PRESENT ( RAINNCV )  ) THEN
-             have_udm_cf = .false.
-             IF (has_reqc==1 .AND. has_reqi==1 .AND. has_reqs==1) THEN
-               IF (PRESENT(udm_cldfra)) THEN
-                 IF (PRESENT(udm_cf_step)) THEN
-                   IF (ASSOCIATED(udm_cldfra)) THEN
-                     IF (ASSOCIATED(udm_cf_step)) THEN
-                       IF (PRESENT(udm_cf_top)) THEN
-                         IF (ASSOCIATED(udm_cf_top)) have_udm_cf = .true.
-                       ENDIF
-                     ENDIF
-                   ENDIF
-                 ENDIF
-               ENDIF
-             ENDIF
              IF (have_udm_cf) THEN
              CALL udm(                                              &
                   TH=th                                             &
@@ -2851,6 +2870,7 @@ REAL, DIMENSION( ims:ime, kms:kme, jms:jme ),                        &
                  ,ITIMESTEP=itimestep                               &
                  ,udm_cldfra=udm_cldfra, udm_cf_step=udm_cf_step     &
                  ,udm_cf_top=udm_cf_top                             &
+                 ,ccn_preinitialized=.true.                        &
                  ,has_reqc=has_reqc                                 &  ! for radiation +
                  ,has_reqi=has_reqi                                 &
                  ,has_reqs=has_reqs                                 &
