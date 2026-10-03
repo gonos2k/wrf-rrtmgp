@@ -31,7 +31,8 @@ PROGRAM rrtmgp_reference_column
   REAL(wp) :: solar,roughness_value,partition_value,precip_mode,visible_weight,raw_direct_tau
   REAL(wp) :: frozen_mode_value,frozen_occurrence
   REAL(wp) :: metadata_gravity,metadata_cp_dry,metadata_mol_weight_dry
-  LOGICAL :: use_precip,has_native_mass,frozen_enabled,sw_direct_enabled
+  LOGICAL :: use_precip,has_native_mass,frozen_enabled,sw_direct_enabled,cu_population_enabled,cu_active
+  REAL(wp) :: cu_policy_value
   INTEGER :: ice_roughness
   REAL(wp), ALLOCATABLE :: play(:,:),plev(:,:),tlay(:,:),tlev(:,:),tsfc(:,:)
   REAL(wp), ALLOCATABLE :: h2o(:,:),co2(:,:),o3(:,:),n2o(:,:),ch4(:,:),o2(:,:)
@@ -42,6 +43,9 @@ PROGRAM rrtmgp_reference_column
   REAL(real64), ALLOCATABLE :: frozen_gmg(:,:,:),frozen_hmg(:,:,:)
   REAL(wp), ALLOCATABLE :: frozen_tau(:,:,:),frozen_ssa(:,:,:),frozen_g(:,:,:)
   REAL(wp), ALLOCATABLE :: emis_in(:,:),cf(:,:),lwp(:,:),iwp(:,:),swp(:,:)
+  REAL(wp), ALLOCATABLE :: cu_lwp(:,:),cu_iwp(:,:),cu_rel(:,:),cu_rei(:,:)
+  REAL(wp), ALLOCATABLE :: native_cu_tau(:,:,:),native_cu_ssa(:,:,:),native_cu_g(:,:,:)
+  REAL(wp), ALLOCATABLE :: cu_tau(:,:,:),cu_ssa(:,:,:),cu_g(:,:,:),cu_rl_used(:,:),cu_di_used(:,:)
   REAL(wp), ALLOCATABLE :: rel(:,:),rei(:,:),res(:,:),avdir_in(:,:),avdif_in(:,:)
   REAL(wp), ALLOCATABLE :: andir_in(:,:),andif_in(:,:),mu0_in(:,:)
   REAL(wp), ALLOCATABLE :: emissivity(:,:),avdir(:),avdif(:),andir(:),andif(:),mu0(:),albdir(:,:),albdif(:,:)
@@ -62,6 +66,7 @@ PROGRAM rrtmgp_reference_column
   REAL(wp), ALLOCATABLE :: bands(:,:)
   REAL(wp), ALLOCATABLE :: v9_toa(:,:),v9_gas_tau(:,:,:),v9_mask(:,:,:)
   REAL(wp), ALLOCATABLE :: v9_cloud_tau(:,:,:),v9_precip_tau(:,:,:),v9_graupel_tau(:,:,:),v9_hail_tau(:,:,:)
+  REAL(wp), ALLOCATABLE :: v11_native_cloud_tau(:,:,:),v11_cu_cloud_tau(:,:,:)
   REAL(wp), ALLOCATABLE :: v9_band_limits(:,:),v9_wavenumbers(:,:),v9_visible(:,:)
   REAL(wp), ALLOCATABLE :: raw_cloud_tau_check(:,:,:),raw_precip_tau_check(:,:,:)
   REAL(wp), ALLOCATABLE :: direct_predelta(:,:),directc_predelta(:,:),visdir_predelta(:,:),nirdir_predelta(:,:)
@@ -75,7 +80,9 @@ PROGRAM rrtmgp_reference_column
   TYPE(ty_gas_optics_rrtmgp) :: gas_lw,gas_sw
   TYPE(ty_cloud_optics_rrtmgp) :: cloud_lw,cloud_sw
   TYPE(ty_optical_props_1scl) :: lw_atmos,lw_cloud,lw_snow,lw_precip,lw_sampled
+  TYPE(ty_optical_props_1scl) :: lw_cu
   TYPE(ty_optical_props_2str) :: sw_atmos,sw_cloud,sw_snow,sw_precip,sw_sampled
+  TYPE(ty_optical_props_2str) :: sw_cu
   TYPE(ty_optical_props_1scl) :: lw_frozen
   TYPE(ty_optical_props_2str) :: sw_frozen
   TYPE(ty_source_func_lw) :: lw_source
@@ -109,13 +116,17 @@ PROGRAM rrtmgp_reference_column
      TRIM(magic)/='RRTMGP_REPLAY_V3'.AND.TRIM(magic)/='RRTMGP_REPLAY_V4'.AND. &
      TRIM(magic)/='RRTMGP_REPLAY_V5'.AND.TRIM(magic)/='RRTMGP_REPLAY_V6'.AND. &
      TRIM(magic)/='RRTMGP_REPLAY_V7'.AND.TRIM(magic)/='RRTMGP_REPLAY_V8'.AND. &
-     TRIM(magic)/='RRTMGP_REPLAY_V9') &
+     TRIM(magic)/='RRTMGP_REPLAY_V9'.AND.TRIM(magic)/='RRTMGP_REPLAY_V10'.AND. &
+     TRIM(magic)/='RRTMGP_REPLAY_V11') &
     ERROR STOP 'invalid replay input magic'
   READ(u_in,*,IOSTAT=ios) phase,nc,nl,overlap,seed,iceflag
   IF(ios/=0 .OR. (TRIM(phase)/='LW' .AND. TRIM(phase)/='SW')) ERROR STOP 'invalid replay header'
   sw_direct_enabled=.FALSE.
-  IF(TRIM(magic)=='RRTMGP_REPLAY_V8'.AND.TRIM(phase)/='LW') ERROR STOP 'V8 is only valid for LW'
-  IF(TRIM(magic)=='RRTMGP_REPLAY_V9'.AND.TRIM(phase)/='SW') ERROR STOP 'V9 is only valid for SW'
+  cu_population_enabled=.FALSE.; cu_active=.FALSE.
+  IF((TRIM(magic)=='RRTMGP_REPLAY_V8'.OR.TRIM(magic)=='RRTMGP_REPLAY_V10').AND.TRIM(phase)/='LW') &
+    ERROR STOP 'V8/V10 are only valid for LW'
+  IF((TRIM(magic)=='RRTMGP_REPLAY_V9'.OR.TRIM(magic)=='RRTMGP_REPLAY_V11').AND.TRIM(phase)/='SW') &
+    ERROR STOP 'V9/V11 are only valid for SW'
   IF(nc<1 .OR. nl<1) ERROR STOP 'replay dimensions must be positive'
 
   ALLOCATE(play(nc,nl),plev(nc,nl+1),tlay(nc,nl),tlev(nc,nl+1),tsfc(nc,1))
@@ -135,7 +146,7 @@ PROGRAM rrtmgp_reference_column
   CALL read_section(u_in,'N2O',n2o)
   CALL read_section(u_in,'CH4',ch4)
   CALL read_section(u_in,'O2',o2)
-  IF(TRIM(magic)=='RRTMGP_REPLAY_V8') THEN
+  IF(TRIM(magic)=='RRTMGP_REPLAY_V8'.OR.TRIM(magic)=='RRTMGP_REPLAY_V10') THEN
     ALLOCATE(vmr_cfc11(nc,nl),vmr_cfc12(nc,nl),vmr_cfc22(nc,nl),vmr_ccl4(nc,nl))
     CALL read_section(u_in,'VMR_CFC11',vmr_cfc11)
     CALL read_section(u_in,'VMR_CFC12',vmr_cfc12)
@@ -163,6 +174,30 @@ PROGRAM rrtmgp_reference_column
   CALL read_section(u_in,'REL',rel)
   CALL read_section(u_in,'REI',rei)
   CALL read_section(u_in,'RES',res)
+  IF(TRIM(magic)=='RRTMGP_REPLAY_V10'.OR.TRIM(magic)=='RRTMGP_REPLAY_V11') THEN
+    cu_population_enabled=.TRUE.
+    CALL read_scalar_section(u_in,'CU_POPULATION_POLICY',cu_policy_value)
+    IF(.NOT.ieee_is_finite(cu_policy_value).OR.cu_policy_value/=1._wp) &
+      ERROR STOP 'V10/V11 CU_POPULATION_POLICY must equal one'
+    CALL read_scalar_section(u_in,'CU_RADIUS_POLICY',cu_policy_value)
+    IF(.NOT.ieee_is_finite(cu_policy_value).OR.cu_policy_value/=1._wp) &
+      ERROR STOP 'V10/V11 CU_RADIUS_POLICY must equal one'
+    CALL read_scalar_section(u_in,'CU_OCCURRENCE_POLICY',cu_policy_value)
+    IF(.NOT.ieee_is_finite(cu_policy_value).OR.cu_policy_value/=1._wp) &
+      ERROR STOP 'V10/V11 CU_OCCURRENCE_POLICY must equal one'
+    ALLOCATE(cu_lwp(nc,nl),cu_iwp(nc,nl),cu_rel(nc,nl),cu_rei(nc,nl))
+    CALL read_section(u_in,'CU_LWP',cu_lwp); CALL read_section(u_in,'CU_IWP',cu_iwp)
+    CALL read_section(u_in,'CU_REL',cu_rel); CALL read_section(u_in,'CU_REI',cu_rei)
+    IF(ANY(.NOT.ieee_is_finite(cu_lwp)).OR.ANY(cu_lwp<0._wp)) &
+      ERROR STOP 'V10/V11 CU_LWP must be finite/nonnegative'
+    IF(ANY(.NOT.ieee_is_finite(cu_iwp)).OR.ANY(cu_iwp<0._wp)) &
+      ERROR STOP 'V10/V11 CU_IWP must be finite/nonnegative'
+    IF(ANY(.NOT.ieee_is_finite(cu_rel)).OR.ANY(cu_rel<=0._wp)) &
+      ERROR STOP 'V10/V11 CU_REL must be finite/positive'
+    IF(ANY(.NOT.ieee_is_finite(cu_rei)).OR.ANY(cu_rei<=0._wp)) &
+      ERROR STOP 'V10/V11 CU_REI must be finite/positive'
+    cu_active=ANY(cu_lwp>0._wp).OR.ANY(cu_iwp>0._wp)
+  END IF
   ice_roughness=1
   IF(TRIM(magic)/='RRTMGP_REPLAY_V1') THEN
     CALL read_scalar_section(u_in,'ICE_ROUGHNESS',roughness_value)
@@ -174,7 +209,8 @@ PROGRAM rrtmgp_reference_column
   IF((TRIM(magic)=='RRTMGP_REPLAY_V3'.OR.TRIM(magic)=='RRTMGP_REPLAY_V4'.OR. &
       TRIM(magic)=='RRTMGP_REPLAY_V5'.OR.TRIM(magic)=='RRTMGP_REPLAY_V6'.OR. &
       TRIM(magic)=='RRTMGP_REPLAY_V7'.OR.TRIM(magic)=='RRTMGP_REPLAY_V8'.OR. &
-      TRIM(magic)=='RRTMGP_REPLAY_V9').AND. &
+      TRIM(magic)=='RRTMGP_REPLAY_V9'.OR.TRIM(magic)=='RRTMGP_REPLAY_V10'.OR. &
+      TRIM(magic)=='RRTMGP_REPLAY_V11').AND. &
      TRIM(phase)=='SW') THEN
     CALL read_scalar_section(u_in,'SW_BAND_PARTITION',partition_value)
     IF(.NOT.ieee_is_finite(partition_value)) ERROR STOP 'non-finite SW band partition'
@@ -225,7 +261,7 @@ PROGRAM rrtmgp_reference_column
       ERROR STOP 'V6 native dry layer mass must be finite and positive'
   END IF
   frozen_enabled=.FALSE.
-  IF(TRIM(magic)=='RRTMGP_REPLAY_V8') THEN
+  IF(TRIM(magic)=='RRTMGP_REPLAY_V8'.OR.TRIM(magic)=='RRTMGP_REPLAY_V10') THEN
     ! V8 adds four recorded LW gas VMR profiles before any optional frozen
     ! optics profile and the host constants appended by trace_input_end.
     DO i=1,2
@@ -319,9 +355,9 @@ PROGRAM rrtmgp_reference_column
       IF(frozen_table_sha256()/=frozen_sha_recorded) ERROR STOP 'V8 loaded table identity differs from input'
     END IF
     READ(u_in,'(A)',IOSTAT=ios) section_line
-    IF(ios>=0) ERROR STOP 'V8 contains trailing or unsupported records'
+    IF(ios>=0) ERROR STOP 'V8/V10 contains trailing or unsupported records'
   END IF
-  IF(TRIM(magic)=='RRTMGP_REPLAY_V9') THEN
+  IF(TRIM(magic)=='RRTMGP_REPLAY_V9'.OR.TRIM(magic)=='RRTMGP_REPLAY_V11') THEN
     use_precip=.FALSE.; frozen_enabled=.FALSE.; has_native_mass=.FALSE.
     DO i=1,2
       READ(u_in,'(A)',IOSTAT=ios) section_line
@@ -415,6 +451,10 @@ PROGRAM rrtmgp_reference_column
     CALL read_section3_alloc(u_in,'RAW_GAS_TAU',v9_gas_tau)
     CALL read_section3_alloc(u_in,'MCICA_MASK',v9_mask)
     CALL read_section3_alloc(u_in,'RAW_CLOUD_TAU',v9_cloud_tau)
+    IF(TRIM(magic)=='RRTMGP_REPLAY_V11') THEN
+      CALL read_section3_alloc(u_in,'RAW_NATIVE_CLOUD_TAU',v11_native_cloud_tau)
+      CALL read_section3_alloc(u_in,'RAW_CU_CLOUD_TAU',v11_cu_cloud_tau)
+    END IF
     CALL read_section3_alloc(u_in,'RAW_PRECIP_TAU',v9_precip_tau)
     CALL read_section3_alloc(u_in,'RAW_GRAUPEL_TAU_EXT',v9_graupel_tau)
     CALL read_section3_alloc(u_in,'RAW_HAIL_TAU_EXT',v9_hail_tau)
@@ -422,7 +462,7 @@ PROGRAM rrtmgp_reference_column
     CALL read_section2_alloc(u_in,'BAND_LIMS_WAVENUMBER',v9_wavenumbers)
     CALL read_section2_alloc(u_in,'VISIBLE_WEIGHT',v9_visible)
     READ(u_in,'(A)',IOSTAT=ios) section_line
-    IF(ios>=0) ERROR STOP 'V9 contains trailing or unsupported records'
+    IF(ios>=0) ERROR STOP 'V9/V11 contains trailing or unsupported records'
     sw_direct_enabled=.TRUE.
   END IF
   IF(TRIM(magic)=='RRTMGP_REPLAY_V7') THEN
@@ -526,7 +566,8 @@ PROGRAM rrtmgp_reference_column
     CALL init_constants(gravity=metadata_gravity, heat_capacity_dry_air=metadata_cp_dry, &
                         mol_weight_dry_air=metadata_mol_weight_dry)
   END IF
-  IF(TRIM(magic)/='RRTMGP_REPLAY_V7'.AND.TRIM(magic)/='RRTMGP_REPLAY_V9') THEN
+  IF(TRIM(magic)/='RRTMGP_REPLAY_V7'.AND.TRIM(magic)/='RRTMGP_REPLAY_V9'.AND. &
+     TRIM(magic)/='RRTMGP_REPLAY_V10'.AND.TRIM(magic)/='RRTMGP_REPLAY_V11') THEN
     READ(u_in,'(A)',IOSTAT=ios) section_line
     IF(ios==0) THEN
       READ(section_line,*,IOSTAT=ios) next_section
@@ -619,9 +660,26 @@ PROGRAM rrtmgp_reference_column
     ds=MAX(cloud_lw%get_min_radius_ice(),MIN(cloud_lw%get_max_radius_ice(),2._wp*res))
     IF(use_precip) ds=res ! V4 snow optics use native effective radius, not the cloud-ice LUT diameter.
     CALL check_error(cloud_lw%cloud_optics(lwp,iwp,rl,di,lw_cloud))
-    IF(.NOT.use_precip) THEN
+    IF(cu_population_enabled.AND..NOT.use_precip) THEN
       CALL check_error(cloud_lw%cloud_optics(zero,swp,rl,ds,lw_snow))
       CALL check_error(lw_snow%increment(lw_cloud))
+    ELSE IF(.NOT.cu_population_enabled.AND..NOT.use_precip) THEN
+      CALL check_error(cloud_lw%cloud_optics(zero,swp,rl,ds,lw_snow))
+      CALL check_error(lw_snow%increment(lw_cloud))
+    END IF
+    IF(cu_population_enabled) THEN
+      ALLOCATE(native_cu_tau(nc,nl,cloud_lw%get_nband()),cu_tau(nc,nl,cloud_lw%get_nband()))
+      ALLOCATE(cu_rl_used(nc,nl),cu_di_used(nc,nl))
+      native_cu_tau=lw_cloud%tau
+      cu_rl_used=MAX(cloud_lw%get_min_radius_liq(),MIN(cloud_lw%get_max_radius_liq(),cu_rel))
+      cu_di_used=MAX(cloud_lw%get_min_radius_ice(),MIN(cloud_lw%get_max_radius_ice(),2._wp*cu_rei))
+      cu_tau=0._wp
+      IF(cu_active) THEN
+        CALL check_error(lw_cu%alloc_1scl(nc,nl,cloud_lw))
+        CALL check_error(cloud_lw%cloud_optics(cu_lwp,cu_iwp,cu_rl_used,cu_di_used,lw_cu))
+        cu_tau=lw_cu%tau
+        CALL check_error(lw_cu%increment(lw_cloud))
+      END IF
     END IF
     IF(use_precip) THEN
       CALL reference_lw_precip(rwp,swp,res,gas_lw%get_band_lims_wavenumber(),precip_tau)
@@ -701,6 +759,12 @@ PROGRAM rrtmgp_reference_column
       IF(ANY(SHAPE(v9_gas_tau)/=[nc,nl,gas_sw%get_ngpt()])) ERROR STOP 'V9 RAW_GAS_TAU shape mismatch'
       IF(ANY(SHAPE(v9_mask)/=[nc,nl,gas_sw%get_ngpt()])) ERROR STOP 'V9 MCICA_MASK shape mismatch'
       IF(ANY(SHAPE(v9_cloud_tau)/=[nc,nl,gas_sw%get_nband()])) ERROR STOP 'V9 RAW_CLOUD_TAU shape mismatch'
+      IF(TRIM(magic)=='RRTMGP_REPLAY_V11') THEN
+        IF(ANY(SHAPE(v11_native_cloud_tau)/=[nc,nl,gas_sw%get_nband()])) &
+          ERROR STOP 'V11 RAW_NATIVE_CLOUD_TAU shape mismatch'
+        IF(ANY(SHAPE(v11_cu_cloud_tau)/=[nc,nl,gas_sw%get_nband()])) &
+          ERROR STOP 'V11 RAW_CU_CLOUD_TAU shape mismatch'
+      END IF
       IF(ANY(SHAPE(v9_precip_tau)/=[nc,nl,gas_sw%get_nband()])) ERROR STOP 'V9 RAW_PRECIP_TAU shape mismatch'
       IF(ANY(SHAPE(v9_graupel_tau)/=[nc,nl,gas_sw%get_nband()])) ERROR STOP 'V9 RAW_GRAUPEL_TAU_EXT shape mismatch'
       IF(ANY(SHAPE(v9_hail_tau)/=[nc,nl,gas_sw%get_nband()])) ERROR STOP 'V9 RAW_HAIL_TAU_EXT shape mismatch'
@@ -725,7 +789,8 @@ PROGRAM rrtmgp_reference_column
     DO b=1,gas_sw%get_nband()
       IF((TRIM(magic)=='RRTMGP_REPLAY_V3'.OR.TRIM(magic)=='RRTMGP_REPLAY_V4'.OR. &
           TRIM(magic)=='RRTMGP_REPLAY_V5'.OR.TRIM(magic)=='RRTMGP_REPLAY_V6'.OR. &
-          TRIM(magic)=='RRTMGP_REPLAY_V7'.OR.TRIM(magic)=='RRTMGP_REPLAY_V9').AND. &
+          TRIM(magic)=='RRTMGP_REPLAY_V7'.OR.TRIM(magic)=='RRTMGP_REPLAY_V9'.OR. &
+          TRIM(magic)=='RRTMGP_REPLAY_V11').AND. &
          bands(1,b)==12850._wp) THEN
         IF(bands(2,b)/=16000._wp) ERROR STOP 'unexpected transition-band upper limit'
         visible_weight=0.5_wp
@@ -753,6 +818,34 @@ PROGRAM rrtmgp_reference_column
     ds=MAX(cloud_sw%get_min_radius_ice(),MIN(cloud_sw%get_max_radius_ice(),2._wp*res))
     IF(use_precip) ds=res ! V4 snow optics use native effective radius, not the cloud-ice LUT diameter.
     CALL check_error(cloud_sw%cloud_optics(lwp,iwp,rl,di,sw_cloud))
+    IF(cu_population_enabled.AND..NOT.use_precip) THEN
+      CALL check_error(cloud_sw%cloud_optics(zero,swp,rl,ds,sw_snow))
+      CALL check_error(sw_snow%increment(sw_cloud))
+    END IF
+    IF(cu_population_enabled) THEN
+      ALLOCATE(native_cu_tau(nc,nl,cloud_sw%get_nband()),native_cu_ssa(nc,nl,cloud_sw%get_nband()), &
+               native_cu_g(nc,nl,cloud_sw%get_nband()),cu_tau(nc,nl,cloud_sw%get_nband()), &
+               cu_ssa(nc,nl,cloud_sw%get_nband()),cu_g(nc,nl,cloud_sw%get_nband()), &
+               cu_rl_used(nc,nl),cu_di_used(nc,nl))
+      native_cu_tau=sw_cloud%tau; native_cu_ssa=sw_cloud%ssa; native_cu_g=sw_cloud%g
+      cu_rl_used=MAX(cloud_sw%get_min_radius_liq(),MIN(cloud_sw%get_max_radius_liq(),cu_rel))
+      cu_di_used=MAX(cloud_sw%get_min_radius_ice(),MIN(cloud_sw%get_max_radius_ice(),2._wp*cu_rei))
+      cu_tau=0._wp; cu_ssa=0._wp; cu_g=0._wp
+      IF(cu_active) THEN
+        CALL check_error(sw_cu%alloc_2str(nc,nl,cloud_sw))
+        CALL check_error(cloud_sw%cloud_optics(cu_lwp,cu_iwp,cu_rl_used,cu_di_used,sw_cu))
+        cu_tau=sw_cu%tau; cu_ssa=sw_cu%ssa; cu_g=sw_cu%g
+        CALL check_error(sw_cu%increment(sw_cloud))
+      END IF
+    END IF
+    IF(TRIM(magic)=='RRTMGP_REPLAY_V11') THEN
+      IF(ANY(v11_native_cloud_tau/=native_cu_tau)) &
+        ERROR STOP 'V11 RAW_NATIVE_CLOUD_TAU differs from independent native optics'
+      IF(ANY(v11_cu_cloud_tau/=cu_tau)) &
+        ERROR STOP 'V11 RAW_CU_CLOUD_TAU differs from independent CU optics'
+      IF(ANY(v9_cloud_tau/=REAL(REAL(v11_native_cloud_tau+v11_cu_cloud_tau),wp))) &
+        ERROR STOP 'V11 RAW_CLOUD_TAU differs from binary32 component sum'
+    END IF
     IF(sw_direct_enabled) raw_cloud_tau_check=sw_cloud%tau
     IF(use_precip) THEN
       IF(sw_policy==1) CALL check_error(sw_cloud%delta_scale())
@@ -784,9 +877,13 @@ PROGRAM rrtmgp_reference_column
       CALL check_error(sw_precip%increment(sw_cloud))
       IF(sw_policy==3) CALL check_error(sw_cloud%delta_scale())
       cloud_tau=sw_cloud%tau; cloud_ssa=sw_cloud%ssa; cloud_g=sw_cloud%g
-    ELSE
+    ELSE IF(.NOT.cu_population_enabled) THEN
       CALL check_error(cloud_sw%cloud_optics(zero,swp,rl,ds,sw_snow))
       CALL check_error(sw_snow%increment(sw_cloud))
+      cloud_tau=sw_cloud%tau; cloud_ssa=sw_cloud%ssa; cloud_g=sw_cloud%g
+      IF(sw_direct_enabled) raw_cloud_tau_check=sw_cloud%tau
+      CALL check_error(sw_cloud%delta_scale())
+    ELSE
       cloud_tau=sw_cloud%tau; cloud_ssa=sw_cloud%ssa; cloud_g=sw_cloud%g
       IF(sw_direct_enabled) raw_cloud_tau_check=sw_cloud%tau
       CALL check_error(sw_cloud%delta_scale())
@@ -804,7 +901,8 @@ PROGRAM rrtmgp_reference_column
       CALL check_error(draw_samples(mask,sw_cloud,sw_sampled))
       CALL check_error(sw_sampled%increment(sw_atmos))
     END IF
-    IF(TRIM(magic)=='RRTMGP_REPLAY_V7'.OR.(TRIM(magic)=='RRTMGP_REPLAY_V9'.AND.frozen_enabled)) THEN
+    IF(TRIM(magic)=='RRTMGP_REPLAY_V7'.OR. &
+       ((TRIM(magic)=='RRTMGP_REPLAY_V9'.OR.TRIM(magic)=='RRTMGP_REPLAY_V11').AND.frozen_enabled)) THEN
       ALLOCATE(frozen_gt(nc,nl,cloud_sw%get_nband()),frozen_gw(nc,nl,cloud_sw%get_nband()), &
                frozen_gmg(nc,nl,cloud_sw%get_nband()),frozen_ht(nc,nl,cloud_sw%get_nband()), &
                frozen_hw(nc,nl,cloud_sw%get_nband()),frozen_hmg(nc,nl,cloud_sw%get_nband()))
@@ -847,7 +945,8 @@ PROGRAM rrtmgp_reference_column
       visible_weight=MERGE(1._wp,0._wp,bands(1,b)>=12850._wp)
       IF((TRIM(magic)=='RRTMGP_REPLAY_V3'.OR.TRIM(magic)=='RRTMGP_REPLAY_V4'.OR. &
           TRIM(magic)=='RRTMGP_REPLAY_V5'.OR.TRIM(magic)=='RRTMGP_REPLAY_V6'.OR. &
-          TRIM(magic)=='RRTMGP_REPLAY_V7'.OR.TRIM(magic)=='RRTMGP_REPLAY_V9').AND. &
+          TRIM(magic)=='RRTMGP_REPLAY_V7'.OR.TRIM(magic)=='RRTMGP_REPLAY_V9'.OR. &
+          TRIM(magic)=='RRTMGP_REPLAY_V11').AND. &
          bands(1,b)==12850._wp) visible_weight=0.5_wp
       visdir=visdir+visible_weight*flux_band_dir(:,:,b)
       visdif=visdif+visible_weight*(flux_band_dn(:,:,b)-flux_band_dir(:,:,b))
@@ -897,7 +996,8 @@ PROGRAM rrtmgp_reference_column
   WRITE(u_out,'(A,1X,I0,1X,I0)') TRIM(phase),nc,nl
   CALL write3(u_out,'GAS_COL_DRY',RESHAPE(col_dry,[nc,nl,1]))
   CALL write3(u_out,'GAS_TAU',gas_tau)
-  IF(TRIM(magic)=='RRTMGP_REPLAY_V8') CALL write3(u_out,'GAS_TAU_RAW',gas_tau)
+  IF(TRIM(magic)=='RRTMGP_REPLAY_V8'.OR.TRIM(magic)=='RRTMGP_REPLAY_V10') &
+    CALL write3(u_out,'GAS_TAU_RAW',gas_tau)
   IF(TRIM(phase)=='SW') THEN
     CALL write3(u_out,'GAS_SSA',gas_ssa); CALL write3(u_out,'GAS_G',gas_g)
   END IF
@@ -908,8 +1008,20 @@ PROGRAM rrtmgp_reference_column
     END IF
   END IF
   CALL write3(u_out,'CLOUD_TAU',cloud_tau)
+  IF(cu_population_enabled) THEN
+    CALL write3(u_out,'NATIVE_CLOUD_TAU',native_cu_tau)
+    CALL write3(u_out,'CU_CLOUD_TAU',cu_tau)
+    CALL write3(u_out,'CU_RL_USED',RESHAPE(cu_rl_used,[nc,nl,1]))
+    CALL write3(u_out,'CU_DI_USED',RESHAPE(cu_di_used,[nc,nl,1]))
+  END IF
   IF(TRIM(phase)=='SW') THEN
     CALL write3(u_out,'CLOUD_SSA',cloud_ssa); CALL write3(u_out,'CLOUD_G',cloud_g)
+    IF(cu_population_enabled) THEN
+      CALL write3(u_out,'NATIVE_CLOUD_SSA',native_cu_ssa)
+      CALL write3(u_out,'NATIVE_CLOUD_G',native_cu_g)
+      CALL write3(u_out,'CU_CLOUD_SSA',cu_ssa)
+      CALL write3(u_out,'CU_CLOUD_G',cu_g)
+    END IF
   END IF
   IF(frozen_enabled) THEN
     IF(TRIM(phase)=='LW') THEN

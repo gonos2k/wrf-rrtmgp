@@ -1,0 +1,39 @@
+{
+  "schema": "udm-cu-v2-traditional-preprocess-syntax-verified-v1",
+  "status": "PASS",
+  "source_root": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-cu-fresh-gnu-v2/source",
+  "source_manifest_sha256": "446b7fd2e5827595d0f42514bc325a8ea2bb8e7b3604a3fdd145a899d3f35c8d",
+  "source_paths": {
+    "WRF/phys/module_ra_rrtmg_lw.F": "64dddfeecf7eff123aa6eadc776999584f6aa4822eb24cb46f3774213d8ba090",
+    "WRF/phys/module_ra_rrtmg_sw.F": "6710853e098b2dbbd8c613c728ab949102a76665442fae419498be48cbbf6f59",
+    "WRF/phys/module_radiation_driver.F": "6790dc884c53fff201f15713d60197f54b43dc53b545ed44eb2397e9d2d3687f"
+  },
+  "standard_executable": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-cu-fresh-gnu-v2/source/WRF/tools/standard.exe",
+  "standard_sha256": "0a1ac69cdf061f13986661259f3a3da4c04559ad05cd743f78b34a1d1fb16d9b",
+  "checked_steps": [
+    "sed comment-strip",
+    "first /lib/cpp (checked exit+nonempty)",
+    "standard.exe (checked executable, exit, nonempty stdout)",
+    "second /lib/cpp (checked exit+nonempty)",
+    "mpif90 compile with configure.wrf flags (checked exit/object/module size)",
+    "object global symbol presence",
+    "preprocessed CU declaration extent assert"
+  ],
+  "outputs": {
+    "module_ra_rrtmg_lw": {
+      "preprocessed_sha256": "893a873452e36980a2d6678e3f96914e5a9ef98f6db71eff6cb21b1f373ce84b",
+      "object_sha256": "2d4796bd2f4295c5a894d937eaac4055bd121fc1a515cd387b533f720cda2876",
+      "module_sha256": "68f3d0e7623fbf69c9c3be4afe038750f70a113e9a145e992650367475b2f042"
+    },
+    "module_ra_rrtmg_sw": {
+      "preprocessed_sha256": "dea778f2f7eb827900341993aeae0848b10c0cd39843114482ca6d4ba81dbcf2",
+      "object_sha256": "5afc5bf64500ddd6de9991f2d8aa7ae2ec1593709b1f6293f6165c3b01a98d67",
+      "module_sha256": "1f5a2337fee18eda271be144c5fed1d0d5ead40036a20607367a35c3d27d7564"
+    },
+    "module_radiation_driver": {
+      "preprocessed_sha256": "fef54d44d6597ffb5278d3ad641b5261e2466da9c0644b6f48fa46ac0ecc6ea4",
+      "object_sha256": "b014a15ae784ca0230d848a5c49194d9b3b8153eed02cafb94482b88c93290b2",
+      "module_sha256": "e33e24c7ad4d564d3e0565c78f75ed1347375e38bae9907505b9aa46dd97bc4e"
+    }
+  }
+}

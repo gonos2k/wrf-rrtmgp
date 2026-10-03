@@ -6,6 +6,8 @@ get_filename_component(WRF_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/../.." ABSOLUTE)
 set(RRTMGP_DATA_DIR "${WRF_ROOT}/run" CACHE PATH "RRTMGP coefficient directory")
 add_test(NAME frozen_raw_replay_contract COMMAND "${Python3_EXECUTABLE}"
   "${CMAKE_CURRENT_SOURCE_DIR}/test_frozen_raw_replay_contract.py")
+add_test(NAME cu_population_replay_contract COMMAND "${Python3_EXECUTABLE}"
+  "${CMAKE_CURRENT_SOURCE_DIR}/test_cu_population_replay.py")
 if(CMAKE_Fortran_COMPILER_ID STREQUAL "GNU")
   add_test(NAME rrtmgp_column_selection_contract COMMAND "${Python3_EXECUTABLE}"
     "${CMAKE_CURRENT_SOURCE_DIR}/test_column_selection.py" "${WRF_ROOT}")
@@ -64,7 +66,7 @@ add_library(test_rrtmgp_adapter STATIC standalone_wrf_error.f90 "${trace}" "${in
 target_link_libraries(test_rrtmgp_adapter PUBLIC wrf_rrtmgp test_rrtmgp_precip test_rrtmgp_frozen)
 set_target_properties(test_rrtmgp_adapter PROPERTIES Fortran_MODULE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/modules")
 target_include_directories(test_rrtmgp_adapter PUBLIC "${CMAKE_CURRENT_BINARY_DIR}/modules")
-foreach(test IN ITEMS columns cloud_inputs multicolumn validation adapter_invalid small_cf_sampling ice_roughness transparent_overlap spectral_surface udm_inputs precip_optics udm_adapter udm_dry_mass domain_seed native_gas_columns frozen_adapter udm_frozen_inputs lw_trace_gases sw_predelta_direct phase_path_stats)
+foreach(test IN ITEMS columns cloud_inputs multicolumn validation adapter_invalid small_cf_sampling ice_roughness transparent_overlap spectral_surface udm_inputs precip_optics udm_adapter udm_dry_mass domain_seed native_gas_columns frozen_adapter udm_frozen_inputs lw_trace_gases sw_predelta_direct phase_path_stats cu_population_inputs cu_population_optics)
   add_executable(test_rrtmgp_${test} test_${test}.f90)
   target_link_libraries(test_rrtmgp_${test} PRIVATE test_rrtmgp_adapter)
   if(CMAKE_Fortran_COMPILER_ID STREQUAL "GNU")
@@ -100,7 +102,48 @@ endif()
 add_test(NAME wrf_rrtmgp_columns COMMAND test_rrtmgp_columns "${RRTMGP_DATA_DIR}")
 add_test(NAME udm_phase_path_statistics COMMAND test_rrtmgp_phase_path_stats "${RRTMGP_DATA_DIR}")
 add_test(NAME cloud_mass_contract COMMAND test_rrtmgp_cloud_inputs)
+foreach(case IN ITEMS success native_tiny)
+  add_test(NAME cu_population_inputs_${case} COMMAND test_rrtmgp_cu_population_inputs ${case})
+endforeach()
+foreach(case_error IN ITEMS
+    "native_masked|RRTMGP_INPUT_UDM_QI_NEGATIVE"
+    "cf_below_cu|RRTMGP_INPUT_CU_CF_EXCEEDS_COMBINED"
+    "cf_zero|RRTMGP_INPUT_CU_CF_ZERO_COMBINED"
+    "cf_sum|RRTMGP_INPUT_CU_CF_SUM_MISMATCH"
+    "negative_fraction|RRTMGP_INPUT_CU_CF_OUT_OF_RANGE"
+    "cf_nan|RRTMGP_INPUT_CU_CF_NOT_FINITE"
+    "q_nan|RRTMGP_INPUT_CU_Q_NOT_FINITE"
+    "mass_zero|RRTMGP_INPUT_CU_DRY_MASS_NOT_POSITIVE_FINITE"
+    "overflow|RRTMGP_INPUT_CU_PATH_OVERFLOW"
+    "shape|RRTMGP_INPUT_CU_SHAPE_MISMATCH")
+  string(REPLACE "|" ";" case_error "${case_error}")
+  list(GET case_error 0 case)
+  list(GET case_error 1 error)
+  add_test(NAME reject_cu_population_inputs_${case} COMMAND "${Python3_EXECUTABLE}"
+    "${CMAKE_CURRENT_SOURCE_DIR}/test_invalid_inputs.py" "$<TARGET_FILE:test_rrtmgp_cu_population_inputs>"
+    "${case}" "${error}")
+endforeach()
 add_test(NAME domain_calendar_seed_contract COMMAND test_rrtmgp_domain_seed)
+foreach(mode IN ITEMS mixed overlap_zero no_precip night)
+  foreach(frozen IN ITEMS 0 1)
+    add_test(NAME cu_population_optics_${mode}_frozen${frozen}
+      COMMAND test_rrtmgp_cu_population_optics "${RRTMGP_DATA_DIR}" "${mode}" "${FROZEN_TABLE}" "${frozen}")
+  endforeach()
+endforeach()
+foreach(case_error IN ITEMS
+    "partial|RRTMGP_INPUT_CU_PARTIAL_BUNDLE"
+    "shape|CU_SHAPE_MISMATCH"
+    "radius|CU_RADIUS_NOT_POSITIVE"
+    "radius_nan|CU_RADIUS_NOT_FINITE"
+    "path_negative|CU_IWP_NEGATIVE"
+    "cf_zero|CU_ZERO_CF_WITH_PATH")
+  string(REPLACE "|" ";" case_error "${case_error}")
+  list(GET case_error 0 case)
+  list(GET case_error 1 error)
+  add_test(NAME reject_cu_population_optics_${case} COMMAND "${Python3_EXECUTABLE}"
+    "${CMAKE_CURRENT_SOURCE_DIR}/test_invalid_inputs.py" "$<TARGET_FILE:test_rrtmgp_cu_population_optics>"
+    "${case}" "${error}" --data-path "${RRTMGP_DATA_DIR}")
+endforeach()
 add_test(NAME multi_column_equivalence COMMAND test_rrtmgp_multicolumn "${RRTMGP_DATA_DIR}")
 foreach(case IN ITEMS clear cloud overlap_zero)
   add_test(NAME sw_predelta_direct_${case} COMMAND test_rrtmgp_sw_predelta_direct "${RRTMGP_DATA_DIR}" ${case})
@@ -167,6 +210,11 @@ add_test(NAME small_cf_sampling COMMAND test_rrtmgp_small_cf_sampling "${RRTMGP_
 # Independent executable shares the pinned library and data, not the WRF adapter.
 add_executable(reference_column reference_column.f90)
 target_link_libraries(reference_column PRIVATE wrf_rrtmgp test_rrtmgp_frozen)
+add_test(NAME cu_population_independent_replay COMMAND "${Python3_EXECUTABLE}"
+  "${CMAKE_CURRENT_SOURCE_DIR}/test_cu_population_optics_replay.py"
+  --generator "$<TARGET_FILE:test_rrtmgp_cu_population_optics>"
+  --reference "$<TARGET_FILE:reference_column>" --data "${RRTMGP_DATA_DIR}" --table "${FROZEN_TABLE}"
+  --ctest-output-root "${CMAKE_CURRENT_BINARY_DIR}/cu-population-replay")
 add_test(NAME sw_predelta_v9_independent_replay COMMAND "${Python3_EXECUTABLE}"
   "${CMAKE_CURRENT_SOURCE_DIR}/test_sw_predelta_replay.py" "${RRTMGP_DATA_DIR}"
   "$<TARGET_FILE:test_rrtmgp_sw_predelta_direct>" "$<TARGET_FILE:reference_column>" "${FROZEN_TABLE}")

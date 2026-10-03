@@ -34,10 +34,113 @@ MODULE module_ra_rrtmgp_input
   PUBLIC :: rrtmgp_column_seed
   PUBLIC :: rrtmgp_udm_frozen_lambdas
   PUBLIC :: rrtmgp_summarize_path_clipping
+  PUBLIC :: rrtmgp_build_cu_inputs, rrtmgp_summarize_cu_filter
 
   EXTERNAL :: wrf_error_fatal3
 
 CONTAINS
+
+  ! Experimental diagnosed-KF population policy: exclude negative diagnosed
+  ! condensate from radiation only. This never corrects native UDM inputs or
+  ! modifies the stored convection fields. Both populations share host CF.
+  SUBROUTINE rrtmgp_build_cu_inputs(combined_cf,cu_cf,cu_dp,cu_sh,qc_cu,qi_cu,dry_mass, &
+                                   grid_path,incloud_path,rejected_grid_path,omitted_grid_path, &
+                                   reason,column_context)
+    REAL, INTENT(IN) :: combined_cf(:),cu_cf(:),cu_dp(:),cu_sh(:),qc_cu(:),qi_cu(:),dry_mass(:)
+    REAL, INTENT(OUT) :: grid_path(:,:),incloud_path(:,:),rejected_grid_path(:,:),omitted_grid_path(:,:)
+    INTEGER, INTENT(OUT) :: reason
+    CHARACTER(LEN=*), OPTIONAL, INTENT(IN) :: column_context
+    INTEGER :: n,k,p
+    REAL :: q(2)
+    REAL(real64) :: mass64,path64,rejected64,incloud64
+    reason=RRTMGP_INPUT_OK
+    n=SIZE(combined_cf)
+    IF(n<1.OR.SIZE(cu_cf)/=n.OR.SIZE(cu_dp)/=n.OR.SIZE(cu_sh)/=n.OR. &
+       SIZE(qc_cu)/=n.OR.SIZE(qi_cu)/=n.OR.SIZE(dry_mass)/=n.OR. &
+       ANY(SHAPE(grid_path)/=[n,2]).OR.ANY(SHAPE(incloud_path)/=[n,2]).OR. &
+       ANY(SHAPE(rejected_grid_path)/=[n,2]).OR.ANY(SHAPE(omitted_grid_path)/=[n,2])) THEN
+      reason=RRTMGP_INPUT_SHAPE
+      CALL fatal_builder_message('RRTMGP_INPUT_CU_SHAPE_MISMATCH',column_context)
+      RETURN
+    END IF
+    grid_path=0.; incloud_path=0.; rejected_grid_path=0.; omitted_grid_path=0.
+    DO k=1,n
+      IF(.NOT.ieee_is_finite(combined_cf(k)).OR..NOT.ieee_is_finite(cu_cf(k)).OR. &
+         .NOT.ieee_is_finite(cu_dp(k)).OR..NOT.ieee_is_finite(cu_sh(k))) THEN
+        CALL fail_builder_layer(reason,RRTMGP_INPUT_INVALID,'RRTMGP_INPUT_CU_CF_NOT_FINITE',k,column_context)
+        RETURN
+      END IF
+      IF(combined_cf(k)<0..OR.combined_cf(k)>1..OR.cu_cf(k)<0..OR.cu_cf(k)>1..OR. &
+         cu_dp(k)<0..OR.cu_dp(k)>1..OR.cu_sh(k)<0..OR.cu_sh(k)>1.) THEN
+        CALL fail_builder_layer(reason,RRTMGP_INPUT_RANGE,'RRTMGP_INPUT_CU_CF_OUT_OF_RANGE',k,column_context)
+        RETURN
+      END IF
+      IF(cu_cf(k)/=cu_dp(k)+cu_sh(k)) THEN
+        CALL fail_builder_layer(reason,RRTMGP_INPUT_INVALID,'RRTMGP_INPUT_CU_CF_SUM_MISMATCH',k,column_context)
+        RETURN
+      END IF
+      IF(combined_cf(k)==0..AND.cu_cf(k)>0.) THEN
+        CALL fail_builder_layer(reason,RRTMGP_INPUT_INVALID,'RRTMGP_INPUT_CU_CF_ZERO_COMBINED',k,column_context)
+        RETURN
+      END IF
+      IF(combined_cf(k)<cu_cf(k)) THEN
+        CALL fail_builder_layer(reason,RRTMGP_INPUT_INVALID,'RRTMGP_INPUT_CU_CF_EXCEEDS_COMBINED',k,column_context)
+        RETURN
+      END IF
+      IF(.NOT.ieee_is_finite(dry_mass(k)).OR.dry_mass(k)<=0.) THEN
+        CALL fail_builder_layer(reason,RRTMGP_INPUT_INVALID,'RRTMGP_INPUT_CU_DRY_MASS_NOT_POSITIVE_FINITE',k,column_context)
+        RETURN
+      END IF
+      q=[qc_cu(k),qi_cu(k)]
+      IF(ANY(.NOT.ieee_is_finite(q))) THEN
+        CALL fail_builder_layer(reason,RRTMGP_INPUT_INVALID,'RRTMGP_INPUT_CU_Q_NOT_FINITE',k,column_context)
+        RETURN
+      END IF
+      mass64=REAL(dry_mass(k),real64)*1000._real64*REAL(cu_cf(k),real64)
+      DO p=1,2
+        path64=MAX(0._real64,REAL(q(p),real64))*mass64
+        rejected64=MAX(0._real64,-REAL(q(p),real64))*mass64
+        IF(.NOT.ieee_is_finite(path64).OR..NOT.ieee_is_finite(rejected64).OR. &
+           path64>REAL(HUGE(0.),real64).OR.rejected64>REAL(HUGE(0.),real64)) THEN
+          CALL fail_builder_layer(reason,RRTMGP_INPUT_OVERFLOW,'RRTMGP_INPUT_CU_PATH_OVERFLOW',k,column_context)
+          RETURN
+        END IF
+        grid_path(k,p)=REAL(path64); rejected_grid_path(k,p)=REAL(rejected64)
+        IF(combined_cf(k)>0.) THEN
+          incloud64=path64/REAL(combined_cf(k),real64)
+          IF(.NOT.ieee_is_finite(incloud64).OR.incloud64>REAL(HUGE(0.),real64)) THEN
+            CALL fail_builder_layer(reason,RRTMGP_INPUT_OVERFLOW,'RRTMGP_INPUT_CU_PATH_OVERFLOW',k,column_context)
+            RETURN
+          END IF
+          incloud_path(k,p)=REAL(incloud64)
+        ELSE
+          omitted_grid_path(k,p)=REAL(path64)
+        END IF
+      END DO
+    END DO
+  END SUBROUTINE rrtmgp_build_cu_inputs
+
+  PURE SUBROUTINE rrtmgp_summarize_cu_filter(qc_cu,qi_cu,cu_cf,grid_path,rejected_grid_path, &
+                                           negative_source_count,negative_active_count, &
+                                           rejected_sum,rejected_max,accepted_sum)
+    REAL, INTENT(IN) :: qc_cu(:),qi_cu(:),cu_cf(:),grid_path(:,:),rejected_grid_path(:,:)
+    INTEGER(int64), INTENT(OUT) :: negative_source_count(2),negative_active_count(2)
+    REAL(real64), INTENT(OUT) :: rejected_sum(2),rejected_max(2),accepted_sum(2)
+    INTEGER :: p,k
+    REAL :: q(2)
+    negative_source_count=0_int64; negative_active_count=0_int64
+    rejected_sum=0._real64; rejected_max=0._real64; accepted_sum=0._real64
+    DO k=1,SIZE(cu_cf)
+      q=[qc_cu(k),qi_cu(k)]
+      DO p=1,2
+        IF(q(p)<0.) negative_source_count(p)=negative_source_count(p)+1_int64
+        IF(q(p)<0..AND.cu_cf(k)>0.) negative_active_count(p)=negative_active_count(p)+1_int64
+        rejected_sum(p)=rejected_sum(p)+REAL(rejected_grid_path(k,p),real64)
+        rejected_max(p)=MAX(rejected_max(p),REAL(rejected_grid_path(k,p),real64))
+        accepted_sum(p)=accepted_sum(p)+REAL(grid_path(k,p),real64)
+      END DO
+    END DO
+  END SUBROUTINE rrtmgp_summarize_cu_filter
 
   ! Summarize LUT-clipped portions of a column without changing paths or
   ! coordinates. The caller supplies grid-mean paths in g/m2 and coordinates
