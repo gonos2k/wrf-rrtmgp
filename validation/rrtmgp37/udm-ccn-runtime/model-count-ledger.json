@@ -1,0 +1,363 @@
+{
+  "candidate_count": 8,
+  "candidate_receipt_paths": [
+    "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-ccn-current-runtime-v1/cases/stage-v3/ra37-omp1/execution.json",
+    "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-ccn-current-runtime-v1/cases/stage-v3/ra37-omp2-probe/execution.json",
+    "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-ccn-current-runtime-v1/cases/stage-v3/ra37-omp2/execution.json",
+    "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-ccn-current-runtime-v1/cases/stage-v3/ra4-omp1/execution.json",
+    "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-ccn-restart-runtime-v1/cases-v1/continuous-omp2/execution.json",
+    "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-ccn-restart-runtime-v1/cases-v1/restart-omp1/execution.json",
+    "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-ccn-restart-runtime-v1/cases-v1/restart-omp2/execution.json",
+    "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-ccn-winter24h-v1/execution.json"
+  ],
+  "candidate_subset_of_primary": true,
+  "earlier_source47_models": [
+    {
+      "actual_model_invocations": 1,
+      "arm": "ra4-24h-v1",
+      "before_after_pins_passed": true,
+      "model": {
+        "cleared_inherited_env_names": [
+          "OMP_NUM_THREADS"
+        ],
+        "command": [
+          "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/mpich-sock/bin/mpiexec.hydra",
+          "-launcher",
+          "fork",
+          "-iface",
+          "lo",
+          "-n",
+          "4",
+          "./wrf.exe"
+        ],
+        "elapsed_seconds": 147.4286347012967,
+        "ended_utc": "2026-10-03T13:18:12.691663+00:00",
+        "model_completed": true,
+        "rank_logs": [
+          {
+            "fatal": false,
+            "file": {
+              "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-seaice-winter-validation-v3/ra4-24h-v1/case/rsl.error.0000",
+              "sha256": "2b4b8548a8cb38e2944633b1f75607654bb2b9cf5195a7d1f692a2f82d70719c",
+              "size_bytes": 128025
+            },
+            "success": true
+          },
+          {
+            "fatal": false,
+            "file": {
+              "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-seaice-winter-validation-v3/ra4-24h-v1/case/rsl.error.0001",
+              "sha256": "667167deeddb661631e6ded164cbbb227a96fea73a689c297da7e57a2f29839a",
+              "size_bytes": 2557
+            },
+            "success": true
+          },
+          {
+            "fatal": false,
+            "file": {
+              "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-seaice-winter-validation-v3/ra4-24h-v1/case/rsl.error.0002",
+              "sha256": "cc0b3df58f6a817724677e4492e4d457387a73f56fd638d03a6fe8d7d796f219",
+              "size_bytes": 2557
+            },
+            "success": true
+          },
+          {
+            "fatal": false,
+            "file": {
+              "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-seaice-winter-validation-v3/ra4-24h-v1/case/rsl.error.0003",
+              "sha256": "562780dd618f7fc515de0368398ee163dad68f0569a571ef829ce909f9497562",
+              "size_bytes": 2557
+            },
+            "success": true
+          }
+        ],
+        "returncode": 0,
+        "stack_limit_soft_hard_bytes": [
+          536870912,
+          536870912
+        ],
+        "started_utc": "2026-10-03T13:15:45.262172+00:00",
+        "stdout": {
+          "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-seaice-winter-validation-v3/ra4-24h-v1/case/runner.stdout.log",
+          "sha256": "9500367e0d5ff6f2be217c996c4abb2609a784ee4f122beab80dfcf50d6061e4",
+          "size_bytes": 196
+        },
+        "timed_out": false,
+        "timeout_seconds": 1200
+      },
+      "receipt": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-seaice-winter-validation-v3/ra4-24h-v1/execution-receipt-v1.json",
+        "sha256": "4073ad6101c06b0f81ac9e2dd4f2dd94b095dac642a79e1e1fab49133bfa8647",
+        "size_bytes": 1978422
+      },
+      "status": "PASS_RA4_24H",
+      "strict_outputs_passed": true
+    },
+    {
+      "actual_model_invocations": 1,
+      "arm": "ra37-24h-v1",
+      "before_after_pins_passed": true,
+      "model": {
+        "cleared_inherited_env_names": [
+          "OMP_NUM_THREADS"
+        ],
+        "command": [
+          "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/mpich-sock/bin/mpiexec.hydra",
+          "-launcher",
+          "fork",
+          "-iface",
+          "lo",
+          "-n",
+          "4",
+          "./wrf.exe"
+        ],
+        "elapsed_seconds": 200.55296375602484,
+        "ended_utc": "2026-10-03T13:22:42.041261+00:00",
+        "model_completed": true,
+        "rank_logs": [
+          {
+            "fatal": false,
+            "file": {
+              "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-seaice-winter-validation-v3/ra37-24h-v1/case/rsl.error.0000",
+              "sha256": "9b4993ca28165bc40a42acdd4d5ec66c4c7bcac168f17251cc20d4364d7241aa",
+              "size_bytes": 793715
+            },
+            "success": true
+          },
+          {
+            "fatal": false,
+            "file": {
+              "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-seaice-winter-validation-v3/ra37-24h-v1/case/rsl.error.0001",
+              "sha256": "2f1a63326ee590b3da4466440a26a7fa0f0cbdbb6e3db54e71d21cad1154e283",
+              "size_bytes": 675303
+            },
+            "success": true
+          },
+          {
+            "fatal": false,
+            "file": {
+              "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-seaice-winter-validation-v3/ra37-24h-v1/case/rsl.error.0002",
+              "sha256": "a02588c30e0d52e20169a6f7f7104d03d7b4b62d49bac6f64714f29e904a3fda",
+              "size_bytes": 618163
+            },
+            "success": true
+          },
+          {
+            "fatal": false,
+            "file": {
+              "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-seaice-winter-validation-v3/ra37-24h-v1/case/rsl.error.0003",
+              "sha256": "114ca199ad19ea5ce9135933ae6ee64245cc659c25f7f63183a58e77b40bd701",
+              "size_bytes": 709444
+            },
+            "success": true
+          }
+        ],
+        "returncode": 0,
+        "stack_limit_soft_hard_bytes": [
+          536870912,
+          536870912
+        ],
+        "started_utc": "2026-10-03T13:19:21.487144+00:00",
+        "stdout": {
+          "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-seaice-winter-validation-v3/ra37-24h-v1/case/runner.stdout.log",
+          "sha256": "8f564da3beef568b7f118385a8ec97169939b63742582512eff04435afd05b59",
+          "size_bytes": 196
+        },
+        "timed_out": false,
+        "timeout_seconds": 1200
+      },
+      "receipt": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-seaice-winter-validation-v3/ra37-24h-v1/execution-receipt-v1.json",
+        "sha256": "150313d70a2a9e3274aed66703e671a22b40338cb5439bb32fb4770324eeabef",
+        "size_bytes": 1982111
+      },
+      "status": "PASS_RA37_24H",
+      "strict_outputs_passed": true
+    },
+    {
+      "actual_model_invocations": 1,
+      "arm": "ra4-own12-to13h-v1",
+      "before_after_pins_passed": true,
+      "model": {
+        "cleared_inherited_env_names": [
+          "OMP_NUM_THREADS"
+        ],
+        "command": [
+          "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/mpich-sock/bin/mpiexec.hydra",
+          "-launcher",
+          "fork",
+          "-iface",
+          "lo",
+          "-n",
+          "4",
+          "./wrf.exe"
+        ],
+        "elapsed_seconds": 10.03971966356039,
+        "ended_utc": "2026-10-03T13:21:45.902073+00:00",
+        "model_completed": true,
+        "rank_logs": [
+          {
+            "fatal": false,
+            "file": {
+              "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-seaice-winter-validation-v3/ra4-own12-to13h-v1/case/rsl.error.0000",
+              "sha256": "966e2237b9caff352cb9106d870d575cb5c1965270782eaf0ef26cf19caa2380",
+              "size_bytes": 9265
+            },
+            "success": true
+          },
+          {
+            "fatal": false,
+            "file": {
+              "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-seaice-winter-validation-v3/ra4-own12-to13h-v1/case/rsl.error.0001",
+              "sha256": "048c35ce3b36244a2f9c91dba66752448dd22501617d0a010205fa46c9bc1190",
+              "size_bytes": 2899
+            },
+            "success": true
+          },
+          {
+            "fatal": false,
+            "file": {
+              "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-seaice-winter-validation-v3/ra4-own12-to13h-v1/case/rsl.error.0002",
+              "sha256": "15d5f536531ce850e33db7ed8c0257c77076b7e2450d497f6336b2d8a5db0956",
+              "size_bytes": 2899
+            },
+            "success": true
+          },
+          {
+            "fatal": false,
+            "file": {
+              "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-seaice-winter-validation-v3/ra4-own12-to13h-v1/case/rsl.error.0003",
+              "sha256": "7483fdea0ae29087d6168eb1f275a3e4474f98f9f1af2505caac4c68d0ee9d5f",
+              "size_bytes": 2899
+            },
+            "success": true
+          }
+        ],
+        "returncode": 0,
+        "stack_limit_soft_hard_bytes": [
+          536870912,
+          536870912
+        ],
+        "started_utc": "2026-10-03T13:21:35.861482+00:00",
+        "stdout": {
+          "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-seaice-winter-validation-v3/ra4-own12-to13h-v1/case/runner.stdout.log",
+          "sha256": "8f564da3beef568b7f118385a8ec97169939b63742582512eff04435afd05b59",
+          "size_bytes": 196
+        },
+        "timed_out": false,
+        "timeout_seconds": 1200
+      },
+      "receipt": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-seaice-winter-validation-v3/ra4-own12-to13h-v1/restart-execution-v1.json",
+        "sha256": "234a2d0950970c4b9455923068749d7fb0c9bce25014cf87e7df382a5461fa58",
+        "size_bytes": 883203
+      },
+      "status": "PASS_RA4_OWN_RESTART13H",
+      "strict_outputs_passed": true
+    },
+    {
+      "actual_model_invocations": 1,
+      "arm": "ra37-own12-to13h-v1",
+      "before_after_pins_passed": true,
+      "model": {
+        "cleared_inherited_env_names": [
+          "OMP_NUM_THREADS"
+        ],
+        "command": [
+          "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/mpich-sock/bin/mpiexec.hydra",
+          "-launcher",
+          "fork",
+          "-iface",
+          "lo",
+          "-n",
+          "4",
+          "./wrf.exe"
+        ],
+        "elapsed_seconds": 11.06450092792511,
+        "ended_utc": "2026-10-03T13:24:45.503107+00:00",
+        "model_completed": true,
+        "rank_logs": [
+          {
+            "fatal": false,
+            "file": {
+              "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-seaice-winter-validation-v3/ra37-own12-to13h-v1/case/rsl.error.0000",
+              "sha256": "3a8967ae8664baffb80838fc581033860055c57c840ed4b1d635901b99d6db29",
+              "size_bytes": 28277
+            },
+            "success": true
+          },
+          {
+            "fatal": false,
+            "file": {
+              "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-seaice-winter-validation-v3/ra37-own12-to13h-v1/case/rsl.error.0001",
+              "sha256": "109c3b34888c5ee579ba65b5664b692b61dca3e87ce39593a03a8f6ae59ff42f",
+              "size_bytes": 22697
+            },
+            "success": true
+          },
+          {
+            "fatal": false,
+            "file": {
+              "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-seaice-winter-validation-v3/ra37-own12-to13h-v1/case/rsl.error.0002",
+              "sha256": "b262aea7bab4c3a5a34f02e3f672ac498ac7223df087b6dec24d0613c50372cf",
+              "size_bytes": 20556
+            },
+            "success": true
+          },
+          {
+            "fatal": false,
+            "file": {
+              "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-seaice-winter-validation-v3/ra37-own12-to13h-v1/case/rsl.error.0003",
+              "sha256": "fdf1b1f677d0ccf73f31788a9be0d9f178a34ff9d5e3340841eb92ddc85a2f9f",
+              "size_bytes": 23673
+            },
+            "success": true
+          }
+        ],
+        "returncode": 0,
+        "stack_limit_soft_hard_bytes": [
+          536870912,
+          536870912
+        ],
+        "started_utc": "2026-10-03T13:24:34.436483+00:00",
+        "stdout": {
+          "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-seaice-winter-validation-v3/ra37-own12-to13h-v1/case/runner.stdout.log",
+          "sha256": "8f564da3beef568b7f118385a8ec97169939b63742582512eff04435afd05b59",
+          "size_bytes": 196
+        },
+        "timed_out": false,
+        "timeout_seconds": 1200
+      },
+      "receipt": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-seaice-winter-validation-v3/ra37-own12-to13h-v1/restart-execution-v1.json",
+        "sha256": "ed6b029155f55aea2f5b183b4aa53ef11c8f67f9c5d2242e0f7a9f10fb69537a",
+        "size_bytes": 895437
+      },
+      "status": "PASS_RA37_OWN_RESTART13H",
+      "strict_outputs_passed": true
+    }
+  ],
+  "prechange_and_reference_count": 13,
+  "primary_receipt_paths": [
+    "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pristine-current-omp-control-v2/omp1-execution.json",
+    "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pristine-current-omp-control-v2/omp2-execution.json",
+    "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-cu-current-omp-early-ra4-v1/cases/omp1/execution.json",
+    "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-cu-current-omp-early-ra4-v1/cases/omp2/execution.json",
+    "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-cu-current-omp-ra4-control-v1/cases/omp1/execution.json",
+    "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-cu-current-omp-ra4-control-v1/cases/omp2/execution.json",
+    "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-cu-current-omp-runtime-v2/cases/omp1/execution.json",
+    "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-cu-current-omp-runtime-v2/cases/omp2-probe/execution.json",
+    "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-cu-current-omp-runtime-v2/cases/omp2/execution.json",
+    "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-ccn-current-runtime-v1/cases/stage-v3/ra37-omp1/execution.json",
+    "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-ccn-current-runtime-v1/cases/stage-v3/ra37-omp2-probe/execution.json",
+    "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-ccn-current-runtime-v1/cases/stage-v3/ra37-omp2/execution.json",
+    "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-ccn-current-runtime-v1/cases/stage-v3/ra4-omp1/execution.json",
+    "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-ccn-restart-runtime-v1/cases-v1/continuous-omp2/execution.json",
+    "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-ccn-restart-runtime-v1/cases-v1/restart-omp1/execution.json",
+    "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-ccn-restart-runtime-v1/cases-v1/restart-omp2/execution.json",
+    "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-ccn-winter24h-v1/execution.json"
+  ],
+  "schema": "unique-model-receipt-count-v1",
+  "scope": "17 primary already includes8 candidate; add4 disjoint source47 winter/restart references. Never17+8.",
+  "unique_model_total": 21
+}

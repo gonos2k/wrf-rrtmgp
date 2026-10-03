@@ -1,0 +1,45 @@
+{
+  "schema": "udm37-ccn-tile-init-independent-design-review-v2",
+  "reviewed_tree": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-seaice-pr-work",
+  "head": "4394845667db52c258dab62719abc87402dd731f",
+  "tree_head_verified": true,
+  "source_sha256": {
+    "WRF/phys/module_microphysics_driver.F": "8f0fb0250aa9146224a07b6ce62744028a0f7e9f3816003850549ec3e11bf823",
+    "WRF/phys/module_mp_udm.F": "7564be3e5ad7b26ffc00c2680eb632745850baeac01529d48d6bc8393cb9e53d"
+  },
+  "scope": "Read-only design review of once-per-call QNN initialization for the UDM CF-enabled path; no edits, builds, tests, or model runs.",
+  "findings": [
+    {
+      "severity": "required_guard",
+      "source": "WRF/phys/module_microphysics_driver.F",
+      "lines": "839, 904-908, 2799-2821",
+      "finding": "Determine have_udm_cf before the OpenMP tile loop. The current shared LOGICAL is written/read inside the parallel loop; it is constant by call-level arguments but concurrent writes still constitute a race. Preserve the nested PRESENT and ASSOCIATED checks, including udm_cf_top."
+    },
+    {
+      "severity": "required_guard",
+      "source": "WRF/phys/module_microphysics_driver.F",
+      "lines": "2801-2807, 2905-2907",
+      "finding": "Only preinitialize when all existing mandatory UDM arguments are PRESENT and num_tiles>0. If arguments are absent, retain the current per-tile fatal path and do not mutate QNN beforehand."
+    },
+    {
+      "severity": "required_contract",
+      "source": "WRF/phys/module_mp_udm.F",
+      "lines": "317-328",
+      "finding": "Move only NN=CCN0 initialization. Preserve its itimestep==1 condition and exact whole-memory ranges ims:ime,kms:kme,jms:jme (including halo/storage cells). The UDM diagnostic reset of udm_cldfra, udm_cf_step, and udm_cf_top at lines 317-319 remains per tile/call."
+    },
+    {
+      "severity": "required_contract",
+      "source": "WRF/phys/module_microphysics_driver.F",
+      "lines": "2822-2863, 2865-2904",
+      "finding": "Pass an optional skip-reset signal only on the CF-enabled UDM call. Keep it absent/default-false on the legacy call, and append it to the end of UDM optional arguments to preserve existing positional callers."
+    },
+    {
+      "severity": "scope_limit",
+      "source": "WRF/phys/module_mp_udm.F",
+      "lines": "320-328",
+      "finding": "The change preserves existing itimestep==1 semantics; it does not establish whether WRF uses that value on restart. Do not claim restart initialization semantics without a restart test."
+    }
+  ],
+  "design_assessment": "Once-per-driver-call QNN preinitialization is sound for CF-enabled UDM if performed before the OpenMP region and guarded as specified. It avoids the current tile-level whole-array reset race while retaining legacy/no-CF behavior.",
+  "verification": "Line locations and source hashes recorded from the exact tree above. No compile or runtime validation performed."
+}

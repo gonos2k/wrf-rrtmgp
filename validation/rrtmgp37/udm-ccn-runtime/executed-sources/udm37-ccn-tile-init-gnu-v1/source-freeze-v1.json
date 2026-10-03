@@ -1,0 +1,269 @@
+{
+  "base_commit": "4394845667db52c258dab62719abc87402dd731f",
+  "build_environment": {
+    "LD_LIBRARY_PATH": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/netcdf/lib:/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/root/usr/lib/x86_64-linux-gnu:/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/mpich-sock/lib",
+    "NETCDF": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/netcdf",
+    "PATH": "/home/korea_keun/.local/bin:/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/mpich-sock/bin:/usr/bin:/bin"
+  },
+  "compile_or_model_started": false,
+  "configure_template": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-ccn-tile-init-gnu-v1/configure-template.wrf",
+    "sha256": "44f85b7fc9b6994cb3784567e69d310580740a021b5f1ab1efb0586f25cfcba2",
+    "size_bytes": 21191
+  },
+  "cpp_build_contract": {
+    "configure_markers": [
+      "-DDM_PARALLEL",
+      "-fopenmp",
+      "-DWRF_USE_CLM"
+    ],
+    "generated_sources": [
+      "WRF/phys/module_microphysics_driver.f90",
+      "WRF/phys/module_mp_udm.f90"
+    ],
+    "preprocessed_objects": [
+      "WRF/phys/module_microphysics_driver.o",
+      "WRF/phys/module_mp_udm.o"
+    ],
+    "symbol": "__module_mp_udm_MOD_udm"
+  },
+  "dependency_baseline": {
+    "file_count": 1582,
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-ccn-tile-init-gnu-v1/shared-dependencies-before-v1.json",
+    "sha256": "e49061863c79e836747d21559950b90e2f6d40b798dbbc8d08895d1cf4a87290"
+  },
+  "dependency_roots": [
+    "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/netcdf",
+    "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/mpich-sock",
+    "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/root/usr/lib/x86_64-linux-gnu"
+  ],
+  "donor_base_equivalence_pin": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-ccn-tile-init-gnu-v1/donor-base-equivalence-v1.json",
+    "sha256": "768fb078af8e3ce4f6ae61ef1e33a83a0fca7090f73197ec8c0c255ddfee9527",
+    "size_bytes": 1840145
+  },
+  "donor_prior_manifest_base": "8ab95cfa984235622687bf708f94385c2774ceac",
+  "donor_source_equivalence_claim": "PASS: all 6734 donor tracked files/symlinks match git base 439484; generated configure is separately pinned; 11 later-added validation-only paths omitted by the approved donor roster.",
+  "donor_source_manifest": {
+    "entry_count": 6735,
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-ccn-tile-init-gnu-v1/donor-source-manifest-v1.json",
+    "sha256": "560aa6b5c88f0b056ac26141d03921f0853f3e14cd8e7e463738cf95ef85c453",
+    "source_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-seaice-fresh-gnu-dm-sm-v1/source",
+    "symlink_count": 17
+  },
+  "expected_source_manifest": {
+    "entry_count": 6735,
+    "overlays": [
+      "WRF/phys/module_microphysics_driver.F",
+      "WRF/phys/module_mp_udm.F"
+    ],
+    "symlink_count": 17
+  },
+  "external_rte_object_baseline": [
+    {
+      "name": "mo_cloud_optics_rrtmgp.o",
+      "sha256": "903c3d58655e0c200d765519b1064f7405b88eb249f2268cb18fff33e9e2f3e6",
+      "size_bytes": 87536
+    },
+    {
+      "name": "mo_cloud_sampling.o",
+      "sha256": "79d7bc7cddbb736357622211ec064b4f4c67c9b761954341c68dbff8d9bcb7c5",
+      "size_bytes": 36072
+    },
+    {
+      "name": "mo_fluxes.o",
+      "sha256": "7fc2df51ef1336a72b2b5d1688dd16beee4b5744d62dfe7b731e54bdd3418e68",
+      "size_bytes": 18224
+    },
+    {
+      "name": "mo_fluxes_broadband_kernels.o",
+      "sha256": "476a9146d85dc509d868521b350d61a6cdd97cd9b4c30d256a2dc7ee480326ce",
+      "size_bytes": 5336
+    },
+    {
+      "name": "mo_fluxes_byband.o",
+      "sha256": "4232e57687bba7ef387ca6911f11295f3a2c7db46cfd06fa367ba3eb5cdd6a81",
+      "size_bytes": 26016
+    },
+    {
+      "name": "mo_gas_concentrations.o",
+      "sha256": "bb468719d93f16660307caabcbac3d77b3f5b87e8180123af38771e4380183ec",
+      "size_bytes": 42672
+    },
+    {
+      "name": "mo_gas_optics.o",
+      "sha256": "a61ae89ec57f4299e8532e20ca7918c646c360b0cb67ae285720743888f7e77c",
+      "size_bytes": 4064
+    },
+    {
+      "name": "mo_gas_optics_constants.o",
+      "sha256": "f18021f3d41abab1063c7d4a2a139c35d1add34d1c305de08ddde8bd0f78d4ed",
+      "size_bytes": 1552
+    },
+    {
+      "name": "mo_gas_optics_rrtmgp.o",
+      "sha256": "8f09d1459f9527d7630efb67e800f09ec4333ecff92b7904c0884634506e4ced",
+      "size_bytes": 176848
+    },
+    {
+      "name": "mo_gas_optics_rrtmgp_kernels.o",
+      "sha256": "75a6df4505577ddbf3aa49972796ca7ca00056c84de3b167621a35bc74408126",
+      "size_bytes": 38536
+    },
+    {
+      "name": "mo_gas_optics_util_string.o",
+      "sha256": "af957121e179e996f89be70512c7287a76defca0bb52cfc87baa336ff940bc23",
+      "size_bytes": 6448
+    },
+    {
+      "name": "mo_heating_rates.o",
+      "sha256": "46f18359a6407fa4be0e80b216b78a6421cd0408846ba095f269f8067a4a8cd8",
+      "size_bytes": 16216
+    },
+    {
+      "name": "mo_load_cloud_coefficients.o",
+      "sha256": "3e5c93a5f41b52e6446bf53bb3b83189cc5b5a999b170cd8ee6c4886cd3b6580",
+      "size_bytes": 17168
+    },
+    {
+      "name": "mo_load_coefficients.o",
+      "sha256": "df0e48ca70fc841f0592fd58080195fbb699cb649bc98e3fb0b0e9ed7077a5ad",
+      "size_bytes": 28312
+    },
+    {
+      "name": "mo_optical_props.o",
+      "sha256": "749d26298f3c69687ce04b9b55e7534b48499efeaad78660439657bd4db524e5",
+      "size_bytes": 105592
+    },
+    {
+      "name": "mo_optical_props_kernels.o",
+      "sha256": "42930e397e915aa92e9261d3a1c3e25a9bc05b805e1e659f4d0b98ffc6cf4af3",
+      "size_bytes": 32376
+    },
+    {
+      "name": "mo_rte_config.o",
+      "sha256": "8be6a4a5792a8a0f169af504e122ffc88e2f7efb4123dcb263a6cefa912e3b7b",
+      "size_bytes": 1568
+    },
+    {
+      "name": "mo_rte_kind.o",
+      "sha256": "f49f5539e8deadf2cd1684a36de5b108166aa2c8d315077e6589d96a5e91e4da",
+      "size_bytes": 824
+    },
+    {
+      "name": "mo_rte_lw.o",
+      "sha256": "826441517ffe57daa26c8da80e0bfd08f8bcdd86249e26870b66bc51df34d28d",
+      "size_bytes": 28952
+    },
+    {
+      "name": "mo_rte_solver_kernels.o",
+      "sha256": "e3ed7712dbc20ebd1e85fe000bf507e38f971088ea34ec82075813eddf2a8962",
+      "size_bytes": 105128
+    },
+    {
+      "name": "mo_rte_sw.o",
+      "sha256": "48728cc7edfd7276b0df836893471e814e78c60bf71786d23af1d72b41e3100c",
+      "size_bytes": 34136
+    },
+    {
+      "name": "mo_rte_util_array.o",
+      "sha256": "dced2eef7757016a49edf5c9f67179b5e3fd7c37d92ce2ec9a157df98bfd2dd3",
+      "size_bytes": 5120
+    },
+    {
+      "name": "mo_rte_util_array_validation.o",
+      "sha256": "2580427fa5783b48b82c73bf4a509b1f5657fbf1e6c2b3f065ae3e944c778d31",
+      "size_bytes": 22808
+    },
+    {
+      "name": "mo_simple_netcdf.o",
+      "sha256": "54da906f970896b8db001bf73a0dbb2a4ecc84d0593e15f2271070c697ea1d7e",
+      "size_bytes": 36360
+    },
+    {
+      "name": "mo_source_functions.o",
+      "sha256": "269abc320b168c05cadeaada14d55da3cc3dec8c754243ebd9ed197fa7a3e7d2",
+      "size_bytes": 29432
+    }
+  ],
+  "external_rte_object_names": [
+    "mo_cloud_optics_rrtmgp.o",
+    "mo_cloud_sampling.o",
+    "mo_fluxes.o",
+    "mo_fluxes_broadband_kernels.o",
+    "mo_fluxes_byband.o",
+    "mo_gas_concentrations.o",
+    "mo_gas_optics.o",
+    "mo_gas_optics_constants.o",
+    "mo_gas_optics_rrtmgp.o",
+    "mo_gas_optics_rrtmgp_kernels.o",
+    "mo_gas_optics_util_string.o",
+    "mo_heating_rates.o",
+    "mo_load_cloud_coefficients.o",
+    "mo_load_coefficients.o",
+    "mo_optical_props.o",
+    "mo_optical_props_kernels.o",
+    "mo_rte_config.o",
+    "mo_rte_kind.o",
+    "mo_rte_lw.o",
+    "mo_rte_solver_kernels.o",
+    "mo_rte_sw.o",
+    "mo_rte_util_array.o",
+    "mo_rte_util_array_validation.o",
+    "mo_simple_netcdf.o",
+    "mo_source_functions.o"
+  ],
+  "prior_build_pattern": {
+    "directory": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-seaice-fresh-gnu-dm-sm-v1",
+    "external_rte_object_count": 25,
+    "fresh_manifest_pin": "560aa6b5c88f0b056ac26141d03921f0853f3e14cd8e7e463738cf95ef85c453"
+  },
+  "root_freeze_pin": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-ccn-tile-init-root-freeze-v1.json",
+    "sha256": "58debad0e6b7642122b2739ac60c2490eaf94114d7d90822eba2832dd9968281",
+    "size_bytes": 1311
+  },
+  "root_production_freeze": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-ccn-tile-init-root-freeze-v1.json",
+    "sha256": "58debad0e6b7642122b2739ac60c2490eaf94114d7d90822eba2832dd9968281"
+  },
+  "schema": "udm37-ccn-gnu-dm-sm-source-freeze-v1",
+  "source_overlays": {
+    "WRF/phys/module_microphysics_driver.F": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-ccn-tile-init-work/WRF/phys/module_microphysics_driver.F",
+      "sha256": "8e8b7974bd7a67fcc632eb3e620cab306af295520b62b4db0c66d94414b704db",
+      "size_bytes": 194681
+    },
+    "WRF/phys/module_mp_udm.F": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-ccn-tile-init-work/WRF/phys/module_mp_udm.F",
+      "sha256": "872737fe3a0cebf941d3ee45056fb60aadf465f0f72d72d1a2c7abac6709351d",
+      "size_bytes": 192801
+    }
+  },
+  "source_worktree": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-ccn-tile-init-work",
+  "status": "PREPARE_ONLY_ROOT_REVIEW_PENDING",
+  "test_only_exclusions": {
+    "reason": "CMake and startup fixture are not compiler inputs for classic GNU ./compile em_real and are excluded from the 6735-entry source manifest.",
+    "tracked": [
+      "WRF/test/rrtmgp/CMakeLists.txt"
+    ],
+    "untracked": [
+      "WRF/test/rrtmgp/UDM_CCN_STARTUP.md",
+      "WRF/test/rrtmgp/ccn_startup_fixture.f90.in",
+      "WRF/test/rrtmgp/test_udm_ccn_startup.py"
+    ]
+  },
+  "toolchain_expected": {
+    "build_mode": "dm+sm GNU MPI + OpenMP",
+    "command": [
+      "csh",
+      "-f",
+      "./compile",
+      "-j",
+      "12",
+      "em_real"
+    ],
+    "gfortran": "13.3.0",
+    "mpiexec": "4.2.0"
+  }
+}

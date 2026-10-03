@@ -1,0 +1,165 @@
+! Harness template. Python injects literal control blocks from the current WRF source.
+module ccn_fixture_state
+  implicit none
+  integer, parameter :: ims=0,ime=5,kms=0,kme=2,jms=0,jme=3
+  integer, parameter :: ccn0=7, num_tiles=2
+  real, parameter :: ccn_conc=7.0
+  real :: qnn_curr(ims:ime,kms:kme,jms:jme)
+  real :: dummy3(ims:ime,kms:kme,jms:jme), dummy2(ims:ime,jms:jme)
+contains
+  subroutine driver_preloop_init(have_udm_cf,itimestep,qv_curr,qc_curr,qr_curr,qi_curr, &
+      qs_curr,qg_curr,qh_curr,qnn_curr,qnc_curr,qnr_curr,rainnc,rainncv)
+    logical,intent(in)::have_udm_cf
+    integer,intent(in)::itimestep
+    real,optional,intent(in)::qv_curr(ims:ime,kms:kme,jms:jme),qc_curr(ims:ime,kms:kme,jms:jme)
+    real,optional,intent(in)::qr_curr(ims:ime,kms:kme,jms:jme),qi_curr(ims:ime,kms:kme,jms:jme)
+    real,optional,intent(in)::qs_curr(ims:ime,kms:kme,jms:jme),qg_curr(ims:ime,kms:kme,jms:jme)
+    real,optional,intent(in)::qh_curr(ims:ime,kms:kme,jms:jme)
+    real,optional,intent(inout)::qnn_curr(ims:ime,kms:kme,jms:jme)
+    real,optional,intent(in)::qnc_curr(ims:ime,kms:kme,jms:jme),qnr_curr(ims:ime,kms:kme,jms:jme)
+    real,optional,intent(in)::rainnc(ims:ime,jms:jme),rainncv(ims:ime,jms:jme)
+    ! Actual option-37 full-memory initialization extracted from driver.
+@@DRIVER_INIT_BLOCK@@
+  end subroutine
+
+  subroutine udm_tile(its,ite,jts,jte,itimestep,nn,ccn_preinitialized)
+    integer,intent(in)::its,ite,jts,jte,itimestep
+    real,intent(inout)::nn(ims:ime,kms:kme,jms:jme)
+    logical,optional,intent(in)::ccn_preinitialized
+    logical::initialize_ccn
+    integer::i,k,j
+    ! Actual optional startup-reset block extracted from UDM.
+@@UDM_INIT_BLOCK@@
+    ! Minimal stand-in for per-tile ncr update/writeback; this is not UDM physics.
+    do j=jts,jte
+      do k=1,1
+        do i=its,ite
+          nn(i,k,j)=nn(i,k,j)+1.0
+        enddo
+      enddo
+    enddo
+  end subroutine
+
+  subroutine driver_all(have_udm_cf,itimestep)
+    logical,intent(in)::have_udm_cf
+    integer,intent(in)::itimestep
+    call driver_preloop_init(have_udm_cf,itimestep, &
+      qv_curr=dummy3,qc_curr=dummy3,qr_curr=dummy3,qi_curr=dummy3, &
+      qs_curr=dummy3,qg_curr=dummy3,qh_curr=dummy3,qnn_curr=qnn_curr, &
+      qnc_curr=dummy3,qnr_curr=dummy3,rainnc=dummy2,rainncv=dummy2)
+  end subroutine
+  subroutine driver_missing_one(have_udm_cf,itimestep)
+    logical,intent(in)::have_udm_cf
+    integer,intent(in)::itimestep
+    call driver_preloop_init(have_udm_cf,itimestep, &
+      qv_curr=dummy3,qc_curr=dummy3,qr_curr=dummy3,qi_curr=dummy3, &
+      qs_curr=dummy3,qg_curr=dummy3,qh_curr=dummy3,qnn_curr=qnn_curr, &
+      qnc_curr=dummy3,qnr_curr=dummy3,rainnc=dummy2)
+  end subroutine
+
+  subroutine update_tiles_parallel(itimestep,preinit_present,preinit)
+    integer,intent(in)::itimestep
+    logical,intent(in)::preinit_present,preinit
+    integer::tile
+    !$omp parallel do private(tile)
+    do tile=1,num_tiles
+      if(tile==1) then
+        if(preinit_present) then
+          call udm_tile(1,2,1,2,itimestep,qnn_curr,preinit)
+        else
+          call udm_tile(1,2,1,2,itimestep,qnn_curr)
+        endif
+      else
+        if(preinit_present) then
+          call udm_tile(3,4,1,2,itimestep,qnn_curr,preinit)
+        else
+          call udm_tile(3,4,1,2,itimestep,qnn_curr)
+        endif
+      endif
+    enddo
+    !$omp end parallel do
+  end subroutine
+
+  subroutine require_all(value,label)
+    real,intent(in)::value
+    character(*),intent(in)::label
+    if (any(qnn_curr/=value)) then
+      write(*,'(a,1x,a)') 'FAIL',label
+      error stop 1
+    endif
+    write(*,'(a,1x,a)') 'PASS',label
+  end subroutine
+  subroutine require_layout(interior,halo,label)
+    real,intent(in)::interior,halo
+    character(*),intent(in)::label
+    integer::i,k,j
+    do j=jms,jme
+      do k=kms,kme
+        do i=ims,ime
+          if(i>=1.and.i<=4.and.k==1.and.j>=1.and.j<=2) then
+            if(qnn_curr(i,k,j)/=interior) error stop 'interior value mismatch'
+          else
+            if(qnn_curr(i,k,j)/=halo) error stop 'halo/storage value mismatch'
+          endif
+        enddo
+      enddo
+    enddo
+    write(*,'(a,1x,a)') 'PASS',label
+  end subroutine
+  subroutine require_legacy_layout(tile1,tile2,label)
+    real,intent(in)::tile1,tile2
+    character(*),intent(in)::label
+    integer::i,k,j
+    do j=jms,jme
+      do k=kms,kme
+        do i=ims,ime
+          if(k==1.and.j>=1.and.j<=2.and.i>=1.and.i<=2) then
+            if(qnn_curr(i,k,j)/=tile1) error stop 'tile 1 legacy value mismatch'
+          else if(k==1.and.j>=1.and.j<=2.and.i>=3.and.i<=4) then
+            if(qnn_curr(i,k,j)/=tile2) error stop 'tile 2 legacy value mismatch'
+          else
+            if(qnn_curr(i,k,j)/=real(ccn0)) error stop 'legacy halo reset mismatch'
+          endif
+        enddo
+      enddo
+    enddo
+    write(*,'(a,1x,a)') 'PASS',label
+  end subroutine
+end module
+
+program ccn_startup_fixture
+  use ccn_fixture_state
+  implicit none
+  ! Driver's all-present optional bundle: initializes the complete backing array.
+  qnn_curr=-99.0
+  call driver_all(.true.,1)
+  call require_all(real(ccn0),'option37 initialized full storage including halos')
+  call update_tiles_parallel(1,.true.,.true.)
+  call require_layout(real(ccn0+1),real(ccn0),'option37 OMP updates preserve both tiles and halos')
+
+  ! First-step startup must not repeat at timestep 2.
+  call driver_all(.true.,2)
+  call update_tiles_parallel(2,.true.,.true.)
+  call require_layout(real(ccn0+2),real(ccn0),'timestep2 preserves and advances state')
+
+  ! Associated-CF false and optional skip flag absent preserve legacy reset semantics.
+  qnn_curr=-99.0
+  call driver_all(.false.,1)
+  call udm_tile(1,2,1,2,1,qnn_curr)
+  call udm_tile(3,4,1,2,1,qnn_curr)
+  call require_legacy_layout(real(ccn0),real(ccn0+1),'CF absent preserves legacy tile-order reset')
+
+  ! Counterfactual: initialized driver but omitted skip flag restores old overwrite.
+  qnn_curr=-99.0
+  call driver_all(.true.,1)
+  call udm_tile(1,2,1,2,1,qnn_curr)
+  call udm_tile(3,4,1,2,1,qnn_curr)
+  call require_legacy_layout(real(ccn0),real(ccn0+1),'skip flag omission preserves legacy overwrite')
+
+  ! If any required optional driver argument is absent, pre-loop initialization is skipped.
+  qnn_curr=-55.0
+  call driver_missing_one(.true.,1)
+  call require_all(-55.0,'missing optional driver argument leaves state untouched')
+  call udm_tile(1,2,1,2,1,qnn_curr)
+  call require_legacy_layout(real(ccn0+1),real(ccn0),'legacy UDM reset still initializes first tile')
+end program
