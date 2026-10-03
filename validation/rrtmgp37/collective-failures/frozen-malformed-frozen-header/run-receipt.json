@@ -1,0 +1,68 @@
+{
+  "case": "malformed-frozen-header",
+  "cleanup_actions": [],
+  "command": [
+    "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/mpich-sock/bin/mpiexec",
+    "-launcher",
+    "fork",
+    "-iface",
+    "lo",
+    "-n",
+    "2",
+    "./wrf.exe"
+  ],
+  "criteria": {
+    "expected_loader_error_and_abort_on_rank0": true,
+    "no_manual_cleanup_required": true,
+    "no_orphan_rank_after_run": true,
+    "nonzero_launcher_return": true,
+    "not_timed_out": true,
+    "two_rank_error_logs_present": true
+  },
+  "elapsed_seconds": 5.170685529708862,
+  "expected_error_substring": "NetCDF open:",
+  "launcher_log_sha256": "cec6a5fa239fa1072fc624d58e47818652921902b08558097c9324196def4e25",
+  "private_assets": {
+    "coefficients": {
+      "frozen-ice-psd-moments.nc": {
+        "bytes": 58617,
+        "sha256": "4957fd3498a67ecbd263bf115c1c86fc6af39a3c5616c3ec801e82354020fc53"
+      },
+      "rrtmgp-clouds-lw-bnd.nc": {
+        "bytes": 49919,
+        "sha256": "09d6704c5b863b4c3ceb417d20bb3076ec492e6bf2dfbcc9f3c5996a3706f0b0"
+      },
+      "rrtmgp-clouds-sw-bnd.nc": {
+        "bytes": 47659,
+        "sha256": "7671835992a45afe66244b591a02c0b3df73d7d59ecb746bbffd9763497651cd"
+      },
+      "rrtmgp-gas-lw-g128.nc": {
+        "bytes": 11679993,
+        "sha256": "70ad65d116531122660318e5da2a2af9db74b425916202860e9527ef2375b8f6"
+      },
+      "rrtmgp-gas-sw-g112.nc": {
+        "bytes": 5949944,
+        "sha256": "361ed541324068ded28a275a4dd757bcaa0a845aebefa630f43a04678668fe62"
+      }
+    },
+    "frozen_table_exists": true,
+    "frozen_table_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-sr-row-dm-sm/validation/collective-frozen-failures-v2/malformed-frozen-header/coefficients/frozen-ice-psd-moments.nc",
+    "frozen_table_sha256": "4957fd3498a67ecbd263bf115c1c86fc6af39a3c5616c3ec801e82354020fc53"
+  },
+  "rank_logs": {
+    "rsl.error.0000": {
+      "sha256": "b876a03e458ae579fff3d4f90bb5a5aeeedd7114fdbbfc20bc0d30f56806043e",
+      "tail": "taskid: 0 hostname: KIM-meso-gpu\n module_io_quilt_old.F        2931 F\nQuilting with   1 groups of   0 I/O tasks.\n Ntasks in X            1 , ntasks in Y            2\nDomain # 1: dx = 20000.000 m\n--- WARNING: RRTMGP37 UDM frozen graupel/hail optics are experimental homogeneous-ice sphere PSD diagnostics; no NOAA/RRTMGP parity is claimed.\nWRF V4.8.0 MODEL\nNo git found or not a git repository, git commit version not available.\n *************************************\n Parent domain\n ids,ide,jds,jde            1         290           1         190\n ims,ime,jms,jme           -4         295          -4         102\n ips,ipe,jps,jpe            1         290           1          95\n *************************************\nDYNAMICS OPTION: Eulerian Mass Coordinate\n alloc_space_field: domain            1 ,             984601020  bytes allocated\n RESTART run: opening wrfrst_d01_2010-06-11_12:00:00 for reading\n Input data is acceptable to use: wrfrst_d01_2010-06-11_12:00:00\nTiming for processing restart file for domain        1:    3.13596 elapsed seconds\nMax map factor in domain 1 =  1.05. Scale the dt in the model accordingly.\n D01: Time step                              =    60.0000000      (s)\n D01: Grid Distance                          =    20.0000000      (km)\n D01: Grid Distance Ratio dt/dx              =    3.00000000      (s/km)\n D01: Ratio Including Maximum Map Factor     =    3.14570165      (s/km)\n D01: NML defined reasonable_time_step_ratio =    6.00000000\n Climate GHG input from file from year         1765  to         2499\n CO2   range =    277.91300000000001        579.26400000000001       ppm\n N2O   range =    274.37200000000001        359.79800000000000       ppb\n CH4   range =    738.98599999999999        997.31100000000004       ppb\n CFC11 range =    0.0000000000000000        1.4000000000000000E-002  ppt\n CFC12 range =    0.0000000000000000        2.8809999999999998       ppt\n Normal ending of CAMtr_volume_mixing_ratio file\n GHG annual values from CAM trace gas file\n Year =         2010 , Julian day =          162\n CO2   =    3.8869696707214676E-004  volume mixing ratio\n N2O   =    3.2313387154840240E-007  volume mixing ratio\n CH4   =    1.8078036801808071E-006  volume mixing ratio\n CFC11 =    2.4046851024771327E-010  volume mixing ratio\n CFC12 =    5.3130249403256519E-010  volume mixing ratio\n-------------- FATAL CALLED ---------------\nRRTMGP: RRTMGP_FROZEN_TABLE: NetCDF open: NetCDF: Unknown file format\n-------------------------------------------\napplication called MPI_Abort(MPI_COMM_WORLD, 1) - process 0\n"
+    },
+    "rsl.error.0001": {
+      "sha256": "cc57087315de8e1a05c7bd58c7d604eb2cdad2c4324854e176447caeaa822234",
+      "tail": "taskid: 1 hostname: KIM-meso-gpu\n module_io_quilt_old.F        2931 F\nQuilting with   1 groups of   0 I/O tasks.\n Ntasks in X            1 , ntasks in Y            2\nDomain # 1: dx = 20000.000 m\n--- WARNING: RRTMGP37 UDM frozen graupel/hail optics are experimental homogeneous-ice sphere PSD diagnostics; no NOAA/RRTMGP parity is claimed.\nWRF V4.8.0 MODEL\nNo git found or not a git repository, git commit version not available.\n *************************************\n Parent domain\n ids,ide,jds,jde            1         290           1         190\n ims,ime,jms,jme           -4         295          89         195\n ips,ipe,jps,jpe            1         290          96         190\n *************************************\nDYNAMICS OPTION: Eulerian Mass Coordinate\n alloc_space_field: domain            1 ,             984601020  bytes allocated\n RESTART run: opening wrfrst_d01_2010-06-11_12:00:00 for reading\n Input data is acceptable to use:\nMax map factor in domain 1 =  1.05. Scale the dt in the model accordingly.\n D01: Time step                              =    60.0000000      (s)\n D01: Grid Distance                          =    20.0000000      (km)\n D01: Grid Distance Ratio dt/dx              =    3.00000000      (s/km)\n D01: Ratio Including Maximum Map Factor     =    3.14570165      (s/km)\n D01: NML defined reasonable_time_step_ratio =    6.00000000\n Normal ending of CAMtr_volume_mixing_ratio file\n GHG annual values from CAM trace gas file\n Year =         2010 , Julian day =          162\n CO2   =    3.8869696707214676E-004  volume mixing ratio\n N2O   =    3.2313387154840240E-007  volume mixing ratio\n CH4   =    1.8078036801808071E-006  volume mixing ratio\n CFC11 =    2.4046851024771327E-010  volume mixing ratio\n CFC12 =    5.3130249403256519E-010  volume mixing ratio\n"
+    }
+  },
+  "remaining_after_cleanup": [],
+  "remaining_before_cleanup": [],
+  "returncode": 1,
+  "status": "PASS",
+  "timed_out": false,
+  "timeout_seconds": 60
+}
