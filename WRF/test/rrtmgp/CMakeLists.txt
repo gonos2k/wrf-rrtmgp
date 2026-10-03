@@ -4,6 +4,8 @@ enable_testing()
 find_package(Python3 REQUIRED COMPONENTS Interpreter)
 get_filename_component(WRF_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/../.." ABSOLUTE)
 set(RRTMGP_DATA_DIR "${WRF_ROOT}/run" CACHE PATH "RRTMGP coefficient directory")
+add_test(NAME frozen_raw_replay_contract COMMAND "${Python3_EXECUTABLE}"
+  "${CMAKE_CURRENT_SOURCE_DIR}/test_frozen_raw_replay_contract.py")
 if(CMAKE_Fortran_COMPILER_ID STREQUAL "GNU")
   add_test(NAME rrtmgp_column_selection_contract COMMAND "${Python3_EXECUTABLE}"
     "${CMAKE_CURRENT_SOURCE_DIR}/test_column_selection.py" "${WRF_ROOT}")

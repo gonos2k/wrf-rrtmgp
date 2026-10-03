@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import argparse
-import hashlib
 import json
 import os
 import re
@@ -29,8 +28,6 @@ RAW_FIELDS = {"DP_HPA", "CF", "QC", "QI", "QS", "T", "QV", "REL", "REI", "RES",
 Q_NAMES = ("QC", "QI", "QS")
 SOURCE_NAMES = {"QC": "SOURCE_QC", "QI": "SOURCE_QI", "QS": "SOURCE_QS"}
 FLAG_NAMES = {"QC": "F_QC", "QI": "F_QI", "QS": "F_QS"}
-FROZEN_NAMES = {"GWP", "HWP", "LAMBDA_G", "LAMBDA_H", "FROZEN_MODE",
-                "FROZEN_OCCURRENCE", "FROZEN_TABLE_SHA256_BYTES"}
 
 
 class ReplayError(RuntimeError):
@@ -484,110 +481,6 @@ def corrected_hydrometeor(raw: dict[str, np.ndarray], q_name: str,
     return np.where(negative, 0.0, q)
 
 
-def frozen_input_policy(inp: dict[str, np.ndarray], nc: int, nl: int) -> str | None:
-    """Return the validated mode1 table digest; absent frozen records mean mode0."""
-    present = FROZEN_NAMES & inp.keys()
-    if not present:
-        return None
-    if present != FROZEN_NAMES:
-        fail("frozen inputs/metadata must be complete when present")
-    for name in ("GWP", "HWP", "LAMBDA_G", "LAMBDA_H"):
-        values = inp[name]
-        if values.shape != (nc, nl) or not np.isfinite(values).all():
-            fail(f"{name}: frozen input must be finite with shape (nc,nl)")
-        if name in {"GWP", "HWP"} and np.any(values < 0.0):
-            fail(f"{name}: frozen path must be nonnegative")
-        if name in {"LAMBDA_G", "LAMBDA_H"} and np.any(values <= 0.0):
-            fail(f"{name}: frozen slope must be positive")
-    for name in ("FROZEN_MODE", "FROZEN_OCCURRENCE"):
-        values = inp[name]
-        if values.shape != (1, 1) or not np.isfinite(values).all() or values.item() != 1.0:
-            fail(f"{name}: frozen policy must be scalar one")
-    hash_bytes = inp["FROZEN_TABLE_SHA256_BYTES"]
-    if hash_bytes.shape != (64, 1) or not np.isfinite(hash_bytes).all() or \
-            np.any(hash_bytes != np.floor(hash_bytes)):
-        fail("frozen table SHA bytes must be integer lowercase-hex ASCII with shape (64,1)")
-    if np.any(~np.isin(hash_bytes, [ord(char) for char in "0123456789abcdef"])):
-        fail("frozen table SHA bytes must be lowercase hexadecimal")
-    return "".join(chr(int(value)) for value in hash_bytes[:, 0])
-
-
-def verify_frozen_table(inp: dict[str, np.ndarray], nc: int, nl: int,
-                        case_dir: Path) -> None:
-    digest = frozen_input_policy(inp, nc, nl)
-    if digest is None:
-        return
-    table_name = os.environ.get("WRF_RRTMGP_FROZEN_TABLE")
-    if not table_name:
-        fail("mode1 replay requires WRF_RRTMGP_FROZEN_TABLE for table identity")
-    table = Path(table_name)
-    if not table.is_absolute():
-        table = case_dir / table
-    if not table.is_file() or hashlib.sha256(table.read_bytes()).hexdigest() != digest:
-        fail("mode1 replay frozen table identity differs from captured SHA256")
-
-
-def compare_frozen_paths(phase: str, raw: dict[str, np.ndarray],
-                         inp: dict[str, np.ndarray], raw_nl: int,
-                         adapter_nl: int) -> dict[str, float]:
-    """Check native G/H mass under the recorded mode, including numerical corrections."""
-    frozen = frozen_input_policy(inp, 1, adapter_nl) is not None
-    lambda_names = {"FROZEN_LAMBDA_G_M-1", "FROZEN_LAMBDA_H_M-1"}
-    present_lambda = lambda_names & raw.keys()
-    if present_lambda and not frozen:
-        fail(f"{phase}: raw frozen slopes require complete mode1 input metadata")
-    if not frozen and "NEGATIVE_Q_LIMITS" not in raw:
-        return {}  # Historical mode0 captures predate the six-phase raw contract.
-    dry_mass, _ = dry_layer_mass_kg_m2(raw, raw_nl, require_native=frozen)
-    differences: dict[str, float] = {}
-    if frozen:
-        native = inp.get("NATIVE_DRY_LAYER_MASS_KG_M2")
-        if native is None:
-            fail(f"{phase}: mode1 input requires native dry layer mass")
-        differences["NATIVE_DRY_LAYER_MASS_KG_M2"] = assert_close(
-            native, dry_mass[None, :], f"{phase}: frozen native dry mass", rtol=0., atol=0.)
-        if present_lambda and present_lambda != lambda_names:
-            fail(f"{phase}: raw frozen slope records must appear together")
-    for q_name, path_name, slope_name in (("QG", "GWP", "LAMBDA_G"),
-                                         ("QH", "HWP", "LAMBDA_H")):
-        if q_name not in raw:
-            fail(f"{phase}: six-phase mass contract omitted {q_name}")
-        q = corrected_hydrometeor(raw, q_name, path_name, raw_nl)
-        if not frozen and q_name == "QH" and np.any(q > 0.0):
-            fail(f"{phase}: positive hail must be refused before optical replay")
-        expected_grid = dry_mass * 1000.0 * q
-        zero = np.zeros_like(expected_grid)
-        for suffix, expected in (("GRID", expected_grid),
-                                 ("OMITTED", zero if frozen else expected_grid),
-                                 ("RADIATION", expected_grid if frozen else zero)):
-            name = f"{path_name}_{suffix}"
-            if name not in raw:
-                fail(f"{phase}: six-phase mass contract omitted {name}")
-            exact_zero = frozen and suffix == "OMITTED"
-            differences[name] = assert_close(raw[name], expected,
-                f"{phase}: {name} mode{int(frozen)} mass contract",
-                rtol=0. if exact_zero else 1.e-6, atol=0. if exact_zero else 1.e-12)
-        if frozen:
-            differences[f"{path_name}_grid_to_radiation"] = assert_close(
-                raw[path_name+"_RADIATION"], raw[path_name+"_GRID"],
-                f"{phase}: mode1 {path_name} radiation preserves grid path", rtol=0., atol=0.)
-            differences[path_name] = assert_close(inp[path_name][0, :raw_nl], expected_grid,
-                f"{phase}: adapter {path_name} mode1 native mass", rtol=1.e-6, atol=1.e-12)
-            differences[f"{path_name}_radiation_to_adapter"] = assert_close(
-                inp[path_name][0, :raw_nl], raw[path_name+"_RADIATION"],
-                f"{phase}: mode1 adapter {path_name} preserves radiation path", rtol=0., atol=0.)
-            differences[f"{path_name}_padded"] = assert_close(
-                inp[path_name][0, raw_nl:], np.zeros(adapter_nl-raw_nl),
-                f"{phase}: padded {path_name} must be zero", rtol=0., atol=0.)
-            raw_slope = f"FROZEN_{slope_name}_M-1"
-            if raw_slope in raw:
-                if np.any(raw[raw_slope] <= 0.0):
-                    fail(f"{phase}: {raw_slope} must be positive")
-                differences[slope_name] = assert_close(inp[slope_name][0, :raw_nl], raw[raw_slope],
-                    f"{phase}: adapter {slope_name} vs raw frozen slope", rtol=0., atol=0.)
-    return differences
-
-
 def compare_input_to_raw(phase: str, raw: dict[str, np.ndarray],
                          inp: dict[str, np.ndarray], raw_nl: int) -> dict[str, Any]:
     required = {"PLAY", "PLEV", "TLAY", "TLEV", "H2O", "CF", "LWP", "IWP", "SWP", "REL", "REI", "RES"}
@@ -661,7 +554,24 @@ def compare_input_to_raw(phase: str, raw: dict[str, np.ndarray],
             "total_grid_box_mass_g_m2_across_snapshot_layers": float(grid_path[excluded].sum()),
             "max_grid_box_mass_g_m2_per_layer": float(grid_path[excluded].max(initial=0.0)),
         }
-    path_differences.update(compare_frozen_paths(phase, raw, inp, raw_nl, adapter_nl))
+    # The six-phase contract includes diagnostic-only graupel and refused
+    # positive hail. Validate their preserved corrections too, even though no
+    # optical input is replayed for these phases.
+    if "NEGATIVE_Q_LIMITS" in raw:
+        for q_name, path_name in (("QG", "GWP"), ("QH", "HWP")):
+            if q_name not in raw:
+                fail(f"{phase}: new six-phase correction contract omitted {q_name}")
+            q = corrected_hydrometeor(raw, q_name, path_name, raw_nl)
+            if q_name == "QH" and np.any(q > 0.0):
+                fail(f"{phase}: positive hail must be refused before optical replay")
+            expected_grid = dry_mass * 1000.0 * q
+            for suffix, expected in (("GRID", expected_grid), ("OMITTED", expected_grid),
+                                     ("RADIATION", np.zeros_like(expected_grid))):
+                name = f"{path_name}_{suffix}"
+                if name not in raw:
+                    fail(f"{phase}: new six-phase correction contract omitted {name}")
+                path_differences[name] = assert_close(raw[name], expected,
+                    f"{phase}: {name} diagnostic-only mass contract", rtol=1.e-6, atol=1.e-12)
     radius_differences = {
         name: assert_close(inp[name][0, :raw_nl], raw[source][:raw_nl],
                            f"{phase}: {name} vs raw {source}", rtol=0.0, atol=0.0)
@@ -981,7 +891,6 @@ def validate_capture(case_dir: Path, phase: str, mp_physics: int,
         fail(f"{phase}: captured MP_PHYSICS={captured_mp}, requested {mp_physics}")
     if nc != 1 or nl < raw_nl:
         fail(f"{phase}: expected one captured WRF column and adapter nl>={raw_nl}; got {nc}x{nl}")
-    verify_frozen_table(adapter, nc, nl, case_dir)
     adapter_checks = compare_input_to_raw(phase, raw, adapter, raw_nl)
     mapping = check_microphysics_mapping(mp_physics, raw, adapter, phase, raw_nl)
     ref_output = capture / f"{phase.lower()}.reference.result"
