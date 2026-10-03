@@ -1,0 +1,100 @@
+--- a/reference_column_sensitivity.f90
++++ b/reference_column_seed_override.f90
+@@ -21,19 +21,19 @@
+                                     frozen_table_sha256, FROZEN_GRAUPEL, FROZEN_HAIL
+   IMPLICIT NONE
+ 
+-  CHARACTER(LEN=512) :: data_dir,input_path,output_path,override_path,sensitivity_file
++  CHARACTER(LEN=512) :: data_dir,input_path,output_path,override_path,sensitivity_file,sample_seed_arg
+   CHARACTER(LEN=32) :: sensitivity_mode
+   CHARACTER(LEN=1024) :: frozen_table_env,frozen_message
+   CHARACTER(LEN=64) :: frozen_sha_recorded,frozen_sha_raw
+   CHARACTER(LEN=32) :: magic,phase,policy_arg,next_section
+-  INTEGER :: nc,nl,overlap,seed,iceflag,u_in,u_out,ios,nemis,sw_policy,sensitivity_i,sensitivity_j
++  INTEGER :: nc,nl,overlap,seed,sample_seed,iceflag,u_in,u_out,ios,nemis,sw_policy,sensitivity_i,sensitivity_j
+   INTEGER :: c,k,g,b,i,ngpt,nbnd,n_native,frozen_status,env_status
+   INTEGER :: override_ncol,override_nlay,override_nband,override_unit,override_ios,sensitivity_unit
+   REAL(wp) :: solar,roughness_value,partition_value,precip_mode,visible_weight
+   REAL(wp) :: raw_direct_tau,scaled_direct_tau,expected_raw_direct_tau,cumulative_raw_tau,cumulative_scaled_tau
+   REAL(wp) :: frozen_mode_value,frozen_occurrence
+   REAL(wp) :: metadata_gravity,metadata_cp_dry,metadata_mol_weight_dry
+-  LOGICAL :: use_precip,has_native_mass,frozen_enabled,sw_direct_enabled
++  LOGICAL :: use_precip,has_native_mass,frozen_enabled,sw_direct_enabled,seed_override_active
+   INTEGER :: ice_roughness
+   REAL(wp), ALLOCATABLE :: play(:,:),plev(:,:),tlay(:,:),tlev(:,:),tsfc(:,:)
+   REAL(wp), ALLOCATABLE :: h2o(:,:),co2(:,:),o3(:,:),n2o(:,:),ch4(:,:),o2(:,:)
+@@ -106,6 +106,9 @@
+   CALL get_command_argument(5,override_path)
+   sensitivity_file=''
+   CALL get_command_argument(6,sensitivity_file)
++  sample_seed_arg=''
++  CALL get_command_argument(7,sample_seed_arg)
++  seed_override_active=LEN_TRIM(sample_seed_arg)>0
+   sensitivity_mode='BASELINE'
+   IF(LEN_TRIM(data_dir)==0 .OR. LEN_TRIM(input_path)==0 .OR. LEN_TRIM(output_path)==0) &
+     ERROR STOP 'usage: reference_column DATA_DIR INPUT_FILE OUTPUT_FILE [SW_POLICY 1|2|3] [SW_OPTICS_OVERRIDE_FILE]'
+@@ -126,9 +129,19 @@
+     ERROR STOP 'invalid replay input magic'
+   READ(u_in,*,IOSTAT=ios) phase,nc,nl,overlap,seed,iceflag
+   IF(ios/=0 .OR. (TRIM(phase)/='LW' .AND. TRIM(phase)/='SW')) ERROR STOP 'invalid replay header'
++  sample_seed=seed
++  IF(seed_override_active) THEN
++    READ(sample_seed_arg,*,IOSTAT=ios) sample_seed
++    IF(ios/=0.OR.sample_seed<1.OR.sample_seed>2147483647) &
++      ERROR STOP 'sample seed override must be an integer in 1..2147483647'
++  END IF
+   sw_direct_enabled=.FALSE.
+   IF(TRIM(magic)=='RRTMGP_REPLAY_V8'.AND.TRIM(phase)/='LW') ERROR STOP 'V8 is only valid for LW'
+   IF(TRIM(magic)=='RRTMGP_REPLAY_V9'.AND.TRIM(phase)/='SW') ERROR STOP 'V9 is only valid for SW'
++  IF(seed_override_active.AND.TRIM(phase)=='SW'.AND.TRIM(magic)/='RRTMGP_REPLAY_V9') &
++    ERROR STOP 'SW seed override requires V9 anchor input'
++  IF(seed_override_active.AND.TRIM(phase)=='LW'.AND.TRIM(magic)/='RRTMGP_REPLAY_V8') &
++    ERROR STOP 'LW seed override requires V8 anchor input'
+   IF(nc<1 .OR. nl<1) ERROR STOP 'replay dimensions must be positive'
+ 
+   ALLOCATE(play(nc,nl),plev(nc,nl+1),tlay(nc,nl),tlev(nc,nl+1),tsfc(nc,1))
+@@ -702,7 +715,12 @@
+     cloud_tau=lw_cloud%tau
+     ALLOCATE(prepared_tau(nc,nl,cloud_lw%get_nband()))
+     prepared_tau=lw_cloud%tau
+-    CALL make_mask(cf,gas_lw%get_ngpt(),overlap,seed,mask,randoms,local_random)
++    CALL make_mask(cf,gas_lw%get_ngpt(),overlap,sample_seed,mask,randoms,local_random)
++    IF(seed_override_active) THEN
++      WRITE(*,'(A,I0)') 'SAMPLE_CLASS=MANUFACTURED_SEED_VARIANT; ACTIVE_SEED=',sample_seed
++      WRITE(*,'(A)') 'CAPTURE_ANCHOR_MASK_CHECK=UNAVAILABLE: V8 LW input contains no recorded mask field'
++      WRITE(*,'(A)') 'ACTIVE_MASK_VS_RECORDED_MASK=SKIPPED: explicit seed override generates a new sample'
++    END IF
+     IF(ANY(cf>0._wp) .AND. overlap/=0) THEN
+       CALL check_error(draw_samples(mask,lw_cloud,lw_sampled))
+       CALL check_error(lw_sampled%increment(lw_atmos))
+@@ -927,9 +945,17 @@
+     CALL make_mask(cf,gas_sw%get_ngpt(),overlap,seed,mask,randoms,local_random)
+     IF(sw_direct_enabled) THEN
+       IF(ANY(v9_mask/=REAL(MERGE(1._wp,0._wp,mask)))) ERROR STOP 'V9 recorded MCICA mask differs from independent seed'
++      IF(seed_override_active) THEN
++        WRITE(*,'(A)') 'CAPTURE_ANCHOR_MASK_CHECK=PASS for recorded V9 seed'
++      END IF
+       IF((sensitivity_mode/='ICE160'.AND.sensitivity_mode/='ICE140').AND. &
+          ANY(v9_cloud_tau/=REAL(raw_cloud_tau_check))) ERROR STOP 'V9 raw cloud tau differs from independent optics'
+       IF(ANY(v9_precip_tau/=REAL(raw_precip_tau_check))) ERROR STOP 'V9 raw precipitation tau differs from independent optics'
++    END IF
++    IF(seed_override_active) THEN
++      CALL make_mask(cf,gas_sw%get_ngpt(),overlap,sample_seed,mask,randoms,local_random)
++      WRITE(*,'(A,I0)') 'SAMPLE_CLASS=MANUFACTURED_SEED_VARIANT; ACTIVE_SEED=',sample_seed
++      WRITE(*,'(A)') 'ACTIVE_MASK_VS_RECORDED_MASK=SKIPPED: explicit seed override generates a different sample'
+     END IF
+     IF(ANY(cf>0._wp) .AND. overlap/=0) THEN
+       CALL check_error(draw_samples(mask,sw_cloud,sw_sampled))
+@@ -1068,6 +1094,12 @@
+   IF(ios/=0) ERROR STOP 'could not open reference output file'
+   WRITE(u_out,'(A)') 'RRTMGP_RESULT_V1'
+   WRITE(u_out,'(A,1X,I0,1X,I0)') TRIM(phase),nc,nl
++  IF(seed_override_active) THEN
++    CALL write3(u_out,'CAPTURE_INPUT_SEED',RESHAPE([REAL(seed,wp)],[1,1,1]))
++    CALL write3(u_out,'ACTIVE_SAMPLE_SEED',RESHAPE([REAL(sample_seed,wp)],[1,1,1]))
++    CALL write3(u_out,'RECORDED_ANCHOR_MASK_CHECK',RESHAPE([MERGE(1._wp,0._wp,TRIM(phase)=='SW')],[1,1,1]))
++    CALL write3(u_out,'ACTIVE_MASK_CHECK_SKIPPED',RESHAPE([1._wp],[1,1,1]))
++  END IF
+   CALL write3(u_out,'GAS_COL_DRY',RESHAPE(col_dry,[nc,nl,1]))
+   CALL write3(u_out,'GAS_TAU',gas_tau)
+   IF(TRIM(magic)=='RRTMGP_REPLAY_V8') CALL write3(u_out,'GAS_TAU_RAW',gas_tau)
