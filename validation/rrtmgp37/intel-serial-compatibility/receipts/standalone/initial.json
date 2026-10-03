@@ -1,0 +1,112 @@
+{
+  "steps": [
+    {
+      "argv": [
+        "cmake",
+        "-S",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-workspace-selected-work/WRF/test/rrtmgp",
+        "-B",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-intel-feasibility/standalone",
+        "-G",
+        "Ninja",
+        "-DCMAKE_Fortran_COMPILER=/NHNHOME/WORKSPACE/26weather002_A/Library/intel/oneapi/compiler/2025.3/bin/ifx",
+        "-DCMAKE_BUILD_TYPE=Release",
+        "-DCMAKE_Fortran_FLAGS=-fp-model precise -convert big_endian",
+        "-DNETCDF_INCLUDE_DIR=/NHNHOME/WORKSPACE/26weather002_A/Library/WRF_LIBS/include",
+        "-DNETCDF_LIBRARY_DIR=/NHNHOME/WORKSPACE/26weather002_A/Library/WRF_LIBS/lib",
+        "-DRRTMGP_DATA_DIR=/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-workspace-selected-work/WRF/run",
+        "-DFROZEN_TABLE=/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-workspace-selected-work/validation/rrtmgp37/frozen-optics-lookup/nine-grid-o128-s50/frozen-ice-psd-moments.nc",
+        "-DRRTMGP_TEST_OPENMP=ON"
+      ],
+      "returncode": 0,
+      "elapsed_s": 1.3656742572784424,
+      "log": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-intel-feasibility/standalone-1.log"
+    },
+    {
+      "argv": [
+        "cmake",
+        "--build",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-intel-feasibility/standalone",
+        "--target",
+        "test_rrtmgp_workspace",
+        "test_rrtmgp_hash",
+        "test_rrtmgp_columns",
+        "test_rrtmgp_sw_predelta_direct",
+        "test_rrtmgp_openmp",
+        "test_rrtmgp_frozen_openmp",
+        "--parallel",
+        "12"
+      ],
+      "returncode": 0,
+      "elapsed_s": 6.822732210159302,
+      "log": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-intel-feasibility/standalone-2.log"
+    },
+    {
+      "argv": [
+        "ctest",
+        "--test-dir",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-intel-feasibility/standalone",
+        "-R",
+        "^(workspace_.*|wrf_rrtmgp_columns|sw_predelta_direct_(clear|cloud|overlap_zero|night)|frozen_file_sha256|cpu_openmp_reentrancy|frozen_openmp_queries)$",
+        "--output-on-failure"
+      ],
+      "returncode": 8,
+      "elapsed_s": 1.2159912586212158,
+      "log": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-intel-feasibility/standalone-3.log"
+    }
+  ],
+  "controlled_environment": {
+    "PATH": "/NHNHOME/WORKSPACE/26weather002_A/Library/intel/oneapi/compiler/2025.3/bin:/NHNHOME/WORKSPACE/26weather002_A/Library/WRF_LIBS/bin:/home/korea_keun/.codex/packages/app-server-daemon/releases/0.160.0-x86_64-unknown-linux-musl/codex-path:/home/korea_keun/.local/bin:/home/korea_keun/.nvm/versions/node/v24.18.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/cuda/bin:/home/korea_keun/.codex/tmp/arg0/codex-arg021pVRT:/home/korea_keun/.codex/packages/app-server-daemon/releases/0.160.0-x86_64-unknown-linux-musl/codex-path:/home/korea_keun/.codex/tmp/arg0/codex-arg01JtUaF:/home/korea_keun/.codex/packages/app-server-daemon/releases/0.159.3-x86_64-unknown-linux-musl/codex-path:/home/korea_keun/.codex/tmp/arg0/codex-arg0pjpt3b:/home/korea_keun/.codex/packages/app-server-daemon/releases/0.159.2-x86_64-unknown-linux-musl/codex-path:/home/korea_keun/.codex/tmp/arg0/codex-arg06QaARG:/home/korea_keun/.codex/packages/app-server-daemon/releases/0.159.1-x86_64-unknown-linux-musl/codex-path:/home/korea_keun/.codex/tmp/arg0/codex-arg0B9RFff:/home/korea_keun/.codex/packages/app-server-daemon/releases/0.159.0-x86_64-unknown-linux-musl/codex-path:/home/korea_keun/.codex/tmp/arg0/codex-arg0Mvh9HJ:/home/korea_keun/.codex/packages/app-server-daemon/releases/0.158.0-x86_64-unknown-linux-musl/codex-path:/home/korea_keun/.codex/tmp/arg0/codex-arg0JUaABk:/home/korea_keun/.codex/packages/app-server-daemon/releases/0.157.1-x86_64-unknown-linux-musl/codex-path:/home/korea_keun/.codex/tmp/arg0/codex-arg0LUEfEg:/home/korea_keun/.nvm/versions/node/v24.18.0/lib/node_modules/@openai/codex/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-path:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/cuda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin:/opt/mellanox/doca/tools/:/opt/mellanox/doca/tools/",
+    "LD_LIBRARY_PATH": "/NHNHOME/WORKSPACE/26weather002_A/Library/WRF_LIBS/lib:/NHNHOME/WORKSPACE/26weather002_A/Library/intel/oneapi/compiler/2025.3/lib:/NHNHOME/WORKSPACE/26weather002_A/Library/intel/oneapi/mpi/2021.17/lib:/usr/lib/x86_64-linux-gnu",
+    "LIBRARY_PATH": "/NHNHOME/WORKSPACE/26weather002_A/Library/WRF_LIBS/lib:/NHNHOME/WORKSPACE/26weather002_A/Library/intel/oneapi/compiler/2025.3/lib",
+    "NETCDF": "/NHNHOME/WORKSPACE/26weather002_A/Library/WRF_LIBS",
+    "NETCDF_C": "/NHNHOME/WORKSPACE/26weather002_A/Library/WRF_LIBS",
+    "I_MPI_ROOT": "/NHNHOME/WORKSPACE/26weather002_A/Library/intel/oneapi/mpi/2021.17",
+    "OMP_NUM_THREADS": "1",
+    "OMP_DYNAMIC": "FALSE",
+    "OMP_STACKSIZE": "64M"
+  },
+  "production_base": "6f0f3ea3e73fbd43325fdad1050b000eecd70138",
+  "test_cmake_includes_reviewed_default_path_reorder": true,
+  "source_hashes_before": {
+    "WRF/phys/module_ra_rrtmgp.F": "58d41e9376cf53cc04b9f004a2f66e5284b04b69ffb551a9130b914a2b3d2bd5",
+    "WRF/phys/module_ra_rrtmg_lw.F": "abaabcc79cc3df08f3b3d4760f37857c9e8ab6d0af9158d6e3be870b2d67346a",
+    "WRF/phys/module_ra_rrtmg_sw.F": "89b1869765124d8552901b58e6389ec2bd36ba342b4c8570c013040304e12070",
+    "WRF/test/rrtmgp/CMakeLists.txt": "e94f9f537c2279e48ee91c149d701fee30938f54c142b9e42b6ae688eed40c2b",
+    "WRF/external/rte_rrtmgp/CMakeLists.txt": "ac24bcc7976a5a7da0331d06f8fb3bf592eed035966d3fc9ec1fe90dae04e004"
+  },
+  "source_hashes_after": {
+    "WRF/phys/module_ra_rrtmgp.F": "58d41e9376cf53cc04b9f004a2f66e5284b04b69ffb551a9130b914a2b3d2bd5",
+    "WRF/phys/module_ra_rrtmg_lw.F": "abaabcc79cc3df08f3b3d4760f37857c9e8ab6d0af9158d6e3be870b2d67346a",
+    "WRF/phys/module_ra_rrtmg_sw.F": "89b1869765124d8552901b58e6389ec2bd36ba342b4c8570c013040304e12070",
+    "WRF/test/rrtmgp/CMakeLists.txt": "e94f9f537c2279e48ee91c149d701fee30938f54c142b9e42b6ae688eed40c2b",
+    "WRF/external/rte_rrtmgp/CMakeLists.txt": "ac24bcc7976a5a7da0331d06f8fb3bf592eed035966d3fc9ec1fe90dae04e004"
+  },
+  "source_unchanged": true,
+  "dependency_hashes_after": {
+    "/NHNHOME/WORKSPACE/26weather002_A/Library/intel/oneapi/compiler/2025.3/bin/ifx": "a0c61576ee32051e87d8c1bb006695c1a4ac2d128e70b9ac349bc11eab2ca9d1",
+    "/NHNHOME/WORKSPACE/26weather002_A/Library/intel/oneapi/compiler/2025.3/bin/icx": "766ffc69a39b16268e022744b74c15bf747f120eb55a4f3628148d025023f968",
+    "/NHNHOME/WORKSPACE/26weather002_A/Library/WRF_LIBS/bin/nf-config": "02b8c1a1e184b29444030a3fd48c9ab73aa24225c2b5d3b3906762e16d5e10c8",
+    "/NHNHOME/WORKSPACE/26weather002_A/Library/WRF_LIBS/bin/nc-config": "40d4e4fe3a2fd15206f4b2120ef0bea6ffa1d13813fa8397fa8a3c1ffb2f7714",
+    "/NHNHOME/WORKSPACE/26weather002_A/Library/WRF_LIBS/include/netcdf.mod": "af81efbbae3d0c158fbce47f18239d0b3a3531e3cbb197f7c588507d018ab55f",
+    "/NHNHOME/WORKSPACE/26weather002_A/Library/WRF_LIBS/include/netcdf.inc": "33aed9f2fdcc05884774cedbbc10139d1671d02fbb73b86f94b8f53bead7b314",
+    "/NHNHOME/WORKSPACE/26weather002_A/Library/WRF_LIBS/lib/libnetcdff.so": "03cde99f00baaebb3dcd3a10b265c26e79909697b0ab97dcb59b092322db7c72",
+    "/NHNHOME/WORKSPACE/26weather002_A/Library/WRF_LIBS/lib/libnetcdf.so": "fe20adaaada0518b6ceab3e9d3c30708a33c5bc9f88f542447b1fd1019989550",
+    "/NHNHOME/WORKSPACE/26weather002_A/Library/WRF_LIBS/lib/libhdf5.so": "4d30c7277546a5ba98420cb7b7933128c4193459aa0667db912e06c9d953dca8",
+    "/NHNHOME/WORKSPACE/26weather002_A/Library/WRF_LIBS/lib/libhdf5_hl.so": "3ee61864df4a0dda9a0c2518c9687d00f21c95ca8fce641ae37c1fd453639692",
+    "/NHNHOME/WORKSPACE/26weather002_A/Library/WRF_LIBS/lib/libz.so": "6d015d6ad8cb2d44b2fdd6aaaa9496d89b62162a89a490c8d56ad0ceb620c95d",
+    "/NHNHOME/WORKSPACE/26weather002_A/Library/intel/oneapi/compiler/2025.3/lib/libimf.so": "16efc27aa9c0aeef3c12afa7d57c74f3fa9501beeedaf56fc51d5a2f7013228a",
+    "/NHNHOME/WORKSPACE/26weather002_A/Library/intel/oneapi/compiler/2025.3/lib/libifport.so": "c55462a964ff85ffd0deefa8fd1fce790bfab51a8e4269bc0bb0f569f5c8b517",
+    "/NHNHOME/WORKSPACE/26weather002_A/Library/intel/oneapi/compiler/2025.3/lib/libifcoremt.so": "52987865eb47b7a5605621f669ad280a3b06cd014f757952aeaedb78741ed395",
+    "/NHNHOME/WORKSPACE/26weather002_A/Library/intel/oneapi/compiler/2025.3/lib/libsvml.so": "30bc176842cad6c14179d827b30f7a71962591ee33b91c65831c6b09335d1178",
+    "/NHNHOME/WORKSPACE/26weather002_A/Library/intel/oneapi/compiler/2025.3/lib/libintlc.so": "0c04d3b61ba90894ab860f1c76bf38fedb24fdede5adbd667ac3140bd288e9e0",
+    "/NHNHOME/WORKSPACE/26weather002_A/Library/intel/oneapi/compiler/2025.3/lib/libirng.so": "5358df7bb9ef73c57a2ce2bba8b1919b0c00a30d752ee60f26e87109561842a8",
+    "/NHNHOME/WORKSPACE/26weather002_A/Library/intel/oneapi/compiler/2025.3/lib/libiomp5.so": "2f035e8415e1afa89c81dd1d0c76efbc737a54b243b7543dbdf6e605e108533a",
+    "/NHNHOME/WORKSPACE/26weather002_A/Library/intel/oneapi/mpi/2021.17/bin/mpiifx": "35aaa2fab11575660b170b2cb48195d2571e5e2ab044897a868616925a31e6e9",
+    "/NHNHOME/WORKSPACE/26weather002_A/Library/intel/oneapi/mpi/2021.17/include/mpi/mpi.mod": "50ffd8692f0fd3ad783560c8513c5e7968f262bf1b6a44abed1f2d1b80fcccf5",
+    "/NHNHOME/WORKSPACE/26weather002_A/Library/intel/oneapi/mpi/2021.17/lib/libmpi.so": "56c63962f2ee040c0cb519b6cbf128728127983133195acb94e903aeb9d7994e",
+    "/NHNHOME/WORKSPACE/26weather002_A/Library/intel/oneapi/mpi/2021.17/lib/libmpifort.so": "e7b48999002075b195381357cfc6d98a21cc3ff1278c92187fda2b01d9623e2e"
+  },
+  "dependencies_unchanged": true,
+  "tests_pass": false
+}

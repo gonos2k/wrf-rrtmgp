@@ -1,0 +1,62 @@
+  Domain # 1: dx = 20000.000 m
+--- WARNING: RRTMGP37 UDM frozen graupel/hail optics are experimental homogeneous-ice sphere PSD diagnostics; no NOAA/RRTMGP parity is claimed.
+WRF V4.8.0 MODEL
+git commit 6f0f3ea3e73fbd43325fdad1050b000eecd70138
+DYNAMICS OPTION: Eulerian Mass Coordinate
+   alloc_space_field: domain            1 ,             1789636868  bytes allocated
+ RESTART run: opening wrfrst_d01_2010-06-11_12:00:00 for reading
+ Domain            1  Setting history stream            0  for rthraten
+ Domain            1  Setting history stream            0  for rthratlw
+ Domain            1  Setting history stream            0  for rthratsw
+ Domain            1  Setting history stream            0  for swddir
+ Domain            1  Setting history stream            0  for swddif
+ Domain            1  Setting history stream            0  for gsw
+ Domain            1  W A R N I N G : Variable swupb already on history stream            0 .  File: selected_audit_iofields.txt at line            1
+ Domain            1  W A R N I N G : Variable albedo already on history stream            0 .  File: selected_audit_iofields.txt at line            1
+   Input data is acceptable to use: wrfrst_d01_2010-06-11_12:00:00
+Timing for processing restart file for domain        1:    2.66234 elapsed seconds
+Max map factor in domain 1 =  1.05. Scale the dt in the model accordingly.
+ D01: Time step                              =    60.00000      (s)
+ D01: Grid Distance                          =    20.00000      (km)
+ D01: Grid Distance Ratio dt/dx              =    3.000000      (s/km)
+ D01: Ratio Including Maximum Map Factor     =    3.145702      (s/km)
+ D01: NML defined reasonable_time_step_ratio =    6.000000
+ Climate GHG input from file from year         1765  to         2499
+ CO2   range =    277.913000000000        579.264000000000       ppm
+ N2O   range =    274.372000000000        359.798000000000       ppb
+ CH4   range =    738.986000000000        997.311000000000       ppb
+ CFC11 range =   0.000000000000000E+000  1.400000000000000E-002  ppt
+ CFC12 range =   0.000000000000000E+000   2.88100000000000       ppt
+ Normal ending of CAMtr_volume_mixing_ratio file
+ GHG annual values from CAM trace gas file
+ Year =         2010 , Julian day =          162
+ CO2   =   3.886969670721468E-004  volume mixing ratio
+ N2O   =   3.231338715484024E-007  volume mixing ratio
+ CH4   =   1.807803680180807E-006  volume mixing ratio
+ CFC11 =   2.404685102477133E-010  volume mixing ratio
+ CFC12 =   5.313024940325652E-010  volume mixing ratio
+INITIALIZE THREE Noah LSM RELATED TABLES
+ LANDUSE TYPE = USGS FOUND          27  CATEGORIES
+ INPUT SOIL TEXTURE CLASSIFICATION = STAS
+ SOIL TEXTURE CLASSIFICATION = STAS FOUND          19  CATEGORIES
+d01 2010-06-11_12:00:00  Input data is acceptable to use: wrfbdy_d01
+d01 2010-06-11_12:00:00 WRF restart, LBC starts at 2010-06-11_00:00:00 and restart starts at 2010-06-11_12:00:00
+ LBC for restart: Starting valid date = 2010-06-11_00:00:00, Ending valid date = 2010-06-11_06:00:00
+ LBC for restart: Restart time            = 2010-06-11_12:00:00
+ LBC for restart: Looking for a bounding time
+ LBC for restart: Starting valid date = 2010-06-11_06:00:00, Ending valid date = 2010-06-11_12:00:00
+ LBC for restart: Starting valid date = 2010-06-11_12:00:00, Ending valid date = 2010-06-11_18:00:00
+ LBC for restart: Found the correct bounding LBC time periods for restart time = 2010-06-11_12:00:00
+Timing for processing lateral boundary for domain        1:    0.08161 elapsed seconds
+forrtl: severe (174): SIGSEGV, segmentation fault occurred
+Image              PC                Routine            Line        Source             
+libc.so.6          00007119F81A6330  Unknown               Unknown  Unknown
+wrf.exe            0000000000F2D65B  Unknown               Unknown  Unknown
+wrf.exe            0000000000D85E54  Unknown               Unknown  Unknown
+wrf.exe            000000000043194B  Unknown               Unknown  Unknown
+wrf.exe            0000000000416F83  Unknown               Unknown  Unknown
+wrf.exe            0000000000416AF8  Unknown               Unknown  Unknown
+wrf.exe            0000000000416AAD  Unknown               Unknown  Unknown
+libc.so.6          00007119F818B1CA  Unknown               Unknown  Unknown
+libc.so.6          00007119F818B28B  __libc_start_main     Unknown  Unknown
+wrf.exe            00000000004169C5  Unknown               Unknown  Unknown
