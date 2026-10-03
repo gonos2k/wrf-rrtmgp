@@ -1,0 +1,222 @@
+{
+  "artifact_policy": {
+    "netcdf_runtime_package_included": false,
+    "only hashes and compact derived statistics are archived": true,
+    "raw_history_files_included": false,
+    "table_and_coefficient_data_included": false,
+    "wrf_executable_included": false
+  },
+  "build": {
+    "build_source_provenance_sha256": "31b15112a72b0b337679cfd122ec641641b0e8fa431838eb15fd014554c2e94f",
+    "compiler": "GNU Fortran 13.3.0",
+    "configure_wrf_sha256_only": "44f85b7fc9b6994cb3784567e69d310580740a021b5f1ab1efb0586f25cfcba2",
+    "executable_included": false,
+    "executable_sha256_only": "176f589d657ca87df670cef3429d7474e674f3e44445eb7886aed871e36bef8f",
+    "nesting_option": 1,
+    "parallel_mode": "GNU dm+sm",
+    "selection": 35,
+    "source_commit": "e7c97ed661403b3922fcf752300c052611ef89cd"
+  },
+  "global_radiation_configuration": {
+    "frozen_table_included": false,
+    "frozen_table_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-frozen-runtime-wrf/source/validation/rrtmgp37/frozen-optics-lookup/nine-grid-o128-s50/frozen-ice-psd-moments.nc",
+    "frozen_table_sha256": "8cb00850c3f885f5ec0306563c1ec0a55b512478a7395d626c1c99cebf280583",
+    "gas_and_cloud_tables": {
+      "rrtmgp-clouds-lw-bnd.nc": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-sr-row-dm-sm/source/WRF/run/rrtmgp-clouds-lw-bnd.nc",
+        "sha256": "09d6704c5b863b4c3ceb417d20bb3076ec492e6bf2dfbcc9f3c5996a3706f0b0"
+      },
+      "rrtmgp-clouds-sw-bnd.nc": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-sr-row-dm-sm/source/WRF/run/rrtmgp-clouds-sw-bnd.nc",
+        "sha256": "7671835992a45afe66244b591a02c0b3df73d7d59ecb746bbffd9763497651cd"
+      },
+      "rrtmgp-gas-lw-g128.nc": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-sr-row-dm-sm/source/WRF/run/rrtmgp-gas-lw-g128.nc",
+        "sha256": "70ad65d116531122660318e5da2a2af9db74b425916202860e9527ef2375b8f6"
+      },
+      "rrtmgp-gas-sw-g112.nc": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-sr-row-dm-sm/source/WRF/run/rrtmgp-gas-sw-g112.nc",
+        "sha256": "361ed541324068ded28a275a4dd757bcaa0a845aebefa630f43a04678668fe62"
+      }
+    },
+    "rrtmgp_data_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-sr-row-dm-sm/source/WRF/run",
+    "rrtmgp_data_path_shared_by_domains": true,
+    "rrtmgp_udm_frozen_optics_mode": 1,
+    "runtime_table_and_coefficient_files_included": false
+  },
+  "inputs": {
+    "boundary_coverage": "2010-06-11 00:00 through 2010-06-12 00:00",
+    "input_and_boundary_files_included": false,
+    "wrfbdy_d01_sha256": "e687b73730ab9a2cee4842e1a92b225a4edb074ba080b6053d96d81ec1731a2d",
+    "wrfinput_d01_dimensions": {
+      "bottom_top": 39,
+      "bottom_top_stag": 40,
+      "south_north": 189,
+      "south_north_stag": 190,
+      "west_east": 289,
+      "west_east_stag": 290
+    },
+    "wrfinput_d01_sha256": "5ef7abe34c516fba107f346bdbdb3777edacb5d48493df467ea2dd8bcf6a75ff"
+  },
+  "mcica_seed_policy": {
+    "calendar_date": "2010-06-11",
+    "calendar_day_of_year": 162,
+    "capture_audit_enabled": false,
+    "domain_ids": [
+      1,
+      2
+    ],
+    "independence_claimed": false,
+    "inherited_capture_variables_removed": [],
+    "per_column_seed_values_captured": false,
+    "phase_ids": {
+      "LW": 1,
+      "SW": 2
+    },
+    "source_formula": "31-bit deterministic modular hash of domain id, global column i/j, year, day-of-year, and radiation phase",
+    "source_function": "rrtmgp_column_seed(domain_id,i,j,year,day_of_year,phase)"
+  },
+  "namelist": {
+    "child_input_absent": true,
+    "dx_m": [
+      20000.0,
+      6666.6666667
+    ],
+    "dy_m": [
+      20000.0,
+      6666.6666667
+    ],
+    "e_sn": [
+      190,
+      61
+    ],
+    "e_vert": [
+      40,
+      40
+    ],
+    "e_we": [
+      290,
+      61
+    ],
+    "end": [
+      "2010-06-11_02:00:00",
+      "2010-06-11_02:00:00"
+    ],
+    "history_interval_minutes": [
+      10,
+      10
+    ],
+    "i_parent_start": [
+      1,
+      100
+    ],
+    "input_from_file": [
+      true,
+      false
+    ],
+    "j_parent_start": [
+      1,
+      80
+    ],
+    "max_dom": 2,
+    "parent_grid_ratio": [
+      1,
+      3
+    ],
+    "parent_time_step_ratio": [
+      1,
+      3
+    ],
+    "physics": {
+      "bl_pbl_physics": [
+        1,
+        1
+      ],
+      "cu_physics": [
+        1,
+        0
+      ],
+      "mp_physics": [
+        27,
+        27
+      ],
+      "ra_lw_physics": [
+        37,
+        37
+      ],
+      "ra_sw_physics": [
+        37,
+        37
+      ],
+      "radt_minutes": [
+        10,
+        10
+      ],
+      "rrtmgp_data_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-sr-row-dm-sm/source/WRF/run",
+      "rrtmgp_udm_frozen_optics": 1,
+      "rrtmgp_udm_frozen_table": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-frozen-runtime-wrf/source/validation/rrtmgp37/frozen-optics-lookup/nine-grid-o128-s50/frozen-ice-psd-moments.nc",
+      "sf_sfclay_physics": [
+        1,
+        1
+      ],
+      "sf_surface_physics": [
+        2,
+        2
+      ],
+      "use_mp_re": 1
+    },
+    "sha256": "83b5e85c423d441a14d7393844eed3ec0a75735c736fd8c6b0cfe5ef37d5827a",
+    "start": [
+      "2010-06-11_00:00:00",
+      "2010-06-11_01:00:00"
+    ]
+  },
+  "runtime": {
+    "capture_env_cleared": true,
+    "launcher_returncode": 0,
+    "ld_library_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/netcdf/lib:/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/mpich-sock/lib:/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/root/usr/lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-gnu:",
+    "main_stack_soft_limit_bytes": 536870912,
+    "mpi_ranks": 4,
+    "no_child_input_staged_or_created": true,
+    "omp_stacksize": "512M",
+    "omp_threads": 1,
+    "parent_interpolation_logged": true,
+    "rank_success": {
+      "rsl.error.0000": true,
+      "rsl.error.0001": true,
+      "rsl.error.0002": true,
+      "rsl.error.0003": true
+    }
+  },
+  "scope": {
+    "not_claimed": [
+      "24h nested runtime",
+      "restart continuity",
+      "MPI decomposition equivalence",
+      "forecast skill or observational accuracy",
+      "high-resolution child static fields"
+    ],
+    "simulation": "2h parent integration (00:00\u201302:00) and delayed child integration (01:00\u201302:00)"
+  },
+  "source_identity": {
+    "base_branch": "fix-udm-sr-row",
+    "comparison_manifest": "results/source-pin-match.json",
+    "evidence_base_commit": "792f36b6bbc442f0db37b5cb9fdf19dd33600082",
+    "generated_config_file_count": 1,
+    "production_source_hash_match_count": 13,
+    "production_source_tracked_count": 13
+  },
+  "status": "PASS_BOUNDED_NESTED_RUNTIME",
+  "validation": {
+    "exact_domain_history_counts": {
+      "d01": 13,
+      "d02": 7
+    },
+    "execution_receipt_sha256": "6cae0b65e8eae2bbb177076c5ee2a047c55aaabae10cc2f2118f098c2963555e",
+    "masked_numeric_values": 0,
+    "numeric_variable_file_checks": 4080,
+    "root_independent_readback": "results/root-independent-history-readback.json",
+    "source_and_data_pins_before_after_equal": true,
+    "staged_assets_before_after_equal": true
+  }
+}
