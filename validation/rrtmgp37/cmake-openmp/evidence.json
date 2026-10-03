@@ -1,0 +1,173 @@
+{
+  "schema": "WRF_RRTMGP_CMAKE_OPENMP_EVIDENCE_V1",
+  "source": {
+    "package_base_commit": "275b9e08dce14e198deaae410a287226cad06075",
+    "full_build_test_overlay_base": "bb56ec0ad5a0fbd2ef2027a291554fc40d6c7291",
+    "production_delta": "conditional PUBLIC OpenMP::OpenMP_Fortran link on wrf_rrtmgp when USE_OPENMP; no other source behavior changes",
+    "tested_overlay_diff_sha256": "a5c48e831c166d35346053d74859438867612de4284f83751345fa789872b2dc",
+    "tested_CMakeLists_sha256": "0eebb2798120696fd63d9abaa86154197253d5efdb3606fa721946df0c827680",
+    "pr38_unchanged_files_sha256": {
+      "WRF/CMakeLists.txt": "f2a9fad649e0d9dfc23d0f0719252b438c928e9fa4346ad08eb9dd460331fc99",
+      "WRF/phys/module_microphysics_driver.F": "1c3b3ecd8c8f5f3fb4572f2837216faff33425b75898cfe5bcc92c06c78a8716",
+      "WRF/phys/module_physics_init.F": "a60589e0af8d8a4bb5984652fb08bf404e5c304ec2baf4c6285b25d442b6a0af"
+    },
+    "pr38_vendor_cmake_base_sha256": "aa0c88f42a9a045c7098b8cc4064458208736e9ed742a0803139feade609deda"
+  },
+  "build_install": {
+    "status": "PASS",
+    "configuration": {
+      "USE_DOUBLE": "OFF",
+      "USE_MPI": "OFF",
+      "USE_OPENMP": "ON",
+      "build_install_log_sha256": "c5c86885fc7c03a437a5268d658769ebfaa265fa9cc05d6ffbd3629ae1886f01",
+      "build_ninja_sha256": "943cc6dd608c420010d24ff420d2be97c2be39fd310a1618d2283de354fef090",
+      "build_type": "Release",
+      "cache_sha256": "3cd74e2feefd064042b4a450b1fe44c16230a35726ee56b8f513222ca06e0667",
+      "cmake": "3.31.6",
+      "compile_commands_sha256": "860fbb94618522231149c474152dd6225b496578df756cc3378d303af1c502f9",
+      "configure_log_sha256": "820e677737b9bd0a9060666c42d13d05d8b48b500b7ad69439094a06549ef538",
+      "generator": "Ninja",
+      "gfortran": "GNU Fortran 13.3.0",
+      "nesting": "NONE",
+      "ninja": "1.13.0.git.kitware.jobserver-pipe-1",
+      "openmp": "4.5",
+      "toolchain_sha256": "8c00a7b004133cbbb1b566b6660b5fe1878ebc4aaeb18ecd0a1cd6afebdae6df",
+      "wrf_case": "EM_REAL",
+      "wrf_core": "ARW"
+    },
+    "installed_wrf_sha256": "87fec6d25e97a9cf67247948312f847c0a7908c4a3da6be9c58e1549d3ec1be0",
+    "installed_rrtmgp_sha256": "e802ef042a26e7e23ac1259a3cc2c6cb20c075392e4b21edc9ad3f6eaf7ff846",
+    "exported_target_mentions_openmp": true,
+    "vendor_fortran_objects_with_fopenmp": 26,
+    "adapter_fortran_objects_with_fopenmp": 7,
+    "radiation_driver_with_fopenmp": 1
+  },
+  "standalone": {
+    "vendor_off": {
+      "binary_or_archive_sha256": "2ea3bea1138debd7b97e71635086052b467fa29135fcb07c9ecb62ee94214ce7",
+      "compile_flags_include_openmp": false,
+      "status": "BUILD_PASS"
+    },
+    "vendor_on": {
+      "binary_or_archive_sha256": "9e631bb46a03aa8788bd20b658f74a884c75fd2a7fc90be56318e66c7bf4dab8",
+      "compile_flags_include_openmp": true,
+      "status": "BUILD_PASS"
+    },
+    "adapter_omp_ctest": {
+      "ctest_log_sha256": "c4647ed4c3ecad596d93419a26edf05f3b1a9898ea9ab0357adeadaa4a7a1672",
+      "status": "2_OF_2_PASS",
+      "tests": [
+        "cpu_openmp_reentrancy",
+        "frozen_openmp_queries"
+      ]
+    },
+    "column_omp_ctest": {
+      "ctest_log_sha256": "61c8fc507bc32e4c25d848e33f3b9c6e921195247f70425a2f9dccb735c21b62",
+      "status": "1_OF_1_PASS"
+    }
+  },
+  "installed_consumers": {
+    "core-plus": {
+      "build_log_sha256": "3ba1b68b531814305ff1c0eb16cd7fb929eef9f052f8f3ed19704f2a595506a0",
+      "configure_log_sha256": "ae1a81a3368a75caa961ff347a94a011bf2a9d413ce50621af2202e8896c2660",
+      "executable_sha256": "5d4c70aebacb858fb473d81864b76f14292133de7b7dd9954f8c6d921f23f49f",
+      "link_command_has_fopenmp": true,
+      "manual_openmp_flags_supplied": false,
+      "run_log_sha256": "218d542e433bb313497cd35928f6405428c94e01aeefa58af08fbeebb90b5fa8",
+      "status": "PASS"
+    },
+    "rrtmgp-only": {
+      "build_log_sha256": "3ba1b68b531814305ff1c0eb16cd7fb929eef9f052f8f3ed19704f2a595506a0",
+      "configure_log_sha256": "21bc9030e75e69da102ce8edf4a492cdc421a3121e968c7514167c1684c1ec5f",
+      "executable_sha256": "955de07ab90c332675c868608bea4d078f5e9677bdcefad877f233f642bfd24f",
+      "link_command_has_fopenmp": true,
+      "manual_openmp_flags_supplied": false,
+      "run_log_sha256": "218d542e433bb313497cd35928f6405428c94e01aeefa58af08fbeebb90b5fa8",
+      "status": "PASS"
+    }
+  },
+  "runtime_scope": {
+    "domain_shape": "289x189x39",
+    "output_time": "2010-06-11_12:01:00",
+    "physics": "MP=27, LW=37, SW=37, frozen optics mode 1",
+    "restart": "2010-06-11_12:00:00",
+    "restart_sha256": "943a53db058f2d9560c6f0d571f3ff9bb8efb407010c5eea2026922a6eeee7b8",
+    "table_sha256": "8cb00850c3f885f5ec0306563c1ec0a55b512478a7395d626c1c99cebf280583",
+    "thread_stack": "512 MiB process RLIMIT_STACK and OMP_STACKSIZE",
+    "tiles": 2,
+    "timeout_s": 600
+  },
+  "runtime_pairs": [
+    {
+      "counts": {
+        "attributes": 1342,
+        "numeric_values": 61252177,
+        "variables": 211
+      },
+      "differences": [],
+      "left": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-cmake-openmp-full/runtime-preflight-v3/ra37-omp1-tiles2/run/wrfout_d01_2010-06-11_12:01:00",
+      "right": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-cmake-openmp-full/runtime-preflight-v3/ra37-omp2-tiles2/run/wrfout_d01_2010-06-11_12:01:00",
+      "status": "BITWISE_EQUAL"
+    },
+    {
+      "counts": {
+        "attributes": 1342,
+        "numeric_values": 61252177,
+        "variables": 211
+      },
+      "differences": [],
+      "left": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-cmake-openmp-full/runtime-preflight-v3/ra37-omp2-tiles2/run/wrfout_d01_2010-06-11_12:01:00",
+      "right": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-cmake-openmp-full/runtime-preflight-v3/ra37-omp2-probe-tiles2/run/wrfout_d01_2010-06-11_12:01:00",
+      "status": "BITWISE_EQUAL"
+    }
+  ],
+  "worker_proof": {
+    "analyzer_sha256": "f7386228d300daac32ac2cbb5df38c2af5cc942225e86adea0e159f1ee594811",
+    "log_sha256": "de115926d049364df642124a9fa57b86e2753dc2c8586434f9a72941ec39e49b",
+    "proof_sha256": "0425c635042267c26bce9c364c4fe6448444abed756616f881aad0b9898d47a2",
+    "radiation_callbacks": {
+      "__module_radiation_driver_MOD_radiation_driver._omp_fn.1": {
+        "contains_lw_and_sw_calls": true,
+        "events": {
+          "ENTER": 2,
+          "EXIT": 2
+        },
+        "teams": [
+          2
+        ],
+        "worker_cpu_ns": {
+          "0": 23578122767,
+          "1": 26612406392
+        },
+        "workers": [
+          0,
+          1
+        ]
+      }
+    },
+    "verified": true,
+    "tested_executable_sha256": "87fec6d25e97a9cf67247948312f847c0a7908c4a3da6be9c58e1549d3ec1be0",
+    "gomp_interposer_sha256": "b7b691789827e149c9f3f2b0230b594d5e5ae942d669b1def11c7d99b703aedf",
+    "disassembly_sha256": "2970f64d2118285ca3ada1f5b172960f8b62f350bbea493bf1261712c4590b23",
+    "probe_source_sha256": "4bae9cdbdbacf45d1a6f205714f28d4439d659e469a56f568ff7656f5d87e814",
+    "analyzer_source_sha256": "f7386228d300daac32ac2cbb5df38c2af5cc942225e86adea0e159f1ee594811"
+  },
+  "recheck": {
+    "status": "PASS",
+    "whole_history_hash_equal": true,
+    "history_sha256": "afd08c3a1b7b13dd3aabf5dbf5005797101eaf2d79957af56d24f8b6317a3845",
+    "variables": 211,
+    "numeric_variables": 210,
+    "numeric_values": 61252177,
+    "attrs": 1342,
+    "finite_unmasked_nofill": true,
+    "times": "2010-06-11_12:01:00"
+  },
+  "claims_excluded": [
+    "MPI",
+    "GPU",
+    "long-duration forecast behavior",
+    "radiative physical accuracy",
+    "performance or speedup"
+  ]
+}

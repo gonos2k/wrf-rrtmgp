@@ -1,0 +1,133 @@
+{
+  "artifacts": {
+    "config_finds_openmp_fortran_and_c": true,
+    "exported_target_mentions_openmp": true,
+    "installed_module_count": 26,
+    "installed_rrtmgp_archive_sha256": "e802ef042a26e7e23ac1259a3cc2c6cb20c075392e4b21edc9ad3f6eaf7ff846",
+    "installed_wrf_sha256": "87fec6d25e97a9cf67247948312f847c0a7908c4a3da6be9c58e1549d3ec1be0"
+  },
+  "configuration": {
+    "USE_DOUBLE": "OFF",
+    "USE_MPI": "OFF",
+    "USE_OPENMP": "ON",
+    "build_install_log_sha256": "c5c86885fc7c03a437a5268d658769ebfaa265fa9cc05d6ffbd3629ae1886f01",
+    "build_ninja_sha256": "943cc6dd608c420010d24ff420d2be97c2be39fd310a1618d2283de354fef090",
+    "build_type": "Release",
+    "cache_sha256": "3cd74e2feefd064042b4a450b1fe44c16230a35726ee56b8f513222ca06e0667",
+    "cmake": "3.31.6",
+    "compile_commands_sha256": "860fbb94618522231149c474152dd6225b496578df756cc3378d303af1c502f9",
+    "configure_log_sha256": "820e677737b9bd0a9060666c42d13d05d8b48b500b7ad69439094a06549ef538",
+    "generator": "Ninja",
+    "gfortran": "GNU Fortran 13.3.0",
+    "nesting": "NONE",
+    "ninja": "1.13.0.git.kitware.jobserver-pipe-1",
+    "openmp": "4.5",
+    "toolchain_sha256": "8c00a7b004133cbbb1b566b6660b5fe1878ebc4aaeb18ecd0a1cd6afebdae6df",
+    "wrf_case": "EM_REAL",
+    "wrf_core": "ARW"
+  },
+  "consumers": {
+    "core-plus": {
+      "build_log_sha256": "3ba1b68b531814305ff1c0eb16cd7fb929eef9f052f8f3ed19704f2a595506a0",
+      "configure_log_sha256": "ae1a81a3368a75caa961ff347a94a011bf2a9d413ce50621af2202e8896c2660",
+      "executable_sha256": "5d4c70aebacb858fb473d81864b76f14292133de7b7dd9954f8c6d921f23f49f",
+      "link_command_has_fopenmp": true,
+      "manual_openmp_flags_supplied": false,
+      "run_log_sha256": "218d542e433bb313497cd35928f6405428c94e01aeefa58af08fbeebb90b5fa8",
+      "status": "PASS"
+    },
+    "rrtmgp-only": {
+      "build_log_sha256": "3ba1b68b531814305ff1c0eb16cd7fb929eef9f052f8f3ed19704f2a595506a0",
+      "configure_log_sha256": "21bc9030e75e69da102ce8edf4a492cdc421a3121e968c7514167c1684c1ec5f",
+      "executable_sha256": "955de07ab90c332675c868608bea4d078f5e9677bdcefad877f233f642bfd24f",
+      "link_command_has_fopenmp": true,
+      "manual_openmp_flags_supplied": false,
+      "run_log_sha256": "218d542e433bb313497cd35928f6405428c94e01aeefa58af08fbeebb90b5fa8",
+      "status": "PASS"
+    }
+  },
+  "corrected_setup_attempts": [
+    {
+      "attempt": "Fortran-only installed consumer configure",
+      "log_sha256": "91a85a8f61c7bfbafe3fb6d78b31bb942e89f990a41a80fcfe64d4183d591b81",
+      "reason": "Installed WRFConfig requires both OpenMP Fortran and C components; caller project enabled Fortran only. This is a consumer language configuration issue; rerun with C and Fortran enabled passed.",
+      "status": "FAILED_SETUP"
+    },
+    {
+      "attempt": "standalone column CTest without NetCDF LD_LIBRARY_PATH",
+      "log_sha256": "98d478c69500258477903894f419be484a067d7fd69793af2003c9b77b49004b",
+      "reason": "Dynamic loader could not locate local libnetcdf.so.19; rerun with local NetCDF lib path passed.",
+      "status": "FAILED_SETUP"
+    },
+    {
+      "attempt": "initial frozen OpenMP standalone test with incorrect table path",
+      "log_sha256": "d2fa108aec37d2d9d49b6610ed27a375269389e05842c3df42ba6b820709c00b",
+      "reason": "The first CTest command pointed at a nonexistent source-root table path; rerun against proposal worktree pinned table passed.",
+      "status": "FAILED_SETUP"
+    }
+  ],
+  "model_runtime": "NOT_RUN_PENDING_ROOT_REVIEW",
+  "openmp_compile_coverage": {
+    "adapter_fortran": {
+      "count": 7,
+      "missing_openmp_flag": []
+    },
+    "all_fortran_compile_commands": {
+      "count": 818,
+      "missing_openmp_flag": 187
+    },
+    "radiation_driver": {
+      "count": 1,
+      "missing_openmp_flag": []
+    },
+    "vendor_fortran": {
+      "count": 26,
+      "missing_openmp_flag": []
+    }
+  },
+  "runtime_preflight": {
+    "omp1": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-cmake-openmp-full/runtime-preflight/ra37-omp1/preflight.json",
+    "omp1_sha256": "356757ba54dfd40602f26eadc1cdd276cb4749211893f573006da946e82de330",
+    "omp2": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-cmake-openmp-full/runtime-preflight/ra37-omp2/preflight.json",
+    "omp2_sha256": "7d9ac719d6314722c5c2643d4477a5349fd6da9e71e66ec9f3739de503d81fc0",
+    "worker_probe_sha256": "b7b691789827e149c9f3f2b0230b594d5e5ae942d669b1def11c7d99b703aedf"
+  },
+  "schema": "WRF_GNU_CMAKE_OPENMP_BUILD_VALIDATION_V1",
+  "scope": "Fresh full GNU CMake/Ninja ARW EM_REAL serial-process CPU OpenMP build/install, exported consumer links, standalone CPU tests. No WRF forecast runtime performed.",
+  "source": {
+    "base": "bb56ec0ad5a0fbd2ef2027a291554fc40d6c7291",
+    "changed_file_sha256": {
+      "WRF/CMakeLists.txt": "f2a9fad649e0d9dfc23d0f0719252b438c928e9fa4346ad08eb9dd460331fc99",
+      "WRF/external/rte_rrtmgp/CMakeLists.txt": "0eebb2798120696fd63d9abaa86154197253d5efdb3606fa721946df0c827680",
+      "WRF/phys/module_microphysics_driver.F": "1c3b3ecd8c8f5f3fb4572f2837216faff33425b75898cfe5bcc92c06c78a8716",
+      "WRF/phys/module_physics_init.F": "a60589e0af8d8a4bb5984652fb08bf404e5c304ec2baf4c6285b25d442b6a0af",
+      "config/registration37.json": "c69c39b79d10cd14e2baf6fb732be3b7dcd847e7c79713ffe729e179a3d59a68"
+    },
+    "proposal_diff_sha256": "a5c48e831c166d35346053d74859438867612de4284f83751345fa789872b2dc",
+    "worktree": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp/build/udm-cmake-openmp-proposal/source"
+  },
+  "standalone": {
+    "adapter_omp": {
+      "ctest_log_sha256": "c4647ed4c3ecad596d93419a26edf05f3b1a9898ea9ab0357adeadaa4a7a1672",
+      "status": "2_OF_2_PASS",
+      "tests": [
+        "cpu_openmp_reentrancy",
+        "frozen_openmp_queries"
+      ]
+    },
+    "column_omp": {
+      "ctest_log_sha256": "61c8fc507bc32e4c25d848e33f3b9c6e921195247f70425a2f9dccb735c21b62",
+      "status": "1_OF_1_PASS"
+    },
+    "vendor_off": {
+      "binary_or_archive_sha256": "2ea3bea1138debd7b97e71635086052b467fa29135fcb07c9ecb62ee94214ce7",
+      "compile_flags_include_openmp": false,
+      "status": "BUILD_PASS"
+    },
+    "vendor_on": {
+      "binary_or_archive_sha256": "9e631bb46a03aa8788bd20b658f74a884c75fd2a7fc90be56318e66c7bf4dab8",
+      "compile_flags_include_openmp": true,
+      "status": "BUILD_PASS"
+    }
+  }
+}
