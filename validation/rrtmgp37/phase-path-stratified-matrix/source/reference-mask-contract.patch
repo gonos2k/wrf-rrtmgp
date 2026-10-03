@@ -1,0 +1,57 @@
+--- build/udm-phase-path-sensitivity-work/ensemble/reference_column_seed_override.f90	2026-10-03 13:23:18.000000000 +0900
++++ build/udm-stratified-final-manifest/diagnostic-exe-v1/reference_column.f90	2026-10-03 16:29:58.000000000 +0900
+@@ -51,6 +51,7 @@
+   REAL(wp), ALLOCATABLE :: gas_tau(:,:,:),gas_ssa(:,:,:),gas_g(:,:,:)
+   REAL(wp), ALLOCATABLE :: rwp(:,:),precip_tau(:,:,:),precip_ssa(:,:,:),precip_g(:,:,:)
+   REAL(wp), ALLOCATABLE :: grid_rwp(:,:),grid_swp(:,:),sensitivity_tau(:,:,:),sensitivity_raw_tau(:,:,:)
++  REAL(wp), ALLOCATABLE :: sensitivity_ice_mask(:,:)
+   REAL(wp), ALLOCATABLE :: sensitivity_ssa(:,:,:),sensitivity_g(:,:,:)
+   REAL(wp), ALLOCATABLE :: ice_diameter_raw(:,:),ice_diameter_changed(:,:)
+   REAL(wp), ALLOCATABLE :: precip_sample_rwp(:,:),precip_sample_swp(:,:)
+@@ -579,6 +580,13 @@
+     ALLOCATE(grid_rwp(nc,nl),grid_swp(nc,nl))
+     CALL read_section(sensitivity_unit,'RWP_GRID',grid_rwp)
+     CALL read_section(sensitivity_unit,'SWP_GRID',grid_swp)
++    IF(sensitivity_mode=='ICE160'.OR.sensitivity_mode=='ICE140') THEN
++      ALLOCATE(sensitivity_ice_mask(nc,nl))
++      CALL read_section(sensitivity_unit,'ICE_EXPECTED_MASK',sensitivity_ice_mask)
++      IF(ANY(.NOT.ieee_is_finite(sensitivity_ice_mask))) ERROR STOP 'ice expected mask must be finite'
++      IF(ANY((sensitivity_ice_mask/=0._wp).AND.(sensitivity_ice_mask/=1._wp))) &
++        ERROR STOP 'ice expected mask values must be exactly zero or one'
++    END IF
+     READ(sensitivity_unit,*,IOSTAT=ios) next_section
+     IF(ios==0) ERROR STOP 'unexpected trailing sensitivity sidecar data'
+     CLOSE(sensitivity_unit)
+@@ -668,10 +676,15 @@
+     di=MAX(cloud_lw%get_min_radius_ice(),MIN(cloud_lw%get_max_radius_ice(),ice_diameter_raw))
+     IF(sensitivity_mode=='ICE160'.OR.sensitivity_mode=='ICE140') THEN
+       ice_diameter_changed=REAL(MERGE(1,0,iwp>0._wp.AND.ice_diameter_raw>cloud_lw%get_max_radius_ice()),wp)
++      IF(.NOT.ALLOCATED(sensitivity_ice_mask)) ERROR STOP 'ice sensitivity requires expected eligibility mask'
++      IF(ANY(ice_diameter_changed/=sensitivity_ice_mask)) &
++        ERROR STOP 'ice changed-layer mask differs from native-input eligibility mask'
++      IF(COUNT(sensitivity_ice_mask>0._wp)<1) ERROR STOP 'ice sensitivity has no eligible native layers'
+       IF(sensitivity_mode=='ICE160') di=MERGE(160._wp,di,ice_diameter_changed>0._wp)
+       IF(sensitivity_mode=='ICE140') di=MERGE(140._wp,di,ice_diameter_changed>0._wp)
+       IF(TRIM(phase)=='SW') THEN
+-        IF(COUNT(ice_diameter_changed>0._wp)/=4) ERROR STOP 'SW ice sensitivity expected exactly four active out-of-range layers'
++        IF(COUNT(ice_diameter_changed>0._wp)/=COUNT(sensitivity_ice_mask>0._wp)) &
++          ERROR STOP 'SW ice changed-layer count differs from exact native-input mask'
+         IF(ANY(PACK(di,ice_diameter_changed>0._wp)/=MERGE(160._wp,140._wp,sensitivity_mode=='ICE160'))) &
+           ERROR STOP 'SW ice sensitivity applied diameter mask mismatch'
+       END IF
+@@ -847,9 +860,14 @@
+     di=MAX(cloud_sw%get_min_radius_ice(),MIN(cloud_sw%get_max_radius_ice(),ice_diameter_raw))
+     IF(sensitivity_mode=='ICE160'.OR.sensitivity_mode=='ICE140') THEN
+       ice_diameter_changed=REAL(MERGE(1,0,iwp>0._wp.AND.ice_diameter_raw>cloud_sw%get_max_radius_ice()),wp)
++      IF(.NOT.ALLOCATED(sensitivity_ice_mask)) ERROR STOP 'ice sensitivity requires expected eligibility mask'
++      IF(ANY(ice_diameter_changed/=sensitivity_ice_mask)) &
++        ERROR STOP 'ice changed-layer mask differs from native-input eligibility mask'
++      IF(COUNT(sensitivity_ice_mask>0._wp)<1) ERROR STOP 'ice sensitivity has no eligible native layers'
+       IF(sensitivity_mode=='ICE160') di=MERGE(160._wp,di,ice_diameter_changed>0._wp)
+       IF(sensitivity_mode=='ICE140') di=MERGE(140._wp,di,ice_diameter_changed>0._wp)
+-      IF(COUNT(ice_diameter_changed>0._wp)/=4) ERROR STOP 'SW ice sensitivity expected exactly four active out-of-range layers'
++      IF(COUNT(ice_diameter_changed>0._wp)/=COUNT(sensitivity_ice_mask>0._wp)) &
++        ERROR STOP 'SW ice changed-layer count differs from exact native-input mask'
+       IF(ANY(PACK(di,ice_diameter_changed>0._wp)/=MERGE(160._wp,140._wp,sensitivity_mode=='ICE160'))) &
+         ERROR STOP 'SW ice sensitivity applied diameter mask mismatch'
+       IF(ANY(di<cloud_sw%get_min_radius_ice()).OR.ANY(di>cloud_sw%get_max_radius_ice())) &
