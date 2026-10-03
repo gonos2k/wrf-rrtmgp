@@ -1244,7 +1244,7 @@ target_link_libraries(  ${PROJECT_NAME}_Core
 ################################################################################
 set( CONFIG_INSTALL_DIRECTORY lib/cmake/${PROJECT_NAME} )
 install(
-        TARGETS ${PROJECT_NAME}_Core
+        TARGETS ${PROJECT_NAME}_Core wrf_rrtmgp
         EXPORT ${EXPORT_NAME}Targets
         RUNTIME DESTINATION bin/
         ARCHIVE DESTINATION lib/
