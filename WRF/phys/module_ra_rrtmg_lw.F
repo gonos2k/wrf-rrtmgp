@@ -12764,7 +12764,7 @@ CONTAINS
                gp_qh=qh3d(i,kts:kte,j)
                ! Active sizes must be positive; every size must be finite.
                WRITE(gp_context,'(A,I0,A,I0,A)') 'LW i=',i,' j=',j,':'
-               CALL trace_start('LW',i,j)
+               CALL trace_start('LW',i,j,ids,ide,jds,jde)
                IF(trace_active('LW')) THEN
                   CALL trace_raw_start('LW',kte-kts+1)
                   CALL trace_raw('LW','DP_HPA',pdel(ncol,kts:kte))

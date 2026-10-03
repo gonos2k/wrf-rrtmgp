@@ -1,0 +1,66 @@
+{
+  "schema": "UDM_SELECTED_POINT_REFERENCE_PROVENANCE_V1",
+  "status": "REFERENCE_TARGET_BUILT_NO_WRF_RUN_NO_CAPTURE_REPLAY",
+  "selected_source": {
+    "path": "build/udm-selected-real-wrf/source",
+    "reported_base_commit": "faf3ea0c6b37bee97e089b7c2a102d19d8557e80",
+    "source_manifest_sha256": "3ebea7488f102853417339847d4b2d63f0573b686755ba2bc128f6e428203da7",
+    "source_tree_sha256": "3ebea7488f102853417339847d4b2d63f0573b686755ba2bc128f6e428203da7",
+    "tree_label": "selected-real WRF staged source manifest from the approved preflight receipt (not an independent Git worktree)",
+    "source_manifest_file_sha256": "3ebea7488f102853417339847d4b2d63f0573b686755ba2bc128f6e428203da7",
+    "reference_library_source": {
+      "repository": "https://github.com/NCAR/rte-rrtmgp",
+      "commit": "41c5fcd950fed09b8afe186dede266824eca7fd3",
+      "SOURCE_json_sha256": "30ce948f8286a4d0c1175e114fb43d15664b80c65f5dd8b7de12682b2139418f",
+      "source_subtree_sha256": "4f19b6c50e22eaabe0b24c4afdfd96e39b9af6b351a328f007f609ab29cd7950",
+      "source_subtree_match": "all 41 source files under rte-frontend, rte-kernels, gas-optics, rrtmgp-frontend, rrtmgp-kernels, extensions byte-identical to build/pr-wrf-rrtmgp"
+    },
+    "key_source_sha256": {
+      "WRF/test/rrtmgp/reference_column.f90": "7904425f1446b0ce906c8523df618bcf4dbd4dcb6fe1ef0082fbf0507e4d57d8",
+      "WRF/phys/module_ra_rrtmgp.F": "74378cc255088422ff8f770c1f342e135c538436d0bc0dcf67ec7b7abde1f5bb",
+      "WRF/phys/module_ra_rrtmgp_trace.F": "c9847b0142c4933e1fbfb7065d41d95031bdf09b44fcef17e9e313f290d7a4cd",
+      "WRF/phys/module_ra_rrtmg_lw.F": "2a46f31dade9a154eeada2e22f3e5e8515aceec5f96f3f8ca2b363926d848eab",
+      "WRF/phys/module_ra_rrtmg_sw.F": "e976978df5b139570ba06732a1fe6852da5e31866edf60a5f7d95c74e37ca547"
+    }
+  },
+  "build": {
+    "build_directory": "build/udm-selected-real-audit/independent-ref-build",
+    "target": "reference_column",
+    "compiler": "/usr/bin/f95 (GNU Fortran 13.3.0)",
+    "compiler_flags_for_core": "-DRRTMGP_CPU_ONLY -ffree-line-length-none",
+    "compiler_flags_for_reference": "CMake target; GNU flags include -ffree-line-length-none -fcheck=bounds",
+    "cmake_version": "3.31",
+    "reference_executable_sha256": "0795dcadd9cec5134559ebc1a9b1e8d8da30010788aa1f1c46183aa9cf69c392",
+    "wrf_executable_sha256": "ef315a64dac9e52315c414868caa9434e3b6e4b3adfbb353140f4895407c2c9e",
+    "reference_link_contract": "reference_column links wrf_rrtmgp and test_rrtmgp_frozen; it does not link test_rrtmgp_adapter or WRF host modules",
+    "runtime_library_path": "build/deps/root/usr/lib/x86_64-linux-gnu"
+  },
+  "data_assets": {
+    "coefficient_data_directory": "build/pr-wrf-rrtmgp/WRF/run",
+    "coefficient_data_commit": "earth-system-radiation/rrtmgp-data ea788bb39876948fa8d2c235665ccff19b4686b5",
+    "DATA_json_sha256": "c29615af763369684e0f577dfa5b4c369a2e99d9aa644da160ac56f720fd1398",
+    "coefficient_sha256": {
+      "rrtmgp-gas-lw-g128.nc": "70ad65d116531122660318e5da2a2af9db74b425916202860e9527ef2375b8f6",
+      "rrtmgp-clouds-lw-bnd.nc": "09d6704c5b863b4c3ceb417d20bb3076ec492e6bf2dfbcc9f3c5996a3706f0b0",
+      "rrtmgp-gas-sw-g112.nc": "361ed541324068ded28a275a4dd757bcaa0a845aebefa630f43a04678668fe62",
+      "rrtmgp-clouds-sw-bnd.nc": "7671835992a45afe66244b591a02c0b3df73d7d59ecb746bbffd9763497651cd"
+    },
+    "frozen-table": "build/pr-wrf-rrtmgp/validation/rrtmgp37/frozen-optics-lookup/nine-grid-o128-s50/frozen-ice-psd-moments.nc",
+    "frozen_table_sha256": "8cb00850c3f885f5ec0306563c1ec0a55b512478a7395d626c1c99cebf280583"
+  },
+  "replay_protocol": {
+    "LW": "RRTMGP_REPLAY_V8: recorded four CFC VMR profiles, optional UDM rain/native dry mass, host constants, and frozen-mode digest",
+    "SW": "RRTMGP_REPLAY_V9: V8-compatible host/frozen inputs plus recorded TOA g-point spectrum, RAW_GAS_TAU, MCICA_MASK, raw cloud/precip/frozen extinction, g-point/band mapping, wavenumber bounds, and visible weights",
+    "capture_location": "completed ON run capture/LW|SW.input, .result, .raw",
+    "point_wrf_indices_one_based": [169, 80],
+    "expected_native_layers": 39,
+    "capture_call": 2
+  },
+  "validation": {
+    "build_command_completed": true,
+    "WRF_execution": false,
+    "capture_replay": false,
+    "numeric_result": null,
+    "reason": "The approved ON run is active; this record documents preparation only."
+  }
+}

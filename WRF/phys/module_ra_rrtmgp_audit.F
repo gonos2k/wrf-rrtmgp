@@ -164,7 +164,7 @@ CONTAINS
         END IF
         OPEN(NEWUNIT=csv_unit,FILE=TRIM(path)//'/same_state.csv',STATUS='replace',IOSTAT=ios)
         IF(ios/=0) CALL wrf_error_fatal('RRTMGP_AUDIT_OPEN_FAILED')
-        WRITE(csv_unit,'(A)') 'phase,domain,step,source_seconds,i,j,metric,value37,value4,sample_count,mean37,sd37,mean4,sd4,sd_delta,radius_mode'
+        WRITE(csv_unit,'(A)') 'phase,domain,step,source_seconds,i,j,metric,value37,value4,sample_count,mean37,sd37,mean4,sd4,sd_delta,radius_mode,scope'
         FLUSH(csv_unit)
       END IF
     END IF
@@ -194,9 +194,9 @@ CONTAINS
     d=x4-this%mean4;this%mean4=this%mean4+d/this%n;this%m24=this%m24+d*(x4-this%mean4)
     xd=x37-x4;d=xd-this%md;this%md=this%md+d/this%n;this%m2d=this%m2d+d*(xd-this%md)
   END SUBROUTINE
-  SUBROUTINE moments_write(this,phase,domain,step,time,x37,x4,labels)
+  SUBROUTINE moments_write(this,phase,domain,step,time,x37,x4,labels,scope)
     CLASS(audit_moments),INTENT(IN) :: this
-    CHARACTER(LEN=*),INTENT(IN) :: phase,labels(:)
+    CHARACTER(LEN=*),INTENT(IN) :: phase,labels(:),scope
     INTEGER,INTENT(IN) :: domain,step
     REAL,INTENT(IN) :: time
     REAL(real64),INTENT(IN) :: x37(:,:,:),x4(:,:,:)
@@ -208,9 +208,9 @@ CONTAINS
           s37=SQRT(MAX(0._real64,this%m237(i,j,m)/(this%n-1)))
           s4=SQRT(MAX(0._real64,this%m24(i,j,m)/(this%n-1)))
           sd=SQRT(MAX(0._real64,this%m2d(i,j,m)/(this%n-1)))
-          WRITE(csv_unit,'(A,",",I0,",",I0,",",ES23.15E3,",",I0,",",I0,",",A,2(",",ES23.15E3),",",I0,5(",",ES23.15E3),",",I0)',IOSTAT=ios) &
+          WRITE(csv_unit,'(A,",",I0,",",I0,",",ES23.15E3,",",I0,",",I0,",",A,2(",",ES23.15E3),",",I0,5(",",ES23.15E3),",",I0,",",A)',IOSTAT=ios) &
             phase,domain,step,REAL(time,real64),this%istart+i-1,this%jstart+j-1,TRIM(labels(m)), &
-            x37(i,j,m),x4(i,j,m),this%n,this%mean37(i,j,m),s37,this%mean4(i,j,m),s4,sd,native4
+            x37(i,j,m),x4(i,j,m),this%n,this%mean37(i,j,m),s37,this%mean4(i,j,m),s4,sd,native4,TRIM(scope)
           IF(ios/=0) CALL wrf_error_fatal('RRTMGP_AUDIT_WRITE_FAILED')
         END DO
       END DO

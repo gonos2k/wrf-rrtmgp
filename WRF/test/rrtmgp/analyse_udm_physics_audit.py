@@ -245,7 +245,45 @@ def read_audit_csv(path: Path) -> tuple[list[dict[str, str]], list[str]]:
             raise ValueError(f"{path}: missing CSV columns: {', '.join(missing)}")
         if not ({"sd_delta", "sdDelta"} & set(reader.fieldnames)):
             raise ValueError(f"{path}: missing paired-seed spread column sd_delta")
-        return list(reader), list(reader.fieldnames)
+        rows = list(reader)
+        validate_scope_rows(rows, path)
+        return rows, list(reader.fieldnames)
+
+
+def validate_scope_rows(rows: list[dict[str, str]], path: Path | str = "audit CSV") -> None:
+    """Validate the optional scope column while remaining compatible with old receipts."""
+    if not rows or "scope" not in rows[0]:
+        return
+    allowed = {"full_tile_cell", "full_tile_mean", "selected_column"}
+    groups: dict[tuple[str, ...], list[dict[str, str]]] = defaultdict(list)
+    for rowno, row in enumerate(rows, 2):
+        scope = row.get("scope", "")
+        if scope not in allowed:
+            raise ValueError(f"{path}:{rowno}: invalid audit scope {scope!r}")
+        i, j = int(row["i"]), int(row["j"])
+        if scope == "full_tile_cell" and (i <= 0 or j <= 0):
+            raise ValueError(f"{path}:{rowno}: full_tile_cell requires positive i,j")
+        if scope == "full_tile_mean" and (i != 0 or j != 0):
+            raise ValueError(f"{path}:{rowno}: full_tile_mean requires i=j=0")
+        if scope == "selected_column" and (i < 0 or j < 0 or ((i == 0) != (j == 0))):
+            raise ValueError(f"{path}:{rowno}: selected_column indices must be positive cell i,j or aggregate i=j=0")
+        key = tuple(row.get(k, "") for k in
+                    ("phase", "domain", "step", "source_seconds", "metric", "radius_mode"))
+        groups[key].append(row)
+    for key, members in groups.items():
+        scopes = {row["scope"] for row in members}
+        if scopes == {"selected_column"}:
+            cell_rows = [r for r in members if int(r["i"]) > 0 and int(r["j"]) > 0]
+            aggregates = [r for r in members if int(r["i"]) == 0 and int(r["j"]) == 0]
+            if len(cell_rows) != 1 or len(aggregates) != 1:
+                raise ValueError(f"{path}: selected_column group {key} needs one cell and one aggregate row")
+        elif scopes <= {"full_tile_cell", "full_tile_mean"}:
+            if scopes != {"full_tile_cell", "full_tile_mean"}:
+                raise ValueError(f"{path}: incomplete full-tile scope pair for {key}")
+            if sum(int(r["i"]) == 0 and int(r["j"]) == 0 for r in members) != 1:
+                raise ValueError(f"{path}: full_tile_mean group {key} needs exactly one aggregate row")
+        else:
+            raise ValueError(f"{path}: mixed selected/full-tile scopes for {key}: {sorted(scopes)}")
 
 
 def summarize_csv(path: Path) -> dict[str, Any]:
@@ -273,6 +311,7 @@ def summarize_csv(path: Path) -> dict[str, Any]:
         metrics.append({
             "phase": key[0], "domain": key[1], "step": key[2], "source_seconds": key[3], "metric": key[4],
             "radius_mode": key[5],
+            "scope": chosen.get("scope"),
             "rows": len(items), "aggregate_row_present": bool(domain_rows),
             "sample_count": int(float(chosen["sample_count"])),
             "mean37": float(chosen["mean37"]), "mean4": float(chosen["mean4"]),
