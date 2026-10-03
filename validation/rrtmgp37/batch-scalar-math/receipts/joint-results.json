@@ -1,0 +1,158 @@
+{
+  "status": "PASS_ANALYZED",
+  "receipt_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-lw-batch-wp-probe/scalar-log-exp/outputs/joint-run-20261003T105300Z/counterfactual-joint-run-receipt.json",
+  "receipt_sha256": "857bb89a265b9af1421b89e30f25e48534b74d53718f325b2bf7a3bc33b3560b",
+  "runner_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-lw-batch-wp-probe/scalar-log-exp/run_joint_counterfactual_pair.py",
+  "runner_sha256": "058aa4972e6aa40a7129f65a9ed8209ef02ff6fe9e2ce98a4e4ffa8301f4182f",
+  "shim_source_sha256": "4466535a6081ead6a81f02c1f7081fee0d08538f41525c810ed1cf108c03601a",
+  "shim_object_sha256": "755a7354db011073f920ca4efccb952c165ab21b5d825c2ac885c871147e15eb",
+  "counterfactual_executable_sha256": "d8249974f240b6f4a71ba064d2c922cb9091813a1da0275deb7146ff7c1b8600",
+  "exp_argument_fixture": {
+    "source_wp_capture": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-lw-batch-wp-probe/scalar-log/outputs/run-20261003T104800Z/batch32/wp.hex",
+    "source_sha256": "fe7750659f890eb08c022afd0734882d51e91be92b2638a0db63620eeccfba7e",
+    "section": "GAS_TAU",
+    "shape": [
+      32,
+      47,
+      128
+    ],
+    "derivation": "each exp argument is -GAS_TAU from the captured batch32 WP diagnostic; append explicit finite underflow probes -745, -746 and -1000 plus -0.0",
+    "values": 192516,
+    "all_finite": true,
+    "all_nonpositive": true,
+    "minimum": -208228.07646995116,
+    "maximum": -0.0,
+    "underflow_probe_results_expected": [
+      5e-324,
+      0.0,
+      0.0
+    ]
+  },
+  "static_abi_tests": {
+    "exp": "PASS exact scalar-libm bits for 192516 lanes",
+    "log": "PASS exact scalar-libm bits for 1504 lanes",
+    "undefined_symbols": "U exp and U log only",
+    "defined_symbols": "T _ZGVbN2v_exp and T _ZGVbN2v_log",
+    "scalar_calls_per_override": 2,
+    "runtime_libraries_match_original_manifest": true
+  },
+  "runs": {
+    "batch32": {
+      "returncode": 0,
+      "timed_out": false,
+      "elapsed_s": 0.2646927833557129,
+      "f32_oracle": {
+        "bytes_equal": false,
+        "actual_sha256": "a29c335dd9d24dffdadc0d2f8cc63ff4d7829fd6542a92ce03240e1dff6df0f2",
+        "expected_sha256": "a9fd0da25b9b41de77a6e9724d50ea38f3681fd1b275371f05290c1bf75617ad",
+        "bytes": 36608,
+        "different_bytes": 2
+      }
+    },
+    "scalar32": {
+      "returncode": 0,
+      "timed_out": false,
+      "elapsed_s": 0.4147522449493408,
+      "f32_oracle": {
+        "bytes_equal": true,
+        "actual_sha256": "a29c335dd9d24dffdadc0d2f8cc63ff4d7829fd6542a92ce03240e1dff6df0f2",
+        "expected_sha256": "a29c335dd9d24dffdadc0d2f8cc63ff4d7829fd6542a92ce03240e1dff6df0f2",
+        "bytes": 36608,
+        "different_bytes": 0
+      }
+    }
+  },
+  "all_wp_sections_bitwise_equal": true,
+  "wp_sections": {
+    "GAS_COL_DRY": {
+      "different_values": 0,
+      "total_values": 1504,
+      "max_abs": 0.0,
+      "max_ulp": 0
+    },
+    "GAS_TAU": {
+      "different_values": 0,
+      "total_values": 192512,
+      "max_abs": 0.0,
+      "max_ulp": 0
+    },
+    "SOURCE_LAY": {
+      "different_values": 0,
+      "total_values": 192512,
+      "max_abs": 0.0,
+      "max_ulp": 0
+    },
+    "SOURCE_LEV": {
+      "different_values": 0,
+      "total_values": 196608,
+      "max_abs": 0.0,
+      "max_ulp": 0
+    },
+    "SOURCE_SFC": {
+      "different_values": 0,
+      "total_values": 4096,
+      "max_abs": 0.0,
+      "max_ulp": 0
+    },
+    "CLEAR_FU": {
+      "different_values": 0,
+      "total_values": 1536,
+      "max_abs": 0.0,
+      "max_ulp": 0
+    },
+    "CLEAR_FD": {
+      "different_values": 0,
+      "total_values": 1536,
+      "max_abs": 0.0,
+      "max_ulp": 0
+    },
+    "CLEAR_HEAT": {
+      "different_values": 0,
+      "total_values": 1504,
+      "max_abs": 0.0,
+      "max_ulp": 0
+    },
+    "TOTAL_TAU": {
+      "different_values": 0,
+      "total_values": 192512,
+      "max_abs": 0.0,
+      "max_ulp": 0
+    },
+    "ALL_FU": {
+      "different_values": 0,
+      "total_values": 1536,
+      "max_abs": 0.0,
+      "max_ulp": 0
+    },
+    "ALL_FD": {
+      "different_values": 0,
+      "total_values": 1536,
+      "max_abs": 0.0,
+      "max_ulp": 0
+    },
+    "ALL_HEAT": {
+      "different_values": 0,
+      "total_values": 1504,
+      "max_abs": 0.0,
+      "max_ulp": 0
+    }
+  },
+  "joint_batch_vs_original_batch_f32_differences": {
+    "differing_words": 2,
+    "sections": [
+      "HR",
+      "HRC"
+    ],
+    "zero_based_fortran_coordinate": [
+      0,
+      38
+    ],
+    "new_value": -1.1380494832992554,
+    "original_batch_value": -1.138049602508545,
+    "difference_float32_ulps": 1,
+    "joint_batch_sha256_equals_original_scalar_sha256": true
+  },
+  "interpretation": "Joint vector-log/vector-exp override removes all captured batch/scalar WP differences for this input. Process-wide symbol replacement does not identify the particular exp call or establish a production defect.",
+  "preflight_only_failed_attempt": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-lw-batch-wp-probe/scalar-log-exp/outputs/joint-run-20261003T105000Z/preflight-failure-preserved.json",
+  "no_extra_engine_calls": true
+}

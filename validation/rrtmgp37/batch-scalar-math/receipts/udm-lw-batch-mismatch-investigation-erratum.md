@@ -1,0 +1,15 @@
+# Erratum: full-history divergence in scalar versus B32
+
+This erratum supersedes the earlier claim in `build/udm-lw-batch-mismatch-investigation.md` that all fields outside the three heating arrays were bitwise identical. That statement came from reading only the beginning of the comparison receipt and was wrong. Preserve the earlier note as part of the audit trail; use this corrected result.
+
+## Corrected readback
+
+I independently compared all variables in all 11 saved RA37 scalar and B32 histories, with auto mask/scale disabled and no numerical tolerance. The direct raw-array receipt is `build/udm-lw-batch-real-pr32-v3/full-array-recheck.json`, SHA256 `ec6b85a3fe267719952f788f74915681ac3f67f6ee4fe69546d53693a751d6d0`; the comparison script is `build/udm-lw-batch-real-pr32-v3-recheck.py`, SHA256 `35ec650bdca99601a1b0e5d99a0d684224567743492ffbd867f0e8a67fc9f88b`. Both independent readbacks agree that all 211 variables were examined at each time and that there are no signed-zero-only differences.
+
+Changed-variable counts by saved time are 3, 3, 3, 3, 3, 4, 5, 12, 16, 43, and 68 (163 file-variable changes total; 67 unique fields over the period). The 12:01–12:05 records differ only in `RTHRATEN`, `RTHRATLW`, and `RTHRATSW`. `W` first differs at 12:06. By 12:11, changes include winds, thermodynamic and moisture state, pressure, surface fluxes, radiation fluxes, and UDM diagnostics. The root's corrected independent first/last-record receipt is `build/udm-lw-batch-real-pr32-v3/root-first-last-recheck.json`, SHA256 `2aa244eead7d3876a219d053ad9f36875f00bb1bf1bff8b3f78fe11355029e49`.
+
+Therefore the 12:00 first radiation call is the same-trajectory target for diagnosing the first heating discrepancy. The 12:10 second LW call is already on a trajectory with visible state differences and cannot be treated as same-state input. The first saved output record, 12:01, has only heating-array differences; no non-heating difference is yet visible in that record. Do not infer from that record that source state inputs are unchanged at later calls.
+
+## Revised diagnostic focus
+
+The earlier source review of matched per-cell PI/seed/packing/scatter remains a static code observation, not proof that actual runtime inputs matched. Root's corrected first-call target is `(i=205,j=53,k=39)`, with `ΔHR=-7.275957614183426e-12`; it is full-domain linear index 15233, queue 477, slot 1 (queue coordinates `i=205..236,j=53`). Capture this B32 queue from the exact 12:00 restart before any tendency feedback, with all 32 prepared input rows and pre-conversion UP/DN/HR; pair it with scalar-mode dumps for those same 32 coordinates from an otherwise identical restart. Confirm row-by-row input bytes before comparing outputs. If this first-call comparison reproduces the heating difference, inspect backend shape-dependent flux/HR values versus host conversions/scatter. If the inputs differ, investigate host preparation/queue alignment. The earlier `(210,55)` target is superseded: it came from the second-call, feedback-confounded comparison. Do not use 12:10 as the first diagnostic and do not relax exact comparison criteria.
