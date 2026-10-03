@@ -68,6 +68,19 @@ foreach(test IN ITEMS columns cloud_inputs multicolumn validation adapter_invali
     target_compile_options(test_rrtmgp_${test} PRIVATE -ffree-line-length-none -fcheck=bounds)
   endif()
 endforeach()
+add_executable(test_rrtmgp_workspace test_workspace.F90)
+target_link_libraries(test_rrtmgp_workspace PRIVATE test_rrtmgp_adapter)
+if(CMAKE_Fortran_COMPILER_ID STREQUAL "GNU")
+  target_compile_options(test_rrtmgp_workspace PRIVATE -ffree-line-length-none -fcheck=bounds)
+endif()
+add_test(NAME workspace_reuse_states_mode0 COMMAND test_rrtmgp_workspace "${RRTMGP_DATA_DIR}" 0 "${FROZEN_TABLE}")
+add_test(NAME workspace_reuse_states_mode1 COMMAND test_rrtmgp_workspace "${RRTMGP_DATA_DIR}" 1 "${FROZEN_TABLE}")
+add_test(NAME workspace_frozen_mode_lock COMMAND "${Python3_EXECUTABLE}"
+  "${CMAKE_CURRENT_SOURCE_DIR}/test_workspace_modeflip.py" "$<TARGET_FILE:test_rrtmgp_workspace>"
+  "${RRTMGP_DATA_DIR}" "${FROZEN_TABLE}")
+set_tests_properties(workspace_reuse_states_mode0 workspace_reuse_states_mode1
+  PROPERTIES ENVIRONMENT "OMP_NUM_THREADS=1;OMP_DYNAMIC=FALSE")
+
 add_executable(test_rrtmgp_host_constants test_host_constants.f90)
 target_link_libraries(test_rrtmgp_host_constants PRIVATE test_rrtmgp_adapter)
 if(CMAKE_Fortran_COMPILER_ID STREQUAL "GNU")
@@ -235,6 +248,7 @@ if(RRTMGP_TEST_OPENMP)
   find_package(OpenMP REQUIRED COMPONENTS Fortran)
   target_link_libraries(wrf_rrtmgp PUBLIC OpenMP::OpenMP_Fortran)
   target_link_libraries(test_rrtmgp_adapter PUBLIC OpenMP::OpenMP_Fortran)
+  target_link_libraries(test_rrtmgp_frozen PUBLIC OpenMP::OpenMP_Fortran)
   add_executable(test_rrtmgp_openmp test_openmp_reentrancy.f90)
   target_link_libraries(test_rrtmgp_openmp PRIVATE test_rrtmgp_adapter OpenMP::OpenMP_Fortran)
   if(CMAKE_Fortran_COMPILER_ID STREQUAL "GNU")

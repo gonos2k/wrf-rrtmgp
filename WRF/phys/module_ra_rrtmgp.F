@@ -6,7 +6,7 @@ MODULE module_ra_rrtmgp
   USE, INTRINSIC :: iso_fortran_env, ONLY: real64
   USE mo_gas_optics_rrtmgp, ONLY: ty_gas_optics_rrtmgp, get_col_dry
   USE mo_gas_concentrations, ONLY: ty_gas_concs
-  USE mo_optical_props, ONLY: ty_optical_props_1scl, ty_optical_props_2str
+  USE mo_optical_props, ONLY: ty_optical_props, ty_optical_props_1scl, ty_optical_props_2str
   USE mo_source_functions, ONLY: ty_source_func_lw
   USE mo_fluxes, ONLY: ty_fluxes_broadband
   USE mo_fluxes_byband, ONLY: ty_fluxes_byband
@@ -31,6 +31,29 @@ MODULE module_ra_rrtmgp
   PRIVATE
   EXTERNAL :: wrf_error_fatal3
   PUBLIC :: rrtmgp_init, rrtmgp_lw_column, rrtmgp_sw_column, cloud_mask, rrtmgp_frozen_enabled
+  ! Caller-owned scratch: one live workspace per concurrent column/tile call.
+  ! Do not copy a live workspace: ty_gas_concs owns pointer targets.
+  TYPE, PUBLIC :: ty_rrtmgp_lw_workspace
+    PRIVATE
+    TYPE(ty_gas_concs) :: gases
+    TYPE(ty_optical_props_1scl) :: atmos,clouds,snow,sampled,frozen
+    TYPE(ty_source_func_lw) :: source
+    INTEGER :: nc=0,nl=0
+  END TYPE
+  TYPE, PUBLIC :: ty_rrtmgp_sw_workspace
+    PRIVATE
+    TYPE(ty_gas_concs) :: gases
+    TYPE(ty_optical_props_2str) :: atmos,clouds,snow,sampled,frozen
+    REAL(wp), ALLOCATABLE :: raw_gas_tau(:,:,:),raw_cloud_tau(:,:,:),raw_precip_tau(:,:,:), &
+      raw_frozen_g(:,:,:),raw_frozen_h(:,:,:),direct_gpt(:,:,:),direct_band(:,:,:),precip_tau_raw(:,:,:)
+    REAL(wp), ALLOCATABLE :: bands(:,:),visible_weight(:)
+    INTEGER, ALLOCATABLE :: gpoint_band(:)
+    INTEGER :: nc=0,nl=0
+  END TYPE
+  PUBLIC :: rrtmgp_release_workspace
+  INTERFACE rrtmgp_release_workspace
+    MODULE PROCEDURE release_lw_workspace,release_sw_workspace
+  END INTERFACE
   TYPE(ty_gas_optics_rrtmgp), SAVE :: gas_lw, gas_sw
   TYPE(ty_cloud_optics_rrtmgp), SAVE :: cloud_lw, cloud_sw
   LOGICAL, SAVE :: ready = .FALSE.
@@ -48,6 +71,137 @@ CONTAINS
   SUBROUTINE require(msg)
     CHARACTER(LEN=*), INTENT(IN) :: msg
     IF (LEN_TRIM(msg)>0) CALL wrf_error_fatal3('module_ra_rrtmgp.F',0,'RRTMGP: '//TRIM(msg))
+  END SUBROUTINE
+
+  SUBROUTINE ensure_1scl(optics,nc,nl,descriptor)
+    TYPE(ty_optical_props_1scl), INTENT(INOUT) :: optics
+    INTEGER, INTENT(IN) :: nc,nl
+    CLASS(ty_optical_props), INTENT(IN) :: descriptor
+    IF(.NOT.optics%is_initialized()) CALL require(optics%init(descriptor))
+    IF(ALLOCATED(optics%tau)) THEN
+      IF(ALL(SHAPE(optics%tau)==[nc,nl,descriptor%get_ngpt()])) RETURN
+    END IF
+    CALL require(optics%alloc_1scl(nc,nl))
+  END SUBROUTINE
+
+  SUBROUTINE ensure_2str(optics,nc,nl,descriptor)
+    TYPE(ty_optical_props_2str), INTENT(INOUT) :: optics
+    INTEGER, INTENT(IN) :: nc,nl
+    CLASS(ty_optical_props), INTENT(IN) :: descriptor
+    IF(.NOT.optics%is_initialized()) CALL require(optics%init(descriptor))
+    IF(ALLOCATED(optics%tau).AND.ALLOCATED(optics%ssa).AND.ALLOCATED(optics%g)) THEN
+      IF(ALL(SHAPE(optics%tau)==[nc,nl,descriptor%get_ngpt()]).AND. &
+         ALL(SHAPE(optics%ssa)==[nc,nl,descriptor%get_ngpt()]).AND. &
+         ALL(SHAPE(optics%g)==[nc,nl,descriptor%get_ngpt()])) RETURN
+    END IF
+    CALL require(optics%alloc_2str(nc,nl))
+  END SUBROUTINE
+
+  SUBROUTINE ensure_lw_source(source,nc,nl)
+    TYPE(ty_source_func_lw), INTENT(INOUT) :: source
+    INTEGER, INTENT(IN) :: nc,nl
+    INTEGER :: ng
+    IF(.NOT.source%is_initialized()) CALL require(source%init(gas_lw))
+    ng=gas_lw%get_ngpt()
+    IF(ALLOCATED(source%lay_source).AND.ALLOCATED(source%lev_source).AND. &
+       ALLOCATED(source%sfc_source).AND.ALLOCATED(source%sfc_source_Jac)) THEN
+      IF(ALL(SHAPE(source%lay_source)==[nc,nl,ng]).AND.ALL(SHAPE(source%lev_source)==[nc,nl+1,ng]).AND. &
+         ALL(SHAPE(source%sfc_source)==[nc,ng]).AND.ALL(SHAPE(source%sfc_source_Jac)==[nc,ng])) RETURN
+    END IF
+    CALL require(source%alloc(nc,nl))
+  END SUBROUTINE
+
+  SUBROUTINE prepare_gases(gases,nc,nl,old_nc,old_nl,names)
+    TYPE(ty_gas_concs), INTENT(INOUT) :: gases
+    INTEGER, INTENT(IN) :: nc,nl
+    INTEGER, INTENT(INOUT) :: old_nc,old_nl
+    CHARACTER(LEN=*), INTENT(IN) :: names(:)
+    IF(.NOT.ALLOCATED(gases%gas_names).OR.nc/=old_nc.OR.nl/=old_nl) THEN
+      ! set_vmr rejects changed dimensions; init releases every old pointer target.
+      CALL require(gases%init(names))
+      old_nc=nc; old_nl=nl
+    END IF
+  END SUBROUTINE
+
+  SUBROUTINE ensure_sw_diagnostics(work,nc,nl)
+    TYPE(ty_rrtmgp_sw_workspace), INTENT(INOUT) :: work
+    INTEGER, INTENT(IN) :: nc,nl
+    INTEGER :: nb,ng
+    nb=gas_sw%get_nband(); ng=gas_sw%get_ngpt()
+    IF(ALLOCATED(work%raw_gas_tau)) THEN
+      IF(ANY(SHAPE(work%raw_gas_tau)/=[nc,nl,ng])) CALL release_sw_diagnostics(work)
+    END IF
+    IF(.NOT.ALLOCATED(work%raw_gas_tau)) THEN
+      ALLOCATE(work%raw_gas_tau(nc,nl,ng),work%raw_cloud_tau(nc,nl,nb),work%raw_precip_tau(nc,nl,nb), &
+        work%raw_frozen_g(nc,nl,nb),work%raw_frozen_h(nc,nl,nb),work%direct_gpt(nc,nl+1,ng), &
+        work%direct_band(nc,nl+1,nb),work%precip_tau_raw(nc,nl,nb))
+    END IF
+    ! Branch defaults and accumulators must be reset on every daylight call.
+    work%raw_gas_tau=0._wp; work%raw_cloud_tau=0._wp; work%raw_precip_tau=0._wp
+    work%raw_frozen_g=0._wp; work%raw_frozen_h=0._wp
+    work%direct_gpt=0._wp; work%direct_band=0._wp; work%precip_tau_raw=0._wp
+  END SUBROUTINE
+
+  SUBROUTINE ensure_sw_spectral(work)
+    TYPE(ty_rrtmgp_sw_workspace), INTENT(INOUT) :: work
+    INTEGER :: b,nb
+    IF(ALLOCATED(work%bands)) RETURN
+    nb=gas_sw%get_nband()
+    work%bands=gas_sw%get_band_lims_wavenumber()
+    work%gpoint_band=gas_sw%get_gpoint_bands()
+    IF(ANY(work%gpoint_band<1).OR.ANY(work%gpoint_band>nb)) CALL require('RRTMGP_SW_INVALID_GPOINT_BAND_MAP')
+    ALLOCATE(work%visible_weight(nb))
+    DO b=1,nb
+      ! Pinned UFS convention: the 12850--16000 cm-1 band is half VIS/NIR.
+      IF(work%bands(2,b)<=12850._wp) THEN
+        work%visible_weight(b)=0._wp
+      ELSE IF(work%bands(1,b)>=16000._wp) THEN
+        work%visible_weight(b)=1._wp
+      ELSE IF(work%bands(1,b)==12850._wp.AND.work%bands(2,b)==16000._wp) THEN
+        work%visible_weight(b)=0.5_wp
+      ELSE
+        CALL require('SW VIS/NIR partition requires the 12850--16000 cm-1 transition band')
+      END IF
+    END DO
+  END SUBROUTINE
+
+  SUBROUTINE release_1scl(optics)
+    TYPE(ty_optical_props_1scl), INTENT(INOUT) :: optics
+    IF(ALLOCATED(optics%tau)) DEALLOCATE(optics%tau)
+    CALL optics%finalize()
+  END SUBROUTINE
+
+  SUBROUTINE release_2str(optics)
+    TYPE(ty_optical_props_2str), INTENT(INOUT) :: optics
+    IF(ALLOCATED(optics%tau)) DEALLOCATE(optics%tau)
+    IF(ALLOCATED(optics%ssa)) DEALLOCATE(optics%ssa)
+    IF(ALLOCATED(optics%g)) DEALLOCATE(optics%g)
+    CALL optics%finalize()
+  END SUBROUTINE
+
+  SUBROUTINE release_lw_workspace(work)
+    TYPE(ty_rrtmgp_lw_workspace), INTENT(INOUT) :: work
+    CALL work%gases%reset()
+    CALL release_1scl(work%atmos); CALL release_1scl(work%clouds)
+    CALL release_1scl(work%snow); CALL release_1scl(work%sampled); CALL release_1scl(work%frozen)
+    CALL work%source%finalize()
+    work%nc=0; work%nl=0
+  END SUBROUTINE
+
+  SUBROUTINE release_sw_diagnostics(work)
+    TYPE(ty_rrtmgp_sw_workspace), INTENT(INOUT) :: work
+    IF(ALLOCATED(work%raw_gas_tau)) DEALLOCATE(work%raw_gas_tau,work%raw_cloud_tau,work%raw_precip_tau, &
+      work%raw_frozen_g,work%raw_frozen_h,work%direct_gpt,work%direct_band,work%precip_tau_raw)
+  END SUBROUTINE
+
+  SUBROUTINE release_sw_workspace(work)
+    TYPE(ty_rrtmgp_sw_workspace), INTENT(INOUT) :: work
+    CALL work%gases%reset()
+    CALL release_2str(work%atmos); CALL release_2str(work%clouds)
+    CALL release_2str(work%snow); CALL release_2str(work%sampled); CALL release_2str(work%frozen)
+    CALL release_sw_diagnostics(work)
+    IF(ALLOCATED(work%bands)) DEALLOCATE(work%bands,work%visible_weight,work%gpoint_band)
+    work%nc=0; work%nl=0
   END SUBROUTINE
 
   SUBROUTINE rrtmgp_coeff_fatal(message)
@@ -156,11 +310,11 @@ CONTAINS
     IF(PRESENT(context)) error_message=TRIM(context)//' '//error_message
   END FUNCTION
 
-  SUBROUTINE add_frozen_lw(atmos,tlay,gwp,hwp,lambda_g,lambda_h,frozen_context)
+  SUBROUTINE add_frozen_lw(atmos,frozen,tlay,gwp,hwp,lambda_g,lambda_h,frozen_context)
     TYPE(ty_optical_props_1scl), INTENT(INOUT) :: atmos
     REAL, INTENT(IN) :: tlay(:,:),gwp(:,:),hwp(:,:),lambda_g(:,:),lambda_h(:,:)
     CHARACTER(LEN=*), OPTIONAL, INTENT(IN) :: frozen_context
-    TYPE(ty_optical_props_1scl) :: frozen
+    TYPE(ty_optical_props_1scl), INTENT(INOUT) :: frozen
     REAL(real64) :: gt(SIZE(tlay,1),SIZE(tlay,2),16),ht(SIZE(tlay,1),SIZE(tlay,2),16)
     INTEGER :: status
     CHARACTER(LEN=1024) :: message
@@ -168,7 +322,7 @@ CONTAINS
     IF(status/=0) CALL require(frozen_error('RRTMGP_FROZEN_LW_GRAUPEL',message,frozen_context))
     CALL query_lw(FROZEN_HAIL,REAL(lambda_h,real64),REAL(tlay,real64),REAL(hwp,real64),ht,status,message)
     IF(status/=0) CALL require(frozen_error('RRTMGP_FROZEN_LW_HAIL',message,frozen_context))
-    CALL require(frozen%alloc_1scl(SIZE(tlay,1),SIZE(tlay,2),cloud_lw))
+    CALL ensure_1scl(frozen,SIZE(tlay,1),SIZE(tlay,2),cloud_lw)
     frozen%tau=REAL(gt+ht,wp)
     IF(trace_active('LW')) THEN
       CALL trace_result('LW','GRAUPEL_TAU_ABS',gt)
@@ -180,12 +334,12 @@ CONTAINS
     CALL require(frozen%increment(atmos))
   END SUBROUTINE
 
-  SUBROUTINE add_frozen_sw(atmos,gwp,hwp,lambda_g,lambda_h,frozen_context,raw_tau_g_out,raw_tau_h_out)
+  SUBROUTINE add_frozen_sw(atmos,frozen,gwp,hwp,lambda_g,lambda_h,frozen_context,raw_tau_g_out,raw_tau_h_out)
     TYPE(ty_optical_props_2str), INTENT(INOUT) :: atmos
     REAL, INTENT(IN) :: gwp(:,:),hwp(:,:),lambda_g(:,:),lambda_h(:,:)
     CHARACTER(LEN=*), OPTIONAL, INTENT(IN) :: frozen_context
     REAL(wp), OPTIONAL, INTENT(OUT) :: raw_tau_g_out(:,:,:),raw_tau_h_out(:,:,:)
-    TYPE(ty_optical_props_2str) :: frozen
+    TYPE(ty_optical_props_2str), INTENT(INOUT) :: frozen
     REAL(real64) :: gt(SIZE(gwp,1),SIZE(gwp,2),14),gw(SIZE(gwp,1),SIZE(gwp,2),14), &
                     gmg(SIZE(gwp,1),SIZE(gwp,2),14),ht(SIZE(gwp,1),SIZE(gwp,2),14), &
                     hw(SIZE(gwp,1),SIZE(gwp,2),14),hmg(SIZE(gwp,1),SIZE(gwp,2),14)
@@ -203,7 +357,7 @@ CONTAINS
       raw_tau_g_out=REAL(gt,wp)
       raw_tau_h_out=REAL(ht,wp)
     END IF
-    CALL require(frozen%alloc_2str(SIZE(gwp,1),SIZE(gwp,2),cloud_sw))
+    CALL ensure_2str(frozen,SIZE(gwp,1),SIZE(gwp,2),cloud_sw)
     frozen%tau=REAL(gt+ht,wp)
     frozen%ssa=REAL((gw+hw)/MAX(gt+ht,TINY(1._real64)),wp)
     frozen%g=REAL((gmg+hmg)/MAX(gw+hw,TINY(1._real64)),wp)
@@ -238,7 +392,6 @@ CONTAINS
     CALL rrtmgp_check_nonnegative('n2o',n2o)
     CALL rrtmgp_check_nonnegative('ch4',ch4)
     CALL rrtmgp_check_nonnegative('o2',o2)
-    CALL require(gases%init(names_sw))
     CALL require(gases%set_vmr('h2o',REAL(h2o,wp)))
     CALL require(gases%set_vmr('co2',REAL(co2,wp)))
     CALL require(gases%set_vmr('o3',REAL(o3,wp)))
@@ -269,7 +422,6 @@ CONTAINS
     CALL rrtmgp_check_nonnegative('n2o',n2o)
     CALL rrtmgp_check_nonnegative('ch4',ch4)
     CALL rrtmgp_check_nonnegative('o2',o2)
-    CALL require(gases%init(names_lw))
     CALL require(gases%set_vmr('h2o',REAL(h2o,wp)))
     CALL require(gases%set_vmr('co2',REAL(co2,wp)))
     CALL require(gases%set_vmr('o3',REAL(o3,wp)))
@@ -367,10 +519,10 @@ CONTAINS
     END IF
   END FUNCTION gas_dry_column
 
-  SUBROUTINE rrtmgp_lw_column(play,plev,tlay,tlev,tsfc,h2o,co2,o3,n2o,ch4,o2,emis, &
+  RECURSIVE SUBROUTINE rrtmgp_lw_column(play,plev,tlay,tlev,tsfc,h2o,co2,o3,n2o,ch4,o2,emis, &
                              cf,lwp,iwp,swp,rel,rei,res,iceflag,overlap,seed, &
                              up,dn,hr,upc,dnc,hrc,column_seeds,rwp,native_dry_layer_mass_kg_m2,gwp,hwp,lambda_g,lambda_h, &
-                             frozen_context,cfc11vmr,cfc12vmr,cfc22vmr,ccl4vmr)
+                             frozen_context,cfc11vmr,cfc12vmr,cfc22vmr,ccl4vmr,workspace)
     REAL, INTENT(IN) :: play(:,:),plev(:,:),tlay(:,:),tlev(:,:),tsfc(:),emis(:,:)
     REAL, INTENT(IN) :: h2o(:,:),co2(:,:),o3(:,:),n2o(:,:),ch4(:,:),o2(:,:)
     REAL, INTENT(IN) :: cf(:,:),lwp(:,:),iwp(:,:),swp(:,:),rel(:,:),rei(:,:),res(:,:)
@@ -381,9 +533,9 @@ CONTAINS
     CHARACTER(LEN=*), OPTIONAL, INTENT(IN) :: frozen_context
     REAL, OPTIONAL, INTENT(IN) :: cfc11vmr(:,:),cfc12vmr(:,:),cfc22vmr(:,:),ccl4vmr(:,:)
     REAL, INTENT(OUT) :: up(:,:),dn(:,:),hr(:,:),upc(:,:),dnc(:,:),hrc(:,:)
-    TYPE(ty_gas_concs) :: gases
-    TYPE(ty_optical_props_1scl) :: atmos,clouds,snow,sampled
-    TYPE(ty_source_func_lw) :: source
+    TYPE(ty_rrtmgp_lw_workspace), OPTIONAL, TARGET, INTENT(INOUT) :: workspace
+    TYPE(ty_rrtmgp_lw_workspace), TARGET :: local_workspace
+    TYPE(ty_rrtmgp_lw_workspace), POINTER :: work
     TYPE(ty_fluxes_broadband) :: flux
     REAL(wp), TARGET :: fu(SIZE(plev,1),SIZE(plev,2)),fd(SIZE(plev,1),SIZE(plev,2))
     REAL(wp) :: col_dry(SIZE(play,1),SIZE(play,2))
@@ -393,6 +545,12 @@ CONTAINS
     LOGICAL :: mask(SIZE(play,1),SIZE(play,2),gas_lw%get_ngpt())
     INTEGER :: nc,nl,precip_status
     LOGICAL :: trace_gases
+    IF(PRESENT(workspace)) THEN
+      work=>workspace
+    ELSE
+      work=>local_workspace
+    END IF
+    ASSOCIATE(gases=>work%gases,atmos=>work%atmos,clouds=>work%clouds,snow=>work%snow,sampled=>work%sampled,source=>work%source)
     IF(.NOT.ready) CALL require('initialization must precede parallel column calls')
     CALL validate_frozen_inputs(SHAPE(play),gwp,hwp,lambda_g,lambda_h,frozen_context)
     CALL rrtmgp_validate_column_inputs(play,plev,tlay,cf,lwp,iwp,swp,rel,rei,res)
@@ -507,10 +665,11 @@ CONTAINS
       CALL trace_input_end('LW')
       CALL trace_result_start('LW',nc,nl)
     END IF
+    CALL prepare_gases(gases,nc,nl,work%nc,work%nl,names_lw)
     CALL set_gases_lw(gases,h2o,co2,o3,n2o,ch4,o2,cfc11vmr,cfc12vmr,cfc22vmr,ccl4vmr)
     col_dry=gas_dry_column(h2o,plev,native_dry_layer_mass_kg_m2)
-    CALL require(atmos%alloc_1scl(nc,nl,gas_lw))
-    CALL require(source%alloc(nc,nl,gas_lw))
+    CALL ensure_1scl(atmos,nc,nl,gas_lw)
+    CALL ensure_lw_source(source,nc,nl)
     CALL require(gas_lw%gas_optics(REAL(play,wp)*100._wp,REAL(plev,wp)*100._wp, &
                  REAL(tlay,wp),REAL(tsfc,wp),gases,atmos,source,col_dry=col_dry,tlev=REAL(tlev,wp)))
     IF(trace_active('LW')) THEN
@@ -525,9 +684,9 @@ CONTAINS
     hrc=REAL(heat*86400._wp)
     ! A selected replay also records prepared optics for clear/overlap-zero controls.
     IF((ANY(cf>0.).AND.overlap/=0).OR.trace_active('LW')) THEN
-      CALL require(clouds%alloc_1scl(nc,nl,cloud_lw))
-      CALL require(snow%alloc_1scl(nc,nl,cloud_lw))
-      CALL require(sampled%alloc_1scl(nc,nl,gas_lw))
+      CALL ensure_1scl(clouds,nc,nl,cloud_lw)
+      CALL ensure_1scl(snow,nc,nl,cloud_lw)
+      CALL ensure_1scl(sampled,nc,nl,gas_lw)
       rl=MAX(cloud_lw%get_min_radius_liq(),MIN(cloud_lw%get_max_radius_liq(),REAL(rel,wp)))
       di=MAX(cloud_lw%get_min_radius_ice(),MIN(cloud_lw%get_max_radius_ice(),ice_diameter(rei,iceflag)))
       ds=MAX(cloud_lw%get_min_radius_ice(),MIN(cloud_lw%get_max_radius_ice(),2._wp*REAL(res,wp)))
@@ -558,7 +717,7 @@ CONTAINS
       CALL require(draw_samples(mask,clouds,sampled))
       IF(ANY(cf>0.).AND.overlap/=0) CALL require(sampled%increment(atmos))
     END IF
-    IF(rrtmgp_frozen_enabled()) CALL add_frozen_lw(atmos,tlay,gwp,hwp,lambda_g,lambda_h,frozen_context)
+    IF(rrtmgp_frozen_enabled()) CALL add_frozen_lw(atmos,work%frozen,tlay,gwp,hwp,lambda_g,lambda_h,frozen_context)
     IF(trace_active('LW')) THEN
       CALL trace_result('LW','TOTAL_TAU',atmos%tau)
     END IF
@@ -574,13 +733,15 @@ CONTAINS
       CALL trace_result('LW','DNC',dnc)
       CALL trace_result('LW','HRC',hrc)
     END IF
+    END ASSOCIATE
+    IF(.NOT.PRESENT(workspace)) CALL release_lw_workspace(local_workspace)
   END SUBROUTINE
 
-  SUBROUTINE rrtmgp_sw_column(play,plev,tlay,h2o,co2,o3,n2o,ch4,o2, &
+  RECURSIVE SUBROUTINE rrtmgp_sw_column(play,plev,tlay,h2o,co2,o3,n2o,ch4,o2, &
                              avdir,avdif,andir,andif,mu0,solar, &
                              cf,lwp,iwp,swp,rel,rei,res,iceflag,overlap,seed, &
                              up,dn,hr,upc,dnc,hrc,direct,diffuse,directc,visdir,visdif,nirdir,nirdif,column_seeds,rwp,native_dry_layer_mass_kg_m2,gwp,hwp,lambda_g,lambda_h,frozen_context, &
-                             direct_unscaled,directc_unscaled,visdir_unscaled,nirdir_unscaled)
+                             direct_unscaled,directc_unscaled,visdir_unscaled,nirdir_unscaled,workspace)
     REAL, INTENT(IN) :: play(:,:),plev(:,:),tlay(:,:)
     REAL, INTENT(IN) :: h2o(:,:),co2(:,:),o3(:,:),n2o(:,:),ch4(:,:),o2(:,:)
     REAL, INTENT(IN) :: avdir(:),avdif(:),andir(:),andif(:),mu0(:),solar
@@ -594,8 +755,9 @@ CONTAINS
     REAL, INTENT(OUT) :: up(:,:),dn(:,:),hr(:,:),upc(:,:),dnc(:,:),hrc(:,:)
     REAL, INTENT(OUT) :: direct(:,:),diffuse(:,:),directc(:,:)
     REAL, INTENT(OUT) :: visdir(:,:),visdif(:,:),nirdir(:,:),nirdif(:,:)
-    TYPE(ty_gas_concs) :: gases
-    TYPE(ty_optical_props_2str) :: atmos,clouds,snow,sampled
+    TYPE(ty_rrtmgp_sw_workspace), OPTIONAL, TARGET, INTENT(INOUT) :: workspace
+    TYPE(ty_rrtmgp_sw_workspace), TARGET :: local_workspace
+    TYPE(ty_rrtmgp_sw_workspace), POINTER :: work
     TYPE(ty_fluxes_byband) :: flux
     REAL(wp), TARGET :: fu(SIZE(plev,1),SIZE(plev,2)),fd(SIZE(plev,1),SIZE(plev,2)), &
                         fdir(SIZE(plev,1),SIZE(plev,2)), &
@@ -605,15 +767,16 @@ CONTAINS
     REAL(wp) :: heat(SIZE(play,1),SIZE(play,2)),zero(SIZE(play,1),SIZE(play,2)), &
                 rl(SIZE(play,1),SIZE(play,2)),di(SIZE(play,1),SIZE(play,2)),ds(SIZE(play,1),SIZE(play,2))
     REAL(wp) :: toa(SIZE(play,1),gas_sw%get_ngpt()),albdir(gas_sw%get_nband(),SIZE(play,1)), &
-                albdif(gas_sw%get_nband(),SIZE(play,1)),bands(2,gas_sw%get_nband()), &
-                visible_weight(gas_sw%get_nband())
+                albdif(gas_sw%get_nband(),SIZE(play,1))
     LOGICAL :: mask(SIZE(play,1),SIZE(play,2),gas_sw%get_ngpt())
-    REAL(wp), ALLOCATABLE :: raw_gas_tau(:,:,:),raw_cloud_tau(:,:,:),raw_precip_tau(:,:,:), &
-                             raw_frozen_g(:,:,:),raw_frozen_h(:,:,:),direct_gpt(:,:,:),direct_band(:,:,:), &
-                             precip_tau_raw(:,:,:)
-    INTEGER, ALLOCATABLE :: gpoint_band(:)
     LOGICAL :: need_unscaled
     INTEGER :: nc,nl,b,c,g,k,precip_status,nb,ngpt
+    IF(PRESENT(workspace)) THEN
+      work=>workspace
+    ELSE
+      work=>local_workspace
+    END IF
+    ASSOCIATE(gases=>work%gases,atmos=>work%atmos,clouds=>work%clouds,snow=>work%snow,sampled=>work%sampled)
     IF(.NOT.ready) CALL require('initialization must precede parallel column calls')
     CALL validate_frozen_inputs(SHAPE(play),gwp,hwp,lambda_g,lambda_h,frozen_context)
     CALL rrtmgp_validate_column_inputs(play,plev,tlay,cf,lwp,iwp,swp,rel,rei,res)
@@ -670,18 +833,17 @@ CONTAINS
          ANY(SHAPE(visdir_unscaled)/=SHAPE(plev)).OR.ANY(SHAPE(nirdir_unscaled)/=SHAPE(plev))) &
         CALL require('RRTMGP_SW_PREDELTA_OUTPUT_SHAPE_MISMATCH')
     END IF
+    CALL prepare_gases(gases,nc,nl,work%nc,work%nl,names_sw)
     CALL set_gases_sw(gases,h2o,co2,o3,n2o,ch4,o2)
     col_dry=gas_dry_column(h2o,plev,native_dry_layer_mass_kg_m2)
-    IF(ALL(mu0<=0.)) RETURN
+    IF(ALL(mu0<=0.)) THEN
+      IF(.NOT.PRESENT(workspace)) CALL release_sw_workspace(local_workspace)
+      RETURN
+    END IF
     IF(ANY(mu0<=0.)) CALL require('daylight columns must be packed separately')
     IF(need_unscaled) THEN
       nb=gas_sw%get_nband(); ngpt=gas_sw%get_ngpt()
-      ALLOCATE(raw_gas_tau(nc,nl,ngpt),raw_cloud_tau(nc,nl,nb),raw_precip_tau(nc,nl,nb), &
-               raw_frozen_g(nc,nl,nb),raw_frozen_h(nc,nl,nb),direct_gpt(nc,nl+1,ngpt), &
-               direct_band(nc,nl+1,nb),precip_tau_raw(nc,nl,nb),gpoint_band(ngpt))
-      raw_gas_tau=0._wp; raw_cloud_tau=0._wp; raw_precip_tau=0._wp
-      raw_frozen_g=0._wp; raw_frozen_h=0._wp; direct_gpt=0._wp; direct_band=0._wp
-      precip_tau_raw=0._wp
+      CALL ensure_sw_diagnostics(work,nc,nl)
     END IF
     IF(trace_active('SW')) THEN
       CALL trace_input_start('SW',nc,nl,overlap,seed,iceflag,udm_precip=PRESENT(rwp), &
@@ -732,10 +894,10 @@ CONTAINS
       CALL trace_input_end('SW')
       CALL trace_result_start('SW',nc,nl)
     END IF
-    CALL require(atmos%alloc_2str(nc,nl,gas_sw))
+    CALL ensure_2str(atmos,nc,nl,gas_sw)
     CALL require(gas_sw%gas_optics(REAL(play,wp)*100._wp,REAL(plev,wp)*100._wp, &
                                  REAL(tlay,wp),gases,atmos,toa,col_dry=col_dry))
-    IF(need_unscaled) raw_gas_tau=atmos%tau
+    IF(need_unscaled) work%raw_gas_tau=atmos%tau
     IF(trace_active('SW')) THEN
       CALL trace_result('SW','GAS_COL_DRY',col_dry)
       CALL trace_result('SW','GAS_TAU',atmos%tau)
@@ -746,21 +908,10 @@ CONTAINS
       IF(SUM(toa(c,:))<=0._wp) CALL require('TOA solar spectrum must have positive integral')
       toa(c,:)=toa(c,:)*(REAL(solar,wp)/SUM(toa(c,:)))
     END DO
-    bands=gas_sw%get_band_lims_wavenumber()
+    CALL ensure_sw_spectral(work)
     DO b=1,gas_sw%get_nband()
-      ! Pinned UFS/CCPP convention: the 12850--16000 cm-1 band is half VIS/NIR.
-      ! This is a band convention, not an exact integration at 0.7 micrometers.
-      IF(bands(2,b)<=12850._wp) THEN
-        visible_weight(b)=0._wp
-      ELSE IF(bands(1,b)>=16000._wp) THEN
-        visible_weight(b)=1._wp
-      ELSE IF(bands(1,b)==12850._wp.AND.bands(2,b)==16000._wp) THEN
-        visible_weight(b)=0.5_wp
-      ELSE
-        CALL require('SW VIS/NIR partition requires the 12850--16000 cm-1 transition band')
-      END IF
-      albdir(b,:)=(1._wp-visible_weight(b))*REAL(andir,wp)+visible_weight(b)*REAL(avdir,wp)
-      albdif(b,:)=(1._wp-visible_weight(b))*REAL(andif,wp)+visible_weight(b)*REAL(avdif,wp)
+      albdir(b,:)=(1._wp-work%visible_weight(b))*REAL(andir,wp)+work%visible_weight(b)*REAL(avdir,wp)
+      albdif(b,:)=(1._wp-work%visible_weight(b))*REAL(andif,wp)+work%visible_weight(b)*REAL(avdif,wp)
     END DO
     flux%flux_up=>fu; flux%flux_dn=>fd; flux%flux_dn_dir=>fdir
     flux%bnd_flux_dn=>bd; flux%bnd_flux_dn_dir=>bdir
@@ -769,9 +920,9 @@ CONTAINS
     CALL require(compute_heating_rate(fu,fd,REAL(plev,wp)*100._wp,heat)); hrc=REAL(heat*86400._wp)
     ! A selected replay also records prepared optics for clear/overlap-zero controls.
     IF((ANY(cf>0.).AND.overlap/=0).OR.trace_active('SW')) THEN
-      CALL require(clouds%alloc_2str(nc,nl,cloud_sw))
-      CALL require(snow%alloc_2str(nc,nl,cloud_sw))
-      CALL require(sampled%alloc_2str(nc,nl,gas_sw))
+      CALL ensure_2str(clouds,nc,nl,cloud_sw)
+      CALL ensure_2str(snow,nc,nl,cloud_sw)
+      CALL ensure_2str(sampled,nc,nl,gas_sw)
       rl=MAX(cloud_sw%get_min_radius_liq(),MIN(cloud_sw%get_max_radius_liq(),REAL(rel,wp)))
       di=MAX(cloud_sw%get_min_radius_ice(),MIN(cloud_sw%get_max_radius_ice(),ice_diameter(rei,iceflag)))
       ds=MAX(cloud_sw%get_min_radius_ice(),MIN(cloud_sw%get_max_radius_ice(),2._wp*REAL(res,wp)))
@@ -779,19 +930,19 @@ CONTAINS
       IF(PRESENT(rwp)) THEN
         ds=REAL(res,wp) ! Native UDM snow radius in micrometers.
         IF(need_unscaled) THEN
-          CALL rrtmgp_precip_sw_optics(REAL(rwp,wp),REAL(swp,wp),ds,bands, &
-               snow%tau,snow%ssa,snow%g,precip_status,raw_tau=precip_tau_raw)
+          CALL rrtmgp_precip_sw_optics(REAL(rwp,wp),REAL(swp,wp),ds,work%bands, &
+               snow%tau,snow%ssa,snow%g,precip_status,raw_tau=work%precip_tau_raw)
         ELSE
-          CALL rrtmgp_precip_sw_optics(REAL(rwp,wp),REAL(swp,wp),ds,bands, &
+          CALL rrtmgp_precip_sw_optics(REAL(rwp,wp),REAL(swp,wp),ds,work%bands, &
                snow%tau,snow%ssa,snow%g,precip_status)
         END IF
         IF(precip_status/=0) CALL require('RRTMGP_UDM_PRECIP_SW_INVALID_INPUT_OR_BANDS')
         IF(need_unscaled) THEN
-          raw_cloud_tau=clouds%tau
-          raw_precip_tau=precip_tau_raw
+          work%raw_cloud_tau=clouds%tau
+          work%raw_precip_tau=work%precip_tau_raw
           DO b=1,nb
             WHERE(rwp==0._wp.AND.swp==0._wp)
-              raw_precip_tau(:,:,b)=0._wp
+              work%raw_precip_tau(:,:,b)=0._wp
             END WHERE
           END DO
         END IF
@@ -813,7 +964,7 @@ CONTAINS
         CALL require(cloud_sw%cloud_optics(zero,REAL(swp,wp),rl,ds,snow))
       END IF
       CALL require(snow%increment(clouds))
-      IF(need_unscaled.AND..NOT.PRESENT(rwp)) raw_cloud_tau=clouds%tau
+      IF(need_unscaled.AND..NOT.PRESENT(rwp)) work%raw_cloud_tau=clouds%tau
     IF(trace_active('SW')) THEN
       CALL trace_result('SW','CLOUD_TAU',clouds%tau)
       CALL trace_result('SW','CLOUD_SSA',clouds%ssa)
@@ -837,61 +988,59 @@ CONTAINS
     END IF
     IF(rrtmgp_frozen_enabled()) THEN
       IF(need_unscaled) THEN
-        CALL add_frozen_sw(atmos,gwp,hwp,lambda_g,lambda_h,frozen_context,raw_frozen_g,raw_frozen_h)
+        CALL add_frozen_sw(atmos,work%frozen,gwp,hwp,lambda_g,lambda_h,frozen_context,work%raw_frozen_g,work%raw_frozen_h)
       ELSE
-        CALL add_frozen_sw(atmos,gwp,hwp,lambda_g,lambda_h,frozen_context)
+        CALL add_frozen_sw(atmos,work%frozen,gwp,hwp,lambda_g,lambda_h,frozen_context)
       END IF
     END IF
     IF(need_unscaled) THEN
-      gpoint_band=gas_sw%get_gpoint_bands()
-      IF(ANY(gpoint_band<1).OR.ANY(gpoint_band>nb)) CALL require('RRTMGP_SW_INVALID_GPOINT_BAND_MAP')
-      IF(ANY(.NOT.ieee_is_finite(raw_gas_tau)).OR.ANY(raw_gas_tau<0._wp).OR. &
-         ANY(.NOT.ieee_is_finite(raw_cloud_tau)).OR.ANY(raw_cloud_tau<0._wp).OR. &
-         ANY(.NOT.ieee_is_finite(raw_precip_tau)).OR.ANY(raw_precip_tau<0._wp).OR. &
-         ANY(.NOT.ieee_is_finite(raw_frozen_g)).OR.ANY(raw_frozen_g<0._wp).OR. &
-         ANY(.NOT.ieee_is_finite(raw_frozen_h)).OR.ANY(raw_frozen_h<0._wp)) &
+      IF(ANY(.NOT.ieee_is_finite(work%raw_gas_tau)).OR.ANY(work%raw_gas_tau<0._wp).OR. &
+         ANY(.NOT.ieee_is_finite(work%raw_cloud_tau)).OR.ANY(work%raw_cloud_tau<0._wp).OR. &
+         ANY(.NOT.ieee_is_finite(work%raw_precip_tau)).OR.ANY(work%raw_precip_tau<0._wp).OR. &
+         ANY(.NOT.ieee_is_finite(work%raw_frozen_g)).OR.ANY(work%raw_frozen_g<0._wp).OR. &
+         ANY(.NOT.ieee_is_finite(work%raw_frozen_h)).OR.ANY(work%raw_frozen_h<0._wp)) &
         CALL require('RRTMGP_SW_PREDELTA_RAW_EXTINCTION_INVALID')
       directc_unscaled=directc
       DO c=1,nc
         DO g=1,ngpt
-          direct_gpt(c,nl+1,g)=toa(c,g)*REAL(mu0(c),wp)
-          b=gpoint_band(g)
+          work%direct_gpt(c,nl+1,g)=toa(c,g)*REAL(mu0(c),wp)
+          b=work%gpoint_band(g)
           DO k=nl,1,-1
             ! G/H are occurrence-one uniform grid-mean precipitation. Only
             ! native cloud and rain/snow follow the realized MCICA mask.
             IF(overlap/=0.AND.mask(c,k,g)) THEN
-              direct_gpt(c,k,g)=direct_gpt(c,k+1,g)*EXP(-(raw_gas_tau(c,k,g)+ &
-                   raw_cloud_tau(c,k,b)+raw_precip_tau(c,k,b)+raw_frozen_g(c,k,b)+ &
-                   raw_frozen_h(c,k,b))/REAL(mu0(c),wp))
+              work%direct_gpt(c,k,g)=work%direct_gpt(c,k+1,g)*EXP(-(work%raw_gas_tau(c,k,g)+ &
+                   work%raw_cloud_tau(c,k,b)+work%raw_precip_tau(c,k,b)+work%raw_frozen_g(c,k,b)+ &
+                   work%raw_frozen_h(c,k,b))/REAL(mu0(c),wp))
             ELSE
-              direct_gpt(c,k,g)=direct_gpt(c,k+1,g)*EXP(-(raw_gas_tau(c,k,g)+ &
-                   raw_frozen_g(c,k,b)+raw_frozen_h(c,k,b))/REAL(mu0(c),wp))
+              work%direct_gpt(c,k,g)=work%direct_gpt(c,k+1,g)*EXP(-(work%raw_gas_tau(c,k,g)+ &
+                   work%raw_frozen_g(c,k,b)+work%raw_frozen_h(c,k,b))/REAL(mu0(c),wp))
             END IF
           END DO
           DO k=1,nl+1
-            direct_band(c,k,b)=direct_band(c,k,b)+direct_gpt(c,k,g)
+            work%direct_band(c,k,b)=work%direct_band(c,k,b)+work%direct_gpt(c,k,g)
           END DO
         END DO
       END DO
       DO k=1,nl+1
-        direct_unscaled(:,k)=SUM(direct_gpt(:,k,:),DIM=2)
+        direct_unscaled(:,k)=SUM(work%direct_gpt(:,k,:),DIM=2)
         DO b=1,nb
-          visdir_unscaled(:,k)=visdir_unscaled(:,k)+visible_weight(b)*direct_band(:,k,b)
-          nirdir_unscaled(:,k)=nirdir_unscaled(:,k)+(1._wp-visible_weight(b))*direct_band(:,k,b)
+          visdir_unscaled(:,k)=visdir_unscaled(:,k)+work%visible_weight(b)*work%direct_band(:,k,b)
+          nirdir_unscaled(:,k)=nirdir_unscaled(:,k)+(1._wp-work%visible_weight(b))*work%direct_band(:,k,b)
         END DO
       END DO
       IF(trace_active('SW')) THEN
         CALL trace_input('SW','SW_DIRECT_PREDELTA_POLICY',RESHAPE([1.],[1,1]))
         CALL trace_input('SW','TOA_GPOINT',REAL(toa))
-        CALL trace_input('SW','RAW_GAS_TAU',REAL(raw_gas_tau))
+        CALL trace_input('SW','RAW_GAS_TAU',REAL(work%raw_gas_tau))
         CALL trace_input('SW','MCICA_MASK',REAL(MERGE(1._wp,0._wp,mask)))
-        CALL trace_input('SW','RAW_CLOUD_TAU',REAL(raw_cloud_tau))
-        CALL trace_input('SW','RAW_PRECIP_TAU',REAL(raw_precip_tau))
-        CALL trace_input('SW','RAW_GRAUPEL_TAU_EXT',REAL(raw_frozen_g))
-        CALL trace_input('SW','RAW_HAIL_TAU_EXT',REAL(raw_frozen_h))
+        CALL trace_input('SW','RAW_CLOUD_TAU',REAL(work%raw_cloud_tau))
+        CALL trace_input('SW','RAW_PRECIP_TAU',REAL(work%raw_precip_tau))
+        CALL trace_input('SW','RAW_GRAUPEL_TAU_EXT',REAL(work%raw_frozen_g))
+        CALL trace_input('SW','RAW_HAIL_TAU_EXT',REAL(work%raw_frozen_h))
         CALL trace_input('SW','BAND_LIMS_GPOINT',REAL(gas_sw%get_band_lims_gpoint()))
-        CALL trace_input('SW','BAND_LIMS_WAVENUMBER',REAL(bands))
-        CALL trace_input('SW','VISIBLE_WEIGHT',REAL(RESHAPE(visible_weight,[nb,1])))
+        CALL trace_input('SW','BAND_LIMS_WAVENUMBER',REAL(work%bands))
+        CALL trace_input('SW','VISIBLE_WEIGHT',REAL(RESHAPE(work%visible_weight,[nb,1])))
       END IF
     END IF
     IF(trace_active('SW')) THEN
@@ -903,10 +1052,10 @@ CONTAINS
     up=REAL(fu); dn=REAL(fd); direct=REAL(fdir); diffuse=REAL(fd-fdir)
     CALL require(compute_heating_rate(fu,fd,REAL(plev,wp)*100._wp,heat)); hr=REAL(heat*86400._wp)
     DO b=1,gas_sw%get_nband()
-      visdir=visdir+REAL(visible_weight(b)*bdir(:,:,b))
-      visdif=visdif+REAL(visible_weight(b)*(bd(:,:,b)-bdir(:,:,b)))
-      nirdir=nirdir+REAL((1._wp-visible_weight(b))*bdir(:,:,b))
-      nirdif=nirdif+REAL((1._wp-visible_weight(b))*(bd(:,:,b)-bdir(:,:,b)))
+      visdir=visdir+REAL(work%visible_weight(b)*bdir(:,:,b))
+      visdif=visdif+REAL(work%visible_weight(b)*(bd(:,:,b)-bdir(:,:,b)))
+      nirdir=nirdir+REAL((1._wp-work%visible_weight(b))*bdir(:,:,b))
+      nirdif=nirdif+REAL((1._wp-work%visible_weight(b))*(bd(:,:,b)-bdir(:,:,b)))
     END DO
     IF(trace_active('SW')) THEN
       CALL trace_result('SW','UP',up)
@@ -929,5 +1078,7 @@ CONTAINS
         CALL trace_result('SW','NIRDIR_PREDELTA',nirdir_unscaled)
       END IF
     END IF
+    END ASSOCIATE
+    IF(.NOT.PRESENT(workspace)) CALL release_sw_workspace(local_workspace)
   END SUBROUTINE
 END MODULE module_ra_rrtmgp

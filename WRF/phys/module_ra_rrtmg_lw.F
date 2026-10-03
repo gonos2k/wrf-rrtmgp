@@ -11567,7 +11567,7 @@ use mcica_subcol_gen_lw, only: mcica_subcol_lw
 CONTAINS
 
 !------------------------------------------------------------------
-   SUBROUTINE RRTMG_LWRAD(                                        &
+   RECURSIVE SUBROUTINE RRTMG_LWRAD(                                        &
                        rthratenlw,                                &
                        rthratenlwc,                               &
                        lwupt, lwuptc, lwuptcln, lwdnt, lwdntc, lwdntcln, &
@@ -11611,11 +11611,13 @@ CONTAINS
    USE MODULE_RA_CLWRF_SUPPORT, ONLY : read_CAMgases
 
    USE module_mp_udm, ONLY: cldf_diag, udm_radiation_negative_limits
-   USE module_ra_rrtmgp, ONLY: rrtmgp_lw_column, rrtmgp_frozen_enabled
+   USE module_ra_rrtmgp, ONLY: rrtmgp_lw_column, rrtmgp_frozen_enabled, &
+        ty_rrtmgp_lw_workspace,rrtmgp_release_workspace
    USE module_ra_rrtmgp_input, ONLY: rrtmgp_build_udm_inputs, rrtmgp_column_seed, rrtmgp_udm_frozen_lambdas
    USE module_ra_rrtmgp_trace, ONLY: trace_start, trace_active, trace_raw_start, trace_raw, &
         trace_raw_end, trace_result, trace_end
    IMPLICIT NONE
+   TYPE(ty_rrtmgp_lw_workspace) :: gp_workspace
    LOGICAL, OPTIONAL, INTENT(IN) :: use_rrtmgp
    LOGICAL, OPTIONAL, INTENT(IN) :: f_qh
    REAL, OPTIONAL, INTENT(IN) :: qh3d(ims:ime,kms:kme,jms:jme)
@@ -13054,13 +13056,13 @@ CONTAINS
                gp_seed,uflx,dflx,hr,uflxc,dflxc,hrc,rwp=gp_rwp, &
              native_dry_layer_mass_kg_m2=RESHAPE(udm_dry_layer_mass(i,kts:kte,j),[1,kte-kts+1]), &
                gwp=gp_gwp,hwp=gp_hwp,lambda_g=gp_lambda_g,lambda_h=gp_lambda_h,frozen_context=gp_context, &
-               cfc11vmr=cfc11vmr,cfc12vmr=cfc12vmr,cfc22vmr=cfc22vmr,ccl4vmr=ccl4vmr)
+               cfc11vmr=cfc11vmr,cfc12vmr=cfc12vmr,cfc22vmr=cfc22vmr,ccl4vmr=ccl4vmr,workspace=gp_workspace)
            ELSE
              CALL rrtmgp_lw_column(play,plev,tlay,tlev,tsfc,h2ovmr,co2vmr,o3vmr,n2ovmr,ch4vmr,o2vmr,emis, &
                cldfrac,clwpth,ciwpth,cswpth,rel,rei,res,4,icld, &
                gp_seed,uflx,dflx,hr,uflxc,dflxc,hrc,rwp=gp_rwp, &
                native_dry_layer_mass_kg_m2=RESHAPE(udm_dry_layer_mass(i,kts:kte,j),[1,kte-kts+1]), &
-               cfc11vmr=cfc11vmr,cfc12vmr=cfc12vmr,cfc22vmr=cfc22vmr,ccl4vmr=ccl4vmr)
+               cfc11vmr=cfc11vmr,cfc12vmr=cfc12vmr,cfc22vmr=cfc22vmr,ccl4vmr=ccl4vmr,workspace=gp_workspace)
            END IF
            uflxcln=uflx; dflxcln=dflx
          ELSE
@@ -13137,6 +13139,7 @@ CONTAINS
 !
       end do i_loop
    end do j_loop                                           
+   IF(run_rrtmgp) CALL rrtmgp_release_workspace(gp_workspace)
 
 !-------------------------------------------------------------------
 
