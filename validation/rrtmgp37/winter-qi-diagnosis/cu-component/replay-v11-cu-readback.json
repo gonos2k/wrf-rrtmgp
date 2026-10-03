@@ -1,0 +1,84 @@
+{
+  "status": "EXPECTED_FATAL_PASS",
+  "case": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-winter-cu-adjustment/replay-v11/ra37",
+  "run": {
+    "return_code": 1,
+    "elapsed_seconds": 33.42310190200806,
+    "fatal_qi_matches_original": true,
+    "radiation_capture_matches_fatal": true,
+    "fatal_rank_matches_radiation_capture": true,
+    "whole_history_file_bitwise_equal": true,
+    "candidate_history_sha256": "e3fa7be56062c640e52f66c73aaa0bd798d56f0809c1d4501e3b4a0c9c227e4c",
+    "expected_fatal_reproduced": true
+  },
+  "cu_capture": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-winter-cu-adjustment/replay-v11/ra37/cu_capture/cu_qi_adjust_rank0002.csv",
+    "sha256": "2edb093b7bc35e6261e11e1619855d757eccaf98ff8f9be09dfd329b7de01d96",
+    "rank": 2,
+    "domain": 1,
+    "step": 171,
+    "i": 17,
+    "j": 58,
+    "k": 7,
+    "icloud_cu": 2,
+    "cu_physics": 1,
+    "icloud_bl_present": 1,
+    "icloud_bl": 0,
+    "flags_raw": [
+      2,
+      1,
+      171,
+      17,
+      58,
+      7,
+      2,
+      1,
+      1,
+      0,
+      1,
+      1,
+      1,
+      1
+    ],
+    "values": {
+      "seconds": 10200.0,
+      "qi_saved": 0.0,
+      "qi_pre_cu": 0.0,
+      "qi_cu": -2.811777051192621e-07,
+      "cldfra_dp": 0.0,
+      "cldfra_sh": 0.20000000298023224,
+      "cldfra_cu": 0.20000000298023224,
+      "qi_cu_product": -5.623554244493789e-08,
+      "qi_post_cu": -5.623554244493789e-08,
+      "qc_saved": 0.0,
+      "qc_pre_cu": 0.0,
+      "qc_cu": 0.0,
+      "qi_bl": -999.0,
+      "cldfra_bl": -999.0,
+      "aercu_opt": 0.0
+    }
+  },
+  "real32_equation": {
+    "float32_qi_cu_times_fraction": -5.623554244493789e-08,
+    "recorded_product": -5.623554244493789e-08,
+    "recorded_post_cu_qi": -5.623554244493789e-08,
+    "fatal_qi": -5.623554244493789e-08,
+    "all_equal": true
+  },
+  "radiation_record": [
+    {
+      "rank": 2,
+      "domain": 1,
+      "step": 171,
+      "i": 17,
+      "j": 58,
+      "k": 7,
+      "seconds": 10200.0,
+      "qi": -5.623554244493789e-08,
+      "temp_kind": "T3D_K"
+    }
+  ],
+  "pins_unchanged": true,
+  "receipt_sha256": "64daf781c2415cd8677cc0cd94af5d617d9bace6bd527a08437c75ced85b67d6",
+  "limitation": "Current runner was corrected after this execution, so its current SHA is not asserted as the exact script hash used by this run; the run receipt pins executable, inputs, WRF sources, runtime assets and launcher."
+}

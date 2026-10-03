@@ -1,0 +1,91 @@
+{
+  "build_command": "env WRF_SRC_ROOT_DIR=$PWD NETCDF=<repo>/build/deps/netcdf PATH=<repo>/build/deps/mpich-sock/bin:$PATH LD_LIBRARY_PATH=<netcdf>/lib:<root>/usr/lib/x86_64-linux-gnu:<mpich-sock>/lib:$LD_LIBRARY_PATH csh -f ./compile -j 12 em_real",
+  "build_logs": [
+    "clean.log",
+    "build.log",
+    "compile.log",
+    "compile-retry.log",
+    "compile-final.log"
+  ],
+  "capture_window": {
+    "elapsed_seconds_inclusive": [
+      10020,
+      10260
+    ],
+    "reason": "solve_em increments itimestep before first_rk_step_part1/radiation; elapsed time is authoritative.",
+    "step_guard_inclusive": [
+      167,
+      172
+    ],
+    "target_radiation_seconds": 10200
+  },
+  "compile_status": "PASS: csh -f ./compile -j 12 em_real emitted Executables successfully built; source frozen after this build.",
+  "configure_sha256": "44f85b7fc9b6994cb3784567e69d310580740a021b5f1ab1efb0586f25cfcba2",
+  "files": {
+    "configure.wrf": {
+      "original_sha256": "44f85b7fc9b6994cb3784567e69d310580740a021b5f1ab1efb0586f25cfcba2",
+      "scratch_sha256": "44f85b7fc9b6994cb3784567e69d310580740a021b5f1ab1efb0586f25cfcba2"
+    },
+    "dyn_em/solve_em.F": {
+      "original_sha256": "b5c60531fe83d530092b9169b40b2493c7f2cb3b8937948ee346af82a93a6642",
+      "scratch_sha256": "7bf72086cd3e4cbe4db5b8b2b1299e91d763b34d1ab92aa6af981e06424ba292"
+    },
+    "phys/Makefile": {
+      "original_sha256": "6387734fa2b60a8fa6644b3cf89fb866274b0803e4ab6b78b217a0a6c36a91ef",
+      "scratch_sha256": "55f251d045e2dfb19a787e50a814a9072679a5c8d03268eba7b0af6edc7d161a"
+    },
+    "phys/module_microphysics_driver.F": {
+      "original_sha256": "c3312bb1eb8a05bcbdf27f9536d6b85d9118def7dfd9cbc0aa49a1641ce4afa2",
+      "scratch_sha256": "925af47f0c6d699d5330425b0c4d4479029af8f87c5cf4883aff8016e9ba9ef1"
+    },
+    "phys/module_ra_rrtmg_lw.F": {
+      "original_sha256": "526afe545b1710c4ccd9607fb5681bd1c1dc0c0be668a20ba62e4a4c9be25c0e",
+      "scratch_sha256": "28ad145fdd507a7e80e8a8cc8006a35224667b47f774d9395c3e58d286117a7c"
+    },
+    "phys/udm_winter_capture.F": {
+      "original_sha256": null,
+      "scratch_sha256": "2f91d39bdf0910c32935ba7448222faa4f993fbe0dd072803ce527ca87927b82"
+    }
+  },
+  "final_compile_log_sha256": "1e6ab417a5f2cc0cb5bbb798b8ac1893c70cf5fbc70421ee2c8f0a6dde3c8ee1",
+  "frozen_case": {
+    "case_root": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-alternate-jan2000-data/paired-forecast-v2/ra37",
+    "namelist_sha256": "37806b6230d9a9479bae32611b6b70d0318ce852fe3931af84ba1e7a15bdcc58",
+    "original_production_executable_sha256": "176f589d657ca87df670cef3429d7474e674f3e44445eb7886aed871e36bef8f",
+    "preexisting_fatal_rank_log_sha256": "2d70d7d1ad0472450bf824eeef8a504e88b67c03c6c2ed3a05173f260caef0cc",
+    "preexisting_partial_history_sha256": "e3fa7be56062c640e52f66c73aaa0bd798d56f0809c1d4501e3b4a0c9c227e4c",
+    "table_sha256": "8cb00850c3f885f5ec0306563c1ec0a55b512478a7395d626c1c99cebf280583",
+    "wrfbdy_d01_sha256": "ba4241de4f4661a77733cf157f0c87f90668f107df86f8c92d092b56d7bd7bd4",
+    "wrfinput_d01_sha256": "0cc7e188ef585a93ab52550816c6af236932254820fb1bc6937f464bfed38637"
+  },
+  "model_executed": false,
+  "original_executable_sha256": "176f589d657ca87df670cef3429d7474e674f3e44445eb7886aed871e36bef8f",
+  "plan_sha256": "7c3b3784727ef84dedeab057ec9992ccb1fae275e06a72a8da85291f04508883",
+  "replay_preflight": {
+    "case": "replay-v6/ra37",
+    "model_executed": false,
+    "receipt": "replay-v6/ra37.receipt.json",
+    "receipt_sha256": "7ff0eb95831460575fcf22be3a8a14ec2aeaa9abc416cd81a3d8aa99812a3b7a",
+    "runner": "run_capture_replay.py",
+    "runner_sha256": "67acf4004e76374fc2d7d6fac3baf6f732dc9060f76d9ad808bbca61bf3f1a9c",
+    "runtime_links_verified": 92,
+    "source_pins_stable_pre_post": true,
+    "status": "PREFLIGHT_PASS_NOT_EXECUTED"
+  },
+  "scratch_executable_sha256": "336c0b065a2fdd6e7dedf33c2162a8cb3f773fc24329a01faceb9b269d720e25",
+  "source_commit": "e7c97ed661403b3922fcf752300c052611ef89cd",
+  "source_diff_sha256": "9f20a1862301b358ef8340315be0bce5e848aea73b905d280250503abdd78385",
+  "temperature_labels": {
+    "PRE_MICROPHYSICS/POST_PHYSICAL_BC/POST_SPEC_BDY": "T_2_K (grid%t_2 state variable, K)",
+    "RAD_PRE_BUILDER": "T3D_K (radiation t3d input, K)",
+    "UDM_PRE/UDM_POST": "THETA_K (th argument, K)"
+  },
+  "timing_order_review": "Radiation in first_rk_step_part1 precedes the current step UDM call. Compare POST_SPEC_BDY(n) with RAD_PRE_BUILDER(n+1); helper does not identify physical producer.",
+  "toolchain": {
+    "compiler": "GNU Fortran 13.3.0",
+    "mpi_show": "gfortran -I/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/mpich-sock/include -I/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/mpich-sock/include -L/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/mpich-sock/lib -lmpifort -Wl,-rpath -Wl,/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/mpich-sock/lib -Wl,--enable-new-dtags -lmpi",
+    "netcdf": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/netcdf",
+    "parallel": "dm+sm; OpenMP enabled (-fopenmp); WRF configure answer 35 / nesting 1 from frozen configure.wrf"
+  },
+  "updated_utc_note": "2026-10-03 (local execution environment date; no wall-clock claim)"
+}
