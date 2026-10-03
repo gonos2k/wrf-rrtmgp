@@ -10031,7 +10031,7 @@ use module_ra_rrtmg_sw_cmaq
 CONTAINS
 
 !------------------------------------------------------------------
-   SUBROUTINE RRTMG_SWRAD(                                        &
+   RECURSIVE SUBROUTINE RRTMG_SWRAD(                                        &
                        rthratensw,                                &
                        rthratenswc,                               &
                        swupt, swuptc, swuptcln, swdnt, swdntc, swdntcln, &
@@ -10102,11 +10102,13 @@ CONTAINS
 !------------------------------------------------------------------
    USE MODULE_RA_CLWRF_SUPPORT, ONLY : read_CAMgases
    USE module_mp_udm, ONLY: cldf_diag, udm_radiation_negative_limits
-   USE module_ra_rrtmgp, ONLY: rrtmgp_sw_column, rrtmgp_frozen_enabled
+   USE module_ra_rrtmgp, ONLY: rrtmgp_sw_column, rrtmgp_frozen_enabled, &
+        ty_rrtmgp_sw_workspace,rrtmgp_release_workspace
    USE module_ra_rrtmgp_input, ONLY: rrtmgp_build_udm_inputs, rrtmgp_column_seed, rrtmgp_udm_frozen_lambdas
    USE module_ra_rrtmgp_trace, ONLY: trace_start, trace_active, trace_raw_start, trace_raw, &
         trace_raw_end, trace_result, trace_end
    IMPLICIT NONE
+   TYPE(ty_rrtmgp_sw_workspace) :: gp_workspace
    LOGICAL, OPTIONAL, INTENT(IN) :: use_rrtmgp
    LOGICAL, OPTIONAL, INTENT(IN) :: f_qh
    REAL, OPTIONAL, INTENT(IN) :: qh3d(ims:ime,kms:kme,jms:jme)
@@ -11755,7 +11757,7 @@ CONTAINS
                native_dry_layer_mass_kg_m2=RESHAPE(udm_dry_layer_mass(i,kts:kte,j),[1,kte-kts+1]), &
                gwp=gp_gwp,hwp=gp_hwp,lambda_g=gp_lambda_g,lambda_h=gp_lambda_h,frozen_context=gp_context, &
                direct_unscaled=swdkdir_predelta,directc_unscaled=swdkdirc_predelta, &
-               visdir_unscaled=sibvisdir_predelta,nirdir_unscaled=sibnirdir_predelta)
+               visdir_unscaled=sibvisdir_predelta,nirdir_unscaled=sibnirdir_predelta,workspace=gp_workspace)
            ELSE
              CALL rrtmgp_sw_column(play,plev,tlay,h2ovmr,co2vmr,o3vmr,n2ovmr,ch4vmr,o2vmr, &
                asdir,asdif,aldir,aldif,coszen,scon,cldfrac,clwpth,ciwpth,cswpth,rel,rei,res,4,icld, &
@@ -11763,7 +11765,7 @@ CONTAINS
                swdkdir,swdkdif,swdkdirc,sibvisdir,sibvisdif,sibnirdir,sibnirdif,rwp=gp_rwp, &
                native_dry_layer_mass_kg_m2=RESHAPE(udm_dry_layer_mass(i,kts:kte,j),[1,kte-kts+1]), &
                direct_unscaled=swdkdir_predelta,directc_unscaled=swdkdirc_predelta, &
-               visdir_unscaled=sibvisdir_predelta,nirdir_unscaled=sibnirdir_predelta)
+               visdir_unscaled=sibvisdir_predelta,nirdir_unscaled=sibnirdir_predelta,workspace=gp_workspace)
            END IF
            swuflxcln=swuflx; swdflxcln=swdflx
            DO k=kts,kte+2
@@ -11922,6 +11924,7 @@ CONTAINS
 !
       end do i_loop
    end do j_loop                                           
+   IF(run_rrtmgp) CALL rrtmgp_release_workspace(gp_workspace)
 
 
 !-------------------------------------------------------------------

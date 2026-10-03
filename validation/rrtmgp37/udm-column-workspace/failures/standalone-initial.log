@@ -1,0 +1,392 @@
+Internal ctest changing into directory: /NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-workspace-reuse-tests-debug
+Test project /NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-workspace-reuse-tests-debug
+        Start  67: ice_roughness_1
+        Start  68: ice_roughness_2
+        Start  69: ice_roughness_3
+        Start  82: delta_policy_benchmark
+  1/103 Test  #82: delta_policy_benchmark ....................   Passed    0.08 sec
+        Start   6: workspace_reuse_states_mode1
+  2/103 Test  #67: ice_roughness_1 ...........................   Passed    0.21 sec
+        Start   5: workspace_reuse_states_mode0
+  3/103 Test  #68: ice_roughness_2 ...........................   Passed    0.21 sec
+        Start   1: native_hydro_snapshot
+  4/103 Test  #69: ice_roughness_3 ...........................   Passed    0.21 sec
+        Start   2: udm_negative_input_contract
+  5/103 Test   #1: native_hydro_snapshot .....................***Failed    0.15 sec
+Traceback (most recent call last):
+  File "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-workspace-reuse-work/WRF/test/rrtmgp/test_hydro_snapshot.py", line 258, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-workspace-reuse-work/WRF/test/rrtmgp/test_hydro_snapshot.py", line 198, in main
+    with tempfile.TemporaryDirectory(prefix="rrtmgp-hydro-test-",
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/tempfile.py", line 1021, in __init__
+    self.name = mkdtemp(suffix, prefix, dir)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/tempfile.py", line 523, in mkdtemp
+    _os.mkdir(file, 0o700)
+FileNotFoundError: [Errno 2] No such file or directory: '/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-workspace-reuse-work/build/rrtmgp-hydro-test-lq0qjt0x'
+
+        Start   3: frozen_file_sha256
+  6/103 Test   #3: frozen_file_sha256 ........................   Passed    0.01 sec
+        Start   4: frozen_fortran_python_lookup
+  7/103 Test   #2: udm_negative_input_contract ...............   Passed    1.03 sec
+        Start   7: workspace_frozen_mode_lock
+  8/103 Test   #7: workspace_frozen_mode_lock ................   Passed    0.20 sec
+        Start   8: wrf_rrtmgp_columns
+  9/103 Test   #8: wrf_rrtmgp_columns ........................   Passed    0.11 sec
+        Start   9: cloud_mass_contract
+ 10/103 Test   #9: cloud_mass_contract .......................   Passed    0.00 sec
+        Start  10: domain_calendar_seed_contract
+ 11/103 Test  #10: domain_calendar_seed_contract .............   Passed    0.00 sec
+        Start  11: multi_column_equivalence
+ 12/103 Test   #4: frozen_fortran_python_lookup ..............   Passed    1.40 sec
+        Start  12: sw_predelta_direct_clear
+ 13/103 Test  #11: multi_column_equivalence ..................   Passed    0.26 sec
+        Start  13: sw_predelta_direct_cloud
+ 14/103 Test  #12: sw_predelta_direct_clear ..................   Passed    0.12 sec
+        Start  14: sw_predelta_direct_overlap_zero
+ 15/103 Test  #13: sw_predelta_direct_cloud ..................   Passed    0.11 sec
+        Start  15: sw_predelta_direct_night
+ 16/103 Test  #14: sw_predelta_direct_overlap_zero ...........   Passed    0.11 sec
+        Start  16: reject_sw_predelta_partial_group_a
+ 17/103 Test  #15: sw_predelta_direct_night ..................   Passed    0.11 sec
+        Start  17: reject_sw_predelta_partial_group_b
+ 18/103 Test  #16: reject_sw_predelta_partial_group_a ........   Passed    0.20 sec
+        Start  18: reject_sw_predelta_bad_output_shape
+ 19/103 Test  #17: reject_sw_predelta_partial_group_b ........   Passed    0.20 sec
+        Start  19: udm_dry_mass_native_mixed
+ 20/103 Test  #19: udm_dry_mass_native_mixed .................   Passed    0.00 sec
+        Start  20: udm_dry_mass_native_clear_omission
+ 21/103 Test  #20: udm_dry_mass_native_clear_omission ........   Passed    0.00 sec
+        Start  21: udm_dry_mass_native_hail_tiny
+ 22/103 Test  #21: udm_dry_mass_native_hail_tiny .............   Passed    0.00 sec
+        Start  22: udm_dry_mass_legacy_pressure_gravity
+ 23/103 Test  #22: udm_dry_mass_legacy_pressure_gravity ......   Passed    0.00 sec
+        Start  23: reject_dry_shape
+ 24/103 Test  #23: reject_dry_shape ..........................   Passed    0.08 sec
+        Start  24: reject_dry_zero
+ 25/103 Test  #24: reject_dry_zero ...........................   Passed    0.08 sec
+        Start  25: reject_dry_negative
+ 26/103 Test  #18: reject_sw_predelta_bad_output_shape .......   Passed    0.20 sec
+        Start  26: reject_dry_nan
+ 27/103 Test  #25: reject_dry_negative .......................   Passed    0.08 sec
+        Start  27: reject_dry_inf
+ 28/103 Test  #26: reject_dry_nan ............................   Passed    0.08 sec
+        Start  28: reject_dry_path_overflow
+ 29/103 Test  #28: reject_dry_path_overflow ..................   Passed    0.08 sec
+        Start  29: reject_cf_negative
+ 30/103 Test  #27: reject_dry_inf ............................   Passed    0.08 sec
+        Start  30: reject_cf_above_one
+ 31/103 Test  #29: reject_cf_negative ........................   Passed    0.08 sec
+        Start  31: reject_cf_nan
+ 32/103 Test  #30: reject_cf_above_one .......................   Passed    0.08 sec
+        Start  32: reject_qc_negative
+ 33/103 Test  #31: reject_cf_nan .............................   Passed    0.08 sec
+        Start  33: reject_qc_nan
+ 34/103 Test  #32: reject_qc_negative ........................   Passed    0.08 sec
+        Start  34: reject_dp_negative
+ 35/103 Test  #33: reject_qc_nan .............................   Passed    0.08 sec
+        Start  35: reject_cf_zero_wet
+ 36/103 Test  #34: reject_dp_negative ........................   Passed    0.08 sec
+        Start  36: reject_tiny_cf_overflow
+ 37/103 Test  #35: reject_cf_zero_wet ........................   Passed    0.08 sec
+        Start  37: common_input_validation
+ 38/103 Test  #37: common_input_validation ...................   Passed    0.00 sec
+        Start  38: reject_cf_range
+ 39/103 Test  #36: reject_tiny_cf_overflow ...................   Passed    0.08 sec
+        Start  39: reject_path_negative
+ 40/103 Test  #38: reject_cf_range ...........................   Passed    0.08 sec
+        Start  40: reject_cf_zero_path
+ 41/103 Test  #39: reject_path_negative ......................   Passed    0.08 sec
+        Start  41: reject_pressure_order
+ 42/103 Test  #40: reject_cf_zero_path .......................   Passed    0.08 sec
+        Start  42: reject_radius_inactive_nan
+ 43/103 Test  #41: reject_pressure_order .....................   Passed    0.08 sec
+        Start  43: reject_radius_active_zero
+ 44/103 Test  #42: reject_radius_inactive_nan ................   Passed    0.08 sec
+        Start  44: reject_shape
+ 45/103 Test  #43: reject_radius_active_zero .................   Passed    0.08 sec
+        Start  45: reject_validation_cf_nan
+ 46/103 Test  #44: reject_shape ..............................   Passed    0.08 sec
+        Start  46: reject_adapter_cf_overlap1
+ 47/103 Test  #45: reject_validation_cf_nan ..................   Passed    0.08 sec
+        Start  47: reject_adapter_cf_overlap3
+ 48/103 Test  #46: reject_adapter_cf_overlap1 ................   Passed    0.20 sec
+        Start  48: reject_adapter_gas_nan
+ 49/103 Test  #47: reject_adapter_cf_overlap3 ................   Passed    0.20 sec
+        Start  49: reject_adapter_albedo_above_one
+ 50/103 Test  #49: reject_adapter_albedo_above_one ...........   Passed    0.20 sec
+        Start  50: reject_adapter_emissivity_nan
+ 51/103 Test  #48: reject_adapter_gas_nan ....................   Passed    0.20 sec
+        Start  51: reject_adapter_mu0_nan_night
+ 52/103 Test  #50: reject_adapter_emissivity_nan .............   Passed    0.20 sec
+        Start  52: reject_adapter_solar_negative
+ 53/103 Test  #51: reject_adapter_mu0_nan_night ..............   Passed    0.20 sec
+        Start  53: reject_adapter_changed_init_path
+ 54/103 Test  #52: reject_adapter_solar_negative .............   Passed    0.20 sec
+        Start  54: reject_adapter_coefficient_load_missing
+ 55/103 Test  #53: reject_adapter_changed_init_path ..........   Passed    0.20 sec
+        Start  55: small_cf_sampling
+ 56/103 Test  #54: reject_adapter_coefficient_load_missing ...   Passed    0.09 sec
+        Start  56: sw_predelta_v9_independent_replay
+ 57/103 Test  #56: sw_predelta_v9_independent_replay .........   Passed    0.89 sec
+        Start  57: lw_trace_gases_replay
+ 58/103 Test  #57: lw_trace_gases_replay .....................***Failed    0.17 sec
+adapter absent failed (1):
+module_ra_rrtmgp_trace.F:0: RRTMGP_TRACE_SERIAL_ONLY: OpenMP capture is unsupported
+ERROR STOP 1
+
+Error termination. Backtrace:
+#0  0x76efc6510e59 in ???
+#1  0x76efc6511a71 in ???
+#2  0x76efc651317a in ???
+#3  0x58250dff8941 in wrf_error_fatal3_
+	at /NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-workspace-reuse-work/WRF/test/rrtmgp/standalone_wrf_error.f90:6
+#4  0x58250df527bc in trace_fatal
+	at /NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-workspace-reuse-tests-debug/src/module_ra_rrtmgp_trace.F:501
+#5  0x58250df537cf in trace_initialize
+	at /NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-workspace-reuse-tests-debug/src/module_ra_rrtmgp_trace.F:413
+#6  0x58250df5ddc1 in __module_ra_rrtmgp_trace_MOD_trace_configure
+	at /NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-workspace-reuse-tests-debug/src/module_ra_rrtmgp_trace.F:56
+#7  0x58250dff2946 in __module_ra_rrtmgp_MOD_rrtmgp_init
+	at /NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-workspace-reuse-tests-debug/src/module_ra_rrtmgp.F:242
+#8  0x58250df4e909 in test_lw_trace_gases
+	at /NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-workspace-reuse-work/WRF/test/rrtmgp/test_lw_trace_gases.f90:18
+#9  0x58250df52761 in main
+	at /NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-workspace-reuse-work/WRF/test/rrtmgp/test_lw_trace_gases.f90:2
+
+
+        Start  58: coefficient_load_failure_callbacks
+ 59/103 Test  #58: coefficient_load_failure_callbacks ........   Passed    0.62 sec
+        Start  59: sw_optics_override_contract
+ 60/103 Test  #59: sw_optics_override_contract ...............   Passed    1.44 sec
+        Start  60: replay_format_compatibility
+ 61/103 Test  #60: replay_format_compatibility ...............***Failed    0.22 sec
+ERROR: test_rrtmgp_columns failed (1): module_ra_rrtmgp_trace.F:0: RRTMGP_TRACE_SERIAL_ONLY: OpenMP capture is unsupported
+ERROR STOP 1
+
+Error termination. Backtrace:
+#0  0x702326c12e59 in ???
+#1  0x702326c13a71 in ???
+#2  0x702326c1517a in ???
+#3  0x55ec696e0ff2 in wrf_error_fatal3_
+	at /NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-workspace-reuse-work/WRF/test/rrtmgp/standalone_wrf_error.f90:6
+#4  0x55ec6963ae6d in trace_fatal
+	at /NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-workspace-reuse-tests-debug/src/module_ra_rrtmgp_trace.F:501
+#5  0x55ec6963be80 in trace_initialize
+	at /NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-workspace-reuse-tests-debug/src/module_ra_rrtmgp_trace.F:413
+#6  0x55ec69646472 in __module_ra_rrtmgp_trace_MOD_trace_configure
+	at /NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-workspace-reuse-tests-debug/src/module_ra_rrtmgp_trace.F:56
+#7  0x55ec696daff7 in __module_ra_rrtmgp_MOD_rrtmgp_init
+	at /NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-workspace-reuse-tests-debug/src/module_ra_rrtmgp.F:242
+#8  0x55ec6961ecf5 in test_rrtmgp_columns
+	at /NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-workspace-reuse-work/WRF/test/rrtmgp/test_columns.f90:41
+#9  0x55ec6963ae12 in main
+	at /NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-workspace-reuse-work/WRF/test/rrtmgp/test_columns.f90:2
+
+
+        Start  61: reject_adapter_roughness_low
+ 62/103 Test  #61: reject_adapter_roughness_low ..............   Passed    0.20 sec
+        Start  62: reject_adapter_roughness_high
+ 63/103 Test  #62: reject_adapter_roughness_high .............   Passed    0.20 sec
+        Start  63: reject_adapter_changed_init_roughness
+ 64/103 Test  #63: reject_adapter_changed_init_roughness .....   Passed    0.20 sec
+        Start  64: reject_adapter_changed_init_constants
+ 65/103 Test  #64: reject_adapter_changed_init_constants .....   Passed    0.20 sec
+        Start  65: transparent_overlap
+ 66/103 Test  #65: transparent_overlap .......................***Exception: SegFault  0.07 sec
+
+        Start  66: spectral_surface_contract
+ 67/103 Test  #66: spectral_surface_contract .................   Passed    0.16 sec
+        Start  70: ice_roughness_invariance
+ 68/103 Test  #70: ice_roughness_invariance ..................   Passed    0.03 sec
+        Start  71: snow_optics_source_comparison
+ 69/103 Test  #71: snow_optics_source_comparison .............   Passed    0.01 sec
+        Start  72: udm_mass_contract
+ 70/103 Test  #72: udm_mass_contract .........................   Passed    0.00 sec
+        Start  73: host_constants_and_column_energy
+ 71/103 Test  #73: host_constants_and_column_energy ..........   Passed    0.11 sec
+        Start  74: host_constants_replay_v5
+ 72/103 Test  #74: host_constants_replay_v5 ..................***Failed    0.21 sec
+Traceback (most recent call last):
+  File "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-workspace-reuse-work/WRF/test/rrtmgp/test_host_constants_replay.py", line 78, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-workspace-reuse-work/WRF/test/rrtmgp/test_host_constants_replay.py", line 44, in main
+    run([str(host_exe), str(data)], env, "host-constant adapter")
+  File "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-workspace-reuse-work/WRF/test/rrtmgp/test_host_constants_replay.py", line 19, in run
+    raise RuntimeError(f"{label} failed ({proc.returncode}): {proc.stdout[-2000:]}")
+RuntimeError: host-constant adapter failed (1): module_ra_rrtmgp_trace.F:0: RRTMGP_TRACE_SERIAL_ONLY: OpenMP capture is unsupported
+ERROR STOP 1
+
+Error termination. Backtrace:
+#0  0x7eb108a47e59 in ???
+#1  0x7eb108a48a71 in ???
+#2  0x7eb108a4a17a in ???
+#3  0x5c5550c91b58 in wrf_error_fatal3_
+	at /NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-workspace-reuse-work/WRF/test/rrtmgp/standalone_wrf_error.f90:6
+#4  0x5c5550beb9d3 in trace_fatal
+	at /NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-workspace-reuse-tests-debug/src/module_ra_rrtmgp_trace.F:501
+#5  0x5c5550bec9e6 in trace_initialize
+	at /NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-workspace-reuse-tests-debug/src/module_ra_rrtmgp_trace.F:413
+#6  0x5c5550bf6fd8 in __module_ra_rrtmgp_trace_MOD_trace_configure
+	at /NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-workspace-reuse-tests-debug/src/module_ra_rrtmgp_trace.F:56
+#7  0x5c5550c8bb5d in __module_ra_rrtmgp_MOD_rrtmgp_init
+	at /NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-workspace-reuse-tests-debug/src/module_ra_rrtmgp.F:242
+#8  0x5c5550be83a5 in test_rrtmgp_host_constants
+	at /NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-workspace-reuse-work/WRF/test/rrtmgp/test_host_constants.f90:31
+#9  0x5c5550beb978 in main
+	at /NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-workspace-reuse-work/WRF/test/rrtmgp/test_host_constants.f90:2
+
+
+        Start  75: udm_precip_optics
+ 73/103 Test  #75: udm_precip_optics .........................   Passed    0.00 sec
+        Start  76: udm_native_radii
+ 74/103 Test  #55: small_cf_sampling .........................   Passed    9.87 sec
+        Start  77: udm_surface_rain_row
+ 75/103 Test   #5: workspace_reuse_states_mode0 ..............   Passed   13.76 sec
+        Start  78: udm_cldf_partial_output
+ 76/103 Test   #6: workspace_reuse_states_mode1 ..............   Passed   14.35 sec
+        Start  79: udm_cf_extent_parser
+ 77/103 Test  #79: udm_cf_extent_parser ......................   Passed    0.17 sec
+        Start  80: udm_precip_adapter
+ 78/103 Test  #80: udm_precip_adapter ........................   Passed    0.12 sec
+        Start  81: udm_precip_replay
+ 79/103 Test  #81: udm_precip_replay .........................***Failed    0.22 sec
+ERROR: UDM adapter test failed (1): module_ra_rrtmgp_trace.F:0: RRTMGP_TRACE_SERIAL_ONLY: OpenMP capture is unsupported
+ERROR STOP 1
+
+Error termination. Backtrace:
+#0  0x74c425e22e59 in ???
+#1  0x74c425e23a71 in ???
+#2  0x74c425e2517a in ???
+#3  0x5978680f9e59 in wrf_error_fatal3_
+	at /NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-workspace-reuse-work/WRF/test/rrtmgp/standalone_wrf_error.f90:6
+#4  0x597868053cd4 in trace_fatal
+	at /NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-workspace-reuse-tests-debug/src/module_ra_rrtmgp_trace.F:501
+#5  0x597868054ce7 in trace_initialize
+	at /NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-workspace-reuse-tests-debug/src/module_ra_rrtmgp_trace.F:413
+#6  0x59786805f2d9 in __module_ra_rrtmgp_trace_MOD_trace_configure
+	at /NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-workspace-reuse-tests-debug/src/module_ra_rrtmgp_trace.F:56
+#7  0x5978680f3e5e in __module_ra_rrtmgp_MOD_rrtmgp_init
+	at /NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-workspace-reuse-tests-debug/src/module_ra_rrtmgp.F:242
+#8  0x59786804b416 in test_rrtmgp_udm_adapter
+	at /NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-workspace-reuse-work/WRF/test/rrtmgp/test_udm_adapter.f90:35
+#9  0x597868053c79 in main
+	at /NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-workspace-reuse-work/WRF/test/rrtmgp/test_udm_adapter.f90:2
+
+
+        Start  83: delta_policy_summary
+ 80/103 Test  #83: delta_policy_summary ......................   Passed    0.07 sec
+        Start  84: udm_sw_delta_policy_replay
+ 81/103 Test  #84: udm_sw_delta_policy_replay ................***Failed    0.27 sec
+Traceback (most recent call last):
+  File "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-workspace-reuse-work/WRF/test/rrtmgp/test_udm_delta_policy.py", line 130, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-workspace-reuse-work/WRF/test/rrtmgp/test_udm_delta_policy.py", line 79, in main
+    raise RuntimeError(f"V4 adapter fixture failed: {result.stdout[-1600:]}")
+RuntimeError: V4 adapter fixture failed: module_ra_rrtmgp_trace.F:0: RRTMGP_TRACE_SERIAL_ONLY: OpenMP capture is unsupported
+ERROR STOP 1
+
+Error termination. Backtrace:
+#0  0x7dc5137cfe59 in ???
+#1  0x7dc5137d0a71 in ???
+#2  0x7dc5137d217a in ???
+#3  0x5ecf722a3e59 in wrf_error_fatal3_
+	at /NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-workspace-reuse-work/WRF/test/rrtmgp/standalone_wrf_error.f90:6
+#4  0x5ecf721fdcd4 in trace_fatal
+	at /NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-workspace-reuse-tests-debug/src/module_ra_rrtmgp_trace.F:501
+#5  0x5ecf721fece7 in trace_initialize
+	at /NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-workspace-reuse-tests-debug/src/module_ra_rrtmgp_trace.F:413
+#6  0x5ecf722092d9 in __module_ra_rrtmgp_trace_MOD_trace_configure
+	at /NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-workspace-reuse-tests-debug/src/module_ra_rrtmgp_trace.F:56
+#7  0x5ecf7229de5e in __module_ra_rrtmgp_MOD_rrtmgp_init
+	at /NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-workspace-reuse-tests-debug/src/module_ra_rrtmgp.F:242
+#8  0x5ecf721f5416 in test_rrtmgp_udm_adapter
+	at /NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-workspace-reuse-work/WRF/test/rrtmgp/test_udm_adapter.f90:35
+#9  0x5ecf721fdc79 in main
+	at /NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-workspace-reuse-work/WRF/test/rrtmgp/test_udm_adapter.f90:2
+
+
+        Start  85: frozen_openmp_queries
+ 82/103 Test  #85: frozen_openmp_queries .....................   Passed    0.02 sec
+        Start  86: cpu_openmp_reentrancy
+ 83/103 Test  #86: cpu_openmp_reentrancy .....................   Passed    0.42 sec
+        Start  87: native_gas_columns_v6
+ 84/103 Test  #87: native_gas_columns_v6 .....................***Failed    0.21 sec
+native gas-column test failed: positive Fortran solver fixture failed (1):
+module_ra_rrtmgp_trace.F:0: RRTMGP_TRACE_SERIAL_ONLY: OpenMP capture is unsupported
+ERROR STOP 1
+
+Error termination. Backtrace:
+#0  0x7a4a4fbc1e59 in ???
+#1  0x7a4a4fbc2a71 in ???
+#2  0x7a4a4fbc417a in ???
+#3  0x59db5099e454 in wrf_error_fatal3_
+	at /NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-workspace-reuse-work/WRF/test/rrtmgp/standalone_wrf_error.f90:6
+#4  0x59db508f82cf in trace_fatal
+	at /NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-workspace-reuse-tests-debug/src/module_ra_rrtmgp_trace.F:501
+#5  0x59db508f92e2 in trace_initialize
+	at /NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-workspace-reuse-tests-debug/src/module_ra_rrtmgp_trace.F:413
+#6  0x59db509038d4 in __module_ra_rrtmgp_trace_MOD_trace_configure
+	at /NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-workspace-reuse-tests-debug/src/module_ra_rrtmgp_trace.F:56
+#7  0x59db50998459 in __module_ra_rrtmgp_MOD_rrtmgp_init
+	at /NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-workspace-reuse-tests-debug/src/module_ra_rrtmgp.F:242
+#8  0x59db508ef1da in test_native_gas_columns
+	at /NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-workspace-reuse-work/WRF/test/rrtmgp/test_native_gas_columns.f90:27
+#9  0x59db508f8274 in main
+	at /NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-workspace-reuse-work/WRF/test/rrtmgp/test_native_gas_columns.f90:2
+
+
+        Start  88: frozen_adapter_zero
+ 85/103 Test  #88: frozen_adapter_zero .......................   Passed    0.12 sec
+        Start  89: frozen_adapter_tiny
+ 86/103 Test  #89: frozen_adapter_tiny .......................   Passed    0.12 sec
+        Start  90: frozen_adapter_graupel
+ 87/103 Test  #90: frozen_adapter_graupel ....................   Passed    0.12 sec
+        Start  91: frozen_adapter_hail
+ 88/103 Test  #91: frozen_adapter_hail .......................   Passed    0.12 sec
+        Start  92: frozen_adapter_mixed
+ 89/103 Test  #92: frozen_adapter_mixed ......................   Passed    0.12 sec
+        Start  93: frozen_adapter_mixed_cloud
+ 90/103 Test  #93: frozen_adapter_mixed_cloud ................   Passed    0.12 sec
+        Start  94: frozen_adapter_overlap_zero
+ 91/103 Test  #94: frozen_adapter_overlap_zero ...............   Passed    0.12 sec
+        Start  95: frozen_reject_missing_inputs
+ 92/103 Test  #95: frozen_reject_missing_inputs ..............   Passed    0.20 sec
+        Start  96: frozen_reject_mode_zero_input
+ 93/103 Test  #96: frozen_reject_mode_zero_input .............   Passed    0.20 sec
+        Start  97: frozen_reject_bad_mode
+ 94/103 Test  #97: frozen_reject_bad_mode ....................   Passed    0.09 sec
+        Start  98: frozen_reject_changed_path
+ 95/103 Test  #98: frozen_reject_changed_path ................   Passed    0.20 sec
+        Start  99: frozen_reject_lambda_range
+ 96/103 Test  #99: frozen_reject_lambda_range ................   Passed    0.21 sec
+        Start 100: frozen_reject_temperature_range
+ 97/103 Test #100: frozen_reject_temperature_range ...........   Passed    0.20 sec
+        Start 101: udm_frozen_input_contract
+ 98/103 Test #101: udm_frozen_input_contract .................   Passed    0.00 sec
+        Start 102: frozen_reject_missing_table
+ 99/103 Test #102: frozen_reject_missing_table ...............   Passed    0.19 sec
+        Start 103: frozen_independent_replay
+100/103 Test  #76: udm_native_radii ..........................   Passed    9.99 sec
+101/103 Test #103: frozen_independent_replay .................   Passed    2.83 sec
+102/103 Test  #77: udm_surface_rain_row ......................   Passed    9.90 sec
+103/103 Test  #78: udm_cldf_partial_output ...................   Passed   21.70 sec
+
+92% tests passed, 8 tests failed out of 103
+
+Total Test time (real) =  35.68 sec
+
+The following tests FAILED:
+	  1 - native_hydro_snapshot (Failed)
+	 57 - lw_trace_gases_replay (Failed)
+	 60 - replay_format_compatibility (Failed)
+	 65 - transparent_overlap (SEGFAULT)
+	 74 - host_constants_replay_v5 (Failed)
+	 81 - udm_precip_replay (Failed)
+	 84 - udm_sw_delta_policy_replay (Failed)
+	 87 - native_gas_columns_v6 (Failed)
+Errors while running CTest

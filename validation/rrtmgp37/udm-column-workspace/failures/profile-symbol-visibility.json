@@ -1,0 +1,16 @@
+{
+  "status": "CORRECTED_SCRATCH_INSTRUMENTATION",
+  "reason": "last relink had a local private ensure_sw_diagnostics symbol, so dladdr diagnostic subcounter was unobservable",
+  "correction": "globalize scratch archive helper symbol, relink and verify exported symbol via nm -D, rerun all four original/candidate frozen-mode profiler cases",
+  "cold_candidate_SW_diagnostic_malloc": 8,
+  "cold_candidate_SW_diagnostic_bytes": 8400,
+  "warmed_candidate_SW_diagnostic_malloc": 0,
+  "all_vendor_and_total_malloc_counts_unchanged": true,
+  "instrumented_original_candidate_output_bytes_equal_modes": [
+    0,
+    1
+  ],
+  "production_and_vendor_source_changed": false,
+  "performance_benchmark_retimed": false,
+  "preserved_previous_allocation_profile_sha256": "ba94c357cc62a771a3c2ef675e42dced8e25c59b1044d4aa3b8615c51137813c"
+}
