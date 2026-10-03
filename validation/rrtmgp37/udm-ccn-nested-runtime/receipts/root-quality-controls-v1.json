@@ -1,0 +1,33 @@
+{
+  "cases": [
+    {
+      "case": "equal_nan",
+      "diagnostic": "numeric mask/nonfinite/fill in continuous equal_nan-c.nc Q: {'raw_masked': 0, 'decoded_masked': 0, 'raw_nonfinite': 1, 'decoded_nonfinite': 1, 'raw_or_default_fill': 0}",
+      "status": "REJECTED_AS_EXPECTED"
+    },
+    {
+      "case": "equal_default_fill",
+      "diagnostic": "numeric mask/nonfinite/fill in continuous equal_default_fill-c.nc Q: {'raw_masked': 1, 'decoded_masked': 1, 'raw_nonfinite': 0, 'decoded_nonfinite': 0, 'raw_or_default_fill': 1}",
+      "status": "REJECTED_AS_EXPECTED"
+    },
+    {
+      "case": "equal_missing_value",
+      "diagnostic": "numeric mask/nonfinite/fill in continuous equal_missing_value-c.nc Q: {'raw_masked': 2, 'decoded_masked': 2, 'raw_nonfinite': 0, 'decoded_nonfinite': 0, 'raw_or_default_fill': 2}",
+      "status": "REJECTED_AS_EXPECTED"
+    },
+    {
+      "case": "decoded_nonfinite",
+      "diagnostic": "numeric mask/nonfinite/fill in continuous decoded_nonfinite-c.nc Q: {'raw_masked': 0, 'decoded_masked': 0, 'raw_nonfinite': 0, 'decoded_nonfinite': 2, 'raw_or_default_fill': 0}",
+      "status": "REJECTED_AS_EXPECTED"
+    },
+    {
+      "case": "signed_zero",
+      "diagnostic": "unexpected raw field mismatch signed_zero-c.nc/signed_zero-r.nc: Q",
+      "status": "REJECTED_AS_EXPECTED"
+    }
+  ],
+  "comparator_sha256": "ae3ffac6c6af70744e358216d59963ac20993b0b1f229ce0ffd2cf118d253487",
+  "fixture_generator_sha256": "5175c5b4cb53ddf4bf0d71995a12a1aa68cd8db85287c7c81ac1f9e4cfa742ba",
+  "scope": "five manufactured numeric-quality/raw signed-zero controls, no models",
+  "status": "PASS"
+}

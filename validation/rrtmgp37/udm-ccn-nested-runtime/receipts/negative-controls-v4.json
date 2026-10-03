@@ -1,0 +1,74 @@
+{
+  "cases": [
+    {
+      "exact_variables": 2,
+      "name": "clean-history",
+      "rejected": false,
+      "reset_variables": 0
+    },
+    {
+      "exact_variables": 2,
+      "name": "valid-initial-diagnostic-reset",
+      "rejected": false,
+      "reset_variables": 3
+    },
+    {
+      "diagnostic": "unexpected global attribute differences: ['START_DATE', 'WRF_ALARM_SECS_TIL_NEXT_RING_55']",
+      "name": "history-alarm55-added",
+      "rejected": true
+    },
+    {
+      "exact_variables": 2,
+      "name": "valid-final-checkpoint",
+      "rejected": false,
+      "reset_variables": 0
+    },
+    {
+      "diagnostic": "alarm51 final exception invalid",
+      "name": "final51-wrong-seconds",
+      "rejected": true
+    },
+    {
+      "diagnostic": "alarm51 final exception invalid",
+      "name": "final51-wrong-ring",
+      "rejected": true
+    },
+    {
+      "diagnostic": "alarm55 elapsed anchor mismatch",
+      "name": "final55-wrong-elapsed",
+      "rejected": true
+    },
+    {
+      "diagnostic": "unexpected global attribute differences: ['START_DATE', 'UNEXPECTED_GLOBAL']",
+      "name": "extra-global",
+      "rejected": true
+    },
+    {
+      "diagnostic": "unexpected raw field mismatch continuous.nc/restart.nc: Q",
+      "name": "other-variable-data",
+      "rejected": true
+    },
+    {
+      "diagnostic": "variable attribute mismatch: Q.units",
+      "name": "variable-attribute",
+      "rejected": true
+    },
+    {
+      "diagnostic": "dimension sizes differ: continuous.nc/restart.nc",
+      "name": "variable-shape",
+      "rejected": true
+    },
+    {
+      "diagnostic": "unexpected raw field mismatch continuous.nc/restart.nc: Q",
+      "name": "initial-other-field",
+      "rejected": true
+    },
+    {
+      "diagnostic": "initial restart diagnostic not reset to -1: UDM_CF_STEP",
+      "name": "initial-reset-not-minus-one",
+      "rejected": true
+    }
+  ],
+  "scope": "comparator negative controls only; manufactured tiny NetCDF files, no model or source execution",
+  "status": "PASS"
+}

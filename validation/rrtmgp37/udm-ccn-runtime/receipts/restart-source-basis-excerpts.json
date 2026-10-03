@@ -1,0 +1,46 @@
+{
+  "alarm_definition": {
+    "citation": "module_streams.f90:133-135 (alarm index 55 is COMPUTE_VORTEX_CENTER_ALARM)",
+    "exact_excerpt": "  INTEGER, PARAMETER :: COMPUTE_VORTEX_CENTER_ALARM = 2*(25)+5\n\n  INTEGER, PARAMETER :: MAX_WRF_ALARMS    = COMPUTE_VORTEX_CENTER_ALARM  \n",
+    "line_end": 135,
+    "line_start": 133,
+    "original": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-ccn-tile-init-gnu-v1/source/WRF/frame/module_streams.f90",
+      "sha256": "524d7e7460d4151f50c0b33a0b3d4d21038085831b526fe8a915dd48db6d3be5",
+      "size_bytes": 5984
+    }
+  },
+  "alarm_disable": {
+    "citation": "set_timekeeping.f90:4387-4390 (WRFU_AlarmDisable on COMPUTE_VORTEX_CENTER_ALARM)",
+    "exact_excerpt": "   CALL WRFU_AlarmDisable( grid%alarms( COMPUTE_VORTEX_CENTER_ALARM ), rc=rc )\n   CALL wrf_check_error( WRFU_SUCCESS, rc, &\n                         'WRFU_AlarmDisable(COMPUTE_VORTEX_CENTER_ALARM) FAILED', &\n                         \"set_timekeeping.G\" , &\n",
+    "line_end": 4390,
+    "line_start": 4387,
+    "original": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-ccn-tile-init-gnu-v1/source/WRF/share/set_timekeeping.f90",
+      "sha256": "bc1c0b26c1354a578820abeb7ea34d7a8562e4fa0d975448f7237392d6e2eba2",
+      "size_bytes": 244655
+    }
+  },
+  "physics_init": {
+    "citation": "module_physics_init.F:1164-1177 (initializes associated UDM diagnostics to -1)",
+    "exact_excerpt": "\n   IF (config_flags%mp_physics == UDMSCHEME .AND. &\n       config_flags%ra_lw_physics == RRTMGP_LWSCHEME .AND. &\n       config_flags%ra_sw_physics == RRTMGP_SWSCHEME) THEN\n      IF (PRESENT(udm_cldfra)) THEN\n         IF (ASSOCIATED(udm_cldfra)) udm_cldfra = -1.\n      ENDIF\n      IF (PRESENT(udm_cf_step)) THEN\n         IF (ASSOCIATED(udm_cf_step)) udm_cf_step = -1\n      ENDIF\n      IF (PRESENT(udm_cf_top)) THEN\n         IF (ASSOCIATED(udm_cf_top)) udm_cf_top = -1\n      ENDIF\n   ENDIF\n",
+    "line_end": 1177,
+    "line_start": 1164,
+    "original": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-ccn-tile-init-gnu-v1/source/WRF/phys/module_physics_init.F",
+      "sha256": "5d2f86eeeb07431d6e9784eef0106989d275cd8f5c37d0433c0d462087db356c",
+      "size_bytes": 315989
+    }
+  },
+  "registry": {
+    "citation": "registry.rrtmgp37:3-5 (h-only; no restart I/O flag)",
+    "exact_excerpt": "state real udm_cldfra ikj misc 1 - h \"UDM_CLDFRA\" \"Last cloud fraction used by UDM microphysics\" \"fraction\"\nstate integer udm_cf_step ij misc 1 - h \"UDM_CF_STEP\" \"Timestep of last UDM cloud-fraction diagnostic\" \"step\"\nstate integer udm_cf_top ij misc 1 - h \"UDM_CF_TOP\" \"Native layer extent of last UDM cloud-fraction diagnostic\" \"layer\"\n",
+    "line_end": 5,
+    "line_start": 3,
+    "original": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-ccn-tile-init-gnu-v1/source/WRF/Registry/registry.rrtmgp37",
+      "sha256": "86ce17cb42f7f222164ea2a3f130b57b7d01f8d90045012bb01e1e0e0b5662c1",
+      "size_bytes": 1072
+    }
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "schema": "udm37-ccn-restart-continuous-plan-v1",
+  "status": "PREPARE_ONLY_NO_CASES_STAGED",
+  "purpose": "Compare same-binary RA37 OMP2 continuous 12:00-16:00 output with own-arm OMP1 and OMP2 restarts from their 15:00 checkpoints.",
+  "new_invocations": 3,
+  "arms": [
+    {"name":"ra37-continuous-omp2-4h","start":"2000-01-24_12:00:00","end":"2000-01-24_16:00:00","omp":2,"restart_interval_minutes":60},
+    {"name":"ra37-own-restart-omp1","restart_source":"ra37-omp1 3h arm's own 15:00 checkpoint","start":"2000-01-24_15:00:00","end":"2000-01-24_16:00:00","omp":1,"restart_interval_minutes":60,"override_restart_timers":true,"write_hist_at_0h_rst":true},
+    {"name":"ra37-own-restart-omp2","restart_source":"ra37-omp2 3h arm's own 15:00 checkpoint","start":"2000-01-24_15:00:00","end":"2000-01-24_16:00:00","omp":2,"restart_interval_minutes":60,"override_restart_timers":true,"write_hist_at_0h_rst":true}
+  ],
+  "comparisons": [
+    "Continuous first four history records (12:00-15:00) must be byte-identical to the completed 3-hour OMP2 history; hourly restart scheduling must not alter the earlier trajectory.",
+    "For each own restart, strict ordered 15:00/16:00 history against continuous history indices 3 and 4 for all 225 variables; raw dtype/shape/value bytes exact.",
+    "For each own restart, full 16:00 checkpoint against continuous 16:00 checkpoint; raw dtype/shape/value bytes exact.",
+    "Own OMP1 vs OMP2 restart histories and checkpoints exact. Metadata must match except the explicitly expected global START_DATE 12:00 to 15:00 restart anchor; any additional difference fails and is reported."
+  ],
+  "requirements": [
+    "Both 3h RA37 OMP1 and OMP2 runs must already PASS and their own 15:00 checkpoints must pass finite/default-fill checks.",
+    "Continuous history times must be exactly 12:00,13:00,14:00,15:00,16:00.",
+    "Restart histories must be exactly 15:00,16:00 and checkpoint exactly 16:00. The namelist explicitly sets `override_restart_timers=.true.` so restart alarms use the new 60-minute intervals, and `write_hist_at_0h_rst=.true.` to preserve the 15:00 starting record.",
+    "Every result remains separately pinned to the posthoc-attested c694e0bb fresh binary, source, dependency and runtime-library inventory."
+  ],
+  "restart_clock_source_review": {
+    "input_wrf.F": {"path":"build/udm37-ccn-tile-init-gnu-v1/source/WRF/share/input_wrf.F","sha256":"54f646fb6a36c919db3d6869c14943b2cc32e9d360628092dff81f1721981f12","lines":"259-263, 312-316","finding":"override_restart_timers resets restart-only alarm seconds from configured restart interval; enabled for 15:00→16:00 restart."},
+    "mediation_integrate.F": {"path":"build/udm37-ccn-tile-init-gnu-v1/source/WRF/share/mediation_integrate.F","sha256":"65e869293142706c7b7d56b814ab9ba5706b457d163f6bd1ef5d784584505be1","lines":"94-110","finding":"write_hist_at_0h_rst controls history output at the restart start clock; enabled to retain the 15:00 endpoint for comparison."},
+    "Registry.EM_COMMON": {"path":"build/udm37-ccn-tile-init-gnu-v1/source/WRF/Registry/Registry.EM_COMMON","sha256":"87e21a476a06b7e0c926b2d939eaf1028810cba8a7d1e6fc585b50b599f99729","line":"2220","finding":"write_hist_at_0h_rst defaults false, confirming explicit restart namelist setting is required."}
+  },
+  "scope_limits": ["This tests restart reproducibility against a continuous same-binary trajectory, not forecast accuracy.", "No WRF case is staged or executed by this plan-preparation task."]
+}
