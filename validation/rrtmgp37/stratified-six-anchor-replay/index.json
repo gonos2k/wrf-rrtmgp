@@ -1,0 +1,1196 @@
+{
+  "asset_pins": "production-reference-data-pins.json",
+  "canonical_count": 6,
+  "capture_inventory": "capture-hash-inventory.json",
+  "future_git_base_branch": "fix-udm-frozen-replay-contract",
+  "future_git_base_commit": "22ab474286c7b808d6f81e08ce457ddf6ba8e9cb",
+  "historical_audit_count": 2,
+  "multi_seed_extension_status": "Not included; captured column seeds recorded, no multi-seed coverage claim.",
+  "new_model_or_reference_calls": 0,
+  "proposed_package_path": "validation/rrtmgp37/stratified-six-anchor-replay",
+  "publication": false,
+  "radius_definitions": "Native RE_CLOUD/RE_ICE/RE_SNOW are meters. Adapter REL/REI/RES are micrometers after explicit/background-fallback mapping. Liquid requested radiusREL is clamped2.5..21.5\u00b5m; cloud-ice requested diameter2*REI is clamped10..180\u00b5m. FrozenG/H slope lookup is distinct from this cloud-ice diameter.",
+  "retained_failed_receipts": [
+    "evidence/failures/1-cf0_rain_low_cloud_proxy-receipt.json",
+    "evidence/failures/2-cf0_rain_low_cloud_proxy-receipt.json",
+    "evidence/failures/3-replay-recovery-v1-recovery-receipt.json",
+    "evidence/failures/4-replay-recovery-v2-recovery-receipt.json",
+    "evidence/failures/5-cf0_snow_high_cloud_proxy-receipt.json",
+    "evidence/failures/6-unclipped_cloud_control-receipt.json"
+  ],
+  "rows": [
+    {
+      "case": "cf0_rain_low_cloud_proxy",
+      "existing_root_receipts": [
+        "evidence/canonical/cf0_rain_low_cloud_proxy/root/root-linked-replay-readback.json"
+      ],
+      "history_COSZEN": 0.08319954574108124,
+      "history_all_numeric_raw_decoded_finite_unmasked": true,
+      "history_file_sha256": "7a76a430f1d37ba88ee2692c5cb076a271f3d525a1190b5cd824df3790225025",
+      "history_geometry": [
+        289,
+        189,
+        39
+      ],
+      "history_physics": [
+        27,
+        37,
+        37
+      ],
+      "i": 136,
+      "j": 48,
+      "linked_recovery_receipts": [
+        "evidence/canonical/cf0_rain_low_cloud_proxy/recovery/replay-recovery-v2/dependency-import-receipt.json",
+        "evidence/canonical/cf0_rain_low_cloud_proxy/recovery/replay-recovery-v2/recovery-receipt.json",
+        "evidence/canonical/cf0_rain_low_cloud_proxy/recovery/replay-recovery-v3/dependency-import-receipt.json",
+        "evidence/canonical/cf0_rain_low_cloud_proxy/recovery/replay-recovery-v3/recovery-receipt.json"
+      ],
+      "numeric_history_variables": 210,
+      "original_case_directory": "build/udm-stratified-captures-v3/cf0_rain_low_cloud_proxy",
+      "original_execution_receipt": "evidence/canonical/cf0_rain_low_cloud_proxy/original-execution-receipt.json",
+      "original_execution_status": "FAIL_PRESERVED",
+      "phases": {
+        "LW": {
+          "actual_eligibility_and_mass": {
+            "active_ice_layers": 0,
+            "active_liquid_inside_lookup": true,
+            "active_liquid_layers": 1,
+            "active_liquid_native_grid_mass_g_m2": 27.688805177982445,
+            "active_liquid_radius_um": [
+              6.022488594055176
+            ],
+            "active_requested_ice_diameter_um": [],
+            "actual_cf0_grid_phase_mass_g_m2": {
+              "QC": 0.0,
+              "QG": 6.218737191227956e-05,
+              "QH": 4.6180290294323803e-20,
+              "QI": 1.2159346911415506e-08,
+              "QR": 202.42863649040018,
+              "QS": 0.000106227821846162
+            },
+            "actual_cf_positive_grid_phase_mass_g_m2": {
+              "QC": 27.688805177982445,
+              "QG": 0.0,
+              "QH": 0.0,
+              "QI": 0.0,
+              "QR": 6.976999782399407,
+              "QS": 0.0
+            },
+            "actual_raw_omitted_rain_g_m2": 202.42863702774048,
+            "actual_raw_omitted_snow_g_m2": 0.00010622782069273955,
+            "eligible_ice_above180_grid_mass_g_m2": 0.0,
+            "eligible_ice_above180_layers": 0,
+            "radius_mapping_selection_counts": {
+              "REI": {
+                "diagnosed_source_layers": 0,
+                "host_background_fallback_layers": 0
+              },
+              "REL": {
+                "diagnosed_source_layers": 1,
+                "host_background_fallback_layers": 0
+              },
+              "RES": {
+                "diagnosed_source_layers": 0,
+                "host_background_fallback_layers": 0
+              }
+            },
+            "realized_mask_ice_above180_grid_mass_g_m2": 0.0,
+            "realized_mask_ice_above180_layers": 0
+          },
+          "actual_profile_snapshot": "evidence/canonical/cf0_rain_low_cloud_proxy/profiles-lw.json",
+          "actual_reference_calls": 1,
+          "adapter_layers": 47,
+          "captured_column_seed": 1751748829,
+          "recorded_MASK_exact_equal_reference": true,
+          "status": "STRICT_PASS",
+          "strict_report": "evidence/canonical/cf0_rain_low_cloud_proxy/strict-lw.json",
+          "strict_sections": 20
+        },
+        "SW": {
+          "actual_eligibility_and_mass": {
+            "active_ice_layers": 0,
+            "active_liquid_inside_lookup": true,
+            "active_liquid_layers": 1,
+            "active_liquid_native_grid_mass_g_m2": 27.688805177982445,
+            "active_liquid_radius_um": [
+              6.022488594055176
+            ],
+            "active_requested_ice_diameter_um": [],
+            "actual_cf0_grid_phase_mass_g_m2": {
+              "QC": 0.0,
+              "QG": 6.218737191227956e-05,
+              "QH": 4.6180290294323803e-20,
+              "QI": 1.2159346911415506e-08,
+              "QR": 202.42863649040018,
+              "QS": 0.000106227821846162
+            },
+            "actual_cf_positive_grid_phase_mass_g_m2": {
+              "QC": 27.688805177982445,
+              "QG": 0.0,
+              "QH": 0.0,
+              "QI": 0.0,
+              "QR": 6.976999782399407,
+              "QS": 0.0
+            },
+            "actual_raw_omitted_rain_g_m2": 202.42863702774048,
+            "actual_raw_omitted_snow_g_m2": 0.00010622782069273955,
+            "eligible_ice_above180_grid_mass_g_m2": 0.0,
+            "eligible_ice_above180_layers": 0,
+            "radius_mapping_selection_counts": {
+              "REI": {
+                "diagnosed_source_layers": 0,
+                "host_background_fallback_layers": 0
+              },
+              "REL": {
+                "diagnosed_source_layers": 1,
+                "host_background_fallback_layers": 0
+              },
+              "RES": {
+                "diagnosed_source_layers": 0,
+                "host_background_fallback_layers": 0
+              }
+            },
+            "realized_mask_ice_above180_grid_mass_g_m2": 0.0,
+            "realized_mask_ice_above180_layers": 0
+          },
+          "actual_profile_snapshot": "evidence/canonical/cf0_rain_low_cloud_proxy/profiles-sw.json",
+          "actual_reference_calls": 1,
+          "adapter_layers": 40,
+          "captured_column_seed": 1751748830,
+          "recorded_MASK_exact_equal_reference": true,
+          "status": "STRICT_PASS",
+          "strict_report": "evidence/canonical/cf0_rain_low_cloud_proxy/strict-sw.json",
+          "strict_sections": 46
+        }
+      },
+      "pins_unchanged": true,
+      "role": "canonical"
+    },
+    {
+      "case": "material_cf0_snow_daylight_proxy",
+      "existing_root_receipts": [
+        "evidence/canonical/material_cf0_snow_daylight_proxy/root/root-material-snow-readback.json",
+        "evidence/canonical/material_cf0_snow_daylight_proxy/root/root-strict-result-readback.json"
+      ],
+      "history_COSZEN": 0.11402784287929535,
+      "history_all_numeric_raw_decoded_finite_unmasked": true,
+      "history_file_sha256": "7a76a430f1d37ba88ee2692c5cb076a271f3d525a1190b5cd824df3790225025",
+      "history_geometry": [
+        289,
+        189,
+        39
+      ],
+      "history_physics": [
+        27,
+        37,
+        37
+      ],
+      "i": 103,
+      "j": 156,
+      "linked_recovery_receipts": [],
+      "numeric_history_variables": 210,
+      "original_case_directory": "build/udm-stratified-replacement-captures-v1/material_cf0_snow_daylight_proxy",
+      "original_execution_receipt": "evidence/canonical/material_cf0_snow_daylight_proxy/original-execution-receipt.json",
+      "original_execution_status": "CAPTURE_HISTORY_NONINTERFERENCE_AND_STRICT_REPLAY_PASS",
+      "phases": {
+        "LW": {
+          "actual_eligibility_and_mass": {
+            "active_ice_layers": 11,
+            "active_liquid_inside_lookup": true,
+            "active_liquid_layers": 2,
+            "active_liquid_native_grid_mass_g_m2": 27.574657187037943,
+            "active_liquid_radius_um": [
+              5.211770534515381,
+              6.047377586364746
+            ],
+            "active_requested_ice_diameter_um": [
+              172.13531494140625,
+              170.77662658691406,
+              170.0837860107422,
+              164.05722045898438,
+              152.31906127929688,
+              139.51368713378906,
+              125.80772399902344,
+              109.95030975341797,
+              87.97138977050781,
+              63.57623291015625,
+              39.850372314453125
+            ],
+            "actual_cf0_grid_phase_mass_g_m2": {
+              "QC": 0.0,
+              "QG": 0.00014350289934299748,
+              "QH": 3.814946112738688e-07,
+              "QI": 0.0,
+              "QR": 0.0015940594109252612,
+              "QS": 5.622483570506456
+            },
+            "actual_cf_positive_grid_phase_mass_g_m2": {
+              "QC": 27.574657187037943,
+              "QG": 0.1369592927839136,
+              "QH": 0.0015358433223418753,
+              "QI": 308.706471689413,
+              "QR": 0.0014823585777693216,
+              "QS": 288.10060423391866
+            },
+            "actual_raw_omitted_rain_g_m2": 0.0015940593730192631,
+            "actual_raw_omitted_snow_g_m2": 5.622483488478097,
+            "eligible_ice_above180_grid_mass_g_m2": 0.0,
+            "eligible_ice_above180_layers": 0,
+            "radius_mapping_selection_counts": {
+              "REI": {
+                "diagnosed_source_layers": 11,
+                "host_background_fallback_layers": 0
+              },
+              "REL": {
+                "diagnosed_source_layers": 2,
+                "host_background_fallback_layers": 0
+              },
+              "RES": {
+                "diagnosed_source_layers": 10,
+                "host_background_fallback_layers": 0
+              }
+            },
+            "realized_mask_ice_above180_grid_mass_g_m2": 0.0,
+            "realized_mask_ice_above180_layers": 0
+          },
+          "actual_profile_snapshot": "evidence/canonical/material_cf0_snow_daylight_proxy/profiles-lw.json",
+          "actual_reference_calls": 1,
+          "adapter_layers": 47,
+          "captured_column_seed": 1053375418,
+          "recorded_MASK_exact_equal_reference": true,
+          "status": "STRICT_PASS",
+          "strict_report": "evidence/canonical/material_cf0_snow_daylight_proxy/strict-lw.json",
+          "strict_sections": 20
+        },
+        "SW": {
+          "actual_eligibility_and_mass": {
+            "active_ice_layers": 11,
+            "active_liquid_inside_lookup": true,
+            "active_liquid_layers": 2,
+            "active_liquid_native_grid_mass_g_m2": 27.574657187037943,
+            "active_liquid_radius_um": [
+              5.211770534515381,
+              6.047377586364746
+            ],
+            "active_requested_ice_diameter_um": [
+              172.13531494140625,
+              170.77662658691406,
+              170.0837860107422,
+              164.05722045898438,
+              152.31906127929688,
+              139.51368713378906,
+              125.80772399902344,
+              109.95030975341797,
+              87.97138977050781,
+              63.57623291015625,
+              39.850372314453125
+            ],
+            "actual_cf0_grid_phase_mass_g_m2": {
+              "QC": 0.0,
+              "QG": 0.00014350289934299748,
+              "QH": 3.814946112738688e-07,
+              "QI": 0.0,
+              "QR": 0.0015940594109252612,
+              "QS": 5.622483570506456
+            },
+            "actual_cf_positive_grid_phase_mass_g_m2": {
+              "QC": 27.574657187037943,
+              "QG": 0.1369592927839136,
+              "QH": 0.0015358433223418753,
+              "QI": 308.706471689413,
+              "QR": 0.0014823585777693216,
+              "QS": 288.10060423391866
+            },
+            "actual_raw_omitted_rain_g_m2": 0.0015940593730192631,
+            "actual_raw_omitted_snow_g_m2": 5.622483488478097,
+            "eligible_ice_above180_grid_mass_g_m2": 0.0,
+            "eligible_ice_above180_layers": 0,
+            "radius_mapping_selection_counts": {
+              "REI": {
+                "diagnosed_source_layers": 11,
+                "host_background_fallback_layers": 0
+              },
+              "REL": {
+                "diagnosed_source_layers": 2,
+                "host_background_fallback_layers": 0
+              },
+              "RES": {
+                "diagnosed_source_layers": 10,
+                "host_background_fallback_layers": 0
+              }
+            },
+            "realized_mask_ice_above180_grid_mass_g_m2": 0.0,
+            "realized_mask_ice_above180_layers": 0
+          },
+          "actual_profile_snapshot": "evidence/canonical/material_cf0_snow_daylight_proxy/profiles-sw.json",
+          "actual_reference_calls": 1,
+          "adapter_layers": 40,
+          "captured_column_seed": 1053375419,
+          "recorded_MASK_exact_equal_reference": true,
+          "status": "STRICT_PASS",
+          "strict_report": "evidence/canonical/material_cf0_snow_daylight_proxy/strict-sw.json",
+          "strict_sections": 46
+        }
+      },
+      "pins_unchanged": true,
+      "role": "canonical"
+    },
+    {
+      "case": "ice_clip_low_cloud_proxy",
+      "existing_root_receipts": [],
+      "history_COSZEN": 0.05580715835094452,
+      "history_all_numeric_raw_decoded_finite_unmasked": true,
+      "history_file_sha256": "7a76a430f1d37ba88ee2692c5cb076a271f3d525a1190b5cd824df3790225025",
+      "history_geometry": [
+        289,
+        189,
+        39
+      ],
+      "history_physics": [
+        27,
+        37,
+        37
+      ],
+      "i": 132,
+      "j": 35,
+      "linked_recovery_receipts": [],
+      "numeric_history_variables": 210,
+      "original_case_directory": "build/udm-stratified-captures-v4/ice_clip_low_cloud_proxy",
+      "original_execution_receipt": "evidence/canonical/ice_clip_low_cloud_proxy/original-execution-receipt.json",
+      "original_execution_status": "CAPTURE_HISTORY_NONINTERFERENCE_AND_STRICT_REPLAY_PASS",
+      "phases": {
+        "LW": {
+          "actual_eligibility_and_mass": {
+            "active_ice_layers": 4,
+            "active_liquid_inside_lookup": true,
+            "active_liquid_layers": 0,
+            "active_liquid_native_grid_mass_g_m2": 0.0,
+            "active_liquid_radius_um": [],
+            "active_requested_ice_diameter_um": [
+              206.72210693359375,
+              201.95143127441406,
+              195.21560668945312,
+              185.23434448242188
+            ],
+            "actual_cf0_grid_phase_mass_g_m2": {
+              "QC": 0.0,
+              "QG": 3.5890798023713965e-12,
+              "QH": 2.996330191607083e-14,
+              "QI": 0.13355873703310098,
+              "QR": 0.24286111132082627,
+              "QS": 0.756984887341043
+            },
+            "actual_cf_positive_grid_phase_mass_g_m2": {
+              "QC": 0.0,
+              "QG": 0.38335327291028176,
+              "QH": 0.0022430543122116176,
+              "QI": 125.85538018735377,
+              "QR": 0.0,
+              "QS": 146.6737682238145
+            },
+            "actual_raw_omitted_rain_g_m2": 0.24286111630499363,
+            "actual_raw_omitted_snow_g_m2": 0.7569848843868373,
+            "eligible_ice_above180_grid_mass_g_m2": 125.85538018735377,
+            "eligible_ice_above180_layers": 4,
+            "radius_mapping_selection_counts": {
+              "REI": {
+                "diagnosed_source_layers": 4,
+                "host_background_fallback_layers": 0
+              },
+              "REL": {
+                "diagnosed_source_layers": 0,
+                "host_background_fallback_layers": 0
+              },
+              "RES": {
+                "diagnosed_source_layers": 4,
+                "host_background_fallback_layers": 0
+              }
+            },
+            "realized_mask_ice_above180_grid_mass_g_m2": 125.85538018735377,
+            "realized_mask_ice_above180_layers": 4
+          },
+          "actual_profile_snapshot": "evidence/canonical/ice_clip_low_cloud_proxy/profiles-lw.json",
+          "actual_reference_calls": 1,
+          "adapter_layers": 47,
+          "captured_column_seed": 1550899616,
+          "recorded_MASK_exact_equal_reference": true,
+          "status": "STRICT_PASS",
+          "strict_report": "evidence/canonical/ice_clip_low_cloud_proxy/strict-lw.json",
+          "strict_sections": 20
+        },
+        "SW": {
+          "actual_eligibility_and_mass": {
+            "active_ice_layers": 4,
+            "active_liquid_inside_lookup": true,
+            "active_liquid_layers": 0,
+            "active_liquid_native_grid_mass_g_m2": 0.0,
+            "active_liquid_radius_um": [],
+            "active_requested_ice_diameter_um": [
+              206.72210693359375,
+              201.95143127441406,
+              195.21560668945312,
+              185.23434448242188
+            ],
+            "actual_cf0_grid_phase_mass_g_m2": {
+              "QC": 0.0,
+              "QG": 3.5890798023713965e-12,
+              "QH": 2.996330191607083e-14,
+              "QI": 0.13355873703310098,
+              "QR": 0.24286111132082627,
+              "QS": 0.756984887341043
+            },
+            "actual_cf_positive_grid_phase_mass_g_m2": {
+              "QC": 0.0,
+              "QG": 0.38335327291028176,
+              "QH": 0.0022430543122116176,
+              "QI": 125.85538018735377,
+              "QR": 0.0,
+              "QS": 146.6737682238145
+            },
+            "actual_raw_omitted_rain_g_m2": 0.24286111630499363,
+            "actual_raw_omitted_snow_g_m2": 0.7569848843868373,
+            "eligible_ice_above180_grid_mass_g_m2": 125.85538018735377,
+            "eligible_ice_above180_layers": 4,
+            "radius_mapping_selection_counts": {
+              "REI": {
+                "diagnosed_source_layers": 4,
+                "host_background_fallback_layers": 0
+              },
+              "REL": {
+                "diagnosed_source_layers": 0,
+                "host_background_fallback_layers": 0
+              },
+              "RES": {
+                "diagnosed_source_layers": 4,
+                "host_background_fallback_layers": 0
+              }
+            },
+            "realized_mask_ice_above180_grid_mass_g_m2": 125.85538018735377,
+            "realized_mask_ice_above180_layers": 4
+          },
+          "actual_profile_snapshot": "evidence/canonical/ice_clip_low_cloud_proxy/profiles-sw.json",
+          "actual_reference_calls": 1,
+          "adapter_layers": 40,
+          "captured_column_seed": 1550899617,
+          "recorded_MASK_exact_equal_reference": true,
+          "status": "STRICT_PASS",
+          "strict_report": "evidence/canonical/ice_clip_low_cloud_proxy/strict-sw.json",
+          "strict_sections": 46
+        }
+      },
+      "pins_unchanged": true,
+      "role": "canonical"
+    },
+    {
+      "case": "ice_clip_high_cloud_proxy",
+      "existing_root_receipts": [],
+      "history_COSZEN": 0.21010129153728485,
+      "history_all_numeric_raw_decoded_finite_unmasked": true,
+      "history_file_sha256": "7a76a430f1d37ba88ee2692c5cb076a271f3d525a1190b5cd824df3790225025",
+      "history_geometry": [
+        289,
+        189,
+        39
+      ],
+      "history_physics": [
+        27,
+        37,
+        37
+      ],
+      "i": 170,
+      "j": 72,
+      "linked_recovery_receipts": [],
+      "numeric_history_variables": 210,
+      "original_case_directory": "build/udm-stratified-captures-v4/ice_clip_high_cloud_proxy",
+      "original_execution_receipt": "evidence/canonical/ice_clip_high_cloud_proxy/original-execution-receipt.json",
+      "original_execution_status": "CAPTURE_HISTORY_NONINTERFERENCE_AND_STRICT_REPLAY_PASS",
+      "phases": {
+        "LW": {
+          "actual_eligibility_and_mass": {
+            "active_ice_layers": 9,
+            "active_liquid_inside_lookup": true,
+            "active_liquid_layers": 3,
+            "active_liquid_native_grid_mass_g_m2": 81.19685470381044,
+            "active_liquid_radius_um": [
+              4.340725421905518,
+              4.499603271484375,
+              3.6016428470611572
+            ],
+            "active_requested_ice_diameter_um": [
+              250.00001525878906,
+              206.96449279785156,
+              203.82443237304688,
+              198.40713500976562,
+              190.95457458496094,
+              180.95550537109375,
+              165.8898468017578,
+              137.59971618652344,
+              50.256072998046875
+            ],
+            "actual_cf0_grid_phase_mass_g_m2": {
+              "QC": 9.037526310351616e-39,
+              "QG": 0.009775688330862117,
+              "QH": 0.011927558259323671,
+              "QI": 0.1884018783426028,
+              "QR": 36.58375844139969,
+              "QS": 9.60624579473443e-07
+            },
+            "actual_cf_positive_grid_phase_mass_g_m2": {
+              "QC": 81.19685470381044,
+              "QG": 61.12261454671291,
+              "QH": 0.43340764175472335,
+              "QI": 305.0903873426881,
+              "QR": 42.75643628020134,
+              "QS": 490.59696640822204
+            },
+            "actual_raw_omitted_rain_g_m2": 36.58375835418701,
+            "actual_raw_omitted_snow_g_m2": 9.606245660193138e-07,
+            "eligible_ice_above180_grid_mass_g_m2": 259.60770590373215,
+            "eligible_ice_above180_layers": 6,
+            "radius_mapping_selection_counts": {
+              "REI": {
+                "diagnosed_source_layers": 9,
+                "host_background_fallback_layers": 0
+              },
+              "REL": {
+                "diagnosed_source_layers": 3,
+                "host_background_fallback_layers": 0
+              },
+              "RES": {
+                "diagnosed_source_layers": 9,
+                "host_background_fallback_layers": 0
+              }
+            },
+            "realized_mask_ice_above180_grid_mass_g_m2": 259.60770590373215,
+            "realized_mask_ice_above180_layers": 6
+          },
+          "actual_profile_snapshot": "evidence/canonical/ice_clip_high_cloud_proxy/profiles-lw.json",
+          "actual_reference_calls": 1,
+          "adapter_layers": 47,
+          "captured_column_seed": 1270445009,
+          "recorded_MASK_exact_equal_reference": true,
+          "status": "STRICT_PASS",
+          "strict_report": "evidence/canonical/ice_clip_high_cloud_proxy/strict-lw.json",
+          "strict_sections": 20
+        },
+        "SW": {
+          "actual_eligibility_and_mass": {
+            "active_ice_layers": 9,
+            "active_liquid_inside_lookup": true,
+            "active_liquid_layers": 3,
+            "active_liquid_native_grid_mass_g_m2": 81.19685470381044,
+            "active_liquid_radius_um": [
+              4.340725421905518,
+              4.499603271484375,
+              3.6016428470611572
+            ],
+            "active_requested_ice_diameter_um": [
+              250.00001525878906,
+              206.96449279785156,
+              203.82443237304688,
+              198.40713500976562,
+              190.95457458496094,
+              180.95550537109375,
+              165.8898468017578,
+              137.59971618652344,
+              50.256072998046875
+            ],
+            "actual_cf0_grid_phase_mass_g_m2": {
+              "QC": 9.037526310351616e-39,
+              "QG": 0.009775688330862117,
+              "QH": 0.011927558259323671,
+              "QI": 0.1884018783426028,
+              "QR": 36.58375844139969,
+              "QS": 9.60624579473443e-07
+            },
+            "actual_cf_positive_grid_phase_mass_g_m2": {
+              "QC": 81.19685470381044,
+              "QG": 61.12261454671291,
+              "QH": 0.43340764175472335,
+              "QI": 305.0903873426881,
+              "QR": 42.75643628020134,
+              "QS": 490.59696640822204
+            },
+            "actual_raw_omitted_rain_g_m2": 36.58375835418701,
+            "actual_raw_omitted_snow_g_m2": 9.606245660193138e-07,
+            "eligible_ice_above180_grid_mass_g_m2": 259.60770590373215,
+            "eligible_ice_above180_layers": 6,
+            "radius_mapping_selection_counts": {
+              "REI": {
+                "diagnosed_source_layers": 9,
+                "host_background_fallback_layers": 0
+              },
+              "REL": {
+                "diagnosed_source_layers": 3,
+                "host_background_fallback_layers": 0
+              },
+              "RES": {
+                "diagnosed_source_layers": 9,
+                "host_background_fallback_layers": 0
+              }
+            },
+            "realized_mask_ice_above180_grid_mass_g_m2": 259.60770590373215,
+            "realized_mask_ice_above180_layers": 6
+          },
+          "actual_profile_snapshot": "evidence/canonical/ice_clip_high_cloud_proxy/profiles-sw.json",
+          "actual_reference_calls": 1,
+          "adapter_layers": 40,
+          "captured_column_seed": 1270445010,
+          "recorded_MASK_exact_equal_reference": true,
+          "status": "STRICT_PASS",
+          "strict_report": "evidence/canonical/ice_clip_high_cloud_proxy/strict-sw.json",
+          "strict_sections": 46
+        }
+      },
+      "pins_unchanged": true,
+      "role": "canonical"
+    },
+    {
+      "case": "clear_control",
+      "existing_root_receipts": [],
+      "history_COSZEN": 0.1012248694896698,
+      "history_all_numeric_raw_decoded_finite_unmasked": true,
+      "history_file_sha256": "7a76a430f1d37ba88ee2692c5cb076a271f3d525a1190b5cd824df3790225025",
+      "history_geometry": [
+        289,
+        189,
+        39
+      ],
+      "history_physics": [
+        27,
+        37,
+        37
+      ],
+      "i": 126,
+      "j": 87,
+      "linked_recovery_receipts": [],
+      "numeric_history_variables": 210,
+      "original_case_directory": "build/udm-stratified-captures-v4/clear_control",
+      "original_execution_receipt": "evidence/canonical/clear_control/original-execution-receipt.json",
+      "original_execution_status": "CAPTURE_HISTORY_NONINTERFERENCE_AND_STRICT_REPLAY_PASS",
+      "phases": {
+        "LW": {
+          "actual_eligibility_and_mass": {
+            "active_ice_layers": 0,
+            "active_liquid_inside_lookup": true,
+            "active_liquid_layers": 0,
+            "active_liquid_native_grid_mass_g_m2": 0.0,
+            "active_liquid_radius_um": [],
+            "active_requested_ice_diameter_um": [],
+            "actual_cf0_grid_phase_mass_g_m2": {
+              "QC": 0.0,
+              "QG": 0.0,
+              "QH": 0.0,
+              "QI": 0.0,
+              "QR": 0.0,
+              "QS": 0.0
+            },
+            "actual_cf_positive_grid_phase_mass_g_m2": {
+              "QC": 0.0,
+              "QG": 0.0,
+              "QH": 0.0,
+              "QI": 0.0,
+              "QR": 0.0,
+              "QS": 0.0
+            },
+            "actual_raw_omitted_rain_g_m2": 0.0,
+            "actual_raw_omitted_snow_g_m2": 0.0,
+            "eligible_ice_above180_grid_mass_g_m2": 0.0,
+            "eligible_ice_above180_layers": 0,
+            "radius_mapping_selection_counts": {
+              "REI": {
+                "diagnosed_source_layers": 0,
+                "host_background_fallback_layers": 0
+              },
+              "REL": {
+                "diagnosed_source_layers": 0,
+                "host_background_fallback_layers": 0
+              },
+              "RES": {
+                "diagnosed_source_layers": 0,
+                "host_background_fallback_layers": 0
+              }
+            },
+            "realized_mask_ice_above180_grid_mass_g_m2": 0.0,
+            "realized_mask_ice_above180_layers": 0
+          },
+          "actual_profile_snapshot": "evidence/canonical/clear_control/profiles-lw.json",
+          "actual_reference_calls": 1,
+          "adapter_layers": 47,
+          "captured_column_seed": 1246308180,
+          "recorded_MASK_exact_equal_reference": true,
+          "status": "STRICT_PASS",
+          "strict_report": "evidence/canonical/clear_control/strict-lw.json",
+          "strict_sections": 20
+        },
+        "SW": {
+          "actual_eligibility_and_mass": {
+            "active_ice_layers": 0,
+            "active_liquid_inside_lookup": true,
+            "active_liquid_layers": 0,
+            "active_liquid_native_grid_mass_g_m2": 0.0,
+            "active_liquid_radius_um": [],
+            "active_requested_ice_diameter_um": [],
+            "actual_cf0_grid_phase_mass_g_m2": {
+              "QC": 0.0,
+              "QG": 0.0,
+              "QH": 0.0,
+              "QI": 0.0,
+              "QR": 0.0,
+              "QS": 0.0
+            },
+            "actual_cf_positive_grid_phase_mass_g_m2": {
+              "QC": 0.0,
+              "QG": 0.0,
+              "QH": 0.0,
+              "QI": 0.0,
+              "QR": 0.0,
+              "QS": 0.0
+            },
+            "actual_raw_omitted_rain_g_m2": 0.0,
+            "actual_raw_omitted_snow_g_m2": 0.0,
+            "eligible_ice_above180_grid_mass_g_m2": 0.0,
+            "eligible_ice_above180_layers": 0,
+            "radius_mapping_selection_counts": {
+              "REI": {
+                "diagnosed_source_layers": 0,
+                "host_background_fallback_layers": 0
+              },
+              "REL": {
+                "diagnosed_source_layers": 0,
+                "host_background_fallback_layers": 0
+              },
+              "RES": {
+                "diagnosed_source_layers": 0,
+                "host_background_fallback_layers": 0
+              }
+            },
+            "realized_mask_ice_above180_grid_mass_g_m2": 0.0,
+            "realized_mask_ice_above180_layers": 0
+          },
+          "actual_profile_snapshot": "evidence/canonical/clear_control/profiles-sw.json",
+          "actual_reference_calls": 1,
+          "adapter_layers": 40,
+          "captured_column_seed": 1246308181,
+          "recorded_MASK_exact_equal_reference": true,
+          "status": "STRICT_PASS",
+          "strict_report": "evidence/canonical/clear_control/strict-sw.json",
+          "strict_sections": 46
+        }
+      },
+      "pins_unchanged": true,
+      "role": "canonical"
+    },
+    {
+      "case": "daylight_unclipped_liquid_cloud_control",
+      "existing_root_receipts": [
+        "evidence/canonical/daylight_unclipped_liquid_cloud_control/root/root-strict-result-readback.json"
+      ],
+      "history_COSZEN": 0.41168996691703796,
+      "history_all_numeric_raw_decoded_finite_unmasked": true,
+      "history_file_sha256": "7a76a430f1d37ba88ee2692c5cb076a271f3d525a1190b5cd824df3790225025",
+      "history_geometry": [
+        289,
+        189,
+        39
+      ],
+      "history_physics": [
+        27,
+        37,
+        37
+      ],
+      "i": 268,
+      "j": 27,
+      "linked_recovery_receipts": [],
+      "numeric_history_variables": 210,
+      "original_case_directory": "build/udm-stratified-replacement-captures-v1/daylight_unclipped_liquid_cloud_control",
+      "original_execution_receipt": "evidence/canonical/daylight_unclipped_liquid_cloud_control/original-execution-receipt.json",
+      "original_execution_status": "CAPTURE_HISTORY_NONINTERFERENCE_AND_STRICT_REPLAY_PASS",
+      "phases": {
+        "LW": {
+          "actual_eligibility_and_mass": {
+            "active_ice_layers": 0,
+            "active_liquid_inside_lookup": true,
+            "active_liquid_layers": 1,
+            "active_liquid_native_grid_mass_g_m2": 3.52704611694038,
+            "active_liquid_radius_um": [
+              5.268178462982178
+            ],
+            "active_requested_ice_diameter_um": [],
+            "actual_cf0_grid_phase_mass_g_m2": {
+              "QC": 0.0,
+              "QG": 0.0,
+              "QH": 0.0,
+              "QI": 0.0,
+              "QR": 0.0,
+              "QS": 0.0
+            },
+            "actual_cf_positive_grid_phase_mass_g_m2": {
+              "QC": 3.52704611694038,
+              "QG": 0.0,
+              "QH": 0.0,
+              "QI": 0.0,
+              "QR": 0.0,
+              "QS": 0.0
+            },
+            "actual_raw_omitted_rain_g_m2": 0.0,
+            "actual_raw_omitted_snow_g_m2": 0.0,
+            "eligible_ice_above180_grid_mass_g_m2": 0.0,
+            "eligible_ice_above180_layers": 0,
+            "radius_mapping_selection_counts": {
+              "REI": {
+                "diagnosed_source_layers": 0,
+                "host_background_fallback_layers": 0
+              },
+              "REL": {
+                "diagnosed_source_layers": 1,
+                "host_background_fallback_layers": 0
+              },
+              "RES": {
+                "diagnosed_source_layers": 0,
+                "host_background_fallback_layers": 0
+              }
+            },
+            "realized_mask_ice_above180_grid_mass_g_m2": 0.0,
+            "realized_mask_ice_above180_layers": 0
+          },
+          "actual_profile_snapshot": "evidence/canonical/daylight_unclipped_liquid_cloud_control/profiles-lw.json",
+          "actual_reference_calls": 1,
+          "adapter_layers": 47,
+          "captured_column_seed": 606638890,
+          "recorded_MASK_exact_equal_reference": true,
+          "status": "STRICT_PASS",
+          "strict_report": "evidence/canonical/daylight_unclipped_liquid_cloud_control/strict-lw.json",
+          "strict_sections": 20
+        },
+        "SW": {
+          "actual_eligibility_and_mass": {
+            "active_ice_layers": 0,
+            "active_liquid_inside_lookup": true,
+            "active_liquid_layers": 1,
+            "active_liquid_native_grid_mass_g_m2": 3.52704611694038,
+            "active_liquid_radius_um": [
+              5.268178462982178
+            ],
+            "active_requested_ice_diameter_um": [],
+            "actual_cf0_grid_phase_mass_g_m2": {
+              "QC": 0.0,
+              "QG": 0.0,
+              "QH": 0.0,
+              "QI": 0.0,
+              "QR": 0.0,
+              "QS": 0.0
+            },
+            "actual_cf_positive_grid_phase_mass_g_m2": {
+              "QC": 3.52704611694038,
+              "QG": 0.0,
+              "QH": 0.0,
+              "QI": 0.0,
+              "QR": 0.0,
+              "QS": 0.0
+            },
+            "actual_raw_omitted_rain_g_m2": 0.0,
+            "actual_raw_omitted_snow_g_m2": 0.0,
+            "eligible_ice_above180_grid_mass_g_m2": 0.0,
+            "eligible_ice_above180_layers": 0,
+            "radius_mapping_selection_counts": {
+              "REI": {
+                "diagnosed_source_layers": 0,
+                "host_background_fallback_layers": 0
+              },
+              "REL": {
+                "diagnosed_source_layers": 1,
+                "host_background_fallback_layers": 0
+              },
+              "RES": {
+                "diagnosed_source_layers": 0,
+                "host_background_fallback_layers": 0
+              }
+            },
+            "realized_mask_ice_above180_grid_mass_g_m2": 0.0,
+            "realized_mask_ice_above180_layers": 0
+          },
+          "actual_profile_snapshot": "evidence/canonical/daylight_unclipped_liquid_cloud_control/profiles-sw.json",
+          "actual_reference_calls": 1,
+          "adapter_layers": 40,
+          "captured_column_seed": 606638891,
+          "recorded_MASK_exact_equal_reference": true,
+          "status": "STRICT_PASS",
+          "strict_report": "evidence/canonical/daylight_unclipped_liquid_cloud_control/strict-sw.json",
+          "strict_sections": 46
+        }
+      },
+      "pins_unchanged": true,
+      "role": "canonical"
+    },
+    {
+      "case": "cf0_snow_high_cloud_proxy",
+      "existing_root_receipts": [
+        "evidence/historical_audit/cf0_snow_high_cloud_proxy/root/root-linked-replay-readback.json"
+      ],
+      "history_COSZEN": 0.2177811563014984,
+      "history_all_numeric_raw_decoded_finite_unmasked": true,
+      "history_file_sha256": "7a76a430f1d37ba88ee2692c5cb076a271f3d525a1190b5cd824df3790225025",
+      "history_geometry": [
+        289,
+        189,
+        39
+      ],
+      "history_physics": [
+        27,
+        37,
+        37
+      ],
+      "i": 155,
+      "j": 115,
+      "linked_recovery_receipts": [
+        "evidence/historical_audit/cf0_snow_high_cloud_proxy/recovery/recovery-v1/reanalysis-receipt.json",
+        "evidence/historical_audit/cf0_snow_high_cloud_proxy/recovery/recovery-v2/recovery-receipt.json"
+      ],
+      "numeric_history_variables": 210,
+      "original_case_directory": "build/udm-stratified-captures-v4/cf0_snow_high_cloud_proxy",
+      "original_execution_receipt": "evidence/historical_audit/cf0_snow_high_cloud_proxy/original-execution-receipt.json",
+      "original_execution_status": "FAIL_PRESERVED",
+      "phases": {
+        "LW": {
+          "actual_eligibility_and_mass": {
+            "active_ice_layers": 11,
+            "active_liquid_inside_lookup": true,
+            "active_liquid_layers": 0,
+            "active_liquid_native_grid_mass_g_m2": 0.0,
+            "active_liquid_radius_um": [],
+            "active_requested_ice_diameter_um": [
+              10.020000457763672,
+              195.03973388671875,
+              188.14715576171875,
+              180.28982543945312,
+              170.275146484375,
+              158.8273162841797,
+              144.13275146484375,
+              123.83845520019531,
+              100.99622344970703,
+              73.14338684082031,
+              47.527862548828125
+            ],
+            "actual_cf0_grid_phase_mass_g_m2": {
+              "QC": 3.3656130614969053e-39,
+              "QG": 1.1858113922999873e-13,
+              "QH": 1.317537336081165e-15,
+              "QI": 0.0,
+              "QR": 5.103372537106899,
+              "QS": 2.991771916428322e-12
+            },
+            "actual_cf_positive_grid_phase_mass_g_m2": {
+              "QC": 0.0,
+              "QG": 12.568306082051759,
+              "QH": 0.0014098732052522333,
+              "QI": 185.1058540886367,
+              "QR": 5.590017170198303,
+              "QS": 293.76444539989143
+            },
+            "actual_raw_omitted_rain_g_m2": 5.10337229212746,
+            "actual_raw_omitted_snow_g_m2": 2.991771814241623e-12,
+            "eligible_ice_above180_grid_mass_g_m2": 15.964089808774514,
+            "eligible_ice_above180_layers": 3,
+            "radius_mapping_selection_counts": {
+              "REI": {
+                "diagnosed_source_layers": 11,
+                "host_background_fallback_layers": 0
+              },
+              "REL": {
+                "diagnosed_source_layers": 0,
+                "host_background_fallback_layers": 0
+              },
+              "RES": {
+                "diagnosed_source_layers": 12,
+                "host_background_fallback_layers": 0
+              }
+            },
+            "realized_mask_ice_above180_grid_mass_g_m2": 15.964089808774514,
+            "realized_mask_ice_above180_layers": 3
+          },
+          "actual_profile_snapshot": "evidence/historical_audit/cf0_snow_high_cloud_proxy/profiles-lw.json",
+          "actual_reference_calls": 1,
+          "adapter_layers": 47,
+          "captured_column_seed": 895946127,
+          "recorded_MASK_exact_equal_reference": true,
+          "status": "STRICT_PASS",
+          "strict_report": "evidence/historical_audit/cf0_snow_high_cloud_proxy/strict-lw.json",
+          "strict_sections": 20
+        },
+        "SW": {
+          "actual_eligibility_and_mass": {
+            "active_ice_layers": 11,
+            "active_liquid_inside_lookup": true,
+            "active_liquid_layers": 0,
+            "active_liquid_native_grid_mass_g_m2": 0.0,
+            "active_liquid_radius_um": [],
+            "active_requested_ice_diameter_um": [
+              10.020000457763672,
+              195.03973388671875,
+              188.14715576171875,
+              180.28982543945312,
+              170.275146484375,
+              158.8273162841797,
+              144.13275146484375,
+              123.83845520019531,
+              100.99622344970703,
+              73.14338684082031,
+              47.527862548828125
+            ],
+            "actual_cf0_grid_phase_mass_g_m2": {
+              "QC": 3.3656130614969053e-39,
+              "QG": 1.1858113922999873e-13,
+              "QH": 1.317537336081165e-15,
+              "QI": 0.0,
+              "QR": 5.103372537106899,
+              "QS": 2.991771916428322e-12
+            },
+            "actual_cf_positive_grid_phase_mass_g_m2": {
+              "QC": 0.0,
+              "QG": 12.568306082051759,
+              "QH": 0.0014098732052522333,
+              "QI": 185.1058540886367,
+              "QR": 5.590017170198303,
+              "QS": 293.76444539989143
+            },
+            "actual_raw_omitted_rain_g_m2": 5.10337229212746,
+            "actual_raw_omitted_snow_g_m2": 2.991771814241623e-12,
+            "eligible_ice_above180_grid_mass_g_m2": 15.964089808774514,
+            "eligible_ice_above180_layers": 3,
+            "radius_mapping_selection_counts": {
+              "REI": {
+                "diagnosed_source_layers": 11,
+                "host_background_fallback_layers": 0
+              },
+              "REL": {
+                "diagnosed_source_layers": 0,
+                "host_background_fallback_layers": 0
+              },
+              "RES": {
+                "diagnosed_source_layers": 12,
+                "host_background_fallback_layers": 0
+              }
+            },
+            "realized_mask_ice_above180_grid_mass_g_m2": 15.964089808774514,
+            "realized_mask_ice_above180_layers": 3
+          },
+          "actual_profile_snapshot": "evidence/historical_audit/cf0_snow_high_cloud_proxy/profiles-sw.json",
+          "actual_reference_calls": 1,
+          "adapter_layers": 40,
+          "captured_column_seed": 895946128,
+          "recorded_MASK_exact_equal_reference": true,
+          "status": "STRICT_PASS",
+          "strict_report": "evidence/historical_audit/cf0_snow_high_cloud_proxy/strict-sw.json",
+          "strict_sections": 46
+        }
+      },
+      "pins_unchanged": true,
+      "role": "historical_audit"
+    },
+    {
+      "case": "unclipped_cloud_control",
+      "existing_root_receipts": [],
+      "history_COSZEN": -0.2577424645423889,
+      "history_all_numeric_raw_decoded_finite_unmasked": true,
+      "history_file_sha256": "7a76a430f1d37ba88ee2692c5cb076a271f3d525a1190b5cd824df3790225025",
+      "history_geometry": [
+        289,
+        189,
+        39
+      ],
+      "history_physics": [
+        27,
+        37,
+        37
+      ],
+      "i": 22,
+      "j": 37,
+      "linked_recovery_receipts": [],
+      "numeric_history_variables": 210,
+      "original_case_directory": "build/udm-stratified-captures-v4/unclipped_cloud_control",
+      "original_execution_receipt": "evidence/historical_audit/unclipped_cloud_control/original-execution-receipt.json",
+      "original_execution_status": "FAIL_PRESERVED",
+      "phases": {
+        "LW": {
+          "actual_eligibility_and_mass": {
+            "active_ice_layers": 0,
+            "active_liquid_inside_lookup": true,
+            "active_liquid_layers": 1,
+            "active_liquid_native_grid_mass_g_m2": 7.320607652550326,
+            "active_liquid_radius_um": [
+              5.8650407791137695
+            ],
+            "active_requested_ice_diameter_um": [],
+            "actual_cf0_grid_phase_mass_g_m2": {
+              "QC": 0.0,
+              "QG": 0.0,
+              "QH": 0.0,
+              "QI": 0.0,
+              "QR": 0.0,
+              "QS": 0.0
+            },
+            "actual_cf_positive_grid_phase_mass_g_m2": {
+              "QC": 7.320607652550326,
+              "QG": 0.0,
+              "QH": 0.0,
+              "QI": 0.0,
+              "QR": 0.0,
+              "QS": 0.0
+            },
+            "actual_raw_omitted_rain_g_m2": 0.0,
+            "actual_raw_omitted_snow_g_m2": 0.0,
+            "eligible_ice_above180_grid_mass_g_m2": 0.0,
+            "eligible_ice_above180_layers": 0,
+            "radius_mapping_selection_counts": {
+              "REI": {
+                "diagnosed_source_layers": 0,
+                "host_background_fallback_layers": 0
+              },
+              "REL": {
+                "diagnosed_source_layers": 1,
+                "host_background_fallback_layers": 0
+              },
+              "RES": {
+                "diagnosed_source_layers": 0,
+                "host_background_fallback_layers": 0
+              }
+            },
+            "realized_mask_ice_above180_grid_mass_g_m2": 0.0,
+            "realized_mask_ice_above180_layers": 0
+          },
+          "actual_profile_snapshot": "evidence/historical_audit/unclipped_cloud_control/profiles-lw.json",
+          "actual_reference_calls": 1,
+          "adapter_layers": 47,
+          "captured_column_seed": 741336344,
+          "recorded_MASK_exact_equal_reference": true,
+          "status": "STRICT_PASS",
+          "strict_report": "evidence/historical_audit/unclipped_cloud_control/strict-lw.json",
+          "strict_sections": 20
+        },
+        "SW": {
+          "actual_reference_calls": 0,
+          "status": "SW_NOT_RUN_AT_NIGHT_EXPECTED_PRODUCTION_GATE",
+          "strict_sections": 0
+        }
+      },
+      "pins_unchanged": true,
+      "role": "historical_audit"
+    }
+  ],
+  "shared_query_limitation": "Separate reference executable replays adapter inputs; both production and reference use module_ra_rrtmgp_frozen query_lw/query_sw with the same table. Frozen agreement is a shared-query transfer/mixing regression check, not an independent physical oracle.",
+  "source_edits": 0,
+  "status": "CANONICAL_SIX_TWO_PHASE_ANCHORS_INDEXED_WITH_TWO_HISTORICAL_AUDITS",
+  "total_LW_only_night": 1,
+  "total_actual_calls": {
+    "LW": 8,
+    "SW": 7,
+    "WRF": 8,
+    "strict_reference": 15
+  },
+  "total_full_LW_SW": 7,
+  "unresolved_scientific_policies": [
+    "CF0 rain/snow occurrence handling",
+    "cloud-ice/liquid lookup clipping; frozenG/H uses a distinct size-law/table contract"
+  ]
+}
