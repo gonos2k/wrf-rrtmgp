@@ -1,0 +1,153 @@
+{
+  "PR_worktree_base_commit": "fdafa534d5641fa2251ad5b02d294d57167b81fb",
+  "RRTMGP_source_sha256": {
+    "WRF/external/rte_rrtmgp/extensions/mo_load_cloud_coefficients.F90": "330976e71d031dc725a63876947312eda821a9f9e09e4420af3a18caace6399a",
+    "WRF/external/rte_rrtmgp/extensions/mo_load_coefficients.F90": "3abc021bf244560f4d7f247be167ad0ecafb6c451f88566a7ce2a0436caebb5b",
+    "WRF/external/rte_rrtmgp/extensions/mo_simple_netcdf.F90": "b87ac6e7b26634a7433327700637471d38793f3e80207852bc7dd1cb5fb7a1a3",
+    "WRF/phys/module_ra_rrtmgp.F": "74378cc255088422ff8f770c1f342e135c538436d0bc0dcf67ec7b7abde1f5bb",
+    "WRF/phys/module_ra_rrtmgp_frozen.F": "dc468bf7e9e4f3883a8ad715dc4c25db4c1ff054637810fb178a02029edbed1d",
+    "WRF/phys/module_ra_rrtmgp_hash.F": "4bf4fd8dbeaf3309c2f4193ccd78ee2a8abf47fc228f5023a63798cc5ee993f6"
+  },
+  "all_tested_loader_sources_match_PR28_base": true,
+  "cases": [
+    {
+      "both_rank_logs_retained": true,
+      "case": "missing-sw-cloud",
+      "category": "coefficient",
+      "cleanup_actions": [],
+      "elapsed_seconds": 5.621034383773804,
+      "expected_error": {
+        "message": "load_cld_lutcoeff(): can't open file",
+        "stage": "RRTMGP gas/cloud coefficient loading"
+      },
+      "no_orphan_after_run": true,
+      "rank0_loader_diagnostic_and_MPI_Abort": true,
+      "remaining_before_cleanup": [],
+      "returncode": 1,
+      "timeout": false
+    },
+    {
+      "both_rank_logs_retained": true,
+      "case": "corrupt-lw-gas",
+      "category": "coefficient",
+      "cleanup_actions": [],
+      "elapsed_seconds": 5.221075534820557,
+      "expected_error": {
+        "message": "load_and_init(): can't open file",
+        "stage": "RRTMGP gas coefficient loading"
+      },
+      "no_orphan_after_run": true,
+      "rank0_loader_diagnostic_and_MPI_Abort": true,
+      "remaining_before_cleanup": [],
+      "returncode": 1,
+      "timeout": false
+    },
+    {
+      "both_rank_logs_retained": true,
+      "case": "missing-frozen-table",
+      "category": "frozen",
+      "cleanup_actions": [],
+      "elapsed_seconds": 5.7204813957214355,
+      "expected_error": {
+        "message": "table hash failed: open failed",
+        "stage": "frozen table initialization"
+      },
+      "no_orphan_after_run": true,
+      "rank0_loader_diagnostic_and_MPI_Abort": true,
+      "remaining_before_cleanup": [],
+      "returncode": 1,
+      "timeout": false
+    },
+    {
+      "both_rank_logs_retained": true,
+      "case": "malformed-frozen-header",
+      "category": "frozen",
+      "cleanup_actions": [],
+      "elapsed_seconds": 5.170685529708862,
+      "expected_error": {
+        "message": "NetCDF open: NetCDF: Unknown file format",
+        "stage": "frozen table initialization"
+      },
+      "no_orphan_after_run": true,
+      "rank0_loader_diagnostic_and_MPI_Abort": true,
+      "remaining_before_cleanup": [],
+      "returncode": 1,
+      "timeout": false
+    }
+  ],
+  "checksum_limit": "Frozen table loader computes SHA-256 and re-hashes after load to detect concurrent mutation, but does not receive an expected trusted digest or compare an embedded checksum. The corrupted-table case tests a malformed NetCDF header, not tampering of a valid NetCDF table.",
+  "coefficient_copy_policy": "Private per-case copies were used during the tests; no coefficient binary is copied into this evidence bundle. Hashes and sizes only.",
+  "coefficient_source_hashes_before_after": {
+    "after": {
+      "rrtmgp-clouds-lw-bnd.nc": "09d6704c5b863b4c3ceb417d20bb3076ec492e6bf2dfbcc9f3c5996a3706f0b0",
+      "rrtmgp-clouds-sw-bnd.nc": "7671835992a45afe66244b591a02c0b3df73d7d59ecb746bbffd9763497651cd",
+      "rrtmgp-gas-lw-g128.nc": "70ad65d116531122660318e5da2a2af9db74b425916202860e9527ef2375b8f6",
+      "rrtmgp-gas-sw-g112.nc": "361ed541324068ded28a275a4dd757bcaa0a845aebefa630f43a04678668fe62"
+    },
+    "before": {
+      "rrtmgp-clouds-lw-bnd.nc": "09d6704c5b863b4c3ceb417d20bb3076ec492e6bf2dfbcc9f3c5996a3706f0b0",
+      "rrtmgp-clouds-sw-bnd.nc": "7671835992a45afe66244b591a02c0b3df73d7d59ecb746bbffd9763497651cd",
+      "rrtmgp-gas-lw-g128.nc": "70ad65d116531122660318e5da2a2af9db74b425916202860e9527ef2375b8f6",
+      "rrtmgp-gas-sw-g112.nc": "361ed541324068ded28a275a4dd757bcaa0a845aebefa630f43a04678668fe62"
+    }
+  },
+  "fatal_callback_path": "module_ra_rrtmgp installs set_fatal_handler(rrtmgp_coeff_fatal) before gas/cloud loading; rrtmgp_coeff_fatal calls wrf_error_fatal3; coefficient and frozen-table loader errors reach the WRF fatal callback.",
+  "frozen_table_sha256_before_after": [
+    "8cb00850c3f885f5ec0306563c1ec0a55b512478a7395d626c1c99cebf280583",
+    "8cb00850c3f885f5ec0306563c1ec0a55b512478a7395d626c1c99cebf280583"
+  ],
+  "launch_contract": {
+    "MPICH_INTERFACE_HOSTNAME": "127.0.0.1",
+    "MPI_ranks": 2,
+    "OMP_NUM_THREADS": 1,
+    "launcher": "MPICH 4.2.0 sock, -launcher fork -iface lo -n 2 ./wrf.exe",
+    "physics": "RA37 LW/SW, frozen mode 1; same 12:00 restart; one-minute configuration but each run aborts during startup table initialization",
+    "timeout_seconds": 60
+  },
+  "not_claimed": [
+    "full forecast completion",
+    "all loader failure modes",
+    "MPI radiation/forecast numerical accuracy",
+    "valid-NetCDF frozen-table authenticity/checksum verification"
+  ],
+  "observed_abort_scope": "Rank 0 reports loader failure and calls MPI_Abort(MPI_COMM_WORLD,1); rank 1 reaches startup and is terminated as a communicator member. Two rank logs exist, no manual cleanup is required, and no case-scoped rank remains after launcher return. The evidence does not claim every rank independently executed the failing loader.",
+  "restart_checkpoint_sha256": "943a53db058f2d9560c6f0d571f3ff9bb8efb407010c5eea2026922a6eeee7b8",
+  "schema": "WRF_RRTMGP_COLLECTIVE_LOADER_FAILURE_EVIDENCE_V1",
+  "source_commit_for_test_executable": "e7c97ed661403b3922fcf752300c052611ef89cd",
+  "status": "PASS",
+  "test_executable_sha256": "176f589d657ca87df670cef3429d7474e674f3e44445eb7886aed871e36bef8f",
+  "test_source_files_match_PR28_base": {
+    "WRF/external/rte_rrtmgp/extensions/mo_load_cloud_coefficients.F90": {
+      "PR28_base_sha256": "330976e71d031dc725a63876947312eda821a9f9e09e4420af3a18caace6399a",
+      "byte_identical": true,
+      "test_executable_source_sha256": "330976e71d031dc725a63876947312eda821a9f9e09e4420af3a18caace6399a"
+    },
+    "WRF/external/rte_rrtmgp/extensions/mo_load_coefficients.F90": {
+      "PR28_base_sha256": "3abc021bf244560f4d7f247be167ad0ecafb6c451f88566a7ce2a0436caebb5b",
+      "byte_identical": true,
+      "test_executable_source_sha256": "3abc021bf244560f4d7f247be167ad0ecafb6c451f88566a7ce2a0436caebb5b"
+    },
+    "WRF/external/rte_rrtmgp/extensions/mo_simple_netcdf.F90": {
+      "PR28_base_sha256": "b87ac6e7b26634a7433327700637471d38793f3e80207852bc7dd1cb5fb7a1a3",
+      "byte_identical": true,
+      "test_executable_source_sha256": "b87ac6e7b26634a7433327700637471d38793f3e80207852bc7dd1cb5fb7a1a3"
+    },
+    "WRF/phys/module_ra_rrtmgp.F": {
+      "PR28_base_sha256": "74378cc255088422ff8f770c1f342e135c538436d0bc0dcf67ec7b7abde1f5bb",
+      "byte_identical": true,
+      "test_executable_source_sha256": "74378cc255088422ff8f770c1f342e135c538436d0bc0dcf67ec7b7abde1f5bb"
+    },
+    "WRF/phys/module_ra_rrtmgp_frozen.F": {
+      "PR28_base_sha256": "dc468bf7e9e4f3883a8ad715dc4c25db4c1ff054637810fb178a02029edbed1d",
+      "byte_identical": true,
+      "test_executable_source_sha256": "dc468bf7e9e4f3883a8ad715dc4c25db4c1ff054637810fb178a02029edbed1d"
+    },
+    "WRF/phys/module_ra_rrtmgp_hash.F": {
+      "PR28_base_sha256": "4bf4fd8dbeaf3309c2f4193ccd78ee2a8abf47fc228f5023a63798cc5ee993f6",
+      "byte_identical": true,
+      "test_executable_source_sha256": "4bf4fd8dbeaf3309c2f4193ccd78ee2a8abf47fc228f5023a63798cc5ee993f6"
+    }
+  },
+  "wrfbdy_sha256": "e687b73730ab9a2cee4842e1a92b225a4edb074ba080b6053d96d81ec1731a2d",
+  "wrfinput_sha256": "5ef7abe34c516fba107f346bdbdb3777edacb5d48493df467ea2dd8bcf6a75ff"
+}
