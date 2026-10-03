@@ -1,0 +1,1336 @@
+{
+  "status": "PASS_OFFLINE_REANALYSIS",
+  "engine_calls": 0,
+  "original_run_receipt_sha256": "90d08387a2655d3ecdacb3485408865334783db579dabaa5925fe43095633cc4",
+  "batch_wp_sha256": "c2e5b155dcaf864de33de655002dd3420a9c1771a484a87c0202ed3040f858ee",
+  "scalar_wp_sha256": "f8d1d0d522d803162df676959ab8453542b916bd10b38b8ec1a3a5fab4878a63",
+  "batch_f32_oracles": {
+    "batch32": {
+      "exact_bytes": true,
+      "actual_sha256": "a9fd0da25b9b41de77a6e9724d50ea38f3681fd1b275371f05290c1bf75617ad",
+      "expected_sha256": "a9fd0da25b9b41de77a6e9724d50ea38f3681fd1b275371f05290c1bf75617ad",
+      "bytes": 36608
+    },
+    "scalar32": {
+      "exact_bytes": true,
+      "actual_sha256": "a29c335dd9d24dffdadc0d2f8cc63ff4d7829fd6542a92ce03240e1dff6df0f2",
+      "expected_sha256": "a29c335dd9d24dffdadc0d2f8cc63ff4d7829fd6542a92ce03240e1dff6df0f2",
+      "bytes": 36608
+    }
+  },
+  "first_differing_wp_stage": "GAS_TAU",
+  "sections": {
+    "GAS_COL_DRY": {
+      "shape": [
+        32,
+        47
+      ],
+      "batch_chunks": 1,
+      "scalar_chunks": 32,
+      "differing_values": 0,
+      "total_values": 1504,
+      "max_abs_difference": 0.0,
+      "max_ulp_difference": 0,
+      "first_10_differences": []
+    },
+    "GAS_TAU": {
+      "shape": [
+        32,
+        47,
+        128
+      ],
+      "batch_chunks": 1,
+      "scalar_chunks": 32,
+      "differing_values": 42310,
+      "total_values": 192512,
+      "max_abs_difference": 4.0745362639427185e-10,
+      "max_ulp_difference": 22,
+      "first_10_differences": [
+        {
+          "fortran_zero_based_index": [
+            1,
+            0,
+            0
+          ],
+          "batch_hex": "402342A498D7DB1A",
+          "scalar_hex": "402342A498D7DB20",
+          "batch_value": 9.630162025785058,
+          "scalar_value": 9.630162025785069
+        },
+        {
+          "fortran_zero_based_index": [
+            8,
+            0,
+            0
+          ],
+          "batch_hex": "4023C2AC9FF203AA",
+          "scalar_hex": "4023C2AC9FF203B0",
+          "batch_value": 9.880223272602809,
+          "scalar_value": 9.88022327260282
+        },
+        {
+          "fortran_zero_based_index": [
+            13,
+            0,
+            0
+          ],
+          "batch_hex": "4022950B76F396E8",
+          "scalar_hex": "4022950B76F396EC",
+          "batch_value": 9.291103093371433,
+          "scalar_value": 9.29110309337144
+        },
+        {
+          "fortran_zero_based_index": [
+            18,
+            0,
+            0
+          ],
+          "batch_hex": "401AF993B7FF0E95",
+          "scalar_hex": "401AF993B7FF0E9D",
+          "batch_value": 6.7437275647568145,
+          "scalar_value": 6.743727564756822
+        },
+        {
+          "fortran_zero_based_index": [
+            19,
+            0,
+            0
+          ],
+          "batch_hex": "401D37B841C37827",
+          "scalar_hex": "401D37B841C37831",
+          "batch_value": 7.304413821750166,
+          "scalar_value": 7.304413821750175
+        },
+        {
+          "fortran_zero_based_index": [
+            31,
+            0,
+            0
+          ],
+          "batch_hex": "401FA84B3AC8843A",
+          "scalar_hex": "401FA84B3AC88443",
+          "batch_value": 7.914349478233868,
+          "scalar_value": 7.914349478233876
+        },
+        {
+          "fortran_zero_based_index": [
+            16,
+            1,
+            0
+          ],
+          "batch_hex": "4020665C1A1B3E39",
+          "scalar_hex": "4020665C1A1B3E3E",
+          "batch_value": 8.199921432328766,
+          "scalar_value": 8.199921432328775
+        },
+        {
+          "fortran_zero_based_index": [
+            3,
+            2,
+            0
+          ],
+          "batch_hex": "402AD35DDF9F9FA7",
+          "scalar_hex": "402AD35DDF9F9FAF",
+          "batch_value": 13.412825573191936,
+          "scalar_value": 13.41282557319195
+        },
+        {
+          "fortran_zero_based_index": [
+            7,
+            2,
+            0
+          ],
+          "batch_hex": "402D33212FFCBD3A",
+          "scalar_hex": "402D33212FFCBD43",
+          "batch_value": 14.599862575151395,
+          "scalar_value": 14.59986257515141
+        },
+        {
+          "fortran_zero_based_index": [
+            16,
+            2,
+            0
+          ],
+          "batch_hex": "40274F0087541DBE",
+          "scalar_hex": "40274F0087541DC6",
+          "batch_value": 11.654300908105935,
+          "scalar_value": 11.654300908105949
+        }
+      ]
+    },
+    "SOURCE_LAY": {
+      "shape": [
+        32,
+        47,
+        128
+      ],
+      "batch_chunks": 1,
+      "scalar_chunks": 32,
+      "differing_values": 19288,
+      "total_values": 192512,
+      "max_abs_difference": 3.552713678800501e-15,
+      "max_ulp_difference": 18,
+      "first_10_differences": [
+        {
+          "fortran_zero_based_index": [
+            13,
+            0,
+            0
+          ],
+          "batch_hex": "3FE41D3AF95B8936",
+          "scalar_hex": "3FE41D3AF95B8935",
+          "batch_value": 0.6285681600823299,
+          "scalar_value": 0.6285681600823297
+        },
+        {
+          "fortran_zero_based_index": [
+            19,
+            0,
+            0
+          ],
+          "batch_hex": "3FE45DCE4F34133F",
+          "scalar_hex": "3FE45DCE4F34133E",
+          "batch_value": 0.6364509150449534,
+          "scalar_value": 0.6364509150449533
+        },
+        {
+          "fortran_zero_based_index": [
+            31,
+            0,
+            0
+          ],
+          "batch_hex": "3FE467AE6F00199A",
+          "scalar_hex": "3FE467AE6F001998",
+          "batch_value": 0.6376564186073665,
+          "scalar_value": 0.6376564186073663
+        },
+        {
+          "fortran_zero_based_index": [
+            26,
+            2,
+            0
+          ],
+          "batch_hex": "3FE46DB812E54C0E",
+          "scalar_hex": "3FE46DB812E54C0D",
+          "batch_value": 0.638393437295578,
+          "scalar_value": 0.6383934372955778
+        },
+        {
+          "fortran_zero_based_index": [
+            7,
+            3,
+            0
+          ],
+          "batch_hex": "3FE460ED0C08CEFA",
+          "scalar_hex": "3FE460ED0C08CEF9",
+          "batch_value": 0.6368317828223262,
+          "scalar_value": 0.6368317828223261
+        },
+        {
+          "fortran_zero_based_index": [
+            11,
+            3,
+            0
+          ],
+          "batch_hex": "3FE44C05D4BBBF42",
+          "scalar_hex": "3FE44C05D4BBBF41",
+          "batch_value": 0.6342801241826026,
+          "scalar_value": 0.6342801241826025
+        },
+        {
+          "fortran_zero_based_index": [
+            13,
+            4,
+            0
+          ],
+          "batch_hex": "3FE464114BCA10FE",
+          "scalar_hex": "3FE464114BCA10FD",
+          "batch_value": 0.637215278650302,
+          "scalar_value": 0.6372152786503019
+        },
+        {
+          "fortran_zero_based_index": [
+            14,
+            4,
+            0
+          ],
+          "batch_hex": "3FE46C5B085FD2BA",
+          "scalar_hex": "3FE46C5B085FD2B9",
+          "batch_value": 0.6382270015297629,
+          "scalar_value": 0.6382270015297627
+        },
+        {
+          "fortran_zero_based_index": [
+            12,
+            5,
+            0
+          ],
+          "batch_hex": "3FE4660B661A32E8",
+          "scalar_hex": "3FE4660B661A32E7",
+          "batch_value": 0.6374566072641672,
+          "scalar_value": 0.6374566072641671
+        },
+        {
+          "fortran_zero_based_index": [
+            2,
+            6,
+            0
+          ],
+          "batch_hex": "3FE44918E3F4359C",
+          "scalar_hex": "3FE44918E3F4359B",
+          "batch_value": 0.6339230015016031,
+          "scalar_value": 0.633923001501603
+        }
+      ]
+    },
+    "SOURCE_LEV": {
+      "shape": [
+        32,
+        48,
+        128
+      ],
+      "batch_chunks": 1,
+      "scalar_chunks": 32,
+      "differing_values": 22067,
+      "total_values": 196608,
+      "max_abs_difference": 5.329070518200751e-15,
+      "max_ulp_difference": 15,
+      "first_10_differences": [
+        {
+          "fortran_zero_based_index": [
+            13,
+            0,
+            0
+          ],
+          "batch_hex": "3FE41EB4067861BA",
+          "scalar_hex": "3FE41EB4067861B9",
+          "batch_value": 0.6287479521152399,
+          "scalar_value": 0.6287479521152398
+        },
+        {
+          "fortran_zero_based_index": [
+            19,
+            0,
+            0
+          ],
+          "batch_hex": "3FE461F952181C2F",
+          "scalar_hex": "3FE461F952181C2E",
+          "batch_value": 0.6369597056772188,
+          "scalar_value": 0.6369597056772187
+        },
+        {
+          "fortran_zero_based_index": [
+            31,
+            0,
+            0
+          ],
+          "batch_hex": "3FE46FBB56BB5F88",
+          "scalar_hex": "3FE46FBB56BB5F86",
+          "batch_value": 0.638639134786886,
+          "scalar_value": 0.6386391347868858
+        },
+        {
+          "fortran_zero_based_index": [
+            13,
+            1,
+            0
+          ],
+          "batch_hex": "3FE420D40617289F",
+          "scalar_hex": "3FE420D40617289E",
+          "batch_value": 0.6290073508219115,
+          "scalar_value": 0.6290073508219114
+        },
+        {
+          "fortran_zero_based_index": [
+            19,
+            1,
+            0
+          ],
+          "batch_hex": "3FE4656B0CAF0475",
+          "scalar_hex": "3FE4656B0CAF0474",
+          "batch_value": 0.6373801467635888,
+          "scalar_value": 0.6373801467635887
+        },
+        {
+          "fortran_zero_based_index": [
+            31,
+            1,
+            0
+          ],
+          "batch_hex": "3FE46602C1260193",
+          "scalar_hex": "3FE46602C1260191",
+          "batch_value": 0.6374524853163613,
+          "scalar_value": 0.6374524853163611
+        },
+        {
+          "fortran_zero_based_index": [
+            26,
+            2,
+            0
+          ],
+          "batch_hex": "3FE4738B376A0DBA",
+          "scalar_hex": "3FE4738B376A0DB9",
+          "batch_value": 0.6391044695196151,
+          "scalar_value": 0.639104469519615
+        },
+        {
+          "fortran_zero_based_index": [
+            11,
+            3,
+            0
+          ],
+          "batch_hex": "3FE444032B1F04E6",
+          "scalar_hex": "3FE444032B1F04E5",
+          "batch_value": 0.6333022920809099,
+          "scalar_value": 0.6333022920809098
+        },
+        {
+          "fortran_zero_based_index": [
+            26,
+            3,
+            0
+          ],
+          "batch_hex": "3FE4749C74B8983A",
+          "scalar_hex": "3FE4749C74B89839",
+          "batch_value": 0.6392347602566197,
+          "scalar_value": 0.6392347602566196
+        },
+        {
+          "fortran_zero_based_index": [
+            7,
+            4,
+            0
+          ],
+          "batch_hex": "3FE462C1F14495EC",
+          "scalar_hex": "3FE462C1F14495EB",
+          "batch_value": 0.6370553695930403,
+          "scalar_value": 0.6370553695930402
+        }
+      ]
+    },
+    "SOURCE_SFC": {
+      "shape": [
+        32,
+        128
+      ],
+      "batch_chunks": 1,
+      "scalar_chunks": 32,
+      "differing_values": 271,
+      "total_values": 4096,
+      "max_abs_difference": 3.552713678800501e-15,
+      "max_ulp_difference": 6,
+      "first_10_differences": [
+        {
+          "fortran_zero_based_index": [
+            13,
+            0
+          ],
+          "batch_hex": "3FE456AB692E05DE",
+          "scalar_hex": "3FE456AB692E05DD",
+          "batch_value": 0.6355797819416542,
+          "scalar_value": 0.6355797819416541
+        },
+        {
+          "fortran_zero_based_index": [
+            19,
+            0
+          ],
+          "batch_hex": "3FE47FF620AA10A4",
+          "scalar_hex": "3FE47FF620AA10A3",
+          "batch_value": 0.6406202924704485,
+          "scalar_value": 0.6406202924704484
+        },
+        {
+          "fortran_zero_based_index": [
+            31,
+            0
+          ],
+          "batch_hex": "3FE48486BCE71AC8",
+          "scalar_hex": "3FE48486BCE71AC6",
+          "batch_value": 0.6411775292879947,
+          "scalar_value": 0.6411775292879944
+        },
+        {
+          "fortran_zero_based_index": [
+            18,
+            1
+          ],
+          "batch_hex": "4004364EC973A806",
+          "scalar_hex": "4004364EC973A805",
+          "batch_value": 2.526517461626102,
+          "scalar_value": 2.5265174616261015
+        },
+        {
+          "fortran_zero_based_index": [
+            31,
+            1
+          ],
+          "batch_hex": "400431F568E96BDE",
+          "scalar_hex": "400431F568E96BDF",
+          "batch_value": 2.5243938633188767,
+          "scalar_value": 2.524393863318877
+        },
+        {
+          "fortran_zero_based_index": [
+            18,
+            2
+          ],
+          "batch_hex": "4001A36D9D0A9236",
+          "scalar_hex": "4001A36D9D0A9235",
+          "batch_value": 2.204798914799791,
+          "scalar_value": 2.2047989147997904
+        },
+        {
+          "fortran_zero_based_index": [
+            19,
+            2
+          ],
+          "batch_hex": "40017CB5FE1BD904",
+          "scalar_hex": "40017CB5FE1BD903",
+          "batch_value": 2.185893998360486,
+          "scalar_value": 2.1858939983604855
+        },
+        {
+          "fortran_zero_based_index": [
+            1,
+            3
+          ],
+          "batch_hex": "3FEBCC0DF86D5693",
+          "scalar_hex": "3FEBCC0DF86D5692",
+          "batch_value": 0.8686590053645936,
+          "scalar_value": 0.8686590053645935
+        },
+        {
+          "fortran_zero_based_index": [
+            18,
+            3
+          ],
+          "batch_hex": "3FEC32087EE28675",
+          "scalar_hex": "3FEC32087EE28676",
+          "batch_value": 0.8811075666637423,
+          "scalar_value": 0.8811075666637425
+        },
+        {
+          "fortran_zero_based_index": [
+            1,
+            4
+          ],
+          "batch_hex": "3FE60BE232D4E181",
+          "scalar_hex": "3FE60BE232D4E182",
+          "batch_value": 0.6889506333164236,
+          "scalar_value": 0.6889506333164237
+        }
+      ]
+    },
+    "CLEAR_FU": {
+      "shape": [
+        32,
+        48
+      ],
+      "batch_chunks": 1,
+      "scalar_chunks": 32,
+      "differing_values": 1170,
+      "total_values": 1536,
+      "max_abs_difference": 5.7980287238024175e-12,
+      "max_ulp_difference": 102,
+      "first_10_differences": [
+        {
+          "fortran_zero_based_index": [
+            0,
+            0
+          ],
+          "batch_hex": "407C39894B0A9C31",
+          "scalar_hex": "407C39894B0A9C2D",
+          "batch_value": 451.5960188307245,
+          "scalar_value": 451.5960188307243
+        },
+        {
+          "fortran_zero_based_index": [
+            1,
+            0
+          ],
+          "batch_hex": "407BC15ACDB2F28E",
+          "scalar_hex": "407BC15ACDB2F28F",
+          "batch_value": 444.0846688261162,
+          "scalar_value": 444.08466882611623
+        },
+        {
+          "fortran_zero_based_index": [
+            2,
+            0
+          ],
+          "batch_hex": "407BAB0336AE21CD",
+          "scalar_hex": "407BAB0336AE21CB",
+          "batch_value": 442.68828456898046,
+          "scalar_value": 442.68828456898035
+        },
+        {
+          "fortran_zero_based_index": [
+            3,
+            0
+          ],
+          "batch_hex": "407BCC523DFB8EDA",
+          "scalar_hex": "407BCC523DFB8ED8",
+          "batch_value": 444.77007864250993,
+          "scalar_value": 444.7700786425098
+        },
+        {
+          "fortran_zero_based_index": [
+            8,
+            0
+          ],
+          "batch_hex": "407C7AC83E0CE911",
+          "scalar_hex": "407C7AC83E0CE90E",
+          "batch_value": 455.67388730090266,
+          "scalar_value": 455.6738873009025
+        },
+        {
+          "fortran_zero_based_index": [
+            9,
+            0
+          ],
+          "batch_hex": "407CBC88FC5DA001",
+          "scalar_hex": "407CBC88FC5D9FFF",
+          "batch_value": 459.7834437997081,
+          "scalar_value": 459.783443799708
+        },
+        {
+          "fortran_zero_based_index": [
+            13,
+            0
+          ],
+          "batch_hex": "407C4FD86834F8F1",
+          "scalar_hex": "407C4FD86834F8EF",
+          "batch_value": 452.9903337544666,
+          "scalar_value": 452.99033375446646
+        },
+        {
+          "fortran_zero_based_index": [
+            14,
+            0
+          ],
+          "batch_hex": "407C276524AE4721",
+          "scalar_hex": "407C276524AE4720",
+          "batch_value": 450.46219318463596,
+          "scalar_value": 450.4621931846359
+        },
+        {
+          "fortran_zero_based_index": [
+            15,
+            0
+          ],
+          "batch_hex": "407C32E7B13CB352",
+          "scalar_hex": "407C32E7B13CB350",
+          "batch_value": 451.1815655108559,
+          "scalar_value": 451.18156551085576
+        },
+        {
+          "fortran_zero_based_index": [
+            17,
+            0
+          ],
+          "batch_hex": "407BECCA5B318634",
+          "scalar_hex": "407BECCA5B318632",
+          "batch_value": 446.79940337510493,
+          "scalar_value": 446.7994033751048
+        }
+      ]
+    },
+    "CLEAR_FD": {
+      "shape": [
+        32,
+        48
+      ],
+      "batch_chunks": 1,
+      "scalar_chunks": 32,
+      "differing_values": 1483,
+      "total_values": 1536,
+      "max_abs_difference": 5.343281372915953e-12,
+      "max_ulp_difference": 22358,
+      "first_10_differences": [
+        {
+          "fortran_zero_based_index": [
+            0,
+            0
+          ],
+          "batch_hex": "4078308C1EDA7FB6",
+          "scalar_hex": "4078308C1EDA7F8D",
+          "batch_value": 387.0342091117012,
+          "scalar_value": 387.0342091116989
+        },
+        {
+          "fortran_zero_based_index": [
+            1,
+            0
+          ],
+          "batch_hex": "407802592DDF1307",
+          "scalar_hex": "407802592DDF130E",
+          "batch_value": 384.14677226198586,
+          "scalar_value": 384.14677226198626
+        },
+        {
+          "fortran_zero_based_index": [
+            2,
+            0
+          ],
+          "batch_hex": "4077F186D562405D",
+          "scalar_hex": "4077F186D5624038",
+          "batch_value": 383.09541834239445,
+          "scalar_value": 383.09541834239235
+        },
+        {
+          "fortran_zero_based_index": [
+            3,
+            0
+          ],
+          "batch_hex": "4077F02AC670C229",
+          "scalar_hex": "4077F02AC670C213",
+          "batch_value": 383.01044315382256,
+          "scalar_value": 383.0104431538213
+        },
+        {
+          "fortran_zero_based_index": [
+            4,
+            0
+          ],
+          "batch_hex": "4078084FB063A20B",
+          "scalar_hex": "4078084FB063A205",
+          "batch_value": 384.51945532721646,
+          "scalar_value": 384.5194553272161
+        },
+        {
+          "fortran_zero_based_index": [
+            5,
+            0
+          ],
+          "batch_hex": "40783A4F03EB121C",
+          "scalar_hex": "40783A4F03EB1212",
+          "batch_value": 387.6442908461047,
+          "scalar_value": 387.6442908461041
+        },
+        {
+          "fortran_zero_based_index": [
+            7,
+            0
+          ],
+          "batch_hex": "4078E92F9A32F17B",
+          "scalar_hex": "4078E92F9A32F162",
+          "batch_value": 398.57412166499824,
+          "scalar_value": 398.5741216649968
+        },
+        {
+          "fortran_zero_based_index": [
+            8,
+            0
+          ],
+          "batch_hex": "4078ECC2EFD970D7",
+          "scalar_hex": "4078ECC2EFD970CB",
+          "batch_value": 398.79759201944165,
+          "scalar_value": 398.79759201944097
+        },
+        {
+          "fortran_zero_based_index": [
+            9,
+            0
+          ],
+          "batch_hex": "40790451ED63B0EF",
+          "scalar_hex": "40790451ED63B0E1",
+          "batch_value": 400.27000178281645,
+          "scalar_value": 400.27000178281565
+        },
+        {
+          "fortran_zero_based_index": [
+            10,
+            0
+          ],
+          "batch_hex": "4078DC441812BEFB",
+          "scalar_hex": "4078DC441812BEFC",
+          "batch_value": 397.76662452051795,
+          "scalar_value": 397.766624520518
+        }
+      ]
+    },
+    "CLEAR_HEAT": {
+      "shape": [
+        32,
+        47
+      ],
+      "batch_chunks": 1,
+      "scalar_chunks": 32,
+      "differing_values": 1421,
+      "total_values": 1504,
+      "max_abs_difference": 8.380205166955146e-17,
+      "max_ulp_difference": 49468,
+      "first_10_differences": [
+        {
+          "fortran_zero_based_index": [
+            0,
+            0
+          ],
+          "batch_hex": "3F195C6D8A83E3A7",
+          "scalar_hex": "3F195C6D8A83E2C6",
+          "batch_value": 9.674471460020696e-05,
+          "scalar_value": 9.674471460020391e-05
+        },
+        {
+          "fortran_zero_based_index": [
+            1,
+            0
+          ],
+          "batch_hex": "3F18BD1D0826834A",
+          "scalar_hex": "3F18BD1D0826842B",
+          "batch_value": 9.437074371599938e-05,
+          "scalar_value": 9.437074371600243e-05
+        },
+        {
+          "fortran_zero_based_index": [
+            2,
+            0
+          ],
+          "batch_hex": "3F19B6BDE9732D79",
+          "scalar_hex": "3F19B6BDE9732C28",
+          "batch_value": 9.809049730618258e-05,
+          "scalar_value": 9.809049730617801e-05
+        },
+        {
+          "fortran_zero_based_index": [
+            3,
+            0
+          ],
+          "batch_hex": "3F1F03841FA8BC83",
+          "scalar_hex": "3F1F03841FA8BBD9",
+          "batch_value": 0.00011830800932764907,
+          "scalar_value": 0.00011830800932764676
+        },
+        {
+          "fortran_zero_based_index": [
+            5,
+            0
+          ],
+          "batch_hex": "3F20A82DAC8FD9B8",
+          "scalar_hex": "3F20A82DAC8FD964",
+          "batch_value": 0.00012708241982268913,
+          "scalar_value": 0.00012708241982268686
+        },
+        {
+          "fortran_zero_based_index": [
+            8,
+            0
+          ],
+          "batch_hex": "3F0A08F9498B0B51",
+          "scalar_hex": "3F0A08F9498B0A00",
+          "batch_value": 4.96579243125713e-05,
+          "scalar_value": 4.965792431256902e-05
+        },
+        {
+          "fortran_zero_based_index": [
+            9,
+            0
+          ],
+          "batch_hex": "3F0A57443BF49F03",
+          "scalar_hex": "3F0A57443BF49E22",
+          "batch_value": 5.0241250841685465e-05,
+          "scalar_value": 5.024125084168394e-05
+        },
+        {
+          "fortran_zero_based_index": [
+            10,
+            0
+          ],
+          "batch_hex": "3F130644C28059DD",
+          "scalar_hex": "3F130644C2805A15",
+          "batch_value": 7.257265735947185e-05,
+          "scalar_value": 7.257265735947261e-05
+        },
+        {
+          "fortran_zero_based_index": [
+            11,
+            0
+          ],
+          "batch_hex": "3F1465DA5E4A88A3",
+          "scalar_hex": "3F1465DA5E4A8913",
+          "batch_value": 7.78116733024825e-05,
+          "scalar_value": 7.781167330248402e-05
+        },
+        {
+          "fortran_zero_based_index": [
+            12,
+            0
+          ],
+          "batch_hex": "3F0DE78D109A385A",
+          "scalar_hex": "3F0DE78D109A393B",
+          "batch_value": 5.70382999970232e-05,
+          "scalar_value": 5.7038299997024725e-05
+        }
+      ]
+    },
+    "TOTAL_TAU": {
+      "shape": [
+        32,
+        47,
+        128
+      ],
+      "batch_chunks": 1,
+      "scalar_chunks": 32,
+      "differing_values": 42281,
+      "total_values": 192512,
+      "max_abs_difference": 4.0745362639427185e-10,
+      "max_ulp_difference": 22,
+      "first_10_differences": [
+        {
+          "fortran_zero_based_index": [
+            1,
+            0,
+            0
+          ],
+          "batch_hex": "4026E10593F644F8",
+          "scalar_hex": "4026E10593F644FE",
+          "batch_value": 11.43949568158358,
+          "scalar_value": 11.43949568158359
+        },
+        {
+          "fortran_zero_based_index": [
+            8,
+            0,
+            0
+          ],
+          "batch_hex": "4023C2AC9FF203AA",
+          "scalar_hex": "4023C2AC9FF203B0",
+          "batch_value": 9.880223272602809,
+          "scalar_value": 9.88022327260282
+        },
+        {
+          "fortran_zero_based_index": [
+            13,
+            0,
+            0
+          ],
+          "batch_hex": "4022950B76F396E8",
+          "scalar_hex": "4022950B76F396EC",
+          "batch_value": 9.291103093371433,
+          "scalar_value": 9.29110309337144
+        },
+        {
+          "fortran_zero_based_index": [
+            18,
+            0,
+            0
+          ],
+          "batch_hex": "401AF993B7FF0E95",
+          "scalar_hex": "401AF993B7FF0E9D",
+          "batch_value": 6.7437275647568145,
+          "scalar_value": 6.743727564756822
+        },
+        {
+          "fortran_zero_based_index": [
+            19,
+            0,
+            0
+          ],
+          "batch_hex": "401D37B841C37827",
+          "scalar_hex": "401D37B841C37831",
+          "batch_value": 7.304413821750166,
+          "scalar_value": 7.304413821750175
+        },
+        {
+          "fortran_zero_based_index": [
+            31,
+            0,
+            0
+          ],
+          "batch_hex": "401FA84B3AC8843A",
+          "scalar_hex": "401FA84B3AC88443",
+          "batch_value": 7.914349478233868,
+          "scalar_value": 7.914349478233876
+        },
+        {
+          "fortran_zero_based_index": [
+            16,
+            1,
+            0
+          ],
+          "batch_hex": "4020665C1A1B3E39",
+          "scalar_hex": "4020665C1A1B3E3E",
+          "batch_value": 8.199921432328766,
+          "scalar_value": 8.199921432328775
+        },
+        {
+          "fortran_zero_based_index": [
+            3,
+            2,
+            0
+          ],
+          "batch_hex": "402AD35DDF9F9FA7",
+          "scalar_hex": "402AD35DDF9F9FAF",
+          "batch_value": 13.412825573191936,
+          "scalar_value": 13.41282557319195
+        },
+        {
+          "fortran_zero_based_index": [
+            7,
+            2,
+            0
+          ],
+          "batch_hex": "402D33212FFCBD3A",
+          "scalar_hex": "402D33212FFCBD43",
+          "batch_value": 14.599862575151395,
+          "scalar_value": 14.59986257515141
+        },
+        {
+          "fortran_zero_based_index": [
+            16,
+            2,
+            0
+          ],
+          "batch_hex": "40274F0087541DBE",
+          "scalar_hex": "40274F0087541DC6",
+          "batch_value": 11.654300908105935,
+          "scalar_value": 11.654300908105949
+        }
+      ]
+    },
+    "ALL_FU": {
+      "shape": [
+        32,
+        48
+      ],
+      "batch_chunks": 1,
+      "scalar_chunks": 32,
+      "differing_values": 1143,
+      "total_values": 1536,
+      "max_abs_difference": 6.0254023992456496e-12,
+      "max_ulp_difference": 106,
+      "first_10_differences": [
+        {
+          "fortran_zero_based_index": [
+            0,
+            0
+          ],
+          "batch_hex": "407C39894B0A9C31",
+          "scalar_hex": "407C39894B0A9C2D",
+          "batch_value": 451.5960188307245,
+          "scalar_value": 451.5960188307243
+        },
+        {
+          "fortran_zero_based_index": [
+            3,
+            0
+          ],
+          "batch_hex": "407BEB38F94CA688",
+          "scalar_hex": "407BEB38F94CA687",
+          "batch_value": 446.7014096254502,
+          "scalar_value": 446.70140962545014
+        },
+        {
+          "fortran_zero_based_index": [
+            4,
+            0
+          ],
+          "batch_hex": "407BEE795D50E327",
+          "scalar_hex": "407BEE795D50E326",
+          "batch_value": 446.90463000866515,
+          "scalar_value": 446.9046300086651
+        },
+        {
+          "fortran_zero_based_index": [
+            6,
+            0
+          ],
+          "batch_hex": "407C65F19E797BCC",
+          "scalar_hex": "407C65F19E797BCE",
+          "batch_value": 454.3714890237286,
+          "scalar_value": 454.3714890237287
+        },
+        {
+          "fortran_zero_based_index": [
+            17,
+            0
+          ],
+          "batch_hex": "407BECCA5B318634",
+          "scalar_hex": "407BECCA5B318632",
+          "batch_value": 446.79940337510493,
+          "scalar_value": 446.7994033751048
+        },
+        {
+          "fortran_zero_based_index": [
+            19,
+            0
+          ],
+          "batch_hex": "407C18B18A564027",
+          "scalar_hex": "407C18B18A564029",
+          "batch_value": 449.54334481898917,
+          "scalar_value": 449.5433448189893
+        },
+        {
+          "fortran_zero_based_index": [
+            22,
+            0
+          ],
+          "batch_hex": "407CE2ADF979B811",
+          "scalar_hex": "407CE2ADF979B812",
+          "batch_value": 462.16747424646843,
+          "scalar_value": 462.1674742464685
+        },
+        {
+          "fortran_zero_based_index": [
+            0,
+            1
+          ],
+          "batch_hex": "407BD17BB576CD40",
+          "scalar_hex": "407BD17BB576CD3F",
+          "batch_value": 445.0927023544973,
+          "scalar_value": 445.09270235449725
+        },
+        {
+          "fortran_zero_based_index": [
+            7,
+            1
+          ],
+          "batch_hex": "407C2467FE0B02D6",
+          "scalar_hex": "407C2467FE0B02D5",
+          "batch_value": 450.27538875867083,
+          "scalar_value": 450.2753887586708
+        },
+        {
+          "fortran_zero_based_index": [
+            8,
+            1
+          ],
+          "batch_hex": "407C240C2466AC1D",
+          "scalar_hex": "407C240C2466AC1C",
+          "batch_value": 450.2529644022596,
+          "scalar_value": 450.2529644022595
+        }
+      ]
+    },
+    "ALL_FD": {
+      "shape": [
+        32,
+        48
+      ],
+      "batch_chunks": 1,
+      "scalar_chunks": 32,
+      "differing_values": 1489,
+      "total_values": 1536,
+      "max_abs_difference": 5.343281372915953e-12,
+      "max_ulp_difference": 22358,
+      "first_10_differences": [
+        {
+          "fortran_zero_based_index": [
+            0,
+            0
+          ],
+          "batch_hex": "4078308C1EDA7FB6",
+          "scalar_hex": "4078308C1EDA7F8D",
+          "batch_value": 387.0342091117012,
+          "scalar_value": 387.0342091116989
+        },
+        {
+          "fortran_zero_based_index": [
+            1,
+            0
+          ],
+          "batch_hex": "407A93644A520327",
+          "scalar_hex": "407A93644A520329",
+          "batch_value": 425.2119849399191,
+          "scalar_value": 425.2119849399192
+        },
+        {
+          "fortran_zero_based_index": [
+            2,
+            0
+          ],
+          "batch_hex": "407AACA09A71A772",
+          "scalar_hex": "407AACA09A71A771",
+          "batch_value": 426.7892097892392,
+          "scalar_value": 426.7892097892391
+        },
+        {
+          "fortran_zero_based_index": [
+            3,
+            0
+          ],
+          "batch_hex": "407A5A315F1E81C7",
+          "scalar_hex": "407A5A315F1E81C4",
+          "batch_value": 421.6370536033323,
+          "scalar_value": 421.6370536033321
+        },
+        {
+          "fortran_zero_based_index": [
+            4,
+            0
+          ],
+          "batch_hex": "407A478A0B3F5E45",
+          "scalar_hex": "407A478A0B3F5E43",
+          "batch_value": 420.47120213273257,
+          "scalar_value": 420.47120213273246
+        },
+        {
+          "fortran_zero_based_index": [
+            5,
+            0
+          ],
+          "batch_hex": "407A4A3472C66A29",
+          "scalar_hex": "407A4A3472C66A26",
+          "batch_value": 420.6378047705244,
+          "scalar_value": 420.6378047705242
+        },
+        {
+          "fortran_zero_based_index": [
+            6,
+            0
+          ],
+          "batch_hex": "4078CACABE291CFF",
+          "scalar_hex": "4078CACABE291D03",
+          "batch_value": 396.67449775752897,
+          "scalar_value": 396.6744977575292
+        },
+        {
+          "fortran_zero_based_index": [
+            7,
+            0
+          ],
+          "batch_hex": "4078E92F9A32F1C6",
+          "scalar_hex": "4078E92F9A32F1B3",
+          "batch_value": 398.5741216650025,
+          "scalar_value": 398.5741216650014
+        },
+        {
+          "fortran_zero_based_index": [
+            8,
+            0
+          ],
+          "batch_hex": "4078ECC2EFD97131",
+          "scalar_hex": "4078ECC2EFD9712E",
+          "batch_value": 398.79759201944677,
+          "scalar_value": 398.7975920194466
+        },
+        {
+          "fortran_zero_based_index": [
+            9,
+            0
+          ],
+          "batch_hex": "40790451ED63B711",
+          "scalar_hex": "40790451ED63B709",
+          "batch_value": 400.2700017829057,
+          "scalar_value": 400.27000178290524
+        }
+      ]
+    },
+    "ALL_HEAT": {
+      "shape": [
+        32,
+        47
+      ],
+      "batch_chunks": 1,
+      "scalar_chunks": 32,
+      "differing_values": 1409,
+      "total_values": 1504,
+      "max_abs_difference": 1.0015317568334847e-16,
+      "max_ulp_difference": 59120,
+      "first_10_differences": [
+        {
+          "fortran_zero_based_index": [
+            0,
+            0
+          ],
+          "batch_hex": "3F195C6D8A83E3A7",
+          "scalar_hex": "3F195C6D8A83E2C6",
+          "batch_value": 9.674471460020696e-05,
+          "scalar_value": 9.674471460020391e-05
+        },
+        {
+          "fortran_zero_based_index": [
+            1,
+            0
+          ],
+          "batch_hex": "BF396F93F29633AE",
+          "scalar_hex": "BF396F93F296333D",
+          "batch_value": -0.00038812028886852756,
+          "scalar_value": -0.00038812028886852143
+        },
+        {
+          "fortran_zero_based_index": [
+            2,
+            0
+          ],
+          "batch_hex": "BF3B23EAA70038D1",
+          "scalar_hex": "BF3B23EAA7003B11",
+          "batch_value": -0.00041412810151165736,
+          "scalar_value": -0.0004141281015116886
+        },
+        {
+          "fortran_zero_based_index": [
+            3,
+            0
+          ],
+          "batch_hex": "BF35F375A0E6FE84",
+          "scalar_hex": "BF35F375A0E6FFAC",
+          "batch_value": -0.00033494588651803597,
+          "scalar_value": -0.000334945886518052
+        },
+        {
+          "fortran_zero_based_index": [
+            4,
+            0
+          ],
+          "batch_hex": "BF3347A02DC1A272",
+          "scalar_hex": "BF3347A02DC1A2F2",
+          "batch_value": -0.00029418621648472705,
+          "scalar_value": -0.000294186216484734
+        },
+        {
+          "fortran_zero_based_index": [
+            5,
+            0
+          ],
+          "batch_hex": "BF30D732FF2E557A",
+          "scalar_hex": "BF30D732FF2E563F",
+          "batch_value": -0.0002569674972446517,
+          "scalar_value": -0.00025696749724466236
+        },
+        {
+          "fortran_zero_based_index": [
+            6,
+            0
+          ],
+          "batch_hex": "3F0B4D34C4D21EA2",
+          "scalar_hex": "3F0B4D34C4D220D3",
+          "batch_value": 5.207364356701645e-05,
+          "scalar_value": 5.207364356702025e-05
+        },
+        {
+          "fortran_zero_based_index": [
+            7,
+            0
+          ],
+          "batch_hex": "3F07818393F91F2C",
+          "scalar_hex": "3F07818393F91EBB",
+          "batch_value": 4.483397287607794e-05,
+          "scalar_value": 4.483397287607717e-05
+        },
+        {
+          "fortran_zero_based_index": [
+            8,
+            0
+          ],
+          "batch_hex": "3F0A08F9498B0D12",
+          "scalar_hex": "3F0A08F9498B0CA1",
+          "batch_value": 4.9657924312574345e-05,
+          "scalar_value": 4.965792431257358e-05
+        },
+        {
+          "fortran_zero_based_index": [
+            9,
+            0
+          ],
+          "batch_hex": "3F0A57443BF4C28D",
+          "scalar_hex": "3F0A57443BF4C36E",
+          "batch_value": 5.0241250841747116e-05,
+          "scalar_value": 5.024125084174864e-05
+        }
+      ]
+    }
+  },
+  "note": "Original run receipt remains unchanged and FAIL_PRESERVED because its scalar validator rejected repeated per-column WP sections; this separate parser joins 32 scalar chunks by the Fortran leading column dimension. No radiation was rerun."
+}

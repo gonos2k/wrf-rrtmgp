@@ -1,0 +1,92 @@
+{
+  "evidence_type": "diagnostic numerical attribution; no production source or math flags changed",
+  "base_commit": "de312b7a53cefc2f69024e8b96de4bd586f00816",
+  "source": {
+    "generated_adapter_sha256": "365c453cefe21c14abb99c7720e048de5e3814bd4ee253465fbac22cd965137a",
+    "source_vendor_tree_git_object": "872368a6a471e707ebc5987bd22feb7940fcb79d",
+    "gnu_fortran": "13.3.0",
+    "adapter_build_flags": "-O2 -ftree-vectorize -funroll-loops -w -ffree-form -ffree-line-length-none -fconvert=big-endian -frecord-marker=4 -fallow-argument-mismatch -fallow-invalid-boz"
+  },
+  "inputs": {
+    "n_columns": 32,
+    "n_engine_layers": 47,
+    "n_native_mass_layers": 39,
+    "fixture": "fixtures/lw32-fortran-order.bin",
+    "fixture_sha256": "644ddb36f5f883b8e9a5ed75d53f426ec47176c83a5c24d7e49a40b6f62620da",
+    "fixture_bytes": 164004,
+    "independent_input_checks": 1856,
+    "all_64_original_capture_rows_inputs_and_headers_match": true,
+    "expected_float32_outputs_included": true,
+    "gas_coefficient_sha256": "70ad65d116531122660318e5da2a2af9db74b425916202860e9527ef2375b8f6",
+    "cloud_coefficient_sha256": "09d6704c5b863b4c3ceb417d20bb3076ec492e6bf2dfbcc9f3c5996a3706f0b0",
+    "frozen_table_sha256": "8cb00850c3f885f5ec0306563c1ec0a55b512478a7395d626c1c99cebf280583"
+  },
+  "original_wrf_first_call": {
+    "field": "LW heating",
+    "target_global_i_j_k": [205, 53, 39],
+    "standalone_fixture_column_layer_zero_based": [0, 38],
+    "standalone_arrays_differing": {
+      "HR": {"batch": -1.138049602508545, "scalar": -1.1380494832992554, "float32_ulps": 1},
+      "HRC": {"batch": -1.138049602508545, "scalar": -1.1380494832992554, "float32_ulps": 1}
+    },
+    "UP_DN_UPC_DNC_bitwise_equal_in_captured_float32_oracles": true,
+    "saved_history_first_record_max_delta_RTHRATLW_K_per_s": 7.275957614183426e-12
+  },
+  "default_math_wp_comparison": {
+    "first_differing_stage": "GAS_TAU",
+    "GAS_COL_DRY_differences": 0,
+    "GAS_TAU_differences": 42310,
+    "GAS_TAU_total": 192512,
+    "GAS_TAU_max_absolute": 4.0745362639427185e-10,
+    "GAS_TAU_max_relative": 2.807419165632381e-15,
+    "target_column_GAS_TAU_differences": 1362,
+    "both_float32_output_oracles_exact": true
+  },
+  "log_only_counterfactual": {
+    "shim_symbol": "_ZGVbN2v_log",
+    "ABI_test_lanes_bitwise_against_scalar_libc": 1504,
+    "GAS_TAU_source_functions_TOTAL_TAU_bitwise_equal": true,
+    "first_remaining_stage": "CLEAR_FU",
+    "CLEAR_HEAT_differing_values": 1421,
+    "CLEAR_HEAT_total": 1504,
+    "both_float32_output_oracles_exact": true,
+    "receipt": "receipts/log-only-run.json"
+  },
+  "joint_log_exp_counterfactual": {
+    "shim_symbols": ["_ZGVbN2v_log", "_ZGVbN2v_exp"],
+    "exp_ABI_test_lanes_bitwise_against_scalar_libc": 192516,
+    "all_12_WP_sections_bitwise_equal": true,
+    "batch_float32_difference_from_original": {
+      "differing_words": 2,
+      "fields": ["HR", "HRC"],
+      "coordinate_zero_based": [0, 38],
+      "delta": "one float32 ULP per field; batch output moves to original scalar value",
+      "joint_batch_output_sha256_equals_original_scalar_output_sha256": true
+    },
+    "receipt": "receipts/joint-shim-run.json",
+    "independent_root_readback": "receipts/root-joint-math-readback.json"
+  },
+  "coupled_forecast_history": {
+    "records": 11,
+    "variables_per_record": 211,
+    "changed_variable_time_pairs_total": 163,
+    "changed_variable_counts_by_minute_12_01_to_12_11": [3, 3, 3, 3, 3, 4, 5, 12, 16, 43, 68],
+    "first_nonheating_field_difference": "W at 12:06",
+    "interpretation": "Later history differences include coupled state feedback and are not same-state radiation attribution.",
+    "full_exact_readback": "receipts/full-array-recheck.json",
+    "root_first_last_readback": "receipts/root-first-last-recheck.json"
+  },
+  "failed_or_corrected_harness_attempts": [
+    {"receipt": "receipts/fixture-v1-ordering-failure.json", "scope": "The initial fixture used incorrect stream packing and failed input pressure validation; preserved, not a radiation result."},
+    {"receipt": "receipts/run-receipt.json", "scope": "The v2 original run completed both modes, but the embedded scalar parser rejected repeated per-column WP chunks. Offline chunk-aware parsing then produced receipts/offline-reanalysis.json with no engine rerun."},
+    {"receipt": "receipts/log-only-ldd-preflight-failure.json", "scope": "Initial log-only runtime checker compared symlink-resolved locations rather than library content identities; zero processes launched."},
+    {"receipt": "receipts/joint-shim-initial-preflight-failure.json", "scope": "Initial copied runner selected the previous shim's executable path; zero processes launched."}
+  ],
+  "scope_limits": [
+    "one 32-column LW input fixture and one GNU 13.3/Linux/libm build",
+    "joint shims replace symbols process-wide, including any calls during coefficient initialization; the individual vector-exp site is not isolated",
+    "no production-source or compiler-math-flag modifications",
+    "the coupled trajectory is not bitwise-identical; downstream state feedback is distinct from the first-call attribution",
+    "does not establish broader portability, forecast accuracy, or a production defect"
+  ]
+}
