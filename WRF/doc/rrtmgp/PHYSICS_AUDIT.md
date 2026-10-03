@@ -28,6 +28,8 @@ python3 WRF/test/rrtmgp/test_udm_physics_audit.py --help
 
 37 전용 history 상태 `UDM_CLDFRA` 및 `UDM_CF_STEP`은 UDM 내부 `cldf_diag`가 마지막으로 실제 실행된 결과를 기록한다. 이번 UDM 호출의 모든 subcycle에서 진단이 실행되지 않은 열에는 sentinel `-1`과 `source_step=-1`이 남는다. 뒤 subcycle에서 실행이 생략되어도 앞 subcycle의 마지막 실제 진단은 보존한다. `cldf_diag`는 내부 `ktop`까지 값을 갱신하며, 그 위쪽은 호출 전에 설정한 1이 보존된다. 따라서 이 배열은 실제 UDM 알고리즘이 마지막으로 사용한 배열 전체를 나타내며, 위쪽 레이어를 사후에 0 또는 재계산 값으로 바꾸지 않는다.
 
+`UDM_CF_TOP` records the exact diagnosed extent for that last actual call (`-1` not called, `0` empty extent, otherwise one-based `ktop`). Levels above the top remain part of the UDM working vector, but are not asserted to be diagnosed cloud fraction. See [UDM_CF_EXTENT.md](UDM_CF_EXTENT.md) for the field and replay contracts.
+
 UDM 구름 진단의 길이 척도는 현재 소스에서 `dxmeter=10000.` m로 고정되어 있다. 따라서 이 결과는 WRF 도메인의 `DX`를 읽은 것이 아니라 UDM 내부에서 사용된 고정 10 km 설정을 반영한다.
 
 방사 호출 trace에는 다음 값을 별도 필드로 저장한다.

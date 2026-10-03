@@ -143,6 +143,7 @@ def read_raw(path: Path) -> tuple[str, int, int, dict[str, np.ndarray]]:
         fail(f"{path}: raw snapshot missing required fields: {', '.join(absent)}")
     if len(records["DP_HPA"]) != nl:
         fail(f"{path}: DP_HPA count differs from raw nl={nl}")
+    validate_udm_cf_extent(records, nl, path)
     if "DRY_LAYER_MASS_KG_M2" in records:
         dry_mass = records["DRY_LAYER_MASS_KG_M2"]
         if dry_mass.shape != (nl,) or not np.isfinite(dry_mass).all() or np.any(dry_mass <= 0.0):
@@ -160,6 +161,30 @@ def read_raw(path: Path) -> tuple[str, int, int, dict[str, np.ndarray]]:
         if field in records and records[field].size != 1:
             fail(f"{path}: {field} must be scalar")
     return phase, i, j, records
+
+
+def validate_udm_cf_extent(records: dict[str, np.ndarray], nl: int, path: Path) -> int | None:
+    """Validate the optional UDM top/step pair; None means legacy extent unknown."""
+    top_values = records.get("UDM_CF_TOP")
+    step_values = records.get("UDM_CF_SOURCE_STEP")
+    if top_values is None:
+        return None
+    if step_values is None:
+        fail(f"{path}: UDM_CF_TOP requires UDM_CF_SOURCE_STEP")
+    if top_values.size != 1 or step_values.size != 1:
+        fail(f"{path}: UDM_CF_TOP and UDM_CF_SOURCE_STEP must be scalar")
+    top_raw = float(top_values[0])
+    step_raw = float(step_values[0])
+    if not np.isfinite(top_raw) or top_raw != np.floor(top_raw):
+        fail(f"{path}: UDM_CF_TOP must be a finite integer")
+    if not np.isfinite(step_raw) or step_raw != np.floor(step_raw):
+        fail(f"{path}: UDM_CF_SOURCE_STEP must be a finite integer")
+    top, step = int(top_raw), int(step_raw)
+    if top < -1 or top > nl or step < -1:
+        fail(f"{path}: UDM_CF_TOP/UDM_CF_SOURCE_STEP outside valid bounds")
+    if (top == -1) != (step == -1):
+        fail(f"{path}: UDM_CF_TOP=-1 and source step=-1 must identify the same not-called state")
+    return top
 
 
 def read_input(path: Path) -> tuple[str, int, int, int, int, int, dict[str, np.ndarray]]:

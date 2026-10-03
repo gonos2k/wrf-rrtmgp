@@ -110,7 +110,7 @@ def main() -> int:
         if int(positive_run["returncode"]):
             sys.stderr.write(positive_output)
             raise RuntimeError("fixed UDM outer-call path failed")
-        if "UDM outer-call native-density test passed" not in positive_output:
+        if "UDM outer-call native-density and CF extent test passed" not in positive_output:
             raise RuntimeError("fixed UDM path did not report successful radius checks")
         print(positive_output, end="")
 

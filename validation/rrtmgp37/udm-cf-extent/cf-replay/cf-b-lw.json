@@ -1,0 +1,192 @@
+{
+  "captured_production_check": null,
+  "cf_policy_diagnostics": {
+    "B": {
+      "cf_semantics": "UDM_CF_USED on 1:top; original radiation CF above top",
+      "extent_status": "EXTENT_LIMITED_HYBRID",
+      "known_layers": 55,
+      "omitted": {
+        "cf_max": 1.0,
+        "cf_min": 0.0,
+        "graupel": {
+          "mode": "omitted",
+          "optical_mapping": "omitted",
+          "raw_grid_mass_available": true
+        },
+        "layer_mean_and_standard_deviation_by_species": {
+          "GWP": {
+            "effective_mass_shift_g_m2": {
+              "layer_maximum_absolute": 0.009647388011217117,
+              "layer_mean": -0.00016637565592753748,
+              "layer_standard_deviation": 0.0012557962853530164,
+              "sum": -0.009816163699724711
+            },
+            "omitted_grid_path_g_m2": {
+              "layer_maximum": 0.009647388011217117,
+              "layer_mean": 0.00016637565592753748,
+              "layer_standard_deviation": 0.0012557962853530164,
+              "sum": 0.009816163699724711
+            }
+          },
+          "IWP": {
+            "effective_mass_shift_g_m2": {
+              "layer_maximum_absolute": 12.613773345947266,
+              "layer_mean": -0.2966970148164842,
+              "layer_standard_deviation": 1.750182752465493,
+              "sum": -17.50512387417257
+            },
+            "omitted_grid_path_g_m2": {
+              "layer_maximum": 12.613773345947266,
+              "layer_mean": 0.2966970148164842,
+              "layer_standard_deviation": 1.750182752465493,
+              "sum": 17.50512387417257
+            }
+          },
+          "LWP": {
+            "effective_mass_shift_g_m2": {
+              "layer_maximum_absolute": 0.0,
+              "layer_mean": 0.0,
+              "layer_standard_deviation": 0.0,
+              "sum": 0.0
+            },
+            "omitted_grid_path_g_m2": {
+              "layer_maximum": 0.0,
+              "layer_mean": 0.0,
+              "layer_standard_deviation": 0.0,
+              "sum": 0.0
+            }
+          },
+          "RWP": {
+            "effective_mass_shift_g_m2": {
+              "layer_maximum_absolute": 0.006662315223366022,
+              "layer_mean": -0.00011292059700620376,
+              "layer_standard_deviation": 0.0008673595635409867,
+              "sum": -0.006662315223366022
+            },
+            "omitted_grid_path_g_m2": {
+              "layer_maximum": 0.006662315223366022,
+              "layer_mean": 0.00011292059700620376,
+              "layer_standard_deviation": 0.0008673595635409867,
+              "sum": 0.006662315223366022
+            }
+          },
+          "SWP": {
+            "effective_mass_shift_g_m2": {
+              "layer_maximum_absolute": 0.0586608424782753,
+              "layer_mean": -0.0009942515674283949,
+              "layer_standard_deviation": 0.007636991199464315,
+              "sum": -0.0586608424782753
+            },
+            "omitted_grid_path_g_m2": {
+              "layer_maximum": 0.0586608424782753,
+              "layer_mean": 0.0009942515674283949,
+              "layer_standard_deviation": 0.007636991199464315,
+              "sum": 0.0586608424782753
+            }
+          }
+        },
+        "maximum_wet_layer_grid_reconstruction_error_g_m2_by_species": {
+          "IWP": 3.588738906046274e-08,
+          "LWP": 0.0,
+          "RWP": 8.058214540085373e-09,
+          "SWP": 5.6706255691096885e-08
+        },
+        "status": "READY",
+        "upper_replay_layers_preserved": 44
+      },
+      "status": "READY_EXTENT_LIMITED_HYBRID",
+      "unknown_layers": 4
+    }
+  },
+  "default_policy_1_matches_default_reference": false,
+  "delta_policy_labels": {
+    "1": "D(C)+D(P)",
+    "2": "C+D(P)",
+    "3": "D(C+P)"
+  },
+  "delta_policy_scope": "SW delta-scaling benchmark; LW is evaluated once with its unchanged policy.",
+  "dry_layer_mass_source": "native_dry_layer_mass",
+  "experiment": "RRTMGP_REPLAY_V8 LW replay with common captured microphysics paths and independent cloud-mask seeds",
+  "graupel_policy_labels": {
+    "as-snow": "counterfactual only: add GWP grid path to SWP using unchanged native UDM RES; no public graupel optical coefficient was verified",
+    "omitted": "keep graupel out of the precipitation optics; report its raw grid-box path separately"
+  },
+  "policy_labels": {
+    "A": "original captured radiation CF and in-cloud paths",
+    "B": "extent-limited hybrid: UDM_CF_USED on 1:UDM_CF_TOP, original radiation CF above top; legacy raw without top retains whole working vector but is explicitly extent-unknown; recompute paths with the selected CF",
+    "B_now": "current-state UDM_CF_RECOMPUTED; recompute paths from preserved grid-box mass; zero-CF grid mass is omitted",
+    "C": "original radiation CF with grid-mean paths passed as in-cloud paths; intentionally non-mass-preserving counterfactual"
+  },
+  "scenarios": {
+    "B": {
+      "omitted": {
+        "1": {
+          "metrics": {
+            "max_abs_heating_k_day": {
+              "maximum": 23.991093004458573,
+              "mean": 23.991093004458573,
+              "minimum": 23.991093004458573,
+              "standard_deviation": 0.0
+            },
+            "max_prepared_tau": {
+              "maximum": 1.1816926332421898,
+              "mean": 1.1816926332421898,
+              "minimum": 1.1816926332421898,
+              "standard_deviation": 0.0
+            },
+            "max_total_tau": {
+              "maximum": 19802.34962519242,
+              "mean": 19802.34962519242,
+              "minimum": 19802.34962519242,
+              "standard_deviation": 0.0
+            },
+            "surface_down_w_m2": {
+              "maximum": 279.89747208600556,
+              "mean": 279.89747208600556,
+              "minimum": 279.89747208600556,
+              "standard_deviation": 0.0
+            },
+            "surface_up_w_m2": {
+              "maximum": 404.5241992319624,
+              "mean": 404.5241992319624,
+              "minimum": 404.5241992319624,
+              "standard_deviation": 0.0
+            },
+            "toa_down_w_m2": {
+              "maximum": 0.0,
+              "mean": 0.0,
+              "minimum": 0.0,
+              "standard_deviation": 0.0
+            },
+            "toa_up_w_m2": {
+              "maximum": 102.34676922473743,
+              "mean": 102.34676922473743,
+              "minimum": 102.34676922473743,
+              "standard_deviation": 0.0
+            }
+          },
+          "samples": 1
+        }
+      }
+    }
+  },
+  "seed_ensemble": {
+    "count": 1,
+    "seeds": [
+      679102813
+    ]
+  },
+  "source_capture": {
+    "cfc_records_preserved": true,
+    "extended_replay_layers": 103,
+    "frozen_metadata_present": false,
+    "i": 1,
+    "input": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-cf-contract-scm/mixed/ra37-call2/capture/lw.input",
+    "input_format": "RRTMGP_REPLAY_V8",
+    "j": 1,
+    "native_raw_layers": 59,
+    "raw": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-cf-contract-scm/mixed/ra37-call2/capture/lw.raw",
+    "variant_unmodified_records_preserved_exactly": true
+  },
+  "status": "PASS"
+}
