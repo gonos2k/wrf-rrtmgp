@@ -1,0 +1,43 @@
+{
+  "status": "PASS",
+  "source": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-lw-trace-gases-dm-sm/WRF/phys/module_mp_udm.F",
+  "source_sha256": "bb14d9467a738706834c006af41730096d03273399f359163d8845d3caf84bb7",
+  "routine_extraction": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-mpix-diagnosis/amplification/adjust_number_concent_verbatim.F90",
+  "routine_extraction_sha256": "bf85cb24c4d3e3877f2c410eb5b94e959d75e8cf865daa56f775c727da59a5c2",
+  "driver": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-mpix-diagnosis/amplification/amplification_driver.f90",
+  "driver_sha256": "404e9e00fe98bac9c816c156c718980eb87345ca25b0745dea31f7dbf9930c6a",
+  "compiler": "GNU Fortran (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0",
+  "compiler_flags": [
+    "-O0",
+    "-fcheck=all"
+  ],
+  "routine": "adjust_number_concent, copied verbatim from pinned PR21 module source and compiled in isolation",
+  "number_unit_provenance": {
+    "registry": "Registry.EM_COMMON:544 declares qnc in # kg-1",
+    "solve_em_binding": "solve_em.F:4000 passes scalar(...,P_QNC) directly as QNC_CURR",
+    "driver_binding": "module_microphysics_driver.F:2813 passes qnc_curr directly as NC to udm; no density multiplication",
+    "udm_copy": "module_mp_udm.F:336 copies nc directly into ncr; lines 989-992 pass ncr to adjust_number_concent without a rho conversion",
+    "helper_convention": "adjust_number_concent compares nn to ncmin=1e-3 commented m-3 (module_mp_udm.F:74) and its fallback/clamp formula uses den*qq and piconst=pi*denr/6, yielding a volume-concentration numeric convention. Captured Registry scalar values are passed unchanged, so production-path input/output unit convention is inconsistent or ambiguous.",
+    "test_labeling": "Captured values are raw Registry scalar numerics, not m-3. Adjusted helper output and equivalent diameter/radius are kept separately; diameter/radius are diagnostic from the helper's volume-form mass-number relation."
+  },
+  "observed_inputs": {
+    "rho_kg_m3": 1.0864946842193604,
+    "QC1_kg_kg": 1.453394907002803e-05,
+    "QC4_kg_kg": 1.4533951798512135e-05,
+    "raw_scalar_QNC1_numeric_registry_unit_kg-1": -0.013483073562383652,
+    "raw_scalar_QNC4_numeric_registry_unit_kg-1": 0.01819402538239956
+  },
+  "production_call_constants": {
+    "piconst": "pi*denr/6, denr=1000",
+    "drconst": 1.0,
+    "qcmin": 1e-12,
+    "ncmin": 0.001,
+    "ncmax": 30000000000.0,
+    "di0_m": 1.5e-05,
+    "dimin_m": 1e-06,
+    "dimax_m": 0.0001
+  },
+  "results_csv": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-mpix-diagnosis/amplification/run.csv",
+  "stdout": "qc1_nc1,  1.4533949070028029E-05, -1.3483073562383652E-02,  1.4533949070028029E-05,  8.9359020000000000E+06,  1.5000000530562829E-05,  7.5000002652814146E-06\nqc1_nc4,  1.4533949070028029E-05,  1.8194025382399559E-02,  1.4533949070028029E-05,  3.0158708984375000E+04,  9.9999961093999445E-05,  4.9999980546999723E-05\nqc4_nc1,  1.4533951798512135E-05, -1.3483073562383652E-02,  1.4533951798512135E-05,  8.9359040000000000E+06,  1.5000000530562829E-05,  7.5000002652814146E-06\nqc4_nc4,  1.4533951798512135E-05,  1.8194025382399559E-02,  1.4533951798512135E-05,  3.0158716796875000E+04,  9.9999961093999445E-05,  4.9999980546999723E-05\ncommonqc_nc1,  1.4533950889017433E-05, -1.3483073562383652E-02,  1.4533950889017433E-05,  8.9359030000000000E+06,  1.5000000530562829E-05,  7.5000002652814146E-06\ncommonqc_nc4,  1.4533950889017433E-05,  1.8194025382399559E-02,  1.4533950889017433E-05,  3.0158712890625000E+04,  9.9999961093999445E-05,  4.9999980546999723E-05\n",
+  "interpretation_limit": "Local branch amplification only; does not identify upstream MPI divergence or establish full UDM/forecast cause. Equivalent radius is computed diagnostically from returned q,n using the production mass-number relation; it is not returned by adjust_number_concent."
+}
