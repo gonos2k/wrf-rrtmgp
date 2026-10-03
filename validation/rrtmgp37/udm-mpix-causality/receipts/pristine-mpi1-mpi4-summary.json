@@ -1,0 +1,619 @@
+{
+  "status": "BOTH_PRISTINE_RA4_RESTART_RUNS_SUCCESS; EXACT_COMPARISON_COMPLETE",
+  "scope": "One 60-second WRF step from the PR20 12 UTC RRTMGP checkpoint using the official pristine WRF v4.8.0 build and RA4/4 configuration. MPI1 vs MPI4 measures native WRF/UDM decomposition sensitivity, not a radiation accuracy comparison.",
+  "source": {
+    "repository": "https://github.com/wrf-model/WRF",
+    "commit": "06d4240ae989cc3e50af412bb472df3d9048783c",
+    "configure_sha256": "5f06ce4a1b7906dc41612d21b56771cbf762b5958fece8070b6e025209317242",
+    "build_exit_code": 0,
+    "build_log": "buildlogs/compile-j1.log",
+    "wrf_binary_sha256": "865a687d9c1dcf67ad69488541ca459b321b0e9e0f20e755dc0a358a6aaca503",
+    "omp_num_threads": 1,
+    "mpi_launcher": "MPICH 4.2.0 `mpiexec -launcher fork -iface lo`; MPICH_INTERFACE_HOSTNAME=127.0.0.1"
+  },
+  "immutable_restart": {
+    "sha256": "943a53db058f2d9560c6f0d571f3ff9bb8efb407010c5eea2026922a6eeee7b8",
+    "time": "2010-06-11_12:00:00",
+    "namelist_sha256": "330147a57cbd26506e4a9553b53b9f024542d2e5f1ede7c290ebef3ae27b0599",
+    "run_end": "2010-06-11_12:01:00",
+    "scheme": {
+      "MP_PHYSICS": 27,
+      "RA_LW_PHYSICS": 4,
+      "RA_SW_PHYSICS": 4
+    }
+  },
+  "runs": {
+    "restart12-mpi1": {
+      "case": "restart12-mpi1",
+      "ranks": 1,
+      "exit_code": 0,
+      "start_utc": "2026-10-03T00:22:33Z",
+      "end_utc": "2026-10-03T00:23:11Z",
+      "binary_sha256": "865a687d9c1dcf67ad69488541ca459b321b0e9e0f20e755dc0a358a6aaca503",
+      "namelist_sha256": "330147a57cbd26506e4a9553b53b9f024542d2e5f1ede7c290ebef3ae27b0599",
+      "checkpoint_sha256": "943a53db058f2d9560c6f0d571f3ff9bb8efb407010c5eea2026922a6eeee7b8",
+      "command": "mpiexec -launcher fork -iface lo -n 1 ./wrf.exe",
+      "omp_num_threads": 1,
+      "mpich_interface_hostname": "127.0.0.1",
+      "outputs": [
+        {
+          "path": "wrfout_d01_2010-06-11_12:01:00",
+          "sha256": "ad642aafd9c7aab1a33765c6fca9a781b0583a95dce5424c1d024b92486f7ce9",
+          "bytes": 81787254
+        }
+      ],
+      "rsl_error_files": [
+        "rsl.error.0000"
+      ],
+      "log": "run.log",
+      "rank_success_logs": [
+        {
+          "file": "rsl.error.0000",
+          "success_marker_count": 1,
+          "failed_marker_count": 0
+        }
+      ],
+      "all_ranks_success": true,
+      "title": "OUTPUT FROM WRF V4.8.0 MODEL",
+      "history_time": "2010-06-11_12:01:00",
+      "var_count": 202,
+      "numeric_var_count": 201
+    },
+    "restart12-mpi4": {
+      "case": "restart12-mpi4",
+      "ranks": 4,
+      "exit_code": 0,
+      "start_utc": "2026-10-03T00:23:34Z",
+      "end_utc": "2026-10-03T00:23:51Z",
+      "binary_sha256": "865a687d9c1dcf67ad69488541ca459b321b0e9e0f20e755dc0a358a6aaca503",
+      "namelist_sha256": "330147a57cbd26506e4a9553b53b9f024542d2e5f1ede7c290ebef3ae27b0599",
+      "checkpoint_sha256": "943a53db058f2d9560c6f0d571f3ff9bb8efb407010c5eea2026922a6eeee7b8",
+      "command": "mpiexec -launcher fork -iface lo -n 4 ./wrf.exe",
+      "omp_num_threads": 1,
+      "mpich_interface_hostname": "127.0.0.1",
+      "outputs": [
+        {
+          "path": "wrfout_d01_2010-06-11_12:01:00",
+          "sha256": "80137d0508cc1a038192d5a12b1f2c095321198f2e43f7cb270be77672549b1f",
+          "bytes": 81787309
+        }
+      ],
+      "rsl_error_files": [
+        "rsl.error.0000",
+        "rsl.error.0001",
+        "rsl.error.0002",
+        "rsl.error.0003"
+      ],
+      "log": "run.log",
+      "rank_success_logs": [
+        {
+          "file": "rsl.error.0000",
+          "success_marker_count": 1,
+          "failed_marker_count": 0
+        },
+        {
+          "file": "rsl.error.0001",
+          "success_marker_count": 1,
+          "failed_marker_count": 0
+        },
+        {
+          "file": "rsl.error.0002",
+          "success_marker_count": 1,
+          "failed_marker_count": 0
+        },
+        {
+          "file": "rsl.error.0003",
+          "success_marker_count": 1,
+          "failed_marker_count": 0
+        }
+      ],
+      "all_ranks_success": true,
+      "title": "OUTPUT FROM WRF V4.8.0 MODEL",
+      "history_time": "2010-06-11_12:01:00",
+      "var_count": 202,
+      "numeric_var_count": 201
+    }
+  },
+  "finite_check": {
+    "official_mpi1": {
+      "all_float_arrays_finite": true,
+      "nonfinite_variables": [],
+      "float_values_checked": 52348901
+    },
+    "official_mpi4": {
+      "all_float_arrays_finite": true,
+      "nonfinite_variables": [],
+      "float_values_checked": 52348901
+    },
+    "pr21_ra4_mpi1": {
+      "all_float_arrays_finite": true,
+      "nonfinite_variables": [],
+      "float_values_checked": 52348901
+    },
+    "pr21_ra4_mpi4": {
+      "all_float_arrays_finite": true,
+      "nonfinite_variables": [],
+      "float_values_checked": 52348901
+    }
+  },
+  "comparisons": {
+    "official_mpi1_vs_mpi4": {
+      "common_variables": 202,
+      "same_shape_dtype": 202,
+      "exact_variables": 139,
+      "unequal_variable_count": 63,
+      "unequal_variables": [
+        "ACGRDFLX",
+        "ACHFX",
+        "ACLHF",
+        "ACSWDNB",
+        "ACSWDNBC",
+        "ACSWDNT",
+        "ACSWDNTC",
+        "ACSWUPB",
+        "ACSWUPBC",
+        "ACSWUPT",
+        "ACSWUPTC",
+        "CANWAT",
+        "CLDFRA",
+        "COSZEN",
+        "GLW",
+        "GRDFLX",
+        "HFX",
+        "LH",
+        "LWDNB",
+        "LWDNBC",
+        "LWUPB",
+        "LWUPBC",
+        "LWUPT",
+        "LWUPTC",
+        "MU",
+        "OLR",
+        "P",
+        "PBLH",
+        "PH",
+        "Q2",
+        "QCLOUD",
+        "QFX",
+        "QGRAUP",
+        "QHAIL",
+        "QICE",
+        "QNCCN",
+        "QNCLOUD",
+        "QNRAIN",
+        "QRAIN",
+        "QSNOW",
+        "QVAPOR",
+        "RAINNC",
+        "SWDNB",
+        "SWDNBC",
+        "SWDNT",
+        "SWDNTC",
+        "SWDOWN",
+        "SWUPB",
+        "SWUPBC",
+        "SWUPT",
+        "SWUPTC",
+        "T",
+        "T2",
+        "TH2",
+        "THM",
+        "TSK",
+        "U",
+        "U10",
+        "UST",
+        "V",
+        "V10",
+        "W",
+        "ZNT"
+      ],
+      "shape_dtype_mismatch": [],
+      "selected_differences": {
+        "U": {
+          "exact": false,
+          "finite_count": 2137590,
+          "nonfinite_count": 0,
+          "unequal_count": 64990,
+          "max_abs": 0.0025682449340820312,
+          "max_rel": 0.01699979163735247
+        },
+        "V": {
+          "exact": false,
+          "finite_count": 2141490,
+          "nonfinite_count": 0,
+          "unequal_count": 57252,
+          "max_abs": 0.0014560818672180176,
+          "max_rel": 0.7308289951947086
+        },
+        "W": {
+          "exact": false,
+          "finite_count": 2184840,
+          "nonfinite_count": 0,
+          "unequal_count": 117446,
+          "max_abs": 0.000571615993976593,
+          "max_rel": 1.9755946248458556
+        },
+        "T": {
+          "exact": false,
+          "finite_count": 2130219,
+          "nonfinite_count": 0,
+          "unequal_count": 6165,
+          "max_abs": 0.0008544921875,
+          "max_rel": 0.030303030303030304
+        },
+        "QVAPOR": {
+          "exact": false,
+          "finite_count": 2130219,
+          "nonfinite_count": 0,
+          "unequal_count": 25312,
+          "max_abs": 3.534369170665741e-07,
+          "max_rel": 2.0
+        },
+        "QCLOUD": {
+          "exact": false,
+          "finite_count": 2130219,
+          "nonfinite_count": 0,
+          "unequal_count": 2417,
+          "max_abs": 3.471504896879196e-07,
+          "max_rel": 0.9747611637986111
+        },
+        "QRAIN": {
+          "exact": false,
+          "finite_count": 2130219,
+          "nonfinite_count": 0,
+          "unequal_count": 5429,
+          "max_abs": 1.3268709153635427e-07,
+          "max_rel": 1.7502012588761726
+        },
+        "QICE": {
+          "exact": false,
+          "finite_count": 2130219,
+          "nonfinite_count": 0,
+          "unequal_count": 9158,
+          "max_abs": 6.994232535362244e-07,
+          "max_rel": 1.749608334802394
+        },
+        "QSNOW": {
+          "exact": false,
+          "finite_count": 2130219,
+          "nonfinite_count": 0,
+          "unequal_count": 21965,
+          "max_abs": 8.122697181534022e-08,
+          "max_rel": 1.1538461632910992
+        },
+        "QGRAUP": {
+          "exact": false,
+          "finite_count": 2130219,
+          "nonfinite_count": 0,
+          "unequal_count": 21118,
+          "max_abs": 5.140577741258312e-09,
+          "max_rel": 1.6666666862719404
+        },
+        "QHAIL": {
+          "exact": false,
+          "finite_count": 2130219,
+          "nonfinite_count": 0,
+          "unequal_count": 20723,
+          "max_abs": 7.353548880928429e-10,
+          "max_rel": 1.0
+        },
+        "SWDOWN": {
+          "exact": false,
+          "finite_count": 54621,
+          "nonfinite_count": 0,
+          "unequal_count": 140,
+          "max_abs": 0.00553131103515625,
+          "max_rel": 6.970289932334349e-05
+        },
+        "GLW": {
+          "exact": false,
+          "finite_count": 54621,
+          "nonfinite_count": 0,
+          "unequal_count": 37,
+          "max_abs": 0.002593994140625,
+          "max_rel": 6.445462928692479e-06
+        },
+        "OLR": {
+          "exact": false,
+          "finite_count": 54621,
+          "nonfinite_count": 0,
+          "unequal_count": 58,
+          "max_abs": 0.0011138916015625,
+          "max_rel": 4.611359952587639e-06
+        },
+        "CLDFRA": {
+          "exact": false,
+          "finite_count": 2130219,
+          "nonfinite_count": 0,
+          "unequal_count": 31,
+          "max_abs": 0.0002504587173461914,
+          "max_rel": 0.0005491717830801062
+        },
+        "RAINNC": {
+          "exact": false,
+          "finite_count": 54621,
+          "nonfinite_count": 0,
+          "unequal_count": 94,
+          "max_abs": 1.6689300537109375e-06,
+          "max_rel": 0.00023011483005891376
+        },
+        "SNOWNC": {
+          "exact": true,
+          "finite_count": 54621,
+          "nonfinite_count": 0,
+          "unequal_count": 0,
+          "max_abs": 0.0,
+          "max_rel": 0.0
+        },
+        "SR": {
+          "exact": true,
+          "finite_count": 54621,
+          "nonfinite_count": 0,
+          "unequal_count": 0,
+          "max_abs": 0.0,
+          "max_rel": 0.0
+        }
+      }
+    },
+    "official_mpi1_vs_existing_pr21_ra4_mpi1": {
+      "common_variables": 202,
+      "same_shape_dtype": 202,
+      "exact_variables": 201,
+      "unequal_variable_count": 1,
+      "unequal_variables": [
+        "SR"
+      ],
+      "shape_dtype_mismatch": [],
+      "selected_differences": {
+        "SR": {
+          "exact": false,
+          "finite_count": 54621,
+          "nonfinite_count": 0,
+          "unequal_count": 317,
+          "max_abs": 1.0,
+          "max_rel": 1.0
+        }
+      }
+    },
+    "official_mpi4_vs_existing_pr21_ra4_mpi4": {
+      "common_variables": 202,
+      "same_shape_dtype": 202,
+      "exact_variables": 201,
+      "unequal_variable_count": 1,
+      "unequal_variables": [
+        "SR"
+      ],
+      "shape_dtype_mismatch": [],
+      "selected_differences": {
+        "SR": {
+          "exact": false,
+          "finite_count": 54621,
+          "nonfinite_count": 0,
+          "unequal_count": 317,
+          "max_abs": 1.0,
+          "max_rel": 1.0
+        }
+      }
+    },
+    "existing_pr21_ra4_mpi1_vs_mpi4": {
+      "common_variables": 202,
+      "same_shape_dtype": 202,
+      "exact_variables": 139,
+      "unequal_variable_count": 63,
+      "unequal_variables": [
+        "ACGRDFLX",
+        "ACHFX",
+        "ACLHF",
+        "ACSWDNB",
+        "ACSWDNBC",
+        "ACSWDNT",
+        "ACSWDNTC",
+        "ACSWUPB",
+        "ACSWUPBC",
+        "ACSWUPT",
+        "ACSWUPTC",
+        "CANWAT",
+        "CLDFRA",
+        "COSZEN",
+        "GLW",
+        "GRDFLX",
+        "HFX",
+        "LH",
+        "LWDNB",
+        "LWDNBC",
+        "LWUPB",
+        "LWUPBC",
+        "LWUPT",
+        "LWUPTC",
+        "MU",
+        "OLR",
+        "P",
+        "PBLH",
+        "PH",
+        "Q2",
+        "QCLOUD",
+        "QFX",
+        "QGRAUP",
+        "QHAIL",
+        "QICE",
+        "QNCCN",
+        "QNCLOUD",
+        "QNRAIN",
+        "QRAIN",
+        "QSNOW",
+        "QVAPOR",
+        "RAINNC",
+        "SWDNB",
+        "SWDNBC",
+        "SWDNT",
+        "SWDNTC",
+        "SWDOWN",
+        "SWUPB",
+        "SWUPBC",
+        "SWUPT",
+        "SWUPTC",
+        "T",
+        "T2",
+        "TH2",
+        "THM",
+        "TSK",
+        "U",
+        "U10",
+        "UST",
+        "V",
+        "V10",
+        "W",
+        "ZNT"
+      ],
+      "shape_dtype_mismatch": [],
+      "selected_differences": {
+        "U": {
+          "exact": false,
+          "finite_count": 2137590,
+          "nonfinite_count": 0,
+          "unequal_count": 64990,
+          "max_abs": 0.0025682449340820312,
+          "max_rel": 0.01699979163735247
+        },
+        "V": {
+          "exact": false,
+          "finite_count": 2141490,
+          "nonfinite_count": 0,
+          "unequal_count": 57252,
+          "max_abs": 0.0014560818672180176,
+          "max_rel": 0.7308289951947086
+        },
+        "W": {
+          "exact": false,
+          "finite_count": 2184840,
+          "nonfinite_count": 0,
+          "unequal_count": 117446,
+          "max_abs": 0.000571615993976593,
+          "max_rel": 1.9755946248458556
+        },
+        "T": {
+          "exact": false,
+          "finite_count": 2130219,
+          "nonfinite_count": 0,
+          "unequal_count": 6165,
+          "max_abs": 0.0008544921875,
+          "max_rel": 0.030303030303030304
+        },
+        "QVAPOR": {
+          "exact": false,
+          "finite_count": 2130219,
+          "nonfinite_count": 0,
+          "unequal_count": 25312,
+          "max_abs": 3.534369170665741e-07,
+          "max_rel": 2.0
+        },
+        "QCLOUD": {
+          "exact": false,
+          "finite_count": 2130219,
+          "nonfinite_count": 0,
+          "unequal_count": 2417,
+          "max_abs": 3.471504896879196e-07,
+          "max_rel": 0.9747611637986111
+        },
+        "QRAIN": {
+          "exact": false,
+          "finite_count": 2130219,
+          "nonfinite_count": 0,
+          "unequal_count": 5429,
+          "max_abs": 1.3268709153635427e-07,
+          "max_rel": 1.7502012588761726
+        },
+        "QICE": {
+          "exact": false,
+          "finite_count": 2130219,
+          "nonfinite_count": 0,
+          "unequal_count": 9158,
+          "max_abs": 6.994232535362244e-07,
+          "max_rel": 1.749608334802394
+        },
+        "QSNOW": {
+          "exact": false,
+          "finite_count": 2130219,
+          "nonfinite_count": 0,
+          "unequal_count": 21965,
+          "max_abs": 8.122697181534022e-08,
+          "max_rel": 1.1538461632910992
+        },
+        "QGRAUP": {
+          "exact": false,
+          "finite_count": 2130219,
+          "nonfinite_count": 0,
+          "unequal_count": 21118,
+          "max_abs": 5.140577741258312e-09,
+          "max_rel": 1.6666666862719404
+        },
+        "QHAIL": {
+          "exact": false,
+          "finite_count": 2130219,
+          "nonfinite_count": 0,
+          "unequal_count": 20723,
+          "max_abs": 7.353548880928429e-10,
+          "max_rel": 1.0
+        },
+        "SWDOWN": {
+          "exact": false,
+          "finite_count": 54621,
+          "nonfinite_count": 0,
+          "unequal_count": 140,
+          "max_abs": 0.00553131103515625,
+          "max_rel": 6.970289932334349e-05
+        },
+        "GLW": {
+          "exact": false,
+          "finite_count": 54621,
+          "nonfinite_count": 0,
+          "unequal_count": 37,
+          "max_abs": 0.002593994140625,
+          "max_rel": 6.445462928692479e-06
+        },
+        "OLR": {
+          "exact": false,
+          "finite_count": 54621,
+          "nonfinite_count": 0,
+          "unequal_count": 58,
+          "max_abs": 0.0011138916015625,
+          "max_rel": 4.611359952587639e-06
+        },
+        "CLDFRA": {
+          "exact": false,
+          "finite_count": 2130219,
+          "nonfinite_count": 0,
+          "unequal_count": 31,
+          "max_abs": 0.0002504587173461914,
+          "max_rel": 0.0005491717830801062
+        },
+        "RAINNC": {
+          "exact": false,
+          "finite_count": 54621,
+          "nonfinite_count": 0,
+          "unequal_count": 94,
+          "max_abs": 1.6689300537109375e-06,
+          "max_rel": 0.00023011483005891376
+        },
+        "SNOWNC": {
+          "exact": true,
+          "finite_count": 54621,
+          "nonfinite_count": 0,
+          "unequal_count": 0,
+          "max_abs": 0.0,
+          "max_rel": 0.0
+        },
+        "SR": {
+          "exact": true,
+          "finite_count": 54621,
+          "nonfinite_count": 0,
+          "unequal_count": 0,
+          "max_abs": 0.0,
+          "max_rel": 0.0
+        }
+      }
+    }
+  },
+  "interpretation": "Pristine official MPI1 and MPI4 are not bitwise identical: 139/202 variables match exactly; 63 differ. PR21 RA4 MPI1 and MPI4 show the same exact field-level reproducibility pattern (139/202 exact, same 63 field names). This establishes that decomposition-dependent differences already occur in the official RRTMG4/UDM setup. At corresponding rank counts, pristine vs PR21 RA4 differs only in SR (201/202 exact); SR is the registered fraction-of-frozen-precipitation diagnostic and should remain separately reported. No extra variables or shape/dtype mismatches occur. These are short one-step results and do not identify the cause of decomposition sensitivity or establish long-run behavior.",
+  "raw_comparison_json": "history-comparison.json"
+}
