@@ -2,6 +2,12 @@
 
 기준 main은 `c705c4474d965db1b1cb78066e8c07d3c31a518d`이다. 이번 변경은 작은 구름분율의 표본 시험, 미세물리 분류 계약, 실제 WRF 기둥의 독립 재생에 집중한다. 이전 SWDOWN 직접 반환, 정확한 양의 cf 질량 변환과 기존 4번 경로는 유지한다.
 
+## 이후 공개된 실행 범위 (2026-10-03)
+
+아래 결과는 PR head와 artifact에 연결된 증거다. 일부 PR의 코드는 이번 문서 작업의 소스 기준인 PR #32 head (`de312b7a53cefc2f69024e8b96de4bd586f00816`)의 조상에 포함되어 있으므로, 인용만으로 현재 main의 병합 상태를 단정하지 않는다. PR #31 (`360cbf6668c84ef7d00c163fdce0d8dd54daca44`)은 PR #26의 `sr(ims,j)` 수정 소스에서 24시간 RA4 legacy/RA37 mode-1 쌍과 자기 arm별 12→13시 재시작 배열 일치를 기록한다. 이전 strict-negative mode-0 QI 실패, SR 수정 전 coupled pair, 그리고 corrected pair는 서로 다른 시도다. 과거 실패는 보존하되 서로 원인으로 귀속하지 않는다. PR #34 (`958cf46b074b3927e9ca939ad9d7c371ac11e17b`)는 Fort Peck/Desert Rock 두 지점에서 하루의 hourly snapshot과 누적 복사를 비교했으며 지표별 오차는 혼합됐다. 관측자료는 20 km 모델 격자와 10–12 km 떨어진 점 관측이므로 예보/구름 정확도나 scheme 우열은 결론내리지 않는다.
+
+병렬 결과도 scope를 나눠 읽는다. PR #30 (`bb56ec0ad5a0fbd2ef2027a291554fc40d6c7291`)은 GNU 같은 layout reference/candidate의 byte parity이고, PR #27 (`f7f0ad164b50684bb170b729f0836c0e8404a8e0`)은 pristine WRF 한 스텝 MPI1/MPI4 차이가 남아 원인이 미확정임을 기록한다. PR #33 (`0f1ae2967281df3cfa4d8ec5c0f6764fe025158d`)은 부모 보간 initial state의 2시간 nested smoke만 다룬다. PR #35 (`7ea36677ae085e8edc61b9161c075bdeda8441d2`)는 Intel serial 1분 run이다; 이 케이스에서 512 MiB master stack은 실패하고 1 GiB 설정은 통과했다. 이는 보편적인 stack 하한이나 Intel MPI/OpenMP 장기 지원 주장이 아니다.
+
 ## 작은 cf와 McICA
 
 한 구름층의 grid LWP=1 g/m²를 고정하고 cf=1e-6부터 0.1까지 10개 분율·2,048개 시드를 계산했다. 평균·분산과 ICA 가중 계산은 배정도를 사용한다. LW/SW의 실제 표본 수, 구름 없는 기둥 비율, 지면/TOA 플럭스 및 3개 층의 가열률 평균·SD·SE를 기록했다. 동일 시드 반복은 정확히 일치했다.
@@ -21,10 +27,13 @@ MP2/4/5의 5분 SCM 청천 시작 제어 사례가 통과했다. 약 248.865 K�
 GNU serial 표준 `compile -j 12 em_scm_xy` 경로로 실행 파일을 다시 빌드했다. CTest 29/29, 기존 회색 알베도·보간 거부·청천 제외 진단 시험이 통과했다. 직전 포팅본과 새 4/4 출력 공통 변수 204개는 비트 단위로 일치했다. 공식 원본 WRF와의 회귀 비교는 아니다. 현재 결과는 [sampling-replay.json](../../../validation/rrtmgp37/sampling-replay.json)에 있다.
 
 - MP95 SCM의 경로 overflow·압력 오류와 원인 규명, Thompson/P3의 실제 분류·반경 경로 검증.
-- 음수 qc/qi/qs의 예보 전체 분포 측정; 현재 저장은 선택한 기둥·호출의 값만 보여주며 허용 오차를 정하지 않는다.
-- cf=0 제외 질량·LUT clipping의 수상별·질량가중 예보 통계, 눈 반경 proxy 민감도.
-- delta-scaled solver direct와 비산란 direct/DNI 비교.
-- 실제 누적 에너지 시간적분, 공식 원본 4/4 회귀, 24–48시간·restart·둥지·MPI/OpenMP 및 집단 오류 종료.
-- WRF tile packing 32–256컬럼, 실행시간·할당량 측정. WRF는 계속 ncol=1이다.
+- 음수 qc/qi/qs 허용 정책을 다른 사례·예보 분포로 일반화하고 물리적 영향을 평가한다. 현재 magnitude-based 보정 정책은 구현됐지만, 이는 보편적인 안전성·물리 타당성의 증거가 아니다.
+- PR32의 cf=0 제외 질량·LUT clipping 진단을 추가 사례의 질량가중 통계와 복사 영향으로 확장하고, 눈 반경 proxy 민감도를 정량화한다.
+- PR23에서 구현한 delta-scaled solver direct의 의미를 관측 DNI/비산란 direct와 대조 검증한다.
+- PR31의 corrected 24시간 pair와 자기 arm 재시작 연속성을 더 긴 24–48시간 사례와 일반적인 forecast skill 검증으로 확장한다.
+- 여러 MPI 분해 사이의 동등성 및 PR27 pristine baseline 차이의 원인. PR30의 같은 layout끼리 parity와 구분한다.
+- 고해상도 nested 입력, nested restart, 장기 child skill. PR33은 parent-interpolated 단기 smoke다.
+- 다양한 사례·기간의 RA4 회귀와 MPI/OMP 구성의 장기 안정성, 전체 입력범위/계수 외삽, 현장 관측을 통한 구름·강수·가열률 검증. PR26은 corrected source의 matched-layout RA4 회귀 근거를, PR31은 corrected source의 24시간 RA4/RA37 pair를 제공한다. PR34는 두 점/하루의 surface radiation 결과만 제공한다.
+- production WRF tile/column packing 32–256 columns과 batching 성능·할당량 측정. 현재 WRF radiative call은 `ncol=1`이며, 전체 CMake/CI integration 검증은 진행 중이다.
 
 현재 재생 진단은 GNU 직렬 개발 실행에 한정한다. 전체 예보의 안정성·정확도·병렬 운용 적합성은 이 시험으로 확정하지 않는다.

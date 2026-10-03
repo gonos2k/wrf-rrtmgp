@@ -1,10 +1,26 @@
 # WRF RRTMGP 37 실행 검증
 
+## 2026-10-03 후속 증거 범위 (공개 PR별 실행 근거)
+
+기존 날짜별 기록은 당시 소스와 시도의 이력으로 보존한다. 아래 표는 각 PR head와 artifact에 연결된 범위다. 일부 PR의 변경은 이 문서 base의 조상에 이미 포함되어 있고, 일부는 후속 head에 있다. 표의 기재만으로 현재 main의 병합 상태를 단정하지 않는다.
+
+| 증거 | 현재 확인된 범위 | 한계와 참조 |
+|---|---|---|
+| corrected 24시간 pair / restart | PR #31 `360cbf6668c84ef7d00c163fdce0d8dd54daca44`, PR #26 SR-row 수정 소스 `792f36b6bbc442f0db37b5cb9fdf19dd33600082`; MPI4, RA4 legacy / RA37 mode-1 pair, 25개 시간별 결과, 자기 arm의 12→13시 수치 연속성 | 초기 strict-negative QI 실패와 SR 수정 전 4/4 비교는 별도 역사적 시도. PR20 old mode-1 run은 CFC 수정 전. 둘을 최신 pair의 원인/결과로 혼합하지 않음. [PR31](https://github.com/gonos2k/wrf-rrtmgp/pull/31) |
+| GNU workspace parallel parity | PR #30 `bb56ec0ad5a0fbd2ef2027a291554fc40d6c7291`; 같은 MPI/OMP layout끼리 RA37 및 legacy RA4 비교, 두 OMP worker가 실제 LW/SW callback 수행 | layout 간 동등성 아님. [PR30](https://github.com/gonos2k/wrf-rrtmgp/pull/30) |
+| MPI 분해 조사 | PR #27 `f7f0ad164b50684bb170b729f0836c0e8404a8e0`; pristine WRF bounded one-step MPI1/MPI4의 63/202 공통 변수 차이 | 원인 미확정이며 성공/PASS로 표시하지 않음. [PR27](https://github.com/gonos2k/wrf-rrtmgp/pull/27) |
+| nested runtime | PR #33 `0f1ae2967281df3cfa4d8ec5c0f6764fe025158d`; 2시간, 부모 보간으로 child 초기화, 양 도메인 성공 | 고해상도 child 초기 입력, nested restart, 분해 동등성, 예보 skill 미검증. [PR33](https://github.com/gonos2k/wrf-rrtmgp/pull/33) |
+| 외부 점 복사 | PR #34 `958cf46b074b3927e9ca939ad9d7c371ac11e17b`; NOAA FPK/DRA 두 지점의 하루 hourly snapshot 및 누적 에너지 | 지표별 RA4/RA37 오차가 혼합됨. 두 지점·하루·20 km grid cell 비교이며 cloud-field 또는 독립 예보 skill 평가가 아님. [PR34](https://github.com/gonos2k/wrf-rrtmgp/pull/34) |
+| Intel serial | PR #35 `7ea36677ae085e8edc61b9161c075bdeda8441d2`; bounded 1분 RA37/RA4 smoke | 이 실행에서 512 MiB master stack 실패, 1 GiB 통과. 보편적 최소치, Intel MPI/OpenMP, 장기 실행을 뜻하지 않음. [PR35](https://github.com/gonos2k/wrf-rrtmgp/pull/35) |
+| G/H optics and phase statistics | PR20 mode 1 is experimental homogeneous-ice G/H optics; PR #32 `de312b7a53cefc2f69024e8b96de4bd586f00816` measures CF-zero omissions and LUT clipping | Default mode 0 still omits qg and rejects positive qh. Mode 1 is not NOAA parity or observationally validated. PR32 path fractions are not flux-error or water-loss percentages. |
+
+Production WRF still calls the radiative backend with one column. Multi-column packing/batching remain pending; bounded CMake tests and broader CMake/CI integration are active validation work. These receipts do not establish production batch support or cross-layout MPI equivalence.
+
 ## Native dry-mass 분모 수정
 
 [건조질량 계약](NATIVE_DRY_MASS.md)은 production 37 수분 경로를 native hybrid 건조층 질량으로 구성한다. GNU 직렬 WRF 재빌드, standalone 66/66, paired UDM SCM·실제 LW/SW replay 및 초기 NetCDF 좌표의 독립 재계산이 통과했다. 수정 전 frozen 실행파일 대비 4/4는 control/mixed 각각 208개 배열이 bitwise 동일했다. 이는 이번 분모 수정의 직렬 회귀 근거이며 새 병렬·restart·장시간·관측 검증을 뜻하지 않는다. [실행·해시 기록](../../../validation/rrtmgp37/native-dry-mass/README.md)을 참고한다. 아래는 각 이전 단계의 역사적 검증 기록이다.
 
-2026년 10월 1일, 이 저장소의 실제 연결 코드로 GNU Fortran 13.3.0, NetCDF C 4.9.2와 Fortran 4.5.4에서 검증했다. 결과는 CPU 계산과 WRF 출력 계약을 확인한다. 예보 정확도, 다른 컴파일러, MPI/OpenMP 및 GPU는 검증하지 않았다.
+2026년 10월 1일 검증 스냅샷은 GNU Fortran 13.3.0, NetCDF C 4.9.2와 Fortran 4.5.4를 사용했다. 당시 결과는 CPU 계산과 WRF 출력 계약을 확인했으며, 당시 다른 컴파일러·MPI/OpenMP·GPU는 시험하지 않았다. 후속 bounded compiler/parallel 결과는 위 공개 PR 표를 참조한다.
 
 ## 이 저장소에서 완료한 확인
 
@@ -33,7 +49,7 @@ SCM은 1999년 10월 22일 19:00부터 19:05 UTC까지 실행했다. 출력 6개
 
 WRF 설정 오류는 STOP 메시지와 종료 코드 0을 반환할 수 있다. 미지원 설정은 로그의 거부 메시지로 검사했고 정상 실행은 `SUCCESS COMPLETE WRF`를 확인했다. NetCDF를 비표준 위치에 설치한 환경에서는 `LD_LIBRARY_PATH`를 설정해야 한다.
 
-전체 WRF CMake 빌드는 수행하지 않았다. CMake 검증 범위는 라이브러리와 독립 어댑터 시험이다. 실제 예보 도메인, 지형, 중첩, SSiB, 화학 결합, 계수 범위 밖 대기 상태 및 병렬 성능은 미검증이다. 장파 산란과 에어로졸을 포함한 HAFS 전체 suite 이식은 후속 작업이다.
+위 초기 스냅샷에서는 전체 WRF CMake 빌드를 수행하지 않았고, CMake 범위는 라이브러리와 독립 어댑터 시험이었다. 이후 제한된 실제 도메인, parent-interpolated nest, GNU parallel 및 Intel serial 증거가 추가됐지만 각각의 범위는 위 공개 PR 표와 같다. 생산 multi-column packing/batching과 전체 WRF CMake/CI 통합, SSiB·화학 결합, 계수 범위 밖 상태, GPU, 장파 산란·에어로졸을 포함한 전체 HAFS suite는 아직 이식/검증 범위가 아니다.
 
 ## 재현과 근거
 
