@@ -54,6 +54,7 @@ MODULE module_ra_rrtmgp
   INTERFACE rrtmgp_release_workspace
     MODULE PROCEDURE release_lw_workspace,release_sw_workspace
   END INTERFACE
+  PUBLIC :: rrtmgp_cloud_lut_bounds, rrtmgp_ice_lut_coordinate
   TYPE(ty_gas_optics_rrtmgp), SAVE :: gas_lw, gas_sw
   TYPE(ty_cloud_optics_rrtmgp), SAVE :: cloud_lw, cloud_sw
   LOGICAL, SAVE :: ready = .FALSE.
@@ -281,6 +282,25 @@ CONTAINS
     rrtmgp_frozen_enabled=initialized_frozen_mode==1
   END FUNCTION
 
+  ! Read-only coordinates/bounds for diagnostics and tests. The returned ice
+  ! coordinate is exactly the value used as the cloud-ice LUT input.
+  SUBROUTINE rrtmgp_cloud_lut_bounds(phase,liq_min,liq_max,ice_min,ice_max)
+    CHARACTER(LEN=*), INTENT(IN) :: phase
+    REAL(wp), INTENT(OUT) :: liq_min,liq_max,ice_min,ice_max
+    IF(.NOT.ready) CALL require('cloud LUT bounds require initialized RRTMGP')
+    SELECT CASE(TRIM(phase))
+    CASE('LW')
+      liq_min=cloud_lw%get_min_radius_liq(); liq_max=cloud_lw%get_max_radius_liq()
+      ice_min=cloud_lw%get_min_radius_ice(); ice_max=cloud_lw%get_max_radius_ice()
+    CASE('SW')
+      liq_min=cloud_sw%get_min_radius_liq(); liq_max=cloud_sw%get_max_radius_liq()
+      ice_min=cloud_sw%get_min_radius_ice(); ice_max=cloud_sw%get_max_radius_ice()
+    CASE DEFAULT
+      CALL require('cloud LUT bounds phase must be LW or SW')
+      liq_min=0._wp; liq_max=0._wp; ice_min=0._wp; ice_max=0._wp
+    END SELECT
+  END SUBROUTINE rrtmgp_cloud_lut_bounds
+
   SUBROUTINE validate_frozen_inputs(expected_shape,gwp,hwp,lambda_g,lambda_h,frozen_context)
     INTEGER, INTENT(IN) :: expected_shape(2)
     REAL, OPTIONAL, INTENT(IN) :: gwp(:,:),hwp(:,:),lambda_g(:,:),lambda_h(:,:)
@@ -497,13 +517,13 @@ CONTAINS
 
   ! The public ice LUT uses effective diameter. WRF's Fu dge=1.0315*r_ec;
   ! Thompson supplies effective radius directly. Convert both to diameter.
-  FUNCTION ice_diameter(re,iceflag) RESULT(d)
-    REAL, INTENT(IN) :: re(:,:)
+  ELEMENTAL FUNCTION rrtmgp_ice_lut_coordinate(re,iceflag) RESULT(d)
+    REAL, INTENT(IN) :: re
     INTEGER, INTENT(IN) :: iceflag
-    REAL(wp) :: d(SIZE(re,1),SIZE(re,2))
+    REAL(wp) :: d
     d=2._wp*REAL(re,wp)
     IF(iceflag==3) d=d/1.0315_wp
-  END FUNCTION
+  END FUNCTION rrtmgp_ice_lut_coordinate
 
   FUNCTION gas_dry_column(h2o,plev,native_mass) RESULT(col_dry)
     ! Bottom-first WRF layers: kg dry air m-2 to dry molecules cm-2.
@@ -688,7 +708,7 @@ CONTAINS
       CALL ensure_1scl(snow,nc,nl,cloud_lw)
       CALL ensure_1scl(sampled,nc,nl,gas_lw)
       rl=MAX(cloud_lw%get_min_radius_liq(),MIN(cloud_lw%get_max_radius_liq(),REAL(rel,wp)))
-      di=MAX(cloud_lw%get_min_radius_ice(),MIN(cloud_lw%get_max_radius_ice(),ice_diameter(rei,iceflag)))
+      di=MAX(cloud_lw%get_min_radius_ice(),MIN(cloud_lw%get_max_radius_ice(),rrtmgp_ice_lut_coordinate(rei,iceflag)))
       ds=MAX(cloud_lw%get_min_radius_ice(),MIN(cloud_lw%get_max_radius_ice(),2._wp*REAL(res,wp)))
       CALL require(cloud_lw%cloud_optics(REAL(lwp,wp),REAL(iwp,wp),rl,di,clouds))
       IF(PRESENT(rwp)) THEN
@@ -924,7 +944,7 @@ CONTAINS
       CALL ensure_2str(snow,nc,nl,cloud_sw)
       CALL ensure_2str(sampled,nc,nl,gas_sw)
       rl=MAX(cloud_sw%get_min_radius_liq(),MIN(cloud_sw%get_max_radius_liq(),REAL(rel,wp)))
-      di=MAX(cloud_sw%get_min_radius_ice(),MIN(cloud_sw%get_max_radius_ice(),ice_diameter(rei,iceflag)))
+      di=MAX(cloud_sw%get_min_radius_ice(),MIN(cloud_sw%get_max_radius_ice(),rrtmgp_ice_lut_coordinate(rei,iceflag)))
       ds=MAX(cloud_sw%get_min_radius_ice(),MIN(cloud_sw%get_max_radius_ice(),2._wp*REAL(res,wp)))
       CALL require(cloud_sw%cloud_optics(REAL(lwp,wp),REAL(iwp,wp),rl,di,clouds))
       IF(PRESENT(rwp)) THEN
