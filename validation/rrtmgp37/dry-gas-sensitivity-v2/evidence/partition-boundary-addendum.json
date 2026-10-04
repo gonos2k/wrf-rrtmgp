@@ -1,0 +1,146 @@
+{
+  "erratum": "One source-location search included nonexistent module_ra_rrtmgp_sw.F; the actual backend is module_ra_rrtmgp.F. No source or output changed.",
+  "interpretation": "The source proves different partition accumulation precision/order at the REAL32 boundary, consistent with the observed small partition mismatch. No per-band exact emulation was run, so this addendum does not prove that this source difference accounts for every observed bit. The aggregate baseline flux/heating identity and descriptive dry-mass sensitivity remain separately scoped.",
+  "partition_metrics": {
+    "NIRDIF": {
+      "REAL32_boundary_different_values": 11,
+      "REAL32_boundary_extension_top_different": 0,
+      "REAL32_boundary_max_ulp": 1,
+      "REAL32_boundary_native_interfaces_different": 11,
+      "extension_top_interface_index46_max_abs_W_m2": 0.0,
+      "max_abs_baseline_wp_vs_captured_value_W_m2": 3.195829130220318e-06,
+      "native44_layer_bounding_interface_indices_1_to_45_max_abs_W_m2": 3.195829130220318e-06,
+      "shape": [
+        1,
+        46,
+        1
+      ]
+    },
+    "NIRDIR": {
+      "REAL32_boundary_different_values": 9,
+      "REAL32_boundary_extension_top_different": 0,
+      "REAL32_boundary_max_ulp": 2,
+      "REAL32_boundary_native_interfaces_different": 9,
+      "extension_top_interface_index46_max_abs_W_m2": 4.589102786667354e-07,
+      "max_abs_baseline_wp_vs_captured_value_W_m2": 7.845494891967064e-06,
+      "native44_layer_bounding_interface_indices_1_to_45_max_abs_W_m2": 7.845494891967064e-06,
+      "shape": [
+        1,
+        46,
+        1
+      ]
+    },
+    "NIRDIR_PREDELTA": {
+      "REAL32_boundary_different_values": 4,
+      "REAL32_boundary_extension_top_different": 0,
+      "REAL32_boundary_max_ulp": 1,
+      "REAL32_boundary_native_interfaces_different": 4,
+      "extension_top_interface_index46_max_abs_W_m2": 4.589102786667354e-07,
+      "max_abs_baseline_wp_vs_captured_value_W_m2": 5.837292732735477e-06,
+      "native44_layer_bounding_interface_indices_1_to_45_max_abs_W_m2": 5.837292732735477e-06,
+      "shape": [
+        1,
+        46,
+        1
+      ]
+    },
+    "VISDIF": {
+      "REAL32_boundary_different_values": 20,
+      "REAL32_boundary_extension_top_different": 0,
+      "REAL32_boundary_max_ulp": 1,
+      "REAL32_boundary_native_interfaces_different": 20,
+      "extension_top_interface_index46_max_abs_W_m2": 0.0,
+      "max_abs_baseline_wp_vs_captured_value_W_m2": 3.4171213982858717e-06,
+      "native44_layer_bounding_interface_indices_1_to_45_max_abs_W_m2": 3.4171213982858717e-06,
+      "shape": [
+        1,
+        46,
+        1
+      ]
+    },
+    "VISDIR": {
+      "REAL32_boundary_different_values": 9,
+      "REAL32_boundary_extension_top_different": 0,
+      "REAL32_boundary_max_ulp": 1,
+      "REAL32_boundary_native_interfaces_different": 9,
+      "extension_top_interface_index46_max_abs_W_m2": 3.6996814714029824e-06,
+      "max_abs_baseline_wp_vs_captured_value_W_m2": 6.268906105333372e-06,
+      "native44_layer_bounding_interface_indices_1_to_45_max_abs_W_m2": 6.268906105333372e-06,
+      "shape": [
+        1,
+        46,
+        1
+      ]
+    },
+    "VISDIR_PREDELTA": {
+      "REAL32_boundary_different_values": 6,
+      "REAL32_boundary_extension_top_different": 0,
+      "REAL32_boundary_max_ulp": 1,
+      "REAL32_boundary_native_interfaces_different": 6,
+      "extension_top_interface_index46_max_abs_W_m2": 3.6996814714029824e-06,
+      "max_abs_baseline_wp_vs_captured_value_W_m2": 5.518141620086681e-06,
+      "native44_layer_bounding_interface_indices_1_to_45_max_abs_W_m2": 5.518141620086681e-06,
+      "shape": [
+        1,
+        46,
+        1
+      ]
+    }
+  },
+  "reviewer_invocations": {
+    "build": 0,
+    "model": 0,
+    "solver": 0
+  },
+  "schema": "udm37-dry-gas-terminal-partition-boundary-addendum-v1",
+  "source_findings": [
+    {
+      "finding": "Production VIS/NIR and optional unscaled outputs are default REAL arrays. Standard partitions cast each wp band term to default REAL before accumulating in that REAL array. Pre-delta partitions assign the mixed wp expression into default REAL on each band iteration.",
+      "lines": [
+        923,
+        926,
+        1307,
+        1308,
+        1355,
+        1356,
+        1357,
+        1358
+      ],
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-current-rrtmg4-optics-export-work/WRF/phys/module_ra_rrtmgp.F"
+    },
+    {
+      "finding": "Independent driver allocates REAL(wp) partition arrays and accumulates band terms in wp, including pre-delta partitions; output is serialized wp.",
+      "lines": [
+        69,
+        76,
+        1008,
+        1016,
+        1017,
+        1018,
+        1019,
+        1056,
+        1057
+      ],
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/dgcf-src-v1/WRF/test/rrtmgp/reference_column.f90"
+    }
+  ],
+  "source_pins": {
+    "executed_production_backend": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-current-rrtmg4-optics-export-work/WRF/phys/module_ra_rrtmgp.F",
+      "sha256": "b3932fa4e88202d5fe0fb660764bec9a07d031c03b501c20ee6ef259828ffa69",
+      "size_bytes": 73930
+    },
+    "standalone_driver": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/dgcf-src-v1/WRF/test/rrtmgp/reference_column.f90",
+      "sha256": "dcd6756345b38f5aaa03e4b2b6e879edd886786e2e41aacfc71c0c15e16ff4d9",
+      "size_bytes": 88409
+    }
+  },
+  "status": "DESCRIPTIVE_BASELINE_PARTITION_PRECISION_DISTINCTION",
+  "terminal_review": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rrtmg4-export-independent-review-v1/dry-gas-four-call-terminal-review-v2/review.json",
+    "sha256": "d62f84647d3f56b31ba560277b0546df8fd78e8079fee589c617337518f52c98",
+    "size_bytes": 33296
+  },
+  "timestamp_utc": "2026-10-04T20:09:32.182935+00:00"
+}

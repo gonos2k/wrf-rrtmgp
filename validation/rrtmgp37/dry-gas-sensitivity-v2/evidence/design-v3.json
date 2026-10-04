@@ -1,0 +1,201 @@
+{
+  "actual_export_dry_column_comparison": {
+    "legacy_exceeds_native_all_layers": true,
+    "max_layer_bottom_first": 19,
+    "max_percent_relative_to_native": 0.2891570627,
+    "mean_percent_relative_to_native": 0.165186889,
+    "native_overlap_layers": 44,
+    "qualification": "These values compare actual observer export values against the native mass equivalent; they describe input differences, not flux impact."
+  },
+  "actual_runtime_table": {
+    "note": "Exact FROZEN_TABLE_SHA256_BYTES table embedded in LW/SW captures and required in WRF_RRTMGP_FROZEN_TABLE. This is distinct from the donor CMake fixture symlink.",
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-frozen-planck-coverage-v1/runs/frozen-planck-150-330-step5-plus233-v1/frozen-ice-psd-moments.nc",
+    "sha256": "ebeafb9746164d5414a45eab4061c5c855f0f91e92be77003b3829722514fe6a",
+    "size_bytes": 163599
+  },
+  "build_dependencies_manifest": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-dry-gas-sensitivity-design-v3/build-dependencies.json",
+    "sha256": "2bb591a2ef8da0276f09cd8210a2b7e8e2efbbe97805d8d9feb57d9a2d35c195",
+    "size_bytes": 47064
+  },
+  "causal_scope": "This is a test-only diagnostic accommodation for a derived gas-optical-depth check that is stale after the intentional dry-column perturbation. It does not disable captured-field validation or change model/production defaults. Both baseline and counterfactual use the same rebuilt scratch executable.",
+  "counterfactual_source_and_formula": {
+    "conversion": "exported legacy dry column * captured MOL_WEIGHT_DRY_kg_mol * 10000 / Avogadro (6.02214076e23)",
+    "lw_export_field": "COLDry; molecule_cm-2; actual RRTMG4 observer export",
+    "preserve": "All remaining records including unchanged captured RAW_GAS_TAU, output sidecars outside generated counterfactual inputs, and all upper-extension values. Do not take dry columns from result GAS_COL_DRY and do not invoke get_col_dry as a substitute source.",
+    "replace_only": "NATIVE_DRY_LAYER_MASS_KG_M2[1:44]",
+    "sw_export_field": "COLDRY; molecule_cm-2; actual RRTMG4 observer export"
+  },
+  "four_calls": [
+    "baseline V10 LW: original captured input, no arg7",
+    "baseline V11 SW: original captured input, no arg7; exact raw gas tau assertion remains active",
+    "counterfactual V10 LW: replace only native dry mass indices 1:44 from actual legacy COLDry export, no arg7",
+    "counterfactual V11 SW: replace only native dry mass indices 1:44 from actual legacy COLDRY export; pass exact arg7 ALLOW_CHANGED_V11_GAS_TAU"
+  ],
+  "isolated_build_recipe": {
+    "build_command_template": "cmake -S <fresh patched source root>/WRF/test/rrtmgp -B <new isolated build dir> -DCMAKE_Fortran_COMPILER=/usr/bin/gfortran -DCMAKE_BUILD_TYPE=Release -DRRTMGP_DATA_DIR=<pinned existing data dir> -DFROZEN_TABLE=<pinned table>; cmake --build <new isolated build dir> --target reference_column --parallel 8",
+    "configuration_basis": "Use the pinned CMakeCache as a reference for GNU Fortran, NetCDF include/libs, RRTMGP_DATA_DIR, and FROZEN_TABLE. Configure a new build directory against the disposable patched source. Do not reuse or overwrite the existing binary/build directory.",
+    "preflight_needed": "Before any build, record fresh-source manifest and exact coefficient/table/NetCDF/compiler pins; verify the only source diff is the patch and confirm any Fortran source path-length constraints. Root review required before executing this recipe.",
+    "source_base_clean_at_pin": true,
+    "source_base_commit": "245b1a83be6ed07582dafabb8c9e50dfa537ed66",
+    "source_change": "Apply only scratch/counterfactual-guard.patch to WRF/test/rrtmgp/reference_column.f90 in a new disposable source checkout/copy. Do not touch the pinned source worktree or current compiled build.",
+    "target": "reference_column only"
+  },
+  "isolated_source_and_build_recipe": {
+    "actual_build_receipt": {
+      "build_invocations": 1,
+      "build_returncode": 0,
+      "model_invocations": 0,
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/dgcf-build-v3/build-receipt.json",
+      "sha256": "7f0fe7c3eb3c08bccd3fc6c64d334391e7e2229ea5bd5a4d71f2b2482d96366b",
+      "solver_invocations": 0,
+      "status": "BUILD_PASS"
+    },
+    "actual_build_worktree": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/dgcf-src-v1",
+    "actual_postbuild_readback": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/dgcf-build-v3/postbuild-readback.json",
+      "sha256": "f7c74b55b45c7849c1251030f122cbafd988a044ceae1c5ed7fd4585a5093923",
+      "status": "PASS"
+    },
+    "base_commit": "245b1a83be6ed07582dafabb8c9e50dfa537ed66",
+    "build_log_terminal_receipt_limitation": "The build helper wrote the command return code and log hash in the same post-wait receipt update, so the log hash was computed before the terminal RC was durably persisted. Preserve this actual successful-build receipt as recorded; the four-call runner is designed to durably write each child RC before hashing or parsing that child\u2019s log/output.",
+    "build_template": [
+      "cmake",
+      "--build",
+      "<new-isolated-build>",
+      "--target",
+      "reference_column",
+      "--parallel",
+      "8"
+    ],
+    "configure_template": [
+      "cmake",
+      "-S",
+      "<fresh-source>/WRF/test/rrtmgp",
+      "-B",
+      "<new-isolated-build>",
+      "-DCMAKE_Fortran_COMPILER=/usr/bin/gfortran",
+      "-DCMAKE_BUILD_TYPE=Release",
+      "-DNETCDF_INCLUDE_DIR=/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/netcdf/include",
+      "-DNETCDF_LIBRARY_DIR=/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/netcdf/lib",
+      "-DRRTMGP_DATA_DIR=/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-cu-optics-design-work/WRF/run",
+      "-DFROZEN_TABLE=/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-frozen-planck-coverage-v1/runs/frozen-planck-150-330-step5-plus233-v1/frozen-ice-psd-moments.nc"
+    ],
+    "isolated_clone_procedure": "Create a new detached source checkout at the pinned base commit. Copy the pinned scratch driver over only WRF/test/rrtmgp/reference_column.f90 in that new checkout. Confirm a one-file diff equal to the saved patch. Do not edit the existing source worktree or existing build directory.",
+    "limits": "This recipe is recorded for root review only. Do not build or run it until separately authorized. Re-pin compiler, CMake, all 85 data assets, frozen table, 46 normalized runtime libraries, and all fresh checkout inputs immediately before/after an authorized build.",
+    "runtime_expanded_table": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-frozen-planck-coverage-v1/runs/frozen-planck-150-330-step5-plus233-v1/frozen-ice-psd-moments.nc",
+      "sha256": "ebeafb9746164d5414a45eab4061c5c855f0f91e92be77003b3829722514fe6a",
+      "size_bytes": 163599
+    },
+    "scratch_driver": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-dry-gas-sensitivity-design-v3/scratch/reference_column.f90",
+      "sha256": "dcd6756345b38f5aaa03e4b2b6e879edd886786e2e41aacfc71c0c15e16ff4d9",
+      "size_bytes": 88409
+    },
+    "scratch_source_sha256": "dcd6756345b38f5aaa03e4b2b6e879edd886786e2e41aacfc71c0c15e16ff4d9",
+    "source_base_tree": "7893bff3cee40b9c3be92e51a2a7c7e4d67d7343",
+    "source_patch": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-dry-gas-sensitivity-design-v3/scratch/counterfactual-guard.patch",
+      "sha256": "a4403b425acb6ccb3ec2e6bb84835dedb17495b7cd87f70dd40255f6c08638fa"
+    },
+    "source_repository": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-precip-audit-pr-work",
+    "successful_scratch_executable": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/dgcf-build-v3/cmake-build/reference_column",
+      "sha256": "6e271346cfa7115d3e5c2c170a5881065ed7a1739d716cad4ed894187977aeb2",
+      "size_bytes": 1040280
+    }
+  },
+  "no_execution": "No compilation, replay invocation, solver, REAL, or WRF call was made while preparing v2.",
+  "pinned_inputs_and_artifacts": {
+    "build_receipt": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-pr64-current-reference-build-v1/root-build-receipt-v2.json",
+      "sha256": "4cc863925951b5cb19ae61b4ea5aa36d52922d46f16432207752552adaa83bab",
+      "size_bytes": 28027
+    },
+    "cmake_cache": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-pr64-current-reference-build-v1/CMakeCache.txt",
+      "sha256": "2b28e7008c5cc2023c8dc907fe9dc4fe90f096af2afb7b338bc5ac4e120a4c47",
+      "size_bytes": 15633
+    },
+    "design_v1": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-dry-gas-sensitivity-design-v1/design.json",
+      "sha256": "5b094952761f47c1293a5cd4f1d080d9305a731651a929594c7316b7e58ef68e",
+      "size_bytes": 12419
+    },
+    "executable": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-pr64-current-reference-build-v1/reference_column",
+      "sha256": "e5a634fc9151e76e9ea13ef9b0aa418b44df89d258e0e1e824ae5f0afe06349e",
+      "size_bytes": 1044328
+    },
+    "independent_review": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rrtmg4-export-independent-review-v1/dry-column-review-v2/review.json",
+      "sha256": "051090d669c9c8ce654924dc67961768ee22e194f118a42322db7990c926291d",
+      "size_bytes": 8001
+    },
+    "lw_input": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rrtmg4-export-runtime-v1/NEW_ON/trace/lw_000001.input",
+      "sha256": "e444fa7b505ba091de6deb1bfb342ad3b79fc6db9123e8e1358de846dd7b811e",
+      "size_bytes": 48870
+    },
+    "lw_legacy_export": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rrtmg4-export-runtime-v1/NEW_ON/export/rrtmg4_d01_i24_j55_step2161_lw.txt",
+      "sha256": "44ad6a5d0e2bb9cee48fe0ec821341dde61a240e53dc0c6bce28f26b7044a303",
+      "size_bytes": 1924790
+    },
+    "reader": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-current-rrtmg4-optics-export-work/validation/rrtmgp37/rrtmg4-optics-export/read_export.py",
+      "sha256": "08519a5945e337d11cd2cb9b599c435aa76d13dfd21ec266ad291721e4cc5817",
+      "size_bytes": 7171
+    },
+    "reconstruction_review": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rrtmg4-dry-column-reconstruction-v2/dry-column-reconstruction.json",
+      "sha256": "4387b9d3762eb409c7866f324cf5e4334882f198a13cd27ecf29786819f819fd",
+      "size_bytes": 62262
+    },
+    "reference_source_original": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-precip-audit-pr-work/WRF/test/rrtmgp/reference_column.f90",
+      "sha256": "93214328388a1a7e242be1a298d34ae61e76f81d201ed9cf039e7f07ac580e6f",
+      "size_bytes": 87776
+    },
+    "reference_source_scratch": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-dry-gas-sensitivity-design-v3/scratch/reference_column.f90",
+      "sha256": "dcd6756345b38f5aaa03e4b2b6e879edd886786e2e41aacfc71c0c15e16ff4d9",
+      "size_bytes": 88409
+    },
+    "scratch_patch": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-dry-gas-sensitivity-design-v3/scratch/counterfactual-guard.patch",
+      "sha256": "a4403b425acb6ccb3ec2e6bb84835dedb17495b7cd87f70dd40255f6c08638fa",
+      "size_bytes": 2841
+    },
+    "sw_input": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rrtmg4-export-runtime-v1/NEW_ON/trace/sw_000001.input",
+      "sha256": "20986c50c59bc294fede10fc7fe7bdb1173ab3ba1a391a444ed8fd785cd55b1c",
+      "size_bytes": 399854
+    },
+    "sw_legacy_export": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rrtmg4-export-runtime-v1/NEW_ON/export/rrtmg4_d01_i24_j55_step2161_sw.txt",
+      "sha256": "6afbe0cf7d5c83d0589a77b44afd27396f7e63ea566610c4a22925b4c1b110b6",
+      "size_bytes": 2142190
+    }
+  },
+  "provenance_erratum": {
+    "amended_v2_dependencies_sha256": "2bb591a2ef8da0276f09cd8210a2b7e8e2efbbe97805d8d9feb57d9a2d35c195",
+    "amended_v2_design_sha256": "67bed19062a815df8ebfb00cd79b563161aeef7648ea2cf892c66895a6540067",
+    "initially_reviewed_v2_dependencies_sha256": "329b7389c87b85d5b09a88b354a0a1a0d8330f2bf1106f8c5ca3ddefb97d81aa",
+    "initially_reviewed_v2_design_sha256": "1e07db6de6f081d0c38fed25a3d83d982aa9c0d362c0bbeb05af0357dbb23bc0",
+    "reason": "The v2 dependency manifest and design were amended in place after their initial review to correct the captured runtime frozen-table pin. No byte-exact backup of the initial v2 JSON was present when the issue was found. Preserve the amended current state and original recorded pre-amendment hashes as a provenance note; this v3 directory is the authoritative additive corrected package.",
+    "v2_bytes_restored": false
+  },
+  "reason_for_v2": "The V11 SW reference driver asserts captured RAW_GAS_TAU equals gas optics recomputed from the input. The proposed dry-mass substitution necessarily changes the recomputed gas optical depth while the captured RAW_GAS_TAU remains from the original call, so the original driver would stop before SW radiative transfer. V1 is retained unchanged.",
+  "schema": "udm37-dry-gas-sensitivity-design-v3",
+  "scratch_only_driver_change": {
+    "behavior": "When absent, preserve the original exact RAW_GAS_TAU equality assertion. When present, accept only the exact token and require RRTMGP_REPLAY_V11 plus phase SW. Skip only that equality assertion. The captured-gas-tau shape check, TOA check, mask/optics/band-map checks, cloud/CU/frozen checks, input validation, and output validation remain enabled.",
+    "input_source": "PR64 reference_column.f90, pinned below; no production file changes",
+    "intended_use": "Pass argument 7 only to the V11 SW counterfactual. Baseline SW omits it. LW calls omit it.",
+    "new_optional_argument": "CLI argument 7: ALLOW_CHANGED_V11_GAS_TAU",
+    "patch_sha256": "a4403b425acb6ccb3ec2e6bb84835dedb17495b7cd87f70dd40255f6c08638fa",
+    "scratch_source_sha256": "dcd6756345b38f5aaa03e4b2b6e879edd886786e2e41aacfc71c0c15e16ff4d9"
+  },
+  "status": "SCRATCH_BUILD_PASS_REVIEW_PENDING_NO_SOLVER_CALLS"
+}
