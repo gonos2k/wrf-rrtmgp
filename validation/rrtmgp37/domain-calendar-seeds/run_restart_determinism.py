@@ -227,6 +227,48 @@ def require_run(result: dict) -> None:
         raise RuntimeError("WRF executable changed during an invocation")
 
 
+
+UDM_CF_DIAGNOSTICS = ("UDM_CLDFRA", "UDM_CF_STEP", "UDM_CF_TOP")
+
+
+def require_restart_diagnostics(checkpoint: Path, history: Path, physical_time: str) -> dict:
+    """Check the actual restart boundary before merging duplicate history times.
+
+    merge_history retains the pre-restart record at a duplicate timestamp. That
+    record cannot demonstrate preservation in the restarted initial output.
+    """
+    compared = []
+    with netCDF4.Dataset(checkpoint) as donor, netCDF4.Dataset(history) as restored:
+        for ds, label in ((donor, "checkpoint"), (restored, "restarted history")):
+            if "Times" not in ds.variables:
+                raise RuntimeError(f"{label}: missing Times")
+            time = b"".join(ds.variables["Times"][0]).decode("ascii")
+            if time != physical_time:
+                raise RuntimeError(f"{label}: first timestamp {time} != {physical_time}")
+        for name in UDM_CF_DIAGNOSTICS:
+            if name not in donor.variables or name not in restored.variables:
+                raise RuntimeError(f"restart boundary: missing {name}")
+            left, right = donor.variables[name], restored.variables[name]
+            if left.dimensions != right.dimensions or left.dtype != right.dtype:
+                raise RuntimeError(f"restart boundary: {name} dimensions/dtype differ")
+            for raw in (True, False):
+                left.set_auto_maskandscale(not raw)
+                right.set_auto_maskandscale(not raw)
+                x, y = left[0], right[0]
+                if np.ma.getmaskarray(x).any() or np.ma.getmaskarray(y).any():
+                    raise RuntimeError(f"restart boundary: {name} contains masked values")
+                x, y = np.asarray(x), np.asarray(y)
+                if not np.isfinite(x).all() or not np.isfinite(y).all():
+                    raise RuntimeError(f"restart boundary: {name} contains nonfinite values")
+                if x.shape != y.shape or x.dtype != y.dtype or x.tobytes() != y.tobytes():
+                    raise RuntimeError(f"restart boundary: {name} differs ({'raw' if raw else 'decoded'})")
+            compared.append(name)
+    return {"status": "PASS", "physical_time": physical_time,
+            "checkpoint": str(checkpoint), "checkpoint_sha256": sha256(checkpoint),
+            "restarted_initial_history": str(history), "history_sha256": sha256(history),
+            "fields": compared, "raw_and_decoded_exact": True}
+
+
 def main() -> None:
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("--repo", type=Path, default=DEFAULT_REPO)
@@ -317,6 +359,8 @@ def main() -> None:
         if not history2:
             raise RuntimeError("split phase 2 produced no history output")
         require_options(history2, f"{label} split-2")
+        diagnostic_boundary = require_restart_diagnostics(
+            restart_files[0], history2[0], time_text(checkpoint))
         restarted_merged = case_root / "restarted_merged.nc"
         merge_history(history1 + history2, restarted_merged)
 
@@ -343,6 +387,7 @@ def main() -> None:
                             "variables": comparison["common_variable_count"],
                             "exact_time_matches": comparison["summary"]["exact_match_times"],
                             "checkpoint_time": checkpoint_time,
+                            "diagnostic_restart_boundary": diagnostic_boundary,
                             "start_time": time_text(start), "end_time": time_text(stop),
                             "calendar_retimed": retime,
                             "calendar_changed_metadata": ("wrfinput_d01 and force_ideal.nc Times; "
