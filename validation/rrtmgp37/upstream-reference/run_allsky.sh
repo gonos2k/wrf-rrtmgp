@@ -186,13 +186,20 @@ make -C "$scratch_example" FC=gfortran FCFLAGS='-O0 -ffree-line-length-none' \
   FCINCLUDE="-I$netcdf_include -I$source/build" \
   LDFLAGS="-L$source/build -L$netcdf_lib -Wl,-rpath,$netcdf_lib" \
   RRTMGP_ROOT="$source" RRTMGP_DATA="$data" all
-objects=("$scratch_example/rrtmgp_allsky.o" "$scratch_example/mo_simple_netcdf.o" \
-  "$scratch_example/mo_load_coefficients.o" "$scratch_example/mo_load_cloud_coefficients.o" \
-  "$scratch_example/mo_load_aerosol_coefficients.o")
+cp "$scratch_example/rrtmgp_allsky" "$output/rrtmgp_allsky_upstream"
+vendor_source="$output/source-vendor"; vendor_example="$vendor_source/examples/all-sky"
+cp -a "$scratch_source" "$vendor_source"
+find "$vendor_source" -type f \( -name '*.o' -o -name '*.mod' -o -name 'rrtmgp_allsky' \) -delete
+make -C "$vendor_example" FC=gfortran FCFLAGS='-O0 -ffree-line-length-none' \
+  FCINCLUDE="-I$netcdf_include -I$prepared/vendor/modules" \
+  LDFLAGS="-L$source/build -L$netcdf_lib -Wl,-rpath,$netcdf_lib" \
+  RRTMGP_ROOT="$source" RRTMGP_DATA="$data" rrtmgp_allsky.o
+objects=("$vendor_example/rrtmgp_allsky.o" "$vendor_example/mo_simple_netcdf.o" \
+  "$vendor_example/mo_load_coefficients.o" "$vendor_example/mo_load_cloud_coefficients.o" \
+  "$vendor_example/mo_load_aerosol_coefficients.o")
 gfortran -O0 -ffree-line-length-none -o "$output/rrtmgp_allsky_vendor" "${objects[@]}" \
   -L"$netcdf_lib" -Wl,-rpath,"$netcdf_lib" -Wl,-Map,"$output/vendor-link.map" \
   "$vendor_archive" -lnetcdff -lnetcdf
-cp "$scratch_example/rrtmgp_allsky" "$output/rrtmgp_allsky_upstream"
 grep -q 'libwrf_rrtmgp.a(mo_cloud_optics_rrtmgp.F90.o)' "$output/vendor-link.map"
 grep -q 'libwrf_rrtmgp.a(mo_aerosol_optics_rrtmgp_merra.F90.o)' "$output/vendor-link.map"
 if printf '%s\n' "${objects[@]}" | grep -Eq 'mo_cloud_optics_rrtmgp\.o|mo_aerosol_optics_rrtmgp_merra\.o'; then
@@ -207,8 +214,30 @@ for engine in upstream vendor; do
   run_dir="$output/run-$engine"; mkdir "$run_dir"
   binary="$output/rrtmgp_allsky_$engine"
   ( cd "$run_dir"
-    "$binary" 24 72 1 sw-g112.nc "$data/rrtmgp-gas-sw-g112.nc" "$data/rrtmgp-clouds-sw-bnd.nc"
-    "$binary" 24 72 1 lw-g128.nc "$data/rrtmgp-gas-lw-g128.nc" "$data/rrtmgp-clouds-lw-bnd.nc"
+    "$binary" 24 72 1 sw-g112.nc "$data/rrtmgp-gas-sw-g112.nc" "$data/rrtmgp-clouds-sw-bnd.nc" > sw.log 2>&1
+    if grep -Eiq 'STOP|ERROR|FATAL|segmentation fault|floating-point exception|isn.t SW' sw.log; then
+      cat sw.log >&2; echo "$engine SW all-sky driver did not complete cleanly" >&2; exit 1
+    fi
+    grep -q 'ncol.*nlay.*ngpt' sw.log
+    python3 - sw-g112.nc <<'PY'
+from pathlib import Path
+import sys
+p = Path(sys.argv[1])
+if not p.is_file() or p.stat().st_size == 0:
+    raise SystemExit(f'SW all-sky output was not produced: {p}')
+PY
+    "$binary" 24 72 1 lw-g128.nc "$data/rrtmgp-gas-lw-g128.nc" "$data/rrtmgp-clouds-lw-bnd.nc" > lw.log 2>&1
+    if grep -Eiq 'STOP|ERROR|FATAL|segmentation fault|floating-point exception|isn.t LW' lw.log; then
+      cat lw.log >&2; echo "$engine LW all-sky driver did not complete cleanly" >&2; exit 1
+    fi
+    grep -q 'ncol.*nlay.*ngpt' lw.log
+    python3 - lw-g128.nc <<'PY'
+from pathlib import Path
+import sys
+p = Path(sys.argv[1])
+if not p.is_file() or p.stat().st_size == 0:
+    raise SystemExit(f'LW all-sky output was not produced: {p}')
+PY
   )
 done
 
@@ -219,7 +248,8 @@ git -C "$repo_root" diff --quiet HEAD -- WRF/external/rte_rrtmgp || {
   echo 'vendored source has uncommitted changes relative to checkout' >&2; exit 1; }
 git -C "$repo_root" diff --cached --quiet HEAD -- WRF/external/rte_rrtmgp || {
   echo 'vendored source has staged changes relative to checkout' >&2; exit 1; }
-git -C "$repo_root" ls-files -z WRF/external/rte_rrtmgp | xargs -0 sha256sum > "$output/vendor-source-sha256.txt"
+( cd "$repo_root" && git ls-files -z WRF/external/rte_rrtmgp | xargs -0 sha256sum ) \
+  > "$output/vendor-source-sha256.txt"
 upstream_sources=(
   "$source/examples/all-sky/rrtmgp_allsky.F90"
   "$source/examples/all-sky/mo_load_cloud_coefficients.F90"
@@ -231,7 +261,7 @@ upstream_sources=(
 )
 sha256sum "${upstream_sources[@]}" > "$output/upstream-source-sha256.txt"
 sha256sum "$source/build/"*.mod > "$output/upstream-module-sha256.txt"
-sha256sum "${objects[@]}" "$output/rrtmgp_allsky_upstream" "$output/rrtmgp_allsky_vendor" \
+sha256sum "${objects[@]}" "$vendor_example/"*.mod "$output/rrtmgp_allsky_upstream" "$output/rrtmgp_allsky_vendor" \
   > "$output/compiled-artifact-sha256.txt"
 sha256sum "$source/build/librrtmgp.a" "$source/build/librte.a" "$vendor_archive" \
   "$data/rrtmgp-clouds-sw-bnd.nc" "$data/rrtmgp-clouds-lw-bnd.nc" \

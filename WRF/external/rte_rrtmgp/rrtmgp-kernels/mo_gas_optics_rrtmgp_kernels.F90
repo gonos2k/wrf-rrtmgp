@@ -25,6 +25,9 @@
 
 module mo_gas_optics_rrtmgp_kernels
   use mo_rte_kind,      only : wp, wl
+#ifdef RRTMGP_CPU_ONLY
+  use mo_rte_scalar_math, only: log => rte_scalar_log
+#endif
   use mo_rte_util_array,only : zero_array
   implicit none
   private

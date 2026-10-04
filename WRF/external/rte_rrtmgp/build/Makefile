@@ -5,6 +5,28 @@ include Makefile.upstream
 VPATH += ../extensions
 FCINCLUDE += -I$(NETCDFPATH)/include
 
+# Keep only the scalar-libm helper across a translation-unit boundary.  Do
+# not disable vectorization for any kernel arithmetic.  WRF does not enable
+# IPO/LTO by default, but make the boundary explicit for GNU and Intel builds.
+RTE_SCALAR_MATH_FC := $(firstword $(FC))
+RTE_SCALAR_MATH_COMPILER_ID := $(shell $(RTE_SCALAR_MATH_FC) --version 2>/dev/null | head -n 1)
+RTE_SCALAR_MATH_COMPILER_NAME := $(notdir $(RTE_SCALAR_MATH_FC))
+ifneq (,$(findstring GNU Fortran,$(RTE_SCALAR_MATH_COMPILER_ID)))
+RTE_SCALAR_MATH_BOUNDARY_FLAG := -fno-lto
+else ifneq (,$(filter ifort ifx,$(RTE_SCALAR_MATH_COMPILER_NAME)))
+RTE_SCALAR_MATH_BOUNDARY_FLAG := -no-ipo
+else ifneq (,$(findstring Intel,$(RTE_SCALAR_MATH_COMPILER_ID)))
+RTE_SCALAR_MATH_BOUNDARY_FLAG := -no-ipo
+else
+RTE_SCALAR_MATH_BOUNDARY_FLAG :=
+endif
+# `override` is required because WRF supplies FCFLAGS on make's command line.
+# `private` prevents this boundary-only setting propagating to prerequisites.
+ifneq (,$(RTE_SCALAR_MATH_BOUNDARY_FLAG))
+mo_rte_scalar_math.o: private override FCFLAGS += $(RTE_SCALAR_MATH_BOUNDARY_FLAG)
+endif
+WRF_RRTMGP_SCALAR_BOUNDARY_FLAG := $(RTE_SCALAR_MATH_BOUNDARY_FLAG)
+
 # Keep the WRF archive input list explicit.  In particular, do not let an
 # unrelated *.o left in this directory silently become part of libwrf.a.
 WRF_RRTMGP_EXTENSION_OBJECTS = \
@@ -28,7 +50,7 @@ WRF_RRTMGP_LIBRARIES = librte.a librrtmgp.a librtekernels.a librtef.a \
 ifneq ($(filter print-wrf-objects,$(MAKECMDGOALS)),print-wrf-objects)
 WRF_RRTMGP_CONFIG_REQUEST_ID := $(shell printf '%s' $$$$)
 WRF_RRTMGP_CONFIG_REQUEST = .wrf-rrtmgp-config-request-$(WRF_RRTMGP_CONFIG_REQUEST_ID)
-WRF_RRTMGP_CONFIG_CONTENT := $(file >$(WRF_RRTMGP_CONFIG_REQUEST),FC=$(FC))$(file >>$(WRF_RRTMGP_CONFIG_REQUEST),FC_VERSION=$(shell $(FC) --version 2>/dev/null | head -n 1))$(file >>$(WRF_RRTMGP_CONFIG_REQUEST),FCFLAGS=$(FCFLAGS))$(file >>$(WRF_RRTMGP_CONFIG_REQUEST),FCINCLUDE=$(FCINCLUDE))$(file >>$(WRF_RRTMGP_CONFIG_REQUEST),NETCDFPATH=$(NETCDFPATH))$(file >>$(WRF_RRTMGP_CONFIG_REQUEST),RTE_KERNELS=$(RTE_KERNELS))$(file >>$(WRF_RRTMGP_CONFIG_REQUEST),OBJECTS=$(WRF_RRTMGP_OBJECTS))
+WRF_RRTMGP_CONFIG_CONTENT := $(file >$(WRF_RRTMGP_CONFIG_REQUEST),FC=$(FC))$(file >>$(WRF_RRTMGP_CONFIG_REQUEST),FC_VERSION=$(shell $(FC) --version 2>/dev/null | head -n 1))$(file >>$(WRF_RRTMGP_CONFIG_REQUEST),FCFLAGS=$(FCFLAGS))$(file >>$(WRF_RRTMGP_CONFIG_REQUEST),FCINCLUDE=$(FCINCLUDE))$(file >>$(WRF_RRTMGP_CONFIG_REQUEST),NETCDFPATH=$(NETCDFPATH))$(file >>$(WRF_RRTMGP_CONFIG_REQUEST),RTE_KERNELS=$(RTE_KERNELS))$(file >>$(WRF_RRTMGP_CONFIG_REQUEST),SCALAR_BOUNDARY_FLAG=$(WRF_RRTMGP_SCALAR_BOUNDARY_FLAG))$(file >>$(WRF_RRTMGP_CONFIG_REQUEST),OBJECTS=$(WRF_RRTMGP_OBJECTS))
 WRF_RRTMGP_CONFIG_STAMP = .wrf-rrtmgp-config.stamp
 WRF_RRTMGP_CONFIG_UPDATE := $(shell \
 	set -e; \

@@ -28,6 +28,9 @@
 module mo_rte_solver_kernels
   use,  intrinsic :: iso_c_binding
   use mo_rte_kind,      only: wp, wl
+#ifdef RRTMGP_CPU_ONLY
+  use mo_rte_scalar_math, only: exp => rte_scalar_exp
+#endif
   use mo_rte_util_array,only: zero_array
   implicit none
   private
