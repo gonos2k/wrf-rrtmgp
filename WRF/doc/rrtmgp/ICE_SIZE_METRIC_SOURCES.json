@@ -1,0 +1,67 @@
+{
+  "status": "DOCUMENTATION_ONLY_SOURCE_AND_DATA_LINEAGE_REVIEW",
+  "base_commit": "ed9022587b852bd360642c5d7ac69e3bf1fc8e54",
+  "scope": "Clarifies the physical size-metric evidence for the existing UDM-radius to RRTMGP-diameter coordinate conversion. No source, coefficient, default, multiplier, build, or model-run changes.",
+  "local_source_pins": {
+    "WRF/phys/module_mp_udm.F": {
+      "sha256": "872737fe3a0cebf941d3ee45056fb60aadf465f0f72d72d1a2c7abac6709351d",
+      "locator": "udm_mp_effective_radius; ice empirical polynomial and configured radius bounds"
+    },
+    "WRF/phys/module_ra_rrtmgp.F": {
+      "sha256": "b3932fa4e88202d5fe0fb660764bec9a07d031c03b501c20ee6ef259828ffa69",
+      "locator": "rrtmgp_ice_lut_coordinate; explicit radius-to-diameter conversion, with flag-3 Fu adjustment"
+    },
+    "WRF/external/rte_rrtmgp/rrtmgp-frontend/mo_cloud_optics_rrtmgp.F90": {
+      "sha256": "14dcab00e6dfe1a64d40b5ddf3cf86186380fac2b8d0c0c3aa2e1f466b0446fc",
+      "locator": "cloud_optics input comments and bounds checks; frontend comments cite Yang et al. (2013)"
+    },
+    "WRF/external/rte_rrtmgp/extensions/mo_load_cloud_coefficients.F90": {
+      "sha256": "330976e71d031dc725a63876947312eda821a9f9e09e4420af3a18caace6399a",
+      "locator": "loader reads diameter-named ice bounds from the LUT"
+    },
+    "WRF/external/rte_rrtmgp/DATA.json": {
+      "sha256": "c29615af763369684e0f577dfa5b4c369a2e99d9aa644da160ac56f720fd1398",
+      "locator": "pins data repository and exact cloud coefficient files"
+    }
+  },
+  "pinned_data": {
+    "repository": "earth-system-radiation/rrtmgp-data",
+    "commit": "ea788bb39876948fa8d2c235665ccff19b4686b5",
+    "source_commit_named_by_pinned_readme": "74a0e09",
+    "cloud_lw": {
+      "filename": "rrtmgp-clouds-lw-bnd.nc",
+      "sha256": "09d6704c5b863b4c3ceb417d20bb3076ec492e6bf2dfbcc9f3c5996a3706f0b0"
+    },
+    "cloud_sw": {
+      "filename": "rrtmgp-clouds-sw-bnd.nc",
+      "sha256": "7671835992a45afe66244b591a02c0b3df73d7d59ecb746bbffd9763497651cd"
+    },
+    "generation_recipe": "NOT_FOUND_IN_PINNED_PUBLIC_MATERIALS_INSPECTED"
+  },
+  "metric_relationship": {
+    "udm_attribution": "The UDM polynomial's form and coefficients match Wyser Eq. (35); this is an equation-form inference. The local source credits Soo Ya Bae (2015) without an explicit Wyser citation.",
+    "conditional_definition": "For identical PSD, habits, volume, and orientation-averaged projected area: r_VA=3*V_total/(4*A_total), D_VA=3*V_total/(2*A_total), hence D_VA=2*r_VA.",
+    "wyser_1998": "Eqs. (19)-(20) define a randomly oriented column geometric proxy and cross-section-weighted population mean; Eq. (35) fits the Eq. (20) value from the paper's PSD and geometry assumptions.",
+    "unresolved": "The inspected primary and pinned table materials do not prove Wyser Eq. (35) radius and the pinned table diameter use the same physical metric.",
+    "fu_terminology": "D_VA is called volume/projected-area effective diameter here; it is not identified with Fu generalized effective size Dge."
+  },
+  "references": [
+    {
+      "citation": "Wyser (1998), The Effective Radius in Ice Clouds, Journal of Climate 11, 1793-1802",
+      "doi": "10.1175/1520-0442(1998)011<1793:TERIIC>2.0.CO;2",
+      "publisher_url": "https://journals.ametsoc.org/view/journals/clim/11/7/1520-0442_1998_011_1793_teriic_2.0.co_2.xml",
+      "access_note": "Publisher indexed text returned equation-referencing body text; direct page/PDF access returned HTTP 403 in review environment; no local PDF or file hash."
+    },
+    {
+      "citation": "Wyser and Yang (1998), Average ice crystal size and bulk short-wave single-scattering properties of cirrus clouds",
+      "doi": "10.1016/S0169-8095(98)00083-0",
+      "evidence_scope": "Publisher abstract describes average size as total volume divided by total projected area; it does not equate this to Wyser Eq. (35)."
+    },
+    {
+      "citation": "Yang et al. (2013), Spectrally Consistent Scattering, Absorption, and Polarization Properties of Atmospheric Ice Crystals",
+      "doi": "10.1175/JAS-D-12-039.1",
+      "author_record": "https://www.giss.nasa.gov/pubs/abs/ya07100h.html"
+    }
+  ],
+  "conclusion": "The adapter's factor two is an explicit coordinate conversion from radius to diameter. These sources do not prove or disprove physical-metric equivalence for the pinned LUT. No factor-two defect or additional multiplier is established."
+}
