@@ -1,7 +1,7 @@
 ! Shared validation and cloud-path construction for the WRF RRTMGP adapter.
 ! This module intentionally has no RTE or WRF-module dependencies.
 MODULE module_ra_rrtmgp_input
-  USE, INTRINSIC :: iso_fortran_env, ONLY: int64, real64
+  USE, INTRINSIC :: iso_fortran_env, ONLY: int64, real64, error_unit
   USE, INTRINSIC :: ieee_arithmetic, ONLY: ieee_is_finite
   IMPLICIT NONE
   PRIVATE
@@ -35,6 +35,7 @@ MODULE module_ra_rrtmgp_input
   PUBLIC :: rrtmgp_udm_frozen_lambdas
   PUBLIC :: rrtmgp_summarize_path_clipping
   PUBLIC :: rrtmgp_build_cu_inputs, rrtmgp_summarize_cu_filter
+  PUBLIC :: rrtmgp_fatal
 
   EXTERNAL :: wrf_error_fatal3
 
@@ -872,9 +873,22 @@ CONTAINS
     CALL fatal_message(TRIM(message))
   END SUBROUTINE fatal_builder_message
 
+  SUBROUTINE rrtmgp_fatal(message,source)
+    CHARACTER(LEN=*), INTENT(IN) :: message
+    CHARACTER(LEN=*), OPTIONAL, INTENT(IN) :: source
+    CHARACTER(LEN=128) :: source_name
+    source_name='module_ra_rrtmgp_input.F'
+    IF(PRESENT(source)) source_name=source
+    !$OMP CRITICAL (rrtmgp_fatal_message_output)
+    WRITE(error_unit,'(A)') 'RRTMGP_FATAL ['//TRIM(source_name)//']: '//TRIM(message)
+    FLUSH(error_unit)
+    !$OMP END CRITICAL (rrtmgp_fatal_message_output)
+    CALL wrf_error_fatal3(TRIM(source_name),0,TRIM(message))
+  END SUBROUTINE rrtmgp_fatal
+
   SUBROUTINE fatal_message(message)
     CHARACTER(LEN=*), INTENT(IN) :: message
-    CALL wrf_error_fatal3('module_ra_rrtmgp_input.F',0,message)
+    CALL rrtmgp_fatal(message,'module_ra_rrtmgp_input.F')
   END SUBROUTINE fatal_message
 
   FUNCTION uppercase(text) RESULT(result)

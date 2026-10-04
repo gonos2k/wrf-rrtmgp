@@ -1,0 +1,197 @@
+taskid: 0 hostname: KIM-meso-gpu
+Quilting with   1 groups of   0 I/O tasks.
+ Ntasks in X            2 , ntasks in Y            2
+Domain # 1: dx = 27000.000 m
+--- WARNING: RRTMGP37 UDM frozen graupel/hail optics are experimental homogeneous-ice sphere PSD diagnostics; no NOAA/RRTMGP parity is claimed.
+WRF V4.8.0 MODEL
+git commit d79b97ea2f4d90ea439ef129cabf014ac73464f1 2 files changed, 68 deletions(-)
+ *************************************
+ Parent domain
+ ids,ide,jds,jde            1          91           1         100
+ ims,ime,jms,jme           -4          52          -4          57
+ ips,ipe,jps,jpe            1          45           1          50
+ *************************************
+DYNAMICS OPTION: Eulerian Mass Coordinate
+ alloc_space_field: domain            1 ,             129795388  bytes allocated
+med_initialdata_input: calling input_input
+ Domain            1  Setting history stream            0  for rthraten
+ Domain            1  Setting history stream            0  for rthratlw
+ Domain            1  Setting history stream            0  for rthratsw
+ Domain            1  Setting history stream            0  for swddir
+ Domain            1  Setting history stream            0  for swddif
+ Domain            1  Setting history stream            0  for gsw
+ Input data is acceptable to use: wrfinput_d01
+ CURRENT DATE          = 2016-10-06_00:00:00
+ SIMULATION START DATE = 2016-10-06_00:00:00
+Timing for processing wrfinput file (stream 0) for domain        1:    0.17856 elapsed seconds
+Max map factor in domain 1 =  1.12. Scale the dt in the model accordingly.
+ D01: Time step                              =    150.000000      (s)
+ D01: Grid Distance                          =    27.0000000      (km)
+ D01: Grid Distance Ratio dt/dx              =    5.55555534      (s/km)
+ D01: Ratio Including Maximum Map Factor     =    6.22594166      (s/km)
+ D01: NML defined reasonable_time_step_ratio =    6.00000000
+ Climate GHG input from file from year         1765  to         2499
+ CO2   range =    277.91300000000001        579.26400000000001       ppm
+ N2O   range =    274.37200000000001        359.79800000000000       ppb
+ CH4   range =    738.98599999999999        997.31100000000004       ppb
+ CFC11 range =    0.0000000000000000        1.4000000000000000E-002  ppt
+ CFC12 range =    0.0000000000000000        2.8809999999999998       ppt
+ Normal ending of CAMtr_volume_mixing_ratio file
+ GHG annual values from CAM trace gas file
+ Year =         2016 , Julian day =          280
+ CO2   =    4.0394310853937966E-004  volume mixing ratio
+ N2O   =    3.2929743177473399E-007  volume mixing ratio
+ CH4   =    1.8585292074609755E-006  volume mixing ratio
+ CFC11 =    2.2856762378121504E-010  volume mixing ratio
+ CFC12 =    5.1278442267350730E-010  volume mixing ratio
+INPUT LandUse = "MODIFIED_IGBP_MODIS_NOAH"
+ LANDUSE TYPE = "MODIFIED_IGBP_MODIS_NOAH" FOUND          61  CATEGORIES           2  SEASONS WATER CATEGORY =           17  SNOW CATEGORY =           15
+INITIALIZE THREE Noah LSM RELATED TABLES
+Skipping over LUTYPE = USGS
+ LANDUSE TYPE = MODIFIED_IGBP_MODIS_NOAH FOUND          20  CATEGORIES
+ INPUT SOIL TEXTURE CLASSIFICATION = STAS
+ SOIL TEXTURE CLASSIFICATION = STAS FOUND          19  CATEGORIES
+Timing for Writing wrfout_d01_2016-10-06_00:00:00 for domain        1:    0.35314 elapsed seconds
+ Input data is acceptable to use: wrfbdy_d01
+Timing for processing lateral boundary for domain        1:    0.25702 elapsed seconds
+ Tile Strategy is not specified. Assuming 1D-Y
+WRF TILE   1 IS      1 IE     45 JS      1 JE     25
+WRF TILE   2 IS      1 IE     45 JS     26 JE     50
+WRF NUMBER OF TILES =   2
+ ----------------------------------------
+ W-DAMPING  BEGINS AT W-COURANT NUMBER =    1.00000000
+ ----------------------------------------
+Timing for main: time 2016-10-06_00:02:30 on domain   1:    1.29276 elapsed seconds
+Timing for main: time 2016-10-06_00:05:00 on domain   1:    0.10716 elapsed seconds
+Timing for main: time 2016-10-06_00:07:30 on domain   1:    0.10375 elapsed seconds
+Timing for main: time 2016-10-06_00:10:00 on domain   1:    0.10941 elapsed seconds
+LW RRTMGP_UDM_PHASE_PATH phase=LIQ tile_i=1:45 tile_j=1:25 domain=1 radiation_step=5 source_time_seconds=6.0000000000000000E+002 overlap=2 native_grid_path_sum_g_m2= 2.6197649908065796E+003 cf0_omitted_grid_path_sum_g_m2= 1.9072433480968367E-036 cf0_omitted_layer_count=113 cf0_grid_path_fraction= 7.2802077850106315E-040
+LW RRTMGP_UDM_PHASE_PATH phase=ICE tile_i=1:45 tile_j=1:25 domain=1 radiation_step=5 source_time_seconds=6.0000000000000000E+002 overlap=2 native_grid_path_sum_g_m2= 3.2125961022943866E+003 cf0_omitted_grid_path_sum_g_m2= 8.9440039140411223E+000 cf0_omitted_layer_count=2781 cf0_grid_path_fraction= 2.7840424470581449E-003
+LW RRTMGP_UDM_PHASE_PATH phase=RAIN tile_i=1:45 tile_j=1:25 domain=1 radiation_step=5 source_time_seconds=6.0000000000000000E+002 overlap=2 native_grid_path_sum_g_m2= 1.7156775877361360E+002 cf0_omitted_grid_path_sum_g_m2= 1.0133512725573382E+001 cf0_omitted_layer_count=64 cf0_grid_path_fraction= 5.9064201794141950E-002
+LW RRTMGP_UDM_PHASE_PATH phase=SNOW tile_i=1:45 tile_j=1:25 domain=1 radiation_step=5 source_time_seconds=6.0000000000000000E+002 overlap=2 native_grid_path_sum_g_m2= 5.4906645403432952E-001 cf0_omitted_grid_path_sum_g_m2= 4.7071635049736583E-005 cf0_omitted_layer_count=26 cf0_grid_path_fraction= 8.5730305874402420E-005
+LW RRTMGP_UDM_CF0_OMITTED phase=LIQ tile_i=1:45 tile_j=1:25 layers=113 sum_layer_grid_wp_g_m2=  1.907243E-36 max_layer_grid_wp_g_m2=  4.580394E-38
+LW RRTMGP_UDM_CF0_OMITTED phase=ICE tile_i=1:45 tile_j=1:25 layers=2781 sum_layer_grid_wp_g_m2=  8.944004E+00 max_layer_grid_wp_g_m2=  2.245784E-01
+LW RRTMGP_UDM_CF0_OMITTED phase=RAIN tile_i=1:45 tile_j=1:25 layers=64 sum_layer_grid_wp_g_m2=  1.013351E+01 max_layer_grid_wp_g_m2=  3.519595E+00
+LW RRTMGP_UDM_CF0_OMITTED phase=SNOW tile_i=1:45 tile_j=1:25 layers=26 sum_layer_grid_wp_g_m2=  4.707164E-05 max_layer_grid_wp_g_m2=  1.163126E-05
+LW RRTMGP_UDM_LUT_CLIP phase=LIQ tile_i=1:45 tile_j=1:25 low_layers=0 high_layers=1 low_clipped_layer_wp_sum_g_m2=  0.000000E+00 high_clipped_layer_wp_sum_g_m2=  2.575435E+01 eligible_layer_wp_sum_g_m2=  2.619765E+03 clip_grid_wp_fraction=  9.830786E-03 max_low_g_m2=  0.000000E+00 max_high_g_m2=  2.575435E+01
+LW RRTMGP_UDM_LUT_CLIP phase=ICE tile_i=1:45 tile_j=1:25 low_layers=0 high_layers=97 low_clipped_layer_wp_sum_g_m2=  0.000000E+00 high_clipped_layer_wp_sum_g_m2=  2.574667E+01 eligible_layer_wp_sum_g_m2=  3.203652E+03 clip_grid_wp_fraction=  8.036662E-03 max_low_g_m2=  0.000000E+00 max_high_g_m2=  3.185972E+00
+ LW RRTMGP_CU_POPULATION phase=LIQ tile_i=           1 :          45  tile_j=           1 :          25  accepted_grid_sum_g_m2=   6005.9287643432617       rejected_grid_sum_g_m2=   0.0000000000000000       rejected_grid_max_g_m2=   0.0000000000000000       omitted_cf0_count=                    0  omitted_cf0_sum_g_m2=   0.0000000000000000       omitted_cf0_max_g_m2=   0.0000000000000000       negative_source_count=                    0  negative_active_count=                    0  domain=1 radiation_step=5 source_time_seconds=6.0000000000000000E+002 overlap=2
+ LW RRTMGP_CU_POPULATION phase=ICE tile_i=           1 :          45  tile_j=           1 :          25  accepted_grid_sum_g_m2=   322.33424019816448       rejected_grid_sum_g_m2=   0.0000000000000000       rejected_grid_max_g_m2=   0.0000000000000000       omitted_cf0_count=                    0  omitted_cf0_sum_g_m2=   0.0000000000000000       omitted_cf0_max_g_m2=   0.0000000000000000       negative_source_count=                    0  negative_active_count=                    0  domain=1 radiation_step=5 source_time_seconds=6.0000000000000000E+002 overlap=2
+ LW RRTMGP_CU_LUT_CLIP phase=ICE tile_i=           1 :          45  tile_j=           1 :          25  low_layers=                    0  low_grid_path_g_m2=   0.0000000000000000       high_layers=                   93  high_grid_path_g_m2=   258.37708115580608       eligible_grid_path_g_m2=   322.33424019816448       clipped_grid_path_fraction=  0.80158124373309259       max_low_g_m2=   0.0000000000000000       max_high_g_m2=   37.788257598876953       domain=1 radiation_step=5 source_time_seconds=6.0000000000000000E+002 overlap=2
+LW RRTMGP_UDM_PHASE_PATH phase=LIQ tile_i=1:45 tile_j=26:50 domain=1 radiation_step=5 source_time_seconds=6.0000000000000000E+002 overlap=2 native_grid_path_sum_g_m2= 1.1293780684635043E+004 cf0_omitted_grid_path_sum_g_m2= 1.0133434832096100E-001 cf0_omitted_layer_count=239 cf0_grid_path_fraction= 8.9725797897620143E-006
+LW RRTMGP_UDM_PHASE_PATH phase=ICE tile_i=1:45 tile_j=26:50 domain=1 radiation_step=5 source_time_seconds=6.0000000000000000E+002 overlap=2 native_grid_path_sum_g_m2= 3.9980556923215254E+003 cf0_omitted_grid_path_sum_g_m2= 7.9635173804947188E+000 cf0_omitted_layer_count=1238 cf0_grid_path_fraction= 1.9918475362384444E-003
+LW RRTMGP_UDM_PHASE_PATH phase=RAIN tile_i=1:45 tile_j=26:50 domain=1 radiation_step=5 source_time_seconds=6.0000000000000000E+002 overlap=2 native_grid_path_sum_g_m2= 1.2229894334484416E+003 cf0_omitted_grid_path_sum_g_m2= 4.7219510466619977E+002 cf0_omitted_layer_count=733 cf0_grid_path_fraction= 3.8609908781857555E-001
+LW RRTMGP_UDM_PHASE_PATH phase=SNOW tile_i=1:45 tile_j=26:50 domain=1 radiation_step=5 source_time_seconds=6.0000000000000000E+002 overlap=2 native_grid_path_sum_g_m2= 4.4259631380166187E-001 cf0_omitted_grid_path_sum_g_m2= 3.5625642453969496E-004 cf0_omitted_layer_count=94 cf0_grid_path_fraction= 8.0492406608551666E-004
+LW RRTMGP_UDM_CF0_OMITTED phase=LIQ tile_i=1:45 tile_j=26:50 layers=239 sum_layer_grid_wp_g_m2=  1.013343E-01 max_layer_grid_wp_g_m2=  1.013343E-01
+LW RRTMGP_UDM_CF0_OMITTED phase=ICE tile_i=1:45 tile_j=26:50 layers=1238 sum_layer_grid_wp_g_m2=  7.963517E+00 max_layer_grid_wp_g_m2=  3.009612E-01
+LW RRTMGP_UDM_CF0_OMITTED phase=RAIN tile_i=1:45 tile_j=26:50 layers=733 sum_layer_grid_wp_g_m2=  4.721951E+02 max_layer_grid_wp_g_m2=  6.809131E+01
+LW RRTMGP_UDM_CF0_OMITTED phase=SNOW tile_i=1:45 tile_j=26:50 layers=94 sum_layer_grid_wp_g_m2=  3.562564E-04 max_layer_grid_wp_g_m2=  1.674343E-04
+LW RRTMGP_UDM_LUT_CLIP phase=LIQ tile_i=1:45 tile_j=26:50 low_layers=0 high_layers=7 low_clipped_layer_wp_sum_g_m2=  0.000000E+00 high_clipped_layer_wp_sum_g_m2=  2.809552E+02 eligible_layer_wp_sum_g_m2=  1.129368E+04 clip_grid_wp_fraction=  2.487720E-02 max_low_g_m2=  0.000000E+00 max_high_g_m2=  9.524746E+01
+LW RRTMGP_UDM_LUT_CLIP phase=ICE tile_i=1:45 tile_j=26:50 low_layers=0 high_layers=382 low_clipped_layer_wp_sum_g_m2=  0.000000E+00 high_clipped_layer_wp_sum_g_m2=  1.326156E+02 eligible_layer_wp_sum_g_m2=  3.990092E+03 clip_grid_wp_fraction=  3.323623E-02 max_low_g_m2=  0.000000E+00 max_high_g_m2=  1.118286E+01
+ LW RRTMGP_CU_POPULATION phase=LIQ tile_i=           1 :          45  tile_j=          26 :          50  accepted_grid_sum_g_m2=   108111.57628720999       rejected_grid_sum_g_m2=   0.0000000000000000       rejected_grid_max_g_m2=   0.0000000000000000       omitted_cf0_count=                    0  omitted_cf0_sum_g_m2=   0.0000000000000000       omitted_cf0_max_g_m2=   0.0000000000000000       negative_source_count=                    0  negative_active_count=                    0  domain=1 radiation_step=5 source_time_seconds=6.0000000000000000E+002 overlap=2
+ LW RRTMGP_CU_POPULATION phase=ICE tile_i=           1 :          45  tile_j=          26 :          50  accepted_grid_sum_g_m2=   11321.178333355128       rejected_grid_sum_g_m2=   0.0000000000000000       rejected_grid_max_g_m2=   0.0000000000000000       omitted_cf0_count=                    0  omitted_cf0_sum_g_m2=   0.0000000000000000       omitted_cf0_max_g_m2=   0.0000000000000000       negative_source_count=                    0  negative_active_count=                    0  domain=1 radiation_step=5 source_time_seconds=6.0000000000000000E+002 overlap=2
+ LW RRTMGP_CU_LUT_CLIP phase=ICE tile_i=           1 :          45  tile_j=          26 :          50  low_layers=                    0  low_grid_path_g_m2=   0.0000000000000000       high_layers=                 1213  high_grid_path_g_m2=   6585.9944897424575       eligible_grid_path_g_m2=   11321.178333355128       clipped_grid_path_fraction=  0.58174107816484166       max_low_g_m2=   0.0000000000000000       max_high_g_m2=   54.839939117431641       domain=1 radiation_step=5 source_time_seconds=6.0000000000000000E+002 overlap=2
+Timing for main: time 2016-10-06_00:12:30 on domain   1:    0.74960 elapsed seconds
+Timing for main: time 2016-10-06_00:15:00 on domain   1:    0.13040 elapsed seconds
+Timing for main: time 2016-10-06_00:17:30 on domain   1:    0.11936 elapsed seconds
+Timing for main: time 2016-10-06_00:20:00 on domain   1:    0.13057 elapsed seconds
+LW RRTMGP_UDM_PHASE_PATH phase=LIQ tile_i=1:45 tile_j=1:25 domain=1 radiation_step=9 source_time_seconds=1.2000000000000000E+003 overlap=2 native_grid_path_sum_g_m2= 2.7320854178801633E+003 cf0_omitted_grid_path_sum_g_m2= 1.9765104884149129E-001 cf0_omitted_layer_count=200 cf0_grid_path_fraction= 7.2344388483596377E-005
+LW RRTMGP_UDM_PHASE_PATH phase=ICE tile_i=1:45 tile_j=1:25 domain=1 radiation_step=9 source_time_seconds=1.2000000000000000E+003 overlap=2 native_grid_path_sum_g_m2= 5.9128509468910852E+003 cf0_omitted_grid_path_sum_g_m2= 1.2787998034518198E+001 cf0_omitted_layer_count=3074 cf0_grid_path_fraction= 2.1627465581965993E-003
+LW RRTMGP_UDM_PHASE_PATH phase=RAIN tile_i=1:45 tile_j=1:25 domain=1 radiation_step=9 source_time_seconds=1.2000000000000000E+003 overlap=2 native_grid_path_sum_g_m2= 3.5696884313292685E+002 cf0_omitted_grid_path_sum_g_m2= 2.5020885119726881E+002 cf0_omitted_layer_count=424 cf0_grid_path_fraction= 7.0092630214255669E-001
+LW RRTMGP_UDM_PHASE_PATH phase=SNOW tile_i=1:45 tile_j=1:25 domain=1 radiation_step=9 source_time_seconds=1.2000000000000000E+003 overlap=2 native_grid_path_sum_g_m2= 3.2034783115625743E+001 cf0_omitted_grid_path_sum_g_m2= 1.2389024063484010E-002 cf0_omitted_layer_count=593 cf0_grid_path_fraction= 3.8673662995523646E-004
+LW RRTMGP_UDM_CF0_OMITTED phase=LIQ tile_i=1:45 tile_j=1:25 layers=200 sum_layer_grid_wp_g_m2=  1.976510E-01 max_layer_grid_wp_g_m2=  1.397990E-01
+LW RRTMGP_UDM_CF0_OMITTED phase=ICE tile_i=1:45 tile_j=1:25 layers=3074 sum_layer_grid_wp_g_m2=  1.278800E+01 max_layer_grid_wp_g_m2=  3.754836E-01
+LW RRTMGP_UDM_CF0_OMITTED phase=RAIN tile_i=1:45 tile_j=1:25 layers=424 sum_layer_grid_wp_g_m2=  2.502089E+02 max_layer_grid_wp_g_m2=  1.038532E+01
+LW RRTMGP_UDM_CF0_OMITTED phase=SNOW tile_i=1:45 tile_j=1:25 layers=593 sum_layer_grid_wp_g_m2=  1.238902E-02 max_layer_grid_wp_g_m2=  3.067627E-03
+LW RRTMGP_UDM_LUT_CLIP phase=LIQ tile_i=1:45 tile_j=1:25 low_layers=0 high_layers=0 low_clipped_layer_wp_sum_g_m2=  0.000000E+00 high_clipped_layer_wp_sum_g_m2=  0.000000E+00 eligible_layer_wp_sum_g_m2=  2.731888E+03 clip_grid_wp_fraction=  0.000000E+00 max_low_g_m2=  0.000000E+00 max_high_g_m2=  0.000000E+00
+LW RRTMGP_UDM_LUT_CLIP phase=ICE tile_i=1:45 tile_j=1:25 low_layers=0 high_layers=114 low_clipped_layer_wp_sum_g_m2=  0.000000E+00 high_clipped_layer_wp_sum_g_m2=  1.746631E+02 eligible_layer_wp_sum_g_m2=  5.900063E+03 clip_grid_wp_fraction=  2.960359E-02 max_low_g_m2=  0.000000E+00 max_high_g_m2=  1.465853E+01
+ LW RRTMGP_CU_POPULATION phase=LIQ tile_i=           1 :          45  tile_j=           1 :          25  accepted_grid_sum_g_m2=   35939.296149380505       rejected_grid_sum_g_m2=   0.0000000000000000       rejected_grid_max_g_m2=   0.0000000000000000       omitted_cf0_count=                    0  omitted_cf0_sum_g_m2=   0.0000000000000000       omitted_cf0_max_g_m2=   0.0000000000000000       negative_source_count=                    0  negative_active_count=                    0  domain=1 radiation_step=9 source_time_seconds=1.2000000000000000E+003 overlap=2
+ LW RRTMGP_CU_POPULATION phase=ICE tile_i=           1 :          45  tile_j=           1 :          25  accepted_grid_sum_g_m2=   3120.7637835859741       rejected_grid_sum_g_m2=   0.0000000000000000       rejected_grid_max_g_m2=   0.0000000000000000       omitted_cf0_count=                    0  omitted_cf0_sum_g_m2=   0.0000000000000000       omitted_cf0_max_g_m2=   0.0000000000000000       negative_source_count=                    0  negative_active_count=                    0  domain=1 radiation_step=9 source_time_seconds=1.2000000000000000E+003 overlap=2
+ LW RRTMGP_CU_LUT_CLIP phase=ICE tile_i=           1 :          45  tile_j=           1 :          25  low_layers=                    0  low_grid_path_g_m2=   0.0000000000000000       high_layers=                  573  high_grid_path_g_m2=   2133.0954591154541       eligible_grid_path_g_m2=   3120.7637835859741       clipped_grid_path_fraction=  0.68351711537243598       max_low_g_m2=   0.0000000000000000       max_high_g_m2=   47.402957916259766       domain=1 radiation_step=9 source_time_seconds=1.2000000000000000E+003 overlap=2
+LW RRTMGP_UDM_NEGATIVE_INPUT_CORRECTED species=QC layers=1 sum_grid_correction_g_m2=  3.009717E-26 max_abs_q_kgkg=  9.167330E-32 limit_kgkg=  1.000000E-12
+LW RRTMGP_UDM_NEGATIVE_INPUT_CORRECTED species=QI layers=1 sum_grid_correction_g_m2=  1.559504E-27 max_abs_q_kgkg=  4.750110E-33 limit_kgkg=  1.000000E-12
+LW RRTMGP_UDM_PHASE_PATH phase=LIQ tile_i=1:45 tile_j=26:50 domain=1 radiation_step=9 source_time_seconds=1.2000000000000000E+003 overlap=2 native_grid_path_sum_g_m2= 7.8795373007286340E+004 cf0_omitted_grid_path_sum_g_m2= 4.8386075537846844E-018 cf0_omitted_layer_count=264 cf0_grid_path_fraction= 6.1407254882050623E-023
+LW RRTMGP_UDM_PHASE_PATH phase=ICE tile_i=1:45 tile_j=26:50 domain=1 radiation_step=9 source_time_seconds=1.2000000000000000E+003 overlap=2 native_grid_path_sum_g_m2= 1.3731237936107640E+004 cf0_omitted_grid_path_sum_g_m2= 1.3643696926951430E+001 cf0_omitted_layer_count=1599 cf0_grid_path_fraction= 9.9362468194320527E-004
+LW RRTMGP_UDM_PHASE_PATH phase=RAIN tile_i=1:45 tile_j=26:50 domain=1 radiation_step=9 source_time_seconds=1.2000000000000000E+003 overlap=2 native_grid_path_sum_g_m2= 1.2524852654887334E+004 cf0_omitted_grid_path_sum_g_m2= 4.9434633361196040E+002 cf0_omitted_layer_count=1095 cf0_grid_path_fraction= 3.9469233469909208E-002
+LW RRTMGP_UDM_PHASE_PATH phase=SNOW tile_i=1:45 tile_j=26:50 domain=1 radiation_step=9 source_time_seconds=1.2000000000000000E+003 overlap=2 native_grid_path_sum_g_m2= 1.3075908303920748E+003 cf0_omitted_grid_path_sum_g_m2= 3.4166260965780675E-002 cf0_omitted_layer_count=835 cf0_grid_path_fraction= 2.6129168369539641E-005
+LW RRTMGP_UDM_CF0_OMITTED phase=LIQ tile_i=1:45 tile_j=26:50 layers=264 sum_layer_grid_wp_g_m2=  4.838608E-18 max_layer_grid_wp_g_m2=  2.797193E-18
+LW RRTMGP_UDM_CF0_OMITTED phase=ICE tile_i=1:45 tile_j=26:50 layers=1599 sum_layer_grid_wp_g_m2=  1.364370E+01 max_layer_grid_wp_g_m2=  3.414769E-01
+LW RRTMGP_UDM_CF0_OMITTED phase=RAIN tile_i=1:45 tile_j=26:50 layers=1095 sum_layer_grid_wp_g_m2=  4.943463E+02 max_layer_grid_wp_g_m2=  8.056543E+00
+LW RRTMGP_UDM_CF0_OMITTED phase=SNOW tile_i=1:45 tile_j=26:50 layers=835 sum_layer_grid_wp_g_m2=  3.416626E-02 max_layer_grid_wp_g_m2=  3.516025E-03
+LW RRTMGP_UDM_LUT_CLIP phase=LIQ tile_i=1:45 tile_j=26:50 low_layers=0 high_layers=1 low_clipped_layer_wp_sum_g_m2=  0.000000E+00 high_clipped_layer_wp_sum_g_m2=  6.357484E-01 eligible_layer_wp_sum_g_m2=  7.879537E+04 clip_grid_wp_fraction=  8.068347E-06 max_low_g_m2=  0.000000E+00 max_high_g_m2=  6.357484E-01
+LW RRTMGP_UDM_LUT_CLIP phase=ICE tile_i=1:45 tile_j=26:50 low_layers=0 high_layers=455 low_clipped_layer_wp_sum_g_m2=  0.000000E+00 high_clipped_layer_wp_sum_g_m2=  9.055151E+02 eligible_layer_wp_sum_g_m2=  1.371759E+04 clip_grid_wp_fraction=  6.601122E-02 max_low_g_m2=  0.000000E+00 max_high_g_m2=  5.410904E+01
+ LW RRTMGP_CU_POPULATION phase=LIQ tile_i=           1 :          45  tile_j=          26 :          50  accepted_grid_sum_g_m2=   183010.85258895159       rejected_grid_sum_g_m2=   0.0000000000000000       rejected_grid_max_g_m2=   0.0000000000000000       omitted_cf0_count=                    0  omitted_cf0_sum_g_m2=   0.0000000000000000       omitted_cf0_max_g_m2=   0.0000000000000000       negative_source_count=                    0  negative_active_count=                    0  domain=1 radiation_step=9 source_time_seconds=1.2000000000000000E+003 overlap=2
+ LW RRTMGP_CU_POPULATION phase=ICE tile_i=           1 :          45  tile_j=          26 :          50  accepted_grid_sum_g_m2=   21613.988806789275       rejected_grid_sum_g_m2=   0.0000000000000000       rejected_grid_max_g_m2=   0.0000000000000000       omitted_cf0_count=                    0  omitted_cf0_sum_g_m2=   0.0000000000000000       omitted_cf0_max_g_m2=   0.0000000000000000       negative_source_count=                    0  negative_active_count=                    0  domain=1 radiation_step=9 source_time_seconds=1.2000000000000000E+003 overlap=2
+ LW RRTMGP_CU_LUT_CLIP phase=ICE tile_i=           1 :          45  tile_j=          26 :          50  low_layers=                    0  low_grid_path_g_m2=   0.0000000000000000       high_layers=                 2151  high_grid_path_g_m2=   11466.832491224166       eligible_grid_path_g_m2=   21613.988806789275       clipped_grid_path_fraction=  0.53052828858791046       max_low_g_m2=   0.0000000000000000       max_high_g_m2=   57.538963317871094       domain=1 radiation_step=9 source_time_seconds=1.2000000000000000E+003 overlap=2
+Timing for main: time 2016-10-06_00:22:30 on domain   1:    0.81570 elapsed seconds
+Timing for main: time 2016-10-06_00:25:00 on domain   1:    0.12314 elapsed seconds
+Timing for main: time 2016-10-06_00:27:30 on domain   1:    0.11323 elapsed seconds
+Timing for main: time 2016-10-06_00:30:00 on domain   1:    0.12296 elapsed seconds
+LW RRTMGP_UDM_PHASE_PATH phase=LIQ tile_i=1:45 tile_j=1:25 domain=1 radiation_step=13 source_time_seconds=1.8000000000000000E+003 overlap=2 native_grid_path_sum_g_m2= 1.9724196191253068E+003 cf0_omitted_grid_path_sum_g_m2= 1.9858426230592033E-001 cf0_omitted_layer_count=360 cf0_grid_path_fraction= 1.0068053490260095E-004
+LW RRTMGP_UDM_PHASE_PATH phase=ICE tile_i=1:45 tile_j=1:25 domain=1 radiation_step=13 source_time_seconds=1.8000000000000000E+003 overlap=2 native_grid_path_sum_g_m2= 9.4649595138579734E+003 cf0_omitted_grid_path_sum_g_m2= 1.8120532796927613E+001 cf0_omitted_layer_count=3208 cf0_grid_path_fraction= 1.9144860335003776E-003
+LW RRTMGP_UDM_PHASE_PATH phase=RAIN tile_i=1:45 tile_j=1:25 domain=1 radiation_step=13 source_time_seconds=1.8000000000000000E+003 overlap=2 native_grid_path_sum_g_m2= 3.5334935781799140E+002 cf0_omitted_grid_path_sum_g_m2= 2.4289348222824628E+002 cf0_omitted_layer_count=603 cf0_grid_path_fraction= 6.8740320833796331E-001
+LW RRTMGP_UDM_PHASE_PATH phase=SNOW tile_i=1:45 tile_j=1:25 domain=1 radiation_step=13 source_time_seconds=1.8000000000000000E+003 overlap=2 native_grid_path_sum_g_m2= 1.5126734704532370E+002 cf0_omitted_grid_path_sum_g_m2= 1.4903959526721053E-001 cf0_omitted_layer_count=1528 cf0_grid_path_fraction= 9.8527275170995311E-004
+LW RRTMGP_UDM_CF0_OMITTED phase=LIQ tile_i=1:45 tile_j=1:25 layers=360 sum_layer_grid_wp_g_m2=  1.985843E-01 max_layer_grid_wp_g_m2=  1.412745E-01
+LW RRTMGP_UDM_CF0_OMITTED phase=ICE tile_i=1:45 tile_j=1:25 layers=3208 sum_layer_grid_wp_g_m2=  1.812053E+01 max_layer_grid_wp_g_m2=  5.413215E-01
+LW RRTMGP_UDM_CF0_OMITTED phase=RAIN tile_i=1:45 tile_j=1:25 layers=603 sum_layer_grid_wp_g_m2=  2.428935E+02 max_layer_grid_wp_g_m2=  9.542980E+00
+LW RRTMGP_UDM_CF0_OMITTED phase=SNOW tile_i=1:45 tile_j=1:25 layers=1528 sum_layer_grid_wp_g_m2=  1.490396E-01 max_layer_grid_wp_g_m2=  1.448737E-02
+LW RRTMGP_UDM_LUT_CLIP phase=LIQ tile_i=1:45 tile_j=1:25 low_layers=0 high_layers=1 low_clipped_layer_wp_sum_g_m2=  0.000000E+00 high_clipped_layer_wp_sum_g_m2=  1.933646E+00 eligible_layer_wp_sum_g_m2=  1.972221E+03 clip_grid_wp_fraction=  9.804408E-04 max_low_g_m2=  0.000000E+00 max_high_g_m2=  1.933646E+00
+LW RRTMGP_UDM_LUT_CLIP phase=ICE tile_i=1:45 tile_j=1:25 low_layers=0 high_layers=135 low_clipped_layer_wp_sum_g_m2=  0.000000E+00 high_clipped_layer_wp_sum_g_m2=  6.599240E+02 eligible_layer_wp_sum_g_m2=  9.446839E+03 clip_grid_wp_fraction=  6.985659E-02 max_low_g_m2=  0.000000E+00 max_high_g_m2=  6.199058E+01
+ LW RRTMGP_CU_POPULATION phase=LIQ tile_i=           1 :          45  tile_j=           1 :          25  accepted_grid_sum_g_m2=   56791.240138150752       rejected_grid_sum_g_m2=   0.0000000000000000       rejected_grid_max_g_m2=   0.0000000000000000       omitted_cf0_count=                    0  omitted_cf0_sum_g_m2=   0.0000000000000000       omitted_cf0_max_g_m2=   0.0000000000000000       negative_source_count=                    0  negative_active_count=                    0  domain=1 radiation_step=13 source_time_seconds=1.8000000000000000E+003 overlap=2
+ LW RRTMGP_CU_POPULATION phase=ICE tile_i=           1 :          45  tile_j=           1 :          25  accepted_grid_sum_g_m2=   5703.7315452351386       rejected_grid_sum_g_m2=   0.0000000000000000       rejected_grid_max_g_m2=   0.0000000000000000       omitted_cf0_count=                    0  omitted_cf0_sum_g_m2=   0.0000000000000000       omitted_cf0_max_g_m2=   0.0000000000000000       negative_source_count=                    0  negative_active_count=                    0  domain=1 radiation_step=13 source_time_seconds=1.8000000000000000E+003 overlap=2
+ LW RRTMGP_CU_LUT_CLIP phase=ICE tile_i=           1 :          45  tile_j=           1 :          25  low_layers=                    0  low_grid_path_g_m2=   0.0000000000000000       high_layers=                  884  high_grid_path_g_m2=   3732.4784910931403       eligible_grid_path_g_m2=   5703.7315452351386       clipped_grid_path_fraction=  0.65439238531680710       max_low_g_m2=   0.0000000000000000       max_high_g_m2=   53.297882080078125       domain=1 radiation_step=13 source_time_seconds=1.8000000000000000E+003 overlap=2
+LW RRTMGP_UDM_NEGATIVE_INPUT_CORRECTED species=QC layers=4 sum_grid_correction_g_m2=  3.150120E-20 max_abs_q_kgkg=  9.564683E-26 limit_kgkg=  1.000000E-12
+LW RRTMGP_UDM_NEGATIVE_INPUT_CORRECTED species=QI layers=4 sum_grid_correction_g_m2=  1.376837E-20 max_abs_q_kgkg=  1.649485E-25 limit_kgkg=  1.000000E-12
+LW RRTMGP_UDM_NEGATIVE_INPUT_CORRECTED species=QS layers=1 sum_grid_correction_g_m2=  8.640807E-19 max_abs_q_kgkg=  3.981202E-24 limit_kgkg=  1.000000E-09
+LW RRTMGP_UDM_PHASE_PATH phase=LIQ tile_i=1:45 tile_j=26:50 domain=1 radiation_step=13 source_time_seconds=1.8000000000000000E+003 overlap=2 native_grid_path_sum_g_m2= 7.8276076329968913E+004 cf0_omitted_grid_path_sum_g_m2= 1.5847425053125017E-005 cf0_omitted_layer_count=364 cf0_grid_path_fraction= 2.0245553681460710E-010
+LW RRTMGP_UDM_PHASE_PATH phase=ICE tile_i=1:45 tile_j=26:50 domain=1 radiation_step=13 source_time_seconds=1.8000000000000000E+003 overlap=2 native_grid_path_sum_g_m2= 3.1184214178260518E+004 cf0_omitted_grid_path_sum_g_m2= 3.3273732860012757E+001 cf0_omitted_layer_count=1931 cf0_grid_path_fraction= 1.0670056545214761E-003
+LW RRTMGP_UDM_PHASE_PATH phase=RAIN tile_i=1:45 tile_j=26:50 domain=1 radiation_step=13 source_time_seconds=1.8000000000000000E+003 overlap=2 native_grid_path_sum_g_m2= 7.8554720822062009E+004 cf0_omitted_grid_path_sum_g_m2= 5.5833651052474052E+003 cf0_omitted_layer_count=1562 cf0_grid_path_fraction= 7.1076124347695765E-002
+LW RRTMGP_UDM_PHASE_PATH phase=SNOW tile_i=1:45 tile_j=26:50 domain=1 radiation_step=13 source_time_seconds=1.8000000000000000E+003 overlap=2 native_grid_path_sum_g_m2= 2.0714029240291173E+004 cf0_omitted_grid_path_sum_g_m2= 1.3517180507401798E+000 cf0_omitted_layer_count=2543 cf0_grid_path_fraction= 6.5256162143043255E-005
+LW RRTMGP_UDM_CF0_OMITTED phase=LIQ tile_i=1:45 tile_j=26:50 layers=364 sum_layer_grid_wp_g_m2=  1.584743E-05 max_layer_grid_wp_g_m2=  3.900946E-06
+LW RRTMGP_UDM_CF0_OMITTED phase=ICE tile_i=1:45 tile_j=26:50 layers=1931 sum_layer_grid_wp_g_m2=  3.327373E+01 max_layer_grid_wp_g_m2=  6.781037E-01
+LW RRTMGP_UDM_CF0_OMITTED phase=RAIN tile_i=1:45 tile_j=26:50 layers=1562 sum_layer_grid_wp_g_m2=  5.583365E+03 max_layer_grid_wp_g_m2=  1.420443E+03
+LW RRTMGP_UDM_CF0_OMITTED phase=SNOW tile_i=1:45 tile_j=26:50 layers=2543 sum_layer_grid_wp_g_m2=  1.351718E+00 max_layer_grid_wp_g_m2=  1.183801E-01
+LW RRTMGP_UDM_LUT_CLIP phase=LIQ tile_i=1:45 tile_j=26:50 low_layers=0 high_layers=17 low_clipped_layer_wp_sum_g_m2=  0.000000E+00 high_clipped_layer_wp_sum_g_m2=  2.456884E+04 eligible_layer_wp_sum_g_m2=  7.827608E+04 clip_grid_wp_fraction=  3.138742E-01 max_low_g_m2=  0.000000E+00 max_high_g_m2=  2.781957E+03
+LW RRTMGP_UDM_LUT_CLIP phase=ICE tile_i=1:45 tile_j=26:50 low_layers=0 high_layers=500 low_clipped_layer_wp_sum_g_m2=  0.000000E+00 high_clipped_layer_wp_sum_g_m2=  6.098780E+03 eligible_layer_wp_sum_g_m2=  3.115094E+04 clip_grid_wp_fraction=  1.957816E-01 max_low_g_m2=  0.000000E+00 max_high_g_m2=  2.264354E+02
+ LW RRTMGP_CU_POPULATION phase=LIQ tile_i=           1 :          45  tile_j=          26 :          50  accepted_grid_sum_g_m2=   171198.21067139506       rejected_grid_sum_g_m2=   0.0000000000000000       rejected_grid_max_g_m2=   0.0000000000000000       omitted_cf0_count=                    0  omitted_cf0_sum_g_m2=   0.0000000000000000       omitted_cf0_max_g_m2=   0.0000000000000000       negative_source_count=                    0  negative_active_count=                    0  domain=1 radiation_step=13 source_time_seconds=1.8000000000000000E+003 overlap=2
+ LW RRTMGP_CU_POPULATION phase=ICE tile_i=           1 :          45  tile_j=          26 :          50  accepted_grid_sum_g_m2=   21003.898826404620       rejected_grid_sum_g_m2=   0.0000000000000000       rejected_grid_max_g_m2=   0.0000000000000000       omitted_cf0_count=                    0  omitted_cf0_sum_g_m2=   0.0000000000000000       omitted_cf0_max_g_m2=   0.0000000000000000       negative_source_count=                    0  negative_active_count=                    0  domain=1 radiation_step=13 source_time_seconds=1.8000000000000000E+003 overlap=2
+ LW RRTMGP_CU_LUT_CLIP phase=ICE tile_i=           1 :          45  tile_j=          26 :          50  low_layers=                    0  low_grid_path_g_m2=   0.0000000000000000       high_layers=                 2130  high_grid_path_g_m2=   10798.963162272383       eligible_grid_path_g_m2=   21003.898826404620       clipped_grid_path_fraction=  0.51414088648611700       max_low_g_m2=   0.0000000000000000       max_high_g_m2=   57.578716278076172       domain=1 radiation_step=13 source_time_seconds=1.8000000000000000E+003 overlap=2
+LW RRTMGP_UDM_NEGATIVE_INPUT_CORRECTED species=QR layers=4 sum_grid_correction_g_m2=  1.234102E-26 max_abs_q_kgkg=  4.212570E-32 limit_kgkg=  1.000000E-09
+Timing for main: time 2016-10-06_00:32:30 on domain   1:    0.76695 elapsed seconds
+           4  points exceeded v_cfl = 2 in domain d01 at time 2016-10-06_00:32:30 hours
+Max   W:     42     30     27 W:    7.74  w-cfl:    2.05  dETA:    0.02
+           5  points exceeded v_cfl = 2 in domain d01 at time 2016-10-06_00:32:30 hours
+Max   W:     42     30     28 W:    7.85  w-cfl:    2.10  dETA:    0.02
+Timing for main: time 2016-10-06_00:35:00 on domain   1:    0.14469 elapsed seconds
+           7  points exceeded v_cfl = 2 in domain d01 at time 2016-10-06_00:35:00 hours
+Max   W:     42     30     28 W:    8.25  w-cfl:    2.23  dETA:    0.02
+           8  points exceeded v_cfl = 2 in domain d01 at time 2016-10-06_00:35:00 hours
+Max   W:     42     30     28 W:    8.49  w-cfl:    2.32  dETA:    0.02
+           8  points exceeded v_cfl = 2 in domain d01 at time 2016-10-06_00:35:00 hours
+Max   W:     42     30     29 W:    8.37  w-cfl:    2.36  dETA:    0.02
+Timing for main: time 2016-10-06_00:37:30 on domain   1:    0.13417 elapsed seconds
+           9  points exceeded v_cfl = 2 in domain d01 at time 2016-10-06_00:37:30 hours
+Max   W:     42     30     29 W:    8.73  w-cfl:    2.45  dETA:    0.02
+          10  points exceeded v_cfl = 2 in domain d01 at time 2016-10-06_00:37:30 hours
+Max   W:     42     30     30 W:    9.54  w-cfl:    2.48  dETA:    0.02
+          11  points exceeded v_cfl = 2 in domain d01 at time 2016-10-06_00:37:30 hours
+Max   W:     42     30     30 W:    8.12  w-cfl:    2.57  dETA:    0.02
+Timing for main: time 2016-10-06_00:40:00 on domain   1:    0.14166 elapsed seconds
+LW RRTMGP_UDM_PHASE_PATH phase=LIQ tile_i=1:45 tile_j=1:25 domain=1 radiation_step=17 source_time_seconds=2.4000000000000000E+003 overlap=2 native_grid_path_sum_g_m2= 2.0439881111389795E+003 cf0_omitted_grid_path_sum_g_m2= 1.9880971593827199E-001 cf0_omitted_layer_count=395 cf0_grid_path_fraction= 9.7265593109290872E-005
+LW RRTMGP_UDM_PHASE_PATH phase=ICE tile_i=1:45 tile_j=1:25 domain=1 radiation_step=17 source_time_seconds=2.4000000000000000E+003 overlap=2 native_grid_path_sum_g_m2= 1.3008480146810956E+004 cf0_omitted_grid_path_sum_g_m2= 2.6668579244661700E+001 cf0_omitted_layer_count=3462 cf0_grid_path_fraction= 2.0500918588248398E-003
+LW RRTMGP_UDM_PHASE_PATH phase=RAIN tile_i=1:45 tile_j=1:25 domain=1 radiation_step=17 source_time_seconds=2.4000000000000000E+003 overlap=2 native_grid_path_sum_g_m2= 3.9574786898953607E+002 cf0_omitted_grid_path_sum_g_m2= 2.3111080407509871E+002 cf0_omitted_layer_count=741 cf0_grid_path_fraction= 5.8398496159990565E-001
+LW RRTMGP_UDM_PHASE_PATH phase=SNOW tile_i=1:45 tile_j=1:25 domain=1 radiation_step=17 source_time_seconds=2.4000000000000000E+003 overlap=2 native_grid_path_sum_g_m2= 4.4471634036291664E+002 cf0_omitted_grid_path_sum_g_m2= 3.9469185293604375E-001 cf0_omitted_layer_count=3938 cf0_grid_path_fraction= 8.8751371855135854E-004
+LW RRTMGP_UDM_CF0_OMITTED phase=LIQ tile_i=1:45 tile_j=1:25 layers=395 sum_layer_grid_wp_g_m2=  1.988097E-01 max_layer_grid_wp_g_m2=  1.413284E-01
+LW RRTMGP_UDM_CF0_OMITTED phase=ICE tile_i=1:45 tile_j=1:25 layers=3462 sum_layer_grid_wp_g_m2=  2.666858E+01 max_layer_grid_wp_g_m2=  4.871054E-01
+LW RRTMGP_UDM_CF0_OMITTED phase=RAIN tile_i=1:45 tile_j=1:25 layers=741 sum_layer_grid_wp_g_m2=  2.311108E+02 max_layer_grid_wp_g_m2=  9.800753E+00
+LW RRTMGP_UDM_CF0_OMITTED phase=SNOW tile_i=1:45 tile_j=1:25 layers=3938 sum_layer_grid_wp_g_m2=  3.946919E-01 max_layer_grid_wp_g_m2=  4.763710E-02
+LW RRTMGP_UDM_LUT_CLIP phase=LIQ tile_i=1:45 tile_j=1:25 low_layers=0 high_layers=0 low_clipped_layer_wp_sum_g_m2=  0.000000E+00 high_clipped_layer_wp_sum_g_m2=  0.000000E+00 eligible_layer_wp_sum_g_m2=  2.043789E+03 clip_grid_wp_fraction=  0.000000E+00 max_low_g_m2=  0.000000E+00 max_high_g_m2=  0.000000E+00
+LW RRTMGP_UDM_LUT_CLIP phase=ICE tile_i=1:45 tile_j=1:25 low_layers=0 high_layers=132 low_clipped_layer_wp_sum_g_m2=  0.000000E+00 high_clipped_layer_wp_sum_g_m2=  9.910761E+02 eligible_layer_wp_sum_g_m2=  1.298181E+04 clip_grid_wp_fraction=  7.634344E-02 max_low_g_m2=  0.000000E+00 max_high_g_m2=  7.057085E+01
+ LW RRTMGP_CU_POPULATION phase=LIQ tile_i=           1 :          45  tile_j=           1 :          25  accepted_grid_sum_g_m2=   66033.888177245855       rejected_grid_sum_g_m2=   0.0000000000000000       rejected_grid_max_g_m2=   0.0000000000000000       omitted_cf0_count=                    0  omitted_cf0_sum_g_m2=   0.0000000000000000       omitted_cf0_max_g_m2=   0.0000000000000000       negative_source_count=                    0  negative_active_count=                    0  domain=1 radiation_step=17 source_time_seconds=2.4000000000000000E+003 overlap=2
+ LW RRTMGP_CU_POPULATION phase=ICE tile_i=           1 :          45  tile_j=           1 :          25  accepted_grid_sum_g_m2=   6517.6603549429874       rejected_grid_sum_g_m2=   0.0000000000000000       rejected_grid_max_g_m2=   0.0000000000000000       omitted_cf0_count=                    0  omitted_cf0_sum_g_m2=   0.0000000000000000       omitted_cf0_max_g_m2=   0.0000000000000000       negative_source_count=                    0  negative_active_count=                    0  domain=1 radiation_step=17 source_time_seconds=2.4000000000000000E+003 overlap=2
+ LW RRTMGP_CU_LUT_CLIP phase=ICE tile_i=           1 :          45  tile_j=           1 :          25  low_layers=                    0  low_grid_path_g_m2=   0.0000000000000000       high_layers=                 1031  high_grid_path_g_m2=   4252.8816684195499       eligible_grid_path_g_m2=   6517.6603549429874       clipped_grid_path_fraction=  0.65251661436978203       max_low_g_m2=   0.0000000000000000       max_high_g_m2=   53.282611846923828       domain=1 radiation_step=17 source_time_seconds=2.4000000000000000E+003 overlap=2
+LW RRTMGP_UDM_NEGATIVE_INPUT_CORRECTED species=QC layers=3 sum_grid_correction_g_m2=  2.742910E-20 max_abs_q_kgkg=  8.327981E-26 limit_kgkg=  1.000000E-12
+LW RRTMGP_UDM_NEGATIVE_INPUT_CORRECTED species=QI layers=2 sum_grid_correction_g_m2=  9.853787E-27 max_abs_q_kgkg=  3.001113E-32 limit_kgkg=  1.000000E-12
+-------------- FATAL CALLED ---------------
+RRTMGP: LW batch j=30 columns i=33-45 RRTMGP_FROZEN_LW_GRAUPEL: LW temperature outside table range; extrapolation forbidden species=graupel column=10 layer=38 lambda_m_inv=  2.000000E+04 temperature_k=  1.799960E+02 path_g_m2=  6.054224E-04 axis_K=[  1.800000E+02,  3.000000E+02]
+-------------------------------------------

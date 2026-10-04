@@ -344,6 +344,18 @@ if(RRTMGP_TEST_OPENMP)
   endif()
   add_test(NAME frozen_openmp_queries COMMAND test_rrtmgp_frozen_openmp "${FROZEN_TABLE}")
   add_test(NAME cpu_openmp_reentrancy COMMAND test_rrtmgp_openmp "${RRTMGP_DATA_DIR}")
+  add_executable(test_rrtmgp_omp_fatal_reason test_openmp_fatal_reason.f90 "${input_builder}")
+  set_target_properties(test_rrtmgp_omp_fatal_reason PROPERTIES
+    Fortran_MODULE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/omp-fatal-modules")
+  target_include_directories(test_rrtmgp_omp_fatal_reason PRIVATE
+    "${CMAKE_CURRENT_BINARY_DIR}/omp-fatal-modules")
+  target_link_libraries(test_rrtmgp_omp_fatal_reason PRIVATE OpenMP::OpenMP_Fortran)
+  if(CMAKE_Fortran_COMPILER_ID STREQUAL "GNU")
+    target_compile_options(test_rrtmgp_omp_fatal_reason PRIVATE -ffree-line-length-none)
+  endif()
+  add_test(NAME omp_fatal_reason_visible_from_worker COMMAND "${Python3_EXECUTABLE}"
+    "${CMAKE_CURRENT_SOURCE_DIR}/test_openmp_fatal_reason.py"
+    "$<TARGET_FILE:test_rrtmgp_omp_fatal_reason>")
   set_tests_properties(cpu_openmp_reentrancy PROPERTIES ENVIRONMENT "OMP_NUM_THREADS=1;OMP_DYNAMIC=FALSE")
 endif()
 

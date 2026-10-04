@@ -45,3 +45,7 @@ ctest --test-dir build/rrtmgp-columns --output-on-failure
 ```
 
 NetCDF C·Fortran 개발 파일과 GNU Fortran이 필요합니다. 비표준 라이브러리 위치에서는 `LD_LIBRARY_PATH`를 설정합니다. Registry/core 검증은 WRF 실행 검증과 별도로 보고합니다. CI는 PR에서 Registry/core, 연결된 컬럼 시험과 실제 WRF SCM 실행을 수행하며 로그와 결과를 보관합니다.
+
+### Fatal-message reporter patch status
+
+A follow-up patch improves the WRF fatal diagnostic emitted by the RRTMGP LW/SW wrappers. The previously recorded RA37 OMP=2 MPI abort had no explicit temperature cause; the separate pre-patch OMP=1, one-hour run exposed a graupel LW lookup at 179.996 K below the table's 180 K minimum. The component worker test passes and the adapter library compiles, but the full WRF executable has not yet been rebuilt with this reporter patch. The proposed table extension has not been generated, and neither this diagnostic patch nor the evidence below constitutes a completed 48-hour RA37 run. The preserved terminal receipts and logs are in [the fatal-diagnostic evidence bundle](validation/rrtmgp37/matthew-fatal-diagnostic/README.md).

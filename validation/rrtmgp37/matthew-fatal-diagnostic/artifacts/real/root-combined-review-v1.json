@@ -1,0 +1,56 @@
+{
+  "schema": "root-matthew-real-combined-review-v1",
+  "status": "PASS_REAL_PROCESS_AND_REVALIDATED_OUTPUTS_SCOPED",
+  "utc": "2026-10-04T09:07:43.987885+00:00",
+  "real_invocations": 1,
+  "wrf_forecast_invocations": 0,
+  "launcher_returncode": 0,
+  "original_execution_status_preserved": "FAIL_PRESERVED",
+  "validation_correction": "next-boundary sequence starts at initial time plus six hours; original validation FALSE FAIL preserved, same outputs re-read only",
+  "execution_receipt": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-matthew-real-v1/execution-receipt.json",
+    "bytes": 91850,
+    "sha256": "dfdbbdcc1bb4d1fb6197cdd79ae466dd9c37fc879d8a6eade9ab02bc5e8b9041"
+  },
+  "corrected_postflight": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-matthew-real-v1/real-postflight-v2.json",
+    "bytes": 168588,
+    "sha256": "b58be9b07bcc7ded2559822eca7a0cfe984a85314b3bbb6f23ab70b9ded49f7d"
+  },
+  "validator_delta_review": "only expected-first argument and next-sequence caller changed; no model input/source change",
+  "common_forecast_inputs": [
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-matthew-real-v1/case/wrfinput_d01",
+      "bytes": 10693939,
+      "sha256": "6adeb00d56b83ef7749502059e35d27adb5114ac0e03adb323e86aa68b946fe3"
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-matthew-real-v1/case/wrfbdy_d01",
+      "bytes": 22126192,
+      "sha256": "2298ac9b6dfec71e434648f66160f6555f89ec351398a4abf76754d1f934d29b"
+    }
+  ],
+  "boundary_coverage": "2016-10-08_00:00:00",
+  "physical_checks": {
+    "pressure_total": {
+      "max_pa": 102171.109375,
+      "min_pa": 5225.2373046875,
+      "nonpositive_count": 0
+    },
+    "dry_column_mass_coordinate": {
+      "max": 97280.640625,
+      "min": 80854.0625,
+      "nonpositive_count": 0,
+      "units": "Pa (WRF dry column mass coordinate)",
+      "variable_sum": "MU+MUB"
+    },
+    "global_attributes": {
+      "MAP_PROJ": 3,
+      "MMINLU": "MODIFIED_IGBP_MODIS_NOAH",
+      "NUM_LAND_CAT": 21,
+      "SIMULATION_START_DATE": "2016-10-06_00:00:00",
+      "START_DATE": "2016-10-06_00:00:00"
+    }
+  },
+  "scope": "REAL initialization and 48-hour boundary availability; not a WRF forecast or radiation accuracy test"
+}
