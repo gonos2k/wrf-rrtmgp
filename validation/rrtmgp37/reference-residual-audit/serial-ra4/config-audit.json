@@ -1,0 +1,11 @@
+{
+  "official_config": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pristine-wrf-v4.8/configure.wrf",
+  "official_sha256": "af7642a54474c075b27f7010db139bef116645e4ba57463be2644cf689791365",
+  "official_size": 21000,
+  "isolated_config": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-source54-pristine-serial-regression-v1/WRF/configure.wrf",
+  "isolated_sha256": "6a2fcd322bbff92ff61a141671d492eb8d74e3d56af28582306c024775b89c68",
+  "isolated_size": 21072,
+  "only_delta": "one -I$(WRF_SRC_ROOT_DIR)/external/rte_rrtmgp/build in INCLUDE_MODULES; no compiler/optimization/precision/OpenMP/link-mode option changes",
+  "diff_sha256": "cbf29bfff0c47efe6578074b4004492e0a7fb15aef4672ad660093b510e611b8",
+  "diff": "--- official/configure.wrf\n+++ isolated/configure.wrf\n@@ -225,6 +225,7 @@\n                       -I$(WRF_SRC_ROOT_DIR)/frame \\\n                       -I$(WRF_SRC_ROOT_DIR)/share \\\n                       -I$(WRF_SRC_ROOT_DIR)/phys \\\n+                      -I$(WRF_SRC_ROOT_DIR)/external/rte_rrtmgp/build \\\n                       -I$(WRF_SRC_ROOT_DIR)/wrftladj \\\n                       -I$(WRF_SRC_ROOT_DIR)/chem -I$(WRF_SRC_ROOT_DIR)/inc \\\n                       -I$(NETCDFPATH)/include \\\n"
+}

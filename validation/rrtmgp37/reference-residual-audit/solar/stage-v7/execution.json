@@ -1,0 +1,207 @@
+{
+  "calls": [
+    {
+      "arm": "control",
+      "command": [
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/official-rrtmgp-reference/source/examples/rfmip-clear-sky/rrtmgp_rfmip_sw",
+        "8",
+        "../../../official-rrtmgp-reference/data/examples/rfmip-clear-sky/inputs/multiple_input4MIPs_radiation_RFMIP_UColorado-RFMIP-1-2_none.nc",
+        "../../../official-rrtmgp-reference/data/rrtmgp-gas-sw-g224.nc",
+        "1"
+      ],
+      "current_upstream_bitwise_control": {
+        "rsd": {
+          "bitwise_value_equal": true,
+          "count_gt_1e-5": 0,
+          "dtype": "float32",
+          "max_abs": 0.0,
+          "mean_abs": 0.0,
+          "shape": [
+            18,
+            100,
+            61
+          ],
+          "within_published_atol_1e-5_rtol_0": true
+        },
+        "rsu": {
+          "bitwise_value_equal": true,
+          "count_gt_1e-5": 0,
+          "dtype": "float32",
+          "max_abs": 0.0,
+          "mean_abs": 0.0,
+          "shape": [
+            18,
+            100,
+            61
+          ],
+          "within_published_atol_1e-5_rtol_0": true
+        }
+      },
+      "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-solar-counterfactual-v1/stage-v7/control",
+      "elapsed_seconds": 2.599726915359497,
+      "fresh_write_checks": {
+        "rsd_Efx_RTE-RRTMGP-181204_rad-irf_r1i1p1f1_gn.nc": {
+          "launch_ns": 1791090004849440684,
+          "output_mtime_ns": 1791090007000000000
+        },
+        "rsu_Efx_RTE-RRTMGP-181204_rad-irf_r1i1p1f1_gn.nc": {
+          "launch_ns": 1791090004849440684,
+          "output_mtime_ns": 1791090007000000000
+        }
+      },
+      "outputs": {
+        "rsd": {
+          "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-solar-counterfactual-v1/stage-v7/control/rsd_Efx_RTE-RRTMGP-181204_rad-irf_r1i1p1f1_gn.nc",
+          "sha256": "81381b7e080540d70b122d484eff5799a1ea75e26ad82a7951898c1a1f46acc1"
+        },
+        "rsu": {
+          "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-solar-counterfactual-v1/stage-v7/control/rsu_Efx_RTE-RRTMGP-181204_rad-irf_r1i1p1f1_gn.nc",
+          "sha256": "c704f2568b8f7328d80854582043f56f6bfb84c0235f55b3ad42daa6a31f4a34"
+        }
+      },
+      "pid": 3289093,
+      "published_reference": {
+        "rsd": {
+          "bitwise_value_equal": false,
+          "count_gt_1e-5": 52972,
+          "dtype": "float32",
+          "max_abs": 0.0006103515625,
+          "mean_abs": 7.467256000567438e-05,
+          "shape": [
+            18,
+            100,
+            61
+          ],
+          "within_published_atol_1e-5_rtol_0": false
+        },
+        "rsu": {
+          "bitwise_value_equal": false,
+          "count_gt_1e-5": 51099,
+          "dtype": "float32",
+          "max_abs": 0.00018310546875,
+          "mean_abs": 2.3464895988422664e-05,
+          "shape": [
+            18,
+            100,
+            61
+          ],
+          "within_published_atol_1e-5_rtol_0": false
+        }
+      },
+      "returncode": 0,
+      "status": "PASS",
+      "stdout": " Usage: rrtmgp_rfmip_sw [block_size] [rfmip_file] [k-distribution_file] [forcing_index (1,2,3)]\n Doing          225 blocks of size            8\n Calculation uses RFMIP gases: h2o carbon_dioxide o3 nitrous_oxide carbon_monoxide methane oxygen nitrogen carbon_tetrachloride cfc11 cfc12 hcfc22 hfc143a hfc125 hfc23 hfc32 hfc134a cf4 no2 \n"
+    },
+    {
+      "arm": "old-solar-counterfactual",
+      "command": [
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/official-rrtmgp-reference/source/examples/rfmip-clear-sky/rrtmgp_rfmip_sw",
+        "8",
+        "../../../official-rrtmgp-reference/data/examples/rfmip-clear-sky/inputs/multiple_input4MIPs_radiation_RFMIP_UColorado-RFMIP-1-2_none.nc",
+        "../rrtmgp-gas-sw-g224-old-solar-counterfactual.nc",
+        "1"
+      ],
+      "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-solar-counterfactual-v1/stage-v7/old-solar-counterfactual",
+      "elapsed_seconds": 2.5927629470825195,
+      "fresh_write_checks": {
+        "rsd_Efx_RTE-RRTMGP-181204_rad-irf_r1i1p1f1_gn.nc": {
+          "launch_ns": 1791090007486074994,
+          "output_mtime_ns": 1791090010000000000
+        },
+        "rsu_Efx_RTE-RRTMGP-181204_rad-irf_r1i1p1f1_gn.nc": {
+          "launch_ns": 1791090007486074994,
+          "output_mtime_ns": 1791090010000000000
+        }
+      },
+      "outputs": {
+        "rsd": {
+          "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-solar-counterfactual-v1/stage-v7/old-solar-counterfactual/rsd_Efx_RTE-RRTMGP-181204_rad-irf_r1i1p1f1_gn.nc",
+          "sha256": "e7e6f47d33c5a23d25db105dc5c1e5c003472cca12fd087f698165b0393ee722"
+        },
+        "rsu": {
+          "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-solar-counterfactual-v1/stage-v7/old-solar-counterfactual/rsu_Efx_RTE-RRTMGP-181204_rad-irf_r1i1p1f1_gn.nc",
+          "sha256": "69d4918403337e182f5a2376644c5cbf5140fa42ac776c78acf73e2594c10c5b"
+        }
+      },
+      "pid": 3289131,
+      "published_reference": {
+        "rsd": {
+          "bitwise_value_equal": false,
+          "count_gt_1e-5": 116,
+          "dtype": "float32",
+          "max_abs": 0.0001220703125,
+          "mean_abs": 5.037623893584927e-08,
+          "shape": [
+            18,
+            100,
+            61
+          ],
+          "within_published_atol_1e-5_rtol_0": false
+        },
+        "rsu": {
+          "bitwise_value_equal": false,
+          "count_gt_1e-5": 39,
+          "dtype": "float32",
+          "max_abs": 3.0517578125e-05,
+          "mean_abs": 2.231319962520634e-08,
+          "shape": [
+            18,
+            100,
+            61
+          ],
+          "within_published_atol_1e-5_rtol_0": false
+        }
+      },
+      "published_tolerance_pass": false,
+      "returncode": 0,
+      "status": "PASS",
+      "stdout": " Usage: rrtmgp_rfmip_sw [block_size] [rfmip_file] [k-distribution_file] [forcing_index (1,2,3)]\n Doing          225 blocks of size            8\n Calculation uses RFMIP gases: h2o carbon_dioxide o3 nitrous_oxide carbon_monoxide methane oxygen nitrogen carbon_tetrachloride cfc11 cfc12 hcfc22 hfc143a hfc125 hfc23 hfc32 hfc134a cf4 no2 \n"
+    }
+  ],
+  "counterfactual_published_tolerance_pass": false,
+  "executable_and_data_pins_after": {
+    "build/official-rrtmgp-reference/data/examples/rfmip-clear-sky/inputs/multiple_input4MIPs_radiation_RFMIP_UColorado-RFMIP-1-2_none.nc": "b8dc05d7cd2e0e6354b4a6198771ddf3bc09f18d72b49f20a41e2024e2fd51f4",
+    "build/official-rrtmgp-reference/data/rrtmgp-gas-sw-g224.nc": "584f1dd41ea9fc07d4ee3754eb1dafbd46ad3161cd6fd20fa06b6922b6f0702e",
+    "build/official-rrtmgp-reference/source/examples/rfmip-clear-sky/rrtmgp_rfmip_sw": "fcebb76288fec0fceba4d720f61001f495819489a975769eec7de57ca8daa74f",
+    "build/udm37-rfmip-reference-provenance-v1/rrtmgp-data-sw-g224-2018-12-04.nc": "b9f4b15796d132880fffb49ac45c29753c1ee70a8ee3fed733899cb315c75e9b"
+  },
+  "executable_and_data_pins_before": {
+    "build/official-rrtmgp-reference/data/examples/rfmip-clear-sky/inputs/multiple_input4MIPs_radiation_RFMIP_UColorado-RFMIP-1-2_none.nc": "b8dc05d7cd2e0e6354b4a6198771ddf3bc09f18d72b49f20a41e2024e2fd51f4",
+    "build/official-rrtmgp-reference/data/rrtmgp-gas-sw-g224.nc": "584f1dd41ea9fc07d4ee3754eb1dafbd46ad3161cd6fd20fa06b6922b6f0702e",
+    "build/official-rrtmgp-reference/source/examples/rfmip-clear-sky/rrtmgp_rfmip_sw": "fcebb76288fec0fceba4d720f61001f495819489a975769eec7de57ca8daa74f",
+    "build/udm37-rfmip-reference-provenance-v1/rrtmgp-data-sw-g224-2018-12-04.nc": "b9f4b15796d132880fffb49ac45c29753c1ee70a8ee3fed733899cb315c75e9b"
+  },
+  "published_tolerance": {
+    "atol": 1e-05,
+    "rtol": 0
+  },
+  "reference_output_pins_after": {
+    "rsd_Efx_RTE-RRTMGP-181204_rad-irf_r1i1p1f1_gn.nc": {
+      "current_upstream_output_sha256": "81381b7e080540d70b122d484eff5799a1ea75e26ad82a7951898c1a1f46acc1",
+      "published_reference_sha256": "f9b0313fdf74598859a7caf27a5d1395b7fe1e445c9620a66856cc19eaf5e5b9"
+    },
+    "rsu_Efx_RTE-RRTMGP-181204_rad-irf_r1i1p1f1_gn.nc": {
+      "current_upstream_output_sha256": "c704f2568b8f7328d80854582043f56f6bfb84c0235f55b3ad42daa6a31f4a34",
+      "published_reference_sha256": "0ea3f4272d9ef088db6ffd07153587863a052e3cf8b3bf04bfb7c9288ed8b324"
+    }
+  },
+  "reference_output_pins_before": {
+    "rsd_Efx_RTE-RRTMGP-181204_rad-irf_r1i1p1f1_gn.nc": {
+      "current_upstream_output_sha256": "81381b7e080540d70b122d484eff5799a1ea75e26ad82a7951898c1a1f46acc1",
+      "published_reference_sha256": "f9b0313fdf74598859a7caf27a5d1395b7fe1e445c9620a66856cc19eaf5e5b9"
+    },
+    "rsu_Efx_RTE-RRTMGP-181204_rad-irf_r1i1p1f1_gn.nc": {
+      "current_upstream_output_sha256": "c704f2568b8f7328d80854582043f56f6bfb84c0235f55b3ad42daa6a31f4a34",
+      "published_reference_sha256": "0ea3f4272d9ef088db6ffd07153587863a052e3cf8b3bf04bfb7c9288ed8b324"
+    }
+  },
+  "runner_sha256": "9c7f0cda466ac1bca532afd9e2557cc32cd4cd9555b29e156c310ed4be19f8b9",
+  "runtime_environment": {
+    "LC_ALL": "C",
+    "LD_LIBRARY_PATH": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/root/usr/lib/x86_64-linux-gnu",
+    "TZ": "UTC"
+  },
+  "schema": "rfmip-sw-solar-counterfactual-execution-v1",
+  "stage_manifest_sha256": "f411988a959db309dd42623e4341c72d78e27ae8bebdd528a8d6306ad1ea0012",
+  "status": "COMPLETE_TWO_SW_CALLS"
+}

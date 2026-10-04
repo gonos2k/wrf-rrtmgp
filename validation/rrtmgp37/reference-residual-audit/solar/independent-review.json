@@ -1,0 +1,319 @@
+{
+  "coefficient_file_check": {
+    "all_other_variables_exactly_unchanged": true,
+    "changed_variable_data_arrays_only": [
+      "solar_source_facular",
+      "solar_source_quiet",
+      "solar_source_sunspot"
+    ],
+    "changed_variable_dimensions_dtypes_attributes_unchanged": true,
+    "counterfactual_sw_data_sha256": "02d4cd320696b9b8a3006a373855a3b4b95fdb6495251fe5f5692d6a9fddfaa4",
+    "current_loader_default_formula": "quiet + (mg_default - 0.1495954)*facular + (sb_default - 0.00066696)*sunspot",
+    "current_sw_data_sha256": "584f1dd41ea9fc07d4ee3754eb1dafbd46ad3161cd6fd20fa06b6922b6f0702e",
+    "default_formula_reproduces_old_vector_bitwise": true,
+    "dimensions": {
+      "absorber": {
+        "length": 19,
+        "unlimited": false
+      },
+      "absorber_ext": {
+        "length": 20,
+        "unlimited": false
+      },
+      "atmos_layer": {
+        "length": 2,
+        "unlimited": false
+      },
+      "bnd": {
+        "length": 14,
+        "unlimited": false
+      },
+      "contributors_lower": {
+        "length": 544,
+        "unlimited": false
+      },
+      "contributors_upper": {
+        "length": 384,
+        "unlimited": false
+      },
+      "gpt": {
+        "length": 224,
+        "unlimited": false
+      },
+      "minor_absorber": {
+        "length": 21,
+        "unlimited": false
+      },
+      "minor_absorber_intervals_lower": {
+        "length": 34,
+        "unlimited": false
+      },
+      "minor_absorber_intervals_upper": {
+        "length": 24,
+        "unlimited": false
+      },
+      "mixing_fraction": {
+        "length": 9,
+        "unlimited": false
+      },
+      "pair": {
+        "length": 2,
+        "unlimited": false
+      },
+      "pressure": {
+        "length": 59,
+        "unlimited": false
+      },
+      "pressure_interp": {
+        "length": 60,
+        "unlimited": false
+      },
+      "string_len": {
+        "length": 32,
+        "unlimited": false
+      },
+      "temperature": {
+        "length": 14,
+        "unlimited": false
+      }
+    },
+    "dimensions_and_global_attributes_unchanged": true,
+    "mg_default": 0.1567651927471161,
+    "quiet_array_matches_old_float32_solar_source_promoted_to_current_dtype": true,
+    "sb_default": 902.7125854492188,
+    "tsi_default_unchanged": true
+  },
+  "comparison": {
+    "control_vs_counterfactual": {
+      "rsd": {
+        "bitwise_values_equal": false,
+        "count_gt_1e-5": 52973,
+        "dtype": "float32",
+        "got_path": "build/udm37-rfmip-solar-counterfactual-v1/stage-v7/old-solar-counterfactual/rsd_Efx_RTE-RRTMGP-181204_rad-irf_r1i1p1f1_gn.nc",
+        "max_abs": 0.0006103515625,
+        "mean_abs": 7.472293624461023e-05,
+        "reference_path": "build/udm37-rfmip-solar-counterfactual-v1/stage-v7/control/rsd_Efx_RTE-RRTMGP-181204_rad-irf_r1i1p1f1_gn.nc",
+        "shape": [
+          18,
+          100,
+          61
+        ],
+        "within_atol_1e-5_rtol_0": false
+      },
+      "rsu": {
+        "bitwise_values_equal": false,
+        "count_gt_1e-5": 51101,
+        "dtype": "float32",
+        "got_path": "build/udm37-rfmip-solar-counterfactual-v1/stage-v7/old-solar-counterfactual/rsu_Efx_RTE-RRTMGP-181204_rad-irf_r1i1p1f1_gn.nc",
+        "max_abs": 0.00018310546875,
+        "mean_abs": 2.3460075503490012e-05,
+        "reference_path": "build/udm37-rfmip-solar-counterfactual-v1/stage-v7/control/rsu_Efx_RTE-RRTMGP-181204_rad-irf_r1i1p1f1_gn.nc",
+        "shape": [
+          18,
+          100,
+          61
+        ],
+        "within_atol_1e-5_rtol_0": false
+      }
+    },
+    "control_vs_published": {
+      "rsd": {
+        "bitwise_values_equal": false,
+        "count_gt_1e-5": 52972,
+        "dtype": "float32",
+        "got_path": "build/udm37-rfmip-solar-counterfactual-v1/stage-v7/control/rsd_Efx_RTE-RRTMGP-181204_rad-irf_r1i1p1f1_gn.nc",
+        "max_abs": 0.0006103515625,
+        "mean_abs": 7.467256000567438e-05,
+        "reference_path": "build/official-rrtmgp-reference/data/examples/rfmip-clear-sky/reference/rsd_Efx_RTE-RRTMGP-181204_rad-irf_r1i1p1f1_gn.nc",
+        "shape": [
+          18,
+          100,
+          61
+        ],
+        "within_atol_1e-5_rtol_0": false
+      },
+      "rsu": {
+        "bitwise_values_equal": false,
+        "count_gt_1e-5": 51099,
+        "dtype": "float32",
+        "got_path": "build/udm37-rfmip-solar-counterfactual-v1/stage-v7/control/rsu_Efx_RTE-RRTMGP-181204_rad-irf_r1i1p1f1_gn.nc",
+        "max_abs": 0.00018310546875,
+        "mean_abs": 2.3464895988422664e-05,
+        "reference_path": "build/official-rrtmgp-reference/data/examples/rfmip-clear-sky/reference/rsu_Efx_RTE-RRTMGP-181204_rad-irf_r1i1p1f1_gn.nc",
+        "shape": [
+          18,
+          100,
+          61
+        ],
+        "within_atol_1e-5_rtol_0": false
+      }
+    },
+    "counterfactual_vs_published": {
+      "rsd": {
+        "bitwise_values_equal": false,
+        "count_gt_1e-5": 116,
+        "dtype": "float32",
+        "got_path": "build/udm37-rfmip-solar-counterfactual-v1/stage-v7/old-solar-counterfactual/rsd_Efx_RTE-RRTMGP-181204_rad-irf_r1i1p1f1_gn.nc",
+        "max_abs": 0.0001220703125,
+        "mean_abs": 5.037623893584927e-08,
+        "reference_path": "build/official-rrtmgp-reference/data/examples/rfmip-clear-sky/reference/rsd_Efx_RTE-RRTMGP-181204_rad-irf_r1i1p1f1_gn.nc",
+        "shape": [
+          18,
+          100,
+          61
+        ],
+        "within_atol_1e-5_rtol_0": false
+      },
+      "rsu": {
+        "bitwise_values_equal": false,
+        "count_gt_1e-5": 39,
+        "dtype": "float32",
+        "got_path": "build/udm37-rfmip-solar-counterfactual-v1/stage-v7/old-solar-counterfactual/rsu_Efx_RTE-RRTMGP-181204_rad-irf_r1i1p1f1_gn.nc",
+        "max_abs": 3.0517578125e-05,
+        "mean_abs": 2.231319962520634e-08,
+        "reference_path": "build/official-rrtmgp-reference/data/examples/rfmip-clear-sky/reference/rsu_Efx_RTE-RRTMGP-181204_rad-irf_r1i1p1f1_gn.nc",
+        "shape": [
+          18,
+          100,
+          61
+        ],
+        "within_atol_1e-5_rtol_0": false
+      }
+    },
+    "error_reductions": {
+      "rsd": {
+        "control_mean_abs": 7.467256000567438e-05,
+        "count_gt_1e-5_reduction": 52856,
+        "counterfactual_mean_abs": 5.037623893584927e-08,
+        "max_abs_error_reduction_fraction": 0.8,
+        "mean_abs_error_reduction_fraction": 0.9993253714760546
+      },
+      "rsu": {
+        "control_mean_abs": 2.3464895988422664e-05,
+        "count_gt_1e-5_reduction": 51060,
+        "counterfactual_mean_abs": 2.231319962520634e-08,
+        "max_abs_error_reduction_fraction": 0.8333333333333334,
+        "mean_abs_error_reduction_fraction": 0.999049081673483
+      }
+    },
+    "published_reference_threshold": {
+      "atol": 1e-05,
+      "rtol": 0
+    },
+    "remaining_failures": {
+      "rsd": 116,
+      "rsu": 39
+    },
+    "strict_threshold_status": {
+      "rsd": false,
+      "rsu": false
+    }
+  },
+  "grid_and_physics_scope": {
+    "forcing_index": 1,
+    "note": "4 process invocations count both stage-v6 calls (the second exited before calculation) and both stage-v7 calls.",
+    "phase": "shortwave only",
+    "resolution": "RFMIP 1800-profile clear-sky SW g224",
+    "sw_executable_process_invocations": 4,
+    "wrf_invocations": 0
+  },
+  "limits": [
+    "Counterfactual dramatically reduces mean SW residuals but still fails the unchanged 1e-5 absolute threshold: 116 rsd points and 39 rsu points remain above tolerance.",
+    "No attribution to the exact historical source_id implementation is justified; exact generating code SHA and data snapshot remain unknown.",
+    "Result applies only to this clear-sky RFMIP g224 SW test, forcing index 1; it is not a WRF, all-sky, or general radiation validation."
+  ],
+  "provenance_limit": "This experiment does not establish the exact historical RTE-RRTMGP-181204 source SHA or prove the counterfactual is the historical executable/data set.",
+  "review_status": "PASS_REVIEW_OF_RUN_INTEGRITY_AND_METRICS; STRICT_PUBLISHED_TOLERANCE_FAILS",
+  "schema": "rfmip-sw-solar-counterfactual-independent-review-v1",
+  "scope": "read-only terminal review; no build or model execution by reviewer",
+  "v6_failure": {
+    "control_current_upstream_arrays_bitwise": true,
+    "counterfactual_outputs_unchanged_templates": true,
+    "counterfactual_returncode": 1,
+    "counterfactual_status": "NONZERO_EXIT",
+    "execution": {
+      "counterfactual_coefficient_sha256": "02d4cd320696b9b8a3006a373855a3b4b95fdb6495251fe5f5692d6a9fddfaa4",
+      "execution_receipt_sha256": "a4d75605a851f8e648fa1c0e58e6b6829ac8e68fcfe7d58627a0702c60e1579a",
+      "execution_status": "FAIL_PRESERVED",
+      "label": "stage-v6",
+      "stage_manifest_sha256": "40c141739b5e954c1e96654d80f2893d78b921d0c99082e93782a0452295d37a"
+    },
+    "failure_reason_from_stdout": "Fortran CHARACTER(LEN=132) coefficient-path argument truncated the absolute path; loader failed to open that path before computing fluxes."
+  },
+  "v7_run_integrity": {
+    "actual_output_sha256_matches_execution_receipt": {
+      "control:rsd": "81381b7e080540d70b122d484eff5799a1ea75e26ad82a7951898c1a1f46acc1",
+      "control:rsu": "c704f2568b8f7328d80854582043f56f6bfb84c0235f55b3ad42daa6a31f4a34",
+      "old-solar-counterfactual:rsd": "e7e6f47d33c5a23d25db105dc5c1e5c003472cca12fd087f698165b0393ee722",
+      "old-solar-counterfactual:rsu": "69d4918403337e182f5a2376644c5cbf5140fa42ac776c78acf73e2594c10c5b"
+    },
+    "calls": [
+      {
+        "arm": "control",
+        "command": [
+          "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/official-rrtmgp-reference/source/examples/rfmip-clear-sky/rrtmgp_rfmip_sw",
+          "8",
+          "../../../official-rrtmgp-reference/data/examples/rfmip-clear-sky/inputs/multiple_input4MIPs_radiation_RFMIP_UColorado-RFMIP-1-2_none.nc",
+          "../../../official-rrtmgp-reference/data/rrtmgp-gas-sw-g224.nc",
+          "1"
+        ],
+        "elapsed_seconds": 2.599726915359497,
+        "returncode": 0,
+        "status": "PASS"
+      },
+      {
+        "arm": "old-solar-counterfactual",
+        "command": [
+          "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/official-rrtmgp-reference/source/examples/rfmip-clear-sky/rrtmgp_rfmip_sw",
+          "8",
+          "../../../official-rrtmgp-reference/data/examples/rfmip-clear-sky/inputs/multiple_input4MIPs_radiation_RFMIP_UColorado-RFMIP-1-2_none.nc",
+          "../rrtmgp-gas-sw-g224-old-solar-counterfactual.nc",
+          "1"
+        ],
+        "elapsed_seconds": 2.5927629470825195,
+        "returncode": 0,
+        "status": "PASS"
+      }
+    ],
+    "current_control_vs_pinned_upstream_arrays_bitwise": {
+      "rsd": {
+        "bitwise_values_equal": true,
+        "count_gt_1e-5": 0,
+        "dtype": "float32",
+        "got_path": "build/udm37-rfmip-solar-counterfactual-v1/stage-v7/control/rsd_Efx_RTE-RRTMGP-181204_rad-irf_r1i1p1f1_gn.nc",
+        "max_abs": 0.0,
+        "mean_abs": 0.0,
+        "reference_path": "build/official-rrtmgp-reference/run-upstream/rsd_Efx_RTE-RRTMGP-181204_rad-irf_r1i1p1f1_gn.nc",
+        "shape": [
+          18,
+          100,
+          61
+        ],
+        "within_atol_1e-5_rtol_0": true
+      },
+      "rsu": {
+        "bitwise_values_equal": true,
+        "count_gt_1e-5": 0,
+        "dtype": "float32",
+        "got_path": "build/udm37-rfmip-solar-counterfactual-v1/stage-v7/control/rsu_Efx_RTE-RRTMGP-181204_rad-irf_r1i1p1f1_gn.nc",
+        "max_abs": 0.0,
+        "mean_abs": 0.0,
+        "reference_path": "build/official-rrtmgp-reference/run-upstream/rsu_Efx_RTE-RRTMGP-181204_rad-irf_r1i1p1f1_gn.nc",
+        "shape": [
+          18,
+          100,
+          61
+        ],
+        "within_atol_1e-5_rtol_0": true
+      }
+    },
+    "execution": {
+      "counterfactual_coefficient_sha256": "02d4cd320696b9b8a3006a373855a3b4b95fdb6495251fe5f5692d6a9fddfaa4",
+      "execution_receipt_sha256": "e4a52a17d4d4c6bc4d4eb3a468925a2e67a9a866cd94d6855d61af78201ee45d",
+      "execution_status": "COMPLETE_TWO_SW_CALLS",
+      "label": "stage-v7",
+      "stage_manifest_sha256": "f411988a959db309dd42623e4341c72d78e27ae8bebdd528a8d6306ad1ea0012"
+    },
+    "external_input_executable_reference_pins_before_after_equal": true
+  }
+}
