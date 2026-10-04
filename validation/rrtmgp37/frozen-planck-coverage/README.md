@@ -16,4 +16,4 @@ This commit adds an optional table and test. It does not replace the old table, 
 
 Three numerical coefficient generations, one local copied incremental WRF build, and one expected-fatal OMP2 reproduction are recorded here. Coefficient generation and lookup fixtures are distinct from WRF forecast invocations. The old complete RA4 result is reused; no RA4 forecast was repeated for these changes. Compiled libraries/executables and binary WRF outputs are referenced by hashes rather than committed.
 
-Large JSON reports are archived losslessly with gzip. `compressed-json-manifest.json` records both compressed and uncompressed hashes; use `gzip -dc FILE.json.gz` to inspect them. Original uncompressed run files remain in the workspace.
+Large JSON reports and the raw compiler log are archived losslessly with gzip. `compressed-json-manifest.json` records both compressed and uncompressed hashes; use `gzip -dc FILE.gz` to inspect them. Original uncompressed run files remain in the workspace.
