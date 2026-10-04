@@ -36,3 +36,11 @@ vectorization enabled and caller LTO enabled. Full model results, the preserved
 failure receipts, and any completed longer comparison should be interpreted
 from their own pinned run records rather than inferred from this source-level
 change.
+
+The initial independent CI client linked upstream-built objects to the vendored
+library and failed in the LW loader. A local exact-source counterfactual
+confirmed a type/vtable module mismatch. The corrected validation runners
+compile the same pinned clients separately against each library's own modules.
+Fresh RFMIP (four flux arrays) and synthetic all-sky (13 SW/12 LW arrays) then
+matched bitwise. The original CI failure remains recorded; this harness repair
+does not change WRF production sources or claim published-reference accuracy.

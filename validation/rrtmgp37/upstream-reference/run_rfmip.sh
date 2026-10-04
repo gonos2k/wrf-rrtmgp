@@ -42,12 +42,34 @@ cmake -S "$repo_root/WRF/external/rte_rrtmgp" -B "$work_dir/vendor" \
   -DCMAKE_Fortran_COMPILER=gfortran -DCMAKE_Fortran_FLAGS='-O0 -ffree-line-length-none' \
   -DNETCDF_INCLUDE_DIR="$netcdf_include" -DNETCDF_LIBRARY_DIR="$netcdf_lib"
 cmake --build "$work_dir/vendor" --target wrf_rrtmgp --parallel 2
-for phase in lw sw; do
-  gfortran -O0 -ffree-line-length-none -o "$work_dir/vendor-rfmip-$phase" \
-    "$example_dir/rrtmgp_rfmip_$phase.o" "$example_dir/mo_simple_netcdf.o" \
-    "$example_dir/mo_rfmip_io.o" "$example_dir/mo_load_coefficients.o" \
-    "$work_dir/vendor/libwrf_rrtmgp.a" -L"$netcdf_lib" -Wl,-rpath,"$netcdf_lib" -lnetcdff -lnetcdf
-done
+vendor_client="$work_dir/vendor-rfmip-client"
+mkdir -p "$vendor_client/src" "$vendor_client/obj" "$vendor_client/mod"
+# The upstream make-built .mod/.o files are not ABI compatible with the
+# vendored modules. Compile fresh copies of the same pinned client sources in
+# an isolated tree with only the vendor module directory on the module path.
+cp "$source_dir/examples/mo_simple_netcdf.F90" \
+  "$source_dir/examples/mo_load_coefficients.F90" \
+  "$source_dir/examples/rfmip-clear-sky/mo_rfmip_io.F90" \
+  "$source_dir/examples/rfmip-clear-sky/rrtmgp_rfmip_lw.F90" \
+  "$source_dir/examples/rfmip-clear-sky/rrtmgp_rfmip_sw.F90" \
+  "$vendor_client/src/"
+vendor_modules="$work_dir/vendor/modules"
+(
+  cd "$vendor_client/obj"
+  flags=(-O0 -ffree-line-length-none -I"$netcdf_include" -I"$vendor_modules" -I"$vendor_client/mod" -J"$vendor_client/mod")
+  gfortran "${flags[@]}" -c "$vendor_client/src/mo_simple_netcdf.F90" -o mo_simple_netcdf.o
+  gfortran "${flags[@]}" -c "$vendor_client/src/mo_rfmip_io.F90" -o mo_rfmip_io.o
+  gfortran "${flags[@]}" -c "$vendor_client/src/mo_load_coefficients.F90" -o mo_load_coefficients.o
+  gfortran "${flags[@]}" -c "$vendor_client/src/rrtmgp_rfmip_lw.F90" -o rrtmgp_rfmip_lw.o
+  gfortran "${flags[@]}" -c "$vendor_client/src/rrtmgp_rfmip_sw.F90" -o rrtmgp_rfmip_sw.o
+  for phase in lw sw; do
+    gfortran -O0 -ffree-line-length-none -o "$work_dir/vendor-rfmip-$phase" \
+      "rrtmgp_rfmip_$phase.o" mo_simple_netcdf.o mo_rfmip_io.o mo_load_coefficients.o \
+      "$work_dir/vendor/libwrf_rrtmgp.a" -L"$netcdf_lib" -Wl,-rpath,"$netcdf_lib" -lnetcdff -lnetcdf
+  done
+)
+sha256sum "$vendor_client/src/"*.F90 "$vendor_client/obj/"*.o "$vendor_client/mod/"*.mod \
+  "$work_dir/vendor-rfmip-lw" "$work_dir/vendor-rfmip-sw" > "$work_dir/VENDOR_CLIENT_SHA256SUMS.txt"
 input="$data_dir/examples/rfmip-clear-sky/inputs/multiple_input4MIPs_radiation_RFMIP_UColorado-RFMIP-1-2_none.nc"
 printf '%s  %s\n' \
   b8dc05d7cd2e0e6354b4a6198771ddf3bc09f18d72b49f20a41e2024e2fd51f4 "$input" \
@@ -68,8 +90,42 @@ for engine in upstream vendor; do
   fi
   (
     cd "$run_dir"
-    "$lw" 8 "$input" "$data_dir/rrtmgp-gas-lw-g128.nc" 1 1
-    "$sw" 8 "$input" "$data_dir/rrtmgp-gas-sw-g112.nc" 1
+    lw_started_ns="$(date +%s%N)"
+    "$lw" 8 "$input" "$data_dir/rrtmgp-gas-lw-g128.nc" 1 1 > lw.log 2>&1
+    if grep -Eiq 'STOP|ERROR|FATAL|segmentation fault|floating-point exception|k-distribution file isn.t LW' lw.log; then
+      cat lw.log >&2; echo "$engine LW driver did not complete cleanly" >&2; exit 1
+    fi
+    grep -q 'Calculation uses RFMIP gases:' lw.log
+    python3 - "$lw_started_ns" <<'PY'
+from pathlib import Path
+import sys
+started = int(sys.argv[1])
+for name in ('rld_Efx_RTE-RRTMGP-181204_rad-irf_r1i1p1f1_gn.nc',
+             'rlu_Efx_RTE-RRTMGP-181204_rad-irf_r1i1p1f1_gn.nc'):
+    p = Path(name)
+    if not p.is_file() or p.stat().st_size == 0:
+        raise SystemExit(f'LW output was not written: {name}')
+    if p.stat().st_mtime_ns <= started:
+        raise SystemExit(f'LW output timestamp shows no fresh write: {name}')
+PY
+    sw_started_ns="$(date +%s%N)"
+    "$sw" 8 "$input" "$data_dir/rrtmgp-gas-sw-g112.nc" 1 > sw.log 2>&1
+    if grep -Eiq 'STOP|ERROR|FATAL|segmentation fault|floating-point exception|k-distribution file isn.t LW' sw.log; then
+      cat sw.log >&2; echo "$engine SW driver did not complete cleanly" >&2; exit 1
+    fi
+    grep -q 'Calculation uses RFMIP gases:' sw.log
+    python3 - "$sw_started_ns" <<'PY'
+from pathlib import Path
+import sys
+started = int(sys.argv[1])
+for name in ('rsd_Efx_RTE-RRTMGP-181204_rad-irf_r1i1p1f1_gn.nc',
+             'rsu_Efx_RTE-RRTMGP-181204_rad-irf_r1i1p1f1_gn.nc'):
+    p = Path(name)
+    if not p.is_file() or p.stat().st_size == 0:
+        raise SystemExit(f'SW output was not written: {name}')
+    if p.stat().st_mtime_ns <= started:
+        raise SystemExit(f'SW output timestamp shows no fresh write: {name}')
+PY
   )
 done
 gfortran --version > "$work_dir/compiler.txt"
@@ -79,7 +135,7 @@ git -C "$repo_root" rev-parse HEAD > "$work_dir/vendor-checkout-head.txt"
   rg --files WRF/external/rte_rrtmgp -g '*.F90' -g 'CMakeLists.txt' -g 'SOURCE.json' \
     | sort | xargs sha256sum
 ) > "$work_dir/VENDOR_SOURCE_SHA256SUMS.txt"
-sha256sum "$work_dir/vendor/libwrf_rrtmgp.a" "$work_dir"/vendor-rfmip-* \
+sha256sum "$work_dir/vendor/libwrf_rrtmgp.a" "$work_dir/vendor-rfmip-lw" "$work_dir/vendor-rfmip-sw" \
   "$example_dir/rrtmgp_rfmip_lw" "$example_dir/rrtmgp_rfmip_sw" \
   > "$work_dir/BINARY_SHA256SUMS.txt"
 python3 "$repo_root/validation/rrtmgp37/upstream-reference/compare_rfmip.py" \

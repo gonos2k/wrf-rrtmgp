@@ -33,6 +33,26 @@
       "workspace_relative_path": "build/udm37-column-batching-scalar-math-regression-v1/runs-v1/read-only-review-terminal-v1.json",
       "sha256": "2865a161045eff28a144b835e7e8164d4555f4d117e34936d8df5cf4fd47cbde",
       "size_bytes": 13863
+    },
+    {
+      "workspace_relative_path": "build/udm37-column-batching-scalar-math-plan-v1/pr52-ci-initial-failure-v1.json",
+      "sha256": "73948d82fa9b475caee20865a1fd55fdd60eac6c256ee8e74953adbb3062edd5",
+      "size_bytes": 3670
+    },
+    {
+      "workspace_relative_path": "build/pr52-ci-independent-failure-v6/independent-rfmip/backend-comparison.json",
+      "sha256": "22e8cb451f198ccd25c8fac0da65a18083cbf5ca107e0835ba69ef9b544a4050",
+      "size_bytes": 5067
+    },
+    {
+      "workspace_relative_path": "build/pr52-ci-independent-failure-v6/allsky-v5/allsky-backend-comparison.json",
+      "sha256": "620bc5c81127700f0ce29cfe194212e50a99fa47d19ca80e58ee7e1b101e91d6",
+      "size_bytes": 24818
+    },
+    {
+      "workspace_relative_path": "build/pr52-ci-independent-failure-v6/root-peer-review-v1.json",
+      "sha256": "00e2ad4c52bb5b20d2a632fbb4dd2b341e3524b6113fa8807867f00867180e26",
+      "size_bytes": 1956
     }
   ],
   "forty_minute_arms": {
@@ -143,5 +163,16 @@
     "These are numerical regression checks, not independent forecast accuracy validation."
   ],
   "registration_metadata": "Initial PR-worktree check detected stale external source hashes. Corrected metadata only and registration check passed; frozen compiled source and original failure receipt remain unchanged.",
-  "independent_terminal_review": "PASS: 8460 exact variable comparisons over 30 file comparisons; this count includes multiple reference pairs, not 30 distinct output files."
+  "independent_terminal_review": "PASS: 8460 exact variable comparisons over 30 file comparisons; this count includes multiple reference pairs, not 30 distinct output files.",
+  "independent_backend_recheck": {
+    "status": "PASS_SCOPED_LOCAL_CURRENT_SCRIPTS",
+    "rfmip_flux_arrays_bitwise": 4,
+    "allsky_sw_arrays_bitwise": 13,
+    "allsky_lw_arrays_bitwise": 12,
+    "cause": "Upstream-compiled Fortran clients used incompatible vendor type/vtable modules; same pinned client sources rebuilt against each own library modules restored equality.",
+    "production_source_changes_for_harness_repair": 0,
+    "original_ci_failure_preserved": true,
+    "published_reference_accuracy": "NOT_RUN",
+    "remote_ci": "pending after harness update"
+  }
 }
