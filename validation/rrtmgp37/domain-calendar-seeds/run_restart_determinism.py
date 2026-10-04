@@ -96,6 +96,8 @@ def nml_for(source: str, start: datetime, end: datetime, restart: bool) -> str:
                  "run_days", "run_hours", "run_minutes", "run_seconds", "restart", "restart_interval",
                  "history_interval", "history_interval_s"):
         source = replace(source, name, values[name], "time_control")
+    if restart:
+        source = replace(source, "write_hist_at_0h_rst", ".true.", "time_control")
     for name in ("ra_lw_physics", "ra_sw_physics"):
         source = replace(source, name, "37", "physics")
     source = replace(source, "mp_physics", "27", "physics")

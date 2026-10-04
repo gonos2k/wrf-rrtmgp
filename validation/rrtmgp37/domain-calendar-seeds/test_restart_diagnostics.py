@@ -1,5 +1,6 @@
 """Failure controls for the direct, unmerged restart-boundary checker."""
 import importlib.util
+from datetime import datetime, timedelta
 from pathlib import Path
 import tempfile
 import unittest
@@ -51,6 +52,26 @@ class RestartDiagnostics(unittest.TestCase):
     def test_wrong_timestamp_rejected(self):
         with self.assertRaisesRegex(RuntimeError, "first timestamp"):
             PROBE.require_restart_diagnostics(self.donor, self.history, "2000-01-01_00:01:00")
+
+    def test_next_timestep_cannot_substitute_for_restart_boundary(self):
+        with netCDF4.Dataset(self.history, "r+") as ds:
+            ds["Times"][0] = np.frombuffer("2000-01-01_00:00:10".encode(), dtype="S1")
+        with self.assertRaisesRegex(RuntimeError, "restarted history: first timestamp"):
+            self.check()
+
+    def test_restart_namelist_requests_initial_history_record(self):
+        start = datetime(2000, 1, 1)
+        for setting in ("", " write_hist_at_0h_rst = .false.,\n"):
+            with self.subTest(setting=setting):
+                source = "&time_control\n" + setting + "/\n&physics\n/\n"
+                result = PROBE.nml_for(source, start, start + timedelta(seconds=60), True)
+                self.assertEqual(result.count("write_hist_at_0h_rst"), 1)
+                self.assertIn("write_hist_at_0h_rst = .true.,", result)
+                self.assertEqual(PROBE.nml_for(source, start, start + timedelta(seconds=60), False)
+                                 .count("write_hist_at_0h_rst"), source.count("write_hist_at_0h_rst"))
+                if setting:
+                    self.assertIn("write_hist_at_0h_rst = .false.,",
+                                  PROBE.nml_for(source, start, start + timedelta(seconds=60), False))
 
     def test_missing_checkpoint_diagnostic_rejected(self):
         with netCDF4.Dataset(self.donor, "r+") as ds:
