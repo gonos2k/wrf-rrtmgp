@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Compile the actual UDM builder and verify its optional negative-q contract."""
+"""Compile the actual UDM builder and verify its input-diagnostic contracts."""
 from __future__ import annotations
 
 import os
@@ -174,6 +174,12 @@ def main() -> int:
                   r"RRTMGP_INPUT_CF_NOT_FINITE layer=2", root)
         run_fatal(executable, "cf_range_context", context +
                   r"RRTMGP_INPUT_CF_OUT_OF_RANGE layer=2", root)
+        for name, label in (("re_cloud", "RE_CLOUD"), ("re_ice", "RE_ICE"),
+                            ("re_snow", "RE_SNOW")):
+            run_fatal(executable, f"{name}_nan_context", context +
+                      rf"RRTMGP_INPUT_UDM_{label}_NOT_FINITE layer=2", root)
+            run_fatal(executable, f"{name}_inf_no_context",
+                      rf"RRTMGP_INPUT_UDM_{label}_NOT_FINITE at column=1 layer=2", root)
         run_fatal(executable, "dp_nan_no_context",
                   r"RRTMGP_INPUT_DP_HPA_NOT_FINITE at column=1 layer=2", root)
         check_raw_record_validation()

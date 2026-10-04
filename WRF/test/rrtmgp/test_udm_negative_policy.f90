@@ -118,6 +118,30 @@ PROGRAM test_udm_negative_policy
     cf(2)=1.25
     CALL build_with_limits()
     ERROR STOP 'out-of-range cf was accepted'
+  CASE('re_cloud_nan_context')
+    re_cloud(2)=ieee_value(0.,ieee_quiet_nan)
+    CALL build_with_limits()
+    ERROR STOP 'nonfinite cloud radius was accepted'
+  CASE('re_ice_nan_context')
+    re_ice(2)=ieee_value(0.,ieee_quiet_nan)
+    CALL build_with_limits()
+    ERROR STOP 'nonfinite ice radius was accepted'
+  CASE('re_snow_nan_context')
+    re_snow(2)=ieee_value(0.,ieee_quiet_nan)
+    CALL build_with_limits()
+    ERROR STOP 'nonfinite snow radius was accepted'
+  CASE('re_cloud_inf_no_context')
+    re_cloud(2)=ieee_value(0.,ieee_positive_inf)
+    CALL build_without_context()
+    ERROR STOP 'infinite cloud radius was accepted'
+  CASE('re_ice_inf_no_context')
+    re_ice(2)=ieee_value(0.,ieee_positive_inf)
+    CALL build_without_context()
+    ERROR STOP 'infinite ice radius was accepted'
+  CASE('re_snow_inf_no_context')
+    re_snow(2)=ieee_value(0.,ieee_positive_inf)
+    CALL build_without_context()
+    ERROR STOP 'infinite snow radius was accepted'
   CASE('dp_nan_no_context')
     dp(2)=ieee_value(0.,ieee_quiet_nan)
     CALL rrtmgp_build_udm_inputs(dp,cf,qc,qi,qr,qs,qg,qh,re_cloud,re_ice,re_snow,gravity, &
@@ -167,6 +191,11 @@ CONTAINS
          grid,incloud,radius,reason,errmsg,column_context='column=d01:i=19:j=8', &
          omitted_grid_path=omitted,layer_reason=layers)
   END SUBROUTINE build_default
+
+  SUBROUTINE build_without_context()
+    CALL rrtmgp_build_udm_inputs(dp,cf,qc,qi,qr,qs,qg,qh,re_cloud,re_ice,re_snow,gravity, &
+         grid,incloud,radius,reason,errmsg)
+  END SUBROUTINE build_without_context
 
   SUBROUTINE build_with_bad_limits()
     CALL rrtmgp_build_udm_inputs(dp,cf,qc,qr,qi,qs,qg,qh,re_cloud,re_ice,re_snow,gravity, &
