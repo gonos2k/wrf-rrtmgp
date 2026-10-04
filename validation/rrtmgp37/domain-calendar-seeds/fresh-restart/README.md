@@ -36,9 +36,12 @@ execution receipts rather than copied into this repository.
 The preceding PR54 CI run failed its serial-SCM restart check because the first
 restarted record began at 19:01:10 instead of 19:01:00. A validation-only fix
 was committed at `dbf03a9171b86cfc2f825a5ff2d7189ba572d4fa`; it enables the
-initial restarted history write and tests that control. The CI rerun is pending,
-so this report does not claim a green CI result. The CI failure and fix receipts
-are pinned in `summary.json`.
+initial restarted history write and tests that control. The updated-head CI run `37173604961` passed all eight jobs. Its serial-SCM
+restart cases (control, mixed, and calendar boundary) match at 13 timestamps
+across 211 history variables each; restart-boundary checks cover 204 variables.
+All nine CI restart invocations succeeded. These SCM runs are separate from
+the seven local real-data runs above. The earlier CI failure, fix, and new
+success receipts are pinned in `summary.json`.
 The follow-up changes only the validation runner and its tests; the compiled
 Fortran sources used by the local campaign are unchanged.
 

@@ -127,7 +127,122 @@
       "change": "sets write_hist_at_0h_rst=.true. for restart phases and adds validation controls; no Fortran source or model change",
       "offline_tests": "8 PASS"
     },
-    "rerun_status": "PENDING",
-    "note": "Do not interpret the failed prior CI run as a current green result."
+    "rerun_status": "SUCCESS",
+    "note": "The updated-head CI passed all eight jobs; the failed prior run remains preserved. CI SCM invocations are separate from the seven local real-data model invocations.",
+    "updated_run": {
+      "run_id": 37173604961,
+      "head_sha": "dbf03a9171b86cfc2f825a5ff2d7189ba572d4fa",
+      "base_sha": "5ac698041d8075c2dae0a6d264922f45610ca1c2",
+      "receipt": {
+        "path": "build/pr54-ci-readback/ci-receipt-db-f03a917.json",
+        "sha256": "a1a9b5debb70286ccee3d2a31bfd588ac90725aac63b07cfcd987fc7d1c75c4e",
+        "size_bytes": 42310
+      },
+      "all_jobs": [
+        {
+          "conclusion": "success",
+          "name": "registration"
+        },
+        {
+          "conclusion": "success",
+          "name": "standalone-columns"
+        },
+        {
+          "conclusion": "success",
+          "name": "component-validation (registry)"
+        },
+        {
+          "conclusion": "success",
+          "name": "serial-scm"
+        },
+        {
+          "conclusion": "success",
+          "name": "component-validation (core)"
+        },
+        {
+          "conclusion": "success",
+          "name": "independent-rfmip"
+        },
+        {
+          "conclusion": "success",
+          "name": "frozen-optics-reference"
+        },
+        {
+          "conclusion": "success",
+          "name": "cpu-openmp"
+        }
+      ],
+      "serial_restart": {
+        "all_invocations_success": true,
+        "calendar_boundary_included": true,
+        "calendar_note": "The boundary case retimes Times, restart/history namelists, and available date metadata; it checks restart reproducibility only, not meteorological validity at the retimed date.",
+        "cases": {
+          "calendar": {
+            "checkpoint_differing_variables": [],
+            "checkpoint_time": "2000-01-01_00:00:00",
+            "checkpoint_variable_count": 204,
+            "common_time_count": 13,
+            "common_variable_count": 211,
+            "first_time": "1999-12-31_23:59:00",
+            "last_time": "2000-01-01_00:01:00",
+            "summary": {
+              "bitwise_equal_variables_all_times": 211,
+              "differing_variable_time_pairs": 0,
+              "exact_match_times": 13,
+              "matching_time_count": 13
+            }
+          },
+          "control": {
+            "checkpoint_differing_variables": [],
+            "checkpoint_time": "1999-10-22_19:01:00",
+            "checkpoint_variable_count": 204,
+            "common_time_count": 13,
+            "common_variable_count": 211,
+            "first_time": "1999-10-22_19:00:00",
+            "last_time": "1999-10-22_19:02:00",
+            "summary": {
+              "bitwise_equal_variables_all_times": 211,
+              "differing_variable_time_pairs": 0,
+              "exact_match_times": 13,
+              "matching_time_count": 13
+            }
+          },
+          "mixed": {
+            "checkpoint_differing_variables": [],
+            "checkpoint_time": "1999-10-22_19:01:00",
+            "checkpoint_variable_count": 204,
+            "common_time_count": 13,
+            "common_variable_count": 211,
+            "first_time": "1999-10-22_19:00:00",
+            "last_time": "1999-10-22_19:02:00",
+            "summary": {
+              "bitwise_equal_variables_all_times": 211,
+              "differing_variable_time_pairs": 0,
+              "exact_match_times": 13,
+              "matching_time_count": 13
+            }
+          }
+        },
+        "invocations": 9,
+        "physics_options": {
+          "mp_physics": 27,
+          "ra_lw_physics": 37,
+          "ra_sw_physics": 37,
+          "use_mp_re": 1
+        },
+        "radiation_timestep_minutes": 0.5,
+        "requested_run_seconds": 120,
+        "scope": "serial actual WRF UDM/RRTMGP 37/37 SCM restart determinism; not a long forecast claim",
+        "status": "PASS",
+        "timestep_seconds": 10
+      },
+      "artifact": {
+        "artifact_id": 11292528815,
+        "download_size_bytes": 84486210,
+        "name": "validation-serial-scm-37173604961",
+        "sha256": "7bf838c5ab504ef646f7309105a119cd12d7f2dc89d07af5aa659869837879be",
+        "tar_path": "build/pr54-ci-readback/serial-scm-artifact-updated/validation-serial-scm.tar.gz"
+      }
+    }
   }
 }
