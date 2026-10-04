@@ -1,0 +1,54 @@
+{
+  "schema": "cf0-precip-audit-patch-proposal-status-v2",
+  "status": "PATCH_PROPOSED_NOT_COMPILED_OR_EXECUTED",
+  "proposal_source_sha256": "939981fd290b1a7f2ba6ece9d124a18b7a4d6be2135ebe10a789fcdb64f07df9",
+  "diff_sha256": "bcc32badaf21f712b4fa3755ddebe231ae8bdaa06247da3764d722b43d5afaa1",
+  "validator_sha256": "cf044b21b3b0ff5966388203e6d7c4a04e7558ad979a0d1df9f05bb07f7d3d9e",
+  "candidate_set_validator_sha256": "6f6fa27841e56375e0d68e68a9f9fbe36b64b673e1562084f591adf2de2b1017",
+  "invocation_gate_sha256": "ab95e3c02c4bc0d864dadb4d6b124851b84d6d7117f7e369224bb8d56916d5b0",
+  "original_source_sha256": "9ab10866c9b398c059310c74b3824b7273c42f180dd48a1643229d76714464cd",
+  "original_four_call_baseline": {
+    "status": "PASS_SCOPED_FOUR_ORIGINAL_DOUBLE_BASELINES",
+    "receipt": "build/udm37-cf0-precip-original-baseline-v1/runs-v2/execution.json",
+    "sha256": "6838371c26a859461f7bd9f1ba704930add1aaa65190e3c208f859224f807f73",
+    "rehashed_pin_count": 137,
+    "mismatches": 0
+  },
+  "candidate_sidecar_validation": {
+    "status": "PASS_OFFLINE_ONLY",
+    "receipt": "build/udm37-cf0-precip-audit-patch-proposal-v2/candidate-validation-v2.json",
+    "sha256": "00fa1176ed526ff592cc55d3309f230d9a963201e07f74f4f5572824497ef316",
+    "sidecars": 8,
+    "solver_invocations": 0
+  },
+  "offline_tests": {
+    "sidecar_validator_passed": 17,
+    "sidecar_validator_failed": 0,
+    "invocation_gate": "PASS",
+    "solver_invocations": 0
+  },
+  "future_calls_after_separate_root_approval_only": {
+    "all_zero_controls": 4,
+    "positive_cases": 4,
+    "compile_authorized": false,
+    "solver_authorized": false
+  },
+  "not_done": [
+    "Fortran syntax/build check",
+    "patched standalone link",
+    "four bitwise zero-sidecar solver controls",
+    "four positive sensitivity solver calls"
+  ],
+  "raw_path_counts": {
+    "rain_strict_positive_layers": 16,
+    "rain_sum_g_m2": 202.42863702774048,
+    "snow_strict_positive_layers": 13,
+    "snow_sum_g_m2": 5.622483488478097,
+    "snow_gt_1e-8_layers": 6,
+    "snow_positive_trace_layers_below_or_equal_1e-8": 7
+  },
+  "manifest_sha256": "b6803434fa02080ae9e9346ebbad516771ac3bf583f303bdb34e32a78c6581a7",
+  "readme_sha256": "4203499c34d94941150033e34705e391d666922448c48264731401639a2fb6e2",
+  "captured_layer_audit_sha256": "e24a425ec4f633f0cb9976ad40ef05ee28d5bba7cea2c0aeb703ee095489e42c",
+  "design_erratum_sha256": "d8c8fd394b1508c0149875c3790af084be278e56fe0ffb560fd7e934641cc4bd"
+}

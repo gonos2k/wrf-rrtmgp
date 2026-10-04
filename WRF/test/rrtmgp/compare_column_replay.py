@@ -21,16 +21,20 @@ OPTICAL_SECTIONS = {
     "HAIL_TAU_EXT", "HAIL_TAU_SCA", "HAIL_TAU_SCA_G", "FROZEN_TAU", "FROZEN_SSA", "FROZEN_G",
     "NATIVE_CLOUD_TAU", "CU_CLOUD_TAU", "NATIVE_CLOUD_SSA", "NATIVE_CLOUD_G",
     "CU_CLOUD_SSA", "CU_CLOUD_G", "CU_RL_USED", "CU_DI_USED",
+    "AUDIT_EXTRA_PRECIP_TAU", "AUDIT_EXTRA_PRECIP_TAU_RAW",
+    "AUDIT_EXTRA_PRECIP_SSA", "AUDIT_EXTRA_PRECIP_G",
 }
 MASK_SECTION = "MASK"
 FLOAT_OUTPUT_SECTIONS = {
     "UP", "DN", "HR", "UPC", "DNC", "HRC", "DIRECT", "DIFFUSE", "DIRECTC",
     "VISDIR", "VISDIF", "NIRDIR", "NIRDIF",
     "DIRECT_PREDELTA", "DIRECTC_PREDELTA", "VISDIR_PREDELTA", "NIRDIR_PREDELTA",
+    "AUDIT_DIRECT_PREDELTA",
 }
 INTERFACE_SECTIONS = {"UP", "DN", "UPC", "DNC", "DIRECT", "DIFFUSE", "DIRECTC",
                       "VISDIR", "VISDIF", "NIRDIR", "NIRDIF", "DIRECT_PREDELTA",
-                      "DIRECTC_PREDELTA", "VISDIR_PREDELTA", "NIRDIR_PREDELTA"}
+                      "DIRECTC_PREDELTA", "VISDIR_PREDELTA", "NIRDIR_PREDELTA",
+                      "AUDIT_DIRECT_PREDELTA"}
 LAYER_SCALAR_SECTIONS = {"RL_USED", "DI_USED", "DS_USED", "HR", "HRC"}
 RADIATION_SECTIONS = (OPTICAL_SECTIONS | FLOAT_OUTPUT_SECTIONS | INTERFACE_SECTIONS |
                       LAYER_SCALAR_SECTIONS | {MASK_SECTION})
@@ -150,6 +154,14 @@ def read_result(path: Path) -> dict:
         raise ReplayFormatError(f"{path}: V9 direct-diagnostic result sections must be all present or all absent")
     if predelta and phase != "SW":
         raise ReplayFormatError(f"{path}: pre-delta direct-diagnostic sections are SW-only")
+    audit_names = {"AUDIT_EXTRA_PRECIP_TAU", "AUDIT_EXTRA_PRECIP_TAU_RAW",
+                   "AUDIT_EXTRA_PRECIP_SSA", "AUDIT_EXTRA_PRECIP_G", "AUDIT_DIRECT_PREDELTA"}
+    audit = audit_names & sections.keys()
+    expected_audit = {"AUDIT_EXTRA_PRECIP_TAU"} if phase == "LW" else audit_names
+    if audit and audit != expected_audit:
+        raise ReplayFormatError(f"{path}: incomplete or wrong-phase CF0 audit sections")
+    if audit and phase == "SW" and not predelta:
+        raise ReplayFormatError(f"{path}: SW CF0 audit requires baseline pre-delta diagnostics")
     cu_lw = {"NATIVE_CLOUD_TAU", "CU_CLOUD_TAU"} & sections.keys()
     cu_sw_names = {"NATIVE_CLOUD_TAU", "CU_CLOUD_TAU", "NATIVE_CLOUD_SSA", "NATIVE_CLOUD_G",
                    "CU_CLOUD_SSA", "CU_CLOUD_G"}

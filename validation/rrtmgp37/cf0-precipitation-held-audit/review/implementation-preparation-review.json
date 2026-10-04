@@ -1,0 +1,34 @@
+{
+  "findings": {
+    "blocking_findings": [],
+    "observations": [
+      "Optional sixth sidecar argument is initialized/read before use; parser restricts sidecars to V8/V9 and one column.",
+      "Fortran reader checks phase/dimensions/native prefix/species/units/finite nonnegative paths/exact occurrence and CF==0, and pads engine extension with zero.",
+      "SW extra optics use the already delta-scaled precipitation result and are added after sampled baseline cloud optics; LW extra tau is added before frozen optics and RTE.",
+      "Absent or all-zero sidecar bypasses extra optics allocation, helper calls, increments, and audit output records by construction; this is a source-level preservation contract, not measured bitwise proof.",
+      "The preparation documentation correctly limits Python tests to sidecar contract parsing and leaves compiled Fortran reader error paths untested; eight solver calls remain NOT_EXECUTED and current-source build/runtime remains NOT_BUILT."
+    ],
+    "status": "PASS_SCOPED_STATIC_SOURCE_REVIEW"
+  },
+  "historical_proposal_source_sha256": "939981fd290b1a7f2ba6ece9d124a18b7a4d6be2135ebe10a789fcdb64f07df9",
+  "preparation_receipt_sha256": "1dfec8334cb6619ab5ad52809c5a2886e22e446b51e06faf68ed28c38d262366",
+  "review_scope": "read-only source-preparation review; no compile, model, or solver calls",
+  "reviewed_file_sha256": {
+    "WRF/doc/rrtmgp/CF0_PRECIPITATION_AUDIT.md": "b135f6987dc9637b1a93ab60427ff8def66c57fb09db33acd176b50858bfa1d1",
+    "WRF/phys/module_ra_rrtmgp.F": "719504c7221aef989c52090a347c6f6c5fb3f85828cf4e741309790a8314a886",
+    "WRF/test/rrtmgp/cf0_precip_sidecar.py": "796928afd8f78a7e6b42f0eb84f3f6a4a688a74d8492b5dd08cb354cb12fffa6",
+    "WRF/test/rrtmgp/reference_column.f90": "93214328388a1a7e242be1a298d34ae61e76f81d201ed9cf039e7f07ac580e6f",
+    "WRF/test/rrtmgp/test_cf0_precip_sidecar.py": "af7da4f6422dc6ba2995f858c7eb468d3b7b5ad4d267fe9467184ad60abda7be",
+    "config/registration37.json": "7c80afdf153b2376f106901c531aa9f68df96a964c5135a7eb428ed3f839f504"
+  },
+  "source_reference_column_sha256": "93214328388a1a7e242be1a298d34ae61e76f81d201ed9cf039e7f07ac580e6f",
+  "verification": {
+    "command": "python3 -B WRF/test/rrtmgp/test_cf0_precip_sidecar.py",
+    "compiled_fortran_reader_exercised": false,
+    "note": "Python -I was not used because isolated mode intentionally omits the script directory from imports; CMake invokes Python with -B.",
+    "result": "PASS",
+    "solver_calls": 0,
+    "tests_passed": 23
+  },
+  "worktree": "build/udm37-cf0-precip-audit-pr-work"
+}

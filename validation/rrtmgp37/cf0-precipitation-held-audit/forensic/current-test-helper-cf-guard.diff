@@ -1,0 +1,20 @@
+--- historical-frozen-v2/reference_column.proposed.f90
++++ PR64-test-helper/reference_column.f90
+@@ -1170,6 +1170,8 @@
+     IF(native_n<1.OR.native_n>nlay) ERROR STOP 'audit sidecar native layer count out of bounds'
+     IF(expected_native_n>0.AND.native_n/=expected_native_n) ERROR STOP 'audit sidecar native depth differs from replay input'
+     IF(species<1.OR.species>2) ERROR STOP 'audit sidecar species must be rain or snow'
++    IF(ANY(.NOT.ieee_is_finite(cloud_fraction)).OR.ANY(cloud_fraction<0._wp).OR.ANY(cloud_fraction>1._wp)) &
++      ERROR STOP 'audit cloud fraction must be finite and in [0,1]'
+     IF(.NOT.ieee_is_finite(occurrence)) ERROR STOP 'audit occurrence must be finite'
+     IF(occurrence/=1._wp) ERROR STOP 'audit sidecar occurrence must equal one'
+     ALLOCATE(rain(ncol,nlay),snow(ncol,nlay)); rain=0._wp; snow=0._wp
+@@ -1182,7 +1184,7 @@
+     IF(species==2.AND.ANY(rain/=0._wp)) ERROR STOP 'snow audit must have zero rain path'
+     IF(ANY(.NOT.ieee_is_finite(rain)).OR.ANY(.NOT.ieee_is_finite(snow))) ERROR STOP 'audit paths must be finite'
+     IF(ANY(rain<0._wp).OR.ANY(snow<0._wp)) ERROR STOP 'audit paths must be nonnegative'
+-    IF(ANY((rain>0._wp.OR.snow>0._wp).AND.cloud_fraction>0._wp)) &
++    IF(ANY((rain>0._wp.OR.snow>0._wp).AND.cloud_fraction/=0._wp)) &
+       ERROR STOP 'audit path is only permitted where CF is zero'
+     READ(unit,'(A)',IOSTAT=stat) line
+     IF(stat==0) ERROR STOP 'audit sidecar has trailing records'

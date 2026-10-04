@@ -1,0 +1,902 @@
+{
+  "analysis_document": {
+    "path": "build/udm37-cf0-precip-campaign-analysis-v1/README.md",
+    "sha256": "644931552ee9d9aac31b3339eec86c0bacd9581f54317fca5b9305586789161e"
+  },
+  "analysis_script": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-precip-campaign-analysis-v1/analyze.py",
+    "sha256": "0bb1cc2b553839e78cdbf90584c18ab95911233a61f4b17abc9ef9da15d0c89a",
+    "size_bytes": 8441
+  },
+  "build_receipt": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-precip-patch-build-v1/build-receipt.json",
+    "sha256": "3d95204395a6004d62088f4c2fd7a038e1b8dd55ac8652b9a03fbf07fe033c48",
+    "size_bytes": 44255
+  },
+  "campaign_solver_invocations": 8,
+  "campaign_status": "PASS_ALL_EIGHT_CALLS",
+  "execution_receipt": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-precip-campaign-v5/execution.json",
+    "sha256": "9285816e2d1203b7c6ce0642cca91356f9e0ca3b42fa30761c87efc36064fdf5",
+    "size_bytes": 40858
+  },
+  "interpretation_limits": [
+    "The four zero-sidecar result files are byte-identical to the saved exact double-precision sidecar-free oracle for the corresponding held column and phase. This is a narrow compatibility control, not a forecast result.",
+    "Positive calls are prescribed conditional-occurrence-one radiative sensitivities using selected held columns and saved precipitation path proxies; they do not establish cloud occurrence, independent optical truth, or forecast error.",
+    "Reported optical-depth sums are unweighted sums over layer-band elements, not a vertically integrated physical path or a mass budget.",
+    "Flux and heating deltas are differences versus each exact saved double-reference output. Surface is interface 1 and TOA the final interface. These changes are not accuracy judgments.",
+    "The experiment isolates rain/snow precipitation additions at held cloud-fraction-zero points. It does not establish a domain-wide correction, all hydrometeor species, or operational benefit."
+  ],
+  "invocation_plan": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-precip-campaign-v5/invocation-plan.json",
+    "sha256": "01286b3702a47359e1d55c6259169b99356dc9490f2b2cc5e18d2476a80d76bc",
+    "size_bytes": 216256
+  },
+  "original_baseline_receipt": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-precip-original-baseline-v1/runs-v2/execution.json",
+    "sha256": "6838371c26a859461f7bd9f1ba704930add1aaa65190e3c208f859224f807f73",
+    "size_bytes": 139875
+  },
+  "positive_cases": [
+    {
+      "added_audit_optics": {
+        "AUDIT_EXTRA_PRECIP_TAU": {
+          "extension_layer_band_sum": 0.0,
+          "max": 0.007548107986450195,
+          "min": 0.0,
+          "native_layer_band_sum": 1.0688232035064698,
+          "nonzero_elements": 256,
+          "shape": [
+            1,
+            47,
+            16
+          ],
+          "sum_across_all_layers_and_bands": 1.0688232035064698
+        }
+      },
+      "baseline_result": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-precip-original-baseline-v1/runs-v2/rain-lw/reference.result",
+        "sha256": "dc3e249e4e3f84018e3ebf5fb2dd84434f6dc18b01fefbc3f08f709d8892e572",
+        "size_bytes": 755645
+      },
+      "boundary_flux_and_heating_deltas": {
+        "max_abs_extension_heating_delta": 0.008007013907807226,
+        "max_abs_native_heating_delta": 2.271922475926875,
+        "surface_down_flux_delta": 0.14968156128657029,
+        "toa_up_flux_delta": -1.23755711671771
+      },
+      "case_id": "rain-lw.positive",
+      "engine_layers": 47,
+      "input_capture": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-stratified-captures-v3/cf0_rain_low_cloud_proxy/replay-recovery-v2/capture/lw.raw",
+        "sha256": "53f666aed40d48e6752712a8f81fa213dc916cc7aef1e082a899dd6215a94bf3",
+        "size_bytes": 70988
+      },
+      "mutated_section_differences": {
+        "DN": {
+          "changed_elements": 17,
+          "max_abs": 4.407119425263488,
+          "max_abs_index_zero_based": [
+            0,
+            7,
+            0
+          ],
+          "new_at_max": 352.6061856110949,
+          "old_at_max": 348.1990661858314
+        },
+        "HR": {
+          "changed_elements": 47,
+          "max_abs": 2.271922475926875,
+          "max_abs_index_zero_based": [
+            0,
+            3,
+            0
+          ],
+          "new_at_max": -22.220270653412108,
+          "old_at_max": -24.492193129338983
+        },
+        "TOTAL_TAU": {
+          "changed_elements": 2048,
+          "max_abs": 0.00754810799844563,
+          "max_abs_index_zero_based": [
+            0,
+            12,
+            10
+          ],
+          "new_at_max": 144769.23952549096,
+          "old_at_max": 144769.23197738297
+        },
+        "UP": {
+          "changed_elements": 48,
+          "max_abs": 1.3891689038921982,
+          "max_abs_index_zero_based": [
+            0,
+            17,
+            0
+          ],
+          "new_at_max": 325.2555509945173,
+          "old_at_max": 326.6447198984095
+        }
+      },
+      "native_layers": 39,
+      "output": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-precip-campaign-v5/cases/rain-lw.positive/result.out",
+        "sha256": "58e1b4aec9314109505d5590a62cdcceefd5edde05d01b45a5d932b561741959",
+        "size_bytes": 775228
+      },
+      "output_validation": "POSITIVE_OUTPUT_CONTRACT_PASS",
+      "phase": "LW",
+      "positive_native_layers": 16,
+      "sidecar": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-precip-audit-patch-proposal-v2/sidecars-v4/rain-lw.positive.sidecar",
+        "sha256": "7e54c64e6c1225a0f09977dabc5afe941bc0bfff0d524561c97e57367d61cd7c",
+        "size_bytes": 1969
+      },
+      "species": "rain",
+      "unchanged_original_sections": [
+        "GAS_COL_DRY",
+        "GAS_TAU",
+        "GAS_TAU_RAW",
+        "PRECIP_TAU",
+        "CLOUD_TAU",
+        "GRAUPEL_TAU_ABS",
+        "HAIL_TAU_ABS",
+        "FROZEN_TAU",
+        "PREPARED_TAU",
+        "MASK",
+        "RL_USED",
+        "DI_USED",
+        "DS_USED",
+        "UPC",
+        "DNC",
+        "HRC"
+      ]
+    },
+    {
+      "added_audit_optics": {
+        "AUDIT_DIRECT_PREDELTA": {
+          "max": 110.45463833799842,
+          "min": 1.1560530179160575e-07,
+          "nonzero_elements": 41,
+          "shape": [
+            1,
+            41,
+            1
+          ],
+          "sum_across_all_layers_and_bands": 2188.8502157878766
+        },
+        "AUDIT_EXTRA_PRECIP_G": {
+          "max": 0.4949494998146838,
+          "min": 0.0,
+          "nonzero_elements": 224,
+          "shape": [
+            1,
+            40,
+            14
+          ],
+          "sum_across_all_layers_and_bands": 107.76710680056507
+        },
+        "AUDIT_EXTRA_PRECIP_SSA": {
+          "max": 0.9999954609774775,
+          "min": 0.0,
+          "nonzero_elements": 224,
+          "shape": [
+            1,
+            40,
+            14
+          ],
+          "sum_across_all_layers_and_bands": 108.07508564582939
+        },
+        "AUDIT_EXTRA_PRECIP_TAU": {
+          "extension_layer_band_sum": 0.0,
+          "max": 0.03623074006822486,
+          "min": 0.0,
+          "native_layer_band_sum": 3.0193303662783224,
+          "nonzero_elements": 224,
+          "shape": [
+            1,
+            40,
+            14
+          ],
+          "sum_across_all_layers_and_bands": 3.019330366278322
+        },
+        "AUDIT_EXTRA_PRECIP_TAU_RAW": {
+          "max": 0.0702202773284912,
+          "min": 0.0,
+          "nonzero_elements": 224,
+          "shape": [
+            1,
+            40,
+            14
+          ],
+          "sum_across_all_layers_and_bands": 8.700382819452285
+        }
+      },
+      "baseline_result": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-precip-original-baseline-v1/runs-v2/rain-sw/reference.result",
+        "sha256": "af076b0f30d2af022ea70faa139ac6f579be8fd34ffb9833b8357e7d90215511",
+        "size_bytes": 1100495
+      },
+      "boundary_flux_and_heating_deltas": {
+        "max_abs_extension_heating_delta": 0.0035276686076830543,
+        "max_abs_native_heating_delta": 0.3418474501585794,
+        "surface_down_flux_delta": -1.5385145816909649,
+        "surface_net_down_flux_delta": -1.2524692966378854,
+        "toa_up_flux_delta": -1.9463441889254298
+      },
+      "case_id": "rain-sw.positive",
+      "engine_layers": 40,
+      "input_capture": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-stratified-captures-v3/cf0_rain_low_cloud_proxy/replay-recovery-v3/capture/sw.raw",
+        "sha256": "39fb118958619b34f7e0101bcd669d5e6c45398437321e5d40599d2a2c22de09",
+        "size_bytes": 66881
+      },
+      "mutated_section_differences": {
+        "DIFFUSE": {
+          "changed_elements": 40,
+          "max_abs": 11.564894606765495,
+          "max_abs_index_zero_based": [
+            0,
+            5,
+            0
+          ],
+          "new_at_max": 29.30459662618043,
+          "old_at_max": 17.739702019414935
+        },
+        "DIRECT": {
+          "changed_elements": 17,
+          "max_abs": 26.91479621568862,
+          "max_abs_index_zero_based": [
+            0,
+            7,
+            0
+          ],
+          "new_at_max": 8.267080159702342,
+          "old_at_max": 35.181876375390964
+        },
+        "DN": {
+          "changed_elements": 40,
+          "max_abs": 15.552869427840449,
+          "max_abs_index_zero_based": [
+            0,
+            8,
+            0
+          ],
+          "new_at_max": 38.38895978101328,
+          "old_at_max": 53.941829208853726
+        },
+        "HR": {
+          "changed_elements": 40,
+          "max_abs": 0.3418474501585794,
+          "max_abs_index_zero_based": [
+            0,
+            14,
+            0
+          ],
+          "new_at_max": 0.7661745589650715,
+          "old_at_max": 0.42432710880649205
+        },
+        "NIRDIF": {
+          "changed_elements": 40,
+          "max_abs": 7.242788288205588,
+          "max_abs_index_zero_based": [
+            0,
+            4,
+            0
+          ],
+          "new_at_max": 9.731807675625221,
+          "old_at_max": 2.489019387419633
+        },
+        "NIRDIR": {
+          "changed_elements": 17,
+          "max_abs": 18.64114494128053,
+          "max_abs_index_zero_based": [
+            0,
+            8,
+            0
+          ],
+          "new_at_max": 6.136232452428176,
+          "old_at_max": 24.777377393708708
+        },
+        "TOTAL_G": {
+          "changed_elements": 1792,
+          "max_abs": 0.4948663240313157,
+          "max_abs_index_zero_based": [
+            0,
+            10,
+            8
+          ],
+          "new_at_max": 0.4948663240313157,
+          "old_at_max": 0.0
+        },
+        "TOTAL_SSA": {
+          "changed_elements": 1792,
+          "max_abs": 0.5227894387007208,
+          "max_abs_index_zero_based": [
+            0,
+            1,
+            71
+          ],
+          "new_at_max": 0.6683445880258745,
+          "old_at_max": 0.14555514932515373
+        },
+        "TOTAL_TAU": {
+          "changed_elements": 1792,
+          "max_abs": 0.036230740068276646,
+          "max_abs_index_zero_based": [
+            0,
+            12,
+            7
+          ],
+          "new_at_max": 1967.2512349146598,
+          "old_at_max": 1967.2150041745915
+        },
+        "UP": {
+          "changed_elements": 41,
+          "max_abs": 13.020606913364713,
+          "max_abs_index_zero_based": [
+            0,
+            4,
+            0
+          ],
+          "new_at_max": 19.66194562219145,
+          "old_at_max": 32.68255253555616
+        },
+        "VISDIF": {
+          "changed_elements": 40,
+          "max_abs": 4.355562275953504,
+          "max_abs_index_zero_based": [
+            0,
+            7,
+            0
+          ],
+          "new_at_max": 19.418388469714635,
+          "old_at_max": 15.062826193761131
+        },
+        "VISDIR": {
+          "changed_elements": 17,
+          "max_abs": 8.309834534011017,
+          "max_abs_index_zero_based": [
+            0,
+            6,
+            0
+          ],
+          "new_at_max": 2.7094455111492985,
+          "old_at_max": 11.019280045160317
+        }
+      },
+      "native_layers": 39,
+      "output": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-precip-campaign-v5/cases/rain-sw.positive/result.out",
+        "sha256": "8b611e76a9395e3b22f797cddef1b30454dcb8ef439197b0272cd9474a41e533",
+        "size_bytes": 1159956
+      },
+      "output_validation": "POSITIVE_OUTPUT_CONTRACT_PASS",
+      "phase": "SW",
+      "positive_native_layers": 16,
+      "sidecar": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-precip-audit-patch-proposal-v2/sidecars-v4/rain-sw.positive.sidecar",
+        "sha256": "c047196689ad0c98608e94c929a1b73c77fe56cec22d4ee1bf10a1a207bafdef",
+        "size_bytes": 1969
+      },
+      "species": "rain",
+      "unchanged_original_sections": [
+        "GAS_COL_DRY",
+        "GAS_TAU",
+        "GAS_SSA",
+        "GAS_G",
+        "PRECIP_TAU",
+        "PRECIP_SSA",
+        "PRECIP_G",
+        "CLOUD_TAU",
+        "CLOUD_SSA",
+        "CLOUD_G",
+        "GRAUPEL_TAU_EXT",
+        "GRAUPEL_TAU_SCA",
+        "GRAUPEL_TAU_SCA_G",
+        "HAIL_TAU_EXT",
+        "HAIL_TAU_SCA",
+        "HAIL_TAU_SCA_G",
+        "FROZEN_TAU",
+        "FROZEN_SSA",
+        "FROZEN_G",
+        "PREPARED_TAU",
+        "PREPARED_SSA",
+        "PREPARED_G",
+        "MASK",
+        "RL_USED",
+        "DI_USED",
+        "DS_USED",
+        "UPC",
+        "DNC",
+        "HRC",
+        "DIRECTC",
+        "DIRECT_PREDELTA",
+        "DIRECTC_PREDELTA",
+        "VISDIR_PREDELTA",
+        "NIRDIR_PREDELTA"
+      ]
+    },
+    {
+      "added_audit_optics": {
+        "AUDIT_EXTRA_PRECIP_TAU": {
+          "extension_layer_band_sum": 0.0,
+          "max": 0.02977295598349836,
+          "min": 0.0,
+          "native_layer_band_sum": 1.235367268412956,
+          "nonzero_elements": 208,
+          "shape": [
+            1,
+            47,
+            16
+          ],
+          "sum_across_all_layers_and_bands": 1.235367268412956
+        }
+      },
+      "baseline_result": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-precip-original-baseline-v1/runs-v2/snow-lw/reference.result",
+        "sha256": "cf5f3e2c47add666654ecee3030447208912852d3ead03b4f1fad3bd00817b73",
+        "size_bytes": 755645
+      },
+      "boundary_flux_and_heating_deltas": {
+        "max_abs_extension_heating_delta": 5.5657721098612e-08,
+        "max_abs_native_heating_delta": 0.9969685982979275,
+        "surface_down_flux_delta": 0.1588255203149629,
+        "toa_up_flux_delta": -1.9031702350957858e-05
+      },
+      "case_id": "snow-lw.positive",
+      "engine_layers": 47,
+      "input_capture": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-stratified-replacement-captures-v1/material_cf0_snow_daylight_proxy/capture/lw.raw",
+        "sha256": "00692eb442b9210cc061dbcf79e57a930b427e2a0b976446e4d3ce4ec54a9c01",
+        "size_bytes": 70989
+      },
+      "mutated_section_differences": {
+        "DN": {
+          "changed_elements": 31,
+          "max_abs": 2.393664146749586,
+          "max_abs_index_zero_based": [
+            0,
+            8,
+            0
+          ],
+          "new_at_max": 286.3865754087181,
+          "old_at_max": 283.9929112619685
+        },
+        "HR": {
+          "changed_elements": 47,
+          "max_abs": 0.9969685982979275,
+          "max_abs_index_zero_based": [
+            0,
+            3,
+            0
+          ],
+          "new_at_max": -13.38113131236672,
+          "old_at_max": -14.378099910664648
+        },
+        "TOTAL_TAU": {
+          "changed_elements": 1519,
+          "max_abs": 0.029772955984299188,
+          "max_abs_index_zero_based": [
+            0,
+            12,
+            9
+          ],
+          "new_at_max": 10653.123999027024,
+          "old_at_max": 10653.09422607104
+        },
+        "UP": {
+          "changed_elements": 48,
+          "max_abs": 2.2115295606005816,
+          "max_abs_index_zero_based": [
+            0,
+            13,
+            0
+          ],
+          "new_at_max": 302.60865400756427,
+          "old_at_max": 304.82018356816485
+        }
+      },
+      "native_layers": 39,
+      "output": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-precip-campaign-v5/cases/snow-lw.positive/result.out",
+        "sha256": "61eae29da934bf03fd94c346b9ed18ee47e850417fd41972751fec6517d634bd",
+        "size_bytes": 775228
+      },
+      "output_validation": "POSITIVE_OUTPUT_CONTRACT_PASS",
+      "phase": "LW",
+      "positive_native_layers": 13,
+      "sidecar": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-precip-audit-patch-proposal-v2/sidecars-v4/snow-lw.positive.sidecar",
+        "sha256": "22d3548afea4aae2b38f5f947b5f9d163d4f19b2e1f6b2b4b68fa9af894e7a91",
+        "size_bytes": 1969
+      },
+      "species": "snow",
+      "unchanged_original_sections": [
+        "GAS_COL_DRY",
+        "GAS_TAU",
+        "GAS_TAU_RAW",
+        "PRECIP_TAU",
+        "CLOUD_TAU",
+        "GRAUPEL_TAU_ABS",
+        "HAIL_TAU_ABS",
+        "FROZEN_TAU",
+        "PREPARED_TAU",
+        "MASK",
+        "RL_USED",
+        "DI_USED",
+        "DS_USED",
+        "UPC",
+        "DNC",
+        "HRC"
+      ]
+    },
+    {
+      "added_audit_optics": {
+        "AUDIT_DIRECT_PREDELTA": {
+          "max": 151.38188596474177,
+          "min": 1.4881974750462662e-62,
+          "nonzero_elements": 41,
+          "shape": [
+            1,
+            41,
+            1
+          ],
+          "sum_across_all_layers_and_bands": 2342.191739592385
+        },
+        "AUDIT_EXTRA_PRECIP_G": {
+          "max": 0.5,
+          "min": 0.0,
+          "nonzero_elements": 182,
+          "shape": [
+            1,
+            40,
+            14
+          ],
+          "sum_across_all_layers_and_bands": 87.27861170274466
+        },
+        "AUDIT_EXTRA_PRECIP_SSA": {
+          "max": 0.9999980392176345,
+          "min": 0.0,
+          "nonzero_elements": 118,
+          "shape": [
+            1,
+            40,
+            14
+          ],
+          "sum_across_all_layers_and_bands": 57.776238107096106
+        },
+        "AUDIT_EXTRA_PRECIP_TAU": {
+          "extension_layer_band_sum": 0.0,
+          "max": 0.015184178930527387,
+          "min": 0.0,
+          "native_layer_band_sum": 0.4707620761170348,
+          "nonzero_elements": 182,
+          "shape": [
+            1,
+            40,
+            14
+          ],
+          "sum_across_all_layers_and_bands": 0.4707620761170348
+        },
+        "AUDIT_EXTRA_PRECIP_TAU_RAW": {
+          "max": 0.029772870284182493,
+          "min": 0.0,
+          "nonzero_elements": 182,
+          "shape": [
+            1,
+            40,
+            14
+          ],
+          "sum_across_all_layers_and_bands": 1.0809432484876091
+        }
+      },
+      "baseline_result": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-precip-original-baseline-v1/runs-v2/snow-sw/reference.result",
+        "sha256": "310ed79749b0e7ab366290ac51aa92c982e8cd5efc11d8666462f5053cb4cacb",
+        "size_bytes": 1100495
+      },
+      "boundary_flux_and_heating_deltas": {
+        "max_abs_extension_heating_delta": 9.404014156677576e-05,
+        "max_abs_native_heating_delta": 0.0011186068608005986,
+        "surface_down_flux_delta": -0.041569985841871215,
+        "surface_net_down_flux_delta": -0.03398842371151467,
+        "toa_up_flux_delta": 0.025166320519403484
+      },
+      "case_id": "snow-sw.positive",
+      "engine_layers": 40,
+      "input_capture": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-stratified-replacement-captures-v1/material_cf0_snow_daylight_proxy/capture/sw.raw",
+        "sha256": "b58e74bf8cfc762ddb909309e90714be8526bf0b60abfdd46db2d447d6c9604a",
+        "size_bytes": 66882
+      },
+      "mutated_section_differences": {
+        "DIFFUSE": {
+          "changed_elements": 40,
+          "max_abs": 0.07306953670947536,
+          "max_abs_index_zero_based": [
+            0,
+            7,
+            0
+          ],
+          "new_at_max": 30.17633889028445,
+          "old_at_max": 30.249408426993924
+        },
+        "DIRECT": {
+          "changed_elements": 28,
+          "max_abs": 4.117757157473534e-08,
+          "max_abs_index_zero_based": [
+            0,
+            25,
+            0
+          ],
+          "new_at_max": 119.33743696385936,
+          "old_at_max": 119.33743700503693
+        },
+        "DN": {
+          "changed_elements": 40,
+          "max_abs": 0.07306953670958549,
+          "max_abs_index_zero_based": [
+            0,
+            7,
+            0
+          ],
+          "new_at_max": 30.176338890287052,
+          "old_at_max": 30.249408426996638
+        },
+        "HR": {
+          "changed_elements": 40,
+          "max_abs": 0.0011186068608005986,
+          "max_abs_index_zero_based": [
+            0,
+            12,
+            0
+          ],
+          "new_at_max": 0.018885984733222144,
+          "old_at_max": 0.017767377872421546
+        },
+        "NIRDIF": {
+          "changed_elements": 40,
+          "max_abs": 0.017724013650168402,
+          "max_abs_index_zero_based": [
+            0,
+            8,
+            0
+          ],
+          "new_at_max": 13.938324331526493,
+          "old_at_max": 13.956048345176661
+        },
+        "NIRDIR": {
+          "changed_elements": 29,
+          "max_abs": 2.001898735670693e-08,
+          "max_abs_index_zero_based": [
+            0,
+            25,
+            0
+          ],
+          "new_at_max": 75.75907328264634,
+          "old_at_max": 75.75907330266533
+        },
+        "TOTAL_G": {
+          "changed_elements": 957,
+          "max_abs": 0.491670405865156,
+          "max_abs_index_zero_based": [
+            0,
+            12,
+            7
+          ],
+          "new_at_max": 0.4920724511660742,
+          "old_at_max": 0.0004020453009182096
+        },
+        "TOTAL_SSA": {
+          "changed_elements": 1297,
+          "max_abs": 0.39664036436927713,
+          "max_abs_index_zero_based": [
+            0,
+            12,
+            72
+          ],
+          "new_at_max": 0.7064470911733595,
+          "old_at_max": 0.30980672680408233
+        },
+        "TOTAL_TAU": {
+          "changed_elements": 1301,
+          "max_abs": 0.015184178930527398,
+          "max_abs_index_zero_based": [
+            0,
+            12,
+            106
+          ],
+          "new_at_max": 0.13574542317572535,
+          "old_at_max": 0.12056124424519796
+        },
+        "UP": {
+          "changed_elements": 41,
+          "max_abs": 0.08358118827788807,
+          "max_abs_index_zero_based": [
+            0,
+            13,
+            0
+          ],
+          "new_at_max": 15.873667435806235,
+          "old_at_max": 15.790086247528347
+        },
+        "VISDIF": {
+          "changed_elements": 40,
+          "max_abs": 0.05800568800483674,
+          "max_abs_index_zero_based": [
+            0,
+            13,
+            0
+          ],
+          "new_at_max": 16.76540374412395,
+          "old_at_max": 16.707398056119114
+        },
+        "VISDIR": {
+          "changed_elements": 29,
+          "max_abs": 2.115854869089162e-08,
+          "max_abs_index_zero_based": [
+            0,
+            25,
+            0
+          ],
+          "new_at_max": 43.578363681213034,
+          "old_at_max": 43.57836370237158
+        }
+      },
+      "native_layers": 39,
+      "output": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-precip-campaign-v5/cases/snow-sw.positive/result.out",
+        "sha256": "f1a5fc907170cb462024dec88a7b8eee224633b42bd840185e5fa62d587dd971",
+        "size_bytes": 1159956
+      },
+      "output_validation": "POSITIVE_OUTPUT_CONTRACT_PASS",
+      "phase": "SW",
+      "positive_native_layers": 13,
+      "sidecar": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-precip-audit-patch-proposal-v2/sidecars-v4/snow-sw.positive.sidecar",
+        "sha256": "5a369649b564320ae76908855a650efdf449b4d8136601c322180db70fb11f27",
+        "size_bytes": 1969
+      },
+      "species": "snow",
+      "unchanged_original_sections": [
+        "GAS_COL_DRY",
+        "GAS_TAU",
+        "GAS_SSA",
+        "GAS_G",
+        "PRECIP_TAU",
+        "PRECIP_SSA",
+        "PRECIP_G",
+        "CLOUD_TAU",
+        "CLOUD_SSA",
+        "CLOUD_G",
+        "GRAUPEL_TAU_EXT",
+        "GRAUPEL_TAU_SCA",
+        "GRAUPEL_TAU_SCA_G",
+        "HAIL_TAU_EXT",
+        "HAIL_TAU_SCA",
+        "HAIL_TAU_SCA_G",
+        "FROZEN_TAU",
+        "FROZEN_SSA",
+        "FROZEN_G",
+        "PREPARED_TAU",
+        "PREPARED_SSA",
+        "PREPARED_G",
+        "MASK",
+        "RL_USED",
+        "DI_USED",
+        "DS_USED",
+        "UPC",
+        "DNC",
+        "HRC",
+        "DIRECTC",
+        "DIRECT_PREDELTA",
+        "DIRECTC_PREDELTA",
+        "VISDIR_PREDELTA",
+        "NIRDIR_PREDELTA"
+      ]
+    }
+  ],
+  "postflight": {
+    "generated_outputs_unchanged": true,
+    "immutable_pin_count": 281,
+    "immutable_pins_unchanged": true,
+    "runtime_closure_pins_sha256": "2784e7475ab7f41758c54297ad405fcb9654c7c5745f0aa0ac1a6ec1bd03d98c",
+    "runtime_library_count": 47
+  },
+  "proposal_status": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-precip-audit-patch-proposal-v2/proposal-status.json",
+    "sha256": "9a6a3459b79af9e8feae97b9a093a5c2622afec4280b0a97f27cd788b2dabd23",
+    "size_bytes": 2456
+  },
+  "raw_capture_path_context": {
+    "rain-LW": {
+      "anchor_ij": [
+        136,
+        48
+      ],
+      "positive_native_layers": 16,
+      "radius_fallback_runs_at_cf_zero": false,
+      "raw_capture_path": "build/udm-stratified-captures-v3/cf0_rain_low_cloud_proxy/replay-recovery-v2/capture/lw.raw",
+      "raw_capture_sha256": "53f666aed40d48e6752712a8f81fa213dc916cc7aef1e082a899dd6215a94bf3",
+      "raw_precip_path_sum_g_m2": 202.42863702774048
+    },
+    "rain-SW": {
+      "anchor_ij": [
+        136,
+        48
+      ],
+      "positive_native_layers": 16,
+      "radius_fallback_runs_at_cf_zero": false,
+      "raw_capture_path": "build/udm-stratified-captures-v3/cf0_rain_low_cloud_proxy/replay-recovery-v3/capture/sw.raw",
+      "raw_capture_sha256": "39fb118958619b34f7e0101bcd669d5e6c45398437321e5d40599d2a2c22de09",
+      "raw_precip_path_sum_g_m2": 202.42863702774048
+    },
+    "snow-LW": {
+      "anchor_ij": [
+        103,
+        156
+      ],
+      "positive_native_layers": 13,
+      "radius_fallback_runs_at_cf_zero": false,
+      "raw_capture_path": "build/udm-stratified-replacement-captures-v1/material_cf0_snow_daylight_proxy/capture/lw.raw",
+      "raw_capture_sha256": "00692eb442b9210cc061dbcf79e57a930b427e2a0b976446e4d3ce4ec54a9c01",
+      "raw_precip_path_sum_g_m2": 5.622483488478097
+    },
+    "snow-SW": {
+      "anchor_ij": [
+        103,
+        156
+      ],
+      "positive_native_layers": 13,
+      "radius_fallback_runs_at_cf_zero": false,
+      "raw_capture_path": "build/udm-stratified-replacement-captures-v1/material_cf0_snow_daylight_proxy/capture/sw.raw",
+      "raw_capture_sha256": "b58e74bf8cfc762ddb909309e90714be8526bf0b60abfdd46db2d447d6c9604a",
+      "raw_precip_path_sum_g_m2": 5.622483488478097
+    }
+  },
+  "schema": "udm-cf0-precip-campaign-analysis-v1",
+  "scope": "Read-only posthoc analysis; exactly the eight already recorded standalone reference calls, zero additional solver invocations.",
+  "zero_controls": [
+    {
+      "byte_identical": true,
+      "case_id": "rain-lw.zero",
+      "oracle_sha256": "dc3e249e4e3f84018e3ebf5fb2dd84434f6dc18b01fefbc3f08f709d8892e572",
+      "output": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-precip-campaign-v5/cases/rain-lw.zero/result.out",
+        "sha256": "dc3e249e4e3f84018e3ebf5fb2dd84434f6dc18b01fefbc3f08f709d8892e572",
+        "size_bytes": 755645
+      }
+    },
+    {
+      "byte_identical": true,
+      "case_id": "rain-sw.zero",
+      "oracle_sha256": "af076b0f30d2af022ea70faa139ac6f579be8fd34ffb9833b8357e7d90215511",
+      "output": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-precip-campaign-v5/cases/rain-sw.zero/result.out",
+        "sha256": "af076b0f30d2af022ea70faa139ac6f579be8fd34ffb9833b8357e7d90215511",
+        "size_bytes": 1100495
+      }
+    },
+    {
+      "byte_identical": true,
+      "case_id": "snow-lw.zero",
+      "oracle_sha256": "cf5f3e2c47add666654ecee3030447208912852d3ead03b4f1fad3bd00817b73",
+      "output": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-precip-campaign-v5/cases/snow-lw.zero/result.out",
+        "sha256": "cf5f3e2c47add666654ecee3030447208912852d3ead03b4f1fad3bd00817b73",
+        "size_bytes": 755645
+      }
+    },
+    {
+      "byte_identical": true,
+      "case_id": "snow-sw.zero",
+      "oracle_sha256": "310ed79749b0e7ab366290ac51aa92c982e8cd5efc11d8666462f5053cb4cacb",
+      "output": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-precip-campaign-v5/cases/snow-sw.zero/result.out",
+        "sha256": "310ed79749b0e7ab366290ac51aa92c982e8cd5efc11d8666462f5053cb4cacb",
+        "size_bytes": 1100495
+      }
+    }
+  ]
+}

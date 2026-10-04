@@ -1,0 +1,38 @@
+{
+  "schema": "cf0-precip-patch-independent-review-v1",
+  "status": "STATIC_REVIEW_PASS_WITH_LAUNCHER_PRECONDITION",
+  "reviewed_proposal": {
+    "directory": "build/udm37-cf0-precip-audit-patch-proposal-v2",
+    "source_sha256": "939981fd290b1a7f2ba6ece9d124a18b7a4d6be2135ebe10a789fcdb64f07df9",
+    "diff_sha256": "bcc32badaf21f712b4fa3755ddebe231ae8bdaa06247da3764d722b43d5afaa1",
+    "readme_sha256": "4203499c34d94941150033e34705e391d666922448c48264731401639a2fb6e2",
+    "manifest_sha256": "b6803434fa02080ae9e9346ebbad516771ac3bf583f303bdb34e32a78c6581a7",
+    "status_sha256": "9a6a3459b79af9e8feae97b9a093a5c2622afec4280b0a97f27cd788b2dabd23"
+  },
+  "checks": {
+    "artifact_manifest_entries": 28,
+    "artifact_manifest_hashes": "PASS",
+    "proposal_status_source_diff_readme_manifest_pins": "PASS",
+    "sidecar_parser_arg6_initialized_and_read": "PASS",
+    "fortran_parser_nested_internal_procedure": "NONE; helpers are sibling internal procedures",
+    "fortran_single_column_guard": "PASS",
+    "header_phase_shape_units_species_occurrence_finite_nonnegative_cf0_native_padding_eof_checks": "PRESENT",
+    "external_raw_capture_and_snow_radius_preflight": "PRESENT",
+    "zero_sidecar_path": "Gated branches are inert when all sidecar paths are zero: no optics allocation/helper/increment/audit output, preserving the original array operations; numerical equality remains uncompiled/unmeasured.",
+    "positive_path_location": "After cloud sampling and before frozen optics/RTE; clear-sky outputs and original direct diagnostics are computed/preserved separately.",
+    "audit_direct": "Adds raw audit extinction to baseline raw direct-path optical depth without masking the audit increment; output is separate from baseline pre-delta direct diagnostics.",
+    "offline_validation_receipts": "17 sidecar tests, 8 candidate sidecars, and gate self-test are recorded; not independently rerun in this review."
+  },
+  "conditional_blocker_before_solver_authorization": {
+    "status": "REQUIRES_REVIEWED_LAUNCHER_CLOSURE",
+    "finding": "invocation_gate.py verifies hashes for the approved file records and exact argv[0], argv[2], argv[6], but does not enforce that argv[1] resolves to the pinned coefficient directory, argv[3] is a fresh output path, argv[4] is the intended policy, argv[5] is the intended override, or that the listed runtime libraries are the libraries actually resolved under the launch environment.",
+    "risk": "The solver opens output with STATUS=REPLACE; an unsafe argv[3] could overwrite a protected baseline before post-run drift is detected. A mismatched data directory or loader environment could use different coefficients/libraries than the ones in the receipt.",
+    "required_scope": "Before any build/calls, a separately reviewed immutable launcher must validate fresh non-colliding output, exact datadir/policy/override/cwd/environment, actual resolved dynamic libraries (including LD_PRELOAD), and pre/post hashes. The proposal README correctly says the preflight is not a launcher, but its gate is not sufficient by itself."
+  },
+  "limitations": [
+    "Fortran patch remains uncompiled and unlinked.",
+    "No solver or WRF/model calls were made.",
+    "The offline sidecar/source gate is based on exact approved artifacts, not a cryptographic signature or standalone proof that the approval is trustworthy.",
+    "Sensitivity is the declared occurrence-one incremental-optics intervention, not a unique physical occurrence model or accuracy validation."
+  ]
+}
