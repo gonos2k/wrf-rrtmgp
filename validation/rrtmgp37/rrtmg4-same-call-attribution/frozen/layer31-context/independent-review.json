@@ -1,0 +1,194 @@
+{
+  "actual_loader_coefficients_equal_analysis_coefficients": true,
+  "checks": [
+    {
+      "exact_bound_joins": 11,
+      "gas_gpoint_ranges_contiguous_complete": true,
+      "gp_mask_hits_each_layer30_32": 128,
+      "joins": [
+        [
+          3,
+          2,
+          500.0,
+          630.0
+        ],
+        [
+          4,
+          3,
+          630.0,
+          700.0
+        ],
+        [
+          5,
+          4,
+          700.0,
+          820.0
+        ],
+        [
+          6,
+          5,
+          820.0,
+          980.0
+        ],
+        [
+          7,
+          6,
+          980.0,
+          1080.0
+        ],
+        [
+          8,
+          7,
+          1080.0,
+          1180.0
+        ],
+        [
+          9,
+          8,
+          1180.0,
+          1390.0
+        ],
+        [
+          10,
+          9,
+          1390.0,
+          1480.0
+        ],
+        [
+          11,
+          10,
+          1480.0,
+          1800.0
+        ],
+        [
+          12,
+          11,
+          1800.0,
+          2080.0
+        ],
+        [
+          13,
+          12,
+          2080.0,
+          2250.0
+        ]
+      ],
+      "legacy_mask_hits_each_layer30_32": 140,
+      "native_layer_count": 44,
+      "phase": "LW",
+      "separate_component_tau_checks": 22,
+      "solver_layers": 57
+    },
+    {
+      "exact_bound_joins": 12,
+      "gas_gpoint_ranges_contiguous_complete": true,
+      "gp_mask_hits_each_layer30_32": 112,
+      "joins": [
+        [
+          17,
+          2,
+          3250.0,
+          4000.0
+        ],
+        [
+          18,
+          3,
+          4000.0,
+          4650.0
+        ],
+        [
+          19,
+          4,
+          4650.0,
+          5150.0
+        ],
+        [
+          20,
+          5,
+          5150.0,
+          6150.0
+        ],
+        [
+          21,
+          6,
+          6150.0,
+          7700.0
+        ],
+        [
+          22,
+          7,
+          7700.0,
+          8050.0
+        ],
+        [
+          23,
+          8,
+          8050.0,
+          12850.0
+        ],
+        [
+          24,
+          9,
+          12850.0,
+          16000.0
+        ],
+        [
+          25,
+          10,
+          16000.0,
+          22650.0
+        ],
+        [
+          26,
+          11,
+          22650.0,
+          29000.0
+        ],
+        [
+          27,
+          12,
+          29000.0,
+          38000.0
+        ],
+        [
+          28,
+          13,
+          38000.0,
+          50000.0
+        ]
+      ],
+      "legacy_mask_hits_each_layer30_32": 112,
+      "native_layer_count": 44,
+      "phase": "SW",
+      "separate_component_tau_checks": 24,
+      "solver_layers": 45
+    }
+  ],
+  "label_clarifications": [
+    "The method prose GP V10 trace files refers to LW V10 and SW V11 inputs.",
+    "Generic gp_optics TOTAL_TAU/TOTAL_SSA/TOTAL_G values_by_band arrays are gpoint vectors; explicit band-join entries select those via coefficient gpoint ranges. They are not band averages."
+  ],
+  "new_REAL_calls": 0,
+  "new_compile_calls": 0,
+  "new_model_calls": 0,
+  "new_solver_calls": 0,
+  "original_directory": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rrtmg4-layer31-optical-context-v1",
+  "original_pins": {
+    "README.md": "5881e67ffb9b8347c057e576e50754265a064e90744ac7f7e8d5e2ff815790fb",
+    "layer31-optical-context.json": "aa1d22c0a165e7c6f40011e43ffa4f992a88180799000855f26315e7b41dc522",
+    "layer31_optical_context.py": "4beb58ea443064b58bfa7d3fa86d42c38e875ff079ab385666b82ab431955757"
+  },
+  "pins_before_after_unchanged": true,
+  "schema": "independent-layer31-optical-context-review-v1",
+  "scope": "One point/call, exact physical bounds only; no positional gpoint pairing, mean spectrum, sampled-cloud-only reconstruction, flux attribution, or accuracy inference.",
+  "script_pin": "2601dc8c87e5991b3d48ad20b5d0340ff48a9b302eed951c817c4fbe2f08bcf8",
+  "stage_source": {
+    "LW": "native/CU pre-increment 828-845; precip/prepared before mask 854-872; sampled draw 878 and frozen after mask 881",
+    "SW": "native/CU before delta 1168-1200; one cloud delta 1226; precipitation/prepared before sampling 1234-1257; frozen after sampling 1262-1266",
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-current-rrtmg4-optics-export-work/WRF/phys/module_ra_rrtmgp.F",
+    "sha256": "b3932fa4e88202d5fe0fb660764bec9a07d031c03b501c20ee6ef259828ffa69"
+  },
+  "status": "PASS_SCOPED_WITH_LABEL_CLARIFICATIONS",
+  "units": "DI_USED/CU_DI_USED are ice diameters in micrometres; RL_USED/CU_RL_USED and DS_USED are physical radii in micrometres. Raw source radii are metres. Gas optical depth remains separate.",
+  "verbatim_reproduction_sha256": "aa1d22c0a165e7c6f40011e43ffa4f992a88180799000855f26315e7b41dc522"
+}
