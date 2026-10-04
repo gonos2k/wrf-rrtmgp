@@ -1,0 +1,11 @@
+# Held-state native ice-layer contribution
+
+The [retained evidence package](../../../validation/rrtmgp37/native-ice-layer-contribution/README.md) contains six unchanged LW/SW reference baselines and six offline control/contribution calls for historical native ice columns. At fixed atmosphere, gases, surface, CF and seed/mask, selected pure-ice layers associated with lookup diameters above180µm were removed while retaining precipitation and frozen optics. SW identity controls reproduce all46 baseline arrays bitwise.
+
+Removing these finite layers changes surface downward SW by+4.282318 and+1.834641W/m² at the two anchors. Corresponding LW changes are−6.275781 and−0.000078W/m². The package gives TOA, heating, path, radius and realized-mask metrics, original receipts and independent baseline review. These are finite-layer contributions, not clipping error, physical accuracy or domain bounds. No valid out-of-LUT optical oracle was introduced. The SW prepared-optics override leaves raw pre-delta direct extinction at baseline; those outputs are excluded from counterfactual interpretation.
+
+`PREPARED_*` records contain the prepared solver cloud-plus-precipitation optics after precipitation increment, before mask sampling and separate frozen addition. They are not cloud-only optical records.
+
+Existing winter native/CU captures retain signed inputs and separate population optics, but every clipped CU ice layer also contains CU liquid. The package therefore makes no isolated CU ice claim. Actual CF0 omitted rain/snow masses establish exclusion exposure; their radiative impact needs an explicit independent occurrence/mask policy. Hourly forecast history is not an exact radiation-call input.
+
+No new WRF model or build was executed for this evidence. The reused reference source matches current reference source, while historical capture production backend and vendor scalar-math linkage differ from current production. This does not establish a current forecast execution. Active-CU fresh validation remains separate and pending here. Experimental precipitation occurrence, LUT treatment and native/CU physical assumptions remain open. The package's standard-library verifier checks retained hashes and receipt contracts; copied execution helpers are nonportable workspace snapshots.
