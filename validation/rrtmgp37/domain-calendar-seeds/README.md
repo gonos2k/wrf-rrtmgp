@@ -16,6 +16,18 @@ The final runner explicitly selects `mp_physics=27`, `ra_lw_physics=37`, `ra_sw_
 
 The calendar fixture crosses 1999-12-31 23:59 through 2000-01-01 00:01, resuming from an actual 37-generated midnight checkpoint. It retimes only date metadata and forcing timestamps while checking the unchanged state payload. This is a calendar/restart test, not a meteorologically valid new case. A supplemental resumed LW capture independently confirms year=2000/day=1 and seed=847516934. SW is inactive at midnight and has no captured midnight seed. Daytime LW/SW captures confirm year=1999/day=295. [Restart receipt](restart-receipt.json), [comparison summary](restart-comparison-summary.json) and [calendar capture receipt](calendar-capture-receipt.json) retain the exact run and source hashes. The runner also rejects a manufactured wrong-mode test using an actual 4/4 history ([probe](wrong-mode-rejection.json)).
 
+## Fresh restart diagnostic preservation
+
+A separate January 2000 real-data campaign validates persistence of the three
+last-call cloud diagnostics across short and long UDM37 restarts. The six-arm
+primary run passes its scoped raw/decoded array checks, with strict invocation
+metadata failures retained; an old-checkpoint compatibility run separately
+validates the unavailable sentinel. See the [campaign report](fresh-restart/README.md)
+and its [pinned summary](fresh-restart/summary.json). The previous PR54 CI run
+had a serial-SCM restart timestamp failure; the validation-only fix has been
+committed and its CI rerun is pending. This is separate from the local real-data
+campaign and is not reported as green here.
+
 Reproduce from a built checkout with fresh paired SCM initial states:
 
 ```bash
