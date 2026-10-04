@@ -1,0 +1,53 @@
+{
+  "base_commit": "33632eafff3fa06a164c7c56f258fac6fb545205",
+  "candidate_head": "33632eafff3fa06a164c7c56f258fac6fb545205",
+  "caveat": "The default-real-overflow fault specifically assumes wp is wider than default REAL (the repository default is wp=c_double and ordinary WRF REAL is single precision). A nonstandard build with RTE_USE_SP or default-real promotion should either skip that specific cast-overflow expectation or use a build-kind-aware assertion. This does not affect the production checks, which inspect each declared kind.",
+  "observed_files": {
+    "WRF/phys/module_ra_rrtmgp.F": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-output-finite-pr-work/WRF/phys/module_ra_rrtmgp.F",
+      "sha256": "b3932fa4e88202d5fe0fb660764bec9a07d031c03b501c20ee6ef259828ffa69",
+      "size_bytes": 73930
+    },
+    "WRF/test/rrtmgp/CMakeLists.txt": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-output-finite-pr-work/WRF/test/rrtmgp/CMakeLists.txt",
+      "sha256": "39abfe14b7ba0add40e4c9ba06e488e426a4fe0c5547697585d4356e24362b31",
+      "size_bytes": 29668
+    },
+    "WRF/test/rrtmgp/generate_output_finite_fault_sources.py": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-output-finite-pr-work/WRF/test/rrtmgp/generate_output_finite_fault_sources.py",
+      "sha256": "05da60888a3bedeb4148757605cc347360d7daa93df5632cfbf47ee782a60e4a",
+      "size_bytes": 3448
+    },
+    "WRF/test/rrtmgp/test_columns.f90": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-output-finite-pr-work/WRF/test/rrtmgp/test_columns.f90",
+      "sha256": "ff7b7dc80bd4246ec0aef06ca605ae4cdcdc8201b1d76203c15a6d94c340e681",
+      "size_bytes": 15491
+    },
+    "WRF/test/rrtmgp/test_output_finite_fault.f90": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-output-finite-pr-work/WRF/test/rrtmgp/test_output_finite_fault.f90",
+      "sha256": "80e4580a378e3d3560a10a48482de98569f4d9d20a8781d6fd6c2413f1e9e800",
+      "size_bytes": 2498
+    },
+    "WRF/test/rrtmgp/test_sw_predelta_direct.f90": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-output-finite-pr-work/WRF/test/rrtmgp/test_sw_predelta_direct.f90",
+      "sha256": "32a5c0aa40244eac703c690ff82ec402ad240e803aabd97243994fc5815b8818",
+      "size_bytes": 9973
+    }
+  },
+  "review_findings": [],
+  "schema": "udm37-output-finite-independent-review-v1",
+  "source_behavior_review": {
+    "arithmetic_note": "The added checks evaluate finiteness only; expressions passed to checkers (e.g. heat*86400 and fd-fdir) do not write into model/RRTMGP state.",
+    "assessment": "No successful-path arithmetic or array assignments are added/changed; checks scan existing result arrays and call existing require/fatal path only for nonfinite values.",
+    "coverage": "LW clear/all-sky fluxes and heating are checked in wp before conversion and default REAL after conversion. SW clear/all-sky fluxes, heating, direct/band outputs and returned diagnostics are checked. SW optional pre-delta g-point/band and default-real diagnostics are checked when requested; night early return checks initialized zero outputs, including optional outputs.",
+    "diagnostics": "First offending column and interface/layer are included with phase, stage, field, optional band index and precision. Checks are performed immediately after RTE/heating output creation or default-real conversion.",
+    "precision_separation": "The helpers accept explicit REAL(wp) and default REAL arrays separately, and diagnostics identify precision=wp or precision=default-real. WP defaults to iso_c_binding c_double in mo_rte_kind; ordinary WRF default REAL remains its declared default kind."
+  },
+  "status": "PASS_SCOPED_READ_ONLY_CODE_REVIEW",
+  "test_review": {
+    "existing_driver_coverage": "test_columns now checks clear/all-sky outputs, repeats, overlap modes, daylight and night including SW diagnostic partitions. test_sw_predelta_direct checks standard and optional pre-delta output arrays for baseline, predelta and night.",
+    "fault_injections": "Generator makes isolated source copies from exact production anchors and refuses if call-site counts drift. Three faults inject LW clear flux NaN, SW all-sky heating NaN and a wp-finite value that overflows on conversion to default REAL. The executable only passes if the injected failure is detected; CTest requires the exact phase/stage/field/column/index/precision marker plus nonzero exit.",
+    "test_limits": "This is a source review only. No build, test, model or RTE execution was performed by the reviewer. Root-owned focused build/tests remain the runtime validation."
+  },
+  "worktree": "build/udm37-output-finite-pr-work"
+}

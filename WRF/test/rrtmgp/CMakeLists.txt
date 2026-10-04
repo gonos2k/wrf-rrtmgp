@@ -83,6 +83,35 @@ add_library(test_rrtmgp_adapter STATIC standalone_wrf_error.f90 "${trace}" "${in
 target_link_libraries(test_rrtmgp_adapter PUBLIC wrf_rrtmgp test_rrtmgp_precip test_rrtmgp_frozen)
 set_target_properties(test_rrtmgp_adapter PROPERTIES Fortran_MODULE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/modules")
 target_include_directories(test_rrtmgp_adapter PUBLIC "${CMAKE_CURRENT_BINARY_DIR}/modules")
+
+# Fault-path tests compile isolated copies of the production adapter with one
+# exact, test-generated NaN/overflow insertion. The production source has no
+# runtime fault switch or test-only branch.
+set(output_fault_dir "${CMAKE_CURRENT_BINARY_DIR}/output-finite-fault-src")
+execute_process(
+  COMMAND "${Python3_EXECUTABLE}" -B "${CMAKE_CURRENT_SOURCE_DIR}/generate_output_finite_fault_sources.py"
+          --source "${adapter}" --output-dir "${output_fault_dir}"
+  RESULT_VARIABLE output_fault_generation_status
+  OUTPUT_VARIABLE output_fault_generation_output
+  ERROR_VARIABLE output_fault_generation_error)
+if(NOT output_fault_generation_status EQUAL 0)
+  message(FATAL_ERROR "Could not generate output-finite fault sources: ${output_fault_generation_error}")
+endif()
+foreach(fault_case IN ITEMS lw_clear_flux_nan sw_allsky_heat_nan lw_allsky_default_overflow)
+  set(fault_source "${output_fault_dir}/module_ra_rrtmgp_${fault_case}.F")
+  set_source_files_properties("${fault_source}" PROPERTIES Fortran_FORMAT FREE Fortran_PREPROCESS ON)
+  set(fault_library "test_rrtmgp_adapter_fault_${fault_case}")
+  set(fault_modules "${CMAKE_CURRENT_BINARY_DIR}/modules-${fault_case}")
+  add_library(${fault_library} STATIC standalone_wrf_error.f90 "${trace}" "${input_builder}" "${fault_source}")
+  target_link_libraries(${fault_library} PUBLIC wrf_rrtmgp test_rrtmgp_precip test_rrtmgp_frozen)
+  set_target_properties(${fault_library} PROPERTIES Fortran_MODULE_DIRECTORY "${fault_modules}")
+  target_include_directories(${fault_library} PUBLIC "${fault_modules}")
+  if(CMAKE_Fortran_COMPILER_ID STREQUAL "GNU")
+    target_compile_options(${fault_library} PRIVATE -ffree-line-length-none -fcheck=bounds)
+  endif()
+  add_executable(test_rrtmgp_output_finite_${fault_case} test_output_finite_fault.f90)
+  target_link_libraries(test_rrtmgp_output_finite_${fault_case} PRIVATE ${fault_library})
+endforeach()
 foreach(test IN ITEMS columns cloud_inputs multicolumn validation adapter_invalid small_cf_sampling ice_roughness transparent_overlap spectral_surface udm_inputs precip_optics udm_adapter udm_dry_mass domain_seed native_gas_columns frozen_adapter udm_frozen_inputs lw_trace_gases sw_predelta_direct phase_path_stats cu_population_inputs cu_population_optics)
   add_executable(test_rrtmgp_${test} test_${test}.f90)
   target_link_libraries(test_rrtmgp_${test} PRIVATE test_rrtmgp_adapter)
@@ -232,6 +261,13 @@ reject_adapter(mu0_nan_night "mu0 must be finite")
 reject_adapter(solar_negative RRTMGP_INPUT_SOLAR_NEGATIVE)
 reject_adapter(changed_init_path "rrtmgp_data_path must be global and unchanged after initialization")
 reject_adapter(coefficient_load_missing "RRTMGP: load_and_init(): can't open file")
+add_test(NAME reject_output_finite_lw_clear_flux_nan COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/test_output_finite_fault.py"
+  "$<TARGET_FILE:test_rrtmgp_output_finite_lw_clear_flux_nan>" lw_clear_flux_nan "${RRTMGP_DATA_DIR}")
+add_test(NAME reject_output_finite_sw_allsky_heat_nan COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/test_output_finite_fault.py"
+  "$<TARGET_FILE:test_rrtmgp_output_finite_sw_allsky_heat_nan>" sw_allsky_heat_nan "${RRTMGP_DATA_DIR}")
+add_test(NAME reject_output_finite_lw_allsky_default_overflow COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/test_output_finite_fault.py"
+  "$<TARGET_FILE:test_rrtmgp_output_finite_lw_allsky_default_overflow>" lw_allsky_default_overflow "${RRTMGP_DATA_DIR}")
+set_tests_properties(reject_output_finite_lw_allsky_default_overflow PROPERTIES SKIP_RETURN_CODE 77)
 
 add_test(NAME small_cf_sampling COMMAND test_rrtmgp_small_cf_sampling "${RRTMGP_DATA_DIR}")
 

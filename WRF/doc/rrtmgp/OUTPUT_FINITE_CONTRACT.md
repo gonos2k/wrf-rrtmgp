@@ -1,0 +1,3 @@
+# RRTMGP output finite-value checks
+
+The WRF adapter checks working-precision broadband and spectral fluxes and heating outputs before conversion, then checks the returned default-REAL arrays—including clear-sky, VIS/NIR, and optional SW pre-delta diagnostics—after conversion; failures report phase, solver stage, field, column, interface or layer, and precision. The checks do not alter finite values or repair invalid results. Test-only source copies inject NaN and conversion-overflow faults through the actual adapter guard path. This is a fail-fast output contract only: it does not explain or fix the separately observed thermodynamic failure following large endpoint vertical Courant values, and it is not a forecast-accuracy claim.

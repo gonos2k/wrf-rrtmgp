@@ -75,17 +75,20 @@ PROGRAM test_sw_predelta_direct
     ERROR STOP 'wrong-sized pre-delta output unexpectedly accepted'
   END IF
   CALL call_sw(.FALSE.)
+  CALL check_finite_outputs('baseline',.FALSE.)
   old_up=up;old_dn=dn;old_hr=hr;old_upc=upc;old_dnc=dnc;old_hrc=hrc
   old_direct=direct;old_diffuse=diffuse;old_directc=directc
   old_visdir=visdir;old_visdif=visdif;old_nirdir=nirdir;old_nirdif=nirdif
   IF(TRIM(which)=='capture'.OR.TRIM(which)=='capture_precip'.OR. &
      TRIM(which)=='capture_frozen_overlap_zero') CALL trace_start('SW',1,1)
   CALL call_sw(.TRUE.)
+  CALL check_finite_outputs('pre-delta',.TRUE.)
   IF(TRIM(which)=='capture'.OR.TRIM(which)=='capture_precip'.OR. &
      TRIM(which)=='capture_frozen_overlap_zero') CALL trace_end('SW')
   IF(TRIM(which)=='night') THEN
     du=777.;dcu=777.;vdu=777.;ndu=777.
     CALL call_sw(.TRUE.)
+    CALL check_finite_outputs('night pre-delta',.TRUE.)
     IF(ANY(up/=0.).OR.ANY(dn/=0.).OR.ANY(hr/=0.).OR.ANY(upc/=0.).OR.ANY(dnc/=0.).OR.ANY(hrc/=0.).OR. &
        ANY(direct/=0.).OR.ANY(diffuse/=0.).OR.ANY(directc/=0.).OR.ANY(visdir/=0.).OR.ANY(visdif/=0.).OR. &
        ANY(nirdir/=0.).OR.ANY(nirdif/=0.).OR.ANY(du/=0.).OR.ANY(dcu/=0.).OR.ANY(vdu/=0.).OR.ANY(ndu/=0.)) &
@@ -114,6 +117,23 @@ PROGRAM test_sw_predelta_direct
   END SELECT
     WRITE(*,'(A)') 'SW pre-delta direct contract PASS: '//TRIM(which)
 CONTAINS
+  SUBROUTINE check_finite_outputs(label,has_predelta)
+    CHARACTER(LEN=*), INTENT(IN) :: label
+    LOGICAL, INTENT(IN) :: has_predelta
+    IF(.NOT.ALL(ieee_is_finite(up)).OR..NOT.ALL(ieee_is_finite(dn)).OR. &
+       .NOT.ALL(ieee_is_finite(hr)).OR..NOT.ALL(ieee_is_finite(upc)).OR. &
+       .NOT.ALL(ieee_is_finite(dnc)).OR..NOT.ALL(ieee_is_finite(hrc)).OR. &
+       .NOT.ALL(ieee_is_finite(direct)).OR..NOT.ALL(ieee_is_finite(diffuse)).OR. &
+       .NOT.ALL(ieee_is_finite(directc)).OR..NOT.ALL(ieee_is_finite(visdir)).OR. &
+       .NOT.ALL(ieee_is_finite(visdif)).OR..NOT.ALL(ieee_is_finite(nirdir)).OR. &
+       .NOT.ALL(ieee_is_finite(nirdif))) ERROR STOP 'non-finite SW output in '//TRIM(label)
+    IF(has_predelta) THEN
+      IF(.NOT.ALL(ieee_is_finite(du)).OR..NOT.ALL(ieee_is_finite(dcu)).OR. &
+         .NOT.ALL(ieee_is_finite(vdu)).OR..NOT.ALL(ieee_is_finite(ndu))) &
+        ERROR STOP 'non-finite SW pre-delta output in '//TRIM(label)
+    END IF
+  END SUBROUTINE check_finite_outputs
+
   SUBROUTINE call_sw(with_optional)
     LOGICAL, INTENT(IN) :: with_optional
     IF(with_optional) THEN
