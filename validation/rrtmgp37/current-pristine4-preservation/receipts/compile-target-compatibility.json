@@ -1,0 +1,41 @@
+{
+  "compiled_source_commit": "b7b5f6f9cd657408e3bde3018d7e882ab3e4bce3",
+  "conclusion": "The existing SCM inputs can be run with this current-source main/wrf.exe based on the common generic target. This does not establish a runtime result or exact equivalence; the two-case run is staged separately and remains unlaunched pending review.",
+  "current_build": {
+    "binary": "build/udm37-rrtmg4-export-serial-build-v1/source/WRF/main/wrf.exe",
+    "binary_sha256": "5091946b34cdf9c3397f07f03133dfe2ce0c36059b1d0ec4caa90c013d5a1a57",
+    "command": [
+      "csh",
+      "-f",
+      "./compile",
+      "-j",
+      "12",
+      "em_real"
+    ],
+    "configure_sha256": "6a2fcd322bbff92ff61a141671d492eb8d74e3d56af28582306c024775b89c68",
+    "path": "build/udm37-rrtmg4-export-serial-build-v1/build-receipt.json",
+    "returncode": 0,
+    "sha256": "771bbdb333a7f24591ee52fc191ea816c6b966174c0a6f36da5f085f90df36a6",
+    "status": "BUILD_PASS"
+  },
+  "makefile": {
+    "meaning": "Both top-level targets depend on generic wrf build. The target-specific recipes link the same main/wrf.exe for their run directories; IDEAL_CASE differs for the ideal/real utility executable.",
+    "path": "WRF/Makefile",
+    "sha256": "2e4e33170b5e4eee54f9f6e43e3799b0d3253ca16c20561d3d2b716701ef5f45",
+    "targets": {
+      "em_real": {
+        "dependency": "wrf",
+        "line": 578
+      },
+      "em_scm_xy": {
+        "dependency": "wrf",
+        "line": 530
+      }
+    }
+  },
+  "purpose": "Show that the fresh current-source binary was built through em_real but can execute the already-generated SCM wrfinput cases; this is make-target compatibility evidence, not runtime proof.",
+  "schema": "wrf-executable-target-compatibility-v1",
+  "source_commit": "5f3034e9c43209a352977da4885a3fc15b46c532",
+  "source_worktree": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-current-rrtmg4-optics-export-work",
+  "wrf_tree_diff_between_commits": []
+}

@@ -1,0 +1,85 @@
+{
+  "checks": [
+    {
+      "baseline_quality_finite_unmasked": true,
+      "case": "control",
+      "data_model": "NETCDF4",
+      "physics": {
+        "MP_PHYSICS": 27,
+        "RA_LW_PHYSICS": 4,
+        "RA_SW_PHYSICS": 4
+      },
+      "staged_asset_count": 92,
+      "staged_namelist_verbatim_official": true,
+      "times": [
+        "1999-10-22_19:00:00",
+        "1999-10-22_19:00:10",
+        "1999-10-22_19:00:20",
+        "1999-10-22_19:00:30",
+        "1999-10-22_19:00:40",
+        "1999-10-22_19:00:50",
+        "1999-10-22_19:01:00"
+      ],
+      "variables": 208
+    },
+    {
+      "baseline_quality_finite_unmasked": true,
+      "case": "mixed",
+      "data_model": "NETCDF4",
+      "physics": {
+        "MP_PHYSICS": 27,
+        "RA_LW_PHYSICS": 4,
+        "RA_SW_PHYSICS": 4
+      },
+      "staged_asset_count": 92,
+      "staged_namelist_verbatim_official": true,
+      "times": [
+        "1999-10-22_19:00:00",
+        "1999-10-22_19:00:10",
+        "1999-10-22_19:00:20",
+        "1999-10-22_19:00:30",
+        "1999-10-22_19:00:40",
+        "1999-10-22_19:00:50",
+        "1999-10-22_19:01:00"
+      ],
+      "variables": 208
+    }
+  ],
+  "comparison_reference_quality_note": "Runner disables auto mask/scale for strict raw comparison; independently verified unchanged official files with normal masking have no masks/nonfinite. Whole-file SHA equality prevents hidden fill or decoded differences in an accepted run.",
+  "compile_target_compatibility": "em_real and em_scm_xy depend on the same generic wrf target; exact current executable uses retained SCM inputs, not a new initializer run. Historical inventory new-build-required proposal is superseded by the separately pinned compatibility receipt.",
+  "limits": "Future runtime equality remains unproven. Scope is two one-minute UDM27 + native RRTMG4 fixtures, no audit/export env. No production accuracy, longer forecast, or restart claim.",
+  "new_REAL_invocations": 0,
+  "new_build_invocations": 0,
+  "new_model_invocations": 0,
+  "pins": {
+    "compile-target-compatibility.json": "4de3c4c582ea85cb8070ab30c10abc2c8cf81e93ae0761c74f644a36e1631856",
+    "current-preflight.json": "827e4bea00ce8994cc252f75cf1fc0068d723841159184244dbcabf296968389",
+    "input-stage.json": "03c6954bda15d0cefbb797969095792473dc2a1da38a2b348e39bf906c8a3529",
+    "run_current_cases.py": "919eb8864501634e802d47ee1330772399eff99127c253b7e079f87435a751fc",
+    "stage-manifest-final.json": "73e7c12bdc77835ac0d597e551cdc441d15b95c49e6a45b143aa9f5021365e75"
+  },
+  "reviewer_erratum": "Initial pin-check command assigned the stage manifest hash to inventory.json and stopped before any helper checks. Correct named artifact is stage-manifest-final.json; this review authenticates it.",
+  "runner_gates": {
+    "120_second_per_case_process_group_timeout": true,
+    "all_W\u200b\u200bRF_RRTMGP_environment_keys_removed": true,
+    "binary_config_build_manifest_input_stage_before_after": true,
+    "fsynced_terminal_RC_before_log_NetCDF_analysis": true,
+    "full_WRF_commit_and_worktree_equality_per_case": true,
+    "one_use_absent_cases_root": true,
+    "schema_data_model_unlimited_dimensions_all_attrs_raw_bytes_plus_wholefile_SHA": true,
+    "two_independent_60_second_fixtures": true
+  },
+  "schema": "independent-current-default4-prelaunch-review-v1",
+  "static_source_build_pins": {
+    "build_commit": "b7b5f6f9cd657408e3bde3018d7e882ab3e4bce3",
+    "build_receipt_sha256": "771bbdb333a7f24591ee52fc191ea816c6b966174c0a6f36da5f085f90df36a6",
+    "configure_sha256": "6a2fcd322bbff92ff61a141671d492eb8d74e3d56af28582306c024775b89c68",
+    "executable_sha256": "5091946b34cdf9c3397f07f03133dfe2ce0c36059b1d0ec4caa90c013d5a1a57",
+    "input_stage_sha256": "03c6954bda15d0cefbb797969095792473dc2a1da38a2b348e39bf906c8a3529",
+    "source_head": "5f3034e9c43209a352977da4885a3fc15b46c532",
+    "source_manifest_sha256": "1d48c4fc3188577368218d19259326cf4d16436e4bc9652aef35cd4e3f5b400d",
+    "wrf_tree_commit_diff": [],
+    "wrf_tree_worktree_status": []
+  },
+  "status": "PASS_SCOPED_PRELAUNCH_ONLY"
+}

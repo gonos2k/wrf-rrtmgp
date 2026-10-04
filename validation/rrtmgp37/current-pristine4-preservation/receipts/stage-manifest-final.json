@@ -1,0 +1,49 @@
+{
+  "binary": {
+    "path": "build/udm37-rrtmg4-export-serial-build-v1/source/WRF/main/wrf.exe",
+    "sha256": "5091946b34cdf9c3397f07f03133dfe2ce0c36059b1d0ec4caa90c013d5a1a57"
+  },
+  "build_receipt_sha256": "771bbdb333a7f24591ee52fc191ea816c6b966174c0a6f36da5f085f90df36a6",
+  "cases": [
+    "control",
+    "mixed"
+  ],
+  "comparison_contract": "All 208 variables; identical complete variable sets, data_model, all dimension sizes/unlimited flags, variable/global attributes, dimensions, dtype, raw array bytes, finite unmasked data, and complete NetCDF file SHA equal to both official pristine and source54 reference. No exclusions.",
+  "configure_sha256": "6a2fcd322bbff92ff61a141671d492eb8d74e3d56af28582306c024775b89c68",
+  "environment": "Serial OMP_NUM_THREADS=1; all WRF_RRTMGP_* observer variables removed; NETCDF and LD_LIBRARY_PATH set to the pinned build dependencies.",
+  "input_stage": {
+    "path": "build/udm37-pristine-current-source-audit-v1/input-stage.json",
+    "sha256": "03c6954bda15d0cefbb797969095792473dc2a1da38a2b348e39bf906c8a3529"
+  },
+  "launch_authorized_by": "root only; helper is dry by default and has not been invoked with --execute.",
+  "max_seconds_each": 120,
+  "official_reference": {
+    "binary_sha256": "cbd07fbc9458aca0861e1ed08976501ab6ae02931a05234596996869d7b12b02",
+    "comparison_path": "build/pristine-udm4-runtime/pristine-comparison.json",
+    "comparison_sha256": "cd3ee35bf1295ded76a7a78545c9a65bb33d1398b32ba89d9946b0624d5659aa",
+    "source_commit": "06d4240ae989cc3e50af412bb472df3d9048783c"
+  },
+  "planned_runs": 2,
+  "preflight": {
+    "path": "build/udm37-pristine-current-source-audit-v1/current-preflight.json",
+    "sha256": "827e4bea00ce8994cc252f75cf1fc0068d723841159184244dbcabf296968389"
+  },
+  "runner": {
+    "path": "build/udm37-pristine-current-source-audit-v1/run_current_cases.py",
+    "sha256": "919eb8864501634e802d47ee1330772399eff99127c253b7e079f87435a751fc"
+  },
+  "schema": "current-source-pristine-ra4-stage-manifest-v1",
+  "source54_reference": {
+    "binary_sha256": "7d6526f4c509aa93d2b28c73db6c782d72e68ef76fc1658ceb360250adf03caa",
+    "path": "build/udm37-source54-pristine-serial-regression-v1",
+    "source54_control_receipt": "89972f75f9c84353173189b336c022b6664de39184874755123f0ea8ce766018",
+    "source54_mixed_receipt": "b9b6b0b559769d9c44886ce50efbd44f9d95c381c9bcd65231476922f01f4f62"
+  },
+  "source_manifest_sha256": "1d48c4fc3188577368218d19259326cf4d16436e4bc9652aef35cd4e3f5b400d",
+  "status": "READY_NOT_RUN",
+  "target_source": {
+    "commit": "5f3034e9c43209a352977da4885a3fc15b46c532",
+    "compiled_commit": "b7b5f6f9cd657408e3bde3018d7e882ab3e4bce3",
+    "wrf_tree_diff_count": 0
+  }
+}
