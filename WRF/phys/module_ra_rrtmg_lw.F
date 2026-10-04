@@ -11621,6 +11621,15 @@ CONTAINS
    USE module_ra_rrtmgp_trace, ONLY: trace_start, trace_active, trace_raw_start, trace_raw, &
         trace_raw_end, trace_result, trace_end
    IMPLICIT NONE
+   TYPE :: ty_rrtmgp_lw_batch_buffers
+     REAL, ALLOCATABLE :: play(:,:),plev(:,:),tlay(:,:),tlev(:,:),h2o(:,:),co2(:,:),o3(:,:),n2o(:,:),ch4(:,:),o2(:,:),emis(:,:)
+     REAL, ALLOCATABLE :: tsfc(:)
+     REAL, ALLOCATABLE :: cf(:,:),lwp(:,:),iwp(:,:),swp(:,:),rel(:,:),rei(:,:),res(:,:)
+     REAL, ALLOCATABLE :: cfc11(:,:),cfc12(:,:),cfc22(:,:),ccl4(:,:),rwp(:,:),dry_mass(:,:)
+     REAL, ALLOCATABLE :: gwp(:,:),hwp(:,:),lambda_g(:,:),lambda_h(:,:),cu_lwp(:,:),cu_iwp(:,:),cu_rel(:,:),cu_rei(:,:)
+     REAL, ALLOCATABLE :: up(:,:),dn(:,:),hr(:,:),upc(:,:),dnc(:,:),hrc(:,:),up_clean(:,:),dn_clean(:,:)
+     INTEGER, ALLOCATABLE :: i(:),j(:),seed(:)
+   END TYPE ty_rrtmgp_lw_batch_buffers
    TYPE(ty_rrtmgp_lw_workspace) :: gp_workspace
    LOGICAL, OPTIONAL, INTENT(IN) :: use_rrtmgp
    LOGICAL, OPTIONAL, INTENT(IN) :: f_qh
@@ -11634,6 +11643,13 @@ CONTAINS
    INTEGER, OPTIONAL, INTENT(IN) :: udm_cf_step(ims:ime,jms:jme),udm_cf_top(ims:ime,jms:jme),mcica_seed_override,audit_step
    INTEGER, OPTIONAL, INTENT(IN) :: rrtmgp_domain_id,rrtmgp_calendar_day,cu_population_policy
    INTEGER :: gp_seed,gp_g_count,gp_seed_overridden
+   INTEGER :: gp_batch_requested,gp_batch_count,gp_batch_slot,gp_batch_max
+   LOGICAL :: gp_batch_enabled
+   CHARACTER(LEN=32) :: gp_batch_env
+   CHARACTER(LEN=1024) :: gp_capture_env,gp_audit_env
+   INTEGER :: gp_batch_env_status,gp_batch_env_value
+   INTEGER :: gp_capture_status,gp_audit_status
+   TYPE(ty_rrtmgp_lw_batch_buffers) :: gp_batch
    REAL(KIND=8) :: gp_g_sum,gp_g_max
    INTEGER(KIND=8) :: gp_cf0_count(4),gp_clip_low_count(2),gp_clip_high_count(2)
    REAL(KIND=8) :: gp_cf0_sum(4),gp_cf0_max(4),gp_clip_low_sum(2),gp_clip_low_max(2), &
@@ -11998,6 +12014,62 @@ CONTAINS
 !------------------------------------------------------------------
     run_rrtmgp=.FALSE.
     IF(PRESENT(use_rrtmgp)) run_rrtmgp=use_rrtmgp
+    gp_batch_requested=1
+    IF(run_rrtmgp) THEN
+      ! Opt-in packing; scalar remains the default and capture/audit or an
+      ! explicit test seed always selects the existing one-column path.
+      gp_batch_env=''
+      CALL GET_ENVIRONMENT_VARIABLE('WRF_RRTMGP_BATCH_SIZE',gp_batch_env,STATUS=gp_batch_env_status)
+      IF(gp_batch_env_status==-1.OR.gp_batch_env_status>1) &
+        CALL wrf_error_fatal('RRTMGP_BATCH_SIZE_INVALID')
+      IF(gp_batch_env_status==0.AND.LEN_TRIM(gp_batch_env)>0) THEN
+        SELECT CASE(TRIM(gp_batch_env))
+        CASE('1'); gp_batch_requested=1
+        CASE('32'); gp_batch_requested=32
+        CASE('64'); gp_batch_requested=64
+        CASE('128'); gp_batch_requested=128
+        CASE DEFAULT; CALL wrf_error_fatal('RRTMGP_BATCH_SIZE_INVALID')
+        END SELECT
+      END IF
+    END IF
+    gp_batch_enabled=run_rrtmgp.AND.gp_batch_requested>1
+    IF(gp_batch_enabled) THEN
+      gp_capture_env=''; gp_audit_env=''
+      CALL GET_ENVIRONMENT_VARIABLE('WRF_RRTMGP_CAPTURE_DIR',gp_capture_env,STATUS=gp_capture_status)
+      CALL GET_ENVIRONMENT_VARIABLE('WRF_RRTMGP_AUDIT_DIR',gp_audit_env,STATUS=gp_audit_status)
+      IF(gp_capture_status==-1.OR.gp_audit_status==-1.OR. &
+         (gp_capture_status==0.AND.LEN_TRIM(gp_capture_env)>0).OR. &
+         (gp_audit_status==0.AND.LEN_TRIM(gp_audit_env)>0)) gp_batch_enabled=.FALSE.
+    END IF
+    IF(PRESENT(mcica_seed_override)) THEN
+      IF(mcica_seed_override>=0) gp_batch_enabled=.FALSE.
+    END IF
+    gp_batch_count=0
+    gp_batch_max=MAX(1,gp_batch_requested)
+    IF(gp_batch_enabled) THEN
+      ALLOCATE(gp_batch%play(gp_batch_max,kts:nlayers),gp_batch%plev(gp_batch_max,kts:nlayers+1), &
+        gp_batch%tlay(gp_batch_max,kts:nlayers),gp_batch%tlev(gp_batch_max,kts:nlayers+1),gp_batch%tsfc(gp_batch_max))
+      ALLOCATE(gp_batch%h2o(gp_batch_max,kts:nlayers),gp_batch%co2(gp_batch_max,kts:nlayers), &
+        gp_batch%o3(gp_batch_max,kts:nlayers),gp_batch%n2o(gp_batch_max,kts:nlayers), &
+        gp_batch%ch4(gp_batch_max,kts:nlayers),gp_batch%o2(gp_batch_max,kts:nlayers),gp_batch%emis(gp_batch_max,nbndlw))
+      ALLOCATE(gp_batch%cf(gp_batch_max,kts:nlayers),gp_batch%lwp(gp_batch_max,kts:nlayers), &
+        gp_batch%iwp(gp_batch_max,kts:nlayers),gp_batch%swp(gp_batch_max,kts:nlayers), &
+        gp_batch%rel(gp_batch_max,kts:nlayers),gp_batch%rei(gp_batch_max,kts:nlayers),gp_batch%res(gp_batch_max,kts:nlayers))
+      ALLOCATE(gp_batch%cfc11(gp_batch_max,kts:nlayers),gp_batch%cfc12(gp_batch_max,kts:nlayers), &
+        gp_batch%cfc22(gp_batch_max,kts:nlayers),gp_batch%ccl4(gp_batch_max,kts:nlayers), &
+        gp_batch%rwp(gp_batch_max,kts:nlayers))
+      ALLOCATE(gp_batch%dry_mass(gp_batch_max,kte-kts+1))
+      ALLOCATE(gp_batch%gwp(gp_batch_max,kts:nlayers),gp_batch%hwp(gp_batch_max,kts:nlayers), &
+        gp_batch%lambda_g(gp_batch_max,kts:nlayers),gp_batch%lambda_h(gp_batch_max,kts:nlayers), &
+        gp_batch%cu_lwp(gp_batch_max,kts:nlayers),gp_batch%cu_iwp(gp_batch_max,kts:nlayers), &
+        gp_batch%cu_rel(gp_batch_max,kts:nlayers),gp_batch%cu_rei(gp_batch_max,kts:nlayers))
+      ALLOCATE(gp_batch%up(gp_batch_max,kts:nlayers+1),gp_batch%dn(gp_batch_max,kts:nlayers+1), &
+        gp_batch%upc(gp_batch_max,kts:nlayers+1),gp_batch%dnc(gp_batch_max,kts:nlayers+1), &
+        gp_batch%up_clean(gp_batch_max,kts:nlayers+1),gp_batch%dn_clean(gp_batch_max,kts:nlayers+1), &
+        gp_batch%hr(gp_batch_max,kts:nlayers),gp_batch%hrc(gp_batch_max,kts:nlayers), &
+        gp_batch%i(gp_batch_max),gp_batch%j(gp_batch_max),gp_batch%seed(gp_batch_max))
+      gp_batch%cu_lwp=0.; gp_batch%cu_iwp=0.; gp_batch%cu_rel=10.; gp_batch%cu_rei=10.
+    END IF
     gp_frozen=.FALSE.
     IF(run_rrtmgp) gp_frozen=rrtmgp_frozen_enabled()
     cu_bundle_present=PRESENT(native_qc3d).OR.PRESENT(native_qi3d).OR.PRESENT(cu_qc3d).OR. &
@@ -13231,6 +13303,53 @@ CONTAINS
          IF(PRESENT(mcica_seed_override)) THEN
            IF(mcica_seed_override>=0) gp_seed=mcica_seed_override
          END IF
+         IF(gp_batch_enabled) THEN
+           gp_batch_count=gp_batch_count+1
+           gp_batch_slot=gp_batch_count
+           gp_batch%i(gp_batch_slot)=i
+           gp_batch%j(gp_batch_slot)=j
+           gp_batch%seed(gp_batch_slot)=gp_seed
+           gp_batch%play(gp_batch_slot,:)=play(1,:)
+           gp_batch%plev(gp_batch_slot,:)=plev(1,:)
+           gp_batch%tlay(gp_batch_slot,:)=tlay(1,:)
+           gp_batch%tlev(gp_batch_slot,:)=tlev(1,:)
+           gp_batch%tsfc(gp_batch_slot)=tsfc(1)
+           gp_batch%h2o(gp_batch_slot,:)=h2ovmr(1,:)
+           gp_batch%co2(gp_batch_slot,:)=co2vmr(1,:)
+           gp_batch%o3(gp_batch_slot,:)=o3vmr(1,:)
+           gp_batch%n2o(gp_batch_slot,:)=n2ovmr(1,:)
+           gp_batch%ch4(gp_batch_slot,:)=ch4vmr(1,:)
+           gp_batch%o2(gp_batch_slot,:)=o2vmr(1,:)
+           gp_batch%emis(gp_batch_slot,:)=emis(1,:)
+           gp_batch%cf(gp_batch_slot,:)=cldfrac(1,:)
+           gp_batch%lwp(gp_batch_slot,:)=clwpth(1,:)
+           gp_batch%iwp(gp_batch_slot,:)=ciwpth(1,:)
+           gp_batch%swp(gp_batch_slot,:)=cswpth(1,:)
+           gp_batch%rel(gp_batch_slot,:)=rel(1,:)
+           gp_batch%rei(gp_batch_slot,:)=rei(1,:)
+           gp_batch%res(gp_batch_slot,:)=res(1,:)
+           gp_batch%cfc11(gp_batch_slot,:)=cfc11vmr(1,:)
+           gp_batch%cfc12(gp_batch_slot,:)=cfc12vmr(1,:)
+           gp_batch%cfc22(gp_batch_slot,:)=cfc22vmr(1,:)
+           gp_batch%ccl4(gp_batch_slot,:)=ccl4vmr(1,:)
+           gp_batch%rwp(gp_batch_slot,:)=gp_rwp(1,:)
+           gp_batch%dry_mass(gp_batch_slot,:)=udm_dry_layer_mass(i,kts:kte,j)
+           gp_batch%gwp(gp_batch_slot,:)=gp_gwp(1,:)
+           gp_batch%hwp(gp_batch_slot,:)=gp_hwp(1,:)
+           gp_batch%lambda_g(gp_batch_slot,:)=gp_lambda_g(1,:)
+           gp_batch%lambda_h(gp_batch_slot,:)=gp_lambda_h(1,:)
+           IF(use_cu_population) THEN
+             gp_batch%cu_lwp(gp_batch_slot,:)=gp_cu_lwp(1,:)
+             gp_batch%cu_iwp(gp_batch_slot,:)=gp_cu_iwp(1,:)
+             gp_batch%cu_rel(gp_batch_slot,:)=gp_cu_rel(1,:)
+             gp_batch%cu_rei(gp_batch_slot,:)=gp_cu_rei(1,:)
+           END IF
+           IF(gp_batch_count==gp_batch_requested.OR.i==ite) THEN
+             CALL flush_lw_batch(gp_batch_count)
+             gp_batch_count=0
+           END IF
+           CYCLE i_loop
+         END IF
          IF(run_rrtmgp) THEN
            IF(use_cu_population) THEN
              IF(gp_frozen) THEN
@@ -13279,64 +13398,7 @@ CONTAINS
              uflxcln ,dflxcln, calc_clean_atm_diag )
          END IF
 
-! Output downard surface flux, and outgoing longwave flux and cloud forcing 
-! at the top of atmosphere (W/m2)
-         glw(i,j) = dflx(1,1)
-!         olr(i,j) = uflx(1,kte+2)
-!         lwcf(i,j) = uflxc(1,kte+2) - uflx(1,kte+2)
-! Steven Cavallo: Changed OLR to be valid at the top of atmosphere instead 
-! of top of model.  Dec 2010.
-         olr(i,j) = uflx(1,nlayers+1)
-         lwcf(i,j) = uflxc(1,nlayers+1) - uflx(1,nlayers+1)
-
-         if (present(lwupt)) then 
-! Output up and down toa fluxes for total and clear sky
-! nlayers+1 represents value at 0 mb
-            lwupt(i,j)     = uflx(1,nlayers+1)
-            lwuptc(i,j)    = uflxc(1,nlayers+1)
-            lwdnt(i,j)     = dflx(1,nlayers+1)
-            lwdntc(i,j)    = dflxc(1,nlayers+1)
-! Output up and down surface fluxes for total and clear sky
-            lwupb(i,j)     = uflx(1,1)
-            lwupbc(i,j)    = uflxc(1,1)
-            lwdnb(i,j)     = dflx(1,1)
-            lwdnbc(i,j)    = dflxc(1,1)
-			if(calc_clean_atm_diag .gt. 0)then
-! Output up and down toa fluxes for clean sky
-            	lwuptcln(i,j)  = uflxcln(1,nlayers+1)
-            	lwdntcln(i,j)  = dflxcln(1,nlayers+1)
-! Output up and down surface fluxes for clean sky
-            	lwupbcln(i,j)  = uflxcln(1,1)
-            	lwdnbcln(i,j)  = dflxcln(1,1)
-			end if
-         endif
-
-! Output up and down layer fluxes for total and clear sky.
-! Vertical ordering is from bottom to top in units of W m-2. 
-         if ( present (lwupflx) ) then
-         do k=kts,kte+2
-            lwupflx(i,k,j)  = uflx(1,k)
-            lwupflxc(i,k,j) = uflxc(1,k)
-            lwdnflx(i,k,j)  = dflx(1,k)
-            lwdnflxc(i,k,j) = dflxc(1,k)
-         enddo
-         endif
-
-! Output heating rate tendency; convert heating rate from K/d to K/s
-! Heating rate arrays are ordered vertically from bottom to top here. 
-         do k=kts,kte
-            tten1d(k) = hr(ncol,k)/86400.
-            rthratenlw(i,k,j) = tten1d(k)/pi3d(i,k,j)
-            tten1d(k) = hrc(ncol,k)/86400.
-            rthratenlwc(i,k,j) = tten1d(k)/pi3d(i,k,j)
-         enddo
-         IF(trace_active('LW')) THEN
-            CALL trace_result('LW','WRF_THETA_HR',RESHAPE(rthratenlw(i,kts:kte,j),[1,kte-kts+1]))
-            CALL trace_result('LW','WRF_GLW',RESHAPE([glw(i,j)],[1,1]))
-            CALL trace_result('LW','WRF_OLR',RESHAPE([olr(i,j)],[1,1]))
-            CALL trace_end('LW')
-         END IF
-
+         CALL scatter_lw_column(i,j)
 !
       end do i_loop
    end do j_loop                                           
@@ -13446,6 +13508,135 @@ CONTAINS
      END IF
     END BLOCK
    END IF
+
+CONTAINS
+
+   SUBROUTINE flush_lw_batch(nbuf)
+      INTEGER, INTENT(IN) :: nbuf
+      INTEGER :: bslot
+      IF(nbuf<1) RETURN
+      WRITE(gp_context,'(A,I0,A,I0,A,I0)') 'LW batch j=',gp_batch%j(1), &
+        ' columns i=',gp_batch%i(1),'-',gp_batch%i(nbuf)
+      IF(gp_frozen.AND.use_cu_population) THEN
+         CALL rrtmgp_lw_column(gp_batch%play(1:nbuf,:),gp_batch%plev(1:nbuf,:), &
+           gp_batch%tlay(1:nbuf,:),gp_batch%tlev(1:nbuf,:),gp_batch%tsfc(1:nbuf), &
+           gp_batch%h2o(1:nbuf,:),gp_batch%co2(1:nbuf,:),gp_batch%o3(1:nbuf,:),gp_batch%n2o(1:nbuf,:), &
+           gp_batch%ch4(1:nbuf,:),gp_batch%o2(1:nbuf,:),gp_batch%emis(1:nbuf,:), &
+           gp_batch%cf(1:nbuf,:),gp_batch%lwp(1:nbuf,:),gp_batch%iwp(1:nbuf,:),gp_batch%swp(1:nbuf,:), &
+           gp_batch%rel(1:nbuf,:),gp_batch%rei(1:nbuf,:),gp_batch%res(1:nbuf,:),4,icld, &
+           gp_batch%seed(1),gp_batch%up(1:nbuf,:),gp_batch%dn(1:nbuf,:),gp_batch%hr(1:nbuf,:), &
+           gp_batch%upc(1:nbuf,:),gp_batch%dnc(1:nbuf,:),gp_batch%hrc(1:nbuf,:), &
+           column_seeds=gp_batch%seed(1:nbuf),rwp=gp_batch%rwp(1:nbuf,:), &
+           native_dry_layer_mass_kg_m2=gp_batch%dry_mass(1:nbuf,:),gwp=gp_batch%gwp(1:nbuf,:), &
+           hwp=gp_batch%hwp(1:nbuf,:),lambda_g=gp_batch%lambda_g(1:nbuf,:), &
+           lambda_h=gp_batch%lambda_h(1:nbuf,:),frozen_context=gp_context, &
+           cfc11vmr=gp_batch%cfc11(1:nbuf,:),cfc12vmr=gp_batch%cfc12(1:nbuf,:), &
+           cfc22vmr=gp_batch%cfc22(1:nbuf,:),ccl4vmr=gp_batch%ccl4(1:nbuf,:),workspace=gp_workspace, &
+           cu_lwp=gp_batch%cu_lwp(1:nbuf,:),cu_iwp=gp_batch%cu_iwp(1:nbuf,:), &
+           cu_rel=gp_batch%cu_rel(1:nbuf,:),cu_rei=gp_batch%cu_rei(1:nbuf,:))
+      ELSE IF(gp_frozen) THEN
+         CALL rrtmgp_lw_column(gp_batch%play(1:nbuf,:),gp_batch%plev(1:nbuf,:), &
+           gp_batch%tlay(1:nbuf,:),gp_batch%tlev(1:nbuf,:),gp_batch%tsfc(1:nbuf), &
+           gp_batch%h2o(1:nbuf,:),gp_batch%co2(1:nbuf,:),gp_batch%o3(1:nbuf,:),gp_batch%n2o(1:nbuf,:), &
+           gp_batch%ch4(1:nbuf,:),gp_batch%o2(1:nbuf,:),gp_batch%emis(1:nbuf,:), &
+           gp_batch%cf(1:nbuf,:),gp_batch%lwp(1:nbuf,:),gp_batch%iwp(1:nbuf,:),gp_batch%swp(1:nbuf,:), &
+           gp_batch%rel(1:nbuf,:),gp_batch%rei(1:nbuf,:),gp_batch%res(1:nbuf,:),4,icld, &
+           gp_batch%seed(1),gp_batch%up(1:nbuf,:),gp_batch%dn(1:nbuf,:),gp_batch%hr(1:nbuf,:), &
+           gp_batch%upc(1:nbuf,:),gp_batch%dnc(1:nbuf,:),gp_batch%hrc(1:nbuf,:), &
+           column_seeds=gp_batch%seed(1:nbuf),rwp=gp_batch%rwp(1:nbuf,:), &
+           native_dry_layer_mass_kg_m2=gp_batch%dry_mass(1:nbuf,:),gwp=gp_batch%gwp(1:nbuf,:), &
+           hwp=gp_batch%hwp(1:nbuf,:),lambda_g=gp_batch%lambda_g(1:nbuf,:), &
+           lambda_h=gp_batch%lambda_h(1:nbuf,:),frozen_context=gp_context, &
+           cfc11vmr=gp_batch%cfc11(1:nbuf,:),cfc12vmr=gp_batch%cfc12(1:nbuf,:), &
+           cfc22vmr=gp_batch%cfc22(1:nbuf,:),ccl4vmr=gp_batch%ccl4(1:nbuf,:),workspace=gp_workspace)
+      ELSE IF(use_cu_population) THEN
+         CALL rrtmgp_lw_column(gp_batch%play(1:nbuf,:),gp_batch%plev(1:nbuf,:), &
+           gp_batch%tlay(1:nbuf,:),gp_batch%tlev(1:nbuf,:),gp_batch%tsfc(1:nbuf), &
+           gp_batch%h2o(1:nbuf,:),gp_batch%co2(1:nbuf,:),gp_batch%o3(1:nbuf,:),gp_batch%n2o(1:nbuf,:), &
+           gp_batch%ch4(1:nbuf,:),gp_batch%o2(1:nbuf,:),gp_batch%emis(1:nbuf,:), &
+           gp_batch%cf(1:nbuf,:),gp_batch%lwp(1:nbuf,:),gp_batch%iwp(1:nbuf,:),gp_batch%swp(1:nbuf,:), &
+           gp_batch%rel(1:nbuf,:),gp_batch%rei(1:nbuf,:),gp_batch%res(1:nbuf,:),4,icld, &
+           gp_batch%seed(1),gp_batch%up(1:nbuf,:),gp_batch%dn(1:nbuf,:),gp_batch%hr(1:nbuf,:), &
+           gp_batch%upc(1:nbuf,:),gp_batch%dnc(1:nbuf,:),gp_batch%hrc(1:nbuf,:), &
+           column_seeds=gp_batch%seed(1:nbuf),rwp=gp_batch%rwp(1:nbuf,:), &
+           native_dry_layer_mass_kg_m2=gp_batch%dry_mass(1:nbuf,:), &
+           cfc11vmr=gp_batch%cfc11(1:nbuf,:),cfc12vmr=gp_batch%cfc12(1:nbuf,:), &
+           cfc22vmr=gp_batch%cfc22(1:nbuf,:),ccl4vmr=gp_batch%ccl4(1:nbuf,:),workspace=gp_workspace, &
+           cu_lwp=gp_batch%cu_lwp(1:nbuf,:),cu_iwp=gp_batch%cu_iwp(1:nbuf,:), &
+           cu_rel=gp_batch%cu_rel(1:nbuf,:),cu_rei=gp_batch%cu_rei(1:nbuf,:))
+      ELSE
+         CALL rrtmgp_lw_column(gp_batch%play(1:nbuf,:),gp_batch%plev(1:nbuf,:), &
+           gp_batch%tlay(1:nbuf,:),gp_batch%tlev(1:nbuf,:),gp_batch%tsfc(1:nbuf), &
+           gp_batch%h2o(1:nbuf,:),gp_batch%co2(1:nbuf,:),gp_batch%o3(1:nbuf,:),gp_batch%n2o(1:nbuf,:), &
+           gp_batch%ch4(1:nbuf,:),gp_batch%o2(1:nbuf,:),gp_batch%emis(1:nbuf,:), &
+           gp_batch%cf(1:nbuf,:),gp_batch%lwp(1:nbuf,:),gp_batch%iwp(1:nbuf,:),gp_batch%swp(1:nbuf,:), &
+           gp_batch%rel(1:nbuf,:),gp_batch%rei(1:nbuf,:),gp_batch%res(1:nbuf,:),4,icld, &
+           gp_batch%seed(1),gp_batch%up(1:nbuf,:),gp_batch%dn(1:nbuf,:),gp_batch%hr(1:nbuf,:), &
+           gp_batch%upc(1:nbuf,:),gp_batch%dnc(1:nbuf,:),gp_batch%hrc(1:nbuf,:), &
+           column_seeds=gp_batch%seed(1:nbuf),rwp=gp_batch%rwp(1:nbuf,:), &
+           native_dry_layer_mass_kg_m2=gp_batch%dry_mass(1:nbuf,:), &
+           cfc11vmr=gp_batch%cfc11(1:nbuf,:),cfc12vmr=gp_batch%cfc12(1:nbuf,:), &
+           cfc22vmr=gp_batch%cfc22(1:nbuf,:),ccl4vmr=gp_batch%ccl4(1:nbuf,:),workspace=gp_workspace)
+      END IF
+      gp_batch%up_clean(1:nbuf,:)=gp_batch%up(1:nbuf,:)
+      gp_batch%dn_clean(1:nbuf,:)=gp_batch%dn(1:nbuf,:)
+      DO bslot=1,nbuf
+         uflx(1,:)=gp_batch%up(bslot,:)
+         dflx(1,:)=gp_batch%dn(bslot,:)
+         uflxc(1,:)=gp_batch%upc(bslot,:)
+         dflxc(1,:)=gp_batch%dnc(bslot,:)
+         hr(1,:)=gp_batch%hr(bslot,:)
+         hrc(1,:)=gp_batch%hrc(bslot,:)
+         uflxcln(1,:)=gp_batch%up_clean(bslot,:)
+         dflxcln(1,:)=gp_batch%dn_clean(bslot,:)
+         ncol=1
+         CALL scatter_lw_column(gp_batch%i(bslot),gp_batch%j(bslot))
+      END DO
+   END SUBROUTINE flush_lw_batch
+
+   SUBROUTINE scatter_lw_column(dest_i,dest_j)
+      INTEGER, INTENT(IN) :: dest_i,dest_j
+! Output downward surface flux and outgoing longwave flux/cloud forcing.
+         glw(dest_i,dest_j) = dflx(1,1)
+         olr(dest_i,dest_j) = uflx(1,nlayers+1)
+         lwcf(dest_i,dest_j) = uflxc(1,nlayers+1) - uflx(1,nlayers+1)
+         if (present(lwupt)) then
+            lwupt(dest_i,dest_j) = uflx(1,nlayers+1)
+            lwuptc(dest_i,dest_j) = uflxc(1,nlayers+1)
+            lwdnt(dest_i,dest_j) = dflx(1,nlayers+1)
+            lwdntc(dest_i,dest_j) = dflxc(1,nlayers+1)
+            lwupb(dest_i,dest_j) = uflx(1,1)
+            lwupbc(dest_i,dest_j) = uflxc(1,1)
+            lwdnb(dest_i,dest_j) = dflx(1,1)
+            lwdnbc(dest_i,dest_j) = dflxc(1,1)
+            if(calc_clean_atm_diag .gt. 0)then
+               lwuptcln(dest_i,dest_j) = uflxcln(1,nlayers+1)
+               lwdntcln(dest_i,dest_j) = dflxcln(1,nlayers+1)
+               lwupbcln(dest_i,dest_j) = uflxcln(1,1)
+               lwdnbcln(dest_i,dest_j) = dflxcln(1,1)
+            end if
+         endif
+         if (present(lwupflx)) then
+            do k=kts,kte+2
+               lwupflx(dest_i,k,dest_j) = uflx(1,k)
+               lwupflxc(dest_i,k,dest_j) = uflxc(1,k)
+               lwdnflx(dest_i,k,dest_j) = dflx(1,k)
+               lwdnflxc(dest_i,k,dest_j) = dflxc(1,k)
+            enddo
+         endif
+         do k=kts,kte
+            tten1d(k) = hr(ncol,k)/86400.
+            rthratenlw(dest_i,k,dest_j) = tten1d(k)/pi3d(dest_i,k,dest_j)
+            tten1d(k) = hrc(ncol,k)/86400.
+            rthratenlwc(dest_i,k,dest_j) = tten1d(k)/pi3d(dest_i,k,dest_j)
+         enddo
+         IF(trace_active('LW')) THEN
+            CALL trace_result('LW','WRF_THETA_HR',RESHAPE(rthratenlw(dest_i,kts:kte,dest_j),[1,kte-kts+1]))
+            CALL trace_result('LW','WRF_GLW',RESHAPE([glw(dest_i,dest_j)],[1,1]))
+            CALL trace_result('LW','WRF_OLR',RESHAPE([olr(dest_i,dest_j)],[1,1]))
+            CALL trace_end('LW')
+         END IF
+   END SUBROUTINE scatter_lw_column
 
    END SUBROUTINE RRTMG_LWRAD
 

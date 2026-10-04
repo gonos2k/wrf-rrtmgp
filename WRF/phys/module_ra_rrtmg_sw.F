@@ -10112,6 +10112,21 @@ CONTAINS
    USE module_ra_rrtmgp_trace, ONLY: trace_start, trace_active, trace_raw_start, trace_raw, &
         trace_raw_end, trace_result, trace_end
    IMPLICIT NONE
+   TYPE :: ty_rrtmgp_sw_batch_buffers
+     REAL, ALLOCATABLE :: play(:,:),plev(:,:),tlay(:,:),h2o(:,:),co2(:,:),o3(:,:),n2o(:,:),ch4(:,:),o2(:,:)
+     REAL, ALLOCATABLE :: avdir(:,:),avdif(:,:),andir(:,:),andif(:,:),mu0(:),solar(:)
+     REAL, ALLOCATABLE :: cf(:,:),lwp(:,:),iwp(:,:),swp(:,:),rel(:,:),rei(:,:),res(:,:),rwp(:,:),dry_mass(:,:)
+     REAL, ALLOCATABLE :: gwp(:,:),hwp(:,:),lambda_g(:,:),lambda_h(:,:),cu_lwp(:,:),cu_iwp(:,:),cu_rel(:,:),cu_rei(:,:)
+     REAL, ALLOCATABLE :: up(:,:),dn(:,:),hr(:,:),upc(:,:),dnc(:,:),hrc(:,:),direct(:,:),diffuse(:,:),directc(:,:)
+     REAL, ALLOCATABLE :: visdir(:,:),visdif(:,:),nirdir(:,:),nirdif(:,:),directu(:,:),directcu(:,:),visdiru(:,:),nirdiru(:,:)
+     INTEGER, ALLOCATABLE :: i(:),j(:),seed(:)
+   END TYPE ty_rrtmgp_sw_batch_buffers
+   TYPE(ty_rrtmgp_sw_batch_buffers) :: gp_batch
+   INTEGER :: gp_batch_requested,gp_batch_count,gp_batch_slot,gp_batch_max
+   LOGICAL :: gp_batch_enabled
+   CHARACTER(LEN=32) :: gp_batch_env
+   CHARACTER(LEN=1024) :: gp_capture_env,gp_audit_env
+   INTEGER :: gp_batch_env_status,gp_batch_env_value,gp_capture_status,gp_audit_status
    TYPE(ty_rrtmgp_sw_workspace) :: gp_workspace
    LOGICAL, OPTIONAL, INTENT(IN) :: use_rrtmgp
    LOGICAL, OPTIONAL, INTENT(IN) :: f_qh
@@ -10426,6 +10441,7 @@ CONTAINS
 ! This will be derived below from the dz in each layer
     real, dimension( 1, kts:kte+1 )  ::                     hgt
     real ::                                               dzsum
+    real ::                                               gp_saved_coszrs
 ! Surface albedo (for UV/visible and near-IR spectral regions,
 ! and for direct and diffuse radiation)
     real, dimension( 1 )  ::                               asdir, &
@@ -10596,6 +10612,67 @@ CONTAINS
 !------------------------------------------------------------------
     run_rrtmgp=.FALSE.
     IF(PRESENT(use_rrtmgp)) run_rrtmgp=use_rrtmgp
+    gp_batch_requested=1
+    IF(run_rrtmgp) THEN
+      ! Opt-in packing; scalar remains the default and capture/audit or an
+      ! explicit test seed always selects the existing one-column path.
+      gp_batch_env=''
+      CALL GET_ENVIRONMENT_VARIABLE('WRF_RRTMGP_BATCH_SIZE',gp_batch_env,STATUS=gp_batch_env_status)
+      IF(gp_batch_env_status==-1.OR.gp_batch_env_status>1) &
+        CALL wrf_error_fatal('RRTMGP_BATCH_SIZE_INVALID')
+      IF(gp_batch_env_status==0.AND.LEN_TRIM(gp_batch_env)>0) THEN
+        SELECT CASE(TRIM(gp_batch_env))
+        CASE('1'); gp_batch_requested=1
+        CASE('32'); gp_batch_requested=32
+        CASE('64'); gp_batch_requested=64
+        CASE('128'); gp_batch_requested=128
+        CASE DEFAULT; CALL wrf_error_fatal('RRTMGP_BATCH_SIZE_INVALID')
+        END SELECT
+      END IF
+    END IF
+    gp_batch_enabled=run_rrtmgp.AND.gp_batch_requested>1
+    IF(gp_batch_enabled) THEN
+      gp_capture_env=''; gp_audit_env=''
+      CALL GET_ENVIRONMENT_VARIABLE('WRF_RRTMGP_CAPTURE_DIR',gp_capture_env,STATUS=gp_capture_status)
+      CALL GET_ENVIRONMENT_VARIABLE('WRF_RRTMGP_AUDIT_DIR',gp_audit_env,STATUS=gp_audit_status)
+      IF(gp_capture_status==-1.OR.gp_audit_status==-1.OR. &
+         (gp_capture_status==0.AND.LEN_TRIM(gp_capture_env)>0).OR. &
+         (gp_audit_status==0.AND.LEN_TRIM(gp_audit_env)>0)) gp_batch_enabled=.FALSE.
+    END IF
+    IF(PRESENT(mcica_seed_override)) THEN
+      IF(mcica_seed_override>=0) gp_batch_enabled=.FALSE.
+    END IF
+    gp_batch_count=0
+    gp_batch_max=MAX(1,gp_batch_requested)
+    IF(gp_batch_enabled) THEN
+      ALLOCATE(gp_batch%play(gp_batch_max,kts:kte+1),gp_batch%plev(gp_batch_max,kts:kte+2), &
+        gp_batch%tlay(gp_batch_max,kts:kte+1),gp_batch%h2o(gp_batch_max,kts:kte+1), &
+        gp_batch%co2(gp_batch_max,kts:kte+1),gp_batch%o3(gp_batch_max,kts:kte+1), &
+        gp_batch%n2o(gp_batch_max,kts:kte+1),gp_batch%ch4(gp_batch_max,kts:kte+1),gp_batch%o2(gp_batch_max,kts:kte+1))
+      ALLOCATE(gp_batch%avdir(gp_batch_max,1),gp_batch%avdif(gp_batch_max,1), &
+        gp_batch%andir(gp_batch_max,1),gp_batch%andif(gp_batch_max,1), &
+        gp_batch%mu0(gp_batch_max),gp_batch%solar(gp_batch_max))
+      ALLOCATE(gp_batch%cf(gp_batch_max,kts:kte+1),gp_batch%lwp(gp_batch_max,kts:kte+1), &
+        gp_batch%iwp(gp_batch_max,kts:kte+1),gp_batch%swp(gp_batch_max,kts:kte+1), &
+        gp_batch%rel(gp_batch_max,kts:kte+1),gp_batch%rei(gp_batch_max,kts:kte+1), &
+        gp_batch%res(gp_batch_max,kts:kte+1),gp_batch%rwp(gp_batch_max,kts:kte+1), &
+        gp_batch%dry_mass(gp_batch_max,kte-kts+1))
+      ALLOCATE(gp_batch%gwp(gp_batch_max,kts:kte+1),gp_batch%hwp(gp_batch_max,kts:kte+1), &
+        gp_batch%lambda_g(gp_batch_max,kts:kte+1),gp_batch%lambda_h(gp_batch_max,kts:kte+1), &
+        gp_batch%cu_lwp(gp_batch_max,kts:kte+1),gp_batch%cu_iwp(gp_batch_max,kts:kte+1), &
+        gp_batch%cu_rel(gp_batch_max,kts:kte+1),gp_batch%cu_rei(gp_batch_max,kts:kte+1))
+      ALLOCATE(gp_batch%up(gp_batch_max,kts:kte+2),gp_batch%dn(gp_batch_max,kts:kte+2), &
+        gp_batch%upc(gp_batch_max,kts:kte+2),gp_batch%dnc(gp_batch_max,kts:kte+2), &
+        gp_batch%hr(gp_batch_max,kts:kte+1),gp_batch%hrc(gp_batch_max,kts:kte+1), &
+        gp_batch%direct(gp_batch_max,kts:kte+2),gp_batch%diffuse(gp_batch_max,kts:kte+2), &
+        gp_batch%directc(gp_batch_max,kts:kte+2),gp_batch%visdir(gp_batch_max,kts:kte+2), &
+        gp_batch%visdif(gp_batch_max,kts:kte+2),gp_batch%nirdir(gp_batch_max,kts:kte+2), &
+        gp_batch%nirdif(gp_batch_max,kts:kte+2),gp_batch%directu(gp_batch_max,kts:kte+2), &
+        gp_batch%directcu(gp_batch_max,kts:kte+2),gp_batch%visdiru(gp_batch_max,kts:kte+2), &
+        gp_batch%nirdiru(gp_batch_max,kts:kte+2),gp_batch%i(gp_batch_max),gp_batch%j(gp_batch_max), &
+        gp_batch%seed(gp_batch_max))
+      gp_batch%cu_lwp=0.; gp_batch%cu_iwp=0.; gp_batch%cu_rel=10.; gp_batch%cu_rei=10.
+    END IF
     gp_frozen=.FALSE.
     IF(run_rrtmgp) gp_frozen=rrtmgp_frozen_enabled()
     cu_bundle_present=PRESENT(native_qc3d).OR.PRESENT(native_qi3d).OR.PRESENT(cu_qc3d).OR. &
@@ -10720,11 +10797,17 @@ CONTAINS
 ! Cosine solar zenith angle for current time step
 !
           ! jararias, 14/08/2013
-          coszr(i,j)=xcoszen(i,j)
-          coszrs=xcoszen(i,j)
+         coszr(i,j)=xcoszen(i,j)
+         coszrs=xcoszen(i,j)
 
 ! Set flag to prevent shortwave calculation when sun below horizon
          if (coszrs.le.0.0) dorrsw = .false.
+         IF(gp_batch_enabled.AND..NOT.dorrsw.AND.gp_batch_count>0) THEN
+           gp_saved_coszrs=coszrs
+           CALL flush_sw_batch(gp_batch_count)
+           gp_batch_count=0
+           coszrs=gp_saved_coszrs
+         END IF
 ! Perform shortwave calculation if sun above horizon
          if (dorrsw) then
 
@@ -11929,6 +12012,52 @@ CONTAINS
          IF(PRESENT(mcica_seed_override)) THEN
            IF(mcica_seed_override>=0) gp_seed=mcica_seed_override
          END IF
+         IF(gp_batch_enabled) THEN
+           gp_batch_count=gp_batch_count+1
+           gp_batch_slot=gp_batch_count
+           gp_batch%i(gp_batch_slot)=i
+           gp_batch%j(gp_batch_slot)=j
+           gp_batch%seed(gp_batch_slot)=gp_seed
+           gp_batch%play(gp_batch_slot,:)=play(1,:)
+           gp_batch%plev(gp_batch_slot,:)=plev(1,:)
+           gp_batch%tlay(gp_batch_slot,:)=tlay(1,:)
+           gp_batch%h2o(gp_batch_slot,:)=h2ovmr(1,:)
+           gp_batch%co2(gp_batch_slot,:)=co2vmr(1,:)
+           gp_batch%o3(gp_batch_slot,:)=o3vmr(1,:)
+           gp_batch%n2o(gp_batch_slot,:)=n2ovmr(1,:)
+           gp_batch%ch4(gp_batch_slot,:)=ch4vmr(1,:)
+           gp_batch%o2(gp_batch_slot,:)=o2vmr(1,:)
+           gp_batch%avdir(gp_batch_slot,1)=asdir(1)
+           gp_batch%avdif(gp_batch_slot,1)=asdif(1)
+           gp_batch%andir(gp_batch_slot,1)=aldir(1)
+           gp_batch%andif(gp_batch_slot,1)=aldif(1)
+           gp_batch%mu0(gp_batch_slot)=coszrs
+           gp_batch%solar(gp_batch_slot)=scon
+           gp_batch%cf(gp_batch_slot,:)=cldfrac(1,:)
+           gp_batch%lwp(gp_batch_slot,:)=clwpth(1,:)
+           gp_batch%iwp(gp_batch_slot,:)=ciwpth(1,:)
+           gp_batch%swp(gp_batch_slot,:)=cswpth(1,:)
+           gp_batch%rel(gp_batch_slot,:)=rel(1,:)
+           gp_batch%rei(gp_batch_slot,:)=rei(1,:)
+           gp_batch%res(gp_batch_slot,:)=res(1,:)
+           gp_batch%rwp(gp_batch_slot,:)=gp_rwp(1,:)
+           gp_batch%dry_mass(gp_batch_slot,:)=udm_dry_layer_mass(i,kts:kte,j)
+           gp_batch%gwp(gp_batch_slot,:)=gp_gwp(1,:)
+           gp_batch%hwp(gp_batch_slot,:)=gp_hwp(1,:)
+           gp_batch%lambda_g(gp_batch_slot,:)=gp_lambda_g(1,:)
+           gp_batch%lambda_h(gp_batch_slot,:)=gp_lambda_h(1,:)
+           IF(use_cu_population) THEN
+             gp_batch%cu_lwp(gp_batch_slot,:)=gp_cu_lwp(1,:)
+             gp_batch%cu_iwp(gp_batch_slot,:)=gp_cu_iwp(1,:)
+             gp_batch%cu_rel(gp_batch_slot,:)=gp_cu_rel(1,:)
+             gp_batch%cu_rei(gp_batch_slot,:)=gp_cu_rei(1,:)
+           END IF
+           IF(gp_batch_count==gp_batch_requested.OR.i==ite) THEN
+             CALL flush_sw_batch(gp_batch_count)
+             gp_batch_count=0
+           END IF
+           CYCLE i_loop
+         END IF
          IF(run_rrtmgp) THEN
            IF(gp_frozen) THEN
              IF(use_cu_population) THEN
@@ -12005,75 +12134,7 @@ CONTAINS
                                                    )
          END IF
 
-         ! WRF-CMAQ twoway coupled model
-         if (present(sw_zbbcddir)) then
-            sw_zbbcddir(i,j) = loc_sw_zbbcddir
-            sw_dirdflux(i,j) = loc_sw_dirdflux
-            sw_difdflux(i,j) = loc_sw_difdflux
-         end if
-
-! Output net absorbed shortwave surface flux and shortwave cloud forcing
-! at the top of atmosphere (W/m2)
-         gsw(i,j) = swdflx(1,1) - swuflx(1,1)
-         swcf(i,j) = (swdflx(1,kte+2) - swuflx(1,kte+2)) - (swdflxc(1,kte+2) - swuflxc(1,kte+2))
-
-         if (present(swupt)) then 
-! Output up and down toa fluxes for total and clear sky
-            swupt(i,j)     = swuflx(1,kte+2)
-            swuptc(i,j)    = swuflxc(1,kte+2)
-            swdnt(i,j)     = swdflx(1,kte+2)
-            swdntc(i,j)    = swdflxc(1,kte+2)
-! Output up and down surface fluxes for total and clear sky
-            swupb(i,j)     = swuflx(1,1)
-            swupbc(i,j)    = swuflxc(1,1)
-            swdnb(i,j)     = swdflx(1,1)
-! Added by Zhenxin for 4 compenants of swdown radiation
-            swvisdir(i,j)  = sibvisdir(1,1)
-            swvisdif(i,j)  = sibvisdif(1,1)
-            swnirdir(i,j)  = sibnirdir(1,1)
-            swnirdif(i,j)  = sibnirdif(1,1)
-!  Ended, Zhenxin (2011/06/20)
-            swdnbc(i,j)    = swdflxc(1,1)
-            if(calc_clean_atm_diag .gt. 0)then
-            	swuptcln(i,j)  = swuflxcln(1,kte+2)
-            	swdntcln(i,j)  = swdflxcln(1,kte+2)
-            	swupbcln(i,j)  = swuflxcln(1,1)
-            	swdnbcln(i,j)  = swdflxcln(1,1)
-            end if
-         endif
-            swddir(i,j)    = swdkdir(1,1)          ! jararias 2013/08/10
-            swddni(i,j)    = swddir(i,j) / coszrs  ! jararias 2013/08/10
-            swddif(i,j)    = swdkdif(1,1)          ! jararias 2013/08/10
-            swdownc(i, j)  = swdflxc(1,1)          ! PAJ: clear-sky GHI
-            swddirc(i,j)   = swdkdirc(1,1)         ! PAJ: clear-sky direct normal irradiance
-            swddnic(i,j)   = swddirc(i,j) / coszrs ! PAJ: clear-sky direct normal irradiance
-
-! Output up and down layer fluxes for total and clear sky.
-! Vertical ordering is from bottom to top in units of W m-2. 
-         if ( present (swupflx) ) then
-         do k=kts,kte+2
-            swupflx(i,k,j)  = swuflx(1,k)
-            swupflxc(i,k,j) = swuflxc(1,k)
-            swdnflx(i,k,j)  = swdflx(1,k)
-            swdnflxc(i,k,j) = swdflxc(1,k)
-         enddo
-         endif
-
-! Output heating rate tendency; convert heating rate from K/d to K/s
-! Heating rate arrays are ordered vertically from bottom to top here. 
-         do k=kts,kte 
-            tten1d(k) = swhr(ncol,k)/86400.
-            rthratensw(i,k,j) = tten1d(k)/pi3d(i,k,j)
-            tten1d(k) = swhrc(ncol,k)/86400.
-            rthratenswc(i,k,j) = tten1d(k)/pi3d(i,k,j)
-         enddo
-         IF(trace_active('SW')) THEN
-            CALL trace_result('SW','WRF_THETA_HR',RESHAPE(rthratensw(i,kts:kte,j),[1,kte-kts+1]))
-            CALL trace_result('SW','WRF_GSW',RESHAPE([gsw(i,j)],[1,1]))
-            CALL trace_result('SW','WRF_SWDDIR',RESHAPE([swddir(i,j)],[1,1]))
-            CALL trace_result('SW','WRF_SWDDIF',RESHAPE([swddif(i,j)],[1,1]))
-            CALL trace_end('SW')
-         END IF
+         CALL scatter_sw_column(i,j)
       else
 
          if (proceed_cmaq_sw) then   ! this is for WRF-CMAQ twoway coupled model
@@ -12126,8 +12187,12 @@ CONTAINS
 
       endif
 !
-      end do i_loop
+   end do i_loop
    end do j_loop                                           
+   IF(gp_batch_count>0) THEN
+     CALL flush_sw_batch(gp_batch_count)
+     gp_batch_count=0
+   END IF
    IF(run_rrtmgp) CALL rrtmgp_release_workspace(gp_workspace)
 
 
@@ -12236,6 +12301,196 @@ CONTAINS
     END BLOCK
    END IF
 
+
+
+CONTAINS
+
+   SUBROUTINE flush_sw_batch(nbuf)
+      INTEGER, INTENT(IN) :: nbuf
+      INTEGER :: bslot,k
+      IF(nbuf<=0) RETURN
+      WRITE(gp_context,'(A,I0,A,I0,A,I0)') 'SW batch j=',gp_batch%j(1), &
+        ' columns i=',gp_batch%i(1),'-',gp_batch%i(nbuf)
+      IF(gp_frozen) THEN
+        IF(use_cu_population) THEN
+          CALL rrtmgp_sw_column(gp_batch%play(1:nbuf,:),gp_batch%plev(1:nbuf,:),gp_batch%tlay(1:nbuf,:), &
+            gp_batch%h2o(1:nbuf,:),gp_batch%co2(1:nbuf,:),gp_batch%o3(1:nbuf,:),gp_batch%n2o(1:nbuf,:), &
+            gp_batch%ch4(1:nbuf,:),gp_batch%o2(1:nbuf,:),gp_batch%avdir(1:nbuf,1),gp_batch%avdif(1:nbuf,1), &
+            gp_batch%andir(1:nbuf,1),gp_batch%andif(1:nbuf,1),gp_batch%mu0(1:nbuf),gp_batch%solar(1), &
+            gp_batch%cf(1:nbuf,:),gp_batch%lwp(1:nbuf,:),gp_batch%iwp(1:nbuf,:),gp_batch%swp(1:nbuf,:), &
+            gp_batch%rel(1:nbuf,:),gp_batch%rei(1:nbuf,:),gp_batch%res(1:nbuf,:),4,icld,gp_batch%seed(1), &
+            gp_batch%up(1:nbuf,:),gp_batch%dn(1:nbuf,:),gp_batch%hr(1:nbuf,:),gp_batch%upc(1:nbuf,:), &
+            gp_batch%dnc(1:nbuf,:),gp_batch%hrc(1:nbuf,:),gp_batch%direct(1:nbuf,:),gp_batch%diffuse(1:nbuf,:), &
+            gp_batch%directc(1:nbuf,:),gp_batch%visdir(1:nbuf,:),gp_batch%visdif(1:nbuf,:), &
+            gp_batch%nirdir(1:nbuf,:),gp_batch%nirdif(1:nbuf,:),column_seeds=gp_batch%seed(1:nbuf), &
+            rwp=gp_batch%rwp(1:nbuf,:),native_dry_layer_mass_kg_m2=gp_batch%dry_mass(1:nbuf,:), &
+            gwp=gp_batch%gwp(1:nbuf,:),hwp=gp_batch%hwp(1:nbuf,:),lambda_g=gp_batch%lambda_g(1:nbuf,:), &
+            lambda_h=gp_batch%lambda_h(1:nbuf,:),cu_lwp=gp_batch%cu_lwp(1:nbuf,:),cu_iwp=gp_batch%cu_iwp(1:nbuf,:), &
+            cu_rel=gp_batch%cu_rel(1:nbuf,:),cu_rei=gp_batch%cu_rei(1:nbuf,:), &
+            frozen_context=gp_context, &
+            direct_unscaled=gp_batch%directu(1:nbuf,:),directc_unscaled=gp_batch%directcu(1:nbuf,:), &
+            visdir_unscaled=gp_batch%visdiru(1:nbuf,:),nirdir_unscaled=gp_batch%nirdiru(1:nbuf,:), &
+            workspace=gp_workspace,solar_by_column=gp_batch%solar(1:nbuf))
+        ELSE
+          CALL rrtmgp_sw_column(gp_batch%play(1:nbuf,:),gp_batch%plev(1:nbuf,:),gp_batch%tlay(1:nbuf,:), &
+            gp_batch%h2o(1:nbuf,:),gp_batch%co2(1:nbuf,:),gp_batch%o3(1:nbuf,:),gp_batch%n2o(1:nbuf,:), &
+            gp_batch%ch4(1:nbuf,:),gp_batch%o2(1:nbuf,:),gp_batch%avdir(1:nbuf,1),gp_batch%avdif(1:nbuf,1), &
+            gp_batch%andir(1:nbuf,1),gp_batch%andif(1:nbuf,1),gp_batch%mu0(1:nbuf),gp_batch%solar(1), &
+            gp_batch%cf(1:nbuf,:),gp_batch%lwp(1:nbuf,:),gp_batch%iwp(1:nbuf,:),gp_batch%swp(1:nbuf,:), &
+            gp_batch%rel(1:nbuf,:),gp_batch%rei(1:nbuf,:),gp_batch%res(1:nbuf,:),4,icld,gp_batch%seed(1), &
+            gp_batch%up(1:nbuf,:),gp_batch%dn(1:nbuf,:),gp_batch%hr(1:nbuf,:),gp_batch%upc(1:nbuf,:), &
+            gp_batch%dnc(1:nbuf,:),gp_batch%hrc(1:nbuf,:),gp_batch%direct(1:nbuf,:),gp_batch%diffuse(1:nbuf,:), &
+            gp_batch%directc(1:nbuf,:),gp_batch%visdir(1:nbuf,:),gp_batch%visdif(1:nbuf,:), &
+            gp_batch%nirdir(1:nbuf,:),gp_batch%nirdif(1:nbuf,:),column_seeds=gp_batch%seed(1:nbuf), &
+            rwp=gp_batch%rwp(1:nbuf,:),native_dry_layer_mass_kg_m2=gp_batch%dry_mass(1:nbuf,:), &
+            gwp=gp_batch%gwp(1:nbuf,:),hwp=gp_batch%hwp(1:nbuf,:),lambda_g=gp_batch%lambda_g(1:nbuf,:), &
+            lambda_h=gp_batch%lambda_h(1:nbuf,:),frozen_context=gp_context, &
+            direct_unscaled=gp_batch%directu(1:nbuf,:), &
+            directc_unscaled=gp_batch%directcu(1:nbuf,:),visdir_unscaled=gp_batch%visdiru(1:nbuf,:), &
+            nirdir_unscaled=gp_batch%nirdiru(1:nbuf,:),workspace=gp_workspace, &
+            solar_by_column=gp_batch%solar(1:nbuf))
+        END IF
+      ELSE
+        IF(use_cu_population) THEN
+          CALL rrtmgp_sw_column(gp_batch%play(1:nbuf,:),gp_batch%plev(1:nbuf,:),gp_batch%tlay(1:nbuf,:), &
+            gp_batch%h2o(1:nbuf,:),gp_batch%co2(1:nbuf,:),gp_batch%o3(1:nbuf,:),gp_batch%n2o(1:nbuf,:), &
+            gp_batch%ch4(1:nbuf,:),gp_batch%o2(1:nbuf,:),gp_batch%avdir(1:nbuf,1),gp_batch%avdif(1:nbuf,1), &
+            gp_batch%andir(1:nbuf,1),gp_batch%andif(1:nbuf,1),gp_batch%mu0(1:nbuf),gp_batch%solar(1), &
+            gp_batch%cf(1:nbuf,:),gp_batch%lwp(1:nbuf,:),gp_batch%iwp(1:nbuf,:),gp_batch%swp(1:nbuf,:), &
+            gp_batch%rel(1:nbuf,:),gp_batch%rei(1:nbuf,:),gp_batch%res(1:nbuf,:),4,icld,gp_batch%seed(1), &
+            gp_batch%up(1:nbuf,:),gp_batch%dn(1:nbuf,:),gp_batch%hr(1:nbuf,:),gp_batch%upc(1:nbuf,:), &
+            gp_batch%dnc(1:nbuf,:),gp_batch%hrc(1:nbuf,:),gp_batch%direct(1:nbuf,:),gp_batch%diffuse(1:nbuf,:), &
+            gp_batch%directc(1:nbuf,:),gp_batch%visdir(1:nbuf,:),gp_batch%visdif(1:nbuf,:), &
+            gp_batch%nirdir(1:nbuf,:),gp_batch%nirdif(1:nbuf,:),column_seeds=gp_batch%seed(1:nbuf), &
+            rwp=gp_batch%rwp(1:nbuf,:),native_dry_layer_mass_kg_m2=gp_batch%dry_mass(1:nbuf,:), &
+            cu_lwp=gp_batch%cu_lwp(1:nbuf,:),cu_iwp=gp_batch%cu_iwp(1:nbuf,:), &
+            cu_rel=gp_batch%cu_rel(1:nbuf,:),cu_rei=gp_batch%cu_rei(1:nbuf,:), &
+            direct_unscaled=gp_batch%directu(1:nbuf,:),directc_unscaled=gp_batch%directcu(1:nbuf,:), &
+            visdir_unscaled=gp_batch%visdiru(1:nbuf,:),nirdir_unscaled=gp_batch%nirdiru(1:nbuf,:), &
+            workspace=gp_workspace,solar_by_column=gp_batch%solar(1:nbuf))
+        ELSE
+          CALL rrtmgp_sw_column(gp_batch%play(1:nbuf,:),gp_batch%plev(1:nbuf,:),gp_batch%tlay(1:nbuf,:), &
+            gp_batch%h2o(1:nbuf,:),gp_batch%co2(1:nbuf,:),gp_batch%o3(1:nbuf,:),gp_batch%n2o(1:nbuf,:), &
+            gp_batch%ch4(1:nbuf,:),gp_batch%o2(1:nbuf,:),gp_batch%avdir(1:nbuf,1),gp_batch%avdif(1:nbuf,1), &
+            gp_batch%andir(1:nbuf,1),gp_batch%andif(1:nbuf,1),gp_batch%mu0(1:nbuf),gp_batch%solar(1), &
+            gp_batch%cf(1:nbuf,:),gp_batch%lwp(1:nbuf,:),gp_batch%iwp(1:nbuf,:),gp_batch%swp(1:nbuf,:), &
+            gp_batch%rel(1:nbuf,:),gp_batch%rei(1:nbuf,:),gp_batch%res(1:nbuf,:),4,icld,gp_batch%seed(1), &
+            gp_batch%up(1:nbuf,:),gp_batch%dn(1:nbuf,:),gp_batch%hr(1:nbuf,:),gp_batch%upc(1:nbuf,:), &
+            gp_batch%dnc(1:nbuf,:),gp_batch%hrc(1:nbuf,:),gp_batch%direct(1:nbuf,:),gp_batch%diffuse(1:nbuf,:), &
+            gp_batch%directc(1:nbuf,:),gp_batch%visdir(1:nbuf,:),gp_batch%visdif(1:nbuf,:), &
+            gp_batch%nirdir(1:nbuf,:),gp_batch%nirdif(1:nbuf,:),column_seeds=gp_batch%seed(1:nbuf), &
+            rwp=gp_batch%rwp(1:nbuf,:),native_dry_layer_mass_kg_m2=gp_batch%dry_mass(1:nbuf,:), &
+            direct_unscaled=gp_batch%directu(1:nbuf,:),directc_unscaled=gp_batch%directcu(1:nbuf,:), &
+            visdir_unscaled=gp_batch%visdiru(1:nbuf,:),nirdir_unscaled=gp_batch%nirdiru(1:nbuf,:), &
+            workspace=gp_workspace,solar_by_column=gp_batch%solar(1:nbuf))
+        END IF
+      END IF
+      DO bslot=1,nbuf
+        ncol=1
+        swuflx(1,:)=gp_batch%up(bslot,:)
+        swdflx(1,:)=gp_batch%dn(bslot,:)
+        swuflxc(1,:)=gp_batch%upc(bslot,:)
+        swdflxc(1,:)=gp_batch%dnc(bslot,:)
+        swhr(1,:)=gp_batch%hr(bslot,:)
+        swhrc(1,:)=gp_batch%hrc(bslot,:)
+        sibvisdir(1,:)=gp_batch%visdir(bslot,:)
+        sibvisdif(1,:)=gp_batch%visdif(bslot,:)
+        sibnirdir(1,:)=gp_batch%nirdir(bslot,:)
+        sibnirdif(1,:)=gp_batch%nirdif(bslot,:)
+        swdkdir_predelta(1,:)=gp_batch%directu(bslot,:)
+        swdkdirc(1,:)=gp_batch%directc(bslot,:)
+        swdkdirc_predelta(1,:)=gp_batch%directcu(bslot,:)
+        sibvisdir_predelta(1,:)=gp_batch%visdiru(bslot,:)
+        sibnirdir_predelta(1,:)=gp_batch%nirdiru(bslot,:)
+        swuflxcln=swuflx; swdflxcln=swdflx
+        DO k=kts,kte+2
+          sibvisdif(1,k)=sibvisdir(1,k)+sibvisdif(1,k)-sibvisdir_predelta(1,k)
+          sibnirdif(1,k)=sibnirdir(1,k)+sibnirdif(1,k)-sibnirdir_predelta(1,k)
+        END DO
+        swdkdir=swdkdir_predelta
+        swdkdif=swdflx-swdkdir_predelta
+        sibvisdir=sibvisdir_predelta
+        sibnirdir=sibnirdir_predelta
+        loc_sw_zbbcddir=swdkdirc_predelta(1,1)
+        loc_sw_dirdflux=swdkdir(1,1)
+        loc_sw_difdflux=swdkdif(1,1)
+        coszrs=gp_batch%mu0(bslot)
+        CALL scatter_sw_column(gp_batch%i(bslot),gp_batch%j(bslot))
+      END DO
+   END SUBROUTINE flush_sw_batch
+
+   SUBROUTINE scatter_sw_column(dest_i,dest_j)
+      INTEGER, INTENT(IN) :: dest_i,dest_j
+         ! WRF-CMAQ twoway coupled model
+         if (present(sw_zbbcddir)) then
+            sw_zbbcddir(dest_i,dest_j) = loc_sw_zbbcddir
+            sw_dirdflux(dest_i,dest_j) = loc_sw_dirdflux
+            sw_difdflux(dest_i,dest_j) = loc_sw_difdflux
+         end if
+
+! Output net absorbed shortwave surface flux and shortwave cloud forcing
+! at the top of atmosphere (W/m2)
+         gsw(dest_i,dest_j) = swdflx(1,1) - swuflx(1,1)
+         swcf(dest_i,dest_j) = (swdflx(1,kte+2) - swuflx(1,kte+2)) - (swdflxc(1,kte+2) - swuflxc(1,kte+2))
+
+         if (present(swupt)) then
+! Output up and down toa fluxes for total and clear sky
+            swupt(dest_i,dest_j)     = swuflx(1,kte+2)
+            swuptc(dest_i,dest_j)    = swuflxc(1,kte+2)
+            swdnt(dest_i,dest_j)     = swdflx(1,kte+2)
+            swdntc(dest_i,dest_j)    = swdflxc(1,kte+2)
+! Output up and down surface fluxes for total and clear sky
+            swupb(dest_i,dest_j)     = swuflx(1,1)
+            swupbc(dest_i,dest_j)    = swuflxc(1,1)
+            swdnb(dest_i,dest_j)     = swdflx(1,1)
+! Added by Zhenxin for 4 compenants of swdown radiation
+            swvisdir(dest_i,dest_j)  = sibvisdir(1,1)
+            swvisdif(dest_i,dest_j)  = sibvisdif(1,1)
+            swnirdir(dest_i,dest_j)  = sibnirdir(1,1)
+            swnirdif(dest_i,dest_j)  = sibnirdif(1,1)
+!  Ended, Zhenxin (2011/06/20)
+            swdnbc(dest_i,dest_j)    = swdflxc(1,1)
+            if(calc_clean_atm_diag .gt. 0)then
+                swuptcln(dest_i,dest_j)  = swuflxcln(1,kte+2)
+                swdntcln(dest_i,dest_j)  = swdflxcln(1,kte+2)
+                swupbcln(dest_i,dest_j)  = swuflxcln(1,1)
+                swdnbcln(dest_i,dest_j)  = swdflxcln(1,1)
+            end if
+         endif
+            swddir(dest_i,dest_j)    = swdkdir(1,1)          ! jararias 2013/08/10
+            swddni(dest_i,dest_j)    = swddir(dest_i,dest_j) / coszrs  ! jararias 2013/08/10
+            swddif(dest_i,dest_j)    = swdkdif(1,1)          ! jararias 2013/08/10
+            swdownc(dest_i, dest_j)  = swdflxc(1,1)          ! PAJ: clear-sky GHI
+            swddirc(dest_i,dest_j)   = swdkdirc(1,1)         ! PAJ: clear-sky direct normal irradiance
+            swddnic(dest_i,dest_j)   = swddirc(dest_i,dest_j) / coszrs ! PAJ: clear-sky direct normal irradiance
+
+! Output up and down layer fluxes for total and clear sky.
+! Vertical ordering is from bottom to top in units of W m-2.
+         if ( present (swupflx) ) then
+         do k=kts,kte+2
+            swupflx(dest_i,k,dest_j)  = swuflx(1,k)
+            swupflxc(dest_i,k,dest_j) = swuflxc(1,k)
+            swdnflx(dest_i,k,dest_j)  = swdflx(1,k)
+            swdnflxc(dest_i,k,dest_j) = swdflxc(1,k)
+         enddo
+         endif
+
+! Output heating rate tendency; convert heating rate from K/d to K/s
+! Heating rate arrays are ordered vertically from bottom to top here.
+         do k=kts,kte
+            tten1d(k) = swhr(ncol,k)/86400.
+            rthratensw(dest_i,k,dest_j) = tten1d(k)/pi3d(dest_i,k,dest_j)
+            tten1d(k) = swhrc(ncol,k)/86400.
+            rthratenswc(dest_i,k,dest_j) = tten1d(k)/pi3d(dest_i,k,dest_j)
+         enddo
+         IF(trace_active('SW')) THEN
+            CALL trace_result('SW','WRF_THETA_HR',RESHAPE(rthratensw(dest_i,kts:kte,dest_j),[1,kte-kts+1]))
+            CALL trace_result('SW','WRF_GSW',RESHAPE([gsw(dest_i,dest_j)],[1,1]))
+            CALL trace_result('SW','WRF_SWDDIR',RESHAPE([swddir(dest_i,dest_j)],[1,1]))
+            CALL trace_result('SW','WRF_SWDDIF',RESHAPE([swddif(dest_i,dest_j)],[1,1]))
+            CALL trace_end('SW')
+         END IF
+   END SUBROUTINE scatter_sw_column
    END SUBROUTINE RRTMG_SWRAD
 
  

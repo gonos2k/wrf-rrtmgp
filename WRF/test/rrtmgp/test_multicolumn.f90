@@ -1,5 +1,5 @@
 PROGRAM test_rrtmgp_multicolumn
-  USE, INTRINSIC :: ieee_arithmetic, ONLY: ieee_is_finite
+  USE, INTRINSIC :: ieee_arithmetic, ONLY: ieee_is_finite, ieee_value, ieee_quiet_nan
   USE module_ra_rrtmgp, ONLY: rrtmgp_init, rrtmgp_lw_column, rrtmgp_sw_column
   IMPLICIT NONE
   INTEGER, PARAMETER :: nc=64, nl=3, nv=nl+1
@@ -30,6 +30,10 @@ PROGRAM test_rrtmgp_multicolumn
   REAL :: p_emis(nc,1), p_cf(nc,nl), p_lwp(nc,nl), p_iwp(nc,nl), p_swp(nc,nl)
   REAL :: p_rel(nc,nl), p_rei(nc,nl), p_res(nc,nl)
   REAL :: p_avdir(nc), p_avdif(nc), p_andir(nc), p_andif(nc), p_mu0(nc)
+  REAL :: solar_columns(nc)
+  REAL :: direct_raw(nc,nv), directc_raw(nc,nv), visdir_raw(nc,nv), nirdir_raw(nc,nv)
+  REAL :: direct_raw_one(1,nv), directc_raw_one(1,nv), visdir_raw_one(1,nv), nirdir_raw_one(1,nv)
+  REAL :: direct_raw_single(nc,nv), directc_raw_single(nc,nv), visdir_raw_single(nc,nv), nirdir_raw_single(nc,nv)
   REAL :: plwup(nc,nv), plwdn(nc,nv), plwhr(nc,nl), plwupc(nc,nv), plwdnc(nc,nv), plwhrc(nc,nl)
   REAL :: pswup(nc,nv), pswdn(nc,nv), pswhr(nc,nl), pswupc(nc,nv), pswdnc(nc,nv), pswhrc(nc,nl)
   REAL :: pdirect(nc,nv), pdiffuse(nc,nv), pdirectc(nc,nv)
@@ -41,6 +45,14 @@ PROGRAM test_rrtmgp_multicolumn
   IF(LEN_TRIM(data_path)==0) ERROR STOP 'usage: test_rrtmgp_multicolumn DATA_DIRECTORY'
   CALL initialize_columns()
   CALL rrtmgp_init(TRIM(data_path))
+  BLOCK
+    CHARACTER(LEN=64) :: invalid_case
+    CALL get_command_argument(2,invalid_case)
+    IF(LEN_TRIM(invalid_case)>0) THEN
+      CALL reject_solar_input(TRIM(invalid_case))
+      ERROR STOP 'invalid solar test unexpectedly returned'
+    END IF
+  END BLOCK
 
   ! Keep all daylight columns together. The adapter intentionally rejects mixed
   ! day/night batches; packing and unpacking those batches is a WRF-side concern.
@@ -49,6 +61,7 @@ PROGRAM test_rrtmgp_multicolumn
     CALL compare_batch_to_single(overlap)
     CALL compare_reordered_batch(overlap)
   END DO
+  CALL compare_column_solar_to_single()
   CALL check_all_night_batch()
   WRITE(*,'(A,ES12.4)') 'RRTMGP multicolumn checks passed; aggregate max difference ', &
     aggregate_max_difference
@@ -204,6 +217,86 @@ CONTAINS
       CALL check_close(TRIM(label)//' SW near-IR diffuse',pnirdif(c:c,:),nirdif(k:k,:))
     END DO
   END SUBROUTINE compare_reordered_batch
+
+  SUBROUTINE compare_column_solar_to_single()
+    ! WRF's eclipse factor can vary by grid point. A batch must use each
+    ! column's solar irradiance, not the first column's scalar value.
+    CHARACTER(LEN=48) :: label
+    DO c=1,nc
+      solar_columns(c)=solar*(1.-REAL(c-1)/REAL(nc-1))
+    END DO
+    WRITE(label,'(A)') 'column-varying solar batch versus single'
+    CALL rrtmgp_sw_column(play,plev,tlay,h2o,co2,o3,n2o,ch4,o2,avdir,avdif,andir,andif,mu0,solar, &
+      cf,lwp,iwp,swp,rel,rei,res,4,2,173,swup,swdn,swhr,swupc,swdnc,swhrc, &
+      direct,diffuse,directc,visdir,visdif,nirdir,nirdif,column_seeds=seeds, &
+      direct_unscaled=direct_raw,directc_unscaled=directc_raw,visdir_unscaled=visdir_raw, &
+      nirdir_unscaled=nirdir_raw,solar_by_column=solar_columns)
+    DO c=1,nc
+      CALL rrtmgp_sw_column(play(c:c,:),plev(c:c,:),tlay(c:c,:),h2o(c:c,:),co2(c:c,:), &
+        o3(c:c,:),n2o(c:c,:),ch4(c:c,:),o2(c:c,:),avdir(c:c),avdif(c:c),andir(c:c),andif(c:c), &
+        mu0(c:c),solar_columns(c),cf(c:c,:),lwp(c:c,:),iwp(c:c,:),swp(c:c,:),rel(c:c,:),rei(c:c,:),res(c:c,:), &
+        4,2,173,swup_one,swdn_one,swhr_one,swupc_one,swdnc_one,swhrc_one, &
+        direct_one,diffuse_one,directc_one,visdir_one,visdif_one,nirdir_one,nirdif_one,column_seeds=seeds(c:c), &
+        direct_unscaled=direct_raw_one,directc_unscaled=directc_raw_one, &
+        visdir_unscaled=visdir_raw_one,nirdir_unscaled=nirdir_raw_one)
+      swup_single(c,:)=swup_one(1,:); swdn_single(c,:)=swdn_one(1,:); swhr_single(c,:)=swhr_one(1,:)
+      swupc_single(c,:)=swupc_one(1,:); swdnc_single(c,:)=swdnc_one(1,:); swhrc_single(c,:)=swhrc_one(1,:)
+      direct_single(c,:)=direct_one(1,:); diffuse_single(c,:)=diffuse_one(1,:)
+      directc_single(c,:)=directc_one(1,:); visdir_single(c,:)=visdir_one(1,:)
+      visdif_single(c,:)=visdif_one(1,:); nirdir_single(c,:)=nirdir_one(1,:); nirdif_single(c,:)=nirdif_one(1,:)
+      direct_raw_single(c,:)=direct_raw_one(1,:); directc_raw_single(c,:)=directc_raw_one(1,:)
+      visdir_raw_single(c,:)=visdir_raw_one(1,:); nirdir_raw_single(c,:)=nirdir_raw_one(1,:)
+    END DO
+    CALL check_close(TRIM(label)//' up',swup,swup_single)
+    CALL check_close(TRIM(label)//' down',swdn,swdn_single)
+    CALL check_close(TRIM(label)//' heating',swhr,swhr_single)
+    CALL check_close(TRIM(label)//' clear up',swupc,swupc_single)
+    CALL check_close(TRIM(label)//' clear down',swdnc,swdnc_single)
+    CALL check_close(TRIM(label)//' clear heating',swhrc,swhrc_single)
+    CALL check_close(TRIM(label)//' direct',direct,direct_single)
+    CALL check_close(TRIM(label)//' diffuse',diffuse,diffuse_single)
+    CALL check_close(TRIM(label)//' clear direct',directc,directc_single)
+    CALL check_close(TRIM(label)//' visible direct',visdir,visdir_single)
+    CALL check_close(TRIM(label)//' visible diffuse',visdif,visdif_single)
+    CALL check_close(TRIM(label)//' near-IR direct',nirdir,nirdir_single)
+    CALL check_close(TRIM(label)//' near-IR diffuse',nirdif,nirdif_single)
+    CALL check_close(TRIM(label)//' unscaled broadband direct',direct_raw,direct_raw_single)
+    CALL check_close(TRIM(label)//' unscaled clear direct',directc_raw,directc_raw_single)
+    CALL check_close(TRIM(label)//' unscaled visible direct',visdir_raw,visdir_raw_single)
+    CALL check_close(TRIM(label)//' unscaled near-IR direct',nirdir_raw,nirdir_raw_single)
+    IF(ANY(.NOT.ieee_is_finite(direct_raw)).OR.ANY(.NOT.ieee_is_finite(directc_raw)).OR. &
+       ANY(.NOT.ieee_is_finite(visdir_raw)).OR.ANY(.NOT.ieee_is_finite(nirdir_raw))) &
+      CALL fail('column-varying solar produced non-finite pre-delta direct output')
+    IF(ANY(direct_raw(nc,:)/=0.).OR.ANY(directc_raw(nc,:)/=0.).OR. &
+       ANY(visdir_raw(nc,:)/=0.).OR.ANY(nirdir_raw(nc,:)/=0.)) &
+      CALL fail('zero-solar column has nonzero pre-delta direct output')
+  END SUBROUTINE compare_column_solar_to_single
+
+  SUBROUTINE reject_solar_input(case_name)
+    CHARACTER(LEN=*), INTENT(IN) :: case_name
+    REAL :: bad_solar(nc), wrong_solar(nc-1)
+    SELECT CASE(case_name)
+    CASE('solar_shape')
+      wrong_solar=solar
+      CALL rrtmgp_sw_column(play,plev,tlay,h2o,co2,o3,n2o,ch4,o2,avdir,avdif,andir,andif,mu0,solar, &
+        cf,lwp,iwp,swp,rel,rei,res,4,2,173,swup,swdn,swhr,swupc,swdnc,swhrc, &
+        direct,diffuse,directc,visdir,visdif,nirdir,nirdif,solar_by_column=wrong_solar)
+    CASE('solar_negative')
+      bad_solar=solar
+      bad_solar(3)=-1.
+      CALL rrtmgp_sw_column(play,plev,tlay,h2o,co2,o3,n2o,ch4,o2,avdir,avdif,andir,andif,mu0,solar, &
+        cf,lwp,iwp,swp,rel,rei,res,4,2,173,swup,swdn,swhr,swupc,swdnc,swhrc, &
+        direct,diffuse,directc,visdir,visdif,nirdir,nirdif,solar_by_column=bad_solar)
+    CASE('solar_nan')
+      bad_solar=solar
+      bad_solar(3)=ieee_value(0.,ieee_quiet_nan)
+      CALL rrtmgp_sw_column(play,plev,tlay,h2o,co2,o3,n2o,ch4,o2,avdir,avdif,andir,andif,mu0,solar, &
+        cf,lwp,iwp,swp,rel,rei,res,4,2,173,swup,swdn,swhr,swupc,swdnc,swhrc, &
+        direct,diffuse,directc,visdir,visdif,nirdir,nirdif,solar_by_column=bad_solar)
+    CASE DEFAULT
+      ERROR STOP 'unknown invalid solar case'
+    END SELECT
+  END SUBROUTINE reject_solar_input
 
   SUBROUTINE check_all_night_batch()
     mu0=0.

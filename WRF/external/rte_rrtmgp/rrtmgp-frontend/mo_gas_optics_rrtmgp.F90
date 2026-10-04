@@ -24,6 +24,11 @@
 ! -------------------------------------------------------------------------------------------------
 module mo_gas_optics_rrtmgp
   use mo_rte_kind,           only: wp, wl
+#ifdef RRTMGP_CPU_ONLY
+  use mo_rte_scalar_math, only: exp => rte_scalar_exp, &
+                                log => rte_scalar_log, &
+                                cos => rte_scalar_cos
+#endif
   use mo_rte_config,         only: check_extents, check_values
   use mo_rte_util_array,     only: zero_array
   use mo_rte_util_array_validation, & 
