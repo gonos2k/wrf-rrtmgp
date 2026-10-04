@@ -1,0 +1,76 @@
+{
+  "compile": {
+    "build_log": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-current-serial-audit-build-v1/build.log",
+    "build_receipt": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-current-serial-audit-build-v1/build-receipt.json",
+    "command": [
+      "/usr/bin/timeout",
+      "--signal=TERM",
+      "--kill-after=30s",
+      "1800s",
+      "csh",
+      "-f",
+      "./compile",
+      "-j",
+      "12",
+      "em_real"
+    ],
+    "compile_invocations": 0,
+    "expected_executables": [
+      "WRF/main/wrf.exe",
+      "WRF/main/real.exe"
+    ],
+    "expected_required_objects": [
+      "WRF/phys/module_ra_rrtmgp_input.o",
+      "WRF/phys/module_ra_rrtmgp.o",
+      "WRF/phys/module_ra_rrtmg_lw.o",
+      "WRF/phys/module_ra_rrtmg_sw.o"
+    ],
+    "model_invocations": 0,
+    "preflight": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-current-serial-audit-build-v1/preflight-v2.json",
+    "preflight_sha256": "d08d54415abec1e3e5af6d8b9cdaecad1152194ca386036463ced94b01f3898c",
+    "preparer_sha256": "fb5fc589a14843815ff35370c31b2c97b79c87fce037bb5408df46654f363d47",
+    "runner": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-current-serial-audit-build-v1/run_build_once.py",
+    "runner_sha256": "5d99525f172d078967746f36dea8fbe711002352fa61cf6f212219577f9c13a9",
+    "timeout_seconds": 1800
+  },
+  "configuration": {
+    "DMPARALLEL": "disabled/commented",
+    "FCOPTIM": "-O2 -ftree-vectorize -funroll-loops",
+    "OpenMP": "disabled",
+    "PROMOTION": "default real (4-byte); no -fdefault-real-8",
+    "RWORDSIZE": 4,
+    "compiler": "GNU Fortran 13.3",
+    "configure_delta": "RRTMGP module include path only",
+    "donor": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-source54-pristine-serial-regression-v1/WRF/configure.wrf",
+    "donor_target": "em_scm_xy",
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-current-serial-audit-build-v1/source/WRF/configure.wrf",
+    "serial": true,
+    "sha256": "6a2fcd322bbff92ff61a141671d492eb8d74e3d56af28582306c024775b89c68",
+    "target": "em_real"
+  },
+  "schema": "udm37-pr70-current-serial-audit-build-plan-v1",
+  "source": {
+    "commit": "1cb6920a43d8ba10ecfa179487839f9df7022cb4",
+    "detached_worktree": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-current-serial-audit-build-v1/source",
+    "full_source_archive_note": "WRF subtree is marked export-ignore; this scaffold uses a detached Git worktree, not git archive.",
+    "production_change_since_pr68_base": [
+      "WRF/phys/module_ra_rrtmgp_input.F"
+    ],
+    "repository": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-output-finite-pr-work",
+    "source_manifest_sha256": "cd3e7ce595cde9d2c149bf0a9eb57ad5eafb45c327006265e6de8b8f87550ee2",
+    "tracked_files": 7034
+  },
+  "status": "PREPARED_NO_BUILD",
+  "toolchain_dependencies": {
+    "dependency_policy": "Shared dependency files remain read-only and are pinned by resolved path, size, SHA-256.",
+    "inventory": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-current-serial-audit-build-v1/toolchain-dependency-inventory.json",
+    "netcdf_root": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/netcdf",
+    "resolved_runtime_libraries": 48,
+    "sha256": "a2894cc301564574a649f14bc47f544c3ecf61a6296736868b0862dcf68cf813"
+  },
+  "verification_limits": [
+    "The donor configure and toolchain were proven with serial em_scm_xy, not em_real. This scaffold therefore requests a clean full em_real build; it does not claim preexisting em_real ABI proof.",
+    "Postbuild acceptance must verify no DM_PARALLEL/OpenMP compile flags and no MPI dependency in each executable, in addition to source/dependency stability, successful WRF footer, fresh executable hashes and required objects.",
+    "No same-state radiation audit or any WRF/REAL/model call has been performed."
+  ]
+}

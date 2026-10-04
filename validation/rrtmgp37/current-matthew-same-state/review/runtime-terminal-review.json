@@ -1,0 +1,331 @@
+{
+  "arms": {
+    "OFF": {
+      "actual_invocations": 1,
+      "process_elapsed_seconds": 105.922513,
+      "returncode": 0,
+      "status": "PASS_ARM",
+      "timed_out": false
+    },
+    "ON_native4_0": {
+      "actual_invocations": 1,
+      "process_elapsed_seconds": 108.131608,
+      "returncode": 0,
+      "status": "PASS_ARM",
+      "timed_out": false
+    },
+    "ON_native4_1": {
+      "actual_invocations": 1,
+      "process_elapsed_seconds": 107.79039,
+      "returncode": 0,
+      "status": "PASS_ARM",
+      "timed_out": false
+    }
+  },
+  "authorization": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-current-matthew-serial-audit-v1/root-authorization.json",
+    "sha256": "3ba1bc5a3874313c0dab91d84b2fb1cebbb27c73fe8a8352fb31c3209663ff75",
+    "size_bytes": 1239
+  },
+  "capture_parity": {
+    "all_group_bytes_equal": true,
+    "complete_raw_input_result_roster_equal": true,
+    "groups_per_arm": 12,
+    "phases": {
+      "LW": 6,
+      "SW": 6
+    },
+    "records_per_group": 3
+  },
+  "counts": {
+    "original_model_invocations": 3,
+    "review_model_REAL_compile_solver_analyzer_invocations": 0
+  },
+  "csv": {
+    "ON_native4_0": {
+      "aggregate_rows": 564,
+      "call_keys": 12,
+      "csv_pin": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-current-matthew-serial-audit-v1/ON_native4_0/audit/same_state.csv",
+        "sha256": "1a9a8914478cf450d921e19ff5598fd2c08d49cd4f89e8df870308dd1dc5d18b",
+        "size_bytes": 267349
+      },
+      "rows": 1128,
+      "sample_count_each": 128,
+      "selected_rows": 564
+    },
+    "ON_native4_1": {
+      "aggregate_rows": 564,
+      "call_keys": 12,
+      "csv_pin": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-current-matthew-serial-audit-v1/ON_native4_1/audit/same_state.csv",
+        "sha256": "5a6ca1a874274e58554fd5d52c6fb6b269c9e0ab3051e09616039b1b5598d617",
+        "size_bytes": 267349
+      },
+      "rows": 1128,
+      "sample_count_each": 128,
+      "selected_rows": 564
+    }
+  },
+  "engine37_reference_between_native4_arms": {
+    "exact_parsed_float64_bytes": true,
+    "fields": [
+      "value37",
+      "mean37",
+      "sd37"
+    ],
+    "matching_rows": 1128
+  },
+  "exact_output_comparisons": [
+    {
+      "all_raw_schema_full_attributes_equal": true,
+      "arm": "ON_native4_0",
+      "fields": 231,
+      "file": "wrfout_d01_2016-10-07_12:00:00",
+      "whole_file_equal": true
+    },
+    {
+      "all_raw_schema_full_attributes_equal": true,
+      "arm": "ON_native4_1",
+      "fields": 231,
+      "file": "wrfout_d01_2016-10-07_12:00:00",
+      "whole_file_equal": true
+    },
+    {
+      "all_raw_schema_full_attributes_equal": true,
+      "arm": "ON_native4_0",
+      "fields": 231,
+      "file": "wrfout_d01_2016-10-07_13:00:00",
+      "whole_file_equal": true
+    },
+    {
+      "all_raw_schema_full_attributes_equal": true,
+      "arm": "ON_native4_1",
+      "fields": 231,
+      "file": "wrfout_d01_2016-10-07_13:00:00",
+      "whole_file_equal": true
+    },
+    {
+      "all_raw_schema_full_attributes_equal": true,
+      "arm": "ON_native4_0",
+      "fields": 667,
+      "file": "wrfrst_d01_2016-10-07_13:00:00",
+      "whole_file_equal": true
+    },
+    {
+      "all_raw_schema_full_attributes_equal": true,
+      "arm": "ON_native4_1",
+      "fields": 667,
+      "file": "wrfrst_d01_2016-10-07_13:00:00",
+      "whole_file_equal": true
+    }
+  ],
+  "limitations": [
+    "All-sky CSV only; no paired clear CSV.",
+    "564 selected rows plus564 aggregate rows per arm are not1128 independent samples.",
+    "128-seed spread is descriptive, not IID confidence.",
+    "Same-state wrapper controls retain each engine input/optics/sampling policy; no pure engine or physical accuracy attribution.",
+    "Observed sixLW and sixSW calls12:00 through12:50 are results, not a forced schedule."
+  ],
+  "observed_call_roster": [
+    {
+      "calendar": "2016-10-07_12:00:00",
+      "phase": "LW",
+      "radiation_step": 2161,
+      "source_seconds": 129600.0
+    },
+    {
+      "calendar": "2016-10-07_12:10:00",
+      "phase": "LW",
+      "radiation_step": 2171,
+      "source_seconds": 130200.0
+    },
+    {
+      "calendar": "2016-10-07_12:20:00",
+      "phase": "LW",
+      "radiation_step": 2181,
+      "source_seconds": 130800.0
+    },
+    {
+      "calendar": "2016-10-07_12:30:00",
+      "phase": "LW",
+      "radiation_step": 2191,
+      "source_seconds": 131400.0
+    },
+    {
+      "calendar": "2016-10-07_12:40:00",
+      "phase": "LW",
+      "radiation_step": 2201,
+      "source_seconds": 132000.0
+    },
+    {
+      "calendar": "2016-10-07_12:50:00",
+      "phase": "LW",
+      "radiation_step": 2211,
+      "source_seconds": 132600.0
+    },
+    {
+      "calendar": "2016-10-07_12:00:00",
+      "phase": "SW",
+      "radiation_step": 2161,
+      "source_seconds": 129600.0
+    },
+    {
+      "calendar": "2016-10-07_12:10:00",
+      "phase": "SW",
+      "radiation_step": 2171,
+      "source_seconds": 130200.0
+    },
+    {
+      "calendar": "2016-10-07_12:20:00",
+      "phase": "SW",
+      "radiation_step": 2181,
+      "source_seconds": 130800.0
+    },
+    {
+      "calendar": "2016-10-07_12:30:00",
+      "phase": "SW",
+      "radiation_step": 2191,
+      "source_seconds": 131400.0
+    },
+    {
+      "calendar": "2016-10-07_12:40:00",
+      "phase": "SW",
+      "radiation_step": 2201,
+      "source_seconds": 132000.0
+    },
+    {
+      "calendar": "2016-10-07_12:50:00",
+      "phase": "SW",
+      "radiation_step": 2211,
+      "source_seconds": 132600.0
+    }
+  ],
+  "observed_utc": "2026-10-04T15:57:53.469787+00:00",
+  "original_receipt": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-current-matthew-serial-audit-v1/execution-receipt.json",
+    "sha256": "460176c97e884af463bb8374714260edad0038e5a306f85251a751a96945b198",
+    "size_bytes": 536018
+  },
+  "output_quality": [
+    {
+      "arm": "OFF",
+      "data_model": "NETCDF4",
+      "file": "wrfout_d01_2016-10-07_12:00:00",
+      "file_pin": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-current-matthew-serial-audit-v1/OFF/wrfout_d01_2016-10-07_12:00:00",
+        "sha256": "cfd51b35cd67291d79aa2beb26be285c62ddaba59193ee4fd19169138155c7a4",
+        "size_bytes": 22115526
+      },
+      "numeric_variables": 230,
+      "variables": 231
+    },
+    {
+      "arm": "OFF",
+      "data_model": "NETCDF4",
+      "file": "wrfout_d01_2016-10-07_13:00:00",
+      "file_pin": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-current-matthew-serial-audit-v1/OFF/wrfout_d01_2016-10-07_13:00:00",
+        "sha256": "ae729e93672861b2033aece3a9e814fce81f8fa368bf7e409876d30ca7856778",
+        "size_bytes": 22155633
+      },
+      "numeric_variables": 230,
+      "variables": 231
+    },
+    {
+      "arm": "OFF",
+      "data_model": "NETCDF4",
+      "file": "wrfrst_d01_2016-10-07_13:00:00",
+      "file_pin": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-current-matthew-serial-audit-v1/OFF/wrfrst_d01_2016-10-07_13:00:00",
+        "sha256": "ddc6a85a6b0c1259ace6ba1a8a80e94e05846cc385edfc2bed23cbcf837b6126",
+        "size_bytes": 68578486
+      },
+      "numeric_variables": 666,
+      "variables": 667
+    },
+    {
+      "arm": "ON_native4_0",
+      "data_model": "NETCDF4",
+      "file": "wrfout_d01_2016-10-07_12:00:00",
+      "file_pin": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-current-matthew-serial-audit-v1/ON_native4_0/wrfout_d01_2016-10-07_12:00:00",
+        "sha256": "cfd51b35cd67291d79aa2beb26be285c62ddaba59193ee4fd19169138155c7a4",
+        "size_bytes": 22115526
+      },
+      "numeric_variables": 230,
+      "variables": 231
+    },
+    {
+      "arm": "ON_native4_0",
+      "data_model": "NETCDF4",
+      "file": "wrfout_d01_2016-10-07_13:00:00",
+      "file_pin": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-current-matthew-serial-audit-v1/ON_native4_0/wrfout_d01_2016-10-07_13:00:00",
+        "sha256": "ae729e93672861b2033aece3a9e814fce81f8fa368bf7e409876d30ca7856778",
+        "size_bytes": 22155633
+      },
+      "numeric_variables": 230,
+      "variables": 231
+    },
+    {
+      "arm": "ON_native4_0",
+      "data_model": "NETCDF4",
+      "file": "wrfrst_d01_2016-10-07_13:00:00",
+      "file_pin": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-current-matthew-serial-audit-v1/ON_native4_0/wrfrst_d01_2016-10-07_13:00:00",
+        "sha256": "ddc6a85a6b0c1259ace6ba1a8a80e94e05846cc385edfc2bed23cbcf837b6126",
+        "size_bytes": 68578486
+      },
+      "numeric_variables": 666,
+      "variables": 667
+    },
+    {
+      "arm": "ON_native4_1",
+      "data_model": "NETCDF4",
+      "file": "wrfout_d01_2016-10-07_12:00:00",
+      "file_pin": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-current-matthew-serial-audit-v1/ON_native4_1/wrfout_d01_2016-10-07_12:00:00",
+        "sha256": "cfd51b35cd67291d79aa2beb26be285c62ddaba59193ee4fd19169138155c7a4",
+        "size_bytes": 22115526
+      },
+      "numeric_variables": 230,
+      "variables": 231
+    },
+    {
+      "arm": "ON_native4_1",
+      "data_model": "NETCDF4",
+      "file": "wrfout_d01_2016-10-07_13:00:00",
+      "file_pin": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-current-matthew-serial-audit-v1/ON_native4_1/wrfout_d01_2016-10-07_13:00:00",
+        "sha256": "ae729e93672861b2033aece3a9e814fce81f8fa368bf7e409876d30ca7856778",
+        "size_bytes": 22155633
+      },
+      "numeric_variables": 230,
+      "variables": 231
+    },
+    {
+      "arm": "ON_native4_1",
+      "data_model": "NETCDF4",
+      "file": "wrfrst_d01_2016-10-07_13:00:00",
+      "file_pin": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-current-matthew-serial-audit-v1/ON_native4_1/wrfrst_d01_2016-10-07_13:00:00",
+        "sha256": "ddc6a85a6b0c1259ace6ba1a8a80e94e05846cc385edfc2bed23cbcf837b6126",
+        "size_bytes": 68578486
+      },
+      "numeric_variables": 666,
+      "variables": 667
+    }
+  ],
+  "radius_comparison": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-current-matthew-serial-audit-v1/radius-arm-comparison.json",
+    "sha256": "9a5f2787902ba42ca59e63fd1a447c94141ad2787c369361c19643c1548be07e",
+    "size_bytes": 799571
+  },
+  "review_script": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-current-serial-audit-independent-review-v1/review_terminal.py",
+    "sha256": "3150fa3a5dcd15c3f05cd8a1e5a3a2be4e0355660f56f793cf9f9ece640683fa",
+    "size_bytes": 6812
+  },
+  "status": "PASS_SCOPED_INDEPENDENT_TERMINAL_SERIAL_AUDIT"
+}

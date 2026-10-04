@@ -1,0 +1,15 @@
+# Same-state radius audit: source interpretation
+
+This note is limited to what the frozen wrapper source changes between `ON_native4_0` and `ON_native4_1`. It contains no forecast-result interpretation.
+
+Source checkout: `build/udm37-current-serial-audit-build-v1/source`, Git HEAD `1cb6920a43d8ba10ecfa179487839f9df7022cb4`.
+
+The three campaign arms run the same production RRTMGP37 forecast setup. `OFF` has the audit disabled. In each `ON` arm, RRTMGP37 remains the actual forecast engine; an opt-in scratch loop additionally calls RRTMG4 and RRTMGP37 with the captured state. At that loop, `native=audit_native4()` is applied to RRTMG4, while `engine==37` forces `native=1`. The RRTMG4 call receives `has_reqc=has_reqi=has_reqs=native` (radiation driver SW lines 3175–3222; LW 2310–2357). Thus mode 0 versus 1 changes three RRTMG4 wrapper capability flags at once. It does not switch the forecast engine, alter the RRTMGP37 audit call, or change the namelist.
+
+With mode 0, RRTMG4 retains the wrapper's generic radius path: defaults are `inflg=2`, `iceflag=3`; no explicit cloud, ice, or snow radii are selected through `has_req*`. Its existing generic cloud/ice radius diagnoses remain active. In the generic ice path, grid ice water path is formed from `qi+qs` and divided by `max(0.01, cloud_fraction)` (SW lines 11268–11281; LW lines 12676–12693). The ice-flag-3 path applies the existing Fu size multiplier 1.0315 and cap 140 µm (SW around 11398; LW around 12833).
+
+With mode 1, all three flags are true. The wrapper selects `re_cloud`, `re_ice`, and `re_snow`, converts their source values from metres to micrometres, and retains legacy bounds/fallbacks (SW lines 11021–11068; LW 12406–12473). Cloudy background-size markers can still select the wrapper's existing diagnosed fallback. Since `has_reqs` is true, the final ice/snow setting is flag 5: the ice path is built from `qi` alone rather than `qi+qs`; snow is supplied separately. The legacy snow adjustment starts at 0.99 mass factor (1% overlaps the ice category); for radii above 130 µm, it reduces that factor by `(130/radius)^2`, caps the snow radius at 130 µm, and computes a separate snow path (SW 11284–11309; LW 12726–12756). These transformations are part of the counterfactual. They mean the two arms do not have identical hydrometeor-category paths or optical inputs.
+
+The source documentation agrees: `WRF/doc/rrtmgp/PHYSICS_AUDIT.md` says mode 1 enables the three scratch RRTMG4 radius flags, retains RRTMG legacy preprocessing and snow correction, and is not a fully matched-optics comparison. It also warns that startup background radii may precede native UDM diagnosed radii.
+
+Interpretation boundary: output differences between the two audit settings can be attributed to this combined RRTMG4 wrapper-input/radius/category transformation under the same captured state. They cannot be described as an isolated engine difference, a pure numerical effect of changing radius alone, or a production RRTMG4 versus RRTMGP37 comparison. The 128 deterministic seeds are descriptive; they are not an IID confidence interval. No observational accuracy conclusion follows.
