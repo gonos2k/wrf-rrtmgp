@@ -1,0 +1,178 @@
+{
+  "schema": "udm37-column-batching-regression-v1",
+  "status": "PASS_SCOPED_40MIN_FOUR_BATCH_SIZES",
+  "created_utc": "2026-10-04T01:28:34.104239+00:00",
+  "production_source_pr": {
+    "number": 52,
+    "head": "677ad6f342806d7a2b57c4e72cdd1a6dfe2e21e1",
+    "url": "https://github.com/gonos2k/wrf-rrtmgp/pull/52"
+  },
+  "source_behavior": "All 18 frozen source/build/documentation overlays apart from registration metadata match the built inputs and PR52 head; registration and validation-harness corrections are recorded separately.",
+  "wide_runs": {
+    "ra37-b128": {
+      "status": "CASE_VALIDATED",
+      "returncode": 0,
+      "batch_size": "128",
+      "rank_count": 4,
+      "threads_per_rank": 2,
+      "executable_sha256": "404b621a27c53eb70eb758b4f8e3904be595bcf6dc1ff53e7cffed654b8f665e",
+      "files": {
+        "wrfout_d01_2010-06-11_00:00:00": {
+          "sha256": "cbf1a2733b3ac8f0fd85118684b5bea279154dd44eeadeb75a9ba2b5d54d7d31",
+          "fields_compared": 209,
+          "metadata_equal": true,
+          "all_raw_and_decoded_equal": true
+        },
+        "wrfout_d01_2010-06-11_00:10:00": {
+          "sha256": "1ec75408635ddd16ba9e9f80a7c7c36cd0021a32a7f593a2fd424589d2bdbfff",
+          "fields_compared": 209,
+          "metadata_equal": true,
+          "all_raw_and_decoded_equal": true
+        },
+        "wrfout_d01_2010-06-11_00:20:00": {
+          "sha256": "a3578cff70ada0e18598fa785b59a2ae7100a4f6f43009f42b34b90e4faf583c",
+          "fields_compared": 209,
+          "metadata_equal": true,
+          "all_raw_and_decoded_equal": true
+        },
+        "wrfout_d01_2010-06-11_00:30:00": {
+          "sha256": "919ecb8eedc9b16e247a0d0d317ef296895f41e0e2e8278de4c551b6e5a382b5",
+          "fields_compared": 209,
+          "metadata_equal": true,
+          "all_raw_and_decoded_equal": true
+        },
+        "wrfout_d01_2010-06-11_00:40:00": {
+          "sha256": "ee43cfe9b95bb1d2af746165c0c655ad0c3e6f6a993bee3adc84a810ba4e75b6",
+          "fields_compared": 209,
+          "metadata_equal": true,
+          "all_raw_and_decoded_equal": true
+        },
+        "wrfrst_d01_2010-06-11_00:40:00": {
+          "sha256": "88a3e5c61530dcbc0ab9a60f8bb21d4d195ea587452144e349e0f29770788c1e",
+          "fields_compared": 650,
+          "metadata_equal": true,
+          "all_raw_and_decoded_equal": true
+        }
+      }
+    },
+    "ra37-b64": {
+      "status": "CASE_VALIDATED",
+      "returncode": 0,
+      "batch_size": "64",
+      "rank_count": 4,
+      "threads_per_rank": 2,
+      "executable_sha256": "404b621a27c53eb70eb758b4f8e3904be595bcf6dc1ff53e7cffed654b8f665e",
+      "files": {
+        "wrfout_d01_2010-06-11_00:00:00": {
+          "sha256": "cbf1a2733b3ac8f0fd85118684b5bea279154dd44eeadeb75a9ba2b5d54d7d31",
+          "fields_compared": 209,
+          "metadata_equal": true,
+          "all_raw_and_decoded_equal": true
+        },
+        "wrfout_d01_2010-06-11_00:10:00": {
+          "sha256": "1ec75408635ddd16ba9e9f80a7c7c36cd0021a32a7f593a2fd424589d2bdbfff",
+          "fields_compared": 209,
+          "metadata_equal": true,
+          "all_raw_and_decoded_equal": true
+        },
+        "wrfout_d01_2010-06-11_00:20:00": {
+          "sha256": "a3578cff70ada0e18598fa785b59a2ae7100a4f6f43009f42b34b90e4faf583c",
+          "fields_compared": 209,
+          "metadata_equal": true,
+          "all_raw_and_decoded_equal": true
+        },
+        "wrfout_d01_2010-06-11_00:30:00": {
+          "sha256": "919ecb8eedc9b16e247a0d0d317ef296895f41e0e2e8278de4c551b6e5a382b5",
+          "fields_compared": 209,
+          "metadata_equal": true,
+          "all_raw_and_decoded_equal": true
+        },
+        "wrfout_d01_2010-06-11_00:40:00": {
+          "sha256": "ee43cfe9b95bb1d2af746165c0c655ad0c3e6f6a993bee3adc84a810ba4e75b6",
+          "fields_compared": 209,
+          "metadata_equal": true,
+          "all_raw_and_decoded_equal": true
+        },
+        "wrfrst_d01_2010-06-11_00:40:00": {
+          "sha256": "88a3e5c61530dcbc0ab9a60f8bb21d4d195ea587452144e349e0f29770788c1e",
+          "fields_compared": 650,
+          "metadata_equal": true,
+          "all_raw_and_decoded_equal": true
+        }
+      }
+    }
+  },
+  "additional_models": 2,
+  "benchmark_models": 0,
+  "comparison_fields_including_character_fields": 3390,
+  "local_total_after_wide": {
+    "models": 45,
+    "references": 16,
+    "candidates": 29,
+    "benchmark_models": 0,
+    "remote_ci_excluded": true,
+    "snapshot_scope": "Wide regression terminal only; subsequent long/restart and benchmark invocations are excluded."
+  },
+  "evidence_pins": {
+    "wide_execution": {
+      "workspace_relative_path": "build/udm37-column-batching-scalar-math-wide-v1/runs-v1/execution.json",
+      "sha256": "e682c444a32e63fa651d3cca7bbac77c1ee69f2b11971fe9b39dd59695a65bd1",
+      "size_bytes": 6251245
+    },
+    "wide_audit": {
+      "workspace_relative_path": "build/udm37-column-batching-scalar-math-wide-v1/runs-v1/peer-terminal-review-v1.json",
+      "sha256": "4530a0becf88e3f7e6bd03a2b8bc4a3681318e5a500408820fad5cad85778355",
+      "size_bytes": 9078
+    },
+    "three_arm_execution": {
+      "workspace_relative_path": "build/udm37-column-batching-scalar-math-regression-v1/runs-v1/execution.json",
+      "sha256": "821908664700baa2b012e117faafc791e64e610665fedacd227efc152d758ecc",
+      "size_bytes": 11384791
+    },
+    "three_arm_audit": {
+      "workspace_relative_path": "build/udm37-column-batching-scalar-math-regression-v1/runs-v1/read-only-review-terminal-v1.json",
+      "sha256": "2865a161045eff28a144b835e7e8164d4555f4d117e34936d8df5cf4fd47cbde",
+      "size_bytes": 13863
+    },
+    "fresh_build": {
+      "workspace_relative_path": "build/udm37-column-batching-scalar-math-gnu-v1/build-result-v1.json",
+      "sha256": "d408de2a8a4cbcf08c3e71fb1225c808c4aceb109dbece72ba652b9260c5abc1",
+      "size_bytes": 506516
+    },
+    "local_ledger": {
+      "workspace_relative_path": "build/udm-cu-current-omp-evidence-plan-v7/after-freeze-notes-v8.json",
+      "sha256": "b414a75f87dc01716f44fc9ede5316a8b62ffbe07da030a473f408c867cf32ca",
+      "size_bytes": 6389
+    },
+    "publication": {
+      "workspace_relative_path": "build/udm37-column-batching-scalar-math-plan-v1/pr52-publication-v2.json",
+      "sha256": "afca9c9393eb104ed23503eabd226daa480643baed51a27cfc7efd9491e088b0",
+      "size_bytes": 5914
+    },
+    "publication_final": {
+      "workspace_relative_path": "build/udm37-column-batching-scalar-math-plan-v1/pr52-publication-v3.json",
+      "sha256": "3b1137628096e377bc645116cb904cb35f2351f560fec5cd3f3dd16dc9c7d89f",
+      "size_bytes": 4954
+    },
+    "remote_backend_audit": {
+      "workspace_relative_path": "build/pr52-remote-reference-v2/remote-artifact-audit-v1.json",
+      "sha256": "36e5eee13f42974ddce2465e3cb66ae54415cc29bcf94151c8f9c449c202523b",
+      "size_bytes": 53808
+    }
+  },
+  "packing_scope": "Source-derived expected day/night and full/tail coverage from logged row widths 144/145; no runtime call count claim.",
+  "limitations": [
+    "Fixed GNU CPU executable and case, MPI4/OMP2; no universal bitwise guarantee.",
+    "No timing speedup claim from diagnostic elapsed times.",
+    "Long/restart and repeated performance comparisons pending.",
+    "No independent forecast accuracy, nested-domain or NOAA hail-optics parity claim."
+  ],
+  "original_failure_retained": "Earlier unshimmed batch-size mismatch and process-wide scalar-math counterfactual preserved in PR51; current proof uses RTE-only CPU helper without preload.",
+  "current_source_pr_ci": {
+    "head": "677ad6f342806d7a2b57c4e72cdd1a6dfe2e21e1",
+    "run": 37167331929,
+    "checks_pass": 8,
+    "status": "PASS",
+    "url": "https://github.com/gonos2k/wrf-rrtmgp/actions/runs/37167331929"
+  }
+}
