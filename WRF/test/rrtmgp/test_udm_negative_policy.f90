@@ -102,6 +102,27 @@ PROGRAM test_udm_negative_policy
     qi(2)=ieee_value(0.,ieee_quiet_nan)
     CALL build_with_limits()
     ERROR STOP 'nonfinite q was accepted'
+  CASE('dp_nan_context')
+    dp(2)=ieee_value(0.,ieee_quiet_nan)
+    CALL build_with_limits()
+    ERROR STOP 'nonfinite dp was accepted'
+  CASE('dp_zero_context')
+    dp(2)=0.
+    CALL build_with_limits()
+    ERROR STOP 'nonpositive dp was accepted'
+  CASE('cf_nan_context')
+    cf(2)=ieee_value(0.,ieee_quiet_nan)
+    CALL build_with_limits()
+    ERROR STOP 'nonfinite cf was accepted'
+  CASE('cf_range_context')
+    cf(2)=1.25
+    CALL build_with_limits()
+    ERROR STOP 'out-of-range cf was accepted'
+  CASE('dp_nan_no_context')
+    dp(2)=ieee_value(0.,ieee_quiet_nan)
+    CALL rrtmgp_build_udm_inputs(dp,cf,qc,qi,qr,qs,qg,qh,re_cloud,re_ice,re_snow,gravity, &
+         grid,incloud,radius,reason,errmsg)
+    ERROR STOP 'nonfinite dp without context was accepted'
   CASE DEFAULT
     ERROR STOP 'unknown negative-policy fixture mode'
   END SELECT
