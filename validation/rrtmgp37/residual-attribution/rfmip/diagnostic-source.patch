@@ -1,0 +1,165 @@
+--- pinned/rrtmgp_rfmip_sw.F90
++++ diagnostic-only/rrtmgp_rfmip_sw.F90
+@@ -38,6 +38,7 @@
+ !
+ ! -------------------------------------------------------------------------------------------------
+ program rrtmgp_rfmip_sw
++  use iso_fortran_env, only: int32
+   ! --------------------------------------------------
+   !
+   ! Modules for working with rte and rrtmgp
+@@ -117,6 +118,16 @@
+   !
+   type(ty_gas_concs), dimension(:), allocatable  :: gas_conc_array
+   real(wp), parameter :: deg_to_rad = acos(-1._wp)/180._wp
++  ! Optional diagnostic-only state. With no fifth/sixth arguments, ordinary
++  ! execution follows the original path and performs no diagnostic I/O.
++  logical :: audit_enabled = .false., audit_this
++  logical, allocatable :: audit_profiles(:,:)
++  character(len=256) :: audit_prefix = '', audit_selector = ''
++  character(len=512) :: audit_source_pre_path, audit_optics_path
++  character(len=512) :: audit_source_post_path, audit_flux_solver_path, audit_flux_written_path
++  integer :: audit_u_source_pre, audit_u_optics, audit_u_source_post
++  integer :: audit_u_flux_solver, audit_u_flux_written, audit_selector_u, audit_ios
++  integer :: audit_e, audit_s, audit_flat, audit_expt, audit_site
+   ! -------------------------------------------------------------------------------------------------
+   !
+   ! Code starts
+@@ -135,6 +146,47 @@
+   if(nargs >= 3) call get_command_argument(3, kdist_file)
+   if(nargs >= 4) then
+     call get_command_argument(4, forcing_index_char)
++  end if
++  if(nargs >= 5) call get_command_argument(5, audit_prefix)
++  if(nargs >= 6) call get_command_argument(6, audit_selector)
++  if((nargs == 5) .or. (nargs > 6)) stop "diagnostic mode requires exactly args 5 and 6"
++  audit_enabled = (nargs == 6)
++  if(audit_enabled) then
++    if(len_trim(audit_prefix) == 0 .or. len_trim(audit_selector) == 0) &
++      stop "diagnostic output prefix and selector path must be nonempty"
++    allocate(audit_profiles(ncol,nexp))
++    audit_profiles = .false.
++    open(newunit=audit_selector_u, file=trim(audit_selector), status='old', action='read', iostat=audit_ios)
++    if(audit_ios /= 0) stop "cannot open diagnostic profile selector"
++    do
++      read(audit_selector_u, *, iostat=audit_ios) audit_e, audit_s
++      if(audit_ios < 0) exit
++      if(audit_ios /= 0) stop "malformed diagnostic selector row"
++      if(audit_e < 1 .or. audit_e > nexp .or. audit_s < 1 .or. audit_s > ncol) &
++        stop "diagnostic selector index out of range"
++      audit_profiles(audit_s,audit_e) = .true.
++    end do
++    close(audit_selector_u)
++    audit_source_pre_path = trim(audit_prefix) // "_source_pre.bin"
++    audit_optics_path = trim(audit_prefix) // "_optics.bin"
++    audit_source_post_path = trim(audit_prefix) // "_source_post.bin"
++    audit_flux_solver_path = trim(audit_prefix) // "_flux_solver.bin"
++    audit_flux_written_path = trim(audit_prefix) // "_flux_written.bin"
++    open(newunit=audit_u_source_pre, file=trim(audit_source_pre_path), status='new', &
++         access='stream', form='unformatted', action='write', iostat=audit_ios)
++    if(audit_ios /= 0) stop "cannot create diagnostic source-pre file"
++    open(newunit=audit_u_optics, file=trim(audit_optics_path), status='new', &
++         access='stream', form='unformatted', action='write', iostat=audit_ios)
++    if(audit_ios /= 0) stop "cannot create diagnostic optics file"
++    open(newunit=audit_u_source_post, file=trim(audit_source_post_path), status='new', &
++         access='stream', form='unformatted', action='write', iostat=audit_ios)
++    if(audit_ios /= 0) stop "cannot create diagnostic source-post file"
++    open(newunit=audit_u_flux_solver, file=trim(audit_flux_solver_path), status='new', &
++         access='stream', form='unformatted', action='write', iostat=audit_ios)
++    if(audit_ios /= 0) stop "cannot create diagnostic solver-flux file"
++    open(newunit=audit_u_flux_written, file=trim(audit_flux_written_path), status='new', &
++         access='stream', form='unformatted', action='write', iostat=audit_ios)
++    if(audit_ios /= 0) stop "cannot create diagnostic written-flux file"
+   end if
+ 
+   !
+@@ -241,6 +293,22 @@
+                                        gas_conc_array(b),  &
+                                        optical_props,      &
+                                        toa_flux))
++    if(audit_enabled) then
++      do icol = 1, block_size
++        audit_flat = (b-1)*block_size + (icol-1)
++        audit_expt = audit_flat/ncol + 1
++        audit_site = mod(audit_flat,ncol) + 1
++        audit_this = audit_profiles(audit_site,audit_expt)
++        if(audit_this) then
++          write(audit_u_source_pre) int(audit_expt,int32), int(audit_site,int32)
++          write(audit_u_source_pre) toa_flux(icol,:)
++          write(audit_u_optics) int(audit_expt,int32), int(audit_site,int32)
++          write(audit_u_optics) optical_props%tau(icol,:,:)
++          write(audit_u_optics) optical_props%ssa(icol,:,:)
++          write(audit_u_optics) optical_props%g(icol,:,:)
++        end if
++      end do
++    end if
+     ! Boundary conditions
+     !   (This is partly to show how to keep work on GPUs using OpenACC in a host application)
+     ! What's the total solar irradiance assumed by RRTMGP?
+@@ -272,6 +340,18 @@
+         toa_flux(icol,igpt) = toa_flux(icol,igpt) * total_solar_irradiance(icol,b)/def_tsi(icol)
+       end do
+     end do
++    if(audit_enabled) then
++      do icol = 1, block_size
++        audit_flat = (b-1)*block_size + (icol-1)
++        audit_expt = audit_flat/ncol + 1
++        audit_site = mod(audit_flat,ncol) + 1
++        audit_this = audit_profiles(audit_site,audit_expt)
++        if(audit_this) then
++          write(audit_u_source_post) int(audit_expt,int32), int(audit_site,int32)
++          write(audit_u_source_post) toa_flux(icol,:)
++        end if
++      end do
++    end if
+     !
+     ! Expand the spectrally-constant surface albedo to a per-band albedo for each column
+     !
+@@ -302,6 +382,19 @@
+                             sfc_alb_spec,    &
+                             sfc_alb_spec,    &
+                             fluxes))
++    if(audit_enabled) then
++      do icol = 1, block_size
++        audit_flat = (b-1)*block_size + (icol-1)
++        audit_expt = audit_flat/ncol + 1
++        audit_site = mod(audit_flat,ncol) + 1
++        audit_this = audit_profiles(audit_site,audit_expt)
++        if(audit_this) then
++          write(audit_u_flux_solver) int(audit_expt,int32), int(audit_site,int32)
++          write(audit_u_flux_solver) flux_up(icol,:,b)
++          write(audit_u_flux_solver) flux_dn(icol,:,b)
++        end if
++      end do
++    end if
+     !
+     ! Zero out fluxes for which the original solar zenith angle is > 90 degrees.
+     !
+@@ -311,7 +404,27 @@
+         flux_dn(icol,:,b)  = 0._wp
+       end if
+     end do
++    if(audit_enabled) then
++      do icol = 1, block_size
++        audit_flat = (b-1)*block_size + (icol-1)
++        audit_expt = audit_flat/ncol + 1
++        audit_site = mod(audit_flat,ncol) + 1
++        audit_this = audit_profiles(audit_site,audit_expt)
++        if(audit_this) then
++          write(audit_u_flux_written) int(audit_expt,int32), int(audit_site,int32)
++          write(audit_u_flux_written) flux_up(icol,:,b)
++          write(audit_u_flux_written) flux_dn(icol,:,b)
++        end if
++      end do
++    end if
+   end do
++  if(audit_enabled) then
++    close(audit_u_source_pre)
++    close(audit_u_optics)
++    close(audit_u_source_post)
++    close(audit_u_flux_solver)
++    close(audit_u_flux_written)
++  end if
+   !
+   ! End timers
+   !

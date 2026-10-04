@@ -1,0 +1,38 @@
+{
+  "input_dimension_shape": {
+    "expt": 18,
+    "level": 61,
+    "site": 100
+  },
+  "integers": "two native-endian int32 values per profile record: expt_index1, site_index1",
+  "n_selected_profiles": 135,
+  "ngpt": 224,
+  "nlay": 60,
+  "ordinary_path": "With no args 5 and 6, no diagnostic selector allocation or file I/O occurs; added numerical calculation statements are absent.",
+  "profile_order": "ascending (expt_index1, site_index1) selector rows; input block mapping is flat=(block-1)*block_size+(column-1), site=mod(flat,nsite)+1, expt=flat/nsite+1",
+  "schema": "rfmip-sw-diagnostic-stream-format-v1",
+  "status": "PREPARED_NOT_EXECUTED",
+  "streams": {
+    "diag_flux_solver.bin": {
+      "meaning": "RTE broadband output before nighttime output mask",
+      "record": "2*int32 then flux_up[61], flux_dn[61] float64"
+    },
+    "diag_flux_written.bin": {
+      "meaning": "values after existing nighttime mask, immediately before netCDF write/cast",
+      "record": "2*int32 then flux_up[61], flux_dn[61] float64"
+    },
+    "diag_optics.bin": {
+      "meaning": "gas optics output properties before RTE",
+      "record": "2*int32 then tau[60,224], ssa[60,224], g[60,224] float64 in Fortran element order"
+    },
+    "diag_source_post.bin": {
+      "meaning": "toa_flux after all-gpoint broadband normalization",
+      "record": "2*int32 then 224*float64"
+    },
+    "diag_source_pre.bin": {
+      "meaning": "gas_optics toa_flux before RFMIP broadband normalization",
+      "record": "2*int32 then 224*float64"
+    }
+  },
+  "wp": "Fortran wp from pinned README: c_double; emitted as native-endian float64 on this x86_64 GNU host"
+}
