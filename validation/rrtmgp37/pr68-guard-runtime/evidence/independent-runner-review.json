@@ -1,0 +1,142 @@
+{
+  "build_calls_by_reviewer": 0,
+  "checks": {
+    "comparison_exceptions_preserved": "comparison try/except records FAIL_PRESERVED before terminal atomic receipt",
+    "durable_child_rc_precedes_log_parse": true,
+    "exact_pair_dimensions_dtype_attrs_raw_bytes": "dimensions/variables/schema and raw bytes compared; variable attributes exact; global attribute differences enumerated separately",
+    "frozen_sha_pins_match": true,
+    "max_two_model_calls_and_no_build_authorization_contract": true,
+    "one_use_exclusive_lock_and_receipt_gate": "LOCK.exists() or RECEIPT.exists() checked before O_EXCL lock creation",
+    "python_compile_check": "PASS",
+    "raw_and_decoded_output_quality": "finite checks, explicit _FillValue, decoded masks, Times checked on each history/checkpoint",
+    "source_independent_existing_restart_quality_check": "PASS",
+    "static_postflight_recheck": "plan/manifest/readback/runner, candidate binary/build evidence, assets and namelist revalidated; before/after summaries compared",
+    "timeout_and_process_group_cleanup": "1800 sec; TERM then KILL; first failed arm stops sequential loop"
+  },
+  "durable_rc_review_note": "Confirmed from exact runner SHA 85ffd8\u2026: immediately after child wait, it sets returncode/timed_out/end/status and atomically fsyncs receipt before parsing rank/fatal logs. Earlier concern was based on an incomplete source view and is withdrawn.",
+  "existing_output_quality_probe": {
+    "dimensions": {
+      "DIM0010": {
+        "size": 5,
+        "unlimited": false
+      },
+      "DIM0014": {
+        "size": 7501,
+        "unlimited": false
+      },
+      "DateStrLen": {
+        "size": 19,
+        "unlimited": false
+      },
+      "Time": {
+        "size": 1,
+        "unlimited": true
+      },
+      "bottom_top": {
+        "size": 44,
+        "unlimited": false
+      },
+      "bottom_top_stag": {
+        "size": 45,
+        "unlimited": false
+      },
+      "dust_erosion_dimension": {
+        "size": 3,
+        "unlimited": false
+      },
+      "ensemble_stag": {
+        "size": 144,
+        "unlimited": false
+      },
+      "iit": {
+        "size": 2,
+        "unlimited": false
+      },
+      "lagday": {
+        "size": 150,
+        "unlimited": false
+      },
+      "land_cat_stag": {
+        "size": 21,
+        "unlimited": false
+      },
+      "num_ext_model_couple_dom_stag": {
+        "size": 1,
+        "unlimited": false
+      },
+      "num_pert_3d": {
+        "size": 15,
+        "unlimited": false
+      },
+      "seed_dim_stag": {
+        "size": 8,
+        "unlimited": false
+      },
+      "soil_cat_stag": {
+        "size": 16,
+        "unlimited": false
+      },
+      "soil_layers": {
+        "size": 4,
+        "unlimited": false
+      },
+      "soil_layers_stag": {
+        "size": 4,
+        "unlimited": false
+      },
+      "south_north": {
+        "size": 99,
+        "unlimited": false
+      },
+      "south_north_stag": {
+        "size": 100,
+        "unlimited": false
+      },
+      "west_east": {
+        "size": 90,
+        "unlimited": false
+      },
+      "west_east_stag": {
+        "size": 91,
+        "unlimited": false
+      }
+    },
+    "finite_raw_values_checked": 48270190,
+    "input": "pinned PR65 restart checkpoint",
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-matthew-dt60-paired-48h-v1/ra37/wrfrst_d01_2016-10-07_12:00:00",
+    "sha256": "2c631a135aa4f31dded06bcc9ed97f9a28bb5a9c1719ef93b2d2a0e762af9197",
+    "times": [
+      "2016-10-07_12:00:00"
+    ],
+    "variable_count": 667
+  },
+  "model_calls_by_reviewer": 0,
+  "nonblocking_note": {
+    "effect": "The runtime validates every manifest entry and its actual staged bytes; stage_entries is not used as the asset acceptance predicate, so this is stale plan metadata rather than a missing staged asset.",
+    "issue": "plan-v3 arms.pr68.stage_entries is 104, while the frozen manifest contains 105 entries and stage-readback-v3 reports 105 for that arm.",
+    "observed_counts": {
+      "manifest": {
+        "pr65": 105,
+        "pr68": 105
+      },
+      "plan": {
+        "pr65": 105,
+        "pr68": 104
+      },
+      "readback": {
+        "pr65": 105,
+        "pr68": 105
+      }
+    }
+  },
+  "pins": {
+    "manifest_sha256": "f044601e8346be443704d40e0fc4a3eb141c9bd1f60feb0a5691410c4c987b1f",
+    "plan_sha256": "b227fec741560ea3f44893aa13afe9158c0b75a74eecf74309a0b241eba3b3cb",
+    "readback_sha256": "ddce2b30665ab7f854ecab9796caf7042413d8db3b7a599a02de529669d9115c",
+    "readme_sha256": "a23436f62e4050b1a57b60e36d62fce26a473633be0e3e5fbb92be6c12ca2bff",
+    "runner_sha256": "85ffd8ccebbbe6afe5183aac1bf75f7e93aba158704fb55b8b412706a80269e8"
+  },
+  "schema": "udm37-pr68-guard-runtime-independent-review-v1",
+  "scope": "Read-only review of frozen, unrun runtime helper; no staging, build, or model execution.",
+  "status": "PASS_SCOPED_WITH_NONBLOCKING_PLAN_METADATA_NOTE"
+}
