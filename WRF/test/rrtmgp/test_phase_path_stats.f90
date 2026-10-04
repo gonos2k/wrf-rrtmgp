@@ -2,15 +2,17 @@ program test_phase_path_stats
   use, intrinsic :: iso_fortran_env, only: int64, real64
   use mo_rte_kind, only: wp
   use module_ra_rrtmgp, only: rrtmgp_init, rrtmgp_cloud_lut_bounds, rrtmgp_ice_lut_coordinate
-  use module_ra_rrtmgp_input, only: rrtmgp_summarize_path_clipping, rrtmgp_build_udm_inputs, &
+  use module_ra_rrtmgp_input, only: rrtmgp_summarize_path_clipping, rrtmgp_build_udm_inputs, rrtmgp_build_cu_inputs, &
        RRTMGP_INPUT_CLEAR_CONDENSATE
   implicit none
   character(len=1024) :: data_dir
   real(wp) :: lmin_lw,lmax_lw,imin_lw,imax_lw,lmin_sw,lmax_sw,imin_sw,imax_sw
-  real(real64) :: coord(6),nlow_sum,nlow_max,nhigh_sum,nhigh_max,total,eps
+  real(real64) :: coord(6),nlow_sum,nlow_max,nhigh_sum,nhigh_max,total,eps,native_total(4),native_omitted(4)
   real :: path(6),path_before(6),cf(6),cf_before(6)
   real :: dp(2),cf_build(2),qc(2),qi(2),qr(2),qs(2),qg(2),qh(2),re_cloud(2),re_ice(2),re_snow(2)
   real :: grid(2,6),incloud(2,6),sizes(2,3),omitted(2,6),dry_mass(2)
+  real :: cu_cf(2),cu_dp(2),cu_sh(2),cu_qc(2),cu_qi(2)
+  real :: cu_grid(2,2),cu_incloud(2,2),cu_rejected(2,2),cu_omitted(2,2),negative_limits(6),negative_correction(2,6)
   integer :: build_reason,layer_reason(2)
   character(len=256) :: errmsg
   integer(int64) :: nlow,nhigh
@@ -75,6 +77,41 @@ program test_phase_path_stats
   end if
   if(abs(grid(2,1)-100.)>1.e-4 .or. abs(incloud(2,1)-200.)>1.e-4) &
     error stop 'cloudy grid/in-cloud path contract changed'
+
+  ! The CF0 denominator includes all native grid paths, including CF0;
+  ! it differs from the positive-CF LUT eligible denominator above.
+  native_total=sum(real(grid(:,1:4),real64),dim=1)
+  native_omitted=sum(real(omitted(:,1:4),real64),dim=1)
+  if(any(abs(native_total-[200._real64,200._real64,300._real64,400._real64])>1.e-4_real64)) &
+    error stop 'native phase grid denominator changed'
+  if(native_omitted(1)/native_total(1)/=0.5_real64 .or. &
+     any(native_omitted(2:4)/native_total(2:4)/=1._real64)) &
+    error stop 'native CF0 phase fraction changed'
+
+  ! Positive uniform frozen G/H never enter the four native denominators.
+  qc=0.; qi=0.; qr=0.; qs=0.; qg=1.e-3; qh=2.e-3
+  call rrtmgp_build_udm_inputs(dp,cf_build,qc,qr,qi,qs,qg,qh,re_cloud,re_ice,re_snow,9.81, &
+       grid,incloud,sizes,build_reason,errmsg,allow_clear_condensate=.true., &
+       omitted_grid_path=omitted,dry_layer_mass_kg_m2=dry_mass,frozen_uniform=.true.)
+  if(any(grid(:,5:6)<=0.) .or. any(grid(:,1:4)/=0.) .or. any(omitted(:,1:4)/=0.)) &
+    error stop 'G/H leaked into native four-phase denominator'
+
+  ! Positive diagnosed CU does not become native condensate or denominator.
+  cu_cf=[0.,0.2];cu_dp=cu_cf;cu_sh=0.;cu_qc=1.e-3;cu_qi=2.e-3
+  call rrtmgp_build_cu_inputs(cf_build,cu_cf,cu_dp,cu_sh,cu_qc,cu_qi,dry_mass, &
+       cu_grid,cu_incloud,cu_rejected,cu_omitted,build_reason)
+  if(cu_grid(2,1)<=0. .or. cu_grid(2,2)<=0. .or. any(grid(:,1:4)/=0.)) &
+    error stop 'CU participation contaminated native denominator'
+
+  ! Existing native correction is applied before grid-path accounting.
+  qg=0.;qh=0.;qc=[-1.e-10,1.e-3];negative_limits=1.e-9
+  call rrtmgp_build_udm_inputs(dp,cf_build,qc,qr,qi,qs,qg,qh,re_cloud,re_ice,re_snow,9.81, &
+       grid,incloud,sizes,build_reason,errmsg,allow_clear_condensate=.true., &
+       omitted_grid_path=omitted,dry_layer_mass_kg_m2=dry_mass,negative_q_limits=negative_limits, &
+       negative_grid_correction=negative_correction)
+  if(negative_correction(1,1)<=0. .or. grid(1,1)/=0. .or. any(omitted/=0.) .or. &
+     abs(sum(real(grid(:,1),real64))-100._real64)>1.e-4_real64) &
+    error stop 'native corrected path denominator changed'
 
   write(*,'(A)') 'phase path and LUT clipping statistics contract passed'
 end program test_phase_path_stats

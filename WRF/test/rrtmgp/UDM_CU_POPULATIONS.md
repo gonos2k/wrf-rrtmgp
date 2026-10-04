@@ -35,7 +35,7 @@ Rejected CU grid paths and source-negative counts are reported separately from n
 | Native UDM | UDM effective radius | Twice UDM effective radius for the ice LUT diameter |
 | Diagnosed CU | Existing WRF `relcalc` analytic radius | Existing WRF `reicalc` temperature-table radius, then twice that radius |
 
-The CU formulas are WRF fallback assumptions. They are not UDM diagnoses or KF particle-size-distribution diagnoses. Their separate arrays must not be overwritten by native microphysics radii. Existing LUT bounds apply to each population; clipping diagnostics must retain the population and water-path weight.
+The CU formulas are WRF fallback assumptions. They are not UDM diagnoses or KF particle-size-distribution diagnoses. Their separate arrays must not be overwritten by native microphysics radii. Existing LUT bounds apply to each population; clipping diagnostics must retain the population and water-path weight. CU clipping summaries require nonzero overlap, while the accepted/rejected input summaries also describe overlap0. The [phase diagnostic contract](PHASE_DIAGNOSTIC_CONTRACT.md) defines call context and native CF0 denominators; none of these path fractions is a flux-error measure.
 
 LW absorption from the two cloud populations is added before the shared cloud sampling. SW cloud optics are evaluated separately and combined through extinction and scattering moments, \(\tau\), \(\tau\omega\), and \(\tau\omega g\), before the cloud's single delta scaling. Existing already-scaled precipitation optics are then included in their original place. The unscaled-direct calculation uses aggregate raw native-plus-CU cloud extinction. Radius averaging or a second cloud delta scaling would define a different model.
 
