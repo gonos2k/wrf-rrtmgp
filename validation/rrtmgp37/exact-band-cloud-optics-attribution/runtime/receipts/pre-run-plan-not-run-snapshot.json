@@ -1,0 +1,66 @@
+{
+  "schema": "udm37-exact-band-cloud-optics-attribution-plan-v1",
+  "status": "NOT_RUN",
+  "runtime_calls_executed": 0,
+  "scope": {
+    "phase": "SW",
+    "point": {"domain": 1, "i": 24, "j": 55, "step": 2161, "source_seconds": 129600.0},
+    "native_layers_1based": [30, 31, 32],
+    "matched_gp_bands_1based": [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
+    "unmatched_gp_bands_1based_held_at_baseline": [1, 2],
+    "prepared_optics_cells": 36,
+    "optics_components_per_cell": 3,
+    "replace_combined_prepared_native_cu_precip_tuple": true,
+    "raw_state_and_component_diagnostics_held": true,
+    "direct_beam_path_fully_reconstructed": false
+  },
+  "reused_evidence": {
+    "sw_export": {
+      "path": "../rrtmg4-same-call-attribution/exports/rrtmg4_d01_i24_j55_step2161_sw.txt.gz",
+      "sha256": "f2c29a53bf9d42f11f33ceeb72671f724c79163e530686c653639b36cfd5aa76",
+      "size_bytes": 140295
+    },
+    "sw_input": {
+      "path": "../rrtmg4-same-call-attribution/traces/NEW_ON/sw_000001.input",
+      "sha256": "20986c50c59bc294fede10fc7fe7bdb1173ab3ba1a391a444ed8fd785cd55b1c",
+      "size_bytes": 399854
+    },
+    "sw_raw": {
+      "path": "../rrtmg4-same-call-attribution/traces/NEW_ON/sw_000001.raw",
+      "sha256": "559a706f9eed53831088594197f52a362b41045ff31293b982e4a98716f45127",
+      "size_bytes": 93904
+    },
+    "baseline_result_gzip": {
+      "path": "../cf0-precip-cu-replay/outputs/baseline-sw.result.txt.gz",
+      "sha256": "f8311e66f09ff2278fbced9d48fc456b95d8a9628cd6bf19aad3da325dc8adf9",
+      "size_bytes": 341495,
+      "decompressed_sha256": "5afeb243d0d8e85a36d8c3dd5be7fe8c6c41a2034a142596d9e1d6d765dac53d",
+      "decompressed_size_bytes": 1338695
+    }
+  },
+  "prepared_assets": {
+    "generator": {"path": "preparation-v4/generate.py", "sha256": "9843c93b63832b04ecd54c3cab5bfe12383fa72e1f05c15a2658b5790378ae5b"},
+    "source_plan": {"path": "preparation-v4/plan-inputs.json", "sha256": "215eb995aa9b2063c38e620ef7ff93add453b94d142d0c9b6cc5f40dff36d720"},
+    "identity_control": {"path": "preparation-v4/inputs/sw-optics-control-full-prepared.optics", "sha256": "a095904db07150b92100ab0d10763aeed043e8f6979390266ba1d3d27c5956b3", "size_bytes": 44202},
+    "legacy_swap": {"path": "preparation-v4/inputs/sw-optics-legacy-exact-band-k30-32.optics", "sha256": "41d2ff807824babc4f20a75f43710fb65a9e0fb039a1e9b09eb3569a2722620a", "size_bytes": 44202}
+  },
+  "calls": [
+    {
+      "call_id": "control-full-prepared",
+      "override": "preparation-v4/inputs/sw-optics-control-full-prepared.optics",
+      "expected_gate": "all output sections byte-identical to the decompressed retained baseline result",
+      "status": "NOT_RUN",
+      "output": "runtime/outputs/control-full-prepared.result",
+      "log": "runtime/logs/control-full-prepared.log"
+    },
+    {
+      "call_id": "legacy-exact-band-k30-32",
+      "override": "preparation-v4/inputs/sw-optics-legacy-exact-band-k30-32.optics",
+      "expected_gate": "validate result structure and report deltas against the verified control without predeclaring a threshold or outcome",
+      "status": "NOT_RUN",
+      "output": "runtime/outputs/legacy-exact-band-k30-32.result",
+      "log": "runtime/logs/legacy-exact-band-k30-32.log"
+    }
+  ],
+  "interpretation": "Prepared-array sensitivity only; not native-only, pure-engine/PSD, or complete direct-beam attribution. No solver has been invoked."
+}
