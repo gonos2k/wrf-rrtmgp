@@ -218,3 +218,153 @@ CONTAINS
     FLUSH(csv_unit)
   END SUBROUTINE
 END MODULE
+
+! Bounded observer for the legacy RRTMG calculation inside the existing
+! selected-column audit. It is activated only by the driver around the
+! engine-4, seed-override -1 call. Production solver calls leave it
+! inactive: wrapper checks are no-ops and do not write or copy arrays.
+MODULE module_rrtmg4_optics_export
+  USE, INTRINSIC :: iso_fortran_env, ONLY: real64
+#ifdef _OPENMP
+  USE omp_lib, ONLY: omp_get_max_threads
+#endif
+  IMPLICIT NONE
+  EXTERNAL :: wrf_error_fatal
+  PRIVATE
+  PUBLIC :: rrtmg4_export_begin, rrtmg4_export_end, rrtmg4_export_active
+  PUBLIC :: rrtmg4_export_stage, rrtmg4_export_real1, rrtmg4_export_real2
+  PUBLIC :: rrtmg4_export_int1
+  LOGICAL, SAVE :: active=.FALSE.
+  LOGICAL, SAVE :: export_checked=.FALSE., export_requested=.FALSE.
+  INTEGER, SAVE :: out_unit=0, stage_mask=0
+  CHARACTER(LEN=1024), SAVE :: out_dir=''
+CONTAINS
+  SUBROUTINE rrtmg4_export_begin(phase,domain,step,seconds,global_i,global_j)
+    CHARACTER(LEN=*), INTENT(IN) :: phase
+    INTEGER, INTENT(IN) :: domain,step,global_i,global_j
+    REAL, INTENT(IN) :: seconds
+    CHARACTER(LEN=2048) :: filename
+    INTEGER :: env_status,env_length,ios
+    LOGICAL :: exists
+    IF(active) CALL wrf_error_fatal('RRTMG4_EXPORT_NESTED_BEGIN')
+    IF(.NOT.export_checked) THEN
+      out_dir=''
+      CALL get_environment_variable('WRF_RRTMGP_RRTMG4_EXPORT_DIR',out_dir, &
+                                     LENGTH=env_length,STATUS=env_status)
+      IF(env_status==-1) CALL wrf_error_fatal('RRTMG4_EXPORT_DIRECTORY_TOO_LONG')
+      IF(env_status>0.AND.env_length>0) CALL wrf_error_fatal('RRTMG4_EXPORT_ENVIRONMENT_READ_FAILED')
+      export_requested=env_length>0.AND.LEN_TRIM(out_dir)>0
+      export_checked=.TRUE.
+    END IF
+    IF(.NOT.export_requested) RETURN
+#ifdef DM_PARALLEL
+    CALL wrf_error_fatal('RRTMG4_EXPORT_REQUIRES_SERIAL_EXECUTION')
+    RETURN
+#endif
+#ifdef _OPENMP
+    IF(omp_get_max_threads()>1) THEN
+      CALL wrf_error_fatal('RRTMG4_EXPORT_REQUIRES_ONE_OPENMP_THREAD')
+      RETURN
+    END IF
+#endif
+    ! This export is intentionally pinned to the exact same-state comparison
+    ! point. Other calls, including all production calls, are no-ops.
+    IF(domain/=1.OR.step/=2161.OR.global_i/=24.OR.global_j/=55) RETURN
+    IF(ABS(REAL(seconds,real64)-129600._real64)>0.01_real64) RETURN
+    IF(phase/='lw'.AND.phase/='sw') CALL wrf_error_fatal('RRTMG4_EXPORT_INVALID_PHASE')
+    INQUIRE(FILE=TRIM(out_dir)//'/.',EXIST=exists)
+    IF(.NOT.exists) CALL wrf_error_fatal('RRTMG4_EXPORT_DIRECTORY_NOT_FOUND')
+    IF(phase=='lw') THEN
+      filename=TRIM(out_dir)//'/rrtmg4_d01_i24_j55_step2161_lw.txt'
+    ELSE
+      filename=TRIM(out_dir)//'/rrtmg4_d01_i24_j55_step2161_sw.txt'
+    END IF
+    OPEN(NEWUNIT=out_unit,FILE=TRIM(filename),STATUS='new',ACTION='write',IOSTAT=ios)
+    IF(ios/=0) CALL wrf_error_fatal('RRTMG4_EXPORT_OUTPUT_CREATE_FAILED')
+    active=.TRUE.; stage_mask=0
+    WRITE(out_unit,'(A)',IOSTAT=ios) 'RRTMG4_SELECTED_COLUMN_EXPORT_V1'
+    IF(ios/=0) CALL wrf_error_fatal('RRTMG4_EXPORT_HEADER_WRITE_FAILED')
+    WRITE(out_unit,'(A,1X,A)',IOSTAT=ios) 'phase',TRIM(phase)
+    IF(ios/=0) CALL wrf_error_fatal('RRTMG4_EXPORT_HEADER_WRITE_FAILED')
+    WRITE(out_unit,'(A,1X,I0)',IOSTAT=ios) 'domain',domain
+    IF(ios/=0) CALL wrf_error_fatal('RRTMG4_EXPORT_HEADER_WRITE_FAILED')
+    WRITE(out_unit,'(A,1X,I0)',IOSTAT=ios) 'step',step
+    IF(ios/=0) CALL wrf_error_fatal('RRTMG4_EXPORT_HEADER_WRITE_FAILED')
+    WRITE(out_unit,'(A,1X,ES24.16E3)',IOSTAT=ios) 'source_seconds',REAL(seconds,real64)
+    IF(ios/=0) CALL wrf_error_fatal('RRTMG4_EXPORT_HEADER_WRITE_FAILED')
+    WRITE(out_unit,'(A,1X,I0)',IOSTAT=ios) 'i',global_i
+    IF(ios/=0) CALL wrf_error_fatal('RRTMG4_EXPORT_HEADER_WRITE_FAILED')
+    WRITE(out_unit,'(A,1X,I0)',IOSTAT=ios) 'j',global_j
+    IF(ios/=0) CALL wrf_error_fatal('RRTMG4_EXPORT_HEADER_WRITE_FAILED')
+    WRITE(out_unit,'(A)',IOSTAT=ios) 'layout fortran_order_first_index_fastest; numeric values use REAL64 text precision'
+    IF(ios/=0) CALL wrf_error_fatal('RRTMG4_EXPORT_HEADER_WRITE_FAILED')
+  END SUBROUTINE
+
+  LOGICAL FUNCTION rrtmg4_export_active()
+    rrtmg4_export_active=active
+  END FUNCTION
+
+  SUBROUTINE rrtmg4_export_stage(stage)
+    CHARACTER(LEN=*), INTENT(IN) :: stage
+    INTEGER :: bit,bit_index,ios
+    IF(.NOT.active) RETURN
+    SELECT CASE(TRIM(stage))
+    CASE('INPUT'); bit=1; bit_index=0
+    CASE('CLOUD'); bit=2; bit_index=1
+    CASE('GAS'); bit=4; bit_index=2
+    CASE('RESULT'); bit=8; bit_index=3
+    CASE DEFAULT; CALL wrf_error_fatal('RRTMG4_EXPORT_UNKNOWN_STAGE')
+    END SELECT
+    IF(BTEST(stage_mask,bit_index)) &
+      CALL wrf_error_fatal('RRTMG4_EXPORT_DUPLICATE_STAGE')
+    stage_mask=stage_mask+bit
+    WRITE(out_unit,'(A,1X,A)',IOSTAT=ios) 'stage',TRIM(stage)
+    IF(ios/=0) CALL wrf_error_fatal('RRTMG4_EXPORT_STAGE_WRITE_FAILED')
+  END SUBROUTINE
+
+  SUBROUTINE rrtmg4_export_real1(name,units,x)
+    CHARACTER(LEN=*), INTENT(IN) :: name,units
+    REAL, INTENT(IN) :: x(:)
+    INTEGER :: n,ios
+    IF(.NOT.active) RETURN
+    WRITE(out_unit,'(A,1X,A,1X,I0)',IOSTAT=ios) TRIM(name),TRIM(units),SIZE(x)
+    IF(ios/=0) CALL wrf_error_fatal('RRTMG4_EXPORT_ARRAY_WRITE_FAILED')
+    WRITE(out_unit,'(*(ES24.16E3,1X))',IOSTAT=ios) (REAL(x(n),real64),n=1,SIZE(x))
+    IF(ios/=0) CALL wrf_error_fatal('RRTMG4_EXPORT_ARRAY_WRITE_FAILED')
+  END SUBROUTINE
+
+  SUBROUTINE rrtmg4_export_real2(name,units,x)
+    CHARACTER(LEN=*), INTENT(IN) :: name,units
+    REAL, INTENT(IN) :: x(:,:)
+    INTEGER :: i,j,ios
+    IF(.NOT.active) RETURN
+    WRITE(out_unit,'(A,1X,A,1X,I0,1X,I0)',IOSTAT=ios) &
+      TRIM(name),TRIM(units),SIZE(x,1),SIZE(x,2)
+    IF(ios/=0) CALL wrf_error_fatal('RRTMG4_EXPORT_ARRAY_WRITE_FAILED')
+    WRITE(out_unit,'(*(ES24.16E3,1X))',IOSTAT=ios) &
+      ((REAL(x(i,j),real64),i=1,SIZE(x,1)),j=1,SIZE(x,2))
+    IF(ios/=0) CALL wrf_error_fatal('RRTMG4_EXPORT_ARRAY_WRITE_FAILED')
+  END SUBROUTINE
+
+  SUBROUTINE rrtmg4_export_int1(name,x)
+    CHARACTER(LEN=*), INTENT(IN) :: name
+    INTEGER, INTENT(IN) :: x(:)
+    INTEGER :: i,ios
+    IF(.NOT.active) RETURN
+    WRITE(out_unit,'(A,1X,A,1X,I0)',IOSTAT=ios) TRIM(name),'1',SIZE(x)
+    IF(ios/=0) CALL wrf_error_fatal('RRTMG4_EXPORT_ARRAY_WRITE_FAILED')
+    WRITE(out_unit,'(*(I0,1X))',IOSTAT=ios) x
+    IF(ios/=0) CALL wrf_error_fatal('RRTMG4_EXPORT_ARRAY_WRITE_FAILED')
+  END SUBROUTINE
+
+  SUBROUTINE rrtmg4_export_end()
+    INTEGER :: ios
+    IF(.NOT.active) RETURN
+    IF(stage_mask/=15) CALL wrf_error_fatal('RRTMG4_EXPORT_INCOMPLETE_CAPTURE')
+    FLUSH(out_unit,IOSTAT=ios)
+    IF(ios/=0) CALL wrf_error_fatal('RRTMG4_EXPORT_FLUSH_FAILED')
+    CLOSE(out_unit,IOSTAT=ios)
+    IF(ios/=0) CALL wrf_error_fatal('RRTMG4_EXPORT_CLOSE_FAILED')
+    active=.FALSE.;out_unit=0;stage_mask=0
+  END SUBROUTINE
+END MODULE module_rrtmg4_optics_export

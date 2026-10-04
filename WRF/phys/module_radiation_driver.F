@@ -298,6 +298,7 @@ CONTAINS
    USE module_ra_rrtm       , ONLY : rrtmlwrad
    USE module_ra_rrtmg_lw   , ONLY : rrtmg_lwrad, rrtmg_lwinit
    USE module_ra_rrtmgp_audit, ONLY: audit_enabled, audit_samples, audit_native4, audit_moments, hydro_snapshot
+   USE module_rrtmg4_optics_export, ONLY: rrtmg4_export_begin, rrtmg4_export_end
    USE module_ra_rrtmgp_trace, ONLY: trace_suspend, trace_column_selection, trace_column_in_tile
    USE module_ra_rrtmg_sw   , ONLY : rrtmg_swrad
 #if( BUILD_RRTMG_FAST == 1)
@@ -2310,6 +2311,8 @@ CONTAINS
                   native=audit_native4()
                   IF(engine==37) native=1
                   ah=0.;af=0.;ao3=O3RAD
+                  IF(m==0.AND.engine==4.AND.native==1.AND.selected_column) &
+                    CALL rrtmg4_export_begin('lw',id,itimestep,xtime*60.,target_i,target_j)
                   CALL RRTMG_LWRAD( &
                     p8w=p8w, &
                     p3d=p, &
@@ -2392,6 +2395,7 @@ CONTAINS
                     lwcf=af(:,:,3), &
                     rthratenlw=ah(:,:,:,1), &
                     rthratenlwc=ah(:,:,:,2) )
+                  CALL rrtmg4_export_end()
                   IF(engine==4) THEN
                    x4(:,:,1)=REAL(af(a_its:a_ite,a_jts:a_jte,1),real64)
                    x4(:,:,2)=REAL(af(a_its:a_ite,a_jts:a_jte,2),real64)
@@ -3175,6 +3179,8 @@ CONTAINS
                   native=audit_native4()
                   IF(engine==37) native=1
                   ah=0.;af=0.;ao3=O3RAD
+                  IF(m==0.AND.engine==4.AND.native==1.AND.selected_column) &
+                    CALL rrtmg4_export_begin('sw',id,itimestep,xtime*60.,target_i,target_j)
                   CALL RRTMG_SWRAD( &
                     p8w=p8w, &
                     p3d=p, &
@@ -3295,6 +3301,7 @@ CONTAINS
                     swddirc=af(:,:,21), &
                     rthratensw=ah(:,:,:,1), &
                     rthratenswc=ah(:,:,:,2) )
+                  CALL rrtmg4_export_end()
                   IF(engine==4) THEN
                    x4(:,:,1)=REAL(af(a_its:a_ite,a_jts:a_jte,1),real64)
                    x4(:,:,2)=REAL(af(a_its:a_ite,a_jts:a_jte,2),real64)
