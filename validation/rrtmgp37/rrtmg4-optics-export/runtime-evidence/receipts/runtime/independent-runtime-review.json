@@ -1,0 +1,372 @@
+{
+  "actual_forecast_invocations": 3,
+  "audit": {
+    "comparison": {
+      "baseline_sha256": "5a6ca1a874274e58554fd5d52c6fb6b269c9e0ab3051e09616039b1b5598d617",
+      "call_context": {
+        "phases": [
+          "lw",
+          "sw"
+        ],
+        "source_seconds": 129600.0,
+        "step": 2161
+      },
+      "rows_compared": 188,
+      "selected_and_aggregate": true,
+      "status": "PASS_EXACT_FIRST_CALL"
+    },
+    "file": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rrtmg4-export-runtime-v1/NEW_ON/audit/same_state.csv",
+      "sha256": "35e67401133e058429cd1a47c0a461d25c46f8b3d9549fb81661fa2081bb8f3f",
+      "size_bytes": 44659
+    },
+    "native4": 1,
+    "row_count": 188,
+    "sample_count": 128,
+    "scope": "Selected and aggregate rows overlap."
+  },
+  "authorization": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rrtmg4-export-runtime-v4/root-authorization.json",
+    "sha256": "5f2cc668b35ffd085567d4f97b7af7663d6b09f17780c8e66a95884b64160913",
+    "size_bytes": 1231
+  },
+  "comparison": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rrtmg4-export-runtime-v4/comparison.json",
+    "sha256": "65718330a8d137ddde0fb160f8660eb4af421046a0bda160ad747ab58f5320d6",
+    "size_bytes": 5908
+  },
+  "comparison_summary": {
+    "actual_capture_files": 18,
+    "all_raw_bytes_data_model_dimensions_dtypes_shapes_attributes_and_wholefile_hashes": "PASS_EXACT",
+    "capture_files_per_arm": 6,
+    "capture_groups_per_arm": 2,
+    "capture_parity_three_arms_and_retained_first_call": "PASS_EXACT",
+    "capture_roster": [
+      {
+        "phase": "LW",
+        "source_seconds": 129600.0,
+        "step": 2161
+      },
+      {
+        "phase": "SW",
+        "source_seconds": 129600.0,
+        "step": 2161
+      }
+    ],
+    "history_variables": 231,
+    "netcdf_pairs": 6,
+    "restart_variables": 667
+  },
+  "created_utc": "2026-10-04T18:05:59.585279+00:00",
+  "export_geometry": {
+    "LW": {
+      "fields": 55,
+      "gpoints": 140,
+      "layers": 57
+    },
+    "SW": {
+      "fields": 69,
+      "gpoints": 112,
+      "layers": 45
+    }
+  },
+  "exports": [
+    {
+      "context": {
+        "domain": 1,
+        "i": 24,
+        "j": 55,
+        "phase": "LW",
+        "source_seconds": 129600.0,
+        "step": 2161
+      },
+      "field_count": 55,
+      "file": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rrtmg4-export-runtime-v1/NEW_ON/export/rrtmg4_d01_i24_j55_step2161_lw.txt",
+        "sha256": "44ad6a5d0e2bb9cee48fe0ec821341dde61a240e53dc0c6bce28f26b7044a303",
+        "size_bytes": 1924790
+      },
+      "finite_fields": "PASS",
+      "pressure_hPa_bottom_to_top_monotonic": "PASS",
+      "stages": [
+        "INPUT",
+        "CLOUD",
+        "GAS",
+        "RESULT"
+      ]
+    },
+    {
+      "context": {
+        "domain": 1,
+        "i": 24,
+        "j": 55,
+        "phase": "SW",
+        "source_seconds": 129600.0,
+        "step": 2161
+      },
+      "field_count": 69,
+      "file": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rrtmg4-export-runtime-v1/NEW_ON/export/rrtmg4_d01_i24_j55_step2161_sw.txt",
+        "sha256": "6afbe0cf7d5c83d0589a77b44afd27396f7e63ea566610c4a22925b4c1b110b6",
+        "size_bytes": 2142190
+      },
+      "finite_fields": "PASS",
+      "pressure_hPa_bottom_to_top_monotonic": "PASS",
+      "stages": [
+        "INPUT",
+        "CLOUD",
+        "GAS",
+        "RESULT"
+      ]
+    }
+  ],
+  "immutable_actual_loader_inputs": {
+    "count": 5,
+    "files": [
+      {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-current-serial-audit-build-v1/source/WRF/run/rrtmgp-gas-lw-g128.nc",
+        "sha256": "70ad65d116531122660318e5da2a2af9db74b425916202860e9527ef2375b8f6",
+        "size_bytes": 11679993
+      },
+      {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-current-serial-audit-build-v1/source/WRF/run/rrtmgp-gas-sw-g112.nc",
+        "sha256": "361ed541324068ded28a275a4dd757bcaa0a845aebefa630f43a04678668fe62",
+        "size_bytes": 5949944
+      },
+      {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-current-serial-audit-build-v1/source/WRF/run/rrtmgp-clouds-lw-bnd.nc",
+        "sha256": "09d6704c5b863b4c3ceb417d20bb3076ec492e6bf2dfbcc9f3c5996a3706f0b0",
+        "size_bytes": 49919
+      },
+      {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-current-serial-audit-build-v1/source/WRF/run/rrtmgp-clouds-sw-bnd.nc",
+        "sha256": "7671835992a45afe66244b591a02c0b3df73d7d59ecb746bbffd9763497651cd",
+        "size_bytes": 47659
+      },
+      {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-frozen-planck-coverage-v1/runs/frozen-planck-150-330-step5-plus233-v1/frozen-ice-psd-moments.nc",
+        "sha256": "ebeafb9746164d5414a45eab4061c5c855f0f91e92be77003b3829722514fe6a",
+        "size_bytes": 163599
+      }
+    ]
+  },
+  "independent_methods": [
+    "Frozen validate_netcdf on9files exactly recomputed stored raw/decoded finite/fill/missing/mask quality.",
+    "scan_logs recomputed3inventories: unique rank0SUCCESS, nofatal markers.",
+    "compare_campaign recomputed6NetCDF pairs wholefileSHA/raw/schema/attrs/data_model and18capture files; exact original comparison afterJSON serialization.",
+    "audit_csv and compare_audit_to_baseline independently recomputed188rows exactly.",
+    "Pinned reader parsed both exports; JSON-normalized inventory exact. hPa pressure decreases bottom-to-top; SW initialized14bands16\u201329 verified.",
+    "Loader pre/post hashes and512MiB stack records verified."
+  ],
+  "limits": [
+    "One minute from retained Matthew checkpoint at i24/j55; experimental frozen1, serial OMP1,batch1.",
+    "Observer preservation only; no forecast-accuracy, matched-optics, or flux attribution claim.",
+    "Cumulative89\u219292 is parentledger context; this review confirms only3invocations."
+  ],
+  "original_execution_receipt": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rrtmg4-export-runtime-v4/execution.json",
+    "sha256": "31c5eac1d76b346bd6a1397146f4f2542f5cd3a93eb27c9b55400c606ab975bc",
+    "size_bytes": 729160
+  },
+  "original_receipt_preserved": true,
+  "output_quality": [
+    {
+      "arm": "OLD_OFF",
+      "data_model": "NETCDF4",
+      "file": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rrtmg4-export-runtime-v1/OLD_OFF/wrfout_d01_2016-10-07_12:00:00",
+        "sha256": "cfd51b35cd67291d79aa2beb26be285c62ddaba59193ee4fd19169138155c7a4",
+        "size_bytes": 22115526
+      },
+      "independent_quality_recompute": "PASS_EXACT",
+      "times": [
+        "2016-10-07_12:00:00"
+      ],
+      "variables": 231
+    },
+    {
+      "arm": "OLD_OFF",
+      "data_model": "NETCDF4",
+      "file": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rrtmg4-export-runtime-v1/OLD_OFF/wrfout_d01_2016-10-07_12:01:00",
+        "sha256": "ac6fba4098c6b8a5d8563e6de58f7480405926f3a17b02fe6d64774dc082d1a7",
+        "size_bytes": 22127542
+      },
+      "independent_quality_recompute": "PASS_EXACT",
+      "times": [
+        "2016-10-07_12:01:00"
+      ],
+      "variables": 231
+    },
+    {
+      "arm": "OLD_OFF",
+      "data_model": "NETCDF4",
+      "file": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rrtmg4-export-runtime-v1/OLD_OFF/wrfrst_d01_2016-10-07_12:01:00",
+        "sha256": "eb68d7bddda59d15802288924682e04f8c9fe3a95a1fe39914324c05d047a601",
+        "size_bytes": 68543319
+      },
+      "independent_quality_recompute": "PASS_EXACT",
+      "times": [
+        "2016-10-07_12:01:00"
+      ],
+      "variables": 667
+    },
+    {
+      "arm": "NEW_OFF",
+      "data_model": "NETCDF4",
+      "file": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rrtmg4-export-runtime-v1/NEW_OFF/wrfout_d01_2016-10-07_12:00:00",
+        "sha256": "cfd51b35cd67291d79aa2beb26be285c62ddaba59193ee4fd19169138155c7a4",
+        "size_bytes": 22115526
+      },
+      "independent_quality_recompute": "PASS_EXACT",
+      "times": [
+        "2016-10-07_12:00:00"
+      ],
+      "variables": 231
+    },
+    {
+      "arm": "NEW_OFF",
+      "data_model": "NETCDF4",
+      "file": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rrtmg4-export-runtime-v1/NEW_OFF/wrfout_d01_2016-10-07_12:01:00",
+        "sha256": "ac6fba4098c6b8a5d8563e6de58f7480405926f3a17b02fe6d64774dc082d1a7",
+        "size_bytes": 22127542
+      },
+      "independent_quality_recompute": "PASS_EXACT",
+      "times": [
+        "2016-10-07_12:01:00"
+      ],
+      "variables": 231
+    },
+    {
+      "arm": "NEW_OFF",
+      "data_model": "NETCDF4",
+      "file": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rrtmg4-export-runtime-v1/NEW_OFF/wrfrst_d01_2016-10-07_12:01:00",
+        "sha256": "eb68d7bddda59d15802288924682e04f8c9fe3a95a1fe39914324c05d047a601",
+        "size_bytes": 68543319
+      },
+      "independent_quality_recompute": "PASS_EXACT",
+      "times": [
+        "2016-10-07_12:01:00"
+      ],
+      "variables": 667
+    },
+    {
+      "arm": "NEW_ON",
+      "data_model": "NETCDF4",
+      "file": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rrtmg4-export-runtime-v1/NEW_ON/wrfout_d01_2016-10-07_12:00:00",
+        "sha256": "cfd51b35cd67291d79aa2beb26be285c62ddaba59193ee4fd19169138155c7a4",
+        "size_bytes": 22115526
+      },
+      "independent_quality_recompute": "PASS_EXACT",
+      "times": [
+        "2016-10-07_12:00:00"
+      ],
+      "variables": 231
+    },
+    {
+      "arm": "NEW_ON",
+      "data_model": "NETCDF4",
+      "file": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rrtmg4-export-runtime-v1/NEW_ON/wrfout_d01_2016-10-07_12:01:00",
+        "sha256": "ac6fba4098c6b8a5d8563e6de58f7480405926f3a17b02fe6d64774dc082d1a7",
+        "size_bytes": 22127542
+      },
+      "independent_quality_recompute": "PASS_EXACT",
+      "times": [
+        "2016-10-07_12:01:00"
+      ],
+      "variables": 231
+    },
+    {
+      "arm": "NEW_ON",
+      "data_model": "NETCDF4",
+      "file": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rrtmg4-export-runtime-v1/NEW_ON/wrfrst_d01_2016-10-07_12:01:00",
+        "sha256": "eb68d7bddda59d15802288924682e04f8c9fe3a95a1fe39914324c05d047a601",
+        "size_bytes": 68543319
+      },
+      "independent_quality_recompute": "PASS_EXACT",
+      "times": [
+        "2016-10-07_12:01:00"
+      ],
+      "variables": 667
+    }
+  ],
+  "plan": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rrtmg4-export-runtime-v4/plan.json",
+    "sha256": "f19e7e61d808ad60661da68e702dab07d646e3875d115685a3b874c9bb6c39e2",
+    "size_bytes": 18464
+  },
+  "prelaunch_review": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rrtmg4-export-independent-review-v1/runtime-prelaunch-review.json",
+    "sha256": "23025205eb26379a15315eca737bf314c38b509f6b9a19047c05a1fb6e390802",
+    "size_bytes": 6521
+  },
+  "processes": [
+    {
+      "arm": "OLD_OFF",
+      "ended_utc": "2026-10-04T17:59:08.120527+00:00",
+      "executable": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-current-serial-audit-build-v1/source/WRF/main/wrf.exe",
+        "sha256": "d2c4c772ff8b3b3900b91de385a9bf9a0ab3ea5739d8deff89ec5efdc97555e6",
+        "size_bytes": 50230560
+      },
+      "process_id": 3928239,
+      "returncode": 0,
+      "started_utc": "2026-10-04T17:58:49.393014+00:00",
+      "status": "PASS_ARM",
+      "timed_out": false
+    },
+    {
+      "arm": "NEW_OFF",
+      "ended_utc": "2026-10-04T17:59:35.419321+00:00",
+      "executable": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rrtmg4-export-serial-build-v1/source/WRF/main/wrf.exe",
+        "sha256": "5091946b34cdf9c3397f07f03133dfe2ce0c36059b1d0ec4caa90c013d5a1a57",
+        "size_bytes": 50257304
+      },
+      "process_id": 3928522,
+      "returncode": 0,
+      "started_utc": "2026-10-04T17:59:16.283807+00:00",
+      "status": "PASS_ARM",
+      "timed_out": false
+    },
+    {
+      "arm": "NEW_ON",
+      "ended_utc": "2026-10-04T18:00:00.848166+00:00",
+      "executable": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rrtmg4-export-serial-build-v1/source/WRF/main/wrf.exe",
+        "sha256": "5091946b34cdf9c3397f07f03133dfe2ce0c36059b1d0ec4caa90c013d5a1a57",
+        "size_bytes": 50257304
+      },
+      "process_id": 3928774,
+      "returncode": 0,
+      "started_utc": "2026-10-04T17:59:41.706987+00:00",
+      "status": "PASS_ARM",
+      "timed_out": false
+    }
+  ],
+  "readback_errata": [
+    "Initial summary path lookup and local report writer pin-dictionary lookup failed before review creation.",
+    "Tuple-shaped reader inventory requires JSON normalization to compare stored list shapes; normalized inventory is exact.",
+    "One local report-only command had a syntax typo before execution. No computational output, checker, frozenreceipt, or source was changed."
+  ],
+  "review_invocations": {
+    "build": 0,
+    "real": 0,
+    "solver": 0,
+    "wrf": 0
+  },
+  "runner": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rrtmg4-export-runtime-v4/run_export_once.py",
+    "sha256": "96223fe6dae22b1cc1c33727b6e02ac950a6e825c1268ff0d131cff6eba7b289",
+    "size_bytes": 39729
+  },
+  "schema": "UDM37_RRTMG4_EXPORT_RUNTIME_INDEPENDENT_TERMINAL_REVIEW_V1",
+  "status": "PASS_SCOPED_RUNTIME_PRESERVATION_AND_EXPORT"
+}

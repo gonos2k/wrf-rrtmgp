@@ -59,3 +59,9 @@ The checked-in tiny text outputs under `fixture/` were emitted by that actual
 writer module; `writer-fixture-receipt.json` records their hashes and the
 standalone compiler scope. These checks are not a WRF build or a
 radiation-solver run.
+
+A one-minute actual-WRF runtime preservation/export receipt, compressed LW/SW
+exports, and a portable package verifier are in
+[`runtime-evidence/README.md`](runtime-evidence/README.md). That evidence is
+scoped to the stated three-arm serial run and selected column; it makes no
+accuracy or observational-skill claim.
