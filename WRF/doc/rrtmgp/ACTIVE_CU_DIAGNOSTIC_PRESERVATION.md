@@ -1,0 +1,7 @@
+# Current active-CU diagnostic preservation
+
+The [retained integration evidence](../../../validation/rrtmgp37/active-cu-diagnostic-preservation/README.md) records one 24 h current-PR60 run configured as 4 MPI ranks × 2 OpenMP threads, batch size 1. Its history with 225 variables across 25 output times and its 12 h/24 h checkpoints with 667 variables match the pre-diagnostic baseline exactly in arrays, dimensions, dtypes, variable sets and full attributes. Whole-file hashes also match for these three retained files. The model produced actual CU population/clipping rows and native phase-path denominators while preserving 7,149 old diagnostic rows.
+
+The original runner's final JSON failed on tuple dictionary keys; its original receipt remains `RUNNING`, with truncated `.tmp` preserved. Numeric launcher RC is unavailable. Four rank success markers and separate posthoc quality/equality/source/input/dependency checks are retained without any rerun. Independent posthoc review passes the raw outputs, metadata, Times and diagnostic context/arithmetic checks with the same limitation.
+
+This establishes diagnostic preservation for the recorded trajectory, not physical accuracy, occurrence or LUT-error validity, general parallel support or a restart launch. Saved checkpoints were compared but no model restarted from them. The package's portable verifier checks text hashes and receipt contracts; its copied workspace helpers are nonportable provenance snapshots. No new numerical process is executed by verification.
