@@ -1,0 +1,677 @@
+{
+  "actual_solver_invocations": 8,
+  "all_call_pids_returncodes": {
+    "baseline-lw": {
+      "log_raw_bytes": 0,
+      "log_raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "output_raw_bytes": 966795,
+      "output_raw_sha256": "7edcaf2191f13c9da764f503cf0230746b3b6179414dc422c74f2398d7760418",
+      "pid": 4095868,
+      "returncode": 0
+    },
+    "baseline-sw": {
+      "log_raw_bytes": 0,
+      "log_raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "output_raw_bytes": 1338695,
+      "output_raw_sha256": "5afeb243d0d8e85a36d8c3dd5be7fe8c6c41a2034a142596d9e1d6d765dac53d",
+      "pid": 4095898,
+      "returncode": 0
+    },
+    "rain-lw": {
+      "log_raw_bytes": 0,
+      "log_raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "output_raw_bytes": 990538,
+      "output_raw_sha256": "5ae1ea5ef51555fc5bea5d23193dc19ea02aa38a718fe5b909befe9229a9df0f",
+      "pid": 4095928,
+      "returncode": 0
+    },
+    "rain-sw": {
+      "log_raw_bytes": 0,
+      "log_raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "output_raw_bytes": 1405566,
+      "output_raw_sha256": "9075af6ed0c0b156bfd384d7f17974fc636fddd080f23d5182e8166cbe99d92a",
+      "pid": 4095937,
+      "returncode": 0
+    },
+    "snow-lw": {
+      "log_raw_bytes": 0,
+      "log_raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "output_raw_bytes": 990538,
+      "output_raw_sha256": "4528d9eb1ed9e4d94ec3382f9bcadf9699fbde842ab2beb81ca7d88546499be8",
+      "pid": 4095948,
+      "returncode": 0
+    },
+    "snow-sw": {
+      "log_raw_bytes": 0,
+      "log_raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "output_raw_bytes": 1405566,
+      "output_raw_sha256": "10d82d007bbcaafa1b478b421949208e9cc879e28e06a69c0da3f5544fec64a4",
+      "pid": 4095957,
+      "returncode": 0
+    },
+    "zero-lw": {
+      "log_raw_bytes": 0,
+      "log_raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "output_raw_bytes": 966795,
+      "output_raw_sha256": "7edcaf2191f13c9da764f503cf0230746b3b6179414dc422c74f2398d7760418",
+      "pid": 4095909,
+      "returncode": 0
+    },
+    "zero-sw": {
+      "log_raw_bytes": 0,
+      "log_raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "output_raw_bytes": 1338695,
+      "output_raw_sha256": "5afeb243d0d8e85a36d8c3dd5be7fe8c6c41a2034a142596d9e1d6d765dac53d",
+      "pid": 4095919,
+      "returncode": 0
+    }
+  },
+  "clear_sky_note": "UPC/DNC/HRC are held and remain exact; the extra object is inserted after the clear solve, so this is not evidence of physical clear-sky precipitation insensitivity.",
+  "execution_receipt_sha256": "cdb97134366d8511024bea182f75e7797d633c6fa659ba3f645803e5c84f11d4",
+  "independent_review_sha256": "a2166d2f3e3406638c664e9c3ae4ed3b1f7afec07d6f60d23a16f0206a5a547e",
+  "positive_cases": {
+    "rain-lw": {
+      "actual_cu_tau_max": 22.28373218197627,
+      "actual_cu_tau_positive_values": 496,
+      "allsky_profile_delta_metrics": {
+        "DN": {
+          "first_index_delta": 1.5036325358242948,
+          "index_0_is_surface_for_interface_fields": true,
+          "last_index_delta": 0.0,
+          "max_abs_delta": 1.5036325358242948,
+          "max_signed_delta": 1.5036325358242948,
+          "min_signed_delta": 0.0,
+          "profile_points": 58
+        },
+        "HR": {
+          "first_index_delta": -0.37653983697322535,
+          "index_0_is_surface_for_interface_fields": false,
+          "last_index_delta": 0.0,
+          "max_abs_delta": 0.37653983697322535,
+          "max_signed_delta": 0.0001074363000387879,
+          "min_signed_delta": -0.37653983697322535,
+          "profile_points": 57
+        },
+        "UP": {
+          "first_index_delta": 0.18043591146908966,
+          "index_0_is_surface_for_interface_fields": true,
+          "last_index_delta": 0.0,
+          "max_abs_delta": 0.4463376686118181,
+          "max_signed_delta": 0.18449084868632326,
+          "min_signed_delta": -0.4463376686118181,
+          "profile_points": 58
+        }
+      },
+      "audit_path_sum_g_m2": 579.0098419189453,
+      "audit_species": "rain",
+      "held_sections_exact": [
+        "CLOUD_TAU",
+        "CU_CLOUD_TAU",
+        "CU_DI_USED",
+        "CU_RL_USED",
+        "DI_USED",
+        "DNC",
+        "DS_USED",
+        "FROZEN_TAU",
+        "GAS_COL_DRY",
+        "GAS_TAU",
+        "GAS_TAU_RAW",
+        "GRAUPEL_TAU_ABS",
+        "HAIL_TAU_ABS",
+        "HRC",
+        "MASK",
+        "NATIVE_CLOUD_TAU",
+        "PRECIP_TAU",
+        "PREPARED_TAU",
+        "RL_USED",
+        "UPC"
+      ],
+      "review_moment_residuals": {
+        "total_extinction_increment_max_abs_residual": 0.0
+      }
+    },
+    "rain-sw": {
+      "actual_cu_tau_max": 42.185622729755515,
+      "actual_cu_tau_positive_values": 434,
+      "allsky_profile_delta_metrics": {
+        "AUDIT_DIRECT_PREDELTA": {
+          "first_index_delta": 0.0,
+          "index_0_is_surface_for_interface_fields": true,
+          "last_index_delta": 0.0,
+          "max_abs_delta": 0.0,
+          "max_signed_delta": 0.0,
+          "min_signed_delta": 0.0,
+          "profile_points": 46
+        },
+        "DIFFUSE": {
+          "first_index_delta": -0.0012329007649788948,
+          "index_0_is_surface_for_interface_fields": true,
+          "last_index_delta": 0.0,
+          "max_abs_delta": 0.04897761481490426,
+          "max_signed_delta": 0.04897761481490426,
+          "min_signed_delta": -0.0012329007649788948,
+          "profile_points": 46
+        },
+        "DIRECT": {
+          "first_index_delta": 0.0,
+          "index_0_is_surface_for_interface_fields": true,
+          "last_index_delta": 0.0,
+          "max_abs_delta": 0.0,
+          "max_signed_delta": 0.0,
+          "min_signed_delta": 0.0,
+          "profile_points": 46
+        },
+        "DN": {
+          "first_index_delta": -0.0012329007649788948,
+          "index_0_is_surface_for_interface_fields": true,
+          "last_index_delta": 0.0,
+          "max_abs_delta": 0.04897761481490426,
+          "max_signed_delta": 0.04897761481490426,
+          "min_signed_delta": -0.0012329007649788948,
+          "profile_points": 46
+        },
+        "HR": {
+          "first_index_delta": 1.7332649227693418e-06,
+          "index_0_is_surface_for_interface_fields": false,
+          "last_index_delta": 6.859064729525244e-07,
+          "max_abs_delta": 1.7384075214300223e-05,
+          "max_signed_delta": 1.7384075214300223e-05,
+          "min_signed_delta": 2.861383663343986e-08,
+          "profile_points": 45
+        },
+        "NIRDIF": {
+          "first_index_delta": -2.5450388058916058e-06,
+          "index_0_is_surface_for_interface_fields": true,
+          "last_index_delta": 0.0,
+          "max_abs_delta": 2.5450388058916058e-06,
+          "max_signed_delta": 1.8770876565657717e-06,
+          "min_signed_delta": -2.5450388058916058e-06,
+          "profile_points": 46
+        },
+        "NIRDIR": {
+          "first_index_delta": 0.0,
+          "index_0_is_surface_for_interface_fields": true,
+          "last_index_delta": 0.0,
+          "max_abs_delta": 0.0,
+          "max_signed_delta": 0.0,
+          "min_signed_delta": 0.0,
+          "profile_points": 46
+        },
+        "UP": {
+          "first_index_delta": -0.0001849351220955045,
+          "index_0_is_surface_for_interface_fields": true,
+          "last_index_delta": 0.00043045127466712074,
+          "max_abs_delta": 0.04998769741760953,
+          "max_signed_delta": 0.04998769741760953,
+          "min_signed_delta": -0.0001849351220955045,
+          "profile_points": 46
+        },
+        "VISDIF": {
+          "first_index_delta": -0.001230355726173138,
+          "index_0_is_surface_for_interface_fields": true,
+          "last_index_delta": 0.0,
+          "max_abs_delta": 0.04897573772724756,
+          "max_signed_delta": 0.04897573772724756,
+          "min_signed_delta": -0.001230355726173138,
+          "profile_points": 46
+        },
+        "VISDIR": {
+          "first_index_delta": 0.0,
+          "index_0_is_surface_for_interface_fields": true,
+          "last_index_delta": 0.0,
+          "max_abs_delta": 0.0,
+          "max_signed_delta": 0.0,
+          "min_signed_delta": 0.0,
+          "profile_points": 46
+        }
+      },
+      "audit_path_sum_g_m2": 579.0098419189453,
+      "audit_species": "rain",
+      "held_sections_exact": [
+        "CLOUD_G",
+        "CLOUD_SSA",
+        "CLOUD_TAU",
+        "CU_CLOUD_G",
+        "CU_CLOUD_SSA",
+        "CU_CLOUD_TAU",
+        "CU_DI_USED",
+        "CU_RL_USED",
+        "DIRECTC",
+        "DIRECTC_PREDELTA",
+        "DIRECT_PREDELTA",
+        "DI_USED",
+        "DNC",
+        "DS_USED",
+        "FROZEN_G",
+        "FROZEN_SSA",
+        "FROZEN_TAU",
+        "GAS_COL_DRY",
+        "GAS_G",
+        "GAS_SSA",
+        "GAS_TAU",
+        "GRAUPEL_TAU_EXT",
+        "GRAUPEL_TAU_SCA",
+        "GRAUPEL_TAU_SCA_G",
+        "HAIL_TAU_EXT",
+        "HAIL_TAU_SCA",
+        "HAIL_TAU_SCA_G",
+        "HRC",
+        "MASK",
+        "NATIVE_CLOUD_G",
+        "NATIVE_CLOUD_SSA",
+        "NATIVE_CLOUD_TAU",
+        "NIRDIR_PREDELTA",
+        "PRECIP_G",
+        "PRECIP_SSA",
+        "PRECIP_TAU",
+        "PREPARED_G",
+        "PREPARED_SSA",
+        "PREPARED_TAU",
+        "RL_USED",
+        "UPC",
+        "VISDIR_PREDELTA"
+      ],
+      "review_moment_residuals": {
+        "total_extinction_increment_max_abs_residual": 0.0,
+        "total_first_scattering_moment_max_abs_residual": 6.938893903907228e-18,
+        "total_scattering_moment_max_abs_residual": 1.3877787807814457e-17
+      }
+    },
+    "snow-lw": {
+      "actual_cu_tau_max": 22.28373218197627,
+      "actual_cu_tau_positive_values": 496,
+      "allsky_profile_delta_metrics": {
+        "DN": {
+          "first_index_delta": 0.0,
+          "index_0_is_surface_for_interface_fields": true,
+          "last_index_delta": 0.0,
+          "max_abs_delta": 3.433863149382432e-08,
+          "max_signed_delta": 3.433863149382432e-08,
+          "min_signed_delta": -7.283063041541027e-14,
+          "profile_points": 58
+        },
+        "HR": {
+          "first_index_delta": 0.0,
+          "index_0_is_surface_for_interface_fields": false,
+          "last_index_delta": -4.0172309923036664e-12,
+          "max_abs_delta": 1.9127703670962504e-08,
+          "max_signed_delta": 6.568260602080045e-09,
+          "min_signed_delta": -1.9127703670962504e-08,
+          "profile_points": 57
+        },
+        "UP": {
+          "first_index_delta": 0.0,
+          "index_0_is_surface_for_interface_fields": true,
+          "last_index_delta": -8.900840953174338e-09,
+          "max_abs_delta": 9.284093493988621e-09,
+          "max_signed_delta": 0.0,
+          "min_signed_delta": -9.284093493988621e-09,
+          "profile_points": 58
+        }
+      },
+      "audit_path_sum_g_m2": 4.5948578228887535e-09,
+      "audit_species": "snow",
+      "held_sections_exact": [
+        "CLOUD_TAU",
+        "CU_CLOUD_TAU",
+        "CU_DI_USED",
+        "CU_RL_USED",
+        "DI_USED",
+        "DNC",
+        "DS_USED",
+        "FROZEN_TAU",
+        "GAS_COL_DRY",
+        "GAS_TAU",
+        "GAS_TAU_RAW",
+        "GRAUPEL_TAU_ABS",
+        "HAIL_TAU_ABS",
+        "HRC",
+        "MASK",
+        "NATIVE_CLOUD_TAU",
+        "PRECIP_TAU",
+        "PREPARED_TAU",
+        "RL_USED",
+        "UPC"
+      ],
+      "review_moment_residuals": {
+        "total_extinction_increment_max_abs_residual": 0.0
+      }
+    },
+    "snow-sw": {
+      "actual_cu_tau_max": 42.185622729755515,
+      "actual_cu_tau_positive_values": 434,
+      "allsky_profile_delta_metrics": {
+        "AUDIT_DIRECT_PREDELTA": {
+          "first_index_delta": 0.0,
+          "index_0_is_surface_for_interface_fields": true,
+          "last_index_delta": 0.0,
+          "max_abs_delta": 3.59873666866406e-07,
+          "max_signed_delta": 0.0,
+          "min_signed_delta": -3.59873666866406e-07,
+          "profile_points": 46
+        },
+        "DIFFUSE": {
+          "first_index_delta": -6.4278027345210376e-12,
+          "index_0_is_surface_for_interface_fields": true,
+          "last_index_delta": 0.0,
+          "max_abs_delta": 4.3123151272084215e-08,
+          "max_signed_delta": 4.3123151272084215e-08,
+          "min_signed_delta": -1.173987129732268e-08,
+          "profile_points": 46
+        },
+        "DIRECT": {
+          "first_index_delta": 0.0,
+          "index_0_is_surface_for_interface_fields": true,
+          "last_index_delta": 0.0,
+          "max_abs_delta": 1.0771685765575967e-07,
+          "max_signed_delta": 0.0,
+          "min_signed_delta": -1.0771685765575967e-07,
+          "profile_points": 46
+        },
+        "DN": {
+          "first_index_delta": -6.4278027345210376e-12,
+          "index_0_is_surface_for_interface_fields": true,
+          "last_index_delta": 0.0,
+          "max_abs_delta": 6.459370638367545e-08,
+          "max_signed_delta": 2.6432189770275727e-12,
+          "min_signed_delta": -6.459370638367545e-08,
+          "profile_points": 46
+        },
+        "HR": {
+          "first_index_delta": -7.995991022080595e-17,
+          "index_0_is_surface_for_interface_fields": false,
+          "last_index_delta": -3.3286706724311443e-12,
+          "max_abs_delta": 3.015361291214269e-08,
+          "max_signed_delta": 3.015361291214269e-08,
+          "min_signed_delta": -3.0720093135983007e-09,
+          "profile_points": 45
+        },
+        "NIRDIF": {
+          "first_index_delta": -4.620056507503856e-17,
+          "index_0_is_surface_for_interface_fields": true,
+          "last_index_delta": 0.0,
+          "max_abs_delta": 1.1940805677568278e-08,
+          "max_signed_delta": 5.985679951692191e-09,
+          "min_signed_delta": -1.1940805677568278e-08,
+          "profile_points": 46
+        },
+        "NIRDIR": {
+          "first_index_delta": 0.0,
+          "index_0_is_surface_for_interface_fields": true,
+          "last_index_delta": 0.0,
+          "max_abs_delta": 4.546716070308321e-08,
+          "max_signed_delta": 0.0,
+          "min_signed_delta": -4.546716070308321e-08,
+          "profile_points": 46
+        },
+        "UP": {
+          "first_index_delta": -9.64194002417429e-13,
+          "index_0_is_surface_for_interface_fields": true,
+          "last_index_delta": -1.9667481865326408e-08,
+          "max_abs_delta": 4.4001723153996863e-08,
+          "max_signed_delta": -9.64194002417429e-13,
+          "min_signed_delta": -4.4001723153996863e-08,
+          "profile_points": 46
+        },
+        "VISDIF": {
+          "first_index_delta": -6.427969267974731e-12,
+          "index_0_is_surface_for_interface_fields": true,
+          "last_index_delta": 0.0,
+          "max_abs_delta": 3.713758012224844e-08,
+          "max_signed_delta": 3.713758012224844e-08,
+          "min_signed_delta": -5.120952550896618e-10,
+          "profile_points": 46
+        },
+        "VISDIR": {
+          "first_index_delta": 0.0,
+          "index_0_is_surface_for_interface_fields": true,
+          "last_index_delta": 0.0,
+          "max_abs_delta": 6.224976800695003e-08,
+          "max_signed_delta": 0.0,
+          "min_signed_delta": -6.224976800695003e-08,
+          "profile_points": 46
+        }
+      },
+      "audit_path_sum_g_m2": 4.5948578228887535e-09,
+      "audit_species": "snow",
+      "held_sections_exact": [
+        "CLOUD_G",
+        "CLOUD_SSA",
+        "CLOUD_TAU",
+        "CU_CLOUD_G",
+        "CU_CLOUD_SSA",
+        "CU_CLOUD_TAU",
+        "CU_DI_USED",
+        "CU_RL_USED",
+        "DIRECTC",
+        "DIRECTC_PREDELTA",
+        "DIRECT_PREDELTA",
+        "DI_USED",
+        "DNC",
+        "DS_USED",
+        "FROZEN_G",
+        "FROZEN_SSA",
+        "FROZEN_TAU",
+        "GAS_COL_DRY",
+        "GAS_G",
+        "GAS_SSA",
+        "GAS_TAU",
+        "GRAUPEL_TAU_EXT",
+        "GRAUPEL_TAU_SCA",
+        "GRAUPEL_TAU_SCA_G",
+        "HAIL_TAU_EXT",
+        "HAIL_TAU_SCA",
+        "HAIL_TAU_SCA_G",
+        "HRC",
+        "MASK",
+        "NATIVE_CLOUD_G",
+        "NATIVE_CLOUD_SSA",
+        "NATIVE_CLOUD_TAU",
+        "NIRDIR_PREDELTA",
+        "PRECIP_G",
+        "PRECIP_SSA",
+        "PRECIP_TAU",
+        "PREPARED_G",
+        "PREPARED_SSA",
+        "PREPARED_TAU",
+        "RL_USED",
+        "UPC",
+        "VISDIR_PREDELTA"
+      ],
+      "review_moment_residuals": {
+        "total_extinction_increment_max_abs_residual": 0.0,
+        "total_first_scattering_moment_max_abs_residual": 1.2924697071141057e-26,
+        "total_scattering_moment_max_abs_residual": 6.938893903907228e-18
+      }
+    }
+  },
+  "schema": "cf0-cu-eight-call-derived-summary-v1",
+  "scope": "One low-sun, thick-CU-shielded captured column; occurrence-one CF0 sidecar sensitivity only. Tiny positive snow paths are retained without cutoff but are very low signal; results do not establish a snow accuracy bound, production occurrence rule, global negligible effect, or forecast accuracy.",
+  "semantic_negative_controls": {
+    "multicolumn_rejected": true,
+    "nonunit_occurrence_rejected": true,
+    "positive_path_at_nonzero_CF_rejected": true
+  },
+  "sidecar_validation": {
+    "rain-lw": {
+      "anchor_ij": [
+        24,
+        55
+      ],
+      "control": "positive-omitted-path",
+      "engine_layers": 57,
+      "native_layers": 44,
+      "omitted_path_sum_g_m2": 579.0098419189453,
+      "phase": "LW",
+      "positive_native_layers": 4,
+      "replay_context": {
+        "cu_policy_profile_sha256": "f0317916d95840a256e8e09fa935017f3e472187996445403ee8d3d3e28cc26a",
+        "cu_records_preserved": [
+          "CU_POPULATION_POLICY",
+          "CU_RADIUS_POLICY",
+          "CU_OCCURRENCE_POLICY",
+          "CU_LWP",
+          "CU_IWP",
+          "CU_REL",
+          "CU_REI"
+        ],
+        "engine_layers": 57,
+        "native_layers": 44,
+        "phase": "LW",
+        "version": "RRTMGP_REPLAY_V10"
+      },
+      "species": "rain"
+    },
+    "rain-sw": {
+      "anchor_ij": [
+        24,
+        55
+      ],
+      "control": "positive-omitted-path",
+      "engine_layers": 45,
+      "native_layers": 44,
+      "omitted_path_sum_g_m2": 579.0098419189453,
+      "phase": "SW",
+      "positive_native_layers": 4,
+      "replay_context": {
+        "cu_policy_profile_sha256": "4e9eaa147a139a7b4a63ad888f7e21a68eaaa0b3138d51e35e74e94104aafe0f",
+        "cu_records_preserved": [
+          "CU_POPULATION_POLICY",
+          "CU_RADIUS_POLICY",
+          "CU_OCCURRENCE_POLICY",
+          "CU_LWP",
+          "CU_IWP",
+          "CU_REL",
+          "CU_REI"
+        ],
+        "engine_layers": 45,
+        "native_layers": 44,
+        "phase": "SW",
+        "version": "RRTMGP_REPLAY_V11"
+      },
+      "species": "rain"
+    },
+    "snow-lw": {
+      "anchor_ij": [
+        24,
+        55
+      ],
+      "control": "positive-omitted-path",
+      "engine_layers": 57,
+      "native_layers": 44,
+      "omitted_path_sum_g_m2": 4.5948578228887535e-09,
+      "phase": "LW",
+      "positive_native_layers": 7,
+      "replay_context": {
+        "cu_policy_profile_sha256": "f0317916d95840a256e8e09fa935017f3e472187996445403ee8d3d3e28cc26a",
+        "cu_records_preserved": [
+          "CU_POPULATION_POLICY",
+          "CU_RADIUS_POLICY",
+          "CU_OCCURRENCE_POLICY",
+          "CU_LWP",
+          "CU_IWP",
+          "CU_REL",
+          "CU_REI"
+        ],
+        "engine_layers": 57,
+        "native_layers": 44,
+        "phase": "LW",
+        "version": "RRTMGP_REPLAY_V10"
+      },
+      "species": "snow"
+    },
+    "snow-sw": {
+      "anchor_ij": [
+        24,
+        55
+      ],
+      "control": "positive-omitted-path",
+      "engine_layers": 45,
+      "native_layers": 44,
+      "omitted_path_sum_g_m2": 4.5948578228887535e-09,
+      "phase": "SW",
+      "positive_native_layers": 7,
+      "replay_context": {
+        "cu_policy_profile_sha256": "4e9eaa147a139a7b4a63ad888f7e21a68eaaa0b3138d51e35e74e94104aafe0f",
+        "cu_records_preserved": [
+          "CU_POPULATION_POLICY",
+          "CU_RADIUS_POLICY",
+          "CU_OCCURRENCE_POLICY",
+          "CU_LWP",
+          "CU_IWP",
+          "CU_REL",
+          "CU_REI"
+        ],
+        "engine_layers": 45,
+        "native_layers": 44,
+        "phase": "SW",
+        "version": "RRTMGP_REPLAY_V11"
+      },
+      "species": "snow"
+    },
+    "zero-lw": {
+      "anchor_ij": [
+        24,
+        55
+      ],
+      "control": "all-zero",
+      "engine_layers": 57,
+      "native_layers": 44,
+      "omitted_path_sum_g_m2": 0.0,
+      "phase": "LW",
+      "positive_native_layers": 0,
+      "replay_context": {
+        "cu_policy_profile_sha256": "f0317916d95840a256e8e09fa935017f3e472187996445403ee8d3d3e28cc26a",
+        "cu_records_preserved": [
+          "CU_POPULATION_POLICY",
+          "CU_RADIUS_POLICY",
+          "CU_OCCURRENCE_POLICY",
+          "CU_LWP",
+          "CU_IWP",
+          "CU_REL",
+          "CU_REI"
+        ],
+        "engine_layers": 57,
+        "native_layers": 44,
+        "phase": "LW",
+        "version": "RRTMGP_REPLAY_V10"
+      },
+      "species": "rain"
+    },
+    "zero-sw": {
+      "anchor_ij": [
+        24,
+        55
+      ],
+      "control": "all-zero",
+      "engine_layers": 45,
+      "native_layers": 44,
+      "omitted_path_sum_g_m2": 0.0,
+      "phase": "SW",
+      "positive_native_layers": 0,
+      "replay_context": {
+        "cu_policy_profile_sha256": "4e9eaa147a139a7b4a63ad888f7e21a68eaaa0b3138d51e35e74e94104aafe0f",
+        "cu_records_preserved": [
+          "CU_POPULATION_POLICY",
+          "CU_RADIUS_POLICY",
+          "CU_OCCURRENCE_POLICY",
+          "CU_LWP",
+          "CU_IWP",
+          "CU_REL",
+          "CU_REI"
+        ],
+        "engine_layers": 45,
+        "native_layers": 44,
+        "phase": "SW",
+        "version": "RRTMGP_REPLAY_V11"
+      },
+      "species": "snow"
+    }
+  },
+  "status": "PASS_SCOPED_EIGHT_CALLS_AND_INDEPENDENT_REVIEW",
+  "wrf_forecasts": 0,
+  "zero_controls_whole_file_bitwise_equal": {
+    "LW": true,
+    "SW": true
+  }
+}

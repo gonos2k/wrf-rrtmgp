@@ -1,0 +1,13 @@
+diff --git a/WRF/test/rrtmgp/CMakeLists.txt b/WRF/test/rrtmgp/CMakeLists.txt
+index 4ef2e14..7e68cb4 100644
+--- a/WRF/test/rrtmgp/CMakeLists.txt
++++ b/WRF/test/rrtmgp/CMakeLists.txt
+@@ -4,6 +4,8 @@ enable_testing()
+ find_package(Python3 REQUIRED COMPONENTS Interpreter)
+ add_test(NAME cf0_precip_sidecar_python_contract COMMAND "${Python3_EXECUTABLE}" -B
+   "${CMAKE_CURRENT_SOURCE_DIR}/test_cf0_precip_sidecar.py")
++add_test(NAME cf0_cu_precip_sidecar_context_contract COMMAND "${Python3_EXECUTABLE}" -B
++  "${CMAKE_CURRENT_SOURCE_DIR}/test_cf0_cu_precip_sidecar.py")
+ get_filename_component(WRF_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/../.." ABSOLUTE)
+ set(RRTMGP_DATA_DIR "${WRF_ROOT}/run" CACHE PATH "RRTMGP coefficient directory")
+ add_test(NAME frozen_raw_replay_contract COMMAND "${Python3_EXECUTABLE}"

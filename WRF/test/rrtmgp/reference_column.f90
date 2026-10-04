@@ -589,9 +589,9 @@ PROGRAM rrtmgp_reference_column
   audit_sidecar_present=LEN_TRIM(audit_sidecar_path)>0
   audit_precip_active=.FALSE.
   IF(audit_sidecar_present) THEN
-    IF(TRIM(magic)/='RRTMGP_REPLAY_V8'.AND.TRIM(magic)/='RRTMGP_REPLAY_V9') &
-      ERROR STOP 'CF0 precipitation audit sidecar is limited to V8/V9 held inputs'
-    IF(cu_population_enabled) ERROR STOP 'CF0 precipitation audit does not support CU inputs'
+    IF(TRIM(magic)/='RRTMGP_REPLAY_V8'.AND.TRIM(magic)/='RRTMGP_REPLAY_V9'.AND. &
+       TRIM(magic)/='RRTMGP_REPLAY_V10'.AND.TRIM(magic)/='RRTMGP_REPLAY_V11') &
+      ERROR STOP 'CF0 precipitation audit sidecar requires V8/V9/V10/V11 held inputs'
     audit_expected_native=0
     IF(has_native_mass) audit_expected_native=n_native
     CALL read_cf0_precip_sidecar(TRIM(audit_sidecar_path),TRIM(phase),nc,nl,audit_expected_native,cf, &

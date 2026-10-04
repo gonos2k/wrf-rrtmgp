@@ -1,0 +1,269 @@
+{
+  "archived_baseline_source": "build/dgcf-runtime-v2/run-v1/outputs",
+  "controls": [
+    {
+      "case": "baseline-lw",
+      "control": "archived_same-input_baseline",
+      "input_sha256": "e444fa7b505ba091de6deb1bfb342ad3b79fc6db9123e8e1358de846dd7b811e",
+      "output_sha256": "7edcaf2191f13c9da764f503cf0230746b3b6179414dc422c74f2398d7760418",
+      "section_count": 24,
+      "shape_finite_heating": {
+        "finite": true,
+        "max_abs_hr_flux_divergence_residual": 0.0,
+        "nc": 1,
+        "nl": 57,
+        "phase": "LW",
+        "threshold_k_day_minus1": 1e-09
+      }
+    },
+    {
+      "case": "baseline-sw",
+      "control": "archived_same-input_baseline",
+      "input_sha256": "20986c50c59bc294fede10fc7fe7bdb1173ab3ba1a391a444ed8fd785cd55b1c",
+      "output_sha256": "5afeb243d0d8e85a36d8c3dd5be7fe8c6c41a2034a142596d9e1d6d765dac53d",
+      "section_count": 54,
+      "shape_finite_heating": {
+        "finite": true,
+        "max_abs_hr_flux_divergence_residual": 0.0,
+        "nc": 1,
+        "nl": 45,
+        "phase": "SW",
+        "threshold_k_day_minus1": 1e-09
+      }
+    },
+    {
+      "accepted": true,
+      "case": "zero-lw",
+      "control": "zero-sidecar-output-identity",
+      "shape_finite_heating": {
+        "finite": true,
+        "max_abs_hr_flux_divergence_residual": 0.0,
+        "nc": 1,
+        "nl": 57,
+        "phase": "LW",
+        "threshold_k_day_minus1": 1e-09
+      }
+    },
+    {
+      "case": "zero-lw",
+      "control": "zero-one-byte-mutation",
+      "rejected": true
+    },
+    {
+      "accepted": true,
+      "case": "zero-sw",
+      "control": "zero-sidecar-output-identity",
+      "shape_finite_heating": {
+        "finite": true,
+        "max_abs_hr_flux_divergence_residual": 0.0,
+        "nc": 1,
+        "nl": 45,
+        "phase": "SW",
+        "threshold_k_day_minus1": 1e-09
+      }
+    },
+    {
+      "case": "zero-sw",
+      "control": "zero-one-byte-mutation",
+      "rejected": true
+    },
+    {
+      "case": "rain-lw",
+      "control": "synthetic-positive-optics-closure",
+      "positive_tau_max": 1e-08,
+      "shape_finite_heating": {
+        "active_native_layers": 4,
+        "band_to_gpoint_limits": [
+          [
+            1,
+            12
+          ],
+          [
+            13,
+            26
+          ],
+          [
+            27,
+            38
+          ],
+          [
+            39,
+            50
+          ],
+          [
+            51,
+            63
+          ],
+          [
+            64,
+            68
+          ],
+          [
+            69,
+            75
+          ],
+          [
+            76,
+            81
+          ],
+          [
+            82,
+            92
+          ],
+          [
+            93,
+            99
+          ],
+          [
+            100,
+            107
+          ],
+          [
+            108,
+            114
+          ],
+          [
+            115,
+            119
+          ],
+          [
+            120,
+            122
+          ],
+          [
+            123,
+            124
+          ],
+          [
+            125,
+            128
+          ]
+        ],
+        "combined_total_optics_moment_checks": {
+          "TOTAL_TAU": {
+            "max_abs_residual": 0.0,
+            "tolerance_rule": "512*binary64_epsilon*max(1,abs(expected))"
+          }
+        },
+        "finite": true,
+        "max_abs_hr_flux_divergence_residual": 0.0,
+        "nc": 1,
+        "nl": 57,
+        "phase": "LW",
+        "threshold_k_day_minus1": 1e-09
+      }
+    },
+    {
+      "case": "rain-lw",
+      "control": "positive-held-field-one-ulp",
+      "rejected": true
+    },
+    {
+      "case": "rain-lw",
+      "control": "positive-total-moment-mutation",
+      "rejected": true
+    },
+    {
+      "case": "rain-sw",
+      "control": "synthetic-positive-optics-closure",
+      "positive_tau_max": 1e-08,
+      "shape_finite_heating": {
+        "active_native_layers": 4,
+        "band_to_gpoint_limits": [
+          [
+            1,
+            10
+          ],
+          [
+            11,
+            18
+          ],
+          [
+            19,
+            29
+          ],
+          [
+            30,
+            37
+          ],
+          [
+            38,
+            46
+          ],
+          [
+            47,
+            56
+          ],
+          [
+            57,
+            67
+          ],
+          [
+            68,
+            71
+          ],
+          [
+            72,
+            80
+          ],
+          [
+            81,
+            89
+          ],
+          [
+            90,
+            96
+          ],
+          [
+            97,
+            102
+          ],
+          [
+            103,
+            109
+          ],
+          [
+            110,
+            112
+          ]
+        ],
+        "combined_total_optics_moment_checks": {
+          "TOTAL_G": {
+            "max_abs_residual": 0.0,
+            "tolerance_rule": "512*binary64_epsilon*max(1,abs(expected))"
+          },
+          "TOTAL_SSA": {
+            "max_abs_residual": 0.0,
+            "tolerance_rule": "512*binary64_epsilon*max(1,abs(expected))"
+          },
+          "TOTAL_TAU": {
+            "max_abs_residual": 0.0,
+            "tolerance_rule": "512*binary64_epsilon*max(1,abs(expected))"
+          }
+        },
+        "finite": true,
+        "max_abs_hr_flux_divergence_residual": 0.0,
+        "nc": 1,
+        "nl": 45,
+        "phase": "SW",
+        "threshold_k_day_minus1": 1e-09
+      }
+    },
+    {
+      "case": "rain-sw",
+      "control": "positive-held-field-one-ulp",
+      "rejected": true
+    },
+    {
+      "case": "rain-sw",
+      "control": "positive-total-moment-mutation",
+      "rejected": true
+    }
+  ],
+  "roster_sha256": "255cb27161d76a071a0cc1125d4075e613639ac27f1a4ac5e5ff63510805b8ce",
+  "runner_sha256": "cd8b5a9faf0a6161c798a7181d8fe392ede3b8debfda5bf555675b5c8ffcd522",
+  "schema": "cf0-cu-retained-eight-offline-controls-v3",
+  "solver_invocations": 0,
+  "status": "PASS_NO_SOLVER",
+  "wrf_invocations": 0
+}

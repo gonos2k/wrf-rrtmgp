@@ -1,0 +1,113 @@
+{
+  "build": {
+    "build_command": [
+      "/usr/local/bin/cmake",
+      "--build",
+      "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/cf0-cu-build-v1/cmake-build",
+      "--target",
+      "reference_column",
+      "--parallel",
+      "8"
+    ],
+    "build_directory": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/cf0-cu-build-v1/cmake-build",
+    "configure_command": [
+      "/usr/local/bin/cmake",
+      "-S",
+      "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/cf0-cu-src-v1/WRF/test/rrtmgp",
+      "-B",
+      "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/cf0-cu-build-v1/cmake-build",
+      "-DCMAKE_Fortran_COMPILER=/usr/bin/gfortran",
+      "-DCMAKE_BUILD_TYPE=Release",
+      "-DCMAKE_Fortran_FLAGS_RELEASE=-O3",
+      "-DNETCDF_INCLUDE_DIR=/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/netcdf/include",
+      "-DNETCDF_LIBRARY_DIR=/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/netcdf/lib",
+      "-DRRTMGP_DATA_DIR=/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-cu-optics-design-work/WRF/run",
+      "-DFROZEN_TABLE=/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-frozen-planck-coverage-v1/runs/frozen-planck-150-330-step5-plus233-v1/frozen-ice-psd-moments.nc"
+    ],
+    "directory_must_not_exist_before_execution": true,
+    "invocations_authorized": 0,
+    "solver_invocations_authorized": 0,
+    "timeouts_seconds": {
+      "build": 1800,
+      "configure": 900
+    }
+  },
+  "dependency_manifest": {
+    "cmake": {
+      "path": "/usr/local/bin/cmake",
+      "sha256": "fa986304cce94ee93eda37f206512509cd2f6707c6c6f1ceca39f9783e136bc6",
+      "size_bytes": 178
+    },
+    "cmake_variables": {
+      "FROZEN_TABLE": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-alternate-jan2000-data/paired-forecast-v2/ra37/frozen-ice-psd-moments.nc",
+      "NETCDF_INCLUDE_DIR": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/netcdf/include",
+      "NETCDF_LIBRARY_DIR": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/netcdf/lib",
+      "RRTMGP_DATA_DIR": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-cu-optics-design-work/WRF/run"
+    },
+    "compiler": {
+      "path": "/usr/bin/x86_64-linux-gnu-gfortran-13",
+      "sha256": "7e292e9d5da17a37bb1c17a06afb6463db786c70827fd6893ed31a86715b03c3",
+      "size_bytes": 1027128
+    },
+    "data_asset_count": 85,
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-dry-gas-sensitivity-design-v2/build-dependencies.json",
+    "runtime_library_count": 46,
+    "runtime_table": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-frozen-planck-coverage-v1/runs/frozen-planck-150-330-step5-plus233-v1/frozen-ice-psd-moments.nc",
+      "sha256": "ebeafb9746164d5414a45eab4061c5c855f0f91e92be77003b3829722514fe6a",
+      "size_bytes": 163599,
+      "source_note": "Exact expanded table recorded by the RRTMG4 export runtime v4 plan. Distinct from the pre-existing CMake test fixture table in the donor build cache."
+    },
+    "schema": "udm37-dry-gas-sensitivity-build-dependencies-v1",
+    "sha256": "2bb591a2ef8da0276f09cd8210a2b7e8e2efbbe97805d8d9feb57d9a2d35c195",
+    "size_bytes": 47064,
+    "source_pin_count": 46
+  },
+  "schema": "cf0-cu-reference-column-build-plan-v1",
+  "scope_note": "Fresh isolated reference_column build only after root review. No solver, REAL, WRF forecast, production physics change, or existing build mutation is in this preparation.",
+  "source": {
+    "base_commit": "245b1a83be6ed07582dafabb8c9e50dfa537ed66",
+    "changed_file_count": 5,
+    "files": [
+      {
+        "base_blob_sha256": "1fe8ea097051dfc6cf03b2a885b529b963168d946082a4ad549ad2ff697cfe4d",
+        "path": "WRF/test/rrtmgp/CMakeLists.txt",
+        "sha256": "c08abb4606d1820ea8815ea522ae5b39f994549f3b7665fea6e3a07d1e44ee16",
+        "size_bytes": 25600
+      },
+      {
+        "base_blob_sha256": "796928afd8f78a7e6b42f0eb84f3f6a4a688a74d8492b5dd08cb354cb12fffa6",
+        "path": "WRF/test/rrtmgp/cf0_precip_sidecar.py",
+        "sha256": "7c38e9a2eb3fbbb6eeb425768d608808b05573f875b29f30e507f0cb406333ce",
+        "size_bytes": 15679
+      },
+      {
+        "base_blob_sha256": "93214328388a1a7e242be1a298d34ae61e76f81d201ed9cf039e7f07ac580e6f",
+        "path": "WRF/test/rrtmgp/reference_column.f90",
+        "sha256": "6e82effd7d25242656858a8242c7e6941fced6aec0ec4d906762ef3ccb1b4ff0",
+        "size_bytes": 87769
+      },
+      {
+        "base_blob_sha256": null,
+        "path": "WRF/test/rrtmgp/CF0_CU_REPLAY_SIDECAR.md",
+        "sha256": "08a3e65a8f4ee287c98d3cfe071ed152c86e918948e0597b5f69b048f3226a22",
+        "size_bytes": 2042
+      },
+      {
+        "base_blob_sha256": null,
+        "path": "WRF/test/rrtmgp/test_cf0_cu_precip_sidecar.py",
+        "sha256": "eb81b08f88e27841731955614c379d00826bcb526a73ee7241d1c2baa1816cfb",
+        "size_bytes": 6191
+      }
+    ],
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/cf0-cu-src-v1",
+    "porcelain_status": [
+      " M WRF/test/rrtmgp/CMakeLists.txt",
+      " M WRF/test/rrtmgp/cf0_precip_sidecar.py",
+      " M WRF/test/rrtmgp/reference_column.f90",
+      "?? WRF/test/rrtmgp/CF0_CU_REPLAY_SIDECAR.md",
+      "?? WRF/test/rrtmgp/test_cf0_cu_precip_sidecar.py"
+    ]
+  },
+  "status": "PREPARATION_ONLY_NOT_BUILT"
+}
