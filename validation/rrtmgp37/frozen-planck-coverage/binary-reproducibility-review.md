@@ -1,0 +1,9 @@
+# Dynamic Mie kernel hash difference
+
+The recorded old kernel SHA256 is `443a194c…f3cb858`. The old binary at its original `udm-cu-fresh-gnu` path is no longer present, but a retained nine-grid artifact at `build/pr-wrf-rrtmgp/build/udm-frozen-optics-next/nine-grid-o128-s50/kernel/libmie_dynamic.so` has that exact hash. The two new libraries are each 20,264 bytes and have hashes `6a0a5276…340e6001` (expanded grid) and `3f5f56ac…c69bf7ca` (direct query).
+
+The retained old binary and expanded-grid new binary have the same compiler version, recorded flags, source/adaptation hashes, ELF section sizes/layout, GNU Fortran `.comment`, dynamic dependencies, and unwind sections. `strings` shows the only printable string difference is the absolute generated `mie_scatter_realK.f` path embedded by gfortran for a Fortran diagnostic. The new path is eight bytes longer. The `.rodata` string shift accounts for all 26 differing `.text` bytes: each is a RIP-relative displacement increased by eight to address the shifted data. Normalized disassembly showed no other instruction differences. GNU build IDs differ because the ELF bytes differ.
+
+This supports attributing the binary hash mismatch to build-path embedding and its corresponding data-address relocations, rather than a source/flag change. It does not make the binaries bitwise identical, and this static comparison is not a runtime equivalence test. The original old binary itself was unavailable; the comparison uses a retained artifact whose SHA matches the historical result record. The expanded and direct outputs also have separate run-directory paths, so their kernel hashes/build IDs differ for the same reason.
+
+Detailed paths and hashes are in `binary-reproducibility-review.json`. No source, binary, table, or model output was modified.

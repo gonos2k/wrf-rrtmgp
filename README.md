@@ -46,6 +46,6 @@ ctest --test-dir build/rrtmgp-columns --output-on-failure
 
 NetCDF C·Fortran 개발 파일과 GNU Fortran이 필요합니다. 비표준 라이브러리 위치에서는 `LD_LIBRARY_PATH`를 설정합니다. Registry/core 검증은 WRF 실행 검증과 별도로 보고합니다. CI는 PR에서 Registry/core, 연결된 컬럼 시험과 실제 WRF SCM 실행을 수행하며 로그와 결과를 보관합니다.
 
-### Fatal-message reporter patch status
+### Frozen-optics temperature coverage
 
-A follow-up patch improves the WRF fatal diagnostic emitted by the RRTMGP LW/SW wrappers. The previously recorded RA37 OMP=2 MPI abort had no explicit temperature cause; the separate pre-patch OMP=1, one-hour run exposed a graupel LW lookup at 179.996 K below the table's 180 K minimum. The component worker test passes and the adapter library compiles, but the full WRF executable has not yet been rebuilt with this reporter patch. The proposed table extension has not been generated, and neither this diagnostic patch nor the evidence below constitutes a completed 48-hour RA37 run. The preserved terminal receipts and logs are in [the fatal-diagnostic evidence bundle](validation/rrtmgp37/matthew-fatal-diagnostic/README.md).
+PR #65의 오류 로그 수정은 CI 8개 작업을 통과했습니다. 로컬 복사 기반 증분 WRF 빌드와 MPI4/OpenMP2 중단 재현에서 기존 표의 180 K 하한 초과가 실제로 기록됐습니다. [확장 Planck 온도표 검증](validation/rrtmgp37/frozen-planck-coverage/README.md)은 150–330 K의 수치 조회 범위, 기존 지점 값 보존, 중간 온도 직접 계산 비교와 Python–Fortran 일치를 제공합니다. 새 표는 명시적으로 선택하는 실험 자료이며, 현재 자료에는 완료된 Matthew 48시간 RA37 비교나 관측 정확도 판정이 없습니다.

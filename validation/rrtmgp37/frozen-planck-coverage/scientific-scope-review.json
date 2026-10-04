@@ -1,0 +1,66 @@
+{
+  "status": "READ_ONLY_SCIENTIFIC_SCOPE_REVIEW",
+  "review_scope": "Temperature semantics and proposed Planck-weighting lookup coverage only; no generation, model run, or source edit.",
+  "source_pins": {
+    "generator": {
+      "path": "build/udm37-native-ice-contribution-evidence-pr-work/tools/udm_frozen_optics/generate.py",
+      "sha256": "44e87a513632251c1d5b7c349742e1950a97c710b64a2c1e9f341b341a6c265e"
+    },
+    "generator_readme": {
+      "path": "build/udm37-native-ice-contribution-evidence-pr-work/tools/udm_frozen_optics/README.md",
+      "sha256": "6b25aaed62e2d5cdfa5f362321a99c060adcdd4721beed46fc6bbba8428edb99"
+    },
+    "source_manifest": {
+      "path": "build/udm37-native-ice-contribution-evidence-pr-work/tools/udm_frozen_optics/SOURCE.json",
+      "sha256": "e8a96926d18ddec03ac2e490bf65b14d80fcfde6ec7d42a3e3a9926b8792d512"
+    },
+    "ice_index_input": {
+      "path": "build/udm-hail-optics-source/IOP_2008_ASCIItable.dat",
+      "sha256": "891d0e0690cc6c6ed2dfe81291fa20a3af177fa85ef93127c58c5f86d3c370af",
+      "meaning": "Pinned static Warren-Brandt ice-Ih refractive-index compilation"
+    },
+    "existing_table": {
+      "path": "build/udm37-column-batching-gnu-v3/source-v3/validation/rrtmgp37/frozen-optics-lookup/nine-grid-o128-s50/frozen-ice-psd-moments.nc",
+      "sha256": "8cb00850c3f885f5ec0306563c1ec0a55b512478a7395d626c1c99cebf280583",
+      "temperature_K": [180.0, 233.0, 250.0, 300.0]
+    }
+  },
+  "source_findings": [
+    {
+      "finding": "The Mie refractive-index function index_at(wavenumber) interpolates the static input by wavelength and has no temperature argument.",
+      "source": "generate.py:138-145"
+    },
+    {
+      "finding": "LW temperature changes the Planck source weights, proportional to nu^3/expm1(c2*nu/T), used in the band integration; SW uses solar weights.",
+      "source": "generate.py:148-158,175"
+    },
+    {
+      "finding": "The output metadata explicitly labels LW temperature as Planck source weighting only and the material index as static ice-Ih.",
+      "source": "generate.py:306-314; README.md:144-155"
+    }
+  ],
+  "assessment": {
+    "proposed_temperature_axis_K": {
+      "range": [150.0, 330.0],
+      "spacing_K": 5.0,
+      "preserved_knot_K": 233.0,
+      "judgment": "Reasonable candidate lookup coverage for the observed 179.996 K table-range failure, provided runtime remains bounded to this explicit range and does not clamp or extrapolate. This is a denser numerical sampling of Planck weighting, not a temperature-dependent optical-constant model."
+    },
+    "scientific_limitations": [
+      "The fixed Warren-Brandt ice-Ih refractive index remains unchanged at every temperature; the wider axis does not validate its physical applicability across 150-330 K.",
+      "The 233 K node is retained for continuity with the prior table; inspected source does not establish it as a special material calibration knot.",
+      "A 5 K spacing is not itself an interpolation error bound. No accuracy or forecast-readiness claim follows from coverage alone.",
+      "The table remains an experimental homogeneous spherical ice-Ih PSD treatment. It does not validate graupel or hail optics, habits, porosity, wet growth/coatings, mixed phase, or a temperature-dependent ice refractive index."
+    ],
+    "required_numerical_followup_before_claiming_interpolation_quality": [
+      "Evaluate direct generator values at independent between-node temperatures, including points near 179.996 K and both table boundaries, across representative lambda slopes and bands; compare with lookup interpolation and report field-specific errors without tuning a pass threshold after seeing results.",
+      "Keep strict out-of-range rejection and record the supported temperature interval in table/runtime metadata.",
+      "Treat these checks as interpolation verification under the fixed material/kernel only, not empirical validation of the ice/graupel/hail model."
+    ]
+  },
+  "execution": {
+    "model_runs": 0,
+    "table_generation": 0,
+    "source_edits": 0
+  }
+}

@@ -69,6 +69,12 @@ add_test(NAME frozen_fortran_python_lookup COMMAND "${Python3_EXECUTABLE}"
   "${REPO_ROOT}/tools/udm_frozen_optics/test_fortran_lookup.py" --executable "$<TARGET_FILE:test_rrtmgp_frozen_lookup>"
   --generation "${REPO_ROOT}/validation/rrtmgp37/frozen-optics-lookup/nine-grid-o128-s50"
   --ctest-output-root "${CMAKE_CURRENT_BINARY_DIR}/frozen-lookup-equivalence-runs")
+add_test(NAME frozen_planck_temperature_coverage COMMAND "${Python3_EXECUTABLE}"
+  "${REPO_ROOT}/tools/udm_frozen_optics/test_planck_coverage.py"
+  --executable "$<TARGET_FILE:test_rrtmgp_frozen_lookup>"
+  --generation "${REPO_ROOT}/validation/rrtmgp37/frozen-planck-coverage/expanded"
+  --old-generation "${REPO_ROOT}/validation/rrtmgp37/frozen-optics-lookup/nine-grid-o128-s50"
+  --ctest-output-root "${CMAKE_CURRENT_BINARY_DIR}/frozen-planck-coverage-runs")
 set(adapter "${CMAKE_CURRENT_BINARY_DIR}/src/module_ra_rrtmgp.F")
 set(trace "${CMAKE_CURRENT_BINARY_DIR}/src/module_ra_rrtmgp_trace.F")
 set(input_builder "${CMAKE_CURRENT_BINARY_DIR}/src/module_ra_rrtmgp_input.F")
