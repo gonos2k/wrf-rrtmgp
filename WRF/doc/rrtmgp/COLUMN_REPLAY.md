@@ -30,7 +30,7 @@ python3 WRF/test/rrtmgp/test_column_replay.py build/replay-udm27 \
 
 광학 비교는 `2e-13 + 2e-12*abs(reference)`, 어댑터의 단정도 반환값은 `1e-6 + 4 float32 ULP`를 허용한다. 서로 다른 최적화와 반환 정밀도를 구분한다. 저장을 선택한 청천 또는 overlap=0 제어 사례는 비교를 위해 준비 광학까지 추가 계산하되, 구름을 대기에 더하는 조건은 원래대로 유지한다.
 
-`SWDDIR`와 `SWDDIF`는 delta-scaled RTE solver의 분해다. 합계 일치나 이번 재생 성공으로 관측 DNI 또는 비산란 direct beam과 같다고 주장하지 않는다. 이 정의에 대한 별도 광학 시험은 남아 있다.
+`SWDDIR`와 `SWDDIF`는 delta-scaled RTE solver의 분해다. 별도 optional WRF direct-diagnostic 출력은 raw, pre-delta extinction으로 broadband/VIS/NIR direct flux를 재구성하고, 그 replay 및 짧은 SCM 검사는 [SW direct 진단 계약](SW_DIRECT_DIAGNOSTIC.md)에 기록되어 있다. 이 검사는 관측 DNI 또는 보편적인 비산란 direct-beam 정확성을 증명하지 않는다.
 
 ## 작은 구름분율의 별도 시험
 
@@ -46,9 +46,9 @@ build/replay-reference/test_rrtmgp_small_cf_sampling WRF/run build/small-cf-samp
 
 ## 광학 설정 형식
 
-Production capture는 `RRTMGP_REPLAY_V6`이며 native 물리층의 `NATIVE_DRY_LAYER_MASS_KG_M2` 행렬과 `GRAVITY`, `CP_DRY`, `MOL_WEIGHT_DRY` 배정도 scalar를 보존한다. 독립 reference는 저장한 상수를 계수 로드 전에 적용하고 native 질량을 기체 건조분자 기둥으로 변환한다. 모델 상단 위 확장층과 native 질량이 없는 V1–V5 저장본은 기존 pressure/VMR 기둥 계산을 유지한다. 결과의 `GAS_COL_DRY`는 native·확장층 모두의 molecules cm⁻²이다. [NATIVE_GAS_COLUMNS.md](NATIVE_GAS_COLUMNS.md)를 참조한다. UDM capture에는 기존 precipitation policy 및 RWP도 들어 있다. 강수 입력이 없는 fixture는 두 강수 기록을 함께 생략한다. V5/V6에서 하나만 존재하면 거부한다. V4 저장본은 강수 기록을 계속 필수로 요구한다. [UDM_ONLY.md](UDM_ONLY.md)를 참조한다.
+Production capture 형식은 선택된 기능에 따라 버전이 다르다. 현재 CU-population 입력 묶음이 있는 LW는 `RRTMGP_REPLAY_V10`, SW는 `RRTMGP_REPLAY_V11`을 사용한다. V10/V11은 native/CU 준비 입력과 별도 광학 성분을 보존하며, V11에는 pre-delta native/CU 광학 분해도 포함된다. Host 상수는 V5 이상 형식에서 기록된다. V6은 native dry-mass record를 추가하고, 후속 형식은 해당 버전별 필수·선택 규칙을 유지한다. V1–V9 legacy capture는 각 버전의 기존 해석으로 유지되며, native dry mass가 없는 V1–V5는 pressure/VMR 기둥 경로를 사용한다. 결과의 `GAS_COL_DRY`는 native·확장층 모두의 molecules cm⁻²이다. [NATIVE_GAS_COLUMNS.md](NATIVE_GAS_COLUMNS.md)와 [CU population 계약](../../test/rrtmgp/UDM_CU_POPULATIONS.md)을 참조한다. 강수 입력이 없는 fixture는 두 강수 기록을 함께 생략한다. V5 이상에서 둘 중 하나만 존재하면 거부한다. V4 저장본은 강수 기록을 계속 필수로 요구한다. [UDM_ONLY.md](UDM_ONLY.md)를 참조한다.
 
-SW direct-flux 진단을 선택한 adapter capture는 `RRTMGP_REPLAY_V9`이다. 이 버전은 raw extinction, MCICA mask와 band mapping을 저장해 delta-scaling 이전 direct beam을 독립 재현한다. 기존 SW solver flux/heating과 legacy adapter 호출은 그대로 둔다. 자세한 식과 cloud/frozen mask 정책은 [SW_DIRECT_DIAGNOSTIC.md](SW_DIRECT_DIAGNOSTIC.md)에 정리되어 있다.
+CU-population capture가 없는 optional SW direct-diagnostic trace는 `RRTMGP_REPLAY_V9`; CU-population capture와 함께 기록되는 최신 SW 형식은 V11이다. 이들 형식은 raw extinction, MCICA mask와 band mapping을 저장해 해당 진단을 독립 재현한다. SW solver flux/heating과 진단 인자를 생략한 legacy adapter 호출은 유지된다. 자세한 식과 cloud/frozen mask 정책은 [SW_DIRECT_DIAGNOSTIC.md](SW_DIRECT_DIAGNOSTIC.md)에 정리되어 있다.
 
 `ICE_ROUGHNESS 1 1`은 정수 category를 기록한다. SW의 `SW_BAND_PARTITION 1 1` 값 1은 고정 CCPP의 12850–16000 cm⁻¹ 전이 밴드 50:50 알베도·진단 분할이다. LW에는 SW 설정이 없다. 독립 reference와 입력 검사기는 V3 이상 SW 설정 누락 또는 1 이외의 값을 거부한다.
 
