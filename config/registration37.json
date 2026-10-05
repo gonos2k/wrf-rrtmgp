@@ -99,8 +99,8 @@
     "main/depend.common": "af4ee94302140298fbbafe37f5b54642099d9ff8",
     "phys/CMakeLists.txt": "fc5b0ec7bc518db76edd8c881fe203dc4098a848",
     "phys/Makefile": "0562b7742f3139431d3630404c71e616ec2707a3",
-    "phys/module_microphysics_driver.F": "dfd28c77baf5f6c2c2e582729ccc9b4cf986eae2",
-    "phys/module_mp_udm.F": "4f1b2ba2de034b9aa7f3117a60047deef4e65d8e",
+    "phys/module_microphysics_driver.F": "3383e4a97b203256cbc73ab713401838991503dc",
+    "phys/module_mp_udm.F": "9bd900a43a7486a594cd223f30c55721bfc634cb",
     "phys/module_physics_init.F": "fd11203b534be8f6829262429d9a0b25713c7a12",
     "phys/module_ra_rrtmg_lw.F": "f0a21ddb2679ff91c7e0a01758dced6d697a0ba3",
     "phys/module_ra_rrtmg_sw.F": "fc161a9ca1c710f97ad0bb922669f72f4f68352a",
@@ -110,7 +110,7 @@
     "phys/module_ra_rrtmgp_hash.F": "3de3c376eccb0f81311cf9b645631bb6db6769e8",
     "phys/module_ra_rrtmgp_input.F": "399ad509a153f1cbd293acc33a9675b7d7bf5fd6",
     "phys/module_ra_rrtmgp_precip.F": "90bec153e8cf1ee1717a0d591223920866cbfd91",
-    "phys/module_ra_rrtmgp_trace.F": "8f96633ea000e23a15e2454fbcbd7b9360fdb673",
+    "phys/module_ra_rrtmgp_trace.F": "d96ee80cd5214cd03ab558c99310766d4c330e25",
     "phys/module_radiation_driver.F": "7f3a1bf6ab1cd9bf77e97220a0f4886e879973ac",
     "phys/module_sf_ssib.F": "53db7a2fce364c38b451aa6f2fbcfce9c093e1bb",
     "phys/module_surface_driver.F": "378bfdc7329601415ce578e9515e56a6f325291a",
@@ -234,11 +234,15 @@
     "test/rrtmgp/validate_scm.py": "294c28584a0828bfd53f9c196828fe0e93181d51",
     "test/rrtmgp/test_udm_warm_ice_radius.py": "cbe563724a5095f3d5c715380af57ab58f5236a8",
     "doc/rrtmgp/UDM_WARM_ICE_RADIUS.md": "5f243282ccc2236da28ead0c452b331f69585fcf",
-    "test/rrtmgp/test_udm_entry_density.py": "d52b998d329971ff63f3222d6b2e68d24c00b4d3",
-    "test/rrtmgp/test_udm_entry_density_trace.py": "663bd048aea2e1b3d887c14ac319f25693493143",
-    "test/rrtmgp/test_udm_entry_density_trace.F90": "ce9599b55812331636c8db54dda6d665ed78570b",
+    "test/rrtmgp/test_udm_entry_density.py": "55a6a5192c13208354fb4cd80ed20f6a1d8da4d3",
+    "test/rrtmgp/test_udm_entry_density_trace.py": "39f0b31323e9a16cd7d18b2b4f9518edec00735e",
+    "test/rrtmgp/test_udm_entry_density_trace.F90": "ddbc034c7efe886dcd88ebf8c06c72d1fd473a4f",
     "test/rrtmgp/test_udm_entry_density_scm.py": "208155d313b14f5c44c68ab88439176cbc92d0e4",
-    "doc/rrtmgp/UDM_ENTRY_DENSITY.md": "dde931c583631c96c6e07888614606794b4207cc"
+    "doc/rrtmgp/UDM_ENTRY_DENSITY.md": "dde931c583631c96c6e07888614606794b4207cc",
+    "test/rrtmgp/test_udm_sedimentation_density.py": "683737264849c438275cf5215637734547997738",
+    "test/rrtmgp/test_udm_sedimentation_density.f90": "c3df3e989cd1d6f84aa55716a254d8e4c37d5f99",
+    "test/rrtmgp/test_udm_sedimentation_density_scm.py": "3aed15778d1565f974771fceece529ef4e175436",
+    "doc/rrtmgp/UDM_SEDIMENTATION_DENSITY.md": "7343140fed29ee0849c023aec48cc5ce956cc9ef"
   },
   "backend": "CPU_LINKED",
   "wrf_forecast_validated": false,
@@ -417,5 +421,11 @@
     "fresh_full_wrf_build": "NOT_RUN",
     "corrected_winter24h": "NOT_RUN",
     "corrected_restart": "NOT_RUN"
+  },
+  "udm_sedimentation_density": {
+    "scope": "Only initialized option37 UDM call supplies input_density_is_dry=true. Omitted/false retains original4 expression and all3 internal forwarding paths. DEN/DENFAC/process equations unchanged.",
+    "validation": "Native-source O0/O2 sedimentation mass+bottomprecip and original16fb-vs-candidate omitted/false bitwise fixtures; fresh GNU serial complete SCM build and sixactualforecasts;4/4 208arrays/fullhistory bytes unchanged and37 capturepassivity211arrays/fullhistory bytes unchanged.",
+    "observer": "RRTMGP_UDM_ENTRY_DENSITY_V2 selectedpolicy/pre-call reevaluation plus separatelynamedlegacycounterfactual; notdirectprivatearrayobservation.",
+    "limits": "Shortcold/warmSCM samples only; no independentphysicalaccuracy or Nc/LUT sourceauthority claim. Separate inheritedrain-onlyuninitializedcloudslope hazard remainsopen."
   }
 }

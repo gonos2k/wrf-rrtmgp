@@ -2845,7 +2845,7 @@ REAL, DIMENSION( ims:ime, kms:kme, jms:jme ),                        &
                   PRESENT( RAINNC  ) .AND. PRESENT ( RAINNCV )  ) THEN
              IF (have_udm_cf) THEN
              ! Capture the actual UDM call inputs before it can update TH/Q.
-             ! This observer re-evaluates the source DEND expression; it does
+             ! This observer re-evaluates the selected DEND policy; it does
              ! not claim to observe the private local DEND inside UDM.
              ! The disabled path constructs no diagnostic array temporaries.
              IF (trace_udm_entry_density_enabled()) THEN
@@ -2863,7 +2863,8 @@ REAL, DIMENSION( ims:ime, kms:kme, jms:jme ),                        &
                    qg_curr(udm_radius_i,kts:kte,udm_radius_j),qh_curr(udm_radius_i,kts:kte,udm_radius_j), &
                    qnn_curr(udm_radius_i,kts:kte,udm_radius_j),qnc_curr(udm_radius_i,kts:kte,udm_radius_j), &
                    qnr_curr(udm_radius_i,kts:kte,udm_radius_j), &
-                   r_d,r_v,cp,cpv,g,dt,epsilon,svpt0,rhoair0,rhowater,time_minutes=xtime)
+                   r_d,r_v,cp,cpv,g,dt,epsilon,svpt0,rhoair0,rhowater,time_minutes=xtime, &
+                   input_density_is_dry=.true.)
                ENDIF
              ENDIF
              CALL udm(                                              &
@@ -2898,6 +2899,7 @@ REAL, DIMENSION( ims:ime, kms:kme, jms:jme ),                        &
                  ,udm_cldfra=udm_cldfra, udm_cf_step=udm_cf_step     &
                  ,udm_cf_top=udm_cf_top                             &
                  ,ccn_preinitialized=.true.                        &
+                 ,input_density_is_dry=.true.                       &
                  ,has_reqc=has_reqc                                 &  ! for radiation +
                  ,has_reqi=has_reqi                                 &
                  ,has_reqs=has_reqs                                 &

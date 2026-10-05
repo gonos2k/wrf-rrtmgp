@@ -72,7 +72,7 @@ def expect_failure(exe: Path, cwd: Path, env: dict[str, str], mode: str,
 
 def parse_packet(path: Path) -> tuple[list[int], dict[str, list[float]]]:
     lines = path.read_text(encoding="ascii").splitlines()
-    if len(lines) < 3 or lines[0] != "RRTMGP_UDM_ENTRY_DENSITY_V1":
+    if len(lines) < 3 or lines[0] != "RRTMGP_UDM_ENTRY_DENSITY_V2":
         raise AssertionError("packet magic or minimum length is wrong")
     header = [int(x) for x in lines[1].split()]
     if len(header) != 6:
@@ -96,16 +96,18 @@ def parse_packet(path: Path) -> tuple[list[int], dict[str, list[float]]]:
     return header, records
 
 
-def validate_packet(path: Path) -> None:
+def validate_packet(path: Path, expected_dry: bool) -> None:
     header, r = parse_packet(path)
     if header != [1, 23, 2, 3, 4, 6]:
         raise AssertionError(f"unexpected packet header {header}")
     vectors = ("TH_K", "PII", "T_K", "P_PA", "QV_MIXING_RATIO_KG_KG",
-               "DEN_PASSED_KG_M3", "DEND_REEVALUATED_PRECALL_KG_M3", "QC_RAW", "QI_RAW",
+               "DEN_PASSED_KG_M3", "DEND_REEVALUATED_PRECALL_KG_M3",
+               "DEND_LEGACY_COUNTERFACTUAL_KG_M3", "QC_RAW", "QI_RAW",
                "QR_RAW", "QS_RAW", "QG_RAW", "QH_RAW", "NN_RAW", "NC_RAW", "NR_RAW")
     scalars = ("RD_J_KG_K", "RV_J_KG_K", "CPD_J_KG_K", "CPV_J_KG_K", "GRAVITY_M_S2",
                "DELT_SECONDS", "QMIN", "T0C_K", "RHO0_KG_M3", "RHO_WATER_KG_M3",
-               "DEND_ORIGIN", "DEFAULT_REAL_BITS", "SOURCE_TIME_PRESENT", "SOURCE_TIME_SECONDS")
+               "DEND_ORIGIN", "DEFAULT_REAL_BITS", "SOURCE_TIME_PRESENT", "SOURCE_TIME_SECONDS",
+               "INPUT_DENSITY_IS_DRY")
     if tuple(r) != vectors + scalars:
         raise AssertionError(f"unexpected packet record order/names: {tuple(r)}")
     if any(len(r[n]) != 3 for n in vectors) or any(len(r[n]) != 1 for n in scalars):
@@ -124,15 +126,26 @@ def validate_packet(path: Path) -> None:
         if abs(got - a * b) > 2.e-5:
             raise AssertionError("temperature is not TH*PII within default-REAL rounding")
     rd, rv = r["RD_J_KG_K"][0], r["RV_J_KG_K"][0]
-    for got, pressure, temp, density in zip(r["DEND_REEVALUATED_PRECALL_KG_M3"], r["P_PA"],
+    for got, pressure, temp, density in zip(r["DEND_LEGACY_COUNTERFACTUAL_KG_M3"], r["P_PA"],
                                              r["T_K"], r["DEN_PASSED_KG_M3"]):
         expected = (pressure / temp - density * rv) / (rd - rv)
         if abs(got - expected) > max(2.e-7, abs(expected) * 2.e-6):
             raise AssertionError("pre-call DEND re-evaluation mismatch")
     if r["DEND_ORIGIN"] != [1.] or r["DEFAULT_REAL_BITS"] != [32.]:
         raise AssertionError("DEND provenance or default-REAL bit width mismatch")
-    if r["DEND_REEVALUATED_PRECALL_KG_M3"][2] >= 0.:
-        raise AssertionError("negative re-evaluated DEND was clipped")
+    if r["INPUT_DENSITY_IS_DRY"] != [1. if expected_dry else 0.]:
+        raise AssertionError("input density policy flag mismatch")
+    if expected_dry:
+        if not close_vec(r["DEND_REEVALUATED_PRECALL_KG_M3"], r["DEN_PASSED_KG_M3"]):
+            raise AssertionError("dry-input selected density must equal passed density")
+        if r["DEND_LEGACY_COUNTERFACTUAL_KG_M3"][2] >= 0.:
+            raise AssertionError("negative legacy counterfactual DEND was clipped")
+    else:
+        if not close_vec(r["DEND_REEVALUATED_PRECALL_KG_M3"],
+                         r["DEND_LEGACY_COUNTERFACTUAL_KG_M3"]):
+            raise AssertionError("legacy selected density differs from its counterfactual field")
+        if r["DEND_REEVALUATED_PRECALL_KG_M3"][2] >= 0.:
+            raise AssertionError("negative re-evaluated DEND was clipped")
     if r["SOURCE_TIME_PRESENT"] != [1.] or r["SOURCE_TIME_SECONDS"] != [3600.]:
         raise AssertionError("optional source time metadata mismatch")
 
@@ -209,9 +222,28 @@ def main() -> int:
                 raise AssertionError("column filter must write exactly one selected packet")
             saved_packet = receipt_dir / f"{opt[1:]}-packet.raw"
             shutil.copyfile(packet, saved_packet)
-            validate_packet(packet)
+            validate_packet(packet, expected_dry=False)
             packet_pin = {"path": str(saved_packet), "sha256": sha(saved_packet),
                           "size_bytes": saved_packet.stat().st_size}
+
+            policy_packets = []
+            for mode, expected_dry in (("falsepacket", False), ("drypacket", True)):
+                policy_capture = td / f"capture-{opt[1:]}-{mode}"
+                policy_capture.mkdir()
+                policy_env = clean_env({**enabled, "WRF_RRTMGP_CAPTURE_DIR": str(policy_capture),
+                                        "WRF_RRTMGP_CAPTURE_UDM_ENTRY_DENSITY": "1"})
+                p = run([str(exe), mode], td, policy_env,
+                        receipt_dir / f"{opt[1:]}-{mode}.json")
+                if p.returncode:
+                    raise AssertionError(f"density policy {mode} failed: {p.stdout}")
+                policy_packet = policy_capture / "udm_entry_density_d1_i2_j3_step23.raw"
+                validate_packet(policy_packet, expected_dry=expected_dry)
+                saved_policy_packet = receipt_dir / f"{opt[1:]}-{mode}.raw"
+                shutil.copyfile(policy_packet, saved_policy_packet)
+                policy_packets.append({"mode": mode, "input_density_is_dry": expected_dry,
+                                       "packet": {"path": str(saved_policy_packet),
+                                                  "sha256": sha(saved_policy_packet),
+                                                  "size_bytes": saved_policy_packet.stat().st_size}})
 
             missing_j = dict(enabled)
             missing_j.pop("WRF_RRTMGP_COLUMN_J")
@@ -248,7 +280,8 @@ def main() -> int:
             expect_failure(exe, td, clean_env(enabled, threads="2"), "packet",
                            "RRTMGP_TRACE_SERIAL_ONLY", receipt_dir / f"{opt[1:]}-omp-guard.json")
             run_results.append({"optimization": opt, "executable_sha256": sha(exe),
-                                "packet": packet_pin, "compiled": True})
+                                "packet": packet_pin, "policy_packets": policy_packets,
+                                "compiled": True})
         root_receipt["runs"] = run_results
 
     after = {str(p): {"sha256": sha(p), "size_bytes": p.stat().st_size} for p in (src, driver, stub)}
