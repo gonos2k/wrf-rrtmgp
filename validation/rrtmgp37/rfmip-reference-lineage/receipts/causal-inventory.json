@@ -1,0 +1,179 @@
+{
+  "schema": "udm37-rfmip-causal-inventory-v1",
+  "scope": "Read-only inventory of the authoritative clear-sky RFMIP SW tolerance failures and the completed v5 solar-only counterfactual. No build, solver, model, download, or threshold change was performed for this inventory.",
+  "strict_gate": {
+    "comparison": "abs(candidate - published) <= 1e-5; rtol=0",
+    "threshold_changed": false,
+    "published_outputs": {
+      "reference_label": "RTE-RRTMGP-181204",
+      "dtype": "float32",
+      "shape_each": [18, 100, 61],
+      "cells_each": 109800
+    },
+    "failures": {
+      "rsd": {
+        "failed_cells": 52972,
+        "max_abs": 0.0006103515625,
+        "mean_abs": 0.00007467256000567538,
+        "strict_pass": false
+      },
+      "rsu": {
+        "failed_cells": 51099,
+        "max_abs": 0.00018310546875,
+        "mean_abs": 0.0000234648959826684,
+        "strict_pass": false
+      },
+      "rld": {"failed_cells": 0, "max_abs": 0.0, "mean_abs": 0.0, "strict_pass": true},
+      "rlu": {"failed_cells": 0, "max_abs": 0.0, "mean_abs": 0.0, "strict_pass": true}
+    },
+    "authoritative_comparison": {
+      "path": "build/udm37-solrad-observation-pr-work/validation/rrtmgp37/upstream-reference/rfmip-comparison.json",
+      "sha256": "ff12cbb81b999c861b94ec4e0e00e0c938ac9b4417e36e2da0458d60915a97ef",
+      "worktree_head_at_inventory": "dd1b2d858ec92424bb1d96abe8e7aeea36a52f7f",
+      "wrf_repository_commit_recorded_in_comparison": "ca33525ad69af58302608d93362a83e698f37698",
+      "revision_note": "The checked-in comparison artifact records ca33525 as its test-tree commit; the current PR83 worktree is later at dd1b2d. These are recorded separately, not presented as the same checkout."
+    }
+  },
+  "same_revision_upstream_vs_vendored": {
+    "result": "All four NetCDF output arrays are bitwise equal between the pinned upstream executable and WRF vendored CPU backend; both share the same comparison-to-published SW failures above.",
+    "upstream_rte_repo": "https://github.com/earth-system-radiation/rte-rrtmgp",
+    "rte_commit": "41c5fcd950fed09b8afe186dede266824eca7fd3",
+    "data_repo": "https://github.com/earth-system-radiation/rrtmgp-data",
+    "data_commit": "ea788bb39876948fa8d2c235665ccff19b4686b5",
+    "wrf_repo_commit_in_record": "ca33525ad69af58302608d93362a83e698f37698",
+    "vendored_SOURCE_json": {
+      "path": "build/udm37-solrad-observation-pr-work/WRF/external/rte_rrtmgp/SOURCE.json",
+      "sha256": "ed156abd22263b5ec7ed8e713dd36f09b22e500734bfffcf426ff8bbb61eb4d4"
+    },
+    "cpu_static_library_sha256": "619531ecacf7b8b0be05344979ab39726c9972e77eb98c604bb3ea542b1ee239",
+    "upstream_lw_executable_sha256": "c6a8073d77aed798687a28efdb88ecd7642e6c9dea5688878eb2c11c7a7e9d63",
+    "upstream_sw_executable_sha256": "a59367eadde85233451c737d11224e9f84a794552552c21a379f1e9a75e775fa",
+    "compiler": "GNU Fortran 13.3.0, -O0 -ffree-line-length-none, serial, no RTE_USE_SP; wp is 64-bit double, NetCDF flux variables are float32",
+    "resolution_scope": "RFMIP uses 256 LW and 224 SW g-points (g256/g224), unlike WRF g128/g112. This is a same-revision code-port check, not direct WRF-resolution validation."
+  },
+  "v4_failure_selector_and_v5_diagnostic": {
+      "v4_selector": {
+      "path": "build/udm37-rfmip-residual-next-diagnostic-v4/failed_points.csv",
+      "sha256": "1c2df6f2ccdb2b9520bdc9eaedadfbac6580be31241d4dd3c22e7c2a013e6b61",
+      "plan_path": "build/udm37-rfmip-residual-next-diagnostic-v4/plan-v4.json",
+      "plan_sha256": "6c8206806ffb1b786d84f955470a4a16db52f393fb71cddb5af08b8aca30b4e3",
+      "selected_failure_counts": {"rsd": 116, "rsu": 39, "total": 155},
+      "shape_basis": "18 experiments x 100 sites x 61 levels; zero-based CSV coordinates",
+      "max_selected_current_minus_published": {
+        "rsd": {"absolute": 0.00054931640625, "expt_index0": 5, "site_index0": 75, "level_index0": 59},
+        "rsu": {"absolute": 0.00018310546875, "expt_index0": 4, "site_index0": 33, "level_index0": 2}
+      }
+    },
+    "v5_execution": {
+      "path": "build/udm37-rfmip-residual-next-diagnostic-v5/execution-v5/execution.json",
+      "sha256": "88d2975310338bbec6b72280592dd9c1fc70742fc389842c7d04385fb68bbe3d",
+      "status": "COMPLETE_DIAGNOSTIC_NOT_STRICT_PASS",
+      "calls": 2,
+      "wrf_or_real_forecasts": 0,
+      "diagnostic_source": {
+        "path": "build/udm37-rfmip-residual-next-diagnostic-v5/source-snapshot/rrtmgp_rfmip_sw.F90",
+        "sha256": "8c55012d7b34722fce2d29a6c13d1cb55cf5f6e919340decad250a8c031f3354"
+      },
+      "source_patch_sha256": "1a1205cb8c5c2e2912fe3bcfec9fd7add9b641825d9c085b7859972b21f7a8c6",
+      "original_driver_sha256": "ec874da7f2891f12b389d03243d58211a66bcee331a0618a0d7ae46c1a835821",
+      "plan_sha256": "14f1d2250db599f898463fbc990bc32cd72b14a03c16e096e64868f33f16798",
+      "analysis_summary": {
+        "path": "build/udm37-rfmip-residual-next-diagnostic-v5/execution-v5/analysis-v5/analysis-summary-v5.json",
+        "sha256": "1f2d407b4ff9b5927005966e07b8b8be2a6b7b3c763c7ee9d4b14970c37e6f1f"
+      },
+      "runtime": "GNU Fortran 13.3.0; -O0 -ffree-line-length-none; same pinned NetCDF runtime closure as baseline; two standalone SW calls."
+    },
+    "exact_inputs": {
+      "rfmip_input": {
+        "path": "build/official-rrtmgp-reference/data/examples/rfmip-clear-sky/inputs/multiple_input4MIPs_radiation_RFMIP_UColorado-RFMIP-1-2_none.nc",
+        "sha256": "b8dc05d7cd2e0e6354b4a6198771ddf3bc09f18d72b49f20a41e2024e2fd51f4",
+        "profiles_total": 1800,
+        "diagnostic_selected_profiles": 135
+      },
+      "current_sw_coefficients": {
+        "path": "build/official-rrtmgp-reference/data/rrtmgp-gas-sw-g224.nc",
+        "sha256": "584f1dd41ea9fc07d4ee3754eb1dafbd46ad3161cd6fd20fa06b6922b6f0702e",
+        "size_bytes": 11083642
+      },
+      "lw_coefficients_used_by_the_official_four-array_comparison": {
+        "path": "build/official-rrtmgp-reference/data/rrtmgp-gas-lw-g256.nc",
+        "sha256": "4048360199d1917ed8f2ccaae2ec097d0f990da3bbad9830337b739b4fa01be7"
+      },
+      "old_solar_counterfactual_coefficients": {
+        "filename": "rrtmgp-gas-sw-g224-old-solar-counterfactual.nc",
+        "sha256": "02d4cd320696b9b8a3006a373855a3b4b95fdb6495251fe5f5692d6a9fddfaa4",
+        "size_bytes": 11079648,
+        "qualification": "Targeted counterfactual; not authenticated as the coefficient file used to generate the 181204 published reference."
+      }
+    },
+    "exact_outputs": {
+      "current_coefficients": {
+        "rsd": {"path": "build/udm37-rfmip-residual-next-diagnostic-v5/execution-v5/current/rsd_Efx_RTE-RRTMGP-181204_rad-irf_r1i1p1f1_gn.nc", "sha256": "81381b7e080540d70b122d484eff5799a1ea75e26ad82a7951898c1a1f46acc1", "dtype": "float32", "shape": [18, 100, 61]},
+        "rsu": {"path": "build/udm37-rfmip-residual-next-diagnostic-v5/execution-v5/current/rsu_Efx_RTE-RRTMGP-181204_rad-irf_r1i1p1f1_gn.nc", "sha256": "c704f2568b8f7328d80854582043f56f6bfb84c0235f55b3ad42daa6a31f4a34", "dtype": "float32", "shape": [18, 100, 61]}
+      },
+      "old_solar_counterfactual": {
+        "rsd": {"path": "build/udm37-rfmip-residual-next-diagnostic-v5/execution-v5/old_solar/rsd_Efx_RTE-RRTMGP-181204_rad-irf_r1i1p1f1_gn.nc", "sha256": "e7e6f47d33c5a23d25db105dc5c1e5c003472cca12fd087f698165b0393ee722", "dtype": "float32", "shape": [18, 100, 61]},
+        "rsu": {"path": "build/udm37-rfmip-residual-next-diagnostic-v5/execution-v5/old_solar/rsu_Efx_RRTMGP-181204_rad-irf_r1i1p1f1_gn.nc", "sha256": "69d4918403337e182f5a2376644c5cbf5140fa42ac776c78acf73e2594c10c5b", "dtype": "float32", "shape": [18, 100, 61]}
+      },
+      "published_references": {
+        "rsd": {"path": "build/official-rrtmgp-reference/data/examples/rfmip-clear-sky/reference/rsd_Efx_RTE-RRTMGP-181204_rad-irf_r1i1p1f1_gn.nc", "sha256": "f9b0313fdf74598859a7caf27a5d1395b7fe1e445c9620a66856cc19eaf5e5b9"},
+        "rsu": {"path": "build/official-rrtmgp-reference/data/examples/rfmip-clear-sky/reference/rsu_Efx_RTE-RRTMGP-181204_rad-irf_r1i1p1f1_gn.nc", "sha256": "0ea3f4272d9ef088db6ffd07153587863a052e3cf8b3bf04bfb7c9288ed8b324"}
+      }
+    },
+    "already_performed_diagnostics": {
+      "same_revision_control": "Upstream and vendored CPU give bitwise-equal rld/rlu/rsd/rsu arrays on the official g256/g224 driver/data path.",
+      "solar_only_intervention": {
+        "only_changed_input": "The v5 run changes the SW coefficient file between arms; the RFMIP input, executable, and driver are held fixed.",
+        "gas_optics": "Captured arrays are bitwise equal for all 135 selected profiles, 40,320 stored values per profile.",
+        "current_capture_hashes": {
+          "diag_optics.bin": "6c78cb7a0f46868c15836f7d43bced51897a47a1f5b4b9e392e915a7874a2613",
+          "diag_source_pre.bin": "d9b70f966120726098505722b39ea16bd494854c6cb12a9b888f151d40b7de52",
+          "diag_source_post.bin": "982b8819594044867c0ec52d19e9a5dee4a9b4ddb4c61c32027a19fc16ea33a6",
+          "diag_flux_solver.bin": "8180c79979d4294f1b3a9867778dbbd5da920d70424fd914a87ad54422ac8611",
+          "diag_flux_written.bin": "8180c79979d4294f1b3a9867778dbbd5da920d70424fd914a87ad54422ac8611"
+        },
+        "old_solar_capture_hashes": {
+          "diag_optics.bin": "6c78cb7a0f46868c15836f7d43bced51897a47a1f5b4b9e392e915a7874a2613",
+          "diag_source_pre.bin": "3f5a8463d7b38d067bce9beb8d526bb7007f58a91053792dcffae35347133c6c",
+          "diag_source_post.bin": "3fc65fa8e8ef3161d3bd738cf003f2e320a2a66442582f71999bb9b3caa2fcf8",
+          "diag_flux_solver.bin": "79346fc841f01ec53219017dc1dc96c04852e6c6d593246e428a64d858a04b18",
+          "diag_flux_written.bin": "79346fc841f01ec53219017dc1dc96c04852e6c6d593246e428a64d858a04b18"
+        },
+        "maximum_absolute_arm_deltas": {
+          "source_pre": 0.0005001694543915747,
+          "source_post": 0.0005137882616583767,
+          "flux_solver": 0.0005993513989324128,
+          "flux_written": 0.0005993513989324128,
+          "gas_optics": 0.0
+        }
+      },
+      "source_normalization": "Both arms satisfy the broadband TSI normalization contract; maximum post-normalization sum error is 4.55e-13 (current) and 2.27e-13 (counterfactual).",
+      "float32_storage": "The full-profile write-cast checks exactly reproduce stored NetCDF values, but are not a sufficient cause: for the counterfactual, all 155 prewrite values lie outside the published target's float32 rounding interval and 99 already exceed 1e-5 before storage.",
+      "counterfactual_errors": "All 155 counterfactual stored selected values are one float32 ULP from the published value, yet they still exceed atol=1e-5; current arm has 154/155 selected stored values above 1e-5. This does not establish the old-solar file as historical truth.",
+      "published_reference_provenance": "The published filename labels RTE-RRTMGP-181204 but the exact generating source and solar coefficient-generation SHA are not authenticated by this evidence."
+    }
+  },
+  "remaining_discriminating_unknowns": [
+    {
+      "unknown": "Exact code and coefficient-generation provenance for the published RTE-RRTMGP-181204 rsd/rsu files.",
+      "why_it_matters": "Current pinned upstream (41c5fcd) and vendored backend agree exactly with each other but not with the published SW arrays; source-versus-reference vintage remains unresolved.",
+      "next_evidence": "Find an authoritative archived source/coefficient manifest or reproducible generation recipe for those exact published arrays. Then compare its solar source file and run the unchanged strict test; do not widen tolerance."
+    },
+    {
+      "unknown": "Whether the v5 old-solar counterfactual is the exact solar coefficient/input revision used for the 181204 publication.",
+      "why_it_matters": "The intervention demonstrates sensitivity to the SW coefficient file while preserving captured gas optics, but the counterfactual is explicitly unauthenticated.",
+      "next_evidence": "Authenticate the coefficient's origin and generator settings, or treat it only as a sensitivity case."
+    },
+    {
+      "unknown": "Why source/flux changes under the solar-only counterfactual do not reproduce the published array within tolerance, despite one-ULP stored residuals in all 155 cells.",
+      "why_it_matters": "Counterfactual source values differ, all 155 prewrite values are outside the target rounding intervals, and float32 casting alone cannot account for the discrepancy.",
+      "next_evidence": "With an authenticated reference-generation path, compare source arrays, spectral source normalization/order and prewrite fluxes at the 155 fixed cells. Keep the current strict threshold."
+    }
+  ],
+  "explicit_nonclaims": [
+    "No RRTMGP port defect is identified by this inventory.",
+    "No published-reference accuracy pass is claimed; the strict SW comparison remains failed.",
+    "The v5 counterfactual is not labeled historical or authoritative.",
+    "No WRF g128/g112 or all-sky conclusion follows from the g256/g224 RFMIP test."
+  ]
+}
