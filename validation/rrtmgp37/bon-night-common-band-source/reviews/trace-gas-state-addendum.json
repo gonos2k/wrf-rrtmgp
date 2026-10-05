@@ -1,0 +1,60 @@
+{
+  "schema": "BON_COMMON_BAND_TRACE_GAS_STATE_ADDENDUM_V1",
+  "status": "PASS_READ_ONLY_FOUR_ADDITIONAL_VMR_MATCHES",
+  "pins": {
+    "legacy_packet": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-legacy-lw-source-export-bon-audit-v2/cases/SOURCE_ON/legacy-export/rrtmg4_d01_i13_j46_step721_lw.txt",
+      "sha256": "bd614b57362b48ab8e00b179fc3464925b9c49a8eef0a472489f87fd89e15c7f"
+    },
+    "matched_dry_input": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-dry-column-attribution-v1/matched-legacy-dry.input",
+      "sha256": "292f9569b059c373c9cb14f1574cb8835627331574592a19d641ef07c21ec918"
+    }
+  },
+  "comparisons": [
+    {
+      "legacy_field": "CFC11_VMR",
+      "GP_field": "VMR_CFC11",
+      "units": "mol_mol-1",
+      "shape": [
+        45
+      ],
+      "exact_equal": true,
+      "max_abs_difference": 0.0
+    },
+    {
+      "legacy_field": "CFC12_VMR",
+      "GP_field": "VMR_CFC12",
+      "units": "mol_mol-1",
+      "shape": [
+        45
+      ],
+      "exact_equal": true,
+      "max_abs_difference": 0.0
+    },
+    {
+      "legacy_field": "CFC22_VMR",
+      "GP_field": "VMR_CFC22",
+      "units": "mol_mol-1",
+      "shape": [
+        45
+      ],
+      "exact_equal": true,
+      "max_abs_difference": 0.0
+    },
+    {
+      "legacy_field": "CCl4_VMR",
+      "GP_field": "VMR_CCL4",
+      "units": "mol_mol-1",
+      "shape": [
+        45
+      ],
+      "exact_equal": true,
+      "max_abs_difference": 0.0
+    }
+  ],
+  "scope": "Adds exact four legacy CFC/CCl4 input VMR comparisons to the prior 13-field state gate; does not prove coefficient absorption equivalence or gas optics accuracy.",
+  "new_WRF_calls": 0,
+  "new_RTE_calls": 0,
+  "new_builds": 0
+}

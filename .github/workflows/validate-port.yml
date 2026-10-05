@@ -19,6 +19,7 @@ on:
       - 'tools/validate.py'
       - 'tools/udm_frozen_optics/**'
       - 'validation/rrtmgp37/upstream-reference/**'
+      - 'validation/rrtmgp37/bon-night-common-band-source/**'
       - '.github/workflows/validate-port.yml'
   push:
     branches: [main]
@@ -39,6 +40,7 @@ on:
       - 'tools/validate.py'
       - 'tools/udm_frozen_optics/**'
       - 'validation/rrtmgp37/upstream-reference/**'
+      - 'validation/rrtmgp37/bon-night-common-band-source/**'
       - '.github/workflows/validate-port.yml'
 permissions:
   contents: read
@@ -55,6 +57,10 @@ jobs:
         run: python3 tools/register37.py --check
       - name: Verify WRF UDM module dependency edges schedule under parallel make
         run: python3 WRF/test/rrtmgp/test_wrf_udm_dependencies.py WRF/main/depend.common
+      - name: Verify frozen same-state LW common-band source evidence
+        run: |
+          python3 -I -S validation/rrtmgp37/bon-night-common-band-source/verify.py --output build/bon-common-band-source-verification.json
+          python3 -I -S validation/rrtmgp37/bon-night-common-band-source/test_verify.py
   component-validation:
     needs: registration
     runs-on: ubuntu-24.04
