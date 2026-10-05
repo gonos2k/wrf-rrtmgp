@@ -66,7 +66,7 @@ def load_parser(path: Path):
     return module
 
 
-def validate_manifest() -> dict:
+def validate_manifest(source_root: Path = REPO) -> dict:
     manifest = read_json("manifest.json")
     require(manifest.get("schema") == "UDM_NATIVE_RADIUS_STAGE_ARCHIVE_V1", "manifest schema")
     payload = manifest.get("payload")
@@ -102,7 +102,7 @@ def validate_manifest() -> dict:
         require(isinstance(rel, str) and bool(rel.strip()) and not Path(rel).is_absolute() and ".." not in Path(rel).parts,
                 f"unsafe source path {rel!r}")
         require(rel not in pin_map, f"duplicate source pin {rel}")
-        p = REPO / rel
+        p = source_root / rel
         require(not p.is_symlink(), f"source symlink is not allowed: {rel}")
         require(p.is_file(), f"missing pinned source {rel}")
         raw = p.read_bytes()
@@ -116,8 +116,8 @@ def validate_manifest() -> dict:
     return {"payload_count": len(payload), "source_pins": pin_map}
 
 
-def validate_join(source_pins: dict) -> dict:
-    parser_path = REPO / PARSER_REL
+def validate_join(source_pins: dict, source_root: Path = REPO) -> dict:
+    parser_path = source_root / PARSER_REL
     require(sha256(parser_path) == PARSER_SHA, "parser changed after manifest validation")
     parser = load_parser(parser_path)
     capture = PACKAGE / "capture"
@@ -231,10 +231,13 @@ def validate_sensitivity(parser, fresh_join: dict) -> dict:
 
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__)
+    ap.add_argument("--source-root", type=Path, default=REPO,
+                    help="checkout containing the exact frozen sources and parser (default: repository root)")
     ap.add_argument("--output", type=Path, help="write one JSON summary to a new file (never overwrite)")
     args = ap.parse_args()
-    manifest = validate_manifest()
-    joined = validate_join(manifest["source_pins"])
+    source_root = args.source_root.resolve()
+    manifest = validate_manifest(source_root)
+    joined = validate_join(manifest["source_pins"], source_root)
     sensitivity = validate_sensitivity(joined["parser"], joined)
     result = {"status": "PASS_SAVED_RADIUS_STAGE_AND_CONDITIONAL_NC_SENSITIVITY",
               "payload_files_checked": manifest["payload_count"],

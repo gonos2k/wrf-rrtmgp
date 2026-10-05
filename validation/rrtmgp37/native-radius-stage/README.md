@@ -83,6 +83,21 @@ From the repository root:
 python3 -I -S validation/rrtmgp37/native-radius-stage/verify.py
 ```
 
+The default source root is the current checkout. After changes to a pinned
+source, this command deliberately fails its original hash check. To verify
+these historical packets, provide a checkout of PR #100 commit
+`845d4ba72619539920a15d64bc90c5ca56da8971`:
+
+```sh
+python3 -I -S validation/rrtmgp37/native-radius-stage/verify.py \
+  --source-root build/native-radius-stage-historical-source
+```
+
+CI checks out that fixed commit separately for source verification and parser
+imports. The package, raw packets, saved results and all original source pins
+stay unchanged; this does not label the archived outputs as results from newer
+native-radius code.
+
 The verifier authenticates the payload roster, raw packets and pinned source
 files; re-runs the saved stage join; and independently evaluates both conditional
 unit formulas on all 198 wet rows. The optional `--output FILE` writes a new

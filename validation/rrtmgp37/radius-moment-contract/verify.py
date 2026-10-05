@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Standard-library-only integrity and bounded result-contract verifier."""
+import argparse
 import hashlib
 import json
 import math
@@ -26,6 +27,11 @@ def require(ok, message):
 
 
 def main():
+    ap = argparse.ArgumentParser(description=__doc__)
+    ap.add_argument("--source-root", type=Path, default=REPO,
+                    help="checkout containing the exact frozen sources (default: repository root)")
+    args = ap.parse_args()
+    source_root = args.source_root.resolve()
     manifest = json.loads(MANIFEST.read_text())
     require(manifest.get("schema") == "udm37-radius-moment-contract-package-v1", "manifest schema")
     rows = manifest.get("files")
@@ -58,7 +64,7 @@ def main():
     require("number_concentration_units" in review["findings"], "units issue documented")
     require("cloud_fraction" in review["findings"], "cloud-fraction issue documented")
     for file_row in review["source"]["files"]:
-        source = REPO / file_row["path"]
+        source = source_root / file_row["path"]
         require(source.is_file(), f"missing source file {file_row['path']}")
         require(sha(source) == file_row["sha256"], f"source-review hash mismatch {file_row['path']}")
 
@@ -85,7 +91,7 @@ def main():
     print(json.dumps({"status": "PASS_SCOPED_RADIUS_MOMENT_EVIDENCE_ARCHIVE",
                       "payload_files_checked": len(rows), "shape_rows": len(qrows),
                       "illustrative_samples": len(samples), "max_quadrature_relative_error": maxerr,
-                      "source_checkout": str(REPO), "physical_accuracy_claim": False}, sort_keys=True))
+                      "source_checkout": str(source_root), "physical_accuracy_claim": False}, sort_keys=True))
 
 
 if __name__ == "__main__":

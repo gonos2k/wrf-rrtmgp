@@ -3743,7 +3743,10 @@ subroutine udm_mp_effective_radius (t, qc, qi, qs, rho, qmin, t0c,             &
   if (has_qi) then
      do k=kts,kte
        if (rqi(k)<=r1 .or. rni(k)<=r2) cycle
-       temp = t0c - t(k)
+! The subfreezing fit contains sqrt(T0C-T). Transient ice can survive
+! above freezing; use the finite freezing-point endpoint there instead
+! of letting an invalid square root become a compiler-dependent clamp.
+       temp = max(0., t0c - t(k))
        bfactor = -2.0 + 1.0e-3*temp*sqrt(temp)*log10(rqi(k)/rqi0)
        bfactor2 = bfactor*bfactor
        bfactor3 = bfactor2*bfactor
