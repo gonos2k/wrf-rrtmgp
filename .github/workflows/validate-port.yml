@@ -67,15 +67,24 @@ jobs:
         run: python3 tools/register37.py --check
       - name: Verify WRF UDM module dependency edges schedule under parallel make
         run: python3 WRF/test/rrtmgp/test_wrf_udm_dependencies.py WRF/main/depend.common
+      # Stored numerical evidence pins the pre-stage-instrumentation sources.
+      # Authenticate that historical checkout rather than retagging old results
+      # as calculations from the current wrappers. Current code is checked above
+      # and built/executed by the component, column and SCM jobs below.
+      - name: Checkout pinned historical sources for stored LW evidence
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: a7317da8f7651272f09d27c5830f6691613ae41a
+          path: build/radius-stage-historical-source
       - name: Verify frozen same-state LW common-band source evidence
         run: |
           python3 -I -S validation/rrtmgp37/bon-night-common-band-source/verify.py --output build/bon-common-band-source-verification.json
           python3 -I -S validation/rrtmgp37/bon-night-common-band-source/test_verify.py
-          python3 -I -S validation/rrtmgp37/bon-night-planck-source/verify.py --output build/bon-planck-source-verification.json
-          python3 -I -S validation/rrtmgp37/bon-night-independent-pfrac/verify.py --output build/bon-independent-pfrac-verification.json
-          python3 -I -S validation/rrtmgp37/bon-night-independent-opacity/verify.py --output build/bon-independent-opacity-verification.json
-          python3 -I -S validation/rrtmgp37/bon-night-common-angle/verify.py --output build/bon-night-common-angle-verification.json
-          python3 -I -S validation/rrtmgp37/bon-night-shared-source/verify.py --output build/bon-night-shared-source-verification.json
+          python3 -I -S validation/rrtmgp37/bon-night-planck-source/verify.py --source-root build/radius-stage-historical-source --output build/bon-planck-source-verification.json
+          python3 -I -S validation/rrtmgp37/bon-night-independent-pfrac/verify.py --source-root build/radius-stage-historical-source --output build/bon-independent-pfrac-verification.json
+          python3 -I -S validation/rrtmgp37/bon-night-independent-opacity/verify.py --source-root build/radius-stage-historical-source --output build/bon-independent-opacity-verification.json
+          python3 -I -S validation/rrtmgp37/bon-night-common-angle/verify.py --source-root build/radius-stage-historical-source --output build/bon-night-common-angle-verification.json
+          python3 -I -S validation/rrtmgp37/bon-night-shared-source/verify.py --source-root build/radius-stage-historical-source --output build/bon-night-shared-source-verification.json
   component-validation:
     needs: registration
     runs-on: ubuntu-24.04
