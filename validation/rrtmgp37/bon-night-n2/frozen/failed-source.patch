@@ -1,0 +1,98 @@
+--- /NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-lw-transport-attribution-v1/preparation/reference_column.f90
++++ /NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-n2-attribution-v1/preparation/reference_column.f90
+@@ -25,7 +25,7 @@
+   CHARACTER(LEN=1024) :: frozen_table_env,frozen_message
+   CHARACTER(LEN=64) :: frozen_sha_recorded,frozen_sha_raw
+   CHARACTER(LEN=32) :: magic,phase,policy_arg,next_section
+-  CHARACTER(LEN=32) :: lw_transport_arg
++  CHARACTER(LEN=32) :: lw_transport_arg,n2_override_arg
+   INTEGER :: nc,nl,overlap,seed,iceflag,u_in,u_out,ios,nemis,sw_policy
+   INTEGER :: lw_transport_policy,arg_status
+   INTEGER :: audit_native_n,audit_sidecar_species,audit_expected_native
+@@ -37,11 +37,14 @@
+   LOGICAL :: use_precip,has_native_mass,frozen_enabled,sw_direct_enabled,cu_population_enabled,cu_active
+   LOGICAL :: audit_sidecar_present,audit_precip_active
+   LOGICAL :: lw_transport_requested
++  LOGICAL :: n2_override_requested
+   REAL(wp) :: cu_policy_value
++  REAL(wp) :: n2_override_vmr
+   INTEGER :: ice_roughness
+   REAL(wp), ALLOCATABLE :: play(:,:),plev(:,:),tlay(:,:),tlev(:,:),tsfc(:,:)
+   REAL(wp), ALLOCATABLE :: h2o(:,:),co2(:,:),o3(:,:),n2o(:,:),ch4(:,:),o2(:,:)
+   REAL(wp), ALLOCATABLE :: vmr_cfc11(:,:),vmr_cfc12(:,:),vmr_cfc22(:,:),vmr_ccl4(:,:)
++  REAL(wp), ALLOCATABLE :: vmr_n2(:,:)
+   REAL(wp), ALLOCATABLE :: col_dry(:,:),native_dry_mass(:,:)
+   REAL(wp), ALLOCATABLE :: gwp(:,:),hwp(:,:),lambda_g(:,:),lambda_h(:,:),frozen_hash_bytes(:,:)
+   REAL(real64), ALLOCATABLE :: frozen_gt(:,:,:),frozen_ht(:,:,:),frozen_gw(:,:,:),frozen_hw(:,:,:)
+@@ -101,6 +104,8 @@
+   CHARACTER(LEN=3), PARAMETER :: gas_names_sw(6)=['h2o','co2','o3 ','n2o','ch4','o2 ']
+   CHARACTER(LEN=5), PARAMETER :: gas_names_lw(10)=['h2o  ','co2  ','o3   ','n2o  ','ch4  ', &
+                                                     'o2   ','cfc11','cfc12','cfc22','ccl4 ']
++  CHARACTER(LEN=5), PARAMETER :: gas_names_lw_with_n2(11)=['h2o  ','co2  ','o3   ','n2o  ','ch4  ', &
++                                                            'o2   ','cfc11','cfc12','cfc22','ccl4 ','n2   ']
+ 
+   CALL get_command_argument(1,data_dir)
+   CALL get_command_argument(2,input_path)
+@@ -124,6 +129,22 @@
+     CASE DEFAULT; ERROR STOP 'LW_TRANSPORT_POLICY must be exactly 1, 2, or 3'
+     END SELECT
+   END IF
++  n2_override_arg=''; n2_override_vmr=0._wp
++  n2_override_requested=COMMAND_ARGUMENT_COUNT()>=8
++  IF(n2_override_requested) THEN
++    CALL get_command_argument(8,n2_override_arg,STATUS=arg_status)
++    IF(arg_status/=0) ERROR STOP 'N2_OVERRIDE argument is too long'
++    n2_override_arg=ADJUSTL(n2_override_arg)
++    IF(LEN_TRIM(n2_override_arg)==0) ERROR STOP 'N2_OVERRIDE must be one numeric value'
++    IF(INDEX(TRIM(n2_override_arg),' ')/=0.OR. &
++       VERIFY(TRIM(n2_override_arg),'0123456789.+-eEdD')/=0.OR. &
++       SCAN(TRIM(n2_override_arg),'0123456789')==0) ERROR STOP 'N2_OVERRIDE must be one numeric value'
++    READ(TRIM(n2_override_arg),*,IOSTAT=ios) n2_override_vmr
++    IF(ios/=0) ERROR STOP 'N2_OVERRIDE must be one numeric value'
++    IF(.NOT.ieee_is_finite(n2_override_vmr).OR.n2_override_vmr<0._wp.OR.n2_override_vmr>1._wp) &
++      ERROR STOP 'N2_OVERRIDE must be finite and in [0,1]'
++    IF(.NOT.lw_transport_requested) ERROR STOP 'N2_OVERRIDE requires explicit LW_TRANSPORT_POLICY argument 7'
++  END IF
+   IF(LEN_TRIM(data_dir)==0 .OR. LEN_TRIM(input_path)==0 .OR. LEN_TRIM(output_path)==0) &
+     ERROR STOP 'usage: reference_column DATA_DIR INPUT_FILE OUTPUT_FILE [SW_POLICY 1|2|3] [SW_OPTICS_OVERRIDE_FILE] [CF0_AUDIT_SIDECAR]'
+   sw_policy=1
+@@ -146,6 +167,7 @@
+   IF(ios/=0 .OR. (TRIM(phase)/='LW' .AND. TRIM(phase)/='SW')) ERROR STOP 'invalid replay header'
+   IF(TRIM(phase)=='SW'.AND.lw_transport_requested.AND.lw_transport_policy/=1) &
+     ERROR STOP 'LW_TRANSPORT_POLICY other than 1 is only valid for LW'
++  IF(TRIM(phase)=='SW'.AND.n2_override_requested) ERROR STOP 'N2_OVERRIDE is only valid for LW'
+   sw_direct_enabled=.FALSE.
+   cu_population_enabled=.FALSE.; cu_active=.FALSE.
+   IF((TRIM(magic)=='RRTMGP_REPLAY_V8'.OR.TRIM(magic)=='RRTMGP_REPLAY_V10').AND.TRIM(phase)/='LW') &
+@@ -636,7 +658,11 @@
+   END IF
+   avdir=avdir_in(:,1); avdif=avdif_in(:,1); andir=andir_in(:,1); andif=andif_in(:,1)
+   mu0=mu0_in(:,1)
+-  CALL check_error(gases_lw%init(gas_names_lw))
++  IF(n2_override_requested) THEN
++    CALL check_error(gases_lw%init(gas_names_lw_with_n2))
++  ELSE
++    CALL check_error(gases_lw%init(gas_names_lw))
++  END IF
+   CALL check_error(gases_sw%init(gas_names_sw))
+   CALL load_and_init(gas_lw,TRIM(data_dir)//'/rrtmgp-gas-lw-g128.nc',gases_lw)
+   CALL load_and_init(gas_sw,TRIM(data_dir)//'/rrtmgp-gas-sw-g112.nc',gases_sw)
+@@ -664,6 +690,10 @@
+   CALL check_error(gases_lw%set_vmr('cfc12',vmr_cfc12))
+   CALL check_error(gases_lw%set_vmr('cfc22',vmr_cfc22))
+   CALL check_error(gases_lw%set_vmr('ccl4',vmr_ccl4))
++  IF(n2_override_requested) THEN
++    ALLOCATE(vmr_n2(nc,nl)); vmr_n2=n2_override_vmr
++    CALL check_error(gases_lw%set_vmr('n2',vmr_n2))
++  END IF
+ 
+   ! V1-V5 retain historical pressure-derived dry columns. V6/V7 replace the
+   ! host-provided native prefix when that optional independent mass is present.
+@@ -1210,6 +1240,7 @@
+       policy_value(1,1,1)=4._wp
+       CALL write3(unit,'GAUSS_ANGLE_COUNT',policy_value)
+     END IF
++    IF(n2_override_requested) CALL write3(unit,'N2_OVERRIDE',RESHAPE([n2_override_vmr],[1,1,1]))
+     CLOSE(unit,IOSTAT=stat)
+     IF(stat/=0) ERROR STOP 'failed to close LW transport trace'
+   END SUBROUTINE write_lw_transport_trace

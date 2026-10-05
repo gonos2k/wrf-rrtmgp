@@ -1,0 +1,82 @@
+{
+  "actual_build_or_solver_calls": 0,
+  "negative_cases": [
+    {
+      "arg7": "1",
+      "arg8": "-0.01",
+      "expected": "reject finite/range gate",
+      "phase": "LW"
+    },
+    {
+      "arg7": "1",
+      "arg8": "1.01",
+      "expected": "reject finite/range gate",
+      "phase": "LW"
+    },
+    {
+      "arg7": "1",
+      "arg8": "NaN",
+      "expected": "reject numeric grammar or non-finite gate",
+      "phase": "LW"
+    },
+    {
+      "arg7": "1",
+      "arg8": "0.5 0.6",
+      "expected": "reject internal whitespace/extra token",
+      "phase": "LW"
+    },
+    {
+      "arg7": "1",
+      "arg8": "/",
+      "expected": "reject numeric grammar before internal READ",
+      "phase": "LW"
+    },
+    {
+      "arg7": "1",
+      "arg8": "empty token at argv position 8",
+      "expected": "reject because argument count says supplied but token is empty",
+      "phase": "LW"
+    },
+    {
+      "arg7": "1",
+      "arg8": "over-32-character value",
+      "expected": "reject truncated argument",
+      "phase": "LW"
+    },
+    {
+      "arg7": "absent",
+      "arg8": "0.7808",
+      "expected": "reject because trace/policy arg7 was not explicitly selected",
+      "phase": "LW"
+    },
+    {
+      "arg7": "1",
+      "arg8": "0.7808",
+      "expected": "reject N2 override for SW before gas/radiation calls",
+      "phase": "SW"
+    }
+  ],
+  "planned_call_count": 3,
+  "schema": "bon-night-n2-attribution-cli-checks-v2",
+  "status": "PLANNED_NOT_RUN_NO_BUILD_OR_SOLVER",
+  "three_same_input_calls": [
+    {
+      "arg7": "1",
+      "arg8": "absent (COMMAND_ARGUMENT_COUNT()<8)",
+      "expected": "legacy 10-gas initialization; trace emitted because arg7 is explicit; main result uses default dry N2 VMR",
+      "label": "transport-baseline"
+    },
+    {
+      "arg7": "1",
+      "arg8": "0.0",
+      "expected": "11-gas LW init with N2 VMR all zero; N2_OVERRIDE=0 section in transport sidecar",
+      "label": "explicit-zero-control"
+    },
+    {
+      "arg7": "1",
+      "arg8": "0.7808",
+      "expected": "11-gas LW init with N2 VMR 0.7808 at every column/layer; N2_OVERRIDE=0.7808 in sidecar",
+      "label": "primary-n2-example"
+    }
+  ]
+}
