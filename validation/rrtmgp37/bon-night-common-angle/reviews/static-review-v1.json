@@ -1,0 +1,112 @@
+{
+  "blocking_findings": [],
+  "created_utc": "2026-10-05T09:15:25.765463+00:00",
+  "limitations": [
+    "Exact legacy angle removes lookup, thin-layer polynomial and float32 approximations; it is not a reconstruction of the retained native bitwise recurrence (already separately validated).",
+    "Both exact emissions use the algebraically shared linear thermal-source closure, with engine-native source fractions and optical depths. Legacy uses layer-local fractions at faces; GP uses captured geometric interlayer fractions.",
+    "Own-spectrum common-angle residual still combines optical coefficients, k-discretization and source-fraction interpolation; it is not pure opacity causality or a physical accuracy judgment.",
+    "No across-engine gpoint pairing, optical-depth/source swapping, source-fraction renormalization, production source changes or new compiled RTE/replay/model/build.",
+    "All-engine totals have different band edges and remain unpaired spectrum totals; the paired attribution is common bands3-13."
+  ],
+  "meaningful_controls_present_not_executed": [
+    "transparent zero-tau emission0",
+    "independent hand-derived two-layer/three-gpoint isothermal slab sum3*pi*(1-exp(-2/.6))",
+    "GP emitter vs own recurrence and prior output",
+    "GP integral vs prior reviewed integral",
+    "four-term telescope closure"
+  ],
+  "next_action": "No static blocker to one bounded root-owned Python calculation; final actual convergence, closures and layer contributions require saved terminal readback.",
+  "pre_run_refinements": {
+    "changes": "Owner added optical_scope pin/exact assembled gas equality and aggregate convergence gates before any numerical run. Final reviewed hashes above supersede draft.",
+    "draft_sha256": "c311060eba99c20922c80002df2d3e3b5a887638316703d34744dd7e9ae248d4",
+    "withdrawn_concern": "Possible tiny frozen contribution in assembled GP TOTAL_TAU is excluded by exact saved-array gate plus existing optical-scope evidence; no such assembled contribution asserted for this case."
+  },
+  "reviewed": {
+    "pins": {
+      "angular_helper": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-lw-angular-math-v1/angular_reference.py",
+        "sha256": "a64dfa9f3ff90cc788028c1cb0f5ab4d0be1316c49ef74e833b8dddc4eb5cb48",
+        "size_bytes": 13139
+      },
+      "common_result": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-common-band-source-math-v1/result.json",
+        "sha256": "e09857e32dfe021f84706ed4e6f0f5074458ef4b44cb3b13b3d6c43924cc2040",
+        "size_bytes": 302546
+      },
+      "gp_result": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-n2-attribution-v1/run-preparation-v1/run-v1/n2-0p7808.result",
+        "sha256": "b578e9983b5817297db75baac026af98b84a3cbcd3653aadf2e4db5930ce5732",
+        "size_bytes": 763371
+      },
+      "gp_source": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-n2-attribution-v1/run-preparation-v1/run-v1/n2-0p7808.result.lw_transport",
+        "sha256": "bb53daf55ea9b6f91c9d0dbc4f132eff11b3ab76fd278bacb327571a1642e792",
+        "size_bytes": 308081
+      },
+      "input": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-dry-column-attribution-v1/matched-legacy-dry.input",
+        "sha256": "292f9569b059c373c9cb14f1574cb8835627331574592a19d641ef07c21ec918",
+        "size_bytes": 39535
+      },
+      "legacy_actual_replay": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-legacy-lw-actual-math-v1/result.json",
+        "sha256": "fe33f4e670083ebdba0b501a5ef3a199f42bcb6487126a965ec5161142f57086",
+        "size_bytes": 2846
+      },
+      "legacy_actual_review": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-legacy-lw-actual-math-review-v1/review.json",
+        "sha256": "c77dd45bf0ab9fb857f1fc3e6c234a35a9f1c135b55a4393566dc7ae00f99330",
+        "size_bytes": 7548
+      },
+      "legacy_helper": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-legacy-lw-math-v2/legacy_lw_replay.py",
+        "sha256": "691497decf3992435ada71b6af84e25e88773f534f385c1a56050e370a1aea00",
+        "size_bytes": 16092
+      },
+      "legacy_source": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-independent-opacity-pr-work/WRF/phys/module_ra_rrtmg_lw.F",
+        "sha256": "09164a1048f2be2001ac6e161da3c0c48f9e74e4ff57271f445032392d9153ef",
+        "size_bytes": 713929
+      },
+      "optical_scope": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-common-band-source-math-v1/optical-scope-addendum-v1.json",
+        "sha256": "2327e14f1b1311a17d2b44622c7b2e527e6834b396ef8a9a76dbc05fe05331a7",
+        "size_bytes": 722
+      },
+      "packet": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-legacy-lw-source-export-bon-audit-v2/cases/SOURCE_ON/legacy-export/rrtmg4_d01_i13_j46_step721_lw.txt",
+        "sha256": "bd614b57362b48ab8e00b179fc3464925b9c49a8eef0a472489f87fd89e15c7f",
+        "size_bytes": 2539937
+      }
+    },
+    "plan": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-common-angle-attribution-v1/plan.json",
+      "sha256": "34ca6fe02230cb01ea97eef4a47943d337b50c1be6786fae04b8c595b8707962",
+      "size_bytes": 5225
+    },
+    "script": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-common-angle-attribution-v1/analyze.py",
+      "sha256": "05bb1bcac5d3a03f79c2df3dffff4bb0acf42c92e4e7369d2c094c2a22fe3ea2",
+      "size_bytes": 8961
+    }
+  },
+  "reviewer_actions": {
+    "numerical_integration_model_build_RTE_replay_calls": 0,
+    "recurrence_emission_quadrature_evaluations": 0,
+    "source_or_plan_edits": 0,
+    "text_AST_and_all11_pin_checks_only": true
+  },
+  "schema": "common-angle-attribution-precalculation-review-v1",
+  "source_and_math_checks": {
+    "algebra": "(GPnative\u2212GPintegral)+(GPintegral\u2212Lintegral)+(Lintegral\u2212Lexactnative)+(Lexactnative\u2212Lcaptured)=GPnative\u2212Lcaptured perband. Code checks four-term closure, ownGP native emitter vs recurrence/prior band values, and GP integral vs prior reviewed result.",
+    "emissivity": "Atmospheric downward emitters receive no emissivity factor; auxiliary ownGP transfer applies EMIS only at upward surface boundary, which cannot alter DN in this absorption-only closure.",
+    "layer_face_order": "Legacy tau transpose45x140, layer source16x45, lower face0..44 with emitting-layer local fraction; GP TOTAL45x128 and SOURCE_LEVEL lower faces0..44 preserve bottom-first order. Attenuation sums tau below emitter excluding self; TOA incident down intensity0. GP captured geometric face fractions remain distinct from legacy layer-local fractions.",
+    "legacy_source_identity": "Pinned LW8117 tfn=1\u22122*(1/x\u2212exp(\u2212x)/(1\u2212exp(\u2212x))). With A=1\u2212exp(\u2212x), A*[B_layer+(B_lower\u2212B_layer)*tfn]=A*B_lower+2*(A/x\u2212exp(\u2212x))*(B_layer\u2212B_lower), exactly the analytic source used by emission(). Legacy fraction applies locally to both sources.",
+    "own_spectra": "Legacy140 gpoints selected by own GPOINT_TO_BAND, GP128 by own BAND_LIMITS_GPOINT. Exact common edges3\u201313 checked; other totals explicitly unpaired. No cross-engine gpoint pairing or optical/source exchange.",
+    "quadrature": "Jacobi(alpha0,beta1), mu=(x+1)/2, w/2 integrates2mu dmu with sum1. Final code gates successive changes separately for emitter cells, band sums, each engine common3\u201313 sum and all16-band sum <=1e\u22129 Wm\u22122; orders256/512/1024/2048, hard fail if none converges. This is a successive numerical criterion, not an independent physical accuracy oracle.",
+    "state_and_optical_scope": "PLAY/PLEV/TLAY/TLEV exact input joins; legacy masks inactive. Final script explicitly requires GP TOTAL_TAU==GAS_TAU_RAW==GAS_TAU. Pinned optical addendum attests tiny frozen diagnostic<=3.011e\u221240 is unassembled in this retained call, so assembled GP target is exactly gas-only. No general no-hydrometeor policy or allsky equivalence inferred.",
+    "thin_layer_scope": "Uses expm1 and small-x fact series x/2\u2212x\u00b2/3+x\u00b3/8 below eps^0.25 to avoid cancellation. It is REAL64 analytic evaluation with local numerical series, not original legacy tau<=.06/Pade lookup/REAL32 recurrence; the separately validated original recurrence is pinned, not rerun.",
+    "units": "Legacy sources multiplied once by DELWAVE*WTDIFF*FLUXFAC/pi; emission multiplies pi once. Captured WTDIFF=.5 required. Captured native band DN already includes WTDIFF, so it receives DELWAVE*FLUXFAC only. Retained rounded FLUXFAC used consistently; no exact SI table-generation history asserted."
+  },
+  "status": "PASS_SCOPED_STATIC_ANALYTIC_CLOSURE_SOURCE_UNITS_AND_INDEXING"
+}
