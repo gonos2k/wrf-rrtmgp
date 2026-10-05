@@ -3180,7 +3180,8 @@ CONTAINS
                   IF(engine==37) native=1
                   ah=0.;af=0.;ao3=O3RAD
                   IF(m==0.AND.engine==4.AND.native==1.AND.selected_column) &
-                    CALL rrtmg4_export_begin('sw',id,itimestep,xtime*60.,target_i,target_j)
+                    CALL rrtmg4_export_begin('sw',id,itimestep,xtime*60.,target_i,target_j, &
+                                              solar_cosine=coszen(target_i,target_j))
                   CALL RRTMG_SWRAD( &
                     p8w=p8w, &
                     p3d=p, &
