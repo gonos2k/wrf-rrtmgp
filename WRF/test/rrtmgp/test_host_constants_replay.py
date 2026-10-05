@@ -48,15 +48,16 @@ def main() -> int:
             if not input_path.exists() or not actual_path.exists():
                 raise RuntimeError(f"missing {phase.upper()} replay capture")
             lines = input_path.read_text(encoding="ascii").splitlines()
-            if not lines or lines[0].strip() != "RRTMGP_REPLAY_V5":
-                raise RuntimeError(f"{phase.upper()} capture did not use replay V5")
+            expected_magic = "RRTMGP_REPLAY_V12" if phase == "lw" else "RRTMGP_REPLAY_V5"
+            if not lines or lines[0].strip() != expected_magic:
+                raise RuntimeError(f"{phase.upper()} capture did not use replay {expected_magic[-3:]}")
             records = {line.split()[0].upper(): idx for idx, line in enumerate(lines[2:], start=2)
                        if line.split() and line.split()[0].upper() in {"GRAVITY", "CP_DRY", "MOL_WEIGHT_DRY"}}
             for name, expected in (("GRAVITY", 9.81), ("CP_DRY", 1004.5), ("MOL_WEIGHT_DRY", .028966)):
                 if name not in records or len(lines[records[name]].split()) != 3:
-                    raise RuntimeError(f"{phase.upper()} V5 missing scalar {name}")
+                    raise RuntimeError(f"{phase.upper()} {expected_magic[-3:]} missing scalar {name}")
                 if abs(float(lines[records[name] + 1].split()[0]) - expected) > max(1.e-9, abs(expected) * 2.e-7):
-                    raise RuntimeError(f"{phase.upper()} V5 {name} does not preserve host initialization")
+                    raise RuntimeError(f"{phase.upper()} {expected_magic[-3:]} {name} does not preserve host initialization")
             reference_path = root / f"{phase}.reference.result"
             run([str(ref_exe), str(data), str(input_path), str(reference_path)], env,
                 f"{phase.upper()} independent replay")

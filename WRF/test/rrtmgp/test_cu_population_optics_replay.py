@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Capture and independently replay CU optics fixtures for V10/V11 and legacy formats."""
+"""Capture and independently replay CU optics fixtures for V13/V11 and legacy formats."""
 from __future__ import annotations
 
 import argparse
@@ -12,6 +12,8 @@ import tempfile
 import time
 from pathlib import Path
 from typing import Any
+
+import numpy as np
 
 from compare_column_replay import compare, read_result
 from test_column_replay import read_input
@@ -92,11 +94,11 @@ def execute(args: argparse.Namespace) -> dict[str, Any]:
     env["OMP_DYNAMIC"] = "FALSE"
     env["OPENBLAS_NUM_THREADS"] = "1"
     env["WRF_RRTMGP_FROZEN_TABLE"] = str(table)
-    versions = {"capture": {"LW": "RRTMGP_REPLAY_V10", "SW": "RRTMGP_REPLAY_V11"},
-                "overlap_zero": {"LW": "RRTMGP_REPLAY_V10", "SW": "RRTMGP_REPLAY_V11"},
-                "no_precip": {"LW": "RRTMGP_REPLAY_V10", "SW": "RRTMGP_REPLAY_V11"},
-                "capture_zero": {"LW": "RRTMGP_REPLAY_V10", "SW": "RRTMGP_REPLAY_V11"},
-                "capture_absent": {"LW": "RRTMGP_REPLAY_V8", "SW": "RRTMGP_REPLAY_V9"}}
+    versions = {"capture": {"LW": "RRTMGP_REPLAY_V13", "SW": "RRTMGP_REPLAY_V11"},
+                "overlap_zero": {"LW": "RRTMGP_REPLAY_V13", "SW": "RRTMGP_REPLAY_V11"},
+                "no_precip": {"LW": "RRTMGP_REPLAY_V13", "SW": "RRTMGP_REPLAY_V11"},
+                "capture_zero": {"LW": "RRTMGP_REPLAY_V13", "SW": "RRTMGP_REPLAY_V11"},
+                "capture_absent": {"LW": "RRTMGP_REPLAY_V12", "SW": "RRTMGP_REPLAY_V9"}}
     receipt: dict[str, Any] = {
         "status": "RUNNING", "cases": [],
         "pins": {"generator": {"path": str(generator), "sha256": sha256(generator)},
@@ -133,6 +135,18 @@ def execute(args: argparse.Namespace) -> dict[str, Any]:
                 if input_version != expected_version or phase_tag != phase or \
                         overlap != expected_overlap or (nc, nl) != (2, 3):
                     raise ValueError(f"{input_path}: unexpected header/version {input_version} {nc}x{nl} overlap={overlap}")
+                if phase == "LW":
+                    n2 = adapter.get("VMR_N2")
+                    flag = adapter.get("TRACE_GASES_PRESENT")
+                    if n2 is None or n2.shape != (nc, nl) or not np.isfinite(n2).all() or \
+                            not np.all(n2 == 0.7808):
+                        raise ValueError(f"{input_path}: LW N2 background trace is missing or not exactly 0.7808")
+                    if flag is None or flag.shape != (1, 1) or flag.item() not in (0.0, 1.0):
+                        raise ValueError(f"{input_path}: LW CFC presence flag is missing/invalid")
+                    cfc_names = {"VMR_CFC11", "VMR_CFC12", "VMR_CFC22", "VMR_CCL4"}
+                    cfc_present = cfc_names & adapter.keys()
+                    if (flag.item() == 1.0 and cfc_present != cfc_names) or (flag.item() == 0.0 and cfc_present):
+                        raise ValueError(f"{input_path}: LW CFC arrays disagree with explicit trace-gas flag")
                 cu_names = {"CU_POPULATION_POLICY", "CU_RADIUS_POLICY", "CU_OCCURRENCE_POLICY",
                             "CU_LWP", "CU_IWP", "CU_REL", "CU_REI"}
                 cu_records = cu_names & adapter.keys()

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Synthetic CFC input contract and independent replay regression for LW."""
+"""Synthetic N2/CFC input contract and independent replay regression for LW."""
 from __future__ import annotations
 
 import argparse
@@ -12,6 +12,8 @@ import tempfile
 from pathlib import Path
 
 import numpy as np
+
+from test_column_replay import ReplayError, read_input
 
 
 EXPECTED = {
@@ -105,8 +107,8 @@ def compare_reference(ref: Path, data: Path, input_file: Path, output_file: Path
             raise AssertionError(f"{name} differs from independent replay: max={maxima[name]:.9g}")
     # GAS_TAU is emitted at adapter/default-REAL precision, while the reference
     # writer preserves wp precision. Compare with float32 rounding allowance.
-    # The adapter keeps GAS_TAU for legacy consumers and adds RAW only in V8.
-    # V8 reference support is being tested as part of this contract.
+    # The adapter retains GAS_TAU and exposes the same raw optical record.
+    # V12/V13 add N2 provenance without reinterpreting any V1-V11 input.
     gas_key = "GAS_TAU_RAW" if "GAS_TAU_RAW" in actual else "GAS_TAU"
     ref_key = "GAS_TAU_RAW" if "GAS_TAU_RAW" in expected else "GAS_TAU"
     if gas_key not in actual or ref_key not in expected:
@@ -117,6 +119,60 @@ def compare_reference(ref: Path, data: Path, input_file: Path, output_file: Path
     if np.any(delta > tol):
         raise AssertionError(f"GAS_TAU_RAW differs from independent replay: max={maxima['GAS_TAU_RAW']:.9g}")
     return maxima
+
+
+def rewrite_section(source: Path, destination: Path, name: str, *,
+                    header: str | None = None, values: list[str] | None = None,
+                    remove: bool = False) -> None:
+    """Rewrite one numeric section while preserving the rest of the fixture."""
+    lines = source.read_text(encoding="ascii").splitlines()
+    out = lines[:2]
+    pos = 2
+    found = False
+    while pos < len(lines):
+        fields = lines[pos].split()
+        if len(fields) != 3:
+            raise ValueError(f"{source}:{pos+1}: malformed input section")
+        section = fields[0].upper()
+        count = int(fields[1]) * int(fields[2])
+        end = pos + 1
+        tokens = 0
+        while tokens < count and end < len(lines):
+            tokens += len(lines[end].split())
+            end += 1
+        if tokens != count:
+            raise ValueError(f"{source}: truncated {section}")
+        if section == name.upper():
+            if found:
+                raise ValueError(f"{source}: duplicate {section}")
+            found = True
+            if not remove:
+                out.append(header or lines[pos])
+                out.extend(values if values is not None else lines[pos+1:end])
+        else:
+            out.extend(lines[pos:end])
+        pos = end
+    if not found and not remove:
+        raise ValueError(f"{source}: missing {name}")
+    destination.write_text("\n".join(out) + "\n", encoding="ascii")
+
+
+def reject_bad_replay(reference: Path, data: Path, source: Path, work: Path,
+                      label: str, *, name: str, header: str | None = None,
+                      values: list[str] | None = None, remove: bool = False) -> None:
+    invalid = work / f"invalid-{label}.input"
+    rewrite_section(source, invalid, name, header=header, values=values, remove=remove)
+    try:
+        read_input(invalid)
+    except ReplayError:
+        pass
+    else:
+        raise AssertionError(f"Python reader accepted malformed N2 replay {label}")
+    output = work / f"invalid-{label}.result"
+    proc = subprocess.run([str(reference), str(data), str(invalid), str(output)],
+                          text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, check=False)
+    if proc.returncode == 0:
+        raise AssertionError(f"reference accepted malformed N2 replay {label}")
 
 
 def main() -> int:
@@ -149,36 +205,62 @@ def main() -> int:
             magic, dims, inp = parse_records(input_path, result=False)
             _, _, out = parse_records(result_path, result=True)
             report["modes"][mode] = {"magic": magic, "dimensions": dims, "metrics": {}}
-            if mode == "absent":
-                if magic not in {"RRTMGP_REPLAY_V5", "RRTMGP_REPLAY_V6", "RRTMGP_REPLAY_V7"}:
-                    raise AssertionError(f"legacy omitted-CFC path unexpectedly wrote {magic}")
-            else:
-                if magic != "RRTMGP_REPLAY_V8":
-                    raise AssertionError(f"explicit CFC path should write V8, got {magic}")
-                if "GAS_TAU_RAW" not in out:
-                    raise AssertionError("V8 result omitted GAS_TAU_RAW")
-                if not np.array_equal(out["GAS_TAU"], out["GAS_TAU_RAW"]):
-                    raise AssertionError("GAS_TAU_RAW is not identical to retained GAS_TAU")
-                for species, section in INPUT_NAMES.items():
+            if magic != "RRTMGP_REPLAY_V12":
+                raise AssertionError(f"LW trace without CU should use V12, got {magic}")
+            if "VMR_N2" not in inp or inp["VMR_N2"].shape != dims or \
+                    not np.all(inp["VMR_N2"] == 0.7808):
+                raise AssertionError("V12 did not retain the exact fixed WP N2 profile")
+            if "TRACE_GASES_PRESENT" not in inp or inp["TRACE_GASES_PRESENT"].shape != (1, 1):
+                raise AssertionError("V12 omitted explicit CFC-presence metadata")
+            if "GAS_TAU_RAW" not in out or not np.array_equal(out["GAS_TAU"], out["GAS_TAU_RAW"]):
+                raise AssertionError("V12 result omitted or changed GAS_TAU_RAW")
+            expected_flag = 0.0 if mode == "absent" else 1.0
+            if inp["TRACE_GASES_PRESENT"].item() != expected_flag:
+                raise AssertionError(f"V12 trace-gas presence flag is wrong for {mode}")
+            for species, section in INPUT_NAMES.items():
+                if expected_flag:
                     if section not in inp:
-                        raise AssertionError(f"V8 trace omitted {section}")
-                    # Wrapper API is default REAL; trace serializes the exact
-                    # binary32 argument widened to text, not the Python source
-                    # decimal. Compare that representable fixture value.
+                        raise AssertionError(f"V12 trace omitted {section}")
+                    # CFC arguments come from the host's default REAL API.
                     expected = float(np.float32(EXPECTED[species])) if mode in {species, "all"} else 0.0
                     if not np.all(inp[section] == expected):
                         raise AssertionError(f"{section} does not match synthetic fixture for {mode}")
+                elif section in inp:
+                    raise AssertionError(f"V12 should omit {section} when TRACE_GASES_PRESENT=0")
             report["modes"][mode]["_input"] = str(input_path)
             report["modes"][mode]["_result"] = str(result_path)
 
-        # Verify absent and explicitly-zero inputs preserve the former six-gas
-        # behavior exactly at both the adapter's trace and public outputs.
+        # Reject malformed fixed-N2 metadata in both the independent Python
+        # reader and compiled reference, including missing, malformed-shape,
+        # nonfinite, and out-of-range inputs.
+        valid_n2_input = Path(report["modes"]["absent"]["_input"])
+        nl = report["modes"]["absent"]["dimensions"][1]
+        reject_bad_replay(args.reference.resolve(), args.data_dir.resolve(), valid_n2_input, work,
+                          "n2-missing", name="VMR_N2", remove=True)
+        reject_bad_replay(args.reference.resolve(), args.data_dir.resolve(), valid_n2_input, work,
+                          "n2-shape", name="VMR_N2", header="VMR_N2 1 1", values=["0.7808"])
+        reject_bad_replay(args.reference.resolve(), args.data_dir.resolve(), valid_n2_input, work,
+                          "n2-nonfinite", name="VMR_N2", values=["NaN"] + ["0.7808"] * (nl - 1))
+        reject_bad_replay(args.reference.resolve(), args.data_dir.resolve(), valid_n2_input, work,
+                          "n2-range", name="VMR_N2", values=["1.01"] + ["0.7808"] * (nl - 1))
+        reject_bad_replay(args.reference.resolve(), args.data_dir.resolve(), valid_n2_input, work,
+                          "trace-flag-range", name="TRACE_GASES_PRESENT", values=["2.0"])
+        reject_bad_replay(args.reference.resolve(), args.data_dir.resolve(), valid_n2_input, work,
+                          "trace-flag-missing", name="TRACE_GASES_PRESENT", remove=True)
+        report["invalid_inputs"].update({
+            "n2_missing": True, "n2_shape": True, "n2_nonfinite": True,
+            "n2_out_of_range": True, "trace_flag_out_of_range": True,
+            "trace_flag_missing": True,
+        })
+
+        # Verify omitted and explicitly-zero CFC inputs preserve the fixed
+        # N2 background path exactly at trace and public-output precision.
         _, _, absent = parse_records(Path(report["modes"]["absent"]["_result"]), result=True)
         _, _, zero = parse_records(Path(report["modes"]["zero"]["_result"]), result=True)
         for name in ("GAS_TAU", "TOTAL_TAU", "UP", "DN", "HR", "UPC", "DNC", "HRC"):
             if name not in absent or name not in zero or not np.array_equal(absent[name], zero[name]):
                 raise AssertionError(f"omitted and all-zero CFC paths differ in {name}")
-        report["absent_equals_explicit_zero"] = True
+        report["absent_equals_explicit_zero_with_fixed_n2"] = True
 
         # Independent direct-core replay must reproduce each synthetic case,
         # proving the captured optional V8 VMR fields are consumed in order.

@@ -336,10 +336,18 @@ def main() -> int:
             v3_input = capture / f"{phase.lower()}.input"
             v3_output = capture / f"{phase.lower()}.result"
             if not v3_input.is_file() or not v3_output.is_file():
-                fail(f"column driver did not capture V5 {phase} input and result")
+                fail(f"column driver did not capture {phase} input and result")
             parsed_phase, nc, nl, overlap, seed, iceflag, records = read_input(v3_input)
             if (parsed_phase, nc, nl) != (phase, 1, 3):
-                fail(f"unexpected V5 {phase} header {(parsed_phase, nc, nl)}")
+                fail(f"unexpected replay {phase} header {(parsed_phase, nc, nl)}")
+            if phase == "LW":
+                if v3_input.read_text(encoding="ascii").splitlines()[0].strip() != "RRTMGP_REPLAY_V12":
+                    fail("current LW adapter capture must use N2-explicit V12")
+                if "VMR_N2" not in records or not np.all(records["VMR_N2"] == 0.7808):
+                    fail("current LW adapter capture lost the fixed dry-background N2 profile")
+                invalid_old_n2 = root / "lw.v10.with-new-n2-fields.input"
+                rewrite_input(v3_input, invalid_old_n2, "RRTMGP_REPLAY_V10")
+                must_reject_python(invalid_old_n2, "N2 fields under legacy V10 magic")
             if phase == "SW":
                 policy = records.get("SW_BAND_PARTITION")
                 if policy is None or policy.shape != (1, 1) or policy.item() != 1.0:
@@ -347,39 +355,56 @@ def main() -> int:
             elif "SW_BAND_PARTITION" in records:
                 fail("LW input must not carry SW_BAND_PARTITION")
 
-            v3_reference = root / f"{phase.lower()}.v5.reference.result"
+            v3_reference = root / f"{phase.lower()}.current.reference.result"
             ref_run = run_reference(reference_exe, data_dir, v3_input, v3_reference)
             if ref_run.returncode != 0:
-                fail(f"reference rejected captured V5 {phase}: {ref_run.stdout[-1600:]}")
-            report = assert_result_match(v3_output, v3_reference, f"captured V5 {phase}")
+                fail(f"reference rejected captured {phase}: {ref_run.stdout[-1600:]}")
+            report = assert_result_match(v3_output, v3_reference, f"captured current {phase}")
             summary["phases"][phase] = {"header": [phase, nc, nl, overlap, seed, iceflag],
-                                         "v5_sections_compared": report["sections_compared"]}
+                                         "current_sections_compared": report["sections_compared"]}
+
+            # Legacy formats intentionally retain the historical ten-gas LW
+            # closure. Strip the explicitly new background N2 metadata before
+            # constructing those compatibility inputs; never relabel N2 data
+            # as an old V1-V11 stream.
+            legacy_v5 = v3_input
+            if phase == "LW":
+                legacy_v5 = root / "lw.v5.legacy-ten-gas.input"
+                rewrite_input(v3_input, legacy_v5, "RRTMGP_REPLAY_V5",
+                              remove={"VMR_N2", "TRACE_GASES_PRESENT"})
+            legacy_v5_output = root / f"{phase.lower()}.v5.legacy-ten-gas.result"
+            legacy_v5_run = run_reference(reference_exe, data_dir, legacy_v5, legacy_v5_output)
+            if legacy_v5_run.returncode != 0:
+                fail(f"reference rejected legacy ten-gas V5 {phase}: {legacy_v5_run.stdout[-1600:]}")
+            summary["phases"][phase]["legacy_ten_gas_v5_sections"] = \
+                len(read_result(legacy_v5_output)["sections"])
 
             # Legacy V4 has no constants metadata. Its independent solver must
             # retain the same exact upstream defaults as no-argument adapter init.
             v4_input = root / f"{phase.lower()}.v4.default.input"
             v4_output = root / f"{phase.lower()}.v4.default.result"
-            rewrite_default_v5_as_v4(v3_input, v4_input)
+            rewrite_default_v5_as_v4(legacy_v5, v4_input)
             v4_run = run_reference(reference_exe, data_dir, v4_input, v4_output)
             if v4_run.returncode != 0:
                 fail(f"reference rejected default-constant V4 {phase}: {v4_run.stdout[-1600:]}")
-            v4_report = assert_default_v4_match(v3_output, v4_output, phase)
+            legacy_current = legacy_v5_output if phase == "LW" else v3_output
+            v4_report = assert_default_v4_match(legacy_current, v4_output, phase)
             summary["phases"][phase]["default_v5_vs_v4_sections_compared"] = v4_report["sections_compared"]
 
             v2_input = root / f"{phase.lower()}.v2.input"
             v1_input = root / f"{phase.lower()}.v1.input"
             remove_v2 = {"SW_BAND_PARTITION"} if phase == "SW" else set()
             remove_v1 = {"ICE_ROUGHNESS"} | remove_v2
-            rewrite_input(v3_input, v2_input, "RRTMGP_REPLAY_V2", remove=remove_v2)
-            rewrite_input(v3_input, v1_input, "RRTMGP_REPLAY_V1", remove=remove_v1)
+            rewrite_input(legacy_v5, v2_input, "RRTMGP_REPLAY_V2", remove=remove_v2)
+            rewrite_input(legacy_v5, v1_input, "RRTMGP_REPLAY_V1", remove=remove_v1)
             for version, legacy_input in (("V2", v2_input), ("V1", v1_input)):
                 legacy_output = root / f"{phase.lower()}.{version.lower()}.result"
                 legacy_run = run_reference(reference_exe, data_dir, legacy_input, legacy_output)
                 if legacy_run.returncode != 0:
                     fail(f"reference rejected legacy {version} {phase}: {legacy_run.stdout[-1600:]}")
                 results[version][phase] = legacy_output
-            results["V3"][phase] = v3_output
-            inputs[phase] = v3_input
+            results["V3"][phase] = legacy_current
+            inputs[phase] = legacy_v5
 
         # V7 is a required new semantics boundary. Validate the complete
         # record set, then prove malformed V7 inputs reject before environment
@@ -442,7 +467,7 @@ def main() -> int:
         v8_zero_run = run_reference(reference_exe, data_dir, v8_input, v8_zero_output)
         if v8_zero_run.returncode != 0:
             fail(f"reference rejected valid zero-CFC V8: {v8_zero_run.stdout[-1600:]}")
-        v8_zero_comparison = compare(read_result(v8_zero_output), read_result(root / "lw.v5.reference.result"))
+        v8_zero_comparison = compare(read_result(v8_zero_output), read_result(root / "lw.v5.legacy-ten-gas.result"))
         if not v8_zero_comparison.get("passed"):
             fail(f"V8 zero-CFC versus V5 common LW sections differ: {v8_zero_comparison.get('failed_sections')}")
         v8_zero_sections = read_result(v8_zero_output)["sections"]

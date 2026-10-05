@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.20)
 project(WRF_RRTMGP_COLUMN_TEST LANGUAGES Fortran)
 enable_testing()
 find_package(Python3 REQUIRED COMPONENTS Interpreter)
+add_test(NAME lw_n2_result_contract COMMAND "${Python3_EXECUTABLE}" -B
+  "${CMAKE_CURRENT_SOURCE_DIR}/test_n2_result_contract.py")
 add_test(NAME cf0_precip_sidecar_python_contract COMMAND "${Python3_EXECUTABLE}" -B
   "${CMAKE_CURRENT_SOURCE_DIR}/test_cf0_precip_sidecar.py")
 add_test(NAME cf0_cu_precip_sidecar_context_contract COMMAND "${Python3_EXECUTABLE}" -B

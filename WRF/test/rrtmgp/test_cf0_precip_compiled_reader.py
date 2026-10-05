@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """Exercise reference_column's compiled CF0 precipitation sidecar reader.
 
-Fixtures are small synthetic adapter captures.  The SW V9 capture is projected
+Fixtures are small synthetic adapter captures. The SW capture is projected
 to its clear second column because the current reader deliberately supports
-one column only; positive sidecar paths are synthetic reader inputs, not a
+one column only; the projection preserves its schema and per-column records.
+Positive sidecar paths are synthetic reader inputs, not a
 claim that the projected adapter column carried that precipitation.
 """
 from __future__ import annotations
@@ -124,10 +125,13 @@ def project_clear_sw_column(source: Path, destination: Path) -> dict[str, Any]:
         raise RuntimeError("the selected SW fixture column is not an all-clear column")
     if "RES" not in projected or projected["RES"].shape != (1, nl) or np.any(projected["RES"] <= 10.0):
         raise RuntimeError("synthetic snow audit requires captured native RES above 10 um")
-    write_input(destination, "RRTMGP_REPLAY_V9", "SW", 1, nl, overlap, seed, iceflag, projected)
+    # This is a column projection, not a schema downgrade: preserve a newer
+    # SW capture's direct/CU records and magic while slicing per-column arrays.
+    write_input(destination, source.read_text(encoding="ascii").splitlines()[0].strip(),
+                "SW", 1, nl, overlap, seed, iceflag, projected)
     reread = read_input(destination)
     if reread[:3] != ("SW", 1, nl):
-        raise RuntimeError("projected one-column V9 input failed its parser roundtrip")
+        raise RuntimeError("projected one-column SW input failed its parser roundtrip")
     return {"source_capture_sha256": sha256(source), "projected_input_sha256": sha256(destination),
             "source_columns": nc, "selected_source_column_one_based": 2,
             "projected_columns": 1, "layers": nl,
@@ -184,13 +188,15 @@ def reject_reference(reference: Path, data_dir: Path, input_path: Path,
 def run_phase(reference: Path, data_dir: Path, root: Path, phase: str,
               input_path: Path, baseline_name: str) -> dict[str, Any]:
     magic, nc, nl, *_rest = read_input(input_path)
-    expected_magic = "RRTMGP_REPLAY_V8" if phase == "LW" else "RRTMGP_REPLAY_V9"
-    if input_path.read_text(encoding="ascii").splitlines()[0].strip() != expected_magic:
-        raise RuntimeError(f"{phase} fixture magic is not {expected_magic}")
+    actual_magic = input_path.read_text(encoding="ascii").splitlines()[0].strip()
+    allowed_magics = ({"RRTMGP_REPLAY_V8", "RRTMGP_REPLAY_V10", "RRTMGP_REPLAY_V12", "RRTMGP_REPLAY_V13"}
+                      if phase == "LW" else {"RRTMGP_REPLAY_V9", "RRTMGP_REPLAY_V11"})
+    if actual_magic not in allowed_magics:
+        raise RuntimeError(f"{phase} fixture magic {actual_magic} is outside {sorted(allowed_magics)}")
     if phase == "LW" and (magic, nc, nl) != ("LW", 1, 3):
-        raise RuntimeError("expected one-column three-layer LW V8 fixture")
+        raise RuntimeError("expected one-column three-layer LW replay fixture")
     if phase == "SW" and (magic, nc, nl) != ("SW", 1, 3):
-        raise RuntimeError("expected projected one-column three-layer SW V9 fixture")
+        raise RuntimeError("expected projected one-column three-layer SW replay fixture")
     records = _rest[-1]
     cf = records.get("CF")
     if cf is None or cf.shape != (1, nl) or not np.isfinite(cf).all():
@@ -202,7 +208,7 @@ def run_phase(reference: Path, data_dir: Path, root: Path, phase: str,
     baseline_path = root / f"{phase.lower()}-{baseline_name}.result"
     baseline = success_reference(reference, data_dir, input_path, baseline_path)
     results: dict[str, Any] = {
-        "input_magic": f"RRTMGP_REPLAY_V{8 if phase == 'LW' else 9}",
+        "input_magic": actual_magic,
         "dimensions": [1, nl],
         "baseline_sha256": sha256(baseline_path),
         "zero_controls": {},
@@ -308,8 +314,8 @@ def mutate_cf_input(source: Path, destination: Path, values: list[float]) -> Non
     if changed["CF"].shape != (1, nl) or len(values) != nl:
         raise RuntimeError("CF mutation requires a one-column input and one value per layer")
     changed["CF"][0, :] = np.asarray(values, dtype=np.float64)
-    write_input(destination, "RRTMGP_REPLAY_V8" if magic == "LW" else "RRTMGP_REPLAY_V9",
-                magic, nc, nl, overlap, seed, iceflag, changed)
+    source_magic = source.read_text(encoding="ascii").splitlines()[0].strip()
+    write_input(destination, source_magic, magic, nc, nl, overlap, seed, iceflag, changed)
 
 
 def main() -> int:

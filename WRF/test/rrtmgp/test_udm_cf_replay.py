@@ -30,6 +30,7 @@ PATHS = {"LWP": "LWP", "IWP": "IWP", "RWP": "RWP", "SWP": "SWP"}
 SUPPORTED_REPLAY_VERSIONS = {
     "RRTMGP_REPLAY_V4", "RRTMGP_REPLAY_V5", "RRTMGP_REPLAY_V6",
     "RRTMGP_REPLAY_V7", "RRTMGP_REPLAY_V8", "RRTMGP_REPLAY_V9",
+    "RRTMGP_REPLAY_V10", "RRTMGP_REPLAY_V11", "RRTMGP_REPLAY_V12", "RRTMGP_REPLAY_V13",
 }
 V9_DIRECT_RECORDS = {
     "SW_DIRECT_PREDELTA_POLICY", "TOA_GPOINT", "RAW_GAS_TAU", "MCICA_MASK",
@@ -155,10 +156,11 @@ def assert_variant_preserves_records(source: Path, variant: Path,
     for name, values in original.items():
         if name not in updates and name not in dropped and not np.array_equal(records[name], values):
             fail(f"{variant}: unmodified section {name} changed or was stripped")
-    # V8's strict reader already enforces required CFCs and frozen-record
-    # completeness. Keep an explicit invariant for fields this test must never
-    # rewrite, even if their values happen to be all zero.
+    # Strict replay parsing validates schema-dependent gas presence. Keep an
+    # explicit invariant for gas/background/frozen records this test must
+    # never rewrite, even if their values happen to be all zero.
     for name in ("VMR_CFC11", "VMR_CFC12", "VMR_CFC22", "VMR_CCL4",
+                 "VMR_N2", "TRACE_GASES_PRESENT",
                  "GWP", "HWP", "LAMBDA_G", "LAMBDA_H", "FROZEN_MODE",
                  "FROZEN_OCCURRENCE", "FROZEN_TABLE_SHA256_BYTES"):
         if name in original and (name in updates or not np.array_equal(records[name], original[name])):
@@ -535,9 +537,17 @@ def main() -> int:
         "status": "PASS" if mode_inputs else "SKIPPED_SENTINEL_MINUS_ONE",
         "experiment": f"{replay_version} {phase} replay with common captured microphysics paths and independent cloud-mask seeds",
         "source_capture": {"input": str(input_path), "input_format": replay_version,
-                           "cfc_records_preserved": all(name in input_records for name in
-                               ("VMR_CFC11", "VMR_CFC12", "VMR_CFC22", "VMR_CCL4"))
-                               if replay_version == "RRTMGP_REPLAY_V8" else None,
+                           "cfc_record_schema_valid": (
+                               (all(name in input_records for name in
+                                    ("VMR_CFC11", "VMR_CFC12", "VMR_CFC22", "VMR_CCL4"))
+                                if replay_version in {"RRTMGP_REPLAY_V8", "RRTMGP_REPLAY_V10"}
+                                else ((int(input_records["TRACE_GASES_PRESENT"].item()) == 1) ==
+                                      all(name in input_records for name in
+                                          ("VMR_CFC11", "VMR_CFC12", "VMR_CFC22", "VMR_CCL4")))
+                                if replay_version in {"RRTMGP_REPLAY_V12", "RRTMGP_REPLAY_V13"} else None)),
+                           "n2_profile_preserved": "VMR_N2" in input_records,
+                           "trace_gases_present": (int(input_records["TRACE_GASES_PRESENT"].item())
+                               if "TRACE_GASES_PRESENT" in input_records else None),
                            "frozen_metadata_present": any(name in input_records for name in
                                ("GWP", "HWP", "LAMBDA_G", "LAMBDA_H", "FROZEN_MODE",
                                 "FROZEN_OCCURRENCE", "FROZEN_TABLE_SHA256_BYTES")),

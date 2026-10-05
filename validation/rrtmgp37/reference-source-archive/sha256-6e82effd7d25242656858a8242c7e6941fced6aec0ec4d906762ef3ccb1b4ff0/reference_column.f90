@@ -29,15 +29,15 @@ PROGRAM rrtmgp_reference_column
   INTEGER :: audit_native_n,audit_sidecar_species,audit_expected_native
   INTEGER :: c,k,g,b,i,ngpt,nbnd,n_native,frozen_status,env_status
   INTEGER :: override_ncol,override_nlay,override_nband,override_unit,override_ios
-  REAL(wp) :: solar,roughness_value,partition_value,precip_mode,visible_weight,raw_direct_tau,audit_occurrence,trace_gases_value
+  REAL(wp) :: solar,roughness_value,partition_value,precip_mode,visible_weight,raw_direct_tau,audit_occurrence
   REAL(wp) :: frozen_mode_value,frozen_occurrence
   REAL(wp) :: metadata_gravity,metadata_cp_dry,metadata_mol_weight_dry
   LOGICAL :: use_precip,has_native_mass,frozen_enabled,sw_direct_enabled,cu_population_enabled,cu_active
-  LOGICAL :: audit_sidecar_present,audit_precip_active,n2_enabled,trace_gases_present
+  LOGICAL :: audit_sidecar_present,audit_precip_active
   REAL(wp) :: cu_policy_value
   INTEGER :: ice_roughness
   REAL(wp), ALLOCATABLE :: play(:,:),plev(:,:),tlay(:,:),tlev(:,:),tsfc(:,:)
-  REAL(wp), ALLOCATABLE :: h2o(:,:),co2(:,:),o3(:,:),n2o(:,:),ch4(:,:),o2(:,:),vmr_n2(:,:)
+  REAL(wp), ALLOCATABLE :: h2o(:,:),co2(:,:),o3(:,:),n2o(:,:),ch4(:,:),o2(:,:)
   REAL(wp), ALLOCATABLE :: vmr_cfc11(:,:),vmr_cfc12(:,:),vmr_cfc22(:,:),vmr_ccl4(:,:)
   REAL(wp), ALLOCATABLE :: col_dry(:,:),native_dry_mass(:,:)
   REAL(wp), ALLOCATABLE :: gwp(:,:),hwp(:,:),lambda_g(:,:),lambda_h(:,:),frozen_hash_bytes(:,:)
@@ -97,8 +97,6 @@ PROGRAM rrtmgp_reference_column
   CHARACTER(LEN=3), PARAMETER :: gas_names_sw(6)=['h2o','co2','o3 ','n2o','ch4','o2 ']
   CHARACTER(LEN=5), PARAMETER :: gas_names_lw(10)=['h2o  ','co2  ','o3   ','n2o  ','ch4  ', &
                                                     'o2   ','cfc11','cfc12','cfc22','ccl4 ']
-  CHARACTER(LEN=5), PARAMETER :: gas_names_lw_n2(11)=['h2o  ','co2  ','o3   ','n2o  ','ch4  ', &
-                                                       'o2   ','cfc11','cfc12','cfc22','ccl4 ','n2   ']
 
   CALL get_command_argument(1,data_dir)
   CALL get_command_argument(2,input_path)
@@ -125,20 +123,16 @@ PROGRAM rrtmgp_reference_column
      TRIM(magic)/='RRTMGP_REPLAY_V5'.AND.TRIM(magic)/='RRTMGP_REPLAY_V6'.AND. &
      TRIM(magic)/='RRTMGP_REPLAY_V7'.AND.TRIM(magic)/='RRTMGP_REPLAY_V8'.AND. &
      TRIM(magic)/='RRTMGP_REPLAY_V9'.AND.TRIM(magic)/='RRTMGP_REPLAY_V10'.AND. &
-     TRIM(magic)/='RRTMGP_REPLAY_V11'.AND.TRIM(magic)/='RRTMGP_REPLAY_V12'.AND. &
-     TRIM(magic)/='RRTMGP_REPLAY_V13') &
+     TRIM(magic)/='RRTMGP_REPLAY_V11') &
     ERROR STOP 'invalid replay input magic'
   READ(u_in,*,IOSTAT=ios) phase,nc,nl,overlap,seed,iceflag
   IF(ios/=0 .OR. (TRIM(phase)/='LW' .AND. TRIM(phase)/='SW')) ERROR STOP 'invalid replay header'
   sw_direct_enabled=.FALSE.
   cu_population_enabled=.FALSE.; cu_active=.FALSE.
-  IF((TRIM(magic)=='RRTMGP_REPLAY_V8'.OR.TRIM(magic)=='RRTMGP_REPLAY_V10'.OR. &
-     TRIM(magic)=='RRTMGP_REPLAY_V12'.OR.TRIM(magic)=='RRTMGP_REPLAY_V13').AND.TRIM(phase)/='LW') &
-    ERROR STOP 'V8/V10/V12/V13 are only valid for LW'
+  IF((TRIM(magic)=='RRTMGP_REPLAY_V8'.OR.TRIM(magic)=='RRTMGP_REPLAY_V10').AND.TRIM(phase)/='LW') &
+    ERROR STOP 'V8/V10 are only valid for LW'
   IF((TRIM(magic)=='RRTMGP_REPLAY_V9'.OR.TRIM(magic)=='RRTMGP_REPLAY_V11').AND.TRIM(phase)/='SW') &
     ERROR STOP 'V9/V11 are only valid for SW'
-  n2_enabled=TRIM(magic)=='RRTMGP_REPLAY_V12'.OR.TRIM(magic)=='RRTMGP_REPLAY_V13'
-  trace_gases_present=.FALSE.
   IF(nc<1 .OR. nl<1) ERROR STOP 'replay dimensions must be positive'
 
   ALLOCATE(play(nc,nl),plev(nc,nl+1),tlay(nc,nl),tlev(nc,nl+1),tsfc(nc,1))
@@ -158,29 +152,6 @@ PROGRAM rrtmgp_reference_column
   CALL read_section(u_in,'N2O',n2o)
   CALL read_section(u_in,'CH4',ch4)
   CALL read_section(u_in,'O2',o2)
-  IF(n2_enabled) THEN
-    ALLOCATE(vmr_n2(nc,nl))
-    CALL read_section(u_in,'VMR_N2',vmr_n2)
-    IF(ANY(.NOT.ieee_is_finite(vmr_n2)).OR.ANY(vmr_n2<0._wp).OR.ANY(vmr_n2>1._wp)) &
-      ERROR STOP 'V12/V13 VMR_N2 must be finite and in [0,1]'
-    CALL read_scalar_section(u_in,'TRACE_GASES_PRESENT',trace_gases_value)
-    IF(.NOT.ieee_is_finite(trace_gases_value)) ERROR STOP 'V12/V13 TRACE_GASES_PRESENT must be finite'
-    IF(trace_gases_value/=0._wp.AND.trace_gases_value/=1._wp) &
-      ERROR STOP 'V12/V13 TRACE_GASES_PRESENT must equal zero or one'
-    trace_gases_present=trace_gases_value==1._wp
-    ALLOCATE(vmr_cfc11(nc,nl),vmr_cfc12(nc,nl),vmr_cfc22(nc,nl),vmr_ccl4(nc,nl))
-    vmr_cfc11=0._wp; vmr_cfc12=0._wp; vmr_cfc22=0._wp; vmr_ccl4=0._wp
-    IF(trace_gases_present) THEN
-      CALL read_section(u_in,'VMR_CFC11',vmr_cfc11)
-      CALL read_section(u_in,'VMR_CFC12',vmr_cfc12)
-      CALL read_section(u_in,'VMR_CFC22',vmr_cfc22)
-      CALL read_section(u_in,'VMR_CCL4',vmr_ccl4)
-      IF(ANY(.NOT.ieee_is_finite(vmr_cfc11)).OR.ANY(vmr_cfc11<0._wp)) ERROR STOP 'V12/V13 VMR_CFC11 invalid'
-      IF(ANY(.NOT.ieee_is_finite(vmr_cfc12)).OR.ANY(vmr_cfc12<0._wp)) ERROR STOP 'V12/V13 VMR_CFC12 invalid'
-      IF(ANY(.NOT.ieee_is_finite(vmr_cfc22)).OR.ANY(vmr_cfc22<0._wp)) ERROR STOP 'V12/V13 VMR_CFC22 invalid'
-      IF(ANY(.NOT.ieee_is_finite(vmr_ccl4)).OR.ANY(vmr_ccl4<0._wp)) ERROR STOP 'V12/V13 VMR_CCL4 invalid'
-    END IF
-  END IF
   IF(TRIM(magic)=='RRTMGP_REPLAY_V8'.OR.TRIM(magic)=='RRTMGP_REPLAY_V10') THEN
     ALLOCATE(vmr_cfc11(nc,nl),vmr_cfc12(nc,nl),vmr_cfc22(nc,nl),vmr_ccl4(nc,nl))
     CALL read_section(u_in,'VMR_CFC11',vmr_cfc11)
@@ -209,8 +180,7 @@ PROGRAM rrtmgp_reference_column
   CALL read_section(u_in,'REL',rel)
   CALL read_section(u_in,'REI',rei)
   CALL read_section(u_in,'RES',res)
-  IF(TRIM(magic)=='RRTMGP_REPLAY_V10'.OR.TRIM(magic)=='RRTMGP_REPLAY_V11'.OR. &
-     TRIM(magic)=='RRTMGP_REPLAY_V13') THEN
+  IF(TRIM(magic)=='RRTMGP_REPLAY_V10'.OR.TRIM(magic)=='RRTMGP_REPLAY_V11') THEN
     cu_population_enabled=.TRUE.
     CALL read_scalar_section(u_in,'CU_POPULATION_POLICY',cu_policy_value)
     IF(.NOT.ieee_is_finite(cu_policy_value).OR.cu_policy_value/=1._wp) &
@@ -297,8 +267,7 @@ PROGRAM rrtmgp_reference_column
       ERROR STOP 'V6 native dry layer mass must be finite and positive'
   END IF
   frozen_enabled=.FALSE.
-  IF(TRIM(magic)=='RRTMGP_REPLAY_V8'.OR.TRIM(magic)=='RRTMGP_REPLAY_V10'.OR. &
-     TRIM(magic)=='RRTMGP_REPLAY_V12'.OR.TRIM(magic)=='RRTMGP_REPLAY_V13') THEN
+  IF(TRIM(magic)=='RRTMGP_REPLAY_V8'.OR.TRIM(magic)=='RRTMGP_REPLAY_V10') THEN
     ! V8 adds four recorded LW gas VMR profiles before any optional frozen
     ! optics profile and the host constants appended by trace_input_end.
     DO i=1,2
@@ -604,8 +573,7 @@ PROGRAM rrtmgp_reference_column
                         mol_weight_dry_air=metadata_mol_weight_dry)
   END IF
   IF(TRIM(magic)/='RRTMGP_REPLAY_V7'.AND.TRIM(magic)/='RRTMGP_REPLAY_V9'.AND. &
-     TRIM(magic)/='RRTMGP_REPLAY_V10'.AND.TRIM(magic)/='RRTMGP_REPLAY_V11'.AND. &
-     TRIM(magic)/='RRTMGP_REPLAY_V12'.AND.TRIM(magic)/='RRTMGP_REPLAY_V13') THEN
+     TRIM(magic)/='RRTMGP_REPLAY_V10'.AND.TRIM(magic)/='RRTMGP_REPLAY_V11') THEN
     READ(u_in,'(A)',IOSTAT=ios) section_line
     IF(ios==0) THEN
       READ(section_line,*,IOSTAT=ios) next_section
@@ -622,9 +590,8 @@ PROGRAM rrtmgp_reference_column
   audit_precip_active=.FALSE.
   IF(audit_sidecar_present) THEN
     IF(TRIM(magic)/='RRTMGP_REPLAY_V8'.AND.TRIM(magic)/='RRTMGP_REPLAY_V9'.AND. &
-       TRIM(magic)/='RRTMGP_REPLAY_V10'.AND.TRIM(magic)/='RRTMGP_REPLAY_V11'.AND. &
-       TRIM(magic)/='RRTMGP_REPLAY_V12'.AND.TRIM(magic)/='RRTMGP_REPLAY_V13') &
-      ERROR STOP 'CF0 precipitation audit sidecar requires V8-V13 held inputs'
+       TRIM(magic)/='RRTMGP_REPLAY_V10'.AND.TRIM(magic)/='RRTMGP_REPLAY_V11') &
+      ERROR STOP 'CF0 precipitation audit sidecar requires V8/V9/V10/V11 held inputs'
     audit_expected_native=0
     IF(has_native_mass) audit_expected_native=n_native
     CALL read_cf0_precip_sidecar(TRIM(audit_sidecar_path),TRIM(phase),nc,nl,audit_expected_native,cf, &
@@ -650,11 +617,7 @@ PROGRAM rrtmgp_reference_column
   END IF
   avdir=avdir_in(:,1); avdif=avdif_in(:,1); andir=andir_in(:,1); andif=andif_in(:,1)
   mu0=mu0_in(:,1)
-  IF(n2_enabled) THEN
-    CALL check_error(gases_lw%init(gas_names_lw_n2))
-  ELSE
-    CALL check_error(gases_lw%init(gas_names_lw))
-  END IF
+  CALL check_error(gases_lw%init(gas_names_lw))
   CALL check_error(gases_sw%init(gas_names_sw))
   CALL load_and_init(gas_lw,TRIM(data_dir)//'/rrtmgp-gas-lw-g128.nc',gases_lw)
   CALL load_and_init(gas_sw,TRIM(data_dir)//'/rrtmgp-gas-sw-g112.nc',gases_sw)
@@ -668,7 +631,6 @@ PROGRAM rrtmgp_reference_column
   CALL check_error(gases_lw%set_vmr('n2o',n2o))
   CALL check_error(gases_lw%set_vmr('ch4',ch4))
   CALL check_error(gases_lw%set_vmr('o2',o2))
-  IF(n2_enabled) CALL check_error(gases_lw%set_vmr('n2',vmr_n2))
   CALL check_error(gases_sw%set_vmr('h2o',h2o))
   CALL check_error(gases_sw%set_vmr('co2',co2))
   CALL check_error(gases_sw%set_vmr('o3',o3))
@@ -1095,9 +1057,7 @@ PROGRAM rrtmgp_reference_column
   WRITE(u_out,'(A,1X,I0,1X,I0)') TRIM(phase),nc,nl
   CALL write3(u_out,'GAS_COL_DRY',RESHAPE(col_dry,[nc,nl,1]))
   CALL write3(u_out,'GAS_TAU',gas_tau)
-  IF(n2_enabled) CALL write3(u_out,'VMR_N2',RESHAPE(vmr_n2,[nc,nl,1]))
-  IF(TRIM(magic)=='RRTMGP_REPLAY_V8'.OR.TRIM(magic)=='RRTMGP_REPLAY_V10'.OR. &
-     TRIM(magic)=='RRTMGP_REPLAY_V12'.OR.TRIM(magic)=='RRTMGP_REPLAY_V13') &
+  IF(TRIM(magic)=='RRTMGP_REPLAY_V8'.OR.TRIM(magic)=='RRTMGP_REPLAY_V10') &
     CALL write3(u_out,'GAS_TAU_RAW',gas_tau)
   IF(TRIM(phase)=='SW') THEN
     CALL write3(u_out,'GAS_SSA',gas_ssa); CALL write3(u_out,'GAS_G',gas_g)

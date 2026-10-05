@@ -148,10 +148,14 @@ def validate_replay_context(input_path: Path, raw_header, raw_records, engine_n:
         raise SidecarError("replay input is truncated")
     version = lines[0].strip()
     header = lines[1].split()
-    if version not in {"RRTMGP_REPLAY_V8", "RRTMGP_REPLAY_V9", "RRTMGP_REPLAY_V10", "RRTMGP_REPLAY_V11"}:
-        raise SidecarError("CF0 sidecar context requires replay V8/V9/V10/V11")
+    if version not in {"RRTMGP_REPLAY_V8", "RRTMGP_REPLAY_V9", "RRTMGP_REPLAY_V10", "RRTMGP_REPLAY_V11", "RRTMGP_REPLAY_V12", "RRTMGP_REPLAY_V13"}:
+        raise SidecarError("CF0 sidecar context requires replay V8-V13")
     if len(header) != 6:
         raise SidecarError("replay header must contain phase/nc/nl/overlap/seed/iceflag")
+    records_text = "\n".join(lines[2:])
+    if version not in {"RRTMGP_REPLAY_V12", "RRTMGP_REPLAY_V13"} and \
+            any((name + " ") in records_text for name in ("VMR_N2", "TRACE_GASES_PRESENT")):
+        raise SidecarError("N2 background fields require replay V12/V13")
     phase = header[0].upper()
     try:
         nc, nl = int(header[1]), int(header[2])
@@ -159,7 +163,7 @@ def validate_replay_context(input_path: Path, raw_header, raw_records, engine_n:
         raise SidecarError("invalid replay dimensions") from exc
     if nc != 1 or nl != engine_n or phase != raw_header[0]:
         raise SidecarError("replay phase/shape does not match paired raw/engine")
-    if (version in {"RRTMGP_REPLAY_V8", "RRTMGP_REPLAY_V10"} and phase != "LW") or \
+    if (version in {"RRTMGP_REPLAY_V8", "RRTMGP_REPLAY_V10", "RRTMGP_REPLAY_V12", "RRTMGP_REPLAY_V13"} and phase != "LW") or \
        (version in {"RRTMGP_REPLAY_V9", "RRTMGP_REPLAY_V11"} and phase != "SW"):
         raise SidecarError("replay version is not valid for this phase")
     def matrix(name):
@@ -170,7 +174,23 @@ def validate_replay_context(input_path: Path, raw_header, raw_records, engine_n:
         raise SidecarError("replay CF shape differs from engine/native context")
     if cf_values[:raw_header[3]] != raw_records["CF"]:
         raise SidecarError("replay CF native prefix differs from paired raw capture")
-    if version in {"RRTMGP_REPLAY_V10", "RRTMGP_REPLAY_V11"}:
+    if version in {"RRTMGP_REPLAY_V12", "RRTMGP_REPLAY_V13"}:
+        n2_shape, n2_values = matrix("VMR_N2")
+        flag_shape, flag_values = matrix("TRACE_GASES_PRESENT")
+        if n2_shape != (1, engine_n) or any(not math.isfinite(v) or v < 0.0 or v > 1.0 for v in n2_values):
+            raise SidecarError(f"{version} VMR_N2 must be finite in [0,1] with shape (1,nl)")
+        if flag_shape != (1, 1) or flag_values[0] not in (0.0, 1.0):
+            raise SidecarError(f"{version} TRACE_GASES_PRESENT must be scalar zero or one")
+        cfc_names = ("VMR_CFC11", "VMR_CFC12", "VMR_CFC22", "VMR_CCL4")
+        cfc_present = [input_path.read_text(encoding="ascii").count(name + " ") == 1 for name in cfc_names]
+        if flag_values[0] == 1.0:
+            for name in cfc_names:
+                shape, values = matrix(name)
+                if shape != (1, engine_n) or any(not math.isfinite(v) or v < 0.0 for v in values):
+                    raise SidecarError(f"{version} {name} must be finite/nonnegative with shape (1,nl)")
+        elif any(cfc_present):
+            raise SidecarError(f"{version} CFC records conflict with TRACE_GASES_PRESENT=0")
+    if version in {"RRTMGP_REPLAY_V10", "RRTMGP_REPLAY_V11", "RRTMGP_REPLAY_V13"}:
         cu_arrays = {}
         for name in ("CU_POPULATION_POLICY", "CU_RADIUS_POLICY", "CU_OCCURRENCE_POLICY"):
             shape, values = matrix(name)
@@ -224,7 +244,7 @@ def validate_against_raw(sidecar_text, raw_path: Path, species_name: str, engine
     replay_context = None
     if input_path is not None:
         first = input_path.read_text(encoding="ascii").splitlines()[0].strip()
-        if first in {"RRTMGP_REPLAY_V8", "RRTMGP_REPLAY_V9", "RRTMGP_REPLAY_V10", "RRTMGP_REPLAY_V11"}:
+        if first in {"RRTMGP_REPLAY_V8", "RRTMGP_REPLAY_V9", "RRTMGP_REPLAY_V10", "RRTMGP_REPLAY_V11", "RRTMGP_REPLAY_V12", "RRTMGP_REPLAY_V13"}:
             replay_context = validate_replay_context(input_path, header, rec, engine_n)
     phase2, ncol, n2, species, occ, rain, snow = decode(sidecar_text)
     expected_species = {"rain": 1, "snow": 2}.get(species_name)
