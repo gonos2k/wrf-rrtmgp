@@ -1,0 +1,229 @@
+{
+  "actual_run_state": {
+    "input_header": "LW, ncol=1, nlay=45; overlap, seed, and ice flag come from the pinned input.",
+    "input_magic": "RRTMGP_REPLAY_V10",
+    "n2_override": "The captured result and sidecar come from the explicit CLI N2 override 0.7808, recorded in the run plan and argv. VMR_N2 is not a named section in the V10 text input.",
+    "native_dry_mass": "Input includes NATIVE_DRY_LAYER_MASS_KG_M2. Production converts native dry mass to molecules cm^-2 using Avogadro/(M_dry*10000); the input has 45 native layers for the 45-layer column.",
+    "retained_output": "Sidecar stores mapped SOURCE_LAYER/LEVEL/SURFACE and N2_OVERRIDE only; no pfrac, fmajor, jeta, jtemp, jpress, or tropo.",
+    "trace_gases": "V10 input includes VMR_CFC11/12/22/CCl4. Keep their recorded profiles in the gas descriptor."
+  },
+  "coefficient_file_inventory": {
+    "bnd_limits_gpt_shape": [
+      16,
+      2
+    ],
+    "gas_names": {
+      "dimensions": [
+        "absorber",
+        "string_len"
+      ],
+      "shape": [
+        19,
+        32
+      ]
+    },
+    "gpt_count": 128,
+    "key_species": {
+      "dimensions": [
+        "bnd",
+        "atmos_layer",
+        "pair"
+      ],
+      "shape": [
+        16,
+        2,
+        2
+      ]
+    },
+    "metadata_note": "Rebuild loader reductions/remaps by named variables. Do not assume NetCDF absorber indices equal compressed runtime gas indices; resolve table species by gas name and preserve Fortran 1-based indexing.",
+    "plank_fraction": {
+      "dimensions": [
+        "temperature",
+        "pressure_interp",
+        "mixing_fraction",
+        "gpt"
+      ],
+      "shape": [
+        14,
+        60,
+        9,
+        128
+      ],
+      "units_attribute": null
+    },
+    "press_ref_count": 59,
+    "press_ref_trop": "scalar coefficient variable",
+    "temp_ref_K": [
+      160,
+      175,
+      190,
+      205,
+      220,
+      235,
+      250,
+      265,
+      280,
+      295,
+      310,
+      325,
+      340,
+      355
+    ],
+    "vmr_ref": {
+      "dimensions": [
+        "temperature",
+        "absorber_ext",
+        "atmos_layer"
+      ],
+      "shape": [
+        14,
+        20,
+        2
+      ]
+    }
+  },
+  "equation_recipe": [
+    "Read coefficient data by NetCDF dimension/variable names; reproduce loader gas-name reduction and key_species remapping by names.",
+    "Build VMR arrays from the V10 input and N2 CLI override. Build col_dry using the adapter native-mass formula; set col_gas(0)=col_dry and col_gas(gas)=VMR(gas)*col_dry.",
+    "For every layer reproduce jtemp/ftemp from TLAY and temp_ref; jpress/fpress from log(PLAY in adapter units) and press_ref_log; tropo from log(PLAY)>press_ref_trop_log.",
+    "For each runtime flavor and temperature plane reproduce eta using major-gas column amounts and vmr_ref ratios; then reproduce jeta, feta/fminor, and fmajor with the exact source index ordering and arithmetic.",
+    "For every band use the exact production atmosphere flavor selected at its first g-point, then call the translated interpolate3D_byflav formula over that band\u2019s inclusive g-point range using scaling=[1,1], jeta, jtemp, and jpress+itropo.",
+    "Compare independently computed pfrac and pfrac-weighted raw Planck products with retained SOURCE_LAYER/LEVEL/SURFACE. Report pfrac versus the sidecar-inferred quotient separately."
+  ],
+  "gas_interpolation_formulae": {
+    "atmosphere_selector": "tropo=log(PLAY_adapter)>press_ref_trop_log; itropo=1 for true (lower-atmosphere table), 2 otherwise, matching merge(1,2,tropo).",
+    "eta_and_temperature_weights": "For each flavor/layer and itemp=1,2: ratio=vmr_ref(itropo,g1,jtemp+itemp-1)/vmr_ref(itropo,g2,jtemp+itemp-1); colmix=colgas(g1)+ratio*colgas(g2); eta=colgas(g1)/colmix if colmix>2*tiny else 0.5; loceta=eta*(neta-1); jeta=min(int(loceta)+1,neta-1); feta=mod(loceta,1). ftemp_term is (1-ftemp) at itemp=1, ftemp at itemp=2; fminor(1,itemp)=(1-feta)*ftemp_term, fminor(2,itemp)=feta*ftemp_term.",
+    "float_and_index_policy": "Translate Fortran INT truncation, CLIP bounds, MOD behavior for nonnegative loceta, branch conditions, and one-based table indexing exactly. Preserve production expression ordering; do not use a generic library interpolator without validating its index semantics.",
+    "fraction_interpolation": "For each output gpt, sum the 8 pfracin corners for temp plane 1 weighted by fmajor(:,:,1), then multiply by scaling(1)=1; add the 8 corners at jtemp+1 and eta jeta(2) weighted by fmajor(:,:,2), times scaling(2)=1. Pressure corners are jpress+itropo-1 and jpress+itropo.",
+    "major_weights": "fmajor(eta_index,pressure_index,temp_plane)=fminor(eta_index,temp_plane)*(1-fpress) for lower pressure index 1, and fminor*fpress for upper pressure index 2.",
+    "pressure_index": "locpress=1+(log(PLAY_adapter)-press_ref_log(1))/press_ref_log_delta; jpress=clip(int(locpress),1,npres-1); fpress=locpress-jpress.",
+    "temperature_index": "jtemp=clip(int((TLAY-(temp_ref_min-temp_ref_delta))/temp_ref_delta),1,ntemp-1); ftemp=(TLAY-temp_ref(jtemp))/temp_ref_delta."
+  },
+  "limitations": [
+    "No numerical pfrac values or reconstruction were produced here.",
+    "No tolerance is specified.",
+    "No renormalization of fraction sums is permitted.",
+    "This checks an algorithmic reconstruction against saved mapped outputs; it is not a new accuracy evaluation.",
+    "A future independent pfrac result requires preserving all table values, exact gas-name remapping, N2 override, native dry mass treatment, and pressure unit conversion."
+  ],
+  "pins": {
+    "captured_n2_result": {
+      "bytes": 763371,
+      "path": "build/udm37-bon-night-n2-attribution-v1/run-preparation-v1/run-v1/n2-0p7808.result",
+      "sha256": "b578e9983b5817297db75baac026af98b84a3cbcd3653aadf2e4db5930ce5732"
+    },
+    "captured_n2_sidecar": {
+      "bytes": 308081,
+      "path": "build/udm37-bon-night-n2-attribution-v1/run-preparation-v1/run-v1/n2-0p7808.result.lw_transport",
+      "sha256": "bb53daf55ea9b6f91c9d0dbc4f132eff11b3ab76fd278bacb327571a1642e792"
+    },
+    "held_input": {
+      "bytes": 39535,
+      "path": "build/udm37-bon-night-dry-column-attribution-v1/matched-legacy-dry.input",
+      "sha256": "292f9569b059c373c9cb14f1574cb8835627331574592a19d641ef07c21ec918"
+    },
+    "n2_execution_record": {
+      "bytes": 70378,
+      "path": "build/udm37-bon-night-n2-attribution-v1/run-preparation-v1/run-v1/execution.json",
+      "sha256": "cbb876791a9ff905356fa90abd65ede8d5f8dde882009d7be48684c74a7a600e"
+    },
+    "n2_plan": {
+      "bytes": 32933,
+      "path": "build/udm37-bon-night-n2-attribution-v1/run-preparation-v1/plan.json",
+      "sha256": "a96058bc38ff15b7ca5b0b822adda6d919ab70d5199160191c66fa37cf169ea9"
+    },
+    "n2_runner": {
+      "bytes": 13223,
+      "path": "build/udm37-bon-night-n2-attribution-v1/run-preparation-v1/run_once.py",
+      "sha256": "56f9059a095bf56391eca1c8f22dff5ece169d6d07c04d9993ac1d04d93a111c"
+    },
+    "production_adapter": {
+      "bytes": 74962,
+      "path": "build/udm37-bon-common-band-source-pr-work/WRF/phys/module_ra_rrtmgp.F",
+      "sha256": "1852452555fbe667a0a95d59242bcd9c3833f2877fc51f882d5d3d929a058f58"
+    },
+    "production_coefficients": {
+      "bytes": 11679993,
+      "path": "build/udm37-bon-common-band-source-pr-work/WRF/run/rrtmgp-gas-lw-g128.nc",
+      "sha256": "70ad65d116531122660318e5da2a2af9db74b425916202860e9527ef2375b8f6"
+    },
+    "production_frontend": {
+      "bytes": 107884,
+      "path": "build/udm37-bon-common-band-source-pr-work/WRF/external/rte_rrtmgp/rrtmgp-frontend/mo_gas_optics_rrtmgp.F90",
+      "sha256": "d5e0a7e56bc811575ec2c9655953a5be64c42a62e4100f65198e1e1b44239adc"
+    },
+    "production_kernel": {
+      "bytes": 41856,
+      "path": "build/udm37-bon-common-band-source-pr-work/WRF/external/rte_rrtmgp/rrtmgp-kernels/mo_gas_optics_rrtmgp_kernels.F90",
+      "sha256": "96be9c4379c4e49a7b13e9b1f8314e78908262f402e913a2a03232987706f6e1"
+    },
+    "replay_build_plan": {
+      "bytes": 3096,
+      "path": "build/udm37-bon-night-n2-attribution-v1/build-plan-v2.json",
+      "sha256": "9692307a89aba18d659b14b3387e4e5332cad34a84f356386531585b9fd62777"
+    },
+    "replay_build_receipt": {
+      "bytes": 92623,
+      "path": "build/udm37-bon-night-n2-attribution-v1/build-v2/build-receipt.json",
+      "sha256": "a9523aa34babe7b037c672998778a92f73b53fdc0119e83cf1f49ec44d8e363a"
+    },
+    "replay_executable": {
+      "bytes": 1048872,
+      "path": "build/udm37-bon-night-n2-attribution-v1/build-v2/reference_transport",
+      "sha256": "24054389e7d4ad2a5442040d7621262ff80b4b089604709cff3184f8d86cbd34"
+    },
+    "replay_reader_source": {
+      "bytes": 92906,
+      "path": "build/udm37-bon-night-n2-attribution-v1/preparation-v3/reference_column.f90",
+      "sha256": "77e2bdf233139771209dffd6efa00616960d3e609f8bd90691877f1ed8806678"
+    }
+  },
+  "production_dependency_graph": [
+    {
+      "required": "Captured H2O/CO2/O3/N2O/CH4/O2/CFC VMRs, CLI N2=0.7808, PLAY/PLEV/TLAY, native dry mass, dry molecular weight and Avogadro. The adapter sets gases into ty_gas_concs and passes col_dry to gas_optics.",
+      "source": "WRF/phys/module_ra_rrtmgp.F:583-595, 693-696, 800-806",
+      "stage": "gas profile preparation"
+    },
+    {
+      "required": "Available gas-name list (includes N2 for this run), source gas_names, key_species, and bnd_limits_gpt. Map species by name, reduce key_species, build unique flavors, then construct per-g-point lower/upper atmosphere flavor map.",
+      "source": "mo_gas_optics_rrtmgp.F90:1299-1328, 1445-1454, 1769-1803, 2111-2127",
+      "stage": "load-time reductions and flavor mapping"
+    },
+    {
+      "required": "PLAY converted as in adapter, TLAY, all runtime VMRs and col_dry-derived col_gas; coefficient press_ref_log, temp_ref, press_ref_log_delta, temp_ref_delta, press_ref_trop_log, vmr_ref and mapped flavor pairs. Recompute jtemp/jpress/tropo/jeta/fmajor in source order.",
+      "source": "mo_gas_optics_rrtmgp.F90:439-458, 560-567, 605-645, 649-672; mo_gas_optics_rrtmgp_kernels.F90:40-177",
+      "stage": "gas interpolation indices and weights"
+    },
+    {
+      "required": "plank_fraction, band start/end g-point bounds, and computed tropo/fmajor/jeta/jtemp/jpress. Production picks iflav=gpoint_flavor(itropo,gptS) once per band and passes scaling=[1,1], inclusive band g-point bounds, jeta, jtemp, and jpress+itropo to interpolate3D_byflav.",
+      "source": "mo_gas_optics_rrtmgp_kernels.F90:616-632, 763-792",
+      "stage": "Planck fraction interpolation"
+    },
+    {
+      "required": "Raw band Planck values from production totplnk interpolation plus independently computed layer pfrac. Compare their product with SOURCE_LAYER; for SOURCE_LEVEL use first/last layer pfrac at boundaries and sqrt(pfrac(k-1)*pfrac(k)) at interior levels; surface uses source sfc_lay pfrac.",
+      "source": "mo_gas_optics_rrtmgp_kernels.F90:638-708",
+      "stage": "mapped-source consistency check"
+    }
+  ],
+  "purpose": "Design an independent, source-faithful calculation of production GP Planck fraction pfrac for the retained single-column 45-layer BON LW state. Compute it from the pinned input and coefficient fraction table, never from SOURCE_LAYER/raw Planck.",
+  "python_reconstruction_assessment": {
+    "basis": "All needed numeric profile state is in the pinned V10 input plus the recorded N2 override; coefficients expose plank_fraction, gas reference axes, gas names, key species, and band-to-g-point mapping; production source defines deterministic interpolation equations.",
+    "feasible_without_new_compiled_observer_in_principle": true,
+    "independence_rule": "Do not define reconstructed pfrac as SOURCE_LAYER/raw_band_planck. That quotient may be reported only as a secondary diagnostic against an independently computed pfrac.",
+    "not_proven_bitwise": "No production pfrac array is retained. Python float arithmetic/libm may differ in final bits from compiled Fortran wp and operation order. Report reconstruction precision and mapped-source residuals; do not claim bitwise production equality without direct evidence."
+  },
+  "schema": "udm37-bon-night-independent-pfrac-design-v1",
+  "scope": {
+    "bitwise_parity_claim": false,
+    "execution_calls_performed": 0,
+    "gpoints": 128,
+    "ncol": 1,
+    "nlay": 45,
+    "pfrac_values_computed": false,
+    "phase": "LW",
+    "replays_performed": 0,
+    "source_edits": 0
+  },
+  "source_worktree_commit": "58d68cded76ef359b8179845d3b150c4ee45de8f",
+  "status": "PREPARED_DESIGN_ONLY_NO_PFRAC_EVALUATION_NO_BUILD_NO_SOLVER"
+}

@@ -1,0 +1,36 @@
+{
+  "schema": "udm37-bon-night-opacity-point-v5-source-review-v1",
+  "status": "PASS_SCOPED_DIAGNOSTIC_IMPLEMENTATION_REVIEW",
+  "reviewed_files": {
+    "point_draft": {
+      "path": "build/udm37-bon-night-opacity-math-v1/reconstruct_point_v5.py",
+      "sha256": "6f3a02f147acc969ce8142974cccde06d444d892a8e7c3c0128369b304af978a"
+    },
+    "diagnostic_plan": {
+      "path": "build/udm37-bon-night-opacity-independent-plan-v1/v3/plan.json",
+      "sha256": "21edb10d1af8cbc6b12f44e305572d49fa688d822644c49acb946246aa62d01e"
+    },
+    "frontend": {
+      "path": "build/cf0-cu-src-v1/WRF/external/rte_rrtmgp/rrtmgp-frontend/mo_gas_optics_rrtmgp.F90",
+      "sha256": "d5e0a7e56bc811575ec2c9655953a5be64c42a62e4100f65198e1e1b44239adc"
+    },
+    "kernel": {
+      "path": "build/cf0-cu-src-v1/WRF/external/rte_rrtmgp/rrtmgp-kernels/mo_gas_optics_rrtmgp_kernels.F90",
+      "sha256": "96be9c4379c4e49a7b13e9b1f8314e78908262f402e913a2a03232987706f6e1"
+    },
+    "loader": {
+      "path": "build/cf0-cu-src-v1/WRF/external/rte_rrtmgp/extensions/mo_load_coefficients.F90",
+      "sha256": "3abc021bf244560f4d7f247be167ad0ecafb6c451f88566a7ce2a0436caebb5b"
+    }
+  },
+  "source_contract_findings": {
+    "roster_and_columns": "The caller roster is treated as membership, reduced into table PACK order, and maps input VMRs by gas name. The dry carrier uses all 45 supplied mass values; saved GAS_COL_DRY remains a post-reconstruction comparison only.",
+    "coordinates": "Reference T/P grids are checked for finite positive monotone source ordering. PLAY/TLAY are checked against frontend table bounds and PLEV is checked nonnegative, matching frontend value guards at lines 532-537. PLAY pressure is high-to-low reference range; TLAY is low-to-high temperature range.",
+    "major": "Raw kmajor uses named (temperature,pressure_interp,mixing_fraction,gpt) axes. The pressure table index is checked against the 60-slot interpolation axis, with the correct lower/upper slot offset. The source uses two reference-temperature planes, four eta/pressure corners per plane, scales each plane by its col_mix, then adds planes and tau in source order.",
+    "minor": "Available-gas pruning/repacking, start-gpt flavor selection, one-band interval validation, source density/scaling/complement rules, four eta/temperature corners, and separately labeled raw/packed contributor indices align with the pinned kernel. The term ledger records each retained major/minor component before target files are opened.",
+    "gates": "The draft does not open captured tau targets and its command-line entry remains locked. It explicitly states no arithmetic/log enclosure; comparison is diagnostic only, with no tolerance-based numerical PASS."
+  },
+  "runner_condition_before_target_read": "This point function returns discrete bracket/flavor/interval context but does not itself compare it with the pinned independent pfrac context. The separately reviewed execution packet must compare those contexts and pin the pre-target result before any saved GAS_TAU target is opened, as specified by plan v3. Pfrac remains a cross-check only, not an opacity input.",
+  "nonblocking_metadata_note": "The unused SCHEMA string at draft line 19 still names plan-v2 although the frozen plan is v3. Correct in a later metadata-only snapshot or document the legacy payload label; it does not alter these source equations.",
+  "scope_limit": "This is static source-equation review only. No import, AST evaluation, reconstruction, coefficient parse, target read, solver, build, or model was performed. A later diagnostic tau agreement cannot validate coefficient generation or physical accuracy; strict arithmetic precision remains open."
+}
