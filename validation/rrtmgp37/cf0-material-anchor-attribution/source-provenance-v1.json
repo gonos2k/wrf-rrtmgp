@@ -1,0 +1,71 @@
+{
+  "build_execution_receipt": {
+    "path": "validation/rrtmgp37/cf0-precip-cu-replay/receipts/build-execution.json",
+    "sha256": "fe979a41e03bb80977a9c6cf9fdac191ca7936364320bee8336ca859402ed36d"
+  },
+  "formula_scope": "The pinned test reference helper applies LW rain tau=0.33e-3*path; SW uses the source helper with delta scaling and its stated tau/SSA floors and SSA cap. These test-only paths produce diagnostics; they are not the production default.",
+  "fresh_executable": {
+    "path": "build/cf0-cu-build-v1/cmake-build/reference_column",
+    "sha256": "353333cc96bce44d26c02ca7585c0ddef8996fc74a05904220fba83db76cd97f"
+  },
+  "items": {
+    "cf0_precip_sidecar.py": {
+      "size_bytes": 15679,
+      "source_path": "build/cf0-cu-src-v1/WRF/test/rrtmgp/cf0_precip_sidecar.py",
+      "source_sha256": "7c38e9a2eb3fbbb6eeb425768d608808b05573f875b29f30e507f0cb406333ce"
+    },
+    "compare_column_replay.py": {
+      "size_bytes": 12800,
+      "source_path": "WRF/test/rrtmgp/compare_column_replay.py",
+      "source_sha256": "6099a3819268d3ee17bbcbaf0610c03822c09247da6ac5bdfdef66c9190533a7"
+    },
+    "frozen-table-addendum.json": {
+      "size_bytes": 5672,
+      "source_path": "build/udm37-cf0-material-anchor-independent-review-v1/frozen-table-addendum-v1.json",
+      "source_sha256": "c7e2f49a3368194dd98b3d211d3c5f2e46af2e0aaf4a629e666573934a31bce0"
+    },
+    "frozen-table-context.json": {
+      "size_bytes": 6668,
+      "source_path": "build/udm37-cf0-material-anchor-table-context-v1.json",
+      "source_sha256": "afb8d84860057a49f43a5399a6c3363b6cfd7e3d55741b9fbba24a63f572e1f0"
+    },
+    "precip-helper-excerpt.txt": {
+      "derived_from": "reference_column.f90",
+      "derived_sha256": "4d98ebd2fcb2a69e57ad9467ec0695b0330460cff45f536f390a55df9940b326",
+      "line_ranges": [
+        [
+          1402,
+          1436
+        ],
+        [
+          1438,
+          1515
+        ]
+      ],
+      "size_bytes": 7387
+    },
+    "prepare_material_anchor_inputs.py": {
+      "size_bytes": 13279,
+      "source_path": "build/udm37-cf0-material-anchor-inputs-v1/prepare_material_anchor_inputs.py",
+      "source_sha256": "ab8a67ca745d5b62957fac7b3a40d166f543c7039c3182a5af5c0e8a8bbea236"
+    },
+    "reference_column.f90": {
+      "size_bytes": 87769,
+      "source_path": "build/cf0-cu-src-v1/WRF/test/rrtmgp/reference_column.f90",
+      "source_sha256": "6e82effd7d25242656858a8242c7e6941fced6aec0ec4d906762ef3ccb1b4ff0"
+    },
+    "roster.json": {
+      "size_bytes": 59824,
+      "source_path": "build/udm37-cf0-material-anchor-inputs-v1/roster.json",
+      "source_sha256": "4f673a3414edd798f15ffc3bd2ebcbb45bee6a45637e51587f972cfc26b7d5b6"
+    },
+    "validate_sidecar.py": {
+      "size_bytes": 16440,
+      "source_path": "build/udm37-cf0-retained-cu-eight-inputs-v1/validate_sidecar.py",
+      "source_sha256": "cf044b21b3b0ff5966388203e6d7c4a04e7558ad979a0d1df9f05bb07f7d3d9e"
+    }
+  },
+  "reader_sha256": "6099a3819268d3ee17bbcbaf0610c03822c09247da6ac5bdfdef66c9190533a7",
+  "schema": "CF0_MATERIAL_SOURCE_AND_INPUT_PROVENANCE_V1",
+  "status": "SOURCE_AND_CAPTURE_PINS_ONLY_NO_NEW_EXECUTION"
+}
