@@ -312,7 +312,7 @@ jobs:
           cmake --build build/replay-reference --target reference_column --parallel 2
           export LD_LIBRARY_PATH="$NETCDF/lib:/usr/lib/x86_64-linux-gnu:${LD_LIBRARY_PATH:-}"
           python3 WRF/test/rrtmgp/test_udm_scm.py build/udm-scm \
-            --reference-executable build/replay-reference/reference_column \
+            --reference-executable build/replay-reference/reference_column --capture-radius-stage \
             | tee build/udm-scm-result.json
       - name: Independently reconstruct UDM dry-layer mass from actual WRF coordinates
         shell: bash
