@@ -1,0 +1,176 @@
+{
+  "captured_case": {
+    "N2_section": "VMR_N2 (captured input vector, copied element-for-element; no scalar override or averaging)",
+    "call_id": "lw_000001",
+    "input": {
+      "path": "build/udm37-legacy-lw-source-export-bon-audit-v2/cases/SOURCE_OFF/trace/lw_000001.input",
+      "sha256": "9c477295b7a01de8b5e38b612052f1e61e711402a5a839bd1cb9c58b6eed2168",
+      "size_bytes": 40429
+    },
+    "layers": 45,
+    "native_mass_layers": 32,
+    "packet_version": "V13",
+    "phase": "LW",
+    "pressure_extension_layers": 13
+  },
+  "construction_contract": {
+    "changed_from_prior_draft": [
+      "V10 to exact V13 input framing",
+      "add captured VMR_N2 as the eleventh actual input gas",
+      "remove synthetic N2 scalar case/override",
+      "use campaign-confirmed native-mass parenthesization",
+      "emit each gas VMR vector and derived molecule-column vector in the construction ledger"
+    ],
+    "execution": "reconstruct_point remains a callable function for later separately authorized use; main() exits with LOCKED status. No function invocation or table interpolation has been performed for this draft.",
+    "retained": "All source-order major/minor table mapping, interpolation and accumulation methods otherwise copied from prior locked draft.",
+    "target_handling": "No saved GAS_TAU or result file is a pin or read by this draft."
+  },
+  "counts": {
+    "new_RTE_calls": 0,
+    "new_WRF_models": 0,
+    "new_compiles": 0,
+    "new_point_constructions": 0,
+    "new_target_reads": 0
+  },
+  "gas_membership": {
+    "n2_status": "present as an input profile; this records the tested interface state only, not authority for physical N2 units or atmospheric composition",
+    "reduced_order": "coefficient-table gas_names order after membership filtering, matching frontend PACK semantics",
+    "source": "the 11 LW input gas sections in the captured V13 packet; membership is the 11 gas names in the campaign driver names_lw"
+  },
+  "limits": [
+    "Source/mechanics draft only; not coefficient accuracy or physical-input validation.",
+    "The captured N2 field is not evidence that the N2 unit or value is physically correct.",
+    "No comparison against captured target opacity is authorized by this draft.",
+    "No compilation, reference RTE call, WRF run, or production source edit."
+  ],
+  "native_dry_source_contract": {
+    "expression": "REAL(native_mass,wp) * (avogad/(initialized_mol_weight_dry*10000._wp))",
+    "extension": "the original get_col_dry(H2O, PLEV*100) pressure/VMR path remains unchanged for layers 33-45",
+    "implementation_note": "The draft uses the confirmed parenthesized source grouping for the native prefix. Python binary64 is not claimed to emulate Fortran wp bit-for-bit.",
+    "source_file": {
+      "git_blob": "8465099294d4a77ef44a7a47cc1e4aec06837a30",
+      "name": "WRF/phys/module_ra_rrtmgp.F",
+      "sha256": "1852452555fbe667a0a95d59242bcd9c3833f2877fc51f882d5d3d929a058f58",
+      "size_bytes": 74962
+    },
+    "source_location": "WRF/phys/module_ra_rrtmgp.F, FUNCTION gas_dry_column, native_mass prefix assignment at lines 583-585 in pinned source"
+  },
+  "pinned_source_manifest_entries": [
+    {
+      "git_blob": "8465099294d4a77ef44a7a47cc1e4aec06837a30",
+      "name": "WRF/phys/module_ra_rrtmgp.F",
+      "sha256": "1852452555fbe667a0a95d59242bcd9c3833f2877fc51f882d5d3d929a058f58",
+      "size_bytes": 74962
+    },
+    {
+      "git_blob": "09aab426d0c946bd5588b472a174c503f665a873",
+      "name": "WRF/external/rte_rrtmgp/gas-optics/mo_gas_optics_constants.F90",
+      "sha256": "255cdd77fa39892bdec92440ae4dbc35b79fb338fdfff6d6b28bdf62f01c94b8",
+      "size_bytes": 3047
+    },
+    {
+      "git_blob": "8440e448234980c1e9b2b51d1f5280c8ba2f2e5d",
+      "name": "WRF/external/rte_rrtmgp/rrtmgp-frontend/mo_gas_optics_rrtmgp.F90",
+      "sha256": "d5e0a7e56bc811575ec2c9655953a5be64c42a62e4100f65198e1e1b44239adc",
+      "size_bytes": 107884
+    },
+    {
+      "git_blob": "896ecbd496434876d8632f496067039de4a77f58",
+      "name": "WRF/external/rte_rrtmgp/rrtmgp-kernels/mo_gas_optics_rrtmgp_kernels.F90",
+      "sha256": "96be9c4379c4e49a7b13e9b1f8314e78908262f402e913a2a03232987706f6e1",
+      "size_bytes": 41856
+    },
+    {
+      "git_blob": "a7fd381f70484b9ff94d88eaba150f05584660cf",
+      "name": "WRF/external/rte_rrtmgp/extensions/mo_load_coefficients.F90",
+      "sha256": "3abc021bf244560f4d7f247be167ad0ecafb6c451f88566a7ce2a0436caebb5b",
+      "size_bytes": 13301
+    },
+    {
+      "git_blob": "7870ac6ab318533dd6687c663de9e3437e9fc766",
+      "name": "WRF/run/rrtmgp-gas-lw-g128.nc",
+      "sha256": "70ad65d116531122660318e5da2a2af9db74b425916202860e9527ef2375b8f6",
+      "size_bytes": 11679993
+    }
+  ],
+  "pins": {
+    "campaign_build_receipt": {
+      "path": "build/udm37-legacy-lw-source-export-serial-build-v1/build-receipt.json",
+      "sha256": "3cfa2cfa0c56b143b60a833f968171c4efba98c285842df2c0c704bee26cf59f",
+      "size_bytes": 27812
+    },
+    "campaign_driver": {
+      "path": "build/udm37-legacy-lw-source-export-serial-build-v1/source/WRF/phys/module_ra_rrtmgp.F",
+      "sha256": "1852452555fbe667a0a95d59242bcd9c3833f2877fc51f882d5d3d929a058f58",
+      "size_bytes": 74962
+    },
+    "campaign_executable": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-legacy-lw-source-export-serial-build-v1/source/WRF/main/wrf.exe",
+      "sha256": "b29840e3bac314aa82cee8d1f1efa21d6a43611cfb4e197a26f854b869a7f872",
+      "size_bytes": 50278720
+    },
+    "campaign_source_manifest": {
+      "path": "build/udm37-legacy-lw-source-export-serial-build-v1/source-manifest.json",
+      "sha256": "a5f307b7bbf2d3f84f4b9caf49fc8a40e8b225fe6e8ceecc65b9a75363c5faf5",
+      "size_bytes": 2099702
+    },
+    "candidate_script": {
+      "path": "build/udm37-normal-positive-n2-opacity-draft-v1/reconstruct_positive_locked_v1.py",
+      "sha256": "7c895b5863872c78e7974374cdf96430d565f4239960e850a7e308d1d37a9f3c",
+      "size_bytes": 31350
+    },
+    "capture_execution_receipt": {
+      "path": "build/udm37-legacy-lw-source-export-bon-audit-v2/execution-receipt.json",
+      "sha256": "83fb045ddbf2b49793a086d4190057e0fcb2cd9148832afba97976552dce297b",
+      "size_bytes": 321982
+    },
+    "capture_runtime_identity": {
+      "path": "build/udm37-legacy-lw-source-export-bon-audit-v2/runtime-build-identity.json",
+      "sha256": "46b1129afd8e01a90bebc6ef862e01b849f445d54f6bd1592c597cd9b0c11dd9",
+      "size_bytes": 118834
+    },
+    "coefficient_loader": {
+      "path": "build/udm37-legacy-lw-source-export-serial-build-v1/source/WRF/external/rte_rrtmgp/extensions/mo_load_coefficients.F90",
+      "sha256": "3abc021bf244560f4d7f247be167ad0ecafb6c451f88566a7ce2a0436caebb5b",
+      "size_bytes": 13301
+    },
+    "coefficient_table": {
+      "path": "build/udm37-legacy-lw-source-export-serial-build-v1/source/WRF/run/rrtmgp-gas-lw-g128.nc",
+      "sha256": "70ad65d116531122660318e5da2a2af9db74b425916202860e9527ef2375b8f6",
+      "size_bytes": 11679993
+    },
+    "gas_constants": {
+      "path": "build/udm37-legacy-lw-source-export-serial-build-v1/source/WRF/external/rte_rrtmgp/gas-optics/mo_gas_optics_constants.F90",
+      "sha256": "255cdd77fa39892bdec92440ae4dbc35b79fb338fdfff6d6b28bdf62f01c94b8",
+      "size_bytes": 3047
+    },
+    "gas_frontend": {
+      "path": "build/udm37-legacy-lw-source-export-serial-build-v1/source/WRF/external/rte_rrtmgp/rrtmgp-frontend/mo_gas_optics_rrtmgp.F90",
+      "sha256": "d5e0a7e56bc811575ec2c9655953a5be64c42a62e4100f65198e1e1b44239adc",
+      "size_bytes": 107884
+    },
+    "gas_kernel": {
+      "path": "build/udm37-legacy-lw-source-export-serial-build-v1/source/WRF/external/rte_rrtmgp/rrtmgp-kernels/mo_gas_optics_rrtmgp_kernels.F90",
+      "sha256": "96be9c4379c4e49a7b13e9b1f8314e78908262f402e913a2a03232987706f6e1",
+      "size_bytes": 41856
+    },
+    "input_packet": {
+      "path": "build/udm37-legacy-lw-source-export-bon-audit-v2/cases/SOURCE_OFF/trace/lw_000001.input",
+      "sha256": "9c477295b7a01de8b5e38b612052f1e61e711402a5a839bd1cb9c58b6eed2168",
+      "size_bytes": 40429
+    },
+    "previous_locked_draft": {
+      "path": "build/udm37-bon-night-normal-opacity-draft-v1/reconstruct_normal_locked_v1.py",
+      "sha256": "fe8723a44e3bf0a5af45ba09b15acc47dafdd2a1f29fcc9509175a72c1a39660",
+      "size_bytes": 30997
+    },
+    "source_compatibility_addendum": {
+      "path": "build/udm37-bon-night-normal-carrier-inventory-v3/source-compatibility.json",
+      "sha256": "ee26b22bbeb92fcc787166c6721414ed0b0ddbbe50d91b1c6f11b10981fe5fdc",
+      "size_bytes": 7294
+    }
+  },
+  "purpose": "Adapt the reviewed 45-layer normal-carrier source-order opacity point reconstruction to the actual captured positive-N2 V13 LW input. This file is not executable as a campaign; main remains locked.",
+  "schema": "UDM37_NORMAL_POSITIVE_N2_OPACITY_DRAFT_V1",
+  "status": "LOCKED_DRAFT_NO_EXECUTION_NO_TARGET_READ"
+}

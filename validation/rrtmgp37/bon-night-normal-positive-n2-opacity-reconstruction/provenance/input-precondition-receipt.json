@@ -1,0 +1,100 @@
+{
+  "adapter": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-legacy-lw-source-export-serial-build-v1/source/WRF/phys/module_ra_rrtmgp.F",
+    "sha256": "1852452555fbe667a0a95d59242bcd9c3833f2877fc51f882d5d3d929a058f58",
+    "size_bytes": 74962,
+    "source_n2_literal": 0.7808
+  },
+  "cfc_group": {
+    "presence": {
+      "VMR_CCL4": true,
+      "VMR_CFC11": true,
+      "VMR_CFC12": true,
+      "VMR_CFC22": true
+    },
+    "profiles": {
+      "VMR_CCL4": {
+        "count": 45,
+        "finite": true,
+        "nonnegative": true,
+        "shape": [
+          1,
+          45
+        ]
+      },
+      "VMR_CFC11": {
+        "count": 45,
+        "finite": true,
+        "nonnegative": true,
+        "shape": [
+          1,
+          45
+        ]
+      },
+      "VMR_CFC12": {
+        "count": 45,
+        "finite": true,
+        "nonnegative": true,
+        "shape": [
+          1,
+          45
+        ]
+      },
+      "VMR_CFC22": {
+        "count": 45,
+        "finite": true,
+        "nonnegative": true,
+        "shape": [
+          1,
+          45
+        ]
+      }
+    },
+    "source_semantics": "All four present is accepted; any partial presence is rejected; all absent uses zero profiles."
+  },
+  "forbidden_inputs_opened": [],
+  "input": {
+    "columns": 1,
+    "layers": 45,
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-legacy-lw-source-export-bon-audit-v2/cases/SOURCE_OFF/trace/lw_000001.input",
+    "phase": "LW",
+    "sha256": "9c477295b7a01de8b5e38b612052f1e61e711402a5a839bd1cb9c58b6eed2168",
+    "size_bytes": 40429,
+    "version": "V13"
+  },
+  "n2": {
+    "all_exactly_equal_to_source_literal": true,
+    "count": 45,
+    "section": "VMR_N2",
+    "shape": [
+      1,
+      45
+    ],
+    "value": 0.7808
+  },
+  "non_actions": {
+    "coefficient_table_read": false,
+    "reconstruction_invoked": false,
+    "result_or_tau_read": false,
+    "solver_or_model_invoked": false
+  },
+  "process_rc": 0,
+  "schema": "udm37-normal-positive-n2-preconditions-v2",
+  "scope": "V13 input/source preconditions only; no result/tau/coefficient/solver reads.",
+  "source_contract_checks": [
+    "LW trace_gases is PRESENT of all four CFC arguments.",
+    "The public LW wrapper rejects any partial optional CFC group.",
+    "set_gases_lw independently rejects any partial optional CFC group.",
+    "The all-present path checks CFC shapes, finiteness, nonnegativity and sets all four gases.",
+    "Background N2 is always set_vmr('n2', n2_background), independently of the CFC trace flag."
+  ],
+  "status": "PASS_SCOPED_INPUT_SOURCE_PRECONDITIONS",
+  "trace_gases_present_marker": {
+    "matches_all_present_source_semantics": true,
+    "shape": [
+      1,
+      1
+    ],
+    "value": 1
+  }
+}
