@@ -1,0 +1,371 @@
+{
+  "D_equals_L_analytic_oracles": [
+    {
+      "B": -4.0,
+      "M2_tail_power_exponent": -2.0,
+      "M2_tail_uses_log_integral": false,
+      "M3_over_M2_um": 58.38511635054987,
+      "M3_tail_power_exponent": -1.0,
+      "M3_tail_uses_log_integral": true,
+      "analytic_moments_M2_M3": {
+        "M2": 232899.83308085726,
+        "M3": 13597883.852449495
+      },
+      "closed_form_rW_over_rVA": 1.1031336922528343,
+      "quadrature_moments_M2_M3": {
+        "M2": 232899.83308085712,
+        "M3": 13597883.852449488
+      },
+      "rVA_over_rW": 0.9065084377558869,
+      "rVA_um": 26.463300305566325,
+      "rW_over_rVA": 1.1031336922528343,
+      "rW_um": 29.192558175274936,
+      "relative_difference_vs_256_GL": 6.248143262221564e-16
+    },
+    {
+      "B": -3.0,
+      "M2_tail_power_exponent": -1.0,
+      "M2_tail_uses_log_integral": true,
+      "M3_over_M2_um": 224.41974281699555,
+      "M3_tail_power_exponent": 0.0,
+      "M3_tail_uses_log_integral": false,
+      "analytic_moments_M2_M3": {
+        "M2": 698036.3711122719,
+        "M3": 156653142.88192493
+      },
+      "closed_form_rW_over_rVA": 1.1031336922528343,
+      "quadrature_moments_M2_M3": {
+        "M2": 698036.3711122717,
+        "M3": 156653142.88192484
+      },
+      "rVA_over_rW": 0.9065084377558869,
+      "rVA_um": 101.71919523130627,
+      "rW_over_rVA": 1.1031336922528343,
+      "rW_um": 112.20987140849778,
+      "relative_difference_vs_256_GL": 5.707320358741552e-16
+    }
+  ],
+  "execution_counts": {
+    "B_values": 11,
+    "WRF_builds": 0,
+    "WRF_models": 0,
+    "quadrature_orders_per_B": 2,
+    "radiation_solver_calls": 0
+  },
+  "limits": [
+    "The article-supported recipe and integration domain are used, but literal Eq. (35) coefficients were not recovered from the retained primary HTML/PDF attempt.",
+    "This does not establish that the native UDM coefficients were generated from this recipe or that the two input coordinates are equivalent.",
+    "No density multiplier, B clamp, optical correction, LUT contract, or physical-accuracy conclusion is justified by this calculation."
+  ],
+  "native_udm_polynomial_diagnostic": "Each sweep row includes ideal binary64 native cubic on the same numeric argument for a bounded curve comparison only; the Wyser B and native bfactor are not physically identified.",
+  "provenance": {
+    "citation": "Wyser (1998), The Effective Radius in Ice Clouds, J. Climate 11(7), 1793\u20131802",
+    "literal_eq35_coefficients": "NOT_RECOVERED in retained primary record; this calculation does not claim them",
+    "path": "validation/rrtmgp37/ice-radius-fit-contract/provenance.json",
+    "sha256": "eb1c1158b8a52b1f511577d499c3d6d43ce367031c775380b244e8d49df2ac09"
+  },
+  "recipe": {
+    "B_fit_sweep": [
+      -6.0,
+      -5.5,
+      -5.0,
+      -4.5,
+      -4.0,
+      -3.5,
+      -3.0,
+      -2.5,
+      -2.0
+    ],
+    "L_bounds_um": [
+      10.0,
+      1000.0
+    ],
+    "L_over_D": "1 for L<=30; 1+0.003(L-30) for L>30 (therefore D=L/x)",
+    "breaks_um": [
+      10.0,
+      20.0,
+      30.0,
+      1000.0
+    ],
+    "max_allowed_relative_difference": 2e-11,
+    "n_small": "L^3 exp(-0.3 L), 10<=L<=20",
+    "n_tail": "20^3 exp(-6) (L/20)^B, 20<L<=1000; continuous at 20",
+    "orders_compared": [
+      128,
+      256
+    ],
+    "outside_domain_examples": [
+      -6.873515884666935,
+      -6.5
+    ],
+    "quadrature": "positive Gauss-Legendre on each [10,20], [20,30], [30,1000] interval"
+  },
+  "result_comparator_control": {
+    "altered_numeric": "rejected",
+    "float_tolerance": "rel_tol=2e-12, abs_tol=1e-12; nonnumeric fields exact",
+    "roundoff_within_tolerance": "accepted"
+  },
+  "rows": [
+    {
+      "B": -6.0,
+      "in_reported_fit_domain": true,
+      "native_ideal64_cubic_numeric_coordinate_only": {
+        "bounded_minus_Wyser_rW_um": 0.15244135215591292,
+        "bounded_um": 10.526399999999569,
+        "same_numeric_argument_as_B_not_a_shared_physical_variable": -6.0,
+        "unbounded_um": 10.526399999999569
+      },
+      "quadrature_128": {
+        "Wyser_rVA_um": 9.40235675769879,
+        "Wyser_rW_um": 10.373958647843663
+      },
+      "quadrature_256": {
+        "Wyser_rVA_um": 9.402356757698783,
+        "Wyser_rW_um": 10.373958647843656
+      },
+      "relative_128_to_256": {
+        "Wyser_rVA_um": 7.557070573591006e-16,
+        "Wyser_rW_um": 6.849292154329095e-16
+      }
+    },
+    {
+      "B": -5.5,
+      "in_reported_fit_domain": true,
+      "native_ideal64_cubic_numeric_coordinate_only": {
+        "bounded_minus_Wyser_rW_um": 0.6411365038975543,
+        "bounded_um": 11.78529999999978,
+        "same_numeric_argument_as_B_not_a_shared_physical_variable": -5.5,
+        "unbounded_um": 11.78529999999978
+      },
+      "quadrature_128": {
+        "Wyser_rVA_um": 10.098960437429007,
+        "Wyser_rW_um": 11.144163496102234
+      },
+      "quadrature_256": {
+        "Wyser_rVA_um": 10.098960437429001,
+        "Wyser_rW_um": 11.144163496102225
+      },
+      "relative_128_to_256": {
+        "Wyser_rVA_um": 5.276850574094761e-16,
+        "Wyser_rW_um": 7.969897606139518e-16
+      }
+    },
+    {
+      "B": -5.0,
+      "in_reported_fit_domain": true,
+      "native_ideal64_cubic_numeric_coordinate_only": {
+        "bounded_minus_Wyser_rW_um": 0.05932156804664146,
+        "bounded_um": 12.449999999999875,
+        "same_numeric_argument_as_B_not_a_shared_physical_variable": -5.0,
+        "unbounded_um": 12.449999999999875
+      },
+      "quadrature_128": {
+        "Wyser_rVA_um": 11.225108238684141,
+        "Wyser_rW_um": 12.390678431953235
+      },
+      "quadrature_256": {
+        "Wyser_rVA_um": 11.22510823868414,
+        "Wyser_rW_um": 12.390678431953233
+      },
+      "relative_128_to_256": {
+        "Wyser_rVA_um": 1.5824852657353826e-16,
+        "Wyser_rW_um": 1.4336235494735783e-16
+      }
+    },
+    {
+      "B": -4.5,
+      "in_reported_fit_domain": true,
+      "native_ideal64_cubic_numeric_coordinate_only": {
+        "bounded_minus_Wyser_rW_um": -0.29273537646370507,
+        "bounded_um": 14.29769999999985,
+        "same_numeric_argument_as_B_not_a_shared_physical_variable": -4.5,
+        "unbounded_um": 14.29769999999985
+      },
+      "quadrature_128": {
+        "Wyser_rVA_um": 13.208412811494842,
+        "Wyser_rW_um": 14.590435376463553
+      },
+      "quadrature_256": {
+        "Wyser_rVA_um": 13.208412811494846,
+        "Wyser_rW_um": 14.590435376463555
+      },
+      "relative_128_to_256": {
+        "Wyser_rVA_um": 2.689735496235166e-16,
+        "Wyser_rW_um": 1.2174803517280687e-16
+      }
+    },
+    {
+      "B": -4.0,
+      "in_reported_fit_domain": true,
+      "native_ideal64_cubic_numeric_coordinate_only": {
+        "bounded_minus_Wyser_rW_um": 0.2752293274863682,
+        "bounded_um": 19.105599999999868,
+        "same_numeric_argument_as_B_not_a_shared_physical_variable": -4.0,
+        "unbounded_um": 19.105599999999868
+      },
+      "quadrature_128": {
+        "Wyser_rVA_um": 17.01546295716202,
+        "Wyser_rW_um": 18.83037067251349
+      },
+      "quadrature_256": {
+        "Wyser_rVA_um": 17.01546295716203,
+        "Wyser_rW_um": 18.8303706725135
+      },
+      "relative_128_to_256": {
+        "Wyser_rVA_um": 6.263797266776895e-16,
+        "Wyser_rW_um": 5.660080314807123e-16
+      }
+    },
+    {
+      "B": -3.5,
+      "in_reported_fit_domain": true,
+      "native_ideal64_cubic_numeric_coordinate_only": {
+        "bounded_minus_Wyser_rW_um": 1.2098841229674626,
+        "bounded_um": 28.650899999999922,
+        "same_numeric_argument_as_B_not_a_shared_physical_variable": -3.5,
+        "unbounded_um": 28.650899999999922
+      },
+      "quadrature_128": {
+        "Wyser_rVA_um": 24.67744703319285,
+        "Wyser_rW_um": 27.441015877032434
+      },
+      "quadrature_256": {
+        "Wyser_rVA_um": 24.677447033192873,
+        "Wyser_rW_um": 27.44101587703246
+      },
+      "relative_128_to_256": {
+        "Wyser_rVA_um": 1.0077620962230407e-15,
+        "Wyser_rW_um": 9.062709581542249e-16
+      }
+    },
+    {
+      "B": -3.0,
+      "in_reported_fit_domain": true,
+      "native_ideal64_cubic_numeric_coordinate_only": {
+        "bounded_minus_Wyser_rW_um": 0.6380757110843902,
+        "bounded_um": 44.71079999999983,
+        "same_numeric_argument_as_B_not_a_shared_physical_variable": -3.0,
+        "unbounded_um": 44.71079999999983
+      },
+      "quadrature_128": {
+        "Wyser_rVA_um": 39.183987551140476,
+        "Wyser_rW_um": 44.072724288915396
+      },
+      "quadrature_256": {
+        "Wyser_rVA_um": 39.18398755114052,
+        "Wyser_rW_um": 44.07272428891544
+      },
+      "relative_128_to_256": {
+        "Wyser_rVA_um": 1.0880098430504201e-15,
+        "Wyser_rW_um": 9.673230968462816e-16
+      }
+    },
+    {
+      "B": -2.5,
+      "in_reported_fit_domain": true,
+      "native_ideal64_cubic_numeric_coordinate_only": {
+        "bounded_minus_Wyser_rW_um": -1.073857996321962,
+        "bounded_um": 69.06249999999994,
+        "same_numeric_argument_as_B_not_a_shared_physical_variable": -2.5,
+        "unbounded_um": 69.06249999999994
+      },
+      "quadrature_128": {
+        "Wyser_rVA_um": 61.05681222927312,
+        "Wyser_rW_um": 70.13635799632188
+      },
+      "quadrature_256": {
+        "Wyser_rVA_um": 61.05681222927314,
+        "Wyser_rW_um": 70.1363579963219
+      },
+      "relative_128_to_256": {
+        "Wyser_rVA_um": 3.4912209292484327e-16,
+        "Wyser_rW_um": 4.0523503418718293e-16
+      }
+    },
+    {
+      "B": -2.0,
+      "in_reported_fit_domain": true,
+      "native_ideal64_cubic_numeric_coordinate_only": {
+        "bounded_minus_Wyser_rW_um": 3.9361507917572993,
+        "bounded_um": 103.48319999999994,
+        "same_numeric_argument_as_B_not_a_shared_physical_variable": -2.0,
+        "unbounded_um": 103.48319999999994
+      },
+      "quadrature_128": {
+        "Wyser_rVA_um": 84.34845379658708,
+        "Wyser_rW_um": 99.5470492082426
+      },
+      "quadrature_256": {
+        "Wyser_rVA_um": 84.34845379658708,
+        "Wyser_rW_um": 99.54704920824264
+      },
+      "relative_128_to_256": {
+        "Wyser_rVA_um": 0.0,
+        "Wyser_rW_um": 4.2826547330823314e-16
+      }
+    },
+    {
+      "B": -6.873515884666935,
+      "in_reported_fit_domain": false,
+      "native_ideal64_cubic_numeric_coordinate_only": {
+        "bounded_minus_Wyser_rW_um": -4.572914740445036,
+        "bounded_um": 5.01,
+        "same_numeric_argument_as_B_not_a_shared_physical_variable": -6.873515884666935,
+        "unbounded_um": 1.5747952486966597
+      },
+      "quadrature_128": {
+        "Wyser_rVA_um": 8.68633461094921,
+        "Wyser_rW_um": 9.582914740445046
+      },
+      "quadrature_256": {
+        "Wyser_rVA_um": 8.6863346109492,
+        "Wyser_rW_um": 9.582914740445036
+      },
+      "relative_128_to_256": {
+        "Wyser_rVA_um": 1.2270009749528674e-15,
+        "Wyser_rW_um": 1.1122024274533546e-15
+      }
+    },
+    {
+      "B": -6.5,
+      "in_reported_fit_domain": false,
+      "native_ideal64_cubic_numeric_coordinate_only": {
+        "bounded_minus_Wyser_rW_um": -2.966284328691346,
+        "bounded_um": 6.896099999999706,
+        "same_numeric_argument_as_B_not_a_shared_physical_variable": -6.5,
+        "unbounded_um": 6.896099999999706
+      },
+      "quadrature_128": {
+        "Wyser_rVA_um": 8.939362868385306,
+        "Wyser_rW_um": 9.86238432869106
+      },
+      "quadrature_256": {
+        "Wyser_rVA_um": 8.939362868385297,
+        "Wyser_rW_um": 9.862384328691052
+      },
+      "relative_128_to_256": {
+        "Wyser_rVA_um": 9.935589736951303e-16,
+        "Wyser_rW_um": 9.005716975724524e-16
+      }
+    }
+  ],
+  "schema": "udm37-ice-radius-fit-recipe-audit-v1",
+  "scope": "Stdlib double-precision quadrature of the recovered mixed-PSD recipe; no solver, WRF execution, or production change.",
+  "source": {
+    "literal_wyser_eq35_coefficients": "NOT_AUTHENTICATED_OR_NOT_CLAIMED",
+    "native_radius_bounds_m": {
+      "reimax": 0.000125,
+      "reimin": 5.01e-06
+    },
+    "native_radius_polynomial_coefficients_um": [
+      377.4,
+      203.3,
+      37.91,
+      2.3696
+    ],
+    "path": "WRF/phys/module_mp_udm.F",
+    "sha256": "9b7b878b263f6b0111edba4cfb1c6c30e53b3f7534035cda2c0411a573b81c2c",
+    "source_anchor": "udm_mp_effective_radius; temp=377.4+203.3*bfactor+37.91*bfactor2+2.3696*bfactor3"
+  },
+  "status": "PASS_NUMERICAL_RECIPE_AUDIT"
+}
