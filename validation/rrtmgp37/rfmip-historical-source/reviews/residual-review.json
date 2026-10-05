@@ -1,0 +1,101 @@
+{
+  "created_at": "2026-10-05T11:26:10.743123+00:00",
+  "material_blockers": [],
+  "pins": {
+    "analysis.json": {
+      "bytes": 14760,
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-historical-source-experiment-v1/analysis.json",
+      "sha256": "198ecc771f3844cb30c2c1ad140ade4bed99cd3422e33839295053e6473fa9ce"
+    },
+    "analyze.py": {
+      "bytes": 7635,
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-historical-source-experiment-v1/analyze.py",
+      "sha256": "8114595efb4d1ba85d745e960f3fb877e5bbdb10dee24ca00dbfd0c08cca03be"
+    },
+    "post-run-review.json": {
+      "bytes": 8376,
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-historical-source-experiment-v1/post-run-review.json",
+      "sha256": "26f7fa7142221b669d576555a7a78a460c6cc62d2f5d6611efabc983d55a10e3"
+    },
+    "residual-details.json": {
+      "bytes": 29400,
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-historical-source-experiment-v1/residual-details.json",
+      "sha256": "58a3901f6e6f4f7c255ae0d0b4629315842bedbe1a244c3cff220ed484aa5879"
+    },
+    "residual_details.py": {
+      "bytes": 7847,
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-historical-source-experiment-v1/residual_details.py",
+      "sha256": "1c05d88e340c2d181db31931c93ab450377dfee1ab91d86cbf29b0e05d52c430"
+    }
+  },
+  "recomputed_counts": {
+    "captured_failure_cells": 13,
+    "captured_historical_outside_reference_rounding_interval": 13,
+    "captured_historical_prewrite_strict_failures": 8,
+    "captured_midpoint_ties": 0,
+    "full_strict_failures": 21,
+    "new_failures_outside_original_selector": 8,
+    "selected_failures": 13,
+    "uncaptured_failure_cells": 8
+  },
+  "reviewer_execution_counts": {
+    "analyzer_main": 0,
+    "compiler_build": 0,
+    "model": 0,
+    "network_retrieval": 0,
+    "solver": 0
+  },
+  "schema": "udm37-historical-residual-independent-review-v1",
+  "scope": [
+    "All 13 captured failures lie outside the published stored float32 value midpoint interval; eight historical working-precision values differ from the published stored value by more than 1e-5, while five do not but their stored cast does. Those five are RSU cells.",
+    "The eight new failures outside the original 155-cell selector also lie outside the 135 captured profile roster. No historical/current working-precision interval classification is available for them; do not extrapolate the 13 captured cells to all 21.",
+    "These intervals describe representational agreement with published float32 values. Published working-precision generator values are unavailable; classification is neither a physical-error estimate nor a changed tolerance or strict pass.",
+    "No tie cases, masked cells, nonfinite values or sentinel matches were observed; archival missing_value attribute warnings remain explicitly recorded.",
+    "All prior analyses/reviews are preserved; the 21 historical strict failures and retained 155 current old-solar failures remain failures."
+  ],
+  "status": "PASS_SCOPED_SAVED_RESIDUAL_DETAILS_STRICT_FAIL_PRESERVED",
+  "stored_cast_only_strict_crossings": {
+    "coordinates_variable_experiment_site_level_zero_based": [
+      [
+        "rsu",
+        4,
+        49,
+        28
+      ],
+      [
+        "rsu",
+        6,
+        0,
+        8
+      ],
+      [
+        "rsu",
+        6,
+        49,
+        36
+      ],
+      [
+        "rsu",
+        10,
+        0,
+        2
+      ],
+      [
+        "rsu",
+        13,
+        25,
+        26
+      ]
+    ],
+    "count": 5
+  },
+  "validation": {
+    "all_11_residual_pins_rehashed": true,
+    "all_13_captured_historical_and_current_casts_exact": true,
+    "all_21_coordinates_and_scalar_values_rederived": true,
+    "all_26_historical_and_current_rounding_records_rederived": true,
+    "all_6_full_array_mask_nonfinite_sentinel_counts_match_zero": true,
+    "rounding_formula": "Positive IEEE32 adjacent values derived independently with uint32 bit neighbors; each midpoint formed exactly in float64. Ties are absent so round-to-nearest-even endpoint parity is not needed for the observed classification.",
+    "sentinel_check_also_tested_float32_converted_attribute_values": true
+  }
+}

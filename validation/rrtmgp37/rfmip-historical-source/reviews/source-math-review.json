@@ -1,0 +1,70 @@
+{
+  "status": "READ_ONLY_STATIC_AUDIT",
+  "scope": "Compare historical RRTMGP v1.0 source against the retained current source for plausible contributors to the measured old-solar optical/flux residual. This is source review only; no numerical intervention was run.",
+  "source_revisions": {
+    "historical": {
+      "commit": "ed5b0113109fcd23a010a90c61f21bad551146ef",
+      "tree": "build/udm37-rfmip-historical-source-experiment-v1/source"
+    },
+    "current": {
+      "commit": "41c5fcd950fed09b8afe186dede266824eca7fd3",
+      "tree": "build/official-rrtmgp-reference/source"
+    }
+  },
+  "observed_retained_metrics": {
+    "solar_source_pre_post": "bitwise equal between historical and current executions",
+    "tau_max_abs": 2.333927113795653e-7,
+    "ssa_max_abs": 3.1747134920934172e-9,
+    "asymmetry_g_max_abs": 0.0,
+    "flux_max_abs": 8.128138233587379e-7,
+    "evidence": "build/udm37-rfmip-historical-source-experiment-v1/analysis.json"
+  },
+  "source_files": [
+    {
+      "historical_path": "build/udm37-rfmip-historical-source-experiment-v1/source/rrtmgp/mo_gas_optics_rrtmgp.F90",
+      "historical_sha256": "00e7740e76fd81a22a4e4a71378df98111f9a388296523c7747e4cb40174b5d2",
+      "current_path": "build/official-rrtmgp-reference/source/rrtmgp-frontend/mo_gas_optics_rrtmgp.F90",
+      "current_sha256": "661a6b7aaec09c46b62a8e2c27c25cdfba5f52c695fcd7ec30701fc4f2a8349c"
+    },
+    {
+      "historical_path": "build/udm37-rfmip-historical-source-experiment-v1/source/rrtmgp/kernels/mo_gas_optics_kernels.F90",
+      "historical_sha256": "517fe6a519b8ab961a7241cba3935d6d5ff14b403a1baa91ecdade85ab9938c7",
+      "current_path": "build/official-rrtmgp-reference/source/rrtmgp-kernels/mo_gas_optics_rrtmgp_kernels.F90",
+      "current_sha256": "d0751c5c0a43fd7a9fac79b99be0645763c549f08052d1e7c55d54992a43afb8"
+    },
+    {
+      "historical_path": "build/udm37-rfmip-historical-source-experiment-v1/source/rrtmgp/mo_gas_concentrations.F90",
+      "historical_sha256": "ff45440a8ab85038d67153d5600b56a3c25dfde5c1b5bff2356874276e635460",
+      "current_path": "build/official-rrtmgp-reference/source/gas-optics/mo_gas_concentrations.F90",
+      "current_sha256": "362334ce30b3eadf998583eff5e3226a24ebf3547eb41dfd0c04135424b50456"
+    }
+  ],
+  "plausible_source_candidates": [
+    {
+      "candidate": "Dry-air column arithmetic regrouping and vector-to-scalar implementation",
+      "evidence": "Historical get_col_dry forms m_air=(m_dry+m_h2o*q)/(1+q), then col_dry=constant*dp/m_air and divides by (1+q), at historical mo_gas_optics_rrtmgp.F90:1230-1235. Current computes fact=1/(1+q), m_air=(m_dry+m_h2o*q)*fact, then col_dry=constant*dp*fact/m_air in mo_gas_optics_rrtmgp.F90:1537-1541. These are algebraically equivalent but have different floating-point operation grouping. Historical passes tlay for output shape; current derives shape from plev. This can change col_dry by rounding and thus gas columns/tau, but the retained run did not capture/compare col_dry directly, so causality is unproven.",
+      "confidence": "plausible_roundoff_path_not_established"
+    },
+    {
+      "candidate": "Absorption-kernel layout, traversal, and accumulation refactor",
+      "evidence": "Historical kernel uses array layout (gpt,nlay,ncol), with major optical depth computed by band-vector interpolation and then added to a g-point slice (historical kernels:125-266 and 268 onward). Current uses (ncol,nlay,gpt), traverses band then layer then column, and adds each band slice (current kernels:178-340, 347-398). Minor-species contributions also changed from vectorized g-point slices to per-column/layer scalar interpolation and slice accumulation (historical kernels:331-427 versus current kernels:404-502). These changes alter loop and expression evaluation order while retaining the same broad physical terms; they are plausible sources of small tau differences. No controlled kernel-only swap was performed.",
+      "confidence": "plausible_roundoff_path_not_established"
+    },
+    {
+      "candidate": "Gas descriptor initialization/order and explicit zero NO2 handling",
+      "evidence": "Historical gas concentrations can grow the gas list when a missing gas is set; absent get_vmr values return zero (historical mo_gas_concentrations.F90:80-181, 190-261). Current initializes the known list, and the RFMIP reader explicitly inserts NO2=0 because it is not supplied (current mo_rfmip_io.F90:339-408). The current descriptor ordering also differs. The observed input audit establishes same effective supplied concentrations for this run, and the explicit NO2 value is semantically zero like an absent historical species. Name-to-table mapping/order remains a static candidate to verify, but there is no evidence that this explains the residual.",
+      "confidence": "lower_priority_mapping_candidate"
+    },
+    {
+      "candidate": "Absorption/Rayleigh combination path",
+      "evidence": "Historical combine_and_reorder_2str calculates t=tau_abs+tau_rayleigh, ssa=tau_rayleigh/t when t>2*tiny, and g=0 (historical kernels:715-738). Current combine_abs_and_rayleigh uses the same addition, threshold, division, and zero asymmetry for the two-stream optical properties (current mo_gas_optics_rrtmgp.F90:2002-2084). No material formula difference was found in this step; different array layout/traversal remains possible but is not an independent changed formula candidate.",
+      "confidence": "formula_match_no_obvious_causal_change"
+    }
+  ],
+  "controlled_out_or_not_supported": [
+    "Solar input/source vectors are bitwise identical before and after the gas-optics call, so a changed solar source does not explain the measured optics differences in this comparison.",
+    "The observed g arrays are exactly equal. The small tau and SSA changes are consistent with perturbations in gas optical depth and subsequent albedo division, but this is interpretation, not source-causality proof.",
+    "The measured flux differences are small and follow the measured optical differences; the retained evidence does not isolate a single changed expression, nor prove the current or historical result is more accurate."
+  ],
+  "next_discriminating_intervention": "If attribution is needed, capture and compare col_dry, col_gas, interpolated weights, major/minor tau and Rayleigh tau at the same profile, then selectively substitute historical/current get_col_dry and absorption-kernel paths while keeping the same coefficients, inputs, compiler, and solar vectors. This report performs none of those interventions."
+}

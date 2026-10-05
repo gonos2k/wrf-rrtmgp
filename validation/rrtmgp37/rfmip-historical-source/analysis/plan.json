@@ -1,0 +1,406 @@
+{
+  "build": {
+    "NetCDF_include": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/root/usr/include",
+    "NetCDF_libraries": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/root/usr/lib/x86_64-linux-gnu",
+    "compiler": "/usr/bin/gfortran",
+    "flags": [
+      "-O0",
+      "-ffree-line-length-none"
+    ]
+  },
+  "pins": {
+    "coefficient": {
+      "bytes": 14954928,
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-historical-provenance-v1/authentic-v1.0-sw-g224.nc",
+      "sha256": "b9f4b15796d132880fffb49ac45c29753c1ee70a8ee3fed733899cb315c75e9b"
+    },
+    "diagnostic_driver": {
+      "bytes": 19475,
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-historical-source-experiment-v1/rrtmgp_rfmip_sw_diag.F90",
+      "sha256": "e6b00c7c8a8fed04454e51778952ecc5dc88b3698f2541f622ed5242e6234878"
+    },
+    "failure_selector": {
+      "bytes": 21465,
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-residual-next-diagnostic-v4/failed_points.csv",
+      "sha256": "1c2df6f2ccdb2b9520bdc9eaedadfbac6580be31241d4dd3c22e7c2a013e6b61"
+    },
+    "input": {
+      "bytes": 1859666,
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/official-rrtmgp-reference/data/examples/rfmip-clear-sky/inputs/multiple_input4MIPs_radiation_RFMIP_UColorado-RFMIP-1-2_none.nc",
+      "sha256": "b8dc05d7cd2e0e6354b4a6198771ddf3bc09f18d72b49f20a41e2024e2fd51f4"
+    },
+    "observer_patch": {
+      "bytes": 7657,
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-historical-source-experiment-v1/observer.patch",
+      "sha256": "b27ff0e8837c2f3bdbd73ab3b132e805472604854837bb6d762a750ef4449f1c"
+    },
+    "observer_predecessor": {
+      "bytes": 19453,
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-residual-next-diagnostic-v5/source-snapshot/rrtmgp_rfmip_sw.F90",
+      "sha256": "8c55012d7b34722fce2d29a6c13d1cb55cf5f6e919340decad250a8c031f3354"
+    },
+    "original_driver": {
+      "bytes": 13768,
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-historical-source-experiment-v1/source/examples/rfmip-clear-sky/rrtmgp_rfmip_sw.F90",
+      "sha256": "9422127eead8d5c9b112dc5cf3c285c1bfcf5d6a122d9e1e67b98873669b12b4"
+    },
+    "profile_selector": {
+      "bytes": 728,
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-residual-next-diagnostic-v5/execution-v5/old_solar/profiles.txt",
+      "sha256": "b6fda5fbbb97efd13625029d3dad82258779edd003b637a68e67b454d4ade102"
+    }
+  },
+  "run": {
+    "SW_gpoints": 224,
+    "all_profiles": 1800,
+    "block_size": 8,
+    "captured_profiles": 135,
+    "forcing_index": 1,
+    "new_historical_solver_budget": 1,
+    "output_flux_dtype": "float32",
+    "strict_atol": 1e-05,
+    "strict_rtol": 0
+  },
+  "schema": "udm37-historical-source-experiment-v1",
+  "scope": "One isolated historical-source candidate with authenticated historical coefficient bytes. Original core/library/helper source is unchanged; diagnostic main adds observer I/O only. Not identified as the original CMIP6 generator; no WRF forecast or production change.",
+  "source_commit": "ed5b0113109fcd23a010a90c61f21bad551146ef",
+  "source_files": [
+    {
+      "bytes": 175,
+      "git_blob_sha1": "687e3f623d7f4e36b012ecd1aaa163d379c68e23",
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-historical-source-experiment-v1/source/.gitignore",
+      "sha256": "4066748580c7bcc36b760c721b9b79c3589e3b3de3cc377ed0871d3f578f6fb9"
+    },
+    {
+      "bytes": 2930,
+      "git_blob_sha1": "844614a52f11bc3e7e2b174a1d2f2dca466887fb",
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-historical-source-experiment-v1/source/.travis.yml",
+      "sha256": "cd1c32433e1987afa145fc8bf557bcc9ebf909c7707fe8489afcc6c7e856b6b1"
+    },
+    {
+      "bytes": 1586,
+      "git_blob_sha1": "18020ccc35bd70fad388767f3a74b397f161ba1d",
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-historical-source-experiment-v1/source/LICENSE",
+      "sha256": "dfe678892093791b1e4338e9f053c5f2ee592cfd8aa5859ba92a61a8d574ea3f"
+    },
+    {
+      "bytes": 2077,
+      "git_blob_sha1": "fd5b1a9f9ba8d93fb44fdc69f805347516e47d97",
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-historical-source-experiment-v1/source/README.md",
+      "sha256": "dd6f3e6a92896da618384230026c13e6df6687b126e9b2f2e29edddaa646de32"
+    },
+    {
+      "bytes": 834,
+      "git_blob_sha1": "d18d52159961ec6afe2655f39bbb9f9f4a1bb3eb",
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-historical-source-experiment-v1/source/build/Makefile",
+      "sha256": "063e18a497f0029d7f75f6c66a863e6b93968c69481cb2f808cf1034a8822a36"
+    },
+    {
+      "bytes": 547,
+      "git_blob_sha1": "a7b85bfecf87bc64c7d0065b2af27d804dfdf638",
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-historical-source-experiment-v1/source/build/Makefile.conf.gfortran",
+      "sha256": "3440f48ac141457ef266b35ee051fd405e876a47a868b10feb501f32c682c974"
+    },
+    {
+      "bytes": 525,
+      "git_blob_sha1": "b2b47bfb39f9944addf834489bb565d9bf7cc9d1",
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-historical-source-experiment-v1/source/build/Makefile.conf.ifort",
+      "sha256": "7c586cd1af3eb0902cf650e303f4e2d95a9afb1d3168110f788ad39d49f3abaa"
+    },
+    {
+      "bytes": 255,
+      "git_blob_sha1": "9e130c56950ef65900dd9f8b4798feddb13bba0d",
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-historical-source-experiment-v1/source/build/Makefile.conf.nagfor",
+      "sha256": "05217cd6a744788f6460c55bac3b43b0d25494a6f4a5a8dd2c62d05a0e3f77b0"
+    },
+    {
+      "bytes": 823,
+      "git_blob_sha1": "dbb69b694d541f2a10400c7d18c7ea998561cf3c",
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-historical-source-experiment-v1/source/build/Makefile.conf.olcf_pgi",
+      "sha256": "ebf9f2a43a5982c2cd7e0c68189c5d14b8cec7ca31fcf263bf98990c1b2aeaf7"
+    },
+    {
+      "bytes": 214,
+      "git_blob_sha1": "c93bd9b86f86c9c516d2a2c4031a9515678f2b1b",
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-historical-source-experiment-v1/source/build/Makefile.conf.pgfortran",
+      "sha256": "47c023769caf945a9c3a9cae2a92b19664dc890291d123fe8c24ce6eb3e508a1"
+    },
+    {
+      "bytes": 1267,
+      "git_blob_sha1": "743a25ff1355ba6c10af19855ea576128d143866",
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-historical-source-experiment-v1/source/build/Makefile.conf.pgfortran-cscs",
+      "sha256": "d5767d8e201e2455751631c685fda21af7215d54c5d6e239d6933662a664b507"
+    },
+    {
+      "bytes": 1246,
+      "git_blob_sha1": "571589b1d0cedc251571a78dff3270e145653ac4",
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-historical-source-experiment-v1/source/build/Makefile.conf.pgfortran-cscs-gpu",
+      "sha256": "6496a1c7e6c5281921a0dab4e2945ede951a0ba5ec4b668a82c78a13a9682064"
+    },
+    {
+      "bytes": 12518,
+      "git_blob_sha1": "edf2ea4a5d7ca78ad0a8450934ba84220b8086ca",
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-historical-source-experiment-v1/source/examples/mo_load_coefficients.F90",
+      "sha256": "57df50565237522545d7138cf684d1e6c6c8c537910d7ea0da16b9a42e1e76f4"
+    },
+    {
+      "bytes": 17984,
+      "git_blob_sha1": "a50f22581a63d84c6af3786bdb3ff1dc3bcc8864",
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-historical-source-experiment-v1/source/examples/mo_simple_netcdf.F90",
+      "sha256": "a28a70dc134c8fb0d675705ac414d451a00833fd4fe3dc0cf2be3dce357c8801"
+    },
+    {
+      "bytes": 1681,
+      "git_blob_sha1": "47f106971d55aa7fb141348a38c38979e7f7b453",
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-historical-source-experiment-v1/source/examples/rfmip-clear-sky/Makefile",
+      "sha256": "f40f731494bfc4f67b40caaa51961dd235e7eb3089bdc9b31ec342cfd34f54a8"
+    },
+    {
+      "bytes": 391,
+      "git_blob_sha1": "135fea0062c4c8f6976722a11b3c89413920b6d5",
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-historical-source-experiment-v1/source/examples/rfmip-clear-sky/Makefile.libs.macos",
+      "sha256": "7c088474e872c2928334e9dc0bf9f48bbc5015f592bbaa6e1eac7c073105e8ce"
+    },
+    {
+      "bytes": 351,
+      "git_blob_sha1": "9754e1fbbd5dbe5138c2f85ded27341d7d9f788e",
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-historical-source-experiment-v1/source/examples/rfmip-clear-sky/Makefile.libs.olcf",
+      "sha256": "a4a6b3644feca7e9f8df04426f64aeb1499339b5e1dc81edaff6d8e431b9024d"
+    },
+    {
+      "bytes": 633,
+      "git_blob_sha1": "3bd5a213b0a48231e66d0201e40aec846c8d0b66",
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-historical-source-experiment-v1/source/examples/rfmip-clear-sky/Makefile.libs.pgfortran-cscs",
+      "sha256": "4c1d477be7d8db7ac1994bfdca56039fb3c926584673f2c885080345684d33c4"
+    },
+    {
+      "bytes": 969,
+      "git_blob_sha1": "1a29d15145c3a3bdcbcb4d339fdfe50c125a4ec4",
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-historical-source-experiment-v1/source/examples/rfmip-clear-sky/Readme.md",
+      "sha256": "7a03772b6ce7c238debbcaecd0bbe549e466721d10593d67e71de802e05d514d"
+    },
+    {
+      "bytes": 2207,
+      "git_blob_sha1": "dc805a605dc3782eb5975eda4c1efffe39caf469",
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-historical-source-experiment-v1/source/examples/rfmip-clear-sky/compare-to-reference.py",
+      "sha256": "df53e1e8abf1dadd45c4b93894bf70ac3e9575099069af756f4bf36d95bf4376"
+    },
+    {
+      "bytes": 21592,
+      "git_blob_sha1": "a5226f4020b591ad421f11aa270b2aca91a8abbc",
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-historical-source-experiment-v1/source/examples/rfmip-clear-sky/mo_rfmip_io.F90",
+      "sha256": "2a810b231a2a19a7a000c75508c967ddd272a0a216a7e60cdefaeb59f2118abc"
+    },
+    {
+      "bytes": 12410,
+      "git_blob_sha1": "5c43e5d1d682dd711ab2a4142703917d40342e06",
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-historical-source-experiment-v1/source/examples/rfmip-clear-sky/rrtmgp_rfmip_lw.F90",
+      "sha256": "5085bf6e0c71edf1ace7d0c8d845a9bd5ca59553d13a865ddbf598e30a0dd10c"
+    },
+    {
+      "bytes": 13768,
+      "git_blob_sha1": "cdf2e72c815a6e77a4fce373c87aee89082246ca",
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-historical-source-experiment-v1/source/examples/rfmip-clear-sky/rrtmgp_rfmip_sw.F90",
+      "sha256": "9422127eead8d5c9b112dc5cf3c285c1bfcf5d6a122d9e1e67b98873669b12b4"
+    },
+    {
+      "bytes": 947,
+      "git_blob_sha1": "1999056c193f90594863ff8141a9b595438f1a8b",
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-historical-source-experiment-v1/source/examples/rfmip-clear-sky/run-rfmip-examples.py",
+      "sha256": "65ef3e80e464e0d7d6f23310fd3cd747a765ec195ec53324523cc3714f5d458a"
+    },
+    {
+      "bytes": 1458,
+      "git_blob_sha1": "a1556e2abc880715d476dceaaea20dc655a18467",
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-historical-source-experiment-v1/source/examples/rfmip-clear-sky/stage_files.py",
+      "sha256": "a9afdde80b8564c2c11b49b78c979c1eda8e2950b292dca9cce8b7cd1abd79f9"
+    },
+    {
+      "bytes": 29442,
+      "git_blob_sha1": "356e7b3ebb9e66e1de138c33f084b5efd8499b05",
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-historical-source-experiment-v1/source/extensions/cloud_optics/mo_cloud_optics.F90",
+      "sha256": "d91719dcd451cccd3a30405e99fea1f8af24454ebaf95724ec5729d72fda8674"
+    },
+    {
+      "bytes": 13566,
+      "git_blob_sha1": "b814d461f65be7c740a0917580bb0c41852591ec",
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-historical-source-experiment-v1/source/extensions/cloud_optics/mo_cloud_sampling.F90",
+      "sha256": "fb333d4fa6d22d93214504fa46a6c002138e09cae63554839160dffd2be5365d"
+    },
+    {
+      "bytes": 10682,
+      "git_blob_sha1": "275a64808d963cba584ded76a50008f1a8811048",
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-historical-source-experiment-v1/source/extensions/mo_compute_bc.F90",
+      "sha256": "7a4958bd35a5b21e4cce087e02d86d69e9ccc8ab2e8ad729ee3e4b2bba51cfbf"
+    },
+    {
+      "bytes": 6803,
+      "git_blob_sha1": "1298b58828f77ac3cb920eb5ee1d5abcbc044841",
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-historical-source-experiment-v1/source/extensions/mo_fluxes_byband.F90",
+      "sha256": "d877e68d3f9276897de50350b8d6671108d868d8a9f73214fd25302dbf8a81cc"
+    },
+    {
+      "bytes": 4019,
+      "git_blob_sha1": "0e69e46e517439e50fac2cb0c2fd5c54555f290a",
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-historical-source-experiment-v1/source/extensions/mo_fluxes_byband_kernels.F90",
+      "sha256": "807ffee378000b327464ceee8bf13207f98fc7f4338aa0f32b3ab5b581193585"
+    },
+    {
+      "bytes": 4948,
+      "git_blob_sha1": "f2304cb891275da6b0bd7f6212e54ee0b5671ac1",
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-historical-source-experiment-v1/source/extensions/mo_fluxes_bygpoint.F90",
+      "sha256": "f41ea539c3da2dc7d6414194fc37532abf04751fec59113350f092a074b82e52"
+    },
+    {
+      "bytes": 2193,
+      "git_blob_sha1": "e9c71ad5af9c1ea442e01dd2d698f210760c9c69",
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-historical-source-experiment-v1/source/extensions/mo_heating_rates.F90",
+      "sha256": "53fe99d920fdb00df0364f994fa7b17068a06667e66623ddd9f02c10ea3ffc5d"
+    },
+    {
+      "bytes": 13616,
+      "git_blob_sha1": "d1ecb15ba2911f9b48b965d38e371bd279812037",
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-historical-source-experiment-v1/source/extensions/mo_rrtmgp_clr_all_sky.F90",
+      "sha256": "e0d01c691bed44f7294fd7d6147cbec2e36c66df7061e804469bbb2583859d1f"
+    },
+    {
+      "bytes": 1168,
+      "git_blob_sha1": "71d8c7328b1f71919bdeeb41da7d27ad06b5a8d3",
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-historical-source-experiment-v1/source/rrtmgp/Make.depends",
+      "sha256": "04e6dfdd4d06d00cbaa045e906f51a4006099ca80af95cc8ef1267e942ab526d"
+    },
+    {
+      "bytes": 38813,
+      "git_blob_sha1": "d51319fad2b1cc6bf2ba4118466a52213d7c1192",
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-historical-source-experiment-v1/source/rrtmgp/kernels-openacc/mo_gas_optics_kernels.F90",
+      "sha256": "b91d31337f68ce7ea94ea869f240a8bf5589dad19924a1d867d34c58a6053d5a"
+    },
+    {
+      "bytes": 40358,
+      "git_blob_sha1": "9b9f99e7e58c0deff657e36e0e28c0603a268c55",
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-historical-source-experiment-v1/source/rrtmgp/kernels/mo_gas_optics_kernels.F90",
+      "sha256": "517fe6a519b8ab961a7241cba3935d6d5ff14b403a1baa91ecdade85ab9938c7"
+    },
+    {
+      "bytes": 2133,
+      "git_blob_sha1": "ab683ac09263d64bae73fc444c9d91d60e167eac",
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-historical-source-experiment-v1/source/rrtmgp/kernels/mo_reorder_kernels.F90",
+      "sha256": "bd438b4f88c77e93ce9b26d3d289ccfdfa052bf757bd4bc12a1c23b512c81ba4"
+    },
+    {
+      "bytes": 14820,
+      "git_blob_sha1": "e4623b0802a843095230b79832e43fd2995459e2",
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-historical-source-experiment-v1/source/rrtmgp/mo_gas_concentrations.F90",
+      "sha256": "ff45440a8ab85038d67153d5600b56a3c25dfde5c1b5bff2356874276e635460"
+    },
+    {
+      "bytes": 6171,
+      "git_blob_sha1": "c3f101af83f8e09e4233e5cdaa8558f66431288f",
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-historical-source-experiment-v1/source/rrtmgp/mo_gas_optics.F90",
+      "sha256": "9285476113a8daa244f2e077b9ad743227d2bfc0a2ea10396b0bb20412706fa0"
+    },
+    {
+      "bytes": 86746,
+      "git_blob_sha1": "e33ee4efa9b5fb247f8254276f1d8a6a4fe6c24f",
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-historical-source-experiment-v1/source/rrtmgp/mo_gas_optics_rrtmgp.F90",
+      "sha256": "00e7740e76fd81a22a4e4a71378df98111f9a388296523c7747e4cb40174b5d2"
+    },
+    {
+      "bytes": 2794,
+      "git_blob_sha1": "5c98aeb054d6db619a4509827bf0317d3a95c36b",
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-historical-source-experiment-v1/source/rrtmgp/mo_rrtmgp_constants.F90",
+      "sha256": "d978864d78072ea7a3be65776eb3ae33d56c3d608b56c1614bd90a411c66f18d"
+    },
+    {
+      "bytes": 1917,
+      "git_blob_sha1": "bf408396737199b697a29317fa43c5388f2483cd",
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-historical-source-experiment-v1/source/rrtmgp/mo_util_reorder.F90",
+      "sha256": "e6d92acf948fa76f9a27d0f3d439da90f28f168fc955f35808cc349fa2c5bbb0"
+    },
+    {
+      "bytes": 3137,
+      "git_blob_sha1": "db792531a5f78349379b44c0ea51a2711b6bc6ef",
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-historical-source-experiment-v1/source/rrtmgp/mo_util_string.F90",
+      "sha256": "b6ca56dce227d028b443556c0eedcc5f46d8c9e36d0e71803a8e43e77ecde66c"
+    },
+    {
+      "bytes": 1337,
+      "git_blob_sha1": "13123d91340758f90a1c8e91f5639388ec925dff",
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-historical-source-experiment-v1/source/rte/Make.depends",
+      "sha256": "c149c2b04992f5fb052d18d046dbb1845e405a02493a30bf9e5da96677532204"
+    },
+    {
+      "bytes": 38670,
+      "git_blob_sha1": "65c91eae4df2f6d3f60124a923985bf3ecb56fae",
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-historical-source-experiment-v1/source/rte/kernels-openacc/mo_optical_props_kernels.F90",
+      "sha256": "8a22bf734c5db49ffa4f9e4ff2c4b8481455ac322552fa4da231a3cd9798d5b5"
+    },
+    {
+      "bytes": 57775,
+      "git_blob_sha1": "da7e0d30754bed516bd4f37ff50a726888fb3752",
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-historical-source-experiment-v1/source/rte/kernels-openacc/mo_rte_solver_kernels.F90",
+      "sha256": "e038c99a49dfe3a0b7eed152bc9156b5b39dc4d795956d07ed0d019f1ca947fe"
+    },
+    {
+      "bytes": 4511,
+      "git_blob_sha1": "cfc3bb7a06f3c0c0f17a5a68f57a0a98c917ad95",
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-historical-source-experiment-v1/source/rte/kernels/mo_fluxes_broadband_kernels.F90",
+      "sha256": "ae553202909d4808e6a13ef8d2fb24c93455e7e2479205a643777460391f9d31"
+    },
+    {
+      "bytes": 31015,
+      "git_blob_sha1": "76a71a186e530664c35e3718c81f985bbb051425",
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-historical-source-experiment-v1/source/rte/kernels/mo_optical_props_kernels.F90",
+      "sha256": "3cc5b7cfd62916fa0e9841d4f3f8fa2e429c82bf339caa91c8ae0c8d0cb362c0"
+    },
+    {
+      "bytes": 47472,
+      "git_blob_sha1": "a243c261b8beab00f570371a9939d69142c90424",
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-historical-source-experiment-v1/source/rte/kernels/mo_rte_solver_kernels.F90",
+      "sha256": "ae6fe692ad1a6374e418900c07bb4e9bed76d16f739add407472c247aff31551"
+    },
+    {
+      "bytes": 9318,
+      "git_blob_sha1": "dc445df8496d998b0e2a72260edabd29e7eefe8a",
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-historical-source-experiment-v1/source/rte/mo_fluxes.F90",
+      "sha256": "98f84b9784431397907f5b3bed03859e6583810f7b7f3a9589593b221d7fea8e"
+    },
+    {
+      "bytes": 55131,
+      "git_blob_sha1": "4213630c804cef191df3c397fb4950f024cdb561",
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-historical-source-experiment-v1/source/rte/mo_optical_props.F90",
+      "sha256": "e699b73872da8f14ec34fe03f70a7a910cb3cd1935fd7fb3b6841759e01f53fe"
+    },
+    {
+      "bytes": 1489,
+      "git_blob_sha1": "daa09262f4f3346bcf236df114f7c64f2d41fe2a",
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-historical-source-experiment-v1/source/rte/mo_rte_kind.F90",
+      "sha256": "5fc64188cb65588bf33ed98153ef4f1cc6238f73944c1df98cb55133966d2f4e"
+    },
+    {
+      "bytes": 12865,
+      "git_blob_sha1": "9439f0b735aa38b08376d74abc110c146b05ed8f",
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-historical-source-experiment-v1/source/rte/mo_rte_lw.F90",
+      "sha256": "6073b2cf91e9005d7679328da6eaa734e7ddf5bc0e26e0fee3fca6f967c28878"
+    },
+    {
+      "bytes": 10323,
+      "git_blob_sha1": "bb69a37d95c7a72da9610f4a1b88ddf05d4d3eb2",
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-historical-source-experiment-v1/source/rte/mo_rte_sw.F90",
+      "sha256": "f96f8d0bf74b34d8f99103403e6f7f19fe1c2bda6dd93262e9a291cc55b707d0"
+    },
+    {
+      "bytes": 12382,
+      "git_blob_sha1": "b930ce5e6d389b2212bfc2b85e54f1ab92a4aff4",
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-historical-source-experiment-v1/source/rte/mo_source_functions.F90",
+      "sha256": "cc6b132b627693e86b2483dfb45c84cf9eeb40c25e22d82adb9608b1be98c792"
+    },
+    {
+      "bytes": 8512,
+      "git_blob_sha1": "28e8f254de950a4d1b7839bfab0bda18d828b2eb",
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-historical-source-experiment-v1/source/rte/mo_util_array.F90",
+      "sha256": "cc47f9de9b0cc8b26e94ef11f72386f412dd9eb76c44b629f58fc1036b670309"
+    }
+  ],
+  "status": "STAGED_NOT_RUN"
+}
