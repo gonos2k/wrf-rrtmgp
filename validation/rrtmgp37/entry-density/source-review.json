@@ -1,0 +1,94 @@
+{
+  "binary_diff_sha256": "74504927ca6d28c189de7f5b5721fc19c5e86a04a8ec95c023e729f7836bc72d",
+  "blocking_findings": [],
+  "checks": {
+    "IO": "New unique domain/column/step pathname; STATUS=new rejects collision; every magic/header/vector/scalar/close IOSTAT checked. ES25.16E3 promotes native default REAL to real64 for roundtrip serialization.",
+    "all_original_CALL_udm_blocks_byte_identical": true,
+    "disabled_path": "Read-only enabled() gate before selector, diagnostic array-section actuals and ALLOCATE. No new physics state writes.",
+    "environment": "Unset/empty disables; exactly length1 value1 enables; malformed/truncated fails. Enabled requires existing CAPTURE_DIR.",
+    "finite_and_raw_negatives": "Raw moisture and number finite, finite negative raw values preserved. TH/PII finite; computed T/P/DEN finite and positive; gas/call constants finite, Rd!=Rv; reevaluated DEND finite, never clipped or forced positive.",
+    "input_equality": "Selected same-column native-k slices match original TH/PII/P/Q/DEN/species/number actuals. All observer dummies INTENT(IN). Capture is after current one-time CCN initialization and immediately before native call.",
+    "native_UDM_unchanged": true,
+    "selector_threads": "Existing explicit/default column and tile inclusion; reused locals already OpenMP PRIVATE. trace_configure runs in rrtmgp_init before parallel work. Existing DM_PARALLEL and OpenMP maxthreads>1 fatal guards retained.",
+    "semantics": "DEND_REEVALUATED_PRECALL_KG_M3 and origin1 label reevaluation, not internal observed variable; DEN_PASSED does not assume total air density.",
+    "shape": "Every14 vector has kte-kts+1; positive identity/native bounds. Default REAL bit-size recorded.",
+    "source_order": "Native wrapper T=TH*PII and exact P/DEN copies precede udm2d assignments and DEND=(p/t-den*rv)/(rd-rv). Observer matches default-REAL expression and ordering, before updates/clamps.",
+    "time": "Optional finite nonnegative XTIME explicitly labelled source seconds, no inferred UTC. SOURCE_TIME_PRESENT written once in mutually exclusive present/absent branches."
+  },
+  "created_utc": "2026-10-05T17:10:50.958379+00:00",
+  "nonblocking_notes": [
+    "Prior reviewer static unique-field assertion counted SOURCE_TIME_PRESENT in two mutually exclusive branches; corrected without changing source. No duplicate runtime record."
+  ],
+  "packet_unique_fields": [
+    "TH_K",
+    "PII",
+    "T_K",
+    "P_PA",
+    "QV_MIXING_RATIO_KG_KG",
+    "DEN_PASSED_KG_M3",
+    "DEND_REEVALUATED_PRECALL_KG_M3",
+    "QC_RAW",
+    "QI_RAW",
+    "QR_RAW",
+    "QS_RAW",
+    "QG_RAW",
+    "QH_RAW",
+    "NN_RAW",
+    "NC_RAW",
+    "NR_RAW",
+    "RD_J_KG_K",
+    "RV_J_KG_K",
+    "CPD_J_KG_K",
+    "CPV_J_KG_K",
+    "GRAVITY_M_S2",
+    "DELT_SECONDS",
+    "QMIN",
+    "T0C_K",
+    "RHO0_KG_M3",
+    "RHO_WATER_KG_M3",
+    "DEND_ORIGIN",
+    "DEFAULT_REAL_BITS",
+    "SOURCE_TIME_PRESENT",
+    "SOURCE_TIME_SECONDS"
+  ],
+  "reviewer_invocation_counts": {
+    "RTE": 0,
+    "WRF": 0,
+    "compiler": 0,
+    "fixture_executable": 0,
+    "model": 0,
+    "static_readback_python": 3
+  },
+  "schema": "UDM_ENTRY_DENSITY_INDEPENDENT_SOURCE_REVIEW_V1",
+  "scope_limits": [
+    "Observer only called under have_udm_cf (associated diagnostic pointers/native RE flags); remaining UDM branches unchanged.",
+    "Read-only gates rely on preexisting trace_configure/rrtmgp_init; ordinary4-only gate-on does not independently configure capture. Root accepted scope: current37 packet validation; ordinary4 regression gate unset.",
+    "Operation-order source parity is not proof of arbitrary compiler bitwise internal-DEND identity; explicitly reevaluated packet avoids that claim.",
+    "Native Nc units, density replacement, microphysics/radiation/forecast accuracy remain unresolved.",
+    "Fresh build and actual gate-off/on full-output parity, packet validation and simultaneous entry EOS measurements are pending separate authorized work."
+  ],
+  "source_head": "efd7b45242a7c1fc7cc90b713221640ccee1291d",
+  "source_pins": [
+    {
+      "path": "build/udm37-entry-density-pr-work/WRF/phys/module_microphysics_driver.F",
+      "sha256": "d202a2d0066709afcd07ef66a83fa2f88a4d0bb7cee6fd02e347cb25da88e7e1",
+      "size_bytes": 198309
+    },
+    {
+      "path": "build/udm37-entry-density-pr-work/WRF/phys/module_ra_rrtmgp_trace.F",
+      "sha256": "4f8fca91f086353b6e29c53bf11778ee334c5ec5848359ebc6e1e1a7de5fb1f5",
+      "size_bytes": 40837
+    },
+    {
+      "path": "build/udm37-entry-density-pr-work/WRF/phys/module_mp_udm.F",
+      "sha256": "9b7b878b263f6b0111edba4cfb1c6c30e53b3f7534035cda2c0411a573b81c2c",
+      "size_bytes": 193022
+    },
+    {
+      "path": "build/udm37-entry-density-pr-work/WRF/phys/module_ra_rrtmgp.F",
+      "sha256": "1852452555fbe667a0a95d59242bcd9c3833f2877fc51f882d5d3d929a058f58",
+      "size_bytes": 74962
+    }
+  ],
+  "status": "PASS_SCOPED"
+}

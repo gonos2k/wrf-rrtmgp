@@ -4,6 +4,7 @@
 ! serialized wrapper path.  With no WRF_RRTMGP_CAPTURE_DIR it is a no-op.
 MODULE module_ra_rrtmgp_trace
   USE, INTRINSIC :: iso_fortran_env, ONLY: real64
+  USE, INTRINSIC :: ieee_arithmetic, ONLY: ieee_is_finite
 #ifdef _OPENMP
   USE omp_lib, ONLY: omp_get_max_threads
 #endif
@@ -16,6 +17,7 @@ MODULE module_ra_rrtmgp_trace
   PUBLIC :: trace_raw_end, trace_end
   PUBLIC :: trace_column_selection, trace_column_in_tile
   PUBLIC :: trace_udm_radius_state, trace_udm_radius_enabled
+  PUBLIC :: trace_udm_entry_density_state, trace_udm_entry_density_enabled
 
   INTERFACE trace_result
     MODULE PROCEDURE trace_result_real2, trace_result_real64_2, trace_result_real64_3
@@ -41,6 +43,7 @@ MODULE module_ra_rrtmgp_trace
   INTEGER, SAVE :: replay_frozen_mode(2)=0
   CHARACTER(len=64), SAVE :: replay_frozen_sha256(2)=''
   LOGICAL, SAVE :: udm_radius_capture_enabled=.FALSE.
+  LOGICAL, SAVE :: udm_entry_density_capture_enabled=.FALSE.
 
 CONTAINS
 
@@ -615,6 +618,118 @@ CONTAINS
     CALL check_io(ios,'closing UDM radius packet')
   END SUBROUTINE trace_udm_radius_state
 
+  ! Optional call-entry packet. Inputs are the exact host arguments immediately
+  ! before UDM; DEND is explicitly a default-REAL pre-call re-evaluation of the
+  ! source expression, not an observation of udm2d's local variable.
+  LOGICAL FUNCTION trace_udm_entry_density_enabled()
+    trace_udm_entry_density_enabled=enabled.AND.udm_entry_density_capture_enabled
+  END FUNCTION trace_udm_entry_density_enabled
+
+  SUBROUTINE trace_udm_entry_density_state(domain_id,step,i,j,kts,kte,th,pii,p,qv,rho, &
+       qc,qi,qr,qs,qg,qh,nn,nc,nr,rd,rv,cpd,cpv,gravity,delt,qmin,t0c,rho0,rho_water,time_minutes)
+    INTEGER,INTENT(IN) :: domain_id,step,i,j,kts,kte
+    REAL,INTENT(IN) :: th(:),pii(:),p(:),qv(:),rho(:),qc(:),qi(:),qr(:),qs(:),qg(:),qh(:),nn(:),nc(:),nr(:)
+    REAL,INTENT(IN) :: rd,rv,cpd,cpv,gravity,delt,qmin,t0c,rho0,rho_water
+    REAL,OPTIONAL,INTENT(IN) :: time_minutes
+    REAL,ALLOCATABLE :: temperature(:),dend(:)
+    INTEGER :: expected,k,unit,ios
+    CHARACTER(len=128) :: filename
+    CHARACTER(len=1200) :: path
+
+    IF(.NOT.trace_udm_entry_density_enabled()) RETURN
+    IF(column_select_set) THEN
+      IF(i/=column_i.OR.j/=column_j) RETURN
+    ELSE
+      IF(i/=1.OR.j/=1) RETURN
+    END IF
+
+    IF(domain_id<1.OR.step<0.OR.i<1.OR.j<1.OR.kts<1.OR.kte<kts) &
+      CALL trace_fatal('RRTMGP_TRACE_UDM_ENTRY_DENSITY_INVALID_INDEX_OR_LEVEL_BOUNDS')
+    expected=kte-kts+1
+    IF(SIZE(th)/=expected.OR.SIZE(pii)/=expected.OR.SIZE(p)/=expected.OR.SIZE(qv)/=expected.OR. &
+       SIZE(rho)/=expected.OR.SIZE(qc)/=expected.OR.SIZE(qi)/=expected.OR.SIZE(qr)/=expected.OR. &
+       SIZE(qs)/=expected.OR.SIZE(qg)/=expected.OR.SIZE(qh)/=expected.OR.SIZE(nn)/=expected.OR. &
+       SIZE(nc)/=expected.OR.SIZE(nr)/=expected) &
+      CALL trace_fatal('RRTMGP_TRACE_UDM_ENTRY_DENSITY_SHAPE: all vectors must match kte-kts+1')
+    IF(.NOT.ieee_is_finite(rd).OR..NOT.ieee_is_finite(rv).OR.rd==rv) &
+      CALL trace_fatal('RRTMGP_TRACE_UDM_ENTRY_DENSITY_INVALID_GAS_CONSTANTS')
+    IF(.NOT.ieee_is_finite(cpd).OR..NOT.ieee_is_finite(cpv).OR..NOT.ieee_is_finite(gravity).OR. &
+       .NOT.ieee_is_finite(delt).OR..NOT.ieee_is_finite(qmin).OR..NOT.ieee_is_finite(t0c).OR. &
+       .NOT.ieee_is_finite(rho0).OR..NOT.ieee_is_finite(rho_water)) &
+      CALL trace_fatal('RRTMGP_TRACE_UDM_ENTRY_DENSITY_NONFINITE_CALL_CONSTANT')
+    IF(ANY(.NOT.ieee_is_finite(qv)).OR.ANY(.NOT.ieee_is_finite(qc)).OR. &
+       ANY(.NOT.ieee_is_finite(qi)).OR.ANY(.NOT.ieee_is_finite(qr)).OR. &
+       ANY(.NOT.ieee_is_finite(qs)).OR.ANY(.NOT.ieee_is_finite(qg)).OR. &
+       ANY(.NOT.ieee_is_finite(qh)).OR.ANY(.NOT.ieee_is_finite(nn)).OR. &
+       ANY(.NOT.ieee_is_finite(nc)).OR.ANY(.NOT.ieee_is_finite(nr))) &
+      CALL trace_fatal('RRTMGP_TRACE_UDM_ENTRY_DENSITY_NONFINITE_RAW_STATE')
+    IF(PRESENT(time_minutes)) THEN
+      IF(.NOT.ieee_is_finite(time_minutes).OR.time_minutes<0.) &
+        CALL trace_fatal('RRTMGP_TRACE_UDM_ENTRY_DENSITY_INVALID_SOURCE_TIME')
+    END IF
+
+    ALLOCATE(temperature(expected),dend(expected))
+    DO k=1,expected
+      IF(.NOT.ieee_is_finite(th(k)).OR..NOT.ieee_is_finite(pii(k))) &
+        CALL trace_fatal('RRTMGP_TRACE_UDM_ENTRY_DENSITY_NONFINITE_TH_OR_PII')
+      temperature(k)=th(k)*pii(k)
+      IF(.NOT.ieee_is_finite(p(k)).OR..NOT.ieee_is_finite(temperature(k)).OR. &
+         .NOT.ieee_is_finite(rho(k)).OR.p(k)<=0..OR.temperature(k)<=0..OR.rho(k)<=0.) &
+        CALL trace_fatal('RRTMGP_TRACE_UDM_ENTRY_DENSITY_INVALID_P_T_OR_DEN')
+      ! Keep the expression and default-REAL operation order from udm2d.
+      dend(k)=(p(k)/temperature(k)-rho(k)*rv)/(rd-rv)
+      IF(.NOT.ieee_is_finite(dend(k))) &
+        CALL trace_fatal('RRTMGP_TRACE_UDM_ENTRY_DENSITY_NONFINITE_DEND_REEVALUATION')
+    END DO
+
+    WRITE(filename,'("udm_entry_density_d",i0,"_i",i0,"_j",i0,"_step",i0,".raw")') &
+      domain_id,i,j,step
+    path=TRIM(capture_dir)//'/'//TRIM(filename)
+    OPEN(NEWUNIT=unit,FILE=TRIM(path),STATUS='new',ACTION='write',IOSTAT=ios)
+    IF(ios/=0) CALL trace_fatal('RRTMGP_TRACE_UDM_ENTRY_DENSITY_IO_ERROR: opening new density packet')
+    WRITE(unit,'(a)',IOSTAT=ios) 'RRTMGP_UDM_ENTRY_DENSITY_V1'
+    CALL check_io(ios,'writing UDM entry density magic')
+    WRITE(unit,'(6(i0,1x))',IOSTAT=ios) domain_id,step,i,j,kts,kte
+    CALL check_io(ios,'writing UDM entry density header')
+    CALL write_radius_vector(unit,'TH_K',th)
+    CALL write_radius_vector(unit,'PII',pii)
+    CALL write_radius_vector(unit,'T_K',temperature)
+    CALL write_radius_vector(unit,'P_PA',p)
+    CALL write_radius_vector(unit,'QV_MIXING_RATIO_KG_KG',qv)
+    CALL write_radius_vector(unit,'DEN_PASSED_KG_M3',rho)
+    CALL write_radius_vector(unit,'DEND_REEVALUATED_PRECALL_KG_M3',dend)
+    CALL write_radius_vector(unit,'QC_RAW',qc)
+    CALL write_radius_vector(unit,'QI_RAW',qi)
+    CALL write_radius_vector(unit,'QR_RAW',qr)
+    CALL write_radius_vector(unit,'QS_RAW',qs)
+    CALL write_radius_vector(unit,'QG_RAW',qg)
+    CALL write_radius_vector(unit,'QH_RAW',qh)
+    CALL write_radius_vector(unit,'NN_RAW',nn)
+    CALL write_radius_vector(unit,'NC_RAW',nc)
+    CALL write_radius_vector(unit,'NR_RAW',nr)
+    CALL write_radius_scalar(unit,'RD_J_KG_K',rd)
+    CALL write_radius_scalar(unit,'RV_J_KG_K',rv)
+    CALL write_radius_scalar(unit,'CPD_J_KG_K',cpd)
+    CALL write_radius_scalar(unit,'CPV_J_KG_K',cpv)
+    CALL write_radius_scalar(unit,'GRAVITY_M_S2',gravity)
+    CALL write_radius_scalar(unit,'DELT_SECONDS',delt)
+    CALL write_radius_scalar(unit,'QMIN',qmin)
+    CALL write_radius_scalar(unit,'T0C_K',t0c)
+    CALL write_radius_scalar(unit,'RHO0_KG_M3',rho0)
+    CALL write_radius_scalar(unit,'RHO_WATER_KG_M3',rho_water)
+    CALL write_radius_scalar(unit,'DEND_ORIGIN',1.)
+    CALL write_radius_scalar(unit,'DEFAULT_REAL_BITS',REAL(STORAGE_SIZE(th)))
+    IF(PRESENT(time_minutes)) THEN
+      CALL write_radius_scalar(unit,'SOURCE_TIME_PRESENT',1.)
+      CALL write_radius_scalar(unit,'SOURCE_TIME_SECONDS',time_minutes*60.)
+    ELSE
+      CALL write_radius_scalar(unit,'SOURCE_TIME_PRESENT',0.)
+    END IF
+    CLOSE(unit,IOSTAT=ios)
+    CALL check_io(ios,'closing UDM entry density packet')
+    DEALLOCATE(temperature,dend)
+  END SUBROUTINE trace_udm_entry_density_state
+
   SUBROUTINE write_radius_vector(unit,name,values)
     INTEGER,INTENT(IN) :: unit
     CHARACTER(len=*),INTENT(IN) :: name
@@ -655,9 +770,10 @@ CONTAINS
   END SUBROUTINE trace_end
 
   SUBROUTINE trace_initialize()
-    INTEGER :: ios, env_status, n, radius_status, radius_length
+    INTEGER :: ios, env_status, n, radius_status, radius_length, entry_status, entry_length
     CHARACTER(len=128) :: value
     CHARACTER(len=32) :: radius_value
+    CHARACTER(len=32) :: entry_value
     IF (env_checked) RETURN
     env_checked = .TRUE.
     CALL GET_ENVIRONMENT_VARIABLE('WRF_RRTMGP_CAPTURE_UDM_RADII',radius_value, &
@@ -669,10 +785,26 @@ CONTAINS
     ELSE IF(radius_status/=1.AND.radius_status/=0) THEN
       CALL trace_fatal('RRTMGP_TRACE_UDM_RADIUS_INVALID: WRF_RRTMGP_CAPTURE_UDM_RADII is too long')
     END IF
+    entry_value=''
+    CALL GET_ENVIRONMENT_VARIABLE('WRF_RRTMGP_CAPTURE_UDM_ENTRY_DENSITY',entry_value, &
+                                  LENGTH=entry_length,STATUS=entry_status)
+    IF(entry_status==0) THEN
+      IF(entry_length==1.AND.entry_value(1:1)=='1') THEN
+        udm_entry_density_capture_enabled=.TRUE.
+      ELSE IF(entry_length==0) THEN
+        udm_entry_density_capture_enabled=.FALSE.
+      ELSE
+        CALL trace_fatal('RRTMGP_TRACE_UDM_ENTRY_DENSITY_INVALID: value must be empty or exactly 1')
+      END IF
+    ELSE IF(entry_status/=1) THEN
+      CALL trace_fatal('RRTMGP_TRACE_UDM_ENTRY_DENSITY_INVALID: environment value is too long')
+    END IF
     CALL GET_ENVIRONMENT_VARIABLE('WRF_RRTMGP_CAPTURE_DIR', capture_dir, STATUS=env_status)
     enabled = env_status == 0 .AND. LEN_TRIM(capture_dir) > 0
     IF(udm_radius_capture_enabled.AND..NOT.enabled) &
       CALL trace_fatal('RRTMGP_TRACE_UDM_RADIUS_REQUIRES_CAPTURE_DIR')
+    IF(udm_entry_density_capture_enabled.AND..NOT.enabled) &
+      CALL trace_fatal('RRTMGP_TRACE_UDM_ENTRY_DENSITY_REQUIRES_CAPTURE_DIR')
     IF (.NOT.enabled) RETURN
 #if defined(DM_PARALLEL)
     CALL trace_fatal('RRTMGP_TRACE_SERIAL_ONLY: MPI capture is unsupported')
@@ -693,7 +825,7 @@ CONTAINS
     END IF
     INQUIRE(FILE=trim(capture_dir)//'/.', EXIST=enabled)
     IF (.NOT.enabled) CALL trace_fatal('RRTMGP_TRACE_DIRECTORY_NOT_FOUND: capture directory must already exist')
-    IF(udm_radius_capture_enabled) CALL column_selection_configure()
+    IF(udm_radius_capture_enabled.OR.udm_entry_density_capture_enabled) CALL column_selection_configure()
   END SUBROUTINE trace_initialize
 
   INTEGER FUNCTION phase_index(phase)
