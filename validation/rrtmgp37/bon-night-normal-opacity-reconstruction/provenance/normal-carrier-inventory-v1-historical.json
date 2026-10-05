@@ -1,0 +1,96 @@
+{
+  "schema": "UDM37_BON_NORMAL_DRY_CARRIER_INVENTORY_V1",
+  "status": "READ_ONLY_PLAN_INPUTS_AUTHENTICATED_NO_RECONSTRUCTION",
+  "scope": "Normal captured LW V10 carrier only; identify source-backed dry-column reconstruction and existing authenticated targets. No opacity reconstruction, solver, RTE, WRF, or tolerance evaluation was run.",
+  "normal_carrier": {
+    "input": {
+      "path": "build/udm37-current-bon-night-serial-audit-v2/cases/OFF/trace/lw_000001.input",
+      "sha256": "9fa15b3644da43a65b86d6f3dd930022b29812eefda4a2b0efa162aecfe56305",
+      "size_bytes": 39197,
+      "magic_and_shape": "LW V10; nc=1, nl=45; NATIVE_DRY_LAYER_MASS_KG_M2 has shape 1x32; PLEV has 46 interfaces; H2O has 45 layers.",
+      "interpretation": "This is the ordinary native-32 plus extension-13 carrier. The supplied dry-mass vector covers only the first 32 layers."
+    },
+    "authenticated_numeric_target": {
+      "path": "build/udm37-bon-night-independent-replay-v1/run-v1/lw_000001.result",
+      "sha256": "2a32de3b1924dad19998da9e23114069f9fba2ac3aa1ffd5b988973882acf0f6",
+      "size_bytes": 763371,
+      "sections": ["GAS_COL_DRY (1x45)", "GAS_TAU_RAW (1x45x128)"],
+      "execution_receipt": {
+        "path": "build/udm37-bon-night-independent-replay-v1/run-v1/execution.json",
+        "sha256": "3d1b9951e7eb96fe2ab222f7aee005ec02471848dc61a4ef3298a24deed23c63",
+        "status": "PASS_SIX_DIRECT_LIBRARY_REPLAYS",
+        "call_id": "lw_000001",
+        "returncode": 0,
+        "input_matches_normal_carrier": true
+      },
+      "inventory": {
+        "path": "build/udm37-bon-night-independent-replay-v1/inventory.json",
+        "sha256": "046a7fa026ea30dbe8eb76d0933ac906605a353a859ed7aa2d535d49213b36ee"
+      },
+      "availability": "An authenticated no-N2-override output target exists for the normal carrier. The six replay outputs cover six captured states, but no N2=0 or N2=0.7808 output target on this normal 32+13 dry-mass path was found in the reviewed artifacts."
+    }
+  },
+  "source_contract": {
+    "standalone_frontend": {
+      "path": "build/udm37-bon-night-n2-attribution-v1/preparation-v3/reference_column.f90",
+      "sha256": "77e2bdf233139771209dffd6efa00616960d3e609f8bd90691877f1ed8806678",
+      "size_bytes": 92906,
+      "locations": ["lines 701-703: initialize all layers with get_col_dry(H2O, PLEV*100), then replace only 1:n_native from supplied mass", "read_section_flexible: zeros the destination and reads only the provided native prefix"]
+    },
+    "get_col_dry_frontend": {
+      "path": "build/cf0-cu-src-v1/WRF/external/rte_rrtmgp/rrtmgp-frontend/mo_gas_optics_rrtmgp.F90",
+      "sha256": "d5e0a7e56bc811575ec2c9655953a5be64c42a62e4100f65198e1e1b44239adc",
+      "size_bytes": 107884,
+      "locations": ["lines 1607-1667: get_col_dry; default gravity branch and Helmert moist-air calculation"]
+    },
+    "constants": {
+      "path": "build/cf0-cu-src-v1/WRF/external/rte_rrtmgp/gas-optics/mo_gas_optics_constants.F90",
+      "sha256": "255cdd77fa39892bdec92440ae4dbc35b79fb338fdfff6d6b28bdf62f01c94b8",
+      "size_bytes": 3047,
+      "parameters": "m_h2o=0.018016 kg/mol; avogad=6.02214076e23 mol^-1; m_dry default=0.028964 kg/mol; grav default=9.80665 m/s^2"
+    },
+    "required_normal_reconstruction": [
+      "Parse the 32 supplied masses as the native prefix and reproduce the source expression/order: native_col_dry = native_mass * avogad / (m_dry * 10000). Do not replace this with an algebraically rearranged expression when making a source-order claim.",
+      "For layers 33-45, independently evaluate the pinned get_col_dry source expression from the V10 H2O layer vmr and adjacent PLEV interfaces converted from hPa to Pa, using the default gravity path (no latitude argument). Preserve the source order: delta_plev=abs(p_i-p_(i+1)); fact=1/(1+vmr); m_air=(m_dry+m_h2o*vmr)*fact; col=10*delta_plev*avogad*fact/(1000*m_air*100*g0).",
+      "Only after constructing the complete 45-layer column may a future authorized reconstruction compare it with the saved GAS_COL_DRY target and proceed to independent absorption terms. The saved GAS_COL_DRY must not be used as an input to construct dry columns."
+    ]
+  },
+  "matched_45_counterfactual": {
+    "input": {
+      "path": "build/udm37-bon-night-dry-column-attribution-v1/matched-legacy-dry.input",
+      "sha256": "292f9569b059c373c9cb14f1574cb8835627331574592a19d641ef07c21ec918",
+      "size_bytes": 39535,
+      "shape": "NATIVE_DRY_LAYER_MASS_KG_M2 is 1x45"
+    },
+    "plan": {
+      "path": "build/udm37-bon-night-dry-column-attribution-v1/plan.json",
+      "sha256": "fdf6a52b0d7efe499370daca8098820cef66636166b2c694588e55a3ee8c5853"
+    },
+    "result": {
+      "path": "build/udm37-bon-night-dry-column-attribution-v1/run-v1/matched-legacy-dry.result",
+      "sha256": "2e4e1257fe152f4e6e2d6036800f762605555a54ee0262951d211aa2af6c87ac"
+    },
+    "execution": {
+      "path": "build/udm37-bon-night-dry-column-attribution-v1/run-v1/execution.json",
+      "sha256": "3f449ad53f6b52f147e3907eb66bc4ae462d6727acaec064c6baf057b7e80b4c"
+    },
+    "scope": "This earlier diagnostic deliberately supplies 45 mass values and is not the normal native32+extension13 state. Its N2 absent/zero/0.7808 outputs cannot substitute for missing N2 variants on the normal carrier."
+  },
+  "opacity_point_plan_context": {
+    "plan": {
+      "path": "build/udm37-bon-night-opacity-independent-plan-v1/v3/plan.json",
+      "sha256": "21edb10d1af8cbc6b12f44e305572d49fa688d822644c49acb946246aa62d01e"
+    },
+    "point_implementation": {
+      "path": "build/udm37-bon-night-opacity-math-v1/reconstruct_point_v5.py",
+      "sha256": "6f3a02f147acc969ce8142974cccde06d444d892a8e7c3c0128369b304af978a",
+      "size_bytes": 29132
+    },
+    "required_plan_delta": "The existing point reconstruction plan is diagnostic for the all-45 matched-mass input. A normal-carrier plan must switch to the V10 input/output/execution pins above; derive the first 32 dry columns from the native mass section and the final 13 from the source-pinned get_col_dry expression; then independently construct table coordinates/major/minor terms. Keep the existing matched-45 case as a separate carrier, do not mutate or reinterpret its result. The normal carrier presently has an authenticated default-N2 target only; N2=0 and N2=0.7808 require new authorized captures if those cases are needed."
+  },
+  "limitations": [
+    "This is a source and target inventory only. No dry-column reconstruction, opacity calculation, solver call, model call, or RTE call occurred.",
+    "An authenticated target file does not by itself establish that an independent reconstruction agrees with it.",
+    "No numerical target for N2=0 or N2=0.7808 on the normal 32+13 carrier was identified in this bounded inventory."
+  ]
+}

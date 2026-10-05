@@ -1,0 +1,95 @@
+{
+  "actual_call_context": {
+    "argv": [
+      "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/cf0-cu-build-v1/cmake-build/reference_column",
+      "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-export-selection-serial-build-v1/source/WRF/run",
+      "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-current-bon-night-serial-audit-v2/cases/OFF/trace/lw_000001.input",
+      "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-independent-replay-v1/run-v1/lw_000001.result",
+      "1",
+      ""
+    ],
+    "case_id": "lw_000001",
+    "conclusion": "The last argv item is an empty string, so the sidecar path is blank and the only differing source branch is not entered for this invocation.",
+    "execution_receipt": {
+      "path": "build/udm37-bon-night-independent-replay-v1/run-v1/execution.json",
+      "sha256": "3d1b9951e7eb96fe2ab222f7aee005ec02471848dc61a4ef3298a24deed23c63"
+    },
+    "passed": true,
+    "returncode": 0,
+    "sidecar_activation_condition": "LEN_TRIM(audit_sidecar_path)>0",
+    "sidecar_argument": ""
+  },
+  "build_receipt_driver": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-precip-audit-pr-work/WRF/test/rrtmgp/reference_column.f90",
+    "sha256": "93214328388a1a7e242be1a298d34ae61e76f81d201ed9cf039e7f07ac580e6f",
+    "size_bytes": 87776
+  },
+  "no_reconstruction_performed": true,
+  "normal_input_target": {
+    "input": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-current-bon-night-serial-audit-v2/cases/OFF/trace/lw_000001.input",
+      "sha256": "9fa15b3644da43a65b86d6f3dd930022b29812eefda4a2b0efa162aecfe56305",
+      "size_bytes": 39197
+    },
+    "meaning": "Existing authenticated normal carrier (1x45 with 32 native masses); default gas roster excludes N2.",
+    "output": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-independent-replay-v1/run-v1/lw_000001.result",
+      "sha256": "2a32de3b1924dad19998da9e23114069f9fba2ac3aa1ffd5b988973882acf0f6",
+      "size_bytes": 763371
+    }
+  },
+  "provenance_gap": {
+    "finding": "The independent-replay inventory identifies the selected compiled source file as 6e82...b1ff0, but its nested build-receipt source manifest contains the 932...580e6f driver. These are different files. Do not claim the build receipt itself pins the complete compiled driver to 6e82.",
+    "mitigating_evidence": "The source difference is isolated to a sidecar-only conditional, actual call argument is empty, selected no-sidecar dry/gas/constants blocks match exactly, and the executable contains the selected-generation diagnostic string.",
+    "remaining_limit": "Treat the normal numerical output as an authenticated direct-library result with a disclosed narrow source-generation provenance inconsistency, not as conclusive proof of every executable source byte."
+  },
+  "schema": "UDM37_BON_NORMAL_CARRIER_SOURCE_COMPATIBILITY_V1",
+  "scope": "Resolve the source-generation gap for the normal LW V10 replay by comparing the build-receipt driver generation with the selected compiled-source file, checking the actual empty sidecar argument, and establishing selected-path source compatibility. No solver/model/build or opacity calculation was run.",
+  "selected_compiled_source_file_from_inventory": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/cf0-cu-src-v1/WRF/test/rrtmgp/reference_column.f90",
+    "sha256": "6e82effd7d25242656858a8242c7e6941fced6aec0ec4d906762ef3ccb1b4ff0",
+    "size_bytes": 87769
+  },
+  "selected_executable_static_evidence": {
+    "checked_read_only": "ELF printable strings include the selected-source-only literal \"CF0 precipitation audit sidecar requires V8/V9/V10/V11 held inputs\"; the receipt-source literal \"sidecar is limited to V8/V9 held inputs\" is absent.",
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/cf0-cu-build-v1/cmake-build/reference_column",
+    "scope_limit": "This string is corroborating static evidence that the selected generation is represented in the executable. It does not independently prove full source-to-object build provenance.",
+    "sha256": "353333cc96bce44d26c02ca7585c0ddef8996fc74a05904220fba83db76cd97f",
+    "size_bytes": 1040232
+  },
+  "source_generation_difference": {
+    "comparison_result": "EXACT_MATCH_FOR_SELECTED_GAS_ROSTER, V10 CONSTANTS READ/INIT, NATIVE-MASS PARSE, get_col_dry CALL, AND NATIVE PREFIX OVERRIDE",
+    "normalized_whole_source_sha256": "42a7d29e7396ae9c1e1104f07724d67a09bb95fd54bc792ae017e5fc80dbd069",
+    "old_source_only_size_bytes": 87776,
+    "old_source_sha256": "93214328388a1a7e242be1a298d34ae61e76f81d201ed9cf039e7f07ac580e6f",
+    "selected_dry_gas_constants_lines_sha256": "afed5d66691134129fc699457e51203cf8584fc11143e2583911165e51cbe7eb",
+    "selected_lines": [
+      "CHARACTER(LEN=5), PARAMETER :: gas_names_lw(10)=['h2o  ','co2  ','o3   ','n2o  ','ch4  ', &",
+      "CALL read_section_flexible(u_in,'NATIVE_DRY_LAYER_MASS_KG_M2',native_dry_mass,n_native)",
+      "ELSE IF(TRIM(next_section)=='NATIVE_DRY_LAYER_MASS_KG_M2') THEN",
+      "CALL read_section_flexible(u_in,'NATIVE_DRY_LAYER_MASS_KG_M2',native_dry_mass,n_native)",
+      "CALL read_scalar_section(u_in,'GRAVITY',metadata_gravity)",
+      "CALL read_scalar_section(u_in,'MOL_WEIGHT_DRY',metadata_mol_weight_dry)",
+      "CALL init_constants(gravity=metadata_gravity,heat_capacity_dry_air=metadata_cp_dry, &",
+      "ELSE IF(TRIM(next_section)=='NATIVE_DRY_LAYER_MASS_KG_M2') THEN",
+      "CALL read_section_flexible(u_in,'NATIVE_DRY_LAYER_MASS_KG_M2',native_dry_mass,n_native)",
+      "CALL read_scalar_section(u_in,'GRAVITY',metadata_gravity)",
+      "CALL read_scalar_section(u_in,'MOL_WEIGHT_DRY',metadata_mol_weight_dry)",
+      "CALL init_constants(gravity=metadata_gravity,heat_capacity_dry_air=metadata_cp_dry, &",
+      "ELSE IF(TRIM(next_section)=='NATIVE_DRY_LAYER_MASS_KG_M2') THEN",
+      "CALL read_section_flexible(u_in,'NATIVE_DRY_LAYER_MASS_KG_M2',native_dry_mass,n_native)",
+      "CALL read_scalar_section(u_in,'GRAVITY',metadata_gravity)",
+      "CALL read_scalar_section(u_in,'MOL_WEIGHT_DRY',metadata_mol_weight_dry)",
+      "CALL init_constants(gravity=metadata_gravity,heat_capacity_dry_air=metadata_cp_dry, &",
+      "CALL read_scalar_section(u_in,'GRAVITY',metadata_gravity)",
+      "CALL read_scalar_section(u_in,'MOL_WEIGHT_DRY',metadata_mol_weight_dry)",
+      "col_dry=get_col_dry(h2o,plev*100._wp)",
+      "col_dry(:,1:n_native)=native_dry_mass(:,1:n_native)*avogad/(m_dry*10000._wp)"
+    ],
+    "selected_source_sha256": "6e82effd7d25242656858a8242c7e6941fced6aec0ec4d906762ef3ccb1b4ff0",
+    "selected_source_size_bytes": 87769,
+    "whole_file_comparison": "The files are not identical. A unified diff has exactly one hunk: the audit_sidecar_present guard. The receipt source accepts sidecars only for V8/V9 and errors for CU input; the selected source accepts V8/V9/V10/V11 and removes that CU rejection. All other source bytes match after replacing only that gate block with a common marker."
+  },
+  "status": "READ_ONLY_NO_SIDECAR_PATH_COMPATIBILITY_ESTABLISHED_COMPILE_PROVENANCE_CONFLICT_DISCLOSED",
+  "supersedes_scope": "Additive clarification to normal-carrier inventory v2; v1 and v2 remain unchanged."
+}

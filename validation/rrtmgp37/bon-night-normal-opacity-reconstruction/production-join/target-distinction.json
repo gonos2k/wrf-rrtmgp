@@ -1,0 +1,83 @@
+{
+  "actual_wrf": {
+    "dry_join_summary": {
+      "layers": 45,
+      "max_absolute_relative_residual_nonzero_saved": 2.174905586287653e-16,
+      "max_absolute_residual": 134217728.0,
+      "numerical_gate": "NONE_DIAGNOSTIC_ONLY",
+      "rms_residual": 44176462.49449151,
+      "saved_zero_layers": 0
+    },
+    "normal_input_sha256": "9fa15b3644da43a65b86d6f3dd930022b29812eefda4a2b0efa162aecfe56305",
+    "production_dry_mass_expression_audit": {
+      "direct_left_associated_binary64_vs_saved": {
+        "exact_equal_cells": 23,
+        "max_abs": 134217728.0,
+        "max_ordered_ulp": 1,
+        "max_relative_to_saved": 2.174905586287653e-16
+      },
+      "expression_from_source": "REAL(native_mass,wp) * (avogad / (initialized_mol_weight_dry * 10000._wp))",
+      "interpretation_limit": "Python binary64 arithmetic is not a bit-exact model of the production Fortran wp evaluation. These comparisons verify the source grouping against saved values descriptively; they do not establish causality for opacity residuals.",
+      "native_layers": 32,
+      "parenthesized_factored_binary64_vs_saved": {
+        "exact_equal_cells": 32,
+        "max_abs": 0.0,
+        "max_ordered_ulp": 0,
+        "max_relative_to_saved": 0.0
+      },
+      "source_file_sha256": "b3932fa4e88202d5fe0fb660764bec9a07d031c03b501c20ee6ef259828ffa69",
+      "source_line_1based": 583
+    },
+    "same_call_join_exact": true,
+    "scope_limit": "Descriptive same-call join. Native-layer differences are tiny arithmetic deltas; this does not identify their cause, establish physical accuracy, validate a tolerance, or explain the broadband residual.",
+    "status": "DIAGNOSTIC_COMPLETE_NO_NUMERICAL_VERDICT",
+    "tau": {
+      "GAS_TAU": {
+        "native_32": {
+          "cells": 4096,
+          "max_absolute_ordered_ulp_delta": 6,
+          "max_absolute_relative_residual_nonzero_target": 7.223528191333665e-16,
+          "max_absolute_residual": 5.4569682106375694e-12,
+          "numerical_gate": "NONE_DIAGNOSTIC_ONLY",
+          "rms_residual": 1.5534050940842825e-13
+        },
+        "pressure_extension_13": {
+          "cells": 1664,
+          "max_absolute_ordered_ulp_delta": 0,
+          "max_absolute_relative_residual_nonzero_target": 0.0,
+          "max_absolute_residual": 0.0,
+          "numerical_gate": "NONE_DIAGNOSTIC_ONLY",
+          "rms_residual": 0.0
+        }
+      }
+    },
+    "tau_raw": {
+      "GAS_TAU_RAW": {
+        "native_32": {
+          "cells": 4096,
+          "max_absolute_ordered_ulp_delta": 6,
+          "max_absolute_relative_residual_nonzero_target": 7.223528191333665e-16,
+          "max_absolute_residual": 5.4569682106375694e-12,
+          "numerical_gate": "NONE_DIAGNOSTIC_ONLY",
+          "rms_residual": 1.5534050940842825e-13
+        },
+        "pressure_extension_13": {
+          "cells": 1664,
+          "max_absolute_ordered_ulp_delta": 0,
+          "max_absolute_relative_residual_nonzero_target": 0.0,
+          "max_absolute_residual": 0.0,
+          "numerical_gate": "NONE_DIAGNOSTIC_ONLY",
+          "rms_residual": 0.0
+        }
+      }
+    }
+  },
+  "direct_reference": {
+    "exact_GAS_TAU_RAW_and_GAS_TAU_join": true,
+    "interpretation": "Source-ordered single-point construction exactly matches this captured direct-library result for both saved 45x128 tau arrays.",
+    "sha256": "2a32de3b1924dad19998da9e23114069f9fba2ac3aa1ffd5b988973882acf0f6",
+    "status": "independent terminal review accepted"
+  },
+  "schema": "udm37-bon-normal-carrier-target-distinction-v1",
+  "scope": "Saved-array comparison only; no opacity calculation or numerical gate. Direct-reference target and actual WRF same-call capture are separate outputs."
+}

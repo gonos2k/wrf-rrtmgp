@@ -1,0 +1,85 @@
+{
+  "schema": "UDM37_NORMAL_PRODUCTION_SAVED_JOIN_PLAN_V1",
+  "created_unix": 1791237088.9704485,
+  "status": "FROZEN_BEFORE_NEW_PRODUCTION_NUMERIC_READ",
+  "purpose": "Compare alreadyconstructed source-derived normal dry/tau with same-call actual WRF capture, separately from direct reference target.",
+  "pins": {
+    "construction": {
+      "path": "build/udm37-bon-night-normal-opacity-math-v1/execution-v1/output/construction.json",
+      "sha256": "35e177c63e3339c82d9c612e8d320d1543f7d5f52b49607ceb0d12090468244a",
+      "size_bytes": 46376207
+    },
+    "construction_receipt": {
+      "path": "build/udm37-bon-night-normal-opacity-math-v1/execution-v1/output/construction-receipt.json",
+      "sha256": "348625ce5e441e2f46d9c372c4f423a2b6f7db6f7c004572ee37254a749de8ee",
+      "size_bytes": 367
+    },
+    "normal_execution": {
+      "path": "build/udm37-bon-night-normal-opacity-math-v1/execution-v1/execution.json",
+      "sha256": "04f8c221e92cbe04396582f0173d611db1f335c95ad6110ec8b9b26ded00b05c",
+      "size_bytes": 1211
+    },
+    "production_result": {
+      "path": "build/udm37-current-bon-night-serial-audit-v2/cases/OFF/trace/lw_000001.result",
+      "sha256": "eabf3ecc8132ca96fe6936efccf77a4140412ffb9ea85df387af7b81d34bbe5a",
+      "size_bytes": 764303
+    },
+    "input": {
+      "path": "build/udm37-current-bon-night-serial-audit-v2/cases/OFF/trace/lw_000001.input",
+      "sha256": "9fa15b3644da43a65b86d6f3dd930022b29812eefda4a2b0efa162aecfe56305",
+      "size_bytes": 39197
+    },
+    "production_execution": {
+      "path": "build/udm37-current-bon-night-serial-audit-v2/execution-receipt.json",
+      "sha256": "00d7abb5b6f92e1dc4a2b07724fbf1fe6a6c2853c4614d4a59e2af0a71ef6240",
+      "size_bytes": 328723
+    },
+    "production_runtime_identity": {
+      "path": "build/udm37-current-bon-night-serial-audit-v2/runtime-build-identity.json",
+      "sha256": "47ea3ee66e8babdbb08fba4492ed21a6c418d10aa7261e0eb61017a610851f7b",
+      "size_bytes": 14995
+    },
+    "production_source_manifest": {
+      "path": "build/udm37-export-selection-serial-build-v1/source-manifest.json",
+      "sha256": "abe0b2bf762efc7d3fd8ef91b9117d0b81d710642138e3aa2d31e94fcd7f6f3c",
+      "size_bytes": 2055910
+    },
+    "production_build_receipt": {
+      "path": "build/udm37-export-selection-serial-build-v1/build-receipt.json",
+      "sha256": "da50ae169664ab62d47d466e53e10da7cd76645ea8bea572a68b49652fb0e938",
+      "size_bytes": 27776
+    },
+    "comparator": {
+      "path": "build/cf0-cu-src-v1/WRF/test/rrtmgp/compare_column_replay.py",
+      "sha256": "6099a3819268d3ee17bbcbaf0610c03822c09247da6ac5bdfdef66c9190533a7",
+      "size_bytes": 12800
+    },
+    "statistics_helper": {
+      "path": "build/udm37-bon-night-normal-opacity-draft-v1/run_normal_once_v3.py",
+      "sha256": "a78ed8750019fab591bf228528ae7c374141002e630d8c814f93d43f5fcfddb6",
+      "size_bytes": 22242
+    }
+  },
+  "context": {
+    "arm": "OFF",
+    "call": "lw_000001",
+    "step": 721,
+    "source_seconds": 43200,
+    "source_head": "f731bb993a86a1836a64152d9b936edb7c315c19",
+    "native_layers": 32,
+    "extensions": 13,
+    "n2": "historical absent, not current positive production"
+  },
+  "metrics": [
+    "GAS_COL_DRY",
+    "GAS_TAU_RAW",
+    "GAS_TAU"
+  ],
+  "numerical_verdict": "NONE_DIAGNOSTIC_RESIDUAL_ULP_NO_TOLERANCE",
+  "budget": {
+    "new_point_reconstructions": 0,
+    "new_model_RTE_compile": 0,
+    "saved_array_comparisons": 1
+  },
+  "scope_limit": "Held historical UDM column only; no updated production run, coefficient truth, whole-port normality or physical accuracy; source generation limits in parent normal plan preserved."
+}

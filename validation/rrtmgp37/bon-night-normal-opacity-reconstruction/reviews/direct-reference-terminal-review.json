@@ -1,0 +1,106 @@
+{
+  "carrier": {
+    "extension_layers": 13,
+    "n2_membership": "absent; source roster is ten gases",
+    "native_mass_layers": 32,
+    "normal_v10_input_sha256": "9fa15b3644da43a65b86d6f3dd930022b29812eefda4a2b0efa162aecfe56305",
+    "total_layers": 45
+  },
+  "coefficient_table": {
+    "major_corner_checks": 46080,
+    "minor_corner_checks": 56660,
+    "path": "build/udm37-export-selection-serial-build-v1/source/WRF/run/rrtmgp-gas-lw-g128.nc",
+    "sha256": "70ad65d116531122660318e5da2a2af9db74b425916202860e9527ef2375b8f6"
+  },
+  "context": {
+    "all_persisted_exact_discrete_checks_true": true,
+    "fraction_differences_are_diagnostic_only": true,
+    "pfrac_context_crosscheck_sha256": "1fa2f3dc66ce2665bda79cf8dc0f0bc1213f938124b63b5a361c284453a99d32"
+  },
+  "dry_column": {
+    "max_abs_residual": 0.0,
+    "native_prefix_rows": 32,
+    "pressure_h2o_extension_rows": 13,
+    "saved_construction_rows_exact": 45,
+    "saved_target_GAS_COL_DRY_exact": 45,
+    "source_order_rows_recomputed": 45
+  },
+  "execution": {
+    "bounded_python_invocations": 1,
+    "child_rc": 0,
+    "new_REAL": 0,
+    "new_RTE": 0,
+    "new_WRF": 0,
+    "new_builds": 0,
+    "receipt_sha256": "04f8c221e92cbe04396582f0173d611db1f335c95ad6110ec8b9b26ded00b05c"
+  },
+  "major_terms": {
+    "band_partition_and_gas_key_membership_checked": true,
+    "coefficient_table_corner_lookups": 46080,
+    "left_associated_sums_checked": 23040,
+    "term_rows": 5760,
+    "two_plane_and_accumulation_rows_checked": 5760,
+    "weighted_products_recomputed": 46080
+  },
+  "minor_terms": {
+    "coefficient_table_corner_lookups": 56660,
+    "final_source_order_accumulation_equals_target": true,
+    "gas_column_density_scaling_and_tau_products_checked": 14165,
+    "left_associated_sums_checked": 14165,
+    "raw_interval_roster_rows_checked": 94,
+    "raw_vs_packed_contributor_indices_checked": 56660,
+    "term_rows": 14165,
+    "weighted_products_recomputed": 56660
+  },
+  "pins": {
+    "audit_script_sha256": "af12d853c608d45c5ffb6e51821463ba83209c7304df8041da0ae218411dabd9",
+    "authorization_artifact_pin_rows": 138,
+    "authorization_sha256": "0198353c0a586bed272dc420eb460f1a194750a4e40ac7b60b983822a1823534",
+    "live_rehash_passes": 2,
+    "pinned_execution_artifacts_verified": true,
+    "plan_sha256": "ce13701489beb602afda0bb8091339bdcb434ff555f536a2de6ab5d9add9f49f",
+    "point_source": {
+      "path": "build/udm37-bon-night-normal-opacity-draft-v1/reconstruct_normal_locked_v1.py",
+      "sha256": "fe8723a44e3bf0a5af45ba09b15acc47dafdd2a1f29fcc9509175a72c1a39660",
+      "size_bytes": 30997
+    },
+    "runner_source": {
+      "path": "build/udm37-bon-night-normal-opacity-draft-v1/run_normal_once_v3.py",
+      "sha256": "a78ed8750019fab591bf228528ae7c374141002e630d8c814f93d43f5fcfddb6",
+      "size_bytes": 22242
+    },
+    "source_review_sha256": "aa4bd9929cb615ad5190f86b362cbe4d783628d1b06eb4be55ba989856b0e6de",
+    "source_review_status": "PASS_SCOPED_LOCKED_SOURCE_REVIEW"
+  },
+  "provenance_limits": [
+    "This audit authenticates saved construction arithmetic/indices against pinned coefficient tables and the direct-replay result; it is not an independent derivation of the RRTMGP coefficients or physical truth.",
+    "The normal replay\u2019s build-receipt driver provenance mismatch is separately disclosed in build/udm37-bon-night-normal-carrier-inventory-v3/source-compatibility.json; the sidecar branch was not entered.",
+    "The direct replay result is the audited numerical target. The production WRF capture output exists but was not parsed or compared in this audit.",
+    "The construction reports exact agreement without applying a numerical tolerance or PASS threshold; this review does not promote same-table agreement to a numerical or physical accuracy verdict.",
+    "No opacity reconstruction code, solver, RTE, compiler, or model was invoked by this independent audit."
+  ],
+  "schema": "UDM37_BON_NORMAL_POINT_SAVED_OUTPUT_AUDIT_V1",
+  "status": "PASS_SCOPED_SAVED_ARTIFACTS_AND_SOURCE_ORDER_TERM_AUDIT_NO_NUMERICAL_VERDICT",
+  "target_reparse": {
+    "GAS_COL_DRY_shape": [
+      1,
+      45,
+      1
+    ],
+    "GAS_TAU_RAW_shape": [
+      1,
+      45,
+      128
+    ],
+    "GAS_TAU_shape": [
+      1,
+      45,
+      128
+    ],
+    "construction_to_target_exact": true,
+    "path": "build/udm37-bon-night-independent-replay-v1/run-v1/lw_000001.result",
+    "prepared_tau_exact_cells": 5760,
+    "raw_tau_exact_cells": 5760,
+    "sha256": "2a32de3b1924dad19998da9e23114069f9fba2ac3aa1ffd5b988973882acf0f6"
+  }
+}

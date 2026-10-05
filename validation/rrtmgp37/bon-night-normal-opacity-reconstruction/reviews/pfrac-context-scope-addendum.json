@@ -1,0 +1,47 @@
+{
+  "schema": "udm37-bon-night-normal-opacity-pfrac-context-scope-v1",
+  "status": "SOURCE_SCOPED_CLARIFICATION",
+  "reviewed_pins": {
+    "normal_draft": {
+      "path": "build/udm37-bon-night-normal-opacity-draft-v1/reconstruct_normal_locked_v1.py",
+      "sha256": "fe8723a44e3bf0a5af45ba09b15acc47dafdd2a1f29fcc9509175a72c1a39660"
+    },
+    "prior_review": {
+      "path": "build/udm37-bon-night-normal-opacity-review-v1/review.json",
+      "sha256": "aa4bd9929cb615ad5190f86b362cbe4d783628d1b06eb4be55ba989856b0e6de"
+    },
+    "matched_diagnostic_plan": {
+      "path": "build/udm37-bon-night-opacity-independent-plan-v1/v3/plan.json",
+      "sha256": "21edb10d1af8cbc6b12f44e305572d49fa688d822644c49acb946246aa62d01e"
+    },
+    "positive_n2_pfrac_result": {
+      "path": "build/udm37-bon-night-independent-pfrac-math-v1/result.json",
+      "sha256": "67d000a0582de7de935e64951e2e7c6a609b793187646b7162bca1e7cb9a2862"
+    },
+    "pfrac_analyzer": {
+      "path": "build/udm37-bon-night-independent-pfrac-math-v1/analyze.py",
+      "sha256": "71ea81f2cb09abacdd0855cdf56cacb08d3a90e662e6ea8e4fd2fb11dc089493"
+    },
+    "pfrac_design": {
+      "path": "build/udm37-bon-night-independent-pfrac-design-v1/design.json",
+      "sha256": "254d4d45094d56a2939db93ca82550a878152ed7744266e81e71b1aed161aae4"
+    }
+  },
+  "conclusion": {
+    "no_full_positive_n2_gate": "Do not require the normal absent-N2 reconstruction to have the positive-N2 result's available/reduced gas roster, raw reduced integer IDs, N2 minor intervals, N2 column, or N2-dependent opacity/fraction outputs. Those belong to a different gas-membership case. The matched-vs-normal dry-carrier states also differ (45 held masses versus 32 native masses plus 13 pressure extensions), so GAS_COL_DRY or dry-column equality is not an applicable gate.",
+    "state_context_applicable": "When using the prior pfrac result as a cross-check, compare only state-derived coordinates that are unchanged by gas roster and dry column: per-layer jtemp, jpress, ftemp, fpress, and atmosphere/tropopause selector. These are formed from TLAY, PLAY, and the pinned reference grids; the pfrac analyzer lines 73-80 implement them without reading gas columns. Given identical authenticated PLAY/TLAY/table inputs and the same formulas, they should reproduce the same context. This cross-check does not make pfrac an opacity input.",
+    "semantic_key_mapping": "Do not compare reduced flavor or key-species integer IDs across rosters. If the runner additionally compares key pairs or eta context, first map each reduced ID to a species name. The pinned positive-N2 result has N2 at reduced ID 7, while every key_species_reduced entry uses only IDs 0 through 5 (zero occurrences of 7); thus all current keyed pairs exclude N2. For those same semantic pairs, eta is mathematically invariant to a positive layerwise dry-column multiplier because each gas column is VMR times dry column, including the dry slot. However, normal-versus-matched carrier floating-point values differ and the pfrac design marks context as cross-check only; do not demand bitwise eta/weight equality or invent a post hoc tolerance. Any eta/jeta/fraction comparison must have its arithmetic criterion preregistered and remain secondary.",
+    "required_before_target_access": "The normal reconstruction must derive its own source-order normal dry columns, gas roster, key mapping, brackets, flavors, and opacity arrays from authenticated normal input and raw named coefficient variables. It must freeze its output before opening any normal GAS_TAU target. Comparing shared state-derived context with the positive-N2 pfrac result is a useful, narrowly scoped check, not a requirement to transplant the entire positive-N2 context result. If the execution protocol elects to make a context cross-check a gate, the gate must be limited to the unchanged state coordinates above and semantic key names, not N2 roster equality.",
+    "review_correction": "The prior review's sentence that the separately reviewed runner 'must apply the pinned pfrac discrete-context comparison' was too broad as written. It should mean only the optional/narrow shared-state context check described here; the positive-N2-specific roster and dry-column context are not a normal-carrier gate."
+  },
+  "source_evidence": {
+    "pfrac_context_only": "Plan v3 lines 326 and 349 specify pfrac as interpolation equation/context and cross-check only; line 336 states the matched dry amounts are reconstructed independently, not imported from pfrac.",
+    "pfrac_state_inputs": "Pinned analyze.py lines 73-80 derive jtemp/ftemp from TLAY and temp_ref, jpress/fpress from PLAY and press_ref, and atmosphere from PLAY and tropopause pressure. These lines do not depend on gas roster or dry mass.",
+    "eta_scale_invariance": "Pinned analyze.py lines 64-70 set dry slot to dry and each species slot to VMR*dry; lines 91-95 derive eta from the selected key pair. For a same semantic key pair, multiplying all those amounts by a common positive layer dry column cancels from eta. Current positive-N2 key-pair IDs 0-5 exclude N2's ID 7, verified from the pinned result object."
+  },
+  "execution_status": {
+    "reconstruction_invoked": false,
+    "opacity_target_read": false,
+    "models_or_solver_run": false
+  }
+}
