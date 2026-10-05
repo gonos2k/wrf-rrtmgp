@@ -1,0 +1,162 @@
+{
+  "SW_C": {
+    "RL_USED_exact_flat_bits": true,
+    "finite_full_roster_sections": 33,
+    "held_exact": [
+      "DIRECTC",
+      "DI_USED",
+      "DNC",
+      "DS_USED",
+      "GAS_COL_DRY",
+      "GAS_G",
+      "GAS_SSA",
+      "GAS_TAU",
+      "HRC",
+      "MASK",
+      "PRECIP_G",
+      "PRECIP_SSA",
+      "PRECIP_TAU",
+      "UPC"
+    ],
+    "input_identical_to_prepared_v2_C": true,
+    "physical_non_REL_blocks_byte_exact": true,
+    "same_executable_source_coefficients_before_after": true
+  },
+  "accounting": {
+    "V1_attempts": 5,
+    "V1_numeric_RC": "UNAVAILABLE",
+    "V1_outputs": 4,
+    "V2_RC": [
+      0,
+      0
+    ],
+    "V2_attempts": 2,
+    "V2_outputs": 2,
+    "V3_attempts": 0,
+    "V3_outputs": 0,
+    "V4_RC": 0,
+    "V4_attempts": 1,
+    "V4_outputs": 1,
+    "historical_failures": "V1 original V9 optics oracle rejection; V2 output-producing RC0 calls then checker shape failure; V3 zero-call NameError preserved.",
+    "original_rejection_count": 1,
+    "total_attempts": 8,
+    "total_outputs": 7
+  },
+  "aggregate_receipt": {
+    "path": "build/udm37-nc-unit-radiative-sensitivity-v4/result.json",
+    "sha256": "73fb4a8d4e64a8d2bdbc7ec07d740992d54f333ddf429614ef54dd2412569dce",
+    "size_bytes": 72997
+  },
+  "baseline": "Earlier review proves LW A bytes exact and SW A all33 common sections bytes/IEEE64 exact; no reruns.",
+  "blockers_saved_evidence": [],
+  "independently_recomputed_signed_pairwise_metrics": {
+    "LW": {
+      "B_minus_A": {
+        "max_abs_cloud_tau_delta": 3.0297512143562244e-06,
+        "max_abs_full_hr_delta_K_day": 5.460622283237626e-07,
+        "max_abs_native59_hr_delta_K_day": 5.460622283237626e-07,
+        "max_abs_total_tau_delta": 3.029751241001577e-06,
+        "surface_down_W_m2": -8.275225127363228e-08,
+        "surface_net_down_W_m2": -8.15111320662254e-08,
+        "toa_up_W_m2": 1.915338998514926e-10
+      },
+      "C_minus_B": {
+        "max_abs_cloud_tau_delta": 0.3908435201113827,
+        "max_abs_full_hr_delta_K_day": 0.05354567351808903,
+        "max_abs_native59_hr_delta_K_day": 0.05354567351808903,
+        "max_abs_total_tau_delta": 0.3908435201113889,
+        "surface_down_W_m2": 0.012350769111264981,
+        "surface_net_down_W_m2": 0.01216550775103542,
+        "toa_up_W_m2": 2.9331901799878324e-05
+      }
+    },
+    "SW": {
+      "B_minus_A": {
+        "max_abs_cloud_tau_delta": 3.7901868292777863e-06,
+        "max_abs_full_hr_delta_K_day": 5.955054929174253e-07,
+        "max_abs_native59_hr_delta_K_day": 5.955054929174253e-07,
+        "max_abs_total_tau_delta": 3.790186831054143e-06,
+        "surface_diffuse_W_m2": 5.9781115169244e-06,
+        "surface_direct_W_m2": 0.0,
+        "surface_down_W_m2": 5.9781115169244e-06,
+        "surface_net_down_W_m2": 4.961832548389111e-06,
+        "toa_up_W_m2": -8.567982490603754e-06
+      },
+      "C_minus_B": {
+        "max_abs_cloud_tau_delta": 0.48891382931040006,
+        "max_abs_full_hr_delta_K_day": 0.09352866590718012,
+        "max_abs_native59_hr_delta_K_day": 0.09352866590718012,
+        "max_abs_total_tau_delta": 0.48891382931040184,
+        "surface_diffuse_W_m2": -0.1014426480851327,
+        "surface_direct_W_m2": 0.0,
+        "surface_down_W_m2": -0.1014426480851327,
+        "surface_net_down_W_m2": -0.08419739772926604,
+        "toa_up_W_m2": -0.5181877938939579
+      }
+    }
+  },
+  "limits": [
+    "Conditional same numeric Nc with different units is different population; no physical-unit validation or universal density correction.",
+    "Derived radii use earlier producer at0s while fixed later radiation state at10s is held.",
+    "One warm column and one seed per phase; native59 vs LW103/SW60 extensions retained separately.",
+    "V9 four pre-delta diagnostics excluded from SW counterfactual interpretation.",
+    "No all-normal, optical accuracy, PSD/moment or correction conclusion."
+  ],
+  "portable_script_static_draft": {
+    "findings_sent_root": [
+      "Persist numeric RC immediately after child return and before log/output hashes or parsing.",
+      "Archived numeric_match uses tolerance; qualify original local exact projection identity separately from cross-toolchain reproduction tolerance."
+    ],
+    "no_executions_by_reviewer": true,
+    "pin": {
+      "path": "build/udm37-nc-radiative-evidence-pr-work/validation/rrtmgp37/nc-unit-radiative-sensitivity/replay.py",
+      "sha256": "0278238c3424ca5d6c2b4ce25be555e76742fad76e14e7f7bec057b5ed021071",
+      "size_bytes": 12593
+    }
+  },
+  "previous_review": {
+    "path": "build/udm37-nc-transport-independent-review-v1/sensitivity-projection-review-v1.json",
+    "sha256": "a13e298021574e226b4171bfd6a81d6df74471ccf6a59d1eb29f36ebc76fbb74",
+    "size_bytes": 6357
+  },
+  "result_pins": [
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-nc-unit-radiative-sensitivity-v1/outputs/lw_A_native.result",
+      "sha256": "a75aca7dd3f7c7aa187b45d2afc209ea6fdc8051ebb18ed98779b7cd27796ba4",
+      "size_bytes": 1529556
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-nc-unit-radiative-sensitivity-v1/outputs/lw_B_volume.result",
+      "sha256": "761fb9421b581ece74539ada6ec40f385f2f1d021fc44bb53fd236409576e020",
+      "size_bytes": 1529556
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-nc-unit-radiative-sensitivity-v1/outputs/lw_C_mass.result",
+      "sha256": "a0c7ade026adce99ebcd8cd369068b397500b463b90965db12ade326c0c245f6",
+      "size_bytes": 1529556
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-nc-unit-radiative-sensitivity-v2/outputs/sw_A_v6_projected.result",
+      "sha256": "8b0432fec62288ee7e133a9424fa2de7d7444e5d1157242fbea967ea4eeba108",
+      "size_bytes": 1446944
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-nc-unit-radiative-sensitivity-v2/outputs/sw_B_volume.result",
+      "sha256": "7f7928040b225f71e6094a408f565644364f78c36dcaaa84f3611830106b6fa9",
+      "size_bytes": 1446944
+    },
+    {
+      "path": "build/udm37-nc-unit-radiative-sensitivity-v4/outputs/sw_C_mass.result",
+      "sha256": "346669ce17980c22bc6d3bc3087518f1a61498c374e92153b00dd444abb90354",
+      "size_bytes": 1446944
+    }
+  ],
+  "reviewer_invocations": {
+    "RTE": 0,
+    "build": 0,
+    "model": 0,
+    "saved_array_stdlib_review": 1
+  },
+  "schema": "INDEPENDENT_NC_COMPLETE_SAVED_MATRIX_REVIEW_V1",
+  "status": "PASS_SCOPED_SAVED_MATRIX"
+}
