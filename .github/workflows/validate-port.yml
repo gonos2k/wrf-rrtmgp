@@ -93,6 +93,8 @@ jobs:
           sudo apt-get install -y cmake gfortran gcc libnetcdf-dev libnetcdff-dev python3-numpy python3-netcdf4 python3-scipy
       - name: Check bounded legacy optics export selection
         run: python3 WRF/test/rrtmgp/test_rrtmg4_export_selection.py
+      - name: Check legacy LW source observer against the actual transport routine
+        run: python3 WRF/test/rrtmgp/test_legacy_lw_source_export.py
       - name: Build and run standalone WRF column tests
         run: |
           cmake -S WRF/test/rrtmgp -B build/rrtmgp-column-test \
