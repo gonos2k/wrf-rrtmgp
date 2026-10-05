@@ -1,0 +1,156 @@
+{
+  "schema": "udm37-pre-microphysics-density-entry-runtime-plan-v2",
+  "status": "READ_ONLY_PLAN_ONLY_NO_SOURCE_BUILD_OR_MODEL_ACTION",
+  "purpose": "Add a diagnostic-only packet at the UDM call entry so pressure, physical temperature, water-vapor mixing ratio, the density array actually passed by the host, and the source dry-density expression are observed together before UDM updates temperature/moisture. The physical meaning of the host DEN argument remains to be independently established; do not label it total density or infer entry density from subsequent radiation captures.",
+  "checkout": {
+    "path": "build/udm37-warm-ice-radius-pr-work",
+    "head": "51bd4e815c97985e6760e676dafa7e5ce2a156a4",
+    "tracked_changes": [
+      "?? WRF/Registry/Registry",
+      "?? WRF/Registry/io_boilerplate_temporary.inc",
+      "?? WRF/external/io_grib1/io_grib1.f90",
+      "?? WRF/external/io_grib_share/io_grib_share.f90",
+      "?? WRF/external/io_int/diffwrf",
+      "?? WRF/external/io_int/test_io_idx",
+      "?? WRF/external/io_netcdf/diffwrf",
+      "?? WRF/frame/md_calls.inc",
+      "?? WRF/frame/module_dm.F",
+      "?? WRF/frame/module_state_description.F",
+      "?? WRF/inc/wrf_io_flags.h",
+      "?? WRF/inc/wrf_status_codes.h",
+      "?? WRF/phys/module_bl_mynnedmf.F",
+      "?? WRF/phys/module_bl_mynnedmf_common.F",
+      "?? WRF/phys/module_bl_mynnedmf_driver.F",
+      "?? WRF/phys/module_cu_gfl_common.F",
+      "?? WRF/phys/module_cu_gfl_deep.F",
+      "?? WRF/phys/module_cu_gfl_sh.F",
+      "?? WRF/phys/module_cu_gfl_wrf.F",
+      "?? WRF/phys/module_mp_tempo_aerosols.F90",
+      "?? WRF/phys/module_mp_tempo_cfgs.F90",
+      "?? WRF/phys/module_mp_tempo_diags.F90",
+      "?? WRF/phys/module_mp_tempo_driver.F90",
+      "?? WRF/phys/module_mp_tempo_main.F90",
+      "?? WRF/phys/module_mp_tempo_ml.F90",
+      "?? WRF/phys/module_mp_tempo_params.F90",
+      "?? WRF/phys/module_mp_tempo_utils.F90",
+      "?? WRF/phys/module_sf_mynnsfc_common.F",
+      "?? WRF/phys/module_sf_mynnsfc_driver.F",
+      "?? WRF/phys/module_sf_mynnsfc_ice.F",
+      "?? WRF/phys/module_sf_mynnsfc_land.F",
+      "?? WRF/phys/module_sf_mynnsfc_water.F",
+      "?? WRF/run/NoahmpTable.TBL",
+      "?? WRF/run/input_sounding",
+      "?? WRF/run/namelist.input",
+      "?? WRF/test/em_scm_xy/GENPARM.TBL",
+      "?? WRF/test/em_scm_xy/LANDUSE.TBL",
+      "?? WRF/test/em_scm_xy/README.namelist",
+      "?? WRF/test/em_scm_xy/RRTM_DATA",
+      "?? WRF/test/em_scm_xy/SOILPARM.TBL",
+      "?? WRF/test/em_scm_xy/VEGPARM.TBL",
+      "?? WRF/tools/fseeko64_test",
+      "?? WRF/tools/fseeko_test",
+      "?? WRF/tools/gen_comms.c",
+      "?? WRF/tools/registry"
+    ]
+  },
+  "source_provenance": [
+    {
+      "path": "build/udm37-warm-ice-radius-pr-work/WRF/phys/module_mp_udm.F",
+      "size_bytes": 193022,
+      "sha256": "9b7b878b263f6b0111edba4cfb1c6c30e53b3f7534035cda2c0411a573b81c2c",
+      "relevant_lines": "849\u2013857: udm2d maps t1\u2192t, q1\u2192q, p1\u2192p, den1\u2192den and computes dend=(p/t-den*rv)/(rd-rv); this is the desired source contract, before later UDM state updates."
+    },
+    {
+      "path": "build/udm37-warm-ice-radius-pr-work/WRF/phys/module_microphysics_driver.F",
+      "size_bytes": 196503,
+      "sha256": "5f365f23e540a7ef3a37153426517aedf9c79b7802d37d8240ac880a0ed46f25",
+      "relevant_lines": "2846\u20132863: exact call actuals TH=th, Q=qv_curr, DEN=rho, P=p, PII=pi_phy and constants DELT, G, CPD, CPV, RD, RV, T0C, EP1, EP2, QMIN, XLS, XLV0, XLF0, DEN0, DENR, CLIQ, CICE, PSAT, CCN0. Radius packet is written after this call at 2888\u20132905."
+    },
+    {
+      "path": "build/udm37-warm-ice-radius-pr-work/WRF/phys/module_ra_rrtmgp_trace.F",
+      "size_bytes": 33542,
+      "sha256": "4ec4b46923a98cb36ef59cea6f8852d09d02cd221c0d13fc874d5db55359a406",
+      "relevant_lines": "64\u2013105 selection/call counter; 107\u2013156 shared selected physical column parser; 549\u2013616 post-UDM radius V1 writer; 663\u2013696 opt-in trace initialization and serial guards."
+    },
+    {
+      "path": "build/udm37-warm-ice-radius-pr-work/WRF/Registry/Registry.EM_COMMON",
+      "size_bytes": 448359,
+      "sha256": "87e21a476a06b7e0c926b2d939eaf1028810cba8a7d1e6fc585b50b599f99729",
+      "relevant_lines": "QVAPOR is registered as water-vapor mixing ratio (kg kg-1)."
+    }
+  ],
+  "capture_design": {
+    "preferred_insertion": "Capture exact call inputs immediately before CALL udm in module_microphysics_driver (or immediately after the corresponding udm2d argument-mapping/DEND assignment if choosing direct source-local capture). The driver location has domain id, timestep, xtime, selected i/j, actual arrays and constants; it avoids using radiation P/T/QV from a later clock.",
+    "opt_in": "A separate exact-1 environment gate such as WRF_RRTMGP_CAPTURE_UDM_ENTRY_DENSITY=1; require an existing WRF_RRTMGP_CAPTURE_DIR. Gate off by default, and before constructing diagnostic array temporaries. Reuse WRF_RRTMGP_COLUMN_I/J and existing trace_column_selection/tile inclusion. Enforce serial-only collection consistently with existing trace diagnostics.",
+    "identity": "For each unique record: domain id, itimestep, xtime minutes and derived source clock seconds (no UTC inference), i/j, kts/kte, tile bounds, and an entry-call sequence or duplicate-key rejection. Existing radius packet V1 is post-UDM; use only its matching domain/step/column/time as a join, never as a source of entry p/T/QV/DEN.",
+    "packet": "New independent magic/version, e.g. RRTMGP_UDM_ENTRY_DENSITY_V1; exact REAL-kind output, scalar metadata, and native-k vectors P_PA, T_K, QV_MIXING_RATIO_KG_KG, DEN_PASSED_KG_M3, plus exactly one explicitly named DEND vector: DEND_INTERNAL_OBSERVED_KG_M3 (only if sampled inside udm2d) or DEND_REEVALUATED_PRECALL_KG_M3 (if computed by the observer before CALL udm). Include an origin/version field so these cannot be conflated. Also write all scalar UDM actual constants listed above, with units and exact ordering. STATUS=NEW, strict write IO status checks; keep the existing post-UDM radius V1 file/schema unchanged.",
+    "source_density": "The source expression is DEND=(P/T-DEN_PASSED*RV)/(RD-RV), evaluated in default REAL and this exact operation order. If the diagnostic is placed inside udm2d after line 856, record it as DEND_INTERNAL_OBSERVED. If capture is placed at the driver immediately before CALL udm, compute and label DEND_REEVALUATED_PRECALL; do not describe that as direct observation of the internal local DEND.",
+    "prepost_sync_caveat": "Capture P, T=TH*PII, QV, DEN_PASSED and scalar constants from the same actual UDM invocation. The existing radius V1 packet is written after UDM; SOURCE_RHO is post-call unchanged host density, but SOURCE_T and moisture/state fields can differ from entry. Never combine post-core T with entry P/DEN/QV/DEND to form an EOS residual."
+  },
+  "independent_eos_checks": {
+    "status": "INTERPRETATION_PENDING_HOST_DEN_BASIS_CONFIRMATION",
+    "semantics": "Registry QVAPOR is water-vapor mixing ratio. Do not assume DEN_PASSED is total moist density. Establish whether it represents dry-air density, moist-air density, or another host convention from the active host calculation before assigning a single EOS contract.",
+    "candidate_dry_density_if_DEN_PASSED_is_total_density": "rho_d_eos = P / (T * (RD + r * RV)); rho_total_eos = rho_d_eos * (1 + r).",
+    "candidate_total_density_if_DEN_PASSED_is_dry_density": "rho_d_eos = P / (T * (RD + r * RV)); rho_total_eos = rho_d_eos * (1 + r); compare DEN_PASSED to rho_d_eos rather than rho_total_eos.",
+    "source_dend_pressure_identity": "Report P - T*(RD*DEND_SOURCE + RV*(DEN_PASSED-DEND_SOURCE)) as a source-formula consistency check only; it is not independent if DEND_SOURCE was produced by the same expression.",
+    "reporting": "First report raw P,T,QV,DEN_PASSED,DEND_SOURCE/REEVALUATED and constants. Then report candidate EOS residuals under explicitly named hypotheses. Do not claim a verified moisture/density contract until source review establishes the DEN_PASSED basis. Keep precision/tolerance tied to captured REAL kind and serialization roundoff; no physical correction."
+  },
+  "existing_scm_reuse": {
+    "driver": "build/udm37-warm-ice-radius-pr-work/build/warm-ice-local/run_scm_regression.py",
+    "helper": "build/udm37-warm-ice-radius-pr-work/WRF/test/rrtmgp/test_udm_scm.py; deterministic seed input via make_generated_seed/write_initial_udm_fixture, exact option-4 runner via run_plain_case, and history checker validate_history.",
+    "existing_suite": "build/udm37-warm-ice-radius-pr-work/build/warm-ice-scm/result.json",
+    "existing_suite_pin": {
+      "path": "build/udm37-warm-ice-radius-pr-work/build/warm-ice-scm/result.json",
+      "size_bytes": 33558,
+      "sha256": "b2895cc507a48fd29b6972fafb2313d464522b0e3060492de94e75503aaa1468"
+    },
+    "existing_source_sha256": "9b7b878b263f6b0111edba4cfb1c6c30e53b3f7534035cda2c0411a573b81c2c",
+    "existing_current_executable": {
+      "path": "build/udm37-warm-ice-radius-pr-work/WRF/main/wrf.exe",
+      "size_bytes": 50287064,
+      "sha256": "5974e98dad211901118a3688785555fd8265acb3d177b557885d27fe678674d0"
+    },
+    "existing_prechange_executable": {
+      "path": "build/udm37-radius-stage-pr-work/WRF/main/wrf.exe",
+      "size_bytes": 50287064,
+      "sha256": "161d9742fd7d4b29632d88fb2b265813fdf03555041b87b585390481735dd207"
+    },
+    "fixtures": {
+      "cold_seed": "build/udm37-radius-stage-pr-work/build/radius-stage-scm/seed-mixed (cold mixed UDM source seed)",
+      "warm_seed": "build/udm37-radius-stage-pr-work/build/radius-stage-warm-block-scm/seed (contiguous warm saturated state)",
+      "existing_cold_entry_candidate": "build/udm37-warm-ice-radius-pr-work/build/warm-ice-scm/cold-new37",
+      "existing_warm_entry_candidate": "build/udm37-warm-ice-radius-pr-work/build/warm-ice-scm/warm-new37",
+      "existing_cold_input": {
+        "path": "build/udm37-warm-ice-radius-pr-work/build/warm-ice-scm/cold-new37/wrfinput_d01",
+        "size_bytes": 77284,
+        "sha256": "2dece4c3fdd45422f0dd4b136c99dd1f122f4f5d3bfb7bf1da93c9c3a57704df"
+      },
+      "existing_warm_input": {
+        "path": "build/udm37-warm-ice-radius-pr-work/build/warm-ice-scm/warm-new37/wrfinput_d01",
+        "size_bytes": 77284,
+        "sha256": "814aed600de40c5f27fe40ed6f13e34b5bf2da8e1998451e4ca360de2ded96dd"
+      }
+    },
+    "ordinary4_disabled_path_control": "Already demonstrated: old prechange and new source each ran the same cold and warm UDM SCM inputs with RRTMG4/4 for one minute; both pairs matched all 208 history arrays bitwise (result.json results.cold.ordinary4 and results.warm.ordinary4). This is scoped to these SCM seeds. For the new packet gate, use same-current-executable entry-gate-off versus entry-gate-on on the exact same cold/warm staged wrfinput and namelist; compare complete histories and metadata bitwise, then require one correctly keyed density packet per selected UDM call only when enabled.",
+    "existing_radius_capture": "The cold/warm 37 runs already write post-UDM radius packets at selected column (default 1,1) and six timesteps; they can be used only to join post-state by domain/step/time and assess the new capture gate\u2019s effect. They do not contain entry pressure or QV and are not density evidence."
+  },
+  "future_validation_contract": [
+    "Preflight pins source, candidate executable, staged wrfinput/namelist, forcing/static assets and library closure before/after; stage in new unique run directories, never overwrite archived cases.",
+    "Run cold and warm same-seed current-source SCM with density gate off and on; serial OMP_NUM_THREADS=1; compare complete history file sets, arrays, attributes and raw bytes for gate-off/on pairs.",
+    "Require entry packet time/step/domain/i/j/levels to match its corresponding same-run post-UDM radius packet. Validate only shared call identity; do not require post-call temperature to equal entry temperature. Reject missing/duplicate keys, wrong shape, nonfinite or fill data.",
+    "Report the source DEND formula separately from any driver-side reevaluation and from independently derived EOS hypotheses; no density assumption is silently promoted to validated.",
+    "Reuse existing ordinary4 old/new exact-array evidence as the legacy disabled-path regression; do not claim it is a direct density check."
+  ],
+  "prohibited_in_this_preparation": [
+    "No production source edit",
+    "No compile or standalone object build",
+    "No WRF/REAL/ideal or solver invocation",
+    "No re-use of post-UDM or later radiation fields to infer call-entry density",
+    "No physical density correction or threshold selection"
+  ],
+  "supersedes": {
+    "path": "build/udm37-density-runtime-plan-v1/plan.json",
+    "sha256": "a16beba0a8a1a04f4f480f9e5311fd6e2a987e0765a1ec98cee1169eff2d0cf6",
+    "reason": "Correct the meaning label for DEN passed by the active host and distinguish the internal DEND value from a pre-call re-evaluation."
+  }
+}

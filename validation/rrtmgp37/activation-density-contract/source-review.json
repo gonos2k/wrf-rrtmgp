@@ -1,0 +1,188 @@
+{
+  "conclusion": {
+    "safe_next_evidence": "Pin actual QNN/QNC/QNR initialization, restart and lateral-boundary producers for each application, then compare known tagged number state against rho across one same-call checkpoint. A correction should first declare one stored state basis and make activation, size reconstruction, sedimentation, and host scalar transport consistent as a set.",
+    "source_established": "Active host RHO is generated as 1/(al+alb) immediately before the UDM call; qnn/qnc/qnr are passed unchanged; UDM local ncr arrays are copied in/out without a general density conversion; WRF\u2019s generic scalar update is dry-mass-weighted; UDM source contains both volumetric-looking number equations and density-weighted rain-number transport.",
+    "unresolved": "This source audit does not establish the physical basis of every incoming initial/boundary/restart QN field. It also does not resolve whether UDM\u2019s DEND formula expects a different DEN basis from current host RHO or is intentionally an approximation. No blanket multiply/divide by rho is justified from source inspection alone."
+  },
+  "findings": [
+    {
+      "claim": "The active solve_em path calls moist_physics_prep_em, then passes grid%rho to microphysics_driver. moist_physics_prep_em sets rho=1/(al+alb); calc_p_rho documents that al is computed all dry, and calc_p_rho_phi applies the vapor virtual factor separately in the EOS. Therefore the active RHO/DEN is the inverse of the dry-coordinate specific volume (dry-air density under the WRF dry-mass convention), not the alternate earlier phy_prep expression that multiplies 1/alt by (1+QV).",
+      "confidence": "source-established",
+      "evidence": [
+        {
+          "detail": "moist_physics_prep_em receives grid%rho, al, alb and QV immediately before microphysics.",
+          "lines": "3820-3829",
+          "path": "WRF/dyn_em/solve_em.F"
+        },
+        {
+          "detail": "microphysics_driver receives RHO=grid%rho.",
+          "lines": "3881-3886",
+          "path": "WRF/dyn_em/solve_em.F"
+        },
+        {
+          "detail": "active moist_physics_prep_em assignment rho=1/(al+alb).",
+          "lines": "5542-5544",
+          "path": "WRF/dyn_em/module_big_step_utilities_em.F"
+        },
+        {
+          "detail": "calc_p_rho states \u201cal computation is all dry\u201d; its associated perturbation pressure equation is written as dry.",
+          "lines": "520-528",
+          "path": "WRF/dyn_em/module_small_step_em.F"
+        },
+        {
+          "detail": "EOS uses qvf=1+rvovrd*QV in non-use_theta_m branch; vapor correction is separate from reciprocal alpha.",
+          "lines": "1061-1065",
+          "path": "WRF/dyn_em/module_big_step_utilities_em.F"
+        },
+        {
+          "detail": "Different phys_prep_part1 assignment rho=1/alt*(1+QV) exists; it is not the active immediately-before-UDM moist_physics_prep_em assignment.",
+          "lines": "4852-4857",
+          "path": "WRF/dyn_em/module_big_step_utilities_em.F"
+        }
+      ],
+      "id": "active_density_chain"
+    },
+    {
+      "claim": "The active driver passes qnn_curr, qnc_curr, qnr_curr directly to UDM as NN, NC, NR and passes rho directly as DEN. The option-37 timestep-1 initialization assigns ccn_conc directly to QNN_CURR; the option-37 call marks CCN preinitialized, so UDM skips its own CCN reset. No density multiplication/division at this driver boundary was found.",
+      "confidence": "source-established",
+      "evidence": [
+        {
+          "detail": "On the option-37 path and timestep 1, QNN_CURR=ccn_conc with no density factor.",
+          "lines": "929-938",
+          "path": "WRF/phys/module_microphysics_driver.F"
+        },
+        {
+          "detail": "UDM receives NN=qnn_curr, NC=qnc_curr, NR=qnr_curr, DEN=rho and ccn_preinitialized=.true.",
+          "lines": "2845-2878",
+          "path": "WRF/phys/module_microphysics_driver.F"
+        },
+        {
+          "detail": "UDM performs the ccn0 full-memory reset only if initialize_ccn remains true; ccn_preinitialized inverts that flag.",
+          "lines": "328-335",
+          "path": "WRF/phys/module_mp_udm.F"
+        },
+        {
+          "detail": "UDM copies NN/NC/NR directly into ncr local components.",
+          "lines": "349-362",
+          "path": "WRF/phys/module_mp_udm.F"
+        },
+        {
+          "detail": "UDM copies ncr components directly back to caller arrays.",
+          "lines": "2824-2832",
+          "path": "WRF/phys/module_mp_udm.F"
+        }
+      ],
+      "id": "number_inputs_are_not_converted"
+    },
+    {
+      "claim": "Registry labels QNCCN/QNCLOUD/QNRAIN as # kg(-1). WRF\u2019s generic scalar update evolves q as a dry-mass-weighted intensive scalar: scalar_new=((C1*MU_old+C2)*q_old + dt*tendency)/(C1*MU_new+C2). The advection routine is called on the scalar field directly. The dynamical convention is consequently consistent with number per unit dry air mass for those registered scalar fields; this establishes storage/transport behavior, not how arbitrary external initial or boundary data were authored.",
+      "confidence": "strong-source-inference",
+      "evidence": [
+        {
+          "detail": "QNRAIN, QNCCN, QNCLOUD units are explicitly # kg(-1).",
+          "lines": "536-545",
+          "path": "WRF/Registry/Registry.EM_COMMON"
+        },
+        {
+          "detail": "Generic scalar update weights scalar state by MU plus base mass at old/new times.",
+          "lines": "1719-1724",
+          "path": "WRF/dyn_em/module_em.F"
+        },
+        {
+          "detail": "Moist scalar advance invokes rk_scalar_tend for all active moist scalars.",
+          "lines": "2240-2267",
+          "path": "WRF/dyn_em/solve_em.F"
+        },
+        {
+          "detail": "Generic scalar advection dispatch passes scalar field to advect_scalar.",
+          "lines": "1328-1342",
+          "path": "WRF/dyn_em/module_em.F"
+        }
+      ],
+      "id": "wrf_scalar_storage_basis"
+    },
+    {
+      "claim": "UDM does not implement a single explicit number-basis conversion at its interface. Its cloud/rain size reconstruction and activation algebra use density and mixing ratio in forms that are dimensionally consistent with volumetric number concentration; e.g. adjust_number_concent reconstructs nn=DEN*Q*lambda^3/(pi*rho_water), and activation forms a particle-mass times number rate, then divides by DEN to make a mixing-ratio mass source. In contrast, rain-number sedimentation forms DEN_DRY*NR, calls a routine documented to transport dry-air-density times mixing ratio, then divides by DEN_DRY. These source paths imply distinct number interpretations unless the state\u2019s numeric convention is clarified. No source change or single conversion is authorized by this audit.",
+      "confidence": "equation-level-source-finding",
+      "evidence": [
+        {
+          "detail": "adjust_number_concent reconstruction and lambda relation combine qq, den, number and particle mass-density constant.",
+          "lines": "3597-3629",
+          "path": "WRF/phys/module_mp_udm.F"
+        },
+        {
+          "detail": "slope_cloud lambda expression uses pidnc*ncr/(q*den).",
+          "lines": "3024-3039",
+          "path": "WRF/phys/module_mp_udm.F"
+        },
+        {
+          "detail": "ncact is formed directly from CCN+cloud-number state; pcact multiplies embryo mass by ncact and divides by DEN before adding/subtracting mass mixing ratio.",
+          "lines": "2507-2518",
+          "path": "WRF/phys/module_mp_udm.F"
+        },
+        {
+          "detail": "semi_lagrangian documents dendl as dry-air density and rql as cloud density*mixing ratio.",
+          "lines": "3106-3126",
+          "path": "WRF/phys/module_mp_udm.F"
+        },
+        {
+          "detail": "rain number is multiplied by DEND before semi-Lagrangian transport and divided by DEND on return.",
+          "lines": "2618-2637",
+          "path": "WRF/phys/module_mp_udm.F"
+        }
+      ],
+      "id": "udm_number_basis_is_mixed_in_source_equations"
+    },
+    {
+      "claim": "UDM computes DEND=(p/T-DEN*Rv)/(Rd-Rv), labels it dry density, and uses it in rain-number and hydrometeor sedimentation. Algebraically this formula returns dry density when DEN is total moist-air density under the ideal-mixture relation. The active host chain above supplies reciprocal dry specific volume. The code alone does not explain this basis transition or provide an explicit rho conversion between host RHO and UDM DEND. This is a concrete reconciliation question, not by itself proof of a numerical defect; the qv convention/intent for this DEND reconstruction must be resolved before proposing a correction.",
+      "confidence": "source-established-plus-algebraic-qualification",
+      "evidence": [
+        {
+          "detail": "DEN copied from DEN1, DEND expression labeled dry density.",
+          "lines": "849-857",
+          "path": "WRF/phys/module_mp_udm.F"
+        },
+        {
+          "detail": "DEND feeds rain mass and rain-number sedimentation.",
+          "lines": "2620-2637",
+          "path": "WRF/phys/module_mp_udm.F"
+        },
+        {
+          "detail": "The upstream al field is explicitly dry in its construction.",
+          "lines": "520-528",
+          "path": "WRF/dyn_em/module_small_step_em.F"
+        }
+      ],
+      "id": "dend_and_actual_den_basis"
+    }
+  ],
+  "scope": "Trace actual solve-to-UDM density argument, UDM number-array ingress/egress and transformations, scalar transport basis, and internal density-weighted rain-number sedimentation. No runtime, build, solver, or source edits.",
+  "source": {
+    "files": {
+      "advection": "WRF/dyn_em/module_advect_em.F",
+      "density_calc": "WRF/dyn_em/module_small_step_em.F",
+      "driver": "WRF/phys/module_microphysics_driver.F",
+      "dynamics": "WRF/dyn_em/module_em.F",
+      "prep": "WRF/dyn_em/module_big_step_utilities_em.F",
+      "registry": "WRF/Registry/Registry.EM_COMMON",
+      "solve": "WRF/dyn_em/solve_em.F",
+      "start": "WRF/dyn_em/start_em.F",
+      "udm": "WRF/phys/module_mp_udm.F"
+    },
+    "head": "246e6f74f3b4fdb0727ea6beeb51edafae435173",
+    "sha256": {
+      "advection": "58253bdbeb188dd47ed0579fcd2891086be1889b75c0c7d3696c9ad1d213559d",
+      "density_calc": "cabf1a177d50fb0096db79644af20cfe6d75217dbe63ab406a7e29bb54c17634",
+      "driver": "5f365f23e540a7ef3a37153426517aedf9c79b7802d37d8240ac880a0ed46f25",
+      "dynamics": "67c5842c1c5d407a26139f26bd317f3016c610aeaf60207dfd21394ddb81482c",
+      "prep": "b8c46ba091d017f70e2d75b9a87e198a0242f6c80341cd402d65677ba339a532",
+      "registry": "87e21a476a06b7e0c926b2d939eaf1028810cba8a7d1e6fc585b50b599f99729",
+      "solve": "ed03953a8b7b999fc0a5a281893f4808bbed28697ea9032fde9b9b605e0d9ecb",
+      "start": "bce1b0656d73d76f74f4db7f1b71d254cc1e11f16ecfc82e54fe153a84e6c17e",
+      "udm": "9b7b878b263f6b0111edba4cfb1c6c30e53b3f7534035cda2c0411a573b81c2c"
+    },
+    "worktree": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-nc-radiative-evidence-pr-work"
+  },
+  "status": "READ_ONLY_SOURCE_AUDIT",
+  "title": "UDM producer/storage/density basis source audit"
+}

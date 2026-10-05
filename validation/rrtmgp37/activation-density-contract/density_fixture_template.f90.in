@@ -1,0 +1,67 @@
+module density_contract_fixture
+  implicit none
+  real, parameter :: rd = @RD_VALUE@
+  real, parameter :: rv = @RV_VALUE@
+contains
+  subroutine host_rho_from_alpha(al, alb, rho)
+    real, intent(in) :: al(1,1,1), alb(1,1,1)
+    real, intent(out) :: rho(1,1,1)
+    integer :: i, k, j
+    do j=1,1
+      do k=1,1
+        do i=1,1
+          ! Extracted statement from module_big_step_utilities_em.F:5542.
+@HOST_RHO_STATEMENT@
+        enddo
+      enddo
+    enddo
+  end subroutine host_rho_from_alpha
+
+  subroutine udm_dend_from_eos(p, t, den, dend)
+    real, intent(in) :: p(1,1), t(1,1), den(1,1)
+    real, intent(out) :: dend(1,1)
+    integer :: i, k
+    do k=1,1
+      do i=1,1
+        ! Extracted statement from module_mp_udm.F:856.
+@UDM_DEND_STATEMENT@
+      enddo
+    enddo
+  end subroutine udm_dend_from_eos
+end module density_contract_fixture
+
+program density_contract_cases
+  use density_contract_fixture, only: rd, rv, host_rho_from_alpha, udm_dend_from_eos
+  implicit none
+  real :: rhod, qv, temp, alpha
+  real :: al(1,1,1), alb(1,1,1), rho(1,1,1)
+  real :: p(1,1), t(1,1), den(1,1), dend_dry(1,1), dend_moist(1,1)
+  real, parameter :: rhos(3) = [0.5,1.0,1.5]
+  real, parameter :: qvs(5) = [0.0,0.001,0.01,0.02,0.03]
+  real, parameter :: temps(2) = [250.0,300.0]
+  integer :: ir, iq, it, case_id
+  write(*,'(A,1X,I0)') 'REAL_BITS', storage_size(0.)
+  case_id=0
+  do ir=1,size(rhos)
+    do iq=1,size(qvs)
+      do it=1,size(temps)
+        case_id=case_id+1
+        rhod=rhos(ir)
+        qv=qvs(iq)
+        temp=temps(it)
+        alpha=1.0/rhod
+        al(1,1,1)=alpha
+        alb(1,1,1)=0.0
+        call host_rho_from_alpha(al,alb,rho)
+        t(1,1)=temp
+        p(1,1)=rhod*temp*(rd+rv*qv)
+        den(1,1)=rho(1,1,1)
+        call udm_dend_from_eos(p,t,den,dend_dry)
+        den(1,1)=rhod*(1.0+qv)
+        call udm_dend_from_eos(p,t,den,dend_moist)
+        write(*,'(I3,1X,I1,1X,I1,1X,I1,1X,8(ES24.16,1X))') &
+          case_id,ir,iq,it,rhod,qv,temp,rho(1,1,1),dend_dry(1,1),dend_moist(1,1),p(1,1),alpha
+      enddo
+    enddo
+  enddo
+end program density_contract_cases
