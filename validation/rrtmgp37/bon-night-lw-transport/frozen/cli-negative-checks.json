@@ -1,0 +1,53 @@
+{
+  "argument": "optional seventh positional argument after existing sidecar argument 6",
+  "checks": [
+    {
+      "argument": "1",
+      "expected": "accept; original default RTE call twice; emit .lw_transport trace",
+      "phase": "LW"
+    },
+    {
+      "argument": "2",
+      "expected": "accept; both clear/all calls receive constant lw_Ds=1.66_wp; trace records policy and diffusivity",
+      "phase": "LW"
+    },
+    {
+      "argument": "3",
+      "expected": "accept; both clear/all calls receive n_gauss_angles=4; trace records policy and count",
+      "phase": "LW"
+    },
+    {
+      "argument": "2",
+      "expected": "reject before radiative calculation",
+      "phase": "SW"
+    },
+    {
+      "argument": "3",
+      "expected": "reject before radiative calculation",
+      "phase": "SW"
+    },
+    {
+      "argument": "0",
+      "expected": "reject exact policy validation",
+      "phase": "LW or SW"
+    },
+    {
+      "argument": "4",
+      "expected": "reject exact policy validation",
+      "phase": "LW or SW"
+    },
+    {
+      "argument": "1junk",
+      "expected": "reject exact policy validation",
+      "phase": "LW or SW"
+    },
+    {
+      "argument": "more than 32 characters",
+      "expected": "reject truncated command argument",
+      "phase": "LW or SW"
+    }
+  ],
+  "future_runtime_scope": "root will compile and authorize three calls; this preparation performed no compile, solver, WRF, or REAL invocation",
+  "schema": "bon-night-lw-transport-cli-negative-checks-v1",
+  "status": "PLANNED_NOT_RUN_NO_COMPILE_OR_SOLVER"
+}

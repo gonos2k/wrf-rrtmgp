@@ -1,0 +1,130 @@
+--- /NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-evidence-pr-work/WRF/test/rrtmgp/reference_column.f90
++++ /NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-lw-transport-attribution-v1/preparation/reference_column.f90
+@@ -25,7 +25,9 @@
+   CHARACTER(LEN=1024) :: frozen_table_env,frozen_message
+   CHARACTER(LEN=64) :: frozen_sha_recorded,frozen_sha_raw
+   CHARACTER(LEN=32) :: magic,phase,policy_arg,next_section
++  CHARACTER(LEN=32) :: lw_transport_arg
+   INTEGER :: nc,nl,overlap,seed,iceflag,u_in,u_out,ios,nemis,sw_policy
++  INTEGER :: lw_transport_policy,arg_status
+   INTEGER :: audit_native_n,audit_sidecar_species,audit_expected_native
+   INTEGER :: c,k,g,b,i,ngpt,nbnd,n_native,frozen_status,env_status
+   INTEGER :: override_ncol,override_nlay,override_nband,override_unit,override_ios
+@@ -34,6 +36,7 @@
+   REAL(wp) :: metadata_gravity,metadata_cp_dry,metadata_mol_weight_dry
+   LOGICAL :: use_precip,has_native_mass,frozen_enabled,sw_direct_enabled,cu_population_enabled,cu_active
+   LOGICAL :: audit_sidecar_present,audit_precip_active
++  LOGICAL :: lw_transport_requested
+   REAL(wp) :: cu_policy_value
+   INTEGER :: ice_roughness
+   REAL(wp), ALLOCATABLE :: play(:,:),plev(:,:),tlay(:,:),tlev(:,:),tsfc(:,:)
+@@ -63,6 +66,7 @@
+   REAL(wp), ALLOCATABLE :: randoms(:,:,:),local_random(:)
+   REAL(wp), ALLOCATABLE, TARGET :: fu(:,:),fd(:,:),fdir(:,:)
+   REAL(wp), ALLOCATABLE :: heat(:,:)
++  REAL(wp), ALLOCATABLE :: lw_ds_field(:,:)
+   REAL(wp), ALLOCATABLE :: up_all(:,:),dn_all(:,:),hr_all(:,:)
+   REAL(wp), ALLOCATABLE :: up_clear(:,:),dn_clear(:,:),hr_clear(:,:)
+   REAL(wp), ALLOCATABLE :: direct_all(:,:),diffuse_all(:,:),direct_clear(:,:)
+@@ -107,6 +111,19 @@
+   CALL get_command_argument(5,override_path)
+   audit_sidecar_path=''
+   CALL get_command_argument(6,audit_sidecar_path)
++  lw_transport_arg=''
++  CALL get_command_argument(7,lw_transport_arg,STATUS=arg_status)
++  IF(arg_status/=0) ERROR STOP 'LW_TRANSPORT_POLICY argument is too long'
++  lw_transport_requested=LEN_TRIM(lw_transport_arg)>0
++  lw_transport_policy=1
++  IF(lw_transport_requested) THEN
++    SELECT CASE(TRIM(lw_transport_arg))
++    CASE('1'); lw_transport_policy=1
++    CASE('2'); lw_transport_policy=2
++    CASE('3'); lw_transport_policy=3
++    CASE DEFAULT; ERROR STOP 'LW_TRANSPORT_POLICY must be exactly 1, 2, or 3'
++    END SELECT
++  END IF
+   IF(LEN_TRIM(data_dir)==0 .OR. LEN_TRIM(input_path)==0 .OR. LEN_TRIM(output_path)==0) &
+     ERROR STOP 'usage: reference_column DATA_DIR INPUT_FILE OUTPUT_FILE [SW_POLICY 1|2|3] [SW_OPTICS_OVERRIDE_FILE] [CF0_AUDIT_SIDECAR]'
+   sw_policy=1
+@@ -127,6 +144,8 @@
+     ERROR STOP 'invalid replay input magic'
+   READ(u_in,*,IOSTAT=ios) phase,nc,nl,overlap,seed,iceflag
+   IF(ios/=0 .OR. (TRIM(phase)/='LW' .AND. TRIM(phase)/='SW')) ERROR STOP 'invalid replay header'
++  IF(TRIM(phase)=='SW'.AND.lw_transport_requested.AND.lw_transport_policy/=1) &
++    ERROR STOP 'LW_TRANSPORT_POLICY other than 1 is only valid for LW'
+   sw_direct_enabled=.FALSE.
+   cu_population_enabled=.FALSE.; cu_active=.FALSE.
+   IF((TRIM(magic)=='RRTMGP_REPLAY_V8'.OR.TRIM(magic)=='RRTMGP_REPLAY_V10').AND.TRIM(phase)/='LW') &
+@@ -671,7 +690,14 @@
+     gas_tau=lw_atmos%tau
+     emissivity=MAX(0._wp,MIN(1._wp,emissivity))
+     lw_flux%flux_up=>fu; lw_flux%flux_dn=>fd
+-    CALL check_error(rte_lw(lw_atmos,.FALSE.,lw_source,emissivity,lw_flux))
++    IF(lw_transport_policy==2) THEN
++      ALLOCATE(lw_ds_field(nc,gas_lw%get_ngpt())); lw_ds_field=1.66_wp
++      CALL check_error(rte_lw(lw_atmos,.FALSE.,lw_source,emissivity,lw_flux,lw_Ds=lw_ds_field))
++    ELSE IF(lw_transport_policy==3) THEN
++      CALL check_error(rte_lw(lw_atmos,.FALSE.,lw_source,emissivity,lw_flux,n_gauss_angles=4))
++    ELSE
++      CALL check_error(rte_lw(lw_atmos,.FALSE.,lw_source,emissivity,lw_flux))
++    END IF
+     up_clear=fu; dn_clear=fd
+     CALL check_error(compute_heating_rate(fu,fd,plev*100._wp,heat))
+     hr_clear=heat*86400._wp
+@@ -752,7 +778,13 @@
+       lw_frozen%tau=frozen_tau
+       CALL check_error(lw_frozen%increment(lw_atmos))
+     END IF
+-    CALL check_error(rte_lw(lw_atmos,.FALSE.,lw_source,emissivity,lw_flux))
++    IF(lw_transport_policy==2) THEN
++      CALL check_error(rte_lw(lw_atmos,.FALSE.,lw_source,emissivity,lw_flux,lw_Ds=lw_ds_field))
++    ELSE IF(lw_transport_policy==3) THEN
++      CALL check_error(rte_lw(lw_atmos,.FALSE.,lw_source,emissivity,lw_flux,n_gauss_angles=4))
++    ELSE
++      CALL check_error(rte_lw(lw_atmos,.FALSE.,lw_source,emissivity,lw_flux))
++    END IF
+     up_all=fu; dn_all=fd
+     CALL check_error(compute_heating_rate(fu,fd,plev*100._wp,heat))
+     hr_all=heat*86400._wp
+@@ -1146,8 +1178,41 @@
+   IF(audit_precip_active.AND.TRIM(phase)=='LW') &
+     CALL write3(u_out,'AUDIT_EXTRA_PRECIP_TAU',audit_tau)
+   CLOSE(u_out)
++  IF(lw_transport_requested.AND.TRIM(phase)=='LW') CALL write_lw_transport_trace(TRIM(output_path)//'.lw_transport')
+ 
+ CONTAINS
++  SUBROUTINE write_lw_transport_trace(path)
++    CHARACTER(LEN=*), INTENT(IN) :: path
++    INTEGER :: unit,stat
++    INTEGER, ALLOCATABLE :: bounds(:,:)
++    REAL(wp), ALLOCATABLE :: wn_bounds(:,:),policy_value(:,:,:),bounds_value(:,:,:)
++    OPEN(NEWUNIT=unit,FILE=path,STATUS='NEW',ACTION='WRITE',IOSTAT=stat)
++    IF(stat/=0) ERROR STOP 'could not create LW transport trace'
++    WRITE(unit,'(A)',IOSTAT=stat) 'RRTMGP_RESULT_V1'
++    IF(stat/=0) ERROR STOP 'failed LW transport result magic write'
++    WRITE(unit,'(A,1X,I0,1X,I0)',IOSTAT=stat) 'LW',nc,nl
++    IF(stat/=0) ERROR STOP 'failed LW transport trace dimensions write'
++    ALLOCATE(policy_value(1,1,1)); policy_value(1,1,1)=REAL(lw_transport_policy,wp)
++    CALL write3(unit,'TRANSPORT_POLICY',policy_value)
++    CALL write3(unit,'SOURCE_LAYER',lw_source%lay_source)
++    CALL write3(unit,'SOURCE_LEVEL',lw_source%lev_source)
++    CALL write3(unit,'SOURCE_SURFACE',RESHAPE(lw_source%sfc_source,[nc,1,SIZE(lw_source%sfc_source,2)]))
++    bounds=gas_lw%get_band_lims_gpoint()
++    ALLOCATE(bounds_value(SIZE(bounds,1),SIZE(bounds,2),1))
++    bounds_value(:,:,1)=REAL(bounds,wp)
++    CALL write3(unit,'BAND_LIMITS_GPOINT',bounds_value)
++    wn_bounds=gas_lw%get_band_lims_wavenumber()
++    CALL write3(unit,'BAND_LIMITS_WAVENUMBER',RESHAPE(wn_bounds,[SIZE(wn_bounds,1),SIZE(wn_bounds,2),1]))
++    IF(lw_transport_policy==2) THEN
++      policy_value(1,1,1)=1.66_wp
++      CALL write3(unit,'LW_DIFFUSIVITY_ANGLE',policy_value)
++    ELSE IF(lw_transport_policy==3) THEN
++      policy_value(1,1,1)=4._wp
++      CALL write3(unit,'GAUSS_ANGLE_COUNT',policy_value)
++    END IF
++    CLOSE(unit,IOSTAT=stat)
++    IF(stat/=0) ERROR STOP 'failed to close LW transport trace'
++  END SUBROUTINE write_lw_transport_trace
+   SUBROUTINE read_cf0_precip_sidecar(path,expected_phase,ncol,nlay,expected_native_n,cloud_fraction,rain,snow,native_n,species,occurrence)
+     CHARACTER(LEN=*), INTENT(IN) :: path,expected_phase
+     INTEGER, INTENT(IN) :: ncol,nlay,expected_native_n

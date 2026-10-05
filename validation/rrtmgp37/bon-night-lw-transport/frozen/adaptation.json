@@ -1,0 +1,51 @@
+{
+  "adapted_source": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-lw-transport-attribution-v1/preparation/reference_column.f90",
+    "sha256": "bd83001cde913134cd7294cb6f697eb851eb8164beb4af08934a64a2bba2ed0e",
+    "size_bytes": 91116
+  },
+  "base_source": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-evidence-pr-work/WRF/test/rrtmgp/reference_column.f90",
+    "sha256": "6e82effd7d25242656858a8242c7e6941fced6aec0ec4d906762ef3ccb1b4ff0",
+    "size_bytes": 87769
+  },
+  "change_summary": {
+    "optional_arg7": "LW_TRANSPORT_POLICY",
+    "policy1": "unchanged rte_lw default call",
+    "policy2": "constant lw_Ds=1.66_wp",
+    "policy3": "n_gauss_angles=4",
+    "trace": "separate <output_path>.lw_transport only for explicitly selected LW input; RRTMGP_RESULT_V1 sections"
+  },
+  "cli_negative_checks": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-lw-transport-attribution-v1/preparation/cli-negative-checks.json",
+    "sha256": "d4f417ac78a011aed8ebacac99b6a5887b9d3fe052d8d13891b56d32656aa380",
+    "size_bytes": 1559
+  },
+  "execution_counts": {
+    "REAL": 0,
+    "WRF": 0,
+    "compile": 0,
+    "solver": 0
+  },
+  "limitations": [
+    "Private reference-column diagnostic only",
+    "No RRTM exact-parity claim; first two LW bands are not identical",
+    "CLI negative checks are a plan, not executed runtime checks"
+  ],
+  "patch": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-lw-transport-attribution-v1/preparation/reference_column.patch",
+    "sha256": "c29866dafd3c08292413236e1ee27c7bccf5e81fd823c0781521e39e3910acf9",
+    "size_bytes": 6969
+  },
+  "readme": {
+    "path": "build/udm37-bon-night-lw-transport-attribution-v1/preparation/README.md",
+    "sha256": "b5515fa75278dd3d7ce3c40d621d6d2fabd9080523a1b7e3ed7fa527ddeaf520",
+    "size_bytes": 2122
+  },
+  "schema": "bon-night-lw-transport-adaptation-v1",
+  "source_delta": {
+    "deletions": 2,
+    "insertions": 67
+  },
+  "status": "PRIVATE_SOURCE_ADAPTATION_READY_FOR_REVIEW_NO_COMPILE_NO_SOLVER"
+}
