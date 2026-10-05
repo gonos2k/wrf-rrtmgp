@@ -1,0 +1,38 @@
+name: Verify UDM rain-only cloud slopes
+on:
+  pull_request:
+    paths:
+      - 'WRF/phys/module_mp_udm.F'
+      - 'WRF/test/rrtmgp/test_udm_rain_only_slopes*'
+      - 'WRF/doc/rrtmgp/UDM_RAIN_ONLY_CLOUD_SLOPES.md'
+      - 'validation/rrtmgp37/rain-only-cloud-slopes/**'
+      - '.github/workflows/validate-rain-only-slopes.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'WRF/phys/module_mp_udm.F'
+      - 'WRF/test/rrtmgp/test_udm_rain_only_slopes*'
+      - 'validation/rrtmgp37/rain-only-cloud-slopes/**'
+      - '.github/workflows/validate-rain-only-slopes.yml'
+permissions:
+  contents: read
+jobs:
+  native-rain-only-and-defined-controls:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - name: Authenticate saved native, full-build, and SCM evidence
+        run: python3 -I -S validation/rrtmgp37/rain-only-cloud-slopes/verify.py
+      - name: Fetch immutable pre-fix UDM source
+        run: git fetch --no-tags --depth=1 origin e3b9e52c2a20811830a27d34420721ca89b62e59
+      - name: Compare actual UDM module at O0 and O2 under NaN and FPE checks
+        run: >-
+          python3 -B WRF/test/rrtmgp/test_udm_rain_only_slopes.py WRF
+          --workdir build/rain-only-cloud-slopes-native
+      - name: Preserve native receipts and expected baseline failure logs
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: udm-rain-only-cloud-slopes-native
+          path: build/rain-only-cloud-slopes-native
