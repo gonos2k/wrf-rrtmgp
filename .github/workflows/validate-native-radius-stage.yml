@@ -1,0 +1,21 @@
+name: Verify actual UDM radius stage evidence
+on:
+  pull_request:
+    paths:
+      - 'validation/rrtmgp37/native-radius-stage/**'
+      - '.github/workflows/validate-native-radius-stage.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'validation/rrtmgp37/native-radius-stage/**'
+      - '.github/workflows/validate-native-radius-stage.yml'
+permissions:
+  contents: read
+jobs:
+  saved-stage-and-unit-sensitivity:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - name: Verify original producer packets and conditional dimensional calculation
+        run: python3 -I -S validation/rrtmgp37/native-radius-stage/verify.py
