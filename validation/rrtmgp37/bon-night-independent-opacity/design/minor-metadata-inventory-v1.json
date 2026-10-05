@@ -1,0 +1,1686 @@
+{
+  "active_filter_rule": "For each minor_gases_{lower,upper} identifier, find it in identifier_minor, map its index through gas_minor to an absorber gas name, and retain iff that mapped gas is in available_gases. Source: mo_gas_optics_rrtmgp.F90:2021-2033 and :1808-1827.",
+  "coefficient_file": {
+    "format": "NetCDF4",
+    "path": "build/udm37-bon-common-band-source-pr-work/WRF/run/rrtmgp-gas-lw-g128.nc",
+    "sha256": "70ad65d116531122660318e5da2a2af9db74b425916202860e9527ef2375b8f6"
+  },
+  "gas_minor_to_identifier_minor_pairs": [
+    {
+      "gas_minor": "h2o",
+      "identifier_minor": "h2o"
+    },
+    {
+      "gas_minor": "co2",
+      "identifier_minor": "co2"
+    },
+    {
+      "gas_minor": "o3",
+      "identifier_minor": "o3"
+    },
+    {
+      "gas_minor": "n2o",
+      "identifier_minor": "n2o"
+    },
+    {
+      "gas_minor": "co",
+      "identifier_minor": "co"
+    },
+    {
+      "gas_minor": "ch4",
+      "identifier_minor": "ch4"
+    },
+    {
+      "gas_minor": "o2",
+      "identifier_minor": "o2"
+    },
+    {
+      "gas_minor": "n2",
+      "identifier_minor": "n2"
+    },
+    {
+      "gas_minor": "h2o",
+      "identifier_minor": "h2o_frgn"
+    },
+    {
+      "gas_minor": "h2o",
+      "identifier_minor": "h2o_self"
+    },
+    {
+      "gas_minor": "ccl4",
+      "identifier_minor": "ccl4"
+    },
+    {
+      "gas_minor": "cfc11",
+      "identifier_minor": "cfc11"
+    },
+    {
+      "gas_minor": "cfc12",
+      "identifier_minor": "cfc12"
+    },
+    {
+      "gas_minor": "cfc22",
+      "identifier_minor": "cfc22"
+    },
+    {
+      "gas_minor": "hfc143a",
+      "identifier_minor": "hfc143a"
+    },
+    {
+      "gas_minor": "hfc125",
+      "identifier_minor": "hfc125"
+    },
+    {
+      "gas_minor": "hfc23",
+      "identifier_minor": "hfc23"
+    },
+    {
+      "gas_minor": "hfc32",
+      "identifier_minor": "hfc32"
+    },
+    {
+      "gas_minor": "hfc134a",
+      "identifier_minor": "hfc134a"
+    },
+    {
+      "gas_minor": "cf4",
+      "identifier_minor": "cf4"
+    },
+    {
+      "gas_minor": "no2",
+      "identifier_minor": "no2"
+    }
+  ],
+  "global_table_shapes": {
+    "contributors_lower": 485,
+    "contributors_upper": 308,
+    "gpt": 128,
+    "minor_absorber": 21,
+    "minor_absorber_intervals_lower": 60,
+    "minor_absorber_intervals_upper": 34,
+    "mixing_fraction": 9,
+    "temperature": 14
+  },
+  "loader_dimension_contract": {
+    "fortran_loader_read_field_arguments": [
+      "ncontributors",
+      "nmixingfracs",
+      "ntemps"
+    ],
+    "netcdf_kminor_lower": [
+      "temperature",
+      "mixing_fraction",
+      "contributors_lower"
+    ],
+    "netcdf_kminor_upper": [
+      "temperature",
+      "mixing_fraction",
+      "contributors_upper"
+    ],
+    "note": "Respect NetCDF named dimensions and the Fortran read_field argument order; do not treat compact contributor positions as g-point IDs. The g-point interval and coefficient start jointly select a table segment.",
+    "runtime_kernel_kminor": [
+      "temperature",
+      "mixing_fraction",
+      "compact_contributor_index"
+    ]
+  },
+  "netcdf_coefficient_gas_names_ordered": [
+    "h2o",
+    "co2",
+    "o3",
+    "n2o",
+    "co",
+    "ch4",
+    "o2",
+    "n2",
+    "ccl4",
+    "cfc11",
+    "cfc12",
+    "cfc22",
+    "hfc143a",
+    "hfc125",
+    "hfc23",
+    "hfc32",
+    "hfc134a",
+    "cf4",
+    "no2"
+  ],
+  "offset_rule": "In source order, each removed interval contributes (minor_limits_gpt(2,i)-minor_limits_gpt(1,i)+1) to n_elim. For a retained interval, reduced kminor_start = original kminor_start - n_elim from preceding removed intervals. See mo_gas_optics_rrtmgp.F90:2066-2086.",
+  "regions": {
+    "lower": {
+      "intervals": [
+        {
+          "coefficient_count_from_gpt_interval": 12,
+          "gpt_bounds_inclusive_1based": [
+            1,
+            12
+          ],
+          "identifier_in_minor_gases": "n2",
+          "kminor_start_after_source_filtering_1based": 1,
+          "kminor_start_original_1based": 1,
+          "mapped_absorber_from_gas_minor_identifier_minor": "n2",
+          "minor_scales_with_density": true,
+          "retained_by_available_gases": true,
+          "scale_by_complement": false,
+          "scaling_gas_name": "n2",
+          "source_1based_interval_index": 1
+        },
+        {
+          "coefficient_count_from_gpt_interval": 12,
+          "gpt_bounds_inclusive_1based": [
+            1,
+            12
+          ],
+          "identifier_in_minor_gases": "h2o_frgn",
+          "kminor_start_after_source_filtering_1based": 13,
+          "kminor_start_original_1based": 13,
+          "mapped_absorber_from_gas_minor_identifier_minor": "h2o",
+          "minor_scales_with_density": true,
+          "retained_by_available_gases": true,
+          "scale_by_complement": true,
+          "scaling_gas_name": "h2o",
+          "source_1based_interval_index": 2
+        },
+        {
+          "coefficient_count_from_gpt_interval": 12,
+          "gpt_bounds_inclusive_1based": [
+            1,
+            12
+          ],
+          "identifier_in_minor_gases": "h2o_self",
+          "kminor_start_after_source_filtering_1based": 25,
+          "kminor_start_original_1based": 25,
+          "mapped_absorber_from_gas_minor_identifier_minor": "h2o",
+          "minor_scales_with_density": true,
+          "retained_by_available_gases": true,
+          "scale_by_complement": false,
+          "scaling_gas_name": "h2o",
+          "source_1based_interval_index": 3
+        },
+        {
+          "coefficient_count_from_gpt_interval": 14,
+          "gpt_bounds_inclusive_1based": [
+            13,
+            26
+          ],
+          "identifier_in_minor_gases": "n2",
+          "kminor_start_after_source_filtering_1based": 37,
+          "kminor_start_original_1based": 37,
+          "mapped_absorber_from_gas_minor_identifier_minor": "n2",
+          "minor_scales_with_density": true,
+          "retained_by_available_gases": true,
+          "scale_by_complement": false,
+          "scaling_gas_name": "n2",
+          "source_1based_interval_index": 4
+        },
+        {
+          "coefficient_count_from_gpt_interval": 14,
+          "gpt_bounds_inclusive_1based": [
+            13,
+            26
+          ],
+          "identifier_in_minor_gases": "h2o_frgn",
+          "kminor_start_after_source_filtering_1based": 51,
+          "kminor_start_original_1based": 51,
+          "mapped_absorber_from_gas_minor_identifier_minor": "h2o",
+          "minor_scales_with_density": true,
+          "retained_by_available_gases": true,
+          "scale_by_complement": true,
+          "scaling_gas_name": "h2o",
+          "source_1based_interval_index": 5
+        },
+        {
+          "coefficient_count_from_gpt_interval": 14,
+          "gpt_bounds_inclusive_1based": [
+            13,
+            26
+          ],
+          "identifier_in_minor_gases": "h2o_self",
+          "kminor_start_after_source_filtering_1based": 65,
+          "kminor_start_original_1based": 65,
+          "mapped_absorber_from_gas_minor_identifier_minor": "h2o",
+          "minor_scales_with_density": true,
+          "retained_by_available_gases": true,
+          "scale_by_complement": false,
+          "scaling_gas_name": "h2o",
+          "source_1based_interval_index": 6
+        },
+        {
+          "coefficient_count_from_gpt_interval": 12,
+          "gpt_bounds_inclusive_1based": [
+            27,
+            38
+          ],
+          "identifier_in_minor_gases": "n2o",
+          "kminor_start_after_source_filtering_1based": 79,
+          "kminor_start_original_1based": 79,
+          "mapped_absorber_from_gas_minor_identifier_minor": "n2o",
+          "minor_scales_with_density": false,
+          "retained_by_available_gases": true,
+          "scale_by_complement": false,
+          "scaling_gas_name": "",
+          "source_1based_interval_index": 7
+        },
+        {
+          "coefficient_count_from_gpt_interval": 12,
+          "gpt_bounds_inclusive_1based": [
+            27,
+            38
+          ],
+          "identifier_in_minor_gases": "h2o_frgn",
+          "kminor_start_after_source_filtering_1based": 91,
+          "kminor_start_original_1based": 91,
+          "mapped_absorber_from_gas_minor_identifier_minor": "h2o",
+          "minor_scales_with_density": true,
+          "retained_by_available_gases": true,
+          "scale_by_complement": true,
+          "scaling_gas_name": "h2o",
+          "source_1based_interval_index": 8
+        },
+        {
+          "coefficient_count_from_gpt_interval": 12,
+          "gpt_bounds_inclusive_1based": [
+            27,
+            38
+          ],
+          "identifier_in_minor_gases": "h2o_self",
+          "kminor_start_after_source_filtering_1based": 103,
+          "kminor_start_original_1based": 103,
+          "mapped_absorber_from_gas_minor_identifier_minor": "h2o",
+          "minor_scales_with_density": true,
+          "retained_by_available_gases": true,
+          "scale_by_complement": false,
+          "scaling_gas_name": "h2o",
+          "source_1based_interval_index": 9
+        },
+        {
+          "coefficient_count_from_gpt_interval": 12,
+          "gpt_bounds_inclusive_1based": [
+            39,
+            50
+          ],
+          "identifier_in_minor_gases": "h2o_frgn",
+          "kminor_start_after_source_filtering_1based": 115,
+          "kminor_start_original_1based": 115,
+          "mapped_absorber_from_gas_minor_identifier_minor": "h2o",
+          "minor_scales_with_density": true,
+          "retained_by_available_gases": true,
+          "scale_by_complement": true,
+          "scaling_gas_name": "h2o",
+          "source_1based_interval_index": 10
+        },
+        {
+          "coefficient_count_from_gpt_interval": 12,
+          "gpt_bounds_inclusive_1based": [
+            39,
+            50
+          ],
+          "identifier_in_minor_gases": "h2o_self",
+          "kminor_start_after_source_filtering_1based": 127,
+          "kminor_start_original_1based": 127,
+          "mapped_absorber_from_gas_minor_identifier_minor": "h2o",
+          "minor_scales_with_density": true,
+          "retained_by_available_gases": true,
+          "scale_by_complement": false,
+          "scaling_gas_name": "h2o",
+          "source_1based_interval_index": 11
+        },
+        {
+          "coefficient_count_from_gpt_interval": 13,
+          "gpt_bounds_inclusive_1based": [
+            51,
+            63
+          ],
+          "identifier_in_minor_gases": "o3",
+          "kminor_start_after_source_filtering_1based": 139,
+          "kminor_start_original_1based": 139,
+          "mapped_absorber_from_gas_minor_identifier_minor": "o3",
+          "minor_scales_with_density": false,
+          "retained_by_available_gases": true,
+          "scale_by_complement": false,
+          "scaling_gas_name": "",
+          "source_1based_interval_index": 12
+        },
+        {
+          "coefficient_count_from_gpt_interval": 13,
+          "gpt_bounds_inclusive_1based": [
+            51,
+            63
+          ],
+          "identifier_in_minor_gases": "h2o_frgn",
+          "kminor_start_after_source_filtering_1based": 152,
+          "kminor_start_original_1based": 152,
+          "mapped_absorber_from_gas_minor_identifier_minor": "h2o",
+          "minor_scales_with_density": true,
+          "retained_by_available_gases": true,
+          "scale_by_complement": true,
+          "scaling_gas_name": "h2o",
+          "source_1based_interval_index": 13
+        },
+        {
+          "coefficient_count_from_gpt_interval": 13,
+          "gpt_bounds_inclusive_1based": [
+            51,
+            63
+          ],
+          "identifier_in_minor_gases": "h2o_self",
+          "kminor_start_after_source_filtering_1based": 165,
+          "kminor_start_original_1based": 165,
+          "mapped_absorber_from_gas_minor_identifier_minor": "h2o",
+          "minor_scales_with_density": true,
+          "retained_by_available_gases": true,
+          "scale_by_complement": false,
+          "scaling_gas_name": "h2o",
+          "source_1based_interval_index": 14
+        },
+        {
+          "coefficient_count_from_gpt_interval": 13,
+          "gpt_bounds_inclusive_1based": [
+            51,
+            63
+          ],
+          "identifier_in_minor_gases": "ccl4",
+          "kminor_start_after_source_filtering_1based": 178,
+          "kminor_start_original_1based": 178,
+          "mapped_absorber_from_gas_minor_identifier_minor": "ccl4",
+          "minor_scales_with_density": false,
+          "retained_by_available_gases": true,
+          "scale_by_complement": false,
+          "scaling_gas_name": "",
+          "source_1based_interval_index": 15
+        },
+        {
+          "coefficient_count_from_gpt_interval": 13,
+          "gpt_bounds_inclusive_1based": [
+            51,
+            63
+          ],
+          "identifier_in_minor_gases": "cfc22",
+          "kminor_start_after_source_filtering_1based": 191,
+          "kminor_start_original_1based": 191,
+          "mapped_absorber_from_gas_minor_identifier_minor": "cfc22",
+          "minor_scales_with_density": false,
+          "retained_by_available_gases": true,
+          "scale_by_complement": false,
+          "scaling_gas_name": "",
+          "source_1based_interval_index": 16
+        },
+        {
+          "coefficient_count_from_gpt_interval": 5,
+          "gpt_bounds_inclusive_1based": [
+            64,
+            68
+          ],
+          "identifier_in_minor_gases": "co2",
+          "kminor_start_after_source_filtering_1based": 204,
+          "kminor_start_original_1based": 204,
+          "mapped_absorber_from_gas_minor_identifier_minor": "co2",
+          "minor_scales_with_density": false,
+          "retained_by_available_gases": true,
+          "scale_by_complement": false,
+          "scaling_gas_name": "",
+          "source_1based_interval_index": 17
+        },
+        {
+          "coefficient_count_from_gpt_interval": 5,
+          "gpt_bounds_inclusive_1based": [
+            64,
+            68
+          ],
+          "identifier_in_minor_gases": "h2o_frgn",
+          "kminor_start_after_source_filtering_1based": 209,
+          "kminor_start_original_1based": 209,
+          "mapped_absorber_from_gas_minor_identifier_minor": "h2o",
+          "minor_scales_with_density": true,
+          "retained_by_available_gases": true,
+          "scale_by_complement": true,
+          "scaling_gas_name": "h2o",
+          "source_1based_interval_index": 18
+        },
+        {
+          "coefficient_count_from_gpt_interval": 5,
+          "gpt_bounds_inclusive_1based": [
+            64,
+            68
+          ],
+          "identifier_in_minor_gases": "h2o_self",
+          "kminor_start_after_source_filtering_1based": 214,
+          "kminor_start_original_1based": 214,
+          "mapped_absorber_from_gas_minor_identifier_minor": "h2o",
+          "minor_scales_with_density": true,
+          "retained_by_available_gases": true,
+          "scale_by_complement": false,
+          "scaling_gas_name": "h2o",
+          "source_1based_interval_index": 19
+        },
+        {
+          "coefficient_count_from_gpt_interval": 5,
+          "gpt_bounds_inclusive_1based": [
+            64,
+            68
+          ],
+          "identifier_in_minor_gases": "cfc11",
+          "kminor_start_after_source_filtering_1based": 219,
+          "kminor_start_original_1based": 219,
+          "mapped_absorber_from_gas_minor_identifier_minor": "cfc11",
+          "minor_scales_with_density": false,
+          "retained_by_available_gases": true,
+          "scale_by_complement": false,
+          "scaling_gas_name": "",
+          "source_1based_interval_index": 20
+        },
+        {
+          "coefficient_count_from_gpt_interval": 5,
+          "gpt_bounds_inclusive_1based": [
+            64,
+            68
+          ],
+          "identifier_in_minor_gases": "cfc12",
+          "kminor_start_after_source_filtering_1based": 224,
+          "kminor_start_original_1based": 224,
+          "mapped_absorber_from_gas_minor_identifier_minor": "cfc12",
+          "minor_scales_with_density": false,
+          "retained_by_available_gases": true,
+          "scale_by_complement": false,
+          "scaling_gas_name": "",
+          "source_1based_interval_index": 21
+        },
+        {
+          "coefficient_count_from_gpt_interval": 5,
+          "gpt_bounds_inclusive_1based": [
+            64,
+            68
+          ],
+          "identifier_in_minor_gases": "hfc143a",
+          "kminor_start_original_1based": 229,
+          "mapped_absorber_from_gas_minor_identifier_minor": "hfc143a",
+          "minor_scales_with_density": false,
+          "removed_coefficient_count_added_to_n_elim": 5,
+          "retained_by_available_gases": false,
+          "scale_by_complement": false,
+          "scaling_gas_name": "",
+          "source_1based_interval_index": 22
+        },
+        {
+          "coefficient_count_from_gpt_interval": 7,
+          "gpt_bounds_inclusive_1based": [
+            69,
+            75
+          ],
+          "identifier_in_minor_gases": "co2",
+          "kminor_start_after_source_filtering_1based": 229,
+          "kminor_start_original_1based": 234,
+          "mapped_absorber_from_gas_minor_identifier_minor": "co2",
+          "minor_scales_with_density": false,
+          "retained_by_available_gases": true,
+          "scale_by_complement": false,
+          "scaling_gas_name": "",
+          "source_1based_interval_index": 23
+        },
+        {
+          "coefficient_count_from_gpt_interval": 7,
+          "gpt_bounds_inclusive_1based": [
+            69,
+            75
+          ],
+          "identifier_in_minor_gases": "h2o_frgn",
+          "kminor_start_after_source_filtering_1based": 236,
+          "kminor_start_original_1based": 241,
+          "mapped_absorber_from_gas_minor_identifier_minor": "h2o",
+          "minor_scales_with_density": true,
+          "retained_by_available_gases": true,
+          "scale_by_complement": true,
+          "scaling_gas_name": "h2o",
+          "source_1based_interval_index": 24
+        },
+        {
+          "coefficient_count_from_gpt_interval": 7,
+          "gpt_bounds_inclusive_1based": [
+            69,
+            75
+          ],
+          "identifier_in_minor_gases": "h2o_self",
+          "kminor_start_after_source_filtering_1based": 243,
+          "kminor_start_original_1based": 248,
+          "mapped_absorber_from_gas_minor_identifier_minor": "h2o",
+          "minor_scales_with_density": true,
+          "retained_by_available_gases": true,
+          "scale_by_complement": false,
+          "scaling_gas_name": "h2o",
+          "source_1based_interval_index": 25
+        },
+        {
+          "coefficient_count_from_gpt_interval": 6,
+          "gpt_bounds_inclusive_1based": [
+            76,
+            81
+          ],
+          "identifier_in_minor_gases": "co2",
+          "kminor_start_after_source_filtering_1based": 250,
+          "kminor_start_original_1based": 255,
+          "mapped_absorber_from_gas_minor_identifier_minor": "co2",
+          "minor_scales_with_density": false,
+          "retained_by_available_gases": true,
+          "scale_by_complement": false,
+          "scaling_gas_name": "",
+          "source_1based_interval_index": 26
+        },
+        {
+          "coefficient_count_from_gpt_interval": 6,
+          "gpt_bounds_inclusive_1based": [
+            76,
+            81
+          ],
+          "identifier_in_minor_gases": "o3",
+          "kminor_start_after_source_filtering_1based": 256,
+          "kminor_start_original_1based": 261,
+          "mapped_absorber_from_gas_minor_identifier_minor": "o3",
+          "minor_scales_with_density": false,
+          "retained_by_available_gases": true,
+          "scale_by_complement": false,
+          "scaling_gas_name": "",
+          "source_1based_interval_index": 27
+        },
+        {
+          "coefficient_count_from_gpt_interval": 6,
+          "gpt_bounds_inclusive_1based": [
+            76,
+            81
+          ],
+          "identifier_in_minor_gases": "n2o",
+          "kminor_start_after_source_filtering_1based": 262,
+          "kminor_start_original_1based": 267,
+          "mapped_absorber_from_gas_minor_identifier_minor": "n2o",
+          "minor_scales_with_density": false,
+          "retained_by_available_gases": true,
+          "scale_by_complement": false,
+          "scaling_gas_name": "",
+          "source_1based_interval_index": 28
+        },
+        {
+          "coefficient_count_from_gpt_interval": 6,
+          "gpt_bounds_inclusive_1based": [
+            76,
+            81
+          ],
+          "identifier_in_minor_gases": "h2o_frgn",
+          "kminor_start_after_source_filtering_1based": 268,
+          "kminor_start_original_1based": 273,
+          "mapped_absorber_from_gas_minor_identifier_minor": "h2o",
+          "minor_scales_with_density": true,
+          "retained_by_available_gases": true,
+          "scale_by_complement": true,
+          "scaling_gas_name": "h2o",
+          "source_1based_interval_index": 29
+        },
+        {
+          "coefficient_count_from_gpt_interval": 6,
+          "gpt_bounds_inclusive_1based": [
+            76,
+            81
+          ],
+          "identifier_in_minor_gases": "h2o_self",
+          "kminor_start_after_source_filtering_1based": 274,
+          "kminor_start_original_1based": 279,
+          "mapped_absorber_from_gas_minor_identifier_minor": "h2o",
+          "minor_scales_with_density": true,
+          "retained_by_available_gases": true,
+          "scale_by_complement": false,
+          "scaling_gas_name": "h2o",
+          "source_1based_interval_index": 30
+        },
+        {
+          "coefficient_count_from_gpt_interval": 6,
+          "gpt_bounds_inclusive_1based": [
+            76,
+            81
+          ],
+          "identifier_in_minor_gases": "cfc12",
+          "kminor_start_after_source_filtering_1based": 280,
+          "kminor_start_original_1based": 285,
+          "mapped_absorber_from_gas_minor_identifier_minor": "cfc12",
+          "minor_scales_with_density": false,
+          "retained_by_available_gases": true,
+          "scale_by_complement": false,
+          "scaling_gas_name": "",
+          "source_1based_interval_index": 31
+        },
+        {
+          "coefficient_count_from_gpt_interval": 6,
+          "gpt_bounds_inclusive_1based": [
+            76,
+            81
+          ],
+          "identifier_in_minor_gases": "cfc22",
+          "kminor_start_after_source_filtering_1based": 286,
+          "kminor_start_original_1based": 291,
+          "mapped_absorber_from_gas_minor_identifier_minor": "cfc22",
+          "minor_scales_with_density": false,
+          "retained_by_available_gases": true,
+          "scale_by_complement": false,
+          "scaling_gas_name": "",
+          "source_1based_interval_index": 32
+        },
+        {
+          "coefficient_count_from_gpt_interval": 6,
+          "gpt_bounds_inclusive_1based": [
+            76,
+            81
+          ],
+          "identifier_in_minor_gases": "hfc125",
+          "kminor_start_original_1based": 297,
+          "mapped_absorber_from_gas_minor_identifier_minor": "hfc125",
+          "minor_scales_with_density": false,
+          "removed_coefficient_count_added_to_n_elim": 6,
+          "retained_by_available_gases": false,
+          "scale_by_complement": false,
+          "scaling_gas_name": "",
+          "source_1based_interval_index": 33
+        },
+        {
+          "coefficient_count_from_gpt_interval": 6,
+          "gpt_bounds_inclusive_1based": [
+            76,
+            81
+          ],
+          "identifier_in_minor_gases": "hfc23",
+          "kminor_start_original_1based": 303,
+          "mapped_absorber_from_gas_minor_identifier_minor": "hfc23",
+          "minor_scales_with_density": false,
+          "removed_coefficient_count_added_to_n_elim": 6,
+          "retained_by_available_gases": false,
+          "scale_by_complement": false,
+          "scaling_gas_name": "",
+          "source_1based_interval_index": 34
+        },
+        {
+          "coefficient_count_from_gpt_interval": 6,
+          "gpt_bounds_inclusive_1based": [
+            76,
+            81
+          ],
+          "identifier_in_minor_gases": "hfc32",
+          "kminor_start_original_1based": 309,
+          "mapped_absorber_from_gas_minor_identifier_minor": "hfc32",
+          "minor_scales_with_density": false,
+          "removed_coefficient_count_added_to_n_elim": 6,
+          "retained_by_available_gases": false,
+          "scale_by_complement": false,
+          "scaling_gas_name": "",
+          "source_1based_interval_index": 35
+        },
+        {
+          "coefficient_count_from_gpt_interval": 6,
+          "gpt_bounds_inclusive_1based": [
+            76,
+            81
+          ],
+          "identifier_in_minor_gases": "hfc134a",
+          "kminor_start_original_1based": 315,
+          "mapped_absorber_from_gas_minor_identifier_minor": "hfc134a",
+          "minor_scales_with_density": false,
+          "removed_coefficient_count_added_to_n_elim": 6,
+          "retained_by_available_gases": false,
+          "scale_by_complement": false,
+          "scaling_gas_name": "",
+          "source_1based_interval_index": 36
+        },
+        {
+          "coefficient_count_from_gpt_interval": 11,
+          "gpt_bounds_inclusive_1based": [
+            82,
+            92
+          ],
+          "identifier_in_minor_gases": "n2o",
+          "kminor_start_after_source_filtering_1based": 292,
+          "kminor_start_original_1based": 321,
+          "mapped_absorber_from_gas_minor_identifier_minor": "n2o",
+          "minor_scales_with_density": false,
+          "retained_by_available_gases": true,
+          "scale_by_complement": false,
+          "scaling_gas_name": "",
+          "source_1based_interval_index": 37
+        },
+        {
+          "coefficient_count_from_gpt_interval": 11,
+          "gpt_bounds_inclusive_1based": [
+            82,
+            92
+          ],
+          "identifier_in_minor_gases": "h2o_frgn",
+          "kminor_start_after_source_filtering_1based": 303,
+          "kminor_start_original_1based": 332,
+          "mapped_absorber_from_gas_minor_identifier_minor": "h2o",
+          "minor_scales_with_density": true,
+          "retained_by_available_gases": true,
+          "scale_by_complement": true,
+          "scaling_gas_name": "h2o",
+          "source_1based_interval_index": 38
+        },
+        {
+          "coefficient_count_from_gpt_interval": 11,
+          "gpt_bounds_inclusive_1based": [
+            82,
+            92
+          ],
+          "identifier_in_minor_gases": "h2o_self",
+          "kminor_start_after_source_filtering_1based": 314,
+          "kminor_start_original_1based": 343,
+          "mapped_absorber_from_gas_minor_identifier_minor": "h2o",
+          "minor_scales_with_density": true,
+          "retained_by_available_gases": true,
+          "scale_by_complement": false,
+          "scaling_gas_name": "h2o",
+          "source_1based_interval_index": 39
+        },
+        {
+          "coefficient_count_from_gpt_interval": 11,
+          "gpt_bounds_inclusive_1based": [
+            82,
+            92
+          ],
+          "identifier_in_minor_gases": "hfc143a",
+          "kminor_start_original_1based": 354,
+          "mapped_absorber_from_gas_minor_identifier_minor": "hfc143a",
+          "minor_scales_with_density": false,
+          "removed_coefficient_count_added_to_n_elim": 11,
+          "retained_by_available_gases": false,
+          "scale_by_complement": false,
+          "scaling_gas_name": "",
+          "source_1based_interval_index": 40
+        },
+        {
+          "coefficient_count_from_gpt_interval": 11,
+          "gpt_bounds_inclusive_1based": [
+            82,
+            92
+          ],
+          "identifier_in_minor_gases": "hfc125",
+          "kminor_start_original_1based": 365,
+          "mapped_absorber_from_gas_minor_identifier_minor": "hfc125",
+          "minor_scales_with_density": false,
+          "removed_coefficient_count_added_to_n_elim": 11,
+          "retained_by_available_gases": false,
+          "scale_by_complement": false,
+          "scaling_gas_name": "",
+          "source_1based_interval_index": 41
+        },
+        {
+          "coefficient_count_from_gpt_interval": 11,
+          "gpt_bounds_inclusive_1based": [
+            82,
+            92
+          ],
+          "identifier_in_minor_gases": "hfc134a",
+          "kminor_start_original_1based": 376,
+          "mapped_absorber_from_gas_minor_identifier_minor": "hfc134a",
+          "minor_scales_with_density": false,
+          "removed_coefficient_count_added_to_n_elim": 11,
+          "retained_by_available_gases": false,
+          "scale_by_complement": false,
+          "scaling_gas_name": "",
+          "source_1based_interval_index": 42
+        },
+        {
+          "coefficient_count_from_gpt_interval": 11,
+          "gpt_bounds_inclusive_1based": [
+            82,
+            92
+          ],
+          "identifier_in_minor_gases": "cf4",
+          "kminor_start_original_1based": 387,
+          "mapped_absorber_from_gas_minor_identifier_minor": "cf4",
+          "minor_scales_with_density": false,
+          "removed_coefficient_count_added_to_n_elim": 11,
+          "retained_by_available_gases": false,
+          "scale_by_complement": false,
+          "scaling_gas_name": "",
+          "source_1based_interval_index": 43
+        },
+        {
+          "coefficient_count_from_gpt_interval": 7,
+          "gpt_bounds_inclusive_1based": [
+            93,
+            99
+          ],
+          "identifier_in_minor_gases": "h2o_frgn",
+          "kminor_start_after_source_filtering_1based": 325,
+          "kminor_start_original_1based": 398,
+          "mapped_absorber_from_gas_minor_identifier_minor": "h2o",
+          "minor_scales_with_density": true,
+          "retained_by_available_gases": true,
+          "scale_by_complement": true,
+          "scaling_gas_name": "h2o",
+          "source_1based_interval_index": 44
+        },
+        {
+          "coefficient_count_from_gpt_interval": 7,
+          "gpt_bounds_inclusive_1based": [
+            93,
+            99
+          ],
+          "identifier_in_minor_gases": "h2o_self",
+          "kminor_start_after_source_filtering_1based": 332,
+          "kminor_start_original_1based": 405,
+          "mapped_absorber_from_gas_minor_identifier_minor": "h2o",
+          "minor_scales_with_density": true,
+          "retained_by_available_gases": true,
+          "scale_by_complement": false,
+          "scaling_gas_name": "h2o",
+          "source_1based_interval_index": 45
+        },
+        {
+          "coefficient_count_from_gpt_interval": 8,
+          "gpt_bounds_inclusive_1based": [
+            100,
+            107
+          ],
+          "identifier_in_minor_gases": "o2",
+          "kminor_start_after_source_filtering_1based": 339,
+          "kminor_start_original_1based": 412,
+          "mapped_absorber_from_gas_minor_identifier_minor": "o2",
+          "minor_scales_with_density": true,
+          "retained_by_available_gases": true,
+          "scale_by_complement": false,
+          "scaling_gas_name": "",
+          "source_1based_interval_index": 46
+        },
+        {
+          "coefficient_count_from_gpt_interval": 8,
+          "gpt_bounds_inclusive_1based": [
+            100,
+            107
+          ],
+          "identifier_in_minor_gases": "h2o_frgn",
+          "kminor_start_after_source_filtering_1based": 347,
+          "kminor_start_original_1based": 420,
+          "mapped_absorber_from_gas_minor_identifier_minor": "h2o",
+          "minor_scales_with_density": true,
+          "retained_by_available_gases": true,
+          "scale_by_complement": true,
+          "scaling_gas_name": "h2o",
+          "source_1based_interval_index": 47
+        },
+        {
+          "coefficient_count_from_gpt_interval": 8,
+          "gpt_bounds_inclusive_1based": [
+            100,
+            107
+          ],
+          "identifier_in_minor_gases": "h2o_self",
+          "kminor_start_after_source_filtering_1based": 355,
+          "kminor_start_original_1based": 428,
+          "mapped_absorber_from_gas_minor_identifier_minor": "h2o",
+          "minor_scales_with_density": true,
+          "retained_by_available_gases": true,
+          "scale_by_complement": false,
+          "scaling_gas_name": "h2o",
+          "source_1based_interval_index": 48
+        },
+        {
+          "coefficient_count_from_gpt_interval": 7,
+          "gpt_bounds_inclusive_1based": [
+            108,
+            114
+          ],
+          "identifier_in_minor_gases": "h2o_frgn",
+          "kminor_start_after_source_filtering_1based": 363,
+          "kminor_start_original_1based": 436,
+          "mapped_absorber_from_gas_minor_identifier_minor": "h2o",
+          "minor_scales_with_density": true,
+          "retained_by_available_gases": true,
+          "scale_by_complement": true,
+          "scaling_gas_name": "h2o",
+          "source_1based_interval_index": 49
+        },
+        {
+          "coefficient_count_from_gpt_interval": 7,
+          "gpt_bounds_inclusive_1based": [
+            108,
+            114
+          ],
+          "identifier_in_minor_gases": "h2o_self",
+          "kminor_start_after_source_filtering_1based": 370,
+          "kminor_start_original_1based": 443,
+          "mapped_absorber_from_gas_minor_identifier_minor": "h2o",
+          "minor_scales_with_density": true,
+          "retained_by_available_gases": true,
+          "scale_by_complement": false,
+          "scaling_gas_name": "h2o",
+          "source_1based_interval_index": 50
+        },
+        {
+          "coefficient_count_from_gpt_interval": 5,
+          "gpt_bounds_inclusive_1based": [
+            115,
+            119
+          ],
+          "identifier_in_minor_gases": "co2",
+          "kminor_start_after_source_filtering_1based": 377,
+          "kminor_start_original_1based": 450,
+          "mapped_absorber_from_gas_minor_identifier_minor": "co2",
+          "minor_scales_with_density": false,
+          "retained_by_available_gases": true,
+          "scale_by_complement": false,
+          "scaling_gas_name": "",
+          "source_1based_interval_index": 51
+        },
+        {
+          "coefficient_count_from_gpt_interval": 5,
+          "gpt_bounds_inclusive_1based": [
+            115,
+            119
+          ],
+          "identifier_in_minor_gases": "co",
+          "kminor_start_original_1based": 455,
+          "mapped_absorber_from_gas_minor_identifier_minor": "co",
+          "minor_scales_with_density": false,
+          "removed_coefficient_count_added_to_n_elim": 5,
+          "retained_by_available_gases": false,
+          "scale_by_complement": false,
+          "scaling_gas_name": "",
+          "source_1based_interval_index": 52
+        },
+        {
+          "coefficient_count_from_gpt_interval": 5,
+          "gpt_bounds_inclusive_1based": [
+            115,
+            119
+          ],
+          "identifier_in_minor_gases": "h2o_frgn",
+          "kminor_start_after_source_filtering_1based": 382,
+          "kminor_start_original_1based": 460,
+          "mapped_absorber_from_gas_minor_identifier_minor": "h2o",
+          "minor_scales_with_density": true,
+          "retained_by_available_gases": true,
+          "scale_by_complement": true,
+          "scaling_gas_name": "h2o",
+          "source_1based_interval_index": 53
+        },
+        {
+          "coefficient_count_from_gpt_interval": 5,
+          "gpt_bounds_inclusive_1based": [
+            115,
+            119
+          ],
+          "identifier_in_minor_gases": "h2o_self",
+          "kminor_start_after_source_filtering_1based": 387,
+          "kminor_start_original_1based": 465,
+          "mapped_absorber_from_gas_minor_identifier_minor": "h2o",
+          "minor_scales_with_density": true,
+          "retained_by_available_gases": true,
+          "scale_by_complement": false,
+          "scaling_gas_name": "h2o",
+          "source_1based_interval_index": 54
+        },
+        {
+          "coefficient_count_from_gpt_interval": 2,
+          "gpt_bounds_inclusive_1based": [
+            123,
+            124
+          ],
+          "identifier_in_minor_gases": "n2o",
+          "kminor_start_after_source_filtering_1based": 392,
+          "kminor_start_original_1based": 470,
+          "mapped_absorber_from_gas_minor_identifier_minor": "n2o",
+          "minor_scales_with_density": false,
+          "retained_by_available_gases": true,
+          "scale_by_complement": false,
+          "scaling_gas_name": "",
+          "source_1based_interval_index": 55
+        },
+        {
+          "coefficient_count_from_gpt_interval": 2,
+          "gpt_bounds_inclusive_1based": [
+            123,
+            124
+          ],
+          "identifier_in_minor_gases": "n2",
+          "kminor_start_after_source_filtering_1based": 394,
+          "kminor_start_original_1based": 472,
+          "mapped_absorber_from_gas_minor_identifier_minor": "n2",
+          "minor_scales_with_density": true,
+          "retained_by_available_gases": true,
+          "scale_by_complement": false,
+          "scaling_gas_name": "",
+          "source_1based_interval_index": 56
+        },
+        {
+          "coefficient_count_from_gpt_interval": 2,
+          "gpt_bounds_inclusive_1based": [
+            123,
+            124
+          ],
+          "identifier_in_minor_gases": "h2o_frgn",
+          "kminor_start_after_source_filtering_1based": 396,
+          "kminor_start_original_1based": 474,
+          "mapped_absorber_from_gas_minor_identifier_minor": "h2o",
+          "minor_scales_with_density": true,
+          "retained_by_available_gases": true,
+          "scale_by_complement": true,
+          "scaling_gas_name": "h2o",
+          "source_1based_interval_index": 57
+        },
+        {
+          "coefficient_count_from_gpt_interval": 2,
+          "gpt_bounds_inclusive_1based": [
+            123,
+            124
+          ],
+          "identifier_in_minor_gases": "h2o_self",
+          "kminor_start_after_source_filtering_1based": 398,
+          "kminor_start_original_1based": 476,
+          "mapped_absorber_from_gas_minor_identifier_minor": "h2o",
+          "minor_scales_with_density": true,
+          "retained_by_available_gases": true,
+          "scale_by_complement": false,
+          "scaling_gas_name": "h2o",
+          "source_1based_interval_index": 58
+        },
+        {
+          "coefficient_count_from_gpt_interval": 4,
+          "gpt_bounds_inclusive_1based": [
+            125,
+            128
+          ],
+          "identifier_in_minor_gases": "h2o_frgn",
+          "kminor_start_after_source_filtering_1based": 400,
+          "kminor_start_original_1based": 478,
+          "mapped_absorber_from_gas_minor_identifier_minor": "h2o",
+          "minor_scales_with_density": true,
+          "retained_by_available_gases": true,
+          "scale_by_complement": true,
+          "scaling_gas_name": "h2o",
+          "source_1based_interval_index": 59
+        },
+        {
+          "coefficient_count_from_gpt_interval": 4,
+          "gpt_bounds_inclusive_1based": [
+            125,
+            128
+          ],
+          "identifier_in_minor_gases": "h2o_self",
+          "kminor_start_after_source_filtering_1based": 404,
+          "kminor_start_original_1based": 482,
+          "mapped_absorber_from_gas_minor_identifier_minor": "h2o",
+          "minor_scales_with_density": true,
+          "retained_by_available_gases": true,
+          "scale_by_complement": false,
+          "scaling_gas_name": "h2o",
+          "source_1based_interval_index": 60
+        }
+      ],
+      "removed_flat_coefficients_total": 78,
+      "removed_interval_count": 10,
+      "retained_interval_count": 50,
+      "source_interval_count": 60
+    },
+    "upper": {
+      "intervals": [
+        {
+          "coefficient_count_from_gpt_interval": 12,
+          "gpt_bounds_inclusive_1based": [
+            1,
+            12
+          ],
+          "identifier_in_minor_gases": "n2",
+          "kminor_start_after_source_filtering_1based": 1,
+          "kminor_start_original_1based": 1,
+          "mapped_absorber_from_gas_minor_identifier_minor": "n2",
+          "minor_scales_with_density": true,
+          "retained_by_available_gases": true,
+          "scale_by_complement": false,
+          "scaling_gas_name": "n2",
+          "source_1based_interval_index": 1
+        },
+        {
+          "coefficient_count_from_gpt_interval": 12,
+          "gpt_bounds_inclusive_1based": [
+            1,
+            12
+          ],
+          "identifier_in_minor_gases": "h2o_frgn",
+          "kminor_start_after_source_filtering_1based": 13,
+          "kminor_start_original_1based": 13,
+          "mapped_absorber_from_gas_minor_identifier_minor": "h2o",
+          "minor_scales_with_density": true,
+          "retained_by_available_gases": true,
+          "scale_by_complement": true,
+          "scaling_gas_name": "h2o",
+          "source_1based_interval_index": 2
+        },
+        {
+          "coefficient_count_from_gpt_interval": 12,
+          "gpt_bounds_inclusive_1based": [
+            1,
+            12
+          ],
+          "identifier_in_minor_gases": "h2o_self",
+          "kminor_start_after_source_filtering_1based": 25,
+          "kminor_start_original_1based": 25,
+          "mapped_absorber_from_gas_minor_identifier_minor": "h2o",
+          "minor_scales_with_density": true,
+          "retained_by_available_gases": true,
+          "scale_by_complement": false,
+          "scaling_gas_name": "h2o",
+          "source_1based_interval_index": 3
+        },
+        {
+          "coefficient_count_from_gpt_interval": 14,
+          "gpt_bounds_inclusive_1based": [
+            13,
+            26
+          ],
+          "identifier_in_minor_gases": "n2",
+          "kminor_start_after_source_filtering_1based": 37,
+          "kminor_start_original_1based": 37,
+          "mapped_absorber_from_gas_minor_identifier_minor": "n2",
+          "minor_scales_with_density": true,
+          "retained_by_available_gases": true,
+          "scale_by_complement": false,
+          "scaling_gas_name": "n2",
+          "source_1based_interval_index": 4
+        },
+        {
+          "coefficient_count_from_gpt_interval": 14,
+          "gpt_bounds_inclusive_1based": [
+            13,
+            26
+          ],
+          "identifier_in_minor_gases": "h2o_frgn",
+          "kminor_start_after_source_filtering_1based": 51,
+          "kminor_start_original_1based": 51,
+          "mapped_absorber_from_gas_minor_identifier_minor": "h2o",
+          "minor_scales_with_density": true,
+          "retained_by_available_gases": true,
+          "scale_by_complement": true,
+          "scaling_gas_name": "h2o",
+          "source_1based_interval_index": 5
+        },
+        {
+          "coefficient_count_from_gpt_interval": 14,
+          "gpt_bounds_inclusive_1based": [
+            13,
+            26
+          ],
+          "identifier_in_minor_gases": "h2o_self",
+          "kminor_start_after_source_filtering_1based": 65,
+          "kminor_start_original_1based": 65,
+          "mapped_absorber_from_gas_minor_identifier_minor": "h2o",
+          "minor_scales_with_density": true,
+          "retained_by_available_gases": true,
+          "scale_by_complement": false,
+          "scaling_gas_name": "h2o",
+          "source_1based_interval_index": 6
+        },
+        {
+          "coefficient_count_from_gpt_interval": 12,
+          "gpt_bounds_inclusive_1based": [
+            27,
+            38
+          ],
+          "identifier_in_minor_gases": "n2o",
+          "kminor_start_after_source_filtering_1based": 79,
+          "kminor_start_original_1based": 79,
+          "mapped_absorber_from_gas_minor_identifier_minor": "n2o",
+          "minor_scales_with_density": false,
+          "retained_by_available_gases": true,
+          "scale_by_complement": false,
+          "scaling_gas_name": "",
+          "source_1based_interval_index": 7
+        },
+        {
+          "coefficient_count_from_gpt_interval": 12,
+          "gpt_bounds_inclusive_1based": [
+            27,
+            38
+          ],
+          "identifier_in_minor_gases": "h2o_frgn",
+          "kminor_start_after_source_filtering_1based": 91,
+          "kminor_start_original_1based": 91,
+          "mapped_absorber_from_gas_minor_identifier_minor": "h2o",
+          "minor_scales_with_density": true,
+          "retained_by_available_gases": true,
+          "scale_by_complement": true,
+          "scaling_gas_name": "h2o",
+          "source_1based_interval_index": 8
+        },
+        {
+          "coefficient_count_from_gpt_interval": 12,
+          "gpt_bounds_inclusive_1based": [
+            27,
+            38
+          ],
+          "identifier_in_minor_gases": "h2o_self",
+          "kminor_start_after_source_filtering_1based": 103,
+          "kminor_start_original_1based": 103,
+          "mapped_absorber_from_gas_minor_identifier_minor": "h2o",
+          "minor_scales_with_density": true,
+          "retained_by_available_gases": true,
+          "scale_by_complement": false,
+          "scaling_gas_name": "h2o",
+          "source_1based_interval_index": 9
+        },
+        {
+          "coefficient_count_from_gpt_interval": 13,
+          "gpt_bounds_inclusive_1based": [
+            51,
+            63
+          ],
+          "identifier_in_minor_gases": "ccl4",
+          "kminor_start_after_source_filtering_1based": 115,
+          "kminor_start_original_1based": 115,
+          "mapped_absorber_from_gas_minor_identifier_minor": "ccl4",
+          "minor_scales_with_density": false,
+          "retained_by_available_gases": true,
+          "scale_by_complement": false,
+          "scaling_gas_name": "",
+          "source_1based_interval_index": 10
+        },
+        {
+          "coefficient_count_from_gpt_interval": 13,
+          "gpt_bounds_inclusive_1based": [
+            51,
+            63
+          ],
+          "identifier_in_minor_gases": "cfc22",
+          "kminor_start_after_source_filtering_1based": 128,
+          "kminor_start_original_1based": 128,
+          "mapped_absorber_from_gas_minor_identifier_minor": "cfc22",
+          "minor_scales_with_density": false,
+          "retained_by_available_gases": true,
+          "scale_by_complement": false,
+          "scaling_gas_name": "",
+          "source_1based_interval_index": 11
+        },
+        {
+          "coefficient_count_from_gpt_interval": 5,
+          "gpt_bounds_inclusive_1based": [
+            64,
+            68
+          ],
+          "identifier_in_minor_gases": "cfc11",
+          "kminor_start_after_source_filtering_1based": 141,
+          "kminor_start_original_1based": 141,
+          "mapped_absorber_from_gas_minor_identifier_minor": "cfc11",
+          "minor_scales_with_density": false,
+          "retained_by_available_gases": true,
+          "scale_by_complement": false,
+          "scaling_gas_name": "",
+          "source_1based_interval_index": 12
+        },
+        {
+          "coefficient_count_from_gpt_interval": 5,
+          "gpt_bounds_inclusive_1based": [
+            64,
+            68
+          ],
+          "identifier_in_minor_gases": "cfc12",
+          "kminor_start_after_source_filtering_1based": 146,
+          "kminor_start_original_1based": 146,
+          "mapped_absorber_from_gas_minor_identifier_minor": "cfc12",
+          "minor_scales_with_density": false,
+          "retained_by_available_gases": true,
+          "scale_by_complement": false,
+          "scaling_gas_name": "",
+          "source_1based_interval_index": 13
+        },
+        {
+          "coefficient_count_from_gpt_interval": 5,
+          "gpt_bounds_inclusive_1based": [
+            64,
+            68
+          ],
+          "identifier_in_minor_gases": "hfc143a",
+          "kminor_start_original_1based": 151,
+          "mapped_absorber_from_gas_minor_identifier_minor": "hfc143a",
+          "minor_scales_with_density": false,
+          "removed_coefficient_count_added_to_n_elim": 5,
+          "retained_by_available_gases": false,
+          "scale_by_complement": false,
+          "scaling_gas_name": "",
+          "source_1based_interval_index": 14
+        },
+        {
+          "coefficient_count_from_gpt_interval": 7,
+          "gpt_bounds_inclusive_1based": [
+            69,
+            75
+          ],
+          "identifier_in_minor_gases": "co2",
+          "kminor_start_after_source_filtering_1based": 151,
+          "kminor_start_original_1based": 156,
+          "mapped_absorber_from_gas_minor_identifier_minor": "co2",
+          "minor_scales_with_density": false,
+          "retained_by_available_gases": true,
+          "scale_by_complement": false,
+          "scaling_gas_name": "",
+          "source_1based_interval_index": 15
+        },
+        {
+          "coefficient_count_from_gpt_interval": 6,
+          "gpt_bounds_inclusive_1based": [
+            76,
+            81
+          ],
+          "identifier_in_minor_gases": "co2",
+          "kminor_start_after_source_filtering_1based": 158,
+          "kminor_start_original_1based": 163,
+          "mapped_absorber_from_gas_minor_identifier_minor": "co2",
+          "minor_scales_with_density": false,
+          "retained_by_available_gases": true,
+          "scale_by_complement": false,
+          "scaling_gas_name": "",
+          "source_1based_interval_index": 16
+        },
+        {
+          "coefficient_count_from_gpt_interval": 6,
+          "gpt_bounds_inclusive_1based": [
+            76,
+            81
+          ],
+          "identifier_in_minor_gases": "n2o",
+          "kminor_start_after_source_filtering_1based": 164,
+          "kminor_start_original_1based": 169,
+          "mapped_absorber_from_gas_minor_identifier_minor": "n2o",
+          "minor_scales_with_density": false,
+          "retained_by_available_gases": true,
+          "scale_by_complement": false,
+          "scaling_gas_name": "",
+          "source_1based_interval_index": 17
+        },
+        {
+          "coefficient_count_from_gpt_interval": 6,
+          "gpt_bounds_inclusive_1based": [
+            76,
+            81
+          ],
+          "identifier_in_minor_gases": "cfc12",
+          "kminor_start_after_source_filtering_1based": 170,
+          "kminor_start_original_1based": 175,
+          "mapped_absorber_from_gas_minor_identifier_minor": "cfc12",
+          "minor_scales_with_density": false,
+          "retained_by_available_gases": true,
+          "scale_by_complement": false,
+          "scaling_gas_name": "",
+          "source_1based_interval_index": 18
+        },
+        {
+          "coefficient_count_from_gpt_interval": 6,
+          "gpt_bounds_inclusive_1based": [
+            76,
+            81
+          ],
+          "identifier_in_minor_gases": "cfc22",
+          "kminor_start_after_source_filtering_1based": 176,
+          "kminor_start_original_1based": 181,
+          "mapped_absorber_from_gas_minor_identifier_minor": "cfc22",
+          "minor_scales_with_density": false,
+          "retained_by_available_gases": true,
+          "scale_by_complement": false,
+          "scaling_gas_name": "",
+          "source_1based_interval_index": 19
+        },
+        {
+          "coefficient_count_from_gpt_interval": 6,
+          "gpt_bounds_inclusive_1based": [
+            76,
+            81
+          ],
+          "identifier_in_minor_gases": "hfc125",
+          "kminor_start_original_1based": 187,
+          "mapped_absorber_from_gas_minor_identifier_minor": "hfc125",
+          "minor_scales_with_density": false,
+          "removed_coefficient_count_added_to_n_elim": 6,
+          "retained_by_available_gases": false,
+          "scale_by_complement": false,
+          "scaling_gas_name": "",
+          "source_1based_interval_index": 20
+        },
+        {
+          "coefficient_count_from_gpt_interval": 6,
+          "gpt_bounds_inclusive_1based": [
+            76,
+            81
+          ],
+          "identifier_in_minor_gases": "hfc23",
+          "kminor_start_original_1based": 193,
+          "mapped_absorber_from_gas_minor_identifier_minor": "hfc23",
+          "minor_scales_with_density": false,
+          "removed_coefficient_count_added_to_n_elim": 6,
+          "retained_by_available_gases": false,
+          "scale_by_complement": false,
+          "scaling_gas_name": "",
+          "source_1based_interval_index": 21
+        },
+        {
+          "coefficient_count_from_gpt_interval": 6,
+          "gpt_bounds_inclusive_1based": [
+            76,
+            81
+          ],
+          "identifier_in_minor_gases": "hfc32",
+          "kminor_start_original_1based": 199,
+          "mapped_absorber_from_gas_minor_identifier_minor": "hfc32",
+          "minor_scales_with_density": false,
+          "removed_coefficient_count_added_to_n_elim": 6,
+          "retained_by_available_gases": false,
+          "scale_by_complement": false,
+          "scaling_gas_name": "",
+          "source_1based_interval_index": 22
+        },
+        {
+          "coefficient_count_from_gpt_interval": 6,
+          "gpt_bounds_inclusive_1based": [
+            76,
+            81
+          ],
+          "identifier_in_minor_gases": "hfc134a",
+          "kminor_start_original_1based": 205,
+          "mapped_absorber_from_gas_minor_identifier_minor": "hfc134a",
+          "minor_scales_with_density": false,
+          "removed_coefficient_count_added_to_n_elim": 6,
+          "retained_by_available_gases": false,
+          "scale_by_complement": false,
+          "scaling_gas_name": "",
+          "source_1based_interval_index": 23
+        },
+        {
+          "coefficient_count_from_gpt_interval": 11,
+          "gpt_bounds_inclusive_1based": [
+            82,
+            92
+          ],
+          "identifier_in_minor_gases": "n2o",
+          "kminor_start_after_source_filtering_1based": 182,
+          "kminor_start_original_1based": 211,
+          "mapped_absorber_from_gas_minor_identifier_minor": "n2o",
+          "minor_scales_with_density": false,
+          "retained_by_available_gases": true,
+          "scale_by_complement": false,
+          "scaling_gas_name": "",
+          "source_1based_interval_index": 24
+        },
+        {
+          "coefficient_count_from_gpt_interval": 11,
+          "gpt_bounds_inclusive_1based": [
+            82,
+            92
+          ],
+          "identifier_in_minor_gases": "hfc143a",
+          "kminor_start_original_1based": 222,
+          "mapped_absorber_from_gas_minor_identifier_minor": "hfc143a",
+          "minor_scales_with_density": false,
+          "removed_coefficient_count_added_to_n_elim": 11,
+          "retained_by_available_gases": false,
+          "scale_by_complement": false,
+          "scaling_gas_name": "",
+          "source_1based_interval_index": 25
+        },
+        {
+          "coefficient_count_from_gpt_interval": 11,
+          "gpt_bounds_inclusive_1based": [
+            82,
+            92
+          ],
+          "identifier_in_minor_gases": "hfc125",
+          "kminor_start_original_1based": 233,
+          "mapped_absorber_from_gas_minor_identifier_minor": "hfc125",
+          "minor_scales_with_density": false,
+          "removed_coefficient_count_added_to_n_elim": 11,
+          "retained_by_available_gases": false,
+          "scale_by_complement": false,
+          "scaling_gas_name": "",
+          "source_1based_interval_index": 26
+        },
+        {
+          "coefficient_count_from_gpt_interval": 11,
+          "gpt_bounds_inclusive_1based": [
+            82,
+            92
+          ],
+          "identifier_in_minor_gases": "hfc134a",
+          "kminor_start_original_1based": 244,
+          "mapped_absorber_from_gas_minor_identifier_minor": "hfc134a",
+          "minor_scales_with_density": false,
+          "removed_coefficient_count_added_to_n_elim": 11,
+          "retained_by_available_gases": false,
+          "scale_by_complement": false,
+          "scaling_gas_name": "",
+          "source_1based_interval_index": 27
+        },
+        {
+          "coefficient_count_from_gpt_interval": 11,
+          "gpt_bounds_inclusive_1based": [
+            82,
+            92
+          ],
+          "identifier_in_minor_gases": "cf4",
+          "kminor_start_original_1based": 255,
+          "mapped_absorber_from_gas_minor_identifier_minor": "cf4",
+          "minor_scales_with_density": false,
+          "removed_coefficient_count_added_to_n_elim": 11,
+          "retained_by_available_gases": false,
+          "scale_by_complement": false,
+          "scaling_gas_name": "",
+          "source_1based_interval_index": 28
+        },
+        {
+          "coefficient_count_from_gpt_interval": 7,
+          "gpt_bounds_inclusive_1based": [
+            93,
+            99
+          ],
+          "identifier_in_minor_gases": "h2o_frgn",
+          "kminor_start_after_source_filtering_1based": 193,
+          "kminor_start_original_1based": 266,
+          "mapped_absorber_from_gas_minor_identifier_minor": "h2o",
+          "minor_scales_with_density": true,
+          "retained_by_available_gases": true,
+          "scale_by_complement": true,
+          "scaling_gas_name": "h2o",
+          "source_1based_interval_index": 29
+        },
+        {
+          "coefficient_count_from_gpt_interval": 7,
+          "gpt_bounds_inclusive_1based": [
+            93,
+            99
+          ],
+          "identifier_in_minor_gases": "h2o_self",
+          "kminor_start_after_source_filtering_1based": 200,
+          "kminor_start_original_1based": 273,
+          "mapped_absorber_from_gas_minor_identifier_minor": "h2o",
+          "minor_scales_with_density": true,
+          "retained_by_available_gases": true,
+          "scale_by_complement": false,
+          "scaling_gas_name": "h2o",
+          "source_1based_interval_index": 30
+        },
+        {
+          "coefficient_count_from_gpt_interval": 8,
+          "gpt_bounds_inclusive_1based": [
+            100,
+            107
+          ],
+          "identifier_in_minor_gases": "o2",
+          "kminor_start_after_source_filtering_1based": 207,
+          "kminor_start_original_1based": 280,
+          "mapped_absorber_from_gas_minor_identifier_minor": "o2",
+          "minor_scales_with_density": true,
+          "retained_by_available_gases": true,
+          "scale_by_complement": false,
+          "scaling_gas_name": "",
+          "source_1based_interval_index": 31
+        },
+        {
+          "coefficient_count_from_gpt_interval": 8,
+          "gpt_bounds_inclusive_1based": [
+            100,
+            107
+          ],
+          "identifier_in_minor_gases": "h2o_frgn",
+          "kminor_start_after_source_filtering_1based": 215,
+          "kminor_start_original_1based": 288,
+          "mapped_absorber_from_gas_minor_identifier_minor": "h2o",
+          "minor_scales_with_density": true,
+          "retained_by_available_gases": true,
+          "scale_by_complement": true,
+          "scaling_gas_name": "h2o",
+          "source_1based_interval_index": 32
+        },
+        {
+          "coefficient_count_from_gpt_interval": 8,
+          "gpt_bounds_inclusive_1based": [
+            100,
+            107
+          ],
+          "identifier_in_minor_gases": "h2o_self",
+          "kminor_start_after_source_filtering_1based": 223,
+          "kminor_start_original_1based": 296,
+          "mapped_absorber_from_gas_minor_identifier_minor": "h2o",
+          "minor_scales_with_density": true,
+          "retained_by_available_gases": true,
+          "scale_by_complement": false,
+          "scaling_gas_name": "h2o",
+          "source_1based_interval_index": 33
+        },
+        {
+          "coefficient_count_from_gpt_interval": 5,
+          "gpt_bounds_inclusive_1based": [
+            115,
+            119
+          ],
+          "identifier_in_minor_gases": "o3",
+          "kminor_start_after_source_filtering_1based": 231,
+          "kminor_start_original_1based": 304,
+          "mapped_absorber_from_gas_minor_identifier_minor": "o3",
+          "minor_scales_with_density": false,
+          "retained_by_available_gases": true,
+          "scale_by_complement": false,
+          "scaling_gas_name": "",
+          "source_1based_interval_index": 34
+        }
+      ],
+      "removed_flat_coefficients_total": 73,
+      "removed_interval_count": 9,
+      "retained_interval_count": 25,
+      "source_interval_count": 34
+    }
+  },
+  "runtime_available_gas_names_ordered": [
+    "h2o",
+    "co2",
+    "o3",
+    "n2o",
+    "ch4",
+    "o2",
+    "cfc11",
+    "cfc12",
+    "cfc22",
+    "ccl4",
+    "n2"
+  ],
+  "schema": "udm37_bon_lw_minor_coefficient_metadata_inventory_v1",
+  "scope": "Static coefficient/loader metadata reconstruction only. No gas column amounts, pfrac, k interpolation, optical-depth, or radiation values computed."
+}

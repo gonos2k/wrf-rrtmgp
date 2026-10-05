@@ -22,6 +22,7 @@ on:
       - 'validation/rrtmgp37/bon-night-common-band-source/**'
       - 'validation/rrtmgp37/bon-night-planck-source/**'
       - 'validation/rrtmgp37/bon-night-independent-pfrac/**'
+      - 'validation/rrtmgp37/bon-night-independent-opacity/**'
       - '.github/workflows/validate-port.yml'
   push:
     branches: [main]
@@ -45,6 +46,7 @@ on:
       - 'validation/rrtmgp37/bon-night-common-band-source/**'
       - 'validation/rrtmgp37/bon-night-planck-source/**'
       - 'validation/rrtmgp37/bon-night-independent-pfrac/**'
+      - 'validation/rrtmgp37/bon-night-independent-opacity/**'
       - '.github/workflows/validate-port.yml'
 permissions:
   contents: read
@@ -67,6 +69,7 @@ jobs:
           python3 -I -S validation/rrtmgp37/bon-night-common-band-source/test_verify.py
           python3 -I -S validation/rrtmgp37/bon-night-planck-source/verify.py --output build/bon-planck-source-verification.json
           python3 -I -S validation/rrtmgp37/bon-night-independent-pfrac/verify.py --output build/bon-independent-pfrac-verification.json
+          python3 -I -S validation/rrtmgp37/bon-night-independent-opacity/verify.py --output build/bon-independent-opacity-verification.json
   component-validation:
     needs: registration
     runs-on: ubuntu-24.04
