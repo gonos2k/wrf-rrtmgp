@@ -35,6 +35,48 @@ python3 validation/rrtmgp37/radius-moment-contract/reproduce.py \
 
 This optional calculation requires NumPy. It reads the selected checkout's source files only to bind their hashes; it does not execute WRF or interpret runtime units. `--wrf-worktree` can point to another checkout, but its source hashes must match the frozen source review. The output path must not already exist.
 
+The frozen source pins correspond to commit `85c1c0a19e64fa190c18fe32d2a11c5f9b3ea1e1`.
+CI checks out that commit into `.radius-moment-historical-source`, separately from
+the current checkout. All four file hashes are still checked; no frozen evidence
+or numerical result is relabeled as current evidence.
+
+```sh
+python3 -I -S validation/rrtmgp37/radius-moment-contract/verify.py \
+  --source-root /absolute/path/to/historical-checkout
+python3 -I -S validation/rrtmgp37/radius-moment-contract/test_verify.py \
+  --historical-source-root /absolute/path/to/historical-checkout
+python3 validation/rrtmgp37/radius-moment-contract/reproduce.py \
+  --wrf-worktree /absolute/path/to/historical-checkout --output /tmp/new-moments.json
+```
+
+Without `--source-root`, the verifier strictly compares the current checkout to
+the historical pins and rejects a mismatch. An incorrect historical root also
+fails. The optional numerical reproduction has the same historical source gate;
+use the historical checkout for `--wrf-worktree` and a new output filename.
+
+Independently, `current-source-contract.json` pins the four current files reviewed
+at PR99 head `d3d8fa7dcc9246ebd739f96a21daa8739c955c54`. Only the microphysics driver
+has an approved difference from the archive: the radius instrumentation. The
+verifier requires those current pins and reports each current/archive match or
+difference, both roots, and both commit references. This is source identity,
+not proof of number units, a PSD contract, physical correctness or a live model
+trajectory. Future source changes fail this current gate until explicitly reviewed
+and recorded in the separate current contract; historical evidence stays unchanged.
+`--current-source-root` selects that independently checked root (default: current
+checkout); it does not relax either source gate.
+
+Both pull-request and main-push workflow filters cover all four source paths.
+The regression controls verify both filters, the historical checkout ref, correct
+root selection, source/payload mutations and the approved current-source difference.
+
+The byte-preserved frozen result reports a maximum quadrature relative error of
+`7.949196856316121e-14`; the archive verifier checks that frozen value against
+`8e-14`. A separate fresh calculation on the Mac Studio with NumPy 2.4.4 produced
+`2.639645977691072e-13` (14 shape rows and 15 illustrative samples), within the
+reproduction script's `5e-12` tolerance. These are different executions; the
+fresh result is not tested against, and does not pass, the frozen `8e-14` bound.
+Neither calculation establishes physical accuracy.
+
 The CI verifier uses only Python's standard library and checks the package's closed file roster, hashes, source-review-to-checkout identity, and the frozen result's row counts and numeric bounds. It does not run the optional calculation, a model, or a radiation solver.
 
 ## Scope limits
