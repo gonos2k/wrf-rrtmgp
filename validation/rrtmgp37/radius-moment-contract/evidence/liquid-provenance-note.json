@@ -1,0 +1,23 @@
+{
+  "schema": "udm37-liquid-provenance-note-v1",
+  "status": "READ_ONLY_NARROW_REPORT_TEXT_CHECK",
+  "source": {
+    "title": "Collaborative Research: Improved Efficiency and Coupling of the Radiation Code in the ACME Earth System Model. Final Report",
+    "report_number": "DOE-CIRES-16593-1",
+    "OSTI_record": "https://www.osti.gov/biblio/1663146",
+    "PDF": "https://www.osti.gov/servlets/purl/1663146",
+    "captured_PDF_path": "build/udm37-ice-lut-generation-provenance-v4/official-report/DOE-CIRES-16593-1.pdf",
+    "captured_PDF_sha256": "216201db6cdac13be3f29bd56f1181377155e5f61440c95b25114015a2c379bf",
+    "captured_text_path": "build/udm37-ice-lut-generation-provenance-v4/official-report/DOE-CIRES-16593-1.txt",
+    "captured_text_sha256": "f1f8d4dfbb71eeef7451529be87b4e3d8bb312202abd8968150bd924ebb28d7b",
+    "section": "E) Example cloud optics implementation, liquid paragraph (captured text lines 162-173)"
+  },
+  "directly_stated": [
+    "Liquid refractive indices were composed from Hale and Querry (1973), Palmer and Williams (1974), and Downing and Williams (1975) over different wavelength ranges.",
+    "Mie calculations produce extinction, single-scattering albedo, and asymmetry parameter as functions of particle size at 1-micron intervals, mapped to 16 LW and 14 SW bands.",
+    "Coefficients were generated for radius 2.5-59.5 microns, while the model LUTs retain 2.5-21.5 microns; the report gives precipitation classification as the reason for the cutoff.",
+    "Temperature dependence of liquid refractive indices was not considered."
+  ],
+  "bounded_absence_finding": "The cited liquid paragraph does not state a droplet PSD, PSD shape parameter, PSD integration or weighting rule, nor a liquid effective-radius moment formula. This says only that these details are absent from this paragraph/section of this report; it does not establish that no PSD was used elsewhere, and it does not establish that the LUT represents monodisperse droplets.",
+  "scope": "Text-only extraction from the already captured primary report. No new search, contact, download, build, solver, model, or table analysis. Frozen v4 evidence is unchanged."
+}

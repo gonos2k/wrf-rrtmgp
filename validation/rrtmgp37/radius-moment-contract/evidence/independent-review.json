@@ -1,0 +1,139 @@
+{
+  "corrected_prose": {
+    "final_corrected_source_review_pin_confirmed": true,
+    "impact": "Dimensional notation correction only; saved moment values/calculator/source unchanged.",
+    "prior_issue": "Initial source-review text displayed the cube-root radius expression as M3/N rather than (M3/N)^(1/3)."
+  },
+  "created_at": "2026-10-05T12:14:42.478936+00:00",
+  "findings": {
+    "gamma_moments": {
+      "effective_radius": "M3/M2=(nu+3)/lambda",
+      "moments": "M_k=n0*Gamma(nu+k+1)/lambda^(nu+k+1)",
+      "radius_PSD": "n(r)=n0*r^nu*exp(-lambda*r)",
+      "ratio_effective_over_volume_mean": "[((nu+3)^2)/((nu+1)*(nu+2))]^(1/3)",
+      "ratio_range": [
+        1.0600476039461897,
+        1.2771823873225885
+      ],
+      "ratio_scope": "Shape-conditional ideal radius-moment factors, not a confidence interval, optical error range or prescription for radiation.",
+      "shape_range": [
+        2,
+        15
+      ],
+      "source_anchors": [
+        "module_mp_udm.F:1404",
+        "module_mp_udm.F:1408",
+        "module_mp_udm.F:1422",
+        "module_mp_udm.F:3547"
+      ]
+    },
+    "native_formula": {
+      "anchors": [
+        "module_mp_udm.F:3448",
+        "module_mp_udm.F:3719",
+        "module_mp_udm.F:3739",
+        "module_mp_udm.F:480"
+      ],
+      "conditional_algebra": "For volumetric Nc=M0 and L=rho*qc with spherical liquid density rho_water, unbounded r_native=0.5*(L/(pidnc*Nc))^(1/3)=[3L/(4*pi*rho_water*Nc)]^(1/3)=(M3/M0)^(1/3).",
+      "units_and_occurrence_condition": "Nc volumetric convention and common mass/number occurrence are assumptions, not established by the generic #/kg Registry label. Radius gates use nc*rho whereas the slope expression uses nc; returned radius uses grid condensate and no explicit CF argument."
+    },
+    "sample_controls": {
+      "actual_source_precision_caution": "Samples are ideal analytic values, not compiled UDM evaluations. Native/collision exponents, pi, recmin/recmax and rgmma tables use default-real arithmetic; rgmma is a finite-product approximation and collision lambda has explicit bounds. No runtime bitwise Gamma or mass/number closure claim follows.",
+      "ideal_collision_slope_range_m_inverse": [
+        750210.3495272319,
+        4853820.998146176
+      ],
+      "method": "Independently rederived volume from mass per number and spherical volume; derived Gamma effective radius with the simplified shape factor. Checked all shape choices and native bounds.",
+      "native_bound_samples": 4,
+      "rows_checked": 15,
+      "samples_inside_collision_slope_bounds": true,
+      "source_collision_slope_bounds_m_inverse": [
+        1000,
+        10000000
+      ]
+    },
+    "saved_quadrature_controls": {
+      "declared_tolerance": 5e-12,
+      "gauss_laguerre_64_exact_degree_bound": 127,
+      "max_relative_saved_moment_error": 7.949196856316121e-14,
+      "max_saved_quadrature_ratio_vs_analytic_difference": 4.6629367034256575e-15,
+      "method": "Saved 64-node Gauss-Laguerre values independently compared to exact integer factorial moments; saved ratio independently recomputed and compared to the simplified analytic expression. No new quadrature integration was executed.",
+      "polynomial_degree_max": 18,
+      "shape_rows_checked": 14
+    },
+    "source_continuity": {
+      "actual_Git_PR7_routine_byte_equality_checked": true,
+      "historical_commit": "1a2cd8d11993a5fb829a5103c0775ff69f820244",
+      "routine_bytes": 3723,
+      "routine_sha256": "994055162e02d61fc9a98dc0380fc5a6a779f5f0d4f86d043039106576b804df",
+      "scope": "Local source continuity to PR7, not upstream WRF equivalence or proof this source was used in any particular forecast."
+    },
+    "stage_identity": {
+      "conditions": "0<CF<=1, identical volumetric Nc and density, L_grid=CF*L_in, same spherical formula, inactive guards and clipping.",
+      "identity": "r_v,grid=CF^(1/3)*r_v,in",
+      "source_basis": "qci/qrs are divided by diagnosed cldf then restored; these explicit divide/restore blocks do not scale ncr. Radius calculation follows return using grid-mean condensate.",
+      "synthetic_CF_samples_checked": 5,
+      "trajectory_limit": "Microphysics also changes condensate and number during the timestep. This algebra does not describe arbitrary pre-step/post-step radius changes and does not establish whether returned Nc is an in-cloud or grid-mean number concentration."
+    }
+  },
+  "material_blockers_in_final_evidence": [],
+  "pins": {
+    "derive_moments.py": {
+      "bytes": 5750,
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-liquid-radius-moment-audit-v1/derive_moments.py",
+      "sha256": "fe9b5173b3d9da4e68ccebe60e87b807aa3589dd7248f58f54e6e33bb8a73f0b"
+    },
+    "moment-result.json": {
+      "bytes": 14286,
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-liquid-radius-moment-audit-v1/moment-result.json",
+      "sha256": "cccb6daef16f147a4ce6436f33dab224806b0d8c5ce8011a50c52a597ff005bb"
+    },
+    "source-review.json": {
+      "bytes": 7946,
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-liquid-radius-moment-audit-v1/source-review.json",
+      "sha256": "6b6a639e391b1bbb43faba9a399ac5b8ba76f1d31d7ee0135433072ab614a176"
+    },
+    "stage-identity.json": {
+      "bytes": 1736,
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-liquid-radius-moment-audit-v1/stage-identity.json",
+      "sha256": "092d54b9877cb4fc3ab8dec6446794e335c4d964a39692ab52776aee0d16dc93"
+    }
+  },
+  "reviewer_counts": {
+    "WRF_REAL_forecast": 0,
+    "compiler_build": 0,
+    "downloads": 0,
+    "quadrature_reintegration": 0,
+    "solver_RTE": 0
+  },
+  "schema": "udm37-liquid-radius-moment-independent-review-v1",
+  "source_pins": {
+    "WRF/Registry/Registry.EM_COMMON": {
+      "bytes": 448359,
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-historical-source-pr-work/WRF/Registry/Registry.EM_COMMON",
+      "sha256": "87e21a476a06b7e0c926b2d939eaf1028810cba8a7d1e6fc585b50b599f99729"
+    },
+    "WRF/phys/module_microphysics_driver.F": {
+      "bytes": 194681,
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-historical-source-pr-work/WRF/phys/module_microphysics_driver.F",
+      "sha256": "8e8b7974bd7a67fcc632eb3e620cab306af295520b62b4db0c66d94414b704db"
+    },
+    "WRF/phys/module_mp_udm.F": {
+      "bytes": 192801,
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-historical-source-pr-work/WRF/phys/module_mp_udm.F",
+      "sha256": "872737fe3a0cebf941d3ee45056fb60aadf465f0f72d72d1a2c7abac6709351d"
+    },
+    "WRF/phys/module_ra_rrtmgp.F": {
+      "bytes": 74962,
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-historical-source-pr-work/WRF/phys/module_ra_rrtmgp.F",
+      "sha256": "1852452555fbe667a0a95d59242bcd9c3833f2877fc51f882d5d3d929a058f58"
+    }
+  },
+  "status": "PASS_SCOPED_CONDITIONAL_MOMENT_DERIVATION_NO_RADIATION_PSD_POLICY",
+  "unresolved_scientific_contracts": [
+    "Whether LB2017 autoconversion Gamma PSD is also the intended radiation PSD is not declared by these source blocks.",
+    "Live QNC producer/update units and grid/in-cloud occurrence convention need actual value-scale/source tracing; generic metadata alone neither proves volumetric semantics nor a port defect.",
+    "Liquid optics table assumptions and intended radiation radius metric remain independent contracts; no opacity/flux/forecast/observation was evaluated.",
+    "Native clipping and placeholders can break the unbounded identity and can reverse an apparent ratio comparison against the clipped radius; do not apply the 1.060..1.277 factor as an automatic production correction."
+  ]
+}

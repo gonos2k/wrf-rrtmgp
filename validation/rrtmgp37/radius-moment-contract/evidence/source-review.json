@@ -1,0 +1,51 @@
+{
+  "status": "READ_ONLY_STATIC_AUDIT",
+  "scope": "Derive the moment represented by UDM's native cloud-water radius formula and compare it with the gamma distribution used by the LB2017 autoconversion calculation. No source, model, build, or radiation run was performed.",
+  "source": {
+    "revision_context": "Current PR worktree build/udm37-rfmip-historical-source-pr-work; this is a source audit, not a statement that these exact files were used in any forecast.",
+    "files": [
+      {
+        "path": "WRF/phys/module_mp_udm.F",
+        "sha256": "872737fe3a0cebf941d3ee45056fb60aadf465f0f72d72d1a2c7abac6709351d"
+      },
+      {
+        "path": "WRF/phys/module_microphysics_driver.F",
+        "sha256": "8e8b7974bd7a67fcc632eb3e620cab306af295520b62b4db0c66d94414b704db"
+      },
+      {
+        "path": "WRF/Registry/Registry.EM_COMMON",
+        "sha256": "87e21a476a06b7e0c926b2d939eaf1028810cba8a7d1e6fc585b50b599f99729"
+      },
+      {
+        "path": "WRF/dyn_em/module_initialize_real.F",
+        "sha256": "81b40b4ae6891d522b2e30d8cee2036c20e139ef9e780c9a17b0d895ca13d87f"
+      }
+    ]
+  },
+  "findings": {
+    "native_cloud_radius_moment": {
+      "source": "module_mp_udm.F:3719-3741",
+      "definitions": "rqc=max(qc*rho,r1); rnc=max(nc*rho,r2); lambda=(pidnc*nc/rqc)^(1/3); re_cloud=0.5/lambda, subject to recmin/recmax bounds. udminit sets pidnc=pi*rho_water/6 at line 3448.",
+      "derived_meaning": "Ignoring guards and bounds, re_cloud^3 = 3*(qc*rho)/(4*pi*rho_water*nc). This is the radius of a sphere whose volume equals the condensate mass per represented droplet divided by liquid-water density: a volume-mean (M3/N)^(1/3) radius. It is not the conventional geometric-optics effective radius M3/M2 for a non-monodisperse distribution.",
+      "limits": "The `rnc` threshold uses nc*rho, but the lambda expression uses nc directly. Thresholds and recmin/recmax may dominate actual values. This audit does not establish the run-time unit convention for the WRF qnc field, nor quantify how often bounds bind."
+    },
+    "lb2017_gamma_distribution_comparison": {
+      "source": "module_mp_udm.F:1404-1426, 193-194, 3544-3549, 3576-3595",
+      "formula": "L_c=qc*rho; n_c is used directly; nu_c=min(nint(1e9/n_c)+2,15); lambda_c=[n_c*pidnc*8*Gamma(nu_c+4)/Gamma(nu_c+1)/L_c]^(1/3), then n0c=n_c*lambda_c^(nu_c+1)/Gamma(nu_c+1). Since 8*pidnc=4*pi*rho_water/3, these equations are consistent with n(r)=n0*r^nu*exp(-lambda*r), with r a particle radius and spherical particle mass 4*pi*rho_water*r^3/3.",
+      "moments": "For that gamma number distribution, M_k=integral(r^k*n(r)dr)=n0*Gamma(nu+k+1)/lambda^(nu+k+1). Thus (M3/N)^(1/3)=[Gamma(nu+4)/Gamma(nu+1)]^(1/3)/lambda, while M3/M2=(nu+3)/lambda. If the autoconversion gamma PSD were also intended as the radiation PSD, UDM's unbounded native formula would correspond to the volume-mean radius and would differ from M3/M2 by factor [Gamma(nu+4)/Gamma(nu+1)]^(1/3)/(nu+3). The source does not state that its autoconversion PSD is the radiation PSD; numerical equality should not be expected or asserted from this derivation alone.",
+      "interpretation": "The source proves a moment-definition distinction. Whether the radiation interface expects native volume-mean radius, a gamma-PSD M3/M2 radius, or a prescribed effective-radius convention is a separate physical contract not settled by the autoconversion code."
+    },
+    "number_concentration_units": {
+      "source": "Registry.EM_COMMON:542-545; module_microphysics_driver.F:330-344; module_mp_udm.F:349-361, 477-485, 856-857, 1069-1072, 1404-1409, 3719-3741",
+      "known": "Registry labels QNCLOUD as `# kg(-1)` (Registry.EM_COMMON:542-545), and module_microphysics_driver documents number mixing ratios as #/kg (lines 339-344). The UDM microphysics-driver branch passes qnc_curr directly as NC (module_microphysics_driver.F:2832-2854); module_mp_udm copies nc to ncr2 and copies it back without density conversion (module_mp_udm.F:349-361, 431-442). UDM does not initialize QNC in udminit: that routine initializes constants including pidnc (module_mp_udm.F:3436-3448), while timestep-1 CCN initialization writes NN only (module_mp_udm.F:323-335). The only nearby real.exe QNC synthesis found is guarded to Thompson, ThompsonAero, and RCON, excluding UDM (module_initialize_real.F:4800-4812); that path computes QNC from a volume concentration and divides by density before storing it (lines 4832-4845). Thus for UDM the model input/prognostic QNC is passed through as a #/kg field with no source-side conversion found in these paths. In contrast, UDM uses nc directly with L_c=qc*den in its LB2017 lambda (module_mp_udm.F:1404-1409), sets ncmin/ncmax with m^-3 comments (lines 74-75), and its droplet-radius formula is dimensionally consistent with nc as #/m^3 (lines 3719-3741). Its number adjustment also creates number from den*qq*lambda^3/piconst (module_mp_udm.F:3597-3628), a volumetric concentration. This is stronger evidence of a pre-existing UDM units inconsistency than the Registry label alone, but source review cannot determine actual run-time values or intended contract.",
+      "unresolved": "The code paths show no explicit conversion between Registry/prognostic QNC (#/kg) and UDM formulas that use nc as #/m^3. Whether UDM is supposed to consume a different field convention, whether initialization/input files carry non-Registry values, or whether this is a pre-existing microphysics units defect requires tracing actual initial and prognostic QNC values plus a model/specification contract. This audit does not attribute the issue to a radiation port."
+    },
+    "cloud_fraction": {
+      "source": "module_mp_udm.F:365-408, 1074-1092, 1278-1291, 3380-3431, 470-489",
+      "known": "The wrapper passes condensate and number fields directly into UDM. Inside udm2d, `cldf_diag` derives a diagnosed cloud fraction and the code divides qci/qrs condensate by cldf for in-cloud microphysics, then multiplies condensate back to grid mean before returning. No corresponding divide/multiply of ncr occurs in those blocks. After return, the outer wrapper copies returned nc into the state and separately calls the effective-radius routine with returned grid-mean qc and the returned nc; that radius routine has no cloud-fraction argument. Diagnostic udm_cldfra is recorded, not used by the radius formula.",
+      "implication": "The effective-radius calculation itself has no explicit CF scaling. The call receives post-microphysics grid-mean condensate plus the unchanged number state. Whether those two state variables share the same grid/in-cloud convention remains tied to the unresolved number units and producer contract; do not infer a missing CF factor from this source alone."
+    }
+  },
+  "conclusion": "The native formula is a volume-mean single-particle radius, not M3/M2 for a polydisperse gamma distribution. The autoconversion gamma law has an explicit shape parameter and would imply a different M3/M2 radius if adopted for radiation, but the source does not declare that coupling. Direct source tracing finds QNC passed through the UDM wrapper unchanged: its Registry/prognostic convention is #/kg, while UDM equations have #/m^3 concentration semantics. This is a concrete pre-existing units-contract concern, not evidence of a radiation-port defect; runtime values and intended contract remain to be verified.",
+  "recommended_evidence_if_contract_must_be_decided": "Trace QNC at initial-state load, any UDM-specific initialization, immediately before/after the UDM call, and each number tendency/update in a real same-state case. Record values alongside dry density, QC, and CF, then check whether QNC is #/kg or #/m^3 at each boundary and whether a conversion is applied. Ask the model/specification owner to state the intended radiation size moment. Keep autoconversion gamma PSD separate unless an explicit source contract equates it to the radiation PSD."
+}
