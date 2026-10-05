@@ -1,0 +1,254 @@
+{
+  "band_scope": {
+    "exclude": [
+      1,
+      2,
+      14,
+      15,
+      16
+    ],
+    "only": [
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13
+    ],
+    "reason": "The physical band edges differ outside the common interval bands 3\u201313; no cross-engine g-point pairing is defined."
+  },
+  "execution_guardrails": [
+    "No values are integrated by this document.",
+    "No acceptance tolerance or physics conclusion is set.",
+    "No flux-based fitted normalization is allowed.",
+    "Use only the production source under build/udm37-bon-common-band-source-pr-work/WRF/external/rte_rrtmgp; similarly named sibling external/rte-rrtmgp trees are not interchangeable and have different hashes.",
+    "Keep SI Planck radiance, hemispheric exitance, RRTMG legacy transport flux factors, and GP source-kernel units as separately labeled quantities until the source convention is resolved.",
+    "The legacy source\u2019s radcn1 units and flux factors provide a source-backed raw radiance conversion: DELWAVE*RTE_PLANCK_NATIVE*1e4 is the candidate SI radiance quantity. Check it against the SI integral without empirical rescaling."
+  ],
+  "gp_source_fraction_contract": {
+    "direct_raw_band_comparison": "The pinned coefficient file contains totplnk per band and Planck-table row. Reconstruct the production interpolation with the pinned table, frontend spacing, and held temperatures, then compare its raw band Planck values directly with the independent SI band-radiance integral. This requires no new compiled observer. Units attributes are absent on the table variable, so record its raw values and source comments alongside the comparison.",
+    "inference_limit": "Summing saved SOURCE_LAYER across a band and dividing by independently reconstructed raw band Planck yields an inferred pfrac sum. That is a consistency diagnostic for the saved mapping, not an independent validation of the production pfrac interpolation: the measured numerator is itself the pfrac-mapped output.",
+    "kernel_location": "mo_gas_optics_rrtmgp_kernels.F90:616-632 computes pfrac; 638-675 maps surface/layer band Planck to g-points; 677-708 maps interface source.",
+    "level_caution": "Interior GP level mapping is sqrt(pfrac(k-1,g)*pfrac(k,g))*planck_function(k,b); do not use either one-sided layer pfrac as the level fraction.",
+    "needed_for_independent_pfrac": "To validate pfrac interpolation itself, record pfrac before source multiplication at the same production call or independently reconstruct it with exact production interpolation, flavor, fmajor, eta, pressure and temperature indices, and pinned fraction table. No such independent pfrac record is currently present in the retained source sidecar.",
+    "sidecar_fact": "The retained sidecar contains only mapped SOURCE_LAYER (1,45,128), SOURCE_LEVEL (1,46,128), and SOURCE_SURFACE (1,1,128), not pfrac or planck_function.",
+    "surface_emissivity": "GP SOURCE_SURFACE is a raw source input before solver surface emissivity; use raw Planck for the blackbody check and apply emissivity only once for a surface-emission comparison."
+  },
+  "legacy_native_scale_investigation": {
+    "caveat": "The documented constants are rounded legacy values; the independent reference uses exact SI constants. Their small numerical difference belongs in reported comparison and must not be adjusted away.",
+    "native_integrated_radiance_derivation": "From the source comment, radcn1 has W cm^2 sr^-1 units and multiplies wavenumber in cm^-1 cubed. This gives spectral radiance per cm^-1; integrating with DELWAVE in cm^-1 yields native band radiance in W cm^-2 sr^-1. Convert to W m^-2 sr^-1 with 1e4. Thus compare 1e4*RTE_PLANCK_*_NATIVE*DELWAVE against the independent SI band-radiance integral, keeping each operand visible.",
+    "source_locations": "WRF/phys/module_ra_rrtmg_lw.F:1578-1585 documents DELWAVE and integrated totplnk; 3570-3571 and 3692+ describe/build interpolated integrated Planck values; 8191-8200 defines wavenumber limits/DELWAVE; 8238-8241 documents radcn1=1.191042722e-12 W cm^2 sr^-1 and radcn2=1.4387752 cm K; 8250 sets FLUXFAC=pi*2e4; 8253-8258 says units are generally cgs and states the NIST radiation-constant relations; 3105-3110 documents WTDIFF=0.5; 3277-3286 exports native fields and conversion factors.",
+    "surface_emissivity": "Legacy SURFACE_NATIVE already includes semiss; retain it for the emitted-surface check, or divide by the exact captured emissivity only when testing the raw blackbody ordinate and explicitly report that operation.",
+    "transport_factor_crosscheck": "The radiation routine applies WTDIFF=0.5 and FLUXFAC=pi*2e4, whose product is pi*1e4. That is consistent with converting the W cm^-2 radiance integral to hemispheric W m^-2 flux, without an extra or missing pi. Preserve and report this code path; do not fit a scale against observed flux."
+  },
+  "netcdf_metadata_read_only": {
+    "bnd_limits_wavenumber": {
+      "shape": [
+        16,
+        2
+      ],
+      "units_assumed_from_name_and_source": "cm-1",
+      "values_common_bands_3_to_13_cm-1": [
+        [
+          500,
+          630
+        ],
+        [
+          630,
+          700
+        ],
+        [
+          700,
+          820
+        ],
+        [
+          820,
+          980
+        ],
+        [
+          980,
+          1080
+        ],
+        [
+          1080,
+          1180
+        ],
+        [
+          1180,
+          1390
+        ],
+        [
+          1390,
+          1480
+        ],
+        [
+          1480,
+          1800
+        ],
+        [
+          1800,
+          2080
+        ],
+        [
+          2080,
+          2250
+        ]
+      ]
+    },
+    "plank_fraction": {
+      "dimensions": [
+        "temperature",
+        "pressure_interp",
+        "mixing_fraction",
+        "gpt"
+      ],
+      "shape": [
+        14,
+        60,
+        9,
+        128
+      ],
+      "variable_units_attribute": null
+    },
+    "temp_ref": {
+      "dimensions": [
+        "temperature"
+      ],
+      "shape": [
+        14
+      ],
+      "values_K": [
+        160,
+        175,
+        190,
+        205,
+        220,
+        235,
+        250,
+        265,
+        280,
+        295,
+        310,
+        325,
+        340,
+        355
+      ]
+    },
+    "temperature_Planck": {
+      "dimensions": [
+        "temperature_Planck"
+      ],
+      "shape": [
+        196
+      ],
+      "values": "integer index 0 through 195; no units attribute"
+    },
+    "totplnk": {
+      "coordinate": "temperature_Planck index values 0..195",
+      "dimensions": [
+        "bnd",
+        "temperature_Planck"
+      ],
+      "shape": [
+        16,
+        196
+      ],
+      "variable_units_attribute": null
+    }
+  },
+  "pins": {
+    "captured_legacy_export": {
+      "bytes": 2539937,
+      "path": "build/udm37-legacy-lw-source-export-bon-audit-v2/cases/SOURCE_ON/legacy-export/rrtmg4_d01_i13_j46_step721_lw.txt",
+      "sha256": "bd614b57362b48ab8e00b179fc3464925b9c49a8eef0a472489f87fd89e15c7f"
+    },
+    "held_gp_result": {
+      "bytes": 763371,
+      "path": "build/udm37-bon-night-n2-attribution-v1/run-preparation-v1/run-v1/n2-0p7808.result",
+      "sha256": "b578e9983b5817297db75baac026af98b84a3cbcd3653aadf2e4db5930ce5732"
+    },
+    "held_gp_transport": {
+      "bytes": 308081,
+      "path": "build/udm37-bon-night-n2-attribution-v1/run-preparation-v1/run-v1/n2-0p7808.result.lw_transport",
+      "sha256": "bb53daf55ea9b6f91c9d0dbc4f132eff11b3ab76fd278bacb327571a1642e792"
+    },
+    "held_native_input": {
+      "bytes": 39535,
+      "path": "build/udm37-bon-night-dry-column-attribution-v1/matched-legacy-dry.input",
+      "sha256": "292f9569b059c373c9cb14f1574cb8835627331574592a19d641ef07c21ec918"
+    },
+    "production_gp_frontend": {
+      "bytes": 107884,
+      "path": "build/udm37-bon-common-band-source-pr-work/WRF/external/rte_rrtmgp/rrtmgp-frontend/mo_gas_optics_rrtmgp.F90",
+      "sha256": "d5e0a7e56bc811575ec2c9655953a5be64c42a62e4100f65198e1e1b44239adc"
+    },
+    "production_gp_kernel": {
+      "bytes": 41856,
+      "path": "build/udm37-bon-common-band-source-pr-work/WRF/external/rte_rrtmgp/rrtmgp-kernels/mo_gas_optics_rrtmgp_kernels.F90",
+      "sha256": "96be9c4379c4e49a7b13e9b1f8314e78908262f402e913a2a03232987706f6e1"
+    },
+    "production_gp_lw_coefficients": {
+      "bytes": 11679993,
+      "path": "build/udm37-bon-common-band-source-pr-work/WRF/run/rrtmgp-gas-lw-g128.nc",
+      "sha256": "70ad65d116531122660318e5da2a2af9db74b425916202860e9527ef2375b8f6"
+    },
+    "production_legacy_module": {
+      "bytes": 713929,
+      "path": "build/udm37-bon-common-band-source-pr-work/WRF/phys/module_ra_rrtmg_lw.F",
+      "sha256": "09164a1048f2be2001ac6e161da3c0c48f9e74e4ff57271f445032392d9153ef"
+    }
+  },
+  "planck_law": {
+    "band_integral": "Integrate B_sigma over sigma=[100*lo_cm-1,100*hi_cm-1] to get band-integrated radiance. Hemispheric blackbody exitance is pi times that value.",
+    "equation_as_wavenumber_variable_transform": "B_sigma(T)=2*h*c^2*sigma^3/expm1(h*c*sigma/(k*T)), sigma in m^-1; derived from Planck spectral radiance by changing spectral variable.",
+    "exact_constants_SI": {
+      "c_m_s": 299792458,
+      "h_J_s": 6.62607015e-34,
+      "k_J_K": 1.380649e-23,
+      "source": "https://www.nist.gov/pml/special-publication-330/sp-330-section-2"
+    },
+    "full_spectrum_check": "sigma_SB=2*pi^5*k^4/(15*h^3*c^2); full hemispheric integral should equal sigma_SB*T^4 as a future implementation check.",
+    "independent_integral_method": "Use float64 Gauss-Legendre at increasing orders and report convergence; this plan contains no computed integrals or acceptance threshold.",
+    "source_for_planck_law": "https://nvlpubs.nist.gov/nistpubs/Legacy/TN/nbstechnicalnote910-8.pdf"
+  },
+  "production_interpolation_contract": {
+    "direct_raw_band_comparison": "The pinned coefficient file contains totplnk per band and Planck-table row. Therefore the raw interpolated per-band Planck values needed for a direct table-to-SI integral comparison are reconstructible from the production frontend lookup and held temperatures; a new compiled observer is not needed for that raw-band comparison.",
+    "frontend_fact": "totplnk_delta=(temp_ref_max-temp_ref_min)/(size(totplnk,1)-1); min/max are the endpoints of temp_ref, 160 K and 355 K. This makes the intended Planck table spacing 1 K for 196 rows.",
+    "frontend_lines": "mo_gas_optics_rrtmgp.F90:1091-1107 and 1459-1466",
+    "kernel_lines": "mo_gas_optics_rrtmgp_kernels.F90:718-737",
+    "literal_algorithm": "val0=(T-offset)/delta; frac=val0-int(val0); index=min(n-1,max(1,int(val0)+1)); result=table(index,:)+frac*(table(index+1,:)-table(index,:)).",
+    "temperature_fields": "Captured input has TLAY (1,45), TLEV (1,46), TSFC (1,1); use these directly for layer, level, and surface comparisons."
+  },
+  "scope": {
+    "accuracy_claim": false,
+    "builds": 0,
+    "held_profile": "one BON longwave column, native 45 layers, captured held input",
+    "integrations_performed": 0,
+    "matched_physical_bands": [
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13
+    ],
+    "production_edits": 0,
+    "solver_calls": 0
+  },
+  "special_case": {
+    "legacy_band_12": "Historical raw Planck remains defined where layer Planck fractions are zero. Keep raw band integral and fraction/source mapping separate; zero fractions must not be normalized or filled."
+  },
+  "status": "PREPARED_DESIGN_ONLY_NO_INTEGRATION_NO_REPLAY_NO_SOLVER",
+  "supersedes": "../plan.json only for production-source/table lookup details; preserves the original design as v1",
+  "version": 2
+}

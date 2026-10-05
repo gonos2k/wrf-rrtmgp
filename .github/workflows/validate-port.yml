@@ -20,6 +20,7 @@ on:
       - 'tools/udm_frozen_optics/**'
       - 'validation/rrtmgp37/upstream-reference/**'
       - 'validation/rrtmgp37/bon-night-common-band-source/**'
+      - 'validation/rrtmgp37/bon-night-planck-source/**'
       - '.github/workflows/validate-port.yml'
   push:
     branches: [main]
@@ -41,6 +42,7 @@ on:
       - 'tools/udm_frozen_optics/**'
       - 'validation/rrtmgp37/upstream-reference/**'
       - 'validation/rrtmgp37/bon-night-common-band-source/**'
+      - 'validation/rrtmgp37/bon-night-planck-source/**'
       - '.github/workflows/validate-port.yml'
 permissions:
   contents: read
@@ -61,6 +63,7 @@ jobs:
         run: |
           python3 -I -S validation/rrtmgp37/bon-night-common-band-source/verify.py --output build/bon-common-band-source-verification.json
           python3 -I -S validation/rrtmgp37/bon-night-common-band-source/test_verify.py
+          python3 -I -S validation/rrtmgp37/bon-night-planck-source/verify.py --output build/bon-planck-source-verification.json
   component-validation:
     needs: registration
     runs-on: ubuntu-24.04
