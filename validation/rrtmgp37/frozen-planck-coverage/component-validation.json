@@ -1,0 +1,31 @@
+{
+  "status": "PASS_SCOPED",
+  "source_sha256": {
+    "tools/udm_frozen_optics/test_planck_coverage.py": "70682768bf97e4b35ffe5abeb6e0b0acac59eb1c223fbfd3d5f38ed5a571c469",
+    "WRF/test/rrtmgp/CMakeLists.txt": "3e6b28af19fdad756b1770811fc13874a4da0767a14edf984de2c34fcdd5c73b",
+    "config/registration37.json": "28328b8d0c35969c452185493e95960430aa06dd5af82fa47064d9eb7fee27a7"
+  },
+  "configure_returncode": 0,
+  "build_returncode": 0,
+  "target": "test_rrtmgp_frozen_lookup",
+  "ctest_attempts": [
+    {
+      "returncode": 8,
+      "cause": "Custom NetCDF runtime path missing; first child loader returned127 before numerical lookup."
+    },
+    {
+      "returncode": 0,
+      "scope": "Initial focused test passed with LD_LIBRARY_PATH."
+    },
+    {
+      "returncode": 0,
+      "scope": "Final test including explicit Python out-of-range probes passed."
+    }
+  ],
+  "environment_required_local": {
+    "LD_LIBRARY_PATH": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/netcdf/lib"
+  },
+  "registration_returncode": 0,
+  "model_invocations": 0,
+  "limitations": "Interpolation parity and stored moment invariants; no independent material accuracy or new 48h forecast."
+}
