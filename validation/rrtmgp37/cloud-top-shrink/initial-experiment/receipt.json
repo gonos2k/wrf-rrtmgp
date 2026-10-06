@@ -1,0 +1,1051 @@
+{
+  "baseline_revision": "e3b9e52c2a20811830a27d34420721ca89b62e59",
+  "baseline_udm_sha256": "7998df8f1f6a3b9f63f285a60016447cbbcf4802b7a31a711442c90b8c59a8fc",
+  "candidate_hazard_profiles": [],
+  "candidate_source_sha256": "18bac4328061b828c1a57fcbead77986eb71bf5b6a56985fbed0672647bc7d4d",
+  "comparisons": [],
+  "compiler": {
+    "path": "/usr/bin/x86_64-linux-gnu-gfortran-13",
+    "sha256": "7e292e9d5da17a37bb1c17a06afb6463db786c70827fd6893ed31a86715b03c3",
+    "size_bytes": 1027128
+  },
+  "counts": {
+    "REAL_calls": 0,
+    "RTE_calls": 0,
+    "WRF_forecasts": 0,
+    "compile_link_processes": 10,
+    "fixture_executions": 2
+  },
+  "driver_sha256": "8d9380420b4485f629ecf52cb283dbe419f8732e0b6ae71035fee363c5086255",
+  "instrumented_source": {
+    "O0": {
+      "sha256": "492b81ed037a9d2197469cf75449a4df0e35765e3dfb0f85b8e170c186522f7e",
+      "size_bytes": 194290
+    },
+    "O2": {
+      "sha256": "492b81ed037a9d2197469cf75449a4df0e35765e3dfb0f85b8e170c186522f7e",
+      "size_bytes": 194290
+    }
+  },
+  "limitations": [
+    "The cold-freezing profile is a synthetic mechanism control, not a meteorological case.",
+    "This experiment compiles the patched candidate only; it is not an original-versus-candidate numerical comparison.",
+    "No rain is initialized, so it cannot establish downstream qrcon consumption of retained slopes.",
+    "Only the tested source version, compiler, optimization levels, flags, and fixture state are covered."
+  ],
+  "processes": [
+    {
+      "actual_returncode": 0,
+      "command": [
+        "/usr/bin/x86_64-linux-gnu-gfortran-13",
+        "-O0",
+        "-g",
+        "-ffixed-form",
+        "-I",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-rain-only-shrink-experiment-v1/run-v1/O0/candidate",
+        "-J",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-rain-only-shrink-experiment-v1/run-v1/O0/candidate",
+        "-cpp",
+        "-c",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-rain-only-slopes-pr-work/WRF/phys/module_gfs_machine.F",
+        "-o",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-rain-only-shrink-experiment-v1/run-v1/O0/candidate/module_gfs_machine.o"
+      ],
+      "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-rain-only-shrink-experiment-v1/run-v1/O0/candidate",
+      "log_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-rain-only-shrink-experiment-v1/run-v1/O0/candidate/compile-module_gfs_machine.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "pid": 964773,
+      "role": "compile",
+      "status": "TERMINAL",
+      "timed_out": false,
+      "timeout_seconds": 180
+    },
+    {
+      "actual_returncode": 0,
+      "command": [
+        "/usr/bin/x86_64-linux-gnu-gfortran-13",
+        "-O0",
+        "-g",
+        "-ffree-form",
+        "-ffree-line-length-none",
+        "-I",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-rain-only-shrink-experiment-v1/run-v1/O0/candidate",
+        "-J",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-rain-only-shrink-experiment-v1/run-v1/O0/candidate",
+        "-cpp",
+        "-c",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-rain-only-shrink-experiment-v1/run-v1/module_wrf_error.f90",
+        "-o",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-rain-only-shrink-experiment-v1/run-v1/O0/candidate/module_wrf_error.o"
+      ],
+      "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-rain-only-shrink-experiment-v1/run-v1/O0/candidate",
+      "log_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-rain-only-shrink-experiment-v1/run-v1/O0/candidate/compile-module_wrf_error.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "pid": 964776,
+      "role": "compile",
+      "status": "TERMINAL",
+      "timed_out": false,
+      "timeout_seconds": 180
+    },
+    {
+      "actual_returncode": 0,
+      "command": [
+        "/usr/bin/x86_64-linux-gnu-gfortran-13",
+        "-O0",
+        "-g",
+        "-ffree-form",
+        "-ffree-line-length-none",
+        "-I",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-rain-only-shrink-experiment-v1/run-v1/O0/candidate",
+        "-J",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-rain-only-shrink-experiment-v1/run-v1/O0/candidate",
+        "-cpp",
+        "-c",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-rain-only-slopes-pr-work/WRF/phys/module_mp_radar.F",
+        "-o",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-rain-only-shrink-experiment-v1/run-v1/O0/candidate/module_mp_radar.o"
+      ],
+      "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-rain-only-shrink-experiment-v1/run-v1/O0/candidate",
+      "log_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-rain-only-shrink-experiment-v1/run-v1/O0/candidate/compile-module_mp_radar.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "pid": 964779,
+      "role": "compile",
+      "status": "TERMINAL",
+      "timed_out": false,
+      "timeout_seconds": 180
+    },
+    {
+      "actual_returncode": 0,
+      "command": [
+        "/usr/bin/x86_64-linux-gnu-gfortran-13",
+        "-O0",
+        "-g",
+        "-ffree-form",
+        "-ffree-line-length-none",
+        "-fcheck=all",
+        "-finit-real=snan",
+        "-ffpe-trap=invalid,zero,overflow",
+        "-fbacktrace",
+        "-fno-fast-math",
+        "-I",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-rain-only-shrink-experiment-v1/run-v1/O0/candidate",
+        "-J",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-rain-only-shrink-experiment-v1/run-v1/O0/candidate",
+        "-cpp",
+        "-c",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-rain-only-shrink-experiment-v1/run-v1/O0/candidate/module_mp_udm.F",
+        "-o",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-rain-only-shrink-experiment-v1/run-v1/O0/candidate/module_mp_udm.o"
+      ],
+      "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-rain-only-shrink-experiment-v1/run-v1/O0/candidate",
+      "log_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-rain-only-shrink-experiment-v1/run-v1/O0/candidate/compile-module_mp_udm.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "pid": 964782,
+      "role": "compile",
+      "status": "TERMINAL",
+      "timed_out": false,
+      "timeout_seconds": 180
+    },
+    {
+      "actual_returncode": 0,
+      "command": [
+        "/usr/bin/x86_64-linux-gnu-gfortran-13",
+        "-O0",
+        "-g",
+        "-ffree-form",
+        "-ffree-line-length-none",
+        "-fcheck=all",
+        "-finit-real=snan",
+        "-ffpe-trap=invalid,zero,overflow",
+        "-fbacktrace",
+        "-fno-fast-math",
+        "-cpp",
+        "-I",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-rain-only-shrink-experiment-v1/run-v1/O0/candidate",
+        "-J",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-rain-only-shrink-experiment-v1/run-v1/O0/candidate",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-rain-only-shrink-experiment-v1/test_udm_rain_only_shrink.f90",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-rain-only-shrink-experiment-v1/run-v1/O0/candidate/module_gfs_machine.o",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-rain-only-shrink-experiment-v1/run-v1/O0/candidate/module_wrf_error.o",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-rain-only-shrink-experiment-v1/run-v1/O0/candidate/module_mp_radar.o",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-rain-only-shrink-experiment-v1/run-v1/O0/candidate/module_mp_udm.o",
+        "-o",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-rain-only-shrink-experiment-v1/run-v1/O0/candidate/slope_fixture"
+      ],
+      "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-rain-only-shrink-experiment-v1/run-v1/O0/candidate",
+      "log_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-rain-only-shrink-experiment-v1/run-v1/O0/candidate/link.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "pid": 964789,
+      "role": "link",
+      "status": "TERMINAL",
+      "timed_out": false,
+      "timeout_seconds": 180
+    },
+    {
+      "actual_returncode": 0,
+      "command": [
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-rain-only-shrink-experiment-v1/run-v1/O0/candidate/slope_fixture",
+        "6"
+      ],
+      "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-rain-only-shrink-experiment-v1/run-v1/O0/candidate",
+      "log_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-rain-only-shrink-experiment-v1/run-v1/O0/candidate/run-6-cold_freeze_shrinking_top.log",
+      "log_sha256": "a130ff4a4e9f7e0af2f926a783f958097a63fee3d501d1963d860a70c6f41c95",
+      "pid": 964794,
+      "role": "candidate_O0_cold_freeze_shrinking_top",
+      "status": "TERMINAL",
+      "timed_out": false,
+      "timeout_seconds": 180
+    },
+    {
+      "actual_returncode": 0,
+      "command": [
+        "/usr/bin/x86_64-linux-gnu-gfortran-13",
+        "-O2",
+        "-g",
+        "-ffixed-form",
+        "-I",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-rain-only-shrink-experiment-v1/run-v1/O2/candidate",
+        "-J",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-rain-only-shrink-experiment-v1/run-v1/O2/candidate",
+        "-cpp",
+        "-c",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-rain-only-slopes-pr-work/WRF/phys/module_gfs_machine.F",
+        "-o",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-rain-only-shrink-experiment-v1/run-v1/O2/candidate/module_gfs_machine.o"
+      ],
+      "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-rain-only-shrink-experiment-v1/run-v1/O2/candidate",
+      "log_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-rain-only-shrink-experiment-v1/run-v1/O2/candidate/compile-module_gfs_machine.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "pid": 964816,
+      "role": "compile",
+      "status": "TERMINAL",
+      "timed_out": false,
+      "timeout_seconds": 180
+    },
+    {
+      "actual_returncode": 0,
+      "command": [
+        "/usr/bin/x86_64-linux-gnu-gfortran-13",
+        "-O2",
+        "-g",
+        "-ffree-form",
+        "-ffree-line-length-none",
+        "-I",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-rain-only-shrink-experiment-v1/run-v1/O2/candidate",
+        "-J",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-rain-only-shrink-experiment-v1/run-v1/O2/candidate",
+        "-cpp",
+        "-c",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-rain-only-shrink-experiment-v1/run-v1/module_wrf_error.f90",
+        "-o",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-rain-only-shrink-experiment-v1/run-v1/O2/candidate/module_wrf_error.o"
+      ],
+      "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-rain-only-shrink-experiment-v1/run-v1/O2/candidate",
+      "log_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-rain-only-shrink-experiment-v1/run-v1/O2/candidate/compile-module_wrf_error.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "pid": 964819,
+      "role": "compile",
+      "status": "TERMINAL",
+      "timed_out": false,
+      "timeout_seconds": 180
+    },
+    {
+      "actual_returncode": 0,
+      "command": [
+        "/usr/bin/x86_64-linux-gnu-gfortran-13",
+        "-O2",
+        "-g",
+        "-ffree-form",
+        "-ffree-line-length-none",
+        "-I",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-rain-only-shrink-experiment-v1/run-v1/O2/candidate",
+        "-J",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-rain-only-shrink-experiment-v1/run-v1/O2/candidate",
+        "-cpp",
+        "-c",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-rain-only-slopes-pr-work/WRF/phys/module_mp_radar.F",
+        "-o",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-rain-only-shrink-experiment-v1/run-v1/O2/candidate/module_mp_radar.o"
+      ],
+      "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-rain-only-shrink-experiment-v1/run-v1/O2/candidate",
+      "log_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-rain-only-shrink-experiment-v1/run-v1/O2/candidate/compile-module_mp_radar.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "pid": 964823,
+      "role": "compile",
+      "status": "TERMINAL",
+      "timed_out": false,
+      "timeout_seconds": 180
+    },
+    {
+      "actual_returncode": 0,
+      "command": [
+        "/usr/bin/x86_64-linux-gnu-gfortran-13",
+        "-O2",
+        "-g",
+        "-ffree-form",
+        "-ffree-line-length-none",
+        "-fcheck=all",
+        "-finit-real=snan",
+        "-ffpe-trap=invalid,zero,overflow",
+        "-fbacktrace",
+        "-fno-fast-math",
+        "-I",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-rain-only-shrink-experiment-v1/run-v1/O2/candidate",
+        "-J",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-rain-only-shrink-experiment-v1/run-v1/O2/candidate",
+        "-cpp",
+        "-c",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-rain-only-shrink-experiment-v1/run-v1/O2/candidate/module_mp_udm.F",
+        "-o",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-rain-only-shrink-experiment-v1/run-v1/O2/candidate/module_mp_udm.o"
+      ],
+      "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-rain-only-shrink-experiment-v1/run-v1/O2/candidate",
+      "log_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-rain-only-shrink-experiment-v1/run-v1/O2/candidate/compile-module_mp_udm.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "pid": 964827,
+      "role": "compile",
+      "status": "TERMINAL",
+      "timed_out": false,
+      "timeout_seconds": 180
+    },
+    {
+      "actual_returncode": 0,
+      "command": [
+        "/usr/bin/x86_64-linux-gnu-gfortran-13",
+        "-O2",
+        "-g",
+        "-ffree-form",
+        "-ffree-line-length-none",
+        "-fcheck=all",
+        "-finit-real=snan",
+        "-ffpe-trap=invalid,zero,overflow",
+        "-fbacktrace",
+        "-fno-fast-math",
+        "-cpp",
+        "-I",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-rain-only-shrink-experiment-v1/run-v1/O2/candidate",
+        "-J",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-rain-only-shrink-experiment-v1/run-v1/O2/candidate",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-rain-only-shrink-experiment-v1/test_udm_rain_only_shrink.f90",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-rain-only-shrink-experiment-v1/run-v1/O2/candidate/module_gfs_machine.o",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-rain-only-shrink-experiment-v1/run-v1/O2/candidate/module_wrf_error.o",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-rain-only-shrink-experiment-v1/run-v1/O2/candidate/module_mp_radar.o",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-rain-only-shrink-experiment-v1/run-v1/O2/candidate/module_mp_udm.o",
+        "-o",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-rain-only-shrink-experiment-v1/run-v1/O2/candidate/slope_fixture"
+      ],
+      "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-rain-only-shrink-experiment-v1/run-v1/O2/candidate",
+      "log_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-rain-only-shrink-experiment-v1/run-v1/O2/candidate/link.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "pid": 965030,
+      "role": "link",
+      "status": "TERMINAL",
+      "timed_out": false,
+      "timeout_seconds": 180
+    },
+    {
+      "actual_returncode": 0,
+      "command": [
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-rain-only-shrink-experiment-v1/run-v1/O2/candidate/slope_fixture",
+        "6"
+      ],
+      "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-rain-only-shrink-experiment-v1/run-v1/O2/candidate",
+      "log_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-rain-only-shrink-experiment-v1/run-v1/O2/candidate/run-6-cold_freeze_shrinking_top.log",
+      "log_sha256": "a130ff4a4e9f7e0af2f926a783f958097a63fee3d501d1963d860a70c6f41c95",
+      "pid": 965035,
+      "role": "candidate_O2_cold_freeze_shrinking_top",
+      "status": "TERMINAL",
+      "timed_out": false,
+      "timeout_seconds": 180
+    }
+  ],
+  "results": {
+    "O0": {
+      "candidate": {
+        "cold_freeze_shrinking_top": {
+          "log_sha256": "a130ff4a4e9f7e0af2f926a783f958097a63fee3d501d1963d860a70c6f41c95",
+          "result_keys": [
+            [
+              1,
+              0
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              2,
+              0
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              3,
+              0
+            ],
+            [
+              3,
+              1
+            ],
+            [
+              3,
+              2
+            ]
+          ],
+          "shrink_retention": {
+            "all_nine_branch_mode_records_pass": true,
+            "observed": true,
+            "records": [
+              {
+                "changed_from_pre_first_call_initializer_levels_1based": [
+                  5
+                ],
+                "density_mode": 0,
+                "first_cloud_top": 5,
+                "forward_branch": 1,
+                "retained_levels_1based": [
+                  5
+                ],
+                "same_substep_values_preserved": true,
+                "second_cloud_top": 4,
+                "substep": 1
+              },
+              {
+                "changed_from_pre_first_call_initializer_levels_1based": [
+                  5
+                ],
+                "density_mode": 1,
+                "first_cloud_top": 5,
+                "forward_branch": 1,
+                "retained_levels_1based": [
+                  5
+                ],
+                "same_substep_values_preserved": true,
+                "second_cloud_top": 4,
+                "substep": 1
+              },
+              {
+                "changed_from_pre_first_call_initializer_levels_1based": [
+                  5
+                ],
+                "density_mode": 2,
+                "first_cloud_top": 5,
+                "forward_branch": 1,
+                "retained_levels_1based": [
+                  5
+                ],
+                "same_substep_values_preserved": true,
+                "second_cloud_top": 4,
+                "substep": 1
+              },
+              {
+                "changed_from_pre_first_call_initializer_levels_1based": [
+                  5
+                ],
+                "density_mode": 0,
+                "first_cloud_top": 5,
+                "forward_branch": 2,
+                "retained_levels_1based": [
+                  5
+                ],
+                "same_substep_values_preserved": true,
+                "second_cloud_top": 4,
+                "substep": 1
+              },
+              {
+                "changed_from_pre_first_call_initializer_levels_1based": [
+                  5
+                ],
+                "density_mode": 1,
+                "first_cloud_top": 5,
+                "forward_branch": 2,
+                "retained_levels_1based": [
+                  5
+                ],
+                "same_substep_values_preserved": true,
+                "second_cloud_top": 4,
+                "substep": 1
+              },
+              {
+                "changed_from_pre_first_call_initializer_levels_1based": [
+                  5
+                ],
+                "density_mode": 2,
+                "first_cloud_top": 5,
+                "forward_branch": 2,
+                "retained_levels_1based": [
+                  5
+                ],
+                "same_substep_values_preserved": true,
+                "second_cloud_top": 4,
+                "substep": 1
+              },
+              {
+                "changed_from_pre_first_call_initializer_levels_1based": [
+                  5
+                ],
+                "density_mode": 0,
+                "first_cloud_top": 5,
+                "forward_branch": 3,
+                "retained_levels_1based": [
+                  5
+                ],
+                "same_substep_values_preserved": true,
+                "second_cloud_top": 4,
+                "substep": 1
+              },
+              {
+                "changed_from_pre_first_call_initializer_levels_1based": [
+                  5
+                ],
+                "density_mode": 1,
+                "first_cloud_top": 5,
+                "forward_branch": 3,
+                "retained_levels_1based": [
+                  5
+                ],
+                "same_substep_values_preserved": true,
+                "second_cloud_top": 4,
+                "substep": 1
+              },
+              {
+                "changed_from_pre_first_call_initializer_levels_1based": [
+                  5
+                ],
+                "density_mode": 2,
+                "first_cloud_top": 5,
+                "forward_branch": 3,
+                "retained_levels_1based": [
+                  5
+                ],
+                "same_substep_values_preserved": true,
+                "second_cloud_top": 4,
+                "substep": 1
+              }
+            ]
+          }
+        }
+      }
+    },
+    "O2": {
+      "candidate": {
+        "cold_freeze_shrinking_top": {
+          "log_sha256": "a130ff4a4e9f7e0af2f926a783f958097a63fee3d501d1963d860a70c6f41c95",
+          "result_keys": [
+            [
+              1,
+              0
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              2,
+              0
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              3,
+              0
+            ],
+            [
+              3,
+              1
+            ],
+            [
+              3,
+              2
+            ]
+          ],
+          "shrink_retention": {
+            "all_nine_branch_mode_records_pass": true,
+            "observed": true,
+            "records": [
+              {
+                "changed_from_pre_first_call_initializer_levels_1based": [
+                  5
+                ],
+                "density_mode": 0,
+                "first_cloud_top": 5,
+                "forward_branch": 1,
+                "retained_levels_1based": [
+                  5
+                ],
+                "same_substep_values_preserved": true,
+                "second_cloud_top": 4,
+                "substep": 1
+              },
+              {
+                "changed_from_pre_first_call_initializer_levels_1based": [
+                  5
+                ],
+                "density_mode": 1,
+                "first_cloud_top": 5,
+                "forward_branch": 1,
+                "retained_levels_1based": [
+                  5
+                ],
+                "same_substep_values_preserved": true,
+                "second_cloud_top": 4,
+                "substep": 1
+              },
+              {
+                "changed_from_pre_first_call_initializer_levels_1based": [
+                  5
+                ],
+                "density_mode": 2,
+                "first_cloud_top": 5,
+                "forward_branch": 1,
+                "retained_levels_1based": [
+                  5
+                ],
+                "same_substep_values_preserved": true,
+                "second_cloud_top": 4,
+                "substep": 1
+              },
+              {
+                "changed_from_pre_first_call_initializer_levels_1based": [
+                  5
+                ],
+                "density_mode": 0,
+                "first_cloud_top": 5,
+                "forward_branch": 2,
+                "retained_levels_1based": [
+                  5
+                ],
+                "same_substep_values_preserved": true,
+                "second_cloud_top": 4,
+                "substep": 1
+              },
+              {
+                "changed_from_pre_first_call_initializer_levels_1based": [
+                  5
+                ],
+                "density_mode": 1,
+                "first_cloud_top": 5,
+                "forward_branch": 2,
+                "retained_levels_1based": [
+                  5
+                ],
+                "same_substep_values_preserved": true,
+                "second_cloud_top": 4,
+                "substep": 1
+              },
+              {
+                "changed_from_pre_first_call_initializer_levels_1based": [
+                  5
+                ],
+                "density_mode": 2,
+                "first_cloud_top": 5,
+                "forward_branch": 2,
+                "retained_levels_1based": [
+                  5
+                ],
+                "same_substep_values_preserved": true,
+                "second_cloud_top": 4,
+                "substep": 1
+              },
+              {
+                "changed_from_pre_first_call_initializer_levels_1based": [
+                  5
+                ],
+                "density_mode": 0,
+                "first_cloud_top": 5,
+                "forward_branch": 3,
+                "retained_levels_1based": [
+                  5
+                ],
+                "same_substep_values_preserved": true,
+                "second_cloud_top": 4,
+                "substep": 1
+              },
+              {
+                "changed_from_pre_first_call_initializer_levels_1based": [
+                  5
+                ],
+                "density_mode": 1,
+                "first_cloud_top": 5,
+                "forward_branch": 3,
+                "retained_levels_1based": [
+                  5
+                ],
+                "same_substep_values_preserved": true,
+                "second_cloud_top": 4,
+                "substep": 1
+              },
+              {
+                "changed_from_pre_first_call_initializer_levels_1based": [
+                  5
+                ],
+                "density_mode": 2,
+                "first_cloud_top": 5,
+                "forward_branch": 3,
+                "retained_levels_1based": [
+                  5
+                ],
+                "same_substep_values_preserved": true,
+                "second_cloud_top": 4,
+                "substep": 1
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "runner_sha256": "e1ada4794aa2745d0b4300d6c40036d7a469efe2fbea71a50f4f2f25fffe6dcf",
+  "schema": "udm-rain-only-cold-freezing-shrink-fixture-v1",
+  "shrink_retention_controls": [
+    {
+      "all_nine_branch_mode_records_pass": true,
+      "observed": true,
+      "records": [
+        {
+          "changed_from_pre_first_call_initializer_levels_1based": [
+            5
+          ],
+          "density_mode": 0,
+          "first_cloud_top": 5,
+          "forward_branch": 1,
+          "retained_levels_1based": [
+            5
+          ],
+          "same_substep_values_preserved": true,
+          "second_cloud_top": 4,
+          "substep": 1
+        },
+        {
+          "changed_from_pre_first_call_initializer_levels_1based": [
+            5
+          ],
+          "density_mode": 1,
+          "first_cloud_top": 5,
+          "forward_branch": 1,
+          "retained_levels_1based": [
+            5
+          ],
+          "same_substep_values_preserved": true,
+          "second_cloud_top": 4,
+          "substep": 1
+        },
+        {
+          "changed_from_pre_first_call_initializer_levels_1based": [
+            5
+          ],
+          "density_mode": 2,
+          "first_cloud_top": 5,
+          "forward_branch": 1,
+          "retained_levels_1based": [
+            5
+          ],
+          "same_substep_values_preserved": true,
+          "second_cloud_top": 4,
+          "substep": 1
+        },
+        {
+          "changed_from_pre_first_call_initializer_levels_1based": [
+            5
+          ],
+          "density_mode": 0,
+          "first_cloud_top": 5,
+          "forward_branch": 2,
+          "retained_levels_1based": [
+            5
+          ],
+          "same_substep_values_preserved": true,
+          "second_cloud_top": 4,
+          "substep": 1
+        },
+        {
+          "changed_from_pre_first_call_initializer_levels_1based": [
+            5
+          ],
+          "density_mode": 1,
+          "first_cloud_top": 5,
+          "forward_branch": 2,
+          "retained_levels_1based": [
+            5
+          ],
+          "same_substep_values_preserved": true,
+          "second_cloud_top": 4,
+          "substep": 1
+        },
+        {
+          "changed_from_pre_first_call_initializer_levels_1based": [
+            5
+          ],
+          "density_mode": 2,
+          "first_cloud_top": 5,
+          "forward_branch": 2,
+          "retained_levels_1based": [
+            5
+          ],
+          "same_substep_values_preserved": true,
+          "second_cloud_top": 4,
+          "substep": 1
+        },
+        {
+          "changed_from_pre_first_call_initializer_levels_1based": [
+            5
+          ],
+          "density_mode": 0,
+          "first_cloud_top": 5,
+          "forward_branch": 3,
+          "retained_levels_1based": [
+            5
+          ],
+          "same_substep_values_preserved": true,
+          "second_cloud_top": 4,
+          "substep": 1
+        },
+        {
+          "changed_from_pre_first_call_initializer_levels_1based": [
+            5
+          ],
+          "density_mode": 1,
+          "first_cloud_top": 5,
+          "forward_branch": 3,
+          "retained_levels_1based": [
+            5
+          ],
+          "same_substep_values_preserved": true,
+          "second_cloud_top": 4,
+          "substep": 1
+        },
+        {
+          "changed_from_pre_first_call_initializer_levels_1based": [
+            5
+          ],
+          "density_mode": 2,
+          "first_cloud_top": 5,
+          "forward_branch": 3,
+          "retained_levels_1based": [
+            5
+          ],
+          "same_substep_values_preserved": true,
+          "second_cloud_top": 4,
+          "substep": 1
+        }
+      ]
+    },
+    {
+      "all_nine_branch_mode_records_pass": true,
+      "observed": true,
+      "records": [
+        {
+          "changed_from_pre_first_call_initializer_levels_1based": [
+            5
+          ],
+          "density_mode": 0,
+          "first_cloud_top": 5,
+          "forward_branch": 1,
+          "retained_levels_1based": [
+            5
+          ],
+          "same_substep_values_preserved": true,
+          "second_cloud_top": 4,
+          "substep": 1
+        },
+        {
+          "changed_from_pre_first_call_initializer_levels_1based": [
+            5
+          ],
+          "density_mode": 1,
+          "first_cloud_top": 5,
+          "forward_branch": 1,
+          "retained_levels_1based": [
+            5
+          ],
+          "same_substep_values_preserved": true,
+          "second_cloud_top": 4,
+          "substep": 1
+        },
+        {
+          "changed_from_pre_first_call_initializer_levels_1based": [
+            5
+          ],
+          "density_mode": 2,
+          "first_cloud_top": 5,
+          "forward_branch": 1,
+          "retained_levels_1based": [
+            5
+          ],
+          "same_substep_values_preserved": true,
+          "second_cloud_top": 4,
+          "substep": 1
+        },
+        {
+          "changed_from_pre_first_call_initializer_levels_1based": [
+            5
+          ],
+          "density_mode": 0,
+          "first_cloud_top": 5,
+          "forward_branch": 2,
+          "retained_levels_1based": [
+            5
+          ],
+          "same_substep_values_preserved": true,
+          "second_cloud_top": 4,
+          "substep": 1
+        },
+        {
+          "changed_from_pre_first_call_initializer_levels_1based": [
+            5
+          ],
+          "density_mode": 1,
+          "first_cloud_top": 5,
+          "forward_branch": 2,
+          "retained_levels_1based": [
+            5
+          ],
+          "same_substep_values_preserved": true,
+          "second_cloud_top": 4,
+          "substep": 1
+        },
+        {
+          "changed_from_pre_first_call_initializer_levels_1based": [
+            5
+          ],
+          "density_mode": 2,
+          "first_cloud_top": 5,
+          "forward_branch": 2,
+          "retained_levels_1based": [
+            5
+          ],
+          "same_substep_values_preserved": true,
+          "second_cloud_top": 4,
+          "substep": 1
+        },
+        {
+          "changed_from_pre_first_call_initializer_levels_1based": [
+            5
+          ],
+          "density_mode": 0,
+          "first_cloud_top": 5,
+          "forward_branch": 3,
+          "retained_levels_1based": [
+            5
+          ],
+          "same_substep_values_preserved": true,
+          "second_cloud_top": 4,
+          "substep": 1
+        },
+        {
+          "changed_from_pre_first_call_initializer_levels_1based": [
+            5
+          ],
+          "density_mode": 1,
+          "first_cloud_top": 5,
+          "forward_branch": 3,
+          "retained_levels_1based": [
+            5
+          ],
+          "same_substep_values_preserved": true,
+          "second_cloud_top": 4,
+          "substep": 1
+        },
+        {
+          "changed_from_pre_first_call_initializer_levels_1based": [
+            5
+          ],
+          "density_mode": 2,
+          "first_cloud_top": 5,
+          "forward_branch": 3,
+          "retained_levels_1based": [
+            5
+          ],
+          "same_substep_values_preserved": true,
+          "second_cloud_top": 4,
+          "substep": 1
+        }
+      ]
+    }
+  ],
+  "source_pins_after": {
+    "candidate": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-rain-only-slopes-pr-work/WRF/phys/module_mp_udm.F",
+      "sha256": "18bac4328061b828c1a57fcbead77986eb71bf5b6a56985fbed0672647bc7d4d",
+      "size_bytes": 193968
+    },
+    "dependencies": [
+      {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-rain-only-slopes-pr-work/WRF/phys/module_mp_radar.F",
+        "sha256": "fa5e06a4d64bbc32089a1357bfa5c57e6c682e5b68c706842698c2b0f292e68e",
+        "size_bytes": 25452
+      },
+      {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-rain-only-slopes-pr-work/WRF/phys/module_gfs_machine.F",
+        "sha256": "300ee4f75663e89d34c8a9b8733cc07a5dd48c3d973da019d31cb76524babe25",
+        "size_bytes": 567
+      }
+    ],
+    "driver": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-rain-only-shrink-experiment-v1/test_udm_rain_only_shrink.f90",
+      "sha256": "8d9380420b4485f629ecf52cb283dbe419f8732e0b6ae71035fee363c5086255",
+      "size_bytes": 5105
+    },
+    "runner": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-rain-only-shrink-experiment-v1/run_shrink_experiment.py",
+      "sha256": "e1ada4794aa2745d0b4300d6c40036d7a469efe2fbea71a50f4f2f25fffe6dcf",
+      "size_bytes": 22605
+    }
+  },
+  "source_pins_before": {
+    "candidate": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-rain-only-slopes-pr-work/WRF/phys/module_mp_udm.F",
+      "sha256": "18bac4328061b828c1a57fcbead77986eb71bf5b6a56985fbed0672647bc7d4d",
+      "size_bytes": 193968
+    },
+    "compiler": {
+      "path": "/usr/bin/x86_64-linux-gnu-gfortran-13",
+      "sha256": "7e292e9d5da17a37bb1c17a06afb6463db786c70827fd6893ed31a86715b03c3",
+      "size_bytes": 1027128
+    },
+    "dependencies": [
+      {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-rain-only-slopes-pr-work/WRF/phys/module_mp_radar.F",
+        "sha256": "fa5e06a4d64bbc32089a1357bfa5c57e6c682e5b68c706842698c2b0f292e68e",
+        "size_bytes": 25452
+      },
+      {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-rain-only-slopes-pr-work/WRF/phys/module_gfs_machine.F",
+        "sha256": "300ee4f75663e89d34c8a9b8733cc07a5dd48c3d973da019d31cb76524babe25",
+        "size_bytes": 567
+      }
+    ],
+    "driver": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-rain-only-shrink-experiment-v1/test_udm_rain_only_shrink.f90",
+      "sha256": "8d9380420b4485f629ecf52cb283dbe419f8732e0b6ae71035fee363c5086255",
+      "size_bytes": 5105
+    },
+    "repository_head": "ba8c82706034e0576101e6a77f8952478c7b1b2f",
+    "runner": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-rain-only-shrink-experiment-v1/run_shrink_experiment.py",
+      "sha256": "e1ada4794aa2745d0b4300d6c40036d7a469efe2fbea71a50f4f2f25fffe6dcf",
+      "size_bytes": 22605
+    }
+  },
+  "status": "PASS_SCOPED_NATURAL_SHRINK_AND_SLOPE_RETENTION"
+}

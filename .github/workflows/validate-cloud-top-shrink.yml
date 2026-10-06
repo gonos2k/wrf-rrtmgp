@@ -1,0 +1,38 @@
+name: Verify UDM shrinking cloud-top slope retention
+on:
+  pull_request:
+    paths:
+      - 'WRF/phys/module_mp_udm.F'
+      - 'WRF/test/rrtmgp/test_udm_cloud_top_shrink*'
+      - 'WRF/test/rrtmgp/test_udm_rain_only_slopes.py'
+      - 'WRF/doc/rrtmgp/UDM_CLOUD_TOP_SHRINK.md'
+      - 'validation/rrtmgp37/cloud-top-shrink/**'
+      - '.github/workflows/validate-cloud-top-shrink.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'WRF/phys/module_mp_udm.F'
+      - 'WRF/test/rrtmgp/test_udm_cloud_top_shrink*'
+      - '.github/workflows/validate-cloud-top-shrink.yml'
+permissions:
+  contents: read
+jobs:
+  natural-freezing-and-slope-retention:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - name: Authenticate saved natural-shrink evidence
+        run: python3 -I -S validation/rrtmgp37/cloud-top-shrink/verify.py
+      - name: Fetch historical context source without compiling it
+        run: git fetch --no-tags --depth=1 origin e3b9e52c2a20811830a27d34420721ca89b62e59
+      - name: Observe actual UDM cloud-top shrink at O0 and O2
+        run: >-
+          python3 -B WRF/test/rrtmgp/test_udm_cloud_top_shrink.py WRF
+          --workdir build/cloud-top-shrink-native
+      - name: Preserve source pins and actual native traces
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: udm-cloud-top-shrink-native
+          path: build/cloud-top-shrink-native

@@ -1,0 +1,128 @@
+{
+  "compiler_flags": [
+    "-g",
+    "-ffree-form",
+    "-ffree-line-length-none",
+    "-fcheck=all",
+    "-finit-real=snan",
+    "-ffpe-trap=invalid,zero,overflow",
+    "-fbacktrace",
+    "-fno-fast-math"
+  ],
+  "created_utc": "2026-10-05T19:42:37+00:00",
+  "expected_mechanism_not_result": "First slope_cloud sees liquid top k=5. Native homogeneous freezing condition tcelci < -40 C at k=5 should transfer that liquid to ice and clear qc/nc. The second recomputed liquid top should be lower. This remains a hypothesis until direct instrumented snapshots confirm it.",
+  "expected_process_budget": {
+    "UDM_invocations": 18,
+    "basis": "Two optimization builds; each profile run executes 3 forwarding branches \u00d7 3 density modes.",
+    "compile_link_processes": 10,
+    "fixture_processes": 2
+  },
+  "experimental_profile": {
+    "density_kg_m-3": 1.0,
+    "id": 6,
+    "levels": 7,
+    "nc_m-3": {
+      "k2_to_k5": 100000000.0,
+      "otherwise": 0
+    },
+    "pressure": "p=den*T*(287+461.6*q), pii=1",
+    "qc_kg_kg": {
+      "k2_to_k5": 0.0001,
+      "otherwise": 0
+    },
+    "rain": "all zero; no qrcon consumer claim",
+    "temperature_K": {
+      "k2_to_k4": 255,
+      "k5": 232,
+      "otherwise": 290
+    },
+    "timestep_s": 1,
+    "vapor_mixing_ratio_kg_kg": 0.001
+  },
+  "instrumented_candidate": {
+    "sha256": "492b81ed037a9d2197469cf75449a4df0e35765e3dfb0f85b8e170c186522f7e",
+    "size_bytes": 194290
+  },
+  "open_or_failure_policy": [
+    "If top does not shrink or any retention gate fails, preserve the complete receipt/logs and report OPEN/NOT_OBSERVED; no tuning or retry under this plan.",
+    "Rain is absent, so no statement about qrcon reading a retained slope is permitted.",
+    "Synthetic microphysics control only; no meteorological occurrence or production-impact claim."
+  ],
+  "pass_gates": [
+    "For all nine branch/mode records in both O0 and O2, site 1 reports initial ktop=5 and site 2 reports a smaller positive ktop.",
+    "For each removed level above the second top, rslopec2 is finite, differs from the site-1 pre-call initializer, and is exactly equal at site-1 post-call, site-2 pre-call, and site-2 post-call.",
+    "All output state values are finite and there is no source, dependency, driver, or runner mutation during execution."
+  ],
+  "pins": {
+    "candidate_udm": {
+      "path": "build/udm-rain-only-slopes-pr-work/WRF/phys/module_mp_udm.F",
+      "sha256": "18bac4328061b828c1a57fcbead77986eb71bf5b6a56985fbed0672647bc7d4d",
+      "size_bytes": 193968
+    },
+    "compiler": {
+      "path": "/usr/bin/x86_64-linux-gnu-gfortran-13",
+      "sha256": "7e292e9d5da17a37bb1c17a06afb6463db786c70827fd6893ed31a86715b03c3",
+      "size_bytes": 1027128
+    },
+    "corrected_marker_review": {
+      "path": "build/udm37-rain-only-trace-placement-fix-v1/independent-review.json",
+      "sha256": "63cc15a806cdcdceab8b2c729b5c180f31309e9e43966df45aa662c18cb0618e",
+      "size_bytes": 3326
+    },
+    "experiment_driver": {
+      "path": "build/udm-rain-only-shrink-experiment-v1/test_udm_rain_only_shrink.f90",
+      "sha256": "8d9380420b4485f629ecf52cb283dbe419f8732e0b6ae71035fee363c5086255",
+      "size_bytes": 5105
+    },
+    "experiment_runner": {
+      "path": "build/udm-rain-only-shrink-experiment-v1/run_shrink_experiment.py",
+      "sha256": "e1ada4794aa2745d0b4300d6c40036d7a469efe2fbea71a50f4f2f25fffe6dcf",
+      "size_bytes": 22605
+    },
+    "module_gfs_machine": {
+      "path": "build/udm-rain-only-slopes-pr-work/WRF/phys/module_gfs_machine.F",
+      "sha256": "300ee4f75663e89d34c8a9b8733cc07a5dd48c3d973da019d31cb76524babe25",
+      "size_bytes": 567
+    },
+    "module_mp_radar": {
+      "path": "build/udm-rain-only-slopes-pr-work/WRF/phys/module_mp_radar.F",
+      "sha256": "fa5e06a4d64bbc32089a1357bfa5c57e6c682e5b68c706842698c2b0f292e68e",
+      "size_bytes": 25452
+    },
+    "prior_v3_receipt": {
+      "path": "build/udm-rain-only-slope-native-v1/run-v3/receipt.json",
+      "sha256": "32b12bfe95fdcf939f1efad1b0347adfaf539a45983ec98184186e7c1f079d6a",
+      "size_bytes": 65526
+    },
+    "source_plan": {
+      "path": "build/udm-rain-only-shrink-plan-v1/plan.json",
+      "sha256": "c2db0e6b7eca5aa9495548edb935f477209ed7ccdae956532448b22e4ae8c351",
+      "size_bytes": 6941
+    }
+  },
+  "planned_workdir": "build/udm-rain-only-shrink-experiment-v1/run-v1",
+  "previous_control": "Corrected v3 warm trace profile reported top 5 at both calls at O0/O2, so it did not demonstrate shrink.",
+  "schema": "udm-rain-only-shrink-experiment-plan-v1",
+  "scope": {
+    "REAL_calls": 0,
+    "RTE_calls": 0,
+    "WRF_forecasts": 0,
+    "candidate_source_only": true,
+    "optimizations": [
+      "O0",
+      "O2"
+    ],
+    "standalone_fixture_profile": [
+      6
+    ]
+  },
+  "source_locations": {
+    "first_slope_call": "module_mp_udm.F:1128-1130",
+    "homogeneous_freezing": "module_mp_udm.F:1235-1245",
+    "liquid_top_recomputation": "module_mp_udm.F:1332",
+    "once_per_substep_slope_initialization": "module_mp_udm.F:1061-1063",
+    "second_slope_call": "module_mp_udm.F:1397-1401",
+    "separate_downstream_qrcon_not_tested": "module_mp_udm.F:1410-1413"
+  },
+  "status": "FROZEN_PREPARED_FOR_ONE_BOUNDED_STANDALONE_EXPERIMENT"
+}
