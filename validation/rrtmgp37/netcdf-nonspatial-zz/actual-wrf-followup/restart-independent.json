@@ -1,0 +1,511 @@
+{
+  "authorization": {
+    "active_stochastic_accepted": false,
+    "max_models": 2,
+    "per_arm_timeout_seconds": 300,
+    "physical_accepted": false,
+    "plan_sha256_matches": true,
+    "runner_sha256_matches": true,
+    "status": "AUTHORIZED_BOUNDED_ROOT_EXECUTION"
+  },
+  "independent_actual_input_spot_readback": {
+    "ra37": {
+      "namelist.input": {
+        "actual_sha256": "65862fb6f2918b2e36ec5f9ef5d20cb23fca459a9626dd57901892b34c28d005",
+        "matches_recorded_after": true,
+        "matches_recorded_before": true
+      },
+      "radiation_iofields.txt": {
+        "actual_sha256": "586dae3b67aadf5b28a9af2b1b4a3970f466f3449230865cbc23b2068c446a3b",
+        "matches_recorded_after": true,
+        "matches_recorded_before": true
+      },
+      "wrf.exe": {
+        "actual_sha256": "7ed9eaed949ed4d67f25395713979f3f2734523b47ff1269cf5622654489adf0",
+        "matches_recorded_after": true,
+        "matches_recorded_before": true
+      },
+      "wrfbdy_d01": {
+        "actual_sha256": "2298ac9b6dfec71e434648f66160f6555f89ec351398a4abf76754d1f934d29b",
+        "matches_recorded_after": true,
+        "matches_recorded_before": true
+      },
+      "wrfinput_d01": {
+        "actual_sha256": "6adeb00d56b83ef7749502059e35d27adb5114ac0e03adb323e86aa68b946fe3",
+        "matches_recorded_after": true,
+        "matches_recorded_before": true
+      },
+      "wrfrst_d01_2016-10-06_12:00:00": {
+        "actual_sha256": "db396c6e430704d5a640282b971d26652b3ea060bf04b9ef2710e44a9e3b700b",
+        "matches_recorded_after": true,
+        "matches_recorded_before": true
+      }
+    },
+    "ra4": {
+      "namelist.input": {
+        "actual_sha256": "16ed7407f430d30b17d9531c31447c4499672edb8c04e68400de1c556f1b7036",
+        "matches_recorded_after": true,
+        "matches_recorded_before": true
+      },
+      "radiation_iofields.txt": {
+        "actual_sha256": "586dae3b67aadf5b28a9af2b1b4a3970f466f3449230865cbc23b2068c446a3b",
+        "matches_recorded_after": true,
+        "matches_recorded_before": true
+      },
+      "wrf.exe": {
+        "actual_sha256": "7ed9eaed949ed4d67f25395713979f3f2734523b47ff1269cf5622654489adf0",
+        "matches_recorded_after": true,
+        "matches_recorded_before": true
+      },
+      "wrfbdy_d01": {
+        "actual_sha256": "2298ac9b6dfec71e434648f66160f6555f89ec351398a4abf76754d1f934d29b",
+        "matches_recorded_after": true,
+        "matches_recorded_before": true
+      },
+      "wrfinput_d01": {
+        "actual_sha256": "6adeb00d56b83ef7749502059e35d27adb5114ac0e03adb323e86aa68b946fe3",
+        "matches_recorded_after": true,
+        "matches_recorded_before": true
+      },
+      "wrfrst_d01_2016-10-06_12:00:00": {
+        "actual_sha256": "5f241083abda93f3c6b25598cb0e7364c34e2c919fa9da454a16d7c8fde1bb7e",
+        "matches_recorded_after": true,
+        "matches_recorded_before": true
+      }
+    }
+  },
+  "interpretation": {
+    "all_resume_arrays_and_variable_attributes_exact": true,
+    "netcdf_time_dimension_extent_difference_expected": {
+      "all_other_dimensions_and_unlimited_flags_equal": true,
+      "continuous": 14,
+      "resumed": 1
+    },
+    "only_global_attribute_difference_each_arm": {
+      "ra37": [
+        {
+          "continuous": "'2016-10-06_00:00:00'",
+          "name": "START_DATE",
+          "resumed": "'2016-10-06_12:00:00'"
+        }
+      ],
+      "ra4": [
+        {
+          "continuous": "'2016-10-06_00:00:00'",
+          "name": "START_DATE",
+          "resumed": "'2016-10-06_12:00:00'"
+        }
+      ]
+    },
+    "seed_sentinel_order_verified_from_saved_execution_and_current_restart_files": true
+  },
+  "limitations": [
+    "Only the resumed 13:00 endpoint is compared with the continuous 13:00 endpoint; the checkpoint payload is tested for seed persistence and numeric validity, not complete checkpoint-to-history identity.",
+    "Global START_DATE differs by design (resumed 12:00 vs continuous 00:00) and is recorded, not accepted as metadata equivalence.",
+    "The seed test runs with multi_perturb=0, so exact seed persistence proves I/O retention only, not active random-process behavior."
+  ],
+  "pins": {
+    "authorization": {
+      "path": "build/udm37-netcdf-zz-restart-read-v1/root-authorization.json",
+      "sha256": "b403dfda010c57f3ea3d0e0390f150ef0758da5ab649396c9bd0e8af3a570f4e",
+      "size_bytes": 810
+    },
+    "build_result": {
+      "path": "build/udm37-netcdf-zz-mpi-build-v1/result.json",
+      "sha256": "dffc3cebaa84b6c9ffcd32e2ab20f484f3222d2d1a72fab7f7e94cb840a590b2",
+      "size_bytes": 3238
+    },
+    "control_execution": {
+      "path": "build/udm37-netcdf-zz-control-13h-v1/execution.json",
+      "sha256": "8867b07c066f1c86969700c6944743a5ae20e843daa120a00aef90c906dea495",
+      "size_bytes": 206659
+    },
+    "execution": {
+      "path": "build/udm37-netcdf-zz-restart-read-v1/execution.json",
+      "sha256": "98795287b118d3d6e90b8766590782d0a583d9c58add6b0c91b28a00e0fd8844",
+      "size_bytes": 210937
+    },
+    "ra37_comparison": {
+      "path": "build/udm37-netcdf-zz-restart-read-v1/ra37-comparison.json",
+      "sha256": "b43029da2aca3d56f8ba483e4c04f9712d2ce4bb9099fdf6cc697517e5190fb3",
+      "size_bytes": 97122
+    },
+    "ra4_comparison": {
+      "path": "build/udm37-netcdf-zz-restart-read-v1/ra4-comparison.json",
+      "sha256": "7f201aa29e6746aac0b8770a8bf12dc0fb8bf113dadce8b6eaa8e99b86b34fc3",
+      "size_bytes": 95826
+    },
+    "runner": {
+      "path": "build/udm37-netcdf-zz-restart-read-runner-v1.py",
+      "sha256": "3c93461b0d1c8b4a8ef7e58b7ef51c79e4a0cd43b4918839be76278e33a1f93c",
+      "size_bytes": 24367
+    },
+    "stage_plan": {
+      "path": "build/udm37-netcdf-zz-restart-read-v1/stage-plan.json",
+      "sha256": "4162b3479f859cc803947b184c1238db63b7ecc53472ba335e06e04e11cb00d3",
+      "size_bytes": 2287385
+    }
+  },
+  "schema": "UDM_NETCDF_ZZ_RESTART_READ_TERMINAL_REVIEW_V1",
+  "scope": "Read-only verification of saved execution/comparison receipts and actual NetCDF arrays. No model, compiler, or solver reruns. This demonstrates inactive ISEEDARR_MULT3D I/O persistence with multi_perturb=0; it does not approve active stochastic physics or scientific accuracy.",
+  "status": "PASS_SCOPED_RESTART_IO_PERSISTENCE_AND_SAME_ARM_ARRAYS",
+  "terminal_execution": {
+    "active_stochastic_accepted": false,
+    "arms": {
+      "ra37": {
+        "arrays": {
+          "array_mismatches": 0,
+          "comparator_status": "PASS_ALL_COMMON_ARRAYS_EXACT",
+          "data_model": "NETCDF3_64BIT_OFFSET",
+          "dimensions_continuous": {
+            "DateStrLen": {
+              "size": 19,
+              "unlimited": false
+            },
+            "Time": {
+              "size": 14,
+              "unlimited": true
+            },
+            "bottom_top": {
+              "size": 44,
+              "unlimited": false
+            },
+            "bottom_top_stag": {
+              "size": 45,
+              "unlimited": false
+            },
+            "seed_dim_stag": {
+              "size": 8,
+              "unlimited": false
+            },
+            "soil_layers_stag": {
+              "size": 4,
+              "unlimited": false
+            },
+            "south_north": {
+              "size": 99,
+              "unlimited": false
+            },
+            "south_north_stag": {
+              "size": 100,
+              "unlimited": false
+            },
+            "west_east": {
+              "size": 90,
+              "unlimited": false
+            },
+            "west_east_stag": {
+              "size": 91,
+              "unlimited": false
+            }
+          },
+          "dimensions_resumed": {
+            "DateStrLen": {
+              "size": 19,
+              "unlimited": false
+            },
+            "Time": {
+              "size": 1,
+              "unlimited": true
+            },
+            "bottom_top": {
+              "size": 44,
+              "unlimited": false
+            },
+            "bottom_top_stag": {
+              "size": 45,
+              "unlimited": false
+            },
+            "seed_dim_stag": {
+              "size": 8,
+              "unlimited": false
+            },
+            "soil_layers_stag": {
+              "size": 4,
+              "unlimited": false
+            },
+            "south_north": {
+              "size": 99,
+              "unlimited": false
+            },
+            "south_north_stag": {
+              "size": 100,
+              "unlimited": false
+            },
+            "west_east": {
+              "size": 90,
+              "unlimited": false
+            },
+            "west_east_stag": {
+              "size": 91,
+              "unlimited": false
+            }
+          },
+          "variable_attribute_differences": 0,
+          "variables_checked": 231
+        },
+        "continuous_history": {
+          "Time": [
+            "2016-10-06_00:00:00 through 2016-10-06_13:00:00; 14 hourly entries"
+          ],
+          "path": "build/udm37-netcdf-zz-control-13h-v1/ra37/wrfout_d01_2016-10-06_00:00:00",
+          "sha256": "8362b221fbb758272544ec287220a859a393c876153a4e0126f221a269745e4d",
+          "size_bytes": 804953328
+        },
+        "execution_row": {
+          "actual_rc": 0,
+          "pid": 3734532,
+          "reaped": true,
+          "status": "PASS_RESTART_READ_SCOPED",
+          "timed_out": false
+        },
+        "global_attribute_differences": [
+          {
+            "continuous": "'2016-10-06_00:00:00'",
+            "name": "START_DATE",
+            "resumed": "'2016-10-06_12:00:00'"
+          }
+        ],
+        "restart_input": {
+          "control_scan_join": {
+            "errors": [],
+            "numeric_variables": 667,
+            "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-zz-control-13h-v1/ra37/wrfrst_d01_2016-10-06_12:00:00",
+            "sha256": "3ffb68d9c3d28866f90af2163e06d6c91ef5e06e32dfc6bffb6d26e9d54c72be",
+            "size_bytes": 193255236,
+            "status": "PASS"
+          },
+          "path": "build/udm37-netcdf-zz-restart-read-v1/ra37/wrfrst_d01_2016-10-06_12:00:00",
+          "producer_control_checkpoint": {
+            "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-zz-control-13h-v1/ra37/wrfrst_d01_2016-10-06_12:00:00",
+            "sha256": "3ffb68d9c3d28866f90af2163e06d6c91ef5e06e32dfc6bffb6d26e9d54c72be",
+            "size_bytes": 193255236
+          },
+          "sha256": "db396c6e430704d5a640282b971d26652b3ea060bf04b9ef2710e44a9e3b700b",
+          "size_bytes": 193255236
+        },
+        "restart_output": {
+          "numeric_scan": {
+            "errors": [],
+            "numeric_variables": 667,
+            "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-zz-restart-read-v1/ra37/wrfrst_d01_2016-10-06_13:00:00",
+            "sha256": "a04e62400a5ea2052aa5d3e5ea79a19355c58733f812ea9c6e82f6c57d010183",
+            "size_bytes": 193255236,
+            "status": "PASS"
+          },
+          "path": "build/udm37-netcdf-zz-restart-read-v1/ra37/wrfrst_d01_2016-10-06_13:00:00",
+          "sha256": "a04e62400a5ea2052aa5d3e5ea79a19355c58733f812ea9c6e82f6c57d010183",
+          "size_bytes": 193255236
+        },
+        "resumed_history": {
+          "Time": [
+            "2016-10-06_13:00:00"
+          ],
+          "path": "build/udm37-netcdf-zz-restart-read-v1/ra37/wrfout_d01_2016-10-06_13:00:00",
+          "sha256": "f8f972ace56baf9a6ee2563bd350aed182a8ba1390226f1281a79eaf6be104df",
+          "size_bytes": 57553636
+        },
+        "seed_output": {
+          "checkpoint": {
+            "link": null,
+            "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-zz-restart-read-v1/ra37/wrfrst_d01_2016-10-06_13:00:00",
+            "sha256": "a04e62400a5ea2052aa5d3e5ea79a19355c58733f812ea9c6e82f6c57d010183",
+            "size_bytes": 193255236
+          },
+          "pattern": "negative signed int32 sequence -1..-N in C order",
+          "seed_dimensions": [
+            "Time",
+            "num_pert_3d",
+            "bottom_top"
+          ],
+          "seed_dtype": "int32",
+          "seed_sha256": "33418dd8d15a022a4c80095645e7379da1b2daff3a44e8edcc570607092632e0",
+          "seed_shape": [
+            1,
+            15,
+            44
+          ]
+        }
+      },
+      "ra4": {
+        "arrays": {
+          "array_mismatches": 0,
+          "comparator_status": "PASS_ALL_COMMON_ARRAYS_EXACT",
+          "data_model": "NETCDF3_64BIT_OFFSET",
+          "dimensions_continuous": {
+            "DateStrLen": {
+              "size": 19,
+              "unlimited": false
+            },
+            "Time": {
+              "size": 14,
+              "unlimited": true
+            },
+            "bottom_top": {
+              "size": 44,
+              "unlimited": false
+            },
+            "bottom_top_stag": {
+              "size": 45,
+              "unlimited": false
+            },
+            "seed_dim_stag": {
+              "size": 8,
+              "unlimited": false
+            },
+            "soil_layers_stag": {
+              "size": 4,
+              "unlimited": false
+            },
+            "south_north": {
+              "size": 99,
+              "unlimited": false
+            },
+            "south_north_stag": {
+              "size": 100,
+              "unlimited": false
+            },
+            "west_east": {
+              "size": 90,
+              "unlimited": false
+            },
+            "west_east_stag": {
+              "size": 91,
+              "unlimited": false
+            }
+          },
+          "dimensions_resumed": {
+            "DateStrLen": {
+              "size": 19,
+              "unlimited": false
+            },
+            "Time": {
+              "size": 1,
+              "unlimited": true
+            },
+            "bottom_top": {
+              "size": 44,
+              "unlimited": false
+            },
+            "bottom_top_stag": {
+              "size": 45,
+              "unlimited": false
+            },
+            "seed_dim_stag": {
+              "size": 8,
+              "unlimited": false
+            },
+            "soil_layers_stag": {
+              "size": 4,
+              "unlimited": false
+            },
+            "south_north": {
+              "size": 99,
+              "unlimited": false
+            },
+            "south_north_stag": {
+              "size": 100,
+              "unlimited": false
+            },
+            "west_east": {
+              "size": 90,
+              "unlimited": false
+            },
+            "west_east_stag": {
+              "size": 91,
+              "unlimited": false
+            }
+          },
+          "variable_attribute_differences": 0,
+          "variables_checked": 228
+        },
+        "continuous_history": {
+          "Time": [
+            "2016-10-06_00:00:00 through 2016-10-06_13:00:00; 14 hourly entries"
+          ],
+          "path": "build/udm37-netcdf-zz-control-13h-v1/ra4/wrfout_d01_2016-10-06_00:00:00",
+          "sha256": "7b75cc838c4a9427e4e14454596a408471f27a7af659b3e8733abbaf3f1987cf",
+          "size_bytes": 782000332
+        },
+        "execution_row": {
+          "actual_rc": 0,
+          "pid": 3734193,
+          "reaped": true,
+          "status": "PASS_RESTART_READ_SCOPED",
+          "timed_out": false
+        },
+        "global_attribute_differences": [
+          {
+            "continuous": "'2016-10-06_00:00:00'",
+            "name": "START_DATE",
+            "resumed": "'2016-10-06_12:00:00'"
+          }
+        ],
+        "restart_input": {
+          "control_scan_join": {
+            "errors": [],
+            "numeric_variables": 664,
+            "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-zz-control-13h-v1/ra4/wrfrst_d01_2016-10-06_12:00:00",
+            "sha256": "c78aff8a0bbb74e1c03ed2d6385d7a00803ccf4328c3131bca2602bf6f515e0d",
+            "size_bytes": 191614960,
+            "status": "PASS"
+          },
+          "path": "build/udm37-netcdf-zz-restart-read-v1/ra4/wrfrst_d01_2016-10-06_12:00:00",
+          "producer_control_checkpoint": {
+            "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-zz-control-13h-v1/ra4/wrfrst_d01_2016-10-06_12:00:00",
+            "sha256": "c78aff8a0bbb74e1c03ed2d6385d7a00803ccf4328c3131bca2602bf6f515e0d",
+            "size_bytes": 191614960
+          },
+          "sha256": "5f241083abda93f3c6b25598cb0e7364c34e2c919fa9da454a16d7c8fde1bb7e",
+          "size_bytes": 191614960
+        },
+        "restart_output": {
+          "numeric_scan": {
+            "errors": [],
+            "numeric_variables": 664,
+            "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-zz-restart-read-v1/ra4/wrfrst_d01_2016-10-06_13:00:00",
+            "sha256": "0b08b604382bbd3a67252eb4952cbde1e6ae4a18919c07da26f5bf01810a17a7",
+            "size_bytes": 191614960,
+            "status": "PASS"
+          },
+          "path": "build/udm37-netcdf-zz-restart-read-v1/ra4/wrfrst_d01_2016-10-06_13:00:00",
+          "sha256": "0b08b604382bbd3a67252eb4952cbde1e6ae4a18919c07da26f5bf01810a17a7",
+          "size_bytes": 191614960
+        },
+        "resumed_history": {
+          "Time": [
+            "2016-10-06_13:00:00"
+          ],
+          "path": "build/udm37-netcdf-zz-restart-read-v1/ra4/wrfout_d01_2016-10-06_13:00:00",
+          "sha256": "0b27351da6d3d8efe1c4379fade1e0e0de92d4270af14a093207479bb28e4b36",
+          "size_bytes": 55913360
+        },
+        "seed_output": {
+          "checkpoint": {
+            "link": null,
+            "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-zz-restart-read-v1/ra4/wrfrst_d01_2016-10-06_13:00:00",
+            "sha256": "0b08b604382bbd3a67252eb4952cbde1e6ae4a18919c07da26f5bf01810a17a7",
+            "size_bytes": 191614960
+          },
+          "pattern": "negative signed int32 sequence -1..-N in C order",
+          "seed_dimensions": [
+            "Time",
+            "num_pert_3d",
+            "bottom_top"
+          ],
+          "seed_dtype": "int32",
+          "seed_sha256": "33418dd8d15a022a4c80095645e7379da1b2daff3a44e8edcc570607092632e0",
+          "seed_shape": [
+            1,
+            15,
+            44
+          ]
+        }
+      }
+    },
+    "inputs_before_equals_assets_after": true,
+    "models": 2,
+    "physical_accepted": false,
+    "status": "PASS_PAIRED_RESTART_READ_SCOPED"
+  }
+}

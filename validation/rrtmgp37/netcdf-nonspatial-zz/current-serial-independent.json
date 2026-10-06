@@ -1,0 +1,45 @@
+{
+  "schema": "INDEPENDENT_REVIEW_NETCDF_ZZ_REUSABLE_V1",
+  "status": "PASS_SCOPED_WITH_DOCUMENTATION_PRECISION_NOTE",
+  "review_scope": "Read-only source/workflow review and inspection of saved serial result/NetCDF files; no compile, fixture, model, or solver was launched by reviewer.",
+  "candidate": {
+    "worktree": "build/udm37-netcdf-zz-pr-work",
+    "head": "474c4af4928b49b4922fae30d422850b29ec1571",
+    "python_runner_sha256": "78254d976b5f759ca02431620c89a25f869e65bdfcd32e09859175ec48b2a70e",
+    "fortran_fixture_sha256": "d0b2fdb9d0e42dc19b71c5ad03bf30dd95b6ead0e3aa7d1c3e4fdc1984c64399",
+    "documentation_sha256": "64985f1407dc8fa2edf2389f201f850c019c3cecd32371003112e64cb4914d8d",
+    "workflow_sha256": "8c3c8930fb5889bd90db5f1eca5852dec315a308ee179975626177a86d4df186"
+  },
+  "saved_serial_run": {
+    "directory": "build/udm37-netcdf-zz-current-serial-v1",
+    "status": "PASS_SCOPED_NETCDF_ZZ_BACKEND",
+    "result_sha256": "21549568f877dbdf7d327eb45e517f97e044de7ac891e27ff0a186c79d37bb01",
+    "plan_sha256": "307d5f6aea4fc98204306b0c4807a292fb63b7aaaa15412d0b749584ea21bcae",
+    "toolchain_sha256": "ebb925fb8dcad2f88b8c976d441d5138673f7100374c8dafb16fe12215e2d0f9",
+    "terminal_direct_children": 8,
+    "all_actual_return_codes": 0,
+    "timeouts": 0,
+    "modes": ["O0", "O2"],
+    "launches": 2,
+    "netcdf_file_size_bytes_each": 864,
+    "netcdf_file_sha256_each": "128861aa413094f5fbf6c81484d539b2657dca2784ac8123e8cffe604538fc97"
+  },
+  "independent_array_checks": {
+    "method": "Read existing O0/O2 NetCDF outputs with Python netCDF4; no test/compile was run.",
+    "variables": ["INT_UPPER", "INT_LOWER", "FLOAT_LOWER", "FLOAT_REAL"],
+    "all_full_arrays_exact_against_constructed_3x5_sentinels": true,
+    "all_o0_o2_arrays_equal": true,
+    "types": {"INT_UPPER": "int32", "INT_LOWER": "int32", "FLOAT_LOWER": "float32", "FLOAT_REAL": "float32"},
+    "netcdf_c_view_variable_dimensions": ["Time", "independent_n", "vertical_k"],
+    "fortran_netcdf_inquiry_expected_order": ["vertical_k", "independent_n", "Time"]
+  },
+  "source_review": {
+    "integer_and_float_transfer": "Fixture tests 3x5 unique INTEGER32 values, WRF_DOUBLE converted to REAL4, and direct REAL32 input to REAL4 output, including exact backend readback and low-level NetCDF type/rank/extent inquiries.",
+    "memory_order": "Uppercase ZZ and lowercase zz are exercised; qq/QQ rejection and absence of an unsupported variable are checked.",
+    "failure_receipts": "Runner persists PREPARED/STARTED/terminal child journals atomically with fsync, writes actual child RC before output interpretation, bounds waits, and attempts process-group termination/reap on exceptions. This review inspected the code but did not inject a failure into the new runner. The saved serial run has eight clean terminal RC=0 children.",
+    "ci": "The standalone-columns job is triggered by WRF/test/rrtmgp/** and workflow changes; it installs required compiler/NetCDF tools, runs the test, and uploads receipt/log/json/stdout/stderr/f90 artifacts with if: always().",
+    "scope": "The fixture invokes ext_ncd backend APIs and a synthetic optional MPI broadcast wrapper. It does not run WRF module_io, a full WRF build/forecast, or RRTMGP; documentation and receipt state this limit."
+  },
+  "nonblocking_documentation_note": "Clarify that the supplied axis order is preserved in the Fortran NetCDF API view. The actual files inspected through the C/Python NetCDF view expose dimensions as (Time, independent_n, vertical_k), the conventional reversal of Fortran dimension order. The Fortran low-level inquiry in the fixture checks (vertical_k, independent_n, Time). This is consistent with the observed interface behavior, but the current phrase that order survives 'NetCDF definition' could be read as a C-visible on-disk order claim.",
+  "verdict_limit": "The fixture validates the focused backend storage/readback contract only; it is not a full WRF checkpoint/restart integration test and does not establish radiation or active stochastic-forcing correctness."
+}

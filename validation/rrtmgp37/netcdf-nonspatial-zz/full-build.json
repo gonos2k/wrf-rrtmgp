@@ -1,0 +1,92 @@
+{
+  "source_head": "474c4af4928b49b4922fae30d422850b29ec1571",
+  "source_tree": "56a693a5abaa7fc8c078453e382f8551933016e6",
+  "processes": [
+    {
+      "name": "configure",
+      "argv": [
+        "/usr/local/bin/cmake",
+        "-S",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-zz-runtime-source-v1/WRF",
+        "-B",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-zz-mpi-build-v1/cmake",
+        "-DCMAKE_INSTALL_PREFIX=/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-zz-mpi-build-v1/install",
+        "-DCMAKE_TOOLCHAIN_FILE=/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-zz-mpi-build-v1/wrf_gnu_mpi_openmp.cmake",
+        "-DWRF_CORE=ARW",
+        "-DWRF_CASE=EM_REAL",
+        "-DUSE_ALLOCATABLES=ON",
+        "-DUSE_MPI=ON",
+        "-DUSE_OPENMP=ON",
+        "-DUSE_IPO=OFF",
+        "-DFORCE_NETCDF_CLASSIC=ON"
+      ],
+      "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-zz-runtime-source-v1",
+      "source_head": "474c4af4928b49b4922fae30d422850b29ec1571",
+      "started_unix": 1791292169.9009523,
+      "pid": 3676165,
+      "actual_rc": 0,
+      "reaped": true,
+      "ended_unix": 1791292174.1707432,
+      "log": {
+        "sha256": "bf9cdc999e19d1275ddee4b60ee5b9221f2ffd7e58c0606401b8db97f84817c8",
+        "size_bytes": 4561
+      }
+    },
+    {
+      "name": "build",
+      "argv": [
+        "/usr/local/bin/cmake",
+        "--build",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-zz-mpi-build-v1/cmake",
+        "--parallel",
+        "4"
+      ],
+      "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-zz-runtime-source-v1",
+      "source_head": "474c4af4928b49b4922fae30d422850b29ec1571",
+      "started_unix": 1791292174.1720393,
+      "pid": 3676756,
+      "actual_rc": 0,
+      "reaped": true,
+      "ended_unix": 1791292452.5531933,
+      "log": {
+        "sha256": "cb0e3747cc3719ae5498703bd2a8b7509a6d4d678c56dd633c84df1d83958d2a",
+        "size_bytes": 88648
+      }
+    },
+    {
+      "name": "install",
+      "argv": [
+        "/usr/local/bin/cmake",
+        "--install",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-zz-mpi-build-v1/cmake"
+      ],
+      "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-zz-runtime-source-v1",
+      "source_head": "474c4af4928b49b4922fae30d422850b29ec1571",
+      "started_unix": 1791292452.5543392,
+      "pid": 3686451,
+      "actual_rc": 0,
+      "reaped": true,
+      "ended_unix": 1791292454.1212668,
+      "log": {
+        "sha256": "2aabd32ebe2711e166771233da194c2098f4f50a429b67b88f2cf97798f9a052",
+        "size_bytes": 30367
+      }
+    }
+  ],
+  "models": 0,
+  "status": "PASS_BUILD_INSTALL_SCOPED",
+  "executables": {
+    "real": {
+      "sha256": "4260ab18fce143d8245d11a3ae4063428e8cd930a4f0995328bd44612fe6153f",
+      "size_bytes": 41067144
+    },
+    "wrf": {
+      "sha256": "7ed9eaed949ed4d67f25395713979f3f2734523b47ff1269cf5622654489adf0",
+      "size_bytes": 51610320
+    }
+  },
+  "source_still_clean": true,
+  "source_head_unchanged": true,
+  "selected_source_files_unchanged": true,
+  "toolchain_unchanged": true
+}
