@@ -37,6 +37,21 @@ This optional calculation requires NumPy. It reads the selected checkout's sourc
 
 The CI verifier uses only Python's standard library and checks the package's closed file roster, hashes, source-review-to-checkout identity, and the frozen result's row counts and numeric bounds. It does not run the optional calculation, a model, or a radiation solver.
 
+Its `--source-root` option defaults to the current repository. A changed pinned
+source fails verification by design. CI uses a separate checkout of PR #98
+commit `a7317da8f7651272f09d27c5830f6691613ae41a`, whose source bytes match the
+frozen review:
+
+```sh
+python3 -I -S validation/rrtmgp37/radius-moment-contract/verify.py \
+  --source-root build/radius-moment-historical-source
+```
+
+The original source pins, calculation and evidence stay unchanged. Verification
+against the historical checkout does not turn those results into validation of
+newer native-radius code. For an optional fresh calculation, pass that same
+checkout to `reproduce.py --wrf-worktree`.
+
 ## Scope limits
 
 - This is source interpretation plus a mathematical moment calculation, not a radiative accuracy test.

@@ -353,6 +353,9 @@ add_test(NAME host_constants_replay_v5 COMMAND "${Python3_EXECUTABLE}" "${CMAKE_
 add_test(NAME udm_precip_optics COMMAND test_rrtmgp_precip_optics)
 
 add_test(NAME udm_native_radii COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/test_udm_native_radii.py" "${WRF_ROOT}" --workdir "${CMAKE_CURRENT_BINARY_DIR}/udm-native-radii")
+add_test(NAME udm_warm_ice_radius COMMAND "${Python3_EXECUTABLE}"
+  "${CMAKE_CURRENT_SOURCE_DIR}/test_udm_warm_ice_radius.py" --wrf-root "${WRF_ROOT}"
+  --workdir "${CMAKE_CURRENT_BINARY_DIR}/udm-warm-ice-radius")
 add_test(NAME udm_ccn_tile_startup COMMAND "${Python3_EXECUTABLE}"
   "${CMAKE_CURRENT_SOURCE_DIR}/test_udm_ccn_startup.py")
 add_test(NAME udm_surface_rain_row COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/test_udm_sr_rows.py" "${WRF_ROOT}" --workdir "${CMAKE_CURRENT_BINARY_DIR}/udm-sr-row")

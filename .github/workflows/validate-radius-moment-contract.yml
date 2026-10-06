@@ -17,5 +17,10 @@ jobs:
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - name: Checkout frozen PR98 sources for radius-moment evidence
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: a7317da8f7651272f09d27c5830f6691613ae41a
+          path: build/radius-moment-historical-source
       - name: Verify radius-moment evidence archive
-        run: python3 -I -S validation/rrtmgp37/radius-moment-contract/verify.py
+        run: python3 -I -S validation/rrtmgp37/radius-moment-contract/verify.py --source-root build/radius-moment-historical-source
