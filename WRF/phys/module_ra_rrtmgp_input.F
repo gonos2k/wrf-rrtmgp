@@ -452,9 +452,27 @@ CONTAINS
         END IF
       END DO
     END DO
-    CALL check_finite('UDM_RE_CLOUD',RESHAPE(re_cloud_um,[n,1]))
-    CALL check_finite('UDM_RE_ICE',RESHAPE(re_ice_um,[n,1]))
-    CALL check_finite('UDM_RE_SNOW',RESHAPE(re_snow_um,[n,1]))
+    DO k=1,n
+      IF(.NOT.ieee_is_finite(re_cloud_um(k))) THEN
+        CALL fail_builder_layer(reason,RRTMGP_INPUT_INVALID, &
+             'RRTMGP_INPUT_UDM_RE_CLOUD_NOT_FINITE',k,column_context)
+        RETURN
+      END IF
+    END DO
+    DO k=1,n
+      IF(.NOT.ieee_is_finite(re_ice_um(k))) THEN
+        CALL fail_builder_layer(reason,RRTMGP_INPUT_INVALID, &
+             'RRTMGP_INPUT_UDM_RE_ICE_NOT_FINITE',k,column_context)
+        RETURN
+      END IF
+    END DO
+    DO k=1,n
+      IF(.NOT.ieee_is_finite(re_snow_um(k))) THEN
+        CALL fail_builder_layer(reason,RRTMGP_INPUT_INVALID, &
+             'RRTMGP_INPUT_UDM_RE_SNOW_NOT_FINITE',k,column_context)
+        RETURN
+      END IF
+    END DO
     DO k=1,n
       IF(qc(k)>0.0 .AND. re_cloud_um(k)<=0.0) THEN
         CALL fail_builder_layer(reason,RRTMGP_INPUT_RANGE,'RRTMGP_INPUT_UDM_RE_CLOUD_NOT_POSITIVE',k,column_context)
