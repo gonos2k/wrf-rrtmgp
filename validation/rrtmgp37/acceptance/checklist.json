@@ -235,10 +235,10 @@
     {
       "id": "P2_CMake",
       "title": "P2 CMake build/export/dependency",
-      "status": "IN_PROGRESS",
+      "status": "PASS_SCOPED",
       "owner": "root; accumulation_contract; pristine_wrf; workspace_review",
       "completion_condition": "최신 main의 CMake configure/build/install/export 및 독립 consumer 실행을 정확한 소스·도구체인 identity에 연결해 확인한다.",
-      "scope_limit": "PR131 local fresh GNU13.3 serial REAL32 allocatable build/install, installed consumers and one-minute UDM37 startup snow SCM pass at exact source45c640e. Initial remote configure failed to locate Ubuntu multiarch NetCDF-Fortran; dependency repair and exact-head CI remain in progress. Nc/PSD and physical reference gates remain open. See validation/rrtmgp37/cmake-current/LOCAL_VALIDATION.json."
+      "scope_limit": "PR131 exact fe8dfc60cc5e15259f3a2d8d1595967465417823: fresh local GNU13.3 serial REAL32 allocatable configure/build/install and installed consumers passed. Remote CMake run37443922808 passed fresh build/install, discovery, consumers and one ideal plus one startup-snow SCM. PR131 and PR132 were merged into observed main d26a86e0d1dd4bb20566c827ebc03eb27f128411. Prefix relocation, other toolchains and physical acceptance are outside this scope."
     },
     {
       "id": "latest_policy_forecast",
@@ -254,7 +254,7 @@
       "status": "IN_PROGRESS",
       "owner": "workspace_review; root",
       "completion_condition": "선택된 최종 source/tree/flags/executable/libs/tables/input/namelist/각 실행 및 검증 artifact를 하나의 검토 가능한 manifest에서 서로 연결하고 foreign-cwd verifier로 확인한다.",
-      "scope_limit": "This index binds documentary evidence and startup runtime source hashes. It is not a complete current-tree scientific execution manifest; toolchain, input/coefficient identities and policy-specific independent acceptance remain required."
+      "scope_limit": "One exact-fe8 installed startup-snow execution now has a closed local engineering capsule with explicit external source/install/system roots. Its verifier checks trusted manifest bytes and semantic process/input/output joins separately from physical acceptance. Full scientific identity for all policies, latest long forecasts and independent accuracy decisions remains incomplete."
     },
     {
       "id": "main_warm_OMP",
@@ -351,5 +351,20 @@
     "LBLRTM": "Negative combined optical depth remains unacceptable as a physical reference; no clipping or relaxed tolerance.",
     "forecast": "Historical 48-hour completion is not a latest-tree forecast rerun."
   },
-  "engineering_followup": "Current-source README pin refreshed for the subprocess-journal follow-up; historical numeric artifacts and their source pins unchanged."
+  "engineering_followup": "Current-source README pin refreshed for the subprocess-journal follow-up; historical numeric artifacts and their source pins unchanged.",
+  "execution_identity_followup": {
+    "CMake_terminal": {
+      "head": "fe8dfc60cc5e15259f3a2d8d1595967465417823",
+      "run": 37443922808,
+      "conclusion": "SUCCESS",
+      "url": "https://github.com/gonos2k/wrf-rrtmgp/actions/runs/37443922808",
+      "observed_main": "d26a86e0d1dd4bb20566c827ebc03eb27f128411"
+    },
+    "whole_port_terminal": {
+      "run": 37443922887,
+      "conclusion": "FAILURE",
+      "serial_scm": "build failed: Fortran/Registry storage-kind mismatch; runtime skipped",
+      "repair": "separate Registry-generated storage-header fix in progress"
+    }
+  }
 }

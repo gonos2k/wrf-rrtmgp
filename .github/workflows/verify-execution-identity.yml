@@ -1,0 +1,28 @@
+name: Verify single-execution engineering identity gate
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'validation/rrtmgp37/execution-identity/**'
+      - 'validation/rrtmgp37/acceptance/**'
+      - '.github/workflows/verify-execution-identity.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'validation/rrtmgp37/execution-identity/**'
+      - 'validation/rrtmgp37/acceptance/**'
+      - '.github/workflows/verify-execution-identity.yml'
+permissions:
+  contents: read
+jobs:
+  manufactured-capsule-boundaries:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - name: Exercise path, source, process and physical-approval boundaries
+        run: python3 -I -S validation/rrtmgp37/execution-identity/tests/test_verify_capsule.py
+      - name: Preserve the full acceptance checklist
+        run: |
+          python3 validation/rrtmgp37/acceptance/test_verify.py
+          python3 validation/rrtmgp37/acceptance/verify.py

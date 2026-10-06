@@ -1,0 +1,163 @@
+{
+  "schema": "UDM37_EXECUTION_CAPSULE_FINAL_STATIC_DELTA_REVIEW_V2",
+  "created_at_utc": "2026-10-06T10:13:31.312695+00:00",
+  "status": "PASS_SCOPED_VERIFIER_STATIC_REVIEW",
+  "blocking_findings": [],
+  "reviewed_verifier": {
+    "path": "build/udm37-identity-verifier-preparation-v1/verify_capsule.py",
+    "sha256": "87c0513499c785ca845ef0b0f92083a099e4a1b58f30aaa3547478be51afc6bb",
+    "size_bytes": 32451
+  },
+  "reviewed_tests": {
+    "path": "build/udm37-identity-verifier-preparation-v1/tests/test_verify_capsule.py",
+    "sha256": "ad291b5767d0e0680e6ff9d5cc0f7772328db9a21bbf990f14d845185f82faf6",
+    "size_bytes": 20582
+  },
+  "reviewed_readme": {
+    "path": "build/udm37-identity-verifier-preparation-v1/README.md",
+    "sha256": "26b324320309744c2cb06b09af08a90d9593c0db6eed5ddaa8301c300f749207",
+    "size_bytes": 3889
+  },
+  "reviewed_capsule_manifest": {
+    "path": "build/udm37-fe8-execution-capsule-v2/manifest.json",
+    "sha256": "dca7d85a198f9d19124b52c5f236715ce6540494a1de70204db0c840ab661eb9",
+    "size_bytes": 28600
+  },
+  "preserved_draft_review": {
+    "path": "build/udm37-execution-identity-review-v1/draft-review-v1.json",
+    "sha256": "6263dc5d458a71dba0abe41c106e021bf6db571affd6a02b2b244d457ad8c583",
+    "size_bytes": 4913
+  },
+  "small_metadata_pins": [
+    {
+      "path": "build/udm37-fe8-execution-capsule-v2/identity.json",
+      "sha256": "6b28fa0a719857746f51ec5ee3a3e79d34cfffe101a04e0bb066d02840a575b3",
+      "size_bytes": 42601
+    },
+    {
+      "path": "build/udm37-fe8-execution-capsule-v2/execution.json",
+      "sha256": "3dd9d3dc9de64018bc1a92652257ff19b1a34efaf487a4e7d33723424f28fd21",
+      "size_bytes": 45063
+    },
+    {
+      "path": "build/udm37-fe8-execution-capsule-v2/outputs.json",
+      "sha256": "fbd9039c7150fb81022a2e69eeafda96614674684aa2ee39f53b758bd3b5c689",
+      "size_bytes": 6389
+    },
+    {
+      "path": "build/udm37-fe8-execution-capsule-v2/validation-report.json",
+      "sha256": "d06955b313e8a16d95316ad6b251ec14396e1673908ec2917e1df40941d569b8",
+      "size_bytes": 2294
+    },
+    {
+      "path": "build/udm37-fe8-execution-capsule-v2/collection-status.json",
+      "sha256": "76da75119db0987c03b2f3562029e99ac8044f5fd4c66231987b7127ec6b2f05",
+      "size_bytes": 298
+    },
+    {
+      "path": "build/udm37-fe8-execution-capsule-v2/root-result.json",
+      "sha256": "593f65543d29929a794c76ca9649c64a722225561ff925783f9ae961b294d51b",
+      "size_bytes": 177
+    },
+    {
+      "path": "build/udm37-fe8-execution-capsule-v2/plans/ideal.json",
+      "sha256": "05b7b97ecf229be63aa1c55ed80e8d97853ac4321a99966a1aaaea9510c5172e",
+      "size_bytes": 28785
+    },
+    {
+      "path": "build/udm37-fe8-execution-capsule-v2/plans/forecast.json",
+      "sha256": "4232a25c786be166a274437bff4030c2775e8600baa2a868cb9f3c7b14231729",
+      "size_bytes": 28836
+    },
+    {
+      "path": "build/udm37-fe8-execution-capsule-v2/source-manifest.json",
+      "sha256": "8b879412f136243e9c74102b4e8094746d4cc0ab9fa640bcb882f297b5bf871e",
+      "size_bytes": 2058787
+    },
+    {
+      "path": "build/udm37-fe8-execution-capsule-v2/source-post-manifest.json",
+      "sha256": "8b879412f136243e9c74102b4e8094746d4cc0ab9fa640bcb882f297b5bf871e",
+      "size_bytes": 2058787
+    },
+    {
+      "path": "build/udm37-fe8-execution-capsule-v2/sealer.py",
+      "sha256": "f2cffec6b08dc12cd224831aa12483dbf2a62d88b6ab704416d3131a2f96e9a2",
+      "size_bytes": 8204
+    }
+  ],
+  "capsule_v1_to_v2": {
+    "path_count": 148,
+    "added_paths": [],
+    "removed_paths": [],
+    "changed_paths": [
+      "execution.json",
+      "identity.json",
+      "sealer.py",
+      "source-manifest.json",
+      "source-post-manifest.json"
+    ],
+    "scope": "Manifest-record comparison confirms only these five metadata/schema/sealer payload records changed; raw runtime receipts, histories, input files, target captures, logs and plans retain original declared byte pins. No payload-sized repeat hash or model rerun by reviewer."
+  },
+  "resolved_findings": [
+    {
+      "id": "required_input_schema",
+      "resolution": "Metadata-only capsule v2 adds required_inputs with all99 offered forecast references; verifier matches the exact byte-key multiset to WRF child input_paths. Original v1 remains untouched."
+    },
+    {
+      "id": "tracked_symlink_schema",
+      "resolution": "V2 source manifest explicitly separates regular8139 from tracked symlinks17; verifier authenticates clean Git head/tree, complete roster and symlink literal target/Gitblob without following unused vendor links. Bundled representation also uses Gitmode120000 handling rather than premature rejection."
+    },
+    {
+      "id": "offered_input_plan_join",
+      "resolution": "Each child has an input_plan reference. Plan kind, executable byte pins/install-root path, ordered capsule input paths and table-link byte multiset are bound to offered child inputs. WRF has6capsule inputs+93table links; ideal5+93. Four required RRTMGP table link names and capture flags are checked."
+    },
+    {
+      "id": "runtime_receipt_semantics",
+      "resolution": "Child/process joins bind actualRC0/reaped/no timeout, PID/time/argv/cwd/environment/processgroup and executable pre/post SHA/size. Runtime arm process fields are bound to the same WRF process."
+    },
+    {
+      "id": "summary_output_join",
+      "resolution": "Validation sourcehead/tree/history exact reference and LW/SW selected-layer dictionaries join identity/runtime; forecast namelist.output is selected by WRFcwd and compared to expected domain policy. Report and identity must keep physical_status NOT_ACCEPTED."
+    }
+  ],
+  "observed_saved_identity": {
+    "head": "fe8dfc60cc5e15259f3a2d8d1595967465417823",
+    "tree": "4292790cf04a297bc0c46b382e1e62a223966b37",
+    "ideal_pid": 3099240,
+    "forecast_pid": 3099259,
+    "actual_RC": [
+      0,
+      0
+    ],
+    "models": 1,
+    "ideal": 1,
+    "physical_status": "NOT_ACCEPTED"
+  },
+  "tests_and_verification": {
+    "source_test_count": 16,
+    "author_reported_synthetic_controls": "16 PASS",
+    "author_reported_actual_capsule_v2_verifier_RC": 0,
+    "author_reported_actual_status": "PASS_ENGINEERING_IDENTITY",
+    "reviewer_executed_controls": 0,
+    "note": "Author results are message-reported; no root independent verification outcome is presumed. The reviewer read control definitions and actual small JSON joins, without running verifier or compiler."
+  },
+  "limitations": [
+    "This certifies source/schema/relationship checks in exact reviewed bytes, not a fresh full-byte rehash of all external roots or every capsule payload. Root will perform independent once verification.",
+    "Trust-anchor SHA must come from outside the capsule to detect coordinated rewriting of manifest+payload; README documents the optional expected-manifest digest.",
+    "Offered table/input roster is a superset supplied to the runtime; it is not an OS file-open provenance trace. Installed libraries/tool data are byte references, not proof of all internal dynamic loading/physical semantics.",
+    "Selected-layer validation is joined to the saved original report; this verifier does not recompute precipitation optics, independently establish Nc/PSD authority or certify physical accuracy.",
+    "Same one ideal+one forecast are retained. No new runtime execution is created by metadata-only v2 or this review.",
+    "Whole-port serial storage-kind failure is separate integration evidence; this scoped exactfe8 capsule verdict does not waive it or rewrite other checklist snapshots."
+  ],
+  "reviewer_execution_counts": {
+    "models": 0,
+    "compilers": 0,
+    "builds": 0,
+    "RTE": 0,
+    "verifier_runs": 0,
+    "tests": 0,
+    "large600MB_hashes": 0,
+    "raw_capture_numeric_reads": 0
+  },
+  "physical_acceptance": false
+}
