@@ -1,0 +1,144 @@
+{
+  "TAPE6_readback": {
+    "continuum_active_evidence": [
+      "CNTNM=1 in frozen prepared control scope",
+      "Using MT_CKD appears in each OPDPTH layer section",
+      "contnm.f revision 32919 logged",
+      "stock continuum scale factors exactly as printed below"
+    ],
+    "layer_headers_counted": 45,
+    "layers_reported": 45,
+    "line_engine": "HIRAC1",
+    "nonlte": "NOT USED",
+    "normal_completion_text_present": true,
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-held-state-sample8-od-run-v1/runs/od-v1/TAPE6",
+    "printed_continuum_scale_factors": {
+      "CO2": "1.000",
+      "H2O Foreign": "1.000",
+      "H2O Self": "1.000",
+      "N2": "1.000",
+      "O2": "1.000",
+      "O3": "1.000",
+      "Rayleigh": "1.000"
+    },
+    "sample": 8.0,
+    "sha256": "c6e82f4ff3fb55d4f5a1bdcc37139529a5a7a7e51bf502da68b5ba2db5c82155",
+    "size_bytes": 137798
+  },
+  "comparison_to_continuum_sample4": {
+    "TAPE3": {
+      "resolved_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-common-band-line-generation-v1/run-v6/TAPE3",
+      "same_manifest_record": true,
+      "sha256": "56bd55fa256ed3b3a672bd4bcd88034cd7086d4fbef2a1def9480199dab2b388",
+      "size_bytes": 122157832,
+      "symlink_target_and_contents_match_in_both_runs": true
+    },
+    "all_37_non_deck_inputs_exact": true,
+    "executable": {
+      "on_disk_hash_and_size_match": true,
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-stock-build-v1/attempt-1/source/LBLRTM/lblrtm_v12.17_linux_gnu_dbl",
+      "same_path": true,
+      "sha256": "a5c363c87a44b686e8bff1cf0e60fcfb7b0e167c8ec74d0201b6cc6b2b41473b",
+      "size_bytes": 14348016
+    },
+    "prepared_input_counts_and_diff": {
+      "count_each": 38,
+      "current_hash_target_checks": "PASS for all 76 per-run input entries, including symlink target bytes and symlink destinations",
+      "manifest_entry_differences": [
+        "TAPE5"
+      ],
+      "manifest_path_sets_equal": true,
+      "tape5_byte_difference_offsets_zero_based": [
+        193
+      ]
+    },
+    "reference_execution_sha256": "7e6b72d0ab4e452b89a13505b299d479ff408219f8e1ea1402424f756ec0ea0a",
+    "reference_prepared_sha256": "7195f13f22acfb3664908f824af3f6b63dbed059150b20da96b8248c58ad3d48",
+    "reference_run_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-held-state-continuum-od-run-v1/runs/od-v1",
+    "source_build_readback": {
+      "lblrtm_source_tree_entry_count": 441,
+      "lblrtm_source_tree_manifest_sha256": "71d24cb34f2c303d55635f3bffd26be080ccc715dbc359405b618a2d0ddbaab4",
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-stock-build-v1/stock-build-readback-v1.json",
+      "sha256": "3a4356f3b9b70a44ff19860519cc934ec636385aa3689b1ea6b392eb92fdd64a",
+      "solver_invocations_in_build_stage": 0,
+      "source_tree_postflight_all_entries_match": true
+    },
+    "tape5": {
+      "changed_byte": {
+        "after_ascii": "8",
+        "before_ascii": "4",
+        "offset_zero_based": 193
+      },
+      "only_change": "TAPE5 record 3 SAMPLE field at 1-based columns 21-30, ` 4.000E+00` to ` 8.000E+00`",
+      "sample4_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-held-state-continuum-od-run-v1/runs/od-v1/TAPE5",
+      "sample4_sha256": "a676bc7761e09ab42f212c3cca80ebfd1be27604cd332cc966205d1280ae62dd",
+      "sample8_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-held-state-sample8-od-run-v1/runs/od-v1/TAPE5",
+      "sample8_sha256": "e9389cefaa17094dd3b52abfe89f1cc55b30aef773ea3b4dc0e99e2c67c3eac2",
+      "size_bytes": 29428
+    }
+  },
+  "no_new_solver_or_build": true,
+  "overall_conclusion": "The SAMPLE=8 run executed and its saved full parser covered all 45 output layers. Compared with the frozen SAMPLE=4 continuum case, the only TAPE5 change was byte 193 in the SAMPLE field; all 37 other staged inputs, the executable, and TAPE3 matched. This does not establish a physical fix or isolate a unique cause; the parsed negative optical depths remain a failure diagnostic.",
+  "provenance_reviews": {
+    "sample4_baseline_postflight_review": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-held-state-continuum-od-run-v1/run-postflight-source-review-v1/review.json",
+      "sha256": "91f4a54168f2740b7473708d9f35c2486dc59e4cbf3537b9e1e89d9179b3cf82",
+      "size_bytes": 8605
+    },
+    "sample_control_source_review": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-sample-control-review-v1/review.json",
+      "sha256": "b68d353704253ae405edb27a94896d1762093c80a8fddbc241828e7224b0fb4e",
+      "size_bytes": 5635
+    }
+  },
+  "review_scope": "Read-only receipt, source/build identity, TAPE5 single-byte diff, staged-input, TAPE6 text metadata, and saved parser-summary verification. No solve, build, parser rerun, or raw optical-depth numerical reparse.",
+  "sample8_execution": {
+    "execution_details": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-held-state-sample8-od-run-v1/runs/od-v1/execution-details.json",
+      "sha256": "120fa64bb1e80d02d3aa2c3e83c4100152fbf41663a51d015c2d6b28d970e7d3",
+      "size_bytes": 804
+    },
+    "execution_receipt": {
+      "actual_child_returncode": 0,
+      "duration_seconds": 16.18120837211609,
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-held-state-sample8-od-run-v1/runs/od-v1/execution.json",
+      "pid": 1275875,
+      "sha256": "29ce234862cae12c4974f36abe979fc481974f012ccf3accaa61db258b1c31ab",
+      "size_bytes": 550,
+      "timed_out": false
+    },
+    "launch_receipt": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-held-state-sample8-od-run-v1/runs/od-v1/launch.json",
+      "sha256": "3b2575ce227050e1921705b1fdff666c5f605a81f0eed00556b9347354b5324c",
+      "size_bytes": 840
+    },
+    "postflight_receipt": {
+      "output_file_count": 59,
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-held-state-sample8-od-run-v1/runs/od-v1/postflight.json",
+      "sha256": "46fe978178c0a8f69c591abccefa6420eedd912dcbacea984e49f7e2808aebd6",
+      "size_bytes": 9363,
+      "total_output_bytes": 1026879854
+    }
+  },
+  "saved_full_parser_readback": {
+    "all_layer_summaries_finite": true,
+    "layer_output_hashes_and_sizes_match_actual_postflight_and_disk": true,
+    "layer_sequence_1_to_45": true,
+    "layers": 45,
+    "minimum_negative_optical_depth": -4.880947884913931,
+    "parser_execution_receipt": {
+      "actual_child_returncode": 0,
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-held-state-sample8-od-run-v1/parser-execution-v1.json",
+      "sha256": "d3a4f9f27a5299dc71639ff77f5a8739bf17ea3785d7ebb8bc16493330309d01"
+    },
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-held-state-sample8-od-run-v1/od-parse-v1.json",
+    "sample_count_reconciles_each_layer_panel_sum": true,
+    "scope": "This confirms the parser\u2019s saved all-layer summary/counts; negatives remain a reported physical diagnostic and are not accepted as pass.",
+    "sha256": "07fb5d4033dcb73b81752fa5d6563a6a030bf24ce9bc83d1c33f2b9dc552f7f0",
+    "size_bytes": 8086815,
+    "status": "PARSED_DIAGNOSTIC",
+    "total_negative_values_all_45_layers": 40770,
+    "total_samples_all_45_layers": 127948502
+  },
+  "schema": "UDM_LBLRTM_SAMPLE8_POSTFLIGHT_REVIEW_V1"
+}

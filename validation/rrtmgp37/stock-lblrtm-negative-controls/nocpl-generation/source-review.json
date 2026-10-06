@@ -1,0 +1,95 @@
+{
+  "status": "SOURCE_REVIEW_COMPLETE_NO_LNFL_OR_LBLRTM_EXECUTION",
+  "scope": "Read-only inspection of the pinned LNFL NOCPL control and correction of the additive raw-OD analyzer. No line file was regenerated; no compiler or solver was run.",
+  "source_tree": "build/udm37-lblrtm-stock-build-v1/attempt-1/source/LNFL",
+  "source_pins": {
+    "lnfl_source": {
+      "path": "build/udm37-lblrtm-stock-build-v1/attempt-1/source/LNFL/src/lnfl.f",
+      "sha256": "d47b7b296b747837bbec8df06a7c8ea1df2ec241546b1db4a15f6b02b98a4ad6"
+    },
+    "lnfl_instructions": {
+      "path": "build/udm37-lblrtm-stock-build-v1/attempt-1/source/LNFL/docs/lnfl_instructions",
+      "sha256": "e044ed5eb774a99d2dd1086ff98ec879cbd5440dc816bd305a37e66548682601"
+    },
+    "lnfl_release_notes": {
+      "path": "build/udm37-lblrtm-stock-build-v1/attempt-1/source/LNFL/docs/RELEASE_NOTES_lnfl",
+      "sha256": "7725c2aa6569c0660af9b1d8482d5cc6fe4cd5e817cb3717818c7cb30a6ed376"
+    },
+    "lnfl_input_tape5": {
+      "path": "build/udm37-lblrtm-common-band-line-generation-v1/run-v6/TAPE5",
+      "sha256": "697357190795f9451e83afe232675dcfd4dc1ddf1c036f1f347c261d973ba970"
+    },
+    "input_tape1": {
+      "path": "build/udm37-lblrtm-common-band-line-generation-v1/run-v6/TAPE1",
+      "sha256": "d0ec800cfaeaaa7ab7af7b8168f45b205e383272e147373df6d0eed2677f2bd3"
+    },
+    "original_tape3": {
+      "path": "build/udm37-lblrtm-common-band-line-generation-v1/run-v6/TAPE3",
+      "sha256": "56bd55fa256ed3b3a672bd4bcd88034cd7086d4fbef2a1def9480199dab2b388"
+    },
+    "lblrtm_tape5_icntnm0": {
+      "path": "build/udm37-lblrtm-held-state-od-run-v1/runs/od-v1/TAPE5",
+      "sha256": "91a6e55bd31c420659acb80156ca99dd3ddb5d186dfd33558500e6cbb137c450"
+    },
+    "stock_negative_reader_v1": {
+      "path": "build/udm37-lblrtm-negative-od-diagnostic-v1/analyze_negative_od.py",
+      "sha256": "f70855792345471f4a9d4f4a82c5182e2ce5cd08db234657131d9d11da3b3958"
+    },
+    "reader_v2": {
+      "path": "build/udm37-lblrtm-negative-control-review-v1/analyze_negative_od_v2.py",
+      "sha256": "f34310b4c8280e750dd6aeac5410f61a796fbaec39fbbf60082a46d4c534b7d2"
+    },
+    "reader_v2_positive_negative_test": {
+      "path": "build/udm37-lblrtm-negative-control-review-v1/test_negative_od_v2.py",
+      "sha256": "c94ef1cef049ebb470de79f5e9d8817d6053a667bb83ad78cfaa3ddd2ff22d11"
+    },
+    "raw_original_v2": {
+      "path": "build/udm37-lblrtm-negative-control-review-v1/negative-od-raw-v2.json",
+      "sha256": "a0e6efa6a170eb82b058776dfb92346969aaf5a4950b0de7bca1bc60d15c4316"
+    },
+    "raw_continuum_v2": {
+      "path": "build/udm37-lblrtm-negative-control-review-v1/negative-od-continuum-raw-v2.json",
+      "sha256": "fbe08e0b19c2a7f35ff0c9c56d1c03c2ad50dc3c5109c10c4d3ecda72e3b46c2"
+    }
+  },
+  "source_semantics": [
+    {
+      "source": "build/udm37-lblrtm-stock-build-v1/attempt-1/source/LNFL/docs/lnfl_instructions",
+      "lines": "132-138, 158-165",
+      "finding": "LNFL TAPE5 record 3 carries MIND1(1:47) and HOLIND1; format is 47I1,4X,A40. NOCPL is documented as suppressing all line-coupling information on TAPE3 and TAPE7."
+    },
+    {
+      "source": "build/udm37-lblrtm-stock-build-v1/attempt-1/source/LNFL/src/lnfl.f",
+      "lines": "458-471, 898-912",
+      "finding": "LNFL calls HOLRT(5,HNOCPL,...,HOLIND1,40); HOLRT scans the 40-character HOLIND1 for the exact uppercase token. NOCPL belongs in LNFL TAPE5 record 3, not the later LBLRTM TAPE5."
+    },
+    {
+      "source": "build/udm37-lblrtm-stock-build-v1/attempt-1/source/LNFL/src/lnfl.f",
+      "lines": "1060-1073",
+      "finding": "When NOCPL is active, line-transfer code zeros IFG2(I) immediately before assigning IFLG for the primary transition. The copied primary line fields (center, strength, broadening, energy, molecule, etc.) are assigned before that switch."
+    },
+    {
+      "source": "build/udm37-lblrtm-stock-build-v1/attempt-1/source/LNFL/src/lnfl.f",
+      "lines": "1084-1116",
+      "finding": "Coupled companion transitions are appended only under IFG2>=1 and the self-coupling companion only under IFG2==5. Since NOCPL set IFG2 to zero, these companion records are skipped. This confirms the mechanism for inline coupling records; it is not an arbitrary postprocessed TAPE3 edit."
+    },
+    {
+      "source": "build/udm37-lblrtm-stock-build-v1/attempt-1/source/LNFL/docs/RELEASE_NOTES_lnfl",
+      "lines": "104-110",
+      "finding": "Version notes say coupling may be supplied in TAPE1 or TAPE2 and NOCPL suppresses all coupling information from either on TAPE3/TAPE7."
+    }
+  ],
+  "exact_control_contract": {
+    "baseline_lnfl_tape5": "build/udm37-lblrtm-common-band-line-generation-v1/run-v6/TAPE5; record 3 is 91 bytes: 47 selection digits + 4 separator spaces + 40-byte blank HOLIND1.",
+    "control_tape5": "Create a fresh LNFL TAPE5 copy with record 3 unchanged except HOLIND1 (bytes at zero-based columns 51..90; 1-based columns 52..91) set to ASCII \"NOCPL\" followed by 35 spaces. Preserve all 47 selection digits, record width, records 1\u20132, wavenumber bounds, and all other controls. That is the only intended LNFL input difference.",
+    "line_inputs": "Use the same pinned TAPE1 SHA from source_pins and same TAPE2 state (absent in the baseline run unless its frozen run receipt says otherwise), identical LNFL executable/source/compiler/runtime/assets and working-directory conventions. Record fresh TAPE3 SHA and LNFL output/log/line counts.",
+    "lblrtm_pair": "Feed each generated TAPE3 to the same pinned LBLRTM executable and preserve the original LBLRTM TAPE5 byte-for-byte (ICNTNM=0 for the cited raw-OD pair), atmosphere/profile, FSCDXS, MT_CKD companion, cross-section files, environment, and numerical settings. Fresh, separate output directories; no overwriting existing outputs.",
+    "interpretation": "Compare raw OD output grids/headers and negative-count/minimum diagnostics. NOCPL is a deliberate line-coupling-off sensitivity control, not an equivalent standard configuration and not evidence by itself that coupling caused a defect."
+  },
+  "known_baseline": "The existing no-NOCPL input was generated from the frozen combined line list and TAPE5 record 3 has blank HOLIND1. The original TAPE3 remains immutable; the proposed controlled arm requires LNFL regeneration from the same TAPE1.",
+  "limitations": [
+    "This source review predicts which coupling records are suppressed but cannot predict whether negative optical-depth samples disappear or change magnitude.",
+    "The generated TAPE3 must be validated by LNFL logs and independent record/parser checks; no output hash is knowable before generation.",
+    "Do not toggle ICNTNM or any other LBLRTM/LNFL option within this NOCPL comparison."
+  ]
+}

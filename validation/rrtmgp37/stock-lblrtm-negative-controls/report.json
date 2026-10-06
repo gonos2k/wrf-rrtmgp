@@ -1,0 +1,80 @@
+{
+  "base_PR": 114,
+  "conclusions": [
+    "SAMPLE4 to SAMPLE8 alone does not remove the large negative minimum.",
+    "Under the executed IBRD0 setting, NOCPL changes the same layer21/grid point from -4.884429085432753 to +4.4625484239488955.",
+    "NOCPL greatly reduces the global negative minimum; finer sampling further reduces the residual.",
+    "Every factorial arm still fails nonnegative optical-depth acceptance.",
+    "No result attributes the held 4/37 flux residual or validates UDM optical metrics."
+  ],
+  "counts_this_package": {
+    "LBLRTM_solves": 3,
+    "LNFL_generation": 1,
+    "WRF_forecasts": 0,
+    "compiles": 0,
+    "full_OD_parsers": 3,
+    "physical_gates_closed": 0,
+    "raw_OD_readers": 3
+  },
+  "factorial": [
+    {
+      "SAMPLE": 4,
+      "case": "coupled_sample4_prior_PR114",
+      "coupling": "on",
+      "full_parser_sha256": "d87d3cab5acea74c8daa9d6cc4ecd2cb058c63c4fc4c91c7930446e179f1df9c",
+      "minimum_OD": -4.884429085432753,
+      "negative_count": 21712,
+      "new_solver_this_package": false,
+      "physical_reference_acceptance": "FAIL_NEGATIVE_OD_PRESERVED",
+      "samples": 63838065
+    },
+    {
+      "SAMPLE": 8,
+      "case": "sample8",
+      "coupling": "on",
+      "full_parser_sha256": "07fb5d4033dcb73b81752fa5d6563a6a030bf24ce9bc83d1c33f2b9dc552f7f0",
+      "minimum_OD": -4.880947884913931,
+      "negative_count": 40770,
+      "new_solver_this_package": true,
+      "parser_actual_child_returncode": 0,
+      "physical_reference_acceptance": "FAIL_NEGATIVE_OD_PRESERVED",
+      "raw_reader_actual_child_returncode": 0,
+      "samples": 127948502,
+      "solver_actual_child_returncode": 0
+    },
+    {
+      "SAMPLE": 4,
+      "case": "nocpl",
+      "coupling": "off",
+      "full_parser_sha256": "70389c2f42fbd248a17c8b5750ae902cd277b79ca73d86fb9b00530340471ff4",
+      "minimum_OD": -0.0009924067060697163,
+      "negative_count": 2391,
+      "new_solver_this_package": true,
+      "parser_actual_child_returncode": 0,
+      "physical_reference_acceptance": "FAIL_NEGATIVE_OD_PRESERVED",
+      "raw_reader_actual_child_returncode": 0,
+      "samples": 63838065,
+      "solver_actual_child_returncode": 0
+    },
+    {
+      "SAMPLE": 8,
+      "case": "nocpl-sample8",
+      "coupling": "off",
+      "full_parser_sha256": "03c3b32c3db885340ab4a3236a8212de1d0a1ee8247d8e72eaf16bdfb5412906",
+      "minimum_OD": -5.739147942124939e-05,
+      "negative_count": 1774,
+      "new_solver_this_package": true,
+      "parser_actual_child_returncode": 0,
+      "physical_reference_acceptance": "FAIL_NEGATIVE_OD_PRESERVED",
+      "raw_reader_actual_child_returncode": 0,
+      "samples": 127948502,
+      "solver_actual_child_returncode": 0
+    }
+  ],
+  "held_state_sha256": "9c477295b7a01de8b5e38b612052f1e61e711402a5a839bd1cb9c58b6eed2168",
+  "physical_normality_verdict": "NOT_ESTABLISHED",
+  "reproduction_note": "Requires original private staged assets at paths recorded in plans; package does not distribute AER line lists, TAPE3, coefficient files or model binaries.",
+  "schema": "UDM37_STOCK_LBLRTM_COUPLING_SAMPLE_FACTORIAL_V1",
+  "status": "PROGRESS_REFERENCE_PHYSICS_NOT_ACCEPTED",
+  "strict_line_comparison": "FAIL retained: 5702 additional-broadening-flag byte differences; supplemental source review identifies LNFL length sentinel at changed block boundaries."
+}

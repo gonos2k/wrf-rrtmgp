@@ -1,0 +1,354 @@
+{
+  "authorization_contract": {
+    "external_root_authorization": "build/udm37-lblrtm-nocpl-control-v2/root-authorization-v1.json",
+    "max_invocations": 1,
+    "must_bind": [
+      "plan_sha256",
+      "runner_sha256",
+      "prepared_sha256"
+    ],
+    "no_execution_without_authorization": true,
+    "required": true,
+    "schema": "UDM_LBLRTM_NOCPL_ONE_RUN_AUTH_V2"
+  },
+  "execution_policy": {
+    "argv_note": "Pass the short TAPE1 name to avoid LNFL v3.2 CHARACTER*100 argument truncation; TAPE1 is an already verified symlink to the pinned absolute line file.",
+    "command": [
+      "<pinned-lnfl-binary>",
+      "TAPE1"
+    ],
+    "cwd": "<new output_dir>",
+    "environment": {
+      "HOME": "inherit unchanged",
+      "LANG": "C",
+      "LC_ALL": "C",
+      "PATH": "/usr/bin:/bin"
+    },
+    "invocations_max": 1,
+    "output_dir": "build/udm37-lblrtm-nocpl-control-v2/run-v2",
+    "outputs_checked_only_after_durable_returncode": [
+      "TAPE3",
+      "TAPE6"
+    ],
+    "required_new_files": [
+      "TAPE5",
+      "TAPE1 symlink"
+    ],
+    "retry": false,
+    "success_contract": "One child invocation only, actual child RC=0, TAPE3/TAPE6 exist and are nonempty, all pinned inputs/source/runtime/executable match pre/post. TAPE3 is an NOCPL line file; no expected numerical TAPE3 byte hash is asserted in advance.",
+    "timeout_seconds": 3600
+  },
+  "format_correction": {
+    "path": "build/udm37-lblrtm-common-band-line-generation-v1/failure-format-diagnosis-v1/diagnosis.json",
+    "scope": "Correct diagnosed format after one terminal RC2; preserve failed v5 artifacts. Separate one-shot corrected attempt, no automated retry.",
+    "sha256": "2ed836b1ce2d1093e6fb1edb68ae96e3474728a3134f3ef81d870c0866fc957f",
+    "size_bytes": 6341
+  },
+  "held_state_context": {
+    "continuum_enabled_OD_TAPE5": {
+      "path": "build/udm37-lblrtm-held-state-continuum-od-run-v1/TAPE5",
+      "role": "unchanged ICNTNM=1 LBLRTM profile/control for any later OD follow-up; this runner invokes LNFL only",
+      "sha256": "a676bc7761e09ab42f212c3cca80ebfd1be27604cd332cc966205d1280ae62dd",
+      "size_bytes": 29428
+    },
+    "current_stock_LBLRTM_OD_run": {
+      "plan_path": "build/udm37-lblrtm-held-state-continuum-od-run-v1/plan.json",
+      "plan_sha256": "05fbb46b8ed13294289795f38035d26271ecbf68e66e8d1f98ac11b90ca41a41",
+      "postflight_path": "build/udm37-lblrtm-held-state-continuum-od-run-v1/runs/od-v1/postflight.json",
+      "postflight_sha256": "ec50124531507e5f674280e7551bd6639bcf54851e065079ac4b1fc2f890b98b"
+    }
+  },
+  "input_control_diff": {
+    "path": "build/udm37-lblrtm-nocpl-control-v2/control-diff.json",
+    "sha256": "c10110549609d57c59d6dc4309ba0afc09efe733c7eea5e954fc4491a7841261",
+    "size_bytes": 1378
+  },
+  "lnfl_build": {
+    "binary": {
+      "path": "build/udm37-lblrtm-stock-build-v1/attempt-2/run/LNFL/lnfl_v3.2_linux_gnu_sgl",
+      "sha256": "825d05dcc530a5bb196f4a95a353f624787089d5b9be75a6696fd0b7c6542586",
+      "size_bytes": 695512
+    },
+    "build_execution": {
+      "path": "build/udm37-lblrtm-stock-build-v1/attempt-2/run/execution.json",
+      "sha256": "90b31eca938cdeb96d42e6cbe3f458540d8b776f7d22e097d2cb2c5e22867924",
+      "size_bytes": 1792
+    },
+    "build_log": {
+      "path": "build/udm37-lblrtm-stock-build-v1/attempt-2/run/lnfl-build.log",
+      "sha256": "fdab4c6bad06947e99b7139756bf81992ba9207ae2579df67054a6a643314011",
+      "size_bytes": 328166
+    },
+    "elf_interpreter": {
+      "path": "/lib64/ld-linux-x86-64.so.2",
+      "sha256": "6222a16be7f2d458d6870efe6e715fc0c8d45766fb79cf7dcc3125538d703e28",
+      "size_bytes": 236616
+    },
+    "format_instructions": {
+      "path": "build/udm37-lblrtm-reference-stage-v1/sources/LNFL/docs/lnfl_instructions",
+      "sha256": "e044ed5eb774a99d2dd1086ff98ec879cbd5440dc816bd305a37e66548682601",
+      "size_bytes": 9574
+    },
+    "runtime_ldd_stdout": "\tlinux-vdso.so.1 (0x00007ffe449e4000)\n\tlibgfortran.so.5 => /lib/x86_64-linux-gnu/libgfortran.so.5 (0x00007dab3d13f000)\n\tlibm.so.6 => /lib/x86_64-linux-gnu/libm.so.6 (0x00007dab3d056000)\n\tlibc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x00007dab3ce44000)\n\tlibgcc_s.so.1 => /lib/x86_64-linux-gnu/libgcc_s.so.1 (0x00007dab3ce16000)\n\t/lib64/ld-linux-x86-64.so.2 (0x00007dab3ff77000)\n",
+    "runtime_libraries": [
+      {
+        "path": "/lib/x86_64-linux-gnu/libgfortran.so.5",
+        "sha256": "5b574c8ad93f1d816afa2d53fb33684ff8f9a0de0fcbe51e0ec21ddf0a56a028",
+        "size_bytes": 3263912
+      },
+      {
+        "path": "/lib/x86_64-linux-gnu/libm.so.6",
+        "sha256": "f06f2ce1f1833df5f41cf13b6447ff07bea993ad9b27297d3428c2f70ab3f0e7",
+        "size_bytes": 952616
+      },
+      {
+        "path": "/lib/x86_64-linux-gnu/libc.so.6",
+        "sha256": "511f825ee075610ac9c0f7f91e2c13de2000d0f7b859f6461137e809a0a009d0",
+        "size_bytes": 2125328
+      },
+      {
+        "path": "/lib/x86_64-linux-gnu/libgcc_s.so.1",
+        "sha256": "02f3f192bf5f79b811f1e34a650fea443d407408703448906585232383957f60",
+        "size_bytes": 183024
+      },
+      {
+        "path": "/lib64/ld-linux-x86-64.so.2",
+        "sha256": "6222a16be7f2d458d6870efe6e715fc0c8d45766fb79cf7dcc3125538d703e28",
+        "size_bytes": 236616
+      }
+    ],
+    "source_file": {
+      "path": "build/udm37-lblrtm-reference-stage-v1/sources/LNFL/src/lnfl.f",
+      "sha256": "d47b7b296b747837bbec8df06a7c8ea1df2ec241546b1db4a15f6b02b98a4ad6",
+      "size_bytes": 542902
+    },
+    "source_manifest_sha256": "ce9699c64df08c7b650479a085501023066bfb9c8db4fea84d86eaed20bcc019"
+  },
+  "nocpl_source_pins": [
+    {
+      "path": "build/udm37-lblrtm-reference-stage-v1/sources/LNFL/docs/lnfl_instructions",
+      "sha256": "e044ed5eb774a99d2dd1086ff98ec879cbd5440dc816bd305a37e66548682601",
+      "size_bytes": 9574
+    },
+    {
+      "path": "build/udm37-lblrtm-reference-stage-v1/sources/LNFL/src/lnfl.f",
+      "sha256": "d47b7b296b747837bbec8df06a7c8ea1df2ec241546b1db4a15f6b02b98a4ad6",
+      "size_bytes": 542902
+    }
+  ],
+  "parent_record3_species_flags": "11110110000000000000010000000000000000000000000",
+  "parent_successful_v6_outputs": {
+    "execution_sha256": "881dc5bdf2716df7d3e11d404910ba9f1142df23dd754fa68fc8da60e47ebe60",
+    "postflight_sha256": "7d7fc12accebe46b2e5a0d220cc82c8ba103d6b2d2f36953181f45e75534217e",
+    "tape3_sha256": "56bd55fa256ed3b3a672bd4bcd88034cd7086d4fbef2a1def9480199dab2b388"
+  },
+  "parent_successful_v6_plan_sha256": "7ee1eddd5d1c0970503d2dc7730c494f77bb2f919bf822795f6252d57248e6f6",
+  "parent_successful_v6_runner_sha256": "cc56cd382d65bbd0580565bfdd6d7dc457f1e23479484045daf0ef136133b4a2",
+  "purpose": "One-control NOCPL diagnostic TAPE3 generation from the same AER line list and spectral/species request as successful LNFL v6.",
+  "schema": "udm37-lblrtm-nocpl-line-generation-plan-v2",
+  "source_stage": {
+    "extracted_tree_manifest": {
+      "path": "build/udm37-lblrtm-reference-stage-v1/receipts/aer-v3.8.1-extracted-tree-manifest.json",
+      "sha256": "eb632e8298df10a7eb9fb6a07a504462fa5034d8f7286e20b7c62f8f835ba2c7",
+      "size_bytes": 14812
+    },
+    "line_archive": {
+      "path": "build/udm37-lblrtm-reference-stage-v1/data/aer_v_3.8.1.tar.gz",
+      "sha256": "ea75443cb018286b7c894394a4d04e7dc152e3762644a8e39c706a278af4a697",
+      "size_bytes": 442551040
+    },
+    "line_file": {
+      "path": "build/udm37-lblrtm-reference-stage-v1/data/aer_v_3.8.1/line_file/aer_v_3.8.1",
+      "sha256": "d0ec800cfaeaaa7ab7af7b8168f45b205e383272e147373df6d0eed2677f2bd3",
+      "size_bytes": 908403720
+    },
+    "line_file_format": "Combined AER v3.8.1 input: 160-character publisher headers and 100-character F100 transition records; per-molecule files are not used.",
+    "source_tree_manifest": {
+      "path": "build/udm37-lblrtm-reference-stage-v1/receipts/LNFL-v3.2-tree-manifest.json",
+      "sha256": "ce9699c64df08c7b650479a085501023066bfb9c8db4fea84d86eaed20bcc019",
+      "size_bytes": 6189
+    },
+    "stage_completion": {
+      "path": "build/udm37-lblrtm-reference-stage-v1/receipts/source-stage-completion.json",
+      "sha256": "dcb9c5fb5dff08a9e6599954005090323d5a36976cb2e01e452a82a9ee971b39",
+      "size_bytes": 5207
+    },
+    "stage_manifest": {
+      "path": "build/udm37-lblrtm-reference-stage-v1/stage-manifest.json",
+      "sha256": "78b0fbce161d2fd79ffddb9bfcba1256e1da7227916e8192640846bf37364785",
+      "size_bytes": 5903
+    },
+    "terms": "AER research-use/acknowledgment restrictions apply. Keep data and generated TAPE3 private; no public redistribution or commercial/proprietary use without written permission."
+  },
+  "spectral_request": {
+    "all_other_molecule_indicators": 0,
+    "holind_semantics": "NOCPL is the only changed HOLIND1 token; LNFL v3.2 docs say it suppresses all line-coupling information from TAPE3/TAPE7. All 47 species flags and line input remain as in successful v6.",
+    "lnfl_margin_each_side_cm-1": 25.0,
+    "molecule_numbers_selected": [
+      1,
+      2,
+      3,
+      4,
+      6,
+      7,
+      22
+    ],
+    "physical_common_band_union_cm-1": [
+      500.0,
+      2250.0
+    ],
+    "record2": "   475.000  2275.000",
+    "record3_holind": "NOCPL",
+    "record_formats": [
+      "R1: 72 characters (9A8)",
+      "R2: F10.3,F10.3",
+      "R3: 47I1,4X,A40"
+    ],
+    "selected_species": [
+      "H2O",
+      "CO2",
+      "O3",
+      "N2O",
+      "CH4",
+      "O2",
+      "N2"
+    ],
+    "tape3_requested_range_cm-1": [
+      475.0,
+      2275.0
+    ],
+    "tape5_records": {
+      "record1": "UDM37 COMMON BANDS LNFL AER V3.8.1                                      ",
+      "record2": "   475.000  2275.000",
+      "record3": "11110110000000000000010000000000000000000000000    NOCPL                                   "
+    }
+  },
+  "status": "PREPARED_NOT_EXECUTED",
+  "verified_inputs": [
+    {
+      "path": "build/udm37-lblrtm-stock-build-v1/attempt-2/run/LNFL/lnfl_v3.2_linux_gnu_sgl",
+      "sha256": "825d05dcc530a5bb196f4a95a353f624787089d5b9be75a6696fd0b7c6542586",
+      "size_bytes": 695512
+    },
+    {
+      "path": "build/udm37-lblrtm-stock-build-v1/attempt-2/run/execution.json",
+      "sha256": "90b31eca938cdeb96d42e6cbe3f458540d8b776f7d22e097d2cb2c5e22867924",
+      "size_bytes": 1792
+    },
+    {
+      "path": "build/udm37-lblrtm-stock-build-v1/attempt-2/run/lnfl-build.log",
+      "sha256": "fdab4c6bad06947e99b7139756bf81992ba9207ae2579df67054a6a643314011",
+      "size_bytes": 328166
+    },
+    {
+      "path": "/lib64/ld-linux-x86-64.so.2",
+      "sha256": "6222a16be7f2d458d6870efe6e715fc0c8d45766fb79cf7dcc3125538d703e28",
+      "size_bytes": 236616
+    },
+    {
+      "path": "build/udm37-lblrtm-reference-stage-v1/sources/LNFL/docs/lnfl_instructions",
+      "sha256": "e044ed5eb774a99d2dd1086ff98ec879cbd5440dc816bd305a37e66548682601",
+      "size_bytes": 9574
+    },
+    {
+      "path": "build/udm37-lblrtm-reference-stage-v1/sources/LNFL/src/lnfl.f",
+      "sha256": "d47b7b296b747837bbec8df06a7c8ea1df2ec241546b1db4a15f6b02b98a4ad6",
+      "size_bytes": 542902
+    },
+    {
+      "path": "/lib/x86_64-linux-gnu/libgfortran.so.5",
+      "sha256": "5b574c8ad93f1d816afa2d53fb33684ff8f9a0de0fcbe51e0ec21ddf0a56a028",
+      "size_bytes": 3263912
+    },
+    {
+      "path": "/lib/x86_64-linux-gnu/libm.so.6",
+      "sha256": "f06f2ce1f1833df5f41cf13b6447ff07bea993ad9b27297d3428c2f70ab3f0e7",
+      "size_bytes": 952616
+    },
+    {
+      "path": "/lib/x86_64-linux-gnu/libc.so.6",
+      "sha256": "511f825ee075610ac9c0f7f91e2c13de2000d0f7b859f6461137e809a0a009d0",
+      "size_bytes": 2125328
+    },
+    {
+      "path": "/lib/x86_64-linux-gnu/libgcc_s.so.1",
+      "sha256": "02f3f192bf5f79b811f1e34a650fea443d407408703448906585232383957f60",
+      "size_bytes": 183024
+    },
+    {
+      "path": "build/udm37-lblrtm-reference-stage-v1/data/aer_v_3.8.1/line_file/aer_v_3.8.1",
+      "sha256": "d0ec800cfaeaaa7ab7af7b8168f45b205e383272e147373df6d0eed2677f2bd3",
+      "size_bytes": 908403720
+    },
+    {
+      "path": "build/udm37-lblrtm-reference-stage-v1/stage-manifest.json",
+      "sha256": "78b0fbce161d2fd79ffddb9bfcba1256e1da7227916e8192640846bf37364785",
+      "size_bytes": 5903
+    },
+    {
+      "path": "build/udm37-lblrtm-reference-stage-v1/receipts/LNFL-v3.2-tree-manifest.json",
+      "sha256": "ce9699c64df08c7b650479a085501023066bfb9c8db4fea84d86eaed20bcc019",
+      "size_bytes": 6189
+    },
+    {
+      "path": "build/udm37-lblrtm-reference-stage-v1/receipts/aer-v3.8.1-extracted-tree-manifest.json",
+      "sha256": "eb632e8298df10a7eb9fb6a07a504462fa5034d8f7286e20b7c62f8f835ba2c7",
+      "size_bytes": 14812
+    },
+    {
+      "path": "build/udm37-lblrtm-reference-stage-v1/receipts/source-stage-completion.json",
+      "sha256": "dcb9c5fb5dff08a9e6599954005090323d5a36976cb2e01e452a82a9ee971b39",
+      "size_bytes": 5207
+    },
+    {
+      "path": "build/udm37-lblrtm-common-band-line-generation-v1/plan-v6.json",
+      "sha256": "7ee1eddd5d1c0970503d2dc7730c494f77bb2f919bf822795f6252d57248e6f6",
+      "size_bytes": 7747
+    },
+    {
+      "path": "build/udm37-lblrtm-common-band-line-generation-v1/run_once_v6.py",
+      "sha256": "cc56cd382d65bbd0580565bfdd6d7dc457f1e23479484045daf0ef136133b4a2",
+      "size_bytes": 10592
+    },
+    {
+      "path": "build/udm37-lblrtm-common-band-line-generation-v1/run-v6/TAPE5",
+      "sha256": "697357190795f9451e83afe232675dcfd4dc1ddf1c036f1f347c261d973ba970",
+      "size_bytes": 186
+    },
+    {
+      "path": "build/udm37-lblrtm-common-band-line-generation-v1/run-v6/TAPE3",
+      "sha256": "56bd55fa256ed3b3a672bd4bcd88034cd7086d4fbef2a1def9480199dab2b388",
+      "size_bytes": 122157832
+    },
+    {
+      "path": "build/udm37-lblrtm-common-band-line-generation-v1/run-v6/execution.json",
+      "sha256": "881dc5bdf2716df7d3e11d404910ba9f1142df23dd754fa68fc8da60e47ebe60",
+      "size_bytes": 474
+    },
+    {
+      "path": "build/udm37-lblrtm-common-band-line-generation-v1/run-v6/postflight.json",
+      "sha256": "7d7fc12accebe46b2e5a0d220cc82c8ba103d6b2d2f36953181f45e75534217e",
+      "size_bytes": 1036
+    },
+    {
+      "path": "build/udm37-lblrtm-nocpl-control-v2/control-diff.json",
+      "sha256": "c10110549609d57c59d6dc4309ba0afc09efe733c7eea5e954fc4491a7841261",
+      "size_bytes": 1378
+    },
+    {
+      "path": "build/udm37-lblrtm-held-state-continuum-od-run-v1/TAPE5",
+      "sha256": "a676bc7761e09ab42f212c3cca80ebfd1be27604cd332cc966205d1280ae62dd",
+      "size_bytes": 29428
+    },
+    {
+      "path": "build/udm37-lblrtm-held-state-continuum-od-run-v1/plan.json",
+      "sha256": "05fbb46b8ed13294289795f38035d26271ecbf68e66e8d1f98ac11b90ca41a41",
+      "size_bytes": 27551
+    },
+    {
+      "path": "build/udm37-lblrtm-held-state-continuum-od-run-v1/runs/od-v1/postflight.json",
+      "sha256": "ec50124531507e5f674280e7551bd6639bcf54851e065079ac4b1fc2f890b98b",
+      "size_bytes": 9358
+    }
+  ]
+}

@@ -1,0 +1,95 @@
+{
+  "frozen_case": {
+    "executable": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-stock-build-v1/attempt-1/source/LBLRTM/lblrtm_v12.17_linux_gnu_dbl",
+      "sha256": "a5c363c87a44b686e8bff1cf0e60fcfb7b0e167c8ec74d0201b6cc6b2b41473b",
+      "size_bytes": 14348016
+    },
+    "existing_controls": {
+      "DVOUT_cm-1": 0.0,
+      "DVSET_cm-1": 0.0,
+      "ICNTNM": 1,
+      "IHIRAC": 1,
+      "IOD": 0,
+      "V1_cm-1": 500.0,
+      "V2_cm-1": 2250.0
+    },
+    "prepared_manifest": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-held-state-continuum-od-run-v1/runs/od-v1/prepared.json",
+      "sha256": "7195f13f22acfb3664908f824af3f6b63dbed059150b20da96b8248c58ad3d48",
+      "size_bytes": 14009
+    },
+    "tape3": {
+      "kind": "existing pinned symlink input; proposed card change does not alter it",
+      "path": "build/udm37-lblrtm-held-state-continuum-od-run-v1/runs/od-v1/TAPE3",
+      "sha256": "56bd55fa256ed3b3a672bd4bcd88034cd7086d4fbef2a1def9480199dab2b388",
+      "size_bytes": 122157832
+    },
+    "tape5": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-held-state-continuum-od-run-v1/TAPE5",
+      "sha256": "a676bc7761e09ab42f212c3cca80ebfd1be27604cd332cc966205d1280ae62dd",
+      "size_bytes": 29428
+    }
+  },
+  "limitations": [
+    "This review did not read or compare OD numerical arrays.",
+    "The resulting SAMPLE=8 case is a diagnostic sensitivity control, not a uniquely signed cubic-isolation experiment.",
+    "No solver or build was run."
+  ],
+  "proposed_control": {
+    "preserve_exact": "All other TAPE5 bytes, all atmospheric/profile records, ICNTNM=1, executable/runtime/data closure, and the pinned TAPE3 bytes remain unchanged.",
+    "single_input_edit_only": "Replace record 3 columns 21-30 with the ten ASCII bytes ` 8.000E+00`; do not rewrite/reformat any other bytes. Use a new one-use case directory and verify only this byte-range differs from the frozen TAPE5."
+  },
+  "proposed_single_field_bytes_diff": {
+    "all_other_tape5_bytes_identical": true,
+    "bytes_changed": 1,
+    "field_start_absolute_offset_zero_based": 192,
+    "new_byte_ascii": "8",
+    "new_byte_hex": "0x38",
+    "old_byte_ascii": "4",
+    "old_byte_hex": "0x34",
+    "only_changed_byte_absolute_offset_zero_based": 193,
+    "original_tape5_sha256": "a676bc7761e09ab42f212c3cca80ebfd1be27604cd332cc966205d1280ae62dd",
+    "proposed_tape5_sha256_in_memory_only": "e9389cefaa17094dd3b52abfe89f1cc55b30aef773ea3b4dc0e99e2c67c3eac2",
+    "record_start_absolute_offset_zero_based": 172
+  },
+  "sample_card": {
+    "SAMPLE_field_1_based_columns": [
+      21,
+      30
+    ],
+    "current_bytes_ascii": " 4.000E+00",
+    "format_source": "lblrtm.f90:1186, FORMAT (8E10.3,4X,I1,5x,e10.3,3X,i2,3x,i2)",
+    "proposed_bytes_ascii": " 8.000E+00",
+    "reader_source": "lblrtm.f90:909, reads V1,V2,SAMPLE,DVSET,ALFAL0,AVMASS,DPTMIN,DPTFAC,ILNFLG,DVOUT,nmol_scal,n_xs_scal",
+    "sample_change": "4.000E+00 -> 8.000E+00",
+    "tape5_record_1_based": 3
+  },
+  "schema": "UDM_LBLRTM_SAMPLE_CONTROL_SOURCE_REVIEW_V1",
+  "scope": "Source/deck-only review. No LBLRTM solve, build, or numerical output parsing was performed.",
+  "source": {
+    "commit": "a85ac73447c1e62401a57a34bbcb040683345dca",
+    "release_notes": {
+      "path": "/tmp/lblrtm-audit/docs/release_notes.txt",
+      "sha256": "1470ef2689a6a323d86adc02903dea8c337467adc5792864a481158b6118da17",
+      "size_bytes": 27040
+    },
+    "repository_path": "/tmp/lblrtm-audit",
+    "source_file": {
+      "path": "/tmp/lblrtm-audit/src/lblrtm.f90",
+      "sha256": "9ae22638469c4b9e60187b53e47f0a80d5fb502ffd4052f63f88f442dac45aca",
+      "size_bytes": 387500
+    }
+  },
+  "source_interpretation": {
+    "adaptive_and_rounding_behavior": [
+      "For the first layer, DV is rounded to 3 significant figures and made even through integer IDV scaling (lblrtm.f90:5463-5472).",
+      "Later layers adapt DV/ITYPE based on OLDDV/DV ratios, with thresholds 2.5, 1.2, and 0.8; layers can retain previous DV or subdivide/interpolate (lblrtm.f90:5480-5520).",
+      "IOD=0 does not take the special IOD=1/2 early path around the adjacent-layer adaptation logic. DVOUT=0 and DVSET=0 remain untouched."
+    ],
+    "causal_limit": "A 4\u21928 run would test sensitivity to the documented sampling discretization while preserving all other deck bytes, atmospheric state, executable, runtime data and TAPE3. It cannot uniquely isolate a signed cubic interpolation cause: SAMPLE changes line sampling density and interacts with first-layer rounding and adaptive grid transitions. No claim of cause or correction follows from this control alone.",
+    "cost_and_output": "Release notes explicitly warn increased computation time as SAMPLE increases. Higher SAMPLE refines layer line-grid spacing and can increase monochromatic work/output, but exact time/size multiplier is path/profile dependent because rounding and adaptive inter-layer DV/ITYPE logic intervene; no exact multiplier asserted.",
+    "sampling_equation": "For IHIRAC=1, OPPATH computes AVBAR from ALBAR and ADBAR (lblrtm.f90:5418-5420), then initial layer DV=AVBAR/SAMPLE (5423-5425). Increasing SAMPLE 4\u21928 halves this pre-adaptation DV algebraically at otherwise identical AVBAR; it is a spectral sampling-resolution diagnostic.",
+    "supported_range": "LBLRTM v12.17 release_notes.txt documents SAMPLE max 32 and gives 8 or 16 as alternatives to default 4. Source input path defaults nonpositive SAMPLE to 4 (lblrtm.f90:912); no additional SAMPLE<=32 guard was located in the inspected source."
+  }
+}
