@@ -1,0 +1,635 @@
+{
+  "schema": "cf0-precip-captured-layer-audit-v1",
+  "scope": "Exact raw values at two held CF-zero points; all positive values retained; no thresholding or solver call.",
+  "background_radius_source": {
+    "constant": "RE_QS_BG = 9.99E-6 m",
+    "file": "build/udm-canonical-six-anchor-pr-work/WRF/share/module_model_constants.F",
+    "line": 64,
+    "sha256": "5b80377fecdc18a5f0ad38d3b6c15cfc86ad5d76701adbbbb08a08698d0f7062"
+  },
+  "wrapper_radius_source": {
+    "files": [
+      {
+        "path": "build/udm-canonical-six-anchor-pr-work/WRF/phys/module_ra_rrtmg_lw.F",
+        "sha256": "b5eaa533fb1c4ccd1863d9eeff3203233f7b9579b4d77d16f6428fe9683a75b7"
+      },
+      {
+        "path": "build/udm-canonical-six-anchor-pr-work/WRF/phys/module_ra_rrtmg_sw.F",
+        "sha256": "655fcd2a186fc8df8f2337b8fee7bca4c086ca31fc3117d0b18db597bea0b5c4"
+      }
+    ],
+    "fallback_rule": "Replace background radius only for source value == RE_QS_BG, positive species mixing ratio and CF > 0 (LW near lines 12769\u201312775; SW paired logic). At this selected CF=0 location no fallback branch runs.",
+    "builder_file": "build/udm-canonical-six-anchor-pr-work/WRF/phys/module_ra_rrtmgp_input.F",
+    "sha256": "145ab85e5ccc26be6f6c0143119ea3409eb5f133f62246be81ac48e43b92623e"
+  },
+  "captures": [
+    {
+      "species": "rain",
+      "phase": "LW",
+      "capture_path": "build/udm-stratified-captures-v3/cf0_rain_low_cloud_proxy/replay-recovery-v2/capture/lw.raw",
+      "capture_sha256": "53f666aed40d48e6752712a8f81fa213dc916cc7aef1e082a899dd6215a94bf3",
+      "i": 136,
+      "j": 48,
+      "native_layers": 39,
+      "raw_path_exact_positive_layers": 16,
+      "raw_path_sum_g_m2": 202.42863702774048,
+      "positive_layers": [
+        {
+          "k_native_1based": 1,
+          "cf": 0.0,
+          "qr_kg_kg": 4.648282629204914e-05,
+          "rwp_omitted_g_m2": 3.132056951522827
+        },
+        {
+          "k_native_1based": 2,
+          "cf": 0.0,
+          "qr_kg_kg": 4.6746547013754025e-05,
+          "rwp_omitted_g_m2": 4.198890209197998
+        },
+        {
+          "k_native_1based": 3,
+          "cf": 0.0,
+          "qr_kg_kg": 4.6761659177718684e-05,
+          "rwp_omitted_g_m2": 5.458858013153076
+        },
+        {
+          "k_native_1based": 5,
+          "cf": 0.0,
+          "qr_kg_kg": 4.7414079745067284e-05,
+          "rwp_omitted_g_m2": 8.654186248779297
+        },
+        {
+          "k_native_1based": 6,
+          "cf": 0.0,
+          "qr_kg_kg": 4.8322155635105446e-05,
+          "rwp_omitted_g_m2": 10.564842224121094
+        },
+        {
+          "k_native_1based": 7,
+          "cf": 0.0,
+          "qr_kg_kg": 4.9267899157712236e-05,
+          "rwp_omitted_g_m2": 12.658026695251465
+        },
+        {
+          "k_native_1based": 8,
+          "cf": 0.0,
+          "qr_kg_kg": 5.026789949624799e-05,
+          "rwp_omitted_g_m2": 14.640052795410156
+        },
+        {
+          "k_native_1based": 9,
+          "cf": 0.0,
+          "qr_kg_kg": 5.1495553634595126e-05,
+          "rwp_omitted_g_m2": 16.57111358642578
+        },
+        {
+          "k_native_1based": 10,
+          "cf": 0.0,
+          "qr_kg_kg": 5.291733396006748e-05,
+          "rwp_omitted_g_m2": 18.432106018066406
+        },
+        {
+          "k_native_1based": 11,
+          "cf": 0.0,
+          "qr_kg_kg": 5.436837818706408e-05,
+          "rwp_omitted_g_m2": 20.15229034423828
+        },
+        {
+          "k_native_1based": 12,
+          "cf": 0.0,
+          "qr_kg_kg": 5.572067675529979e-05,
+          "rwp_omitted_g_m2": 21.696508407592773
+        },
+        {
+          "k_native_1based": 13,
+          "cf": 0.0,
+          "qr_kg_kg": 5.661340765072964e-05,
+          "rwp_omitted_g_m2": 22.87305450439453
+        },
+        {
+          "k_native_1based": 14,
+          "cf": 0.0,
+          "qr_kg_kg": 5.030310421716422e-05,
+          "rwp_omitted_g_m2": 20.8864803314209
+        },
+        {
+          "k_native_1based": 15,
+          "cf": 0.0,
+          "qr_kg_kg": 3.3532494853716344e-05,
+          "rwp_omitted_g_m2": 14.179931640625
+        },
+        {
+          "k_native_1based": 16,
+          "cf": 0.0,
+          "qr_kg_kg": 1.586618418514263e-05,
+          "rwp_omitted_g_m2": 6.773331642150879
+        },
+        {
+          "k_native_1based": 17,
+          "cf": 0.0,
+          "qr_kg_kg": 3.6391738831298426e-06,
+          "rwp_omitted_g_m2": 1.5569074153900146
+        }
+      ],
+      "paired_input_path": "build/udm-stratified-captures-v3/cf0_rain_low_cloud_proxy/replay-recovery-v2/capture/lw.input",
+      "paired_input_sha256": "e020db768f3dca001862a911826a4539a80f7aead0e89267cb5b341498f19c94"
+    },
+    {
+      "species": "rain",
+      "phase": "SW",
+      "capture_path": "build/udm-stratified-captures-v3/cf0_rain_low_cloud_proxy/replay-recovery-v3/capture/sw.raw",
+      "capture_sha256": "39fb118958619b34f7e0101bcd669d5e6c45398437321e5d40599d2a2c22de09",
+      "i": 136,
+      "j": 48,
+      "native_layers": 39,
+      "raw_path_exact_positive_layers": 16,
+      "raw_path_sum_g_m2": 202.42863702774048,
+      "positive_layers": [
+        {
+          "k_native_1based": 1,
+          "cf": 0.0,
+          "qr_kg_kg": 4.648282629204914e-05,
+          "rwp_omitted_g_m2": 3.132056951522827
+        },
+        {
+          "k_native_1based": 2,
+          "cf": 0.0,
+          "qr_kg_kg": 4.6746547013754025e-05,
+          "rwp_omitted_g_m2": 4.198890209197998
+        },
+        {
+          "k_native_1based": 3,
+          "cf": 0.0,
+          "qr_kg_kg": 4.6761659177718684e-05,
+          "rwp_omitted_g_m2": 5.458858013153076
+        },
+        {
+          "k_native_1based": 5,
+          "cf": 0.0,
+          "qr_kg_kg": 4.7414079745067284e-05,
+          "rwp_omitted_g_m2": 8.654186248779297
+        },
+        {
+          "k_native_1based": 6,
+          "cf": 0.0,
+          "qr_kg_kg": 4.8322155635105446e-05,
+          "rwp_omitted_g_m2": 10.564842224121094
+        },
+        {
+          "k_native_1based": 7,
+          "cf": 0.0,
+          "qr_kg_kg": 4.9267899157712236e-05,
+          "rwp_omitted_g_m2": 12.658026695251465
+        },
+        {
+          "k_native_1based": 8,
+          "cf": 0.0,
+          "qr_kg_kg": 5.026789949624799e-05,
+          "rwp_omitted_g_m2": 14.640052795410156
+        },
+        {
+          "k_native_1based": 9,
+          "cf": 0.0,
+          "qr_kg_kg": 5.1495553634595126e-05,
+          "rwp_omitted_g_m2": 16.57111358642578
+        },
+        {
+          "k_native_1based": 10,
+          "cf": 0.0,
+          "qr_kg_kg": 5.291733396006748e-05,
+          "rwp_omitted_g_m2": 18.432106018066406
+        },
+        {
+          "k_native_1based": 11,
+          "cf": 0.0,
+          "qr_kg_kg": 5.436837818706408e-05,
+          "rwp_omitted_g_m2": 20.15229034423828
+        },
+        {
+          "k_native_1based": 12,
+          "cf": 0.0,
+          "qr_kg_kg": 5.572067675529979e-05,
+          "rwp_omitted_g_m2": 21.696508407592773
+        },
+        {
+          "k_native_1based": 13,
+          "cf": 0.0,
+          "qr_kg_kg": 5.661340765072964e-05,
+          "rwp_omitted_g_m2": 22.87305450439453
+        },
+        {
+          "k_native_1based": 14,
+          "cf": 0.0,
+          "qr_kg_kg": 5.030310421716422e-05,
+          "rwp_omitted_g_m2": 20.8864803314209
+        },
+        {
+          "k_native_1based": 15,
+          "cf": 0.0,
+          "qr_kg_kg": 3.3532494853716344e-05,
+          "rwp_omitted_g_m2": 14.179931640625
+        },
+        {
+          "k_native_1based": 16,
+          "cf": 0.0,
+          "qr_kg_kg": 1.586618418514263e-05,
+          "rwp_omitted_g_m2": 6.773331642150879
+        },
+        {
+          "k_native_1based": 17,
+          "cf": 0.0,
+          "qr_kg_kg": 3.6391738831298426e-06,
+          "rwp_omitted_g_m2": 1.5569074153900146
+        }
+      ],
+      "paired_input_path": "build/udm-stratified-captures-v3/cf0_rain_low_cloud_proxy/replay-recovery-v3/capture/sw.input",
+      "paired_input_sha256": "b6a202adf90a265e390d765ec674efa0b9f48f209bc61ce2632abfbffaefc3b9"
+    },
+    {
+      "species": "snow",
+      "phase": "LW",
+      "capture_path": "build/udm-stratified-replacement-captures-v1/material_cf0_snow_daylight_proxy/capture/lw.raw",
+      "capture_sha256": "00692eb442b9210cc061dbcf79e57a930b427e2a0b976446e4d3ce4ec54a9c01",
+      "i": 103,
+      "j": 156,
+      "native_layers": 39,
+      "raw_path_exact_positive_layers": 13,
+      "raw_path_sum_g_m2": 5.622483488478097,
+      "positive_layers": [
+        {
+          "k_native_1based": 8,
+          "cf": 0.0,
+          "q_snow_kg_kg": 9.823934732366979e-08,
+          "swp_omitted_g_m2": 0.02641182579100132,
+          "source_re_snow_m": 5.568493725149892e-05,
+          "source_re_snow_um": 55.68493725149892,
+          "adapter_RES_um": 55.6849365234375,
+          "source_is_RE_QS_BG_float32": false,
+          "radius_gt_10um": true,
+          "radius_match_abs_um": 7.280614227056503e-07,
+          "fallback_condition_cf_gt_zero": false
+        },
+        {
+          "k_native_1based": 9,
+          "cf": 0.0,
+          "q_snow_kg_kg": 1.1510950344018056e-06,
+          "swp_omitted_g_m2": 0.3402807116508484,
+          "source_re_snow_m": 0.0001003027573460713,
+          "source_re_snow_um": 100.3027573460713,
+          "adapter_RES_um": 100.3027572631836,
+          "source_is_RE_QS_BG_float32": false,
+          "radius_gt_10um": true,
+          "radius_match_abs_um": 8.288770914077759e-08,
+          "fallback_condition_cf_gt_zero": false
+        },
+        {
+          "k_native_1based": 10,
+          "cf": 0.0,
+          "q_snow_kg_kg": 9.858867997536436e-07,
+          "swp_omitted_g_m2": 0.31414175033569336,
+          "source_re_snow_m": 9.471735393162817e-05,
+          "source_re_snow_um": 94.71735393162817,
+          "adapter_RES_um": 94.71735382080078,
+          "source_is_RE_QS_BG_float32": false,
+          "radius_gt_10um": true,
+          "radius_match_abs_um": 1.1082738637924194e-07,
+          "fallback_condition_cf_gt_zero": false
+        },
+        {
+          "k_native_1based": 11,
+          "cf": 0.0,
+          "q_snow_kg_kg": 2.6854527277464513e-06,
+          "swp_omitted_g_m2": 0.9077569246292114,
+          "source_re_snow_m": 0.00011494348291307688,
+          "source_re_snow_um": 114.94348291307688,
+          "adapter_RES_um": 114.9434814453125,
+          "source_is_RE_QS_BG_float32": false,
+          "radius_gt_10um": true,
+          "radius_match_abs_um": 1.4677643775939941e-06,
+          "fallback_condition_cf_gt_zero": false
+        },
+        {
+          "k_native_1based": 12,
+          "cf": 0.0,
+          "q_snow_kg_kg": 5.205840807320783e-06,
+          "swp_omitted_g_m2": 1.8455616235733032,
+          "source_re_snow_m": 0.00012450786016415805,
+          "source_re_snow_um": 124.50786016415805,
+          "adapter_RES_um": 124.50785827636719,
+          "source_is_RE_QS_BG_float32": false,
+          "radius_gt_10um": true,
+          "radius_match_abs_um": 1.887790858745575e-06,
+          "fallback_condition_cf_gt_zero": false
+        },
+        {
+          "k_native_1based": 13,
+          "cf": 0.0,
+          "q_snow_kg_kg": 5.948164925939636e-06,
+          "swp_omitted_g_m2": 2.18833065032959,
+          "source_re_snow_m": 0.00011659697338473052,
+          "source_re_snow_um": 116.59697338473052,
+          "adapter_RES_um": 116.59696960449219,
+          "source_is_RE_QS_BG_float32": false,
+          "radius_gt_10um": true,
+          "radius_match_abs_um": 3.7802383303642273e-06,
+          "fallback_condition_cf_gt_zero": false
+        },
+        {
+          "k_native_1based": 25,
+          "cf": 0.0,
+          "q_snow_kg_kg": 8.427272405553903e-17,
+          "swp_omitted_g_m2": 2.075251082089835e-11,
+          "source_re_snow_m": 2.499999936844688e-05,
+          "source_re_snow_um": 24.99999936844688,
+          "adapter_RES_um": 25.0,
+          "source_is_RE_QS_BG_float32": false,
+          "radius_gt_10um": true,
+          "radius_match_abs_um": 6.315531209111214e-07,
+          "fallback_condition_cf_gt_zero": false
+        },
+        {
+          "k_native_1based": 26,
+          "cf": 0.0,
+          "q_snow_kg_kg": 8.72646122436439e-15,
+          "swp_omitted_g_m2": 1.970775320714324e-09,
+          "source_re_snow_m": 2.499999936844688e-05,
+          "source_re_snow_um": 24.99999936844688,
+          "adapter_RES_um": 25.0,
+          "source_is_RE_QS_BG_float32": false,
+          "radius_gt_10um": true,
+          "radius_match_abs_um": 6.315531209111214e-07,
+          "fallback_condition_cf_gt_zero": false
+        },
+        {
+          "k_native_1based": 27,
+          "cf": 0.0,
+          "q_snow_kg_kg": 8.388075691221914e-16,
+          "swp_omitted_g_m2": 1.732620436012411e-10,
+          "source_re_snow_m": 2.499999936844688e-05,
+          "source_re_snow_um": 24.99999936844688,
+          "adapter_RES_um": 25.0,
+          "source_is_RE_QS_BG_float32": false,
+          "radius_gt_10um": true,
+          "radius_match_abs_um": 6.315531209111214e-07,
+          "fallback_condition_cf_gt_zero": false
+        },
+        {
+          "k_native_1based": 28,
+          "cf": 0.0,
+          "q_snow_kg_kg": 1.9365550491313783e-17,
+          "swp_omitted_g_m2": 3.655429691579171e-12,
+          "source_re_snow_m": 2.499999936844688e-05,
+          "source_re_snow_um": 24.99999936844688,
+          "adapter_RES_um": 25.0,
+          "source_is_RE_QS_BG_float32": false,
+          "radius_gt_10um": true,
+          "radius_match_abs_um": 6.315531209111214e-07,
+          "fallback_condition_cf_gt_zero": false
+        },
+        {
+          "k_native_1based": 29,
+          "cf": 0.0,
+          "q_snow_kg_kg": 1.895160852341701e-21,
+          "swp_omitted_g_m2": 3.26247815706117e-16,
+          "source_re_snow_m": 2.499999936844688e-05,
+          "source_re_snow_um": 24.99999936844688,
+          "adapter_RES_um": 25.0,
+          "source_is_RE_QS_BG_float32": false,
+          "radius_gt_10um": true,
+          "radius_match_abs_um": 6.315531209111214e-07,
+          "fallback_condition_cf_gt_zero": false
+        },
+        {
+          "k_native_1based": 30,
+          "cf": 0.0,
+          "q_snow_kg_kg": 1.865860198049964e-23,
+          "swp_omitted_g_m2": 2.9223821616500844e-18,
+          "source_re_snow_m": 2.499999936844688e-05,
+          "source_re_snow_um": 24.99999936844688,
+          "adapter_RES_um": 25.0,
+          "source_is_RE_QS_BG_float32": false,
+          "radius_gt_10um": true,
+          "radius_match_abs_um": 6.315531209111214e-07,
+          "fallback_condition_cf_gt_zero": false
+        },
+        {
+          "k_native_1based": 31,
+          "cf": 0.0,
+          "q_snow_kg_kg": 2.5685625305693687e-20,
+          "swp_omitted_g_m2": 3.652176522631837e-15,
+          "source_re_snow_m": 2.499999936844688e-05,
+          "source_re_snow_um": 24.99999936844688,
+          "adapter_RES_um": 25.0,
+          "source_is_RE_QS_BG_float32": false,
+          "radius_gt_10um": true,
+          "radius_match_abs_um": 6.315531209111214e-07,
+          "fallback_condition_cf_gt_zero": false
+        }
+      ],
+      "has_reqs": 1,
+      "source_radius_field": "SOURCE_RE_SNOW (explicit host field, raw capture)",
+      "background_radius_m": 9.99e-06,
+      "background_radius_m_float32": 9.989999853132758e-06,
+      "all_active_source_values_non_background_sentinel": true,
+      "all_active_RES_gt_10um": true,
+      "max_RES_vs_source_conversion_abs_um": 3.7802383303642273e-06,
+      "source_interpretation": "All sidecar-positive layers have HAS_REQS=1; their raw SOURCE_RE_SNOW values are not the RE_QS_BG background sentinel, RES matches source metres converted to microns, and each radius is >10 um. The WRF wrapper fallback replacement condition is cloud fraction > 0, so it is inactive at these CF=0 layers. This establishes eligible captured source radii, not independent proof of microphysical diagnostic history.",
+      "paired_input_path": "build/udm-stratified-replacement-captures-v1/material_cf0_snow_daylight_proxy/capture/lw.input",
+      "paired_input_sha256": "7bf8b8bc31219eafaf1b63c2d5296fcb7bdda7ec1b3a350c2bc0f35a46832c67",
+      "input_RES_native_prefix_matches_raw_exactly": true
+    },
+    {
+      "species": "snow",
+      "phase": "SW",
+      "capture_path": "build/udm-stratified-replacement-captures-v1/material_cf0_snow_daylight_proxy/capture/sw.raw",
+      "capture_sha256": "b58e74bf8cfc762ddb909309e90714be8526bf0b60abfdd46db2d447d6c9604a",
+      "i": 103,
+      "j": 156,
+      "native_layers": 39,
+      "raw_path_exact_positive_layers": 13,
+      "raw_path_sum_g_m2": 5.622483488478097,
+      "positive_layers": [
+        {
+          "k_native_1based": 8,
+          "cf": 0.0,
+          "q_snow_kg_kg": 9.823934732366979e-08,
+          "swp_omitted_g_m2": 0.02641182579100132,
+          "source_re_snow_m": 5.568493725149892e-05,
+          "source_re_snow_um": 55.68493725149892,
+          "adapter_RES_um": 55.6849365234375,
+          "source_is_RE_QS_BG_float32": false,
+          "radius_gt_10um": true,
+          "radius_match_abs_um": 7.280614227056503e-07,
+          "fallback_condition_cf_gt_zero": false
+        },
+        {
+          "k_native_1based": 9,
+          "cf": 0.0,
+          "q_snow_kg_kg": 1.1510950344018056e-06,
+          "swp_omitted_g_m2": 0.3402807116508484,
+          "source_re_snow_m": 0.0001003027573460713,
+          "source_re_snow_um": 100.3027573460713,
+          "adapter_RES_um": 100.3027572631836,
+          "source_is_RE_QS_BG_float32": false,
+          "radius_gt_10um": true,
+          "radius_match_abs_um": 8.288770914077759e-08,
+          "fallback_condition_cf_gt_zero": false
+        },
+        {
+          "k_native_1based": 10,
+          "cf": 0.0,
+          "q_snow_kg_kg": 9.858867997536436e-07,
+          "swp_omitted_g_m2": 0.31414175033569336,
+          "source_re_snow_m": 9.471735393162817e-05,
+          "source_re_snow_um": 94.71735393162817,
+          "adapter_RES_um": 94.71735382080078,
+          "source_is_RE_QS_BG_float32": false,
+          "radius_gt_10um": true,
+          "radius_match_abs_um": 1.1082738637924194e-07,
+          "fallback_condition_cf_gt_zero": false
+        },
+        {
+          "k_native_1based": 11,
+          "cf": 0.0,
+          "q_snow_kg_kg": 2.6854527277464513e-06,
+          "swp_omitted_g_m2": 0.9077569246292114,
+          "source_re_snow_m": 0.00011494348291307688,
+          "source_re_snow_um": 114.94348291307688,
+          "adapter_RES_um": 114.9434814453125,
+          "source_is_RE_QS_BG_float32": false,
+          "radius_gt_10um": true,
+          "radius_match_abs_um": 1.4677643775939941e-06,
+          "fallback_condition_cf_gt_zero": false
+        },
+        {
+          "k_native_1based": 12,
+          "cf": 0.0,
+          "q_snow_kg_kg": 5.205840807320783e-06,
+          "swp_omitted_g_m2": 1.8455616235733032,
+          "source_re_snow_m": 0.00012450786016415805,
+          "source_re_snow_um": 124.50786016415805,
+          "adapter_RES_um": 124.50785827636719,
+          "source_is_RE_QS_BG_float32": false,
+          "radius_gt_10um": true,
+          "radius_match_abs_um": 1.887790858745575e-06,
+          "fallback_condition_cf_gt_zero": false
+        },
+        {
+          "k_native_1based": 13,
+          "cf": 0.0,
+          "q_snow_kg_kg": 5.948164925939636e-06,
+          "swp_omitted_g_m2": 2.18833065032959,
+          "source_re_snow_m": 0.00011659697338473052,
+          "source_re_snow_um": 116.59697338473052,
+          "adapter_RES_um": 116.59696960449219,
+          "source_is_RE_QS_BG_float32": false,
+          "radius_gt_10um": true,
+          "radius_match_abs_um": 3.7802383303642273e-06,
+          "fallback_condition_cf_gt_zero": false
+        },
+        {
+          "k_native_1based": 25,
+          "cf": 0.0,
+          "q_snow_kg_kg": 8.427272405553903e-17,
+          "swp_omitted_g_m2": 2.075251082089835e-11,
+          "source_re_snow_m": 2.499999936844688e-05,
+          "source_re_snow_um": 24.99999936844688,
+          "adapter_RES_um": 25.0,
+          "source_is_RE_QS_BG_float32": false,
+          "radius_gt_10um": true,
+          "radius_match_abs_um": 6.315531209111214e-07,
+          "fallback_condition_cf_gt_zero": false
+        },
+        {
+          "k_native_1based": 26,
+          "cf": 0.0,
+          "q_snow_kg_kg": 8.72646122436439e-15,
+          "swp_omitted_g_m2": 1.970775320714324e-09,
+          "source_re_snow_m": 2.499999936844688e-05,
+          "source_re_snow_um": 24.99999936844688,
+          "adapter_RES_um": 25.0,
+          "source_is_RE_QS_BG_float32": false,
+          "radius_gt_10um": true,
+          "radius_match_abs_um": 6.315531209111214e-07,
+          "fallback_condition_cf_gt_zero": false
+        },
+        {
+          "k_native_1based": 27,
+          "cf": 0.0,
+          "q_snow_kg_kg": 8.388075691221914e-16,
+          "swp_omitted_g_m2": 1.732620436012411e-10,
+          "source_re_snow_m": 2.499999936844688e-05,
+          "source_re_snow_um": 24.99999936844688,
+          "adapter_RES_um": 25.0,
+          "source_is_RE_QS_BG_float32": false,
+          "radius_gt_10um": true,
+          "radius_match_abs_um": 6.315531209111214e-07,
+          "fallback_condition_cf_gt_zero": false
+        },
+        {
+          "k_native_1based": 28,
+          "cf": 0.0,
+          "q_snow_kg_kg": 1.9365550491313783e-17,
+          "swp_omitted_g_m2": 3.655429691579171e-12,
+          "source_re_snow_m": 2.499999936844688e-05,
+          "source_re_snow_um": 24.99999936844688,
+          "adapter_RES_um": 25.0,
+          "source_is_RE_QS_BG_float32": false,
+          "radius_gt_10um": true,
+          "radius_match_abs_um": 6.315531209111214e-07,
+          "fallback_condition_cf_gt_zero": false
+        },
+        {
+          "k_native_1based": 29,
+          "cf": 0.0,
+          "q_snow_kg_kg": 1.895160852341701e-21,
+          "swp_omitted_g_m2": 3.26247815706117e-16,
+          "source_re_snow_m": 2.499999936844688e-05,
+          "source_re_snow_um": 24.99999936844688,
+          "adapter_RES_um": 25.0,
+          "source_is_RE_QS_BG_float32": false,
+          "radius_gt_10um": true,
+          "radius_match_abs_um": 6.315531209111214e-07,
+          "fallback_condition_cf_gt_zero": false
+        },
+        {
+          "k_native_1based": 30,
+          "cf": 0.0,
+          "q_snow_kg_kg": 1.865860198049964e-23,
+          "swp_omitted_g_m2": 2.9223821616500844e-18,
+          "source_re_snow_m": 2.499999936844688e-05,
+          "source_re_snow_um": 24.99999936844688,
+          "adapter_RES_um": 25.0,
+          "source_is_RE_QS_BG_float32": false,
+          "radius_gt_10um": true,
+          "radius_match_abs_um": 6.315531209111214e-07,
+          "fallback_condition_cf_gt_zero": false
+        },
+        {
+          "k_native_1based": 31,
+          "cf": 0.0,
+          "q_snow_kg_kg": 2.5685625305693687e-20,
+          "swp_omitted_g_m2": 3.652176522631837e-15,
+          "source_re_snow_m": 2.499999936844688e-05,
+          "source_re_snow_um": 24.99999936844688,
+          "adapter_RES_um": 25.0,
+          "source_is_RE_QS_BG_float32": false,
+          "radius_gt_10um": true,
+          "radius_match_abs_um": 6.315531209111214e-07,
+          "fallback_condition_cf_gt_zero": false
+        }
+      ],
+      "has_reqs": 1,
+      "source_radius_field": "SOURCE_RE_SNOW (explicit host field, raw capture)",
+      "background_radius_m": 9.99e-06,
+      "background_radius_m_float32": 9.989999853132758e-06,
+      "all_active_source_values_non_background_sentinel": true,
+      "all_active_RES_gt_10um": true,
+      "max_RES_vs_source_conversion_abs_um": 3.7802383303642273e-06,
+      "source_interpretation": "All sidecar-positive layers have HAS_REQS=1; their raw SOURCE_RE_SNOW values are not the RE_QS_BG background sentinel, RES matches source metres converted to microns, and each radius is >10 um. The WRF wrapper fallback replacement condition is cloud fraction > 0, so it is inactive at these CF=0 layers. This establishes eligible captured source radii, not independent proof of microphysical diagnostic history.",
+      "paired_input_path": "build/udm-stratified-replacement-captures-v1/material_cf0_snow_daylight_proxy/capture/sw.input",
+      "paired_input_sha256": "bb4697be31d26e67c8b5d4e26997e1dc3fbd463b5027417a5dac835581bfc58b",
+      "input_RES_native_prefix_matches_raw_exactly": true
+    }
+  ]
+}

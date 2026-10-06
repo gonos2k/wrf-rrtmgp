@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.20)
 project(WRF_RRTMGP_COLUMN_TEST LANGUAGES Fortran)
 enable_testing()
 find_package(Python3 REQUIRED COMPONENTS Interpreter)
+add_test(NAME cf0_precip_sidecar_python_contract COMMAND "${Python3_EXECUTABLE}" -B
+  "${CMAKE_CURRENT_SOURCE_DIR}/test_cf0_precip_sidecar.py")
 get_filename_component(WRF_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/../.." ABSOLUTE)
 set(RRTMGP_DATA_DIR "${WRF_ROOT}/run" CACHE PATH "RRTMGP coefficient directory")
 add_test(NAME frozen_raw_replay_contract COMMAND "${Python3_EXECUTABLE}"
@@ -230,6 +232,14 @@ add_test(NAME small_cf_sampling COMMAND test_rrtmgp_small_cf_sampling "${RRTMGP_
 # Independent executable shares the pinned library and data, not the WRF adapter.
 add_executable(reference_column reference_column.f90)
 target_link_libraries(reference_column PRIVATE wrf_rrtmgp test_rrtmgp_frozen)
+add_test(NAME cf0_precip_compiled_reader COMMAND "${Python3_EXECUTABLE}" -B
+  "${CMAKE_CURRENT_SOURCE_DIR}/test_cf0_precip_compiled_reader.py"
+  --data "${RRTMGP_DATA_DIR}"
+  --reference "$<TARGET_FILE:reference_column>"
+  --lw-generator "$<TARGET_FILE:test_rrtmgp_lw_trace_gases>"
+  --sw-generator "$<TARGET_FILE:test_rrtmgp_sw_predelta_direct>"
+  --work-root "${CMAKE_CURRENT_BINARY_DIR}/cf0-precip-compiled-reader"
+  --output "${CMAKE_CURRENT_BINARY_DIR}/cf0-precip-compiled-reader.json")
 add_test(NAME cu_population_independent_replay COMMAND "${Python3_EXECUTABLE}"
   "${CMAKE_CURRENT_SOURCE_DIR}/test_cu_population_optics_replay.py"
   --generator "$<TARGET_FILE:test_rrtmgp_cu_population_optics>"

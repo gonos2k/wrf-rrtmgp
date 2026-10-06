@@ -1,0 +1,310 @@
+{
+  "schema": "cf0-held-audit-final-summary-v2",
+  "status": "PASS_SCOPED_HISTORICAL_HELD_AUDIT_AND_CURRENT_SYNTHETIC_READER",
+  "base_pr": 63,
+  "base_head": "048d6d0ae833c4e8a4867431b0ffc3be2a477b49",
+  "original_source_sha256": "9ab10866c9b398c059310c74b3824b7273c42f180dd48a1643229d76714464cd",
+  "isolated_build_status": "BUILD_PASS_NO_SOLVER_CALL",
+  "isolated_build_receipt": {
+    "path": "build/udm37-cf0-precip-patch-build-v1/build-receipt.json",
+    "bytes": 44255,
+    "sha256": "3d95204395a6004d62088f4c2fd7a038e1b8dd55ac8652b9a03fbf07fe033c48"
+  },
+  "static_review_status": "STATIC_REVIEW_PASS_WITH_LAUNCHER_PRECONDITION",
+  "original_baseline_calls": 4,
+  "historical_backend": "focused-v2 object/archive/runtime closure (original 67261 and patched 7b25); not current private-scalar backend",
+  "current_forecast_evidence": false,
+  "zero_sidecar_controls": {
+    "planned": 4,
+    "actual": 4,
+    "status": "PASS_BYTE_IDENTICAL_EXACT_DOUBLE_ORACLES"
+  },
+  "positive_sidecar_calls": {
+    "planned": 4,
+    "actual": 4,
+    "status": "PASS_DECLARED_OUTPUT_CONTRACT"
+  },
+  "eight_call_results_frozen": true,
+  "python_controls": {
+    "methods": 23,
+    "status": "PASS_PYTHON_ONLY",
+    "does_not_prove_fortran_rejections": true
+  },
+  "new_preparation_calls": {
+    "build": 0,
+    "solver": 0,
+    "model": 0,
+    "REAL": 0
+  },
+  "physical_accuracy": "NOT_ASSESSED",
+  "production_occurrence_policy": "UNCHANGED_OPEN",
+  "proposal_history": "Historical uncompiled proposal and NOT_EXECUTED preparation bytes preserved. Later successful builds/results do not rewrite them. Current compiled-reader tests separate from historical held-state audit.",
+  "frozen_proposal_source_sha256": "939981fd290b1a7f2ba6ece9d124a18b7a4d6be2135ebe10a789fcdb64f07df9",
+  "integrated_test_helper_sha256": "93214328388a1a7e242be1a298d34ae61e76f81d201ed9cf039e7f07ac580e6f",
+  "integrated_source_build_status": "BUILD_PASS_CURRENT_HELPER_NO_SOLVER",
+  "current_optional_reader_validation_delta": "Current932 source adds finite/range/exactzeroCF guard versus historical compiled939. Four actual historical engineCF inputs satisfy new guard; historical results are not current-backend executions.",
+  "current_helper_build_receipt": {
+    "path": "build/udm37-cf0-precip-audit-pr-work/validation/rrtmgp37/cf0-precipitation-held-audit/current-helper/build-receipt-v2.json",
+    "bytes": 28027,
+    "sha256": "4cc863925951b5cb19ae61b4ea5aa36d52922d46f16432207752552adaa83bab"
+  },
+  "current_helper_test_receipt": {
+    "path": "build/udm37-cf0-precip-audit-pr-work/validation/rrtmgp37/cf0-precipitation-held-audit/current-helper/test-receipt-v4.json",
+    "bytes": 5772,
+    "sha256": "ed8e095d38096b072bcb871e96e8a8a4c8d224184eaea8b92f1625ce6a84a1db"
+  },
+  "current_compiled_reader_report": {
+    "path": "build/udm37-cf0-precip-audit-pr-work/validation/rrtmgp37/cf0-precipitation-held-audit/current-helper/compiled-reader-report-v4.json",
+    "bytes": 25054,
+    "sha256": "490dbfc065d8d9be4357c87dfe58bea079a324ac937530532deb082ccad75ad5"
+  },
+  "campaign_receipt": {
+    "path": "build/udm37-cf0-precip-audit-pr-work/validation/rrtmgp37/cf0-precipitation-held-audit/campaign/execution.json",
+    "bytes": 40858,
+    "sha256": "9285816e2d1203b7c6ce0642cca91356f9e0ca3b42fa30761c87efc36064fdf5"
+  },
+  "campaign_analysis": {
+    "path": "build/udm37-cf0-precip-audit-pr-work/validation/rrtmgp37/cf0-precipitation-held-audit/campaign/analysis.json",
+    "bytes": 29560,
+    "sha256": "87d88873a748298991986143a2dea08042f670871be0456163a18869437a8d43"
+  },
+  "campaign_independent_review": {
+    "path": "build/udm37-cf0-precip-audit-pr-work/validation/rrtmgp37/cf0-precipitation-held-audit/review/campaign-result-review.json",
+    "bytes": 4205,
+    "sha256": "eebb78384e8e66b0810b5f241e8f3e9e8b298064ea41edfff4a334c4b7057f3d"
+  },
+  "campaign_postflight": {
+    "protected_paths": 281,
+    "unchanged": true,
+    "runtime_libraries": 47,
+    "closure_unchanged": true,
+    "generated_outputs_unchanged": true
+  },
+  "current_compiled_reader": {
+    "fixture": "Synthetic three-layer state, current source/private-scalar build, not a real captured WRF column",
+    "reference_processes": 14,
+    "successes": 10,
+    "rejected_before_output": 4,
+    "fixture_programs": 2,
+    "fixture_RTE_calls": 3,
+    "fixture_RTE_call_breakdown": "LW 1, SW 2",
+    "model_REAL_processes": 0,
+    "reject_controls": {
+      "nan_cf": "PASS_REJECTED_BEFORE_OUTPUT",
+      "native_count_out_of_bounds": "PASS_REJECTED_BEFORE_OUTPUT",
+      "positive_path_where_cf_positive": "PASS_REJECTED_BEFORE_OUTPUT",
+      "wrong_units": "PASS_REJECTED_BEFORE_OUTPUT"
+    },
+    "processes_do_not_equal_internal_RTE_calls": true
+  },
+  "positive_sensitivities": [
+    {
+      "case_id": "rain-lw.positive",
+      "phase": "LW",
+      "species": "rain",
+      "native_layers": 39,
+      "positive_native_layers": 16,
+      "delta": {
+        "max_abs_extension_heating_delta": 0.008007013907807226,
+        "max_abs_native_heating_delta": 2.271922475926875,
+        "surface_down_flux_delta": 0.14968156128657029,
+        "toa_up_flux_delta": -1.23755711671771
+      },
+      "output": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-precip-campaign-v5/cases/rain-lw.positive/result.out",
+        "sha256": "58e1b4aec9314109505d5590a62cdcceefd5edde05d01b45a5d932b561741959",
+        "size_bytes": 775228
+      },
+      "unchanged_sections": [
+        "GAS_COL_DRY",
+        "GAS_TAU",
+        "GAS_TAU_RAW",
+        "PRECIP_TAU",
+        "CLOUD_TAU",
+        "GRAUPEL_TAU_ABS",
+        "HAIL_TAU_ABS",
+        "FROZEN_TAU",
+        "PREPARED_TAU",
+        "MASK",
+        "RL_USED",
+        "DI_USED",
+        "DS_USED",
+        "UPC",
+        "DNC",
+        "HRC"
+      ]
+    },
+    {
+      "case_id": "rain-sw.positive",
+      "phase": "SW",
+      "species": "rain",
+      "native_layers": 39,
+      "positive_native_layers": 16,
+      "delta": {
+        "max_abs_extension_heating_delta": 0.0035276686076830543,
+        "max_abs_native_heating_delta": 0.3418474501585794,
+        "surface_down_flux_delta": -1.5385145816909649,
+        "surface_net_down_flux_delta": -1.2524692966378854,
+        "toa_up_flux_delta": -1.9463441889254298
+      },
+      "output": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-precip-campaign-v5/cases/rain-sw.positive/result.out",
+        "sha256": "8b611e76a9395e3b22f797cddef1b30454dcb8ef439197b0272cd9474a41e533",
+        "size_bytes": 1159956
+      },
+      "unchanged_sections": [
+        "GAS_COL_DRY",
+        "GAS_TAU",
+        "GAS_SSA",
+        "GAS_G",
+        "PRECIP_TAU",
+        "PRECIP_SSA",
+        "PRECIP_G",
+        "CLOUD_TAU",
+        "CLOUD_SSA",
+        "CLOUD_G",
+        "GRAUPEL_TAU_EXT",
+        "GRAUPEL_TAU_SCA",
+        "GRAUPEL_TAU_SCA_G",
+        "HAIL_TAU_EXT",
+        "HAIL_TAU_SCA",
+        "HAIL_TAU_SCA_G",
+        "FROZEN_TAU",
+        "FROZEN_SSA",
+        "FROZEN_G",
+        "PREPARED_TAU",
+        "PREPARED_SSA",
+        "PREPARED_G",
+        "MASK",
+        "RL_USED",
+        "DI_USED",
+        "DS_USED",
+        "UPC",
+        "DNC",
+        "HRC",
+        "DIRECTC",
+        "DIRECT_PREDELTA",
+        "DIRECTC_PREDELTA",
+        "VISDIR_PREDELTA",
+        "NIRDIR_PREDELTA"
+      ]
+    },
+    {
+      "case_id": "snow-lw.positive",
+      "phase": "LW",
+      "species": "snow",
+      "native_layers": 39,
+      "positive_native_layers": 13,
+      "delta": {
+        "max_abs_extension_heating_delta": 5.5657721098612e-08,
+        "max_abs_native_heating_delta": 0.9969685982979275,
+        "surface_down_flux_delta": 0.1588255203149629,
+        "toa_up_flux_delta": -1.9031702350957858e-05
+      },
+      "output": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-precip-campaign-v5/cases/snow-lw.positive/result.out",
+        "sha256": "61eae29da934bf03fd94c346b9ed18ee47e850417fd41972751fec6517d634bd",
+        "size_bytes": 775228
+      },
+      "unchanged_sections": [
+        "GAS_COL_DRY",
+        "GAS_TAU",
+        "GAS_TAU_RAW",
+        "PRECIP_TAU",
+        "CLOUD_TAU",
+        "GRAUPEL_TAU_ABS",
+        "HAIL_TAU_ABS",
+        "FROZEN_TAU",
+        "PREPARED_TAU",
+        "MASK",
+        "RL_USED",
+        "DI_USED",
+        "DS_USED",
+        "UPC",
+        "DNC",
+        "HRC"
+      ]
+    },
+    {
+      "case_id": "snow-sw.positive",
+      "phase": "SW",
+      "species": "snow",
+      "native_layers": 39,
+      "positive_native_layers": 13,
+      "delta": {
+        "max_abs_extension_heating_delta": 9.404014156677576e-05,
+        "max_abs_native_heating_delta": 0.0011186068608005986,
+        "surface_down_flux_delta": -0.041569985841871215,
+        "surface_net_down_flux_delta": -0.03398842371151467,
+        "toa_up_flux_delta": 0.025166320519403484
+      },
+      "output": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-precip-campaign-v5/cases/snow-sw.positive/result.out",
+        "sha256": "f1a5fc907170cb462024dec88a7b8eee224633b42bd840185e5fa62d587dd971",
+        "size_bytes": 1159956
+      },
+      "unchanged_sections": [
+        "GAS_COL_DRY",
+        "GAS_TAU",
+        "GAS_SSA",
+        "GAS_G",
+        "PRECIP_TAU",
+        "PRECIP_SSA",
+        "PRECIP_G",
+        "CLOUD_TAU",
+        "CLOUD_SSA",
+        "CLOUD_G",
+        "GRAUPEL_TAU_EXT",
+        "GRAUPEL_TAU_SCA",
+        "GRAUPEL_TAU_SCA_G",
+        "HAIL_TAU_EXT",
+        "HAIL_TAU_SCA",
+        "HAIL_TAU_SCA_G",
+        "FROZEN_TAU",
+        "FROZEN_SSA",
+        "FROZEN_G",
+        "PREPARED_TAU",
+        "PREPARED_SSA",
+        "PREPARED_G",
+        "MASK",
+        "RL_USED",
+        "DI_USED",
+        "DS_USED",
+        "UPC",
+        "DNC",
+        "HRC",
+        "DIRECTC",
+        "DIRECT_PREDELTA",
+        "DIRECTC_PREDELTA",
+        "VISDIR_PREDELTA",
+        "NIRDIR_PREDELTA"
+      ]
+    }
+  ],
+  "original_preparation_history": [
+    {
+      "retained_path": "history/preparation-summary.json",
+      "sha256": "8c3b02c43f954890f4e09412a4f6efbd5a2e8d1c8021d8363dd1f6a5800c0f1e",
+      "bytes": 2117,
+      "meaning": "Exact pre-integration NOT_EXECUTED/NOT_BUILT preparation bytes; superseded by later actual receipts, not rewritten."
+    },
+    {
+      "retained_path": "history/preparation-README.md",
+      "sha256": "3c1aacce6d1ad0a0f727e38860ea04842bc34c18b4648b5ff15c9641e05b2731",
+      "bytes": 4258,
+      "meaning": "Exact pre-integration NOT_EXECUTED/NOT_BUILT preparation bytes; superseded by later actual receipts, not rewritten."
+    },
+    {
+      "retained_path": "history/preparation-manifest.json",
+      "sha256": "a66dcf488eb5e66fa71ac4088a9f1a968b74acd23ae4f5502c58fd7872992327",
+      "bytes": 3197,
+      "meaning": "Exact pre-integration NOT_EXECUTED/NOT_BUILT preparation bytes; superseded by later actual receipts, not rewritten."
+    }
+  ],
+  "curation_calls": {
+    "build": 0,
+    "solver": 0,
+    "model": 0,
+    "REAL": 0
+  }
+}

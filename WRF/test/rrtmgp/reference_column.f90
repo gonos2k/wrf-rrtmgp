@@ -1,5 +1,5 @@
 PROGRAM rrtmgp_reference_column
-  USE, INTRINSIC :: iso_fortran_env, ONLY: real64
+  USE, INTRINSIC :: iso_fortran_env, ONLY: real64,iostat_end
   USE mo_rte_kind, ONLY: wp,i8
   USE, INTRINSIC :: ieee_arithmetic, ONLY: ieee_is_finite
   USE mo_gas_concentrations, ONLY: ty_gas_concs
@@ -21,17 +21,19 @@ PROGRAM rrtmgp_reference_column
                                     frozen_table_sha256, FROZEN_GRAUPEL, FROZEN_HAIL
   IMPLICIT NONE
 
-  CHARACTER(LEN=512) :: data_dir,input_path,output_path,override_path
+  CHARACTER(LEN=512) :: data_dir,input_path,output_path,override_path,audit_sidecar_path
   CHARACTER(LEN=1024) :: frozen_table_env,frozen_message
   CHARACTER(LEN=64) :: frozen_sha_recorded,frozen_sha_raw
   CHARACTER(LEN=32) :: magic,phase,policy_arg,next_section
   INTEGER :: nc,nl,overlap,seed,iceflag,u_in,u_out,ios,nemis,sw_policy
+  INTEGER :: audit_native_n,audit_sidecar_species,audit_expected_native
   INTEGER :: c,k,g,b,i,ngpt,nbnd,n_native,frozen_status,env_status
   INTEGER :: override_ncol,override_nlay,override_nband,override_unit,override_ios
-  REAL(wp) :: solar,roughness_value,partition_value,precip_mode,visible_weight,raw_direct_tau
+  REAL(wp) :: solar,roughness_value,partition_value,precip_mode,visible_weight,raw_direct_tau,audit_occurrence
   REAL(wp) :: frozen_mode_value,frozen_occurrence
   REAL(wp) :: metadata_gravity,metadata_cp_dry,metadata_mol_weight_dry
   LOGICAL :: use_precip,has_native_mass,frozen_enabled,sw_direct_enabled,cu_population_enabled,cu_active
+  LOGICAL :: audit_sidecar_present,audit_precip_active
   REAL(wp) :: cu_policy_value
   INTEGER :: ice_roughness
   REAL(wp), ALLOCATABLE :: play(:,:),plev(:,:),tlay(:,:),tlev(:,:),tsfc(:,:)
@@ -52,6 +54,8 @@ PROGRAM rrtmgp_reference_column
   REAL(wp), ALLOCATABLE :: zero(:,:),rl(:,:),di(:,:),ds(:,:),toa(:,:)
   REAL(wp), ALLOCATABLE :: gas_tau(:,:,:),gas_ssa(:,:,:),gas_g(:,:,:)
   REAL(wp), ALLOCATABLE :: rwp(:,:),precip_tau(:,:,:),precip_ssa(:,:,:),precip_g(:,:,:)
+  REAL(wp), ALLOCATABLE :: audit_rwp(:,:),audit_swp(:,:),audit_tau(:,:,:),audit_ssa(:,:,:),audit_g(:,:,:)
+  REAL(wp), ALLOCATABLE :: audit_tau_raw(:,:,:),audit_direct(:,:),audit_direct_gpt(:,:,:)
   REAL(wp), ALLOCATABLE :: mask_values(:,:,:)
   REAL(wp), ALLOCATABLE :: cloud_tau(:,:,:),cloud_ssa(:,:,:),cloud_g(:,:,:)
   REAL(wp), ALLOCATABLE :: prepared_tau(:,:,:),prepared_ssa(:,:,:),prepared_g(:,:,:)
@@ -83,8 +87,8 @@ PROGRAM rrtmgp_reference_column
   TYPE(ty_optical_props_1scl) :: lw_cu
   TYPE(ty_optical_props_2str) :: sw_atmos,sw_cloud,sw_snow,sw_precip,sw_sampled
   TYPE(ty_optical_props_2str) :: sw_cu
-  TYPE(ty_optical_props_1scl) :: lw_frozen
-  TYPE(ty_optical_props_2str) :: sw_frozen
+  TYPE(ty_optical_props_1scl) :: lw_frozen,lw_audit_precip
+  TYPE(ty_optical_props_2str) :: sw_frozen,sw_audit_precip
   TYPE(ty_source_func_lw) :: lw_source
   TYPE(ty_fluxes_broadband) :: lw_flux
   TYPE(ty_fluxes_byband) :: sw_flux
@@ -101,8 +105,10 @@ PROGRAM rrtmgp_reference_column
   CALL get_command_argument(4,policy_arg)
   override_path=''
   CALL get_command_argument(5,override_path)
+  audit_sidecar_path=''
+  CALL get_command_argument(6,audit_sidecar_path)
   IF(LEN_TRIM(data_dir)==0 .OR. LEN_TRIM(input_path)==0 .OR. LEN_TRIM(output_path)==0) &
-    ERROR STOP 'usage: reference_column DATA_DIR INPUT_FILE OUTPUT_FILE [SW_POLICY 1|2|3] [SW_OPTICS_OVERRIDE_FILE]'
+    ERROR STOP 'usage: reference_column DATA_DIR INPUT_FILE OUTPUT_FILE [SW_POLICY 1|2|3] [SW_OPTICS_OVERRIDE_FILE] [CF0_AUDIT_SIDECAR]'
   sw_policy=1
   IF(LEN_TRIM(policy_arg)>0) THEN
     READ(policy_arg,*,IOSTAT=ios) sw_policy
@@ -580,6 +586,20 @@ PROGRAM rrtmgp_reference_column
     END IF
   END IF
   CLOSE(u_in)
+  audit_sidecar_present=LEN_TRIM(audit_sidecar_path)>0
+  audit_precip_active=.FALSE.
+  IF(audit_sidecar_present) THEN
+    IF(TRIM(magic)/='RRTMGP_REPLAY_V8'.AND.TRIM(magic)/='RRTMGP_REPLAY_V9') &
+      ERROR STOP 'CF0 precipitation audit sidecar is limited to V8/V9 held inputs'
+    IF(cu_population_enabled) ERROR STOP 'CF0 precipitation audit does not support CU inputs'
+    audit_expected_native=0
+    IF(has_native_mass) audit_expected_native=n_native
+    CALL read_cf0_precip_sidecar(TRIM(audit_sidecar_path),TRIM(phase),nc,nl,audit_expected_native,cf, &
+                                 audit_rwp,audit_swp,audit_native_n,audit_sidecar_species,audit_occurrence)
+    IF(TRIM(phase)=='SW'.AND.(.NOT.sw_direct_enabled.OR..NOT.use_precip)) &
+      ERROR STOP 'SW CF0 precipitation audit requires V9 direct-diagnostic precipitation input'
+    audit_precip_active=ANY(audit_rwp>0._wp).OR.ANY(audit_swp>0._wp)
+  END IF
   IF(sw_policy/=1.AND.(TRIM(phase)/='SW'.OR..NOT.use_precip)) &
     ERROR STOP 'SW_POLICY override requires a SW replay with precipitation optics'
   IF(LEN_TRIM(override_path)>0.AND.TRIM(phase)/='SW') &
@@ -699,6 +719,18 @@ PROGRAM rrtmgp_reference_column
     IF(ANY(cf>0._wp) .AND. overlap/=0) THEN
       CALL check_error(draw_samples(mask,lw_cloud,lw_sampled))
       CALL check_error(lw_sampled%increment(lw_atmos))
+    END IF
+    IF(audit_precip_active.AND.TRIM(phase)=='LW') THEN
+      ALLOCATE(audit_tau(nc,nl,cloud_lw%get_nband()))
+      CALL reference_lw_precip(audit_rwp,audit_swp,res,gas_lw%get_band_lims_wavenumber(),audit_tau)
+      DO k=1,nl
+        DO c=1,nc
+          IF(audit_rwp(c,k)==0._wp.AND.audit_swp(c,k)==0._wp) audit_tau(c,k,:)=0._wp
+        END DO
+      END DO
+      CALL check_error(lw_audit_precip%alloc_1scl(nc,nl,cloud_lw))
+      lw_audit_precip%tau=audit_tau
+      CALL check_error(lw_audit_precip%increment(lw_atmos))
     END IF
     IF(frozen_enabled) THEN
       ALLOCATE(frozen_gt(nc,nl,cloud_lw%get_nband()),frozen_ht(nc,nl,cloud_lw%get_nband()))
@@ -901,6 +933,23 @@ PROGRAM rrtmgp_reference_column
       CALL check_error(draw_samples(mask,sw_cloud,sw_sampled))
       CALL check_error(sw_sampled%increment(sw_atmos))
     END IF
+    IF(audit_precip_active.AND.TRIM(phase)=='SW') THEN
+      ALLOCATE(audit_tau(nc,nl,cloud_sw%get_nband()),audit_ssa(nc,nl,cloud_sw%get_nband()), &
+               audit_g(nc,nl,cloud_sw%get_nband()),audit_tau_raw(nc,nl,cloud_sw%get_nband()))
+      CALL reference_sw_precip(audit_rwp,audit_swp,res,bands,audit_tau,audit_ssa,audit_g, &
+                               delta_scaled=.TRUE.,raw_tau_out=audit_tau_raw)
+      DO k=1,nl
+        DO c=1,nc
+          IF(audit_rwp(c,k)==0._wp.AND.audit_swp(c,k)==0._wp) THEN
+            audit_tau(c,k,:)=0._wp; audit_ssa(c,k,:)=0._wp
+            audit_g(c,k,:)=0._wp; audit_tau_raw(c,k,:)=0._wp
+          END IF
+        END DO
+      END DO
+      CALL check_error(sw_audit_precip%alloc_2str(nc,nl,cloud_sw))
+      sw_audit_precip%tau=audit_tau; sw_audit_precip%ssa=audit_ssa; sw_audit_precip%g=audit_g
+      CALL check_error(sw_audit_precip%increment(sw_atmos))
+    END IF
     IF(TRIM(magic)=='RRTMGP_REPLAY_V7'.OR. &
        ((TRIM(magic)=='RRTMGP_REPLAY_V9'.OR.TRIM(magic)=='RRTMGP_REPLAY_V11').AND.frozen_enabled)) THEN
       ALLOCATE(frozen_gt(nc,nl,cloud_sw%get_nband()),frozen_gw(nc,nl,cloud_sw%get_nband()), &
@@ -955,9 +1004,14 @@ PROGRAM rrtmgp_reference_column
     END DO
     IF(sw_direct_enabled) THEN
       directc_predelta=direct_clear
+      IF(audit_precip_active) THEN
+        ALLOCATE(audit_direct(nc,nl+1),audit_direct_gpt(nc,nl+1,gas_sw%get_ngpt()))
+        audit_direct=0._wp; audit_direct_gpt=0._wp
+      END IF
       DO c=1,nc
         DO g=1,gas_sw%get_ngpt()
           direct_predelta_gpt(c,nl+1,g)=toa(c,g)*mu0(c)
+          IF(audit_precip_active) audit_direct_gpt(c,nl+1,g)=toa(c,g)*mu0(c)
           b=gpoint_bands(g)
           DO k=nl,1,-1
             raw_direct_tau=gas_tau(c,k,g)
@@ -967,6 +1021,12 @@ PROGRAM rrtmgp_reference_column
             IF(.NOT.ieee_is_finite(raw_direct_tau)) ERROR STOP 'V9 reference direct extinction is non-finite'
             IF(raw_direct_tau<0._wp) ERROR STOP 'V9 reference direct extinction is negative'
             direct_predelta_gpt(c,k,g)=direct_predelta_gpt(c,k+1,g)*EXP(-raw_direct_tau/mu0(c))
+            IF(audit_precip_active) THEN
+              raw_direct_tau=raw_direct_tau+audit_tau_raw(c,k,b)
+              IF(.NOT.ieee_is_finite(raw_direct_tau).OR.raw_direct_tau<0._wp) &
+                ERROR STOP 'audit direct extinction is invalid'
+              audit_direct_gpt(c,k,g)=audit_direct_gpt(c,k+1,g)*EXP(-raw_direct_tau/mu0(c))
+            END IF
           END DO
           DO k=1,nl+1
             direct_predelta_band(c,k,b)=direct_predelta_band(c,k,b)+direct_predelta_gpt(c,k,g)
@@ -975,6 +1035,7 @@ PROGRAM rrtmgp_reference_column
       END DO
       DO k=1,nl+1
         direct_predelta(:,k)=SUM(direct_predelta_gpt(:,k,:),DIM=2)
+        IF(audit_precip_active) audit_direct(:,k)=SUM(audit_direct_gpt(:,k,:),DIM=2)
         DO b=1,gas_sw%get_nband()
           visdir_predelta(:,k)=visdir_predelta(:,k)+visible_weights(b)*direct_predelta_band(:,k,b)
           nirdir_predelta(:,k)=nirdir_predelta(:,k)+(1._wp-visible_weights(b))*direct_predelta_band(:,k,b)
@@ -1069,15 +1130,87 @@ PROGRAM rrtmgp_reference_column
     CALL write3(u_out,'NIRDIR',RESHAPE(nirdir,[nc,nl+1,1]))
     CALL write3(u_out,'NIRDIF',RESHAPE(nirdif,[nc,nl+1,1]))
     IF(sw_direct_enabled) THEN
+      IF(audit_precip_active) THEN
+        CALL write3(u_out,'AUDIT_EXTRA_PRECIP_TAU',audit_tau)
+        CALL write3(u_out,'AUDIT_EXTRA_PRECIP_TAU_RAW',audit_tau_raw)
+        CALL write3(u_out,'AUDIT_EXTRA_PRECIP_SSA',audit_ssa)
+        CALL write3(u_out,'AUDIT_EXTRA_PRECIP_G',audit_g)
+        CALL write3(u_out,'AUDIT_DIRECT_PREDELTA',RESHAPE(audit_direct,[nc,nl+1,1]))
+      END IF
       CALL write3(u_out,'DIRECT_PREDELTA',RESHAPE(direct_predelta,[nc,nl+1,1]))
       CALL write3(u_out,'DIRECTC_PREDELTA',RESHAPE(directc_predelta,[nc,nl+1,1]))
       CALL write3(u_out,'VISDIR_PREDELTA',RESHAPE(visdir_predelta,[nc,nl+1,1]))
       CALL write3(u_out,'NIRDIR_PREDELTA',RESHAPE(nirdir_predelta,[nc,nl+1,1]))
     END IF
   END IF
+  IF(audit_precip_active.AND.TRIM(phase)=='LW') &
+    CALL write3(u_out,'AUDIT_EXTRA_PRECIP_TAU',audit_tau)
   CLOSE(u_out)
 
 CONTAINS
+  SUBROUTINE read_cf0_precip_sidecar(path,expected_phase,ncol,nlay,expected_native_n,cloud_fraction,rain,snow,native_n,species,occurrence)
+    CHARACTER(LEN=*), INTENT(IN) :: path,expected_phase
+    INTEGER, INTENT(IN) :: ncol,nlay,expected_native_n
+    REAL(wp), INTENT(IN) :: cloud_fraction(ncol,nlay)
+    REAL(wp), ALLOCATABLE, INTENT(OUT) :: rain(:,:),snow(:,:)
+    INTEGER, INTENT(OUT) :: native_n,species
+    REAL(wp), INTENT(OUT) :: occurrence
+    CHARACTER(LEN=64) :: header,side_phase,section
+    CHARACTER(LEN=256) :: line
+    INTEGER :: unit,stat,file_ncol
+    OPEN(NEWUNIT=unit,FILE=path,STATUS='OLD',ACTION='READ',IOSTAT=stat)
+    IF(stat/=0) ERROR STOP 'cannot open CF0 precipitation sidecar'
+    READ(unit,*,IOSTAT=stat) header
+    IF(stat/=0) ERROR STOP 'failed to read audit sidecar magic'
+    IF(TRIM(header)/='RRTMGP_CF0_PRECIP_AUDIT_V1') ERROR STOP 'invalid audit sidecar magic'
+    READ(unit,*,IOSTAT=stat) side_phase,file_ncol,native_n,species,occurrence
+    IF(stat/=0) ERROR STOP 'invalid audit sidecar header'
+    IF(file_ncol/=1.OR.ncol/=1) ERROR STOP 'CF0 audit sidecar currently supports one column only'
+    IF(TRIM(side_phase)/=expected_phase.OR.file_ncol/=ncol) ERROR STOP 'audit sidecar phase/column mismatch'
+    IF(native_n<1.OR.native_n>nlay) ERROR STOP 'audit sidecar native layer count out of bounds'
+    IF(expected_native_n>0.AND.native_n/=expected_native_n) ERROR STOP 'audit sidecar native depth differs from replay input'
+    IF(species<1.OR.species>2) ERROR STOP 'audit sidecar species must be rain or snow'
+    IF(ANY(.NOT.ieee_is_finite(cloud_fraction)).OR.ANY(cloud_fraction<0._wp).OR.ANY(cloud_fraction>1._wp)) &
+      ERROR STOP 'audit cloud fraction must be finite and in [0,1]'
+    IF(.NOT.ieee_is_finite(occurrence)) ERROR STOP 'audit occurrence must be finite'
+    IF(occurrence/=1._wp) ERROR STOP 'audit sidecar occurrence must equal one'
+    ALLOCATE(rain(ncol,nlay),snow(ncol,nlay)); rain=0._wp; snow=0._wp
+    READ(unit,*,IOSTAT=stat) section
+    IF(stat/=0) ERROR STOP 'failed to read audit sidecar path units'
+    IF(TRIM(section)/='PATH_UNITS_G_M2') ERROR STOP 'audit sidecar path units must be g m-2'
+    CALL read_cf0_native_section(unit,'AUDIT_RWP_GRID',ncol,nlay,native_n,rain)
+    CALL read_cf0_native_section(unit,'AUDIT_SWP_GRID',ncol,nlay,native_n,snow)
+    IF(species==1.AND.ANY(snow/=0._wp)) ERROR STOP 'rain audit must have zero snow path'
+    IF(species==2.AND.ANY(rain/=0._wp)) ERROR STOP 'snow audit must have zero rain path'
+    IF(ANY(.NOT.ieee_is_finite(rain)).OR.ANY(.NOT.ieee_is_finite(snow))) ERROR STOP 'audit paths must be finite'
+    IF(ANY(rain<0._wp).OR.ANY(snow<0._wp)) ERROR STOP 'audit paths must be nonnegative'
+    IF(ANY((rain>0._wp.OR.snow>0._wp).AND.cloud_fraction/=0._wp)) &
+      ERROR STOP 'audit path is only permitted where CF is zero'
+    READ(unit,'(A)',IOSTAT=stat) line
+    IF(stat==0) ERROR STOP 'audit sidecar has trailing records'
+    IF(stat/=iostat_end) ERROR STOP 'I/O error checking audit sidecar end-of-file'
+    CLOSE(unit)
+  END SUBROUTINE read_cf0_precip_sidecar
+
+  SUBROUTINE read_cf0_native_section(unit,wanted,ncol,nlay,native_n,engine_array)
+    INTEGER, INTENT(IN) :: unit,ncol,nlay,native_n
+    CHARACTER(LEN=*), INTENT(IN) :: wanted
+    REAL(wp), INTENT(INOUT) :: engine_array(ncol,nlay)
+    CHARACTER(LEN=64) :: section_name
+    INTEGER :: rows,cols,read_status
+    REAL(wp), ALLOCATABLE :: native_values(:,:)
+    READ(unit,*,IOSTAT=read_status) section_name,rows,cols
+    IF(read_status/=0) ERROR STOP 'failed to read audit path section header'
+    IF(TRIM(section_name)/=wanted) ERROR STOP 'audit sidecar section name/order mismatch'
+    IF(rows/=ncol.OR.cols/=native_n) ERROR STOP 'audit sidecar must contain native-prefix shape only'
+    ALLOCATE(native_values(rows,cols))
+    READ(unit,*,IOSTAT=read_status) native_values
+    IF(read_status/=0) ERROR STOP 'failed reading native audit path values'
+    engine_array=0._wp
+    engine_array(:,1:native_n)=native_values
+    IF(ANY(engine_array(:,native_n+1:nlay)/=0._wp)) ERROR STOP 'audit engine padding must be zero'
+    DEALLOCATE(native_values)
+  END SUBROUTINE read_cf0_native_section
   SUBROUTINE apply_sw_optics_override(path,gas_optics,optical_props)
     USE, INTRINSIC :: iso_fortran_env, ONLY: error_unit
     CHARACTER(LEN=*), INTENT(IN) :: path
