@@ -1,0 +1,82 @@
+{
+  "MPICH_INTERFACE_HOSTNAME": "127.0.0.1",
+  "OMP_NUM_THREADS": 1,
+  "cases": {
+    "malformed-frozen-header": {
+      "coefficients": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-sr-row-dm-sm/validation/collective-frozen-failures-v2/malformed-frozen-header/coefficients",
+      "directory": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-sr-row-dm-sm/validation/collective-frozen-failures-v2/malformed-frozen-header",
+      "expected_error": "RRTMGP_FROZEN_TABLE: NetCDF open",
+      "frozen_table_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-sr-row-dm-sm/validation/collective-frozen-failures-v2/malformed-frozen-header/coefficients/frozen-ice-psd-moments.nc",
+      "kind": "malformed_header",
+      "namelist_sha256": "a6add3307afce8bd079e9bf7dad7703dbf8849c9406a81177ebb5b36e71dfb91",
+      "physics": {
+        "frozen_mode": 1,
+        "ra_lw_physics": 37,
+        "ra_sw_physics": 37,
+        "radt": 1,
+        "run_minutes": 1
+      },
+      "private_coefficient_hashes": {
+        "frozen-ice-psd-moments.nc": "4957fd3498a67ecbd263bf115c1c86fc6af39a3c5616c3ec801e82354020fc53",
+        "rrtmgp-clouds-lw-bnd.nc": "09d6704c5b863b4c3ceb417d20bb3076ec492e6bf2dfbcc9f3c5996a3706f0b0",
+        "rrtmgp-clouds-sw-bnd.nc": "7671835992a45afe66244b591a02c0b3df73d7d59ecb746bbffd9763497651cd",
+        "rrtmgp-gas-lw-g128.nc": "70ad65d116531122660318e5da2a2af9db74b425916202860e9527ef2375b8f6",
+        "rrtmgp-gas-sw-g112.nc": "361ed541324068ded28a275a4dd757bcaa0a845aebefa630f43a04678668fe62"
+      }
+    },
+    "missing-frozen-table": {
+      "coefficients": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-sr-row-dm-sm/validation/collective-frozen-failures-v2/missing-frozen-table/coefficients",
+      "directory": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-sr-row-dm-sm/validation/collective-frozen-failures-v2/missing-frozen-table",
+      "expected_error": "frozen table hash failed",
+      "frozen_table_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-sr-row-dm-sm/validation/collective-frozen-failures-v2/missing-frozen-table/coefficients/frozen-ice-psd-moments.nc",
+      "kind": "missing",
+      "namelist_sha256": "63c9aadff66c4b06c26c9ebf76c068a3a8f1aa203076156fcfb7840b9b6dec0c",
+      "physics": {
+        "frozen_mode": 1,
+        "ra_lw_physics": 37,
+        "ra_sw_physics": 37,
+        "radt": 1,
+        "run_minutes": 1
+      },
+      "private_coefficient_hashes": {
+        "rrtmgp-clouds-lw-bnd.nc": "09d6704c5b863b4c3ceb417d20bb3076ec492e6bf2dfbcc9f3c5996a3706f0b0",
+        "rrtmgp-clouds-sw-bnd.nc": "7671835992a45afe66244b591a02c0b3df73d7d59ecb746bbffd9763497651cd",
+        "rrtmgp-gas-lw-g128.nc": "70ad65d116531122660318e5da2a2af9db74b425916202860e9527ef2375b8f6",
+        "rrtmgp-gas-sw-g112.nc": "361ed541324068ded28a275a4dd757bcaa0a845aebefa630f43a04678668fe62"
+      }
+    }
+  },
+  "checkpoint": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-frozen-restart-plan/trial-mode1-0to12/wrfrst_d01_2010-06-11_12:00:00",
+  "checkpoint_sha256": "943a53db058f2d9560c6f0d571f3ff9bb8efb407010c5eea2026922a6eeee7b8",
+  "checksum_contract": "initialize computes a SHA-256 for provenance and re-hashes after table load to detect concurrent mutation; no expected table digest is passed into initialize and no embedded checksum attribute is compared. Therefore this stage tests missing file and malformed NetCDF header, not valid-NetCDF tamper against a trusted expected hash.",
+  "executable": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-sr-row-dm-sm/source/WRF/main/wrf.exe",
+  "executable_sha256": "176f589d657ca87df670cef3429d7474e674f3e44445eb7886aed871e36bef8f",
+  "frozen_table_source": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-mpix-evidence-work/validation/rrtmgp37/frozen-optics-lookup/nine-grid-o128-s50/frozen-ice-psd-moments.nc",
+  "frozen_table_source_sha256": "8cb00850c3f885f5ec0306563c1ec0a55b512478a7395d626c1c99cebf280583",
+  "loader_source_sha256": {
+    "WRF/external/rte_rrtmgp/extensions/mo_simple_netcdf.F90": "b87ac6e7b26634a7433327700637471d38793f3e80207852bc7dd1cb5fb7a1a3",
+    "WRF/phys/module_ra_rrtmgp.F": "74378cc255088422ff8f770c1f342e135c538436d0bc0dcf67ec7b7abde1f5bb",
+    "WRF/phys/module_ra_rrtmgp_frozen.F": "dc468bf7e9e4f3883a8ad715dc4c25db4c1ff054637810fb178a02029edbed1d",
+    "WRF/phys/module_ra_rrtmgp_hash.F": "4bf4fd8dbeaf3309c2f4193ccd78ee2a8abf47fc228f5023a63798cc5ee993f6"
+  },
+  "mpi_command_suffix": [
+    "-launcher",
+    "fork",
+    "-iface",
+    "lo",
+    "-n",
+    "2",
+    "./wrf.exe"
+  ],
+  "mpi_launcher": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/mpich-sock/bin/mpiexec",
+  "schema": "WRF_MPI_FROZEN_TABLE_FAILURE_PREFLIGHT_V1",
+  "shared_coeff_hashes_before": {
+    "rrtmgp-clouds-lw-bnd.nc": "09d6704c5b863b4c3ceb417d20bb3076ec492e6bf2dfbcc9f3c5996a3706f0b0",
+    "rrtmgp-clouds-sw-bnd.nc": "7671835992a45afe66244b591a02c0b3df73d7d59ecb746bbffd9763497651cd",
+    "rrtmgp-gas-lw-g128.nc": "70ad65d116531122660318e5da2a2af9db74b425916202860e9527ef2375b8f6",
+    "rrtmgp-gas-sw-g112.nc": "361ed541324068ded28a275a4dd757bcaa0a845aebefa630f43a04678668fe62"
+  },
+  "shared_coeff_source": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp/WRF/run",
+  "source_commit": "e7c97ed661403b3922fcf752300c052611ef89cd",
+  "timeout_seconds": 60
+}
