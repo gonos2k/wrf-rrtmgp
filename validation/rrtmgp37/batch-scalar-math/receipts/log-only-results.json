@@ -1,0 +1,111 @@
+{
+  "status": "PASS_ANALYZED",
+  "receipt_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-lw-batch-wp-probe/scalar-log/outputs/run-20261003T104800Z/counterfactual-run-receipt.json",
+  "receipt_sha256": "93bde911cd1f313aee04bfca72cf20ed010a88acd40faa0d0e701eb22a98173b",
+  "runner_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-lw-batch-wp-probe/scalar-log/run_counterfactual_pair.py",
+  "runner_sha256": "535ef1f69ab434f5d72263189ce29d19544eb3140d6ea1e67e523d34a38ab432",
+  "engine_processes": [
+    {
+      "batch32": {
+        "bytes_equal": true,
+        "actual_sha256": "a9fd0da25b9b41de77a6e9724d50ea38f3681fd1b275371f05290c1bf75617ad",
+        "expected_sha256": "a9fd0da25b9b41de77a6e9724d50ea38f3681fd1b275371f05290c1bf75617ad",
+        "bytes": 36608,
+        "different_bytes": 0
+      }
+    },
+    {
+      "scalar32": {
+        "bytes_equal": true,
+        "actual_sha256": "a29c335dd9d24dffdadc0d2f8cc63ff4d7829fd6542a92ce03240e1dff6df0f2",
+        "expected_sha256": "a29c335dd9d24dffdadc0d2f8cc63ff4d7829fd6542a92ce03240e1dff6df0f2",
+        "bytes": 36608,
+        "different_bytes": 0
+      }
+    }
+  ],
+  "pins_unchanged": true,
+  "runtime_pre_post_match_expected": true,
+  "first_differing_wp_stage": "CLEAR_FU",
+  "gas_tau_batch_scalar_bitwise_equal": true,
+  "source_functions_batch_scalar_bitwise_equal": true,
+  "total_tau_bitwise_equal": true,
+  "stage_counts": {
+    "GAS_COL_DRY": {
+      "different_values": 0,
+      "total_values": 1504,
+      "max_abs": 0.0,
+      "max_ulp": 0
+    },
+    "GAS_TAU": {
+      "different_values": 0,
+      "total_values": 192512,
+      "max_abs": 0.0,
+      "max_ulp": 0
+    },
+    "SOURCE_LAY": {
+      "different_values": 0,
+      "total_values": 192512,
+      "max_abs": 0.0,
+      "max_ulp": 0
+    },
+    "SOURCE_LEV": {
+      "different_values": 0,
+      "total_values": 196608,
+      "max_abs": 0.0,
+      "max_ulp": 0
+    },
+    "SOURCE_SFC": {
+      "different_values": 0,
+      "total_values": 4096,
+      "max_abs": 0.0,
+      "max_ulp": 0
+    },
+    "TOTAL_TAU": {
+      "different_values": 0,
+      "total_values": 192512,
+      "max_abs": 0.0,
+      "max_ulp": 0
+    },
+    "CLEAR_FU": {
+      "different_values": 1160,
+      "total_values": 1536,
+      "max_abs": 5.8548721426632255e-12,
+      "max_ulp": 103
+    },
+    "CLEAR_FD": {
+      "different_values": 1482,
+      "total_values": 1536,
+      "max_abs": 5.357492227631155e-12,
+      "max_ulp": 22428
+    },
+    "CLEAR_HEAT": {
+      "different_values": 1421,
+      "total_values": 1504,
+      "max_abs": 8.380205166955146e-17,
+      "max_ulp": 49468
+    },
+    "ALL_FU": {
+      "different_values": 1132,
+      "total_values": 1536,
+      "max_abs": 6.0254023992456496e-12,
+      "max_ulp": 106
+    },
+    "ALL_FD": {
+      "different_values": 1490,
+      "total_values": 1536,
+      "max_abs": 5.357492227631155e-12,
+      "max_ulp": 22428
+    },
+    "ALL_HEAT": {
+      "different_values": 1414,
+      "total_values": 1504,
+      "max_abs": 9.75985243144295e-17,
+      "max_ulp": 57612
+    }
+  },
+  "scope": "Only the x86-64 vector log ABI symbol was replaced, by a function that calls scalar libc log per lane. The same replacement affects every vector-log invocation in the process. It does not replace vector exp or alter original Fortran objects.",
+  "interpretation": "The first differing stage moved from GAS_TAU to CLEAR_FU; gas tau, source functions and total tau are bitwise equal. This supports vector-log implementation as the cause of the observed gas-stage difference for these inputs. RTE differences remain and are not explained by this log-only test.",
+  "preserved_preflight_failure": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-lw-batch-wp-probe/scalar-log/outputs/run-20261003T104500Z/preflight-failure-preserved.json",
+  "no_further_engine_calls": true
+}

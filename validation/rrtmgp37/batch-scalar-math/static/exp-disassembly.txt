@@ -1,0 +1,30 @@
+
+/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-lw-batch-wp-probe/scalar-log-exp/build/wp_probe_scalar_log_exp.exe:     file format elf64-x86-64
+
+
+Disassembly of section .init:
+
+Disassembly of section .plt:
+
+Disassembly of section .plt.got:
+
+Disassembly of section .text:
+
+0000000000118830 <_ZGVbN2v_exp>:
+  118830:	f3 0f 1e fa          	endbr64
+  118834:	48 83 ec 28          	sub    $0x28,%rsp
+  118838:	0f 29 44 24 10       	movaps %xmm0,0x10(%rsp)
+  11883d:	e8 5e c8 ee ff       	call   50a0 <exp@plt>
+  118842:	66 0f 28 4c 24 10    	movapd 0x10(%rsp),%xmm1
+  118848:	48 c7 44 24 08 00 00 	movq   $0x0,0x8(%rsp)
+  11884f:	00 00
+  118851:	f2 0f 11 04 24       	movsd  %xmm0,(%rsp)
+  118856:	66 0f 15 c9          	unpckhpd %xmm1,%xmm1
+  11885a:	66 0f 28 c1          	movapd %xmm1,%xmm0
+  11885e:	e8 3d c8 ee ff       	call   50a0 <exp@plt>
+  118863:	f2 0f 11 44 24 08    	movsd  %xmm0,0x8(%rsp)
+  118869:	66 0f 28 04 24       	movapd (%rsp),%xmm0
+  11886e:	48 83 c4 28          	add    $0x28,%rsp
+  118872:	c3                   	ret
+
+Disassembly of section .fini:

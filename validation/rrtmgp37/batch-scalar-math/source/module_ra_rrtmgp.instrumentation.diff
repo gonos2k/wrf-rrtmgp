@@ -1,0 +1,87 @@
+--- build/udm-lw-batch-wp-probe/src/module_ra_rrtmgp.f90.baseline	2026-10-03 15:49:45.000000000 +0900
++++ build/udm-lw-batch-wp-probe/src/module_ra_rrtmgp.f90	2026-10-03 16:00:32.000000000 +0900
+@@ -3,7 +3,7 @@
+
+ MODULE module_ra_rrtmgp
+   USE mo_rte_kind, ONLY: wp, i8
+-  USE, INTRINSIC :: iso_fortran_env, ONLY: real64
++  USE, INTRINSIC :: iso_fortran_env, ONLY: real64,int64
+   USE mo_gas_optics_rrtmgp, ONLY: ty_gas_optics_rrtmgp, get_col_dry
+   USE mo_gas_concentrations, ONLY: ty_gas_concs
+   USE mo_optical_props, ONLY: ty_optical_props, ty_optical_props_1scl, ty_optical_props_2str
+@@ -71,6 +71,40 @@
+   CHARACTER(LEN=32), PARAMETER :: names_lw(10) = [CHARACTER(LEN=32) :: &
+       'h2o','co2','o3','n2o','ch4','o2','cfc11','cfc12','cfc22','ccl4']
+ CONTAINS
++  SUBROUTINE wp_probe2(label,a)
++    CHARACTER(LEN=*),INTENT(IN)::label
++    REAL(wp),INTENT(IN)::a(:,:)
++    CHARACTER(LEN=1024)::path
++    INTEGER::u,ios,i,j
++    INTEGER(int64)::bits
++    CALL GET_ENVIRONMENT_VARIABLE('RRTMGP_WP_CAPTURE_FILE',path,STATUS=ios)
++    IF(ios/=0.OR.LEN_TRIM(path)==0) RETURN
++    OPEN(NEWUNIT=u,FILE=TRIM(path),STATUS='UNKNOWN',POSITION='APPEND',ACTION='WRITE',IOSTAT=ios)
++    IF(ios/=0) RETURN
++    WRITE(u,'(A,1X,I0,1X,I0)') TRIM(label),SIZE(a,1),SIZE(a,2)
++    DO j=1,SIZE(a,2); DO i=1,SIZE(a,1)
++      bits=TRANSFER(REAL(a(i,j),real64),bits)
++      WRITE(u,'(Z16.16)') bits
++    END DO; END DO
++    CLOSE(u)
++  END SUBROUTINE
++  SUBROUTINE wp_probe3(label,a)
++    CHARACTER(LEN=*),INTENT(IN)::label
++    REAL(wp),INTENT(IN)::a(:,:,:)
++    CHARACTER(LEN=1024)::path
++    INTEGER::u,ios,i,j,k
++    INTEGER(int64)::bits
++    CALL GET_ENVIRONMENT_VARIABLE('RRTMGP_WP_CAPTURE_FILE',path,STATUS=ios)
++    IF(ios/=0.OR.LEN_TRIM(path)==0) RETURN
++    OPEN(NEWUNIT=u,FILE=TRIM(path),STATUS='UNKNOWN',POSITION='APPEND',ACTION='WRITE',IOSTAT=ios)
++    IF(ios/=0) RETURN
++    WRITE(u,'(A,1X,I0,1X,I0,1X,I0)') TRIM(label),SIZE(a,1),SIZE(a,2),SIZE(a,3)
++    DO k=1,SIZE(a,3); DO j=1,SIZE(a,2); DO i=1,SIZE(a,1)
++      bits=TRANSFER(REAL(a(i,j,k),real64),bits)
++      WRITE(u,'(Z16.16)') bits
++    END DO; END DO; END DO
++    CLOSE(u)
++  END SUBROUTINE
+   SUBROUTINE require(msg)
+     CHARACTER(LEN=*), INTENT(IN) :: msg
+     IF (LEN_TRIM(msg)>0) CALL wrf_error_fatal3('module_ra_rrtmgp.F',0,'RRTMGP: '//TRIM(msg))
+@@ -737,6 +771,11 @@
+     CALL ensure_lw_source(source,nc,nl)
+     CALL require(gas_lw%gas_optics(REAL(play,wp)*100._wp,REAL(plev,wp)*100._wp, &
+                  REAL(tlay,wp),REAL(tsfc,wp),gases,atmos,source,col_dry=col_dry,tlev=REAL(tlev,wp)))
++    CALL wp_probe2('GAS_COL_DRY',col_dry)
++    CALL wp_probe3('GAS_TAU',atmos%tau)
++    CALL wp_probe3('SOURCE_LAY',source%lay_source)
++    CALL wp_probe3('SOURCE_LEV',source%lev_source)
++    CALL wp_probe2('SOURCE_SFC',source%sfc_source)
+     IF(trace_active('LW')) THEN
+       CALL trace_result('LW','GAS_COL_DRY',col_dry)
+       CALL trace_result('LW','GAS_TAU',atmos%tau)
+@@ -746,6 +785,7 @@
+     CALL require(rte_lw(atmos,.FALSE.,source,emissivity,flux))
+     upc=REAL(fu); dnc=REAL(fd)
+     CALL require(compute_heating_rate(fu,fd,REAL(plev,wp)*100._wp,heat))
++    CALL wp_probe2('CLEAR_FU',fu); CALL wp_probe2('CLEAR_FD',fd); CALL wp_probe2('CLEAR_HEAT',heat)
+     hrc=REAL(heat*86400._wp)
+
+     IF((ANY(cf>0.).AND.overlap/=0).OR.trace_active('LW')) THEN
+@@ -783,12 +823,14 @@
+       IF(ANY(cf>0.).AND.overlap/=0) CALL require(sampled%increment(atmos))
+     END IF
+     IF(rrtmgp_frozen_enabled()) CALL add_frozen_lw(atmos,work%frozen,tlay,gwp,hwp,lambda_g,lambda_h,frozen_context)
++    CALL wp_probe3('TOTAL_TAU',atmos%tau)
+     IF(trace_active('LW')) THEN
+       CALL trace_result('LW','TOTAL_TAU',atmos%tau)
+     END IF
+     CALL require(rte_lw(atmos,.FALSE.,source,emissivity,flux))
+     up=REAL(fu); dn=REAL(fd)
+     CALL require(compute_heating_rate(fu,fd,REAL(plev,wp)*100._wp,heat))
++    CALL wp_probe2('ALL_FU',fu); CALL wp_probe2('ALL_FD',fd); CALL wp_probe2('ALL_HEAT',heat)
+     hr=REAL(heat*86400._wp)
+     IF(trace_active('LW')) THEN
+       CALL trace_result('LW','UP',up)
