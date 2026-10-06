@@ -1,0 +1,24 @@
+{
+  "schema": "UDM37_LBLRTM_R3_TERM_REVIEW_ERRATUM_V1",
+  "status": "CORRECTION_TO_TARGET_R3_INDEX_63_TERM_SEQUENCE_IDS",
+  "original_review": {
+    "path": "build/udm37-lblrtm-r3-term-independent-review-v1/review.json",
+    "sha256": "fe14b49f9b96ef4274947bddb58f295ca80bad7bf7db07fc79504fac350f4536"
+  },
+  "source_accounting_report": {
+    "path": "build/udm37-lblrtm-r3-term-trace-v1/r3-accounting-report-v2.json",
+    "sha256": "e44d08ea068c0b5e242f263c3a2f70c2d5ff4b71b529c10604d8be5de1e438ce"
+  },
+  "correction": {
+    "field": "target_r3_index_63_accounting.large_negative_coupling_updates",
+    "original_review_sequence_ids": [35613, 35883, 36163],
+    "correct_sequence_ids_for_j3_63": [35615, 35885, 36165],
+    "values_from_saved_accounting_report": [
+      {"seq": 35615, "j3": 63, "operand": -0.013911364162291164},
+      {"seq": 35885, "j3": 63, "operand": -0.005200702219169724},
+      {"seq": 36165, "j3": 63, "operand": -0.0018938007388991413}
+    ],
+    "reason": "The prior review accidentally copied the neighboring j3=61 sequence IDs. These IDs and operands are read directly from the saved report's R3_index_1based=63 largest_negative_coupling_terms; no reader or model was rerun."
+  },
+  "scope": "This corrects only the three sequence IDs/operands listed for the index-63 subsection. The seq35615 raw-record spot check, arithmetic, local source interpretation, noninterference finding, and FAIL_NEGATIVE_OD physical acceptance are unchanged."
+}

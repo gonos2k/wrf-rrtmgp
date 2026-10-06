@@ -1,0 +1,177 @@
+--- panel-diagnostic/src/oprop.f90
++++ r3-term-diagnostic/src/oprop.f90
+@@ -468,8 +468,10 @@
+ 
+ 70 CONTINUE
+ !
++   CALL udm37_r3_snapshot(110,R3,ICNTNM,ILBLF4,IXSECT,IR4)
+    CALL CNVFNV (VNU,SP,SPPSP,RECALF,R1,R2,R3,F1,F2,F3,FG,XVER,ZETAI, &
+    &             IZETA)
++   CALL udm37_r3_snapshot(111,R3,ICNTNM,ILBLF4,IXSECT,IR4)
+ !
+    IF (IPANEL.EQ.0) GO TO 60
+ !
+@@ -504,23 +506,31 @@
+       CALL RSYM (R3,DVR3,VFT)
+    ENDIF
+ !
++   CALL udm37_r3_snapshot(120,R3,ICNTNM,ILBLF4,IXSECT,IR4)
+    IF (IXSECT.GE.1.AND.IR4.EQ.0) THEN
+       CALL CPUTIM (TIME0)
+       CALL XSECTM (IFST,IR4)
+       CALL CPUTIM (TIME)
+       TXS = TXS+TIME-TIME0
+    ENDIF
++   CALL udm37_r3_snapshot(121,R3,ICNTNM,ILBLF4,IXSECT,IR4)
+ !
+    CALL CPUTIM(TPAT0)
++   CALL udm37_r3_snapshot(122,R3,ICNTNM,ILBLF4,IXSECT,IR4)
+    IF (ILBLF4.GE.1)                                                  &
+    &    CALL XINT (V1R4,V2R4,DVR4,R4,1.0,VFT,DVR3,R3,N1R3,N2R3)
++   CALL udm37_r3_snapshot(123,R3,ICNTNM,ILBLF4,IXSECT,IR4)
++   CALL udm37_r3_snapshot(124,R3,ICNTNM,ILBLF4,IXSECT,IR4)
+ 
+    IF (ICNTNM.GE.1)                                                  &
+    &    CALL XINT (V1ABS,V2ABS,DVABS,ABSRB,1.,VFT,DVR3,R3,N1R3,N2R3)
++   CALL udm37_r3_snapshot(125,R3,ICNTNM,ILBLF4,IXSECT,IR4)
+    CALL CPUTIM(TPAT1)
+    TXINT = TXINT + TPAT1-TPAT0
+ !
++   CALL udm37_r3_snapshot(126,R3,ICNTNM,ILBLF4,IXSECT,IR4)
+    CALL PANEL (R1,R2,R3,KFILE,JRAD,IENTER)
++   CALL udm37_r3_snapshot(127,R3,ICNTNM,ILBLF4,IXSECT,IR4)
+ !
+    IF (ISTOP.NE.1) THEN
+       IF (ILBLF4.GE.1) THEN
+@@ -1147,6 +1157,8 @@
+       SP(I) = SUI*(1.+GI*PAVP2)
+       SPPI = SUI*YI*PAVP0
+       SPPSP(I) = SPPI/SP(I)
++      IF (LAYER.EQ.21) CALL udm37_line_store(NLNCR,I,M,ISO,IFLAG,IZ, &
++         SUI,GI,YI,PAVP0,PAVP2,ALFL,ZETA,VNU(I))
+ !
+ !     SPEAK is used for line rejection (no LCPL lines (sppsp ne 1) are r
+ 
+@@ -1254,6 +1266,7 @@
+    DIMENSION R1(*),R2(*),R3(*)
+    DIMENSION F1(*),F2(*),F3(*)
+    DIMENSION FG(*),XVER(*)
++   REAL udm37_before_r3
+    DIMENSION IZETA(*),ZETAI(*)
+ !
+    CALL CPUTIM (TIME0)
+@@ -1313,7 +1326,11 @@
+                IZ3 = ABS(ZF3)+1.5
+                IZ2 = ABS(ZF2)+1.5
+                IZ1 = ABS(ZF1)+1.5
++               IF (LAYER.EQ.21) udm37_before_r3=R3(J3)
+                R3(J3) = R3(J3)+STRF3*F3(IZ3)
++               IF (LAYER.EQ.21) CALL udm37_r3_term(1,I,J1,J3,IZ3, &
++                  J3SHFT,JMIN1,JMAX1,VNU(I),SP(I),SPPSP(I),RECALF(I), &
++                  STRF3,F3(IZ3),1.0,udm37_before_r3,R3(J3),ZSLOPE,ZINT,CONF3)
+                R2(J2) = R2(J2)+STRF2*F2(IZ2)
+                R1(J1) = R1(J1)+STRF1*F1(IZ1)+STRD*FG(IZ1)+STRVER*    &
+                   XVER (IZ1)
+@@ -1342,7 +1359,11 @@
+                   IZ3 = ABS(ZF3L)+1.5
+                   IZ2 = ABS(ZF2L)+1.5
+                   IZ1 = ABS(ZF1L)+1.5
++                  IF (LAYER.EQ.21) udm37_before_r3=R3(J3)
+                   R3(J3) = R3(J3)+STRF3*F3(IZ3)*ZF3L
++                  IF (LAYER.EQ.21) CALL udm37_r3_term(2,I,J1,J3,IZ3, &
++                     J3SHFT,JMIN1,JMAX1,VNU(I),SP(I),SPPSP(I),RECALF(I), &
++                     STRF3,F3(IZ3),ZF3L,udm37_before_r3,R3(J3),ZSLOPE,ZINT,CONF3)
+                   R2(J2) = R2(J2)+STRF2*F2(IZ2)*ZF2L
+                   R1(J1) = R1(J1)+(STRF1*F1(IZ1)+STRD*FG(IZ1)+STRVER*&
+                      XVER(IZ1))*ZF1L
+@@ -11836,3 +11857,90 @@
+    WRITE(trace_unit) R3(1:MAX3)
+    FLUSH(trace_unit)
+ END SUBROUTINE udm37_panel_trace
++
++
++! Observational diagnostics only. Separate diagnostic COMMONs never alias physics.
++SUBROUTINE udm37_line_store(batch,i,m,iso,flag,iz,sui,gi,yi,p0,p2,alfl,zeta,vnu)
++   IMPLICIT NONE
++   INTEGER, INTENT(IN) :: batch,i,m,iso,flag,iz
++   REAL, INTENT(IN) :: sui,gi,yi,p0,p2,alfl,zeta
++   REAL*8, INTENT(IN) :: vnu
++   INTEGER udm37_mi(5,250)
++   REAL*8 udm37_mr(8,250)
++   COMMON /UDM37_META_I/ udm37_mi
++   COMMON /UDM37_META_R/ udm37_mr
++   IF(i<1.OR.i>250) STOP 'UDM37 diagnostic metadata index'
++   udm37_mi(:,i)=[batch,m,iso,flag,iz]
++   udm37_mr(:,i)=[REAL(sui,8),REAL(gi,8),REAL(yi,8),REAL(p0,8), &
++      REAL(p2,8),REAL(alfl,8),REAL(zeta,8),vnu]
++END SUBROUTINE udm37_line_store
++
++INTEGER FUNCTION udm37_term_unit()
++   IMPLICIT NONE
++   INTEGER, SAVE :: u=0
++   IF(u==0) OPEN(NEWUNIT=u,FILE='UDM37_R3_TERM_TRACE', &
++      FORM='UNFORMATTED',STATUS='NEW',ACTION='WRITE')
++   udm37_term_unit=u
++END FUNCTION udm37_term_unit
++
++INTEGER FUNCTION udm37_term_seq()
++   IMPLICIT NONE
++   INTEGER, SAVE :: n=0
++   n=n+1
++   udm37_term_seq=n
++END FUNCTION udm37_term_seq
++
++SUBROUTINE udm37_r3_term(stage,i,j1,j3,iz3,j3shft,jmin1,jmax1, &
++   vn,sp,sppsp,rec,str,f,z,before,after,zslope,zint,conf3)
++   IMPLICIT REAL*8 (V)
++   INTEGER, INTENT(IN) :: stage,i,j1,j3,iz3,j3shft,jmin1,jmax1
++   REAL*8, INTENT(IN) :: vn
++   REAL, INTENT(IN) :: sp,sppsp,rec,str,f,z,before,after,zslope,zint,conf3
++   CHARACTER*8 XID,HMOLID,YID
++   REAL*8 SECANT,XALTZ
++   COMMON /FILHDR/ XID(10),SECANT,PAVE,TAVE,HMOLID(60),XALTZ(4), &
++      WK(60),PZL,PZU,TZL,TZU,WBROAD,DV,V1,V2,TBOUND, &
++      EMISIV,FSCDID(17),NMOL,LAYER,YI1,YID(10),LSTWDF
++   COMMON /XSUB/ VBOT,VTOP,VFT,LIMIN,ILO,IHI,IEOF,IPANEL,ISTOP,IDATA
++   COMMON /SUB1/ MAX1,MAX2,MAX3,NLIM1,NLIM2,NLIM3,NLO,NHI,DVR2,DVR3, &
++      N1R1,N2R1,N1R2,N2R2,N1R3,N2R3
++   INTEGER udm37_mi(5,250),u,q,udm37_term_unit,udm37_term_seq
++   REAL*8 udm37_mr(8,250),nu
++   COMMON /UDM37_META_I/ udm37_mi
++   COMMON /UDM37_META_R/ udm37_mr
++   IF(LAYER/=21) RETURN
++   IF(j3<1.OR.j3>MAX3) RETURN
++   nu=VFT+REAL(j3-1)*DVR3
++   IF(nu<666.1_8.OR.nu>666.7_8) RETURN
++   IF(i<1.OR.i>250) STOP 'UDM37 diagnostic trace index'
++   IF(udm37_mr(8,i)/=vn) STOP 'UDM37 diagnostic stale metadata'
++   u=udm37_term_unit();q=udm37_term_seq()
++   WRITE(u) 'UDMR3T1 ',q,stage,LAYER,udm37_mi(1,i),i,j1,j3, &
++      udm37_mi(2:5,i),iz3,j3shft,jmin1,jmax1, &
++      VFT,DVR3,vn,sp,sppsp,rec,str,f,z,before,after,zslope,zint,conf3, &
++      udm37_mr(:,i)
++END SUBROUTINE udm37_r3_term
++
++SUBROUTINE udm37_r3_snapshot(stage,r3,icntnm,ilblf4,ixsect,ir4)
++   IMPLICIT REAL*8 (V)
++   INTEGER, INTENT(IN) :: stage,icntnm,ilblf4,ixsect,ir4
++   REAL, INTENT(IN) :: r3(*)
++   CHARACTER*8 XID,HMOLID,YID
++   REAL*8 SECANT,XALTZ
++   COMMON /FILHDR/ XID(10),SECANT,PAVE,TAVE,HMOLID(60),XALTZ(4), &
++      WK(60),PZL,PZU,TZL,TZU,WBROAD,DV,V1,V2,TBOUND, &
++      EMISIV,FSCDID(17),NMOL,LAYER,YI1,YID(10),LSTWDF
++   COMMON /XSUB/ VBOT,VTOP,VFT,LIMIN,ILO,IHI,IEOF,IPANEL,ISTOP,IDATA
++   COMMON /SUB1/ MAX1,MAX2,MAX3,NLIM1,NLIM2,NLIM3,NLO,NHI,DVR2,DVR3, &
++      N1R1,N2R1,N1R2,N2R2,N1R3,N2R3
++   COMMON /XPANEL/ V1P,V2P,DVP,NLIM,RMIN,RMAX,NPNLXP,NSHIFT,NPTS
++   INTEGER u,q,udm37_term_unit,udm37_term_seq
++   IF(LAYER/=21) RETURN
++   IF(VFT>666.7_8.OR.VFT+REAL(MAX3-1)*DVR3<666.1_8) RETURN
++   u=udm37_term_unit();q=udm37_term_seq()
++   WRITE(u) 'UDMR3S1 ',q,stage,LAYER,MAX3,NLIM1,NLIM3,ILO,IHI,IPANEL, &
++      ISTOP,N1R3,N2R3,NLO,NHI,NSHIFT,icntnm,ilblf4,ixsect,ir4, &
++      VFT,DV,DVR3,PAVE,TAVE
++   WRITE(u) r3(1:MAX3)
++   FLUSH(u)
++END SUBROUTINE udm37_r3_snapshot

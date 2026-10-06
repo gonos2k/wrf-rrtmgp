@@ -1,0 +1,68 @@
+{
+  "blocking_source_arithmetic_issue_found": false,
+  "execution_performed": false,
+  "required_reader_contract": [
+    "Keep the global q sequence and stage tags; term records can interleave with array snapshots.",
+    "Group 110/111 by repeated CNVFNV call and VFT/window, then distinguish 120-126 for the current PANEL from 127 for the next window.",
+    "Do not require stage127 in the same target-containing panel when its post-shift VFT window has passed the target; require the corresponding carry/next-stage relationship if stage127 is the diagnostic objective.",
+    "Retain exact all-45-layer spectral output comparison, and retain original FAIL_NEGATIVE_OD status."
+  ],
+  "review_findings": [
+    {
+      "finding": "The new patch is additive to the reviewed PANEL trace source. It adds calls/helpers and diagnostic COMMON blocks; no existing radiative-transfer arithmetic assignment is edited.",
+      "topic": "parent/source-diff"
+    },
+    {
+      "finding": "UDM37_META_I is declared consistently as INTEGER(5,250) in line_store and term writer; UDM37_META_R is consistently REAL*8(8,250). Under pinned linuxGNUdbl flags (-fdefault-integer-8, -fdefault-real-8, -fdefault-double-8, -frecord-marker=4), default INTEGER/REAL arguments and existing HIRAC1/CNVFNV arrays match the helper declarations. The snapshot and term record field counts in the plan match their WRITE lists: respectively 19 integers + 5 reals and 15 integers + 22 reals after the 8-character tag.",
+      "topic": "metadata COMMON layouts"
+    },
+    {
+      "finding": "The metadata store call follows line correction and computation of SUI/GI/YI/PAVP0/PAVP2/ALFL/ZETA and VNU, and term writes are only reached when SP(I) is nonzero in CNVFNV. Each subsequent LNCOR1/RDLIN chunk overwrites the slots it uses; the term helper checks stored VNU exactly against the active line center. NLNCR is stored as a batch identifier. IR4 is initialized to zero in HIRAC1 before the processing loop; subsequent XSECTM updates are bracketed by snapshot stages 120/121. ICNTNM/ILBLF4/IXSECT derive from initialized FSCDID inputs.",
+      "topic": "line metadata validity"
+    },
+    {
+      "finding": "Snapshots 110/111 bracket every CNVFNV chunk before the IPANEL==0 continuation branch. The R3 array persists across these chunks, and each snapshot records ILO/IHI/IPANEL plus sequence and stage, so the trace can preserve per-chunk accumulation. Analysis must respect the shared sequential record order and batch IDs; a stage 110/111 pair is not necessarily a whole panel.",
+      "topic": "partial CNVFNV calls"
+    },
+    {
+      "finding": "The baseline hook is immediately around the R3 += STRF3*F3(IZ3) assignment; the coupling hook is immediately around the corresponding additional ZF3L-weighted increment. Both save before/after R3, contributing terms, center/index metadata, and per-line corrected inputs. The helper is observational except for fail-fast checks and file output.",
+      "topic": "term capture"
+    },
+    {
+      "finding": "Stage 127 occurs after PANEL has advanced VFT and shifted/zeroed R3 (oprop.f90:1562-1582). Its helper range test uses this new VFT and the new MAX3 window. Therefore stage 127 describes the carried state for the next spectral window, not the same coordinate origin as stage 126. For a target no longer inside the post-shift R3 window, stage 127 is intentionally absent; carry into that target should be connected through a prior-panel stage 127 and the next-window stage 110 by VFT/window and sequence, not assumed as a same-panel four-stage tuple.",
+      "topic": "post-PANEL carry window"
+    },
+    {
+      "finding": "Index-range and stale-metadata checks use STOP in diagnostic helpers; an invariant violation can terminate the instrumented run even though physical expressions are unchanged. Treat this as a diagnostic integrity guard, not as fully passive control flow; preserve any such failure and do not interpret it as a physics result.",
+      "topic": "fail-fast behavior"
+    }
+  ],
+  "schema": "UDM37_LBLRTM_R3_TERM_TRACE_PREFLIGHT_REVIEW_V1",
+  "source_pins": {
+    "build/udm37-lblrtm-panel-trace-v1/source/LBLRTM/src/oprop.f90": {
+      "sha256": "3479ab50b9edebeb68d6faea77d6559134b2f778343a3bca53d9e73c3a87c37b",
+      "size_bytes": 483574
+    },
+    "build/udm37-lblrtm-r3-term-trace-v1/build-plan.json": {
+      "sha256": "061959897b666724a6c70023d71d32b61c459e3c848b28c099647a39574f2c5e",
+      "size_bytes": 7231
+    },
+    "build/udm37-lblrtm-r3-term-trace-v1/instrumentation.patch": {
+      "sha256": "bf2b1e6c6061e12515e645e225026510f5c88767ec90e6e71d5346a837c14197",
+      "size_bytes": 6978
+    },
+    "build/udm37-lblrtm-r3-term-trace-v1/source/LBLRTM/src/oprop.f90": {
+      "sha256": "6b806117a32832371f8947bc54b5a5c3bf38389a7279ae48ae39afc141666300",
+      "size_bytes": 488351
+    },
+    "build/udm37-lblrtm-stock-build-v1/attempt-1/lblrtm-build.log": {
+      "sha256": "7c1df01e26183d4c9a739879eef6489a06b45b10ee14012726794268c8b9fe51",
+      "size_bytes": 26386
+    },
+    "build/udm37-lblrtm-stock-build-v1/attempt-1/source/LBLRTM/src/oprop.f90": {
+      "sha256": "7cf594968ec331da3df75429262c1023c21fc461cbbae208253b0fa870685ef8",
+      "size_bytes": 481997
+    }
+  },
+  "status": "PASS_SCOPED_PREFLIGHT_WITH_POSTCARRY_PARSER_CONSTRAINT"
+}

@@ -1,0 +1,246 @@
+{
+  "execution_scope": {
+    "builds": 0,
+    "line_generation": 0,
+    "new_numeric_replay": 0,
+    "solver_calls": 0
+  },
+  "inputs": {
+    "lblrtm_oprop": {
+      "path": "build/udm37-lblrtm-stock-build-v1/attempt-1/source/LBLRTM/src/oprop.f90",
+      "sha256": "7cf594968ec331da3df75429262c1023c21fc461cbbae208253b0fa870685ef8"
+    },
+    "lblrtm_struct_types": {
+      "path": "build/udm37-lblrtm-stock-build-v1/attempt-1/source/LBLRTM/src/struct_types.f90",
+      "sha256": "55b52495780ae564e66470f6ad3f32afd8b58e0c59a6b78ed82b3f606fb7b16c"
+    },
+    "lnfl": {
+      "path": "build/udm37-lblrtm-reference-stage-v1/sources/LNFL/src/lnfl.f",
+      "sha256": "d47b7b296b747837bbec8df06a7c8ea1df2ec241546b1db4a15f6b02b98a4ad6"
+    },
+    "prior_source_review": {
+      "path": "build/udm37-lblrtm-r3-term-source-review-v1/review.json",
+      "sha256": "b042ebe15d5476bb0baa56fadbb35371312dd8b38139e783946854a898c2d806"
+    },
+    "r3_trace_report": {
+      "path": "build/udm37-lblrtm-r3-term-trace-v1/r3-accounting-report-v2.json",
+      "sha256": "e44d08ea068c0b5e242f263c3a2f70c2d5ff4b71b529c10604d8be5de1e438ce"
+    }
+  },
+  "recommended_next_discriminator": {
+    "first": "Read-only/direct binary audit of the selected CO2 main records and their exact LNFL/TAPE3 companion records, keyed by trace identities (molecule/isotope/VNU/flag/sequence); validate raw record bytes -> RDLIN decoded companion -> LNCOR1 interpolated YI/GI/SPPSP. Preserve all unrelated records and original line ordering.",
+    "nonclaims": [
+      "No source evidence here proves TAPE3 corruption or a reader defect.",
+      "A mathematically negative R3 contribution is not by itself proof that line coupling or the reference is invalid.",
+      "Do not convert the NOCPL control into an accuracy reference.",
+      "No support-limit change, tolerance change, or physical-validity conclusion is supported."
+    ],
+    "second_if_record_path_matches": "For only the traced target R3 cells, enumerate all contributing updates and report support/carry geometry and each line\u2019s ALFV/HWF3/ALFMAX status, JMIN/JMAX, J3/IZ3/ZF3L and PANEL shifts. Do not change HWF3/ALFMAX or assert truncation is erroneous.",
+    "why_first": "Current trace already localizes negative increments to the coupling operand; confirming the representation/association feeding that operand tests a potentially consequential interface before investigating finite support."
+  },
+  "schema": "LBLRTM_COUPLING_NEXT_SOURCE_REVIEW_V1",
+  "source_findings": [
+    {
+      "facts": [
+        "INPUT_BLOCK stores VNU as REAL(8), while SP/ALFA/EPP/HWHM/TMPALF/PSHIFT are REAL(4), MOL and IFLG are INTEGER(4) (struct_types.f90 34-43).",
+        "Both RDLIN and RDLNFL branch on IFLG: nonnegative MOL is copied as integer; negative-IFLG MOL bits are TRANSFERred to REAL(4), promoted to REAL(8), then transferred into wider storage. Thus negative-IFLG companion data is deliberately encoded in the MOL slot and must not be decoded as a molecule identifier.",
+        "The reader builds IOUT only from records with IFLG>=0 (RDLIN 840-850; RDLNFL analogous at 3490-3499), so companion records are consumed to populate interpolation arrays but are not main absorption lines."
+      ],
+      "interpretation": "This is a real precision/representation boundary worth auditing against the selected raw TAPE3 bytes and the values delivered to LNCOR1. Source alone does not show corruption; transfer is explicitly intentional.",
+      "source": {
+        "file": "lblrtm_oprop",
+        "lines": "780-812, 840-850, 3371-3499"
+      },
+      "topic": "mixed_precision_RDLIN_companion_transfer"
+    },
+    {
+      "facts": [
+        "LNFL SHRINK writes a main line, then appends companion line records when the main IFLG is >=1; IFLG=5 appends an additional self-coupling companion (1057-1116).",
+        "The line parser normalizes a negative input coupling flag to its absolute value and maintains IFLGM1 state (1646-1679). For flag 5 it reads a foreign coupling row, sets IFLGM1=1 for the next self-coupling row; the subsequent branch reads coupling fields and resets IFLGM1=0 (1775-1814).",
+        "RDLIN uses the emitted IFLG and companion sequence; LNCOR1 consumes the companion-interpolated A/B values for coupling (oprop 1036-1061)."
+      ],
+      "interpretation": "An exact selected main-plus-companion record audit is more discriminating next than changing line-support limits: it can verify identity, flag/state sequence, embedded REAL(4) payload bits, and final LNCOR1 YI/GI inputs for the traced lines.",
+      "source": {
+        "file": "lnfl",
+        "lines": "1057-1116, 1646-1679, 1775-1814"
+      },
+      "topic": "LNFL_companion_encoding_and_readthrough"
+    },
+    {
+      "facts": [
+        "LNCOR1 computes ALFV, floors it at DV, caps it at ALFMAX, and skips a line when HWF3*ALFV+VNU<VFT (1107-1123).",
+        "CNVFNV constructs ZSLOPE, ZINT, JMIN/JMAX and the R3 shift; base line updates use R3(J3)+STRF3*F3(IZ3) and coupling updates use R3(J3)+STRF3*F3(IZ3)*ZF3L (1284-1316, 1322-1349). The finite update range is JMIN1..JMAX1.",
+        "The trace report verifies actual negative crossings in the target R3 window from CO2 coupling increments; it reports GI strength multipliers equal to 1, positive continuum increment, and zero XS/LBLF4 increment for those selected accounting points."
+      ],
+      "interpretation": "Support limits and panel mapping are a second-stage question after record/YI/GI provenance. A bounded support audit should retain every line update mapped into the four target R3 points plus line-center, widths, HWF3, ALFMAX-capped ALFV, ZSLOPE, JMIN/JMAX, J3, IZ3, ZF3L, and PANEL/VFT identity. This would test truncation/mapping, not certify physical validity.",
+      "source": {
+        "file": "lblrtm_oprop",
+        "lines": "1100-1123, 1271-1351"
+      },
+      "topic": "finite_line_support_and_R3_update"
+    }
+  ],
+  "source_line_notes": {
+    "lnfl": "LNFL reader/writer comments and state logic are source contracts; confirming the selected input bytes still requires a targeted record-level audit.",
+    "oprop": "Line locations refer to the frozen stock source at the pinned hash above."
+  },
+  "status": "SOURCE_REVIEW_COMPLETE_SCOPED",
+  "trace_evidence": {
+    "physical_reference_acceptance": "FAIL_NEGATIVE_OD_RETAINED",
+    "samples_compared": 63838065,
+    "source_report_status": "PASS_SCOPED_EXACT_UPDATE_ACCOUNTING_AND_NONINTERFERENCE",
+    "target_accounting_selected_fields": [
+      {
+        "GI_strength_multiplier_max": 1.0,
+        "GI_strength_multiplier_min": 1.0,
+        "LBLF4_XINT_delta": 0.0,
+        "R3_index_1based": 61,
+        "baseline_operand_sum": 0.004509224352488143,
+        "continuum_XINT_delta": 0.000259345705365256,
+        "coupling_operand_sum": -0.012963058039624796,
+        "first_negative_transitions": [
+          {
+            "GI_strength_multiplier": 1.0,
+            "R3_grid_wavenumber": 666.3135288888894,
+            "actual_operand": -0.01115841512571552,
+            "after": -0.010124725405579845,
+            "batch": 474,
+            "before": 0.0010336897201356741,
+            "flag": 1,
+            "gi": 0.0,
+            "i": 32,
+            "isotope": 1,
+            "j3": 61,
+            "molecule": 2,
+            "pavp0": 0.34380581297804097,
+            "pavp2": 0.11820243703749168,
+            "seq": 35613,
+            "sp": 0.05631378974057237,
+            "sppsp": 1.0431859088670232,
+            "stage": 2,
+            "sui": 0.05631378974057237,
+            "vft": 662.695395555556,
+            "vnu": 667.385965634841,
+            "yi": 3.034229991142273
+          }
+        ],
+        "optional_XSECTM_delta": 0.0,
+        "wavenumber": 666.3135288888894
+      },
+      {
+        "GI_strength_multiplier_max": 1.0,
+        "GI_strength_multiplier_min": 1.0,
+        "LBLF4_XINT_delta": 0.0,
+        "R3_index_1based": 62,
+        "baseline_operand_sum": 0.005548779228631568,
+        "continuum_XINT_delta": 0.00025945734515737777,
+        "coupling_operand_sum": -0.014122199029226271,
+        "first_negative_transitions": [
+          {
+            "GI_strength_multiplier": 1.0,
+            "R3_grid_wavenumber": 666.3738311111116,
+            "actual_operand": -0.012464655733754637,
+            "after": -0.011425893009135437,
+            "batch": 474,
+            "before": 0.0010387627246192005,
+            "flag": 1,
+            "gi": 0.0,
+            "i": 32,
+            "isotope": 1,
+            "j3": 62,
+            "molecule": 2,
+            "pavp0": 0.34380581297804097,
+            "pavp2": 0.11820243703749168,
+            "seq": 35614,
+            "sp": 0.05631378974057237,
+            "sppsp": 1.0431859088670232,
+            "stage": 2,
+            "sui": 0.05631378974057237,
+            "vft": 662.695395555556,
+            "vnu": 667.385965634841,
+            "yi": 3.034229991142273
+          }
+        ],
+        "optional_XSECTM_delta": 0.0,
+        "wavenumber": 666.3738311111116
+      },
+      {
+        "GI_strength_multiplier_max": 1.0,
+        "GI_strength_multiplier_min": 1.0,
+        "LBLF4_XINT_delta": 0.0,
+        "R3_index_1based": 63,
+        "baseline_operand_sum": 0.0067990251847154974,
+        "continuum_XINT_delta": 0.0002595661029347919,
+        "coupling_operand_sum": -0.015348817314295393,
+        "first_negative_transitions": [
+          {
+            "GI_strength_multiplier": 1.0,
+            "R3_grid_wavenumber": 666.4341333333339,
+            "actual_operand": -0.013911364162291164,
+            "after": -0.012865978591276264,
+            "batch": 474,
+            "before": 0.0010453855710148992,
+            "flag": 1,
+            "gi": 0.0,
+            "i": 32,
+            "isotope": 1,
+            "j3": 63,
+            "molecule": 2,
+            "pavp0": 0.34380581297804097,
+            "pavp2": 0.11820243703749168,
+            "seq": 35615,
+            "sp": 0.05631378974057237,
+            "sppsp": 1.0431859088670232,
+            "stage": 2,
+            "sui": 0.05631378974057237,
+            "vft": 662.695395555556,
+            "vnu": 667.385965634841,
+            "yi": 3.034229991142273
+          }
+        ],
+        "optional_XSECTM_delta": 0.0,
+        "wavenumber": 666.4341333333339
+      },
+      {
+        "GI_strength_multiplier_max": 1.0,
+        "GI_strength_multiplier_min": 1.0,
+        "LBLF4_XINT_delta": 0.0,
+        "R3_index_1based": 64,
+        "baseline_operand_sum": 0.008326313736703122,
+        "continuum_XINT_delta": 0.000259671972267032,
+        "coupling_operand_sum": -0.016769635358776507,
+        "first_negative_transitions": [
+          {
+            "GI_strength_multiplier": 1.0,
+            "R3_grid_wavenumber": 666.494435555556,
+            "actual_operand": -0.015578580323629486,
+            "after": -0.014501915608709164,
+            "batch": 474,
+            "before": 0.0010766647149203228,
+            "flag": 1,
+            "gi": 0.0,
+            "i": 32,
+            "isotope": 1,
+            "j3": 64,
+            "molecule": 2,
+            "pavp0": 0.34380581297804097,
+            "pavp2": 0.11820243703749168,
+            "seq": 35616,
+            "sp": 0.05631378974057237,
+            "sppsp": 1.0431859088670232,
+            "stage": 2,
+            "sui": 0.05631378974057237,
+            "vft": 662.695395555556,
+            "vnu": 667.385965634841,
+            "yi": 3.034229991142273
+          }
+        ],
+        "optional_XSECTM_delta": 0.0,
+        "wavenumber": 666.494435555556
+      }
+    ],
+    "target_snapshot_seq": 45785,
+    "target_vft": 662.695395555556,
+    "term_updates_reconstructed_bitwise": 45569
+  }
+}

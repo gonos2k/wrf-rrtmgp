@@ -1,0 +1,51 @@
+{
+  "blocking_source_arithmetic_issue": false,
+  "confirmed": [
+    "No preexisting arithmetic assignment was changed by the final patch; calls wrap observation around the R3 accumulation and snapshot existing arrays.",
+    "Line metadata stores five default INTEGER fields and eight REAL*8 fields in distinct COMMON blocks with matching declarations in writer/consumer. Stock GNU flags set default INTEGER and REAL to 8 bytes and record markers to 4 bytes.",
+    "Term record is 8-byte tag + 15 8-byte integers + 22 8-byte reals; snapshots are 8-byte tag + 19 8-byte integers + 5 8-byte reals, followed by one MAX3-element default-REAL R3 record.",
+    "IR4 starts at zero before the HIRAC1 data loop; ICNTNM, ILBLF4, IXSECT are from TAPE5/FSCDID. The XSECTM snapshots bracket the optional call. LNCOR1 populates per-line metadata before CNVFNV; CNVFNV stage 110/111 brackets every partial input chunk and records ILO/IHI/IPANEL.",
+    "The stage127 snapshot is after PANEL advances VFT and shifts R3. It describes the carried array in the new window. It should be joined to a subsequent stage110 record by sequence and VFT, not paired as though it shared stage126\u2019s old origin. At positive target frequencies, no RSYM intervenes; R3 should remain unchanged from stage127 through the next stage110, providing a direct carry-integrity check."
+  ],
+  "no_build_or_solver_run": true,
+  "pins": {
+    "buildlog": {
+      "path": "build/udm37-lblrtm-stock-build-v1/attempt-1/lblrtm-build.log",
+      "sha256": "7c1df01e26183d4c9a739879eef6489a06b45b10ee14012726794268c8b9fe51",
+      "size_bytes": 26386
+    },
+    "parent": {
+      "path": "build/udm37-lblrtm-panel-trace-v1/source/LBLRTM/src/oprop.f90",
+      "sha256": "3479ab50b9edebeb68d6faea77d6559134b2f778343a3bca53d9e73c3a87c37b",
+      "size_bytes": 483574
+    },
+    "patch": {
+      "path": "build/udm37-lblrtm-r3-term-trace-v1/instrumentation.patch",
+      "sha256": "bf2b1e6c6061e12515e645e225026510f5c88767ec90e6e71d5346a837c14197",
+      "size_bytes": 6978
+    },
+    "plan": {
+      "path": "build/udm37-lblrtm-r3-term-trace-v1/build-plan.json",
+      "sha256": "061959897b666724a6c70023d71d32b61c459e3c848b28c099647a39574f2c5e",
+      "size_bytes": 7231
+    },
+    "source": {
+      "path": "build/udm37-lblrtm-r3-term-trace-v1/source/LBLRTM/src/oprop.f90",
+      "sha256": "6b806117a32832371f8947bc54b5a5c3bf38389a7279ae48ae39afc141666300",
+      "size_bytes": 488351
+    },
+    "stock": {
+      "path": "build/udm37-lblrtm-stock-build-v1/attempt-1/source/LBLRTM/src/oprop.f90",
+      "sha256": "7cf594968ec331da3df75429262c1023c21fc461cbbae208253b0fa870685ef8",
+      "size_bytes": 481997
+    }
+  },
+  "run_gates_and_caveats": [
+    "Diagnostic STOP guards for invalid metadata/ranges and file-creation errors are additional failure paths absent from stock; record such failures as instrumentation failures, not physical results.",
+    "Run parser must honor interleaved global sequence IDs for term and snapshot records; snapshots 110/111 repeat for each CNVFNV chunk.",
+    "Keep complete all-45-layer spectral payload/panel-header bytewise comparison against corresponding baselines. No physical acceptance is implied."
+  ],
+  "schema": "UDM37_LBLRTM_R3_TERM_TRACE_PREFLIGHT_REVIEW_V2",
+  "status": "PASS_SCOPED_PREFLIGHT_WITH_CARRY_WINDOW_PARSER_REQUIREMENT",
+  "updated_review": "Final source includes guard returning from the diagnostic term writer for j3<1 or j3>MAX3 before metadata indexing. This correctly limits trace capture to positive retained R3 entries without modifying stock R3 updates, including any backing-storage negative-index updates."
+}
