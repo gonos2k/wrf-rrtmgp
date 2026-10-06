@@ -225,6 +225,7 @@ END MODULE
 ! inactive: wrapper checks are no-ops and do not write or copy arrays.
 MODULE module_rrtmg4_optics_export
   USE, INTRINSIC :: iso_fortran_env, ONLY: real64
+  USE, INTRINSIC :: ieee_arithmetic, ONLY: ieee_is_finite
 #ifdef _OPENMP
   USE omp_lib, ONLY: omp_get_max_threads
 #endif
@@ -238,11 +239,15 @@ MODULE module_rrtmg4_optics_export
   LOGICAL, SAVE :: export_checked=.FALSE., export_requested=.FALSE.
   INTEGER, SAVE :: out_unit=0, stage_mask=0
   CHARACTER(LEN=1024), SAVE :: out_dir=''
+  ! Historical selector remains the default; overrides require all five keys.
+  INTEGER, SAVE :: selected_domain=1, selected_i=24, selected_j=55, selected_step=2161
+  REAL(real64), SAVE :: selected_seconds=129600._real64
 CONTAINS
-  SUBROUTINE rrtmg4_export_begin(phase,domain,step,seconds,global_i,global_j)
+  SUBROUTINE rrtmg4_export_begin(phase,domain,step,seconds,global_i,global_j,solar_cosine)
     CHARACTER(LEN=*), INTENT(IN) :: phase
     INTEGER, INTENT(IN) :: domain,step,global_i,global_j
     REAL, INTENT(IN) :: seconds
+    REAL, OPTIONAL, INTENT(IN) :: solar_cosine
     CHARACTER(LEN=2048) :: filename
     INTEGER :: env_status,env_length,ios
     LOGICAL :: exists
@@ -254,6 +259,7 @@ CONTAINS
       IF(env_status==-1) CALL wrf_error_fatal('RRTMG4_EXPORT_DIRECTORY_TOO_LONG')
       IF(env_status>0.AND.env_length>0) CALL wrf_error_fatal('RRTMG4_EXPORT_ENVIRONMENT_READ_FAILED')
       export_requested=env_length>0.AND.LEN_TRIM(out_dir)>0
+      IF(export_requested) CALL read_export_selection()
       export_checked=.TRUE.
     END IF
     IF(.NOT.export_requested) RETURN
@@ -269,16 +275,21 @@ CONTAINS
 #endif
     ! This export is intentionally pinned to the exact same-state comparison
     ! point. Other calls, including all production calls, are no-ops.
-    IF(domain/=1.OR.step/=2161.OR.global_i/=24.OR.global_j/=55) RETURN
-    IF(ABS(REAL(seconds,real64)-129600._real64)>0.01_real64) RETURN
+    IF(domain/=selected_domain.OR.step/=selected_step.OR. &
+       global_i/=selected_i.OR.global_j/=selected_j) RETURN
+    IF(.NOT.ieee_is_finite(seconds)) CALL wrf_error_fatal('RRTMG4_EXPORT_NONFINITE_CALL_TIME')
+    IF(ABS(REAL(seconds,real64)-selected_seconds)>0.01_real64) RETURN
     IF(phase/='lw'.AND.phase/='sw') CALL wrf_error_fatal('RRTMG4_EXPORT_INVALID_PHASE')
+    IF(phase=='sw') THEN
+      IF(.NOT.PRESENT(solar_cosine)) CALL wrf_error_fatal('RRTMG4_EXPORT_MISSING_SOLAR_COSINE')
+      IF(.NOT.ieee_is_finite(solar_cosine)) CALL wrf_error_fatal('RRTMG4_EXPORT_NONFINITE_SOLAR_COSINE')
+      ! The wrapper does not visit any optics stages below the horizon.
+      IF(solar_cosine<=0.) RETURN
+    END IF
     INQUIRE(FILE=TRIM(out_dir)//'/.',EXIST=exists)
     IF(.NOT.exists) CALL wrf_error_fatal('RRTMG4_EXPORT_DIRECTORY_NOT_FOUND')
-    IF(phase=='lw') THEN
-      filename=TRIM(out_dir)//'/rrtmg4_d01_i24_j55_step2161_lw.txt'
-    ELSE
-      filename=TRIM(out_dir)//'/rrtmg4_d01_i24_j55_step2161_sw.txt'
-    END IF
+    WRITE(filename,'(A,"/rrtmg4_d",I2.2,"_i",I0,"_j",I0,"_step",I0,"_",A,".txt")') &
+      TRIM(out_dir),domain,global_i,global_j,step,TRIM(phase)
     OPEN(NEWUNIT=out_unit,FILE=TRIM(filename),STATUS='new',ACTION='write',IOSTAT=ios)
     IF(ios/=0) CALL wrf_error_fatal('RRTMG4_EXPORT_OUTPUT_CREATE_FAILED')
     active=.TRUE.; stage_mask=0
@@ -299,6 +310,46 @@ CONTAINS
     WRITE(out_unit,'(A)',IOSTAT=ios) 'layout fortran_order_first_index_fastest; numeric values use REAL64 text precision'
     IF(ios/=0) CALL wrf_error_fatal('RRTMG4_EXPORT_HEADER_WRITE_FAILED')
   END SUBROUTINE
+
+  SUBROUTINE read_export_selection()
+    CHARACTER(LEN=40), PARAMETER :: suffix(5)=[CHARACTER(LEN=40):: &
+      'DOMAIN','I','J','STEP','SECONDS']
+    CHARACTER(LEN=128) :: value(5)
+    CHARACTER(LEN=80) :: key
+    INTEGER :: n,length,stat,ios,key_count,indices(4)
+    LOGICAL :: present(5)
+    REAL(real64) :: time_value
+    present=.FALSE.;value=''
+    DO n=1,5
+      key='WRF_RRTMGP_RRTMG4_EXPORT_'//TRIM(suffix(n))
+      CALL get_environment_variable(TRIM(key),value(n),LENGTH=length,STATUS=stat)
+      IF(stat==-1) CALL wrf_error_fatal('RRTMG4_EXPORT_SELECTOR_TOO_LONG')
+      IF(stat>1) CALL wrf_error_fatal('RRTMG4_EXPORT_SELECTOR_READ_FAILED')
+      present(n)=stat==0
+      IF(present(n).AND.length==0) CALL wrf_error_fatal('RRTMG4_EXPORT_EMPTY_SELECTOR')
+    END DO
+    key_count=COUNT(present)
+    IF(key_count==0) RETURN
+    IF(key_count/=5) CALL wrf_error_fatal('RRTMG4_EXPORT_SELECTOR_REQUIRES_ALL_FIVE_KEYS')
+    DO n=1,4
+      value(n)=ADJUSTL(value(n))
+      IF(VERIFY(TRIM(value(n)),'0123456789')/=0) &
+        CALL wrf_error_fatal('RRTMG4_EXPORT_INVALID_INTEGER_SELECTOR')
+      READ(value(n),*,IOSTAT=ios) indices(n)
+      IF(ios/=0) CALL wrf_error_fatal('RRTMG4_EXPORT_INVALID_INTEGER_SELECTOR')
+      IF(indices(n)<1) CALL wrf_error_fatal('RRTMG4_EXPORT_NONPOSITIVE_INTEGER_SELECTOR')
+    END DO
+    IF(indices(1)>99) CALL wrf_error_fatal('RRTMG4_EXPORT_DOMAIN_OUT_OF_RANGE')
+    value(5)=ADJUSTL(value(5))
+    IF(VERIFY(TRIM(value(5)),'0123456789.eEdD+-')/=0) &
+      CALL wrf_error_fatal('RRTMG4_EXPORT_INVALID_SECONDS_SELECTOR')
+    READ(value(5),*,IOSTAT=ios) time_value
+    IF(ios/=0) CALL wrf_error_fatal('RRTMG4_EXPORT_INVALID_SECONDS_SELECTOR')
+    IF(.NOT.ieee_is_finite(time_value)) CALL wrf_error_fatal('RRTMG4_EXPORT_NONFINITE_SECONDS_SELECTOR')
+    IF(time_value<0._real64) CALL wrf_error_fatal('RRTMG4_EXPORT_NEGATIVE_SECONDS_SELECTOR')
+    selected_domain=indices(1);selected_i=indices(2);selected_j=indices(3);selected_step=indices(4)
+    selected_seconds=time_value
+  END SUBROUTINE read_export_selection
 
   LOGICAL FUNCTION rrtmg4_export_active()
     rrtmg4_export_active=active
