@@ -1,0 +1,266 @@
+{
+  "schema": "udm-ccn-post-fix-observations-v2",
+  "status": "PASS_SCOPED_THREADS_24H_AND_RESTART_STATE_WITH_EXPLICIT_EXCEPTIONS",
+  "candidate_executable_sha256": "c694e0bb05b5fa5b20ea6d0a6a7b07573572ebc9c79f976499808eb820b12658",
+  "scope": "GNU13.3 UDM27 real-data January2000 73x60x32 MPI4/numtiles2; 3h OMP1/2 and probe controls, 24h OMP2, own15-16 restart OMP1/2. No nest or general forecast accuracy claim.",
+  "three_hour_evidence_v1": {
+    "path": "build/udm37-ccn-tile-init-pr-work/validation/rrtmgp37/udm-ccn-tile-startup/post-fix-observations.json",
+    "sha256": "7703e132247c574306ed94d35304ac847246b2f2ec9c6fb0cc6595a1a444c611",
+    "size_bytes": 7248
+  },
+  "candidate_model_invocations": 8,
+  "twenty_four_hour": {
+    "receipt": {
+      "path": "build/udm37-ccn-winter24h-v1/execution.json",
+      "sha256": "6b3f23b11cf6b646f4c3716f8822cda5c09b4c6a1846c3139f9f317c0971986f",
+      "size_bytes": 2063126
+    },
+    "runner": {
+      "path": "build/udm37-ccn-winter24h-v1/run24h.py",
+      "sha256": "4659c1c03df9a6100f3e26d634ad04d03423a78caaec7fe5608586576342ede6",
+      "size_bytes": 7428
+    },
+    "stage": {
+      "path": "build/udm37-ccn-winter24h-v1/stage.json",
+      "sha256": "76ba938091e7f143f3f9cd8fa956cd50c4b6a99b718c6087e0ed7180bf213b75",
+      "size_bytes": 98722
+    },
+    "strict_outputs_passed": true,
+    "history": {
+      "path": "build/udm37-ccn-winter24h-v1/case/wrfout_d01_2000-01-24_12:00:00",
+      "sha256": "2f916abf9689affd608c20f106877f9c23b4ba149610f104630adda56d3deddb",
+      "size_bytes": 194031874
+    },
+    "history_variables": 225,
+    "history_numeric_variables": 224,
+    "history_times": [
+      "2000-01-24_12:00:00",
+      "2000-01-24_13:00:00",
+      "2000-01-24_14:00:00",
+      "2000-01-24_15:00:00",
+      "2000-01-24_16:00:00",
+      "2000-01-24_17:00:00",
+      "2000-01-24_18:00:00",
+      "2000-01-24_19:00:00",
+      "2000-01-24_20:00:00",
+      "2000-01-24_21:00:00",
+      "2000-01-24_22:00:00",
+      "2000-01-24_23:00:00",
+      "2000-01-25_00:00:00",
+      "2000-01-25_01:00:00",
+      "2000-01-25_02:00:00",
+      "2000-01-25_03:00:00",
+      "2000-01-25_04:00:00",
+      "2000-01-25_05:00:00",
+      "2000-01-25_06:00:00",
+      "2000-01-25_07:00:00",
+      "2000-01-25_08:00:00",
+      "2000-01-25_09:00:00",
+      "2000-01-25_10:00:00",
+      "2000-01-25_11:00:00",
+      "2000-01-25_12:00:00"
+    ],
+    "checkpoints": [
+      {
+        "file": {
+          "path": "build/udm37-ccn-winter24h-v1/case/wrfrst_d01_2000-01-25_00:00:00",
+          "sha256": "2ec116f1837ab68609be40682b2ff5dafcb7f7e568dedd95d4429c8b38055261",
+          "size_bytes": 28593834
+        },
+        "passed": true,
+        "variables": 664,
+        "numeric_variables": 663,
+        "cu_positive_cells": {
+          "QC_CU": 8781,
+          "QI_CU": 9490
+        }
+      },
+      {
+        "file": {
+          "path": "build/udm37-ccn-winter24h-v1/case/wrfrst_d01_2000-01-25_12:00:00",
+          "sha256": "da3dd074261af6c2005c1db02277fda2bb83f1d2e025f0e4343386d41ec7280d",
+          "size_bytes": 28629153
+        },
+        "passed": true,
+        "variables": 664,
+        "numeric_variables": 663,
+        "cu_positive_cells": {
+          "QC_CU": 6123,
+          "QI_CU": 6637
+        }
+      }
+    ],
+    "historical_one_tile_comparison": {
+      "all225_raw_variables_equal": true,
+      "metadata_equal": true,
+      "whole_file_equal": true,
+      "reference": {
+        "path": "build/udm-seaice-winter-validation-v3/ra37-24h-v1/case/wrfout_d01_2000-01-24_12:00:00",
+        "sha256": "2f916abf9689affd608c20f106877f9c23b4ba149610f104630adda56d3deddb",
+        "size_bytes": 194031874
+      }
+    }
+  },
+  "restart": {
+    "runner": {
+      "path": "build/udm37-ccn-restart-runtime-v1/restart_continuous_v1.py",
+      "sha256": "9daf1d125cc1c5caf9c718d9cfcb4360a8005d86bee842c213461bc030c44727",
+      "size_bytes": 29536
+    },
+    "stage": {
+      "path": "build/udm37-ccn-restart-runtime-v1/cases-v1/stage.json",
+      "sha256": "bb277cd5518a932f1a00cfdae8c3de0217ae2ffee469f1471acf6a11b763a809",
+      "size_bytes": 248855
+    },
+    "arms": {
+      "continuous-omp2": {
+        "receipt": {
+          "path": "build/udm37-ccn-restart-runtime-v1/cases-v1/continuous-omp2/execution.json",
+          "sha256": "6acd3725cf930be747d5fc5132ab88b10fb4ad7e55fb95b1c52adbbc97ff0646",
+          "size_bytes": 4760450
+        },
+        "elapsed_seconds": 34.07188974134624,
+        "history": {
+          "path": "build/udm37-ccn-restart-runtime-v1/cases-v1/continuous-omp2/wrfout_d01_2000-01-24_12:00:00",
+          "sha256": "924d1083fbbdd3f854c1628b8875388e04d3521ed2a94af086d2cd7481d6fad3",
+          "size_bytes": 37774915
+        },
+        "history_times": [
+          "2000-01-24_12:00:00",
+          "2000-01-24_13:00:00",
+          "2000-01-24_14:00:00",
+          "2000-01-24_15:00:00",
+          "2000-01-24_16:00:00"
+        ],
+        "checkpoint_files": [
+          {
+            "path": "build/udm37-ccn-restart-runtime-v1/cases-v1/continuous-omp2/wrfrst_d01_2000-01-24_13:00:00",
+            "sha256": "bc5b3c44ec798920bfb9b98eabf8c3503af3940689a1121945d4503821f1269e",
+            "size_bytes": 29190904
+          },
+          {
+            "path": "build/udm37-ccn-restart-runtime-v1/cases-v1/continuous-omp2/wrfrst_d01_2000-01-24_14:00:00",
+            "sha256": "a127e1e8372ff1a28604edcfeda0ea286e1f7458f7c5fe753e19ab7cbc659fce",
+            "size_bytes": 29716351
+          },
+          {
+            "path": "build/udm37-ccn-restart-runtime-v1/cases-v1/continuous-omp2/wrfrst_d01_2000-01-24_15:00:00",
+            "sha256": "c28c20df823cf600e93669f17b3b25c66563542ec692302ae3ef9b38b4eaa993",
+            "size_bytes": 29858991
+          },
+          {
+            "path": "build/udm37-ccn-restart-runtime-v1/cases-v1/continuous-omp2/wrfrst_d01_2000-01-24_16:00:00",
+            "sha256": "930efd3ab0ec68fe4b8f94ea5ca4adcf047bb44935003ea218395d9e7480ff55",
+            "size_bytes": 29883463
+          }
+        ],
+        "strict_output_validity_passed": true
+      },
+      "restart-omp1": {
+        "receipt": {
+          "path": "build/udm37-ccn-restart-runtime-v1/cases-v1/restart-omp1/execution.json",
+          "sha256": "7b97cf192d8733758eae748ad534ac163aca10c90af1690ac1237407ca153dea",
+          "size_bytes": 2036527
+        },
+        "elapsed_seconds": 15.037973143160343,
+        "history": {
+          "path": "build/udm37-ccn-restart-runtime-v1/cases-v1/restart-omp1/wrfout_d01_2000-01-24_15:00:00",
+          "sha256": "dd9bb4d043346cb59eaa29fe58f5c3e513d61bacac70bd1f6a605a930324259f",
+          "size_bytes": 17455421
+        },
+        "history_times": [
+          "2000-01-24_15:00:00",
+          "2000-01-24_16:00:00"
+        ],
+        "checkpoint_files": [
+          {
+            "path": "build/udm37-ccn-restart-runtime-v1/cases-v1/restart-omp1/wrfrst_d01_2000-01-24_16:00:00",
+            "sha256": "29ab12d21d31d4e5f9364798c8c5911982b91523f8c69b4f3f8e2c8b8762910f",
+            "size_bytes": 29883463
+          }
+        ],
+        "strict_output_validity_passed": true
+      },
+      "restart-omp2": {
+        "receipt": {
+          "path": "build/udm37-ccn-restart-runtime-v1/cases-v1/restart-omp2/execution.json",
+          "sha256": "b43c072c0930af974f2dec49d30eff56670f24e138a37da22a168ca11a822a2d",
+          "size_bytes": 2036527
+        },
+        "elapsed_seconds": 12.038148205727339,
+        "history": {
+          "path": "build/udm37-ccn-restart-runtime-v1/cases-v1/restart-omp2/wrfout_d01_2000-01-24_15:00:00",
+          "sha256": "dd9bb4d043346cb59eaa29fe58f5c3e513d61bacac70bd1f6a605a930324259f",
+          "size_bytes": 17455421
+        },
+        "history_times": [
+          "2000-01-24_15:00:00",
+          "2000-01-24_16:00:00"
+        ],
+        "checkpoint_files": [
+          {
+            "path": "build/udm37-ccn-restart-runtime-v1/cases-v1/restart-omp2/wrfrst_d01_2000-01-24_16:00:00",
+            "sha256": "29ab12d21d31d4e5f9364798c8c5911982b91523f8c69b4f3f8e2c8b8762910f",
+            "size_bytes": 29883463
+          }
+        ],
+        "strict_output_validity_passed": true
+      }
+    },
+    "original_strict_comparison": {
+      "path": "build/udm37-ccn-restart-runtime-v1/cases-v1/comparison.json",
+      "sha256": "7e9682c25b1303bd71f22c1c0ac117bb4baa0b3fd62b14abe39cdcc2ba681dca",
+      "size_bytes": 735346
+    },
+    "original_strict_status": "FAIL_PRESERVED",
+    "scoped_posthoc_report": {
+      "path": "build/udm37-ccn-restart-runtime-v1/posthoc-attribution-v1/report-v2.json",
+      "sha256": "6e18a5fb8ac190508acdd756c2fba8a1d5c30b472b7b9d95942f904f92622534",
+      "size_bytes": 34141
+    },
+    "scoped_posthoc_verifier": {
+      "path": "build/udm37-ccn-restart-runtime-v1/posthoc-attribution-v1/attribute_restart.py",
+      "sha256": "f73f06f3a89ec17ce596020b0335e8c997f283f47ff6f13c5e9dceeb38388875",
+      "size_bytes": 11915
+    },
+    "independent_readback": {
+      "path": "build/udm37-ccn-restart-runtime-v1/actual-readback-v1.md",
+      "sha256": "5702851b952c5b4a9c960adf170475195c48dfb2ba968aa0c6dcc178b5ae16f1",
+      "size_bytes": 4717
+    },
+    "scoped_status": "PASS_SCOPED_RESTART_STATE_WITH_INITIAL_DIAGNOSTIC_RESET",
+    "initial15_history_exact_variables": 222,
+    "initial15_named_diagnostics_reset_to_minus_one": [
+      "UDM_CLDFRA",
+      "UDM_CF_STEP",
+      "UDM_CF_TOP"
+    ],
+    "final16_history_exact_variables": 225,
+    "final16_checkpoint_exact_variables": 664,
+    "global_metadata_exceptions": {
+      "history": [
+        "START_DATE"
+      ],
+      "history_dimensions": [
+        "Time size 2 versus 5"
+      ],
+      "checkpoint": [
+        "START_DATE",
+        "WRF_ALARM_SECS_TIL_NEXT_RING_55"
+      ]
+    },
+    "disabled_vortex_alarm55_seconds": {
+      "continuous": -14400,
+      "restart": -3600
+    },
+    "omp1_vs_omp2_restart_whole_file_equal": true,
+    "continuous_prefix_all225_equal": true,
+    "scope": "State equivalence with source-backed initial diagnostic reset and disabled alarm metadata. Original strict comparison remains failed; no full-file restart equivalence claim."
+  },
+  "interpretation": "The repaired option37 path removes this observed thread-count discrepancy. CCN startup placement and shared CF guard changed together. Legacy option4 preserves the known pre-change CCN defect. Use same-state offline engine replay when attributing coupled4/37 differences; multiple-tile startup semantics differ.",
+  "remaining_limits": [
+    "No universal thread/decomposition invariance or accuracy claim.",
+    "Current-source delayed nested restart validation not included here.",
+    "Full NetCDF and build/runtime dependencies remain local, identified by hashes; compact portable evidence follows separately."
+  ]
+}

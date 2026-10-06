@@ -1,0 +1,45 @@
+{
+  "schema": "udm37-ccn-current-runtime-plan-v1",
+  "status": "PREPARE_ONLY_NO_CASES_STAGED",
+  "purpose": "Validate the fresh CCN tile-initialization binary for thread parity, OMP observer noninterference, RA4 control, and own-checkpoint restart viability.",
+  "build_identity": {
+    "freeze": "../udm37-ccn-tile-init-gnu-v1/source-freeze-v1.json",
+    "source_manifest_sha256": "da7f8daeb1a7a07be284f84d1a0252f1b41a31d7ee6d9ab029e3b8afd90feda1",
+    "executable": "../udm37-ccn-tile-init-gnu-v1/source/WRF/main/wrf.exe",
+    "executable_sha256": "c694e0bb05b5fa5b20ea6d0a6a7b07573572ebc9c79f976499808eb820b12658",
+    "executable_size_bytes": 59010648,
+    "build_receipt_context": "The preserved original receipt is BUILD_FAIL_PRESERVED because its Python harness called nonexistent verify_compile_commands; compiler process returncode=0, successful_footer=true, errors=[], elapsed 444 s. Runtime is blocked until a separate frozen posthoc attestation is independently validated."
+  },
+  "donor": {
+    "ra37": "build/udm-seaice-winter-validation-v3/ra37-24h-v1/execution-receipt-v1.json",
+    "ra4": "build/udm-seaice-winter-validation-v3/ra4-24h-v1/execution-receipt-v1.json",
+    "reused_inputs": ["wrfinput_d01", "wrfbdy_d01", "radiation_iofields.txt", "runtime tables and coefficient assets"],
+    "no_old_executable_reuse": true
+  },
+  "runtime_matrix": {
+    "trajectory_hours": 3,
+    "period": "2000-01-24 12:00 through 15:00 UTC model clock",
+    "history_times": ["2000-01-24_12:00:00", "2000-01-24_13:00:00", "2000-01-24_14:00:00", "2000-01-24_15:00:00"],
+    "restart_interval_minutes": 180,
+    "domain": "one domain, 4 MPI ranks, `numtiles=2` as in the validated setup",
+    "arms": [
+      {"id":"ra37-omp1","mp_physics":27,"radiation":37,"omp_threads":1,"capture":"disabled"},
+      {"id":"ra37-omp2","mp_physics":27,"radiation":37,"omp_threads":2,"capture":"disabled"},
+      {"id":"ra37-omp2-probe","mp_physics":27,"radiation":37,"omp_threads":2,"capture":"pinned observer preload"},
+      {"id":"ra4-omp1","mp_physics":27,"radiation":4,"omp_threads":1,"capture":"disabled"}
+    ],
+    "comparisons": [
+      "RA37 OMP1 vs OMP2: full history and checkpoint variables raw-bitwise, same ordered times and metadata.",
+      "RA37 OMP2 vs OMP2-probe: full history and checkpoint raw-bitwise; generic symbol-based callback proof against the new executable.",
+      "New RA4 OMP1 vs accepted historical RA4 OMP1 only if complete namelist, input, runtime assets and output contracts match exactly; prior RA37 from the old broken-startup source is never a bitwise target."
+    ],
+    "restart": "Deferred to a separately reviewed runner revision. The initial runner covers the four 3-hour arms only.",
+    "total_invocations": 4,
+    "resource_limits": {"omp_stack_bytes": 536870912, "per_run_timeout_seconds": 1200, "mpich_interface_hostname": "127.0.0.1", "process_group_timeout": true}
+  },
+  "acceptance": {
+    "three_hour_history_contract": "225 variables, 224 numeric variables, exact ordered 4-frame clock, full-domain finite/default-fill validation.",
+    "checkpoint_contract": "664 variables, 663 numeric variables, finite/default-fill validation and repaired USTM/QZ0 diagnostics.",
+    "no_unproved_claims": ["No requirement that repaired RA37 equal prior defective-startup RA37.", "No claim of physical forecast accuracy from thread parity.", "No restart claim in this initial 3-hour runtime matrix."]
+  }
+}

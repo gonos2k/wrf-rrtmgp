@@ -1,0 +1,77 @@
+{
+  "schema": "UDM37_CCN_STARTUP_PRE_CHANGE_EVIDENCE_V1",
+  "scope": "Pre-change observations and exact source mechanism, not post-fix full-model parity",
+  "source_base": "4394845667db52c258dab62719abc87402dd731f",
+  "current_binary_sha256": "3f868da917910ad1be5b1fed9e603c588c56936edebdc1bd7906d54113fe0b9c",
+  "official_source": "06d4240ae989cc3e50af412bb472df3d9048783c",
+  "official_binary_sha256": "865a687d9c1dcf67ad69488541ca459b321b0e9e0f20e755dc0a358a6aaca503",
+  "configuration": "Jan24 2000 12\u219215 UTC; same input and boundary; MPI4; two tiles; OMP1/OMP2",
+  "pre_change": {
+    "ra37_history_different": 92,
+    "ra37_checkpoint_different": 194,
+    "ra4_history_different": 93,
+    "ra4_checkpoint_different": 195,
+    "official_ra4_history_different": 93,
+    "official_ra4_checkpoint_different": 196,
+    "observer_vs_plain_omp2": "225 history and 664 checkpoint fields plus whole files identical",
+    "official_vs_patched_ra4_each_thread": "all 222 history fields and metadata identical; only QZ0 and USTM differ in checkpoint, recorded without exclusions"
+  },
+  "early_ra4": {
+    "window": "12:00\u219212:10 UTC; 1-minute history; same MPI4/tiles2",
+    "initial_different_fields": 0,
+    "first_different_time": "12:01",
+    "first_different_fields": [
+      "QNCCN"
+    ],
+    "first_qnccn_different_values": 2248,
+    "different_field_counts_by_minute": [
+      0,
+      1,
+      7,
+      34,
+      43,
+      49,
+      51,
+      51,
+      52,
+      52,
+      52
+    ],
+    "first_qnccn_max_abs_difference": 50000000,
+    "qnccn_history_units": "# kg(-1)",
+    "unit_scope": "History Registry/NetCDF label; no inference about internal UDM number convention."
+  },
+  "post_fix_runtime": "PENDING",
+  "external_evidence": [
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-cu-current-omp-runtime-v2/cases/comparison.json",
+      "sha256": "a7edcaf3309fd86f4e771c86ac4eee5e93121abe2df9e4321d9957eb203e6c58",
+      "bytes": 638535
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-cu-current-omp-ra4-control-v1/cases/comparison.json",
+      "sha256": "11278efb8f283d6d260610c00afc12d3d64bd86e059fd7be30249e342169b452",
+      "bytes": 318618
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pristine-current-omp-control-v2/comparison.json",
+      "sha256": "cdcd6bb5c7fc33194119e920776a9abe14900e311346e6890964be3924ea455f",
+      "bytes": 182202
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pristine-current-omp-control-v2/root-patched-ra4-cross-source-v1.json",
+      "sha256": "cd0d5e07583f4bf374d413f14c11e3bd3eefd766042752e5b5d74928ebc8ad1a",
+      "bytes": 634812
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-cu-current-omp-early-ra4-v1/cases/comparison.json",
+      "sha256": "d43096473aa105e3e6c7e7627027ac155f9293f823a33b3dadede9d2e1d265ce",
+      "bytes": 670985
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-cu-current-omp-early-ra4-v1/root-first-step-qnccn-v1.json",
+      "sha256": "68cf73da5850e662b0872792ed4f89b8e4af97eeaaac4f5477f74496609c472f",
+      "bytes": 11363
+    }
+  ]
+}
