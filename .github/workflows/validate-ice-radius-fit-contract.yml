@@ -1,0 +1,21 @@
+name: Verify UDM ice radius fit contract evidence
+on:
+  pull_request:
+    paths:
+      - 'validation/rrtmgp37/ice-radius-fit-contract/**'
+      - '.github/workflows/validate-ice-radius-fit-contract.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'validation/rrtmgp37/ice-radius-fit-contract/**'
+      - '.github/workflows/validate-ice-radius-fit-contract.yml'
+permissions:
+  contents: read
+jobs:
+  independent-recipe-and-moment:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - name: Verify recipe integrals, analytic oracle and native implemented fit
+        run: python3 -I -S validation/rrtmgp37/ice-radius-fit-contract/audit.py
