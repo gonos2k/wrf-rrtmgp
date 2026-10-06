@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-"""Compile/run the six input_wrf UDM sentinel guards for both storage kinds.
+"""Compile/run source-selected input_wrf sentinel guards from Registry storage.
 
 The fixture embeds the exact four preprocessor groups selected from
-WRF/share/input_wrf.F: three restart-startup assignments and one assignment
-for each failed-read field case. This is a focused kind-compatibility fixture,
-not an input_wrf or WRF build.
+WRF/share/input_wrf.F and selects storage using the Registry-generated header,
+not the potentially different Fortran USE_ALLOCATABLES compiler define. This
+is a focused kind-compatibility fixture, not an input_wrf or WRF build.
 """
 from __future__ import annotations
 
@@ -12,6 +12,7 @@ import argparse
 import hashlib
 import json
 from pathlib import Path
+import re
 import shutil
 import subprocess
 import tempfile
@@ -39,7 +40,7 @@ def extract_groups(source: Path) -> tuple[bytes, list[str]]:
     groups = []
     i = 0
     while i < len(lines):
-        if lines[i].strip() != "#ifdef USE_ALLOCATABLES":
+        if lines[i].strip() != "#if WRF_REGISTRY_STATE_ALLOCATABLE":
             i += 1
             continue
         start = i
@@ -47,7 +48,7 @@ def extract_groups(source: Path) -> tuple[bytes, list[str]]:
         while i < len(lines) and lines[i].strip() != "#endif":
             i += 1
         if i >= len(lines):
-            raise ValueError("unterminated USE_ALLOCATABLES guard in input_wrf.F")
+            raise ValueError("unterminated Registry-storage guard in input_wrf.F")
         group = "".join(lines[start:i + 1])
         if "grid%udm_" in group:
             groups.append(group)
@@ -67,6 +68,89 @@ def extract_groups(source: Path) -> tuple[bytes, list[str]]:
     return raw, groups
 
 
+def verify_registry_storage_contract(wrf: Path) -> dict:
+    generator = wrf / "tools/gen_defs.c"
+    declarations = wrf / "tools/misc.c"
+    gen_text, decl_text = generator.read_text(), declarations.read_text()
+    if not all(token in gen_text for token in (
+            "#ifdef USE_ALLOCATABLES",
+            "#define WRF_REGISTRY_STATE_ALLOCATABLE 1",
+            "#define WRF_REGISTRY_STATE_ALLOCATABLE 0")):
+        raise ValueError("Registry header generator does not encode both storage kinds")
+    if not all(token in decl_text for token in (
+            "#ifdef USE_ALLOCATABLES", 'strcpy ( tmp, ",ALLOCATABLE" )',
+            'strcpy ( tmp, ",POINTER" )')):
+        raise ValueError("Registry declaration generator storage condition changed")
+    return {"header_generator": {"path": "WRF/tools/gen_defs.c", "sha256": sha(generator.read_bytes())},
+            "declaration_generator": {"path": "WRF/tools/misc.c", "sha256": sha(declarations.read_bytes())},
+            "contract": "header and Registry declarations share the USE_ALLOCATABLES compile-time condition"}
+
+
+def actual_registry_cases(wrf: Path, work: Path, cc: str) -> list[dict]:
+    """Build isolated copies of the real Registry C tools and generate fields."""
+    runs = []
+    for mode, defines, expected in (("pointer", [], 0),
+                                   ("allocatable", ["-DUSE_ALLOCATABLES"], 1)):
+        case = work / ("registry_" + mode)
+        case.mkdir(parents=True, exist_ok=False)
+        shutil.copytree(wrf / "tools", case / "tools",
+                        ignore=shutil.ignore_patterns("*.o", "registry", "standard.exe"))
+        shutil.copytree(wrf / "Registry", case / "Registry")
+        (case / "inc").mkdir()
+        shutil.copyfile(wrf / "inc/streams.h", case / "inc/streams.h")
+        (case / "frame").mkdir()
+        # Generate only the three real fields: unrelated package dependencies
+        # require the full configure-generated Registry, not an ad hoc include.
+        dims = (wrf / "Registry/registry.dimspec").read_text().splitlines()
+        selected_dims = [line for line in dims if re.match(
+            r"^dimspec\s+(?:i\s+1|j\s+3|k\s+2)\s+standard_domain\s", line)]
+        fields = [line for line in (wrf / "Registry/registry.rrtmgp37").read_text().splitlines()
+                  if re.match(r"^state\s+(?:real|integer)\s+udm_(?:cldfra|cf_step|cf_top)\s", line)]
+        if len(selected_dims) != 3 or len(fields) != 3:
+            raise ValueError("expected three real ARW dimensions and UDM diagnostic fields")
+        fixture_registry = case / "Registry/Registry"
+        fixture_registry.write_text("\n".join(selected_dims + fields) + "\n")
+        make_command = ["make", "-C", str(case / "tools"), "registry",
+                        "CC_TOOLS=" + cc, "CC_TOOLS_CFLAGS=" + " ".join(defines)]
+        build = run_child(make_command, case, case / "tools-build.log", timeout=180.0)
+        run = {"mode": mode, "c_defines": defines, "expected_allocatable": expected,
+               "build": build, "registry_fixture_sha256": sha(fixture_registry.read_bytes()),
+               "registry_fixture_scope": "exact ARW dimensions and three source diagnostic entries; no physics packages"}
+        if build["returncode"] == 0:
+            argv = [str(case / "tools/registry"), "-DEM_CORE=1", "-DNMM_CORE=0",
+                    "-DNMM_MAX_DIM=2600", "-DIWORDSIZE=4", "-DNEW_BDYS", "Registry/Registry"]
+            run["registry_generation"] = run_child(argv, case, case / "registry.log", timeout=20.0)
+            header = case / "inc/registry_state_storage.h"
+            state = case / "inc/state_struct.inc"
+            if run["registry_generation"]["returncode"] == 0 and header.is_file() and state.is_file():
+                header_match = re.search(r"(?m)^#define WRF_REGISTRY_STATE_ALLOCATABLE ([01])$",
+                                         header.read_text())
+                required = ("udm_cldfra", "udm_cf_step", "udm_cf_top")
+                declarations = {}
+                for name in required:
+                    rows = [line for line in state.read_text().splitlines()
+                            if re.search(r"::\s*" + name + r"\s*$", line, re.I)]
+                    if len(rows) != 1:
+                        raise ValueError(f"expected one generated declaration for {name}, got {len(rows)}")
+                    declarations[name] = rows[0]
+                attribute = "ALLOCATABLE" if expected else "POINTER"
+                run["header_value"] = int(header_match.group(1)) if header_match else None
+                run["case_dir"] = str(case)
+                run["generated_header"] = str(header)
+                run["generated_header_sha256"] = sha(header.read_bytes())
+                run["generated_state_struct_sha256"] = sha(state.read_bytes())
+                run["declarations"] = declarations
+                run["generated_storage_matches"] = (
+                    run["header_value"] == expected and
+                    all(attribute in line.upper() for line in declarations.values()))
+            else:
+                run["generated_storage_matches"] = False
+        else:
+            run["generated_storage_matches"] = False
+        runs.append(run)
+    return runs
+
+
 def fixture_source(groups: list[str]) -> str:
     failed_cases = {
         "udm_cldfra": groups[1],
@@ -79,7 +163,8 @@ def fixture_source(groups: list[str]) -> str:
     return f'''module input_wrf_udm_sentinel_fixture
   implicit none
   type :: grid_type
-#ifdef USE_ALLOCATABLES
+#include "registry_state_storage.h"
+#if WRF_REGISTRY_STATE_ALLOCATABLE
     real, allocatable :: udm_cldfra(:,:,:)
     integer, allocatable :: udm_cf_step(:,:), udm_cf_top(:,:)
 #else
@@ -173,6 +258,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("wrf_root", type=Path)
     parser.add_argument("--compiler", default=shutil.which("gfortran") or "gfortran")
+    parser.add_argument("--cc", default=shutil.which("gcc") or "gcc")
     parser.add_argument("--workdir", type=Path)
     parser.add_argument("--output", type=Path)
     args = parser.parse_args()
@@ -183,6 +269,7 @@ def main() -> int:
         parser.error(f"refusing existing output file: {args.output}")
     source = wrf / "share/input_wrf.F"
     raw, groups = extract_groups(source)
+    storage_contract = verify_registry_storage_contract(wrf)
     if args.workdir:
         work = args.workdir.resolve()
         work.mkdir(parents=True, exist_ok=True)
@@ -191,23 +278,39 @@ def main() -> int:
         cleanup = tempfile.TemporaryDirectory(prefix="input-wrf-udm-sentinels-")
         work = Path(cleanup.name)
     results = []
+    registry_runs = actual_registry_cases(wrf, work, args.cc)
+    if not all(row.get("generated_storage_matches") for row in registry_runs):
+        receipt = make_receipt(source, raw, groups, [], registry_runs)
+        receipt["registry_storage_contract"] = storage_contract
+        if args.output: atomic_json(args.output.resolve(), receipt)
+        raise RuntimeError("actual Registry C-tool generation failed; inspect saved receipt")
     try:
-        for mode in ("pointer", "allocatable"):
+        modes = (
+            ("pointer_header_undefined", registry_runs[0], []),
+            ("pointer_header_defined", registry_runs[0], ["-DUSE_ALLOCATABLES"]),
+            ("pointer_header_zero", registry_runs[0], ["-DUSE_ALLOCATABLES=0"]),
+            ("allocatable_header_undefined", registry_runs[1], []),
+            ("allocatable_header_zero", registry_runs[1], ["-DUSE_ALLOCATABLES=0"]),
+            ("allocatable_header_one", registry_runs[1], ["-DUSE_ALLOCATABLES=1"]))
+        for mode, registry_row, mode_defines in modes:
+            storage_allocatable = registry_row["header_value"]
             case = work / mode
             case.mkdir(parents=True, exist_ok=False)
+            shutil.copyfile(registry_row["generated_header"], case / "registry_state_storage.h")
             fixture = case / "test_input_wrf_udm_sentinels.F90"
             fixture.write_text(fixture_source(groups))
             exe = case / "fixture.exe"
             argv = [args.compiler, "-cpp", "-std=f2008", "-ffree-line-length-none",
                     "-O0", str(fixture), "-o", str(exe)]
-            if mode == "allocatable":
-                argv.insert(1, "-DUSE_ALLOCATABLES")
+            argv[1:1] = mode_defines
             compile_result = run_child(argv, case, case / "compile.log")
-            record = {"mode": mode, "compile": compile_result,
+            record = {"mode": mode, "registry_storage_allocatable": storage_allocatable,
+                      "fortran_defines": mode_defines, "compile": compile_result,
                       "fixture_sha256": sha(fixture.read_bytes())}
             if compile_result["returncode"] != 0:
                 results.append(record)
-                receipt = make_receipt(source, raw, groups, results)
+                receipt = make_receipt(source, raw, groups, results, registry_runs)
+                receipt["registry_storage_contract"] = storage_contract
                 if args.output: atomic_json(args.output.resolve(), receipt)
                 raise RuntimeError(f"{mode} fixture compilation failed")
             execution = run_child([str(exe)], case, case / "run.log")
@@ -216,10 +319,12 @@ def main() -> int:
             record["pass_marker_present"] = "INPUT_WF_UDM_SENTINEL_KIND_FIXTURE_PASS" in logtext
             results.append(record)
             if execution["returncode"] != 0 or not record["pass_marker_present"]:
-                receipt = make_receipt(source, raw, groups, results)
+                receipt = make_receipt(source, raw, groups, results, registry_runs)
+                receipt["registry_storage_contract"] = storage_contract
                 if args.output: atomic_json(args.output.resolve(), receipt)
                 raise RuntimeError(f"{mode} fixture execution failed")
-        receipt = make_receipt(source, raw, groups, results)
+        receipt = make_receipt(source, raw, groups, results, registry_runs)
+        receipt["registry_storage_contract"] = storage_contract
         if args.output: atomic_json(args.output.resolve(), receipt)
         print(json.dumps(receipt, sort_keys=True))
         return 0
@@ -228,18 +333,23 @@ def main() -> int:
             cleanup.cleanup()
 
 
-def make_receipt(source: Path, raw: bytes, groups: list[str], results: list[dict]) -> dict:
+def make_receipt(source: Path, raw: bytes, groups: list[str], results: list[dict],
+                 registry_runs: list[dict]) -> dict:
     return {"schema": "UDM_INPUT_WRESTART_SENTINEL_STORAGE_FIXTURE_V1",
-            "status": "PASS_POINTER_AND_ALLOCATABLE" if len(results) == 2 and all(
+            "status": "PASS_REGISTRY_STORAGE_MATRIX" if len(results) == 6 and all(
                 r.get("execution", {}).get("returncode") == 0 and r.get("pass_marker_present")
-                for r in results) else "INCOMPLETE_OR_FAILED",
+                for r in results) and all(r.get("generated_storage_matches")
+                                          for r in registry_runs) else "INCOMPLETE_OR_FAILED",
             "source": {"path": "WRF/share/input_wrf.F", "sha256": sha(raw),
                        "guard_group_sha256": [sha(g.encode()) for g in groups],
                        "guard_group_count": len(groups)},
             "modes": results,
-            "scope": "Actual source-selected sentinel guards compiled and run in small pointer/allocatable fixtures; this is not a full input_wrf or WRF build.",
+            "actual_registry_generations": registry_runs,
+            "scope": "Source-selected guards compiled against Registry storage headers in small fixtures; this is not a full input_wrf or WRF build.",
             "execution_counts": {"fixture_compiles": sum("compile" in r for r in results),
                                  "fixture_runs": sum("execution" in r for r in results),
+                                 "registry_tool_builds": len(registry_runs),
+                                 "registry_generations": sum("registry_generation" in r for r in registry_runs),
                                  "WRF_builds": 0, "models": 0, "RTE": 0}}
 
 

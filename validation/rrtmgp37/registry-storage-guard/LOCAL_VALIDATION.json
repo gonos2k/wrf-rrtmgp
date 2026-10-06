@@ -1,0 +1,67 @@
+{
+  "schema": "REGISTRY_STORAGE_GUARD_LOCAL_VALIDATION_V1",
+  "status": "PASS_REGISTRY_STORAGE_MATRIX",
+  "physical_status": "NOT_ACCEPTED",
+  "cause": {
+    "failed_run": 37443922887,
+    "head": "fe8dfc60cc5e15259f3a2d8d1595967465417823",
+    "failure": "classic Make Fortran defines USE_ALLOCATABLES but Registry C declares pointer fields; six ALLOCATED checks failed"
+  },
+  "correction": "Generated numeric header follows same compiled-C storage-kind condition as Registry state declarations; six input_wrf checks follow header",
+  "fixture": {
+    "registry_tool_builds": 2,
+    "registry_generations": 2,
+    "generated_fields": [
+      "udm_cldfra",
+      "udm_cf_step",
+      "udm_cf_top"
+    ],
+    "Fortran_compiles": 6,
+    "fixture_runs": 6,
+    "models": 0,
+    "status": "PASS"
+  },
+  "classic_full_build": {
+    "status": "IN_PROGRESS",
+    "base_head": "d26a86e0d1dd4bb20566c827ebc03eb27f128411",
+    "local_receipt_location": "build/udm37-registry-storage-classic-v2",
+    "input_wrf_o_created": true,
+    "scope": "Fresh isolated GNU serial em_scm_xy build, production correction files match final candidate; test harness later revised without affecting model compile"
+  },
+  "attempts_preserved": [
+    "v1 handcrafted header fixture PASS; preparation only",
+    "v2 real-tools setup FAILED missing streams.h",
+    "v3 ad hoc full Registry fixture timeout/termination; not physics test",
+    "v4 selected real field generation PASS",
+    "v5 fresh-tool selected real field generation final PASS",
+    "classic runner v1 preparation FAILED: git archive export-ignore omitted WRF files; no compiler/model",
+    "classic runner v2 tracked-file snapshot build IN_PROGRESS"
+  ],
+  "nonclaims": [
+    "general Make incremental dependency/cleanup lifecycle",
+    "physical or forecast accuracy",
+    "Nc or PSD units",
+    "strict reference PASS"
+  ],
+  "production_files": [
+    {
+      "path": "WRF/share/input_wrf.F",
+      "sha256": "b3c663892cb7f46c6503ff3a4a7c5202a5301c71a70c8db1fad21a293c2a48b1"
+    },
+    {
+      "path": "WRF/tools/gen_defs.c",
+      "sha256": "1e530847f94b27d70f0a65df956ff72f03cc9a4fde8e2a243821141c2032b1ce"
+    },
+    {
+      "path": "WRF/tools/CMakeLists.txt",
+      "sha256": "bdbdb759dcd0c587d7d6851324a122ee7af19e01988eaea099bdff33edd63836"
+    }
+  ],
+  "fixture_source_sha256": "2e7dfdddeedb55ffb79417486e337aaaf9ebdc5bb636b3e7a0ad7f947a43857b",
+  "evidence": [
+    {
+      "path": "evidence/registry-and-sentinel-fixture.json",
+      "sha256": "47c5c335745a2c8c95ed1067a780513b2b3d7144808d401c4b65ac2e08c68e79"
+    }
+  ]
+}

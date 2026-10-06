@@ -133,6 +133,7 @@ wrf_expand_definitions(
 add_custom_command(
                     OUTPUT
                       ${CMAKE_BINARY_DIR}/inc/nl_config.inc
+                      ${CMAKE_BINARY_DIR}/inc/registry_state_storage.h
                       ${CMAKE_BINARY_DIR}/frame/module_state_description.F
                       ${dealloc_source}
                       ${allocs_source}
@@ -167,6 +168,7 @@ add_custom_target(
                   registry_code
                   DEPENDS
                     ${CMAKE_BINARY_DIR}/inc/nl_config.inc
+                    ${CMAKE_BINARY_DIR}/inc/registry_state_storage.h
                     ${CMAKE_BINARY_DIR}/frame/module_state_description.F
                     ${dealloc_source}
                     ${allocs_source}
