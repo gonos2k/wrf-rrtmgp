@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Compare Registry diagnostics with the exact pre-registration input.
 
-Reuse the same compiled original generator and flags. Do not edit the working
+Reuse the same compiled current generator and flags. Do not edit the working
 WRF source. Reconstruction is accepted only when its Git blob is the recorded
 upstream blob, so this does not guess the original Registry contents.
 """
@@ -86,7 +86,7 @@ def compare_registry(root: Path, out: Path, log: Path, execute: Callable) -> dic
     introduced = before - original
     removed = original - before
     result = {
-        'scope': 'SAME_ORIGINAL_GENERATOR_AND_SERIAL_FLAGS; NOT A MODEL BUILD',
+        'scope': 'SAME_CURRENT_GENERATOR_AND_SERIAL_FLAGS; ORIGINAL_REGISTRY_INPUT; NOT A MODEL BUILD',
         'original_common_git_blob': git_blob(valid[0]),
         'registered_warning_count': sum(before.values()),
         'baseline_warning_count': sum(original.values()),
