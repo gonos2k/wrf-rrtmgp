@@ -1,0 +1,85 @@
+{
+  "independent_checks": {
+    "cpl_layer21_contrast": "The saved CPL stage proof reports pre-PANEL negatives already in R1/R2/R3 for layer 21; that case does not support attributing its negatives to the cubic PANEL stage. GI and YI/SPPSP effects are not isolated by this evidence.",
+    "preservation": "Both root analysis receipts show all 45 layers / 63,838,065 samples and panel headers exact against their respective uninstrumented baseline, with only the HTIME header field changed. This is a scoped instrumentation noninterference check for these two cases, not general physics acceptance.",
+    "saved_comparison": {
+      "actual_reader_return_codes": {
+        "cpl": 0,
+        "nocpl": 0
+      },
+      "cpl": "all 45 layer sample payloads and panel headers match baseline byte-for-byte; one 8-byte header word differs per layer",
+      "duplicate_trace_panels": false,
+      "nocpl": "all 45 layer sample payloads and panel headers match baseline byte-for-byte; one 8-byte header word differs per layer",
+      "samples_per_case": 63838065
+    },
+    "target_layer44": "The saved proof has pre-PANEL global minima R1=R2=R3=0 in the NOCPL target panel. Its R3 inputs at indices 27..30 are all positive; the phase-1 signed stencil maps R2[110] from 3.829888890455154e-08 to -8.868114942557128e-07. I independently decoded the NOCPL raw trace records for layer 44 and recomputed this sample; the binary64 result is bitwise identical. The target R2 stencil values then feed R1 interpolation; the saved record shows R1 moves from 1.0268175809267504e-08 to -1.5221808532066484e-06 and RADFNI scales it to -9.924067060697163e-04, matching the supplied residual.",
+    "timestamp_scope": "Source lblrtm.f90 equivalences map YID(2) to HTIME (line 531), and FTIME sets HTIME at runtime (line 661). In the 177-word header, zero-based word 168 is YID(2); the stored changes are clock strings. Other 176 words are equal in each layer."
+  },
+  "limits": [
+    "The arrays are panel accumulators at the moment of PANEL; R1/R2/R3 may include overlap/carry from earlier panel processing. The exact before/after array transition is demonstrated, but attribution to an individual line, line pair, or unique source contribution is not.",
+    "The result explains the sampled NOCPL layer-44 negative optical depth through R3\u2192R2 then R2\u2192R1 interpolation for this run. It does not establish all negative OD cases, broader model accuracy, or UDM/WRF flux-residual attribution.",
+    "The CPL layer-21 negatives are present before PANEL; their cause is unresolved.",
+    "Original physical acceptance remains FAIL_NEGATIVE_OD_RETAINED; no tolerance or acceptance gate was altered."
+  ],
+  "new_solver_or_build_runs": 0,
+  "schema": "UDM37_LBLRTM_PANEL_TRACE_INDEPENDENT_REVIEW_V1",
+  "source_and_evidence_pins": {
+    "analyze_panel_trace.py": {
+      "sha256": "c10aa943dd60afb5ac07b78c4cb89fa372b1ec7e8c11a18004694cd538ef2b9f",
+      "size_bytes": 6756
+    },
+    "build-plan.json": {
+      "sha256": "2911151af66cc6c63ca3eb1a02720ec997274b75cee751a4115c57490d9b8c5d",
+      "size_bytes": 5456
+    },
+    "build-postflight.json": {
+      "sha256": "47b2122b873e8d9029ea7e0e597d3d2345e1633e29e1ab0bea33f9a6b11b0f03",
+      "size_bytes": 536
+    },
+    "build/udm37-lblrtm-held-state-paneltrace-cpl-od-run-v1/runs/od-v1/UDM37_PANEL_TRACE": {
+      "sha256": "e80e8e10c80a6af43f31a5123b9024fabb1d87a149f01f6edd0679bdb42f5ee0",
+      "size_bytes": 307584
+    },
+    "build/udm37-lblrtm-held-state-paneltrace-nocpl-od-run-v1/runs/od-v1/UDM37_PANEL_TRACE": {
+      "sha256": "edfc19d45b7efc0bf6dff48ab8fcf92b62d19cec38349c33758674aa887a8880",
+      "size_bytes": 307584
+    },
+    "cpl-reader-execution.json": {
+      "sha256": "b2e6c2aebe94059b8871463ecd143391b4fc72ebcd4fa9d6089f84b507ee5b3c",
+      "size_bytes": 339
+    },
+    "cpl-trace-analysis.json": {
+      "sha256": "ba32fcc926b121524aa9d4f9837f3892f3f0e5c5c9cb59d6663a776312e7bd56",
+      "size_bytes": 35006
+    },
+    "instrumentation.patch": {
+      "sha256": "8cd4bf253403c5f7c01135441d829f4c1318ff74ee5abcdedd783810e241e3b5",
+      "size_bytes": 2501
+    },
+    "local-diagnosis-proof.json": {
+      "sha256": "00a5ece3d517416c37cdaf428cabf32ffc49ecffcebfe48ed74cc45cd16414f6",
+      "size_bytes": 15996
+    },
+    "nocpl-reader-execution.json": {
+      "sha256": "bee043520ad66399e122d50262701a52eb8fbc911499d8368af4b7cfa130c91f",
+      "size_bytes": 341
+    },
+    "nocpl-trace-analysis.json": {
+      "sha256": "aeaafa1d4e25b1dfae790dbab89bb163aeddaa8b4c20e1255ff054c6a6563167",
+      "size_bytes": 34947
+    },
+    "source/LBLRTM/src/lblrtm.f90": {
+      "sha256": "9ae22638469c4b9e60187b53e47f0a80d5fb502ffd4052f63f88f442dac45aca",
+      "size_bytes": 387500
+    },
+    "source/LBLRTM/src/oprop.f90": {
+      "sha256": "3479ab50b9edebeb68d6faea77d6559134b2f778343a3bca53d9e73c3a87c37b",
+      "size_bytes": 483574
+    },
+    "supplement_trace_diagnosis.py": {
+      "sha256": "434a1a8af6a9f69b6c4ec371db43bd131af10e21978d9e842a618707dfb0f91b",
+      "size_bytes": 4850
+    }
+  },
+  "status": "PASS_SCOPED_LOCAL_INTERPOLATION_CAUSAL_DIAGNOSIS"
+}

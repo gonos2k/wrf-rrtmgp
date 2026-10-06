@@ -1,0 +1,106 @@
+{
+  "status": "SOURCE_REVIEW_COMPLETE_NO_EXECUTION",
+  "scope": "Source-only mapping of LBLRTM IHIRAC=1/JRAD=0 line-strength, coupling, convolution, and interpolation stages for the retained negative OD near layer 21 / 666.3964444 cm-1. No compile, line generation, or solver call.",
+  "source_pins": {
+    "stock_oprop": {
+      "path": "build/udm37-lblrtm-stock-build-v1/attempt-1/source/LBLRTM/src/oprop.f90",
+      "sha256": "7cf594968ec331da3df75429262c1023c21fc461cbbae208253b0fa870685ef8"
+    },
+    "lnfl_source": {
+      "path": "build/udm37-lblrtm-reference-stage-v1/sources/LNFL/src/lnfl.f",
+      "sha256": "d47b7b296b747837bbec8df06a7c8ea1df2ec241546b1db4a15f6b02b98a4ad6"
+    },
+    "lnfl_docs": {
+      "path": "build/udm37-lblrtm-reference-stage-v1/sources/LNFL/docs/lnfl_instructions",
+      "sha256": "e044ed5eb774a99d2dd1086ff98ec879cbd5440dc816bd305a37e66548682601"
+    },
+    "prior_negative_report": {
+      "path": "build/udm37-lblrtm-negative-od-diagnostic-v1/negative-od-raw-v1.json",
+      "sha256": "32d9c01e186158b0cd04b0f1e145de920fc557966f2e0ff6078c8354eff536d8"
+    },
+    "prior_sample8_raw_v2": {
+      "path": "build/udm37-lblrtm-negative-control-review-v1/negative-od-sample8-raw-v2.json",
+      "sha256": "ab080b3b98fa291f1d6b0124f65d3c784b1fbc76eff89f8e0ae33b783ac4189e"
+    }
+  },
+  "observed_target_from_retained_raw_reader": {
+    "source_report": "build/udm37-lblrtm-negative-od-diagnostic-v1/negative-od-raw-v1.json",
+    "coordinate": "Original no-continuum case: ODdeflt_021, layer 21, PAVE=348.36124 mbar, TAVE=228.3152 K, most negative raw sample at 666.3964444444449 cm-1; IEMIT=0, JRAD=0, IMRG=1.",
+    "control_context": "The retained NOCPL comparison output is a deliberate line-coupling-off sensitivity arm; it does not establish a standard/reference solution. The sign-term inspection should compare same-line/same-wavenumber contributions only where exact spectral coordinates and line identities are retained."
+  },
+  "source_path": [
+    {
+      "routine": "OPDPTH",
+      "path": "build/udm37-lblrtm-stock-build-v1/attempt-1/source/LBLRTM/src/oprop.f90",
+      "lines": "451-472",
+      "fact": "For each line batch, RDLIN reads line attributes and LNCOR1 applies pressure, temperature, and column corrections; CNVFNV then convolves the prepared line records."
+    },
+    {
+      "routine": "LNCOR1",
+      "path": "build/udm37-lblrtm-stock-build-v1/attempt-1/source/LBLRTM/src/oprop.f90",
+      "lines": "995-1061, 1123-1149",
+      "fact": "Per-line setup starts YI=GI=0. IFLAG 1/3 reads coupling coefficients from following entries and interpolates the four stored temperatures 200, 250, 296, 340 K. With IFLAG=1, YI and GI are linearly interpolated; IFLAG=3 instead interpolates GAMMA1/2 and adjusts ALFL. After broadening/temperature corrections, SP=SUI*(1+GI*PAVP2), SPPI=SUI*YI*PAVP0, and SPPSP=SPPI/SP. Thus GI is a multiplicative line-strength correction; YI supplies a separate signed coupling ratio. Neither term should be conflated with the base Voigt-profile sum."
+    },
+    {
+      "routine": "CNVFNV",
+      "path": "build/udm37-lblrtm-stock-build-v1/attempt-1/source/LBLRTM/src/oprop.f90",
+      "lines": "1271-1351",
+      "fact": "At each base-grid point J1, the no-line-coupling additions are explicitly STRF1*F1 + STRD*FG + STRVER*XVER (lines 1316-1319). Their amplitudes derive from DEPTHI=SP*RECALF and interpolated CF1, CGAUSS, CER tables (1273-1282). If SPPSP is nonzero, the additional coupling block scales these components by CLC and SPPSP and multiplies the pointwise contribution by ZF1L (lines 1322-1348). The actual signed term is this full coefficient-and-coordinate product; SPPSP alone is not the spectral correction."
+    },
+    {
+      "routine": "SHAPEG / VERFN",
+      "path": "build/udm37-lblrtm-stock-build-v1/attempt-1/source/LBLRTM/src/oprop.f90",
+      "lines": "1912-1942, 1943-1987",
+      "fact": "FG is constructed as a normalized Doppler/Gaussian profile. XVER is a correction used to improve the Voigt approximation over 0\u20134 half-widths. Therefore the decomposed no-coupling baseline is not just one positive Voigt curve: capture the three terms independently before summing."
+    },
+    {
+      "routine": "PANEL",
+      "path": "build/udm37-lblrtm-stock-build-v1/attempt-1/source/LBLRTM/src/oprop.f90",
+      "lines": "1428-1487",
+      "fact": "R3 and R2 arrays are interpolated onto finer R2 and R1 grids with the explicit four-point weights X00..X03; a subsequent two-point stencil uses X10/X11. These signed cubic/interpolation weights can alter local values. This is distinct from line coupling."
+    },
+    {
+      "routine": "R1 interpolation/output",
+      "path": "build/udm37-lblrtm-stock-build-v1/attempt-1/source/LBLRTM/src/oprop.f90",
+      "lines": "1745-1758",
+      "fact": "The panel output grid is formed by cubic four-point interpolation of R1 into R1OUT using A1..A4. Capture pre-output R1 and post-interpolation R1OUT to test whether a negative is already present before this final interpolation."
+    },
+    {
+      "routine": "JRAD=0 radiation factor",
+      "path": "build/udm37-lblrtm-stock-build-v1/attempt-1/source/LBLRTM/src/oprop.f90",
+      "lines": "1492-1515, 2235-2296",
+      "fact": "JRAD=0 multiplies the panel R1 array by RADFNI after line convolution; RADFN defines the corresponding positive radiation term. It is downstream of the source terms and cannot alone explain a sign reversal when finite and positive."
+    },
+    {
+      "routine": "LNFL TAPE3 companion flags",
+      "path": "build/udm37-lblrtm-reference-stage-v1/sources/LNFL/src/lnfl.f",
+      "lines": "1393-1422, 1673-1685, 1775-1815",
+      "fact": "The formatted line parser uses IFLGM1 to distinguish main lines from coupling follow-on records. Flag 5 selects foreign/self coupling records; flags 1/3 select coupled coefficient paths. LNFL MOVE emits companion records when IFG2>=1 and a further record for IFG2==5 (source review lines 1068-1116 in the pinned LNFL copy). These flags and companion records are the upstream switch corresponding to LBLRTM coupling paths."
+    }
+  ],
+  "safe_instrumentation_plan": [
+    {
+      "stage": "LNCOR1 immediately before SP/SPPSP assignment (source line 1147-1149)",
+      "record": "For selected line records only: stable line ID (molecule/isotope, VNU, source IFLG), SUI after temperature/isotope correction, GI, YI, PAVP0/PAVP2, 1+GI*PAVP2, SP, SPPI, SPPSP, ALFL, RECALF. Preserve uninstrumented run; use an isolated source-copy hook or debugger/log build."
+    },
+    {
+      "stage": "CNVFNV additions in the target panel (1316-1348)",
+      "record": "For a narrow spectral window around the target: line ID, J1/wavenumber, DEPTHI, STRF1*F1, STRD*FG, STRVER*XVER separately; then, when SPPSP!=0, the full per-component coupling additions including ZF1L, CLC1, SPPSP. Preserve per-line sums and pre/post accumulator values to identify the first stage where sign appears."
+    },
+    {
+      "stage": "PANEL and R1-to-R1OUT (1428-1487, 1745-1758)",
+      "record": "Capture stencil input values and output at the target frequency before/after the R3\u2192R2\u2192R1 and R1\u2192R1OUT interpolations. Keep each stage separate; use exact coordinate mapping rather than nearby samples."
+    },
+    {
+      "stage": "JRAD=0 multiplication (1492-1515)",
+      "record": "Capture the factor and R1 before/after multiplication at the matched sample; this is a check of downstream sign preservation, not a cause hypothesis."
+    }
+  ],
+  "interpretive_limits": [
+    "NOCPL disables line-coupling metadata and associated companion records, which removes both the GI strength correction and YI/SPPSP coupling branch. It does not isolate only the signed SPPSP contribution.",
+    "A negative at final OD can originate in a signed line-level term, accumulation/cancellation, or interpolation; output-only data do not distinguish these.",
+    "The component baseline terms include approximate profile pieces and must be reported as implementation decomposition, not assumed independently physical/positive contributions.",
+    "JRAD=0 is a positive multiplicative radiation term after the source accumulation; it is not the Planck function and should not be labeled Planck.",
+    "The nearby no-NOCPL/NOCPL result is a sensitivity comparison, not a reference truth, accepted tolerance, or proof that line coupling is defective."
+  ]
+}
