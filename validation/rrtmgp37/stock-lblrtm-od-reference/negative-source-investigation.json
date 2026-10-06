@@ -1,0 +1,104 @@
+{
+  "schema": "lblrtm-negative-od-source-investigation-v1",
+  "created_utc": "2026-10-06T00:35:24.255821+00:00",
+  "status": "SCIENTIFIC_ANOMALY_OPEN_SOURCE_MECHANISMS_IDENTIFIED",
+  "pins": [
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-held-state-od-run-v1/od-parse-v1.json",
+      "sha256": "545c7d5472297aafb29bf4dd045954f0a50345797cf676ba7e2a3b2899bb3ebd",
+      "size_bytes": 4048317
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-held-state-od-run-v1/parser-execution-v1.json",
+      "sha256": "3aeb76e8420361acbdf9a1288ba0a01c321b6bc411d9aa473f51e1b35294b0d5",
+      "size_bytes": 718
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-held-state-od-run-v1/runs/od-v1/execution.json",
+      "sha256": "0e3a44c2d741e4b861469489cd40924d47f61e96b7c341c783db3523ed48cb42",
+      "size_bytes": 543
+    },
+    {
+      "path": "/tmp/lblrtm-audit/src/oprop.f90",
+      "sha256": "7cf594968ec331da3df75429262c1023c21fc461cbbae208253b0fa870685ef8",
+      "size_bytes": 481997
+    },
+    {
+      "path": "/tmp/lblrtm-audit/src/lblrtm.f90",
+      "sha256": "9ae22638469c4b9e60187b53e47f0a80d5fb502ffd4052f63f88f442dac45aca",
+      "size_bytes": 387500
+    }
+  ],
+  "saved_output_summary": {
+    "layers": 45,
+    "sample_count": 63838065,
+    "negative_count": 145117,
+    "min": -5.052245375427372,
+    "max": 5517.207903121621,
+    "all_finite": true,
+    "layers_with_negatives": 45,
+    "warm_layer_example": {
+      "layer": 1,
+      "TAVE": 260.8542,
+      "negative_count": 85,
+      "negative_min": -0.12212092849567305
+    }
+  },
+  "mechanisms": [
+    {
+      "name": "Inline coupled-line corrections",
+      "active_path": true,
+      "source": "oprop.f90 LNCOR1:1038-1067,1146-1149; CNVFNV:1322-1351",
+      "formula": "Temperature interpolation YI/GI is not sign-restricted; SP=SUI*(1+GI*PAVP2), SPPI=SUI*YI*PAVP0, SPPSP=SPPI/SP. Signed ZF*SPPSP terms are added to line profiles. Such terms can decrease opacity and are not disabled by ICNTNM=0.",
+      "inference": "A concrete active mechanism; actual attribution requires coupling/band localization, not inferred from negative count."
+    },
+    {
+      "name": "Signed interpolation of profile subfunctions",
+      "active_path": true,
+      "source": "oprop.f90 PNL1:1429-1490",
+      "formula": "4-point coefficients include -7/128, -5/128 and -1/16; R3\u2192R2\u2192R1 resampling does not impose positivity.",
+      "inference": "Can create numerical undershoot near spectral structure; magnitude/cause is not established from source alone."
+    },
+    {
+      "name": "Cross-section cold extrapolation",
+      "active_path": true,
+      "source": "oprop.f90 XSNTMP:5366-5387; XSECTM:4907-4916; XSBINF:5503-5508,5577-5578",
+      "formula": "Below first temperature, first two database temperatures selected; FAC2=(T-T1)/(T2-T1) may be negative and FAC1>1. Weighted spectra are added without a positivity clamp. HCFC22 minimum retained temperature is253 K.",
+      "inference": "Possible cold-layer contribution. Negatives already exist at T260.8542 in layer1, so HCFC22 below253 extrapolation cannot alone explain all negative values."
+    },
+    {
+      "name": "Fourth-function cutoff/baseline subtraction",
+      "active_path": false,
+      "source": "oprop.f90:442,515; CNVF4:3940-4006",
+      "formula": "F4BND and CO2 fcnt_fn subtractions are present in fourth-function code.",
+      "inference": "Current ILBLF4=0 bypasses this fourth-function path. Do not attribute current negative OD to that inactive subtraction."
+    },
+    {
+      "name": "Continuum omission",
+      "active_path": true,
+      "source": "lblrtm.f90:704-712,6216-6228",
+      "formula": "ICNTNM=0 disables continuum/CIA and skips CONTNM. It leaves line/coupling and XS terms active.",
+      "inference": "Removes potentially positive background contribution; does not prove continuum1 repairs sign or makes either run physical truth."
+    }
+  ],
+  "next_readonly_discriminants": [
+    "Localize negative samples by exact layer/wavenumber and compare to line-coupling bands versus XS band coverage; preserve original values.",
+    "Use existing TAPE6 molecule/coupling diagnostic counts and source-specific temperature coverage to rank mechanisms.",
+    "Any later ICNTNM1 experiment is a distinct policy comparison; record unchanged other controls and do not infer negative-free means accuracy."
+  ],
+  "limits": [
+    "Successful reader/RC and finite binary parsing do not establish scientifically acceptable absorption.",
+    "No clipping, replacement, sign tolerance relaxation, source patch or solver rerun was performed.",
+    "Saved summaries were read; no monochromatic arrays were recalculated, no source mechanism was numerically evaluated.",
+    "Actual attribution of the -5.052245 optical depth remains open."
+  ],
+  "reviewer_invocations": {
+    "LBLRTM": 0,
+    "LNFL": 0,
+    "compiler": 0,
+    "WRF": 0,
+    "RTE": 0,
+    "integration": 0,
+    "source_equation_calculation": 0
+  }
+}

@@ -1,0 +1,78 @@
+{
+  "LBLRTM_commit": "a85ac73447c1e62401a57a34bbcb040683345dca",
+  "cases": [
+    {
+      "ICNTNM": 0,
+      "all_finite": true,
+      "case": "line_xs_only",
+      "duration_seconds": 10.543515920639038,
+      "layers": 45,
+      "maximum": 5517.207903121621,
+      "minimum": -5.052245375427372,
+      "negative_samples": 145117,
+      "parser_actual_child_rc": 0,
+      "samples": 63838065,
+      "scientific_reference_acceptance": "FAIL_NONNEGATIVITY_UNRESOLVED_NO_CLIPPING",
+      "source_full_parser_report": {
+        "path": "build/udm37-lblrtm-held-state-od-run-v1/od-parse-v1.json",
+        "sha256": "545c7d5472297aafb29bf4dd045954f0a50345797cf676ba7e2a3b2899bb3ebd",
+        "size_bytes": 4048317
+      },
+      "stock_solver_actual_child_rc": 0,
+      "stock_solver_parent_rc": 0
+    },
+    {
+      "ICNTNM": 1,
+      "all_finite": true,
+      "case": "stock_continuum",
+      "duration_seconds": 10.546129941940308,
+      "layers": 45,
+      "maximum": 5517.208061446636,
+      "minimum": -4.884429085432753,
+      "negative_samples": 21712,
+      "parser_actual_child_rc": 0,
+      "samples": 63838065,
+      "scientific_reference_acceptance": "FAIL_NONNEGATIVITY_UNRESOLVED_NO_CLIPPING",
+      "source_full_parser_report": {
+        "path": "build/udm37-lblrtm-held-state-continuum-od-run-v1/od-parse-v1.json",
+        "sha256": "d87d3cab5acea74c8daa9d6cc4ecd2cb058c63c4fc4c91c7930446e179f1df9c",
+        "size_bytes": 4048316
+      },
+      "stock_solver_actual_child_rc": 0,
+      "stock_solver_parent_rc": 0
+    }
+  ],
+  "evidence_date": "2026-10-06",
+  "inactive_hypothesis": "Fourth-function cutoff subtraction under ILBLF4>=1 is inactive because ILBLF4=0.",
+  "mechanistic_hypotheses_not_causal_proof": [
+    "Signed inline line mixing",
+    "Signed cubic subfunction interpolation",
+    "Cold external cross-section extrapolation (cannot alone explain warm-layer negatives)"
+  ],
+  "minimum_location": {
+    "PAVE_mbar": 348.36124,
+    "TAVE_K": 228.3152,
+    "interpretation": "Within CO2 15um spectral region, not species attribution proof.",
+    "layer": 21,
+    "wavenumber_cm-1": 666.3964444444449
+  },
+  "next_discrimination": "Use localized identical-state controls to separate line-mixing from interpolation; preserve all original outputs and avoid broadly changing unrelated physics.",
+  "profile_input": {
+    "path": "build/udm37-legacy-lw-source-export-bon-audit-v2/cases/SOURCE_OFF/trace/lw_000001.input",
+    "sha256": "9c477295b7a01de8b5e38b612052f1e61e711402a5a839bd1cb9c58b6eed2168",
+    "size_bytes": 40429
+  },
+  "restrictions": [
+    "No negative clipping, tolerance relaxation or failed-case omission.",
+    "Full-continuum still has negative optical depth and is not promoted to an accuracy reference.",
+    "No flux result or attribution of held4/37residual follows.",
+    "N2 stockcontinuum uses complement convention; not equality to explicit GP N2.",
+    "Nominal0\u201345km heights are restricted LTE OD metadata,not WRFgeometry.",
+    "Cold HCFC22extrapolation and singletemperatureCCl4 limitations remain.",
+    "Large spectra, source datasets and compiled binaries stay private; file hashes bind them."
+  ],
+  "schema": "UDM37_STOCK_LBLRTM_REFERENCE_EXECUTION_V1",
+  "scope": "Captured45layer clear LW state,500\u20132250cm-1. Two stock diagnostics differ by one ICNTNM byte. No WRF/RTE rerun; no port code changed.",
+  "status": "ACTUAL_STOCK_READER_ACCEPTED_FINITE_BUT_PHYSICAL_REFERENCE_REJECTED",
+  "stock_binary_sha256": "a5c363c87a44b686e8bff1cf0e60fcfb7b0e167c8ec74d0201b6cc6b2b41473b"
+}

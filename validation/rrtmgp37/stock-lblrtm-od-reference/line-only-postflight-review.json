@@ -1,0 +1,560 @@
+{
+  "bound_receipt_hashes": [
+    {
+      "path": "build/udm37-lblrtm-held-state-od-run-v1/plan.json",
+      "sha256": "8f9353d781228ed113d7eece31f835694e0a01e6fe0ca8ff5996a9eb36bb4a13",
+      "size_bytes": 26527
+    },
+    {
+      "path": "build/udm37-lblrtm-held-state-od-run-v1/runner.py",
+      "sha256": "b4b283ddff530a605883fd980943bbda8b65029e90940fb9d197def270ae49b3",
+      "size_bytes": 15040
+    },
+    {
+      "path": "build/udm37-lblrtm-held-state-od-run-v1/root-launch-authorization-v1.json",
+      "sha256": "2b1e222a1a1ec5721f73dd2ff6e03d08c3887123b952af1b0a22c617d8d76b67",
+      "size_bytes": 663
+    },
+    {
+      "path": "build/udm37-lblrtm-held-state-od-run-v1/runs/od-v1/prepared.json",
+      "sha256": "8e3ad7b01e42079f89cd3572f02379519e1710c4b86d8a4e09cdce9fb446e53e",
+      "size_bytes": 13999
+    },
+    {
+      "path": "build/udm37-lblrtm-held-state-od-run-v1/runs/od-v1/launch.json",
+      "sha256": "67f9873498f64506565db943387adbfbd0a21913cf31fbaf9b3ee801ea09a06b",
+      "size_bytes": 832
+    },
+    {
+      "path": "build/udm37-lblrtm-held-state-od-run-v1/runs/od-v1/execution.json",
+      "sha256": "0e3a44c2d741e4b861469489cd40924d47f61e96b7c341c783db3523ed48cb42",
+      "size_bytes": 543
+    },
+    {
+      "path": "build/udm37-lblrtm-held-state-od-run-v1/runs/od-v1/execution-details.json",
+      "sha256": "b5cca19d6093bc98f6df501414cbcac95d7639c4e415f308264807afa2a725ea",
+      "size_bytes": 804
+    },
+    {
+      "path": "build/udm37-lblrtm-held-state-od-run-v1/runs/od-v1/postflight.json",
+      "sha256": "a0fe20377c08a3ee4feb818736c3ed1083bb5dc8616f6b43a1b147d9e9917160",
+      "size_bytes": 9349
+    },
+    {
+      "path": "build/udm37-lblrtm-held-state-od-run-v1/runs/od-v1/TAPE5",
+      "sha256": "91a6e55bd31c420659acb80156ca99dd3ddb5d186dfd33558500e6cbb137c450",
+      "size_bytes": 29428
+    },
+    {
+      "path": "build/udm37-lblrtm-held-state-od-run-v1/runs/od-v1/TAPE6",
+      "sha256": "6e8b75f11ceb9f4a85489d9adc02118c8f2de57b05791abeb6bd209523333a6d",
+      "size_bytes": 127971
+    },
+    {
+      "path": "build/udm37-lblrtm-held-state-od-run-v1/runs/od-v1/stderr.log",
+      "sha256": "a5f7f1f04deb07633d6519919e24787f762b76d223da303bff248529f31c36b5",
+      "size_bytes": 95
+    },
+    {
+      "path": "build/udm37-lblrtm-held-state-od-run-v1/runs/od-v1/stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    }
+  ],
+  "executable_recheck": {
+    "expected_sha256": "a5c363c87a44b686e8bff1cf0e60fcfb7b0e167c8ec74d0201b6cc6b2b41473b",
+    "expected_size_bytes": 14348016,
+    "pass": true,
+    "path": "build/udm37-lblrtm-stock-build-v1/attempt-1/source/LBLRTM/lblrtm_v12.17_linux_gnu_dbl",
+    "sha256": "a5c363c87a44b686e8bff1cf0e60fcfb7b0e167c8ec74d0201b6cc6b2b41473b",
+    "size_bytes": 14348016
+  },
+  "interpretation": "This verifies successful stock LBLRTM optical-depth run completion, 45-layer logging, continuum/non-LTE module status, and unchanged staged inputs. It does not attribute the IEEE_DENORMAL note or independently validate the numerical OD arrays.",
+  "outputs": {
+    "ODdeflt_layer_files": 45,
+    "names_consecutive_001_to_045": true,
+    "total_postflight_inventory_files": 59
+  },
+  "run": {
+    "actual_child_returncode": 0,
+    "duration_seconds": 10.543516,
+    "execution_receipt_sha256": "0e3a44c2d741e4b861469489cd40924d47f61e96b7c341c783db3523ed48cb42",
+    "launch_executable_sha256": "a5c363c87a44b686e8bff1cf0e60fcfb7b0e167c8ec74d0201b6cc6b2b41473b",
+    "parent_tool_returncode": 0,
+    "parent_tool_returncode_source": "root-reported completion; no separate parent receipt found in run directory",
+    "pid": 1214258,
+    "postflight_output_file_count": 59,
+    "postflight_status": "OUTPUTS_INVENTORIED_CHILD_RC0"
+  },
+  "schema": "udm37-lblrtm-held-state-od-run-postflight-source-review-v1",
+  "scope": "Independent receipt, unchanged input, and TAPE6 textual/structural verification only. No duplicate optical-depth or other numerical result parsing.",
+  "staged_inputs": {
+    "all_unchanged": true,
+    "checks": [
+      {
+        "actual_sha256": "91a6e55bd31c420659acb80156ca99dd3ddb5d186dfd33558500e6cbb137c450",
+        "actual_size_bytes": 29428,
+        "expected_sha256": "91a6e55bd31c420659acb80156ca99dd3ddb5d186dfd33558500e6cbb137c450",
+        "expected_size_bytes": 29428,
+        "kind": "copied_input",
+        "pass": true,
+        "path": "TAPE5",
+        "path_or_link_matches": true
+      },
+      {
+        "actual_sha256": "56bd55fa256ed3b3a672bd4bcd88034cd7086d4fbef2a1def9480199dab2b388",
+        "actual_size_bytes": 122157832,
+        "expected_sha256": "56bd55fa256ed3b3a672bd4bcd88034cd7086d4fbef2a1def9480199dab2b388",
+        "expected_size_bytes": 122157832,
+        "kind": "symlink_input",
+        "pass": true,
+        "path": "TAPE3",
+        "path_or_link_matches": true
+      },
+      {
+        "actual_sha256": "1a5cebba2d3787c2e48c9cc0f2e4d1593720e4655b6ae4e7e4bc1a31c4b426f6",
+        "actual_size_bytes": 10382,
+        "expected_sha256": "1a5cebba2d3787c2e48c9cc0f2e4d1593720e4655b6ae4e7e4bc1a31c4b426f6",
+        "expected_size_bytes": 10382,
+        "kind": "symlink_input",
+        "pass": true,
+        "path": "FSCDXS",
+        "path_or_link_matches": true
+      },
+      {
+        "actual_sha256": "69944eb8b045c268e2daeb2cddf536b99f9e9efe7e91c425067b46a5b287ddb3",
+        "actual_size_bytes": 83576,
+        "expected_sha256": "69944eb8b045c268e2daeb2cddf536b99f9e9efe7e91c425067b46a5b287ddb3",
+        "expected_size_bytes": 83576,
+        "kind": "symlink_input",
+        "pass": true,
+        "path": "absco-ref_wv-mt-ckd.nc",
+        "path_or_link_matches": true
+      },
+      {
+        "actual_sha256": "2e50c888c75a19f1d7c2b3a0e563644f9e2e4fcd36065648cb37003ac5c915bb",
+        "actual_size_bytes": 18584,
+        "expected_sha256": "2e50c888c75a19f1d7c2b3a0e563644f9e2e4fcd36065648cb37003ac5c915bb",
+        "expected_size_bytes": 18584,
+        "kind": "symlink_input",
+        "pass": true,
+        "path": "xs/CCL4",
+        "path_or_link_matches": true
+      },
+      {
+        "actual_sha256": "c3c741a84f06b5e3d5d32c4e1aebb80921f0bf208a605fdb01afedbe6a56aa04",
+        "actual_size_bytes": 20604,
+        "expected_sha256": "c3c741a84f06b5e3d5d32c4e1aebb80921f0bf208a605fdb01afedbe6a56aa04",
+        "expected_size_bytes": 20604,
+        "kind": "symlink_input",
+        "pass": true,
+        "path": "xs/F11AT1",
+        "path_or_link_matches": true
+      },
+      {
+        "actual_sha256": "1292ca88931ae102b5c56432a270d67ecde910adade9f48554c52949e223d2dc",
+        "actual_size_bytes": 20604,
+        "expected_sha256": "1292ca88931ae102b5c56432a270d67ecde910adade9f48554c52949e223d2dc",
+        "expected_size_bytes": 20604,
+        "kind": "symlink_input",
+        "pass": true,
+        "path": "xs/F11AT2",
+        "path_or_link_matches": true
+      },
+      {
+        "actual_sha256": "83525a02a7785c06d26ef8fe03d3c6d0e394b346e2959b19bbb09780d36f6e28",
+        "actual_size_bytes": 20604,
+        "expected_sha256": "83525a02a7785c06d26ef8fe03d3c6d0e394b346e2959b19bbb09780d36f6e28",
+        "expected_size_bytes": 20604,
+        "kind": "symlink_input",
+        "pass": true,
+        "path": "xs/F11AT3",
+        "path_or_link_matches": true
+      },
+      {
+        "actual_sha256": "162c4a7b4d8581966b9a3a255155e14ca9338d7e4ba995797d93dd1193fd58db",
+        "actual_size_bytes": 20604,
+        "expected_sha256": "162c4a7b4d8581966b9a3a255155e14ca9338d7e4ba995797d93dd1193fd58db",
+        "expected_size_bytes": 20604,
+        "kind": "symlink_input",
+        "pass": true,
+        "path": "xs/F11AT4",
+        "path_or_link_matches": true
+      },
+      {
+        "actual_sha256": "50483d639842ecb2df7613417ea292b6d117bc9365ca50acfb85c7a2665ba313",
+        "actual_size_bytes": 20604,
+        "expected_sha256": "50483d639842ecb2df7613417ea292b6d117bc9365ca50acfb85c7a2665ba313",
+        "expected_size_bytes": 20604,
+        "kind": "symlink_input",
+        "pass": true,
+        "path": "xs/F11AT5",
+        "path_or_link_matches": true
+      },
+      {
+        "actual_sha256": "8cdb9ebb13b7ceeab9294d2989bf86ecff9793fc6e755831dcb6e525b626a33a",
+        "actual_size_bytes": 20604,
+        "expected_sha256": "8cdb9ebb13b7ceeab9294d2989bf86ecff9793fc6e755831dcb6e525b626a33a",
+        "expected_size_bytes": 20604,
+        "kind": "symlink_input",
+        "pass": true,
+        "path": "xs/F11AT6",
+        "path_or_link_matches": true
+      },
+      {
+        "actual_sha256": "42a8782721cf9c97efc3ed3607045817aee218cace9ef97b72865fbc5be125cc",
+        "actual_size_bytes": 32118,
+        "expected_sha256": "42a8782721cf9c97efc3ed3607045817aee218cace9ef97b72865fbc5be125cc",
+        "expected_size_bytes": 32118,
+        "kind": "symlink_input",
+        "pass": true,
+        "path": "xs/F11BT1",
+        "path_or_link_matches": true
+      },
+      {
+        "actual_sha256": "70ce2c26e2dce70d22cd8e9ff2e777e803085c77aa3d7420e5d2f14ec9007bce",
+        "actual_size_bytes": 32118,
+        "expected_sha256": "70ce2c26e2dce70d22cd8e9ff2e777e803085c77aa3d7420e5d2f14ec9007bce",
+        "expected_size_bytes": 32118,
+        "kind": "symlink_input",
+        "pass": true,
+        "path": "xs/F11BT2",
+        "path_or_link_matches": true
+      },
+      {
+        "actual_sha256": "ec38b98f3e16356db657c875c72c5dfb59f139b15e731edebf96fa5bd56474ff",
+        "actual_size_bytes": 32118,
+        "expected_sha256": "ec38b98f3e16356db657c875c72c5dfb59f139b15e731edebf96fa5bd56474ff",
+        "expected_size_bytes": 32118,
+        "kind": "symlink_input",
+        "pass": true,
+        "path": "xs/F11BT3",
+        "path_or_link_matches": true
+      },
+      {
+        "actual_sha256": "b5d172d83e82c3b3e97e3b34221e964e8424f7ddf33a8e84720cde88010704bb",
+        "actual_size_bytes": 32118,
+        "expected_sha256": "b5d172d83e82c3b3e97e3b34221e964e8424f7ddf33a8e84720cde88010704bb",
+        "expected_size_bytes": 32118,
+        "kind": "symlink_input",
+        "pass": true,
+        "path": "xs/F11BT4",
+        "path_or_link_matches": true
+      },
+      {
+        "actual_sha256": "aad952d01a63761aa73520b6e44fd57efbd6e598cafaf5485ed08e18a58fe953",
+        "actual_size_bytes": 32118,
+        "expected_sha256": "aad952d01a63761aa73520b6e44fd57efbd6e598cafaf5485ed08e18a58fe953",
+        "expected_size_bytes": 32118,
+        "kind": "symlink_input",
+        "pass": true,
+        "path": "xs/F11BT5",
+        "path_or_link_matches": true
+      },
+      {
+        "actual_sha256": "f278a8009361b058a4746beeba9ee4eb02088f1ceb8e5952bf17e4672601fed0",
+        "actual_size_bytes": 32118,
+        "expected_sha256": "f278a8009361b058a4746beeba9ee4eb02088f1ceb8e5952bf17e4672601fed0",
+        "expected_size_bytes": 32118,
+        "kind": "symlink_input",
+        "pass": true,
+        "path": "xs/F11BT6",
+        "path_or_link_matches": true
+      },
+      {
+        "actual_sha256": "c29d0dffeb4dad6ed086e557dd963950d6d1228a2b28ff8b2728f7e8e516c7e2",
+        "actual_size_bytes": 47773,
+        "expected_sha256": "c29d0dffeb4dad6ed086e557dd963950d6d1228a2b28ff8b2728f7e8e516c7e2",
+        "expected_size_bytes": 47773,
+        "kind": "symlink_input",
+        "pass": true,
+        "path": "xs/F12AT1",
+        "path_or_link_matches": true
+      },
+      {
+        "actual_sha256": "215f480f19cb5cac643318253e50fb9a7918f97c268d00b262241f01021686b4",
+        "actual_size_bytes": 47773,
+        "expected_sha256": "215f480f19cb5cac643318253e50fb9a7918f97c268d00b262241f01021686b4",
+        "expected_size_bytes": 47773,
+        "kind": "symlink_input",
+        "pass": true,
+        "path": "xs/F12AT2",
+        "path_or_link_matches": true
+      },
+      {
+        "actual_sha256": "f148a7fde6f995b22ca7cd969f8bee048c216c974c3dbc5ccbe71a2e247657a6",
+        "actual_size_bytes": 47773,
+        "expected_sha256": "f148a7fde6f995b22ca7cd969f8bee048c216c974c3dbc5ccbe71a2e247657a6",
+        "expected_size_bytes": 47773,
+        "kind": "symlink_input",
+        "pass": true,
+        "path": "xs/F12AT3",
+        "path_or_link_matches": true
+      },
+      {
+        "actual_sha256": "0200c0f228ac9e8b8f4d2361563e6500e132a9488698a5c9a281da7ba850ef57",
+        "actual_size_bytes": 47773,
+        "expected_sha256": "0200c0f228ac9e8b8f4d2361563e6500e132a9488698a5c9a281da7ba850ef57",
+        "expected_size_bytes": 47773,
+        "kind": "symlink_input",
+        "pass": true,
+        "path": "xs/F12AT4",
+        "path_or_link_matches": true
+      },
+      {
+        "actual_sha256": "d907050bce812262c3577dfbf26bae556038c35788c0086739f35cfc45d76907",
+        "actual_size_bytes": 47773,
+        "expected_sha256": "d907050bce812262c3577dfbf26bae556038c35788c0086739f35cfc45d76907",
+        "expected_size_bytes": 47773,
+        "kind": "symlink_input",
+        "pass": true,
+        "path": "xs/F12AT5",
+        "path_or_link_matches": true
+      },
+      {
+        "actual_sha256": "c0b93ef0797a9ee805d303f69ea18e977a06351543168d0d37ad30d74a9a0a40",
+        "actual_size_bytes": 47773,
+        "expected_sha256": "c0b93ef0797a9ee805d303f69ea18e977a06351543168d0d37ad30d74a9a0a40",
+        "expected_size_bytes": 47773,
+        "kind": "symlink_input",
+        "pass": true,
+        "path": "xs/F12AT6",
+        "path_or_link_matches": true
+      },
+      {
+        "actual_sha256": "e5d6faf2d7b1f1283abccb8670bee6ee60108232db94467ad40023593a6cacd7",
+        "actual_size_bytes": 66155,
+        "expected_sha256": "e5d6faf2d7b1f1283abccb8670bee6ee60108232db94467ad40023593a6cacd7",
+        "expected_size_bytes": 66155,
+        "kind": "symlink_input",
+        "pass": true,
+        "path": "xs/F12BT1",
+        "path_or_link_matches": true
+      },
+      {
+        "actual_sha256": "ca3d511077e3feb3689237cfc5d06d023678f71ec1291e878a3eb058bb5841b3",
+        "actual_size_bytes": 66155,
+        "expected_sha256": "ca3d511077e3feb3689237cfc5d06d023678f71ec1291e878a3eb058bb5841b3",
+        "expected_size_bytes": 66155,
+        "kind": "symlink_input",
+        "pass": true,
+        "path": "xs/F12BT2",
+        "path_or_link_matches": true
+      },
+      {
+        "actual_sha256": "fa05052fb97afb00701bb90f13c71f170ef80ed45280d1861db2345e3c655e3f",
+        "actual_size_bytes": 66155,
+        "expected_sha256": "fa05052fb97afb00701bb90f13c71f170ef80ed45280d1861db2345e3c655e3f",
+        "expected_size_bytes": 66155,
+        "kind": "symlink_input",
+        "pass": true,
+        "path": "xs/F12BT3",
+        "path_or_link_matches": true
+      },
+      {
+        "actual_sha256": "b22eec92fc8584a5a5210c544f706a11c519f9a743cab7268fe6ecdffdcddf78",
+        "actual_size_bytes": 66155,
+        "expected_sha256": "b22eec92fc8584a5a5210c544f706a11c519f9a743cab7268fe6ecdffdcddf78",
+        "expected_size_bytes": 66155,
+        "kind": "symlink_input",
+        "pass": true,
+        "path": "xs/F12BT4",
+        "path_or_link_matches": true
+      },
+      {
+        "actual_sha256": "9e990c29234f2b06988739b1f52307cc181679a820afe4e8be62eba812969c09",
+        "actual_size_bytes": 66155,
+        "expected_sha256": "9e990c29234f2b06988739b1f52307cc181679a820afe4e8be62eba812969c09",
+        "expected_size_bytes": 66155,
+        "kind": "symlink_input",
+        "pass": true,
+        "path": "xs/F12BT5",
+        "path_or_link_matches": true
+      },
+      {
+        "actual_sha256": "455978d333d402576206cdc8ced8c3174f8a6f96b16030af9d54177e112f96d5",
+        "actual_size_bytes": 66155,
+        "expected_sha256": "455978d333d402576206cdc8ced8c3174f8a6f96b16030af9d54177e112f96d5",
+        "expected_size_bytes": 66155,
+        "kind": "symlink_input",
+        "pass": true,
+        "path": "xs/F12BT6",
+        "path_or_link_matches": true
+      },
+      {
+        "actual_sha256": "a7294b3899adee33b1faf187ea4b0109edb23a83d8f67a023fe1308c41ba184f",
+        "actual_size_bytes": 105747,
+        "expected_sha256": "a7294b3899adee33b1faf187ea4b0109edb23a83d8f67a023fe1308c41ba184f",
+        "expected_size_bytes": 105747,
+        "kind": "symlink_input",
+        "pass": true,
+        "path": "xs/HCF3AT1",
+        "path_or_link_matches": true
+      },
+      {
+        "actual_sha256": "4973a523af7d202ac940fade0ed9719536ed9a62c0b45cc3745895a44bb69cea",
+        "actual_size_bytes": 105747,
+        "expected_sha256": "4973a523af7d202ac940fade0ed9719536ed9a62c0b45cc3745895a44bb69cea",
+        "expected_size_bytes": 105747,
+        "kind": "symlink_input",
+        "pass": true,
+        "path": "xs/HCF3AT2",
+        "path_or_link_matches": true
+      },
+      {
+        "actual_sha256": "bd5760a47b7f4cbb805713fe07d7697890f3475b20344e3d63acee97b214ba98",
+        "actual_size_bytes": 105747,
+        "expected_sha256": "bd5760a47b7f4cbb805713fe07d7697890f3475b20344e3d63acee97b214ba98",
+        "expected_size_bytes": 105747,
+        "kind": "symlink_input",
+        "pass": true,
+        "path": "xs/HCF3AT3",
+        "path_or_link_matches": true
+      },
+      {
+        "actual_sha256": "9995af7f47d39d7eadcbdd4683ba6e871c53b87c9c38e0999eaa2ae5d330860f",
+        "actual_size_bytes": 164408,
+        "expected_sha256": "9995af7f47d39d7eadcbdd4683ba6e871c53b87c9c38e0999eaa2ae5d330860f",
+        "expected_size_bytes": 164408,
+        "kind": "symlink_input",
+        "pass": true,
+        "path": "xs/HCF3BT1",
+        "path_or_link_matches": true
+      },
+      {
+        "actual_sha256": "f6d2aadf397246334f471c0656757f206fb40ab798d174f74fbe080f391f113f",
+        "actual_size_bytes": 164409,
+        "expected_sha256": "f6d2aadf397246334f471c0656757f206fb40ab798d174f74fbe080f391f113f",
+        "expected_size_bytes": 164409,
+        "kind": "symlink_input",
+        "pass": true,
+        "path": "xs/HCF3BT2",
+        "path_or_link_matches": true
+      },
+      {
+        "actual_sha256": "eb4c011d8cc3bef13af632dd5c595662b12ea55ce6ed6c215a3dc01cfddddc2f",
+        "actual_size_bytes": 164408,
+        "expected_sha256": "eb4c011d8cc3bef13af632dd5c595662b12ea55ce6ed6c215a3dc01cfddddc2f",
+        "expected_size_bytes": 164408,
+        "kind": "symlink_input",
+        "pass": true,
+        "path": "xs/HCF3BT3",
+        "path_or_link_matches": true
+      },
+      {
+        "actual_sha256": "a24e2ebabe18d767822f0ae558ab2d0bceb02999d35934d40651e034e12799b4",
+        "actual_size_bytes": 123321,
+        "expected_sha256": "a24e2ebabe18d767822f0ae558ab2d0bceb02999d35934d40651e034e12799b4",
+        "expected_size_bytes": 123321,
+        "kind": "symlink_input",
+        "pass": true,
+        "path": "xs/HCF3CT1",
+        "path_or_link_matches": true
+      },
+      {
+        "actual_sha256": "360b20c0c521f79c7e47f6e9da0a7037d9323d7ef3c72ad9c31197a1c8069121",
+        "actual_size_bytes": 123321,
+        "expected_sha256": "360b20c0c521f79c7e47f6e9da0a7037d9323d7ef3c72ad9c31197a1c8069121",
+        "expected_size_bytes": 123321,
+        "kind": "symlink_input",
+        "pass": true,
+        "path": "xs/HCF3CT2",
+        "path_or_link_matches": true
+      },
+      {
+        "actual_sha256": "774670f388a3f0ee32c2f603b5da3f80940f5a10c02239656e9b7ce52d93c068",
+        "actual_size_bytes": 123321,
+        "expected_sha256": "774670f388a3f0ee32c2f603b5da3f80940f5a10c02239656e9b7ce52d93c068",
+        "expected_size_bytes": 123321,
+        "kind": "symlink_input",
+        "pass": true,
+        "path": "xs/HCF3CT3",
+        "path_or_link_matches": true
+      }
+    ],
+    "prepared_input_count": 38,
+    "unchanged_count": 38
+  },
+  "status": "PASS_SCOPED_OD_RUN_POSTFLIGHT",
+  "tape6": {
+    "NLAYRS": 45,
+    "continuum_module": "contnm.f: NOT USED",
+    "lbl_flags": {
+      "AERSL": 0,
+      "CNTNM": 0,
+      "EMISS": 0,
+      "FILTR": 0,
+      "FRGNX": 0,
+      "HIRAC": 1,
+      "IATM": 0,
+      "IBRD": 0,
+      "ILAS": 0,
+      "IMRG": 1,
+      "ISOTPL": 0,
+      "LBLF4": 0,
+      "OPDEP": 0,
+      "PLOT": 0,
+      "SCNFN": 0,
+      "TEST": 0,
+      "XSECT": 1
+    },
+    "nonlte_module": "nonlte.f: NOT USED",
+    "normal_completion_line": "TIME LEAVING LBLRTM observed; process return code 0",
+    "sequential_layer_rows": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45
+    ],
+    "sha256": "6e8b75f11ceb9f4a85489d9adc02118c8f2de57b05791abeb6bd209523333a6d",
+    "size_bytes": 127971,
+    "stderr_diagnostic": "IEEE_DENORMAL floating-point exception note observed; its numerical significance is not inferred."
+  },
+  "termination_text": {
+    "stderr_contains_stop_lblrtm_exit": true,
+    "stderr_denormal_note": true,
+    "stderr_sha256": "a5f7f1f04deb07633d6519919e24787f762b76d223da303bff248529f31c36b5",
+    "stdout_size_bytes": 0
+  }
+}
