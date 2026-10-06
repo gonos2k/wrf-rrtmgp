@@ -1,0 +1,646 @@
+{
+  "schema": "independent-exact-band-swap-preparation-review-v1",
+  "status": "PASS_SCOPED_OVERRIDES_NOT_RUNTIME_LAUNCH_APPROVAL",
+  "calls": {
+    "solver": 0,
+    "build": 0,
+    "WRF": 0,
+    "REAL": 0
+  },
+  "before_after_pins_equal": true,
+  "pins": [
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rrtmg4-export-runtime-v1/NEW_ON/trace/sw_000001.input",
+      "sha256": "20986c50c59bc294fede10fc7fe7bdb1173ab3ba1a391a444ed8fd785cd55b1c",
+      "size_bytes": 399854
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rrtmg4-export-runtime-v1/NEW_ON/trace/sw_000001.raw",
+      "sha256": "559a706f9eed53831088594197f52a362b41045ff31293b982e4a98716f45127",
+      "size_bytes": 93904
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rrtmg4-export-runtime-v1/NEW_ON/export/rrtmg4_d01_i24_j55_step2161_sw.txt",
+      "sha256": "6afbe0cf7d5c83d0589a77b44afd27396f7e63ea566610c4a22925b4c1b110b6",
+      "size_bytes": 2142190
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-retained-cu-runtime-v1/run-v1/outputs/baseline-sw.result",
+      "sha256": "5afeb243d0d8e85a36d8c3dd5be7fe8c6c41a2034a142596d9e1d6d765dac53d",
+      "size_bytes": 1338695
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/cf0-cu-src-v1/WRF/run/rrtmgp-gas-sw-g112.nc",
+      "sha256": "361ed541324068ded28a275a4dd757bcaa0a845aebefa630f43a04678668fe62",
+      "size_bytes": 5949944
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rrtmg4-export-analysis-v1/read_export.py",
+      "sha256": "08519a5945e337d11cd2cb9b599c435aa76d13dfd21ec266ad291721e4cc5817",
+      "size_bytes": 7171
+    },
+    {
+      "path": "build/udm37-same-call-exact-band-cloud-swap-v4/prepared/plan-inputs.json",
+      "sha256": "215eb995aa9b2063c38e620ef7ff93add453b94d142d0c9b6cc5f40dff36d720",
+      "size_bytes": 35500
+    },
+    {
+      "path": "build/udm37-same-call-exact-band-cloud-swap-v4/prepared/generate.py",
+      "sha256": "9843c93b63832b04ecd54c3cab5bfe12383fa72e1f05c15a2658b5790378ae5b",
+      "size_bytes": 24761
+    },
+    {
+      "path": "build/udm37-same-call-exact-band-cloud-swap-v4/prepared/inputs/sw-optics-control-full-prepared.optics",
+      "sha256": "a095904db07150b92100ab0d10763aeed043e8f6979390266ba1d3d27c5956b3",
+      "size_bytes": 44202
+    },
+    {
+      "path": "build/udm37-same-call-exact-band-cloud-swap-v4/prepared/inputs/sw-optics-legacy-exact-band-k30-32.optics",
+      "sha256": "41d2ff807824babc4f20a75f43710fb65a9e0fb039a1e9b09eb3569a2722620a",
+      "size_bytes": 44202
+    }
+  ],
+  "native_layers": 44,
+  "engine_layers": 45,
+  "selected_layers": [
+    30,
+    31,
+    32
+  ],
+  "selected_band_layer_cells": 36,
+  "property_assignments": 108,
+  "selected_CF_and_all112_masks": true,
+  "all_pressure_interfaces_and_layers_bit_equal": true,
+  "control_full_arrays_bits_equal": true,
+  "variant_only_36_cells_3_properties_exact": true,
+  "unmatched_GP_bands_1_2_bits_held": true,
+  "negative_controls": [
+    {
+      "control": "wrong_band_edge",
+      "status": "REJECTED_AS_REQUIRED"
+    },
+    {
+      "control": "missed_mask_in_unmatched_band",
+      "status": "REJECTED_AS_REQUIRED"
+    },
+    {
+      "control": "nonconstant_legacy_gpoint",
+      "status": "REJECTED_AS_REQUIRED"
+    },
+    {
+      "control": "swapped_legacy_axes",
+      "status": "REJECTED_AS_REQUIRED"
+    },
+    {
+      "control": "outside_scope_change",
+      "status": "REJECTED_AS_REQUIRED"
+    },
+    {
+      "control": "signed_zero_control_change",
+      "status": "REJECTED_AS_REQUIRED"
+    }
+  ],
+  "assignments": [
+    {
+      "layer_one_based": 30,
+      "GP_band_one_based": 3,
+      "legacy_band_code": 17,
+      "bounds": [
+        3250.0,
+        4000.0
+      ],
+      "values": {
+        "TAU": 1.9026970863342285,
+        "SSA": 0.36772701144218445,
+        "ASYM": 0.6559658050537109
+      },
+      "legacy_gpoints": 12
+    },
+    {
+      "layer_one_based": 31,
+      "GP_band_one_based": 3,
+      "legacy_band_code": 17,
+      "bounds": [
+        3250.0,
+        4000.0
+      ],
+      "values": {
+        "TAU": 1.3527002334594727,
+        "SSA": 0.39679914712905884,
+        "ASYM": 0.6367371678352356
+      },
+      "legacy_gpoints": 12
+    },
+    {
+      "layer_one_based": 32,
+      "GP_band_one_based": 3,
+      "legacy_band_code": 17,
+      "bounds": [
+        3250.0,
+        4000.0
+      ],
+      "values": {
+        "TAU": 0.5756930112838745,
+        "SSA": 0.4277975261211395,
+        "ASYM": 0.6137518286705017
+      },
+      "legacy_gpoints": 12
+    },
+    {
+      "layer_one_based": 30,
+      "GP_band_one_based": 4,
+      "legacy_band_code": 18,
+      "bounds": [
+        4000.0,
+        4650.0
+      ],
+      "values": {
+        "TAU": 1.6435341835021973,
+        "SSA": 0.868037760257721,
+        "ASYM": 0.5580768585205078
+      },
+      "legacy_gpoints": 8
+    },
+    {
+      "layer_one_based": 31,
+      "GP_band_one_based": 4,
+      "legacy_band_code": 18,
+      "bounds": [
+        4000.0,
+        4650.0
+      ],
+      "values": {
+        "TAU": 1.1752830743789673,
+        "SSA": 0.8989134430885315,
+        "ASYM": 0.5339051485061646
+      },
+      "legacy_gpoints": 8
+    },
+    {
+      "layer_one_based": 32,
+      "GP_band_one_based": 4,
+      "legacy_band_code": 18,
+      "bounds": [
+        4000.0,
+        4650.0
+      ],
+      "values": {
+        "TAU": 0.5030438303947449,
+        "SSA": 0.9291648864746094,
+        "ASYM": 0.5081790089607239
+      },
+      "legacy_gpoints": 8
+    },
+    {
+      "layer_one_based": 30,
+      "GP_band_one_based": 5,
+      "legacy_band_code": 19,
+      "bounds": [
+        4650.0,
+        5150.0
+      ],
+      "values": {
+        "TAU": 1.701318383216858,
+        "SSA": 0.6497281193733215,
+        "ASYM": 0.532914400100708
+      },
+      "legacy_gpoints": 8
+    },
+    {
+      "layer_one_based": 31,
+      "GP_band_one_based": 5,
+      "legacy_band_code": 19,
+      "bounds": [
+        4650.0,
+        5150.0
+      ],
+      "values": {
+        "TAU": 1.196273684501648,
+        "SSA": 0.7111626863479614,
+        "ASYM": 0.5039905905723572
+      },
+      "legacy_gpoints": 8
+    },
+    {
+      "layer_one_based": 32,
+      "GP_band_one_based": 5,
+      "legacy_band_code": 19,
+      "bounds": [
+        4650.0,
+        5150.0
+      ],
+      "values": {
+        "TAU": 0.5033228397369385,
+        "SSA": 0.7778827548027039,
+        "ASYM": 0.47257813811302185
+      },
+      "legacy_gpoints": 8
+    },
+    {
+      "layer_one_based": 30,
+      "GP_band_one_based": 6,
+      "legacy_band_code": 20,
+      "bounds": [
+        5150.0,
+        6150.0
+      ],
+      "values": {
+        "TAU": 1.6139603853225708,
+        "SSA": 0.8926464915275574,
+        "ASYM": 0.4861345887184143
+      },
+      "legacy_gpoints": 10
+    },
+    {
+      "layer_one_based": 31,
+      "GP_band_one_based": 6,
+      "legacy_band_code": 20,
+      "bounds": [
+        5150.0,
+        6150.0
+      ],
+      "values": {
+        "TAU": 1.1584912538528442,
+        "SSA": 0.918193519115448,
+        "ASYM": 0.46113258600234985
+      },
+      "legacy_gpoints": 10
+    },
+    {
+      "layer_one_based": 32,
+      "GP_band_one_based": 6,
+      "legacy_band_code": 20,
+      "bounds": [
+        5150.0,
+        6150.0
+      ],
+      "values": {
+        "TAU": 0.49758267402648926,
+        "SSA": 0.9430596828460693,
+        "ASYM": 0.4349670708179474
+      },
+      "legacy_gpoints": 10
+    },
+    {
+      "layer_one_based": 30,
+      "GP_band_one_based": 7,
+      "legacy_band_code": 21,
+      "bounds": [
+        6150.0,
+        7700.0
+      ],
+      "values": {
+        "TAU": 1.5970630645751953,
+        "SSA": 0.8891798853874207,
+        "ASYM": 0.468915730714798
+      },
+      "legacy_gpoints": 10
+    },
+    {
+      "layer_one_based": 31,
+      "GP_band_one_based": 7,
+      "legacy_band_code": 21,
+      "bounds": [
+        6150.0,
+        7700.0
+      ],
+      "values": {
+        "TAU": 1.1440342664718628,
+        "SSA": 0.9142586588859558,
+        "ASYM": 0.444832444190979
+      },
+      "legacy_gpoints": 10
+    },
+    {
+      "layer_one_based": 32,
+      "GP_band_one_based": 7,
+      "legacy_band_code": 21,
+      "bounds": [
+        6150.0,
+        7700.0
+      ],
+      "values": {
+        "TAU": 0.49042120575904846,
+        "SSA": 0.9392997622489929,
+        "ASYM": 0.41978439688682556
+      },
+      "legacy_gpoints": 10
+    },
+    {
+      "layer_one_based": 30,
+      "GP_band_one_based": 8,
+      "legacy_band_code": 22,
+      "bounds": [
+        7700.0,
+        8050.0
+      ],
+      "values": {
+        "TAU": 1.5405203104019165,
+        "SSA": 0.9897512197494507,
+        "ASYM": 0.4534606635570526
+      },
+      "legacy_gpoints": 2
+    },
+    {
+      "layer_one_based": 31,
+      "GP_band_one_based": 8,
+      "legacy_band_code": 22,
+      "bounds": [
+        7700.0,
+        8050.0
+      ],
+      "values": {
+        "TAU": 1.1082388162612915,
+        "SSA": 0.9924584031105042,
+        "ASYM": 0.4317229092121124
+      },
+      "legacy_gpoints": 2
+    },
+    {
+      "layer_one_based": 32,
+      "GP_band_one_based": 8,
+      "legacy_band_code": 22,
+      "bounds": [
+        7700.0,
+        8050.0
+      ],
+      "values": {
+        "TAU": 0.47698304057121277,
+        "SSA": 0.9948990941047668,
+        "ASYM": 0.4092633128166199
+      },
+      "legacy_gpoints": 2
+    },
+    {
+      "layer_one_based": 30,
+      "GP_band_one_based": 9,
+      "legacy_band_code": 23,
+      "bounds": [
+        8050.0,
+        12850.0
+      ],
+      "values": {
+        "TAU": 1.5490221977233887,
+        "SSA": 0.9984660148620605,
+        "ASYM": 0.4427298307418823
+      },
+      "legacy_gpoints": 10
+    },
+    {
+      "layer_one_based": 31,
+      "GP_band_one_based": 9,
+      "legacy_band_code": 23,
+      "bounds": [
+        8050.0,
+        12850.0
+      ],
+      "values": {
+        "TAU": 1.1187242269515991,
+        "SSA": 0.9988790154457092,
+        "ASYM": 0.4231235086917877
+      },
+      "legacy_gpoints": 10
+    },
+    {
+      "layer_one_based": 32,
+      "GP_band_one_based": 9,
+      "legacy_band_code": 23,
+      "bounds": [
+        8050.0,
+        12850.0
+      ],
+      "values": {
+        "TAU": 0.48320478200912476,
+        "SSA": 0.9992524981498718,
+        "ASYM": 0.4035077393054962
+      },
+      "legacy_gpoints": 10
+    },
+    {
+      "layer_one_based": 30,
+      "GP_band_one_based": 10,
+      "legacy_band_code": 24,
+      "bounds": [
+        12850.0,
+        16000.0
+      ],
+      "values": {
+        "TAU": 1.5433611869812012,
+        "SSA": 0.999951958656311,
+        "ASYM": 0.43457087874412537
+      },
+      "legacy_gpoints": 8
+    },
+    {
+      "layer_one_based": 31,
+      "GP_band_one_based": 10,
+      "legacy_band_code": 24,
+      "bounds": [
+        12850.0,
+        16000.0
+      ],
+      "values": {
+        "TAU": 1.1144788265228271,
+        "SSA": 0.9999648332595825,
+        "ASYM": 0.4159504473209381
+      },
+      "legacy_gpoints": 8
+    },
+    {
+      "layer_one_based": 32,
+      "GP_band_one_based": 10,
+      "legacy_band_code": 24,
+      "bounds": [
+        12850.0,
+        16000.0
+      ],
+      "values": {
+        "TAU": 0.4813108742237091,
+        "SSA": 0.9999764561653137,
+        "ASYM": 0.39766725897789
+      },
+      "legacy_gpoints": 8
+    },
+    {
+      "layer_one_based": 30,
+      "GP_band_one_based": 11,
+      "legacy_band_code": 25,
+      "bounds": [
+        16000.0,
+        22650.0
+      ],
+      "values": {
+        "TAU": 1.5354549884796143,
+        "SSA": 0.9999939203262329,
+        "ASYM": 0.423348993062973
+      },
+      "legacy_gpoints": 6
+    },
+    {
+      "layer_one_based": 31,
+      "GP_band_one_based": 11,
+      "legacy_band_code": 25,
+      "bounds": [
+        16000.0,
+        22650.0
+      ],
+      "values": {
+        "TAU": 1.108481526374817,
+        "SSA": 0.9999952912330627,
+        "ASYM": 0.4055496156215668
+      },
+      "legacy_gpoints": 6
+    },
+    {
+      "layer_one_based": 32,
+      "GP_band_one_based": 11,
+      "legacy_band_code": 25,
+      "bounds": [
+        16000.0,
+        22650.0
+      ],
+      "values": {
+        "TAU": 0.4786134958267212,
+        "SSA": 0.9999964237213135,
+        "ASYM": 0.3884168565273285
+      },
+      "legacy_gpoints": 6
+    },
+    {
+      "layer_one_based": 30,
+      "GP_band_one_based": 12,
+      "legacy_band_code": 26,
+      "bounds": [
+        22650.0,
+        29000.0
+      ],
+      "values": {
+        "TAU": 1.5382659435272217,
+        "SSA": 0.9999915361404419,
+        "ASYM": 0.40604519844055176
+      },
+      "legacy_gpoints": 6
+    },
+    {
+      "layer_one_based": 31,
+      "GP_band_one_based": 12,
+      "legacy_band_code": 26,
+      "bounds": [
+        22650.0,
+        29000.0
+      ],
+      "values": {
+        "TAU": 1.1118487119674683,
+        "SSA": 0.9999938607215881,
+        "ASYM": 0.38826027512550354
+      },
+      "legacy_gpoints": 6
+    },
+    {
+      "layer_one_based": 32,
+      "GP_band_one_based": 12,
+      "legacy_band_code": 26,
+      "bounds": [
+        22650.0,
+        29000.0
+      ],
+      "values": {
+        "TAU": 0.48060905933380127,
+        "SSA": 0.9999958276748657,
+        "ASYM": 0.371227890253067
+      },
+      "legacy_gpoints": 6
+    },
+    {
+      "layer_one_based": 30,
+      "GP_band_one_based": 13,
+      "legacy_band_code": 27,
+      "bounds": [
+        29000.0,
+        38000.0
+      ],
+      "values": {
+        "TAU": 1.531552791595459,
+        "SSA": 0.9999791979789734,
+        "ASYM": 0.37793105840682983
+      },
+      "legacy_gpoints": 8
+    },
+    {
+      "layer_one_based": 31,
+      "GP_band_one_based": 13,
+      "legacy_band_code": 27,
+      "bounds": [
+        29000.0,
+        38000.0
+      ],
+      "values": {
+        "TAU": 1.1072301864624023,
+        "SSA": 0.9999848008155823,
+        "ASYM": 0.36000534892082214
+      },
+      "legacy_gpoints": 8
+    },
+    {
+      "layer_one_based": 32,
+      "GP_band_one_based": 13,
+      "legacy_band_code": 27,
+      "bounds": [
+        29000.0,
+        38000.0
+      ],
+      "values": {
+        "TAU": 0.47873228788375854,
+        "SSA": 0.999989926815033,
+        "ASYM": 0.3428821265697479
+      },
+      "legacy_gpoints": 8
+    },
+    {
+      "layer_one_based": 30,
+      "GP_band_one_based": 14,
+      "legacy_band_code": 28,
+      "bounds": [
+        38000.0,
+        50000.0
+      ],
+      "values": {
+        "TAU": 1.510376214981079,
+        "SSA": 0.9999455213546753,
+        "ASYM": 0.3231887221336365
+      },
+      "legacy_gpoints": 6
+    },
+    {
+      "layer_one_based": 31,
+      "GP_band_one_based": 14,
+      "legacy_band_code": 28,
+      "bounds": [
+        38000.0,
+        50000.0
+      ],
+      "values": {
+        "TAU": 1.0913523435592651,
+        "SSA": 0.9999598860740662,
+        "ASYM": 0.305327445268631
+      },
+      "legacy_gpoints": 6
+    },
+    {
+      "layer_one_based": 32,
+      "GP_band_one_based": 14,
+      "legacy_band_code": 28,
+      "bounds": [
+        38000.0,
+        50000.0
+      ],
+      "values": {
+        "TAU": 0.4716510772705078,
+        "SSA": 0.9999731183052063,
+        "ASYM": 0.2882448136806488
+      },
+      "legacy_gpoints": 6
+    }
+  ],
+  "scope": "Prepared cloud-plus-precip hybrid response only. Raw/native/CU/ordinary PREDELTA remain baseline and are excluded from variant physical/direct interpretation."
+}

@@ -1,0 +1,180 @@
+{
+  "call_records": [
+    {
+      "case_id": "control-full-prepared",
+      "pid": 4147148,
+      "returncode": 0,
+      "status": "CALL_VALIDATED",
+      "timed_out": false
+    },
+    {
+      "case_id": "legacy-exact-band-k30-32",
+      "pid": 4147156,
+      "returncode": 0,
+      "status": "CALL_VALIDATED",
+      "timed_out": false
+    }
+  ],
+  "execution_receipt_sha256": "b7039df802062ca2cb6887c8d49490b1e34beaed7aa173faebb604599d8f274d",
+  "heating_comparison_to_legacy_radius4_export": {
+    "engine_extension_layer45_gap_variant": 1.9139635522288923,
+    "layer31_1based": {
+      "abs_gap_reduction_percent": 78.00413592913308,
+      "control": 3.3593932936198465,
+      "control_abs_gap": 1.7825275013453714,
+      "legacy4": 1.576865792274475,
+      "variant": 1.9689481184962234,
+      "variant_abs_gap": 0.3920823262217483
+    },
+    "native44_max_abs_gap_control": 1.7825275013453714,
+    "native44_max_abs_gap_control_layer_1based": 31,
+    "native44_max_abs_gap_variant": 0.8309791301923986,
+    "native44_max_abs_gap_variant_layer_1based": 29,
+    "native_layer_count": 44,
+    "profile_csv": "results/heating-profile-45-layers.csv",
+    "units": "K day-1"
+  },
+  "independent_terminal_review": {
+    "receipt_sha256": "720842c9df9c4ead882a28cea465b16f32a3baacec6a28957806d28a355d7d4f",
+    "reviewer_numerical_invocations": 0,
+    "status": "PASS_SCOPED_EXACT_TWO_CALLS_HYBRID_ATTRIBUTION"
+  },
+  "interpretation": "This is a one-column combined prepared-optics sensitivity. It does not establish physical accuracy, a pure engine/PSD effect, a native-only effect, or a fully consistent direct-beam attribution. The legacy4 comparison is a native-radius observer/counterfactual, not default-RRTMG4 preservation.",
+  "optics_profile_csv": "results/selected-optics-36-cells.csv",
+  "prepared_cell_contract": {
+    "exact_band_layer_cells": 36,
+    "prepared_tau_ssa_g_changed_support_exact": true,
+    "property_assignments": 108,
+    "total_arrays_changes_confined_to_targeted_gpoints": true,
+    "unmatched_gp_bands_1_and_2_held": true
+  },
+  "radiative_fluxes": {
+    "max_abs_variant_minus_control_by_total_moment": {
+      "total_extinction_tau": 0.7708911576378199,
+      "total_first_angular_moment_tau_ssa_g": 0.5287562761097553,
+      "total_scattering_tau_times_ssa": 0.8386765843865887
+    },
+    "profile_csv": "results/flux-profile-46-interfaces.csv",
+    "surface_DN_variant_minus_control_W_m2": -0.00234115370638438,
+    "surface_interface_index_bottom_first": 0,
+    "toa_UP_variant_minus_control_W_m2": 3.9474423271898615,
+    "toa_interface_index_bottom_first": 45
+  },
+  "result_contract": {
+    "changed_sections": [
+      "DIFFUSE",
+      "DIRECT",
+      "DN",
+      "HR",
+      "NIRDIF",
+      "NIRDIR",
+      "PREPARED_G",
+      "PREPARED_SSA",
+      "PREPARED_TAU",
+      "TOTAL_G",
+      "TOTAL_SSA",
+      "TOTAL_TAU",
+      "UP",
+      "VISDIF",
+      "VISDIR"
+    ],
+    "clear_flux_and_heating_sections_bitwise_equal": true,
+    "held_components_and_pre_delta_diagnostics_bitwise_equal": true,
+    "held_section_count": 39,
+    "nc": 1,
+    "nl": 45,
+    "phase": "SW",
+    "section_count": 54
+  },
+  "result_hashes": {
+    "control_gzip_sha256": "9443785993cc65f29e278b3d646a09a0c6c527b0836f6ba65978b73704a499c3",
+    "control_raw_sha256": "5afeb243d0d8e85a36d8c3dd5be7fe8c6c41a2034a142596d9e1d6d765dac53d",
+    "variant_gzip_sha256": "50e818908e524542d2baa8ecc491baf187e0d6d067fe9f24343371a280b95378",
+    "variant_raw_sha256": "a2fc13d1a3e2f6c9438ee93d90c7f573757dadd7faccc84162fddb6d8ad28793"
+  },
+  "runtime_calls": 2,
+  "schema": "udm37-exact-band-cloud-swap-two-call-analysis-v1",
+  "status": "PASS_SCOPED_TWO_CALL_OFFLINE_REPLAY",
+  "verified_by_independent_terminal_review": {
+    "endpoint_fluxes": {
+      "TOA": {
+        "control": {
+          "DIFFUSE": 0.0,
+          "DIRECT": 193.7007938760762,
+          "DN": 193.7007938760762,
+          "NET_DOWN_MINUS_UP": 44.46709759688375,
+          "UP": 149.23369627919246
+        },
+        "variant": {
+          "DIFFUSE": 0.0,
+          "DIRECT": 193.7007938760762,
+          "DN": 193.7007938760762,
+          "NET_DOWN_MINUS_UP": 40.519655269693885,
+          "UP": 153.18113860638232
+        },
+        "variant_minus_control": {
+          "DIFFUSE": 0.0,
+          "DIRECT": 0.0,
+          "DN": 0.0,
+          "NET_DOWN_MINUS_UP": -3.9474423271898615,
+          "UP": 3.9474423271898615
+        }
+      },
+      "surface": {
+        "control": {
+          "DIFFUSE": 0.379629606799925,
+          "DIRECT": 0.0,
+          "DN": 0.379629606799925,
+          "NET_DOWN_MINUS_UP": 0.3226851635171675,
+          "UP": 0.05694444328275756
+        },
+        "variant": {
+          "DIFFUSE": 0.37728845309354064,
+          "DIRECT": 0.0,
+          "DN": 0.37728845309354064,
+          "NET_DOWN_MINUS_UP": 0.32069518288069515,
+          "UP": 0.05659327021284549
+        },
+        "variant_minus_control": {
+          "DIFFUSE": -0.00234115370638438,
+          "DIRECT": 0.0,
+          "DN": -0.00234115370638438,
+          "NET_DOWN_MINUS_UP": -0.0019899806364723216,
+          "UP": -0.0003511730699120655
+        }
+      }
+    },
+    "heating_residual_K_day_minus1": {
+      "control": {
+        "all_sky": 0.0,
+        "clear_sky": 0.0
+      },
+      "variant": {
+        "all_sky": 0.0,
+        "clear_sky": 0.0
+      }
+    },
+    "total_moment_max_abs_residuals": {
+      "extinction": {
+        "max_abs_residual": 8.881784197001252e-16,
+        "rounding_bound": "512*binary64epsilon*max(1,abs(expected))",
+        "selected_max_abs_residual": 8.881784197001252e-16
+      },
+      "scattering_optical_depth": {
+        "max_abs_residual": 2.220446049250313e-16,
+        "rounding_bound": "512*binary64epsilon*max(1,abs(expected))",
+        "selected_max_abs_residual": 2.220446049250313e-16
+      },
+      "scattering_weighted_asymmetry": {
+        "max_abs_residual": 2.220446049250313e-16,
+        "rounding_bound": "512*binary64epsilon*max(1,abs(expected))",
+        "selected_max_abs_residual": 2.220446049250313e-16
+      }
+    }
+  },
+  "whole_file_identity_control": {
+    "baseline_decompressed_sha256": "5afeb243d0d8e85a36d8c3dd5be7fe8c6c41a2034a142596d9e1d6d765dac53d",
+    "equals_reused_baseline": true
+  },
+  "wrf_model_calls": 0
+}
