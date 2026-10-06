@@ -1,0 +1,374 @@
+--- original/phys/Makefile
++++ scratch/phys/Makefile
+@@ -136,6 +136,7 @@
+ 	module_ra_rrtmgp_input.o  \
+ 	module_ra_rrtmgp_hash.o  \
+ 	module_ra_rrtmgp_frozen.o  \
++	udm_winter_capture.o  \
+ 	module_ra_rrtmgp_precip.o  \
+ 	module_ra_rrtmgp.o  \
+ 	module_ra_rrtmg_lw.o  \
+--- original/phys/module_ra_rrtmg_lw.F
++++ scratch/phys/module_ra_rrtmg_lw.F
+@@ -11604,7 +11604,8 @@
+                        ims,ime, jms,jme, kms,kme,                 &
+                        its,ite, jts,jte, kts,kte,                 &
+                        lwupflx, lwupflxc, lwdnflx, lwdnflxc       &
+-                                                                   ,use_rrtmgp,qh3d,f_qh,udm_cldfra,udm_cf_step,mcica_seed_override,audit_step,audit_time,udm_dry_layer_mass,rrtmgp_domain_id,rrtmgp_calendar_day )
++                       ,use_rrtmgp,qh3d,f_qh,udm_cldfra,udm_cf_step,udm_cf_top, &
++                        mcica_seed_override,audit_step,audit_time,udm_dry_layer_mass,rrtmgp_domain_id,rrtmgp_calendar_day )
+ !------------------------------------------------------------------
+ !ccc To use clWRF time varying trace gases
+    USE MODULE_RA_CLWRF_SUPPORT, ONLY : read_CAMgases
+@@ -11614,15 +11615,21 @@
+    USE module_ra_rrtmgp_input, ONLY: rrtmgp_build_udm_inputs, rrtmgp_column_seed, rrtmgp_udm_frozen_lambdas
+    USE module_ra_rrtmgp_trace, ONLY: trace_start, trace_active, trace_raw_start, trace_raw, &
+         trace_raw_end, trace_result, trace_end
++#ifdef DM_PARALLEL
++   USE module_dm, ONLY: mytask
++#endif
+    IMPLICIT NONE
+    LOGICAL, OPTIONAL, INTENT(IN) :: use_rrtmgp
+    LOGICAL, OPTIONAL, INTENT(IN) :: f_qh
+    REAL, OPTIONAL, INTENT(IN) :: qh3d(ims:ime,kms:kme,jms:jme)
+    REAL, OPTIONAL, INTENT(IN) :: udm_cldfra(ims:ime,kms:kme,jms:jme),audit_time
+    REAL, OPTIONAL, INTENT(IN) :: udm_dry_layer_mass(ims:ime,kms:kme,jms:jme)
+-   INTEGER, OPTIONAL, INTENT(IN) :: udm_cf_step(ims:ime,jms:jme),mcica_seed_override,audit_step
++   INTEGER, OPTIONAL, INTENT(IN) :: udm_cf_step(ims:ime,jms:jme),udm_cf_top(ims:ime,jms:jme),mcica_seed_override,audit_step
+    INTEGER, OPTIONAL, INTENT(IN) :: rrtmgp_domain_id,rrtmgp_calendar_day
+    INTEGER :: gp_seed,gp_g_count,gp_seed_overridden
++   INTEGER :: winter_rank,winter_k,winter_step,winter_domain
++   REAL :: winter_seconds
++   EXTERNAL :: udm_winter_capture
+    REAL(KIND=8) :: gp_g_sum,gp_g_max
+    INTEGER :: gp_negative_count(6)
+    REAL(KIND=8) :: gp_negative_sum(6),gp_negative_max_q(6)
+@@ -12777,6 +12784,7 @@
+                   CALL trace_raw('LW','RAD_CF_SOURCE',cldfra3d(i,kts:kte,j))
+                   IF(PRESENT(udm_cldfra)) CALL trace_raw('LW','UDM_CF_USED',udm_cldfra(i,kts:kte,j))
+                   IF(PRESENT(udm_cf_step)) CALL trace_raw('LW','UDM_CF_SOURCE_STEP',[REAL(udm_cf_step(i,j))])
++                  IF(PRESENT(udm_cf_top)) CALL trace_raw('LW','UDM_CF_TOP',[REAL(udm_cf_top(i,j))])
+                   IF(PRESENT(audit_step)) CALL trace_raw('LW','RADIATION_STEP',[REAL(audit_step)])
+                   IF(PRESENT(audit_time)) CALL trace_raw('LW','SOURCE_TIME_SECONDS',[audit_time])
+                   CALL cldf_diag(1,kte-kts+1,RESHAPE(t3d(i,kts:kte,j),[1,kte-kts+1]), &
+@@ -12804,6 +12812,10 @@
+                   IF(has_reqi/=0) CALL trace_raw('LW','SOURCE_RE_ICE',re_ice(i,kts:kte,j))
+                   IF(has_reqs/=0) CALL trace_raw('LW','SOURCE_RE_SNOW',re_snow(i,kts:kte,j))
+                   CALL trace_raw('LW','QV',qv1d(kts:kte))
++                  CALL trace_raw('LW','VMR_CFC11',cfc11vmr(ncol,kts:kte))
++                  CALL trace_raw('LW','VMR_CFC12',cfc12vmr(ncol,kts:kte))
++                  CALL trace_raw('LW','VMR_CFC22',cfc22vmr(ncol,kts:kte))
++                  CALL trace_raw('LW','VMR_CCL4',ccl4vmr(ncol,kts:kte))
+                   CALL trace_raw('LW','ICLOUD',[REAL(ICLOUD)])
+                   IF (ICLOUD /= 0) CALL trace_raw('LW','FALLBACK_REL',recloud1d(ncol,kts:kte))
+                   IF (ICLOUD /= 0) CALL trace_raw('LW','FALLBACK_REI',reice1d(ncol,kts:kte))
+@@ -12823,6 +12835,26 @@
+                   IF(PRESENT(F_QS)) CALL trace_raw('LW','F_QS',[MERGE(1.,0.,F_QS)])
+                   ! Keep raw capture open through UDM path preparation.
+                END IF
++               winter_rank=0
++#ifdef DM_PARALLEL
++               winter_rank=mytask
++#endif
++               winter_step=0
++               winter_domain=0
++               winter_seconds=-1.
++               IF(PRESENT(audit_step)) winter_step=audit_step
++               IF(PRESENT(rrtmgp_domain_id)) winter_domain=rrtmgp_domain_id
++               IF(PRESENT(audit_time)) winter_seconds=audit_time
++               DO winter_k=MAX(6,kts),MIN(8,kte)
++                  CALL udm_winter_capture('RAD_PRE_BUILDER','T3D_K',winter_rank, &
++                       winter_domain,winter_step,winter_seconds,i,j,winter_k, &
++                       ims,ime,kms,kme,jms,jme,its,ite,kts,kte,jts,jte, &
++                       [qc1d(winter_k),qi1d(winter_k),qr1d(winter_k),qs1d(winter_k), &
++                        qg1d(winter_k),gp_qh(winter_k-kts+1),gp_rel(winter_k-kts+1)*1.e-6, &
++                        gp_rei(winter_k-kts+1)*1.e-6,gp_res(winter_k-kts+1)*1.e-6, &
++                        cldfra3d(i,winter_k,j),-999.,-999.,-999.,-999., &
++                        udm_dry_layer_mass(i,winter_k,j),t3d(i,winter_k,j)])
++               END DO
+                CALL rrtmgp_build_udm_inputs(pdel(ncol,kts:kte),cldfrac(ncol,kts:kte), &
+                     qc1d(kts:kte),qr1d(kts:kte),qi1d(kts:kte),qs1d(kts:kte),qg1d(kts:kte),gp_qh, &
+                     gp_rel,gp_rei,gp_res,g,gp_grid,gp_rad,gp_sizes,gp_reason,gp_errmsg, &
+@@ -13046,13 +13078,15 @@
+              CALL rrtmgp_lw_column(play,plev,tlay,tlev,tsfc,h2ovmr,co2vmr,o3vmr,n2ovmr,ch4vmr,o2vmr,emis, &
+                cldfrac,clwpth,ciwpth,cswpth,rel,rei,res,4,icld, &
+                gp_seed,uflx,dflx,hr,uflxc,dflxc,hrc,rwp=gp_rwp, &
+-               native_dry_layer_mass_kg_m2=RESHAPE(udm_dry_layer_mass(i,kts:kte,j),[1,kte-kts+1]), &
+-               gwp=gp_gwp,hwp=gp_hwp,lambda_g=gp_lambda_g,lambda_h=gp_lambda_h,frozen_context=gp_context)
++             native_dry_layer_mass_kg_m2=RESHAPE(udm_dry_layer_mass(i,kts:kte,j),[1,kte-kts+1]), &
++               gwp=gp_gwp,hwp=gp_hwp,lambda_g=gp_lambda_g,lambda_h=gp_lambda_h,frozen_context=gp_context, &
++               cfc11vmr=cfc11vmr,cfc12vmr=cfc12vmr,cfc22vmr=cfc22vmr,ccl4vmr=ccl4vmr)
+            ELSE
+              CALL rrtmgp_lw_column(play,plev,tlay,tlev,tsfc,h2ovmr,co2vmr,o3vmr,n2ovmr,ch4vmr,o2vmr,emis, &
+                cldfrac,clwpth,ciwpth,cswpth,rel,rei,res,4,icld, &
+                gp_seed,uflx,dflx,hr,uflxc,dflxc,hrc,rwp=gp_rwp, &
+-               native_dry_layer_mass_kg_m2=RESHAPE(udm_dry_layer_mass(i,kts:kte,j),[1,kte-kts+1]))
++               native_dry_layer_mass_kg_m2=RESHAPE(udm_dry_layer_mass(i,kts:kte,j),[1,kte-kts+1]), &
++               cfc11vmr=cfc11vmr,cfc12vmr=cfc12vmr,cfc22vmr=cfc22vmr,ccl4vmr=ccl4vmr)
+            END IF
+            uflxcln=uflx; dflxcln=dflx
+          ELSE
+--- original/phys/module_microphysics_driver.F
++++ scratch/phys/module_microphysics_driver.F
+@@ -172,7 +172,7 @@
+                       ,f_light_ne                                        &
+                       ,f_light_neu                                       &
+                       ,lpos,lneg,lneu                                    &
+-                      ,udm_cldfra,udm_cf_step                            &
++                      ,udm_cldfra,udm_cf_step,udm_cf_top                 &
+                                                                          )
+ 
+ ! Framework
+@@ -767,6 +767,7 @@
+    INTEGER, INTENT(IN):: has_reqc, has_reqi, has_reqs
+    REAL, DIMENSION(:,:,:), OPTIONAL, POINTER, INTENT(INOUT) :: udm_cldfra
+    INTEGER, DIMENSION(:,:), OPTIONAL, POINTER, INTENT(INOUT) :: udm_cf_step
++   INTEGER, DIMENSION(:,:), OPTIONAL, POINTER, INTENT(INOUT) :: udm_cf_top
+ 
+   INTEGER,           INTENT(IN   )    :: aercu_opt
+ # if (EM_CORE == 1)
+@@ -801,6 +802,9 @@
+ ! LOCAL  VAR
+ 
+    INTEGER :: i,j,k,its,ite,jts,jte,ij,sz,n
++   INTEGER :: winter_k,winter_rank
++   REAL :: winter_values(16)
++   EXTERNAL :: udm_winter_capture
+    LOGICAL :: channel
+    LOGICAL :: have_udm_cf
+    LOGICAL :: nssl_progn = .false.
+@@ -2809,12 +2813,32 @@
+                IF (PRESENT(udm_cldfra)) THEN
+                  IF (PRESENT(udm_cf_step)) THEN
+                    IF (ASSOCIATED(udm_cldfra)) THEN
+-                     IF (ASSOCIATED(udm_cf_step)) have_udm_cf = .true.
++                     IF (ASSOCIATED(udm_cf_step)) THEN
++                       IF (PRESENT(udm_cf_top)) THEN
++                         IF (ASSOCIATED(udm_cf_top)) have_udm_cf = .true.
++                       ENDIF
++                     ENDIF
+                    ENDIF
+                  ENDIF
+                ENDIF
+              ENDIF
+              IF (have_udm_cf) THEN
++             IF (17>=its .AND. 17<=ite .AND. 58>=jts .AND. 58<=jte) THEN
++#ifdef DM_PARALLEL
++               winter_rank=mytask
++#else
++               winter_rank=0
++#endif
++               DO winter_k=MAX(6,kts),MIN(8,kte)
++                  winter_values=[qc_curr(17,winter_k,58),qi_curr(17,winter_k,58), &
++                       qr_curr(17,winter_k,58),qs_curr(17,winter_k,58), &
++                       qg_curr(17,winter_k,58),qh_curr(17,winter_k,58), &
++                       -999.,-999.,-999.,-999.,-999.,qnn_curr(17,winter_k,58), &
++                       qnc_curr(17,winter_k,58),qnr_curr(17,winter_k,58),-999.,th(17,winter_k,58)]
++                  CALL udm_winter_capture('UDM_PRE','THETA_K',winter_rank,id,itimestep,xtime*60., &
++                       17,58,winter_k,ims,ime,kms,kme,jms,jme,its,ite,kts,kte,jts,jte,winter_values)
++               END DO
++             END IF
+              CALL udm(                                              &
+                   TH=th                                             &
+                  ,Q=qv_curr                                         &
+@@ -2845,6 +2869,7 @@
+                  ,HAIL=hailnc ,HAILNCV=hailncv                      &
+                  ,ITIMESTEP=itimestep                               &
+                  ,udm_cldfra=udm_cldfra, udm_cf_step=udm_cf_step     &
++                 ,udm_cf_top=udm_cf_top                             &
+                  ,has_reqc=has_reqc                                 &  ! for radiation +
+                  ,has_reqi=has_reqi                                 &
+                  ,has_reqs=has_reqs                                 &
+@@ -2855,7 +2880,39 @@
+                  ,IMS=ims,IME=ime, JMS=jms,JME=jme, KMS=kms,KME=kme &
+                  ,ITS=its,ITE=ite, JTS=jts,JTE=jte, KTS=kts,KTE=kte &
+                                                                     )
++             IF (17>=its .AND. 17<=ite .AND. 58>=jts .AND. 58<=jte) THEN
++#ifdef DM_PARALLEL
++               winter_rank=mytask
++#else
++               winter_rank=0
++#endif
++               DO winter_k=MAX(6,kts),MIN(8,kte)
++                  winter_values=[qc_curr(17,winter_k,58),qi_curr(17,winter_k,58), &
++                       qr_curr(17,winter_k,58),qs_curr(17,winter_k,58), &
++                       qg_curr(17,winter_k,58),qh_curr(17,winter_k,58), &
++                       -999.,-999.,-999.,-999.,-999.,qnn_curr(17,winter_k,58), &
++                       qnc_curr(17,winter_k,58),qnr_curr(17,winter_k,58),-999.,th(17,winter_k,58)]
++                  CALL udm_winter_capture('UDM_POST','THETA_K',winter_rank,id,itimestep,xtime*60., &
++                       17,58,winter_k,ims,ime,kms,kme,jms,jme,its,ite,kts,kte,jts,jte,winter_values)
++               END DO
++             END IF
+              ELSE
++             IF (17>=its .AND. 17<=ite .AND. 58>=jts .AND. 58<=jte) THEN
++#ifdef DM_PARALLEL
++               winter_rank=mytask
++#else
++               winter_rank=0
++#endif
++               DO winter_k=MAX(6,kts),MIN(8,kte)
++                  winter_values=[qc_curr(17,winter_k,58),qi_curr(17,winter_k,58), &
++                       qr_curr(17,winter_k,58),qs_curr(17,winter_k,58), &
++                       qg_curr(17,winter_k,58),qh_curr(17,winter_k,58), &
++                       -999.,-999.,-999.,-999.,-999.,qnn_curr(17,winter_k,58), &
++                       qnc_curr(17,winter_k,58),qnr_curr(17,winter_k,58),-999.,th(17,winter_k,58)]
++                  CALL udm_winter_capture('UDM_PRE','THETA_K',winter_rank,id,itimestep,xtime*60., &
++                       17,58,winter_k,ims,ime,kms,kme,jms,jme,its,ite,kts,kte,jts,jte,winter_values)
++               END DO
++             END IF
+              CALL udm(                                              &
+                   TH=th                                             &
+                  ,Q=qv_curr                                         &
+@@ -2895,6 +2952,22 @@
+                  ,IMS=ims,IME=ime, JMS=jms,JME=jme, KMS=kms,KME=kme &
+                  ,ITS=its,ITE=ite, JTS=jts,JTE=jte, KTS=kts,KTE=kte &
+                                                                     )
++             IF (17>=its .AND. 17<=ite .AND. 58>=jts .AND. 58<=jte) THEN
++#ifdef DM_PARALLEL
++               winter_rank=mytask
++#else
++               winter_rank=0
++#endif
++               DO winter_k=MAX(6,kts),MIN(8,kte)
++                  winter_values=[qc_curr(17,winter_k,58),qi_curr(17,winter_k,58), &
++                       qr_curr(17,winter_k,58),qs_curr(17,winter_k,58), &
++                       qg_curr(17,winter_k,58),qh_curr(17,winter_k,58), &
++                       -999.,-999.,-999.,-999.,-999.,qnn_curr(17,winter_k,58), &
++                       qnc_curr(17,winter_k,58),qnr_curr(17,winter_k,58),-999.,th(17,winter_k,58)]
++                  CALL udm_winter_capture('UDM_POST','THETA_K',winter_rank,id,itimestep,xtime*60., &
++                       17,58,winter_k,ims,ime,kms,kme,jms,jme,its,ite,kts,kte,jts,jte,winter_values)
++               END DO
++             END IF
+              ENDIF
+              ELSE
+                CALL wrf_error_fatal ( 'arguments not present for calling udm')
+--- original/dyn_em/solve_em.F
++++ scratch/dyn_em/solve_em.F
+@@ -191,6 +191,9 @@
+    REAL    :: spacing
+ 
+    INTEGER :: ii, jj !kk is above after l,kte
++   INTEGER :: winter_rank
++   REAL :: winter_values(16)
++   EXTERNAL :: udm_winter_capture
+    REAL    :: dclat
+    INTEGER :: debug_level
+ 
+@@ -3878,6 +3881,21 @@
+ #endif
+ 
+ 
++     IF (17>=ips .AND. 17<=ipe .AND. 58>=jps .AND. 58<=jpe) THEN
++#ifdef DM_PARALLEL
++       winter_rank=mytask
++#else
++       winter_rank=0
++#endif
++       winter_values=[moist(17,7,58,P_QC),moist(17,7,58,P_QI), &
++            moist(17,7,58,P_QR),moist(17,7,58,P_QS),moist(17,7,58,P_QG), &
++            moist(17,7,58,P_QH),-999.,-999.,-999.,grid%cldfra(17,7,58), &
++            -999.,scalar(17,7,58,P_QNN),scalar(17,7,58,P_QNC), &
++            scalar(17,7,58,P_QNR),-999.,grid%t_2(17,7,58)]
++       CALL udm_winter_capture('PRE_MICROPHYSICS','T_2_K',winter_rank,grid%id, &
++            grid%itimestep,grid%xtime*60.,17,58,7,ims,ime,kms,kme,jms,jme, &
++            ips,ipe,k_start,k_end,jps,jpe,winter_values)
++     END IF
+      CALL microphysics_driver(                                            &
+       &         DT=dtm             ,DX=grid%dx              ,DY=grid%dy   &
+       &        ,DZ8W=dz8w          ,F_ICE_PHY=grid%f_ice_phy              &
+@@ -4147,7 +4165,7 @@
+       &        ,light_neu_curr=scalar(ims,kms,jms,P_light_neu), F_light_neu=F_light_neu   &
+       &        ,lpos=grid%lpos,lneg=grid%lneg,lneu=grid%lneu             &
+       &        ,lpi2d=grid%lpi2d,lpi3d=grid%lpi3d                        &
+-      &        ,udm_cldfra=grid%udm_cldfra, udm_cf_step=grid%udm_cf_step &
++      &        ,udm_cldfra=grid%udm_cldfra, udm_cf_step=grid%udm_cf_step, udm_cf_top=grid%udm_cf_top &
+ 	)
+ 
+                                                                           
+@@ -4659,6 +4677,23 @@
+                                k_start    , k_end                     )
+ 
+      END DO moisture_loop_bdy_2
++     IF (17>=grid%i_start(ij) .AND. 17<=grid%i_end(ij) .AND. &
++         58>=grid%j_start(ij) .AND. 58<=grid%j_end(ij)) THEN
++#ifdef DM_PARALLEL
++       winter_rank=mytask
++#else
++       winter_rank=0
++#endif
++       winter_values=[moist(17,7,58,P_QC),moist(17,7,58,P_QI), &
++            moist(17,7,58,P_QR),moist(17,7,58,P_QS),moist(17,7,58,P_QG), &
++            moist(17,7,58,P_QH),-999.,-999.,-999.,grid%cldfra(17,7,58), &
++            -999.,scalar(17,7,58,P_QNN),scalar(17,7,58,P_QNC), &
++            scalar(17,7,58,P_QNR),-999.,grid%t_2(17,7,58)]
++       CALL udm_winter_capture('POST_PHYSICAL_BC','T_2_K',winter_rank,grid%id, &
++            grid%itimestep,grid%xtime*60.,17,58,7,ims,ime,kms,kme,jms,jme, &
++            grid%i_start(ij),grid%i_end(ij),k_start,k_end,grid%j_start(ij), &
++            grid%j_end(ij),winter_values)
++     END IF
+ 
+      chem_species_bdy_loop_2 : DO ic = PARAM_FIRST_SCALAR , num_3d_c
+ 
+@@ -4811,6 +4846,23 @@
+      ENDIF
+ 
+      END DO moisture_loop_bdy_3
++     IF (17>=grid%i_start(ij) .AND. 17<=grid%i_end(ij) .AND. &
++         58>=grid%j_start(ij) .AND. 58<=grid%j_end(ij)) THEN
++#ifdef DM_PARALLEL
++       winter_rank=mytask
++#else
++       winter_rank=0
++#endif
++       winter_values=[moist(17,7,58,P_QC),moist(17,7,58,P_QI), &
++            moist(17,7,58,P_QR),moist(17,7,58,P_QS),moist(17,7,58,P_QG), &
++            moist(17,7,58,P_QH),-999.,-999.,-999.,grid%cldfra(17,7,58), &
++            -999.,scalar(17,7,58,P_QNN),scalar(17,7,58,P_QNC), &
++            scalar(17,7,58,P_QNR),-999.,grid%t_2(17,7,58)]
++       CALL udm_winter_capture('POST_SPEC_BDY','T_2_K',winter_rank,grid%id, &
++            grid%itimestep,grid%xtime*60.,17,58,7,ims,ime,kms,kme,jms,jme, &
++            grid%i_start(ij),grid%i_end(ij),k_start,k_end,grid%j_start(ij), &
++            grid%j_end(ij),winter_values)
++     END IF
+ 
+ #if (WRF_CHEM == 1)
+      IF (num_3d_c >= PARAM_FIRST_SCALAR)  THEN
+--- original/phys/udm_winter_capture.F
++++ scratch/phys/udm_winter_capture.F
+@@ -0,0 +1,36 @@
++! Scratch-only, opt-in diagnostic for the Jan-2000 QI investigation.
++! This routine only appends observed values; it never writes model state.
++SUBROUTINE udm_winter_capture(stage, temp_kind, rank, domain, step, seconds, i, j, k, &
++     ims, ime, kms, kme, jms, jme, its, ite, kts, kte, jts, jte, values)
++  IMPLICIT NONE
++  CHARACTER(LEN=*), INTENT(IN) :: stage, temp_kind
++  INTEGER, INTENT(IN) :: rank,domain,step,i,j,k
++  INTEGER, INTENT(IN) :: ims,ime,kms,kme,jms,jme,its,ite,kts,kte,jts,jte
++  REAL, INTENT(IN) :: seconds, values(16)
++  CHARACTER(LEN=1024) :: outdir,filename
++  INTEGER :: stat,unit
++  LOGICAL, SAVE :: configured=.FALSE., enabled=.FALSE.
++  CHARACTER(LEN=1024), SAVE :: cached_dir
++  !$OMP CRITICAL(udm_winter_capture_config)
++  IF (.NOT.configured) THEN
++    CALL GET_ENVIRONMENT_VARIABLE('WRF_UDM_WINTER_CAPTURE_DIR',cached_dir,STATUS=stat)
++    enabled=(stat==0 .AND. LEN_TRIM(cached_dir)>0)
++    configured=.TRUE.
++  END IF
++  !$OMP END CRITICAL(udm_winter_capture_config)
++  IF (.NOT.enabled) RETURN
++  ! Radiation is at elapsed minute 170 (14:50); solve_em increments
++  ! itimestep before invoking first_rk_step_part1, so include nearby step
++  ! labels while the elapsed-time window is the authoritative selector.
++  IF (step<167 .OR. step>172) RETURN
++  IF (seconds<10020. .OR. seconds>10260.) RETURN
++  IF (i/=17 .OR. j/=58 .OR. k<6 .OR. k>8) RETURN
++  WRITE(filename,'(A,"/rank",I4.4,".csv")') TRIM(cached_dir),rank
++  OPEN(NEWUNIT=unit,FILE=TRIM(filename),STATUS='UNKNOWN',POSITION='APPEND', &
++       ACTION='WRITE',IOSTAT=stat)
++  IF (stat/=0) RETURN
++  WRITE(unit,'(A,1X,A,1X,6(I0,1X),17(ES24.16E3,1X),12(I0,1X))') &
++       TRIM(stage),TRIM(temp_kind),rank,domain,step,i,j,k,seconds,values, &
++       ims,ime,jms,jme,kms,kme,its,ite,jts,jte,kts,kte
++  CLOSE(unit)
++END SUBROUTINE udm_winter_capture
