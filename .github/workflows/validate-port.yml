@@ -121,6 +121,11 @@ jobs:
         run: |
           sudo apt-get update -qq
           sudo apt-get install -y cmake gfortran gcc libnetcdf-dev libnetcdff-dev python3-numpy python3-netcdf4 python3-scipy
+      - name: Compile and run input_wrf UDM sentinel guards for both storage kinds
+        run: >-
+          python3 WRF/test/rrtmgp/test_input_wrf_udm_sentinel_kinds.py WRF
+          --workdir build/input-wrf-udm-storage-test
+          --output build/input-wrf-udm-storage-test/receipt.json
       - name: Check bounded legacy optics export selection
         run: python3 WRF/test/rrtmgp/test_rrtmg4_export_selection.py
       - name: Check legacy LW source observer against the actual transport routine
