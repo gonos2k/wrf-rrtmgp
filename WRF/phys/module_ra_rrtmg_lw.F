@@ -3052,6 +3052,8 @@ contains
       use rrlw_tbl, only: tblint, bpade, tau_tbl, exp_tbl, tfn_tbl
       use rrlw_vsn, only: hvrrtc, hnamrtc
 
+      use module_rrtmg4_optics_export, only: rrtmg4_export_real1, rrtmg4_export_real2, rrtmg4_export_int1
+
       implicit none
 
       real(kind=rb) :: wtdiff, rec_6
@@ -3086,7 +3088,7 @@ contains
                         cldfmc, taucmc, planklay, planklev, plankbnd, &
                         pwvcm, fracs, taut, &
                         totuflux, totdflux, fnet, htr, &
-                        totuclfl, totdclfl, fnetc, htrc ) 
+                        totuclfl, totdclfl, fnetc, htrc, source_export )
 !-----------------------------------------------------------------------------
 !
 !  Original version:   E. J. Mlawer, et al. RRTM_V3.0
@@ -3156,6 +3158,11 @@ contains
                                                       !    Dimensions: (0:nlayers)
       real(kind=rb), intent(out) :: htrc(0:)          ! clear sky longwave heating rate (k/day)
                                                       !    Dimensions: (0:nlayers)
+
+! The caller enables this read-only observer only for its selected first column.
+      logical, optional, intent(in) :: source_export
+      logical :: record_source
+      real(kind=rb), allocatable :: band_up(:,:),band_dn(:,:),band_up_clear(:,:),band_dn_clear(:,:)
 
 ! ----- Local -----
 ! Declarations for radiative transfer
@@ -3259,6 +3266,33 @@ contains
            if (secdiff(ibnd) .lt. 1.50_rb) secdiff(ibnd) = 1.50_rb
          endif
       enddo
+
+      record_source=.FALSE.
+      IF(PRESENT(source_export)) record_source=source_export
+      IF(record_source) THEN
+         ALLOCATE(band_up(0:nlayers,nbndlw),band_dn(0:nlayers,nbndlw), &
+                  band_up_clear(0:nlayers,nbndlw),band_dn_clear(0:nlayers,nbndlw))
+         band_up=0._rb;band_dn=0._rb;band_up_clear=0._rb;band_dn_clear=0._rb
+         ! Preserve native Planck units and table indices; consumers must use
+         ! the recorded DELWAVE, WTDIFF and FLUXFAC rather than assume SI units.
+         CALL rrtmg4_export_real2('RTE_PLANCK_LAYER_NATIVE','native_planck',TRANSPOSE(planklay(1:nlayers,1:nbndlw)))
+         CALL rrtmg4_export_real2('RTE_PLANCK_LEVEL_NATIVE','native_planck',TRANSPOSE(planklev(0:nlayers,1:nbndlw)))
+         CALL rrtmg4_export_real1('RTE_PLANCK_SURFACE_NATIVE','native_planck',plankbnd(1:nbndlw))
+         CALL rrtmg4_export_real2('RTE_PLANCK_FRACTIONS','1',TRANSPOSE(fracs(1:nlayers,1:ngptlw)))
+         CALL rrtmg4_export_real1('RTE_SECDIFF','1',secdiff)
+         CALL rrtmg4_export_real1('RTE_DELWAVE','cm-1',delwave)
+         CALL rrtmg4_export_real1('RTE_WTDIFF','1',[wtdiff])
+         CALL rrtmg4_export_real1('RTE_REC_6','1',[rec_6])
+         CALL rrtmg4_export_real1('RTE_FLUXFAC','native_flux_conversion',[fluxfac])
+         CALL rrtmg4_export_real1('RTE_HEATFAC','native_heating_conversion',[heatfac])
+         CALL rrtmg4_export_int1('RTE_BAND_START_END_IOUT',[istart,iend,iout])
+         CALL rrtmg4_export_int1('RTE_TABLE_BOUNDS',[LBOUND(tau_tbl,1),UBOUND(tau_tbl,1)])
+         CALL rrtmg4_export_real1('RTE_TBLINT','1',[tblint])
+         CALL rrtmg4_export_real1('RTE_BPADE','1',[bpade])
+         CALL rrtmg4_export_real1('RTE_TAU_TABLE','1',tau_tbl)
+         CALL rrtmg4_export_real1('RTE_EXP_TABLE','1',exp_tbl)
+         CALL rrtmg4_export_real1('RTE_TFN_TABLE','1',tfn_tbl)
+      END IF
 
       urad(0) = 0.0_rb
       drad(0) = 0.0_rb
@@ -3489,8 +3523,22 @@ contains
             totdclfl(lev) = totdclfl(lev) + dclfl(lev) * delwave(iband)
          enddo
 
+         IF(record_source) THEN
+            band_up(:,iband)=uflux;band_dn(:,iband)=dflux
+            band_up_clear(:,iband)=uclfl;band_dn_clear(:,iband)=dclfl
+         END IF
+
 ! End spectral band loop
       enddo
+
+      IF(record_source) THEN
+         ! These are exactly the per-band values before DELWAVE multiplication
+         ! and broadband summation, not separately rounded W/m2 fluxes.
+         CALL rrtmg4_export_real2('RTE_BAND_UP_NATIVE','native_flux',TRANSPOSE(band_up))
+         CALL rrtmg4_export_real2('RTE_BAND_DN_NATIVE','native_flux',TRANSPOSE(band_dn))
+         CALL rrtmg4_export_real2('RTE_BAND_UP_CLEAR_NATIVE','native_flux',TRANSPOSE(band_up_clear))
+         CALL rrtmg4_export_real2('RTE_BAND_DN_CLEAR_NATIVE','native_flux',TRANSPOSE(band_dn_clear))
+      END IF
 
 ! Calculate fluxes at surface
       totuflux(0) = totuflux(0) * fluxfac
@@ -10678,7 +10726,7 @@ contains
       use rrtmg_lw_setcoef, only: setcoef
       use rrtmg_lw_taumol, only: taumol
       use module_rrtmg4_optics_export, only: rrtmg4_export_active, rrtmg4_export_stage, &
-           rrtmg4_export_real1, rrtmg4_export_real2, rrtmg4_export_int1
+           rrtmg4_export_real1, rrtmg4_export_real2, rrtmg4_export_int1, rrtmg4_export_lw_source_active
 
       implicit none
 
@@ -11220,7 +11268,8 @@ contains
                      cldfmc, taucmc, planklay, planklev, plankbnd, &
                      pwvcm, fracs, taut, &
                      totuflux, totdflux, fnet, htr, &
-                     totuclfl, totdclfl, fnetc, htrc )
+                     totuclfl, totdclfl, fnetc, htrc, &
+                     source_export=iplon==1.AND.rrtmg4_export_lw_source_active() )
 
          IF(rrtmg4_export_active().AND.iplon==1) THEN
             CALL rrtmg4_export_stage('RESULT')

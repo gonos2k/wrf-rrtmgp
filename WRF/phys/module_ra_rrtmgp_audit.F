@@ -234,9 +234,11 @@ MODULE module_rrtmg4_optics_export
   PRIVATE
   PUBLIC :: rrtmg4_export_begin, rrtmg4_export_end, rrtmg4_export_active
   PUBLIC :: rrtmg4_export_stage, rrtmg4_export_real1, rrtmg4_export_real2
-  PUBLIC :: rrtmg4_export_int1
+  PUBLIC :: rrtmg4_export_int1, rrtmg4_export_lw_source_active
   LOGICAL, SAVE :: active=.FALSE.
   LOGICAL, SAVE :: export_checked=.FALSE., export_requested=.FALSE.
+  LOGICAL, SAVE :: lw_source_requested=.FALSE.
+  CHARACTER(LEN=2), SAVE :: active_phase=''
   INTEGER, SAVE :: out_unit=0, stage_mask=0
   CHARACTER(LEN=1024), SAVE :: out_dir=''
   ! Historical selector remains the default; overrides require all five keys.
@@ -259,6 +261,7 @@ CONTAINS
       IF(env_status==-1) CALL wrf_error_fatal('RRTMG4_EXPORT_DIRECTORY_TOO_LONG')
       IF(env_status>0.AND.env_length>0) CALL wrf_error_fatal('RRTMG4_EXPORT_ENVIRONMENT_READ_FAILED')
       export_requested=env_length>0.AND.LEN_TRIM(out_dir)>0
+      CALL read_lw_source_selection()
       IF(export_requested) CALL read_export_selection()
       export_checked=.TRUE.
     END IF
@@ -292,7 +295,7 @@ CONTAINS
       TRIM(out_dir),domain,global_i,global_j,step,TRIM(phase)
     OPEN(NEWUNIT=out_unit,FILE=TRIM(filename),STATUS='new',ACTION='write',IOSTAT=ios)
     IF(ios/=0) CALL wrf_error_fatal('RRTMG4_EXPORT_OUTPUT_CREATE_FAILED')
-    active=.TRUE.; stage_mask=0
+    active=.TRUE.; active_phase=phase; stage_mask=0
     WRITE(out_unit,'(A)',IOSTAT=ios) 'RRTMG4_SELECTED_COLUMN_EXPORT_V1'
     IF(ios/=0) CALL wrf_error_fatal('RRTMG4_EXPORT_HEADER_WRITE_FAILED')
     WRITE(out_unit,'(A,1X,A)',IOSTAT=ios) 'phase',TRIM(phase)
@@ -310,6 +313,26 @@ CONTAINS
     WRITE(out_unit,'(A)',IOSTAT=ios) 'layout fortran_order_first_index_fastest; numeric values use REAL64 text precision'
     IF(ios/=0) CALL wrf_error_fatal('RRTMG4_EXPORT_HEADER_WRITE_FAILED')
   END SUBROUTINE
+
+  SUBROUTINE read_lw_source_selection()
+    CHARACTER(LEN=16) :: value
+    INTEGER :: length,stat
+    value=''
+    CALL get_environment_variable('WRF_RRTMGP_RRTMG4_EXPORT_LW_SOURCE',value,LENGTH=length,STATUS=stat)
+    IF(stat==1) RETURN
+    IF(stat/=0.OR.length==0) CALL wrf_error_fatal('RRTMG4_EXPORT_INVALID_LW_SOURCE_FLAG')
+    SELECT CASE(TRIM(value))
+    CASE('0'); lw_source_requested=.FALSE.
+    CASE('1'); lw_source_requested=.TRUE.
+    CASE DEFAULT; CALL wrf_error_fatal('RRTMG4_EXPORT_INVALID_LW_SOURCE_FLAG')
+    END SELECT
+    IF(lw_source_requested.AND..NOT.export_requested) &
+      CALL wrf_error_fatal('RRTMG4_EXPORT_LW_SOURCE_REQUIRES_EXPORT_DIRECTORY')
+  END SUBROUTINE read_lw_source_selection
+
+  LOGICAL FUNCTION rrtmg4_export_lw_source_active()
+    rrtmg4_export_lw_source_active=active.AND.lw_source_requested.AND.active_phase=='lw'
+  END FUNCTION rrtmg4_export_lw_source_active
 
   SUBROUTINE read_export_selection()
     CHARACTER(LEN=40), PARAMETER :: suffix(5)=[CHARACTER(LEN=40):: &
@@ -416,6 +439,6 @@ CONTAINS
     IF(ios/=0) CALL wrf_error_fatal('RRTMG4_EXPORT_FLUSH_FAILED')
     CLOSE(out_unit,IOSTAT=ios)
     IF(ios/=0) CALL wrf_error_fatal('RRTMG4_EXPORT_CLOSE_FAILED')
-    active=.FALSE.;out_unit=0;stage_mask=0
+    active=.FALSE.;active_phase='';out_unit=0;stage_mask=0
   END SUBROUTINE
 END MODULE module_rrtmg4_optics_export

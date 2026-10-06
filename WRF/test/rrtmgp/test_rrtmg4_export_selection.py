@@ -51,12 +51,14 @@ DRIVER = '''program probe
   call rrtmg4_export_real2('cloud','1',y)
   call rrtmg4_export_stage('GAS')
   call rrtmg4_export_int1('gas',z)
+  if(rrtmg4_export_lw_source_active()) call rrtmg4_export_real1('lw-source-probe','1',x)
   if(trim(mode)/='incomplete') then
    call rrtmg4_export_stage('RESULT')
    call rrtmg4_export_real1('result','W_m2',x)
   end if
   call rrtmg4_export_end()
  end if
+ if(rrtmg4_export_lw_source_active()) stop 4
  if(any(x/=[1.25,2.5]).or.any(y/=reshape([3.,4.],[1,2])).or.any(z/=[7,8])) stop 3
 end program
 subroutine wrf_error_fatal(message)
@@ -109,6 +111,18 @@ def main():
         assert [f.name for f in files]==['rrtmg4_d01_i24_j55_step2161_lw.txt']
         text=files[0].read_text();assert text.count('\nstage ')==4 and 'source_seconds' in text
         assert '1.2500000000000000E+000' in text
+        source_key=PREFIX+'LW_SOURCE'
+        _,zero_files=run('lw-source-zero',extra={source_key:'0'})
+        assert zero_files[0].read_text()==text
+        _,source_files=run('lw-source-one',extra={source_key:'1'})
+        assert '\nlw-source-probe 1 2\n' in source_files[0].read_text()
+        _,day_files=run('lw-source-sw-no-record',extra={source_key:'1'},mode='sw-day')
+        assert 'lw-source-probe' not in day_files[0].read_text()
+        assert not run('lw-source-nonselected',call=CUSTOM,extra={source_key:'1'})[1]
+        run('lw-source-no-directory',directory=False,extra={source_key:'1'},
+            fail='LW_SOURCE_REQUIRES_EXPORT_DIRECTORY')
+        for label,value in [('empty',''),('invalid','2'),('nan','NaN'),('trailing','1 0'),('overflow','1'*30)]:
+            run('lw-source-'+label,extra={source_key:value},fail='INVALID_LW_SOURCE_FLAG')
         for n in range(5):
             call=list(DEFAULT);call[n]=str(float(call[n])+1) if n==4 else str(int(call[n])+1)
             assert not run(f'nonselected-{KEYS[n]}',call=call)[1]
