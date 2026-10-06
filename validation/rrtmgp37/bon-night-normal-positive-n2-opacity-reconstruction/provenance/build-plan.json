@@ -1,0 +1,95 @@
+{
+  "candidate_review": {
+    "scope": "read-only static PASS_SCOPED, not runtime parity",
+    "static_core_review": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-legacy-lw-source-export-code-review-v1/review.json",
+    "static_final_review": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-legacy-lw-source-export-final-review-v1/review.json"
+  },
+  "compile": {
+    "build_log": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-legacy-lw-source-export-serial-build-v1/build.log",
+    "command": [
+      "/usr/bin/timeout",
+      "--signal=TERM",
+      "--kill-after=30s",
+      "1800s",
+      "csh",
+      "-f",
+      "./compile",
+      "-j",
+      "12",
+      "em_real"
+    ],
+    "compile_invocations": 0,
+    "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-legacy-lw-source-export-serial-build-v1/source/WRF",
+    "max_parallel_jobs": 12,
+    "model_invocations": 0,
+    "preflight": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-legacy-lw-source-export-serial-build-v1/preflight-v2.json",
+    "preflight_sha256": "be0cad59be19e7d0d83ea7a7e99a62e09e950c89305540bf622aa9ec829bb863",
+    "preparer": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-legacy-lw-source-export-serial-build-v1/prepare_scaffold.py",
+    "preparer_sha256": "d34c633e52210c127b1dcf9cdffc4fbec7828925f2b913efa82acbc2e32bcf93",
+    "receipt": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-legacy-lw-source-export-serial-build-v1/build-receipt.json",
+    "runner": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-legacy-lw-source-export-serial-build-v1/run_build_once.py",
+    "runner_sha256": "94f9e41243c33d440498e1ca5ca803295b528901d60e7729a3a086a476a7d703",
+    "timeout_seconds": 1800
+  },
+  "configuration": {
+    "DMPARALLEL": "disabled/commented",
+    "FCOPTIM": "-O2 -ftree-vectorize -funroll-loops",
+    "OpenMP": "disabled",
+    "RWORDSIZE": 4,
+    "compiler": "GNU Fortran 13.3",
+    "configure_donor_limit": "Same pinned serial GNU configuration was previously exercised in fresh em_real; current candidate needs its own full build.",
+    "configure_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-legacy-lw-source-export-serial-build-v1/source/WRF/configure.wrf",
+    "configure_sha256": "6a2fcd322bbff92ff61a141671d492eb8d74e3d56af28582306c024775b89c68",
+    "copied_from": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-export-selection-serial-build-v1/source/WRF/configure.wrf",
+    "default_real_bytes": 4,
+    "target": "em_real"
+  },
+  "created_utc": "2026-10-05T05:41:59.164804+00:00",
+  "postbuild_acceptance": [
+    "Fresh wrf.exe and real.exe, each with pinned resolved runtime closure and no MPI dependency.",
+    "Radiation physics objects plus selector/audit module object and radiation-driver object are present and hashed.",
+    "The generated module_rrtmg4_optics_export.mod is present and hashed to bind the driver USE interface.",
+    "Build footer, zero exit status, source/config/tool/dependency stability, and no OpenMP/MPI flags.",
+    "No REAL or WRF forecast is part of this compile scaffold."
+  ],
+  "required_build_products": [
+    "WRF/main/wrf.exe",
+    "WRF/main/real.exe",
+    "WRF/phys/module_ra_rrtmgp_input.o",
+    "WRF/phys/module_ra_rrtmgp.o",
+    "WRF/phys/module_ra_rrtmg_lw.o",
+    "WRF/phys/module_ra_rrtmg_sw.o",
+    "WRF/phys/module_ra_rrtmgp_audit.o",
+    "WRF/phys/module_radiation_driver.o",
+    "WRF/phys/module_rrtmg4_optics_export.mod"
+  ],
+  "schema": "udm37-export-selection-serial-build-plan-v1",
+  "source": {
+    "archive_note": "WRF subtree is export-ignore; a detached git worktree is used.",
+    "branch": "feat-udm37-legacy-lw-source-export",
+    "commit": "085618aa60b9dcf473c2b26eb17b2123d5c7762c",
+    "detached": true,
+    "git_status_after_configure": "clean",
+    "repository": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp",
+    "reviewed_worktree": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-legacy-lw-source-export-pr-work",
+    "source_manifest": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-legacy-lw-source-export-serial-build-v1/source-manifest.json",
+    "source_manifest_sha256": "a5f307b7bbf2d3f84f4b9caf49fc8a40e8b225fe6e8ceecc65b9a75363c5faf5",
+    "tracked_files": 7542,
+    "worktree": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-legacy-lw-source-export-serial-build-v1/source"
+  },
+  "status": "PREPARED_NO_BUILD",
+  "toolchain_dependencies": {
+    "environment": {
+      "LD_LIBRARY_PATH": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/netcdf/lib:/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/root/usr/lib/x86_64-linux-gnu",
+      "MPI": "not used",
+      "NETCDF": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/netcdf",
+      "OpenMP": "not used",
+      "PATH": "/home/korea_keun/.local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
+    },
+    "inventory": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-legacy-lw-source-export-serial-build-v1/toolchain-dependency-inventory.json",
+    "netcdf_root": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/netcdf",
+    "policy": "Tool/dependency files are read-only SHA/size pins. Final runtime closure must be captured from each resulting executable.",
+    "prebuild_runtime_library_count": 48,
+    "sha256": "540ffa7a3280162149af48a0a3e8d464a2282eb15e459c362063317a0b298004"
+  }
+}

@@ -1,0 +1,228 @@
+{
+  "changed_field": "Exactly one provenance_limits element is corrected. All remaining report fields and array/term findings are JSON-value-identical to v2.",
+  "corrected_report": {
+    "path": "build/udm37-normal-positive-n2-opacity-terminal-audit-v3/terminal-audit.json",
+    "sha256": "f18e37165c90c7409c43185b60cdc9bd3ba90cd32b771905f748dd53fd8ae595"
+  },
+  "corrector_script": {
+    "path": "build/udm37-normal-positive-n2-opacity-terminal-audit-v3/audit_positive_saved_v3.py",
+    "sha256": "1602bd5fd9df62b390389c2360c7b70c8d9676f294a43be5f766255e77db8375"
+  },
+  "preserved_numeric_report": {
+    "carrier": {
+      "extension_layers": 13,
+      "gas_membership_count": 11,
+      "input_sha256": "9c477295b7a01de8b5e38b612052f1e61e711402a5a839bd1cb9c58b6eed2168",
+      "n2_membership": "present from captured VMR_N2 input section; no synthetic override",
+      "native_mass_layers": 32,
+      "packet": "LW V13",
+      "total_layers": 45
+    },
+    "coefficient_table": {
+      "major_corner_checks": 46080,
+      "minor_corner_checks": 61564,
+      "path": "build/udm37-legacy-lw-source-export-serial-build-v1/source/WRF/run/rrtmgp-gas-lw-g128.nc",
+      "sha256": "70ad65d116531122660318e5da2a2af9db74b425916202860e9527ef2375b8f6"
+    },
+    "dry_column": {
+      "construction_rows_source_order_exact": 45,
+      "native_prefix_rows": 32,
+      "pressure_h2o_extension_rows": 13,
+      "source_native_grouping": "mass*(avogad/(Mdry*10000))",
+      "source_order_rows_recomputed": 45,
+      "target_comparison": {
+        "all45": {
+          "count": 45,
+          "exact": 45,
+          "max_abs_residual": 0.0,
+          "max_relative_to_construction": 0.0,
+          "max_relative_to_saved": 0.0,
+          "rms_residual": 0.0
+        },
+        "extension13": {
+          "count": 13,
+          "exact": 13,
+          "max_abs_residual": 0.0,
+          "max_relative_to_construction": 0.0,
+          "max_relative_to_saved": 0.0,
+          "rms_residual": 0.0
+        },
+        "native32": {
+          "count": 32,
+          "exact": 32,
+          "max_abs_residual": 0.0,
+          "max_relative_to_construction": 0.0,
+          "max_relative_to_saved": 0.0,
+          "rms_residual": 0.0
+        }
+      }
+    },
+    "execution": {
+      "RTE_compile_invocations": 0,
+      "audit_invoked_point_function": false,
+      "child_rc": 0,
+      "new_REAL": 0,
+      "new_RTE": 0,
+      "new_WRF": 0,
+      "new_builds": 0,
+      "point_invocations": 1,
+      "receipt_sha256": "b32ad3572a93574dbb0dc5f9193bc17c82893bf2500ff47759e69beaba63eedb"
+    },
+    "gas_input_columns": {
+      "each_derived_molecule_column_vector_exact": true,
+      "each_input_vmr_vector_exact": true,
+      "gas_records_checked": 11,
+      "input_gases": [
+        "h2o",
+        "co2",
+        "o3",
+        "n2o",
+        "ch4",
+        "o2",
+        "n2",
+        "ccl4",
+        "cfc11",
+        "cfc12",
+        "cfc22"
+      ],
+      "positive_N2_vector_exact_to_input": true
+    },
+    "major_terms": {
+      "band_partition_and_gas_key_membership_checked": true,
+      "coefficient_table_corner_lookups": 46080,
+      "left_associated_sums_checked": 23040,
+      "term_rows": 5760,
+      "two_plane_and_accumulation_rows_checked": 5760,
+      "weighted_products_recomputed": 46080
+    },
+    "minor_terms": {
+      "coefficient_table_corner_lookups": 61564,
+      "complete_unique_source_roster_match": true,
+      "final_source_order_accumulation_equals_construction": true,
+      "gas_column_density_scaling_and_tau_products_checked": 15391,
+      "left_associated_sums_checked": 15391,
+      "raw_interval_roster_rows_checked": 94,
+      "raw_vs_packed_contributor_indices_checked": 61564,
+      "term_rows": 15391,
+      "weighted_products_recomputed": 61564
+    },
+    "pins": {
+      "adaptation_sha256": "00bc3bb7687f3f5fbcd210a9ccfb4c26ad473aedad863c398a9bea87abe92805",
+      "audit_script_sha256": "689eaf3c9938013c0b77969377f3d113d875fd173ee20de7e17a104e5b3a60a9",
+      "authorization_artifact_pin_rows": 108,
+      "authorization_sha256": "7ef59824b3a8478f30fd13440e120fba2ea04463b756849f3e547f48efd2c1f0",
+      "campaign_driver_sha256": "1852452555fbe667a0a95d59242bcd9c3833f2877fc51f882d5d3d929a058f58",
+      "campaign_source_manifest_entry_verified": true,
+      "direct_plan_pin_rows_rehashed": 31,
+      "input_sha256": "9c477295b7a01de8b5e38b612052f1e61e711402a5a839bd1cb9c58b6eed2168",
+      "live_rehash_passes": 2,
+      "pinned_execution_artifacts_verified": true,
+      "point_source": {
+        "path": "build/udm37-normal-positive-n2-opacity-draft-v1/reconstruct_positive_locked_v1.py",
+        "sha256": "7c895b5863872c78e7974374cdf96430d565f4239960e850a7e308d1d37a9f3c",
+        "size_bytes": 31350
+      },
+      "recursive_execution_pin_rows_verified_by_runner": 108,
+      "source_manifest_sha256": "a5f307b7bbf2d3f84f4b9caf49fc8a40e8b225fe6e8ceecc65b9a75363c5faf5",
+      "table_sha256": "70ad65d116531122660318e5da2a2af9db74b425916202860e9527ef2375b8f6"
+    },
+    "status": "SOURCE_ORDER_LEDGER_VALIDATED_TARGET_RESIDUALS_DESCRIPTIVE_ONLY",
+    "target_reparse": {
+      "GAS_COL_DRY_shape": [
+        1,
+        45,
+        1
+      ],
+      "GAS_TAU_RAW_shape": [
+        1,
+        45,
+        128
+      ],
+      "GAS_TAU_shape": [
+        1,
+        45,
+        128
+      ],
+      "path": "build/udm37-legacy-lw-source-export-bon-audit-v2/cases/SOURCE_OFF/trace/lw_000001.result",
+      "sha256": "4722e6590a1d3e609a38a1323d8f2ddb56c1c50670547fdca367c7198671e0c6",
+      "tau_comparison": {
+        "GAS_TAU": {
+          "all45": {
+            "cells": 5760,
+            "exact_cells": 5760,
+            "max_abs_residual": 0.0,
+            "max_ordered_ulp": 0,
+            "max_relative_nonzero_construction": 0.0,
+            "max_relative_nonzero_saved": 0.0,
+            "rms_residual": 0.0
+          },
+          "extension13": {
+            "cells": 1664,
+            "exact_cells": 1664,
+            "max_abs_residual": 0.0,
+            "max_ordered_ulp": 0,
+            "max_relative_nonzero_construction": 0.0,
+            "max_relative_nonzero_saved": 0.0,
+            "rms_residual": 0.0
+          },
+          "native32": {
+            "cells": 4096,
+            "exact_cells": 4096,
+            "max_abs_residual": 0.0,
+            "max_ordered_ulp": 0,
+            "max_relative_nonzero_construction": 0.0,
+            "max_relative_nonzero_saved": 0.0,
+            "rms_residual": 0.0
+          }
+        },
+        "GAS_TAU_RAW": {
+          "all45": {
+            "cells": 5760,
+            "exact_cells": 5760,
+            "max_abs_residual": 0.0,
+            "max_ordered_ulp": 0,
+            "max_relative_nonzero_construction": 0.0,
+            "max_relative_nonzero_saved": 0.0,
+            "rms_residual": 0.0
+          },
+          "extension13": {
+            "cells": 1664,
+            "exact_cells": 1664,
+            "max_abs_residual": 0.0,
+            "max_ordered_ulp": 0,
+            "max_relative_nonzero_construction": 0.0,
+            "max_relative_nonzero_saved": 0.0,
+            "rms_residual": 0.0
+          },
+          "native32": {
+            "cells": 4096,
+            "exact_cells": 4096,
+            "max_abs_residual": 0.0,
+            "max_ordered_ulp": 0,
+            "max_relative_nonzero_construction": 0.0,
+            "max_relative_nonzero_saved": 0.0,
+            "rms_residual": 0.0
+          }
+        }
+      }
+    }
+  },
+  "prior_report": {
+    "path": "build/udm37-normal-positive-n2-opacity-terminal-audit-v2/terminal-audit.json",
+    "sha256": "da18208155aed69225369168a34bc0692e2a34a610ba6826ecc60583b928a760"
+  },
+  "schema": "UDM37_NORMAL_POSITIVE_N2_TERMINAL_AUDIT_METADATA_SUPERSESSION_V1",
+  "scope": "The positive-N2 campaign source inventory applies. The prior absent-N2/direct-reference compatibility note is superseded only for this actual positive-N2 campaign. Trace instrumentation differs; no whole WRF tree identity, coefficient truth, physical accuracy, or global N2 policy is established. No point function, solver, RTE, compiler, or model was invoked.",
+  "source_inventory": {
+    "path": "build/udm37-normal-positive-n2-production-inventory-v1/inventory.json",
+    "scope": "Entire radiation adapter, gas constants/frontend/kernel/loader and exact LW table bytes identical to the retained campaign. Trace instrumentation has a separate source identity; no whole-current-WRF-tree or new-forecast equivalence claimed.",
+    "sha256": "d870e6c9f1355186e0238c96e7c3926afe7bf21e1a97b1c0bf49b65240bd8ab2",
+    "source_head": "0910208dddfc1785fb85947e906873cfc3d2a00f",
+    "status": "FOUND_AUTHENTICATED_NORMAL_POSITIVE_N2_ACTUAL_WRF_CAPTURE"
+  },
+  "source_review": {
+    "path": "build/udm37-normal-positive-n2-opacity-source-review-v1/review.json",
+    "sha256": "f0a1378901bd557277f244ca3d18514ea219d2601557798c8b2024d5488183e7"
+  },
+  "status": "METADATA_ONLY_CORRECTION_NO_POINT_OR_TERM_RECOMPUTATION"
+}

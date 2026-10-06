@@ -1,0 +1,85 @@
+{
+  "schema": "udm37-normal-positive-n2-opacity-source-review-v1",
+  "status": "PASS_SCOPED_STATIC_SOURCE_CONTRACT_WITH_FOLLOWUP_GUARDS",
+  "scope": "Static source and adaptation review only. No opacity target values were opened, no point reconstruction was invoked, and no RTE/model/build was run.",
+  "reviewed_artifacts": {
+    "locked_reconstruction": {
+      "path": "build/udm37-normal-positive-n2-opacity-draft-v1/reconstruct_positive_locked_v1.py",
+      "sha256": "7c895b5863872c78e7974374cdf96430d565f4239960e850a7e308d1d37a9f3c"
+    },
+    "adaptation_contract": {
+      "path": "build/udm37-normal-positive-n2-opacity-draft-v1/adaptation.json",
+      "sha256": "00bc3bb7687f3f5fbcd210a9ccfb4c26ad473aedad863c398a9bea87abe92805"
+    },
+    "production_inventory": {
+      "path": "build/udm37-normal-positive-n2-production-inventory-v1/inventory.json",
+      "sha256": "d870e6c9f1355186e0238c96e7c3926afe7bf21e1a97b1c0bf49b65240bd8ab2",
+      "current_source_head": "0910208dddfc1785fb85947e906873cfc3d2a00f"
+    },
+    "campaign_adapter": {
+      "path": "build/udm37-legacy-lw-source-export-serial-build-v1/source/WRF/phys/module_ra_rrtmgp.F",
+      "sha256": "1852452555fbe667a0a95d59242bcd9c3833f2877fc51f882d5d3d929a058f58"
+    },
+    "campaign_frontend": {
+      "path": "build/udm37-legacy-lw-source-export-serial-build-v1/source/WRF/external/rte_rrtmgp/rrtmgp-frontend/mo_gas_optics_rrtmgp.F90",
+      "sha256": "d5e0a7e56bc811575ec2c9655953a5be64c42a62e4100f65198e1e1b44239adc"
+    },
+    "campaign_kernel": {
+      "path": "build/udm37-legacy-lw-source-export-serial-build-v1/source/WRF/external/rte_rrtmgp/rrtmgp-kernels/mo_gas_optics_rrtmgp_kernels.F90",
+      "sha256": "96be9c4379c4e49a7b13e9b1f8314e78908262f402e913a2a03232987706f6e1"
+    },
+    "gas_coefficients": {
+      "path": "build/udm37-legacy-lw-source-export-serial-build-v1/source/WRF/run/rrtmgp-gas-lw-g128.nc",
+      "sha256": "70ad65d116531122660318e5da2a2af9db74b425916202860e9527ef2375b8f6"
+    },
+    "campaign_executable": {
+      "path": "build/udm37-legacy-lw-source-export-serial-build-v1/source/WRF/main/wrf.exe",
+      "sha256": "b29840e3bac314aa82cee8d1f1efa21d6a43611cfb4e197a26f854b869a7f872"
+    },
+    "captured_input_only": {
+      "path": "build/udm37-legacy-lw-source-export-bon-audit-v2/cases/SOURCE_OFF/trace/lw_000001.input",
+      "sha256": "9c477295b7a01de8b5e38b612052f1e61e711402a5a839bd1cb9c58b6eed2168"
+    }
+  },
+  "source_contract_findings": [
+    {
+      "claim": "The captured normal LW path supplies positive background N2 directly to gas optics.",
+      "evidence": "The pinned adapter defines names_lw with eleven entries ending in n2 and dry_background_n2_vmr=0.7808_wp; the LW call assigns n2_background from that constant, calls set_gases_lw, and set_gases_lw calls gases%set_vmr('n2', n2_background). The V13 trace writes VMR_N2. The saved input header is V13 with 45 layers, and the inventory reports 45 input N2 values all 0.7808. This path is independent of the optional CFC trace-gas flag.",
+      "source_locations": "module_ra_rrtmgp.F: names_lw/default N2 near module declarations; set_gases_lw around 473-505; n2_background setup and trace/call around 734-802."
+    },
+    {
+      "claim": "The candidate's N2 call membership and input wiring are aligned with the captured adapter contract.",
+      "evidence": "CALL_GAS_ORDER includes h2o, co2, o3, n2o, ch4, o2, cfc11, cfc12, cfc22, ccl4, n2. The V13 section map assigns VMR_N2 to n2; reconstruction reads that section as an input profile and forms its gas column as VMR times dry column. It does not synthesize or average N2. The frontend reduces gases by PACK in its coefficient-gas order and multiplies supplied VMR by col_dry when forming per-gas columns; the candidate filters table gas names by membership, preserving that table order.",
+      "source_locations": "mo_gas_optics_rrtmgp.F90: init/load reduction around 1300-1330 and per-gas column construction around 632-642."
+    },
+    {
+      "claim": "The 32-native/13-extension dry-column policy and native-prefix association match the reviewed production source at the expression-grouping level.",
+      "evidence": "The adapter first calls get_col_dry(H2O, PLEV*100), then overwrites only the supplied native prefix using REAL(native_mass,wp) * (avogad/(initialized_mol_weight_dry*10000._wp)). The candidate applies that parenthesized factor to the 32 captured mass layers and retains its pressure/H2O-derived expression for layers 33-45. It explicitly disclaims Fortran-kind bitwise emulation.",
+      "source_location": "module_ra_rrtmgp.F: gas_dry_column around 583-595; production use around 802."
+    },
+    {
+      "claim": "Campaign adapter, frontend, kernel, gas coefficients, and the corresponding PR111 production adapter bytes are authenticated as listed by the inventory; this is not a claim that every WRF source file or instrumentation file is identical.",
+      "evidence": "Production inventory head is 0910208dddfc1785fb85947e906873cfc3d2a00f. It records byte-identical campaign/current adapter, gas constants, frontend, kernel, loader, and exact gas coefficient data. The campaign trace module differs from the current trace module and is outside the gas-math equivalence claim."
+    }
+  ],
+  "candidate_review": {
+    "n2_handling": "The candidate's V13 reader requires the captured VMR_N2 section when traversing the eleven caller gases, checks finite nonnegative values and shape (1,45), and records values/columns. The captured values and adapter constant agree according to the input-only inventory. The draft does not independently assert that every VMR_N2 value equals the source constant 0.7808; add that explicit source-consistency check or report the equality as a separately pinned precondition before any authorized comparison.",
+    "dry_column": "Uses the same factored association, but evaluates in Python binary64 and starts from decimal packet values; it is a source-order reconstruction, not an IEEE-bitwise emulation of default-REAL-to-wp conversion.",
+    "major_minor_mapping": "The reviewed V13 changes retain the prior normal-point source-order algorithms. The gas membership addition matches the adapter's 11-gas LW call. The draft keeps coefficient-table gas order for the reduced set, table-key reduction, minor interval pruning/repacking, and source-order accumulation; this static review did not execute or independently numerically validate those operations.",
+    "target_isolation": "The locked function pins and reads input, table and source files only. It contains no result/target path pin or result-file opening. main() exits locked before invoking reconstruct_point."
+  },
+  "required_pre_numeric_followups": [
+    "Keep this point reconstruction locked until a separate diagnostic plan authorizes calling it.",
+    "Before any target comparison, validate the V13 TRACE_GASES_PRESENT marker's intended CFC semantics and explicitly bind captured VMR_N2=0.7808 to the adapter's dry_background_n2_vmr=0.7808 source constant; do not treat the field as independent physical validation.",
+    "Keep the normal positive-N2 case distinct from the normal N2-absent and matched45 positive-N2 cases. A result agreement would check source/table mechanics for this captured state only, not coefficient generation or atmospheric N2 truth.",
+    "The Python binary64 reconstruction has no strict arithmetic/log error enclosure; any residual report must remain diagnostic rather than a numerical acceptance gate."
+  ],
+  "non_actions": {
+    "saved_target_tau_parsed": false,
+    "reconstruction_function_invoked": false,
+    "RTE_or_solver_invoked": false,
+    "WRF_or_REAL_invoked": false,
+    "compile_invoked": false,
+    "source_modified": false
+  }
+}

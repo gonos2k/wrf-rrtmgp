@@ -1,0 +1,207 @@
+{
+  "carrier": {
+    "extension_layers": 13,
+    "gas_membership_count": 11,
+    "input_sha256": "9c477295b7a01de8b5e38b612052f1e61e711402a5a839bd1cb9c58b6eed2168",
+    "n2_membership": "present from captured VMR_N2 input section; no synthetic override",
+    "native_mass_layers": 32,
+    "packet": "LW V13",
+    "total_layers": 45
+  },
+  "coefficient_table": {
+    "major_corner_checks": 46080,
+    "minor_corner_checks": 61564,
+    "path": "build/udm37-legacy-lw-source-export-serial-build-v1/source/WRF/run/rrtmgp-gas-lw-g128.nc",
+    "sha256": "70ad65d116531122660318e5da2a2af9db74b425916202860e9527ef2375b8f6"
+  },
+  "dry_column": {
+    "construction_rows_source_order_exact": 45,
+    "native_prefix_rows": 32,
+    "pressure_h2o_extension_rows": 13,
+    "source_native_grouping": "mass*(avogad/(Mdry*10000))",
+    "source_order_rows_recomputed": 45,
+    "target_comparison": {
+      "all45": {
+        "count": 45,
+        "exact": 45,
+        "max_abs_residual": 0.0,
+        "max_relative_to_construction": 0.0,
+        "max_relative_to_saved": 0.0,
+        "rms_residual": 0.0
+      },
+      "extension13": {
+        "count": 13,
+        "exact": 13,
+        "max_abs_residual": 0.0,
+        "max_relative_to_construction": 0.0,
+        "max_relative_to_saved": 0.0,
+        "rms_residual": 0.0
+      },
+      "native32": {
+        "count": 32,
+        "exact": 32,
+        "max_abs_residual": 0.0,
+        "max_relative_to_construction": 0.0,
+        "max_relative_to_saved": 0.0,
+        "rms_residual": 0.0
+      }
+    }
+  },
+  "execution": {
+    "RTE_compile_invocations": 0,
+    "audit_invoked_point_function": false,
+    "child_rc": 0,
+    "new_REAL": 0,
+    "new_RTE": 0,
+    "new_WRF": 0,
+    "new_builds": 0,
+    "point_invocations": 1,
+    "receipt_sha256": "b32ad3572a93574dbb0dc5f9193bc17c82893bf2500ff47759e69beaba63eedb"
+  },
+  "gas_input_columns": {
+    "each_derived_molecule_column_vector_exact": true,
+    "each_input_vmr_vector_exact": true,
+    "gas_records_checked": 11,
+    "input_gases": [
+      "h2o",
+      "co2",
+      "o3",
+      "n2o",
+      "ch4",
+      "o2",
+      "n2",
+      "ccl4",
+      "cfc11",
+      "cfc12",
+      "cfc22"
+    ],
+    "positive_N2_vector_exact_to_input": true
+  },
+  "major_terms": {
+    "band_partition_and_gas_key_membership_checked": true,
+    "coefficient_table_corner_lookups": 46080,
+    "left_associated_sums_checked": 23040,
+    "term_rows": 5760,
+    "two_plane_and_accumulation_rows_checked": 5760,
+    "weighted_products_recomputed": 46080
+  },
+  "minor_terms": {
+    "coefficient_table_corner_lookups": 61564,
+    "complete_unique_source_roster_match": true,
+    "final_source_order_accumulation_equals_construction": true,
+    "gas_column_density_scaling_and_tau_products_checked": 15391,
+    "left_associated_sums_checked": 15391,
+    "raw_interval_roster_rows_checked": 94,
+    "raw_vs_packed_contributor_indices_checked": 61564,
+    "term_rows": 15391,
+    "weighted_products_recomputed": 61564
+  },
+  "pins": {
+    "adaptation_sha256": "00bc3bb7687f3f5fbcd210a9ccfb4c26ad473aedad863c398a9bea87abe92805",
+    "audit_script_sha256": "689eaf3c9938013c0b77969377f3d113d875fd173ee20de7e17a104e5b3a60a9",
+    "authorization_artifact_pin_rows": 108,
+    "authorization_sha256": "7ef59824b3a8478f30fd13440e120fba2ea04463b756849f3e547f48efd2c1f0",
+    "campaign_driver_sha256": "1852452555fbe667a0a95d59242bcd9c3833f2877fc51f882d5d3d929a058f58",
+    "campaign_source_manifest_entry_verified": true,
+    "direct_plan_pin_rows_rehashed": 31,
+    "input_sha256": "9c477295b7a01de8b5e38b612052f1e61e711402a5a839bd1cb9c58b6eed2168",
+    "live_rehash_passes": 2,
+    "pinned_execution_artifacts_verified": true,
+    "point_source": {
+      "path": "build/udm37-normal-positive-n2-opacity-draft-v1/reconstruct_positive_locked_v1.py",
+      "sha256": "7c895b5863872c78e7974374cdf96430d565f4239960e850a7e308d1d37a9f3c",
+      "size_bytes": 31350
+    },
+    "recursive_execution_pin_rows_verified_by_runner": 108,
+    "source_manifest_sha256": "a5f307b7bbf2d3f84f4b9caf49fc8a40e8b225fe6e8ceecc65b9a75363c5faf5",
+    "table_sha256": "70ad65d116531122660318e5da2a2af9db74b425916202860e9527ef2375b8f6"
+  },
+  "provenance_limits": [
+    "This audit checks source-order mechanics against the pinned input/table and independently validates the saved WRF arrays; it is not a physical-accuracy verdict or independent verification of coefficient truth.",
+    "The captured VMR_N2 value is recorded as an input field only; this exercise does not validate its units or justify a global N2 policy.",
+    "The parent normal-carrier source-compatibility note remains applicable: build-receipt source-generation mismatch is disclosed in build/udm37-bon-night-normal-carrier-inventory-v3/source-compatibility.json.",
+    "No tolerance, residual gate, or causal attribution is applied to tau differences; native32 and extension13 are reported separately.",
+    "No point reconstruction function, solver, RTE, compiler, or model is invoked by this terminal audit."
+  ],
+  "schema": "UDM37_NORMAL_POSITIVE_N2_POINT_TERMINAL_AUDIT_V1",
+  "status": "SOURCE_ORDER_LEDGER_VALIDATED_TARGET_RESIDUALS_DESCRIPTIVE_ONLY",
+  "target_reparse": {
+    "GAS_COL_DRY_shape": [
+      1,
+      45,
+      1
+    ],
+    "GAS_TAU_RAW_shape": [
+      1,
+      45,
+      128
+    ],
+    "GAS_TAU_shape": [
+      1,
+      45,
+      128
+    ],
+    "path": "build/udm37-legacy-lw-source-export-bon-audit-v2/cases/SOURCE_OFF/trace/lw_000001.result",
+    "sha256": "4722e6590a1d3e609a38a1323d8f2ddb56c1c50670547fdca367c7198671e0c6",
+    "tau_comparison": {
+      "GAS_TAU": {
+        "all45": {
+          "cells": 5760,
+          "exact_cells": 5760,
+          "max_abs_residual": 0.0,
+          "max_ordered_ulp": 0,
+          "max_relative_nonzero_construction": 0.0,
+          "max_relative_nonzero_saved": 0.0,
+          "rms_residual": 0.0
+        },
+        "extension13": {
+          "cells": 1664,
+          "exact_cells": 1664,
+          "max_abs_residual": 0.0,
+          "max_ordered_ulp": 0,
+          "max_relative_nonzero_construction": 0.0,
+          "max_relative_nonzero_saved": 0.0,
+          "rms_residual": 0.0
+        },
+        "native32": {
+          "cells": 4096,
+          "exact_cells": 4096,
+          "max_abs_residual": 0.0,
+          "max_ordered_ulp": 0,
+          "max_relative_nonzero_construction": 0.0,
+          "max_relative_nonzero_saved": 0.0,
+          "rms_residual": 0.0
+        }
+      },
+      "GAS_TAU_RAW": {
+        "all45": {
+          "cells": 5760,
+          "exact_cells": 5760,
+          "max_abs_residual": 0.0,
+          "max_ordered_ulp": 0,
+          "max_relative_nonzero_construction": 0.0,
+          "max_relative_nonzero_saved": 0.0,
+          "rms_residual": 0.0
+        },
+        "extension13": {
+          "cells": 1664,
+          "exact_cells": 1664,
+          "max_abs_residual": 0.0,
+          "max_ordered_ulp": 0,
+          "max_relative_nonzero_construction": 0.0,
+          "max_relative_nonzero_saved": 0.0,
+          "rms_residual": 0.0
+        },
+        "native32": {
+          "cells": 4096,
+          "exact_cells": 4096,
+          "max_abs_residual": 0.0,
+          "max_ordered_ulp": 0,
+          "max_relative_nonzero_construction": 0.0,
+          "max_relative_nonzero_saved": 0.0,
+          "rms_residual": 0.0
+        }
+      }
+    }
+  }
+}
