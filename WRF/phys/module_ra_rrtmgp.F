@@ -853,7 +853,8 @@ CONTAINS
                              avdir,avdif,andir,andif,mu0,solar, &
                              cf,lwp,iwp,swp,rel,rei,res,iceflag,overlap,seed, &
                              up,dn,hr,upc,dnc,hrc,direct,diffuse,directc,visdir,visdif,nirdir,nirdif,column_seeds,rwp,native_dry_layer_mass_kg_m2,gwp,hwp,lambda_g,lambda_h,frozen_context, &
-                             direct_unscaled,directc_unscaled,visdir_unscaled,nirdir_unscaled,workspace,cu_lwp,cu_iwp,cu_rel,cu_rei)
+                             direct_unscaled,directc_unscaled,visdir_unscaled,nirdir_unscaled,workspace,cu_lwp,cu_iwp,cu_rel,cu_rei, &
+                             solar_by_column)
     REAL, INTENT(IN) :: play(:,:),plev(:,:),tlay(:,:)
     REAL, INTENT(IN) :: h2o(:,:),co2(:,:),o3(:,:),n2o(:,:),ch4(:,:),o2(:,:)
     REAL, INTENT(IN) :: avdir(:),avdif(:),andir(:),andif(:),mu0(:),solar
@@ -868,6 +869,9 @@ CONTAINS
     REAL, INTENT(OUT) :: direct(:,:),diffuse(:,:),directc(:,:)
     REAL, INTENT(OUT) :: visdir(:,:),visdif(:,:),nirdir(:,:),nirdif(:,:)
     REAL, OPTIONAL, INTENT(IN) :: cu_lwp(:,:),cu_iwp(:,:),cu_rel(:,:),cu_rei(:,:)
+    ! Optional per-column solar irradiance for batched WRF tiles. The scalar
+    ! `solar` argument remains the backward-compatible default.
+    REAL, OPTIONAL, INTENT(IN) :: solar_by_column(:)
     TYPE(ty_rrtmgp_sw_workspace), OPTIONAL, TARGET, INTENT(INOUT) :: workspace
     TYPE(ty_rrtmgp_sw_workspace), TARGET :: local_workspace
     TYPE(ty_rrtmgp_sw_workspace), POINTER :: work
@@ -881,6 +885,7 @@ CONTAINS
                 rl(SIZE(play,1),SIZE(play,2)),di(SIZE(play,1),SIZE(play,2)),ds(SIZE(play,1),SIZE(play,2))
     REAL(wp) :: toa(SIZE(play,1),gas_sw%get_ngpt()),albdir(gas_sw%get_nband(),SIZE(play,1)), &
                 albdif(gas_sw%get_nband(),SIZE(play,1))
+    REAL(wp) :: solar_column
     LOGICAL :: mask(SIZE(play,1),SIZE(play,2),gas_sw%get_ngpt())
     LOGICAL :: need_unscaled,has_cu,active_cu
     INTEGER :: nc,nl,b,c,g,k,precip_status,nb,ngpt
@@ -940,6 +945,10 @@ CONTAINS
     IF(.NOT.ALL(ieee_is_finite(mu0))) CALL require('mu0 must be finite')
     IF(ANY(ABS(mu0)>1.)) CALL require('mu0 must be in [-1,1]')
     CALL rrtmgp_check_nonnegative('solar',RESHAPE([solar],[1,1]))
+    IF(PRESENT(solar_by_column)) THEN
+      IF(SIZE(solar_by_column)/=nc) CALL require('RRTMGP_SW_SOLAR_COLUMN_SHAPE_MISMATCH')
+      CALL rrtmgp_check_nonnegative('solar_by_column',RESHAPE(solar_by_column,[nc,1]))
+    END IF
     IF(ANY(SHAPE(direct)/=SHAPE(plev)).OR.ANY(SHAPE(diffuse)/=SHAPE(plev)).OR. &
        ANY(SHAPE(directc)/=SHAPE(plev)).OR.ANY(SHAPE(visdir)/=SHAPE(plev)).OR. &
        ANY(SHAPE(visdif)/=SHAPE(plev)).OR.ANY(SHAPE(nirdir)/=SHAPE(plev)).OR. &
@@ -969,7 +978,11 @@ CONTAINS
            native_dry_mass=PRESENT(native_dry_layer_mass_kg_m2), &
            frozen_mode=initialized_frozen_mode,frozen_table_sha256=frozen_table_sha256(), &
            sw_direct_predelta=need_unscaled,cu_population_present=has_cu)
-      CALL trace_input('SW','SOLAR',RESHAPE([solar],[1,1]))
+      IF(PRESENT(solar_by_column)) THEN
+        CALL trace_input('SW','SOLAR',RESHAPE(solar_by_column,[nc,1]))
+      ELSE
+        CALL trace_input('SW','SOLAR',RESHAPE([solar],[1,1]))
+      END IF
       CALL trace_input('SW','PLAY',play)
       CALL trace_input('SW','PLEV',plev)
       CALL trace_input('SW','TLAY',tlay)
@@ -1032,7 +1045,9 @@ CONTAINS
     END IF
     DO c=1,nc
       IF(SUM(toa(c,:))<=0._wp) CALL require('TOA solar spectrum must have positive integral')
-      toa(c,:)=toa(c,:)*(REAL(solar,wp)/SUM(toa(c,:)))
+      solar_column=REAL(solar,wp)
+      IF(PRESENT(solar_by_column)) solar_column=REAL(solar_by_column(c),wp)
+      toa(c,:)=toa(c,:)*(solar_column/SUM(toa(c,:)))
     END DO
     CALL ensure_sw_spectral(work)
     DO b=1,gas_sw%get_nband()

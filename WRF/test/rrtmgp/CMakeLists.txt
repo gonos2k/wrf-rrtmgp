@@ -150,6 +150,17 @@ foreach(case_error IN ITEMS
     "${case}" "${error}" --data-path "${RRTMGP_DATA_DIR}")
 endforeach()
 add_test(NAME multi_column_equivalence COMMAND test_rrtmgp_multicolumn "${RRTMGP_DATA_DIR}")
+foreach(case_error IN ITEMS
+    "solar_shape|RRTMGP_SW_SOLAR_COLUMN_SHAPE_MISMATCH"
+    "solar_negative|RRTMGP_INPUT_SOLAR_BY_COLUMN_NEGATIVE"
+    "solar_nan|RRTMGP_INPUT_SOLAR_BY_COLUMN_NOT_FINITE")
+  string(REPLACE "|" ";" case_error "${case_error}")
+  list(GET case_error 0 case)
+  list(GET case_error 1 error)
+  add_test(NAME reject_multicolumn_${case} COMMAND "${Python3_EXECUTABLE}"
+    "${CMAKE_CURRENT_SOURCE_DIR}/test_invalid_inputs.py" "$<TARGET_FILE:test_rrtmgp_multicolumn>"
+    "${case}" "${error}" --data-path "${RRTMGP_DATA_DIR}")
+endforeach()
 foreach(case IN ITEMS clear cloud overlap_zero)
   add_test(NAME sw_predelta_direct_${case} COMMAND test_rrtmgp_sw_predelta_direct "${RRTMGP_DATA_DIR}" ${case})
 endforeach()

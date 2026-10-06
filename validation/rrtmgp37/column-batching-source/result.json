@@ -1,0 +1,178 @@
+{
+  "schema": "udm37-cpu-column-batching-source-evidence-v1",
+  "base_commit": "199d0d9be07f9289ac60959e5cdd89c39e71a7dd",
+  "status": "PASS_SCOPED_RTE_40MIN_REGRESSION_THREE_ARMS",
+  "executable_sha256": "404b621a27c53eb70eb758b4f8e3904be595bcf6dc1ff53e7cffed654b8f665e",
+  "receipts": [
+    {
+      "workspace_relative_path": "build/udm37-column-batching-scalar-math-plan-v1/root-source-freeze-v1.json",
+      "sha256": "cce2f262a65303c58d999c8fdda7e4995bafc896ed910507664dad0faa1cd7a7",
+      "size_bytes": 4792
+    },
+    {
+      "workspace_relative_path": "build/udm37-column-batching-scalar-math-gnu-v1/build-result-v1.json",
+      "sha256": "d408de2a8a4cbcf08c3e71fb1225c808c4aceb109dbece72ba652b9260c5abc1",
+      "size_bytes": 506516
+    },
+    {
+      "workspace_relative_path": "build/udm37-column-batching-scalar-math-firststep-v1/runs-v1/execution.json",
+      "sha256": "c62a16f4e7787b1363eef193e9b6330da00d41074e5c9b293280a0a4b8ee66da",
+      "size_bytes": 2582142
+    },
+    {
+      "workspace_relative_path": "build/udm37-column-batching-scalar-math-regression-v1/runs-v1/execution.json",
+      "sha256": "821908664700baa2b012e117faafc791e64e610665fedacd227efc152d758ecc",
+      "size_bytes": 11384791
+    },
+    {
+      "workspace_relative_path": "build/udm37-column-batching-scalar-math-plan-v1/registration-receipt-correction-v1.json",
+      "sha256": "0b489abd9b32c8cef202f53e4fa50c4ef2e3b77f1f7eacdaddc4ced92aeee7c3",
+      "size_bytes": 3111
+    },
+    {
+      "workspace_relative_path": "build/udm37-column-batching-scalar-math-regression-v1/runs-v1/read-only-review-terminal-v1.json",
+      "sha256": "2865a161045eff28a144b835e7e8164d4555f4d117e34936d8df5cf4fd47cbde",
+      "size_bytes": 13863
+    },
+    {
+      "workspace_relative_path": "build/udm37-column-batching-scalar-math-plan-v1/pr52-ci-initial-failure-v1.json",
+      "sha256": "73948d82fa9b475caee20865a1fd55fdd60eac6c256ee8e74953adbb3062edd5",
+      "size_bytes": 3670
+    },
+    {
+      "workspace_relative_path": "build/pr52-ci-independent-failure-v6/independent-rfmip/backend-comparison.json",
+      "sha256": "22e8cb451f198ccd25c8fac0da65a18083cbf5ca107e0835ba69ef9b544a4050",
+      "size_bytes": 5067
+    },
+    {
+      "workspace_relative_path": "build/pr52-ci-independent-failure-v6/allsky-v5/allsky-backend-comparison.json",
+      "sha256": "620bc5c81127700f0ce29cfe194212e50a99fa47d19ca80e58ee7e1b101e91d6",
+      "size_bytes": 24818
+    },
+    {
+      "workspace_relative_path": "build/pr52-ci-independent-failure-v6/root-peer-review-v1.json",
+      "sha256": "00e2ad4c52bb5b20d2a632fbb4dd2b341e3524b6113fa8807867f00867180e26",
+      "size_bytes": 1956
+    }
+  ],
+  "forty_minute_arms": {
+    "ra37-b1": {
+      "status": "CASE_VALIDATED",
+      "returncode": 0,
+      "omp_threads": 2,
+      "batch_size_env": "1"
+    },
+    "ra37-b32": {
+      "status": "CASE_VALIDATED",
+      "returncode": 0,
+      "omp_threads": 2,
+      "batch_size_env": "32"
+    },
+    "ra4-default": {
+      "status": "CASE_VALIDATED",
+      "returncode": 0,
+      "omp_threads": 1,
+      "batch_size_env": null
+    }
+  },
+  "comparisons": [
+    {
+      "arm": "ra37-b1",
+      "reference": "old_b1",
+      "identical_all": true,
+      "by_category": {
+        "other": {
+          "different_variables": 0,
+          "max_abs_difference": 0.0
+        },
+        "radiation": {
+          "different_variables": 0,
+          "max_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "arm": "ra37-b1",
+      "reference": "old_prebatch",
+      "identical_all": true,
+      "by_category": {
+        "other": {
+          "different_variables": 0,
+          "max_abs_difference": 0.0
+        },
+        "radiation": {
+          "different_variables": 0,
+          "max_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "arm": "ra37-b32",
+      "reference": "new_b1",
+      "identical_all": true,
+      "by_category": {
+        "other": {
+          "different_variables": 0,
+          "max_abs_difference": 0.0
+        },
+        "radiation": {
+          "different_variables": 0,
+          "max_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "arm": "ra37-b32",
+      "reference": "old_b1",
+      "identical_all": true,
+      "by_category": {
+        "other": {
+          "different_variables": 0,
+          "max_abs_difference": 0.0
+        },
+        "radiation": {
+          "different_variables": 0,
+          "max_abs_difference": 0.0
+        }
+      }
+    },
+    {
+      "arm": "ra4-default",
+      "reference": "old_ra4",
+      "identical_all": true,
+      "by_category": {
+        "other": {
+          "different_variables": 0,
+          "max_abs_difference": 0.0
+        },
+        "radiation": {
+          "different_variables": 0,
+          "max_abs_difference": 0.0
+        }
+      }
+    }
+  ],
+  "model_invocations_this_regression": 3,
+  "benchmark_models": 0,
+  "limits": [
+    "Evidence files are workspace artifacts pinned by SHA256; large binaries and raw outputs are not included in this PR.",
+    "GNU CPU, stated cases and decompositions only.",
+    "B64/B128 coupled, batched restart/long runs, accelerator and performance acceptance remain pending.",
+    "Legacy RRTMG4 regression is OMP1 and uses the saved project binary rather than a newly built pristine official WRF.",
+    "Focused CTest initial run: 27 pass and one serial-environment failure; only the failed replay was rerun with OMP_NUM_THREADS=1 and passed. Original failure retained.",
+    "These are numerical regression checks, not independent forecast accuracy validation."
+  ],
+  "registration_metadata": "Initial PR-worktree check detected stale external source hashes. Corrected metadata only and registration check passed; frozen compiled source and original failure receipt remain unchanged.",
+  "independent_terminal_review": "PASS: 8460 exact variable comparisons over 30 file comparisons; this count includes multiple reference pairs, not 30 distinct output files.",
+  "independent_backend_recheck": {
+    "status": "PASS_SCOPED_LOCAL_CURRENT_SCRIPTS",
+    "rfmip_flux_arrays_bitwise": 4,
+    "allsky_sw_arrays_bitwise": 13,
+    "allsky_lw_arrays_bitwise": 12,
+    "cause": "Upstream-compiled Fortran clients used incompatible vendor type/vtable modules; same pinned client sources rebuilt against each own library modules restored equality.",
+    "production_source_changes_for_harness_repair": 0,
+    "original_ci_failure_preserved": true,
+    "published_reference_accuracy": "NOT_RUN",
+    "remote_ci": "pending after harness update"
+  }
+}
