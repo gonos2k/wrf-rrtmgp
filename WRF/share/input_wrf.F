@@ -14,6 +14,7 @@
     IMPLICIT NONE
 #include "wrf_io_flags.h"
 #include "wrf_status_codes.h"
+#include "registry_state_storage.h"
     TYPE(domain) :: grid
     TYPE(grid_config_rec_type),  INTENT(INOUT)    :: config_flags
     INTEGER, INTENT(IN) :: fid
@@ -1301,7 +1302,7 @@
           config_flags%ra_lw_physics == RRTMGP_LWSCHEME .AND. &
           config_flags%ra_sw_physics == RRTMGP_SWSCHEME
       IF (udm37_restart_diagnostics) THEN
-#ifdef USE_ALLOCATABLES
+#if WRF_REGISTRY_STATE_ALLOCATABLE
          IF (ALLOCATED(grid%udm_cldfra)) grid%udm_cldfra = -1.
          IF (ALLOCATED(grid%udm_cf_step)) grid%udm_cf_step = -1
          IF (ALLOCATED(grid%udm_cf_top)) grid%udm_cf_top = -1
@@ -1839,19 +1840,19 @@
            CASE ('udm_cldfra', 'udm_cf_step', 'udm_cf_top')
               SELECT CASE (TRIM(p%VarName))
               CASE ('udm_cldfra')
-#ifdef USE_ALLOCATABLES
+#if WRF_REGISTRY_STATE_ALLOCATABLE
                  IF (ALLOCATED(grid%udm_cldfra)) grid%udm_cldfra = -1.
 #else
                  IF (ASSOCIATED(grid%udm_cldfra)) grid%udm_cldfra = -1.
 #endif
               CASE ('udm_cf_step')
-#ifdef USE_ALLOCATABLES
+#if WRF_REGISTRY_STATE_ALLOCATABLE
                  IF (ALLOCATED(grid%udm_cf_step)) grid%udm_cf_step = -1
 #else
                  IF (ASSOCIATED(grid%udm_cf_step)) grid%udm_cf_step = -1
 #endif
               CASE ('udm_cf_top')
-#ifdef USE_ALLOCATABLES
+#if WRF_REGISTRY_STATE_ALLOCATABLE
                  IF (ALLOCATED(grid%udm_cf_top)) grid%udm_cf_top = -1
 #else
                  IF (ASSOCIATED(grid%udm_cf_top)) grid%udm_cf_top = -1

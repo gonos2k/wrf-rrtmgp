@@ -16,8 +16,10 @@ int
 gen_state_struct ( char * dirname )
 {
   FILE * fp ;
-  char  fname[NAMELEN] ;
+  FILE * storage_fp ;
+  char  fname[NAMELEN], storage_fname[NAMELEN] ;
   char * fn = "state_struct.inc" ;
+  char * storage_fn = "registry_state_storage.h" ;
 
   strcpy( fname, fn ) ;
   if ( strlen(dirname) > 0 ) { sprintf(fname,"%s/%s",dirname,fn) ; }
@@ -25,6 +27,17 @@ gen_state_struct ( char * dirname )
   print_warning(fp,fname) ;
   gen_decls ( fp , &Domain , COLON_RANGE , POINTERDECL , FIELD | RCONFIG | FOURD , DRIVER_LAYER ) ;
   close_the_file( fp ) ;
+
+  strcpy( storage_fname, storage_fn ) ;
+  if ( strlen(dirname) > 0 ) { sprintf(storage_fname,"%s/%s",dirname,storage_fn) ; }
+  if ((storage_fp = fopen( storage_fname , "w" )) == NULL ) return(1) ;
+  fprintf(storage_fp,"/* Registry-generated state storage; do not edit. */\n") ;
+#ifdef USE_ALLOCATABLES
+  fprintf(storage_fp,"#define WRF_REGISTRY_STATE_ALLOCATABLE 1\n") ;
+#else
+  fprintf(storage_fp,"#define WRF_REGISTRY_STATE_ALLOCATABLE 0\n") ;
+#endif
+  if ( fclose( storage_fp ) != 0 ) return(1) ;
   return(0) ;
 }
 

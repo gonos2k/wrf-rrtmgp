@@ -1,0 +1,388 @@
+{
+  "actual_registry_generations": [
+    {
+      "build": {
+        "argv": [
+          "make",
+          "-C",
+          "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-registry-storage-fixture-v5/registry_pointer/tools",
+          "registry",
+          "CC_TOOLS=/usr/bin/gcc",
+          "CC_TOOLS_CFLAGS="
+        ],
+        "ended_epoch": 1791282288.8751738,
+        "log": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-registry-storage-fixture-v5/registry_pointer/tools-build.log",
+        "log_sha256": "cdbdba58837fe1fc40aa17750d96fb8339b1602013ef5fc128291f4a996748ee",
+        "log_size_bytes": 39209,
+        "returncode": 0,
+        "started_epoch": 1791282288.1600025,
+        "status": "EXITED_ZERO"
+      },
+      "c_defines": [],
+      "case_dir": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-registry-storage-fixture-v5/registry_pointer",
+      "declarations": {
+        "udm_cf_step": "integer   ,DIMENSION(:,:)     ,POINTER   :: udm_cf_step",
+        "udm_cf_top": "integer   ,DIMENSION(:,:)     ,POINTER   :: udm_cf_top",
+        "udm_cldfra": "real      ,DIMENSION(:,:,:)   ,POINTER   :: udm_cldfra"
+      },
+      "expected_allocatable": 0,
+      "generated_header": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-registry-storage-fixture-v5/registry_pointer/inc/registry_state_storage.h",
+      "generated_header_sha256": "747663245190dd0262bfb820479fd02432553dd589fc9f7a9b82391f26ee42af",
+      "generated_state_struct_sha256": "d6055163082c30efe4ffb16772a557b7e04f40da800089f300e3c189fddd329e",
+      "generated_storage_matches": true,
+      "header_value": 0,
+      "mode": "pointer",
+      "registry_fixture_scope": "exact ARW dimensions and three source diagnostic entries; no physics packages",
+      "registry_fixture_sha256": "47789469c11ef32d9ab0e2cdf49eaf4509b4d33c3db24c564258adcddae8b1e5",
+      "registry_generation": {
+        "argv": [
+          "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-registry-storage-fixture-v5/registry_pointer/tools/registry",
+          "-DEM_CORE=1",
+          "-DNMM_CORE=0",
+          "-DNMM_MAX_DIM=2600",
+          "-DIWORDSIZE=4",
+          "-DNEW_BDYS",
+          "Registry/Registry"
+        ],
+        "ended_epoch": 1791282288.9397922,
+        "log": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-registry-storage-fixture-v5/registry_pointer/registry.log",
+        "log_sha256": "3b00277bb6cd6f1a53f70f9a8d684a785b9f46838dbae492471a87f6ae4458e5",
+        "log_size_bytes": 32,
+        "returncode": 0,
+        "started_epoch": 1791282288.875454,
+        "status": "EXITED_ZERO"
+      }
+    },
+    {
+      "build": {
+        "argv": [
+          "make",
+          "-C",
+          "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-registry-storage-fixture-v5/registry_allocatable/tools",
+          "registry",
+          "CC_TOOLS=/usr/bin/gcc",
+          "CC_TOOLS_CFLAGS=-DUSE_ALLOCATABLES"
+        ],
+        "ended_epoch": 1791282289.828038,
+        "log": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-registry-storage-fixture-v5/registry_allocatable/tools-build.log",
+        "log_sha256": "6ea300e55c3b3be2d7c2557bc9e59e3401fd9197faa49d32433733fcecf031af",
+        "log_size_bytes": 39631,
+        "returncode": 0,
+        "started_epoch": 1791282289.1628394,
+        "status": "EXITED_ZERO"
+      },
+      "c_defines": [
+        "-DUSE_ALLOCATABLES"
+      ],
+      "case_dir": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-registry-storage-fixture-v5/registry_allocatable",
+      "declarations": {
+        "udm_cf_step": "integer   ,DIMENSION(:,:)     ,ALLOCATABLE :: udm_cf_step",
+        "udm_cf_top": "integer   ,DIMENSION(:,:)     ,ALLOCATABLE :: udm_cf_top",
+        "udm_cldfra": "real      ,DIMENSION(:,:,:)   ,ALLOCATABLE :: udm_cldfra"
+      },
+      "expected_allocatable": 1,
+      "generated_header": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-registry-storage-fixture-v5/registry_allocatable/inc/registry_state_storage.h",
+      "generated_header_sha256": "676473319a8cca0050cb304e864788f7bf479ca0a34f4009186c737f7b878b92",
+      "generated_state_struct_sha256": "ac045d7e80de718eaa215465b51a3b89a39b84d36c70cd02e1f94d6e75079969",
+      "generated_storage_matches": true,
+      "header_value": 1,
+      "mode": "allocatable",
+      "registry_fixture_scope": "exact ARW dimensions and three source diagnostic entries; no physics packages",
+      "registry_fixture_sha256": "47789469c11ef32d9ab0e2cdf49eaf4509b4d33c3db24c564258adcddae8b1e5",
+      "registry_generation": {
+        "argv": [
+          "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-registry-storage-fixture-v5/registry_allocatable/tools/registry",
+          "-DEM_CORE=1",
+          "-DNMM_CORE=0",
+          "-DNMM_MAX_DIM=2600",
+          "-DIWORDSIZE=4",
+          "-DNEW_BDYS",
+          "Registry/Registry"
+        ],
+        "ended_epoch": 1791282289.9428873,
+        "log": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-registry-storage-fixture-v5/registry_allocatable/registry.log",
+        "log_sha256": "3b00277bb6cd6f1a53f70f9a8d684a785b9f46838dbae492471a87f6ae4458e5",
+        "log_size_bytes": 32,
+        "returncode": 0,
+        "started_epoch": 1791282289.8283148,
+        "status": "EXITED_ZERO"
+      }
+    }
+  ],
+  "execution_counts": {
+    "RTE": 0,
+    "WRF_builds": 0,
+    "fixture_compiles": 6,
+    "fixture_runs": 6,
+    "models": 0,
+    "registry_generations": 2,
+    "registry_tool_builds": 2
+  },
+  "modes": [
+    {
+      "compile": {
+        "argv": [
+          "/usr/bin/gfortran",
+          "-cpp",
+          "-std=f2008",
+          "-ffree-line-length-none",
+          "-O0",
+          "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-registry-storage-fixture-v5/pointer_header_undefined/test_input_wrf_udm_sentinels.F90",
+          "-o",
+          "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-registry-storage-fixture-v5/pointer_header_undefined/fixture.exe"
+        ],
+        "ended_epoch": 1791282290.009223,
+        "log": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-registry-storage-fixture-v5/pointer_header_undefined/compile.log",
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "log_size_bytes": 0,
+        "returncode": 0,
+        "started_epoch": 1791282289.945145,
+        "status": "EXITED_ZERO"
+      },
+      "execution": {
+        "argv": [
+          "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-registry-storage-fixture-v5/pointer_header_undefined/fixture.exe"
+        ],
+        "ended_epoch": 1791282290.01119,
+        "log": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-registry-storage-fixture-v5/pointer_header_undefined/run.log",
+        "log_sha256": "2376b4df604dde8b0ae5c4f9968a1c72643a94e6d37979adb9358a64703eb47c",
+        "log_size_bytes": 40,
+        "returncode": 0,
+        "started_epoch": 1791282290.009263,
+        "status": "EXITED_ZERO"
+      },
+      "fixture_sha256": "8b96ef3258e9af7efc8dbe3b7448324ccf609d911be777389f0d9b23dd87e6e3",
+      "fortran_defines": [],
+      "mode": "pointer_header_undefined",
+      "pass_marker_present": true,
+      "registry_storage_allocatable": 0
+    },
+    {
+      "compile": {
+        "argv": [
+          "/usr/bin/gfortran",
+          "-DUSE_ALLOCATABLES",
+          "-cpp",
+          "-std=f2008",
+          "-ffree-line-length-none",
+          "-O0",
+          "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-registry-storage-fixture-v5/pointer_header_defined/test_input_wrf_udm_sentinels.F90",
+          "-o",
+          "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-registry-storage-fixture-v5/pointer_header_defined/fixture.exe"
+        ],
+        "ended_epoch": 1791282290.0768645,
+        "log": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-registry-storage-fixture-v5/pointer_header_defined/compile.log",
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "log_size_bytes": 0,
+        "returncode": 0,
+        "started_epoch": 1791282290.0127203,
+        "status": "EXITED_ZERO"
+      },
+      "execution": {
+        "argv": [
+          "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-registry-storage-fixture-v5/pointer_header_defined/fixture.exe"
+        ],
+        "ended_epoch": 1791282290.079024,
+        "log": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-registry-storage-fixture-v5/pointer_header_defined/run.log",
+        "log_sha256": "2376b4df604dde8b0ae5c4f9968a1c72643a94e6d37979adb9358a64703eb47c",
+        "log_size_bytes": 40,
+        "returncode": 0,
+        "started_epoch": 1791282290.0769038,
+        "status": "EXITED_ZERO"
+      },
+      "fixture_sha256": "8b96ef3258e9af7efc8dbe3b7448324ccf609d911be777389f0d9b23dd87e6e3",
+      "fortran_defines": [
+        "-DUSE_ALLOCATABLES"
+      ],
+      "mode": "pointer_header_defined",
+      "pass_marker_present": true,
+      "registry_storage_allocatable": 0
+    },
+    {
+      "compile": {
+        "argv": [
+          "/usr/bin/gfortran",
+          "-DUSE_ALLOCATABLES=0",
+          "-cpp",
+          "-std=f2008",
+          "-ffree-line-length-none",
+          "-O0",
+          "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-registry-storage-fixture-v5/pointer_header_zero/test_input_wrf_udm_sentinels.F90",
+          "-o",
+          "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-registry-storage-fixture-v5/pointer_header_zero/fixture.exe"
+        ],
+        "ended_epoch": 1791282290.144686,
+        "log": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-registry-storage-fixture-v5/pointer_header_zero/compile.log",
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "log_size_bytes": 0,
+        "returncode": 0,
+        "started_epoch": 1791282290.0806046,
+        "status": "EXITED_ZERO"
+      },
+      "execution": {
+        "argv": [
+          "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-registry-storage-fixture-v5/pointer_header_zero/fixture.exe"
+        ],
+        "ended_epoch": 1791282290.1467144,
+        "log": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-registry-storage-fixture-v5/pointer_header_zero/run.log",
+        "log_sha256": "2376b4df604dde8b0ae5c4f9968a1c72643a94e6d37979adb9358a64703eb47c",
+        "log_size_bytes": 40,
+        "returncode": 0,
+        "started_epoch": 1791282290.144734,
+        "status": "EXITED_ZERO"
+      },
+      "fixture_sha256": "8b96ef3258e9af7efc8dbe3b7448324ccf609d911be777389f0d9b23dd87e6e3",
+      "fortran_defines": [
+        "-DUSE_ALLOCATABLES=0"
+      ],
+      "mode": "pointer_header_zero",
+      "pass_marker_present": true,
+      "registry_storage_allocatable": 0
+    },
+    {
+      "compile": {
+        "argv": [
+          "/usr/bin/gfortran",
+          "-cpp",
+          "-std=f2008",
+          "-ffree-line-length-none",
+          "-O0",
+          "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-registry-storage-fixture-v5/allocatable_header_undefined/test_input_wrf_udm_sentinels.F90",
+          "-o",
+          "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-registry-storage-fixture-v5/allocatable_header_undefined/fixture.exe"
+        ],
+        "ended_epoch": 1791282290.2122855,
+        "log": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-registry-storage-fixture-v5/allocatable_header_undefined/compile.log",
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "log_size_bytes": 0,
+        "returncode": 0,
+        "started_epoch": 1791282290.1482477,
+        "status": "EXITED_ZERO"
+      },
+      "execution": {
+        "argv": [
+          "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-registry-storage-fixture-v5/allocatable_header_undefined/fixture.exe"
+        ],
+        "ended_epoch": 1791282290.2142477,
+        "log": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-registry-storage-fixture-v5/allocatable_header_undefined/run.log",
+        "log_sha256": "2376b4df604dde8b0ae5c4f9968a1c72643a94e6d37979adb9358a64703eb47c",
+        "log_size_bytes": 40,
+        "returncode": 0,
+        "started_epoch": 1791282290.2123208,
+        "status": "EXITED_ZERO"
+      },
+      "fixture_sha256": "8b96ef3258e9af7efc8dbe3b7448324ccf609d911be777389f0d9b23dd87e6e3",
+      "fortran_defines": [],
+      "mode": "allocatable_header_undefined",
+      "pass_marker_present": true,
+      "registry_storage_allocatable": 1
+    },
+    {
+      "compile": {
+        "argv": [
+          "/usr/bin/gfortran",
+          "-DUSE_ALLOCATABLES=0",
+          "-cpp",
+          "-std=f2008",
+          "-ffree-line-length-none",
+          "-O0",
+          "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-registry-storage-fixture-v5/allocatable_header_zero/test_input_wrf_udm_sentinels.F90",
+          "-o",
+          "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-registry-storage-fixture-v5/allocatable_header_zero/fixture.exe"
+        ],
+        "ended_epoch": 1791282290.2798443,
+        "log": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-registry-storage-fixture-v5/allocatable_header_zero/compile.log",
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "log_size_bytes": 0,
+        "returncode": 0,
+        "started_epoch": 1791282290.2158132,
+        "status": "EXITED_ZERO"
+      },
+      "execution": {
+        "argv": [
+          "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-registry-storage-fixture-v5/allocatable_header_zero/fixture.exe"
+        ],
+        "ended_epoch": 1791282290.2817206,
+        "log": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-registry-storage-fixture-v5/allocatable_header_zero/run.log",
+        "log_sha256": "2376b4df604dde8b0ae5c4f9968a1c72643a94e6d37979adb9358a64703eb47c",
+        "log_size_bytes": 40,
+        "returncode": 0,
+        "started_epoch": 1791282290.2798781,
+        "status": "EXITED_ZERO"
+      },
+      "fixture_sha256": "8b96ef3258e9af7efc8dbe3b7448324ccf609d911be777389f0d9b23dd87e6e3",
+      "fortran_defines": [
+        "-DUSE_ALLOCATABLES=0"
+      ],
+      "mode": "allocatable_header_zero",
+      "pass_marker_present": true,
+      "registry_storage_allocatable": 1
+    },
+    {
+      "compile": {
+        "argv": [
+          "/usr/bin/gfortran",
+          "-DUSE_ALLOCATABLES=1",
+          "-cpp",
+          "-std=f2008",
+          "-ffree-line-length-none",
+          "-O0",
+          "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-registry-storage-fixture-v5/allocatable_header_one/test_input_wrf_udm_sentinels.F90",
+          "-o",
+          "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-registry-storage-fixture-v5/allocatable_header_one/fixture.exe"
+        ],
+        "ended_epoch": 1791282290.3473663,
+        "log": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-registry-storage-fixture-v5/allocatable_header_one/compile.log",
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "log_size_bytes": 0,
+        "returncode": 0,
+        "started_epoch": 1791282290.2832115,
+        "status": "EXITED_ZERO"
+      },
+      "execution": {
+        "argv": [
+          "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-registry-storage-fixture-v5/allocatable_header_one/fixture.exe"
+        ],
+        "ended_epoch": 1791282290.3493872,
+        "log": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-registry-storage-fixture-v5/allocatable_header_one/run.log",
+        "log_sha256": "2376b4df604dde8b0ae5c4f9968a1c72643a94e6d37979adb9358a64703eb47c",
+        "log_size_bytes": 40,
+        "returncode": 0,
+        "started_epoch": 1791282290.347406,
+        "status": "EXITED_ZERO"
+      },
+      "fixture_sha256": "8b96ef3258e9af7efc8dbe3b7448324ccf609d911be777389f0d9b23dd87e6e3",
+      "fortran_defines": [
+        "-DUSE_ALLOCATABLES=1"
+      ],
+      "mode": "allocatable_header_one",
+      "pass_marker_present": true,
+      "registry_storage_allocatable": 1
+    }
+  ],
+  "registry_storage_contract": {
+    "contract": "header and Registry declarations share the USE_ALLOCATABLES compile-time condition",
+    "declaration_generator": {
+      "path": "WRF/tools/misc.c",
+      "sha256": "c61646fc39ef086a788155a053f1bc9ef593116e3171fb121db78e167cd56aa6"
+    },
+    "header_generator": {
+      "path": "WRF/tools/gen_defs.c",
+      "sha256": "1e530847f94b27d70f0a65df956ff72f03cc9a4fde8e2a243821141c2032b1ce"
+    }
+  },
+  "schema": "UDM_INPUT_WRESTART_SENTINEL_STORAGE_FIXTURE_V1",
+  "scope": "Source-selected guards compiled against Registry storage headers in small fixtures; this is not a full input_wrf or WRF build.",
+  "source": {
+    "guard_group_count": 4,
+    "guard_group_sha256": [
+      "c6009c891e12e9e75ed079eac435edf4ef5dc9da2aa35291d7d7d16b01725d74",
+      "8901dcf3d5606d26691aeeaae40524eaddcb639813608d02cd7de5374e55a4ea",
+      "ce46e7f46a16f5483699ad855cf190e0a842e3c23087d9593dc83f570bfdaba5",
+      "17435aca2c7b112d312402ba7a21e2aa424ed70b1aaf7f4a85e4eb0bf0256a88"
+    ],
+    "path": "WRF/share/input_wrf.F",
+    "sha256": "b3c663892cb7f46c6503ff3a4a7c5202a5301c71a70c8db1fad21a293c2a48b1"
+  },
+  "status": "PASS_REGISTRY_STORAGE_MATRIX"
+}
