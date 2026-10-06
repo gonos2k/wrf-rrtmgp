@@ -3,7 +3,7 @@
 
 Standalone mode runs the Fortran solver fixture, validates its V6 captures,
 replays them through the independent reference executable, and probes invalid
-native-mass inputs. Capture mode accepts current V6/V7/V8/V9 production captures
+native-mass inputs. Capture mode accepts current V6/V7/V8/V9/V12/V13 production captures
 and validates them with the same independent mass and pressure-derived-
 extension formulas. V8 must contain all four LW trace-gas profiles.
 """
@@ -29,7 +29,8 @@ M_H2O_KG_MOL = 0.018016
 SHAPE_ERROR = "RRTMGP_INPUT_NATIVE_DRY_MASS_SHAPE"
 VALUE_ERROR = "RRTMGP_INPUT_NATIVE_DRY_MASS_NOT_POSITIVE_FINITE"
 REFERENCE_VALUE_ERROR = "V6 native dry layer mass must be finite and positive"
-SUPPORTED_INPUT_MAGICS = {"RRTMGP_REPLAY_V6", "RRTMGP_REPLAY_V7", "RRTMGP_REPLAY_V8", "RRTMGP_REPLAY_V9"}
+SUPPORTED_INPUT_MAGICS = {"RRTMGP_REPLAY_V6", "RRTMGP_REPLAY_V7", "RRTMGP_REPLAY_V8", "RRTMGP_REPLAY_V9",
+                          "RRTMGP_REPLAY_V12", "RRTMGP_REPLAY_V13"}
 PHASES = ("LW", "SW")
 
 
@@ -90,7 +91,7 @@ def read_input(path: Path) -> tuple[dict[str, Any], dict[str, np.ndarray]]:
         raise ValueError(f"{path}: malformed replay header")
     phase, nc, nl, overlap, seed, iceflag = h[0], *(int(x) for x in h[1:])
     # Use the shared strict replay parser so V8 cannot silently pass with a
-    # missing/invalid CFC profile and V7/V8 frozen metadata keeps its contract.
+    # missing/invalid CFC profile and frozen metadata keeps its contract.
     from test_column_replay import read_input as read_strict_replay_input
     try:
         strict_phase, strict_nc, strict_nl, strict_overlap, strict_seed, strict_iceflag, sections = \
@@ -294,8 +295,15 @@ def validate_pair(capture: Path, phase: str, *, require_raw: bool) -> dict[str, 
             raise ValueError(f"{capture}: raw fields unexpectedly present for standalone fixture")
     elif require_raw:
         raise ValueError(f"{capture}: missing actual SCM raw trace {raw_path.name}")
+    trace_gases_present = (bool(inputs["TRACE_GASES_PRESENT"].item())
+                           if "TRACE_GASES_PRESENT" in inputs else None)
+    n2_profile = inputs.get("VMR_N2")
     return {"phase": phase, "nc": meta["nc"], "nl": meta["nl"], "native_layers": n_native,
             "magic": meta["magic"], "missing_v8_cfc_rejected": missing_v8_cfc_rejected,
+            "n2_profile_shape": list(n2_profile.shape) if n2_profile is not None else None,
+            "trace_gases_present": trace_gases_present,
+            "cfc_records_present": all(name in inputs for name in
+                ("VMR_CFC11", "VMR_CFC12", "VMR_CFC22", "VMR_CCL4")),
             "native_mass_exact_raw_match": native_exact,
             "gas_col_dry_max_abs_error": float(np.max(np.abs(gas_col - expected))),
             "gas_col_dry_relative_max_error": float(np.max(np.abs(gas_col - expected) /
@@ -462,8 +470,13 @@ def _run_standalone_in_directory(args: argparse.Namespace, executable: Path, ref
 
     corruption_results = []
     source_input = capture / "lw_000001.input"
-    ref_diags = {"zero": REFERENCE_VALUE_ERROR, "negative": REFERENCE_VALUE_ERROR,
-                 "nan": REFERENCE_VALUE_ERROR, "inf": REFERENCE_VALUE_ERROR,
+    version = source_input.read_text(encoding="ascii").splitlines()[0].strip()
+    reference_value_error = ("V8 native dry layer mass must be finite/positive"
+                             if version in {"RRTMGP_REPLAY_V8", "RRTMGP_REPLAY_V10",
+                                            "RRTMGP_REPLAY_V12", "RRTMGP_REPLAY_V13"}
+                             else REFERENCE_VALUE_ERROR)
+    ref_diags = {"zero": reference_value_error, "negative": reference_value_error,
+                 "nan": reference_value_error, "inf": reference_value_error,
                  "empty": "replay section name or shape mismatch",
                  "too_wide": "replay section name or shape mismatch",
                  "row_shape": "replay section name or shape mismatch"}

@@ -21,7 +21,7 @@ MODULE module_ra_rrtmgp_trace
   END INTERFACE
 
   INTERFACE trace_input
-    MODULE PROCEDURE trace_input_real2, trace_input_real3, trace_input_real64_3
+    MODULE PROCEDURE trace_input_real2, trace_input_real3, trace_input_real64_2, trace_input_real64_3
   END INTERFACE
 
   CHARACTER(len=2), PARAMETER :: phases(2) = [ CHARACTER(len=2) :: 'lw', 'sw' ]
@@ -173,7 +173,7 @@ CONTAINS
 
   SUBROUTINE trace_input_start(phase, nc, nl, overlap, seed, iceflag,udm_precip,gravity,cp_dry,mol_weight_dry, &
                                native_dry_mass,frozen_mode,frozen_table_sha256,trace_gases_present, &
-                               sw_direct_predelta,cu_population_present)
+                               sw_direct_predelta,cu_population_present,background_n2_present)
     CHARACTER(len=*), INTENT(IN) :: phase
     INTEGER, INTENT(IN) :: nc, nl, overlap, seed, iceflag
     LOGICAL, OPTIONAL, INTENT(IN) :: udm_precip,native_dry_mass
@@ -181,8 +181,8 @@ CONTAINS
     INTEGER, OPTIONAL, INTENT(IN) :: frozen_mode
     CHARACTER(len=*), OPTIONAL, INTENT(IN) :: frozen_table_sha256
     LOGICAL, OPTIONAL, INTENT(IN) :: trace_gases_present
-    LOGICAL, OPTIONAL, INTENT(IN) :: sw_direct_predelta,cu_population_present
-    LOGICAL :: v4,v5,v6,v7,v8,v9,v10,v11
+    LOGICAL, OPTIONAL, INTENT(IN) :: sw_direct_predelta,cu_population_present,background_n2_present
+    LOGICAL :: v4,v5,v6,v7,v8,v9,v10,v11,v12,v13,background_n2
     INTEGER :: p, unit, ios, selected_frozen_mode
     CHARACTER(len=64) :: selected_frozen_sha256
     CHARACTER(len=1200) :: filename
@@ -213,7 +213,9 @@ CONTAINS
     IF(PRESENT(trace_gases_present)) v8=trace_gases_present
     v9=.FALSE.
     IF(PRESENT(sw_direct_predelta)) v9=sw_direct_predelta
-    v10=.FALSE.; v11=.FALSE.
+    v10=.FALSE.; v11=.FALSE.; v12=.FALSE.; v13=.FALSE.
+    background_n2=.FALSE.
+    IF(PRESENT(background_n2_present)) background_n2=background_n2_present
     IF(PRESENT(cu_population_present)) THEN
       IF(cu_population_present) THEN
         IF(uppercase(phase)=='LW') THEN
@@ -225,7 +227,14 @@ CONTAINS
         END IF
       END IF
     END IF
-    IF(v10.AND..NOT.v8) CALL trace_fatal('RRTMGP_TRACE_V10_REQUIRES_LW_TRACE_GASES')
+    IF(v10.AND..NOT.v8.AND..NOT.background_n2) CALL trace_fatal('RRTMGP_TRACE_V10_REQUIRES_LW_TRACE_GASES')
+    IF(background_n2) THEN
+      IF(uppercase(phase)/='LW') CALL trace_fatal('RRTMGP_TRACE_BACKGROUND_N2_LW_ONLY')
+      IF(.NOT.v5) CALL trace_fatal('RRTMGP_TRACE_V12_V13_REQUIRES_HOST_CONSTANTS')
+      v12=.NOT.v10
+      v13=v10
+      v10=.FALSE.
+    END IF
     IF(v11.AND..NOT.v9) CALL trace_fatal('RRTMGP_TRACE_V11_REQUIRES_SW_DIRECT_PREDELTA')
     IF(v9.AND.uppercase(phase)/='SW') CALL trace_fatal('RRTMGP_TRACE_V9_SW_ONLY')
     IF(v9.AND..NOT.v5) CALL trace_fatal('RRTMGP_TRACE_V9_REQUIRES_HOST_CONSTANTS')
@@ -236,7 +245,11 @@ CONTAINS
     IF(v7.AND..NOT.v5) CALL trace_fatal('RRTMGP_TRACE_V7_REQUIRES_HOST_CONSTANTS')
     IF(v7.AND..NOT.PRESENT(frozen_table_sha256)) CALL trace_fatal('RRTMGP_TRACE_V7_REQUIRES_FROZEN_SHA256')
     IF(v7) CALL validate_frozen_sha256(selected_frozen_sha256)
-    IF(v10) THEN
+    IF(v13) THEN
+      WRITE(unit,'(a)',IOSTAT=ios) 'RRTMGP_REPLAY_V13'
+    ELSE IF(v12) THEN
+      WRITE(unit,'(a)',IOSTAT=ios) 'RRTMGP_REPLAY_V12'
+    ELSE IF(v10) THEN
       WRITE(unit,'(a)',IOSTAT=ios) 'RRTMGP_REPLAY_V10'
     ELSE IF(v11) THEN
       WRITE(unit,'(a)',IOSTAT=ios) 'RRTMGP_REPLAY_V11'
@@ -264,7 +277,8 @@ CONTAINS
       constants_pending(p)=.TRUE.
       replay_gravity(p)=gravity; replay_cp_dry(p)=cp_dry; replay_mol_weight_dry(p)=mol_weight_dry
     END IF
-    frozen_pending(p)=v7.OR.(v8.AND.selected_frozen_mode==1).OR.(v9.AND.selected_frozen_mode==1)
+    frozen_pending(p)=v7.OR.((v8.OR.v12.OR.v13).AND.selected_frozen_mode==1).OR. &
+                       (v9.AND.selected_frozen_mode==1)
     replay_frozen_mode(p)=selected_frozen_mode
     replay_frozen_sha256(p)=selected_frozen_sha256
   END SUBROUTINE trace_input_start
@@ -290,6 +304,28 @@ CONTAINS
     CLOSE(unit, IOSTAT=ios)
     CALL check_io(ios, 'closing input record')
   END SUBROUTINE trace_input_real2
+
+  SUBROUTINE trace_input_real64_2(phase, name, values)
+    CHARACTER(len=*), INTENT(IN) :: phase, name
+    REAL(real64), INTENT(IN) :: values(:,:)
+    INTEGER :: p, unit, ios, r, c
+    CHARACTER(len=1200) :: filename
+    p = active_phase(phase)
+    IF (p == 0) RETURN
+    filename = trim(capture_dir)//'/'//trim(trace_basename(p))//'.input'
+    OPEN(NEWUNIT=unit, FILE=trim(filename), STATUS='old', POSITION='append', ACTION='write', IOSTAT=ios)
+    CALL check_io(ios, 'opening real64 rank2 input record')
+    WRITE(unit,'(a,1x,i0,1x,i0)',IOSTAT=ios) trim(name),size(values,1),size(values,2)
+    CALL check_io(ios, 'writing real64 rank2 input record header')
+    DO c=1,size(values,2)
+      DO r=1,size(values,1)
+        WRITE(unit,'(es25.16e3)',IOSTAT=ios) values(r,c)
+        CALL check_io(ios, 'writing real64 rank2 input value')
+      END DO
+    END DO
+    CLOSE(unit, IOSTAT=ios)
+    CALL check_io(ios, 'closing real64 rank2 input record')
+  END SUBROUTINE trace_input_real64_2
 
   SUBROUTINE trace_input_real3(phase,name,values)
     CHARACTER(len=*), INTENT(IN) :: phase,name

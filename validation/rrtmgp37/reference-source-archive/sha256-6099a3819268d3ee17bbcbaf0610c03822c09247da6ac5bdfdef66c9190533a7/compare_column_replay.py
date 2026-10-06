@@ -35,7 +35,7 @@ INTERFACE_SECTIONS = {"UP", "DN", "UPC", "DNC", "DIRECT", "DIFFUSE", "DIRECTC",
                       "VISDIR", "VISDIF", "NIRDIR", "NIRDIF", "DIRECT_PREDELTA",
                       "DIRECTC_PREDELTA", "VISDIR_PREDELTA", "NIRDIR_PREDELTA",
                       "AUDIT_DIRECT_PREDELTA"}
-LAYER_SCALAR_SECTIONS = {"RL_USED", "DI_USED", "DS_USED", "HR", "HRC", "VMR_N2"}
+LAYER_SCALAR_SECTIONS = {"RL_USED", "DI_USED", "DS_USED", "HR", "HRC"}
 RADIATION_SECTIONS = (OPTICAL_SECTIONS | FLOAT_OUTPUT_SECTIONS | INTERFACE_SECTIONS |
                       LAYER_SCALAR_SECTIONS | {MASK_SECTION})
 WRF_SURFACE_SECTIONS = {"WRF_GLW", "WRF_OLR", "WRF_GSW", "WRF_SWDDIR", "WRF_SWDDIF"}
@@ -119,8 +119,6 @@ def read_result(path: Path) -> dict:
             raise ReplayFormatError(f"{path}:{section_line}: {name} must have shape {(nc, nl + 1, 1)}")
         if name in LAYER_SCALAR_SECTIONS and shape != (nc, nl, 1):
             raise ReplayFormatError(f"{path}:{section_line}: {name} must have shape {(nc, nl, 1)}")
-        if name == "VMR_N2" and (phase != "LW" or np.any(array < 0.0) or np.any(array > 1.0)):
-            raise ReplayFormatError(f"{path}:{section_line}: VMR_N2 requires LW and finite values in [0,1]")
         if name in RADIATION_SECTIONS - INTERFACE_SECTIONS - LAYER_SCALAR_SECTIONS:
             if shape[0:2] != (nc, nl):
                 raise ReplayFormatError(f"{path}:{section_line}: {name} must start with shape {(nc, nl)}")
@@ -212,7 +210,7 @@ def compare(production: dict, reference: dict) -> dict:
         difference = np.abs(actual - expected)
         max_abs = float(np.max(difference)) if difference.size else 0.0
         detail = {"max_abs": max_abs}
-        if name in {MASK_SECTION, "VMR_N2"}:
+        if name == MASK_SECTION:
             passed = np.array_equal(actual, expected)
             detail["tolerance"] = "exact"
         elif name in FLOAT_OUTPUT_SECTIONS:

@@ -28,6 +28,8 @@ WRF_ROOT = test_surface_scm.WRF_ROOT
 DATA_DIR = test_surface_scm.DATA_DIR
 SUCCESS = "SUCCESS COMPLETE WRF"
 CFC_NAMES = ("VMR_CFC11", "VMR_CFC12", "VMR_CFC22", "VMR_CCL4")
+N2_MAGICS = {"RRTMGP_REPLAY_V12", "RRTMGP_REPLAY_V13"}
+TRACE_GAS_MAGICS = {"RRTMGP_REPLAY_V8", "RRTMGP_REPLAY_V10", *N2_MAGICS}
 STATIC_CFC = {"VMR_CFC11": 0.251e-9, "VMR_CFC12": 0.538e-9,
               "VMR_CFC22": 0.169e-9, "VMR_CCL4": 0.093e-9}
 
@@ -81,10 +83,12 @@ def prepare_mode_case(seed: dict[str, Any], case: Path, *, ghg_input: int) -> No
 
 
 def render_input(path: Path, header: tuple[str, int, int, int, int, int],
-                 records: dict[str, np.ndarray]) -> None:
+                 records: dict[str, np.ndarray], *, magic: str = "RRTMGP_REPLAY_V8") -> None:
     phase, nc, nl, overlap, seed, iceflag = header
     with path.open("w", encoding="ascii") as stream:
-        stream.write("RRTMGP_REPLAY_V8\n")
+        if magic not in {"RRTMGP_REPLAY_V8", "RRTMGP_REPLAY_V10", *N2_MAGICS}:
+            fail(f"cannot render unsupported LW replay magic {magic}")
+        stream.write(magic + "\n")
         stream.write(f"{phase} {nc} {nl} {overlap} {seed} {iceflag}\n")
         for name, array in records.items():
             values = np.asarray(array, dtype=np.float64)
@@ -117,8 +121,22 @@ def validate_lw_capture(case: Path, phase: str, call: int, reference: Path,
     if input_phase != "LW" or nc != 1:
         fail(f"{case}: unexpected LW replay header phase={input_phase} nc={nc}")
     magic = input_path.read_text(encoding="ascii").splitlines()[0].strip()
-    if magic != "RRTMGP_REPLAY_V8":
-        fail(f"{case}: expected V8 replay, got {magic}")
+    if magic not in TRACE_GAS_MAGICS:
+        fail(f"{case}: expected a trace-gas replay (V8/V10/V12/V13), got {magic}")
+    trace_present = True
+    n2_report = None
+    if magic in N2_MAGICS:
+        n2 = records.get("VMR_N2")
+        flag = records.get("TRACE_GASES_PRESENT")
+        if n2 is None or n2.shape != (nc, nl) or not np.isfinite(n2).all() or np.any((n2 < 0.0) | (n2 > 1.0)):
+            fail(f"{case}: {magic} requires finite VMR_N2 with shape {(nc, nl)} and values in [0,1]")
+        if flag is None or flag.shape != (1, 1) or not np.isfinite(flag).all() or float(flag.item()) not in (0.0, 1.0):
+            fail(f"{case}: {magic} requires scalar TRACE_GASES_PRESENT=0 or 1")
+        trace_present = bool(flag.item())
+        if trace_present != all(name in records for name in CFC_NAMES):
+            fail(f"{case}: {magic} CFC sections disagree with TRACE_GASES_PRESENT={int(trace_present)}")
+        n2_report = {"shape": list(n2.shape), "min_vmr": float(n2.min()), "max_vmr": float(n2.max()),
+                     "preserved_in_reference_variants": True}
     raw_phase, raw_i, raw_j, raw = test_column_replay.read_raw(capture / "lw.raw")
     if raw_phase != "LW":
         fail(f"{case}: raw capture has phase {raw_phase}, expected LW")
@@ -126,26 +144,30 @@ def validate_lw_capture(case: Path, phase: str, call: int, reference: Path,
     raw_fields = {"VMR_CFC11": "VMR_CFC11", "VMR_CFC12": "VMR_CFC12",
                   "VMR_CFC22": "VMR_CFC22", "VMR_CCL4": "VMR_CCL4"}
     cfc_values: dict[str, dict[str, Any]] = {}
-    for name in CFC_NAMES:
-        values = records.get(name)
-        if values is None or values.shape != (nc, nl):
-            fail(f"{case}: {name} must be present with native adapter shape {(nc, nl)}")
-        if not np.isfinite(values).all() or np.any(values < 0.0):
-            fail(f"{case}: {name} must be finite and nonnegative")
-        cfc_values[name] = {"shape": list(values.shape), "min_vmr": float(values.min()),
-                            "max_vmr": float(values.max()),
-                            "sha256_f64_fortran": hashlib.sha256(values.tobytes(order="F")).hexdigest()}
-        raw_values = raw.get(raw_fields[name])
-        if raw_values is None or raw_values.shape != (raw_nl,):
-            fail(f"{case}: raw native capture lacks {name} with {raw_nl} layers")
-        test_column_replay.assert_close(values[0, :raw_nl], raw_values,
-                                        f"{case}: V8 {name} equals native wrapper capture",
-                                        rtol=0.0, atol=0.0)
-        if expected_ghg in (0, 1):
-            expected = np.full(values.shape, STATIC_CFC[name], dtype=np.float64)
-            test_column_replay.assert_close(values, expected,
-                                            f"{case}: ideal-run CAM-reader fallback {name}",
-                                            rtol=2.e-7, atol=1.e-18)
+    if trace_present:
+        for name in CFC_NAMES:
+            values = records.get(name)
+            if values is None or values.shape != (nc, nl):
+                fail(f"{case}: {name} must be present with native adapter shape {(nc, nl)}")
+            if not np.isfinite(values).all() or np.any(values < 0.0):
+                fail(f"{case}: {name} must be finite and nonnegative")
+            cfc_values[name] = {"shape": list(values.shape), "min_vmr": float(values.min()),
+                                "max_vmr": float(values.max()),
+                                "sha256_f64_fortran": hashlib.sha256(values.tobytes(order="F")).hexdigest()}
+            raw_values = raw.get(raw_fields[name])
+            if raw_values is not None:
+                if raw_values.shape != (raw_nl,):
+                    fail(f"{case}: raw {name} has unexpected shape")
+                test_column_replay.assert_close(values[0, :raw_nl], raw_values,
+                                                f"{case}: {magic} {name} equals native wrapper capture",
+                                                rtol=0.0, atol=0.0)
+            elif magic in {"RRTMGP_REPLAY_V8", "RRTMGP_REPLAY_V10"}:
+                fail(f"{case}: raw native capture lacks {name} with {raw_nl} layers")
+            if expected_ghg in (0, 1):
+                expected = np.full(values.shape, STATIC_CFC[name], dtype=np.float64)
+                test_column_replay.assert_close(values, expected,
+                                                f"{case}: ideal-run CAM-reader fallback {name}",
+                                                rtol=2.e-7, atol=1.e-18)
     production = read_result(result_path)
     if production["phase"] != "LW" or production["nc"] != nc or production["nl"] != nl:
         fail(f"{case}: production result dimensions disagree with V8 input")
@@ -159,56 +181,74 @@ def validate_lw_capture(case: Path, phase: str, call: int, reference: Path,
     if not replay.get("passed"):
         fail(f"{case}: V8 LW reference replay failed: {replay.get('failed_sections')}")
 
-    # Same captured atmosphere/optics/seeds; only the four CFC VMR arrays are
-    # zeroed for this independent-reference counterfactual.
-    zero_records = {name: np.array(value, copy=True) for name, value in records.items()}
-    for name in CFC_NAMES:
-        zero_records[name][:] = 0.0
-    zero_input = capture / "lw.cfc-zero.input"
-    render_input(zero_input, (input_phase, nc, nl, overlap, seed, iceflag), zero_records)
-    # Ensure the exact serialized variant is still valid under the V8 reader.
-    zero_phase, zero_nc, zero_nl, _, _, _, reread = test_column_replay.read_input(zero_input)
-    if (zero_phase, zero_nc, zero_nl) != ("LW", nc, nl):
-        fail(f"{case}: malformed CFC-zero V8 variant")
-    for name in CFC_NAMES:
-        if np.any(reread[name] != 0.0):
-            fail(f"{case}: CFC-zero variant retained nonzero {name}")
-    zero_result = capture / "lw.cfc-zero.result"
-    invoke_reference(reference, zero_input, zero_result, case)
-    zero_sections = read_result(zero_result)["sections"]
-    # Compare two reference-engine runs for CFC attribution. The production
-    # REAL32 result is checked separately above and must not add roundoff to
-    # the gas-off delta.
-    actual_sections = reference_result["sections"]
-    gas_diff = float(np.max(np.abs(actual_sections["GAS_TAU_RAW"] - zero_sections["GAS_TAU_RAW"])))
-    if gas_diff <= 0.0:
-        fail(f"{case}: captured CFC VMRs produce no GAS_TAU_RAW difference against zero-CFC replay")
-    response = {}
-    for name in ("UP", "DN", "HR"):
-        if name not in zero_sections or name not in actual_sections:
-            fail(f"{case}: missing {name} section in CFC attribution result")
-        response[name] = float(np.max(np.abs(actual_sections[name] - zero_sections[name])))
-    if max(response.values()) <= 0.0:
-        fail(f"{case}: CFC VMRs changed GAS_TAU_RAW but no LW flux/heating output")
+    # For legacy schemas, zero the four captured arrays. V12/V13 use an
+    # explicit presence bit: remove the CFC records and set it to zero while
+    # retaining VMR_N2 and every other section byte-for-byte in value.
+    zero_counterfactual = {"applicable": False, "reason": "trace-gas profiles are absent"}
+    if trace_present:
+        zero_records = {name: np.array(value, copy=True) for name, value in records.items()}
+        for name in CFC_NAMES:
+            if magic in N2_MAGICS:
+                del zero_records[name]
+            else:
+                zero_records[name][:] = 0.0
+        if magic in N2_MAGICS:
+            zero_records["TRACE_GASES_PRESENT"][:] = 0.0
+        zero_input = capture / "lw.cfc-zero.input"
+        render_input(zero_input, (input_phase, nc, nl, overlap, seed, iceflag), zero_records, magic=magic)
+        # Ensure the exact serialized variant is still valid under the same
+        # schema; no conversion to an older replay format is allowed.
+        zero_phase, zero_nc, zero_nl, _, _, _, reread = test_column_replay.read_input(zero_input)
+        if (zero_phase, zero_nc, zero_nl) != ("LW", nc, nl):
+            fail(f"{case}: malformed {magic} zero-CFC variant")
+        if magic in N2_MAGICS:
+            if float(reread["TRACE_GASES_PRESENT"].item()) != 0.0 or any(name in reread for name in CFC_NAMES):
+                fail(f"{case}: V12/V13 zero-CFC variant must preserve N2 and omit all CFC records")
+            if not np.array_equal(reread["VMR_N2"], records["VMR_N2"]):
+                fail(f"{case}: V12/V13 zero-CFC variant changed the N2 profile")
+        else:
+            for name in CFC_NAMES:
+                if np.any(reread[name] != 0.0):
+                    fail(f"{case}: CFC-zero variant retained nonzero {name}")
+        zero_result = capture / "lw.cfc-zero.result"
+        invoke_reference(reference, zero_input, zero_result, case)
+        zero_sections = read_result(zero_result)["sections"]
+        # The production REAL32 result is independently replay-checked above;
+        # this delta compares the reference engine against itself.
+        actual_sections = reference_result["sections"]
+        gas_diff = float(np.max(np.abs(actual_sections["GAS_TAU_RAW"] - zero_sections["GAS_TAU_RAW"])))
+        if gas_diff <= 0.0:
+            fail(f"{case}: captured CFC VMRs produce no GAS_TAU_RAW difference against zero-CFC replay")
+        response = {}
+        for name in ("UP", "DN", "HR"):
+            if name not in zero_sections or name not in actual_sections:
+                fail(f"{case}: missing {name} section in CFC attribution result")
+            response[name] = float(np.max(np.abs(actual_sections[name] - zero_sections[name])))
+        if max(response.values()) <= 0.0:
+            fail(f"{case}: CFC VMRs changed GAS_TAU_RAW but no LW flux/heating output")
+        zero_counterfactual = {"applicable": True, "reference_only": True,
+            "gas_tau_raw_max_abs_difference": gas_diff,
+            "flux_heating_max_abs_difference": response,
+            "input_sha256": sha256(zero_input), "result_sha256": sha256(zero_result)}
     return {"phase": phase, "capture_call": call, "header": {"nc": nc, "nl": nl,
             "overlap": overlap, "seed": seed, "iceflag": iceflag},
+            "replay_magic": magic, "n2_profile": n2_report,
+            "trace_gases_present": trace_present,
             "cfc_vmr_records": cfc_values, "native_raw_cfc_equality": "PASS_EXACT",
             "raw_column_i_j": [raw_i, raw_j], "native_raw_layers": raw_nl,
             "ghg_input_setting": expected_ghg,
             "cfc_source_assessment": {
-                "kind": "ideal.exe initialization fallback",
+                "kind": ("ideal.exe initialization fallback" if trace_present else "trace gases absent by explicit V12/V13 flag"),
                 "cam_reader_loaded_file": False,
-                "explanation": ("physics_init skips read_CAMgases(READtrFILE=true) for ideal runs; "
-                                "these captured values are fallback constants, not evidence that "
-                                "the CAM tracer table was consumed"),
-                "captured_cfc11_cfc12_cfc22_ccl4_are_fallback_constants": True,
+                "explanation": (("physics_init skips read_CAMgases(READtrFILE=true) for ideal runs; "
+                                 "these captured values are fallback constants, not evidence that "
+                                 "the CAM tracer table was consumed") if trace_present else
+                                "TRACE_GASES_PRESENT=0 and the V12/V13 format omits the CFC records"),
+                "captured_cfc11_cfc12_cfc22_ccl4_are_fallback_constants": trace_present,
             },
             "reference_replay": {"status": "PASS", "sections_compared": replay["sections_compared"],
                                  "max_differences": replay["max_differences"]},
-            "zero_cfc_counterfactual": {"reference_only": True,
-                "gas_tau_raw_max_abs_difference": gas_diff,
-                "flux_heating_max_abs_difference": response,
-                "input_sha256": sha256(zero_input), "result_sha256": sha256(zero_result)},
+            "zero_cfc_counterfactual": zero_counterfactual,
             "files": {"input_sha256": sha256(input_path), "production_result_sha256": sha256(result_path),
                       "reference_result_sha256": sha256(reference_path),
                       "raw_sha256": sha256(capture / "lw.raw")}}

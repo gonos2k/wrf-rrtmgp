@@ -6,7 +6,10 @@ and O2. This is a host-input correction: the pinned LW coefficient data already
 contain minor-absorber coefficients for these species. Previously, initialization
 filtered out these minor intervals because the adapter listed only six gases.
 
-LW initializes the coefficient model with ten available gases. SW retains its
+Current LW initializes the coefficient model with eleven available gases,
+including the fixed dry-background N2 described in
+[`LW_BACKGROUND_N2.md`](../../test/rrtmgp/LW_BACKGROUND_N2.md). Historical
+replay formats V1–V11 retain their original ten-gas closure. SW retains its
 six-gas configuration: the pinned SW file has no key/minor-absorber intervals
 using these four trace gases. Existing RRTMG4 calls retain their prior arguments.
 
@@ -30,15 +33,20 @@ path does not imply that missing trace gases are physically negligible.
 
 ## Replay and causal comparison
 
-New LW captures use V8 and require all four `VMR_CFC11`, `VMR_CFC12`,
-`VMR_CFC22` and `VMR_CCL4` sections. Raw native-column records permit checking
-the host-to-adapter mapping, and complete adapter arrays retain above-top values.
-V8 can also record the opt-in frozen-optics metadata/table identity. SW and
-older captures retain their formats. Old LW replay formats explicitly use zero
-for these four gases rather than reconstructing unrecorded CAM values.
+New LW captures use V12 (without CU records) or V13 (with CU records). Both
+record `VMR_N2` and an explicit `TRACE_GASES_PRESENT` flag. The four CFC sections
+are included only when all four host arrays are supplied; otherwise the flag is
+zero and the replay initializes those arrays to zero. Raw native-column records
+permit checking the host-to-adapter mapping, and complete adapter arrays retain
+above-top values. These new formats can also record the opt-in frozen-optics
+metadata/table identity. SW captures and historical V1–V11 LW captures retain
+their original formats and ten-gas closure. V8/V10 consume their recorded CFC
+profiles; older LW formats without CFC records use zero profiles rather than
+reconstructing unrecorded CAM values. All V1–V11 formats omit the new N2 input.
 
-The reference executable recomputes gas optics from recorded VMRs. A controlled
-comparison sets only these four arrays to zero in a copied V8 input, preserving
+The reference executable recomputes gas optics from recorded VMRs. The
+historical controlled comparison set only these four arrays to zero in a copied
+V8 input using the then-current ten-gas closure, preserving
 pressure, temperature, six common gases, surfaces, cloud/precipitation state,
 table, seed and dry mass. `GAS_TAU_RAW`, clear/all-sky LW flux and heating changes
 then measure the four-gas contribution within this RRTMGP configuration.

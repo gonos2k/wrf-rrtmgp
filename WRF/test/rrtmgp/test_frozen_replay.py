@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Compare V7 frozen-optics adapter captures with independent table replay."""
+"""Compare frozen-optics adapter captures with independent table replay."""
 from __future__ import annotations
 
 import argparse
@@ -56,9 +56,22 @@ def run_reference(reference: Path, data: Path, table: Path, source: Path,
 def verify_input(path: Path, expected_sha: str, phase: str) -> dict[str, np.ndarray]:
     parsed_phase, nc, nl, _overlap, _seed, _iceflag, records = read_input(path)
     if (parsed_phase, nc, nl) != (phase, 2, 3):
-        fail(f"{path}: expected two-column three-layer {phase} V7 input")
-    if path.read_text(encoding="ascii").splitlines()[0].strip() != "RRTMGP_REPLAY_V7":
-        fail(f"{path}: frozen capture did not use replay V7")
+        fail(f"{path}: expected two-column three-layer {phase} input")
+    version = path.read_text(encoding="ascii").splitlines()[0].strip()
+    expected_versions = {"RRTMGP_REPLAY_V12", "RRTMGP_REPLAY_V13"} if phase == "LW" else {"RRTMGP_REPLAY_V7"}
+    if version not in expected_versions:
+        fail(f"{path}: frozen {phase} capture used unexpected replay format {version}")
+    if phase == "LW":
+        n2 = records.get("VMR_N2")
+        flag = records.get("TRACE_GASES_PRESENT")
+        if n2 is None or n2.shape != (nc, nl) or not np.all(n2 == 0.7808):
+            fail(f"{path}: frozen LW capture lost the fixed dry-background N2 profile")
+        if flag is None or flag.shape != (1, 1) or flag.item() not in (0.0, 1.0):
+            fail(f"{path}: frozen LW capture has invalid CFC presence metadata")
+        cfc_names = {"VMR_CFC11", "VMR_CFC12", "VMR_CFC22", "VMR_CCL4"}
+        if (flag.item() == 1.0 and not cfc_names <= records.keys()) or \
+                (flag.item() == 0.0 and cfc_names & records.keys()):
+            fail(f"{path}: frozen LW CFC records disagree with TRACE_GASES_PRESENT")
     digest_values = records["FROZEN_TABLE_SHA256_BYTES"][:, 0]
     actual_sha = "".join(chr(int(x)) for x in digest_values)
     if actual_sha != expected_sha:
@@ -104,7 +117,7 @@ def verify_hash_mismatch_rejected(reference: Path, data: Path, table: Path,
     run = subprocess.run([str(reference), str(data), str(captured_input), str(work / "hash-mismatch.result")],
                          env=env, text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, check=False)
     if run.returncode == 0 or "SHA256 does not match input" not in run.stdout:
-        fail(f"reference did not reject table bytes with the wrong V7 hash: {run.stdout[-1200:]}")
+        fail(f"reference did not reject table bytes with the wrong recorded hash: {run.stdout[-1200:]}")
 
 
 def main() -> int:
@@ -141,7 +154,7 @@ def main() -> int:
                 source = capture / f"{phase.lower()}.input"
                 actual_path = capture / f"{phase.lower()}.result"
                 if not source.is_file() or not actual_path.is_file():
-                    fail(f"{case}: missing captured {phase} V7 input/result")
+                    fail(f"{case}: missing captured {phase} input/result")
                 records = verify_input(source, expected_sha, phase)
                 if hash_check_input is None:
                     hash_check_input = source

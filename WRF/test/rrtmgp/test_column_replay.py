@@ -208,7 +208,7 @@ def _exact_real_storage(actual: np.ndarray, expected: np.ndarray, label: str, pa
 def validate_cu_population_records(records: dict[str, np.ndarray], nc: int, nl: int,
                                    phase: str, version: str, path: Path) -> None:
     """Validate adapter-side CU policy/profiles and V11 raw optical decomposition."""
-    if (version, phase) not in {("RRTMGP_REPLAY_V10", "LW"), ("RRTMGP_REPLAY_V11", "SW")}:
+    if (version, phase) not in {("RRTMGP_REPLAY_V10", "LW"), ("RRTMGP_REPLAY_V11", "SW"), ("RRTMGP_REPLAY_V13", "LW")}:
         fail(f"{path}: CU replay version/phase mismatch")
     scalars = ("CU_POPULATION_POLICY", "CU_RADIUS_POLICY", "CU_OCCURRENCE_POLICY")
     for name in scalars:
@@ -228,7 +228,7 @@ def validate_cu_population_records(records: dict[str, np.ndarray], nc: int, nl: 
     for name in ("CU_REL", "CU_REI"):
         if np.any(records[name] <= 0.0):
             fail(f"{path}: {version} {name} must be positive finite radii")
-    if version == "RRTMGP_REPLAY_V11":
+    if version in {"RRTMGP_REPLAY_V11", "RRTMGP_REPLAY_V13"} and phase == "SW":
         components = ("RAW_CLOUD_TAU", "RAW_NATIVE_CLOUD_TAU", "RAW_CU_CLOUD_TAU")
         for name in components:
             value = records.get(name)
@@ -241,7 +241,7 @@ def validate_cu_population_records(records: dict[str, np.ndarray], nc: int, nl: 
         _exact_real_storage(records["RAW_CLOUD_TAU"], combined,
                             "RAW_CLOUD_TAU=native+CU", path)
     elif {"RAW_NATIVE_CLOUD_TAU", "RAW_CU_CLOUD_TAU"} & records.keys():
-        fail(f"{path}: raw native/CU optical decomposition is only valid in V11")
+        fail(f"{path}: raw native/CU optical decomposition is only valid in V11 SW")
 
 
 def validate_cu_population_raw(raw: dict[str, np.ndarray], adapter: dict[str, np.ndarray],
@@ -310,7 +310,7 @@ def validate_cu_population_raw(raw: dict[str, np.ndarray], adapter: dict[str, np
 
 def read_input(path: Path) -> tuple[str, int, int, int, int, int, dict[str, np.ndarray]]:
     lines = path.read_text(encoding="ascii").splitlines()
-    if len(lines) < 2 or lines[0].strip() not in {"RRTMGP_REPLAY_V1", "RRTMGP_REPLAY_V2", "RRTMGP_REPLAY_V3", "RRTMGP_REPLAY_V4", "RRTMGP_REPLAY_V5", "RRTMGP_REPLAY_V6", "RRTMGP_REPLAY_V7", "RRTMGP_REPLAY_V8", "RRTMGP_REPLAY_V9", "RRTMGP_REPLAY_V10", "RRTMGP_REPLAY_V11"}:
+    if len(lines) < 2 or lines[0].strip() not in {"RRTMGP_REPLAY_V1", "RRTMGP_REPLAY_V2", "RRTMGP_REPLAY_V3", "RRTMGP_REPLAY_V4", "RRTMGP_REPLAY_V5", "RRTMGP_REPLAY_V6", "RRTMGP_REPLAY_V7", "RRTMGP_REPLAY_V8", "RRTMGP_REPLAY_V9", "RRTMGP_REPLAY_V10", "RRTMGP_REPLAY_V11", "RRTMGP_REPLAY_V12", "RRTMGP_REPLAY_V13"}:
         fail(f"{path}: unsupported replay format version")
     header = lines[1].split()
     if len(header) != 6:
@@ -345,7 +345,7 @@ def read_input(path: Path) -> tuple[str, int, int, int, int, int, dict[str, np.n
         rain = records.get("RWP")
         if rain is None or rain.shape != (nc, nl) or np.any(rain < 0):
             fail(f"{path}: V4 requires nonnegative RWP matching column layers")
-    if lines[0].strip() in {"RRTMGP_REPLAY_V5", "RRTMGP_REPLAY_V6", "RRTMGP_REPLAY_V7", "RRTMGP_REPLAY_V8", "RRTMGP_REPLAY_V9", "RRTMGP_REPLAY_V10", "RRTMGP_REPLAY_V11"}:
+    if lines[0].strip() in {"RRTMGP_REPLAY_V5", "RRTMGP_REPLAY_V6", "RRTMGP_REPLAY_V7", "RRTMGP_REPLAY_V8", "RRTMGP_REPLAY_V9", "RRTMGP_REPLAY_V10", "RRTMGP_REPLAY_V11", "RRTMGP_REPLAY_V12", "RRTMGP_REPLAY_V13"}:
         policy = records.get("PRECIPITATION_OPTICS")
         rain = records.get("RWP")
         if (policy is None) != (rain is None):
@@ -360,16 +360,23 @@ def read_input(path: Path) -> tuple[str, int, int, int, int, int, dict[str, np.n
             fail(f"{path}: V6 requires NATIVE_DRY_LAYER_MASS_KG_M2 shape (nc, nnative), 1 <= nnative <= nl")
         if not np.isfinite(native).all() or np.any(native <= 0):
             fail(f"{path}: V6 native dry layer mass must be finite and positive")
-    if lines[0].strip() in {"RRTMGP_REPLAY_V5", "RRTMGP_REPLAY_V6", "RRTMGP_REPLAY_V7", "RRTMGP_REPLAY_V8", "RRTMGP_REPLAY_V9", "RRTMGP_REPLAY_V10", "RRTMGP_REPLAY_V11"}:
+    if lines[0].strip() in {"RRTMGP_REPLAY_V5", "RRTMGP_REPLAY_V6", "RRTMGP_REPLAY_V7", "RRTMGP_REPLAY_V8", "RRTMGP_REPLAY_V9", "RRTMGP_REPLAY_V10", "RRTMGP_REPLAY_V11", "RRTMGP_REPLAY_V12", "RRTMGP_REPLAY_V13"}:
         for name in ("GRAVITY", "CP_DRY", "MOL_WEIGHT_DRY"):
             value = records.get(name)
             if value is None or value.shape != (1, 1) or not np.isfinite(value).all() or value.item() <= 0:
                 fail(f"{path}: V5-V9 requires positive finite scalar {name}")
     version = lines[0].strip()
+    if version not in {"RRTMGP_REPLAY_V12", "RRTMGP_REPLAY_V13"} and \
+            {"VMR_N2", "TRACE_GASES_PRESENT"} & records.keys():
+        fail(f"{path}: N2 background fields require RRTMGP_REPLAY_V12/V13")
     cu_input_names = {"CU_POPULATION_POLICY", "CU_RADIUS_POLICY", "CU_OCCURRENCE_POLICY",
                       "CU_LWP", "CU_IWP", "CU_REL", "CU_REI"}
-    if version not in {"RRTMGP_REPLAY_V10", "RRTMGP_REPLAY_V11"} and cu_input_names & records.keys():
-        fail(f"{path}: CU population records require RRTMGP_REPLAY_V10/V11")
+    if version not in {"RRTMGP_REPLAY_V10", "RRTMGP_REPLAY_V11", "RRTMGP_REPLAY_V13"} and cu_input_names & records.keys():
+        fail(f"{path}: CU population records require RRTMGP_REPLAY_V10/V11/V13")
+    if version == "RRTMGP_REPLAY_V12" and cu_input_names & records.keys():
+        fail(f"{path}: V12 must not contain CU population records")
+    if version == "RRTMGP_REPLAY_V13" and not cu_input_names <= records.keys():
+        fail(f"{path}: V13 requires the full CU population record set")
     frozen_names = {"GWP", "HWP", "LAMBDA_G", "LAMBDA_H", "FROZEN_MODE",
                     "FROZEN_OCCURRENCE", "FROZEN_TABLE_SHA256_BYTES"}
     trace_gas_names = {"VMR_CFC11", "VMR_CFC12", "VMR_CFC22", "VMR_CCL4"}
@@ -378,13 +385,33 @@ def read_input(path: Path) -> tuple[str, int, int, int, int, int, dict[str, np.n
             fail(f"{path}: V8/V10 are only valid for LW")
         missing = trace_gas_names - records.keys()
         if missing:
-            fail(f"{path}: V8 missing required LW gas records: {', '.join(sorted(missing))}")
+            fail(f"{path}: V8/V10 missing required LW gas records: {', '.join(sorted(missing))}")
         for name in trace_gas_names:
             values = records[name]
             if values.shape != (nc, nl) or not np.isfinite(values).all() or np.any(values < 0.0):
-                fail(f"{path}: V8 {name} must be finite/nonnegative with shape (nc,nl)")
+                fail(f"{path}: V8/V10 {name} must be finite/nonnegative with shape (nc,nl)")
+    elif version in {"RRTMGP_REPLAY_V12", "RRTMGP_REPLAY_V13"}:
+        if phase != "LW":
+            fail(f"{path}: V12/V13 are only valid for LW")
+        n2 = records.get("VMR_N2")
+        if n2 is None or n2.shape != (nc, nl) or not np.isfinite(n2).all() or \
+                np.any(n2 < 0.0) or np.any(n2 > 1.0):
+            fail(f"{path}: V12/V13 VMR_N2 must be finite in [0,1] with shape (nc,nl)")
+        flag = records.get("TRACE_GASES_PRESENT")
+        if flag is None or flag.shape != (1, 1) or not np.isfinite(flag).all() or flag.item() not in (0.0, 1.0):
+            fail(f"{path}: V12/V13 TRACE_GASES_PRESENT must be scalar zero or one")
+        if flag.item() == 1.0:
+            missing = trace_gas_names - records.keys()
+            if missing:
+                fail(f"{path}: V12/V13 trace-gas flag requires all CFC records: {', '.join(sorted(missing))}")
+            for name in trace_gas_names:
+                values = records[name]
+                if values.shape != (nc, nl) or not np.isfinite(values).all() or np.any(values < 0.0):
+                    fail(f"{path}: V12/V13 {name} must be finite/nonnegative with shape (nc,nl)")
+        elif trace_gas_names & records.keys():
+            fail(f"{path}: V12/V13 CFC records conflict with TRACE_GASES_PRESENT=0")
     elif trace_gas_names & records.keys():
-        fail(f"{path}: LW trace-gas VMR records require RRTMGP_REPLAY_V8")
+        fail(f"{path}: LW trace-gas VMR records require V8/V10/V12/V13")
     if version == "RRTMGP_REPLAY_V7":
         required = frozen_names
         missing = required - records.keys()
@@ -414,7 +441,7 @@ def read_input(path: Path) -> tuple[str, int, int, int, int, int, dict[str, np.n
         if native is not None and (native.shape[0] != nc or not 1 <= native.shape[1] <= nl
                                    or not np.isfinite(native).all() or np.any(native <= 0.0)):
             fail(f"{path}: V7 optional native dry mass has invalid shape or values")
-    elif version in {"RRTMGP_REPLAY_V8", "RRTMGP_REPLAY_V10"}:
+    elif version in {"RRTMGP_REPLAY_V8", "RRTMGP_REPLAY_V10", "RRTMGP_REPLAY_V12", "RRTMGP_REPLAY_V13"}:
         present_frozen = frozen_names & records.keys()
         if present_frozen and present_frozen != frozen_names:
             fail(f"{path}: V8 frozen-optics metadata must be complete when present")
@@ -441,7 +468,7 @@ def read_input(path: Path) -> tuple[str, int, int, int, int, int, dict[str, np.n
             if any(char not in "0123456789abcdef" for char in digest):
                 fail(f"{path}: V8 SHA bytes are not lowercase hexadecimal")
     elif frozen_names & records.keys():
-        if version not in {"RRTMGP_REPLAY_V9", "RRTMGP_REPLAY_V10", "RRTMGP_REPLAY_V11"}:
+        if version not in {"RRTMGP_REPLAY_V9", "RRTMGP_REPLAY_V10", "RRTMGP_REPLAY_V11", "RRTMGP_REPLAY_V12", "RRTMGP_REPLAY_V13"}:
             fail(f"{path}: frozen-optics records require RRTMGP_REPLAY_V7 through V11")
     if version in {"RRTMGP_REPLAY_V9", "RRTMGP_REPLAY_V11"}:
         if phase != "SW":
@@ -511,13 +538,13 @@ def read_input(path: Path) -> tuple[str, int, int, int, int, int, dict[str, np.n
         if not present_frozen and (np.any(records["RAW_GRAUPEL_TAU_EXT"] != 0.0) or
                                    np.any(records["RAW_HAIL_TAU_EXT"] != 0.0)):
             fail(f"{path}: V9 frozen extinction must be zero without frozen metadata")
-    if version in {"RRTMGP_REPLAY_V10", "RRTMGP_REPLAY_V11"}:
+    if version in {"RRTMGP_REPLAY_V10", "RRTMGP_REPLAY_V11", "RRTMGP_REPLAY_V13"}:
         validate_cu_population_records(records, nc, nl, phase, version, path)
     for name, values in records.items():
         if name in {"ICE_ROUGHNESS", "SW_BAND_PARTITION", "PRECIPITATION_OPTICS",
                     "GRAVITY", "CP_DRY", "MOL_WEIGHT_DRY", "SOLAR", "FROZEN_MODE",
                     "FROZEN_OCCURRENCE", "FROZEN_TABLE_SHA256_BYTES", "SW_DIRECT_PREDELTA_POLICY",
-                    "CU_POPULATION_POLICY", "CU_RADIUS_POLICY", "CU_OCCURRENCE_POLICY",
+                    "CU_POPULATION_POLICY", "CU_RADIUS_POLICY", "CU_OCCURRENCE_POLICY", "TRACE_GASES_PRESENT",
                     "BAND_LIMS_GPOINT", "BAND_LIMS_WAVENUMBER", "VISIBLE_WEIGHT"}:
             continue
         if values.shape[0] != nc:

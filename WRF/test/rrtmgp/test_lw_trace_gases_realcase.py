@@ -30,6 +30,8 @@ DATA_DIR = test_surface_scm.DATA_DIR
 STATIC_CFC = {"VMR_CFC11": 0.251e-9, "VMR_CFC12": 0.538e-9,
               "VMR_CFC22": 0.169e-9, "VMR_CCL4": 0.093e-9}
 CFC_NAMES = tuple(STATIC_CFC)
+N2_MAGICS = {"RRTMGP_REPLAY_V12", "RRTMGP_REPLAY_V13"}
+TRACE_GAS_MAGICS = {"RRTMGP_REPLAY_V8", "RRTMGP_REPLAY_V10", *N2_MAGICS}
 SUCCESS = "SUCCESS COMPLETE WRF"
 
 
@@ -233,8 +235,16 @@ def validate_capture(case: Path, reference: Path, table: Path, log: str) -> dict
     annual_cfc12 = logged_annual_cam_value(log, "CFC12")
     wrapper_cfc11, wrapper_cfc12, wrapper_line = logged_wrapper_cfc_values(log)
     phase, nc, nl, overlap, seed, iceflag, records = test_column_replay.read_input(input_path)
-    if phase != "LW" or nc != 1 or input_path.read_text().splitlines()[0].strip() != "RRTMGP_REPLAY_V8":
-        fail("expected a single-column LW V8 capture")
+    magic = input_path.read_text(encoding="ascii").splitlines()[0].strip()
+    if phase != "LW" or nc != 1 or magic not in TRACE_GAS_MAGICS:
+        fail(f"expected a single-column LW trace-gas capture, got {magic}")
+    if magic in N2_MAGICS:
+        n2 = records.get("VMR_N2")
+        trace_flag = records.get("TRACE_GASES_PRESENT")
+        if n2 is None or n2.shape != (nc, nl) or not np.isfinite(n2).all() or np.any((n2 < 0.0) | (n2 > 1.0)):
+            fail(f"{magic} requires finite VMR_N2 with shape {(nc, nl)} and values in [0,1]")
+        if trace_flag is None or trace_flag.shape != (1, 1) or not np.isfinite(trace_flag).all() or float(trace_flag.item()) != 1.0:
+            fail("real-data CFC test requires TRACE_GASES_PRESENT=1")
     if decode_frozen_sha(records) != sha256(table):
         fail("captured frozen-optics table hash does not match requested table")
     raw_phase, i, j, raw = test_column_replay.read_raw(raw_path)
@@ -279,15 +289,26 @@ def validate_capture(case: Path, reference: Path, table: Path, log: str) -> dict
     reference_result = read_result(ref_out)
     replay = compare(production, reference_result)
     if not replay.get("passed"):
-        fail(f"independent V8 reference replay failed: {replay.get('failed_sections')}")
+        fail(f"independent {magic} reference replay failed: {replay.get('failed_sections')}")
 
     zero_records = {name: np.array(value, copy=True) for name, value in records.items()}
-    for name in CFC_NAMES:
-        zero_records[name][:] = 0.0
+    if magic in N2_MAGICS:
+        for name in CFC_NAMES:
+            del zero_records[name]
+        zero_records["TRACE_GASES_PRESENT"][:] = 0.0
+    else:
+        for name in CFC_NAMES:
+            zero_records[name][:] = 0.0
     zero_input = capture / "lw.cfc-zero.input"
     # Re-serialize through the test helper, preserving all unchanged V8 fields.
     from test_lw_trace_gases_scm import render_input
-    render_input(zero_input, (phase, nc, nl, overlap, seed, iceflag), zero_records)
+    render_input(zero_input, (phase, nc, nl, overlap, seed, iceflag), zero_records, magic=magic)
+    _, _, _, _, _, _, zero_reread = test_column_replay.read_input(zero_input)
+    if magic in N2_MAGICS:
+        if float(zero_reread["TRACE_GASES_PRESENT"].item()) != 0.0 or any(name in zero_reread for name in CFC_NAMES):
+            fail("V12/V13 zero-CFC replay must clear the presence flag and omit all CFC records")
+        if not np.array_equal(zero_reread["VMR_N2"], records["VMR_N2"]):
+            fail("V12/V13 zero-CFC replay changed the captured N2 profile")
     zero_result = capture / "lw.cfc-zero.result"
     invoke_reference(reference, zero_input, zero_result, case, table)
     zero_sections = read_result(zero_result)["sections"]
@@ -300,7 +321,15 @@ def validate_capture(case: Path, reference: Path, table: Path, log: str) -> dict
                   for name in ("UP", "DN", "HR")}
     if gas_delta <= 0.0 or max(flux_delta.values()) <= 0.0:
         fail("zero-CFC reference variant did not change gas optical depth and LW outputs")
-    return {"raw_grid_i_j": [i, j], "input_header": {"nc": nc, "nl": nl,
+    return {"raw_grid_i_j": [i, j], "input_magic": magic,
+            "n2_profile": ({"shape": list(records["VMR_N2"].shape),
+                            "min_vmr": float(records["VMR_N2"].min()),
+                            "max_vmr": float(records["VMR_N2"].max()),
+                            "preserved_in_zero_cfc_variant": True}
+                           if magic in N2_MAGICS else None),
+            "trace_gases_present": (int(records["TRACE_GASES_PRESENT"].item())
+                                    if magic in N2_MAGICS else True),
+            "input_header": {"nc": nc, "nl": nl,
             "overlap": overlap, "seed": seed, "iceflag": iceflag},
             "annual_initialization_cam_log_values_vmr": {"CFC11": annual_cfc11, "CFC12": annual_cfc12,
                 "role": "CAM file-load/initial interpolation evidence only; time differs from LW call"},
