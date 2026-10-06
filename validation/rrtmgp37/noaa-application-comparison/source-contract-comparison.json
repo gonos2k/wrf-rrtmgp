@@ -1,0 +1,152 @@
+{
+  "schema": "udm37-current-vs-ccpp-source-audit-v4",
+  "scope": "Read-only source comparison; no compile, model, solver, or numerical result validation.",
+  "source_selection": {
+    "latest_production_code_candidate": {
+      "path": "build/udm-rain-only-slopes-pr-work",
+      "head": "ba8c82706034e0576101e6a77f8952478c7b1b2f",
+      "relevant_module_identical_at_pr112_head": "79a58e27cddb8d737d81c925c299a868a86596d6",
+      "relevant_module_sha256": "1852452555fbe667a0a95d59242bcd9c3833f2877fc51f882d5d3d929a058f58",
+      "description": "Latest isolated production-code candidate. Relevant module_ra_rrtmgp.F bytes at the PR112 evidence-only head are identical. Not merged main."
+    },
+    "main_at_audit": {
+      "head": "1a2cd8d11993a5fb829a5103c0775ff69f820244",
+      "file": "WRF/phys/module_ra_rrtmgp.F",
+      "sha256": "8bc355812ce08b221a6cee36b484285aa4350445237f4b537e42b72242f6a72e",
+      "bytes": 25734
+    },
+    "ccpp_reference": {
+      "public_chain": {
+        "hafs_branch": "production/hafs.v2.2",
+        "hafs_commit": "6ac5af973faf2d9bb72208c4292bb8362f1308d4",
+        "forecast_gitlink": "9ad9fab316e87dbb547a924f073f8a2221717fda",
+        "ufs_atmos_commit": "8f3a2ecd5b0b6ecaf6331356fb6fa3aed917b229",
+        "ccpp_physics_gitlink": "9c64d49ba93e06ba2e7e0e6f63d8edd707ac1c51",
+        "rte_rrtmgp_gitlink": "763cc15f7a6d2d4f4893f83460cdd81209b6fce7"
+      },
+      "source_files": [
+        {
+          "remote_path": "physics/Radiation/RRTMGP/rrtmgp_lw_main.F90",
+          "local_copy": "build/udm37-current-vs-ccpp-source-audit-v4/public-ccpp/rrtmgp_lw_main.F90",
+          "git_blob_sha1": "7f86c6ca3abdfbbd764c0b4a727385a83c5b169b",
+          "sha256": "59a0e878259385299a70eba3ddf798e3e99e1f9b93cf9c4977301cdb50ba90b1",
+          "bytes": 33412
+        },
+        {
+          "remote_path": "physics/Radiation/RRTMGP/rrtmgp_sw_main.F90",
+          "local_copy": "build/udm37-current-vs-ccpp-source-audit-v4/public-ccpp/rrtmgp_sw_main.F90",
+          "git_blob_sha1": "4ce051fe15b6d3e91a6ad5ab15cc58ac99a2ef3c",
+          "sha256": "23e08057b4c61bc95ffcf7fc7cef9a1df0e4cc1b753b7775961a9cbe6332bbb8",
+          "bytes": 39401
+        },
+        {
+          "remote_path": "physics/Interstitials/UFS_SCM_NEPTUNE/GFS_rrtmgp_setup.F90",
+          "local_copy": "build/udm37-current-vs-ccpp-source-audit-v4/public-ccpp/GFS_rrtmgp_setup.F90",
+          "git_blob_sha1": "df3d69bdd14cf4d65ece197d7c45c453edbd979c",
+          "sha256": "0c6f3b612ad2719bd983ae96e4d39784df914bf869dbb5f271c30fdd478e2780",
+          "bytes": 9288
+        },
+        {
+          "remote_path": "physics/Interstitials/UFS_SCM_NEPTUNE/GFS_rrtmgp_pre.F90",
+          "local_copy": "build/udm37-current-vs-ccpp-source-audit-v4/public-ccpp/GFS_rrtmgp_pre.F90",
+          "git_blob_sha1": "9745f4c980c0ac8c6228de8b73708cc8cb104321",
+          "sha256": "743bc56b03ca4791dc92ffa0c9e488ad9a6e5ad14910b53d7b96045f0a75cd41",
+          "bytes": 17521
+        },
+        {
+          "remote_path": "physics/Interstitials/UFS_SCM_NEPTUNE/GFS_rrtmgp_cloud_mp.F90",
+          "local_copy": "build/udm37-current-vs-ccpp-source-audit-v4/public-ccpp/GFS_rrtmgp_cloud_mp.F90",
+          "git_blob_sha1": "a335f56a44aaee241269901308ad7f4286f591ef",
+          "sha256": "2d44b2f0eadd5c4f35e6a82085549699701bf9e87cb38744f60d55b1f412c5f0",
+          "bytes": 45811
+        }
+      ],
+      "classification": "Pinned public HAFS/UFS CCPP source chain. It is not an authenticated release tag or proof of a particular deployed binary.",
+      "tree_manifest": {
+        "path": "/tmp/hafs-ccpp-tree-v22.json",
+        "sha256": "703724191082563b9f4be259d8e711837dc869b37e53542b32444920af09374e",
+        "root_tree_commit": "9c64d49ba93e06ba2e7e0e6f63d8edd707ac1c51"
+      }
+    }
+  },
+  "files": [
+    {
+      "path": "build/udm-rain-only-slopes-pr-work/WRF/phys/module_ra_rrtmgp.F",
+      "sha256": "1852452555fbe667a0a95d59242bcd9c3833f2877fc51f882d5d3d929a058f58",
+      "bytes": 74962
+    },
+    {
+      "path": "build/udm-rain-only-slopes-pr-work/WRF/phys/module_ra_rrtmgp_trace.F",
+      "sha256": "c08a1cae7a93f85a08ed59042aa1b98dc1ef6b42d33c6f344b93a9eca9d652e9",
+      "bytes": 41541
+    },
+    {
+      "path": "build/udm-rain-only-slopes-pr-work/WRF/phys/module_physics_init.F",
+      "sha256": "bc9cd3a7e3d908678b52d53aa8ef7d7ad760a8e57958e044e35dc560b1bc1375",
+      "bytes": 316145
+    },
+    {
+      "path": "build/udm-rain-only-slopes-pr-work/WRF/share/module_model_constants.F",
+      "sha256": "5b80377fecdc18a5f0ad38d3b6c15cfc86ad5d76701adbbbb08a08698d0f7062",
+      "bytes": 8280
+    },
+    {
+      "path": "build/udm37-current-vs-ccpp-source-audit-v4/public-ccpp/rrtmgp_lw_main.F90",
+      "sha256": "59a0e878259385299a70eba3ddf798e3e99e1f9b93cf9c4977301cdb50ba90b1",
+      "bytes": 33412
+    },
+    {
+      "path": "build/udm37-current-vs-ccpp-source-audit-v4/public-ccpp/rrtmgp_sw_main.F90",
+      "sha256": "23e08057b4c61bc95ffcf7fc7cef9a1df0e4cc1b753b7775961a9cbe6332bbb8",
+      "bytes": 39401
+    },
+    {
+      "path": "build/udm37-current-vs-ccpp-source-audit-v4/public-ccpp/GFS_rrtmgp_setup.F90",
+      "sha256": "0c6f3b612ad2719bd983ae96e4d39784df914bf869dbb5f271c30fdd478e2780",
+      "bytes": 9288
+    },
+    {
+      "path": "build/udm37-current-vs-ccpp-source-audit-v4/public-ccpp/GFS_rrtmgp_pre.F90",
+      "sha256": "743bc56b03ca4791dc92ffa0c9e488ad9a6e5ad14910b53d7b96045f0a75cd41",
+      "bytes": 17521
+    },
+    {
+      "path": "build/udm37-current-vs-ccpp-source-audit-v4/public-ccpp/GFS_rrtmgp_cloud_mp.F90",
+      "sha256": "2d44b2f0eadd5c4f35e6a82085549699701bf9e87cb38744f60d55b1f412c5f0",
+      "bytes": 45811
+    }
+  ],
+  "comparisons": [
+    {
+      "topic": "Gas roster and N2",
+      "candidate": "In the unmerged candidate, the six SW gases are H2O, CO2, O3, N2O, CH4, O2 (module_ra_rrtmgp.F:69,453-470). LW has those six plus CFC11, CFC12, CFC22, CCl4, and N2 (lines 70-75, 473-505). N2 is explicitly supplied as fixed dry-background VMR 0.7808. CFC profiles are optional but if supplied must be complete as a four-profile set.",
+      "ccpp": "The pinned public LW and SW wrapper interfaces accept/set only six VMR inputs (H2O, CO2, O3, N2O, CH4, O2): LW rrtmgp_lw_main.F90:82-85,119-128,291-301; SW rrtmgp_sw_main.F90:75-85,118-128,329-340. The public GFS mapper obtains its active gas-name list from configuration (GFS_rrtmgp_pre.F90:37-45) and recognizes H2O/CO2/O3/N2O/CH4/O2 plus CFC indices (lines 83-92); its gas VMR mapping shown at 349-358 supplies CO2/CH4/N2O/O2 plus separately derived water and ozone. These wrapper/mapper files do not supply N2 or CFC VMR arguments. Omission from these routines is not evidence that additional active gases are zero; that depends on active_gases_array and linked RRTMGP initialization.",
+      "main_delta": "Main's module has a single six-gas roster and no explicit N2/CFC treatment (module_ra_rrtmgp.F:34,71-89)."
+    },
+    {
+      "topic": "Dry column and constants",
+      "candidate": "The actual WRF host initialization passes gravity=g, cp_dry=cp, mol_weight_dry=mwdry*1.e-3 at module_physics_init.F:2440-2442 and 2559-2561. In the candidate's WRF/share/module_model_constants.F, g=9.81, cp=7*287/2=1004.5, and mwdry=28.966 g/mol (lines 17-20,34); thus the host passes 9.81 m s-2, 1004.5 J kg-1 K-1, and 0.028966 kg mol-1, overriding the adapter's linked-engine fallback defaults. gas_dry_column starts with get_col_dry pressure/VMR reconstruction then overwrites the native prefix using native dry mass [kg m-2] * Avogadro/(initialized molar mass [kg mol-1] * 10000) (module_ra_rrtmgp.F:583-594); LW and SW gas_optics receive col_dry explicitly. In contrast, the public CCPP wrappers pass pressure, temperature, and gas concentrations to gas_optics without col_dry or native dry mass (LW public pinned CCPP LW rrtmgp_lw_main.F90:324-332; SW rrtmgp_sw_main.F90:348-355). These wrapper lines do not establish what constants the linked RTE-RRTMGP build initializes internally, so no numeric constant comparison is claimed for that build.",
+      "ccpp": "Public CCPP wrapper calls pass layer/interface pressure and temperature plus gas_concs to gas_optics but no col_dry/native dry-mass argument (LW rrtmgp_lw_main.F90:324-332; SW rrtmgp_sw_main.F90:348-355). These wrapper files do not establish linked-engine constants or how dry columns are internally reconstructed; no numeric constant comparison with that engine is asserted.",
+      "main_delta": "The main WRF adapter calls gas_optics without explicit col_dry and has no WRF-native dry-mass override (main module lines 228-232)."
+    },
+    {
+      "topic": "LW source and angular treatment",
+      "candidate": "Both clear and all-sky calls invoke rte_lw(atmos,.FALSE.,source,emissivity,flux) without explicit lw_Ds or n_gauss_angles (module_ra_rrtmgp.F:815 and 900). Gas optics receives tlev and the WRF source object; source/temperature construction is in the wrapper. This source file therefore does not select the CCPP angle options explicitly.",
+      "ccpp": "The public CCPP LW wrapper computes lw_Ds using compute_optimal_angles for clear sky, passing n_gauss_angles if nGauss_angles>1 and otherwise lw_Ds (rrtmgp_lw_main.F90:495-513). All-sky calls pass n_gauss_angles=nGauss_angles (lines 547-587). This is an explicit configurable angular path unlike the candidate calls.",
+      "main_delta": "Main uses the same rte_lw call form with no explicit angle keyword (main module line 237 and all-sky call around 279)."
+    },
+    {
+      "topic": "SW delta scaling",
+      "candidate": "Without precipitation, the adapter delta-scales accumulated clouds before the all-sky solve (module_ra_rrtmgp.F:1261-1265). With precipitation, precipitation optics are produced as already delta-scaled and the cloud optics are delta-scaled once before snow is added (lines 1237-1254); the code comments state this convention. This differs from applying delta_scale to the combined cloud+precip object.",
+      "ccpp": "The public CCPP SW wrapper has its cloudy-column delta_scale() call commented out, then increments cloud optics into the accumulated all-sky object (rrtmgp_sw_main.F90:601-607). That cited wrapper block does not establish the full precipitation treatment, so the comparison is limited to the cloud delta-scale call shown there.",
+      "main_delta": "Main WRF already delta-scales clouds, and for the precipitation branch comments that precipitation is already delta-scaled and scales cloud once (main module lines 439-462)."
+    }
+  ],
+  "limitations": [
+    "Public source is pinned to the HAFS production/hafs.v2.2 -> forecast -> UFSATM -> CCPP and RTE-RRTMGP gitlink chain; it is not an authenticated release tag or deployed executable.",
+    "The candidate is an unmerged production-code frontier. Its module_ra_rrtmgp.F bytes are identical at PR112 evidence-only HEAD; main is separately identified and older.",
+    "The CCPP source inspected does not establish values for active gases it does not explicitly set. Do not infer omitted N2/CFC concentrations are zero without the specific active_gases_array and linked gas-concentration initialization.",
+    "The public wrappers do not pass native col_dry and do not reveal linked RTE-RRTMGP constant initialization; no numeric engine-constant equality/difference is claimed.",
+    "No accuracy or flux-equivalence conclusion is made. Gas inputs, dry-column construction, LW angular treatment and SW delta convention are source-level differences, not proof of any measured flux residual cause."
+  ]
+}
