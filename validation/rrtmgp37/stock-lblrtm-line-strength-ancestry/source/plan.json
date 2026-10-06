@@ -1,0 +1,165 @@
+{
+  "schema": "UDM37_LBLRTM_LEFT_CENSORED_ANCESTRY_SOURCE_PREPARATION_V2",
+  "status": "SOURCE_PREPARED_UNCOMPILED_UNRUN_REQUIRES_ROOT_AND_INDEPENDENT_STATIC_REVIEW",
+  "created_utc": "2026-10-06T04:47:45.896513+00:00",
+  "upstream_plan": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-left-censored-ancestry-plan-v1/plan.json",
+    "sha256": "6740e92d0be54a1e23b7452df951870887d60722f2b43b00a297eacdf1b10bd4",
+    "size_bytes": 5957
+  },
+  "base_candidate": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-candidate-decision-source-v3/oprop.candidate.f90",
+    "sha256": "a3b5732eca771b74fd373b2f8f67f515c9c05d09dc4c86c1fe77bd7d9bb1bd3c",
+    "size_bytes": 498873
+  },
+  "candidate": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-left-censored-ancestry-source-v2/oprop.ancestry.f90",
+    "sha256": "63f6383c698e2e63e9dcde3956f0f936364b38aeffeb23f41284cdfb8e19bf65",
+    "size_bytes": 504734
+  },
+  "patch": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-left-censored-ancestry-source-v2/ancestry.patch",
+    "sha256": "2730bd47785d6471cfb9717d237dec8cf971eea5f1c4973219854cc3b4329e9d",
+    "size_bytes": 7162
+  },
+  "allowlist": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-left-censored-ancestry-source-v2/allowlist.json",
+    "sha256": "83dd68dbde3637ecfb56dd65894c41d59ec02b584de18e1725487d2a43a2eae4",
+    "size_bytes": 18502
+  },
+  "report_basis": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-candidate-decision-reader-run-v2/report.json",
+    "sha256": "3244591f8545ba8f91f9c0f9ce3a8e8717ba7ec21487b13a0360e9d60ef83c51",
+    "size_bytes": 1370214
+  },
+  "identity_contract": [
+    "pass_id",
+    "block_id",
+    "slot_id",
+    "batch_id",
+    "buffer_i",
+    "encoded_MOL",
+    "isotope",
+    "original_IFLAG"
+  ],
+  "capture": {
+    "file": "UDM37_ANCESTRY",
+    "format": "formatted list-directed ASCII; tag plus15 INTEGER and26 REAL values",
+    "tag": "UDM37ANC1",
+    "integer_fields": [
+      "seq",
+      "phase",
+      "reason",
+      "layer",
+      "pass_id",
+      "block_id",
+      "slot_id",
+      "batch_id",
+      "buffer_i",
+      "outer_j",
+      "encoded_MOL",
+      "isotope",
+      "original_IFLAG",
+      "JRAD",
+      "ILNFLG"
+    ],
+    "real_fields": [
+      "VFT",
+      "VBOT",
+      "VTOP",
+      "input_VNU",
+      "adjusted_VNU",
+      "input_line_strength",
+      "prethermal_SUI",
+      "corrected_SUI",
+      "YI",
+      "GI",
+      "PAVP0",
+      "PAVP2",
+      "ALFL",
+      "ALFV",
+      "RECALF",
+      "ZETA",
+      "SP",
+      "SPPSP",
+      "EPP",
+      "BETACR",
+      "SCOR",
+      "XKT",
+      "TAVE",
+      "PAVE",
+      "TEMP0",
+      "P0"
+    ],
+    "compile_kind": "Same pinned GNUdbl INTEGER8/default REAL8 and explicit REAL*8; not compiled here. No binary record markers for this file.",
+    "predicate": "layer21 and exact8-field 72-ID allowlist at ANY VFT; groups left_censored_prefix69 and dominant_negative3. Groups are determined by identity in allowlist.json, not a new numeric event field.",
+    "observation_site": "Immediately after original SPPSP assignment, before original target reason9 observer, line_store and SPEAK/FREJ filters.",
+    "input_copy_site": "Diagnostic-only VNU/S copies at actual loop entry after RDLIN identity batch assignment, before MOL rewrite/center shifts; prethermal SUI copied immediately before existing temperature correction IF."
+  },
+  "static_checks": {
+    "allowlisted_identities": 72,
+    "unique8_field_ids": 72,
+    "selected_IFLAG_counts": {
+      "1": 70,
+      "0": 2
+    },
+    "common_pass_block_batch": null,
+    "old_source_lines_deleted_or_changed": 0,
+    "inverse_remove_diagnostic_insertions_recovers_base_section_exact": true,
+    "maximum_source_line_length": 111,
+    "full_original_candidate_source_preserved": true,
+    "pass_block_batch_groups": [
+      [
+        21,
+        484,
+        471
+      ],
+      [
+        21,
+        487,
+        474
+      ]
+    ]
+  },
+  "unchanged": [
+    "All existing target-window candidate event hooks and guards; original formatted candidate schema.",
+    "All physical assignments, expressions, filters, branch ordering, line order and rounding. New scalar copies read state without recalculating EXP or source terms.",
+    "Existing R3/PANEL observers and45 spectral output coverage; no negative clipping/tolerance change."
+  ],
+  "prospective_runtime_checks": [
+    "Fresh separately pinned build/input/executable receipt before any solver. Independent static review before a separately root-authorized one-run experiment.",
+    "Require actual terminal solver RC0 before saved-reader inspection. Missing/repeated/identity-mismatched antecedents remain unresolved or FAIL.",
+    "Join exact8-field allowlist at earlier VFT to selected-VFT phase3 actual entry and R3 term; compare SP/SPPSP/RECALF/adjustedVNU bits when captured decimal round trips support this.",
+    "Reason9 is computed prefilter state, not LNCOR survivor/physical acceptance. Two IFLAG0 identities can enter later filters; use later actual phase3 event, not logger alone, to prove consumption.",
+    "Preserve original target candidate/R3/PANEL and all45 spectral sample/panel equality; source-specific HTIME exception only.",
+    "Raw ancestry operand file is private; public summary must not distribute original coefficients/vectors."
+  ],
+  "risks": [
+    "Diagnostic I/O may fail or STOP; STATUS=NEW forbids overwrite. Actual diagnostic passivity needs runtime checks, not inferred solely from additive source diff.",
+    "The72 identities are tied to exact old run TAPE3/order/pass. Another input/source traversal can leave them unmatched; do not relax selector silently.",
+    "Logger omits early rejected lines that never reach reason9; absence is unresolved, not inferred survival or reconstructed strength.",
+    "Default-real-kind and list-directed decimal serialization must be verified against actual GNUdbl build flags before bitwise join claims.",
+    "Source code captures EPP after its existing sign/sentinel treatment and SUI before/after thermal correction; input_line_strength is loaded LNCOR array state, not original AER ASCII coefficient proof."
+  ],
+  "execution_counts": {
+    "build": 0,
+    "compiler": 0,
+    "solver": 0,
+    "model": 0,
+    "saved_raw_reader": 0,
+    "raw_scans": 0,
+    "derived_report_metadata_read": 2
+  },
+  "physical_acceptance": "NOT_EVALUATED_OR_CLOSED_NEGATIVE_OD_FAIL_RETAINED",
+  "preserved_source_v1": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-left-censored-ancestry-source-v1/plan.json",
+    "sha256": "c7fc7219364b5249971adb63daffe7377c8622135dc77018258da5c61801f3a1",
+    "size_bytes": 6366
+  },
+  "delta_from_v1": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-left-censored-ancestry-source-v2/v1-to-v2.patch",
+    "sha256": "0e220ff4cc4b7740f50dfc2a49eeaefcb6b60c027c63d95729cd4c16af4d3c2b",
+    "size_bytes": 1170
+  },
+  "scientific_question": "Observe earlier initial and thermal operands for the69 censored identities and the3 dominant negative R3 contributors in one future held case. This does not validate input coefficient physics or close negativeOD failure."
+}

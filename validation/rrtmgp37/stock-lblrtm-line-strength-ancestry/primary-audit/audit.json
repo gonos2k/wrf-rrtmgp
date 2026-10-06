@@ -1,0 +1,137 @@
+{
+  "status": "PRIMARY_SOURCE_AUDIT_COMPLETE_SCOPED",
+  "date": "2026-10-06",
+  "question": "What do the pinned AER LBLRTM/LNFL/line-file/MT_CKD sources establish about negative monochromatic total optical depth in this CO2 line-mixing diagnostic, and what independent reference would be defensible?",
+  "execution_policy": "Read-only source and documentation review. No compile, line-file generation, solver, raw-file scan, model, or contact with maintainers was performed for this audit.",
+  "local_evidence": {
+    "lblrtm_release_source": {
+      "path": "build/udm37-lblrtm-candidate-decision-run-v3/staging/source/LBLRTM/src/oprop.f90",
+      "sha256": "a3b5732eca771b74fd373b2f8f67f515c9c05d09dc4c86c1fe77bd7d9bb1bd3c",
+      "note": "Instrumented candidate source copy; not byte-identical to the local stock build source or proven byte-identical to upstream commit a85ac734."
+    },
+    "stock_lblrtm_oprop": {
+      "path": "build/udm37-lblrtm-stock-build-v1/attempt-1/source/LBLRTM/src/oprop.f90",
+      "sha256": "7cf594968ec331da3df75429262c1023c21fc461cbbae208253b0fa870685ef8"
+    },
+    "line_file_generation_plan": {
+      "path": "build/udm37-lblrtm-common-band-line-generation-v1/plan-v6.json",
+      "sha256": "7ee1eddd5d1c0970503d2dc7730c494f77bb2f919bf822795f6252d57248e6f6",
+      "line_input_sha256": "d0ec800cfaeaaa7ab7af7b8168f45b205e383272e147373df6d0eed2677f2bd3",
+      "tape3_sha256": "56bd55fa256ed3b3a672bd4bcd88034cd7086d4fbef2a1def9480199dab2b388",
+      "lnfl_tape5_sha256": "697357190795f9451e83afe232675dcfd4dc1ddf1c036f1f347c261d973ba970"
+    },
+    "lblrtm_line_only_tape5_sha256": "91a6e55bd31c420659acb80156ca99dd3ddb5d186dfd33558500e6cbb137c450",
+    "negative_od_evidence": {
+      "cpl_continuum_enabled": {
+        "path": "build/udm37-lblrtm-negative-control-review-v1/negative-od-continuum-raw-v2.json",
+        "sha256": "fbe08e0b19c2a7f35ff0c9c56d1c03c2ad50dc3c5109c10c4d3ecda72e3b46c2",
+        "plan_path": "build/udm37-lblrtm-held-state-continuum-od-run-v1/plan.json",
+        "plan_sha256": "05fbb46b8ed13294289795f38035d26271ecbf68e66e8d1f98ac11b90ca41a41",
+        "icntnm": 1,
+        "layers": 45,
+        "samples": 63838065,
+        "negative_samples": 21712,
+        "negative_fraction": 0.00034011055942876717,
+        "layer21": {
+          "pressure_mbar": 348.36124,
+          "temperature_K": 228.3152,
+          "negative_samples": 654,
+          "samples": 464329,
+          "minimum_od": -4.884429085432753,
+          "minimum_wavenumber_cm-1": 666.3964444444449
+        },
+        "tape5_sha256": "a676bc7761e09ab42f212c3cca80ebfd1be27604cd332cc966205d1280ae62dd",
+        "tape3_sha256": "56bd55fa256ed3b3a672bd4bcd88034cd7086d4fbef2a1def9480199dab2b388"
+      },
+      "cpl_line_only": {
+        "path": "build/udm37-lblrtm-negative-control-review-v1/negative-od-raw-v2.json",
+        "sha256": "a0e6efa6a170eb82b058776dfb92346969aaf5a4950b0de7bca1bc60d15c4316",
+        "plan_path": "build/udm37-lblrtm-held-state-od-run-v1/plan.json",
+        "plan_sha256": "8f9353d781228ed113d7eece31f835694e0a01e6fe0ca8ff5996a9eb36bb4a13",
+        "icntnm": 0,
+        "layers": 45,
+        "samples": 63838065,
+        "negative_samples": 145117,
+        "negative_fraction": 0.0022732048660936074,
+        "layer21_minimum_od": -5.052245375427372,
+        "layer21_minimum_wavenumber_cm-1": 666.3964444444449,
+        "tape5_sha256": "91a6e55bd31c420659acb80156ca99dd3ddb5d186dfd33558500e6cbb137c450",
+        "tape3_sha256": "56bd55fa256ed3b3a672bd4bcd88034cd7086d4fbef2a1def9480199dab2b388"
+      },
+      "nocpl_continuum_enabled_sensitivity": {
+        "path": "build/udm37-lblrtm-negative-od-diagnostic-v2/nocpl-raw-v1.json",
+        "sha256": "ddcb6bc9beac34d4467ac0531eca1823db8cc0f96de8ef2529ce4938f3095e4c",
+        "plan_path": "build/udm37-lblrtm-held-state-nocpl-od-run-v1/plan.json",
+        "plan_sha256": "40cc83cd001ea35e526e023143fce2a89689fe7ffa9562921d02c299964790cf",
+        "icntnm": 1,
+        "layers": 45,
+        "samples": 63838065,
+        "negative_samples": 2391,
+        "minimum_od": -0.0009924067060697163,
+        "minimum_layer": 44,
+        "minimum_wavenumber_cm-1": 677.5490446508708,
+        "tape5_sha256": "a676bc7761e09ab42f212c3cca80ebfd1be27604cd332cc966205d1280ae62dd",
+        "tape3_sha256": "4b8c696c40ed1b80c03ee3b697422f37d95c832bcf3f7cdd3106930bb84da459",
+        "comparison_scope": "Plan states same ICNTNM=1 deck/profile as CPL continuum baseline; TAPE3 generated with LNFL NOCPL is the intended coupling-off change."
+      }
+    }
+  },
+  "source_interpretation": {
+    "local_lblrtm": [
+      {
+        "path": "build/udm37-lblrtm-candidate-decision-run-v3/staging/source/LBLRTM/src/oprop.f90",
+        "lines": "1262-1264",
+        "finding": "HIRAC1 forms temperature-adjusted line strength SP, then SPPI=SUI*YI*PAVP0 and SPPSP=SPPI/SP. YI can therefore contribute a signed pressure-scaled term."
+      },
+      {
+        "path": "build/udm37-lblrtm-candidate-decision-run-v3/staging/source/LBLRTM/src/oprop.f90",
+        "lines": "1522-1526, 1532-1543",
+        "finding": "CNVFNV adds a base R3 contribution, then applies a separate coupling correction scaled by SPPSP. The implementation contains signed correction arithmetic; this source fact neither validates nor invalidates a negative sum at a given point."
+      }
+    ],
+    "local_lnfl": {
+      "source_sha256": "d47b7b296b747837bbec8df06a7c8ea1df2ec241546b1db4a15f6b02b98a4ad6",
+      "instructions_sha256": "e044ed5eb774a99d2dd1086ff98ec879cbd5440dc816bd305a37e66548682601",
+      "finding": "The documented NOCPL control removes line-coupling data from TAPE3/TAPE7. Thus its reduction in negative samples demonstrates sensitivity to the coupling configuration; it does not establish that the coupled result is physically wrong or that the no-coupling result is more accurate."
+    }
+  },
+  "primary_sources": [
+    {
+      "title": "AER LBLRTM code and data page",
+      "url": "https://rtweb.aer.com/lblrtm_code.html",
+      "claim": "AER says line coupling was used in deriving the CO2 continuum and must be used for accurate calculations with that continuum; the coupling parameters are carried in the AER line file."
+    },
+    {
+      "title": "AER-RC/LBLRTM README",
+      "url": "https://github.com/AER-RC/LBLRTM",
+      "claim": "The official compatibility table pairs LBLRTM v12.17 with MT_CKD 4.3 and line file v3.8.1. The repository recommends the v12.17 release tag."
+    },
+    {
+      "title": "AER-RC/LBLRTM pinned release commit",
+      "url": "https://github.com/AER-RC/LBLRTM/commit/a85ac73447c1e62401a57a34bbcb040683345dca",
+      "claim": "The official v12.17 release commit and its release metadata."
+    },
+    {
+      "title": "AER-RC/LNFL README",
+      "url": "https://github.com/AER-RC/LNFL",
+      "claim": "LNFL converts the ASCII line database into LBLRTM TAPE3; NOCPL suppresses all line-coupling information on TAPE3/TAPE7."
+    },
+    {
+      "title": "AER FAQ, section 5.9",
+      "url": "https://rtweb.aer.com/docs/FAQ_LBLRTM.pdf",
+      "claim": "Coupling parameters for O2, CO2, and CH4 come from the AER line database and are written to TAPE3 by LNFL."
+    },
+    {
+      "title": "AER-RC/LBLRTM issue tracker search",
+      "url": "https://github.com/AER-RC/LBLRTM/issues?q=is%3Aissue+negative+optical+depth+line+mixing",
+      "claim": "A targeted public issue search did not surface a directly matching negative-total-OD/CO2-coupling report. This limited search is not evidence that no such report exists."
+    }
+  ],
+  "conclusions": {
+    "matched_release_stack": "The coupled line-only and coupled continuum runs use the local AER v3.8.1 line data/TAPE3 provenance; official AER lists the compatible LBLRTM v12.17 / MT_CKD 4.3 release pairing. The NOCPL continuum sensitivity uses a separate NOCPL-generated TAPE3 and is not a matched-physics reference.",
+    "no_coupling_control": "The controlled NOCPL comparison is ICNTNM=1 for both arms, with an identical TAPE5 and profile; only TAPE3 is regenerated with NOCPL. It reduces the negative count substantially, but is not a truth oracle. AER explicitly warns that coupling was used to derive the CO2 continuum, so coupling-off with continuum-on is specifically not the recommended accurate stack.",
+    "historical_continuum_version": "The selected coupled ICNTNM=0 line-only run has no continuum contribution. For the separate ICNTNM=1 paired comparison, the official compatible stack is MT_CKD 4.3 with LBLRTM v12.17 / AER line v3.8.1; do not use older 4.1 example artifacts as equivalent. The local NOCPL continuum arm is an intentional altered-physics sensitivity.",
+    "physical_status": "OPEN. These documents and source establish the configured algorithm and a relevant sensitivity, but do not establish whether the observed negative total OD at the selected samples is physically admissible, a coding defect, or a reference-data issue.",
+    "next_discriminating_step": "Use the matched release stack with coupling retained and independently validated published/reference spectra or benchmark cases. Any continuum-enabled check should be separately labeled and use the officially paired MT_CKD 4.3 data. Preserve strict numerical gates; do not treat NOCPL or an older 4.1 case as the truth reference."
+  }
+}

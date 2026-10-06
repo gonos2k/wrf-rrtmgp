@@ -1,0 +1,20 @@
+{
+  "status": "ADDITIVE_SOURCE_AND_PROVENANCE_ERRATUM",
+  "preserved_original": {
+    "path": "build/udm37-lblrtm-negative-od-aer-primary-audit-v1/audit.json",
+    "sha256": "e746df652127780b2ddc660634f4807cbc3e1b54af7f5bf2cf6e9cf020f092d8"
+  },
+  "correction": {
+    "path": "build/udm37-lblrtm-negative-od-aer-primary-audit-v1/audit.json#/source_interpretation/local_lblrtm/0",
+    "original_wording": "HIRAC1 forms temperature-adjusted line strength SP...",
+    "correct_wording": "Within the LNCOR1 source path, SP, SPPI, and SPPSP are assigned at source lines 1262-1264. LNCOR1 initializes the per-line YI/GI accumulators in the preceding loop (lines 1065-1069).",
+    "source_path": "build/udm37-lblrtm-candidate-decision-run-v3/staging/source/LBLRTM/src/oprop.f90",
+    "source_sha256": "a3b5732eca771b74fd373b2f8f67f515c9c05d09dc4c86c1fe77bd7d9bb1bd3c",
+    "lines": "1065-1070, 1262-1264"
+  },
+  "provenance_scope": {
+    "official_release_compatibility": "AER's public LBLRTM repository lists the compatible release combination LBLRTM v12.17 / MT_CKD 4.3 / AER line file v3.8.1.",
+    "locally_pinned_assets": "The local line-generation plan identifies and hashes an AER v3.8.1 line-list asset and its generated coupled TAPE3. The separate local build/source and MT_CKD runtime/data pins must be used to establish actual executed asset identity; the public compatibility table by itself does not prove it.",
+    "not_established": "This correction does not prove the negative optical-depth samples are physically valid. Signed coupling arithmetic in source and a no-coupling sensitivity response are not physical validation."
+  }
+}

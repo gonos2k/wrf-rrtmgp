@@ -1,0 +1,1101 @@
+{
+  "allowed_additional_output_names": [
+    "UDM37_ANCESTRY"
+  ],
+  "allowlist_groups": {
+    "dominant_negative3": 3,
+    "left_censored_prefix69": 69
+  },
+  "authorization_contract": {
+    "runtime_review_fields": [
+      "reviewed_plan",
+      "reviewed_runner"
+    ],
+    "runtime_review_pin_field": "runtime_review",
+    "runtime_review_status": "PASS_SCOPED_RUNTIME_PREPARATION_REVIEW",
+    "schema": "UDM37_LEFT_CENSORED_ANCESTRY_ACTION_AUTH_V1"
+  },
+  "authorization_files": {
+    "build": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-ancestry-build-auth-v2.json",
+    "solver": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-ancestry-solver-auth-v2.json"
+  },
+  "authorization_scopes": {
+    "build": "One isolated GNU-double incremental OPROP 72-ID ancestry diagnostic build; maximum one make invocation, timeout600seconds.",
+    "solver": "One isolated held-case 72-ID ancestry diagnostic after durable RC0 OPROP-only build; maximum one invocation, timeout7200seconds."
+  },
+  "baseline_output_receipt": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-candidate-decision-run-v3/solver-postflight.json",
+    "sha256": "cfb96a1dcc02df85e598e86f81c9dc087790676b81f58ddb63b484851e337169",
+    "size_bytes": 21684
+  },
+  "candidate_source": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-left-censored-ancestry-run-v2/staging/source/LBLRTM/src/oprop.f90",
+    "sha256": "63f6383c698e2e63e9dcde3956f0f936364b38aeffeb23f41284cdfb8e19bf65",
+    "size_bytes": 504734
+  },
+  "case_stage_pin": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-left-censored-ancestry-run-v2/runs/od-v1/case-stage.json",
+    "sha256": "9a2b58f36499ebbe9e78ede03b53c1f6897d9233d49eb9c07f8cd316bd72cb90",
+    "size_bytes": 15148
+  },
+  "counts": {
+    "build_invocations": 0,
+    "raw_numeric_reads": 0,
+    "solver_invocations": 0
+  },
+  "environment": {
+    "HOME": "inherit exact value and verify unchanged",
+    "LANG": "C",
+    "LC_ALL": "C",
+    "LD_LIBRARY_PATH": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/netcdf/lib",
+    "MPI": null,
+    "OMP_NUM_THREADS": null,
+    "PATH": "/usr/bin:/bin"
+  },
+  "executable_relative_path": "lblrtm_v12.17_linux_gnu_dbl",
+  "execution_limits": {
+    "builds_performed_during_preparation": 0,
+    "compile_build_invocations_max": 1,
+    "incremental_build_invocations_max": 1,
+    "raw_TAPE3_or_OD_scans_during_preparation": 0,
+    "solver_invocations_during_preparation": 0,
+    "solver_invocations_max": 1
+  },
+  "held_case": {
+    "IATM": 0,
+    "ICNTNM": 1,
+    "IEMIT": 0,
+    "IHIRAC": 1,
+    "IXSECT": 1,
+    "input_count": 38,
+    "inputs": [
+      {
+        "kind": "copied_input",
+        "path": "TAPE5",
+        "sha256": "a676bc7761e09ab42f212c3cca80ebfd1be27604cd332cc966205d1280ae62dd",
+        "size_bytes": 29428
+      },
+      {
+        "kind": "readonly_symlink_input",
+        "path": "TAPE3",
+        "resolved_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-common-band-line-generation-v1/run-v6/TAPE3",
+        "source_sha256_receipt": "56bd55fa256ed3b3a672bd4bcd88034cd7086d4fbef2a1def9480199dab2b388",
+        "source_size_bytes_receipt": 122157832
+      },
+      {
+        "kind": "readonly_symlink_input",
+        "path": "FSCDXS",
+        "resolved_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-stock-build-v1/attempt-1/source/LBLRTM/cross-sections/FSCDXS",
+        "source_sha256_receipt": "1a5cebba2d3787c2e48c9cc0f2e4d1593720e4655b6ae4e7e4bc1a31c4b426f6",
+        "source_size_bytes_receipt": 10382
+      },
+      {
+        "kind": "readonly_symlink_input",
+        "path": "absco-ref_wv-mt-ckd.nc",
+        "resolved_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-reference-stage-v1/sources/MT_CKD_H2O/data/absco-ref_wv-mt-ckd.nc",
+        "source_sha256_receipt": "69944eb8b045c268e2daeb2cddf536b99f9e9efe7e91c425067b46a5b287ddb3",
+        "source_size_bytes_receipt": 83576
+      },
+      {
+        "kind": "readonly_symlink_input",
+        "path": "xs/CCL4",
+        "resolved_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-stock-build-v1/attempt-1/source/LBLRTM/cross-sections/xs/CCL4",
+        "source_sha256_receipt": "2e50c888c75a19f1d7c2b3a0e563644f9e2e4fcd36065648cb37003ac5c915bb",
+        "source_size_bytes_receipt": 18584
+      },
+      {
+        "kind": "readonly_symlink_input",
+        "path": "xs/F11AT1",
+        "resolved_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-stock-build-v1/attempt-1/source/LBLRTM/cross-sections/xs/F11AT1",
+        "source_sha256_receipt": "c3c741a84f06b5e3d5d32c4e1aebb80921f0bf208a605fdb01afedbe6a56aa04",
+        "source_size_bytes_receipt": 20604
+      },
+      {
+        "kind": "readonly_symlink_input",
+        "path": "xs/F11AT2",
+        "resolved_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-stock-build-v1/attempt-1/source/LBLRTM/cross-sections/xs/F11AT2",
+        "source_sha256_receipt": "1292ca88931ae102b5c56432a270d67ecde910adade9f48554c52949e223d2dc",
+        "source_size_bytes_receipt": 20604
+      },
+      {
+        "kind": "readonly_symlink_input",
+        "path": "xs/F11AT3",
+        "resolved_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-stock-build-v1/attempt-1/source/LBLRTM/cross-sections/xs/F11AT3",
+        "source_sha256_receipt": "83525a02a7785c06d26ef8fe03d3c6d0e394b346e2959b19bbb09780d36f6e28",
+        "source_size_bytes_receipt": 20604
+      },
+      {
+        "kind": "readonly_symlink_input",
+        "path": "xs/F11AT4",
+        "resolved_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-stock-build-v1/attempt-1/source/LBLRTM/cross-sections/xs/F11AT4",
+        "source_sha256_receipt": "162c4a7b4d8581966b9a3a255155e14ca9338d7e4ba995797d93dd1193fd58db",
+        "source_size_bytes_receipt": 20604
+      },
+      {
+        "kind": "readonly_symlink_input",
+        "path": "xs/F11AT5",
+        "resolved_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-stock-build-v1/attempt-1/source/LBLRTM/cross-sections/xs/F11AT5",
+        "source_sha256_receipt": "50483d639842ecb2df7613417ea292b6d117bc9365ca50acfb85c7a2665ba313",
+        "source_size_bytes_receipt": 20604
+      },
+      {
+        "kind": "readonly_symlink_input",
+        "path": "xs/F11AT6",
+        "resolved_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-stock-build-v1/attempt-1/source/LBLRTM/cross-sections/xs/F11AT6",
+        "source_sha256_receipt": "8cdb9ebb13b7ceeab9294d2989bf86ecff9793fc6e755831dcb6e525b626a33a",
+        "source_size_bytes_receipt": 20604
+      },
+      {
+        "kind": "readonly_symlink_input",
+        "path": "xs/F11BT1",
+        "resolved_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-stock-build-v1/attempt-1/source/LBLRTM/cross-sections/xs/F11BT1",
+        "source_sha256_receipt": "42a8782721cf9c97efc3ed3607045817aee218cace9ef97b72865fbc5be125cc",
+        "source_size_bytes_receipt": 32118
+      },
+      {
+        "kind": "readonly_symlink_input",
+        "path": "xs/F11BT2",
+        "resolved_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-stock-build-v1/attempt-1/source/LBLRTM/cross-sections/xs/F11BT2",
+        "source_sha256_receipt": "70ce2c26e2dce70d22cd8e9ff2e777e803085c77aa3d7420e5d2f14ec9007bce",
+        "source_size_bytes_receipt": 32118
+      },
+      {
+        "kind": "readonly_symlink_input",
+        "path": "xs/F11BT3",
+        "resolved_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-stock-build-v1/attempt-1/source/LBLRTM/cross-sections/xs/F11BT3",
+        "source_sha256_receipt": "ec38b98f3e16356db657c875c72c5dfb59f139b15e731edebf96fa5bd56474ff",
+        "source_size_bytes_receipt": 32118
+      },
+      {
+        "kind": "readonly_symlink_input",
+        "path": "xs/F11BT4",
+        "resolved_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-stock-build-v1/attempt-1/source/LBLRTM/cross-sections/xs/F11BT4",
+        "source_sha256_receipt": "b5d172d83e82c3b3e97e3b34221e964e8424f7ddf33a8e84720cde88010704bb",
+        "source_size_bytes_receipt": 32118
+      },
+      {
+        "kind": "readonly_symlink_input",
+        "path": "xs/F11BT5",
+        "resolved_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-stock-build-v1/attempt-1/source/LBLRTM/cross-sections/xs/F11BT5",
+        "source_sha256_receipt": "aad952d01a63761aa73520b6e44fd57efbd6e598cafaf5485ed08e18a58fe953",
+        "source_size_bytes_receipt": 32118
+      },
+      {
+        "kind": "readonly_symlink_input",
+        "path": "xs/F11BT6",
+        "resolved_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-stock-build-v1/attempt-1/source/LBLRTM/cross-sections/xs/F11BT6",
+        "source_sha256_receipt": "f278a8009361b058a4746beeba9ee4eb02088f1ceb8e5952bf17e4672601fed0",
+        "source_size_bytes_receipt": 32118
+      },
+      {
+        "kind": "readonly_symlink_input",
+        "path": "xs/F12AT1",
+        "resolved_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-stock-build-v1/attempt-1/source/LBLRTM/cross-sections/xs/F12AT1",
+        "source_sha256_receipt": "c29d0dffeb4dad6ed086e557dd963950d6d1228a2b28ff8b2728f7e8e516c7e2",
+        "source_size_bytes_receipt": 47773
+      },
+      {
+        "kind": "readonly_symlink_input",
+        "path": "xs/F12AT2",
+        "resolved_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-stock-build-v1/attempt-1/source/LBLRTM/cross-sections/xs/F12AT2",
+        "source_sha256_receipt": "215f480f19cb5cac643318253e50fb9a7918f97c268d00b262241f01021686b4",
+        "source_size_bytes_receipt": 47773
+      },
+      {
+        "kind": "readonly_symlink_input",
+        "path": "xs/F12AT3",
+        "resolved_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-stock-build-v1/attempt-1/source/LBLRTM/cross-sections/xs/F12AT3",
+        "source_sha256_receipt": "f148a7fde6f995b22ca7cd969f8bee048c216c974c3dbc5ccbe71a2e247657a6",
+        "source_size_bytes_receipt": 47773
+      },
+      {
+        "kind": "readonly_symlink_input",
+        "path": "xs/F12AT4",
+        "resolved_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-stock-build-v1/attempt-1/source/LBLRTM/cross-sections/xs/F12AT4",
+        "source_sha256_receipt": "0200c0f228ac9e8b8f4d2361563e6500e132a9488698a5c9a281da7ba850ef57",
+        "source_size_bytes_receipt": 47773
+      },
+      {
+        "kind": "readonly_symlink_input",
+        "path": "xs/F12AT5",
+        "resolved_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-stock-build-v1/attempt-1/source/LBLRTM/cross-sections/xs/F12AT5",
+        "source_sha256_receipt": "d907050bce812262c3577dfbf26bae556038c35788c0086739f35cfc45d76907",
+        "source_size_bytes_receipt": 47773
+      },
+      {
+        "kind": "readonly_symlink_input",
+        "path": "xs/F12AT6",
+        "resolved_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-stock-build-v1/attempt-1/source/LBLRTM/cross-sections/xs/F12AT6",
+        "source_sha256_receipt": "c0b93ef0797a9ee805d303f69ea18e977a06351543168d0d37ad30d74a9a0a40",
+        "source_size_bytes_receipt": 47773
+      },
+      {
+        "kind": "readonly_symlink_input",
+        "path": "xs/F12BT1",
+        "resolved_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-stock-build-v1/attempt-1/source/LBLRTM/cross-sections/xs/F12BT1",
+        "source_sha256_receipt": "e5d6faf2d7b1f1283abccb8670bee6ee60108232db94467ad40023593a6cacd7",
+        "source_size_bytes_receipt": 66155
+      },
+      {
+        "kind": "readonly_symlink_input",
+        "path": "xs/F12BT2",
+        "resolved_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-stock-build-v1/attempt-1/source/LBLRTM/cross-sections/xs/F12BT2",
+        "source_sha256_receipt": "ca3d511077e3feb3689237cfc5d06d023678f71ec1291e878a3eb058bb5841b3",
+        "source_size_bytes_receipt": 66155
+      },
+      {
+        "kind": "readonly_symlink_input",
+        "path": "xs/F12BT3",
+        "resolved_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-stock-build-v1/attempt-1/source/LBLRTM/cross-sections/xs/F12BT3",
+        "source_sha256_receipt": "fa05052fb97afb00701bb90f13c71f170ef80ed45280d1861db2345e3c655e3f",
+        "source_size_bytes_receipt": 66155
+      },
+      {
+        "kind": "readonly_symlink_input",
+        "path": "xs/F12BT4",
+        "resolved_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-stock-build-v1/attempt-1/source/LBLRTM/cross-sections/xs/F12BT4",
+        "source_sha256_receipt": "b22eec92fc8584a5a5210c544f706a11c519f9a743cab7268fe6ecdffdcddf78",
+        "source_size_bytes_receipt": 66155
+      },
+      {
+        "kind": "readonly_symlink_input",
+        "path": "xs/F12BT5",
+        "resolved_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-stock-build-v1/attempt-1/source/LBLRTM/cross-sections/xs/F12BT5",
+        "source_sha256_receipt": "9e990c29234f2b06988739b1f52307cc181679a820afe4e8be62eba812969c09",
+        "source_size_bytes_receipt": 66155
+      },
+      {
+        "kind": "readonly_symlink_input",
+        "path": "xs/F12BT6",
+        "resolved_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-stock-build-v1/attempt-1/source/LBLRTM/cross-sections/xs/F12BT6",
+        "source_sha256_receipt": "455978d333d402576206cdc8ced8c3174f8a6f96b16030af9d54177e112f96d5",
+        "source_size_bytes_receipt": 66155
+      },
+      {
+        "kind": "readonly_symlink_input",
+        "path": "xs/HCF3AT1",
+        "resolved_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-stock-build-v1/attempt-1/source/LBLRTM/cross-sections/xs/HCF3AT1",
+        "source_sha256_receipt": "a7294b3899adee33b1faf187ea4b0109edb23a83d8f67a023fe1308c41ba184f",
+        "source_size_bytes_receipt": 105747
+      },
+      {
+        "kind": "readonly_symlink_input",
+        "path": "xs/HCF3AT2",
+        "resolved_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-stock-build-v1/attempt-1/source/LBLRTM/cross-sections/xs/HCF3AT2",
+        "source_sha256_receipt": "4973a523af7d202ac940fade0ed9719536ed9a62c0b45cc3745895a44bb69cea",
+        "source_size_bytes_receipt": 105747
+      },
+      {
+        "kind": "readonly_symlink_input",
+        "path": "xs/HCF3AT3",
+        "resolved_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-stock-build-v1/attempt-1/source/LBLRTM/cross-sections/xs/HCF3AT3",
+        "source_sha256_receipt": "bd5760a47b7f4cbb805713fe07d7697890f3475b20344e3d63acee97b214ba98",
+        "source_size_bytes_receipt": 105747
+      },
+      {
+        "kind": "readonly_symlink_input",
+        "path": "xs/HCF3BT1",
+        "resolved_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-stock-build-v1/attempt-1/source/LBLRTM/cross-sections/xs/HCF3BT1",
+        "source_sha256_receipt": "9995af7f47d39d7eadcbdd4683ba6e871c53b87c9c38e0999eaa2ae5d330860f",
+        "source_size_bytes_receipt": 164408
+      },
+      {
+        "kind": "readonly_symlink_input",
+        "path": "xs/HCF3BT2",
+        "resolved_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-stock-build-v1/attempt-1/source/LBLRTM/cross-sections/xs/HCF3BT2",
+        "source_sha256_receipt": "f6d2aadf397246334f471c0656757f206fb40ab798d174f74fbe080f391f113f",
+        "source_size_bytes_receipt": 164409
+      },
+      {
+        "kind": "readonly_symlink_input",
+        "path": "xs/HCF3BT3",
+        "resolved_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-stock-build-v1/attempt-1/source/LBLRTM/cross-sections/xs/HCF3BT3",
+        "source_sha256_receipt": "eb4c011d8cc3bef13af632dd5c595662b12ea55ce6ed6c215a3dc01cfddddc2f",
+        "source_size_bytes_receipt": 164408
+      },
+      {
+        "kind": "readonly_symlink_input",
+        "path": "xs/HCF3CT1",
+        "resolved_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-stock-build-v1/attempt-1/source/LBLRTM/cross-sections/xs/HCF3CT1",
+        "source_sha256_receipt": "a24e2ebabe18d767822f0ae558ab2d0bceb02999d35934d40651e034e12799b4",
+        "source_size_bytes_receipt": 123321
+      },
+      {
+        "kind": "readonly_symlink_input",
+        "path": "xs/HCF3CT2",
+        "resolved_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-stock-build-v1/attempt-1/source/LBLRTM/cross-sections/xs/HCF3CT2",
+        "source_sha256_receipt": "360b20c0c521f79c7e47f6e9da0a7037d9323d7ef3c72ad9c31197a1c8069121",
+        "source_size_bytes_receipt": 123321
+      },
+      {
+        "kind": "readonly_symlink_input",
+        "path": "xs/HCF3CT3",
+        "resolved_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-stock-build-v1/attempt-1/source/LBLRTM/cross-sections/xs/HCF3CT3",
+        "source_sha256_receipt": "774670f388a3f0ee32c2f603b5da3f80940f5a10c02239656e9b7ce52d93c068",
+        "source_size_bytes_receipt": 123321
+      }
+    ],
+    "native_profile": "same45 held diagnostic layers"
+  },
+  "limits": [
+    "Ancestry observations before strength filters are not survivor proofs.",
+    "Only existing three diagnostic file hashes are checked by the runner; all45 spectrum equality is deferred to the saved reader.",
+    "All negativeOD physicalFAILs and WRF residuals remain open."
+  ],
+  "make_common_pin": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-left-censored-ancestry-run-v2/staging/source/LBLRTM/build/makefile.common",
+    "sha256": "c7f91b5660102d409d2785a1be501171aa261b6056579b6fca0ed9b5ff0fff78",
+    "size_bytes": 13126
+  },
+  "makefile_pin": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-left-censored-ancestry-run-v2/staging/source/LBLRTM/build/make_lblrtm",
+    "sha256": "76fbc2ed792696fa2a5a3aab9c0bd56517d7df117922c4a868889c17f11de8bd",
+    "size_bytes": 6212
+  },
+  "max_invocations": {
+    "incremental_build": 1,
+    "solver": 1
+  },
+  "object_directory": "build/lblrtm_v12.17_linux_gnu_dbl.obj",
+  "oprop_object_relative_path": "build/lblrtm_v12.17_linux_gnu_dbl.obj/oprop.o",
+  "parent_receipt_pins": [
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-candidate-decision-run-v3/build-execution.json",
+      "sha256": "421ff6fbe7e42fafe54e9ec9ec310de9338174ef301a7332fd74756f094f9840",
+      "size_bytes": 690
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-candidate-decision-run-v3/build-postflight.json",
+      "sha256": "68aab32740ff72398c60648efff00bf53cc2d4fdd3db7f87cd858b17d1788c75",
+      "size_bytes": 3343
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-candidate-decision-run-v3/solver-execution.json",
+      "sha256": "bd603c223cd0c86a0fea2897816714f17b1237b06d5a6aa71ccaef007fedda4b",
+      "size_bytes": 754
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-candidate-decision-run-v3/solver-postflight.json",
+      "sha256": "cfb96a1dcc02df85e598e86f81c9dc087790676b81f58ddb63b484851e337169",
+      "size_bytes": 21684
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-candidate-decision-run-v3/plan-v7.json",
+      "sha256": "d91cf4e2369fdd5ba34db41fe7e6ef925b7d38def1b6f9822125d73d2ba19208",
+      "size_bytes": 37703
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-candidate-decision-run-v3/execute_once_v7.py",
+      "sha256": "c9d46648411735481e47b925f954b7f84ecccdb5f78d4f6c3ea77d1dcb48ab47",
+      "size_bytes": 17034
+    }
+  ],
+  "paths": {
+    "build_cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-left-censored-ancestry-run-v2/staging/source/LBLRTM/build",
+    "run_cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-left-censored-ancestry-run-v2/runs/od-v1",
+    "staging_source_root": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-left-censored-ancestry-run-v2/staging/source/LBLRTM"
+  },
+  "prebuild_executable": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-left-censored-ancestry-run-v2/staging/source/LBLRTM/lblrtm_v12.17_linux_gnu_dbl",
+    "sha256": "ce8ceef48506f6a36d38633c34ee1a60408a3ce5b99c6078dda3e29fcaacc8c4",
+    "size_bytes": 14373328
+  },
+  "prebuild_objects": [
+    {
+      "path": "build/lblrtm_v12.17_linux_gnu_dbl.obj/contnm.o",
+      "sha256": "99eebd867841f70f9f9b2a5c140afaaae295439d0c52b181071fef6914949442",
+      "size_bytes": 305312
+    },
+    {
+      "path": "build/lblrtm_v12.17_linux_gnu_dbl.obj/fftscn_dbl.o",
+      "sha256": "518cbf6e3d30eb03291125b14792dd1d930305898e222eb023e69134614dd936",
+      "size_bytes": 151632
+    },
+    {
+      "path": "build/lblrtm_v12.17_linux_gnu_dbl.obj/lblatm.o",
+      "sha256": "46bcfc22f97c5091cc7112eea74b9dd3114338b26a1469089eb2842cf334b37a",
+      "size_bytes": 11676672
+    },
+    {
+      "path": "build/lblrtm_v12.17_linux_gnu_dbl.obj/lbldum.o",
+      "sha256": "fb2313d03d1ca06fbf6889780d1ef41e0bd285cd77789e853476e51b512d8223",
+      "size_bytes": 4520
+    },
+    {
+      "path": "build/lblrtm_v12.17_linux_gnu_dbl.obj/lbllow.o",
+      "sha256": "975c66242e929f261cb600ca1f3738316c65b8076a1797891b755954fbf72f80",
+      "size_bytes": 1269744
+    },
+    {
+      "path": "build/lblrtm_v12.17_linux_gnu_dbl.obj/lblparams.o",
+      "sha256": "dbec2bec78b2546f2a9bf2444b8a04523cdd7133f649fd8b63ce70aa8ba80a37",
+      "size_bytes": 8960
+    },
+    {
+      "path": "build/lblrtm_v12.17_linux_gnu_dbl.obj/lblrtm.o",
+      "sha256": "514dd2c0571eaa9ea1ca2cc1f6abb4b4c57bc0993c0069ea611c65b650b3ee81",
+      "size_bytes": 530312
+    },
+    {
+      "path": "build/lblrtm_v12.17_linux_gnu_dbl.obj/mt_ckd_h2o_module.o",
+      "sha256": "92d7c1fa2d18424a7e6ac60e67ec035a9087c6abc5ea165a57bfecfbbd706af5",
+      "size_bytes": 17192
+    },
+    {
+      "path": "build/lblrtm_v12.17_linux_gnu_dbl.obj/nonlte.o",
+      "sha256": "fc39ddcd056ad5bf1e01662675517a561d59563b1b2d988d1eaea9772d3f1d08",
+      "size_bytes": 162504
+    },
+    {
+      "path": "build/lblrtm_v12.17_linux_gnu_dbl.obj/oprop.o",
+      "sha256": "2994049576e3b30a0fb1a4e1be6778a94c3cfb71dbf8c95e364e969abee45b16",
+      "size_bytes": 505928
+    },
+    {
+      "path": "build/lblrtm_v12.17_linux_gnu_dbl.obj/phys_consts.o",
+      "sha256": "d1fbcbe5ddd72196095f719664f09974439d0155f163914d125fa93fc8f4885a",
+      "size_bytes": 824
+    },
+    {
+      "path": "build/lblrtm_v12.17_linux_gnu_dbl.obj/planet_earth.o",
+      "sha256": "984b4e363b4c5aef6c15590ac5f5e5a9e78b88c759f8579d2fe0e33bbeee8e64",
+      "size_bytes": 1640
+    },
+    {
+      "path": "build/lblrtm_v12.17_linux_gnu_dbl.obj/pltlbl.o",
+      "sha256": "589b567082683d4ffcdb352d363e32e85836f9afab5141a78eaa718c939e5705",
+      "size_bytes": 157528
+    },
+    {
+      "path": "build/lblrtm_v12.17_linux_gnu_dbl.obj/postsub.o",
+      "sha256": "df8248b8d6c63d9d6b8073268b8af4da5ceb91be1ac6f972126d5af75d87a4ca",
+      "size_bytes": 190448
+    },
+    {
+      "path": "build/lblrtm_v12.17_linux_gnu_dbl.obj/read_module.o",
+      "sha256": "a1c880b3ba2a67e609564177ef78d299761445cc4b38e76185d9188598458339",
+      "size_bytes": 14352
+    },
+    {
+      "path": "build/lblrtm_v12.17_linux_gnu_dbl.obj/solar.o",
+      "sha256": "6b23a7dd9c1b7b15713e92520fb852f9b3c2f9442d6abdae886a89a2419765b2",
+      "size_bytes": 53752
+    },
+    {
+      "path": "build/lblrtm_v12.17_linux_gnu_dbl.obj/solar_cycle.o",
+      "sha256": "cebc3032e91463b53ca2f424c65c01512b07dedeeedc429d856d3add4524f29d",
+      "size_bytes": 3088
+    },
+    {
+      "path": "build/lblrtm_v12.17_linux_gnu_dbl.obj/struct_types.o",
+      "sha256": "4f0a2224a1467ec95a6ed3d5f987e74ad943a30186fff62c35ff6c0cbf3523ad",
+      "size_bytes": 3112
+    },
+    {
+      "path": "build/lblrtm_v12.17_linux_gnu_dbl.obj/testmm.o",
+      "sha256": "06277f94386c5edae7735dca49e710a2fd065acc4c29648f57bb2574447f51e5",
+      "size_bytes": 110552
+    },
+    {
+      "path": "build/lblrtm_v12.17_linux_gnu_dbl.obj/util_gfortran.o",
+      "sha256": "99c3f30c59edee4dd184d17f401b24ae829bdba5f623c7d7b19d5f25c26d96bc",
+      "size_bytes": 7056
+    },
+    {
+      "path": "build/lblrtm_v12.17_linux_gnu_dbl.obj/xmerge.o",
+      "sha256": "96e3029238712b36d137faffe2624e3a326024571b8c7e8f5de24ee734efdf07",
+      "size_bytes": 271144
+    }
+  ],
+  "preserves_runtime_v1": {
+    "plan": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-left-censored-ancestry-run-v1/plan.json",
+      "sha256": "483ef4eccf7c03cd04f553e53661179c9417816c6dda1be7901d24169c539a9d",
+      "size_bytes": 51911
+    },
+    "runner": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-left-censored-ancestry-run-v1/run_once.py",
+      "sha256": "8abbe8f2712a3385e1478d22157e33e0f67ef16a1b94bf060b7e3ceb1d8306de",
+      "size_bytes": 20327
+    }
+  },
+  "protected_source_pins": [
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-left-censored-ancestry-run-v2/staging/source/LBLRTM/aer_rt_utils/util_OS_X_absoft.f90",
+      "sha256": "c1fb90a534de8f5f8ce9049ef8e76ab9d76ea9064f31db21bff18dfb6a9a17d5",
+      "size_bytes": 11359
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-left-censored-ancestry-run-v2/staging/source/LBLRTM/aer_rt_utils/util_OS_X_g95.f90",
+      "sha256": "c3de6460b89556a3e15de369cca0e9324205df90b42c81611205cfddeddd2ecb",
+      "size_bytes": 18409
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-left-censored-ancestry-run-v2/staging/source/LBLRTM/aer_rt_utils/util_OS_X_ibm_xl.f90",
+      "sha256": "126c8dfb5f2638cd5a087adbdffef09108900feb75ac6d9ca0b162f5017fc7f4",
+      "size_bytes": 17966
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-left-censored-ancestry-run-v2/staging/source/LBLRTM/aer_rt_utils/util_OS_X_ifort.f90",
+      "sha256": "5d4b43b4acb8544e890ae441ca8d65221c65e17b42dacbaf6c11e7efa39df785",
+      "size_bytes": 10776
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-left-censored-ancestry-run-v2/staging/source/LBLRTM/aer_rt_utils/util_aix.f90",
+      "sha256": "7a7189ee020288885b1e86d1b5d6c703b1308d4086c5c71569c3aeeaea0e69dd",
+      "size_bytes": 18885
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-left-censored-ancestry-run-v2/staging/source/LBLRTM/aer_rt_utils/util_alpha.f90",
+      "sha256": "2bb1e2ccc32ef9cb93102aed1bcfa598a5c4b708b11a7d2d32779f5972de62ff",
+      "size_bytes": 10686
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-left-censored-ancestry-run-v2/staging/source/LBLRTM/aer_rt_utils/util_cray.f90",
+      "sha256": "6c2e3edc0aa4a6a394af9fede0d38c06ebd79fa74312962e1ad8dbf9ffbfa29b",
+      "size_bytes": 11193
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-left-censored-ancestry-run-v2/staging/source/LBLRTM/aer_rt_utils/util_dos.f90",
+      "sha256": "2a0b71951319e206ad65a86dd850d18cc4b699fb31a5076ccd5dc43b3f1a0691",
+      "size_bytes": 12016
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-left-censored-ancestry-run-v2/staging/source/LBLRTM/aer_rt_utils/util_gfortran.f90",
+      "sha256": "64d679afbffa23f81c5faf3289c562b37ee65019d5ff176dd19528cef71b99e2",
+      "size_bytes": 18911
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-left-censored-ancestry-run-v2/staging/source/LBLRTM/aer_rt_utils/util_hp.f90",
+      "sha256": "bc2c6d81194e66c644e8b06fb618087cbe7fd3ce17df8f81e6388a1b8ddafe00",
+      "size_bytes": 12256
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-left-censored-ancestry-run-v2/staging/source/LBLRTM/aer_rt_utils/util_linux_intel.f90",
+      "sha256": "5d4b43b4acb8544e890ae441ca8d65221c65e17b42dacbaf6c11e7efa39df785",
+      "size_bytes": 10776
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-left-censored-ancestry-run-v2/staging/source/LBLRTM/aer_rt_utils/util_linux_pgi.f90",
+      "sha256": "da4796d8146aedc57c27a84b142fef7b248be28743c52e47e9c236ed6f6fc6dc",
+      "size_bytes": 10775
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-left-censored-ancestry-run-v2/staging/source/LBLRTM/aer_rt_utils/util_sgi.f90",
+      "sha256": "60d5e9718b54d498388515660e762a4ab095d8f04ae406232aea3b98dff7f2dd",
+      "size_bytes": 11067
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-left-censored-ancestry-run-v2/staging/source/LBLRTM/aer_rt_utils/util_sun.f90",
+      "sha256": "1c0cd7227909a432313c2b1c140acc13e5e0840e00492c4cb384ff9130dc96b9",
+      "size_bytes": 10775
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-left-censored-ancestry-run-v2/staging/source/LBLRTM/build/addlibs.inc",
+      "sha256": "7e352483bed2577608e12535fcab6d248d61b81068b49dcc88f5f14ac9e5a1c2",
+      "size_bytes": 275
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-left-censored-ancestry-run-v2/staging/source/LBLRTM/build/make_lblrtm",
+      "sha256": "76fbc2ed792696fa2a5a3aab9c0bd56517d7df117922c4a868889c17f11de8bd",
+      "size_bytes": 6212
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-left-censored-ancestry-run-v2/staging/source/LBLRTM/build/makefile.common",
+      "sha256": "c7f91b5660102d409d2785a1be501171aa261b6056579b6fca0ed9b5ff0fff78",
+      "size_bytes": 13126
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-left-censored-ancestry-run-v2/staging/source/LBLRTM/src/contnm.f90",
+      "sha256": "6fbf59aa45b065515e0b95ae11d89d63981c1c844c08ee111039d4085bbec281",
+      "size_bytes": 523866
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-left-censored-ancestry-run-v2/staging/source/LBLRTM/src/fftscn.f90",
+      "sha256": "024db281deca20e762d8e66f83c2d7b75ebca05fe5291fc2b4c8f8f61551117c",
+      "size_bytes": 141987
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-left-censored-ancestry-run-v2/staging/source/LBLRTM/src/fftscn_dbl.f90",
+      "sha256": "702013c39d4607b775d4ba6f12a38a5b924658ac7dbefbace43139e68c940c43",
+      "size_bytes": 142381
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-left-censored-ancestry-run-v2/staging/source/LBLRTM/src/h2oCont_module.f90",
+      "sha256": "2407cf98c97a6028e0ab59823117bf26ab6df8a1fdb5087b38904974b8d5aa27",
+      "size_bytes": 6546
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-left-censored-ancestry-run-v2/staging/source/LBLRTM/src/lblatm.f90",
+      "sha256": "eae4009c11aca457aa7c70bfabe1148dd826091fee18b73bc0f4ffb84c9e2708",
+      "size_bytes": 326442
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-left-censored-ancestry-run-v2/staging/source/LBLRTM/src/lbldum.f90",
+      "sha256": "67fdcb1b486f849337d0e75a4dbd461acd02f9c87e58556b6c53dec1c790dc41",
+      "size_bytes": 2689
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-left-censored-ancestry-run-v2/staging/source/LBLRTM/src/lbllow.f90",
+      "sha256": "d44b57a8aac6255b8eca6e6531511198d85efb5928636f7b02bebcfed2712fb6",
+      "size_bytes": 376588
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-left-censored-ancestry-run-v2/staging/source/LBLRTM/src/lblparams.f90",
+      "sha256": "2c16053ab3109163fe504de67358a28057867a5743e4fef07fdad0e82acf58e6",
+      "size_bytes": 23881
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-left-censored-ancestry-run-v2/staging/source/LBLRTM/src/lblparams.inc",
+      "sha256": "c5e147612d555a64ba7374687af6d1c25f403ffd30f2efb32a3c14c023a771b2",
+      "size_bytes": 1870
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-left-censored-ancestry-run-v2/staging/source/LBLRTM/src/lblrtm.f90",
+      "sha256": "9ae22638469c4b9e60187b53e47f0a80d5fb502ffd4052f63f88f442dac45aca",
+      "size_bytes": 387500
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-left-censored-ancestry-run-v2/staging/source/LBLRTM/src/mt_ckd_h2o_module.f90",
+      "sha256": "d95d01074c6b188d7c37efd775f955ed33b84a83fa61e262ef8e917571a89615",
+      "size_bytes": 10409
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-left-censored-ancestry-run-v2/staging/source/LBLRTM/src/ncargks.f90",
+      "sha256": "ccaaa0a0e19f20cb4f2c1d4880f4324e1254f3dfbb12c5f70bdab6a6b49475ea",
+      "size_bytes": 11728
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-left-censored-ancestry-run-v2/staging/source/LBLRTM/src/nonlte.f90",
+      "sha256": "77a5df5b7b061f818b6736b9f310b863ed725c393856f3616ca1ba4aa12b337d",
+      "size_bytes": 106936
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-left-censored-ancestry-run-v2/staging/source/LBLRTM/src/nonlte_voigt.f90",
+      "sha256": "a39d2a94ddaa4b84c7760290995bf6e4ecf09a27356e2b6344a38c0280b9836b",
+      "size_bytes": 107343
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-left-censored-ancestry-run-v2/staging/source/LBLRTM/src/oprop.f90",
+      "sha256": "63f6383c698e2e63e9dcde3956f0f936364b38aeffeb23f41284cdfb8e19bf65",
+      "size_bytes": 504734
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-left-censored-ancestry-run-v2/staging/source/LBLRTM/src/oprop_voigt.f90",
+      "sha256": "efc975723aa0054120cef69ce3cd963734989c9e7cec7f10323ddeb978aae721",
+      "size_bytes": 494550
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-left-censored-ancestry-run-v2/staging/source/LBLRTM/src/phys_consts.f90",
+      "sha256": "aa8c481cf6ef71d1af64ad6c35c57601da8bd9142666f02c0a79b4e7a1477e4e",
+      "size_bytes": 2347
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-left-censored-ancestry-run-v2/staging/source/LBLRTM/src/planet_earth.f90",
+      "sha256": "9da9c5cb05e0ecddc3480dc72553c53b2d1e88033eed70ac4f69c545b87de031",
+      "size_bytes": 2429
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-left-censored-ancestry-run-v2/staging/source/LBLRTM/src/planet_mars.f90",
+      "sha256": "43aa4ff88ccaf9e64473f732d1abafec9c8856264c026dbd962e36a492a8fff4",
+      "size_bytes": 2145
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-left-censored-ancestry-run-v2/staging/source/LBLRTM/src/pltlbl.f90",
+      "sha256": "5e254de67f4332c4149a0e3eec1f3cf0def475577af2a66dad58aba1bbcc52ee",
+      "size_bytes": 72559
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-left-censored-ancestry-run-v2/staging/source/LBLRTM/src/postsub.f90",
+      "sha256": "de461a415f304c0346e209afff207db80b459d721a9af9a1bf39934ceb3cde3b",
+      "size_bytes": 116674
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-left-censored-ancestry-run-v2/staging/source/LBLRTM/src/read_module.f90",
+      "sha256": "36988999b02cd95b61f04d83780f7c0a1af414a7553a05de4bc22a3703061b9e",
+      "size_bytes": 7843
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-left-censored-ancestry-run-v2/staging/source/LBLRTM/src/solar.f90",
+      "sha256": "141220d94e76e9e872a69fc4076511cc86d50c08e0e49b47a0094fc033cba208",
+      "size_bytes": 50053
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-left-censored-ancestry-run-v2/staging/source/LBLRTM/src/solar_cycle.f90",
+      "sha256": "6a79849d618f4b53734bd7b30fb5d18ed29ce82d8c4e38c81e7692b8a3e60882",
+      "size_bytes": 6818
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-left-censored-ancestry-run-v2/staging/source/LBLRTM/src/struct_types.f90",
+      "sha256": "55b52495780ae564e66470f6ad3f32afd8b58e0c59a6b78ed82b3f606fb7b16c",
+      "size_bytes": 3110
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-left-censored-ancestry-run-v2/staging/source/LBLRTM/src/testmm.f90",
+      "sha256": "5b490958ba06337d8633b551977efd868a6cf8fcc224d57dc07acf676b06341a",
+      "size_bytes": 177927
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-left-censored-ancestry-run-v2/staging/source/LBLRTM/src/util_OS_X_absoft.f90",
+      "sha256": "c1fb90a534de8f5f8ce9049ef8e76ab9d76ea9064f31db21bff18dfb6a9a17d5",
+      "size_bytes": 11359
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-left-censored-ancestry-run-v2/staging/source/LBLRTM/src/util_OS_X_g95.f90",
+      "sha256": "c3de6460b89556a3e15de369cca0e9324205df90b42c81611205cfddeddd2ecb",
+      "size_bytes": 18409
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-left-censored-ancestry-run-v2/staging/source/LBLRTM/src/util_OS_X_ibm_xl.f90",
+      "sha256": "126c8dfb5f2638cd5a087adbdffef09108900feb75ac6d9ca0b162f5017fc7f4",
+      "size_bytes": 17966
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-left-censored-ancestry-run-v2/staging/source/LBLRTM/src/util_OS_X_ifort.f90",
+      "sha256": "5d4b43b4acb8544e890ae441ca8d65221c65e17b42dacbaf6c11e7efa39df785",
+      "size_bytes": 10776
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-left-censored-ancestry-run-v2/staging/source/LBLRTM/src/util_aix.f90",
+      "sha256": "7a7189ee020288885b1e86d1b5d6c703b1308d4086c5c71569c3aeeaea0e69dd",
+      "size_bytes": 18885
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-left-censored-ancestry-run-v2/staging/source/LBLRTM/src/util_alpha.f90",
+      "sha256": "2bb1e2ccc32ef9cb93102aed1bcfa598a5c4b708b11a7d2d32779f5972de62ff",
+      "size_bytes": 10686
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-left-censored-ancestry-run-v2/staging/source/LBLRTM/src/util_cray.f90",
+      "sha256": "6c2e3edc0aa4a6a394af9fede0d38c06ebd79fa74312962e1ad8dbf9ffbfa29b",
+      "size_bytes": 11193
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-left-censored-ancestry-run-v2/staging/source/LBLRTM/src/util_dos.f90",
+      "sha256": "2a0b71951319e206ad65a86dd850d18cc4b699fb31a5076ccd5dc43b3f1a0691",
+      "size_bytes": 12016
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-left-censored-ancestry-run-v2/staging/source/LBLRTM/src/util_gfortran.f90",
+      "sha256": "64d679afbffa23f81c5faf3289c562b37ee65019d5ff176dd19528cef71b99e2",
+      "size_bytes": 18911
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-left-censored-ancestry-run-v2/staging/source/LBLRTM/src/util_hp.f90",
+      "sha256": "bc2c6d81194e66c644e8b06fb618087cbe7fd3ce17df8f81e6388a1b8ddafe00",
+      "size_bytes": 12256
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-left-censored-ancestry-run-v2/staging/source/LBLRTM/src/util_linux_intel.f90",
+      "sha256": "5d4b43b4acb8544e890ae441ca8d65221c65e17b42dacbaf6c11e7efa39df785",
+      "size_bytes": 10776
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-left-censored-ancestry-run-v2/staging/source/LBLRTM/src/util_linux_pgi.f90",
+      "sha256": "da4796d8146aedc57c27a84b142fef7b248be28743c52e47e9c236ed6f6fc6dc",
+      "size_bytes": 10775
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-left-censored-ancestry-run-v2/staging/source/LBLRTM/src/util_sgi.f90",
+      "sha256": "60d5e9718b54d498388515660e762a4ab095d8f04ae406232aea3b98dff7f2dd",
+      "size_bytes": 11067
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-left-censored-ancestry-run-v2/staging/source/LBLRTM/src/util_sun.f90",
+      "sha256": "1c0cd7227909a432313c2b1c140acc13e5e0840e00492c4cb384ff9130dc96b9",
+      "size_bytes": 10775
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-left-censored-ancestry-run-v2/staging/source/LBLRTM/src/xmerge.f90",
+      "sha256": "e63307119ba87baa94e1535e06bbfafb7c3c2fb305f72d12d068be1b60dcf4b0",
+      "size_bytes": 237374
+    }
+  ],
+  "required_exact_diagnostic_outputs": [
+    "UDM37_CANDIDATE_DECISIONS",
+    "UDM37_R3_TERM_TRACE",
+    "UDM37_PANEL_TRACE"
+  ],
+  "runner_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-left-censored-ancestry-run-v2/run_once.py",
+  "runner_sha256": "8abbe8f2712a3385e1478d22157e33e0f67ef16a1b94bf060b7e3ceb1d8306de",
+  "runner_size_bytes": 20327,
+  "runtime_library_pins": [
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/root/usr/lib/x86_64-linux-gnu/libnetcdf.so.19",
+      "sha256": "04fc972259131718fd96f0ea876654fe0a410a4af1635349dc8ec1590764f0f5",
+      "size_bytes": 1395960
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/root/usr/lib/x86_64-linux-gnu/libnetcdff.so.7.1.0",
+      "sha256": "9e8fe96709d71af61b88ad88caff7db8899369162b96aee66ecd6a553a5370f9",
+      "size_bytes": 653744
+    },
+    {
+      "path": "/usr/lib/x86_64-linux-gnu/libaec.so.0.1.2",
+      "sha256": "4fd52145f7a3f0648b3f5a9527bc3143f96e47768bb68acd62bd12399871ddcc",
+      "size_bytes": 34808
+    },
+    {
+      "path": "/usr/lib/x86_64-linux-gnu/libbrotlicommon.so.1.1.0",
+      "sha256": "a91ead095d2c80520c55a89057bbe10b031a075340442e63f44b310f93883a1b",
+      "size_bytes": 141640
+    },
+    {
+      "path": "/usr/lib/x86_64-linux-gnu/libbrotlidec.so.1.1.0",
+      "sha256": "64d8a5019d4c294b89fde1193343ea324bbd8603652554e5545f0a01595fa2c5",
+      "size_bytes": 51512
+    },
+    {
+      "path": "/usr/lib/x86_64-linux-gnu/libc.so.6",
+      "sha256": "511f825ee075610ac9c0f7f91e2c13de2000d0f7b859f6461137e809a0a009d0",
+      "size_bytes": 2125328
+    },
+    {
+      "path": "/usr/lib/x86_64-linux-gnu/libcom_err.so.2.1",
+      "sha256": "022943b3b11c860b049bce41342f1c2594941b7b401d95dfdf235521099fee08",
+      "size_bytes": 18504
+    },
+    {
+      "path": "/usr/lib/x86_64-linux-gnu/libcrypto.so.3",
+      "sha256": "c19c2cf8d7cf91c4f273b1d3bbc56a9d19c91a739bfe57ad630756ee8ede7b77",
+      "size_bytes": 5305304
+    },
+    {
+      "path": "/usr/lib/x86_64-linux-gnu/libcurl-gnutls.so.4.8.0",
+      "sha256": "25a1efac8eb6e18913a29baf0d5340ae842398cb944c9e847bed7cb2a7a8f765",
+      "size_bytes": 765856
+    },
+    {
+      "path": "/usr/lib/x86_64-linux-gnu/libcurl.so.4.8.0",
+      "sha256": "bc0f65f0c1574a232b9cbd90bd5b45e04a1a263a04eae36007336dd5bbb2293c",
+      "size_bytes": 786336
+    },
+    {
+      "path": "/usr/lib/x86_64-linux-gnu/libffi.so.8.1.4",
+      "sha256": "00f593fe192f2851b8ce23b25cec2488d769beb5a8f63e8c9e563071e1075153",
+      "size_bytes": 47672
+    },
+    {
+      "path": "/usr/lib/x86_64-linux-gnu/libgcc_s.so.1",
+      "sha256": "02f3f192bf5f79b811f1e34a650fea443d407408703448906585232383957f60",
+      "size_bytes": 183024
+    },
+    {
+      "path": "/usr/lib/x86_64-linux-gnu/libgfortran.so.5.0.0",
+      "sha256": "5b574c8ad93f1d816afa2d53fb33684ff8f9a0de0fcbe51e0ec21ddf0a56a028",
+      "size_bytes": 3263912
+    },
+    {
+      "path": "/usr/lib/x86_64-linux-gnu/libgmp.so.10.5.0",
+      "sha256": "0ccdfb6d6f5c039465f6d002cf7e4c072d48ac6a2cffc8dd6c748dec31592804",
+      "size_bytes": 534896
+    },
+    {
+      "path": "/usr/lib/x86_64-linux-gnu/libgnutls.so.30.37.1",
+      "sha256": "96137275400f39510c9a533c6ad8a921e94266e664e7e09c9ad6ea9f23277c23",
+      "size_bytes": 2057632
+    },
+    {
+      "path": "/usr/lib/x86_64-linux-gnu/libgssapi_krb5.so.2.2",
+      "sha256": "b9a20df712d206654477c079f03b568276933e91cbe237e62af791f0f3ab8d8b",
+      "size_bytes": 338696
+    },
+    {
+      "path": "/usr/lib/x86_64-linux-gnu/libhdf5_serial.so.103.4.0",
+      "sha256": "aa9c9c402261b73469d0b79fe0d585537bdea8d4b5dab872fab613640277db0e",
+      "size_bytes": 3613632
+    },
+    {
+      "path": "/usr/lib/x86_64-linux-gnu/libhdf5_serial_hl.so.100.1.7",
+      "sha256": "f7612eea5f3df4d0fb7b7d8d0840b79ee25958e00da8d4934fe869ae36431a2b",
+      "size_bytes": 142800
+    },
+    {
+      "path": "/usr/lib/x86_64-linux-gnu/libhogweed.so.6.8",
+      "sha256": "c3c606139d4f7776efa4dbd4a6b62e30c916b07a0cafd8c3ef173d6f093607e3",
+      "size_bytes": 288920
+    },
+    {
+      "path": "/usr/lib/x86_64-linux-gnu/libicudata.so.74.2",
+      "sha256": "ddbb3718b8bd9cbd780e5ab08b4503c30a6c4fa0706ebe5d074ed6b596c1714e",
+      "size_bytes": 30795392
+    },
+    {
+      "path": "/usr/lib/x86_64-linux-gnu/libicuuc.so.74.2",
+      "sha256": "7560aadde38e5f4237a47a1ddd5891f9b36768a77a60faae30beee003ac01901",
+      "size_bytes": 2140336
+    },
+    {
+      "path": "/usr/lib/x86_64-linux-gnu/libidn2.so.0.4.0",
+      "sha256": "6e632fd9a3125db60bbc623719bbc17b0470330321c5b1c57f1ff7190e5551ad",
+      "size_bytes": 133192
+    },
+    {
+      "path": "/usr/lib/x86_64-linux-gnu/libk5crypto.so.3.1",
+      "sha256": "8394027f2be7c2cc7b2da4797476a8b688a21f75ee231941fa2df8d00ba79d08",
+      "size_bytes": 178648
+    },
+    {
+      "path": "/usr/lib/x86_64-linux-gnu/libkeyutils.so.1.10",
+      "sha256": "f48214417757f18793ed6e180cc14ee1d6f04252a518fc7270e8ca1d0b4260fe",
+      "size_bytes": 22600
+    },
+    {
+      "path": "/usr/lib/x86_64-linux-gnu/libkrb5.so.3.3",
+      "sha256": "52c143c9c77a223a4dac5449eac41fd2490e37c8a30430f1559c1421f4f8ed73",
+      "size_bytes": 823488
+    },
+    {
+      "path": "/usr/lib/x86_64-linux-gnu/libkrb5support.so.0.1",
+      "sha256": "8e1ef5a40f7b0d5b0fbcd6e4f28dd50b263650338a2bb72503be34632f3629d6",
+      "size_bytes": 47904
+    },
+    {
+      "path": "/usr/lib/x86_64-linux-gnu/liblber.so.2.0.200",
+      "sha256": "6f6935b26c962d5b51ef2011332472cfd96ff244a4edc9d47120be6faa70e602",
+      "size_bytes": 59888
+    },
+    {
+      "path": "/usr/lib/x86_64-linux-gnu/libldap.so.2.0.200",
+      "sha256": "4a0664ab6a8a66c685e78d5604b79df330f5710f0c5e2c382536a8325dc4c2a4",
+      "size_bytes": 372400
+    },
+    {
+      "path": "/usr/lib/x86_64-linux-gnu/liblzma.so.5.4.5",
+      "sha256": "a9793942a8a5f6f4d0f523ef9e0a5be4f0033f2c6c28520cd2b4e706d53c6e17",
+      "size_bytes": 202904
+    },
+    {
+      "path": "/usr/lib/x86_64-linux-gnu/libm.so.6",
+      "sha256": "f06f2ce1f1833df5f41cf13b6447ff07bea993ad9b27297d3428c2f70ab3f0e7",
+      "size_bytes": 952616
+    },
+    {
+      "path": "/usr/lib/x86_64-linux-gnu/libnettle.so.8.8",
+      "sha256": "a245ed916229583d6fe0b07657b3ed945bc148c28cc08b5266295f620d2b91cc",
+      "size_bytes": 342280
+    },
+    {
+      "path": "/usr/lib/x86_64-linux-gnu/libnghttp2.so.14.26.0",
+      "sha256": "398c6d2025210279f4c7413ebdb7f4c63bc5afda5ec3b1ccc58885a65acc2b78",
+      "size_bytes": 170352
+    },
+    {
+      "path": "/usr/lib/x86_64-linux-gnu/libp11-kit.so.0.3.1",
+      "sha256": "c6b469a006685ebf2075e200180c3b21f41b88ad722c5697d736ea558cfe3ea1",
+      "size_bytes": 1714008
+    },
+    {
+      "path": "/usr/lib/x86_64-linux-gnu/libpsl.so.5.3.4",
+      "sha256": "ae6c5a9aecc249fc66e03c16ec6c4385d09d7e12e0ea7694bb831ab4fee8133c",
+      "size_bytes": 75768
+    },
+    {
+      "path": "/usr/lib/x86_64-linux-gnu/libresolv.so.2",
+      "sha256": "878e927be164fde61bf85f44c27901a1d569526f5c8f058990e8a4edc3df1fa0",
+      "size_bytes": 68104
+    },
+    {
+      "path": "/usr/lib/x86_64-linux-gnu/librtmp.so.1",
+      "sha256": "15a2a75e8c437b9c99971b5ee10278ab110beef1a56d1d9e5d6759ea140e98ac",
+      "size_bytes": 121848
+    },
+    {
+      "path": "/usr/lib/x86_64-linux-gnu/libsasl2.so.2.0.25",
+      "sha256": "a0f410ad093236856eee59c4ff2838dc04d932ea0993400f23ed77d67d85af34",
+      "size_bytes": 101200
+    },
+    {
+      "path": "/usr/lib/x86_64-linux-gnu/libssh.so.4.9.6",
+      "sha256": "ed3828e179eaea8effe1b6b001ae827b38de4575d2fa768c04489dc74b54ccde",
+      "size_bytes": 458264
+    },
+    {
+      "path": "/usr/lib/x86_64-linux-gnu/libssl.so.3",
+      "sha256": "63597a81ef19496ad0423cbaaf04d5b0244c7a9e261e331a5a7f3ac0fcdb9590",
+      "size_bytes": 696512
+    },
+    {
+      "path": "/usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.33",
+      "sha256": "a68762c86d371e6041f03f03a33a78fa235809ae7d81c90185940c93c3535aed",
+      "size_bytes": 2592224
+    },
+    {
+      "path": "/usr/lib/x86_64-linux-gnu/libsz.so.2.0.1",
+      "sha256": "e73fa40252e84d38d64f9b3268ae6679530a777a55d6478d6b24de176d845c4b",
+      "size_bytes": 14256
+    },
+    {
+      "path": "/usr/lib/x86_64-linux-gnu/libtasn1.so.6.6.3",
+      "sha256": "7c9c7830afbaac7b07ec21ddaa6b4d606423432c264efd2636e8ca9734b4d7b6",
+      "size_bytes": 88216
+    },
+    {
+      "path": "/usr/lib/x86_64-linux-gnu/libunistring.so.5.0.0",
+      "sha256": "7bcf825cd449892db5105ad2aed91dcf94a27b796426600c765720c584c54dd1",
+      "size_bytes": 1755312
+    },
+    {
+      "path": "/usr/lib/x86_64-linux-gnu/libxml2.so.2.9.14",
+      "sha256": "0ec89f65e1868cb79caa8a4cd5f47194ce95ac09f7a1d49e76049f391254a3a3",
+      "size_bytes": 1967424
+    },
+    {
+      "path": "/usr/lib/x86_64-linux-gnu/libz.so.1.3",
+      "sha256": "9b64150b28505a33d6bc3ecf709c279f6de97a1c184dbda65d06ee4537f6d286",
+      "size_bytes": 113000
+    },
+    {
+      "path": "/usr/lib/x86_64-linux-gnu/libzstd.so.1.5.5",
+      "sha256": "0a2128bc10841fb29e76d08d945864dfb0b6a66da5df6df5d8299197439e54bb",
+      "size_bytes": 755864
+    },
+    {
+      "path": "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2",
+      "sha256": "6222a16be7f2d458d6870efe6e715fc0c8d45766fb79cf7dcc3125538d703e28",
+      "size_bytes": 236616
+    }
+  ],
+  "schema": "UDM37_LBLRTM_LEFT_CENSORED_ANCESTRY_RUN_V1",
+  "scope": "One observational all-VFT reason9 logger for exactly69 censored prefix IDs plus3 dominant negative R3 contributor IDs; one incremental OPROP build, at most one held-case instrumented solve; no physics or numerical threshold changes.",
+  "source_preparation_pins": [
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-left-censored-ancestry-source-v2/oprop.ancestry.f90",
+      "sha256": "63f6383c698e2e63e9dcde3956f0f936364b38aeffeb23f41284cdfb8e19bf65",
+      "size_bytes": 504734
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-left-censored-ancestry-source-v2/ancestry.patch",
+      "sha256": "2730bd47785d6471cfb9717d237dec8cf971eea5f1c4973219854cc3b4329e9d",
+      "size_bytes": 7162
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-left-censored-ancestry-source-v2/plan.json",
+      "sha256": "9e1fe2f83a637d6edde25771ba75d15089d7f81e3e1a7f2ca2bb1d63da6d1b6d",
+      "size_bytes": 7340
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-left-censored-ancestry-source-v2/allowlist.json",
+      "sha256": "83dd68dbde3637ecfb56dd65894c41d59ec02b584de18e1725487d2a43a2eae4",
+      "size_bytes": 18502
+    }
+  ],
+  "source_review_pins": [
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-left-censored-ancestry-source-v2/root-static-review.json",
+      "sha256": "0122391c087c59e3d01852cc4f66f91daf65f8a61161f6ef45afa7638a3d8f75",
+      "size_bytes": 1112
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-left-censored-ancestry-static-review-v2/review.json",
+      "sha256": "92a13bf011d0adb4dc62aab5190080bb8a2ec63581f280c00e01476e8d540bb9",
+      "size_bytes": 2538
+    }
+  ],
+  "stage_receipt_pin": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-left-censored-ancestry-run-v2/staging/stage-receipt.json",
+    "sha256": "b8797fb4c8be282499d1d5aad29ad6df50c43a51429e82baabdebfcfc6fd7813",
+    "size_bytes": 48592
+  },
+  "status": "STAGED_READY_FOR_REVIEW_NOT_EXECUTED"
+}

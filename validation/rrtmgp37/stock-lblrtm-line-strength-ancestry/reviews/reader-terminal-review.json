@@ -1,0 +1,51 @@
+{
+  "status": "PASS_SCOPED_DERIVED_REPORT_REVIEW_OUTER_FAILURE_PRESERVED",
+  "reviewed_at": "2026-10-06",
+  "scope": "Independent review of the small terminal receipt, authorization/claim manifests, and derived report only. No raw solver output, OD files, or trace artifact was reopened; no replay, model, build, or solver was run.",
+  "pins": {
+    "report": {
+      "path": "build/udm37-lblrtm-ancestry-reader-result-v2/report.json",
+      "sha256": "f94476c8dcb2ae707fc04a07b6cc6f9afd4ff5d0af4bc19f876710887c491993",
+      "size_bytes": 1387853
+    },
+    "reader_execution": {
+      "path": "build/udm37-lblrtm-ancestry-reader-execution-v2/execution.json",
+      "sha256": "33198f319fcf567ffbf1939ee39a46b2458d3460e794e1f1d93e5a7d1f3c17b5",
+      "size_bytes": 353
+    },
+    "authorization": {
+      "path": "build/udm37-lblrtm-ancestry-reader-execution-v2/authorization.json",
+      "sha256": "df86efa308ed253993fc65464a400117a7c68939844556628de25aebe6ee9faf"
+    },
+    "reader_claim": {
+      "path": "build/udm37-lblrtm-ancestry-reader-result-v2/reader-claim.json",
+      "sha256": "8fd9721e5b53a742585e44bf3f564d8166dff496d2b0afd4dab0b6d0f99d14c6"
+    },
+    "preserved_outer_runner_failure": {
+      "path": "build/udm37-lblrtm-left-censored-ancestry-run-v2/solver-postflight.json",
+      "sha256": "bc9c8951dc89767519267665da0674c6447ed9e050ea1c34f664ad7da9e3c8bf",
+      "outer_runner_rc": 3
+    }
+  },
+  "independent_checks": {
+    "terminal_reader_process": "PASS: reader execution receipt is TERMINAL for PID 2043083, child RC0, reaped true, timed_out false, exception null; elapsed time is about 8.18 seconds.",
+    "report_authorization_binding": "PASS: reader claim plan/script hashes equal the reviewed v5 plan/script hashes; claim reader PID and RC match the candidate child recorded in the derived report. The report's 99 path/hash/size triples equal the 99 authorization triples and are unique. No underlying raw files were rehashed by this reviewer.",
+    "ancestry_roster": "PASS: 72 records and 72 unique identities; group coverage/counts are 69 left-censored-prefix identities plus 3 dominant-negative identities; duplicate event keys and duplicate occurrences both zero.",
+    "joins": "PASS scoped: prefix 69/69 have an earlier-VFT event and selected phase-3 reason-12 entry; 3/3 dominant identities have selected-window ancestry and phase-3 entries. Join counts are 69 prefix events and 3 dominant events, with no ambiguous joins or missing entries.",
+    "transport_values": "PASS: canonical transport checks are 276 prefix (69 x 4) plus 27 dominant (12 ancestry-to-phase3 plus 15 same-call) = 303, with zero bit differences.",
+    "source_order_thermal_diagnostics": "PASS descriptive: 72 corrected-SUI rows; combined SUI/SP/SPPSP source-order recomputation reports zero binary64 residual in the saved report. This is diagnostic evidence, not an independent original coefficient reconstruction or physical-acceptance test.",
+    "negative_r3_context": "PASS scoped to inherited accounting report: three designated identities each retain four negative target-grid operands and positive SP; no R3 terms were independently recomputed here.",
+    "candidate_comparison": "PASS scoped: 25,070 token differences on 14,379 records remain reported, all within the reader's narrowly allowed source-uninitialized I21 fields. Candidate CAND raw bytes remain unequal; no strict equality is claimed.",
+    "spectra": "PASS preserved: derived report states all 45 OD files / 63,838,065 samples are bitwise equal, with only header word 168 (HTIME) differing. Negative OD acceptance remains FAIL_RETAINED_NO_CLIPPING.",
+    "outer_failure": "PASS preserved: outer model runner RC3 remains explicitly recorded and is not superseded by the saved-data diagnostic PASS."
+  },
+  "report_label_correction": {
+    "path": "build/udm37-lblrtm-ancestry-reader-independent-result-review-v2/report-label-correction.json",
+    "meaning": "The report's dominant_same_call_bit_checks field is a legacy label: in the prefix group its 276 count represents cross-VFT transport checks, not same-call checks. matched_event_count likewise increments once per field comparison. Use joined_ancestry_to_selected_candidate_events for actual event joins and the canonical totals documented in the correction file. The source report is preserved unchanged."
+  },
+  "limitations": [
+    "This report reviews derived results and receipts only; it is not an independent raw-array recomputation.",
+    "The report observes source-loaded LNCOR S but does not validate original AER ASCII coefficients or reconstruct absolute initial strength because WKL/WKI gas amounts are absent.",
+    "Neither the 69/3 ancestry joins nor bitwise same-call transport establish the physical validity of negative OD."
+  ]
+}

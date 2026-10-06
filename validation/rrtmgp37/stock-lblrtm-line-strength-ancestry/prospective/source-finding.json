@@ -1,0 +1,43 @@
+{
+  "status": "ADDITIVE_SOURCE_ONLY_UNAVAILABLE_METADATA_FINDING",
+  "base_executed_source": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-left-censored-ancestry-source-v2/oprop.ancestry.f90",
+    "sha256": "63f6383c698e2e63e9dcde3956f0f936364b38aeffeb23f41284cdfb8e19bf65",
+    "size_bytes": 504734
+  },
+  "prior_finding": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-ancestry-unavailable-metadata-source-v1/source-finding.json",
+    "sha256": "94852a74e9be524f75c11b196906fa8b5b7e55ee6087eb439f2a3fd49ab3583d",
+    "size_bytes": 1477
+  },
+  "routine": "CNVFNV",
+  "field": "KPANEL",
+  "implicit_type": "INTEGER from initial K; no /IFIL/ COMMON binding and no assignment in CNVFNV",
+  "scope": {
+    "phase": 3,
+    "reasons": [
+      10,
+      11,
+      12,
+      13
+    ],
+    "hooks": 4,
+    "numeric_field_index_1based": 13,
+    "tag_inclusive_token_index_0based": 13,
+    "tag_inclusive_token_index_1based": 14
+  },
+  "contrasting_defined_field": "IPANEL/IDATA are bound to named /XSUB/ in CNVFNV, so no phase3 exceptions are proposed for them.",
+  "root_reported_runtime_context": "Reader-v3 PID2020164 RC1 stopped at CAND line10518 before45 spectra scan. Root bounded observation reports only phase3 reason10 token13 KPANEL differs. This report author did not read any actual raw record.",
+  "unchanged": "Only candidate logger arguments changed; physical source operations, common blocks, branches, ancestry helper and R3/PANEL hooks unchanged.",
+  "execution_status": "PROSPECTIVE_UNCOMPILED_UNRUN",
+  "counts": {
+    "compiler": 0,
+    "solver": 0,
+    "reader": 0,
+    "raw_reads": 0
+  },
+  "limits": [
+    "The original strict raw hashFAIL and failed reader-v3 receipt remain immutable.",
+    "A future reader exception is diagnostic availability handling, not physical tolerance relaxation or a tested source correction."
+  ]
+}
