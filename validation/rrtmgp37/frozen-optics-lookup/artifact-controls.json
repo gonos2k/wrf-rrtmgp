@@ -1,0 +1,159 @@
+{
+  "status": "PASS",
+  "valid_generation_receipt_sha256": "c5116f4a3bb4e77dc8bed481ce52c07b29ee5f8d65fa6a5657a324c51e9a619c",
+  "validator_sha256": "bf6714e2e3fd773368295318bf95819e88b069f28a22576a86740a8a1d27925f",
+  "test_sha256": "ec6ed062ebe12b5af1d27d4f594720c7186f3358fa76ede3fa589e67ee1a89ca",
+  "cases": [
+    {
+      "name": "table-hash",
+      "status": "EXPECTED_REJECTION",
+      "reason": "Table hash differs from receipt"
+    },
+    {
+      "name": "status",
+      "status": "EXPECTED_REJECTION",
+      "reason": "Incomplete generator receipt"
+    },
+    {
+      "name": "lambda-axis",
+      "status": "EXPECTED_REJECTION",
+      "reason": "Lambda axis/receipt mismatch"
+    },
+    {
+      "name": "temperature-axis",
+      "status": "EXPECTED_REJECTION",
+      "reason": "Temperature axis/receipt mismatch"
+    },
+    {
+      "name": "missing-row",
+      "status": "EXPECTED_REJECTION",
+      "reason": "Missing spectral task receipt"
+    },
+    {
+      "name": "duplicate-row",
+      "status": "EXPECTED_REJECTION",
+      "reason": "Duplicate spectral task receipt"
+    },
+    {
+      "name": "task-index",
+      "status": "EXPECTED_REJECTION",
+      "reason": "Unknown spectral task"
+    },
+    {
+      "name": "task-values",
+      "status": "EXPECTED_REJECTION",
+      "reason": "Table does not match task receipt"
+    },
+    {
+      "name": "negative-moment",
+      "status": "EXPECTED_REJECTION",
+      "reason": "Negative optical moment"
+    },
+    {
+      "name": "nonfinite-moment",
+      "status": "EXPECTED_REJECTION",
+      "reason": "Nonfinite lw_scattering_times_density"
+    },
+    {
+      "name": "wrong-units",
+      "status": "EXPECTED_REJECTION",
+      "reason": "Wrong lambda units/dtype"
+    },
+    {
+      "name": "closure",
+      "status": "EXPECTED_REJECTION",
+      "reason": "Extinction=absorption+scattering closure"
+    },
+    {
+      "name": "workspace",
+      "status": "EXPECTED_REJECTION",
+      "reason": "Workspace bound"
+    },
+    {
+      "name": "pruning",
+      "status": "EXPECTED_REJECTION",
+      "reason": "Excessive quadrature pruning"
+    },
+    {
+      "name": "bounds",
+      "status": "EXPECTED_REJECTION",
+      "reason": "SW band contract"
+    },
+    {
+      "name": "generator-source",
+      "status": "EXPECTED_REJECTION",
+      "reason": "Generator source identity differs; use its matching checkout"
+    },
+    {
+      "name": "kernel-source",
+      "status": "EXPECTED_REJECTION",
+      "reason": "Kernel/source-manifest identities differ"
+    },
+    {
+      "name": "input-source",
+      "status": "EXPECTED_REJECTION",
+      "reason": "Pinned input identities differ"
+    },
+    {
+      "name": "adaptation-source",
+      "status": "EXPECTED_REJECTION",
+      "reason": "Compiled precision adaptation identity differs"
+    },
+    {
+      "name": "local-library",
+      "status": "EXPECTED_REJECTION",
+      "reason": "Local compiled library identity differs"
+    },
+    {
+      "name": "local-adaptation",
+      "status": "EXPECTED_REJECTION",
+      "reason": "Local adaptation manifest differs"
+    },
+    {
+      "name": "order-control",
+      "status": "EXPECTED_REJECTION",
+      "reason": "Invalid receipt control: order"
+    },
+    {
+      "name": "order-bool",
+      "status": "EXPECTED_REJECTION",
+      "reason": "Invalid receipt control: order"
+    },
+    {
+      "name": "step-control",
+      "status": "EXPECTED_REJECTION",
+      "reason": "Invalid spectral spacing control"
+    },
+    {
+      "name": "workspace-control",
+      "status": "EXPECTED_REJECTION",
+      "reason": "Invalid receipt control: max_terms"
+    },
+    {
+      "name": "workers-control",
+      "status": "EXPECTED_REJECTION",
+      "reason": "Invalid receipt control: workers"
+    },
+    {
+      "name": "chunk-control",
+      "status": "EXPECTED_REJECTION",
+      "reason": "Invalid receipt control: spectral_chunk_size"
+    },
+    {
+      "name": "flags-control",
+      "status": "EXPECTED_REJECTION",
+      "reason": "Compiled flag contract differs"
+    },
+    {
+      "name": "quadrature-control",
+      "status": "EXPECTED_REJECTION",
+      "reason": "Quadrature algorithm contract differs"
+    },
+    {
+      "name": "pruning-control",
+      "status": "EXPECTED_REJECTION",
+      "reason": "Quadrature pruning contract differs"
+    }
+  ],
+  "scope": "Artifact schema and receipt identities, not material/optical model accuracy"
+}

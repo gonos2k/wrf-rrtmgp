@@ -58,6 +58,46 @@ This reports differences without granting a scientific PASS. The optional
 tolerance only. Validate spectral spacing, quadrature order, interpolation and
 state coverage separately before using a table in a model.
 
+## Offline lookup and interpolation audit
+
+`lookup.py` loads the complete validated artifact and rejects all size or
+temperature extrapolation. It interpolates `kappa*rho_bulk/lambda` linearly in
+`log(lambda)`, restores query lambda, and interpolates LW source temperature
+linearly. The constant-Q sphere limit is therefore exact. Interpolating the
+four optical moments before deriving albedo/asymmetry preserves their closure
+and bounds. These are algebraic properties, not bounds on error versus Mie.
+
+```bash
+python3 tools/udm_frozen_optics/test_lookup.py \
+  --generation build/frozen-o128-s50 --output-dir build/frozen-lookup-check
+python3 tools/udm_frozen_optics/validate_lookup.py \
+  --table build/frozen-o128-s50 --direct build/frozen-held-out \
+  --output build/frozen-interpolation-report.json
+```
+
+The direct artifact must use identical material, kernel and numerical controls
+and contain separate query sizes/temperatures. The checker reports sampled
+interpolation differences; it has no default scientific acceptance threshold.
+`test_lookup.py` also checks the public UDM constants against the current source.
+Its double-precision reconstructed slope is an algebraic state diagnostic,
+not a bitwise reproduction of UDM's single-precision process work arrays.
+
+`FrozenTable.optical_depth` consumes every supplied positive path, including
+small masses below the UDM process activation cutoff, with `path_g_m2*1e-3`
+and the explicit bulk density. It leaves grid-mean versus in-occurrence path,
+precipitation fraction, cloud mask and delta scaling to the caller. No WRF
+configuration is enabled by this API. Source temperature only changes Planck
+weighting; warm-layer hail queries do not imply a validated melting/wet-coating
+material model.
+
+The initial three-size reference had a sampled maximum interpolation difference
+of 4.38% normalized by direct extinction. Five-size and nine-size refinements
+reduced their newly sampled midpoint maxima to 1.54% and 0.440%. The separate
+temperature-only midpoint check gave 0.0201%. The samples differ between size
+refinement levels; none is a global error bound, a quadrature convergence claim
+or a forecast error. Full receipts and table/axis choices are in
+[`frozen-optics-lookup`](../../validation/rrtmgp37/frozen-optics-lookup/README.md).
+
 ## Mass and size contract
 
 Let diameter `D` be in metres and `N(D)=N0 exp(-lambda D)`. For the chosen sphere
@@ -168,8 +208,9 @@ agreement does not by itself imply convergence of an oscillatory Mie integrand.
 ## Remaining integration gates
 
 The lambda/temperature fixtures above are a numerical test matrix, not a
-production interpolation grid. Live WRF support still needs an explicit
-experimental model selector, validated interpolation/range rejection, mass and
+production interpolation grid. The offline lookup and sampled holdouts do not
+establish full state coverage or certified error. Live WRF support still needs an explicit
+experimental model selector, further interpolation/state validation, mass and
 occurrence contracts, all nonzero qg/qh consumption, trace/replay extensions,
 species limits, same-state RRTMG comparison, and full real-case restart/MPI/
 OpenMP/24–48-hour checks. Default hail rejection remains in force until such a

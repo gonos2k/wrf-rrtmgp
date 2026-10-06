@@ -143,7 +143,7 @@ jobs:
           python3 tools/udm_frozen_optics/generate.py \
             --input-dir build/frozen-reference/input --fetch-inputs \
             --output-dir build/frozen-reference/smoke \
-            --lambda-grid 20000 --temperatures 233 250 \
+            --lambda-grid 15000 20000 --temperatures 233 250 \
             --order 32 --spectral-step 50 --workers 2
       - name: Reject malformed tables and inconsistent task receipts
         run: |
@@ -152,6 +152,21 @@ jobs:
           python3 tools/udm_frozen_optics/compare.py \
             --candidate build/frozen-reference/smoke --reference build/frozen-reference/smoke \
             --output build/frozen-reference/self-comparison.json
+      - name: Check offline lookup units, exact limits and state rejection
+        run: |
+          python3 tools/udm_frozen_optics/test_lookup.py \
+            --generation build/frozen-reference/smoke --output-dir build/frozen-reference/lookup-checks
+          python3 tools/udm_frozen_optics/generate.py \
+            --input-dir build/frozen-reference/input \
+            --output-dir build/frozen-reference/held-out \
+            --lambda-grid 17320.508075688773 --temperatures 241.5 \
+            --order 32 --spectral-step 50 --workers 2
+          python3 tools/udm_frozen_optics/validate_lookup.py \
+            --table build/frozen-reference/smoke --direct build/frozen-reference/held-out \
+            --output build/frozen-reference/interpolation-report.json
+          python3 tools/udm_frozen_optics/test_lookup_validator.py \
+            --table build/frozen-reference/smoke --direct build/frozen-reference/held-out \
+            --output-dir build/frozen-reference/report-contract-checks
       - name: Save numerical artifacts without claiming live WRF G/H validation
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
@@ -168,6 +183,11 @@ jobs:
             build/frozen-reference/smoke/frozen-ice-psd-moments.nc
             build/frozen-reference/rejections/result.json
             build/frozen-reference/self-comparison.json
+            build/frozen-reference/lookup-checks/result.json
+            build/frozen-reference/held-out/result.json
+            build/frozen-reference/held-out/frozen-ice-psd-moments.nc
+            build/frozen-reference/interpolation-report.json
+            build/frozen-reference/report-contract-checks/result.json
           retention-days: 30
           if-no-files-found: warn
   independent-rfmip:
