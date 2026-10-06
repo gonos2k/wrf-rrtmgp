@@ -1,0 +1,129 @@
+{
+  "pins": {
+    "build_result": {
+      "path": "build/udm37-netcdf-zz-mpi-build-v1/result.json",
+      "sha256": "dffc3cebaa84b6c9ffcd32e2ab20f484f3222d2d1a72fab7f7e94cb840a590b2",
+      "size_bytes": 3238
+    },
+    "control_execution": {
+      "path": "build/udm37-netcdf-zz-control-13h-v1/execution.json",
+      "sha256": "8867b07c066f1c86969700c6944743a5ae20e843daa120a00aef90c906dea495",
+      "size_bytes": 206659
+    },
+    "control_preparer_executed": {
+      "ast_parse": "PASS",
+      "path": "build/prepare-netcdf-zz-control-executed-v1.py",
+      "sha256": "1725e7cedb75327f096958b9fbc44b6e6dd4124a4bd6788d55ce82a03985b9ff",
+      "size_bytes": 11624
+    },
+    "control_stage_plan": {
+      "path": "build/udm37-netcdf-zz-control-13h-v1/stage-plan.json",
+      "sha256": "3aa11f71b3d0e97e5f5d98867ec6ec95c296268f4ded0d1ef778d5820ff5a3ec",
+      "size_bytes": 100947
+    },
+    "pending_authorization": {
+      "path": "build/udm37-netcdf-zz-restart-read-v1/PENDING_ROOT_AUTHORIZATION.json",
+      "sha256": "1208f14e115595ef3391f5fcbc431f5ced34b3600aeb43126e5789d15d82d23d",
+      "size_bytes": 446
+    },
+    "restart_preparer_executed": {
+      "ast_parse": "PASS",
+      "path": "build/prepare-netcdf-zz-restart-read-executed-v1.py",
+      "sha256": "a12a18ae907ec8bab0397a2caf23fcd0f09523881a443f4be55d3e66a8c8742c",
+      "size_bytes": 16360
+    },
+    "restart_runner": {
+      "ast_parse": "PASS",
+      "path": "build/udm37-netcdf-zz-restart-read-runner-v1.py",
+      "sha256": "3c93461b0d1c8b4a8ef7e58b7ef51c79e4a0cd43b4918839be76278e33a1f93c",
+      "size_bytes": 24367
+    },
+    "stage_plan": {
+      "path": "build/udm37-netcdf-zz-restart-read-v1/stage-plan.json",
+      "sha256": "4162b3479f859cc803947b184c1238db63b7ecc53472ba335e06e04e11cb00d3",
+      "size_bytes": 2287385
+    }
+  },
+  "producer_consumer_joins": {
+    "arms": {
+      "ra37": {
+        "14_times_exact_00_through_13": true,
+        "actual_rc": 0,
+        "checkpoint_file_time_verified_from_readonly_netcdf": "2016-10-06_12:00:00",
+        "checkpoint_scan_join": true,
+        "continuous_history_clock_verified_from_saved_control_receipt": "2016-10-06_00:00:00 through 2016-10-06_13:00:00, hourly",
+        "history_scan_join": true,
+        "reaped": true,
+        "seed_dimensions_globals_unchanged": true,
+        "seed_only_recorded_delta": [
+          "ISEEDARR_MULT3D"
+        ],
+        "staged_executable_joins_build": true,
+        "status": "PASS_RUNTIME_SCOPED",
+        "validation_status": "PASS_RUNTIME_SCOPED",
+        "wrf.exe_actual_sha256": "7ed9eaed949ed4d67f25395713979f3f2734523b47ff1269cf5622654489adf0",
+        "wrfrst_d01_2016-10-06_12:00:00_actual_sha256": "db396c6e430704d5a640282b971d26652b3ea060bf04b9ef2710e44a9e3b700b"
+      },
+      "ra4": {
+        "14_times_exact_00_through_13": true,
+        "actual_rc": 0,
+        "checkpoint_file_time_verified_from_readonly_netcdf": "2016-10-06_12:00:00",
+        "checkpoint_scan_join": true,
+        "continuous_history_clock_verified_from_saved_control_receipt": "2016-10-06_00:00:00 through 2016-10-06_13:00:00, hourly",
+        "history_scan_join": true,
+        "reaped": true,
+        "seed_dimensions_globals_unchanged": true,
+        "seed_only_recorded_delta": [
+          "ISEEDARR_MULT3D"
+        ],
+        "staged_executable_joins_build": true,
+        "status": "PASS_RUNTIME_SCOPED",
+        "validation_status": "PASS_RUNTIME_SCOPED",
+        "wrf.exe_actual_sha256": "7ed9eaed949ed4d67f25395713979f3f2734523b47ff1269cf5622654489adf0",
+        "wrfrst_d01_2016-10-06_12:00:00_actual_sha256": "5f241083abda93f3c6b25598cb0e7364c34e2c919fa9da454a16d7c8fde1bb7e"
+      }
+    },
+    "control_build_join": true,
+    "control_stage_plan_join": true,
+    "control_status": "PASS_PAIRED_RUNTIME_SCOPED",
+    "head_match": true,
+    "library_join_to_control": true,
+    "model_calls": 2,
+    "mpi_join": true,
+    "runtime_library_pin_count": 50,
+    "scanner_join": true,
+    "tree_match": true
+  },
+  "review_notes": [
+    "The explicit authorization status gate now rejects pending authorization and requires bounded root execution with physical and active-stochastic acceptance false.",
+    "Continuous-reference comparator enforces all 14 exact hourly timestamps, matching NetCDF data_model and complete dimension map; only Time extent may differ (one resumed record vs fourteen continuous records), while unlimited flags and all other dimension sizes must match.",
+    "Runner checks strict raw arrays, per-variable attributes, numeric scans, and seed persistence; global-attribute differences are recorded and not accepted as metadata approval.",
+    "The executed preparer hash is recorded in the plan and manually verified here; the runner itself does not recheck the executed-preparer file. This is nonblocking after the stage is frozen and root authorization binds the exact stage plan.",
+    "Pending authorization is still pending; only the root may issue the final authorization. No model execution was authorized by this review."
+  ],
+  "root_reported_stage_verifier": "PASS_STAGED_UNRUN (not invoked independently in this review)",
+  "schema": "UDM_NETCDF_ZZ_RESTART_READ_INDEPENDENT_PRELAUNCH_REVIEW_V3",
+  "scope": "Read-only review of frozen prepared stage, runner, build receipt, and saved 13-hour control receipts. No preparer, model, compiler, or solver was run.",
+  "stage_readback": {
+    "arm_roster_counts": {
+      "ra37": 105,
+      "ra4": 105
+    },
+    "case_file_rosters_match_names": {
+      "ra37": true,
+      "ra4": true
+    },
+    "current_pending_auth_status": "PENDING_ROOT_REVIEW_CURRENT_STAGE",
+    "execution_receipt_exists": false,
+    "models_launched": 0,
+    "one_use_lock_exists": false,
+    "pending_auth_matches_plan": true,
+    "pending_auth_matches_runner": true,
+    "reported_stage_status": "STAGED_UNRUN",
+    "staged_outputs_absent": {
+      "ra37": true,
+      "ra4": true
+    }
+  },
+  "status": "PASS_SCOPED_PRELAUNCH_REVIEW"
+}
