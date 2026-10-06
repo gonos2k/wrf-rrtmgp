@@ -1,0 +1,59 @@
+{
+  "status": "PASS_SCOPED_SAVED_FIXTURE_REVIEW",
+  "scope": "Read-only review of immutable source, manifest, execution receipts/logs, result metadata, and generated NetCDF arrays. No compilation, model, or fixture rerun.",
+  "subject": {
+    "path": "build/udm37-netcdf-zz-fixture-v1",
+    "result_sha256": "1d6861643f91c5c8d38a0c38312533501cb0d42e72a6383c920f715c6a4f31d7",
+    "manifest_sha256": "c39ccef746a831ce018bb95851eaa82f28b6d298491fbbc9b9aa8f39f3150ce5",
+    "run_v2_execution_sha256": "74f69f20b0c67c17d4717ceaa3a20f2e8b912f4e5e7d775ef85d0f7a381245f6",
+    "run_v1_execution_sha256": "223a53d76412a85a365b063553c42d38980f2b9a5d047cb53548ac8b67c8fe30",
+    "source_patch_sha256": "58b34ffa5724b08503010965ebf57a2540351e8f71358e4e1d5b6e78e7dd800d",
+    "source_pins": [
+      {"path":"WRF/external/io_netcdf/wrf_io.F90","sha256":"670b6934259528e664af100692390d5289188e17a604e52c94d4a49ec6a7c5b1","size_bytes":129354},
+      {"path":"WRF/frame/module_io.F","sha256":"3b4a0e1180b08146c015e4acf37d7e431d751b1a3dbe3a238fb38647feee7eea","size_bytes":189901}
+    ]
+  },
+  "manifest_check": {"declared_files":33,"verified_files":33,"missing":0,"hash_or_size_mismatches":0},
+  "child_and_failure_chronology": {
+    "direct_children_total":17,
+    "kinds":{"preprocess":2,"macro_expand":2,"GNU_compile_link":4,"fixture_launches":9},
+    "compiled_translation_units":12,
+    "successful_fixture_launches":8,
+    "interrupted_fixture_launches":1,
+    "fixture_rank_processes":24,
+    "successful_fixture_rank_processes":20,
+    "initial_parent_mpi_timeout": {
+      "receipt":"build/udm37-netcdf-zz-fixture-v1/run-v1/command-05.json",
+      "sha256":"849f54dca3034f37e07384e899ece080cd24027de82f373a2a15a11f20b68d07",
+      "timed_out":true,
+      "status":"TERMINAL_INTERRUPTED",
+      "reported_launcher_returncode":0,
+      "interpretation":"Preserved timeout; the post-TERM launcher RC0 is not a successful MPI fixture result. The run-v1 outer execution remains FAIL_PRESERVED."
+    },
+    "successor": "run-v2 records twelve additional terminal commands; parent MPI rejection, candidate serial/MPI round trips at O0/O2, compile/preprocess steps are individually receipted.",
+    "wrf_builds_forecasts_rte":0
+  },
+  "independent_netcdf_read": {
+    "reader":"Python netCDF4 read-only inspection of all four run-v2 candidate output files",
+    "all_four_file_sha256":"7308605fd73fc6e9fad1cb2ca0f5f692039d9f8ebb820ae417742d48b9de62d2",
+    "all_four_size_bytes":692,
+    "times":"2026-10-06_00:00:00",
+    "variables":["Times","INT_UPPER","INT_LOWER","FLOAT_LOWER"],
+    "stored_variable_dimensions":["Time","independent_n","vertical_k"],
+    "stored_variable_shape":[1,5,3],
+    "storage_types":{"INT_UPPER":"int32/NF_INT","INT_LOWER":"int32/NF_INT","FLOAT_LOWER":"float32/NF_FLOAT"},
+    "attributes":{"INT_UPPER":{"FieldType":106,"MemoryOrder":"ZZ"},"INT_LOWER":{"FieldType":106,"MemoryOrder":"ZZ"},"FLOAT_LOWER":{"FieldType":104,"MemoryOrder":"ZZ"}},
+    "value_check":"All four files independently matched INT_UPPER[n,k] = INT_LOWER[n,k] = 1000*(n+1)+17*(k+1), and FLOAT_LOWER = float32(integer value + 0.5), for n=0..4, k=0..2. The NetCDF dimension list appears reversed relative to WRF Fortran MemoryOrder; fixture backend inquiry separately asserts Fortran ordered names/lengths vertical_k=3, independent_n=5, Time=1.",
+    "identical_outputs":true
+  },
+  "behavior_review": {
+    "parent_expected_rejection":"Saved O0/O2 serial and MPI4 parent runs report PARENT_REJECT_PASS for ZZ.",
+    "candidate":"Saved O0/O2 serial and MPI4 candidate logs report BACKEND_ROUNDTRIP_PASS and rank replica checks. Upper/lowercase ZZ accepted; qq warns/rejects and is absent from the output file.",
+    "interpretation_limit":"MPI test is a custom wrapper that invokes the NetCDF backend on rank 0 and broadcasts read integer state. It does not test full WRF module_io orchestration, distributed stochastic-state ownership/equality, or restart continuity."
+  },
+  "review_notes": [
+    "Manifest entries, including the result, source patch, runner, command receipts, source files, executables, and four NetCDF outputs, all match recorded hashes/sizes.",
+    "The original 120-second MPI timeout remains preserved and is not counted as success.",
+    "The result's scoped status and README correctly avoid claiming full module_io/full-WRF validation."
+  ]
+}

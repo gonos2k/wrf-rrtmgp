@@ -1,0 +1,28 @@
+{
+  "schema": "UDM_NETCDF_ZZ_SOURCE_PATCH_REVIEW_V1",
+  "status": "PASS_SCOPED_SOURCE_REVIEW_FIXTURE_PENDING",
+  "review_scope": "Static review of the two modified source files against base commit 7a8d1ba85f7ff53d67b6ca7c28923e4d3985090a. No edit, compilation, model run, restart, or output read.",
+  "candidate_worktree": "build/udm37-netcdf-zz-pr-work",
+  "candidate_head": "7a8d1ba85f7ff53d67b6ca7c28923e4d3985090a",
+  "modified_files_exact": [
+    {"path":"WRF/external/io_netcdf/wrf_io.F90","sha256":"670b6934259528e664af100692390d5289188e17a604e52c94d4a49ec6a7c5b1"},
+    {"path":"WRF/frame/module_io.F","sha256":"3b4a0e1180b08146c015e4acf37d7e431d751b1a3dbe3a238fb38647feee7eea"}
+  ],
+  "review_findings": {
+    "existing_tokens": "The diff only adds ZZ to rank-2/identity-order selector lists and adds a ZZ-specific identity return in reorder. Existing tokens and their cases are unchanged.",
+    "rank_and_named_dimensions": "GetDim now classifies ZZ as rank 2. ExtOrder and ExtOrderStr retain the incoming lengths and named dimensions in the original order; the no-horizontal-dimension helper accepts ZZ without applying zero-length X/Y tests.",
+    "read_write_transpose": "The write and read NetCDF paths share GetDim, ExtOrder, ExtOrderStr, and Transpose. ZZ is explicitly routed through the existing identity flattening branch, where the first logical index remains fastest. The TransposeToR4 identity branch is updated consistently. reorder returns canonical uppercase ZZ, matching the backend MemoryOrder attribute convention.",
+    "generic_mpi_path": "The module_io change classifies ZZ rank as 2 without adding it to any spatial distribution/gather selectors. The existing default replicated-field path therefore remains in place: monitor writes its local copy; on read, the monitor reads and broadcasts the field. That is consistent with a registry variable containing only bottom_top and pertn3d dimensions, conditional on the runtime copies being replicated.",
+    "source_scope": "Patch changes only WRF/external/io_netcdf/wrf_io.F90 and WRF/frame/module_io.F. No Registry, output/input filtering, or physics source change is included."
+  },
+  "required_runtime_fixture_checks": [
+    "Use actual NetCDF write and read path for a non-square ZZ array with distinct values at every coordinate; require correct two named dimensions, extents, type, MemoryOrder attribute, and exact value/order round trip.",
+    "Exercise one-rank and four-rank replicated-array paths; require the monitor write and all-rank read broadcast to preserve identical values and finish without rank divergence.",
+    "Keep the fixture separate from claims about a full WRF restart; the actual restart-read case remains required after fixture review."
+  ],
+  "limitations": [
+    "This is source review only. The backend/MPI fixture was still in progress at review time; its results are not included.",
+    "The replicated-field MPI assumption is inferred from the nonspatial Registry dimensions and existing collector branch; rank-identical field values have not been demonstrated here.",
+    "Review covers the NetCDF path selected by io_form_restart=2, not other WRF I/O backends."
+  ]
+}

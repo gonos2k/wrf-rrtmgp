@@ -1,0 +1,175 @@
+{
+  "schema": "UDM37_NETCDF_ZZ_RESTART_DESIGN_REVIEW_V1",
+  "status": "PASS_SCOPED_SOURCE_DESIGN_WITH_INACTIVE_SEED_ROUNDTRIP_CAVEAT",
+  "scope": "Read-only source/design review of the frozen NetCDF ZZ implementation and proposed RA4/RA37 13-hour continuous plus 12-to-13-hour restart checks. No model launched and no source edited by reviewer.",
+  "source": {
+    "path": "build/udm37-netcdf-zz-runtime-source-v1/WRF",
+    "head": "474c4af4928b49b4922fae30d422850b29ec1571",
+    "tree": "56a693a5abaa7fc8c078453e382f8551933016e6",
+    "worktree_status": "clean",
+    "pins": {
+      "Registry/registry.stoch": {
+        "sha256": "7c781030e0dd2f6e623d0efa81acd86aaeb952d0371beaeee92989e700b48f19",
+        "size_bytes": 27624,
+        "relevant_lines": [
+          94,
+          98,
+          160,
+          268
+        ]
+      },
+      "share/module_io_domain.F": {
+        "sha256": "1dde269826435be2935883a0a477e9aa30cb852b67bc5b6b931c98e080dbe5ad",
+        "size_bytes": 16428,
+        "relevant_lines": [
+          108,
+          115
+        ]
+      },
+      "share/input_wrf.F": {
+        "sha256": "b3c663892cb7f46c6503ff3a4a7c5202a5301c71a70c8db1fad21a293c2a48b1",
+        "size_bytes": 102789,
+        "relevant_lines": [
+          1519,
+          1524,
+          1553,
+          1570
+        ]
+      },
+      "share/output_wrf.F": {
+        "sha256": "741f627ffba1a8743a0be01dae695daea5bc845d096e166fcb63ff1f29089e71",
+        "size_bytes": 93090,
+        "relevant_lines": [
+          1219,
+          1274
+        ]
+      },
+      "frame/module_io.F": {
+        "sha256": "3b4a0e1180b08146c015e4acf37d7e431d751b1a3dbe3a238fb38647feee7eea",
+        "size_bytes": 189901,
+        "relevant_lines": [
+          2201,
+          2248,
+          2267,
+          4438
+        ]
+      },
+      "share/wrf_ext_read_field.F": {
+        "sha256": "45a32baa06ceb9b9743897a49a820061783811a65d28b0d692962e91593ef29c",
+        "size_bytes": 8208,
+        "relevant_lines": [
+          74,
+          145
+        ]
+      },
+      "share/wrf_ext_write_field.F": {
+        "sha256": "92112e03a7255d6f19145293508799c6ef72aa88cae1682024ad36e7ff5b8f60",
+        "size_bytes": 15070,
+        "relevant_lines": [
+          84
+        ]
+      },
+      "external/io_netcdf/wrf_io.F90": {
+        "sha256": "670b6934259528e664af100692390d5289188e17a604e52c94d4a49ec6a7c5b1",
+        "size_bytes": 129354,
+        "relevant_lines": [
+          426,
+          437,
+          507,
+          512,
+          542,
+          547,
+          589,
+          594,
+          738,
+          765,
+          793,
+          805,
+          807
+        ]
+      },
+      "tools/gen_allocs.c": {
+        "sha256": "dae119ef30bf9c8b2a9b69dabc32bf88e59a9078a3f644c00b719fc0afb76fee",
+        "size_bytes": 45544,
+        "relevant_lines": [
+          565,
+          570,
+          571
+        ]
+      },
+      "dyn_em/module_stoch.F": {
+        "sha256": "e28c912fa69aebdfd9d27fef5e75bd2ab84018767f5a0e7c642aeeae31190ae2",
+        "size_bytes": 77618,
+        "relevant_lines": [
+          274,
+          389
+        ]
+      },
+      "dyn_em/module_first_rk_step_part2.F": {
+        "sha256": "9c8c06b246c1cb1bb1632c25e5683a0cfd8545e6832df6eeaa1c744524325738",
+        "size_bytes": 64799,
+        "relevant_lines": [
+          267,
+          295,
+          317
+        ]
+      },
+      "doc/rrtmgp/REGISTRY_SUBGRID_RESTART_CONTRACT.md": {
+        "sha256": "762754abb83f27262c9c92675e4b9fd91796e4a99bb51fba0cd7843609e40c8c",
+        "size_bytes": 2777,
+        "relevant_lines": []
+      },
+      "generated:cmake/inc/allocs_23.F": {
+        "sha256": "e5eec734f0437af405989540ab5b6d82465ce58d9ad1be0abae6b3f7a8701587",
+        "size_bytes": 279109
+      },
+      "generated:cmake/inc/state_struct.inc": {
+        "sha256": "7202ff2fe98b49dbbef96a85175ef5b0328c0c5a72b98b5c2152291b9a414720",
+        "size_bytes": 302355
+      }
+    }
+  },
+  "fresh_build_observed": {
+    "plan_path": "build/udm37-netcdf-zz-mpi-build-v1/plan.json",
+    "plan_sha256": "bd4fdc4988e37f7d2fec4141d35e3ae3afdc5b4f79595ed9df5a00762890e32e",
+    "processes_path": "build/udm37-netcdf-zz-mpi-build-v1/processes.json",
+    "processes_sha256": "3f5ebd14c489664631b5ee680ea6653047f4ac1661f9a38e2a8533d9722992d1",
+    "steps": [
+      {
+        "name": "configure",
+        "actual_rc": 0,
+        "reaped": true,
+        "pid": 3676165
+      },
+      {
+        "name": "build",
+        "actual_rc": 0,
+        "reaped": true,
+        "pid": 3676756
+      },
+      {
+        "name": "install",
+        "actual_rc": 0,
+        "reaped": true,
+        "pid": 3686451
+      }
+    ],
+    "wrf_exe_sha256": "7ed9eaed949ed4d67f25395713979f3f2734523b47ff1269cf5622654489adf0"
+  },
+  "source_contract": {
+    "registry": "Registry/registry.stoch:94 declares ISEEDARR_MULT3D as integer state with k{pertn3d} dimensions and restart stream flag r. num_pert_3d defaults to 1 at line 160; multi_perturb defaults to 0 at line 98 and its package is conditionally active at line 268.",
+    "generated_metadata": "CMake generated allocs_23.F allocates (sm32:em32,1:num_pert_3d), initializes to zero only when setinitval is 1 or 3, stores Type=i, MemoryOrder=ZZ, Ndim=2, Restart=.TRUE., pointer ifield_2d, subgrid_x/y=.FALSE., and dimension names bottom_top / num_pert_3d. Checkpoint length should be taken from actual generated/runtime geometry; likely bottom_top x num_pert_3d, not presumed from source alone.",
+    "writer": "output_wrf Ndim=2 path sends integer fields through wrf_ext_write_field using the tail_statevars MemoryOrder/dim names and restart stream. Generated subgrid flags false mean this ZZ field is not gated as X/Y-subgrid.",
+    "backend_fix": "474c4af adds ZZ to NetCDF NDim=2 handling, horizontal-zero-length bypass, extents and name ordering, transpose pass-through, and a special reorder branch preserving uppercase ZZ. frame/module_io.F dim_from_memorder also maps ZZ to NDim=2. This is needed because earlier writer logged BAD MEMORY ORDER; it does not change the restart predicate or registered axes.",
+    "reader": "module_io_domain input_restart calls input_wrf(restart_only). input_wrf Ndim=2 restart branch applies Restart/in-use/subgrid predicates, then calls wrf_ext_read_field with ifield_2d, MemoryOrder, dimnames and bounds. NetCDF reader validates NDim/type/dimension lengths, FieldIO reads, then Transpose maps into the Fortran array. frame/module_io wrf_read_field1 dispatches through call_pkg_and_dist, the normal I/O distribution path. There is no seed-specific reader/repair branch.",
+    "active_use": "The ISEEDARR_MULT3D name is consumed by module_stoch rand_seed within the multi_perturb==1 initialization block and by module_first_rk_step_part2 updates within a multi_perturb==1 gate. With multi_perturb=0 those active stochastic paths are skipped. Allocation may initialize the array to zero only under setinitval 1 or 3; inspect actual emitted value rather than assume zeros."
+  },
+  "recommended_test_design": {
+    "arms": "Use the same new binary for four one-domain runs: RA4 continuous 00:00-13:00, RA37 continuous 00:00-13:00, and one 12:00-13:00 continuation for each radiative policy from that policy’s own new 12-hour checkpoint. Do not seed a continuation from old checkpoints missing ISEEDARR_MULT3D.",
+    "continuous_checks": "For each policy verify successful 4-rank completion, history Times through 13:00, the 12-hour restart checkpoint exists, and ISEEDARR_MULT3D is present with integer/NC_INT type, MemoryOrder ZZ, registered bottom_top and num_pert_3d axes, expected lengths, and recorded actual values. Also ensure restart logs show no BAD MEMORY ORDER or missing-variable read warnings.",
+    "sentinel_control": "Because multi_perturb=0 can leave the seed array at allocation-initialized values, a zero-to-zero restart does not prove input readback. Preserve each genuine 12-hour checkpoint byte-for-byte; make a separate disposable copy and modify only ISEEDARR_MULT3D to a small, deterministic, nonzero integer pattern in the generated axis order. Run each continuation from that copy, still with multi_perturb=0. Require the exact pattern in the resulting 13-hour restart and no write/read error. This is an inactive-state NetCDF read/write persistence control, not an operational active-stochastic restart or a physically valid altered model state.",
+    "restart_comparison": "Compare each continuation’s 13:00 record against its own continuous arm at 13:00, with exact time selection and exact variable/dimension/dtype/array checks for common history fields, including UDM diagnostics and accumulators. Compare RA4 only with RA4 and RA37 only with RA37. Keep expected start/restart global metadata differences explicit. The sentinel-modified checkpoint changes one inactive registered state field, so do not claim an unmodified seed-state roundtrip from this control.",
+    "counts": "Four forecast launches total (two continuous + two sentinel-copy continuations), with each child’s actual RC durably recorded before artifact inspection and first-failure stop. Keep multi_perturb=0 and record it from the actual namelist in every arm.",
+    "limitations": "This can establish the NetCDF ZZ backend’s inactive seed-field write/read preservation and same-binary one-hour continuation behavior for this input. It does not exercise active stochastic seed consumption (multi_perturb=0), approve stochastic physics, establish physical accuracy, or isolate a pure radiation-only effect because RA37 may use its own frozen-optics/coupled policy."
+  }
+}

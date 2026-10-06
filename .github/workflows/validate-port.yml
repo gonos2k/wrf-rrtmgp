@@ -7,6 +7,7 @@ on:
       - 'WRF/dyn_em/**'
       - 'WRF/arch/postamble'
       - 'WRF/external/**'
+      - 'WRF/frame/module_io.F'
       - 'WRF/main/depend.common'
       - 'WRF/phys/**'
       - 'WRF/share/**'
@@ -34,6 +35,7 @@ on:
       - 'WRF/dyn_em/**'
       - 'WRF/arch/postamble'
       - 'WRF/external/**'
+      - 'WRF/frame/module_io.F'
       - 'WRF/main/depend.common'
       - 'WRF/phys/**'
       - 'WRF/share/**'
@@ -131,7 +133,26 @@ jobs:
       - name: Install compiler, CMake, and NetCDF C/Fortran
         run: |
           sudo apt-get update -qq
-          sudo apt-get install -y cmake gfortran gcc libnetcdf-dev libnetcdff-dev python3-numpy python3-netcdf4 python3-scipy
+          sudo apt-get install -y cmake gfortran gcc m4 libnetcdf-dev libnetcdff-dev python3-numpy python3-netcdf4 python3-scipy
+      - name: Round-trip ordered nonspatial ZZ fields through the actual NetCDF backend
+        run: >-
+          python3 WRF/test/rrtmgp/test_netcdf_zz.py WRF
+          --workdir build/netcdf-zz
+          --output build/netcdf-zz/receipt.json
+      - name: Save NetCDF backend round-trip receipts and logs
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: netcdf-zz-${{ github.run_id }}
+          path: |
+            build/netcdf-zz/receipt.json
+            build/netcdf-zz/*.log
+            build/netcdf-zz/*.json
+            build/netcdf-zz/*.stdout
+            build/netcdf-zz/*.stderr
+            build/netcdf-zz/*.f90
+          retention-days: 30
+          if-no-files-found: error
       - name: Compile and run input_wrf UDM sentinel guards for both storage kinds
         run: >-
           python3 WRF/test/rrtmgp/test_input_wrf_udm_sentinel_kinds.py WRF
