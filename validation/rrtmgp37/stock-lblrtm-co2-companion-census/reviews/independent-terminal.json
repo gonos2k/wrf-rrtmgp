@@ -1,0 +1,53 @@
+{
+  "pins": {
+    "audit": {
+      "path": "build/udm37-lblrtm-co2-target-companion-census-v1/audit.py",
+      "sha256": "2f7fee7188e013bdacfc30ff2c135392c98263e5277b7f6e6dd93c9c2bf3bcda",
+      "size_bytes": 12009
+    },
+    "execution": {
+      "path": "build/udm37-lblrtm-co2-target-companion-census-v1/run-v1/execution.json",
+      "sha256": "8629c98619173633f1e67c262ec873a97c19f03399f2f96528e7d13f07defd5a",
+      "size_bytes": 846
+    },
+    "plan": {
+      "path": "build/udm37-lblrtm-co2-target-companion-census-v1/plan.json",
+      "sha256": "a509998be2235f8e764d8b3f5d2af0f5735665ff75437de0e99c2b16a6638abe",
+      "size_bytes": 4908
+    },
+    "result": {
+      "path": "build/udm37-lblrtm-co2-target-companion-census-v1/run-v1/result.json",
+      "sha256": "eb8243244ff65d396c1c797195e7dcc36111dd7cce9a084c8873ec0aad109e22",
+      "size_bytes": 108576
+    }
+  },
+  "result_review": {
+    "companion_cardinality": {
+      "exactly_one_negative_IFLG_slot": 801
+    },
+    "duplicate": 0,
+    "identity_mismatch": 0,
+    "matched_main_count": 801,
+    "missing": 0,
+    "observed_report_roster": 801,
+    "open_group": 0,
+    "panels_selected": [
+      484,
+      496
+    ],
+    "selected_range_bytes_read": 509192,
+    "summary": "The compact result reports exact main identity matches and one adjacent negative-IFLG slot for every one of the 801 pre-observed CO2 flag-1 target contributors, including matches through panel 496.",
+    "whole_TAPE3_sha_recomputed": false
+  },
+  "review_method": "Read terminal execution.json and result.json only; no raw TAPE3, coefficient file, solver output, or arithmetic was opened/recomputed.",
+  "schema": "lblrtm-co2-target-companion-census-terminal-review-v1",
+  "scope_limit": "This validates record identity and adjacency cardinality for the prior observed contributor roster only. It does not validate companion coefficients or YI/GI/SPPSP values, census all candidate/rejected lines, prove a physical coupling-group closure, or validate negative OD. The 801 identities are selected from the already-derived 837 reason-12 roster; this review did not reread raw TAPE3 or redo joins.",
+  "status": "PASS_SCOPED_801_OBSERVED_CO2_TARGET_MAIN_COMPANION_ASSOCIATIONS",
+  "terminal": {
+    "actual_child_rc": 0,
+    "exception": null,
+    "pid": 2169675,
+    "reaped": true,
+    "timed_out": false
+  }
+}
