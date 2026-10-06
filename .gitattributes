@@ -1,2 +1,10 @@
-# Preserve whitespace in the archived, byte-pinned executed runner.
+# Preserve exact numeric replay inputs and the output-hash manifest.
+validation/rrtmgp37/phase-path-sensitivity-ensemble/captures/* -text
+validation/rrtmgp37/phase-path-sensitivity-ensemble/sidecars/* -text
+validation/rrtmgp37/phase-path-sensitivity-ensemble/execution/per-seed-paired-deltas.csv -text whitespace=-blank-at-eol
+validation/rrtmgp37/phase-path-sensitivity-ensemble/execution/output-hashes.sha256 -text
+# Preserve exact CMake/patch evidence and suppress only their intentional archived whitespace.
+validation/rrtmgp37/phase-path-sensitivity-ensemble/execution/CMakeCache.txt -text whitespace=-blank-at-eof
+validation/rrtmgp37/phase-path-sensitivity-ensemble/execution/reference_column_seed_override.patch -text whitespace=-blank-at-eol
+# Preserve whitespace in the archived phase-path-statistics runner.
 validation/rrtmgp37/phase-path-statistics/run_integrated_candidate.py whitespace=-blank-at-eol
