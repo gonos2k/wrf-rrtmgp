@@ -1,0 +1,41 @@
+{
+  "actual_failed_reader_execution": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-r3-term-trace-v1/reader-execution.json",
+    "sha256": "19c89b6dbfa5f7885e2ffe12215dbb5fc01d5a8711113aa2811f7420c57760c6",
+    "size_bytes": 419
+  },
+  "actual_failed_reader_stderr": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-r3-term-trace-v1/reader-stderr.log",
+    "sha256": "ae9fd3b77597e228d57e531eabffcb46850ff55695730eb8a76cec346bd46ab9",
+    "size_bytes": 479
+  },
+  "actual_reader_RC": 1,
+  "created_utc": "2026-10-06T01:59:52.162762+00:00",
+  "failed_reader_source": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-r3-term-trace-v1/analyze_r3_terms.py",
+    "sha256": "f8b2a13f93605a787f6bb1bbaee6e949b42d83e571f5a64d9b164a1bb42d3d86",
+    "size_bytes": 8522
+  },
+  "failure": "First captured snapshot may be stage127 with no captured preceding126: the capture intersection test applies after PANEL advances VFT, so the shifted window can first enter the selected range through the newly zeroed tail. V1 unconditionally requires a captured preceding126. This is a reader boundary defect missed by the code-only review.",
+  "preserved_static_review": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-r3-term-reader-preflight-v1/review.json",
+    "sha256": "752ce4c737d91d700cbfd99b134e5ad4b1d7ec198d57f395e07964c19f84cf28",
+    "size_bytes": 3706
+  },
+  "required_narrow_fix": [
+    "Permit an unmatched stage127 only as the first captured snapshot/record.",
+    "Require ISTOP!=1 and each selected-window slot to map beyond previous MAX3 using shift=NLIM3-1; require each such slot bitwise +0.0, consistent with the source tail initialization.",
+    "Require every subsequent stage127 to retain the preceding126, origin-advance and full-array carry checks.",
+    "Retain the failed v1 reader source, receipt and log; do not rerun or alter the instrumented solver."
+  ],
+  "reviewer_invocations": {
+    "compiler": 0,
+    "model": 0,
+    "numeric_reconstruction": 0,
+    "reader": 0,
+    "solver": 0
+  },
+  "schema": "UDM37_LBLRTM_R3_READER_RUNTIME_BOUNDARY_ADDENDUM_V1",
+  "scope": "This addendum authenticates the failed reader receipt and source boundary reasoning only. It does not approve an unseen v2 script or establish any saved numeric accounting/full-spectrum result.",
+  "status": "V1_STATIC_PASS_INSUFFICIENT_RUNTIME_READER_FAILED"
+}

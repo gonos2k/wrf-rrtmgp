@@ -1,0 +1,49 @@
+{
+  "blocking_findings": [],
+  "created_utc": "2026-10-06T01:59:19.105266+00:00",
+  "findings": [
+    "No original arithmetic or assignment was replaced by the patch; diagnostic before/after copies and separate metadata COMMON/helper records observe the existing operations.",
+    "GNUdbl layout matches the reader: 8-character magic, 19 INTEGER*8 and five REAL*8 values yield a 200-byte snapshot header; 15 INTEGER*8 and 22 REAL*8 values yield a 304-byte term record. Snapshot R3 arrays are separate records with four-byte Fortran record markers.",
+    "LNCOR1 metadata is saved after SP and SPPSP formation. The analyzer reconstructs SP=SUI*(1+GI*PAVP2) and SPPSP=((SUI*YI)*PAVP0)/SP with the source association, and checks metadata line identity.",
+    "Base STRF3*F3 and coupling (STRF3*F3)*ZF3L use the captured actual operands. Before/after and checkpoint chains are bitwise checks; fsum grouped contributions are descriptive accounting rather than an alternative pass threshold.",
+    "PANEL advances VFT by (NLIM1-1)*DV and shifts R3 by NLIM3-1 before zeroing the tail. The stage127 full-array carry check and stage110 same-origin resumption agree with the source indexing.",
+    "Separate stages120/121,122/123 and124/125 isolate optional XSECTM, LBLF4 XINT and continuum XINT checkpoint changes without claiming molecular or counterfactual accuracy.",
+    "The planned reader also authenticates inherited PANEL trace bytes, all 45 saved spectra/panel headers and permits only the identified runtime-clock header word exception. This is a future runtime check, not a result established by this static review."
+  ],
+  "invocations": {
+    "LBLRTM": 0,
+    "WRF": 0,
+    "compiler": 0,
+    "numerical_calculation": 0,
+    "reader": 0
+  },
+  "live_numeric_output_read": false,
+  "nonblocking_limits": [
+    "The fixed-case reader is tied to layer21, the 666.1\u2013666.7 cm-1 term window and four selected R3 indices. It is not a generic trace protocol validator.",
+    "Consecutive sequence numbers and update/checkpoint chains are checked, but a complete arbitrary-file stage grammar is not independently enforced. Source-generated records and exact pinned instrumentation define the reviewed case.",
+    "Existing negative optical-depth physical failures remain open. Exact accounting/noninterference cannot establish line-data accuracy, isolate GI-only/YI-only causes, or attribute the WRF4/37 flux residual.",
+    "Archived input coefficients and full numeric traces remain private; no permission or new execution flow is introduced by this receipt."
+  ],
+  "reviewed_analyzer": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-r3-term-trace-v1/analyze_r3_terms.py",
+    "sha256": "f8b2a13f93605a787f6bb1bbaee6e949b42d83e571f5a64d9b164a1bb42d3d86",
+    "size_bytes": 8522
+  },
+  "reviewed_instrumented_source": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-r3-term-trace-v1/source/LBLRTM/src/oprop.f90",
+    "sha256": "6b806117a32832371f8947bc54b5a5c3bf38389a7279ae48ae39afc141666300",
+    "size_bytes": 488351
+  },
+  "reviewed_patch": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-r3-term-trace-v1/instrumentation.patch",
+    "sha256": "bf2b1e6c6061e12515e645e225026510f5c88767ec90e6e71d5346a837c14197",
+    "size_bytes": 6978
+  },
+  "reviewed_plan": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-r3-term-trace-v1/build-plan.json",
+    "sha256": "061959897b666724a6c70023d71d32b61c459e3c848b28c099647a39574f2c5e",
+    "size_bytes": 7231
+  },
+  "schema": "UDM37_LBLRTM_R3_TERM_READER_STATIC_REVIEW_V1",
+  "status": "PASS_SCOPED_CODE_ONLY_READER_PREFLIGHT"
+}

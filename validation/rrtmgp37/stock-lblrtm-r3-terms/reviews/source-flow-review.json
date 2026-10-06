@@ -1,0 +1,74 @@
+{
+  "status": "READ_ONLY_SOURCE_REVIEW_COMPLETE",
+  "scope": "Source ordering and instrumentation/join design for observational R3 trace at layer 21 near 666.1\u2013666.7 cm-1. No files were edited and no compile, LNFL, LBLRTM, or model run was performed.",
+  "source_pins": {
+    "oprop": {
+      "path": "build/udm37-lblrtm-stock-build-v1/attempt-1/source/LBLRTM/src/oprop.f90",
+      "sha256": "7cf594968ec331da3df75429262c1023c21fc461cbbae208253b0fa870685ef8"
+    },
+    "contnm": {
+      "path": "build/udm37-lblrtm-stock-build-v1/attempt-1/source/LBLRTM/src/contnm.f90",
+      "sha256": "6fbf59aa45b065515e0b95ae11d89d63981c1c844c08ee111039d4085bbec281"
+    },
+    "lnfl": {
+      "path": "build/udm37-lblrtm-reference-stage-v1/sources/LNFL/src/lnfl.f",
+      "sha256": "d47b7b296b747837bbec8df06a7c8ea1df2ec241546b1db4a15f6b02b98a4ad6"
+    },
+    "lnfl_docs": {
+      "path": "build/udm37-lblrtm-reference-stage-v1/sources/LNFL/docs/lnfl_instructions",
+      "sha256": "e044ed5eb774a99d2dd1086ff98ec879cbd5440dc816bd305a37e66548682601"
+    },
+    "target_raw_summary": {
+      "path": "build/udm37-lblrtm-negative-od-diagnostic-v1/negative-od-raw-v1.json",
+      "sha256": "32d9c01e186158b0cd04b0f1e145de920fc557966f2e0ff6078c8354eff536d8"
+    }
+  },
+  "target_context": {
+    "source": "build/udm37-lblrtm-negative-od-diagnostic-v1/negative-od-raw-v1.json",
+    "case": "Stock LBLRTM output, IEMIT=0/JRAD=0/IMRG=1; original most-negative sample layer 21 at 666.3964444444449 cm-1, PAVE 348.36124 mbar, TAVE 228.3152 K."
+  },
+  "execution_order": [
+    {
+      "step": 1,
+      "routine": "OPDPTH/LNCOR1",
+      "lines": "oprop.f90 454, 463-465; 995-1061; 1123-1149",
+      "detail": "RDLIN loads line records; LNCOR1 applies pressure/temperature/profile corrections. Capture line identity and IFLAG plus SUI, YI, GI, PAVP0/PAVP2, strength multiplier (1+GI*PAVP2), SP, SPPI, SPPSP, RECALF, ZETAI/IZETA. GI changes SP; YI forms SPPSP=SPPI/SP. A NOCPL-vs-normal difference combines those pathways: SPPSP depends on SP too, so it cannot by itself isolate a YI-only effect."
+    },
+    {
+      "step": 2,
+      "routine": "CNVFNV line accumulation",
+      "lines": "oprop.f90 1271-1368",
+      "detail": "For each active line in ILO:IHI, R3 receives baseline STRF3*F3(IZ3) at each j3 and, if SPPSP is nonzero, a separate coupling increment STRF3*F3(IZ3)*ZF3L. R1/R2 get their own baseline and coupling increments. Record pre-value, delta, post-value for every R3 write in the target coordinate window, in actual program order, and retain line index, VNU/MOL/IFLG, SP/SPPSP/RECALF, ZINT, JMIN/JMAX, J3SHFT, ZF3L, IZ3, STRF3, F3(IZ3), and call-level ILO/IHI/IPANEL/ILAST. Capture initial R3 values at each CNVFNV call because a target location may already contain earlier line updates."
+    },
+    {
+      "step": 3,
+      "routine": "CNVFNV return and outer OPDPTH continuation",
+      "lines": "oprop.f90 471-475; 1288-1291; 1354-1368",
+      "detail": "CNVFNV can return with IPANEL=0 and resume on another call; when an individual line would exceed MAX1 it sets ILAST=J-1 and resumes later from ILO=ILAST+1. Trace every call, not just the last one, and join by layer/call sequence plus stable physical frequency; do not infer completeness from one CNVFNV invocation."
+    },
+    {
+      "step": 4,
+      "routine": "XSECTM and continuum/absorption additions",
+      "lines": "oprop.f90 507-512; 514-523; 4548-4556; 4964-4995; 2201-2234",
+      "detail": "After CNVFNV has completed the active line block, OPDPTH calls XSECTM when enabled, then XINT to R3 for ILBLF4 and separately to R3 for ICNTNM absorption, then PANEL. Capture R3 immediately before/after each operation and the relevant enable flags/ranges. XSECTM can interpolate cross-section contributions into R3 (4981-4985); XINT adds its source-array interpolation to R3 (2219-2229). These increments must not be attributed to line convolution."
+    },
+    {
+      "step": 5,
+      "routine": "PANEL merge and carry",
+      "lines": "oprop.f90 478-499; 1428-1487; 1518-1555",
+      "detail": "PANEL maps R3\u2192R2\u2192R1 with 4-point overlapping stencils, advances VFT by (NLIM1-1)*DV, then shifts R3 left by NLIM3-1 and zeroes the tail; subsequent-panel ranges include overlap offsets. Save VFT, DV, DVR3, NSHIFT, N1R3/N2R3, NLIM3, NLO/NHI, ISTOP/IPANEL before/after every PANEL call. An array index alone is not a persistent spectral coordinate across carry."
+    }
+  ],
+  "frequency_join_contract": {
+    "fine_and_coarse_grids": "Source defines DVR3=(DXF3/DXF1)*DV at oprop.f90 280-284 and initializes VFT=V1-NSHIFT*DV at 427. For an R3 slot j, use nu=VFT+(j-1)*DVR3 with the VFT in force before that panel\u2019s carry; XINT uses the same origin formula at 2220-2229. PANEL then advances VFT by (NLIM1-1)*DV and shifts R3, so recompute physical frequency using the updated VFT after every carry. Retain index/stencil offsets as emitted and verify against the current output header before interpreting frequency.",
+    "target_window": "Trace every R3 update whose mapped support/index lies in the requested physical 666.1\u2013666.7 cm-1 band, including line wings whose line centers are outside it. Preserve exact f64 target coordinate/sample bytes and update order.",
+    "cross_array_join": "R3 raw entries are internal oversampled accumulators. Do not directly compare their values to ODdeflt output at the same integer index; first reproduce the same R3\u2192R2\u2192R1 interpolation, XSECTM/XINT additions, JRAD factor, and output mapping, or label the trace as internal-only."
+  },
+  "attribution_caveats": [
+    "NOCPL suppresses coupling information and companion records. In LNCOR1 that affects both the GI strength multiplier in SP and the YI-derived SPPSP branch; NOCPL is not a one-term switch.",
+    "To distinguish terms observationally, log baseline and coupling increments separately, plus line metadata before convolution. A single run shows accounting, not a counterfactual causal effect for GI or YI alone.",
+    "For `JRAD=0`, RADFNI multiplies R1 later in PANEL (oprop.f90 1492-1515); the factor is downstream and positive in the normal domain. Keep pre- and post-factor checkpoints.",
+    "Continuum and cross-section arrays enter after the line convolution. Record their increments separately so a negative already present in the line-only R3 accumulator is not confused with the final assembled OD.",
+    "The resulting trace would localize the first negative accumulator stage; it would not establish that negative monochromatic OD is physically inadmissible or quantify its integrated flux impact."
+  ]
+}

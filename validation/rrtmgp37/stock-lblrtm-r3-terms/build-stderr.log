@@ -1,0 +1,386 @@
+../src/lblrtm.f90:1437:25:
+
+ 1373 |       CALL BUFOUT (IFILE,IDUM(1),6)
+      |                         2
+......
+ 1437 |       CALL BUFOUT (MFILE,XFILHD(1),NFHDRF)
+      |                         1
+Warning: Type mismatch between actual argument at (1) and actual argument at (2) (REAL(8)/INTEGER(8)).
+../src/lblrtm.f90:2058:21:
+
+ 2058 |       COMMON /BNDPRP/ TMPBND,BNDEMI(3),BNDRFL(3),IBPROP,surf_refl,pad_3,&
+      |                     1
+Warning: Padding of 4 bytes required before 'angle_path' in COMMON 'bndprp' at (1); reorder elements or use '-fno-align-commons' [-Walign-commons]
+../src/lblrtm.f90:4152:21:
+
+ 4152 |       COMMON /BNDPRP/ TMPBND,BNDEMI(3),BNDRFL(3),IBPROP,surf_refl,pad_3,&
+      |                     1
+Warning: Padding of 4 bytes required before 'angle_path' in COMMON 'bndprp' at (1); reorder elements or use '-fno-align-commons' [-Walign-commons]
+../src/lblrtm.f90:4504:21:
+
+ 4504 |       COMMON /BNDPRP/ TMPBND,BNDEMI(3),BNDRFL(3),IBPROP,surf_refl,pad_3,&
+      |                     1
+Warning: Padding of 4 bytes required before 'angle_path' in COMMON 'bndprp' at (1); reorder elements or use '-fno-align-commons' [-Walign-commons]
+../src/lblrtm.f90:476:21:
+
+  476 |       COMMON /BNDPRP/ TMPBND,BNDEMI(3),BNDRFL(3),IBPROP,surf_refl,pad_3,&
+      |                     1
+Warning: Padding of 4 bytes required before 'angle_path' in COMMON 'bndprp' at (1); reorder elements or use '-fno-align-commons' [-Walign-commons]
+../src/lblrtm.f90:504:22:
+
+  504 |       COMMON /CLOSURE/ FRGNX
+      |                      1
+Warning: Named COMMON block 'closure' at (1) shall be of the same size as elsewhere (1 vs 56 bytes)
+../src/lblrtm.f90:483:19:
+
+  483 |       COMMON /IFIL/ IRD,IPR,IPU,NOPR,NFHDRF,NPHDRF,NFHDRL,NPHDRL,       &
+      |                   1
+Warning: Named COMMON block 'ifil' at (1) shall be of the same size as elsewhere (152 vs 144 bytes)
+../src/oprop.f90:3455:31:
+
+ 3450 | 10 CALL BUFIN_sgl(Lnfl,LEOF,RDLNPNL,npnlhd)
+      |                            2   
+......
+ 3455 |       CALL BUFIN_sgl(lnfl,LEOF,dum(1),i_1)
+      |                               1
+Warning: Type mismatch between actual argument at (1) and actual argument at (2) (REAL(4)/TYPE(input_header)).
+../src/oprop.f90:3847:30:
+
+ 3847 |       CALL BUFIN (LNFIL4,LEOF,LINE,NWDS)
+      |                              1
+......
+ 5222 |             CALL BUFIN (IFILE,IEOF,FILHDR(1),NFHDRF)
+      |                                   2
+Warning: Type mismatch between actual argument at (1) and actual argument at (2) (TYPE(line_shrink)/REAL(8)).
+../src/oprop.f90:3287:26:
+
+ 1553 |       CALL BUFOUT (KFILE,PNLHDR(1),NPHDRF)
+      |                         2 
+......
+ 3287 |       CALL BUFOUT (LNFIL4,SHRUNK,NLNGT4)
+      |                          1
+Warning: Type mismatch between actual argument at (1) and actual argument at (2) (TYPE(line_shrink)/REAL(8)).
+../src/oprop.f90:931:16:
+
+  931 |    COMMON /IFIL/   IRD,IPR,IPU,NOPR,NFHDRF,NPHDRF,NFHDRL,NPHDRL,     &
+      |                1
+Warning: Named COMMON block 'ifil' at (1) shall be of the same size as elsewhere (152 vs 144 bytes)
+../src/oprop.f90:726:16:
+
+  726 |    COMMON /IFIL/ IRD,IPR,IPU,NOPR,NFHDRF,NPHDRF,NFHDRL,NPHDRL,       &
+      |                1
+Warning: Named COMMON block 'ifil' at (1) shall be of the same size as elsewhere (144 vs 152 bytes)
+../src/oprop.f90:3811:16:
+
+ 3811 |    COMMON /IFIL/ IRD,IPR,IPU,NOPR,NFHDRF,NPHDRF,NFHDRL,NPHDRL,       &
+      |                1
+Warning: Named COMMON block 'ifil' at (1) shall be of the same size as elsewhere (144 vs 152 bytes)
+../src/oprop.f90:6002:23:
+
+ 6002 |    COMMON/Temperatures/tdat !mja, 10-27-2011
+      |                       1
+Warning: Named COMMON block 'temperatures' at (1) shall be of the same size as elsewhere (8 vs 952 bytes)
+../src/oprop.f90:125:16:
+
+  125 |    COMMON /IFIL/ IRD,IPR,IPU,NOPR,NFHDRF,NPHDRF,NFHDRL,NPHDRL,       &
+      |                1
+Warning: Named COMMON block 'ifil' at (1) shall be of the same size as elsewhere (144 vs 152 bytes)
+../src/oprop.f90:4127:16:
+
+ 4127 |    COMMON /IFIL/ IRD,IPR,IPU,NOPR,NFHDRF,NPHDRF,NFHDRL,NPHDRL,       &
+      |                1
+Warning: Named COMMON block 'ifil' at (1) shall be of the same size as elsewhere (144 vs 152 bytes)
+../src/oprop.f90:4450:16:
+
+ 4450 |    COMMON /IFIL/ IRD,IPR,IPU,NOPR,NFHDRF,NPHDRF,NFHDRL,NPHDRL,       &
+      |                1
+Warning: Named COMMON block 'ifil' at (1) shall be of the same size as elsewhere (144 vs 152 bytes)
+../src/read_module.f90:172:39:
+
+  172 |       call check(nf_get_var(id, varId, val), varName, fatal)
+      |                                       1
+......
+  183 |     call check(nf_get_var(id, varId, val), varName, fatal)
+      |                                     2  
+Warning: Rank mismatch between actual argument at (1) and actual argument at (2) (scalar and rank-1)
+../src/read_module.f90:161:39:
+
+  161 |       call check(nf_get_var(id, varId, val), varName, fatal)
+      |                                       1
+......
+  183 |     call check(nf_get_var(id, varId, val), varName, fatal)
+      |                                     2  
+Warning: Type mismatch between actual argument at (1) and actual argument at (2) (REAL(4)/REAL(8)).
+../src/xmerge.f90:6743:18:
+
+ 6743 |    COMMON /BNDPRP/ TMPBND,BNDEMI(3),BNDRFL(3),IBPROP,surf_refl,        &
+      |                  1
+Warning: Padding of 4 bytes required before 'angle_path' in COMMON 'bndprp' at (1); reorder elements or use '-fno-align-commons' [-Walign-commons]
+../src/xmerge.f90:1736:18:
+
+ 1736 |    COMMON /BNDPRP/ TMPBND,BNDEMI(3),BNDRFL(3),IBPROP,surf_refl,      &
+      |                  1
+Warning: Padding of 4 bytes required before 'angle_path' in COMMON 'bndprp' at (1); reorder elements or use '-fno-align-commons' [-Walign-commons]
+../src/xmerge.f90:2294:18:
+
+ 2294 |    COMMON /BNDPRP/ TMPBND,BNDEMI(3),BNDRFL(3),IBPROP,surf_refl,pad_3,&
+      |                  1
+Warning: Padding of 4 bytes required before 'angle_path' in COMMON 'bndprp' at (1); reorder elements or use '-fno-align-commons' [-Walign-commons]
+../src/xmerge.f90:5435:18:
+
+ 5435 |    COMMON /BNDPRP/ TMPBND,BNDEMI(3),BNDRFL(3),IBPROP,surf_refl,      &
+      |                  1
+Warning: Padding of 4 bytes required before 'angle_path' in COMMON 'bndprp' at (1); reorder elements or use '-fno-align-commons' [-Walign-commons]
+../src/xmerge.f90:2930:18:
+
+ 2930 |    COMMON /BNDPRP/ TMPBND,BNDEMI(3),BNDRFL(3),IBPROP,surf_refl,      &
+      |                  1
+Warning: Padding of 4 bytes required before 'angle_path' in COMMON 'bndprp' at (1); reorder elements or use '-fno-align-commons' [-Walign-commons]
+../src/xmerge.f90:3845:18:
+
+ 3845 |    COMMON /BNDPRP/ TMPBND,BNDEMI(3),BNDRFL(3),IBPROP,surf_refl,      &
+      |                  1
+Warning: Padding of 4 bytes required before 'angle_path' in COMMON 'bndprp' at (1); reorder elements or use '-fno-align-commons' [-Walign-commons]
+../src/xmerge.f90:4442:18:
+
+ 4442 |    COMMON /BNDPRP/ TMPBND,BNDEMI(3),BNDRFL(3),IBPROP,surf_refl,      &
+      |                  1
+Warning: Padding of 4 bytes required before 'angle_path' in COMMON 'bndprp' at (1); reorder elements or use '-fno-align-commons' [-Walign-commons]
+../src/xmerge.f90:5064:18:
+
+ 5064 |    COMMON /BNDPRP/ TMPBND,BNDEMI(3),BNDRFL(3),IBPROP,surf_refl,pad_3,&
+      |                  1
+Warning: Padding of 4 bytes required before 'angle_path' in COMMON 'bndprp' at (1); reorder elements or use '-fno-align-commons' [-Walign-commons]
+../src/xmerge.f90:1440:18:
+
+ 1440 |    COMMON /BNDPRP/ TMPBND,BNDEMI(3),BNDRFL(3),IBPROP,surf_refl,      &
+      |                  1
+Warning: Padding of 4 bytes required before 'angle_path' in COMMON 'bndprp' at (1); reorder elements or use '-fno-align-commons' [-Walign-commons]
+../src/xmerge.f90:1585:18:
+
+ 1585 |    COMMON /BNDPRP/ TMPBND,BNDEMI(3),BNDRFL(3),IBPROP,surf_refl,      &
+      |                  1
+Warning: Padding of 4 bytes required before 'angle_path' in COMMON 'bndprp' at (1); reorder elements or use '-fno-align-commons' [-Walign-commons]
+../src/xmerge.f90:2634:18:
+
+ 2634 |    COMMON /BNDPRP/ TMPBND,BNDEMI(3),BNDRFL(3),IBPROP,surf_refl,      &
+      |                  1
+Warning: Padding of 4 bytes required before 'angle_path' in COMMON 'bndprp' at (1); reorder elements or use '-fno-align-commons' [-Walign-commons]
+../src/xmerge.f90:6976:18:
+
+ 6976 |    COMMON /BNDPRP/ TMPBND,BNDEMI(3),BNDRFL(3),IBPROP,surf_refl,        &
+      |                  1
+Warning: Padding of 4 bytes required before 'angle_path' in COMMON 'bndprp' at (1); reorder elements or use '-fno-align-commons' [-Walign-commons]
+../src/xmerge.f90:51:18:
+
+   51 |    COMMON /BNDPRP/ TMPBND,BNDEMI(3),BNDRFL(3),IBPROP,surf_refl,      &
+      |                  1
+Warning: Padding of 4 bytes required before 'angle_path' in COMMON 'bndprp' at (1); reorder elements or use '-fno-align-commons' [-Walign-commons]
+../src/xmerge.f90:206:18:
+
+  206 |    COMMON /BNDPRP/ TMPBND,BNDEMI(3),BNDRFL(3),IBPROP,surf_refl,      &
+      |                  1
+Warning: Padding of 4 bytes required before 'angle_path' in COMMON 'bndprp' at (1); reorder elements or use '-fno-align-commons' [-Walign-commons]
+../src/lblatm.f90:7045:32:
+
+ 7045 |                   CALL CMPALT(2,PTMP,TTMP, WVTMP,ZTMP(1),REF_LAT,    &
+      |                                1
+Warning: Actual argument contains too few elements for dummy argument 'pm' (2/7000) at (1)
+../src/lblatm.f90:7045:37:
+
+ 7045 |                   CALL CMPALT(2,PTMP,TTMP, WVTMP,ZTMP(1),REF_LAT,    &
+      |                                     1
+Warning: Actual argument contains too few elements for dummy argument 'tm' (2/7000) at (1)
+../src/lblatm.f90:7045:43:
+
+ 7045 |                   CALL CMPALT(2,PTMP,TTMP, WVTMP,ZTMP(1),REF_LAT,    &
+      |                                           1
+Warning: Actual argument contains too few elements for dummy argument 'denw' (2/7000) at (1)
+../src/lblatm.f90:7046:21:
+
+ 7046 |                      ZTMP)
+      |                     1
+Warning: Actual argument contains too few elements for dummy argument 'zmdl' (2/7000) at (1)
+../src/lblatm.f90:946:32:
+
+  946 |                   CALL CMPALT(2,PTMP,TTMP, WVTMP,ZTMP(1),REF_LAT, &
+      |                                1
+Warning: Actual argument contains too few elements for dummy argument 'pm' (2/7000) at (1)
+../src/lblatm.f90:946:37:
+
+  946 |                   CALL CMPALT(2,PTMP,TTMP, WVTMP,ZTMP(1),REF_LAT, &
+      |                                     1
+Warning: Actual argument contains too few elements for dummy argument 'tm' (2/7000) at (1)
+../src/lblatm.f90:946:43:
+
+  946 |                   CALL CMPALT(2,PTMP,TTMP, WVTMP,ZTMP(1),REF_LAT, &
+      |                                           1
+Warning: Actual argument contains too few elements for dummy argument 'denw' (2/7000) at (1)
+../src/lblatm.f90:947:21:
+
+  947 |                      ZTMP)
+      |                     1
+Warning: Actual argument contains too few elements for dummy argument 'zmdl' (2/7000) at (1)
+../src/lblatm.f90:1012:29:
+
+ 1012 |                CALL CMPALT(2,PTMP,TTMP, WVTMP,ZTMP(1),REF_LAT,    &
+      |                             1
+Warning: Actual argument contains too few elements for dummy argument 'pm' (2/7000) at (1)
+../src/lblatm.f90:1012:34:
+
+ 1012 |                CALL CMPALT(2,PTMP,TTMP, WVTMP,ZTMP(1),REF_LAT,    &
+      |                                  1
+Warning: Actual argument contains too few elements for dummy argument 'tm' (2/7000) at (1)
+../src/lblatm.f90:1012:40:
+
+ 1012 |                CALL CMPALT(2,PTMP,TTMP, WVTMP,ZTMP(1),REF_LAT,    &
+      |                                        1
+Warning: Actual argument contains too few elements for dummy argument 'denw' (2/7000) at (1)
+../src/lblatm.f90:1013:18:
+
+ 1013 |                   ZTMP)
+      |                  1
+Warning: Actual argument contains too few elements for dummy argument 'zmdl' (2/7000) at (1)
+../src/lblatm.f90:1075:29:
+
+ 1075 |                CALL CMPALT(2,PTMP,TTMP, WVTMP,ZTMP(1),REF_LAT,    &
+      |                             1
+Warning: Actual argument contains too few elements for dummy argument 'pm' (2/7000) at (1)
+../src/lblatm.f90:1075:34:
+
+ 1075 |                CALL CMPALT(2,PTMP,TTMP, WVTMP,ZTMP(1),REF_LAT,    &
+      |                                  1
+Warning: Actual argument contains too few elements for dummy argument 'tm' (2/7000) at (1)
+../src/lblatm.f90:1075:40:
+
+ 1075 |                CALL CMPALT(2,PTMP,TTMP, WVTMP,ZTMP(1),REF_LAT,    &
+      |                                        1
+Warning: Actual argument contains too few elements for dummy argument 'denw' (2/7000) at (1)
+../src/lblatm.f90:1076:18:
+
+ 1076 |                   ZTMP)
+      |                  1
+Warning: Actual argument contains too few elements for dummy argument 'zmdl' (2/7000) at (1)
+../src/lblatm.f90:6889:19:
+
+ 6889 |    COMMON /c_drive/ ref_lat,hobs,ibmax_b,immax_b,                    &
+      |                   1
+Warning: Padding of 4 bytes required before 'wm' in COMMON 'c_drive' at (1); reorder elements or use '-fno-align-commons' [-Walign-commons]
+../src/lblatm.f90:419:19:
+
+  419 |    COMMON /c_drive/ ref_lat,hobs,ibmax_b,immax_b,                    &
+      |                   1
+Warning: Padding of 4 bytes required before 'wm' in COMMON 'c_drive' at (1); reorder elements or use '-fno-align-commons' [-Walign-commons]
+../src/lblatm.f90:3193:19:
+
+ 3193 |    COMMON /c_drive/ ref_lat,hobs,ibmax_b,immax_b,                    &
+      |                   1
+Warning: Padding of 4 bytes required before 'wm' in COMMON 'c_drive' at (1); reorder elements or use '-fno-align-commons' [-Walign-commons]
+../src/lblatm.f90:3326:19:
+
+ 3326 |    COMMON /c_drive/ ref_lat,hobs,ibmax_b,immax_b,                    &
+      |                   1
+Warning: Padding of 4 bytes required before 'wm' in COMMON 'c_drive' at (1); reorder elements or use '-fno-align-commons' [-Walign-commons]
+../src/lblatm.f90:3562:19:
+
+ 3562 |    COMMON /c_drive/ ref_lat,hobs,ibmax_b,immax_dum,                  &
+      |                   1
+Warning: Padding of 4 bytes required before 'wm' in COMMON 'c_drive' at (1); reorder elements or use '-fno-align-commons' [-Walign-commons]
+../src/lblatm.f90:137:19:
+
+  137 |    COMMON /c_drive/ ref_lat,hobs,ibmax_b,immax_b,                    &
+      |                   1
+Warning: Padding of 4 bytes required before 'wm' in COMMON 'c_drive' at (1); reorder elements or use '-fno-align-commons' [-Walign-commons]
+../src/lbllow.f90:959:11:
+
+  958 |    DO 10 I = 0, n_lvl-1
+      |                       2
+  959 |       ZSTF(I) = ALTZ(I)
+      |           1
+Warning: Array reference at (1) out of bounds (0 < 1) in loop beginning at (2)
+../src/lbllow.f90:2950:16:
+
+ 2950 |    CALL BS (J,T,TEMP,NT,ST)
+      |                1
+Warning: Actual argument contains too few elements for dummy argument 'b' (3/9) at (1)
+../src/lbllow.f90:9245:17:
+
+ 9245 |    COMMON /TRACL/ TRAC(50,22)
+      |                 1
+Warning: Named COMMON block 'tracl' at (1) shall be of the same size as elsewhere (8800 vs 16400 bytes)
+../src/solar.f90:1136:20:
+
+ 1136 |    COMMON /BUFPNL_s/ V1PBF,V2PBF,dvpbf,nlimbf
+      |                    1
+Warning: Named COMMON block 'bufpnl_s' at (1) shall be of the same size as elsewhere (24 vs 32 bytes)
+../src/solar.f90:1080:20:
+
+ 1080 |    COMMON /BUFPNL_s/ V1PBF,V2PBF,dvpbf,nlimbf
+      |                    1
+Warning: Named COMMON block 'bufpnl_s' at (1) shall be of the same size as elsewhere (24 vs 32 bytes)
+../src/solar.f90:181:18:
+
+  181 |    COMMON /BNDPRP/ TMPBND,BNDEMI(3),BNDRFL(3),IBPROP,surf_refl,pad_3,&
+      |                  1
+Warning: Padding of 4 bytes required before 'angle_path' in COMMON 'bndprp' at (1); reorder elements or use '-fno-align-commons' [-Walign-commons]
+../src/nonlte.f90:2880:30:
+
+ 2858 |       CALL BUFIN (LNFIL4,LEOF,DUM(1),1)
+      |                              2
+......
+ 2880 |       CALL BUFIN (LNFIL4,LEOF,LINE,NWDS)
+      |                              1
+Warning: Type mismatch between actual argument at (1) and actual argument at (2) (TYPE(line_shrink)/REAL(8)).
+../src/nonlte.f90:2522:26:
+
+ 1054 |       CALL BUFOUT (KFILE,FILHDR(1),NFHDRF)
+      |                         2 
+......
+ 2522 |       CALL BUFOUT (LNFIL4,SHRUNK,NLNGT4)
+      |                          1
+Warning: Type mismatch between actual argument at (1) and actual argument at (2) (TYPE(line_shrink)/REAL(8)).
+../src/nonlte.f90:1398:16:
+
+ 1398 |    COMMON /IFIL/   IRD,IPR,IPU,NOPR,NFHDRF,NPHDRF,NFHDRL,NPHDRL,     &
+      |                1
+Warning: Named COMMON block 'ifil' at (1) shall be of the same size as elsewhere (152 vs 144 bytes)
+../src/nonlte.f90:2842:16:
+
+ 2842 |    COMMON /IFIL/ IRD,IPR,IPU,NOPR,NFHDRF,NPHDRF,NFHDRL,NPHDRL,       &
+      |                1
+Warning: Named COMMON block 'ifil' at (1) shall be of the same size as elsewhere (144 vs 152 bytes)
+../src/nonlte.f90:323:16:
+
+  323 |    COMMON /IFIL/ IRD,IPR,IPU,NOPR,NFHDRF,NPHDRF,NFHDRL,NPHDRL,       &
+      |                1
+Warning: Named COMMON block 'ifil' at (1) shall be of the same size as elsewhere (144 vs 152 bytes)
+../src/nonlte.f90:467:16:
+
+  467 |    COMMON /IFIL/ IRD,IPR,IPU,NOPR,NFHDRF,NPHDRF,NFHDRL,NPHDRL,       &
+      |                1
+Warning: Named COMMON block 'ifil' at (1) shall be of the same size as elsewhere (144 vs 152 bytes)
+../src/nonlte.f90:663:16:
+
+  663 |    COMMON /IFIL/ IRD,IPR,IPU,NOPR,NFHDRF,NPHDRF,NFHDRL,NPHDRL,       &
+      |                1
+Warning: Named COMMON block 'ifil' at (1) shall be of the same size as elsewhere (144 vs 152 bytes)
+../src/nonlte.f90:233:16:
+
+  233 |    COMMON /IFIL/ IRD,IPR,IPU,NOPR,NFHDRF,NPHDRF,NFHDRL,NPHDRL,       &
+      |                1
+Warning: Named COMMON block 'ifil' at (1) shall be of the same size as elsewhere (144 vs 152 bytes)
+../src/nonlte.f90:196:16:
+
+  196 |    COMMON /IFIL/ IRD,IPR,IPU,NOPR,NFHDRF,NPHDRF,NFHDRL,NPHDRL,       &
+      |                1
+Warning: Named COMMON block 'ifil' at (1) shall be of the same size as elsewhere (144 vs 152 bytes)
+../src/nonlte.f90:3140:16:
+
+ 3140 |    COMMON /IFIL/ IRD,IPR,IPU,NOPR,NFHDRF,NPHDRF,NFHDRL,NPHDRL,       &
+      |                1
+Warning: Named COMMON block 'ifil' at (1) shall be of the same size as elsewhere (144 vs 152 bytes)
+../src/nonlte.f90:73:16:
+
+   73 |    COMMON /IFIL/ IRD,IPR,IPU,NOPR,NFHDRF,NPHDRF,NFHDRL,NPHDRL,       &
+      |                1
+Warning: Named COMMON block 'ifil' at (1) shall be of the same size as elsewhere (144 vs 152 bytes)

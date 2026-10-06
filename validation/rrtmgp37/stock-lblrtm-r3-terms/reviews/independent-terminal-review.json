@@ -1,0 +1,105 @@
+{
+  "schema": "UDM37_LBLRTM_R3_TERM_INDEPENDENT_REVIEW_V1",
+  "status": "PASS_SCOPED_LOCAL_COUPLING_TERM_ATTRIBUTION",
+  "scope": "Read-only review of the saved R3 accounting, its analyzer/source mapping, and five raw term records near sequence 35615. No model, solver, build, or full-spectrum reread was performed.",
+  "pins": {
+    "accounting_report": {
+      "path": "build/udm37-lblrtm-r3-term-trace-v1/r3-accounting-report-v2.json",
+      "sha256": "e44d08ea068c0b5e242f263c3a2f70c2d5ff4b71b529c10604d8be5de1e438ce"
+    },
+    "analyzer": {
+      "path": "build/udm37-lblrtm-r3-term-trace-v1/analyze_r3_terms_v2.py",
+      "sha256": "f258377d9db12c9e56ca9a96c72cd82daaa1e89863220f70fb31671d3593f3f4"
+    },
+    "instrumented_source": {
+      "path": "build/udm37-lblrtm-r3-term-trace-v1/source/LBLRTM/src/oprop.f90",
+      "sha256": "6b806117a32832371f8947bc54b5a5c3bf38389a7279ae48ae39afc141666300"
+    },
+    "run_trace": {
+      "path": "build/udm37-lblrtm-held-state-r3terms-cpl-od-run-v1/runs/od-v1/UDM37_R3_TERM_TRACE",
+      "sha256": "5167f1496f7c34577a755f8c5ebd71e59a20245ebf057f9bfc25a260f0e2ccec",
+      "bytes": 14753208
+    },
+    "execution": {
+      "path": "build/udm37-lblrtm-held-state-r3terms-cpl-od-run-v1/runs/od-v1/execution.json",
+      "sha256": "db8d7eec76ae7de89f8ec0c3d7bd098de7190ecfdafd180b6ef004ac37980f49",
+      "child_return_code": 0,
+      "timed_out": false
+    }
+  },
+  "reviewed_accounting": {
+    "trace_records": 45785,
+    "update_records_reconstructed_bitwise": 45569,
+    "negative_transitions_in_scoped_window": 16,
+    "stage_1_updates": 23182,
+    "stage_2_coupling_updates": 22387,
+    "all45_layer_spectral_samples_and_panel_headers_bitwise_equal_to_uninstrumented_baseline": true,
+    "panel_carry_mapping_bitwise_checked": true,
+    "sole_file_header_difference": "TAPE6-confirmed HTIME word 168; physical header words match",
+    "previous_reader_rc1_preserved_and_corrected_saved_reader_rc0": true
+  },
+  "raw_term_spot_checks": {
+    "method": "Read only sequential records from the saved trace through seq 35610, 35613, 35615, 35616, and 35617; decoded the 15 int64 and 22 float64 fields using the source writer layout in udm37_r3_term. No model or full output parsing.",
+    "selected_target_record": {
+      "seq": 35615,
+      "stage": 2,
+      "layer": 21,
+      "batch": 474,
+      "molecule_code": 2,
+      "isotope": 1,
+      "coupling_flag": 1,
+      "i": 32,
+      "j1": 1230,
+      "j3": 63,
+      "vft": 662.695395555556,
+      "vnu": 667.385965634841,
+      "SUI": 0.05631378974057237,
+      "GI": 0.0,
+      "YI": 3.034229991142273,
+      "PAVP0": 0.34380581297804097,
+      "PAVP2": 0.11820243703749168,
+      "SP": 0.05631378974057237,
+      "SPPSP": 1.0431859088670232,
+      "STRF3_after_coupling_scale": 0.05008524503175398,
+      "F3": 0.0003503920826515181,
+      "ZF3L_signed_offset": -792.6941117363057,
+      "R3_before": 0.0010453855710148992,
+      "R3_after": -0.012865978591276264,
+      "reconstructed_left_associated_STRF3_times_F3_times_ZF3L": -0.013911364162291164,
+      "reconstructed_before_plus_operand_bitwise_equals_saved_after": true
+    },
+    "neighboring_target_records": [
+      {"seq": 35610, "j3": 58, "stage": 2, "molecule_code": 2, "coupling_flag": 1, "operand": -0.007880583456741976, "R3_before": 0.0009977506635015902, "R3_after": -0.006882832793240386},
+      {"seq": 35613, "j3": 61, "stage": 2, "molecule_code": 2, "coupling_flag": 1, "operand": -0.01115841512571552, "R3_before": 0.0010336897201356741, "R3_after": -0.010124725405579845},
+      {"seq": 35616, "j3": 64, "stage": 2, "molecule_code": 2, "coupling_flag": 1, "operand": -0.015578580323629486, "R3_before": 0.0010766647149203228, "R3_after": -0.014501915608709164},
+      {"seq": 35617, "j3": 65, "stage": 2, "molecule_code": 2, "coupling_flag": 1, "operand": -0.017396500062972145, "R3_before": 0.0011433755512804834, "R3_after": -0.016253124511691662}
+    ]
+  },
+  "source_interpretation": {
+    "line_strength_and_ratio": "oprop.f90 LNCOR1 computes SP=SUI*(1+GI*PAVP2), SPPI=SUI*YI*PAVP0, and SPPSP=SPPI/SP (around lines 1157-1159); the line-store hook follows. For this selected CO2 coupling line, GI=0, so the line-strength multiplier is exactly 1 and SP=SUI. SPPSP is positive (about 1.043), not the source of the negative sign.",
+    "R3_update": "CNVFNV first adds the baseline R3 term STRF3*F3 (around line 1330), then for nonzero SPPSP scales STRF3 by CLC3*SPPSP and adds STRF3*F3*ZF3L (around lines 1339-1364). The sampled coupling update is negative because ZF3L is negative while scaled STRF3 and F3 are positive. This identifies the local line-coupling increment, not an independent physical cause for all negative optical depth.",
+    "source_hook": "The diagnostic writer serializes the fields passed at the two R3 writes and validates saved line metadata VNU against the term. The inherited full PANEL trace and all45 output samples/panel headers remained bitwise unchanged except the recorded runtime clock word."
+  },
+  "target_r3_index_63_accounting": {
+    "wavenumber": 666.4341333333339,
+    "carried_R3": 0.000518142586488824,
+    "baseline_term_sum": 0.0067990251847154974,
+    "coupling_term_sum": -0.015348817314295393,
+    "optional_xsectm_delta": 0.0,
+    "lblf4_xint_delta": 0.0,
+    "continuum_xint_delta": 0.0002595661029347919,
+    "pre_panel_R3": -0.007772083440156277,
+    "gi_strength_multiplier_min_max": [1.0, 1.0],
+    "large_negative_coupling_updates": [
+      {"seq": 35613, "operand": -0.01115841512571552},
+      {"seq": 35883, "operand": -0.004113375505829357},
+      {"seq": 36163, "operand": -0.0014773619622748672}
+    ],
+    "qualification": "The per-write ordered chain is checked bitwise in the saved analyzer; component fsum totals are descriptive. Positive carry/baseline/continuum terms do not offset the negative sum."
+  },
+  "conclusion_and_limits": [
+    "The saved trace supports a local causal statement: in this CPL run and selected layer-21 R3 window, CO2 lines with the coupling flag make negative R3 increments through the SPPSP-controlled coupling branch; the selected large crossing is a positive-SPPSP line with negative signed ZF3L, not a GI line-strength effect.",
+    "The original negative-OD physical-reference acceptance remains FAIL_NEGATIVE_OD_RETAINED. This accounting does not establish global spectroscopy validity, explain every negative sample, prove an underlying physical defect, or establish WRF4/37 flux attribution or UDM accuracy.",
+    "Saved v2 analysis reports bitwise exact full-spectrum output equivalence for all45 layers against the uninstrumented CPL run; this is evidence of instrumentation noninterference, not a pass of the physical nonnegative-OD gate."
+  ]
+}
