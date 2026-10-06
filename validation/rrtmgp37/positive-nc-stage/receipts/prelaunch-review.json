@@ -1,0 +1,168 @@
+{
+  "build": {
+    "executable_sha256": "c703df21f664795c33b5d904c3c49a2b264d8afbdc79391fa8d4caf763d78417",
+    "models": 0,
+    "processes": [
+      {
+        "actual_rc": 0,
+        "name": "configure",
+        "pid": 3898927,
+        "reaped": true
+      },
+      {
+        "actual_rc": 0,
+        "name": "build",
+        "pid": 3899582,
+        "reaped": true
+      },
+      {
+        "actual_rc": 0,
+        "name": "install",
+        "pid": 3909487,
+        "reaped": true
+      }
+    ],
+    "status": "PASS_BUILD_INSTALL_SCOPED"
+  },
+  "checks": [
+    {
+      "actual_models": 0,
+      "command": "python3 -I -S build/udm37-positive-nc-stage-runtime-2min-v2/stage/verify_stage.py",
+      "name": "staged_case_verifier",
+      "status": "PASS_STAGED_UNRUN"
+    },
+    {
+      "count": 18,
+      "detail": "Source selected files, Registries, build plan/result, positive input, runner, stage validator, and both staged arm executables/input hashes matched the stage plan.",
+      "name": "external_source_build_input_pins",
+      "status": "PASS"
+    },
+    {
+      "detail": "Target observer is now (23,2), inside the actual UDM crop; the boundary QNN destination remains (23,1), with outflow source (23,2). No same-cell density identity is assumed.",
+      "name": "crop_target",
+      "status": "PASS_SCOPED_SOURCE_REVIEW"
+    }
+  ],
+  "created_utc": "2026-10-06T15:51:05.990670+00:00",
+  "launch_state": "NOT_LAUNCHED; stage contains PENDING_ROOT_AUTHORIZATION.json and no root-authorization.json.",
+  "pins": {
+    "build_result": {
+      "path": "build/udm37-positive-nc-stage-observer-build-v2/result.json",
+      "sha256": "a542bb9f4bb383a531e42fa5acbfbf70c2c7d95cf7614d0438cdc90403a0db86",
+      "size_bytes": 4569
+    },
+    "installed_wrf": {
+      "path": "build/udm37-positive-nc-stage-observer-build-v2/install/bin/wrf",
+      "sha256": "c703df21f664795c33b5d904c3c49a2b264d8afbdc79391fa8d4caf763d78417",
+      "size_bytes": 51742072
+    },
+    "positive_input": {
+      "path": "build/udm37-positive-nc-stage-observer-preparation-v1/inputs/wrfinput_d01",
+      "sha256": "849f340d8d74b8e252b40d41c2d660126ae7a7b755d2e2b9eb24e988c97efc03",
+      "size_bytes": 10699727
+    },
+    "preparation_v3_plan": {
+      "path": "build/udm37-positive-nc-stage-observer-preparation-v3/plan.json",
+      "sha256": "3cdd1c0f3de2809292c4f24ea7d66f287588deca4bf7ecf8f8bb2735b5022a43",
+      "size_bytes": 9251
+    },
+    "preparer": {
+      "path": "build/prepare-udm37-positive-nc-stage-runtime-v2.py",
+      "sha256": "b93a1e729c3672577b51560b2c42939888803b3018df61a4f27e6362fc3a47e8",
+      "size_bytes": 11794
+    },
+    "runner": {
+      "path": "build/udm37-positive-nc-stage-runtime-runner-v3.py",
+      "sha256": "cca7d3026d697086805b3e6ca4612cd9f491072414c2cc21d2585b5dc6e3a80e",
+      "size_bytes": 30018
+    },
+    "source_v2_static_review": {
+      "path": "build/udm37-positive-nc-stage-runtime-saved-recovery-v1/source-v2-review.json",
+      "sha256": "83d8304034f96c007b39cc0531abf5b5aa36728d31c6e18f0b175cea3b7ca33a",
+      "size_bytes": 3454
+    },
+    "stage_plan": {
+      "path": "build/udm37-positive-nc-stage-runtime-2min-v2/stage/stage-plan.json",
+      "sha256": "639a0b9d5b1f16c6f04018a0695cf3826a8ca53a2fb1feeda1c1c99f3a874fe5",
+      "size_bytes": 119391
+    },
+    "stage_validator": {
+      "path": "build/udm37-positive-nc-stage-runtime-2min-v2/stage/verify_stage.py",
+      "sha256": "985c0c5236c8e9dc8c49cf4f2ef9ee619aa9c309c307d3b58218b251dba05dd9",
+      "size_bytes": 1093
+    }
+  },
+  "schema": "UDM37_POSITIVE_NC_STAGE_PRELAUNCH_INDEPENDENT_REVIEW_V2",
+  "scope": "Prelaunch review only. No compiler/build/model/RTE execution by reviewer. Stage is ready for root-authorized two-arm 2-minute run; scientific/unit approval remains false.",
+  "source": {
+    "head": "8017ff7caf8f979dc16e1d9119c9a88eaa362a2b",
+    "selected_file_pins": {
+      "WRF/dyn_em/solve_em.F": {
+        "link": null,
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-positive-nc-stage-observer-source-v2/WRF/dyn_em/solve_em.F",
+        "sha256": "34930bc35a8fa6358bb64dfe6ba7a780bcc85b8a68cee5ea09ebbbae58a26ede",
+        "size_bytes": 286298
+      },
+      "WRF/external/io_netcdf/wrf_io.F90": {
+        "link": null,
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-positive-nc-stage-observer-source-v2/WRF/external/io_netcdf/wrf_io.F90",
+        "sha256": "670b6934259528e664af100692390d5289188e17a604e52c94d4a49ec6a7c5b1",
+        "size_bytes": 129354
+      },
+      "WRF/frame/module_io.F": {
+        "link": null,
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-positive-nc-stage-observer-source-v2/WRF/frame/module_io.F",
+        "sha256": "3b4a0e1180b08146c015e4acf37d7e431d751b1a3dbe3a238fb38647feee7eea",
+        "size_bytes": 189901
+      },
+      "WRF/phys/module_microphysics_driver.F": {
+        "link": null,
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-positive-nc-stage-observer-source-v2/WRF/phys/module_microphysics_driver.F",
+        "sha256": "c2568eef1fe6223eab587c864ae104bbfaace5fde1266313ddc36ba89541d74d",
+        "size_bytes": 203985
+      },
+      "WRF/phys/module_mp_udm.F": {
+        "link": null,
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-positive-nc-stage-observer-source-v2/WRF/phys/module_mp_udm.F",
+        "sha256": "9f25a1aaebd0d29ba3ecdf86c9fe65065cf920fc187bdfd904e8b8192bc7e3c8",
+        "size_bytes": 208324
+      },
+      "WRF/share/module_bc.F": {
+        "link": null,
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-positive-nc-stage-observer-source-v2/WRF/share/module_bc.F",
+        "sha256": "cf278eb406423d0ba99905dcad647485196f4caae2856db2a50362d1f748c54f",
+        "size_bytes": 176055
+      },
+      "WRF/tools/gen_allocs.c": {
+        "link": null,
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-positive-nc-stage-observer-source-v2/WRF/tools/gen_allocs.c",
+        "sha256": "dae119ef30bf9c8b2a9b69dabc32bf88e59a9078a3f644c00b719fc0afb76fee",
+        "size_bytes": 45544
+      }
+    },
+    "tree": "eef44b724e452bd412431928bad1d26f15c6dab4"
+  },
+  "stage": {
+    "case_files": {
+      "off": 104,
+      "on": 104
+    },
+    "models_launched": 0,
+    "off_gate": "unset",
+    "off_on_input_hashes_match": true,
+    "on_gate": "1",
+    "runtime": {
+      "MPI": 4,
+      "OMP": 2,
+      "dt_seconds": 60,
+      "duration_seconds": 120,
+      "first_failure_stops": true,
+      "history_interval_minutes": 1,
+      "max_models": 2,
+      "restart_interval_minutes": 2,
+      "timeout_seconds_each": 300
+    },
+    "status": "STAGED_UNRUN"
+  },
+  "status": "PASS_SCOPED_PRELAUNCH"
+}

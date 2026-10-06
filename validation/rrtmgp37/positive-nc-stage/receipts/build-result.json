@@ -1,0 +1,110 @@
+{
+  "source_head": "8017ff7caf8f979dc16e1d9119c9a88eaa362a2b",
+  "source_tree": "eef44b724e452bd412431928bad1d26f15c6dab4",
+  "processes": [
+    {
+      "name": "configure",
+      "argv": [
+        "/usr/local/bin/cmake",
+        "-S",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-positive-nc-stage-observer-source-v2/WRF",
+        "-B",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-positive-nc-stage-observer-build-v2/cmake",
+        "-DCMAKE_INSTALL_PREFIX=/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-positive-nc-stage-observer-build-v2/install",
+        "-DCMAKE_TOOLCHAIN_FILE=/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-positive-nc-stage-observer-build-v2/wrf_gnu_mpi_openmp.cmake",
+        "-DWRF_CORE=ARW",
+        "-DWRF_CASE=EM_REAL",
+        "-DUSE_ALLOCATABLES=ON",
+        "-DUSE_MPI=ON",
+        "-DUSE_OPENMP=ON",
+        "-DUSE_IPO=OFF",
+        "-DFORCE_NETCDF_CLASSIC=ON"
+      ],
+      "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-positive-nc-stage-observer-source-v2",
+      "source_head": "8017ff7caf8f979dc16e1d9119c9a88eaa362a2b",
+      "started_unix": 1791301357.6717694,
+      "actual_rc": 0,
+      "reaped": true,
+      "pid": 3898927,
+      "status": "PROCESS_COMPLETE",
+      "ended_unix": 1791301361.7936645,
+      "log": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-positive-nc-stage-observer-build-v2/configure.log",
+        "sha256": "0a07dd9160b84adcd31e647beb90f8d3d25935d6ca45ddd68b12883cfd97c169",
+        "size_bytes": 4587
+      }
+    },
+    {
+      "name": "build",
+      "argv": [
+        "/usr/local/bin/cmake",
+        "--build",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-positive-nc-stage-observer-build-v2/cmake",
+        "--parallel",
+        "4"
+      ],
+      "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-positive-nc-stage-observer-source-v2",
+      "source_head": "8017ff7caf8f979dc16e1d9119c9a88eaa362a2b",
+      "started_unix": 1791301361.8030019,
+      "actual_rc": 0,
+      "reaped": true,
+      "pid": 3899582,
+      "status": "PROCESS_COMPLETE",
+      "ended_unix": 1791301640.6797957,
+      "log": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-positive-nc-stage-observer-build-v2/build.log",
+        "sha256": "3dcd6dfcb8939dc5fbbc8865891a61d9c969ca9431a2ab975ee5df2f175c224e",
+        "size_bytes": 88648
+      }
+    },
+    {
+      "name": "install",
+      "argv": [
+        "/usr/local/bin/cmake",
+        "--install",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-positive-nc-stage-observer-build-v2/cmake"
+      ],
+      "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-positive-nc-stage-observer-source-v2",
+      "source_head": "8017ff7caf8f979dc16e1d9119c9a88eaa362a2b",
+      "started_unix": 1791301640.6940186,
+      "actual_rc": 0,
+      "reaped": true,
+      "pid": 3909487,
+      "status": "PROCESS_COMPLETE",
+      "ended_unix": 1791301642.2126868,
+      "log": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-positive-nc-stage-observer-build-v2/install.log",
+        "sha256": "ee44475f2227c71d0c2665804b65fcfda87321936a27a78f1a782ed66f05d42b",
+        "size_bytes": 32759
+      }
+    }
+  ],
+  "models": 0,
+  "status": "PASS_BUILD_INSTALL_SCOPED",
+  "executables": {
+    "real": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-positive-nc-stage-observer-build-v2/install/bin/real",
+      "sha256": "d635941129c56e3c87702dd18faf93bf54244b7178f7f97e84a3b853cbc87802",
+      "size_bytes": 41178408
+    },
+    "wrf": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-positive-nc-stage-observer-build-v2/install/bin/wrf",
+      "sha256": "c703df21f664795c33b5d904c3c49a2b264d8afbdc79391fa8d4caf763d78417",
+      "size_bytes": 51742072
+    }
+  },
+  "source_still_clean": true,
+  "source_head_unchanged": true,
+  "selected_source_files_unchanged": true,
+  "toolchain_unchanged": true,
+  "plan": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-positive-nc-stage-observer-build-v2/plan.json",
+    "sha256": "9992b5b20e3aef1c2dd6082f9614d94db0f98be2247631bb43d074385492efe1",
+    "size_bytes": 11035
+  },
+  "runner": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-positive-nc-stage-observer-build-runner-v3.py",
+    "sha256": "5de81a4748597c36c3846bf5899d6e8a6877d1382dbe5e37ee877212d3599ac0",
+    "size_bytes": 7734
+  }
+}
