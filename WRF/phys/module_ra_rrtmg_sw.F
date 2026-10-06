@@ -10097,7 +10097,8 @@
 !------------------------------------------------------------------
 MODULE module_ra_rrtmg_sw
 
-use module_model_constants, only : cp, RE_QC_BG, RE_QI_BG, RE_QS_BG
+use module_model_constants, only : cp, RE_QC_BG, RE_QI_BG, RE_QS_BG, &
+     udm_qmin => epsilon, udm_t0c => svpt0
 USE module_wrf_error
 #if (HWRF == 1)
 USE module_state_description, ONLY : FER_MP_HIRES, FER_MP_HIRES_ADVECT, ETAMP_HWRF 
@@ -10186,11 +10187,11 @@ CONTAINS
                        ,sw_dirdflux                               & ! WRF-CMAQ twoway coupled model
                        ,sw_difdflux                               & ! WRF-CMAQ twoway coupled model
                        ,use_rrtmgp,qh3d,f_qh,udm_cldfra,udm_cf_step,udm_cf_top, &
-                        mcica_seed_override,audit_step,audit_time,udm_dry_layer_mass,rrtmgp_domain_id,rrtmgp_calendar_day, &
+                        mcica_seed_override,audit_step,audit_time,udm_dry_layer_mass,udm_dry_density,rrtmgp_domain_id,rrtmgp_calendar_day, &
                         native_qc3d,native_qi3d,cu_qc3d,cu_qi3d,cu_cf3d,cu_dp3d,cu_sh3d,cu_population_policy,qnc3d )
 !------------------------------------------------------------------
    USE MODULE_RA_CLWRF_SUPPORT, ONLY : read_CAMgases
-   USE module_mp_udm, ONLY: cldf_diag, udm_radiation_negative_limits
+   USE module_mp_udm, ONLY: cldf_diag, udm_radiation_negative_limits, udm_startup_snow_radius
    USE mo_rte_kind, ONLY: wp
    USE module_ra_rrtmgp, ONLY: rrtmgp_sw_column, rrtmgp_frozen_enabled, rrtmgp_fatal, &
         ty_rrtmgp_sw_workspace,rrtmgp_release_workspace, rrtmgp_cloud_lut_bounds, rrtmgp_ice_lut_coordinate
@@ -10223,6 +10224,7 @@ CONTAINS
    ! Diagnostic-only host number state; no size conversion is inferred here.
    REAL, OPTIONAL, INTENT(IN) :: qnc3d(ims:ime,kms:kme,jms:jme)
    REAL, OPTIONAL, INTENT(IN) :: udm_dry_layer_mass(ims:ime,kms:kme,jms:jme)
+   REAL, OPTIONAL, INTENT(IN) :: udm_dry_density(ims:ime,kms:kme,jms:jme)
    REAL, OPTIONAL, INTENT(IN) :: native_qc3d(ims:ime,kms:kme,jms:jme),native_qi3d(ims:ime,kms:kme,jms:jme)
    REAL, OPTIONAL, INTENT(IN) :: cu_qc3d(ims:ime,kms:kme,jms:jme),cu_qi3d(ims:ime,kms:kme,jms:jme)
    REAL, OPTIONAL, INTENT(IN) :: cu_cf3d(ims:ime,kms:kme,jms:jme),cu_dp3d(ims:ime,kms:kme,jms:jme)
@@ -10271,6 +10273,9 @@ CONTAINS
                                        ims,ime, jms,jme, kms,kme, &
                                        its,ite, jts,jte, kts,kte
    REAL, DIMENSION(1:kte-kts+1) :: gp_rel, gp_rei, gp_res, gp_omitted
+   REAL, DIMENSION(1:kte-kts+1) :: gp_snow_bootstrap, gp_snow_bootstrap_m
+   REAL :: gp_host_real_bits(1)
+   REAL :: gp_startup_snow_m(1)
    INTEGER, DIMENSION(1:kte-kts+1) :: gp_layer_reason
    INTEGER :: gp_phase
    CHARACTER(LEN=3), PARAMETER :: gp_phase_names(6) = [CHARACTER(LEN=3) :: "LWP","IWP","RWP","SWP","GWP","HWP"]
@@ -10800,6 +10805,8 @@ CONTAINS
       END IF
       IF(.NOT.PRESENT(udm_dry_layer_mass)) &
         CALL rrtmgp_fatal('RRTMGP37 UDM requires native dry-layer mass in kg/m2','module_ra_rrtmg_sw.F')
+      IF(.NOT.PRESENT(udm_dry_density)) &
+        CALL rrtmgp_fatal('RRTMGP37 UDM requires native dry density in kg/m3','module_ra_rrtmg_sw.F')
       IF(mp_physics/=27) CALL rrtmgp_fatal('RRTMGP37 requires mp_physics=27 (UDM)','module_ra_rrtmg_sw.F')
       IF(has_reqc/=1.OR.has_reqi/=1.OR.has_reqs/=1) &
         CALL rrtmgp_fatal('RRTMGP37 UDM requires native effective radii','module_ra_rrtmg_sw.F')
@@ -11559,16 +11566,28 @@ CONTAINS
                      END WHERE
                   END IF
                END IF
+               gp_snow_bootstrap=0.
+               gp_snow_bootstrap_m=0.
                gp_res = gp_rei ! diagnosed ice-radius proxy when snow size is absent
                IF (has_reqs /= 0) THEN
                   gp_res = re_snow(i,kts:kte,j)*1.e6
-                  ! has_req* is a capability flag; RE_*_BG may precede size diagnosis.
-                  ! Wet/cloudy background placeholders use the existing WRF fallback.
+                  ! Before UDM's first radius write, diagnose only snow from the
+                  ! current radiation raw state and same-stage native dry density.
                   IF (ICLOUD /= 0) THEN
-                     WHERE (re_snow(i,kts:kte,j)==RE_QS_BG .AND. &
-                            qs1d(kts:kte)>0. .AND. cldfrac(ncol,kts:kte)>0.)
-                        gp_res = resnow1d(ncol,kts:kte)
-                     END WHERE
+                     DO k=kts,kte
+                        IF(re_snow(i,k,j)==RE_QS_BG .AND. qs1d(k)>0. .AND. cldfrac(ncol,k)>0.) THEN
+                           CALL udm_startup_snow_radius(t3d(i,k:k,j),qs3d(i,k:k,j), &
+                                udm_dry_density(i,k:k,j),udm_qmin,udm_t0c,gp_startup_snow_m,1,gp_reason)
+                           IF(gp_reason/=0) THEN
+                              WRITE(gp_errmsg,'(A,I0,A,I0,A,I0,A,I0)') &
+                                   'RRTMGP_STARTUP_SNOW_NATIVE_INPUT_INVALID i=',i,' j=',j,' k=',k,' reason=',gp_reason
+                              CALL rrtmgp_fatal(TRIM(gp_errmsg),'module_ra_rrtmg_sw.F')
+                           ENDIF
+                           gp_res(k-kts+1)=gp_startup_snow_m(1)*1.e6
+                           gp_snow_bootstrap(k-kts+1)=1.
+                           gp_snow_bootstrap_m(k-kts+1)=gp_startup_snow_m(1)
+                        ENDIF
+                     ENDDO
                   END IF
                END IF
                ! UDM-only: no CAM/P3/other microphysics radius override.
@@ -11605,6 +11624,11 @@ CONTAINS
                   CALL trace_raw('SW','QG',qg1d(kts:kte))
                   CALL trace_raw('SW','QH',gp_qh)
                   CALL trace_raw('SW','RHO',rho3d(i,kts:kte,j))
+                  CALL trace_raw('SW','SOURCE_DRY_RHO',udm_dry_density(i,kts:kte,j))
+                  CALL trace_raw('SW','STARTUP_SNOW_BOOTSTRAP',gp_snow_bootstrap)
+                  CALL trace_raw('SW','STARTUP_SNOW_RADIUS_M',gp_snow_bootstrap_m)
+                  gp_host_real_bits(1)=REAL(STORAGE_SIZE(1.))
+                  CALL trace_raw('SW','HOST_REAL_BITS',gp_host_real_bits)
                   CALL trace_raw('SW','SOURCE_QNC_PRESENT',[MERGE(1.,0.,PRESENT(qnc3d))])
                   IF(PRESENT(qnc3d)) CALL trace_raw('SW','SOURCE_QNC',qnc3d(i,kts:kte,j))
                   CALL trace_raw('SW','T',t1d(kts:kte))

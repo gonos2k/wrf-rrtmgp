@@ -1,0 +1,104 @@
+{
+  "schema": "UDM37_STARTUP_SNOW_LOCAL_VALIDATION_V1",
+  "status": "PASS_SCOPED_LOCAL_IMPLEMENTATION",
+  "base_commit": "38fbc63c7264b9e73231f17c858247d7232bdce2",
+  "base_tree": "9508c36597eb89e55fd082fe4f1d35a492da30d5",
+  "runtime_source_sha256": {
+    "WRF/dyn_em/module_first_rk_step_part1.F": "6b0e4948a44f5b565e583186237b9d1d23f30dea1bb1c8e7a17590ddab7a5dba",
+    "WRF/phys/module_radiation_driver.F": "31b95f0d2e9c121011672268c5874b20d7753a01794f7bdde9f6452d73b58385",
+    "WRF/phys/module_mp_udm.F": "7bd96141eefc6ae2cb66cea0ce022fcc2ee64afce5c616aa65f26711c8790947",
+    "WRF/phys/module_ra_rrtmg_lw.F": "123c9d14c7b6d092c9f39e6c0f908747ce6c7d494f57e2484b0aeb226ede178f",
+    "WRF/phys/module_ra_rrtmg_sw.F": "b3d191a67053d696413f4a759d68a76b526424a369ee2ba11a98cf33f3e4524c"
+  },
+  "local_receipt_pins": {
+    "baseline_build": {
+      "artifact": "udm37-startup-snow-build-v1/baseline-execution-v1/execution.json",
+      "sha256": "787447e1a51df813f14ceac9f437d66461565c00325ffc541b87261e32a6563f"
+    },
+    "first_candidate_build_failure": {
+      "artifact": "udm37-startup-snow-build-v1/candidate-execution-v1/execution.json",
+      "sha256": "a8a8ff0a481ec393d324f903e6f551a3c9ddcbf664b866c253b969cd7d0e11bb"
+    },
+    "corrected_candidate_build": {
+      "artifact": "udm37-startup-snow-build-v2/candidate-execution-v1/execution.json",
+      "sha256": "3d1d64a7e34b446342de0cbe5552c121bb6cab6a13445b34c9b9f9d36bc5680f"
+    },
+    "original_scm_failure": {
+      "artifact": "udm37-startup-snow-scm-execution-v1/cases/execution.json",
+      "sha256": "c050167d4b3d3b6727745cbfbd260cb3ab034f58b7610ef53d798bec0b700680"
+    },
+    "saved_scm_validation": {
+      "artifact": "udm37-startup-snow-scm-posthoc-v1/saved-readback-v1/verification.json",
+      "sha256": "2d860e809378e48266f4ff31fbd9a2cd58d3f85b1abd4dd3d3589c19e1574579"
+    }
+  },
+  "toolchain": "GNU Fortran 13.3.0; serial em_scm_xy; default REAL 32 bits",
+  "full_builds": {
+    "baseline": "PASS",
+    "first_candidate": "FAIL_MISSING_EXECUTABLE_DESPITE_TOP_LEVEL_RC0",
+    "corrected_candidate": "PASS"
+  },
+  "focused_validation": {
+    "native_fixture": "O0/O2 compile/run RC0 with invalid/zero/overflow trapping",
+    "mapping_tests": 12,
+    "original_fixture_failure": "RC9 after matching 12 native tuples: incorrect SW-zero oracle; preserved"
+  },
+  "scm": {
+    "ideal_processes": 1,
+    "forecast_processes": 3,
+    "process_returncodes": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "dt_seconds": 10,
+    "duration_seconds": 60,
+    "original_postprocessor": "FAIL_PRESERVED: wrong native-layer/g-point shape assumption",
+    "successor_verification": "PASS on identical saved outputs; zero new forecasts",
+    "engine4_identical_common_history_arrays": 208,
+    "startup_snow": {
+      "LW": {
+        "adapter_layers": 103,
+        "cf": 1.0,
+        "fixture_level_native_and_adapter_zero_based": 46,
+        "native_layers": 59,
+        "optical_band_count": 16,
+        "optical_dimension_label": "spectral bands",
+        "precip_tau_above_threshold_count": 16,
+        "precip_tau_floor_source": null,
+        "precip_tau_threshold": 0.0,
+        "prepared_res_um": 134.778076171875,
+        "qs": 9.999999747378752e-05,
+        "rwp_grid": 0.0,
+        "source_re_snow_m": 9.989999853132758e-06,
+        "startup_radius_m": 0.00013477807806339115,
+        "swp_grid": 19.163209915161133
+      },
+      "SW": {
+        "adapter_layers": 60,
+        "cf": 1.0,
+        "fixture_level_native_and_adapter_zero_based": 46,
+        "native_layers": 59,
+        "optical_band_count": 14,
+        "optical_dimension_label": "spectral bands",
+        "precip_tau_above_threshold_count": 14,
+        "precip_tau_floor_source": "WRF/phys/module_ra_rrtmgp_precip.F:194, pre-delta tau_prec floor",
+        "precip_tau_threshold": 1e-12,
+        "prepared_res_um": 134.778076171875,
+        "qs": 9.999999747378752e-05,
+        "rwp_grid": 0.0,
+        "source_re_snow_m": 9.989999853132758e-06,
+        "startup_radius_m": 0.00013477807806339115,
+        "swp_grid": 19.163209915161133
+      }
+    }
+  },
+  "limits": [
+    "Exact PR-head remote CI pending at publication",
+    "Retained project main38 baseline, not a new pristine upstream comparison",
+    "No capture-off/on observer-passivity pair in this campaign",
+    "Native radius transfer/positive optics do not establish PSD, Nc units, or LUT size compatibility",
+    "No new 24\u201348 hour forecast or independent physical-reference gate"
+  ]
+}

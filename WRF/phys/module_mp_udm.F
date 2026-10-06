@@ -170,6 +170,7 @@
 !-------------------------------------------------------------------------------
 ! save the microphysics constants that are initialzed in init driver
 !
+   logical, save, private :: udm_radius_constants_initialized = .false.
    real, save ::                                                    &
              qc_ocean,qc_land,qck1,pidnc,bvtr1,bvtr2,bvtr3,bvtr4,bvtr5,        &
              bvtr6,bvtr7, bvtr2o5,bvtr3o5,                                     &
@@ -3507,6 +3508,7 @@ subroutine udminit(den0,denr,dens,cl,cv,ccn0,allowed_to_read)
    precs2 = 4.*n0s*.44*avts**.5*g5pbso2
    pidn0r =  pi*denr*n0r
    pidn0s =  pi*dens*n0s
+   udm_radius_constants_initialized = .true.
    pacrc = pi*n0s*avts*g3pbs*.25*eacrc
 !
    bvtg1 = 1.+bvtg
@@ -3679,6 +3681,70 @@ end subroutine find_cloud_top
 !-------------------------------------------------------------------------------
 !
 !
+!-------------------------------------------------------------------------------
+!-------------------------------------------------------------------------------
+! Diagnose only native snow size for a radiation call preceding UDM's first
+! radius write. Inputs are the current radiation grid-box state and native dry density;
+! returned radius is in metres. This does not advance microphysics or use Nc.
+subroutine udm_startup_snow_radius(t, qs, rho_dry, qmin, t0c, re_qs, nlay, ierr)
+   use, intrinsic :: ieee_arithmetic, only: ieee_is_finite
+   implicit none
+   integer, intent(in) :: nlay
+   real, intent(in) :: t(:), qs(:), rho_dry(:), qmin, t0c
+   real, intent(out) :: re_qs(:)
+   integer, intent(out) :: ierr
+   real :: zero_q(nlay), unused_cloud(nlay), unused_ice(nlay), floor_mass, exponent, n0sfac_check, snow_mass, snow_coefficient
+   integer :: k
+   ierr=1
+   if(nlay<1) return
+   if(size(t)/=nlay.or.size(qs)/=nlay.or.size(rho_dry)/=nlay.or.size(re_qs)/=nlay) return
+   ierr=2
+   if(.not.ieee_is_finite(qmin).or..not.ieee_is_finite(t0c)) return
+   if(qmin<=0..or.t0c<=0.) return
+   if(any(.not.ieee_is_finite(t)).or.any(.not.ieee_is_finite(qs)).or. &
+      any(.not.ieee_is_finite(rho_dry))) return
+   if(any(t<=0.).or.any(rho_dry<=0.).or.any(qs<0.)) return
+   ierr=3
+   if(.not.udm_radius_constants_initialized) return
+   if(.not.ieee_is_finite(pidn0s)) return
+   if(pidn0s<=0.) return
+   ierr=2
+   do k=1,nlay
+      ! Check products before entering the native routine, including its
+      ! inactive-ice floor arithmetic. No invalid-input clipping is applied.
+      if(rho_dry(k)>1.) then
+         if(qs(k)>huge(1.)/rho_dry(k)) return
+      endif
+      if(qmin>1.) then
+         if(rho_dry(k)>huge(1.)/qmin) return
+      endif
+      floor_mass=rho_dry(k)*qmin
+      if(floor_mass>1.) then
+         if(floor_mass>huge(1.)/floor_mass/floor_mass) return
+      endif
+      ! The actual host T0C is SVPT0. Guard arbitrary caller constants too,
+      ! before the native exp and coefficient/mass quotient can overflow.
+      exponent=alpha*(t0c-t(k))
+      if(exponent>log(huge(1.))-1.) return
+      n0sfac_check=max(min(exp(exponent),n0smax/n0s),1.)
+      if(pidn0s>huge(1.)/n0sfac_check) return
+      snow_coefficient=pidn0s*n0sfac_check
+      snow_mass=max(1.e-12,qs(k)*rho_dry(k))
+      if(snow_mass<1.) then
+         if(snow_coefficient>huge(1.)*snow_mass) return
+      endif
+   enddo
+   zero_q=0.
+   unused_cloud=recmin
+   unused_ice=reimin
+   re_qs=resmin
+   call udm_mp_effective_radius(t,zero_q,zero_q,qs,rho_dry,qmin,t0c, &
+                               zero_q,unused_cloud,unused_ice,re_qs,1,nlay,0,0)
+   ierr=4
+   if(any(.not.ieee_is_finite(re_qs))) return
+   if(any(re_qs<resmin).or.any(re_qs>resmax)) return
+   ierr=0
+end subroutine udm_startup_snow_radius
 !-------------------------------------------------------------------------------
 subroutine udm_mp_effective_radius (t, qc, qi, qs, rho, qmin, t0c,             &
                                 nc,                                            &

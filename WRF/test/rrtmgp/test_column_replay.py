@@ -190,6 +190,62 @@ def validate_udm_cf_extent(records: dict[str, np.ndarray], nl: int, path: Path) 
     return top
 
 
+def startup_snow_radius_mapping(raw: dict[str, np.ndarray], nl: int,
+                                phase: str) -> tuple[np.ndarray, np.ndarray] | None:
+    """Authenticate diagnostic origin/unit mapping, not independently diagnose PSD.
+
+    Native diagnosis is checked by the compiled source-extracted fixture/SCM.
+    Historical captures with none of these fields retain their old contract.
+    """
+    names = {"SOURCE_DRY_RHO", "STARTUP_SNOW_BOOTSTRAP", "STARTUP_SNOW_RADIUS_M", "HOST_REAL_BITS"}
+    present = names.intersection(raw)
+    if not present:
+        return None
+    if present != names:
+        fail(f"{phase}: partial startup snow diagnostic bundle")
+    for name in names - {"HOST_REAL_BITS"}:
+        if raw[name].shape != (nl,) or not np.isfinite(raw[name]).all():
+            fail(f"{phase}: {name} must contain nl finite values")
+    real_bits = raw["HOST_REAL_BITS"]
+    if real_bits.shape != (1,) or real_bits[0] not in (32.0, 64.0):
+        fail(f"{phase}: HOST_REAL_BITS must identify default REAL32 or REAL64")
+    dtype = np.float32 if real_bits[0] == 32.0 else np.float64
+    rho = raw["SOURCE_DRY_RHO"]
+    flag = raw["STARTUP_SNOW_BOOTSTRAP"]
+    radius_m = raw["STARTUP_SNOW_RADIUS_M"]
+    if np.any(rho <= 0.0) or np.any((flag != 0.0) & (flag != 1.0)):
+        fail(f"{phase}: invalid startup dry density or nonbinary mask")
+    for name in ("SOURCE_RE_SNOW", "QS", "CF"):
+        if name not in raw or raw[name].shape != (nl,) or not np.isfinite(raw[name]).all():
+            fail(f"{phase}: startup snow requires {name} with nl finite values")
+    for name in ("HAS_REQS", "ICLOUD", "MP_PHYSICS"):
+        if name not in raw or raw[name].shape != (1,) or not np.isfinite(raw[name]).all():
+            fail(f"{phase}: startup snow requires finite scalar {name}")
+    if raw["HAS_REQS"][0] != 1.0 or raw["MP_PHYSICS"][0] != 27.0:
+        fail(f"{phase}: startup diagnostics require native UDM snow capability")
+    icloud = raw["ICLOUD"][0]
+    if icloud != np.floor(icloud) or icloud < 0.0:
+        fail(f"{phase}: ICLOUD must be a nonnegative integer")
+    mask = ((raw["SOURCE_RE_SNOW"].astype(dtype) == dtype(9.99e-6)) &
+            (raw["QS"] > 0.0) & (raw["CF"] > 0.0) & (icloud != 0.0))
+    if not np.array_equal(flag, mask.astype(np.float64)):
+        fail(f"{phase}: startup mask differs from exact background/wet/cloudy selector")
+    if np.any(radius_m[~mask] != 0.0):
+        fail(f"{phase}: inactive startup radius diagnostic must be zero")
+    minimum = float(dtype(25.e-6))
+    maximum = float(dtype(999.e-6))
+    if np.any(radius_m[mask] < minimum) or np.any(radius_m[mask] > maximum):
+        fail(f"{phase}: startup native radius outside 25..999 micron bounds")
+    # The captured host kind binds both exact background equality and the
+    # native metres-to-microns operation. No selected RES echo or tolerance.
+    expected_um = (radius_m.astype(dtype) * dtype(1.e6)).astype(np.float64)
+    if "RES" not in raw or raw["RES"].shape != (nl,) or not np.isfinite(raw["RES"]).all():
+        fail(f"{phase}: startup snow requires finite selected RES")
+    if not np.array_equal(raw["RES"][mask], expected_um[mask]):
+        fail(f"{phase}: selected RES does not match native diagnostic unit mapping")
+    return expected_um, mask
+
+
 def _exact_real_storage(actual: np.ndarray, expected: np.ndarray, label: str, path: Path) -> None:
     """Require exact default-real or real64 storage of a stated arithmetic identity."""
     actual = np.asarray(actual, dtype=np.float64)
@@ -823,6 +879,7 @@ def compare_input_to_raw(phase: str, raw: dict[str, np.ndarray],
                            f"{phase}: {name} vs raw {source}", rtol=0.0, atol=0.0)
         for name, source in (("REL", "REL"), ("REI", "REI"), ("RES", "RES"))
     }
+    startup_snow = startup_snow_radius_mapping(raw, raw_nl, phase)
     radius_selection_counts: dict[str, dict[str, int]] = {}
     has_snow_radius: bool | None = None
     for has_name, raw_radius, adapter_radius in (
@@ -845,7 +902,11 @@ def compare_input_to_raw(phase: str, raw: dict[str, np.ndarray],
                 background = ((source.astype(np.float32) == np.float32(background_m)) &
                               (phase_q > 0.0) & (raw["CF"][:raw_nl] > 0.0))
                 # Old snapshots retain their original direct-source contract.
-                if fallback_name in raw:
+                if adapter_radius == "RES" and startup_snow is not None:
+                    bootstrap_um, bootstrap_mask = startup_snow
+                    expected_radius[bootstrap_mask] = bootstrap_um[bootstrap_mask]
+                    background = bootstrap_mask
+                elif fallback_name in raw:
                     if len(raw[fallback_name]) != raw_nl:
                         fail(f"{phase}: {fallback_name} shape mismatch")
                     expected_radius[background] = raw[fallback_name][background]
@@ -854,6 +915,10 @@ def compare_input_to_raw(phase: str, raw: dict[str, np.ndarray],
                     "host_background_fallback_layers": int(np.count_nonzero(background)) if fallback_name in raw else 0,
                     "diagnosed_source_layers": int(np.count_nonzero(wet & ~background)),
                 }
+                if adapter_radius == "RES" and startup_snow is not None:
+                    radius_selection_counts[adapter_radius]["host_background_fallback_layers"] = 0
+                    radius_selection_counts[adapter_radius]["native_startup_snow_layers"] = int(
+                        np.count_nonzero(startup_snow[1]))
                 radius_differences[f"{adapter_radius}_vs_{raw_radius}_um"] = assert_close(
                     inp[adapter_radius][0, :raw_nl], expected_radius,
                     f"{phase}: explicit {adapter_radius} radius with initialized-background fallback",

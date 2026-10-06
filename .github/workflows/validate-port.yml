@@ -292,6 +292,16 @@ jobs:
           printf '32\n0\n' | ./configure 2>&1 | tee ../build/wrf-configure.log
           csh -f ./compile -j 2 em_scm_xy 2>&1 | tee ../build/wrf-compile-scm.log
           [[ -x main/wrf.exe && -x main/ideal.exe ]]
+      - name: Check UDM37 first-call startup snow fallback on the current build
+        shell: bash
+        run: |
+          set -euo pipefail
+          export NETCDF="$RUNNER_TEMP/netcdf"
+          export LD_LIBRARY_PATH="$NETCDF/lib:/usr/lib/x86_64-linux-gnu:${LD_LIBRARY_PATH:-}"
+          python3 WRF/test/rrtmgp/test_udm_startup_snow_scm.py \
+            build/udm-startup-snow-runtime-only \
+            --candidate-wrf-root "$GITHUB_WORKSPACE/WRF" --runtime-only \
+            | tee build/udm-startup-snow-runtime-only.log
       - name: Check RRTMGP compiler/flags/object inventory rebuilds
         shell: bash
         run: |
