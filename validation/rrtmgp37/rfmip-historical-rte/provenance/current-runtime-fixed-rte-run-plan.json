@@ -1,0 +1,174 @@
+{
+  "cleanup_delta": "All post-KILL waits bounded10s; outer exceptions also kill the residual group after an already exited leader.",
+  "comparisons": {
+    "claims": "fixed RTE/source/geometry replay only; no physical accuracy or source attribution",
+    "current-arm-gate": "bitwise equality of current solver and night-masked output against current-source/old-solar captured references for all 20 keys",
+    "historical-arm": "compare to saved historical capture descriptively only because its original RTE source revision differs",
+    "strict published gate": "unchanged: 21 cells atol=1e-5, rtol=0; no reinterpretation"
+  },
+  "execution_contract": {
+    "build": "Exactly one GNU compile and one link using the pinned frozen preparation flags, objects, libraries, and module files.",
+    "excluded": "No gas_optics calls, WRF/REAL, or forecast runs.",
+    "failure": "First nonzero child/validation result stops the sequence; no retry.",
+    "journaling": "Each child PID, argv, cwd, and actual return code is atomically persisted before log hashing/parsing.",
+    "output": "Output path must be new; an existing path is rejected.",
+    "rte": "Exactly one fixed-optics harness process; source structure is two optics arms times twenty profiles with one rte_sw invocation per profile/arm (40 total).",
+    "timeouts": "60 seconds for the harness; 300 seconds each for compile and link; bounded TERM/KILL cleanup."
+  },
+  "plan_only_delta": "Plan status normalized to the literal accepted by unchanged independently dummy-tested runner. No source/arithmetic changes.",
+  "predecessor_failed_preflight_receipt": {
+    "actual_children": 0,
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-fixed-rte-replay-execution-v3/execution.json",
+    "sha256": "421e304b77bc1d9d9eb1d29a3d7bede31b65d8d848af11f0bf67957b827bd22f"
+  },
+  "preflight_guard_delta": "Two frozen i=1,expected_profiles loops exist: selector reading and the nested RTE loop. Correct guard from one to two; harness hash, arithmetic and 40 RTE bound unchanged.",
+  "preparation": {
+    "harness": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-fixed-rte-replay-preparation-v1/rrtmgp_rfmip_sw_fixed_rte.F90",
+      "sha256": "5a46c11921b045a3dc1ff9bbe911cd2f886250773b8686dfe1345ff042fd9925",
+      "size_bytes": 14629
+    },
+    "plan": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-fixed-rte-replay-preparation-v1/plan.json",
+      "sha256": "2c369ee729436bb6cde3a09f5c2e5d9c874e65491a5f698e1b4cd4dc0a56bc7e",
+      "size_bytes": 19191
+    },
+    "selector": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-fixed-rte-replay-preparation-v1/profiles20.txt",
+      "sha256": "d3d7037d48dbe603ce93d2a70610a140d4c5373f91d691942b9f50a2eb8d1178",
+      "size_bytes": 103
+    },
+    "validator": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-fixed-rte-replay-preparation-v1/validate_replay.py",
+      "sha256": "ca9d5118178fa2db3bf4b5742799264a1bc873bd43ccf7111d1e17d09e403bd8",
+      "size_bytes": 3804
+    }
+  },
+  "preserved_predecessor": {
+    "actual_children": 0,
+    "failed_receipt": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-fixed-rte-replay-execution-v1/execution.json",
+    "failed_receipt_sha256": "f0db1379b0b9a337562b19d8130ce9c7c533acd712324f3c7352e85d4bca270f",
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-fixed-rte-replay-run-v2/run-plan.json",
+    "sha256": "98d1403938596bc2fa8d195d60be7b8e0511b17c7cd10284bd269a0d36c8fe6f"
+  },
+  "required_authorization": {
+    "fields": {
+      "limits": {
+        "compile_timeout_seconds": 300,
+        "compiles": 1,
+        "link_timeout_seconds": 300,
+        "links": 1,
+        "model_forecasts": 0,
+        "rte_invocations": 40,
+        "timeout_seconds": 60
+      },
+      "prep_plan_sha256": "2c369ee729436bb6cde3a09f5c2e5d9c874e65491a5f698e1b4cd4dc0a56bc7e",
+      "run_plan_sha256": "sha256 of this run-plan.json, provided in authorization after independent review",
+      "runner_sha256": "7ee094485946511c7bfac8c41e90454845c41d767516c8518a137a3517b9646c",
+      "subset_audit_sha256": "80cb9d63a42a729b0def452b0c7e55f592edc09331569e75b9b35abbc06e8f5e",
+      "subset_manifest_sha256": "244fa05a0b1e4d97005bf01381e0bcba9b39fce3d2efeafb820635b8c2a90b7b"
+    },
+    "not_created_by_preparation": true,
+    "status": "AUTHORIZED_BOUNDED_FIXED_RTE_REPLAY"
+  },
+  "runner": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-fixed-rte-replay-run-v5/run_once.py",
+    "sha256": "11a336f08c1af29ef7e6026530944bd25a6b58675fa68e2d7c25d1ff4da3d03e",
+    "size_bytes": 25662
+  },
+  "runner_dummy_tests": {
+    "receipt": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-fixed-rte-replay-run-v4/dummy-test-receipt.json",
+      "sha256": "78439b4346fbeadf2d77360c0772e8ee5457750ec7c096188f7353618f7cdc85",
+      "size_bytes": 801
+    },
+    "scientific_processes": 0,
+    "script": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-fixed-rte-replay-run-v4/test_runner_journal.py",
+      "sha256": "44400f2264fb184d9aead4ae6af429c7e40cc0579a1ed50586f37c542e5b84ba",
+      "size_bytes": 4912
+    },
+    "status": "PASS_DUMMY_RECEIPT_AND_CLEANUP_CONTROLS"
+  },
+  "schema": "udm37-rfmip-fixed-rte-replay-run-plan-v4",
+  "status": "PREPARED_FOR_ROOT_REVIEW_NOT_EXECUTED",
+  "subset_contract": {
+    "independent_audit": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-fixed-rte-subsets-v1/independent-audit.json",
+      "sha256": "80cb9d63a42a729b0def452b0c7e55f592edc09331569e75b9b35abbc06e8f5e",
+      "size_bytes": 98511
+    },
+    "manifest": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-fixed-rte-subsets-v1/subset-manifest.json",
+      "sha256": "244fa05a0b1e4d97005bf01381e0bcba9b39fce3d2efeafb820635b8c2a90b7b",
+      "size_bytes": 18506
+    },
+    "manifest_path_expected": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-fixed-rte-subsets-v1/subset-manifest.json",
+    "manifest_sha256": "244fa05a0b1e4d97005bf01381e0bcba9b39fce3d2efeafb820635b8c2a90b7b",
+    "record_provenance": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-fixed-rte-subsets-v1/record-provenance.json",
+      "sha256": "349dfe2481b726eb945461e0e0373e2f71dc1f1008666f116bfc1210d0be438c",
+      "size_bytes": 86262
+    },
+    "rte_input_streams": [
+      "current_optics",
+      "historical_optics",
+      "current_source_post",
+      "historical_source_post"
+    ],
+    "saved_flux_references": [
+      "current_solver",
+      "current_written",
+      "historical_solver",
+      "historical_written"
+    ],
+    "status": "must be terminal PASS; exact keys_one_based equals profiles20.txt",
+    "streams": {
+      "current_optics": {
+        "path": "manifest-relative or absolute",
+        "sha256": "required",
+        "size_bytes": 6451360
+      },
+      "current_solver": {
+        "path": "manifest-relative or absolute",
+        "sha256": "required",
+        "size_bytes": 19680
+      },
+      "current_source_post": {
+        "path": "manifest-relative or absolute",
+        "sha256": "required",
+        "size_bytes": 36000
+      },
+      "current_written": {
+        "path": "manifest-relative or absolute",
+        "sha256": "required",
+        "size_bytes": 19680
+      },
+      "historical_optics": {
+        "path": "manifest-relative or absolute",
+        "sha256": "required",
+        "size_bytes": 6451360
+      },
+      "historical_solver": {
+        "path": "manifest-relative or absolute",
+        "sha256": "required",
+        "size_bytes": 19680
+      },
+      "historical_source_post": {
+        "path": "manifest-relative or absolute",
+        "sha256": "required",
+        "size_bytes": 36000
+      },
+      "historical_written": {
+        "path": "manifest-relative or absolute",
+        "sha256": "required",
+        "size_bytes": 19680
+      }
+    }
+  },
+  "supersedes": {
+    "v3_attempt_result": "preflight path-type error before compiler Popen; children contains STARTED compile but no PID; no compiler actual call",
+    "v3_authorized_attempt_preserved": "build/udm37-rfmip-fixed-rte-replay-run-v3/execution-v2/execution.json",
+    "v3_runner_sha256": "7ee094485946511c7bfac8c41e90454845c41d767516c8518a137a3517b9646c"
+  }
+}
