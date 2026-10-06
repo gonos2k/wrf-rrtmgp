@@ -71,12 +71,16 @@ contains
     !$acc data copyin(flavor,press_ref_log,temp_ref,vmr_ref,play,tlay,col_gas) &
     !$acc      copyout(jtemp,jpress,tropo,jeta,col_mix,fmajor,fminor) &
     !$acc      create(ftemp,fpress)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target data map(to:flavor, press_ref_log, temp_ref, vmr_ref, play, tlay, col_gas) &
     !$omp             map(alloc:jtemp, jpress, tropo, jeta, col_mix, fmajor, fminor) &
     !$omp             map(alloc:ftemp, fpress)
+#endif
 
     !$acc parallel loop gang vector collapse(2) default(present)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target teams distribute parallel do simd collapse(2)
+#endif
     do ilay = 1, nlay
       do icol = 1, ncol
         ! index and factor for temperature interpolation
@@ -98,7 +102,9 @@ contains
     ! PGI BUG WORKAROUND: if present(vmr_ref) isn't there, OpenACC runtime
     ! thinks it isn't present.
     !$acc parallel loop gang vector collapse(4) default(present) private(igases)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target teams distribute parallel do simd collapse(4) private(igases)
+#endif
     do iflav = 1, nflav
       do ilay = 1, nlay
         ! loop over implemented combinations of major species
@@ -148,7 +154,9 @@ contains
     end do ! iflav
 
     !$acc end data
+#ifndef RRTMGP_CPU_ONLY
     !$omp end target data
+#endif
 
   end subroutine interpolation
   ! --------------------------------------------------------------------------------------
@@ -233,23 +241,33 @@ contains
     ! ----------------------------------------------------------------
 
     !$acc enter data create(itropo_lower, itropo_upper)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target enter data map(alloc:itropo_lower, itropo_upper)
+#endif
     !$acc enter data copyin(play, tlay, tropo, gpoint_flavor, jeta, jtemp, col_gas, fminor, tau)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target enter data map(to:play, tlay, tropo, gpoint_flavor, jeta, jtemp, col_gas, fminor, tau)
+#endif
 
     ! ---------------------
     ! Layer limits of upper, lower atmospheres
     ! ---------------------
 
     !$acc kernels copyout(top_at_1)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target map(from:top_at_1)
+#endif
     top_at_1 = play(1,1) < play(1, nlay)
     !$acc end kernels
+#ifndef RRTMGP_CPU_ONLY
     !$omp end target
+#endif
 
     if(top_at_1) then
       !$acc parallel loop
+#ifndef RRTMGP_CPU_ONLY
       !$omp target teams distribute parallel do simd
+#endif
       do icol = 1,ncol
         itropo_lower(icol,2) = nlay
 #if ( defined(_CRAYFTN) && _RELEASE_MAJOR <= 14 ) || ( defined(_OPENMP) && defined(__NVCOMPILER) )
@@ -263,7 +281,9 @@ contains
       end do
     else
       !$acc parallel loop
+#ifndef RRTMGP_CPU_ONLY
       !$omp target teams distribute parallel do simd
+#endif
       do icol = 1,ncol
         itropo_lower(icol,1) = 1
 #if ( defined(_CRAYFTN) && _RELEASE_MAJOR <= 14 ) || ( defined(_OPENMP) && defined(__NVCOMPILER) )
@@ -332,11 +352,17 @@ contains
            tau)
 
     !$acc exit data delete(itropo_lower,itropo_upper)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target exit data map(release:itropo_lower, itropo_upper)
+#endif
     !$acc exit data delete(play, tlay, tropo, gpoint_flavor, jeta, jtemp, col_gas, fminor)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target exit data map(release:play, tlay, tropo, gpoint_flavor, jeta, jtemp, col_gas, fminor)
+#endif
     !$acc exit data copyout(tau)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target exit data map(from:tau)
+#endif
 
   end subroutine compute_tau_absorption
   ! --------------------------------------------------------------------------------------
@@ -381,7 +407,9 @@ contains
 
     ! optical depth calculation for major species
     !$acc parallel loop collapse(2)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target teams distribute parallel do simd collapse(2)
+#endif
     do ilay = 1, nlay
       do icol = 1, ncol
 
@@ -457,7 +485,9 @@ contains
     extent = size(scale_by_complement,dim=1)
 
     !$acc parallel loop gang vector collapse(2)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target teams distribute parallel do simd collapse(2)
+#endif
     do ilay = 1 , nlay
       do icol = 1, ncol
         !
@@ -549,7 +579,9 @@ contains
     ! -----------------
 
     !$acc parallel loop collapse(2)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target teams distribute parallel do simd collapse(2)
+#endif
     do ilay = 1, nlay
       do icol = 1, ncol
         !$acc loop seq
@@ -610,12 +642,16 @@ contains
 
     !$acc        data copyin(   tlay,tlev,tsfc,fmajor,jeta,tropo,jtemp,jpress,gpoint_bands,pfracin,totplnk,gpoint_flavor) &
     !$acc             copyout(  sfc_src,lay_src,lev_src,sfc_source_Jac)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target data map(   to:tlay,tlev,tsfc,fmajor,jeta,tropo,jtemp,jpress,gpoint_bands,pfracin,totplnk,gpoint_flavor) &
     !$omp             map(from: sfc_src,lay_src,lev_src,sfc_source_Jac)
+#endif
 
     ! Calculation of fraction of band's Planck irradiance associated with each g-point
     !$acc parallel loop tile(128,2)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target teams distribute parallel do simd collapse(2)
+#endif
     do ilay = 1, nlay
       do icol = 1, ncol
 
@@ -660,7 +696,9 @@ contains
       end do ! icol
     end do ! ilay
     !$acc end        data
+#ifndef RRTMGP_CPU_ONLY
     !$omp end target data
+#endif
   end subroutine compute_Planck_source
   ! ----------------------------------------------------------
   !
@@ -668,7 +706,9 @@ contains
   !
   function interpolate1D(val, offset, delta, table) result(res)
     !$acc routine seq
+#ifndef RRTMGP_CPU_ONLY
     !$omp declare target
+#endif
     ! input
     real(wp), intent(in) :: val,    & ! axis value at which to evaluate table
                             offset, & ! minimum of table axis
@@ -693,7 +733,9 @@ contains
   !
   function interpolate2D(fminor, k, igpt, jeta, jtemp) result(res)
   !$acc routine seq
+#ifndef RRTMGP_CPU_ONLY
   !$omp declare target
+#endif
     real(wp), dimension(2,2), intent(in) :: fminor ! interpolation fractions for minor species
                                        ! index(1) : reference eta level (temperature dependent)
                                        ! index(2) : reference temperature level
@@ -713,7 +755,9 @@ contains
   ! interpolation in temperature, pressure, and eta
   function interpolate3D(scaling, fmajor, k, igpt, jeta, jtemp, jpress) result(res)
   !$acc routine seq
+#ifndef RRTMGP_CPU_ONLY
   !$omp declare target
+#endif
     real(wp), dimension(2),     intent(in) :: scaling
     real(wp), dimension(2,2,2), intent(in) :: fmajor ! interpolation fractions for major species
                                                      ! index(1) : reference eta level (temperature dependent)
@@ -746,7 +790,9 @@ contains
   subroutine minmaxloc(i, mask, a, minl, maxl)
     implicit none
     !$acc routine seq
+#ifndef RRTMGP_CPU_ONLY
     !$omp declare target
+#endif
     integer :: i, minl, maxl
     logical(wl) :: mask(:,:)
     real(wp) :: a(:,:)

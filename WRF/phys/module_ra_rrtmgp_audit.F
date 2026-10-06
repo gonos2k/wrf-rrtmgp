@@ -22,6 +22,7 @@ CONTAINS
     CHARACTER(LEN=1024) :: path,value
     INTEGER :: stat,ios
     LOGICAL :: exists
+    !$OMP CRITICAL(rrtmgp_audit_configuration)
     IF(.NOT.checked) THEN
       checked=.TRUE.
       CALL get_environment_variable('WRF_RRTMGP_AUDIT_DIR',path,STATUS=stat)
@@ -53,6 +54,7 @@ CONTAINS
         FLUSH(csv_unit)
       END IF
     END IF
+    !$OMP END CRITICAL(rrtmgp_audit_configuration)
     audit_enabled=enabled
   END FUNCTION
   INTEGER FUNCTION audit_samples()

@@ -152,9 +152,11 @@ contains
     !$acc enter data create(this)                                               &
     !$acc            create(this%lut_extliq, this%lut_ssaliq, this%lut_asyliq)  &
     !$acc            create(this%lut_extice, this%lut_ssaice, this%lut_asyice)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target enter data &
     !$omp map(alloc:this%lut_extliq, this%lut_ssaliq, this%lut_asyliq) &
     !$omp map(alloc:this%lut_extice, this%lut_ssaice, this%lut_asyice)
+#endif
     ! Load LUT constants
     this%radliq_lwr = radliq_lwr
     this%radliq_upr = radliq_upr
@@ -163,7 +165,9 @@ contains
 
     ! Load LUT coefficients
     !$acc kernels
+#ifndef RRTMGP_CPU_ONLY
     !$omp target
+#endif
     this%lut_extliq = lut_extliq
     this%lut_ssaliq = lut_ssaliq
     this%lut_asyliq = lut_asyliq
@@ -171,7 +175,9 @@ contains
     this%lut_ssaice = lut_ssaice
     this%lut_asyice = lut_asyice
     !$acc end kernels
+#ifndef RRTMGP_CPU_ONLY
     !$omp end target
+#endif
     !
     ! Set default ice roughness - min values
     !
@@ -283,16 +289,20 @@ contains
     !$acc            create(this%pade_extice, this%pade_ssaice, this%pade_asyice)                       &
     !$acc            create(this%pade_sizreg_extliq, this%pade_sizreg_ssaliq, this%pade_sizreg_asyliq)  &
     !$acc            create(this%pade_sizreg_extice, this%pade_sizreg_ssaice, this%pade_sizreg_asyice)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target enter data &
     !$omp map(alloc:this%pade_extliq, this%pade_ssaliq, this%pade_asyliq) &
     !$omp map(alloc:this%pade_extice, this%pade_ssaice, this%pade_asyice) &
     !$omp map(alloc:this%pade_sizreg_extliq, this%pade_sizreg_ssaliq, this%pade_sizreg_asyliq) &
     !$omp map(alloc:this%pade_sizreg_extice, this%pade_sizreg_ssaice, this%pade_sizreg_asyice)
+#endif
     !
     ! Load data
     !
     !$acc kernels
+#ifndef RRTMGP_CPU_ONLY
     !$omp target
+#endif
     this%pade_extliq = pade_extliq
     this%pade_ssaliq = pade_ssaliq
     this%pade_asyliq = pade_asyliq
@@ -306,7 +316,9 @@ contains
     this%pade_sizreg_ssaice = pade_sizreg_ssaice
     this%pade_sizreg_asyice = pade_sizreg_asyice
     !$acc end kernels
+#ifndef RRTMGP_CPU_ONLY
     !$omp end target
+#endif
     !
     ! Set default ice roughness - min values
     !
@@ -331,8 +343,10 @@ contains
       !$acc exit data delete(this%lut_extliq, this%lut_ssaliq, this%lut_asyliq)  &
       !$acc           delete(this%lut_extice, this%lut_ssaice, this%lut_asyice)  &
       !$acc           delete(this)
+#ifndef RRTMGP_CPU_ONLY
       !$omp target exit data map(release:this%lut_extliq, this%lut_ssaliq, this%lut_asyliq) &
       !$omp map(release:this%lut_extice, this%lut_ssaice, this%lut_asyice)
+#endif
 
 
       deallocate(this%lut_extliq, this%lut_ssaliq, this%lut_asyliq, &
@@ -351,10 +365,12 @@ contains
       !$acc           delete(this%pade_sizreg_extliq, this%pade_sizreg_ssaliq, this%pade_sizreg_asyliq)  &
       !$acc           delete(this%pade_sizreg_extice, this%pade_sizreg_ssaice, this%pade_sizreg_asyice)  &
       !$acc           delete(this)
+#ifndef RRTMGP_CPU_ONLY
       !$omp target exit data map(release:this%pade_extliq, this%pade_ssaliq, this%pade_asyliq) &
       !$omp map(release:this%pade_extice, this%pade_ssaice, this%pade_asyice) &
       !$omp map(release:this%pade_sizreg_extliq, this%pade_sizreg_ssaliq, this%pade_sizreg_asyliq) &
       !$omp map(release:this%pade_sizreg_extice, this%pade_sizreg_ssaice, this%pade_sizreg_asyice)
+#endif
 
       deallocate(this%pade_extliq, this%pade_ssaliq, this%pade_asyliq, &
                  this%pade_extice, this%pade_ssaice, this%pade_asyice, &
@@ -443,14 +459,18 @@ contains
     !$acc data copyin(clwp, ciwp, reliq, reice)                         &
     !$acc      create(ltau, ltaussa, ltaussag, itau, itaussa, itaussag) &
     !$acc      create(liqmsk,icemsk)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target data map(to:clwp, ciwp, reliq, reice) &
     !$omp map(alloc:ltau, ltaussa, ltaussag, itau, itaussa, itaussag) &
     !$omp map(alloc:liqmsk, icemsk)
+#endif
     !
     ! Cloud masks; don't need value re values if there's no cloud
     !
     !$acc parallel loop gang vector default(present) collapse(2)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target teams distribute parallel do simd collapse(2)
+#endif
     do ilay = 1, nlay
       do icol = 1, ncol
         liqmsk(icol,ilay) = clwp(icol,ilay) > 0._wp
@@ -527,8 +547,10 @@ contains
       type is (ty_optical_props_1scl)
         !$acc parallel loop gang vector default(present) collapse(3) &
         !$acc               copyin(optical_props) copyout(optical_props%tau)
+#ifndef RRTMGP_CPU_ONLY
         !$omp target teams distribute parallel do simd collapse(3) &
         !$omp map(from:optical_props%tau)
+#endif
 
         do ibnd = 1, nbnd
           do ilay = 1, nlay
@@ -542,8 +564,10 @@ contains
       type is (ty_optical_props_2str)
         !$acc parallel loop gang vector default(present) collapse(3) &
         !$acc               copyin(optical_props) copyout(optical_props%tau, optical_props%ssa, optical_props%g)
+#ifndef RRTMGP_CPU_ONLY
         !$omp target teams distribute parallel do simd collapse(3) &
         !$omp map(from:optical_props%tau, optical_props%ssa, optical_props%g)
+#endif
         do ibnd = 1, nbnd
           do ilay = 1, nlay
             do icol = 1,ncol
@@ -561,7 +585,9 @@ contains
       end select
     end if
     !$acc end data
+#ifndef RRTMGP_CPU_ONLY
     !$omp end target data
+#endif
   end function cloud_optics
   !--------------------------------------------------------------------------------------------------------------------
   !
@@ -647,7 +673,9 @@ contains
     real(wp) :: t, ts  ! tau, tau*ssa, tau*ssa*g
     ! ---------------------------
     !$acc parallel loop gang vector default(present) collapse(3)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target teams distribute parallel do simd collapse(3)
+#endif
     do ibnd = 1, nbnd
       do ilay = 1,nlay
         do icol = 1, ncol
@@ -702,7 +730,9 @@ contains
     real(wp) :: t, ts
 
     !$acc parallel loop gang vector default(present) collapse(3)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target teams distribute parallel do simd collapse(3)
+#endif
     do ibnd = 1, nbnd
       do ilay = 1, nlay
         do icol = 1, ncol
@@ -775,7 +805,9 @@ contains
   !
   function pade_eval_1(iband, nbnd, nrads, m, n, irad, re, pade_coeffs)
     !$acc routine seq
+#ifndef RRTMGP_CPU_ONLY
     !$omp declare target
+#endif
     !
     integer,                intent(in) :: iband, nbnd, nrads, m, n, irad
     real(wp), dimension(nbnd, nrads, 0:m+n), &

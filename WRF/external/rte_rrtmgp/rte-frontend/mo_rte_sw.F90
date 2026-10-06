@@ -84,10 +84,14 @@ contains
     nlay = atmos%get_nlay()
     ! Solar zenith angle cosine is constant with height
     !$acc        data copyin(mu0)    create(mu0_bylay)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target data map(to:mu0) map(alloc:mu0_bylay)
+#endif
 
     !$acc                         parallel loop    collapse(2)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target teams distribute parallel do simd collapse(2)
+#endif
     do j = 1, nlay
       do i = 1, ncol
         mu0_bylay(i,j) = mu0(i)
@@ -99,7 +103,9 @@ contains
                     sfc_alb_dir, sfc_alb_dif,    &
                     fluxes, inc_flux_dif)
     !$acc end data
+#ifndef RRTMGP_CPU_ONLY
     !$omp end target data
+#endif
   end function rte_sw_mu0_bycol
   ! -------------------------------------------------------------------------------------------------
   function rte_sw_mu0_full(atmos, top_at_1, &
@@ -162,9 +168,13 @@ contains
     ! Copy variables whose sizes and values are checked to the GPU so the checks can happen there.
     !   No harm done if checks are not performed  (?)
     !$acc        data copyin(mu0, inc_flux, sfc_alb_dir, sfc_alb_dif)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target data map(to:mu0, inc_flux, sfc_alb_dir, sfc_alb_dif)
+#endif
     !$acc        data copyin(inc_flux_dif) if (has_dif_bc)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target data map(to:inc_flux_dif) if (has_dif_bc)
+#endif
     if(check_extents) then
       if(.not. extents_are(mu0, ncol, nlay)) &
         error_msg = "rte_sw: mu0 inconsistently sized"
@@ -229,7 +239,9 @@ contains
           allocate(flux_dir_loc(ncol, nlay+1))
         end if
         !$acc        enter data create(   flux_up_loc, flux_dn_loc, flux_dir_loc)
+#ifndef RRTMGP_CPU_ONLY
         !$omp target enter data map(alloc:flux_up_loc, flux_dn_loc, flux_dir_loc)
+#endif
       class default
         !
         ! If broadband integrals aren't being computed, allocate working space
@@ -253,14 +265,20 @@ contains
 
     ! Fluxes need to be copied out only if do_broadband is .true.
     !$acc        data copyin(   flux_up_loc,flux_dn_loc,flux_dir_loc) if (      do_broadband)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target data map(to:   flux_up_loc,flux_dn_loc,flux_dir_loc) if (      do_broadband)
+#endif
     !$acc        data create(   flux_up_loc,flux_dn_loc,flux_dir_loc) if (.not. do_broadband)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target data map(alloc:flux_up_loc,flux_dn_loc,flux_dir_loc) if (.not. do_broadband)
+#endif
 
     !$acc        data create(   gpt_flux_up,gpt_flux_dn,gpt_flux_dir) &
     !$acc             create(   sfc_alb_dir_gpt, sfc_alb_dif_gpt)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target data map(alloc:gpt_flux_up,gpt_flux_dn,gpt_flux_dir) &
     !$omp             map(alloc:sfc_alb_dir_gpt, sfc_alb_dif_gpt)
+#endif
 
 
     ! ------------------------------------------------------------------------------------
@@ -275,11 +293,15 @@ contains
     if (has_dif_bc) then
       inc_flux_diffuse => inc_flux_dif
       !$acc        enter data copyin(   inc_flux_diffuse)
+#ifndef RRTMGP_CPU_ONLY
       !$omp target enter data map(to:   inc_flux_diffuse)
+#endif
     else
       allocate(inc_flux_diffuse(ncol, ngpt))
       !$acc        enter data create(   inc_flux_diffuse)
+#ifndef RRTMGP_CPU_ONLY
       !$omp target enter data map(alloc:inc_flux_diffuse)
+#endif
       call zero_array(ncol, ngpt, inc_flux_diffuse)
     end if
     ! ------------------------------------------------------------------------------------
@@ -299,10 +321,14 @@ contains
           call zero_array(ncol, nlay+1, ngpt, gpt_flux_up)
           !
           !$acc kernels
+#ifndef RRTMGP_CPU_ONLY
           !$omp target
+#endif
           gpt_flux_dn(:,:,:) = gpt_flux_dir(:,:,:)
           !$acc end kernels
+#ifndef RRTMGP_CPU_ONLY
           !$omp end target
+#endif
 
         class is (ty_optical_props_2str)
           !
@@ -337,7 +363,9 @@ contains
         type is (ty_fluxes_broadband)
           if(associated(fluxes%flux_net)) then
             !$acc                         parallel loop    collapse(2) copyin(fluxes) copyout(fluxes%flux_net)
+#ifndef RRTMGP_CPU_ONLY
             !$omp target teams distribute parallel do simd collapse(2)
+#endif
             do ilev = 1, nlay+1
               do icol = 1, ncol
                 fluxes%flux_net(icol,ilev) = flux_dn_loc(icol,ilev) - flux_up_loc(icol,ilev)
@@ -353,15 +381,25 @@ contains
     end if ! In case of an error we exit here
 
     !$acc        end data
+#ifndef RRTMGP_CPU_ONLY
     !$omp end target data
+#endif
     !$acc        end data
+#ifndef RRTMGP_CPU_ONLY
     !$omp end target data
+#endif
     !$acc        end data
+#ifndef RRTMGP_CPU_ONLY
     !$omp end target data
+#endif
     !$acc        end data
+#ifndef RRTMGP_CPU_ONLY
     !$omp end target data
+#endif
     !$acc        end data
+#ifndef RRTMGP_CPU_ONLY
     !$omp end target data
+#endif
 
     !
     ! Deallocate any memory allocated locally to pointer variables
@@ -369,7 +407,9 @@ contains
     select type(fluxes)
       type is (ty_fluxes_broadband)
         !$acc        exit data copyout( flux_up_loc, flux_dn_loc, flux_dir_loc)
+#ifndef RRTMGP_CPU_ONLY
         !$omp target exit data map(from:flux_up_loc, flux_dn_loc, flux_dir_loc)
+#endif
         if(.not. associated(fluxes%flux_up    )) deallocate(flux_up_loc)
         if(.not. associated(fluxes%flux_dn    )) deallocate(flux_dn_loc)
         if(.not. associated(fluxes%flux_dn_dir)) deallocate(flux_dir_loc)
@@ -378,7 +418,9 @@ contains
     end select
     if(.not. has_dif_bc) then
       !$acc        exit data delete(     inc_flux_diffuse)
+#ifndef RRTMGP_CPU_ONLY
       !$omp target exit data map(release:inc_flux_diffuse)
+#endif
       deallocate(inc_flux_diffuse)
     end if
 
@@ -401,7 +443,9 @@ contains
     ngpt  = ops%get_ngpt()
     limits = ops%get_band_lims_gpoint()
     !$acc                         parallel loop    collapse(2) copyin(arr_in, limits)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target teams distribute parallel do simd collapse(2) map(to:arr_in, limits)
+#endif
     do iband = 1, nband
       do icol = 1, ncol
         do igpt = limits(1, iband), limits(2, iband)
