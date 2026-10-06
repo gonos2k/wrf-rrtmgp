@@ -1,0 +1,400 @@
+{
+  "arithmetic_error_bound": {
+    "future": "A strict arithmetic reproduction gate requires an independently reviewed error/LOG enclosure before observing residuals; it is separate from this diagnostic numerical report.",
+    "status": "UNPROVEN_NOT_USED_AS_GATE",
+    "withdrawn": "V2 provisional gamma_256 term bound does not propagate upstream input/interpolation/LOG errors. It must not classify agreement as PASS."
+  },
+  "created_unix": 1791232872.1761112,
+  "current_library_identity": {
+    "coefficient_loader": {
+      "path": "build/udm-cloud-top-shrink-pr-work/WRF/external/rte_rrtmgp/extensions/mo_load_coefficients.F90",
+      "sha256": "3abc021bf244560f4d7f247be167ad0ecafb6c451f88566a7ce2a0436caebb5b",
+      "size_bytes": 13301
+    },
+    "gas_frontend": {
+      "path": "build/udm-cloud-top-shrink-pr-work/WRF/external/rte_rrtmgp/rrtmgp-frontend/mo_gas_optics_rrtmgp.F90",
+      "sha256": "d5e0a7e56bc811575ec2c9655953a5be64c42a62e4100f65198e1e1b44239adc",
+      "size_bytes": 107884
+    },
+    "gas_kernel": {
+      "path": "build/udm-cloud-top-shrink-pr-work/WRF/external/rte_rrtmgp/rrtmgp-kernels/mo_gas_optics_rrtmgp_kernels.F90",
+      "sha256": "96be9c4379c4e49a7b13e9b1f8314e78908262f402e913a2a03232987706f6e1",
+      "size_bytes": 41856
+    }
+  },
+  "design_review_pins": {
+    "bound_review": {
+      "path": "build/udm37-bon-night-opacity-design-review-v1/plan-v2-review.json",
+      "sha256": "31d98f0d9892f5dd35ed548f6b3d2ff7170848477abe8cb233652e02a9a22e5f",
+      "size_bytes": 6004
+    },
+    "root_interval_draft_review": {
+      "path": "build/udm37-bon-night-opacity-root-draft-review-v1/review.json",
+      "sha256": "d316803d250f5eab611a3e678a115aab9bcd2b92e160430ebcdb8445497a4964",
+      "size_bytes": 2464
+    }
+  },
+  "diagnostic_authority": {
+    "execution_gate": "Before one bounded pure-Python execution: freeze coherent source SHA, independent source-equation review, complete pins and AST check in a separate authorization packet. Do not run either unfinished interval draft or locked point draft. The execution receipt must preserve actual return code before reading numerical results.",
+    "numerical_status": "DIAGNOSTIC_COMPLETE is permitted after successful structural checks; no numerical PASS/FAIL threshold is specified or permitted for residual agreement in this phase.",
+    "physical_status": "No accuracy, coefficient-generation, or broadband difference gate closes even if all point residuals are zero.",
+    "purpose": "Obtain a separately implemented point reconstruction from original held state and raw table, to locate loading/species/interpolation discrepancies. This is diagnostic evidence only.",
+    "unresolved": "A prior rigorous forward-error bound including all upstream weights, gas scaling, LOG implementations and discrete branch stability has not been established. Gamma_256 is not a valid strict gate and is withdrawn from this diagnostic phase."
+  },
+  "execution_counts": {
+    "new_builds": 0,
+    "new_model_calls": 0,
+    "new_solver_calls": 0,
+    "reconstruction_executions": 0,
+    "source_or_coefficient_edits": 0
+  },
+  "existing_evidence_available": {
+    "gp_absorption_tau": "The 0/N2 and 0.7808 outputs preserve GAS_TAU and GAS_TAU_RAW; existing independent terminal review authenticates the captured reference calls and source/support pins.",
+    "legacy_absorption_tau": "The V10 export preserves TAUGAS as optical_depth_gpoint_layer 140 by 45 and WKL_MOLECULE_COLUMNS 38 by 45, so legacy-side raw opacity need not be regenerated.",
+    "prior_planck_and_flux": "Prior Planck mapping and common-band analysis provide pinned context only. Their numbers must not be called an independent gas-tau reconstruction."
+  },
+  "held_state_and_density_contract": {
+    "constant_source": "Avogadro and dry molecular weight come from input/pinned constants. The previous independent pfrac run recomputed dry mass with this formula and found max relative difference 2.22e-16 to saved GAS_COL_DRY; that is context only, not a tolerance to fit.",
+    "gas_column": "Set col_gas(0)=recomputed col_dry and col_gas(g)=input VMR[g]*col_dry. Keep the four trace-gas profiles from input; do not infer any VMR from legacy WKL columns.",
+    "input_format": "RRTMGP_REPLAY_V10, LW, ncol=1, nlay=45. PLAY/PLEV text values are hPa and driver multiplies by 100 for Pa before gas_optics; TLAY is K. Input has NATIVE_DRY_LAYER_MASS_KG_M2 width 45 and scalar MOL_WEIGHT_DRY, plus ten gas VMR sections (six main LW gases plus CFC11/12/22/CCl4).",
+    "matched_profile_exception": "This is the exact retained matched-legacy-dry diagnostic carrier: the original V10 trace had a 32-value mass section, and the pinned dry-column plan changed only NATIVE_DRY_LAYER_MASS_KG_M2 to a 45-value section. The replay reader sets n_native from section width, so all 45 solver levels are overridden from supplied masses. The 32-native/13-upper-extension description is physical coordinate context, not the mass state represented by this matched input. Do not silently restore the original 32-value prefix/default upper mass; reconstruct the actual held 45-value carrier.",
+    "n2_cases": "Absent-N2 initializes the ten-gas list and filters N2 minor intervals. Explicit N2=0 initializes the 11-gas list, retains those intervals but gives them zero amount. The 0.7808 case uses the CLI N2 VMR override (not a V10 text section), retains intervals, and activates their scaled absorption. Keep these as separate roster cases.",
+    "reconstruct_dry_column_first": "Recompute each layer col_dry = NATIVE_DRY_LAYER_MASS_KG_M2 * Avogadro / (MOL_WEIGHT_DRY * 10000), using all 45 held mass values and the pinned constants. Do not use saved GAS_COL_DRY as reconstruction input. Compare the independently computed result with saved GAS_COL_DRY only after reconstruction."
+  },
+  "independent_reconstruction_steps": [
+    "Authenticate every retained artifact plus current PR109 frontend/kernel/loader source identity; no solver/executable is executed.",
+    "Independently derive all 45 matched dry amounts and active VMR columns, retaining absent/zero N2 roster distinction.",
+    "Reduce available gas roster in coefficient-table order (frontend PACK), derive key pairs/flavors and interpolation context from held state/raw named dimensions.",
+    "Reconstruct all three point arrays and component ledgers with source-ordered major/minor equations; save the construction artifact before reading captured target optical depths.",
+    "Only then read authenticated target GAS_TAU_RAW/GAS_TAU and dry/context diagnostics; report raw residual/ULP statistics without any tolerance-based numerical verdict."
+  ],
+  "matched_carrier_provenance": {
+    "45_layer_matched_input": {
+      "path": "build/udm37-bon-night-dry-column-attribution-v1/matched-legacy-dry.input",
+      "sha256": "292f9569b059c373c9cb14f1574cb8835627331574592a19d641ef07c21ec918",
+      "size_bytes": 39535
+    },
+    "independent_terminal_review": {
+      "path": "build/udm37-bon-night-dry-column-attribution-v1/terminal-review-v1/terminal-review.json",
+      "sha256": "53fc07cc4cbd19733fc40d3c0480e2435ba3372d9c552250c882ef0829114c85",
+      "size_bytes": 4088
+    },
+    "original_32_layer_input": {
+      "path": "build/udm37-current-bon-night-serial-audit-v2/cases/OFF/trace/lw_000001.input",
+      "sha256": "9fa15b3644da43a65b86d6f3dd930022b29812eefda4a2b0efa162aecfe56305",
+      "size_bytes": 39197
+    },
+    "physical_scope": "The reconstructed dry column is for all 45 solver layers in this matched carrier. It does not reconstruct or establish accuracy of the normal 32 native dry-mass levels plus 13 extensions; the extension values are explicitly counterfactual carrier values.",
+    "scope": "The held matched input is an intentional dry-column counterfactual, not the original production native-layer state. Its source input has NATIVE_DRY_LAYER_MASS_KG_M2 width 32; the dry-carrier plan changes only that section to width 45, and the replay reader sets n_native from that width and replaces all 45 levels.",
+    "transformation_execution": {
+      "path": "build/udm37-bon-night-dry-column-attribution-v1/run-v1/execution.json",
+      "sha256": "3f449ad53f6b52f147e3907eb66bc4ae462d6727acaec064c6baf057b7e80b4c",
+      "size_bytes": 69211
+    },
+    "transformation_output": {
+      "path": "build/udm37-bon-night-dry-column-attribution-v1/run-v1/matched-legacy-dry.result",
+      "sha256": "2e4e1257fe152f4e6e2d6036800f762605555a54ee0262951d211aa2af6c87ac",
+      "size_bytes": 763371
+    },
+    "transformation_plan": {
+      "path": "build/udm37-bon-night-dry-column-attribution-v1/plan.json",
+      "sha256": "fdf6a52b0d7efe499370daca8098820cef66636166b2c694588e55a3ee8c5853",
+      "size_bytes": 4228
+    },
+    "transformation_runner": {
+      "path": "build/udm37-bon-night-dry-column-attribution-v1/run_once.py",
+      "sha256": "a12d15630d788d2bea7cc807455e6026272ed998e5b1feb94e14e0451ace3f51",
+      "size_bytes": 6299
+    }
+  },
+  "open_items": [
+    "Coherent point implementation, source review and separate frozen execution authorization pending.",
+    "No independent point opacity computation or target residual inspection has occurred.",
+    "Strict arithmetic/log bound unproven; no numerical PASS threshold.",
+    "Absolute opacity accuracy and the 4/37 broadband residual cause remain open."
+  ],
+  "pinned_artifacts": {
+    "coefficient_loader": {
+      "path": "build/cf0-cu-src-v1/WRF/external/rte_rrtmgp/extensions/mo_load_coefficients.F90",
+      "sha256": "3abc021bf244560f4d7f247be167ad0ecafb6c451f88566a7ce2a0436caebb5b",
+      "size_bytes": 13301
+    },
+    "column_comparator": {
+      "path": "build/cf0-cu-src-v1/WRF/test/rrtmgp/compare_column_replay.py",
+      "sha256": "6099a3819268d3ee17bbcbaf0610c03822c09247da6ac5bdfdef66c9190533a7",
+      "size_bytes": 12800
+    },
+    "gas_constants": {
+      "path": "build/cf0-cu-src-v1/WRF/external/rte_rrtmgp/gas-optics/mo_gas_optics_constants.F90",
+      "sha256": "255cdd77fa39892bdec92440ae4dbc35b79fb338fdfff6d6b28bdf62f01c94b8",
+      "size_bytes": 3047
+    },
+    "gas_frontend": {
+      "path": "build/cf0-cu-src-v1/WRF/external/rte_rrtmgp/rrtmgp-frontend/mo_gas_optics_rrtmgp.F90",
+      "sha256": "d5e0a7e56bc811575ec2c9655953a5be64c42a62e4100f65198e1e1b44239adc",
+      "size_bytes": 107884
+    },
+    "gas_kernel": {
+      "path": "build/cf0-cu-src-v1/WRF/external/rte_rrtmgp/rrtmgp-kernels/mo_gas_optics_rrtmgp_kernels.F90",
+      "sha256": "96be9c4379c4e49a7b13e9b1f8314e78908262f402e913a2a03232987706f6e1",
+      "size_bytes": 41856
+    },
+    "gp_absent_result": {
+      "path": "build/udm37-bon-night-n2-attribution-v1/run-preparation-v1/run-v1/n2-absent-baseline.result",
+      "sha256": "2e4e1257fe152f4e6e2d6036800f762605555a54ee0262951d211aa2af6c87ac",
+      "size_bytes": 763371
+    },
+    "gp_absent_sidecar": {
+      "path": "build/udm37-bon-night-n2-attribution-v1/run-preparation-v1/run-v1/n2-absent-baseline.result.lw_transport",
+      "sha256": "a672cef9b611fece13e0124a85da8cd6bcc98b97d863475fc35557d7ea7008a7",
+      "size_bytes": 308037
+    },
+    "gp_absent_transport": {
+      "path": "build/udm37-bon-night-n2-attribution-v1/run-preparation-v1/run-v1/n2-absent-baseline.result.lw_transport",
+      "sha256": "a672cef9b611fece13e0124a85da8cd6bcc98b97d863475fc35557d7ea7008a7",
+      "size_bytes": 308037
+    },
+    "gp_build_plan": {
+      "path": "build/udm37-bon-night-n2-attribution-v1/build-plan-v2.json",
+      "sha256": "9692307a89aba18d659b14b3387e4e5332cad34a84f356386531585b9fd62777",
+      "size_bytes": 3096
+    },
+    "gp_build_receipt": {
+      "path": "build/udm37-bon-night-n2-attribution-v1/build-v2/build-receipt.json",
+      "sha256": "a9523aa34babe7b037c672998778a92f73b53fdc0119e83cf1f49ec44d8e363a",
+      "size_bytes": 92623
+    },
+    "gp_execution": {
+      "path": "build/udm37-bon-night-n2-attribution-v1/run-preparation-v1/run-v1/execution.json",
+      "sha256": "cbb876791a9ff905356fa90abd65ede8d5f8dde882009d7be48684c74a7a600e",
+      "size_bytes": 70378
+    },
+    "gp_n2_result": {
+      "path": "build/udm37-bon-night-n2-attribution-v1/run-preparation-v1/run-v1/n2-0p7808.result",
+      "sha256": "b578e9983b5817297db75baac026af98b84a3cbcd3653aadf2e4db5930ce5732",
+      "size_bytes": 763371
+    },
+    "gp_n2_sidecar": {
+      "path": "build/udm37-bon-night-n2-attribution-v1/run-preparation-v1/run-v1/n2-0p7808.result.lw_transport",
+      "sha256": "bb53daf55ea9b6f91c9d0dbc4f132eff11b3ab76fd278bacb327571a1642e792",
+      "size_bytes": 308081
+    },
+    "gp_n2_transport": {
+      "path": "build/udm37-bon-night-n2-attribution-v1/run-preparation-v1/run-v1/n2-0p7808.result.lw_transport",
+      "sha256": "bb53daf55ea9b6f91c9d0dbc4f132eff11b3ab76fd278bacb327571a1642e792",
+      "size_bytes": 308081
+    },
+    "gp_reference_executable": {
+      "path": "build/udm37-bon-night-n2-attribution-v1/build-v2/reference_transport",
+      "sha256": "24054389e7d4ad2a5442040d7621262ff80b4b089604709cff3184f8d86cbd34",
+      "size_bytes": 1048872
+    },
+    "gp_runtime_lw_coefficients": {
+      "path": "build/udm37-export-selection-serial-build-v1/source/WRF/run/rrtmgp-gas-lw-g128.nc",
+      "sha256": "70ad65d116531122660318e5da2a2af9db74b425916202860e9527ef2375b8f6",
+      "size_bytes": 11679993
+    },
+    "gp_source": {
+      "path": "build/udm37-bon-night-n2-attribution-v1/preparation-v3/reference_column.f90",
+      "sha256": "77e2bdf233139771209dffd6efa00616960d3e609f8bd90691877f1ed8806678",
+      "size_bytes": 92906
+    },
+    "gp_terminal_review": {
+      "path": "build/udm37-bon-night-n2-attribution-v1/run-preparation-v1/terminal-review-v1.json",
+      "sha256": "7463be583664a09d22d03bd0a694e48c510f4ee8cfc473ab31b3832bad2196aa",
+      "size_bytes": 6116
+    },
+    "gp_zero_result": {
+      "path": "build/udm37-bon-night-n2-attribution-v1/run-preparation-v1/run-v1/n2-explicit-zero.result",
+      "sha256": "2e4e1257fe152f4e6e2d6036800f762605555a54ee0262951d211aa2af6c87ac",
+      "size_bytes": 763371
+    },
+    "gp_zero_sidecar": {
+      "path": "build/udm37-bon-night-n2-attribution-v1/run-preparation-v1/run-v1/n2-explicit-zero.result.lw_transport",
+      "sha256": "3e57910c8954bab764da5a616b249507d68e5e875bdd50076a13a41750a2cca8",
+      "size_bytes": 308081
+    },
+    "gp_zero_transport": {
+      "path": "build/udm37-bon-night-n2-attribution-v1/run-preparation-v1/run-v1/n2-explicit-zero.result.lw_transport",
+      "sha256": "3e57910c8954bab764da5a616b249507d68e5e875bdd50076a13a41750a2cca8",
+      "size_bytes": 308081
+    },
+    "legacy_export_execution": {
+      "path": "build/udm37-current-bon-night-serial-audit-v2/execution-receipt.json",
+      "sha256": "00d7abb5b6f92e1dc4a2b07724fbf1fe6a6c2853c4614d4a59e2af0a71ef6240",
+      "size_bytes": 328723
+    },
+    "legacy_lw_export": {
+      "path": "build/udm37-current-bon-night-serial-audit-v2/cases/ON_native4_1/legacy-export/rrtmg4_d01_i13_j46_step721_lw.txt",
+      "sha256": "0884e7e898ddf470c1a9616905d89ad022b74e7e3cb6d42d59086540d90b7653",
+      "size_bytes": 1520389
+    },
+    "legacy_lw_source": {
+      "path": "build/cf0-cu-src-v1/WRF/phys/module_ra_rrtmg_lw.F",
+      "sha256": "83179d79a383947e0631ec19fc4f1d2d93c86add4c51a32cbd3ae4a5e07e1440",
+      "size_bytes": 705249
+    },
+    "linked_dependency_closure": {
+      "path": "build/udm37-bon-night-n2-attribution-v1/retained-link-dependencies-v1.json",
+      "sha256": "1413c989ad1c3df14e81d03b82b04b6cd654e0c49ebba3d8c027247c6a64ad8a",
+      "size_bytes": 14039
+    },
+    "lw_coefficients": {
+      "path": "build/cf0-cu-src-v1/WRF/run/rrtmgp-gas-lw-g128.nc",
+      "sha256": "70ad65d116531122660318e5da2a2af9db74b425916202860e9527ef2375b8f6",
+      "size_bytes": 11679993
+    },
+    "matched_input": {
+      "path": "build/udm37-bon-night-dry-column-attribution-v1/matched-legacy-dry.input",
+      "sha256": "292f9569b059c373c9cb14f1574cb8835627331574592a19d641ef07c21ec918",
+      "size_bytes": 39535
+    },
+    "pfrac_analyzer": {
+      "path": "build/udm37-bon-night-independent-pfrac-math-v1/analyze.py",
+      "sha256": "71ea81f2cb09abacdd0855cdf56cacb08d3a90e662e6ea8e4fd2fb11dc089493",
+      "size_bytes": 8419
+    },
+    "pfrac_design": {
+      "path": "build/udm37-bon-night-independent-pfrac-design-v1/design.json",
+      "sha256": "254d4d45094d56a2939db93ca82550a878152ed7744266e81e71b1aed161aae4",
+      "size_bytes": 12571
+    },
+    "pfrac_plan": {
+      "path": "build/udm37-bon-night-independent-pfrac-math-v1/plan.json",
+      "sha256": "46893f3864ec5e6ab9e68e5b2a9544b496e9119c6a2823bb71e3a47e26dff6dc",
+      "size_bytes": 5785
+    },
+    "pfrac_portable_manifest": {
+      "path": "build/udm37-bon-independent-pfrac-pr-work/validation/rrtmgp37/bon-night-independent-pfrac/manifest.json",
+      "sha256": "ed64b5df20737e7f94e7438d2737d22e041e0e1355f5c2c0c3c1e607a6201fc9",
+      "size_bytes": 6968
+    },
+    "pfrac_portable_reproduction": {
+      "path": "build/udm37-bon-independent-pfrac-portable-reproduction-v1/result.json",
+      "sha256": "67d000a0582de7de935e64951e2e7c6a609b793187646b7162bca1e7cb9a2862",
+      "size_bytes": 729346
+    },
+    "pfrac_portable_verifier": {
+      "path": "build/udm37-bon-independent-pfrac-pr-work/validation/rrtmgp37/bon-night-independent-pfrac/verify.py",
+      "sha256": "10cd40d7058d77c19ac4431e289f085b02fce4a5f937d9f443991910c37960eb",
+      "size_bytes": 8596
+    },
+    "pfrac_precalculation_pins": {
+      "path": "build/udm37-bon-night-independent-pfrac-math-v1/precalculation-pins-v1.json",
+      "sha256": "25caf415739574714d56067171ec158525ac82ab96953de8b7f2ec77cf8c97de",
+      "size_bytes": 5066
+    },
+    "pfrac_result": {
+      "path": "build/udm37-bon-night-independent-pfrac-math-v1/result.json",
+      "sha256": "67d000a0582de7de935e64951e2e7c6a609b793187646b7162bca1e7cb9a2862",
+      "size_bytes": 729346
+    },
+    "pfrac_terminal_review": {
+      "path": "build/udm37-bon-independent-pfrac-pr-work/validation/rrtmgp37/bon-night-independent-pfrac/reviews/terminal-review-v1.json",
+      "sha256": "5938c4062127c5005ddf2360510576711f991731241e52b3964d5833d7602a7f",
+      "size_bytes": 15649
+    },
+    "planck_source_package_summary": {
+      "path": "build/udm37-bon-planck-source-pr-work/validation/rrtmgp37/bon-night-lw-transport/summary.json",
+      "sha256": "f0521b4e15e96a8e42c0371bed8fac7cf66b046e2761e616bd2cfe24b1478249",
+      "size_bytes": 1766
+    },
+    "prior_planck_math_result": {
+      "path": "build/udm37-bon-night-independent-planck-math-v1/result.json",
+      "sha256": "53e9513bf41a5e5054906bc7ee4ebbc9b9e9c83890d61ac18f9cbdd6634d44df",
+      "size_bytes": 332501
+    }
+  },
+  "precision_and_gate_policy": {
+    "before_any_calculation": "Verify every pinned artifact and exact current/replay source identity; validate all finite values, shapes, units, band maps, gas roster, dimension order and pressure/temp ranges.",
+    "comparison": "No numerical PASS threshold. Raw binary64 residual/ULP data are diagnostic only. Structural source agreement and finite/shape controls are prerequisites, not physical accuracy.",
+    "cross_engine": "Only exact shared band edges; no gpoint pairing, no per-index comparisons, no inferred spectral accuracy, and no conversion of tau match into broadband accuracy claim.",
+    "runtime_binding": "Bind the actual executable, execution receipt, runtime coefficient path, and linked source/build receipts before using the captured GAS_TAU outputs as comparison targets."
+  },
+  "prior_plan": {
+    "path": "build/udm37-bon-night-opacity-independent-plan-v1/v2/plan.json",
+    "sha256": "f4a1824c8e7a28140c2f6a5e106527c1dcc4b9eb03884cfbae3ae4863175a601",
+    "size_bytes": 26075
+  },
+  "purpose": "Specify a separately implemented numerical reconstruction of the pinned RRTMGP LW GAS_TAU from the retained matched BON column and exact pinned LW k-distribution table. Do not rerun gas_optics, compile, or call an RTE/solver as the reconstruction.",
+  "raw_table_mapping_contract": {
+    "gas_order": "Caller membership is ten supplied species plus optional N2; runtime reduced roster is PACK(table gas_names, present in caller), not caller insertion order. Key/flavor and col_gas positive indexes use that table order, zero index is dry.",
+    "major_axes": "Raw Python NetCDF kmajor axes (temperature, pressure_interp, mixing_fraction, gpt), shape (14,60,9,128). Python indexes [temp, pressure, eta, gpoint]. Loader Fortran input is (gpt,eta,pressure,temp); frontend RESHAPE ORDER=(4,2,3,1) produces kernel logical array (temp,eta,pressure,gpt). This corrects V2's misleading internal-axis label; no table bytes change.",
+    "major_path": "For each band/layer choose lower/upper atmosphere key pair and runtime flavor. For each of two reference temperature planes form col_mix from major species columns and table vmr_ref ratio; interpolate kmajor in its four eta-pressure corners at each plane and apply col_mix for that plane. Lower vs upper pressure slots have the source-required one-index shift. Sum the major component by flavor and in total.",
+    "minor_path": "For each interval use inclusive minor_limits_gpt, source kminor_start, and lower/upper pool. Base scaling is col_gas of minor absorber. If density flag is true, multiply by 0.01*PLAY(Pa)/TLAY(K); if a scaling gas is configured, apply source dry-fraction plus selected gas ratio or complement flag. Interpolate kminor over eta/temp (2×2 corners), multiply by scaling, and add into total tau.",
+    "minor_pool_and_packing": "Raw kminor lower/upper pools use named axes `(temperature,mixing_fraction,contributors_*)`, 485 and 308 contributor rows. Map each interval `minor_gases_*`→`identifier_minor`→`gas_minor`, then include only intervals whose parent gas is available. For removed intervals, runtime packed kminor_start subtracts the cumulative g-point widths of eliminated preceding intervals; independently either reproduce this packed layout or address original uncompressed pool by original start and prove identical source-row selection.",
+    "pfrac_equations_context": "Pinned pfrac design/analyzer gives equations and checked mappings for reduced key_species, flavor order, jtemp/jpress, ftemp/fpress, atmosphere, eta and fmajor-like corner weights. Recompute these from input/table in the independent opacity path; use pfrac result only as a cross-check of derived bracket/weight metadata.",
+    "rayleigh": "Pinned LW table contains no rayl_lower/rayl_upper arrays, so this is gas absorption only; do not add Rayleigh."
+  },
+  "remaining_inputs": {
+    "external_truth": "Independent spectroscopic coefficients/generator or alternative gas k table are not present; therefore this check cannot adjudicate absolute physical opacity accuracy or uniquely split the legacy-vs-GP flux residual.",
+    "legacy_comparison": "Legacy TAUGAS/WKL values are retained. No one-to-one legacy↔GP g-point pairing exists; only exact common-band summaries are admissible.",
+    "primary_gp_reconstruction": "No essential numerical inputs appear missing: held V10 state/mass/VMRs, exact LW gas k table and metadata, compiled/replay provenance, and saved GP gas optical-depth outputs are all retained."
+  },
+  "reporting_policy": {
+    "cross_engine": "Defer legacy band-distribution summaries to a separate reviewed analysis. Never pair 128 and 140 g-point indices.",
+    "dry_context": "Recompute dry amounts from all 45 supplied matched-carrier masses. Captured GAS_COL_DRY and previous pfrac discrete state are post-reconstruction cross-checks only; not inputs to tau.",
+    "failure": "Structural/source-index/check failures stop with retained failure artifacts; fix in a new version. They cannot be reclassified as production port bugs without separate evidence.",
+    "primary": "All 45x128 cells for each of absent N2, explicit zero N2, and N2=0.7808. Construct and freeze all three independent arrays before opening any captured GAS_TAU target.",
+    "raw_statistics": "Save signed/absolute/relative residual arrays, max and RMS, signed ordered-binary64 ULP differences, along with exact target pins. Relative residual at zero target must be explicitly undefined or separately classified; never add a fitted floor.",
+    "term_ledger": "Save all eight weighted major corners, two plane column mixes and sums, resulting major contribution, each retained minor interval's four weighted corners, scaling factor, contribution and source raw/packed row map. Save pressure/temp/eta brackets, weights, gas-name roster, flavors and atmosphere masks."
+  },
+  "schema": "udm37-bon-night-opacity-independent-plan-v3",
+  "scope": {
+    "bands": "Primary same-engine 45x128 diagnostic reconstruction only. Cross-engine band summaries deferred; gpoint pairing prohibited.",
+    "column": "BON nighttime d01 i13 j46 step721, 45 solver-coordinate levels. The held matched diagnostic dry-mass carrier supplies ALL 45 values; it is not a fresh reconstruction of native32 plus default13-extension mass.",
+    "gas_tau_artifacts": "GP result sections GAS_TAU and GAS_TAU_RAW have shape (1,45,128); the retained legacy packet TAUGAS has shape (140,45). Both are available, but gpoint indices are engine-specific and must never be paired.",
+    "not_claimed": "A reconstruction from the same coefficient file checks table loading, species mapping and interpolation implementation against captured GP tau; it is not an independent coefficient-generation or physical-accuracy oracle and does not uniquely attribute the cross-engine flux residual.",
+    "not_repeated": "The earlier independent Planck/source mapping is pinned for state/provenance context, but this plan does not recalculate Planck source, angular transport, or prior flux residual decomposition.",
+    "pfrac_context": "The pinned independent pfrac analyzer already reconstructs key-species/flavor mapping and jtemp/jpress/eta/fmajor interpolation context for this state. Pin it as equation/context and optional cross-check only; the opacity reconstruction must derive gas columns and interpolation from the original input and raw coefficients independently, not treat saved pfrac outputs as its tau oracle.",
+    "target": "Per-cell GP GAS_TAU/GAS_TAU_RAW (45 layers × 128 g-points) for the retained absent-N2, explicit-zero-N2, and 0.7808-N2 diagnostic outputs."
+  },
+  "status": "DIAGNOSTIC_PLAN_FROZEN_IMPLEMENTATION_AND_EXECUTION_PENDING",
+  "supersedes": "Additive diagnostic-only interpretation. V1 and V2 remain byte-exact historical records. No residual has been inspected or used to set a tolerance.",
+  "table_inventory": {
+    "dimensions": {
+      "absorber": 19,
+      "absorber_ext": 20,
+      "bnd": 16,
+      "contributors_lower": 485,
+      "contributors_upper": 308,
+      "gpt": 128,
+      "minor_absorber_intervals_lower": 60,
+      "minor_absorber_intervals_upper": 34,
+      "mixing_fraction": 9,
+      "pressure": 59,
+      "pressure_interp": 60,
+      "temperature": 14
+    },
+    "file": "LW gas table g128; NetCDF history attributes trace a 2021 g128 assembly from the 2018-12-04 g256 artifact and a 2018 RRTMGP coefficient source. Use bytes/SHA as authority, not filename date.",
+    "rayleigh": "The pinned NetCDF contains no rayl_lower/rayl_upper arrays. The reconstruction target is absorption GAS_TAU_RAW; verify captured GAS_TAU_RAW equals GAS_TAU as the existing replay contract does, and do not add Rayleigh.",
+    "required_variables": [
+      "kmajor",
+      "kminor_lower",
+      "kminor_upper",
+      "key_species",
+      "gas_names",
+      "gas_minor",
+      "identifier_minor",
+      "minor_gases_lower",
+      "minor_gases_upper",
+      "minor_limits_gpt_lower",
+      "minor_limits_gpt_upper",
+      "minor_scales_with_density_lower",
+      "minor_scales_with_density_upper",
+      "scaling_gas_lower",
+      "scaling_gas_upper",
+      "scale_by_complement_lower",
+      "scale_by_complement_upper",
+      "kminor_start_lower",
+      "kminor_start_upper",
+      "vmr_ref",
+      "press_ref",
+      "press_ref_trop",
+      "temp_ref",
+      "bnd_limits_gpt",
+      "bnd_limits_wavenumber"
+    ],
+    "runtime_table_identity": "The runtime coefficient symlink/path recorded in the execution plan is separately pinned as gp_runtime_lw_coefficients; it is byte-identical to the source-tree coefficient file pin."
+  }
+}

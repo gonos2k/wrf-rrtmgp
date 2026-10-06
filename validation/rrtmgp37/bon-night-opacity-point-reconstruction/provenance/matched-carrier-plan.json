@@ -1,0 +1,107 @@
+{
+  "M_dry_kg_mol": 0.02896600030362606,
+  "avogad_molecules_mol": 6.02214076e+23,
+  "baseline_execution": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-independent-replay-v1/run-v1/execution.json",
+    "sha256": "3d1b9951e7eb96fe2ab222f7aee005ec02471848dc61a4ef3298a24deed23c63",
+    "size_bytes": 81010
+  },
+  "baseline_result": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-independent-replay-v1/run-v1/lw_000001.result",
+    "sha256": "2a32de3b1924dad19998da9e23114069f9fba2ac3aa1ffd5b988973882acf0f6",
+    "size_bytes": 763371
+  },
+  "counterfactual_count": 45,
+  "counterfactual_input": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-dry-column-attribution-v1/matched-legacy-dry.input",
+    "sha256": "292f9569b059c373c9cb14f1574cb8835627331574592a19d641ef07c21ec918",
+    "size_bytes": 39535
+  },
+  "expected_COLDry_molecule_cm2": [
+    1.2361434320490338e+23,
+    1.5712805096876677e+23,
+    1.9847871563859743e+23,
+    2.4873695993941165e+23,
+    3.086661259936502e+23,
+    3.7844295306508966e+23,
+    4.572639809658086e+23,
+    5.430105723159038e+23,
+    6.320179499402003e+23,
+    7.19150352938833e+23,
+    7.983385503099722e+23,
+    8.635732989988249e+23,
+    9.100716320859355e+23,
+    9.395679758597971e+23,
+    9.641279420964964e+23,
+    9.827103706197794e+23,
+    9.94264589650979e+23,
+    9.977772532451399e+23,
+    9.923157920202232e+23,
+    9.771021280758074e+23,
+    9.515851649326904e+23,
+    9.155220684989644e+23,
+    8.690516937583404e+23,
+    8.119655780912668e+23,
+    6.938870325267295e+23,
+    5.8224841825654986e+23,
+    4.885707717898731e+23,
+    4.099642953754021e+23,
+    3.4400482743451295e+23,
+    2.886590828074404e+23,
+    2.422163601685285e+23,
+    2.0324656847770352e+23,
+    8.480078138515189e+22,
+    8.480078138515189e+22,
+    8.480078138515189e+22,
+    8.480078138515189e+22,
+    8.480078138515189e+22,
+    8.480078138515189e+22,
+    8.480078138515189e+22,
+    8.480078138515189e+22,
+    8.480078138515189e+22,
+    8.480078138515189e+22,
+    8.480078138515189e+22,
+    8.480078138515189e+22,
+    4.240039069257594e+22
+  ],
+  "expected_context": {
+    "domain": 1,
+    "i": 13,
+    "j": 46,
+    "source_seconds": 43200.0,
+    "step": 721
+  },
+  "expected_solver_calls": 1,
+  "export_parser": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-current-bon-night-serial-audit-v2/read_export_context.py",
+    "sha256": "39de9417e4ba2eb2d97d08e0260226397fa00eaa2d13b7b9480f54187ac6454c",
+    "size_bytes": 7261
+  },
+  "interpretation": "Diagnostic carrier mass on all45 solver layers to impose same-call legacy molecular dry amount. Not a new WRF native state, nor updated physics. p,T,VMR,cloud/CU/precip/frozen/radii,gravity,cp,seed and all other bytes held. Compare direct F64 baseline/CF and legacy export F64; operational CSV REAL32 contrast kept separate.",
+  "inventory": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-independent-replay-v1/inventory.json",
+    "sha256": "046a7fa026ea30dbe8eb76d0933ac906605a353a859ed7aa2d535d49213b36ee",
+    "size_bytes": 32234
+  },
+  "legacy_export": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-current-bon-night-serial-audit-v2/cases/ON_native4_1/legacy-export/rrtmg4_d01_i13_j46_step721_lw.txt",
+    "sha256": "0884e7e898ddf470c1a9616905d89ad022b74e7e3cb6d42d59086540d90b7653",
+    "size_bytes": 1520389
+  },
+  "only_changed_section": "NATIVE_DRY_LAYER_MASS_KG_M2",
+  "original_count": 32,
+  "original_input": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-current-bon-night-serial-audit-v2/cases/OFF/trace/lw_000001.input",
+    "sha256": "9fa15b3644da43a65b86d6f3dd930022b29812eefda4a2b0efa162aecfe56305",
+    "size_bytes": 39197
+  },
+  "retries": 0,
+  "reuse_runner": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-independent-replay-v1/run_once.py",
+    "sha256": "859420d57a48bb4012442e847a9aa51d67673b9950c84a546f98976759ada738",
+    "size_bytes": 6468
+  },
+  "schema": "bon-night-dry-column-attribution-plan-v1",
+  "status": "PREPARED_NO_CALL",
+  "timeout_seconds": 180
+}

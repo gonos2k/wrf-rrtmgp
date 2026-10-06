@@ -1,0 +1,109 @@
+{
+  "actual_solver_invocations": 1,
+  "execution_receipt": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-dry-column-attribution-v1/run-v1/execution.json",
+    "sha256": "3f449ad53f6b52f147e3907eb66bc4ae462d6727acaec064c6baf057b7e80b4c",
+    "size_bytes": 69211
+  },
+  "execution_status": "PASS_ONE_DRY_COLUMN_INTERVENTION",
+  "inputs": {
+    "all_bytes_before_and_after_mass_section_identical": true,
+    "counterfactual": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-dry-column-attribution-v1/matched-legacy-dry.input",
+      "sha256": "292f9569b059c373c9cb14f1574cb8835627331574592a19d641ef07c21ec918",
+      "size_bytes": 39535
+    },
+    "counterfactual_mass_to_COLDry_max_relative_error": 2.220446049250313e-16,
+    "legacy_context": {
+      "domain": 1,
+      "i": 13,
+      "j": 46,
+      "phase": "LW",
+      "source_seconds": 43200.0,
+      "step": 721
+    },
+    "legacy_dry_column_levels": 45,
+    "legacy_dry_column_units": "molecule_cm-2",
+    "legacy_export": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-current-bon-night-serial-audit-v2/cases/ON_native4_1/legacy-export/rrtmg4_d01_i13_j46_step721_lw.txt",
+      "sha256": "0884e7e898ddf470c1a9616905d89ad022b74e7e3cb6d42d59086540d90b7653",
+      "size_bytes": 1520389
+    },
+    "new_count": 45,
+    "old_count": 32,
+    "only_section_changed": "NATIVE_DRY_LAYER_MASS_KG_M2",
+    "original": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-current-bon-night-serial-audit-v2/cases/OFF/trace/lw_000001.input",
+      "sha256": "9fa15b3644da43a65b86d6f3dd930022b29812eefda4a2b0efa162aecfe56305",
+      "size_bytes": 39197
+    },
+    "result_GAS_COL_DRY_to_COLDry_max_relative_error": 2.220446049250313e-16
+  },
+  "pid": 149609,
+  "pre_post_file_pins": {
+    "all_paths_rehashed": true,
+    "count_each": 120,
+    "equal": true,
+    "resolved_runtime_paths_each": 47
+  },
+  "recomputed_surface_down_w_m2": {
+    "GP_COLDry_matched": 189.08751473673385,
+    "GP_native_dry": 189.08001140829873,
+    "GP_native_minus_legacy_direct": 1.2423801827127932,
+    "WRF_REAL32_boundary_minus_legacy_separate": 1.2423858642578125,
+    "algebra_residual": 0.0,
+    "dry_column_component_GP_native_minus_matched": -0.007503328435120693,
+    "legacy_RRTMG4": 187.83763122558594,
+    "matched_GP_minus_legacy_residual": 1.2498835111479139
+  },
+  "results": {
+    "baseline_result": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-independent-replay-v1/run-v1/lw_000001.result",
+      "sha256": "2a32de3b1924dad19998da9e23114069f9fba2ac3aa1ffd5b988973882acf0f6",
+      "size_bytes": 763371
+    },
+    "changed_sections": [
+      "DN",
+      "DNC",
+      "GAS_COL_DRY",
+      "GAS_TAU",
+      "GAS_TAU_RAW",
+      "HR",
+      "HRC",
+      "TOTAL_TAU",
+      "UP",
+      "UPC"
+    ],
+    "counterfactual_result": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-dry-column-attribution-v1/run-v1/matched-legacy-dry.result",
+      "sha256": "2e4e1257fe152f4e6e2d6036800f762605555a54ee0262951d211aa2af6c87ac",
+      "size_bytes": 763371
+    },
+    "counterfactual_result_sections_finite": true,
+    "held_section_count": 14,
+    "held_sections_exact": [
+      "CLOUD_TAU",
+      "CU_CLOUD_TAU",
+      "CU_DI_USED",
+      "CU_RL_USED",
+      "DI_USED",
+      "DS_USED",
+      "FROZEN_TAU",
+      "GRAUPEL_TAU_ABS",
+      "HAIL_TAU_ABS",
+      "MASK",
+      "NATIVE_CLOUD_TAU",
+      "PRECIP_TAU",
+      "PREPARED_TAU",
+      "RL_USED"
+    ],
+    "nc": 1,
+    "nl": 45,
+    "phase": "LW"
+  },
+  "returncode": 0,
+  "schema": "bon-night-dry-column-terminal-review-v1",
+  "scope": "One BON V10 LW first-call column. The substitution changes all 45 solver-layer dry-column carrier values; it is not a revised WRF native state. The remaining matched-column residual combines gas engine/spectral and other cross-implementation differences, not a pure spectral attribution.",
+  "status": "PASS_READONLY_ONE_CALL_REVIEW",
+  "timed_out": false
+}
