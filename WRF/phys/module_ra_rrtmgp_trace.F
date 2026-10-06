@@ -619,19 +619,22 @@ CONTAINS
   END SUBROUTINE trace_udm_radius_state
 
   ! Optional call-entry packet. Inputs are the exact host arguments immediately
-  ! before UDM; DEND is explicitly a default-REAL pre-call re-evaluation of the
-  ! source expression, not an observation of udm2d's local variable.
+  ! before UDM; the selected DEND field is a default-REAL pre-call reevaluation
+  ! under the input-density policy, not an observation of udm2d's local variable.
   LOGICAL FUNCTION trace_udm_entry_density_enabled()
     trace_udm_entry_density_enabled=enabled.AND.udm_entry_density_capture_enabled
   END FUNCTION trace_udm_entry_density_enabled
 
   SUBROUTINE trace_udm_entry_density_state(domain_id,step,i,j,kts,kte,th,pii,p,qv,rho, &
-       qc,qi,qr,qs,qg,qh,nn,nc,nr,rd,rv,cpd,cpv,gravity,delt,qmin,t0c,rho0,rho_water,time_minutes)
+       qc,qi,qr,qs,qg,qh,nn,nc,nr,rd,rv,cpd,cpv,gravity,delt,qmin,t0c,rho0,rho_water, &
+       time_minutes,input_density_is_dry)
     INTEGER,INTENT(IN) :: domain_id,step,i,j,kts,kte
     REAL,INTENT(IN) :: th(:),pii(:),p(:),qv(:),rho(:),qc(:),qi(:),qr(:),qs(:),qg(:),qh(:),nn(:),nc(:),nr(:)
     REAL,INTENT(IN) :: rd,rv,cpd,cpv,gravity,delt,qmin,t0c,rho0,rho_water
     REAL,OPTIONAL,INTENT(IN) :: time_minutes
-    REAL,ALLOCATABLE :: temperature(:),dend(:)
+    LOGICAL,OPTIONAL,INTENT(IN) :: input_density_is_dry
+    REAL,ALLOCATABLE :: temperature(:),dend(:),dend_legacy(:)
+    LOGICAL :: selected_density_is_dry
     INTEGER :: expected,k,unit,ios
     CHARACTER(len=128) :: filename
     CHARACTER(len=1200) :: path
@@ -668,7 +671,10 @@ CONTAINS
         CALL trace_fatal('RRTMGP_TRACE_UDM_ENTRY_DENSITY_INVALID_SOURCE_TIME')
     END IF
 
-    ALLOCATE(temperature(expected),dend(expected))
+    selected_density_is_dry=.FALSE.
+    IF(PRESENT(input_density_is_dry)) selected_density_is_dry=input_density_is_dry
+
+    ALLOCATE(temperature(expected),dend(expected),dend_legacy(expected))
     DO k=1,expected
       IF(.NOT.ieee_is_finite(th(k)).OR..NOT.ieee_is_finite(pii(k))) &
         CALL trace_fatal('RRTMGP_TRACE_UDM_ENTRY_DENSITY_NONFINITE_TH_OR_PII')
@@ -677,9 +683,14 @@ CONTAINS
          .NOT.ieee_is_finite(rho(k)).OR.p(k)<=0..OR.temperature(k)<=0..OR.rho(k)<=0.) &
         CALL trace_fatal('RRTMGP_TRACE_UDM_ENTRY_DENSITY_INVALID_P_T_OR_DEN')
       ! Keep the expression and default-REAL operation order from udm2d.
-      dend(k)=(p(k)/temperature(k)-rho(k)*rv)/(rd-rv)
-      IF(.NOT.ieee_is_finite(dend(k))) &
+      dend_legacy(k)=(p(k)/temperature(k)-rho(k)*rv)/(rd-rv)
+      IF(.NOT.ieee_is_finite(dend_legacy(k))) &
         CALL trace_fatal('RRTMGP_TRACE_UDM_ENTRY_DENSITY_NONFINITE_DEND_REEVALUATION')
+      IF(selected_density_is_dry) THEN
+        dend(k)=rho(k)
+      ELSE
+        dend(k)=dend_legacy(k)
+      END IF
     END DO
 
     WRITE(filename,'("udm_entry_density_d",i0,"_i",i0,"_j",i0,"_step",i0,".raw")') &
@@ -687,7 +698,7 @@ CONTAINS
     path=TRIM(capture_dir)//'/'//TRIM(filename)
     OPEN(NEWUNIT=unit,FILE=TRIM(path),STATUS='new',ACTION='write',IOSTAT=ios)
     IF(ios/=0) CALL trace_fatal('RRTMGP_TRACE_UDM_ENTRY_DENSITY_IO_ERROR: opening new density packet')
-    WRITE(unit,'(a)',IOSTAT=ios) 'RRTMGP_UDM_ENTRY_DENSITY_V1'
+    WRITE(unit,'(a)',IOSTAT=ios) 'RRTMGP_UDM_ENTRY_DENSITY_V2'
     CALL check_io(ios,'writing UDM entry density magic')
     WRITE(unit,'(6(i0,1x))',IOSTAT=ios) domain_id,step,i,j,kts,kte
     CALL check_io(ios,'writing UDM entry density header')
@@ -698,6 +709,7 @@ CONTAINS
     CALL write_radius_vector(unit,'QV_MIXING_RATIO_KG_KG',qv)
     CALL write_radius_vector(unit,'DEN_PASSED_KG_M3',rho)
     CALL write_radius_vector(unit,'DEND_REEVALUATED_PRECALL_KG_M3',dend)
+    CALL write_radius_vector(unit,'DEND_LEGACY_COUNTERFACTUAL_KG_M3',dend_legacy)
     CALL write_radius_vector(unit,'QC_RAW',qc)
     CALL write_radius_vector(unit,'QI_RAW',qi)
     CALL write_radius_vector(unit,'QR_RAW',qr)
@@ -725,9 +737,14 @@ CONTAINS
     ELSE
       CALL write_radius_scalar(unit,'SOURCE_TIME_PRESENT',0.)
     END IF
+    IF(selected_density_is_dry) THEN
+      CALL write_radius_scalar(unit,'INPUT_DENSITY_IS_DRY',1.)
+    ELSE
+      CALL write_radius_scalar(unit,'INPUT_DENSITY_IS_DRY',0.)
+    END IF
     CLOSE(unit,IOSTAT=ios)
     CALL check_io(ios,'closing UDM entry density packet')
-    DEALLOCATE(temperature,dend)
+    DEALLOCATE(temperature,dend,dend_legacy)
   END SUBROUTINE trace_udm_entry_density_state
 
   SUBROUTINE write_radius_vector(unit,name,values)

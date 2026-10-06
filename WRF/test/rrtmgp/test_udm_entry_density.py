@@ -21,6 +21,7 @@ import tempfile
 import unittest
 
 MAGIC = "RRTMGP_UDM_ENTRY_DENSITY_V1"
+MAGIC_V2 = "RRTMGP_UDM_ENTRY_DENSITY_V2"
 ENTRY_NAME = re.compile(r"udm_entry_density_d([0-9]+)_i([0-9]+)_j([0-9]+)_step([0-9]+)\.raw\Z")
 FIELD_NAME = re.compile(r"[A-Z][A-Z0-9_]*\Z")
 INTEGER = re.compile(r"[0-9]+\Z")
@@ -35,6 +36,8 @@ SCALAR_FIELDS = (
     "DEND_ORIGIN", "DEFAULT_REAL_BITS", "SOURCE_TIME_PRESENT",
 )
 OPTIONAL_SCALARS = ("SOURCE_TIME_SECONDS",)
+V2_VECTOR_FIELDS = ("DEND_LEGACY_COUNTERFACTUAL_KG_M3",)
+V2_SCALAR_FIELDS = ("INPUT_DENSITY_IS_DRY",)
 EPS32 = 2.0 ** -23
 SERIALIZATION_REL_TOL = 2.0e-16
 
@@ -85,6 +88,7 @@ class EntryPacket:
     fields: dict[str, tuple[float, ...]]
     sha256: str
     size_bytes: int
+    version: int
 
     def pin(self) -> dict:
         return {"path": str(self.path.resolve()), "sha256": self.sha256, "size_bytes": self.size_bytes}
@@ -129,7 +133,8 @@ def integer_scalar(fields: dict[str, tuple[float, ...]], name: str) -> int:
     return int(value)
 
 
-def source_density_checks(fields: dict[str, tuple[float, ...]], label: str, kts: int) -> list[dict]:
+def source_density_checks(fields: dict[str, tuple[float, ...]], label: str, kts: int,
+                          version: int = 1) -> list[dict]:
     n = len(fields["T_K"])
     rd, rv = one(fields, "RD_J_KG_K"), one(fields, "RV_J_KG_K")
     require(rd != rv, f"{label}: RD and RV must differ, matching writer guard")
@@ -151,20 +156,40 @@ def source_density_checks(fields: dict[str, tuple[float, ...]], label: str, kts:
         require(abs(temp-temp_native) <= 0.5*ulp32(temp) + SERIALIZATION_REL_TOL*abs(temp),
                 f"{label}: TH*PII source relation mismatch at level {idx}")
 
-        # Reevaluate the exact source expression in binary64 and also simulate its
-        # default-REAL operation sequence. The gamma bound is derived from the
-        # expression's finite operation count and conditioning, not tuned to data.
+        # Reevaluate the legacy source expression in binary64 and also simulate
+        # its default-REAL operation sequence. The gamma bound is derived from
+        # the expression's finite operation count and conditioning, not tuned.
         term_p = pressure / temp
         term_rv = rho * rv
         denom = rd - rv
-        dend64 = (term_p - term_rv) / denom
-        dend32 = f32(f32(f32(term_p) - f32(term_rv)) / f32(denom))
-        round_bound = gamma8 * (abs(term_p) + abs(term_rv) + abs(dend64*denom)) / abs(denom)
+        legacy64 = (term_p - term_rv) / denom
+        legacy32 = f32(f32(f32(term_p) - f32(term_rv)) / f32(denom))
+        is_dry = integer_scalar(fields, "INPUT_DENSITY_IS_DRY") if version == 2 else None
+        selected64 = rho if is_dry == 1 else legacy64
+        selected32 = f32(rho) if is_dry == 1 else legacy32
+        selected_kind = ("passed DEN (dry-density policy)" if is_dry == 1 else
+                         "legacy DEND formula (implicit V1)" if version == 1 else
+                         "legacy DEND formula (moist-density policy)")
+        round_bound = gamma8 * (abs(term_p) + abs(term_rv) + abs(legacy64*denom)) / abs(denom)
         round_bound += 0.5*ulp32(dend) + SERIALIZATION_REL_TOL*abs(dend)
-        require(abs(dend-dend64) <= round_bound,
-                f"{label}: DEND source expression exceeds derived default-REAL bound at level {idx}")
-        require(abs(dend-dend32) <= ulp32(dend) + SERIALIZATION_REL_TOL*abs(dend),
-                f"{label}: DEND differs from default-REAL source-operation simulation at level {idx}")
+        if is_dry != 1:
+            require(abs(dend-legacy64) <= round_bound,
+                    f"{label}: DEND source expression exceeds derived default-REAL bound at level {idx}")
+            require(bits32(dend)==bits32(legacy32),
+                    f"{label}: selected DEND differs from default-REAL legacy source simulation at level {idx}")
+        else:
+            require(bits32(dend)==bits32(rho),
+                    f"{label}: dry-density policy selected DEND must exactly equal DEN at level {idx}")
+
+        legacy_counterfactual = legacy32
+        if version == 2:
+            counterfactual = fields["DEND_LEGACY_COUNTERFACTUAL_KG_M3"][idx]
+            require(bits32(counterfactual)==bits32(legacy_counterfactual),
+                    f"{label}: legacy counterfactual differs from default-REAL source simulation at level {idx}")
+            require(abs(counterfactual-legacy64) <= (
+                gamma8 * (abs(term_p) + abs(term_rv) + abs(legacy64*denom)) / abs(denom)
+                + 0.5*ulp32(counterfactual) + SERIALIZATION_REL_TOL*abs(counterfactual)),
+                f"{label}: legacy counterfactual exceeds derived default-REAL bound at level {idx}")
 
         eos_dry = None
         eos_total = None
@@ -182,10 +207,10 @@ def source_density_checks(fields: dict[str, tuple[float, ...]], label: str, kts:
             "QV_MIXING_RATIO_KG_KG": qv,
             "DEN_PASSED_KG_M3": rho,
             "DEND_REEVALUATED_PRECALL_KG_M3": dend,
-            "DEND_binary64_source_expression": dend64,
-            "DEND_default_REAL_simulation": dend32,
-            "DEND_source_expression_abs_residual": abs(dend-dend64),
-            "DEND_source_expression_derived_bound": round_bound,
+            "DEND_binary64_source_expression": selected64,
+            "DEND_default_REAL_simulation": selected32,
+            "DEND_source_expression_abs_residual": abs(dend-selected64),
+            "DEND_source_expression_derived_bound": (0.0 if is_dry == 1 else round_bound),
             "EOS_dry_density_conditional_kg_m3": eos_dry,
             "EOS_total_density_conditional_kg_m3": eos_total,
             "passed_DEN_minus_conditional_EOS_total_kg_m3": (rho-eos_total if eos_total is not None else None),
@@ -196,6 +221,19 @@ def source_density_checks(fields: dict[str, tuple[float, ...]], label: str, kts:
             "DEND_minus_conditional_EOS_dry_relative": ((dend-eos_dry)/eos_dry if eos_dry not in (None,0.) else None),
             "interpretation": "diagnostic comparison only; EOS dry/gas-total convention is conditional, not a physical acceptance test",
         })
+        if version == 2:
+            rows[-1].update({
+                "INPUT_DENSITY_IS_DRY": is_dry,
+                "selected_DEND_policy": selected_kind,
+                "DEND_LEGACY_COUNTERFACTUAL_KG_M3": legacy_counterfactual,
+                "DEND_legacy_counterfactual_binary64_source_expression": legacy64,
+                "DEND_legacy_counterfactual_default_REAL_simulation": legacy32,
+                "DEND_selected_policy_interpretation": (
+                    "selected DEND is exactly passed DEN under dry-density policy; legacy formula remains a counterfactual only"
+                    if is_dry == 1 else
+                    "selected DEND uses legacy formula under moist-density policy; EOS comparisons remain diagnostic only"
+                ),
+            })
     return rows
 
 
@@ -207,7 +245,8 @@ def parse_entry(path: Path) -> EntryPacket:
     except UnicodeDecodeError as exc:
         raise ContractError(f"{path.name}: packet is not ASCII") from exc
     require(len(lines) >= 2, f"{path.name}: missing magic/header")
-    require(lines[0] == MAGIC, f"{path.name}: wrong magic")
+    version = {MAGIC: 1, MAGIC_V2: 2}.get(lines[0])
+    require(version is not None, f"{path.name}: wrong magic or unknown version")
     name_match = ENTRY_NAME.fullmatch(path.name)
     require(name_match is not None, f"{path.name}: invalid packet filename")
     h = lines[1].split()
@@ -219,15 +258,17 @@ def parse_entry(path: Path) -> EntryPacket:
             f"{path.name}: filename/header identity mismatch")
     fields = read_records(lines[2:], path.name)
     expected = set(VECTOR_FIELDS + SCALAR_FIELDS)
+    if version == 2:
+        expected.update(V2_VECTOR_FIELDS + V2_SCALAR_FIELDS)
     present = integer_scalar(fields, "SOURCE_TIME_PRESENT") if "SOURCE_TIME_PRESENT" in fields else None
     require(present in (0, 1), f"{path.name}: SOURCE_TIME_PRESENT must be 0 or 1")
     expected_fields = expected | ({"SOURCE_TIME_SECONDS"} if present == 1 else set())
     require(set(fields) == expected_fields,
             f"{path.name}: field roster mismatch; missing={sorted(expected_fields-set(fields))}, extra={sorted(set(fields)-expected_fields)}")
     nlevels = kte-kts+1
-    for key in VECTOR_FIELDS:
+    for key in VECTOR_FIELDS + (V2_VECTOR_FIELDS if version == 2 else ()):
         require(len(fields[key]) == nlevels, f"{path.name}: {key} count does not equal kte-kts+1")
-    for key in SCALAR_FIELDS + OPTIONAL_SCALARS:
+    for key in SCALAR_FIELDS + (V2_SCALAR_FIELDS if version == 2 else ()) + OPTIONAL_SCALARS:
         if key in fields:
             require(len(fields[key]) == 1, f"{path.name}: {key} must be scalar")
     require(one(fields, "DEND_ORIGIN") == 1.0,
@@ -236,7 +277,10 @@ def parse_entry(path: Path) -> EntryPacket:
             f"{path.name}: DEFAULT_REAL_BITS must be exactly 32")
     if present:
         require(one(fields, "SOURCE_TIME_SECONDS") >= 0., f"{path.name}: negative source clock")
-    return EntryPacket(path, (domain, step, i, j, kts, kte), fields, digest(data), len(data))
+    if version == 2:
+        policy = one(fields, "INPUT_DENSITY_IS_DRY")
+        require(policy in (0.0, 1.0), f"{path.name}: INPUT_DENSITY_IS_DRY must be exactly 0 or 1")
+    return EntryPacket(path, (domain, step, i, j, kts, kte), fields, digest(data), len(data), version)
 
 
 def load_radius_parser():
@@ -271,7 +315,10 @@ def inspect(entry_dir: Path, producer_dir: Path | None = None) -> dict:
 
     source_root=Path(__file__).resolve().parents[3]
     trace_source=source_root/"WRF/phys/module_ra_rrtmgp_trace.F"
-    report={"schema":"UDM_ENTRY_DENSITY_CONTRACT_V1","status":"ENTRY_DENSITY_DIAGNOSTIC_CONTRACT_CHECKED",
+    versions={p.version for p in packets}
+    require(len(versions)==1,"entry directory may not mix packet versions")
+    version=next(iter(versions))
+    report={"schema":f"UDM_ENTRY_DENSITY_CONTRACT_V{version}","status":"ENTRY_DENSITY_DIAGNOSTIC_CONTRACT_CHECKED",
         "scope":"Validates the emitted call-entry packet, exact source-equation diagnostics and optional same-call post-radius identity/time/DEN join. No physical density or gas-mixture accuracy claim.",
         "source_pins":{"trace_writer":{"path":"WRF/phys/module_ra_rrtmgp_trace.F","sha256":digest(trace_source.read_bytes())},
                        "radius_stage_parser":{"path":"WRF/test/rrtmgp/test_udm_radius_stage.py","sha256":digest(Path(__file__).with_name("test_udm_radius_stage.py").read_bytes())}},
@@ -279,11 +326,16 @@ def inspect(entry_dir: Path, producer_dir: Path | None = None) -> dict:
     for p in packets:
         _,step,i,j,kts,kte=p.header
         present=integer_scalar(p.fields,"SOURCE_TIME_PRESENT")
-        rows=source_density_checks(p.fields,p.path.name,p.header[4])
-        report["entry_packets"].append({"identity":{"domain":p.header[0],"step":step,"i":i,"j":j,"kts":kts,"kte":kte},
+        rows=source_density_checks(p.fields,p.path.name,p.header[4],p.version)
+        packet_row={"identity":{"domain":p.header[0],"step":step,"i":i,"j":j,"kts":kts,"kte":kte},
             "pin":p.pin(),"source_time_present":present,"source_time_seconds":one(p.fields,"SOURCE_TIME_SECONDS") if present else None,
             "DEND_origin":"explicit pre-call reevaluation; not direct observation of udm2d local DEND",
-            "levels":rows})
+            "levels":rows}
+        if p.version==2:
+            packet_row.update({"version":2,"input_density_is_dry":integer_scalar(p.fields,"INPUT_DENSITY_IS_DRY"),
+                "selected_DEND_policy":("passed DEN" if integer_scalar(p.fields,"INPUT_DENSITY_IS_DRY")==1 else "legacy formula"),
+                "legacy_counterfactual_policy":"legacy formula in all V2 packets; diagnostic only"})
+        report["entry_packets"].append(packet_row)
     if producer_dir is not None:
         require(producer_dir.is_dir(),f"producer directory missing: {producer_dir}")
         radius_parser=load_radius_parser()
@@ -335,7 +387,8 @@ def format_packet(path: Path, magic: str, header: str, fields: dict[str,list[flo
 
 
 def manufactured_entry(directory: Path, *, name="udm_entry_density_d1_i3_j4_step10.raw", magic=MAGIC,
-                        qv=(0.01,-0.001), rho=(1.1,0.9), bad_t=False, bad_dend=False, origin=1.0, present=1, time=600.0):
+                        qv=(0.01,-0.001), rho=(1.1,0.9), bad_t=False, bad_dend=False,
+                        origin=1.0, present=1, time=600.0, input_density_is_dry=0):
     th=[1.0,1.1]; pii=[280.0,270.0]
     t=[f32(a*b) for a,b in zip(th,pii)]
     if bad_t: t[0]+=0.5
@@ -354,9 +407,35 @@ def manufactured_entry(directory: Path, *, name="udm_entry_density_d1_i3_j4_step
       "GRAVITY_M_S2":[9.81],"DELT_SECONDS":[60.],"QMIN":[1.e-12],"T0C_K":[273.15],
       "RHO0_KG_M3":[1.2],"RHO_WATER_KG_M3":[1000.],"DEND_ORIGIN":[origin],
       "DEFAULT_REAL_BITS":[32.],"SOURCE_TIME_PRESENT":[float(present)]}
+    if magic == MAGIC_V2:
+        fields["DEND_LEGACY_COUNTERFACTUAL_KG_M3"] = list(dend)
+        fields["INPUT_DENSITY_IS_DRY"] = [float(input_density_is_dry)]
+        if input_density_is_dry == 1:
+            fields["DEND_REEVALUATED_PRECALL_KG_M3"] = list(rho)
     if present: fields["SOURCE_TIME_SECONDS"]=[time]
     format_packet(directory/name,magic,"1 10 3 4 1 2",fields)
     return directory/name
+
+
+def mutate_record_value(path: Path, field: str, index: int, value: float) -> None:
+    lines=path.read_text(encoding="ascii").splitlines()
+    # Field records have one count line followed by enough whitespace-separated
+    # values. Locate by exact field token without depending on vector wrapping.
+    for start,line in enumerate(lines):
+        parts=line.split()
+        if len(parts)==2 and parts[0]==field:
+            count=int(parts[1]); found=[]; cursor=start+1
+            while len(found)<count:
+                row=lines[cursor].split(); found.extend(row); cursor+=1
+            found[index]=f"{value:.16E}"
+            cursor=start+1; offset=0
+            while offset<len(found):
+                width=len(lines[cursor].split())
+                lines[cursor]=" ".join(found[offset:offset+width])
+                offset+=width; cursor+=1
+            path.write_text("\n".join(lines)+"\n",encoding="ascii")
+            return
+    raise AssertionError(f"fixture field {field} not found")
 
 
 def make_producer(directory: Path, *, step=10, time=600.0, rho=(1.1,0.9)) -> Path:
@@ -389,6 +468,49 @@ class EntryDensityControls(unittest.TestCase):
         report=inspect(self.entries)
         self.assertEqual(report["packet_count"],1)
         self.assertIsNotNone(report["entry_packets"][0]["levels"][0]["EOS_dry_density_conditional_kg_m3"])
+
+    def test_v2_volume_density_policy_selects_passed_den(self):
+        manufactured_entry(self.entries,magic=MAGIC_V2,input_density_is_dry=1)
+        report=inspect(self.entries)
+        row=report["entry_packets"][0]
+        self.assertEqual(report["schema"],"UDM_ENTRY_DENSITY_CONTRACT_V2")
+        self.assertEqual(row["selected_DEND_policy"],"passed DEN")
+        self.assertTrue(all(bits32(x["DEND_REEVALUATED_PRECALL_KG_M3"])==bits32(x["DEN_PASSED_KG_M3"])
+                            for x in row["levels"]))
+        self.assertTrue(all(x["DEND_LEGACY_COUNTERFACTUAL_KG_M3"]==x["DEND_legacy_counterfactual_default_REAL_simulation"]
+                            for x in row["levels"]))
+
+    def test_v2_moist_density_policy_selects_legacy_formula(self):
+        manufactured_entry(self.entries,magic=MAGIC_V2,input_density_is_dry=0)
+        row=inspect(self.entries)["entry_packets"][0]
+        self.assertEqual(row["selected_DEND_policy"],"legacy formula")
+        self.assertTrue(all(bits32(x["DEND_REEVALUATED_PRECALL_KG_M3"])==bits32(x["DEND_LEGACY_COUNTERFACTUAL_KG_M3"])
+                            for x in row["levels"]))
+
+    def test_v2_negative_legacy_counterfactual_is_valid(self):
+        manufactured_entry(self.entries,magic=MAGIC_V2,input_density_is_dry=1,rho=(0.1,0.1))
+        row=inspect(self.entries)["entry_packets"][0]
+        self.assertTrue(all(x["DEND_LEGACY_COUNTERFACTUAL_KG_M3"]<0. for x in row["levels"]))
+        self.assertTrue(all(x["DEND_REEVALUATED_PRECALL_KG_M3"]>0. for x in row["levels"]))
+
+    def test_v2_wrong_policy_rejected(self):
+        p=manufactured_entry(self.entries,magic=MAGIC_V2,input_density_is_dry=0)
+        mutate_record_value(p,"INPUT_DENSITY_IS_DRY",0,2.)
+        with self.assertRaisesRegex(ContractError,"must be exactly 0 or 1"): inspect(self.entries)
+
+    def test_v2_wrong_selected_value_rejected(self):
+        p=manufactured_entry(self.entries,magic=MAGIC_V2,input_density_is_dry=1)
+        mutate_record_value(p,"DEND_REEVALUATED_PRECALL_KG_M3",0,1.2)
+        with self.assertRaisesRegex(ContractError,"must exactly equal DEN"): inspect(self.entries)
+
+    def test_v2_wrong_counterfactual_rejected(self):
+        p=manufactured_entry(self.entries,magic=MAGIC_V2,input_density_is_dry=1)
+        mutate_record_value(p,"DEND_LEGACY_COUNTERFACTUAL_KG_M3",0,42.)
+        with self.assertRaisesRegex(ContractError,"legacy counterfactual differs"): inspect(self.entries)
+
+    def test_unknown_version_rejected(self):
+        manufactured_entry(self.entries,magic="RRTMGP_UDM_ENTRY_DENSITY_V3")
+        with self.assertRaisesRegex(ContractError,"unknown version"): inspect(self.entries)
 
     def test_dry_and_negative_qv_are_diagnostic_inputs(self):
         manufactured_entry(self.entries,qv=(0.,-0.001))

@@ -1,0 +1,37 @@
+name: Verify UDM37 sedimentation density contract
+on:
+  pull_request:
+    paths:
+      - 'WRF/phys/module_mp_udm.F'
+      - 'WRF/phys/module_microphysics_driver.F'
+      - 'WRF/phys/module_ra_rrtmgp_trace.F'
+      - 'WRF/test/rrtmgp/test_udm_sedimentation_density*'
+      - 'WRF/test/rrtmgp/test_udm_entry_density*'
+      - 'WRF/doc/rrtmgp/UDM_SEDIMENTATION_DENSITY.md'
+      - '.github/workflows/validate-sedimentation-density.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'WRF/phys/module_mp_udm.F'
+      - 'WRF/phys/module_microphysics_driver.F'
+      - '.github/workflows/validate-sedimentation-density.yml'
+permissions:
+  contents: read
+jobs:
+  native-sedimentation-and-density-observer:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - name: Fetch immutable parent UDM source for compatibility comparison
+        run: git fetch --no-tags --depth=1 origin 16fb5415cc30ec124f9d9871a236009f1a472c07
+      - name: Check actual UDM forwarding and native sedimentation budgets
+        run: >-
+          python3 -B WRF/test/rrtmgp/test_udm_sedimentation_density.py WRF
+          --workdir build/sedimentation-density-native
+      - name: Check V1 and V2 density packet failure controls
+        run: python3 -I -S WRF/test/rrtmgp/test_udm_entry_density.py --self-test
+      - name: Compile the actual V2 observer at O0 and O2
+        run: >-
+          python3 -I -S WRF/test/rrtmgp/test_udm_entry_density_trace.py
+          --wrf-root WRF --compiler gfortran --receipt-dir build/sedimentation-density-observer

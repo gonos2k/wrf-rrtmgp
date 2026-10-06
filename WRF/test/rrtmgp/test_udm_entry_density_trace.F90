@@ -27,6 +27,10 @@ PROGRAM test_udm_entry_density_trace
     SELECT CASE(TRIM(mode))
     CASE('packet')
       CALL emit(7,9,rho)
+    CASE('falsepacket')
+      CALL emit(2,3,rho,.FALSE.)
+    CASE('drypacket')
+      CALL emit(2,3,rho,.TRUE.)
     CASE('selection')
       CALL emit(7,9,rho)
       CALL emit(2,3,rho)
@@ -50,10 +54,17 @@ PROGRAM test_udm_entry_density_trace
   END IF
   WRITE(*,'(A)') 'UDM entry density trace fixture completed: '//TRIM(mode)
 CONTAINS
-  SUBROUTINE emit(i,j,density)
+  SUBROUTINE emit(i,j,density,input_is_dry)
     INTEGER,INTENT(IN) :: i,j
     REAL,INTENT(IN) :: density(:)
-    CALL trace_udm_entry_density_state(1,23,i,j,4,6,th,pii,p,qv,density,qc,qi,qr,qs,qg,qh, &
-         nn,nc,nr,287.,461.,1004.,1850.,9.81,30.,1.e-12,273.15,1000.,1000.,60.)
+    LOGICAL,OPTIONAL,INTENT(IN) :: input_is_dry
+    IF(PRESENT(input_is_dry)) THEN
+      CALL trace_udm_entry_density_state(1,23,i,j,4,6,th,pii,p,qv,density,qc,qi,qr,qs,qg,qh, &
+           nn,nc,nr,287.,461.,1004.,1850.,9.81,30.,1.e-12,273.15,1000.,1000., &
+           time_minutes=60.,input_density_is_dry=input_is_dry)
+    ELSE
+      CALL trace_udm_entry_density_state(1,23,i,j,4,6,th,pii,p,qv,density,qc,qi,qr,qs,qg,qh, &
+           nn,nc,nr,287.,461.,1004.,1850.,9.81,30.,1.e-12,273.15,1000.,1000.,time_minutes=60.)
+    END IF
   END SUBROUTINE emit
 END PROGRAM test_udm_entry_density_trace
