@@ -1,0 +1,150 @@
+Internal ctest changing into directory: /NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-intel-feasibility/standalone
+Test project /NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-intel-feasibility/standalone
+      Start  1: frozen_file_sha256
+ 1/11 Test  #1: frozen_file_sha256 ................   Passed    0.06 sec
+      Start  3: workspace_reuse_states_mode0
+ 2/11 Test  #3: workspace_reuse_states_mode0 ......***Failed    0.11 sec
+forrtl: severe (174): SIGSEGV, segmentation fault occurred
+Image              PC                Routine            Line        Source             
+libc.so.6          000073DB4EA0E330  Unknown               Unknown  Unknown
+test_rrtmgp_works  00000000004C8BF6  Unknown               Unknown  Unknown
+test_rrtmgp_works  00000000004C3E3A  Unknown               Unknown  Unknown
+test_rrtmgp_works  00000000004F7AFB  Unknown               Unknown  Unknown
+test_rrtmgp_works  000000000042C48D  Unknown               Unknown  Unknown
+test_rrtmgp_works  00000000004203F6  Unknown               Unknown  Unknown
+test_rrtmgp_works  0000000000413FBD  Unknown               Unknown  Unknown
+libc.so.6          000073DB4E9F31CA  Unknown               Unknown  Unknown
+libc.so.6          000073DB4E9F328B  __libc_start_main     Unknown  Unknown
+test_rrtmgp_works  0000000000413ED5  Unknown               Unknown  Unknown
+
+      Start  4: workspace_reuse_states_mode1
+ 3/11 Test  #4: workspace_reuse_states_mode1 ......***Failed    0.11 sec
+forrtl: severe (174): SIGSEGV, segmentation fault occurred
+Image              PC                Routine            Line        Source             
+libc.so.6          00007F4CBC325330  Unknown               Unknown  Unknown
+test_rrtmgp_works  00000000004C8BF6  Unknown               Unknown  Unknown
+test_rrtmgp_works  00000000004C3E3A  Unknown               Unknown  Unknown
+test_rrtmgp_works  00000000004F7AFB  Unknown               Unknown  Unknown
+test_rrtmgp_works  000000000042C48D  Unknown               Unknown  Unknown
+test_rrtmgp_works  00000000004203F6  Unknown               Unknown  Unknown
+test_rrtmgp_works  0000000000413FBD  Unknown               Unknown  Unknown
+libc.so.6          00007F4CBC30A1CA  Unknown               Unknown  Unknown
+libc.so.6          00007F4CBC30A28B  __libc_start_main     Unknown  Unknown
+test_rrtmgp_works  0000000000413ED5  Unknown               Unknown  Unknown
+
+      Start  5: workspace_frozen_mode_lock
+ 4/11 Test  #5: workspace_frozen_mode_lock ........***Failed    0.18 sec
+Traceback (most recent call last):
+  File "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-workspace-selected-work/WRF/test/rrtmgp/test_workspace_modeflip.py", line 7, in <module>
+    assert "UDM frozen optics mode and table path must be global and unchanged" in result.stdout + result.stderr
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError
+
+      Start  6: wrf_rrtmgp_columns
+ 5/11 Test  #6: wrf_rrtmgp_columns ................***Failed    0.10 sec
+forrtl: severe (174): SIGSEGV, segmentation fault occurred
+Image              PC                Routine            Line        Source             
+libc.so.6          0000724364F25330  Unknown               Unknown  Unknown
+test_rrtmgp_colum  00000000004D28B6  Unknown               Unknown  Unknown
+test_rrtmgp_colum  00000000004CDAFA  Unknown               Unknown  Unknown
+test_rrtmgp_colum  00000000005017BB  Unknown               Unknown  Unknown
+test_rrtmgp_colum  000000000043614D  Unknown               Unknown  Unknown
+test_rrtmgp_colum  0000000000414141  Unknown               Unknown  Unknown
+test_rrtmgp_colum  0000000000413F6D  Unknown               Unknown  Unknown
+libc.so.6          0000724364F0A1CA  Unknown               Unknown  Unknown
+libc.so.6          0000724364F0A28B  __libc_start_main     Unknown  Unknown
+test_rrtmgp_colum  0000000000413E85  Unknown               Unknown  Unknown
+
+      Start 10: sw_predelta_direct_clear
+ 6/11 Test #10: sw_predelta_direct_clear ..........***Failed    0.10 sec
+forrtl: severe (174): SIGSEGV, segmentation fault occurred
+Image              PC                Routine            Line        Source             
+libc.so.6          00007F7C4200E330  Unknown               Unknown  Unknown
+test_rrtmgp_sw_pr  00000000004C9D96  Unknown               Unknown  Unknown
+test_rrtmgp_sw_pr  00000000004C4FDA  Unknown               Unknown  Unknown
+test_rrtmgp_sw_pr  00000000004F8C9B  Unknown               Unknown  Unknown
+test_rrtmgp_sw_pr  000000000042D62D  Unknown               Unknown  Unknown
+test_rrtmgp_sw_pr  000000000041467F  Unknown               Unknown  Unknown
+test_rrtmgp_sw_pr  0000000000413F6D  Unknown               Unknown  Unknown
+libc.so.6          00007F7C41FF31CA  Unknown               Unknown  Unknown
+libc.so.6          00007F7C41FF328B  __libc_start_main     Unknown  Unknown
+test_rrtmgp_sw_pr  0000000000413E85  Unknown               Unknown  Unknown
+
+      Start 11: sw_predelta_direct_cloud
+ 7/11 Test #11: sw_predelta_direct_cloud ..........***Failed    0.10 sec
+forrtl: severe (174): SIGSEGV, segmentation fault occurred
+Image              PC                Routine            Line        Source             
+libc.so.6          00007BBE6400E330  Unknown               Unknown  Unknown
+test_rrtmgp_sw_pr  00000000004C9D96  Unknown               Unknown  Unknown
+test_rrtmgp_sw_pr  00000000004C4FDA  Unknown               Unknown  Unknown
+test_rrtmgp_sw_pr  00000000004F8C9B  Unknown               Unknown  Unknown
+test_rrtmgp_sw_pr  000000000042D62D  Unknown               Unknown  Unknown
+test_rrtmgp_sw_pr  000000000041467F  Unknown               Unknown  Unknown
+test_rrtmgp_sw_pr  0000000000413F6D  Unknown               Unknown  Unknown
+libc.so.6          00007BBE63FF31CA  Unknown               Unknown  Unknown
+libc.so.6          00007BBE63FF328B  __libc_start_main     Unknown  Unknown
+test_rrtmgp_sw_pr  0000000000413E85  Unknown               Unknown  Unknown
+
+      Start 12: sw_predelta_direct_overlap_zero
+ 8/11 Test #12: sw_predelta_direct_overlap_zero ...***Failed    0.09 sec
+forrtl: severe (174): SIGSEGV, segmentation fault occurred
+Image              PC                Routine            Line        Source             
+libc.so.6          000077711E00E330  Unknown               Unknown  Unknown
+test_rrtmgp_sw_pr  00000000004C9D96  Unknown               Unknown  Unknown
+test_rrtmgp_sw_pr  00000000004C4FDA  Unknown               Unknown  Unknown
+test_rrtmgp_sw_pr  00000000004F8C9B  Unknown               Unknown  Unknown
+test_rrtmgp_sw_pr  000000000042D62D  Unknown               Unknown  Unknown
+test_rrtmgp_sw_pr  000000000041467F  Unknown               Unknown  Unknown
+test_rrtmgp_sw_pr  0000000000413F6D  Unknown               Unknown  Unknown
+libc.so.6          000077711DFF31CA  Unknown               Unknown  Unknown
+libc.so.6          000077711DFF328B  __libc_start_main     Unknown  Unknown
+test_rrtmgp_sw_pr  0000000000413E85  Unknown               Unknown  Unknown
+
+      Start 13: sw_predelta_direct_night
+ 9/11 Test #13: sw_predelta_direct_night ..........***Failed    0.10 sec
+forrtl: severe (174): SIGSEGV, segmentation fault occurred
+Image              PC                Routine            Line        Source             
+libc.so.6          00007F32EE40E330  Unknown               Unknown  Unknown
+test_rrtmgp_sw_pr  00000000004C9D96  Unknown               Unknown  Unknown
+test_rrtmgp_sw_pr  00000000004C4FDA  Unknown               Unknown  Unknown
+test_rrtmgp_sw_pr  00000000004F8C9B  Unknown               Unknown  Unknown
+test_rrtmgp_sw_pr  000000000042D62D  Unknown               Unknown  Unknown
+test_rrtmgp_sw_pr  000000000041467F  Unknown               Unknown  Unknown
+test_rrtmgp_sw_pr  0000000000413F6D  Unknown               Unknown  Unknown
+libc.so.6          00007F32EE3F31CA  Unknown               Unknown  Unknown
+libc.so.6          00007F32EE3F328B  __libc_start_main     Unknown  Unknown
+test_rrtmgp_sw_pr  0000000000413E85  Unknown               Unknown  Unknown
+
+      Start 83: frozen_openmp_queries
+10/11 Test #83: frozen_openmp_queries .............   Passed    0.04 sec
+      Start 84: cpu_openmp_reentrancy
+11/11 Test #84: cpu_openmp_reentrancy .............***Failed    0.09 sec
+forrtl: severe (174): SIGSEGV, segmentation fault occurred
+Image              PC                Routine            Line        Source             
+libc.so.6          000077CE811D5330  Unknown               Unknown  Unknown
+test_rrtmgp_openm  00000000004BF746  Unknown               Unknown  Unknown
+test_rrtmgp_openm  00000000004BA98A  Unknown               Unknown  Unknown
+test_rrtmgp_openm  00000000004EE64B  Unknown               Unknown  Unknown
+test_rrtmgp_openm  000000000041D56D  Unknown               Unknown  Unknown
+test_rrtmgp_openm  00000000004140FF  Unknown               Unknown  Unknown
+test_rrtmgp_openm  0000000000413FED  Unknown               Unknown  Unknown
+libc.so.6          000077CE811BA1CA  Unknown               Unknown  Unknown
+libc.so.6          000077CE811BA28B  __libc_start_main     Unknown  Unknown
+test_rrtmgp_openm  0000000000413F05  Unknown               Unknown  Unknown
+
+
+18% tests passed, 9 tests failed out of 11
+
+Total Test time (real) =   1.10 sec
+
+The following tests FAILED:
+	  3 - workspace_reuse_states_mode0 (Failed)
+	  4 - workspace_reuse_states_mode1 (Failed)
+	  5 - workspace_frozen_mode_lock (Failed)
+	  6 - wrf_rrtmgp_columns (Failed)
+	 10 - sw_predelta_direct_clear (Failed)
+	 11 - sw_predelta_direct_cloud (Failed)
+	 12 - sw_predelta_direct_overlap_zero (Failed)
+	 13 - sw_predelta_direct_night (Failed)
+	 84 - cpu_openmp_reentrancy (Failed)
+Errors while running CTest
