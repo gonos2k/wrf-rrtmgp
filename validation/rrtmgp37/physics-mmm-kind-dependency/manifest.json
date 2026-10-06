@@ -1,0 +1,114 @@
+{
+  "purpose": "Actual WRF Make dependency regression repro for physics_mmm/bl_shinhong.o -> ccpp_kind_types.o",
+  "source_commit": "361c05ad36c149dc7e9d700fa80fc47ea8843d60",
+  "branch": "fix-physics-mmm-kind-dependency",
+  "change": {
+    "file": "WRF/main/depend.common",
+    "rule": "physics_mmm/bl_shinhong.o: ccpp_kind_types.o",
+    "baseline_git_blob_sha1": "db7f3fab1354fa608d87f263fb2c0ca8719b69ca",
+    "fixed_git_blob_sha1": "2d68a88530c105cde692c1115bfda86340d9e6d4",
+    "baseline_sha256": "6295f05721b3867af6a42f9bb3593f292467c6146c020dd8d01e54e851c87089",
+    "fixed_sha256": "8dc54c936a0e6d9e325c388151e48671196fa97ecb2cccf0a7ccd4ed9e18bcab"
+  },
+  "source_inputs": {
+    "phys/Makefile": {
+      "sha256": "6387734fa2b60a8fa6644b3cf89fb866274b0803e4ab6b78b217a0a6c36a91ef"
+    },
+    "phys/ccpp_kind_types.F": {
+      "sha256": "0cc7b2d71d8a93ff1f2b401324de8fd1ee70ba598f83d89254d6dbe8c31d0e4b"
+    },
+    "phys/module_bl_shinhong.F": {
+      "sha256": "c7bfe36353a9db6f4fd471a5ca13287efb4b92d5c12ff2797af685eb536cb5dc"
+    },
+    "phys/physics_mmm/bl_shinhong.F90": {
+      "sha256": "7d2588364d95519024d4914273e6a4953f1baa393261e0035f9a7198fbc9d961"
+    }
+  },
+  "configuration": {
+    "configured_wrf_root": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp/WRF",
+    "configure_wrf_sha256": "b5c234db6278ef88e2b03bc0329168163e3b1257188a3c55d5c1ebfb2b1224ac",
+    "standard_exe_sha256": "47542d94a1635a2891f398da4adc56d12b71bb82f7bd42323b11ab6496964a33",
+    "compiler": "GNU Fortran 13.3.0",
+    "compiler_realpath": "/usr/bin/gfortran",
+    "flags": "-O2 -ftree-vectorize -funroll-loops -w -ffree-form -ffree-line-length-none -fconvert=big-endian -frecord-marker=4 -fallow-argument-mismatch -fallow-invalid-boz"
+  },
+  "test": {
+    "driver": "validation/rrtmgp37/physics-mmm-kind-dependency/reproduce.sh",
+    "driver_sha256": "11f43437a398816d5b3e2834b544297bc2e0fdc0074ca9c754e88cb9b9532158",
+    "baseline_parallel_wrapper_fanout": "exit 2; compiler reports missing ccpp_kind_types.mod",
+    "fixed_parallel_wrapper_fanout": "exit 0",
+    "baseline_direct_object": "exit 2; compiler reports missing ccpp_kind_types.mod",
+    "fixed_direct_object": "exit 0",
+    "parallelism": "make -j2",
+    "determinism": "same gfortran forwarding shim sleeps 3 seconds only before ccpp_kind_types.f90 compilation; original source and flags are used in all cases",
+    "original_actual_make_logs": {
+      "directory": "logs",
+      "source_repro_root": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/physics-mmm-kind-repro",
+      "files": {
+        "baseline-make-j2.log": {
+          "sha256": "f86c652a9def68cbcc977cac9de388fae077a2bf02f886a841082b845d241c3d"
+        },
+        "fixed-make-j2.log": {
+          "sha256": "a8ae35d5ba2d6b2609dc930598e9412306f8cce8ccd512529aa20327a25a8a48"
+        },
+        "baseline-direct-j2.log": {
+          "sha256": "bdc4ad9ebcc1602c299b95952dbdd934936d3d47a33f54d981b8914e8a662504"
+        },
+        "fixed-direct-j2.log": {
+          "sha256": "d7862061ef1eca9db95fb3fe5a57b44c739b6d134b1387d9912714ff8db956de"
+        }
+      }
+    },
+    "packaged_driver_logs": {
+      "logs/baseline-direct-target-failure.log": {
+        "sha256": "bdc4ad9ebcc1602c299b95952dbdd934936d3d47a33f54d981b8914e8a662504",
+        "bytes": 1623
+      },
+      "logs/baseline-wrapper-fanout-failure.log": {
+        "sha256": "f86c652a9def68cbcc977cac9de388fae077a2bf02f886a841082b845d241c3d",
+        "bytes": 2891
+      },
+      "logs/fixed-direct-target-pass.log": {
+        "sha256": "d7862061ef1eca9db95fb3fe5a57b44c739b6d134b1387d9912714ff8db956de",
+        "bytes": 2550
+      },
+      "logs/fixed-wrapper-fanout-pass.log": {
+        "sha256": "a8ae35d5ba2d6b2609dc930598e9412306f8cce8ccd512529aa20327a25a8a48",
+        "bytes": 3809
+      },
+      "logs/script-baseline-direct-target.log": {
+        "sha256": "6dc5c4e053a92a33c2346f4df0f80ac5c0f5f20df7395bfd12ac984dc4174956",
+        "bytes": 1632
+      },
+      "logs/script-baseline-wrapper-fanout.log": {
+        "sha256": "2772a40ac652257ae77ea41379b483e9f9635de957bfaed820ed7b6b45f6a06c",
+        "bytes": 2909
+      },
+      "logs/script-fixed-direct-target.log": {
+        "sha256": "f7408dba2ad60811e034c41dbb416d7648dcab5596469bf0ed6ea7b63c99b2fd",
+        "bytes": 2568
+      },
+      "logs/script-fixed-wrapper-fanout.log": {
+        "sha256": "e08e48dd5a9355b7856f4f16b034b5b88673136cb111819478fff2e6fb12a184",
+        "bytes": 3836
+      },
+      "logs/final-baseline-direct-target.log": {
+        "sha256": "2a310b86954682018890aac51fc1cb35363599a5c167196336fb0e58fc6c5ec5",
+        "bytes": 1629
+      },
+      "logs/final-baseline-wrapper-fanout.log": {
+        "sha256": "c3d3424cd6e61091b914b94fd56a23b245bfcac3ac511a0d88166fcd08fa8b39",
+        "bytes": 2903
+      },
+      "logs/final-fixed-direct-target.log": {
+        "sha256": "4f9c1ca81911a3af131b42cb999ae086debc808ab35a5c4f8f903212436c4145",
+        "bytes": 2562
+      },
+      "logs/final-fixed-wrapper-fanout.log": {
+        "sha256": "2c33002c7a7fdbf12c876dc337055c1ef3526e3a3f21795ea430ac51d35ac342",
+        "bytes": 3827
+      }
+    }
+  },
+  "scope": "Targeted Make graph check using actual WRF Makefile rules and actual Fortran sources. Not a complete WRF build."
+}

@@ -1,0 +1,13 @@
+rm -f physics_mmm/bl_shinhong.o
+sed -e "s/^\!.*'.*//" -e "s/^ *\!.*'.*//" physics_mmm/bl_shinhong.F90 > physics_mmm/bl_shinhong.G
+/lib/cpp -P -nostdinc -I/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp/WRF/inc -DEM_CORE= -DNMM_CORE= -DNMM_MAX_DIM=2600 -DDA_CORE= -DWRFPLUS= -DIWORDSIZE=4 -DDWORDSIZE=8 -DRWORDSIZE=4 -DLWORDSIZE=4 -DNONSTANDARD_SYSTEM_SUBR  -DWRF_USE_CLM  -DNETCDF -DLANDREAD_STUB=1 -DUSE_ALLOCATABLES -Dwrfmodel -DGRIB1 -DINTIO -DKEEP_INT_AROUND -DLIMIT_ARGS -DBUILD_RRTMG_FAST=0 -DBUILD_RRTMK=0 -DBUILD_SBM_FAST=1 -DSHOW_ALL_VARS_USED=0 -DCONFIG_BUF_LEN=65536 -DMAX_DOMAINS_F=21 -DMAX_HISTORY=25 -DNMM_NEST=  -I. -traditional-cpp   physics_mmm/bl_shinhong.G  > physics_mmm/bl_shinhong.bb
+/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp/WRF/tools/standard.exe physics_mmm/bl_shinhong.bb | /lib/cpp -P -nostdinc -traditional-cpp > physics_mmm/bl_shinhong.tmp.f90
+rm -f physics_mmm/bl_shinhong.G physics_mmm/bl_shinhong.bb
+time /NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/physics-mmm-kind-repro/bin/gfortran -o physics_mmm/bl_shinhong.o -c -O2 -ftree-vectorize -funroll-loops -w -ffree-form -ffree-line-length-none -fconvert=big-endian -frecord-marker=4 -fallow-argument-mismatch -fallow-invalid-boz   -I. -I../frame -I../share   physics_mmm/bl_shinhong.tmp.f90
+physics_mmm/bl_shinhong.tmp.f90:3:6:
+
+    3 |  use ccpp_kind_types,only: kind_phys
+      |      1
+Fatal Error: Cannot open module file ‘ccpp_kind_types.mod’ for reading at (1): No such file or directory
+compilation terminated.
+make: *** [../configure.wrf:389: physics_mmm/bl_shinhong.o] Error 1
