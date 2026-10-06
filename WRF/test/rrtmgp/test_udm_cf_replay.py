@@ -18,7 +18,8 @@ from typing import Any
 import numpy as np
 
 from compare_column_replay import compare, read_result
-from test_column_replay import read_input, read_raw
+from test_column_replay import (assert_close, corrected_hydrometeor, dry_layer_mass_kg_m2,
+                                read_input, read_raw)
 
 
 PATHS = {"LWP": "LWP", "IWP": "IWP", "RWP": "RWP", "SWP": "SWP"}
@@ -100,7 +101,7 @@ def run_reference(executable: Path, data_dir: Path, input_path: Path,
 def raw_grid_paths(raw: dict[str, np.ndarray], inputs: dict[str, np.ndarray],
                    raw_nl: int, gravity: float) -> tuple[dict[str, np.ndarray], dict[str, float]]:
     original_cf = inputs["CF"][0, :raw_nl]
-    dp = raw["DP_HPA"][:raw_nl]
+    dry_mass, _ = dry_layer_mass_kg_m2(raw, raw_nl)
     grid: dict[str, np.ndarray] = {}
     wet_path_error: dict[str, float] = {}
     for path_name, input_name in PATHS.items():
@@ -118,6 +119,12 @@ def raw_grid_paths(raw: dict[str, np.ndarray], inputs: dict[str, np.ndarray],
             if np.any(~np.isfinite(direct)) or np.any(direct < 0.0):
                 fail(f"raw grid path {path_name} must be finite and nonnegative")
             wet = original_cf > 0.0
+            qname = Q_NAMES[path_name]
+            if qname in raw:
+                q = corrected_hydrometeor(raw, qname, path_name, raw_nl)
+                assert_close(direct, q * dry_mass * 1000.0,
+                             f"raw {path_name} grid mass from {qname} and dry layer mass",
+                             rtol=5.0e-6, atol=1.0e-8)
             wet_path_error[path_name] = float(np.max(np.abs(direct[wet] - reconstructed[wet]), initial=0.0))
             scale = max(1.0, float(np.max(np.abs(direct[wet]), initial=0.0)))
             if not np.allclose(direct[wet], reconstructed[wet], rtol=5.0e-6, atol=1.0e-5 * scale):
@@ -129,8 +136,8 @@ def raw_grid_paths(raw: dict[str, np.ndarray], inputs: dict[str, np.ndarray],
         if np.any(missing_clear):
             if qname not in raw:
                 fail(f"cannot recover clear-grid {path_name}: raw {qname} or grid path is missing")
-            q = raw[qname][:raw_nl]
-            recovered = q * dp * 100.0 / gravity * 1000.0
+            q = corrected_hydrometeor(raw, qname, path_name, raw_nl)
+            recovered = q * dry_mass * 1000.0
             reconstructed[missing_clear] = recovered[missing_clear]
         grid[path_name] = reconstructed
         wet_path_error[path_name] = 0.0
@@ -419,6 +426,8 @@ def main() -> int:
         "experiment": f"V4 {phase} replay with common captured microphysics paths and independent cloud-mask seeds",
         "source_capture": {"input": str(input_path), "raw": str(raw_path), "i": raw_i, "j": raw_j,
                            "native_raw_layers": raw_nl, "extended_replay_layers": nl},
+        "dry_layer_mass_source": ("native_dry_layer_mass" if "DRY_LAYER_MASS_KG_M2" in raw
+                                  else "legacy_dp_over_gravity"),
         "seed_ensemble": {"count": args.seeds, "seeds": seed_values},
         "policy_labels": {
             "A": "original V4 radiation CF and in-cloud paths",

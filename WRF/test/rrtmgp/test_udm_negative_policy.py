@@ -57,8 +57,9 @@ def run_fatal(executable: Path, mode: str, pattern: str, cwd: Path) -> None:
 
 
 def raw_case(q: np.ndarray, limit: float, clipped: np.ndarray,
-             correction: np.ndarray, dp_hpa: np.ndarray | None = None) -> dict[str, np.ndarray]:
-    return {
+             correction: np.ndarray, dp_hpa: np.ndarray | None = None,
+             dry_mass: np.ndarray | None = None) -> dict[str, np.ndarray]:
+    records = {
         "SOURCE_QC": np.asarray(q, dtype=np.float64),
         "DP_HPA": np.asarray(dp_hpa if dp_hpa is not None else [1000.0, 500.0], dtype=np.float64),
         "GRAVITY": np.asarray([10.0], dtype=np.float64),
@@ -66,6 +67,9 @@ def raw_case(q: np.ndarray, limit: float, clipped: np.ndarray,
         "NUMERIC_CLIPPED_QC": np.asarray(clipped, dtype=np.float64),
         "NEGATIVE_GRID_CORRECTION_LWP": np.asarray(correction, dtype=np.float64),
     }
+    if dry_mass is not None:
+        records["DRY_LAYER_MASS_KG_M2"] = np.asarray(dry_mass, dtype=np.float64)
+    return records
 
 
 def expect_python_failure(raw: dict[str, np.ndarray], message: str) -> None:
@@ -96,15 +100,22 @@ def check_raw_record_validation() -> None:
 
     q = np.asarray([-0.0625, 0.125])
     dp = np.asarray([1000.0, 500.0])
-    correction = np.asarray([625000.0, 0.0])
-    accepted = raw_case(q, 0.125, [-0.0625, 0.0], correction, dp)
+    dry_mass = np.asarray([321.0, 87.0])
+    correction = np.asarray([20062.5, 0.0])
+    accepted = raw_case(q, 0.125, [-0.0625, 0.0], correction, dp, dry_mass)
     sanitized = corrected_hydrometeor(accepted, "SOURCE_QC", "LWP", 2)
     if not np.array_equal(sanitized, np.asarray([0.0, 0.125])):
         fail("accepted raw negative did not reconstruct the sanitized q series")
-    raw_path = q * dp * 100.0 / accepted["GRAVITY"][0] * 1000.0
-    if not np.array_equal(raw_path + correction, sanitized * dp * 100.0 /
-                          accepted["GRAVITY"][0] * 1000.0):
+    raw_path = q * dry_mass * 1000.0
+    if not np.array_equal(raw_path + correction, sanitized * dry_mass * 1000.0):
         fail("raw signed path plus correction differs from sanitized path")
+
+    # New native dry mass is authoritative; invalid present values must not
+    # silently fall back to the historical pressure/gravity estimate.
+    for invalid_mass in (np.asarray([321.0]), np.asarray([321.0, np.nan]),
+                         np.asarray([321.0, 0.0]), np.asarray([321.0, -1.0])):
+        invalid = raw_case(q, 0.125, [-0.0625, 0.0], correction, dp, invalid_mass)
+        expect_python_failure(invalid, "DRY_LAYER_MASS_KG_M2 must contain nl finite positive values")
 
     boundary = raw_case([-0.125, 0.0], 0.125, [-0.125, 0.0],
                         [1250000.0, 0.0])

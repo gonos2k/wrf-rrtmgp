@@ -1,0 +1,34 @@
+{
+  "parent_commit": "9d22bca5807de135d72719404b04954908323d4e",
+  "source_state": "listed uncommitted PR15 sources tested on top of parent; not a pristine parent binary",
+  "compiler": "GNU Fortran (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0",
+  "build": "GNU serial em_scm_xy, csh -f ./compile -j 12; incremental WRF rebuild with existing configuration",
+  "standalone": "fresh GNU CMake build, ulimit -s 65536, 66/66 CTest PASS",
+  "source_sha256": {
+    "WRF/dyn_em/module_first_rk_step_part1.F": "d69ad33563e05ac5a35a626041c6defa68a123b3373bfffc44883f862255d1de",
+    "WRF/phys/module_radiation_driver.F": "30361fe6b0542c2ea30f55dfb95554a0e1bec1317bcba9a3b8f734890487946f",
+    "WRF/phys/module_ra_rrtmg_lw.F": "4dcccbd639e829a76b0e8c45920efa73901fcb3d87fc319aa96a42b9b9aa3336",
+    "WRF/phys/module_ra_rrtmg_sw.F": "aedf8ef7f58aa6b3349c3389ae29e26d2dc01761b80cc0251cf458ceb6484819",
+    "WRF/phys/module_ra_rrtmgp_input.F": "d07284eb360b27b59e5a9962f813d20184438f40a1d02e1c7fcf1a1c47e1555a",
+    "WRF/test/rrtmgp/CMakeLists.txt": "dea214f30404494339a8009bf646b1c52ee3a85590c890dc5927cc326d0f8158",
+    "WRF/test/rrtmgp/test_udm_dry_mass.f90": "98887ed5e0436228821388b12c0f1798f5111dcc30bf29dcb81dc020b75c7c7f",
+    "WRF/test/rrtmgp/test_udm_native_mass.py": "8d42e8ea584c8c47cf39ec8f0a9a39657c46f655c68a1874ff58173d3233dffa",
+    "WRF/test/rrtmgp/test_column_replay.py": "8fd394fb62dd5c4d12fcfef808985d63027bf59cbcd30a546d7004c08db1c1be",
+    "WRF/test/rrtmgp/test_udm_cf_replay.py": "759d24986535ad9c5e3dcfc540f922228ec895fb751ff950b312edbbecca8848",
+    "WRF/test/rrtmgp/test_udm_scm.py": "e06d6d22486a9705d56f3f3ac184a153c5e07beff5d940262cf1ed38792460b7",
+    "WRF/test/rrtmgp/test_udm_negative_policy.py": "c37d78ecf0d11b7862ff58c22d6d13128cc8bd25f5c8ec0cf5c2899cdc1e258e"
+  },
+  "binary_sha256": {
+    "WRF/main/wrf.exe": "d722110ec0854ae1e0f1e40a0ce721f7e23b8247ce090b08d2a298e07576282c",
+    "WRF/main/ideal.exe": "59cc93f08da7c2c021cd3a44421b660d47a55b9e201de130fc86c85f36dc85af",
+    "build/udm-native-dry-mass-pr15/standalone/reference_column": "4baab49a26f5f0830d50078d836427b25b77d9e815b064bd12b2668fa0938825"
+  },
+  "log_sha256": {
+    "compile-serial.log": "6a191df18966b8b7e9b6e2fd6c6da7280c4af577924c589f0e1385ee24b61217",
+    "ctest.log": "6fcb200eeba5081aa8b540b3cbbb45a145fad6c2f2ac055bd00bdda5c0762ac5",
+    "scm-test.log": "584c412aaace8c468326b4effcc7e519e65540a370b3effe89772a05b27e21e6",
+    "cmake-configure-netcdf.log": "9627b0510b10e29e41e977670a276df062142040c6d241e5c5a53758d7158c25",
+    "cmake-build.log": "6e05ebe43f30778da173712804f1bfbee978391d45d1eed34c609a997013d6e9"
+  },
+  "scope": "serial fixture and first-call mapping; not new MPI/OpenMP/restart/nest/24h/observational validation"
+}
