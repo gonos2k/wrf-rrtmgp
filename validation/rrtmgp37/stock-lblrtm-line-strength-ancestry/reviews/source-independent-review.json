@@ -1,0 +1,51 @@
+{
+  "schema": "UDM37_LBLRTM_ANCESTRY_SOURCE_STATIC_REVIEW_V2",
+  "status": "PASS_SCOPED_STATIC_SOURCE_REVIEW_UNCOMPILED_UNRUN",
+  "review_scope": "Additive source-v2 selector expansion only; no compile, solver, saved-reader, or raw-artifact execution.",
+  "pins": {
+    "source_v1": {
+      "path": "build/udm37-lblrtm-left-censored-ancestry-source-v1/oprop.ancestry.f90",
+      "sha256": "ffa6d0917381e219a1f28b84751d46b2250eee8b9c054d97217a4e71edf9e8e1",
+      "size_bytes": 504561
+    },
+    "source_v2": {
+      "path": "build/udm37-lblrtm-left-censored-ancestry-source-v2/oprop.ancestry.f90",
+      "sha256": "63f6383c698e2e63e9dcde3956f0f936364b38aeffeb23f41284cdfb8e19bf65",
+      "size_bytes": 504734
+    },
+    "plan_v2": {
+      "path": "build/udm37-lblrtm-left-censored-ancestry-source-v2/plan.json",
+      "sha256": "9e1fe2f83a637d6edde25771ba75d15089d7f81e3e1a7f2ca2bb1d63da6d1b6d",
+      "size_bytes": 7340
+    },
+    "allowlist_v2": {
+      "path": "build/udm37-lblrtm-left-censored-ancestry-source-v2/allowlist.json",
+      "sha256": "83dd68dbde3637ecfb56dd65894c41d59ec02b584de18e1725487d2a43a2eae4",
+      "size_bytes": 18502
+    },
+    "delta_patch": {
+      "path": "build/udm37-lblrtm-left-censored-ancestry-source-v2/v1-to-v2.patch",
+      "sha256": "0e220ff4cc4b7740f50dfc2a49eeaefcb6b60c027c63d95729cd4c16af4d3c2b",
+      "size_bytes": 1170
+    }
+  },
+  "checks": {
+    "source_change_scope": "Diff from v1 changes only the selector table extent (69 to 72), appends the three designated block-487/batch-474 identities, and broadens the selector's pass/block/batch guard to those two exact groups. Capture schema, input-copy assignments, observation location, logger calls, and all pre-existing source statements are unchanged.",
+    "source_table_entries": 72,
+    "unique_source_table_entries": 72,
+    "allowlist_entries": 72,
+    "source_table_matches_allowlist_in_order": true,
+    "v1_prefix_matches_v2_first_69": true,
+    "groups": {
+      "left_censored_prefix69": 69,
+      "dominant_negative3": 3
+    },
+    "appended_identities": [
+      [21, 487, 32, 474, 32, 102, 1, 1],
+      [21, 487, 60, 474, 60, 102, 1, 1],
+      [21, 487, 99, 474, 99, 102, 1, 1]
+    ],
+    "capture_scope_preserved": "Selected events remain layer 21 at the existing corrected-strength/SPPSP point before later SPEAK/FREJ filters. They remain observations of source state, not proof of downstream acceptance.",
+    "physical_acceptance": "NOT_EVALUATED; retained negative-OD failure is not closed by this instrumentation."
+  }
+}

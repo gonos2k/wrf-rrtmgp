@@ -1,0 +1,232 @@
+{
+  "schema": "UDM37_ANCESTRY_PUBLIC_COMPACT_SUMMARY_V1",
+  "status": "SCOPED_SAVED_NUMERICAL_DIAGNOSTIC_WITH_STRICT_RAW_FAILURE_RETAINED",
+  "private_literal_report": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-ancestry-reader-result-v2/report.json",
+    "sha256": "f94476c8dcb2ae707fc04a07b6cc6f9afd4ff5d0af4bc19f876710887c491993",
+    "size_bytes": 1387853
+  },
+  "report_not_redistributed": true,
+  "actual_execution_counts": {
+    "incremental_build": 1,
+    "instrumented_solver": 1,
+    "saved_readers": 2,
+    "saved_reader_returncodes": [
+      1,
+      0
+    ],
+    "new_WRF_REAL_RRTMGP_build_or_forecast": 0
+  },
+  "strict_original_contract": {
+    "wrapper_returncode": 3,
+    "CAND_whole_byte_identity": "FAIL_RETAINED",
+    "not_superseded": true,
+    "R3_PANEL_hashes": "EXACT"
+  },
+  "scoped_source_defined_comparison": {
+    "allowed_candidate_event_scope": "phase=2 reason=2..9 fields14/15; phase=3 reason=10..13 field13 only",
+    "allowed_token_differences": 25070,
+    "rows_with_allowed_metadata_difference": 14379,
+    "byte_sha256_equal": false,
+    "record_counts_equal": true,
+    "strict_byte_identity_failure_preserved": true,
+    "token_fields_equal_except_source_uninitialized_metadata": true,
+    "undefined_field_allowlist": [
+      "IPANEL",
+      "IDATA",
+      "KPANEL"
+    ],
+    "masked_byte_scope": "complete I21 field slots only, including leading padding; all prefix/suffix bytes remain exact"
+  },
+  "ancestry_records": {
+    "total": 72,
+    "unique_identities": 72,
+    "duplicates": 0,
+    "groups": {
+      "dominant_negative3": {
+        "allowed_identities": 3,
+        "actual_prefilter_records": 3,
+        "unique_observed_identities": 3,
+        "prior_VFT_identities": 0,
+        "selected_VFT_prefilter_records": 3,
+        "joined_ancestry_to_selected_candidate_events": 3,
+        "transport_field_checks": 27,
+        "transport_field_difference_count": 0,
+        "unmatched_identity_count": 0,
+        "ambiguous_join_count": 0
+      },
+      "left_censored_prefix69": {
+        "allowed_identities": 69,
+        "actual_prefilter_records": 69,
+        "unique_observed_identities": 69,
+        "prior_VFT_identities": 69,
+        "selected_VFT_prefilter_records": 0,
+        "joined_ancestry_to_selected_candidate_events": 69,
+        "transport_field_checks": 276,
+        "transport_field_difference_count": 0,
+        "unmatched_identity_count": 0,
+        "ambiguous_join_count": 0
+      }
+    }
+  },
+  "field_checks": {
+    "total": 303,
+    "prefix_cross_stage": 276,
+    "dominant_cross_stage": 12,
+    "dominant_same_call": 15,
+    "differences": 0,
+    "unit": "scalar field comparisons, not event or invocation counts"
+  },
+  "thermal": {
+    "count_corrected": 72,
+    "count_unmodified": 0,
+    "equation": "SUI = prethermal_SUI * SCOR * exp(-EPP*BETACR) * (1+exp(-adjusted_VNU/XKT)) for EPP > -0.999; otherwise unchanged",
+    "interpretation": "Binary64 descriptive recomputation only; not a compiler/libm last-bit oracle and no fitted tolerance.",
+    "max_abs_residual_combined_SUI_SP_SPPSP": 0.0,
+    "max_rel_residual_combined_SUI_SP_SPPSP": 0.0
+  },
+  "strength_signs_and_finiteness": {
+    "dominant_negative3": {
+      "SP": {
+        "finite": 3,
+        "negative": 0,
+        "positive": 3,
+        "zero": 0
+      },
+      "corrected_SUI": {
+        "finite": 3,
+        "negative": 0,
+        "positive": 3,
+        "zero": 0
+      },
+      "input_line_strength": {
+        "finite": 3,
+        "negative": 0,
+        "positive": 3,
+        "zero": 0
+      },
+      "prethermal_SUI": {
+        "finite": 3,
+        "negative": 0,
+        "positive": 3,
+        "zero": 0
+      },
+      "strength_factor": {
+        "finite": 3,
+        "negative": 0,
+        "positive": 3,
+        "zero": 0
+      }
+    },
+    "left_censored_prefix69": {
+      "SP": {
+        "finite": 69,
+        "negative": 0,
+        "positive": 69,
+        "zero": 0
+      },
+      "corrected_SUI": {
+        "finite": 69,
+        "negative": 0,
+        "positive": 69,
+        "zero": 0
+      },
+      "input_line_strength": {
+        "finite": 69,
+        "negative": 0,
+        "positive": 69,
+        "zero": 0
+      },
+      "prethermal_SUI": {
+        "finite": 69,
+        "negative": 0,
+        "positive": 69,
+        "zero": 0
+      },
+      "strength_factor": {
+        "finite": 69,
+        "negative": 0,
+        "positive": 69,
+        "zero": 0
+      }
+    }
+  },
+  "dominant_negative_R3_context": [
+    {
+      "identity": [
+        21,
+        487,
+        32,
+        474,
+        32,
+        102,
+        1,
+        1
+      ],
+      "negative_operand_rows": 4,
+      "positive_SP_rows": 4,
+      "target_grid_rows": 4
+    },
+    {
+      "identity": [
+        21,
+        487,
+        60,
+        474,
+        60,
+        102,
+        1,
+        1
+      ],
+      "negative_operand_rows": 4,
+      "positive_SP_rows": 4,
+      "target_grid_rows": 4
+    },
+    {
+      "identity": [
+        21,
+        487,
+        99,
+        474,
+        99,
+        102,
+        1,
+        1
+      ],
+      "negative_operand_rows": 4,
+      "positive_SP_rows": 4,
+      "target_grid_rows": 4
+    }
+  ],
+  "spectra": {
+    "layers": 45,
+    "samples_bitwise_equal": 63838065,
+    "all_panels_and_samples_exact": true,
+    "changed_header_words_only": [
+      168
+    ],
+    "header_word168": "Existing source-specific HTIME timestamp exception; all other compared header words exact."
+  },
+  "literal_report_label_cautions": [
+    {
+      "field": "group_joins.groups.*.matched_event_count",
+      "meaning": "Scalar field comparisons; use canonical prefilter records69+3 and uniqueIDs69+3 above."
+    },
+    {
+      "field": "group_joins.groups.dominant_negative3.dominant_same_call_bit_checks",
+      "value": 27,
+      "meaning": "12 cross-stage plus15 same-call field comparisons; not27 same-call comparisons."
+    }
+  ],
+  "negative_OD_acceptance": "FAIL_RETAINED_NO_CLIPPING",
+  "loaded_vs_original_coefficient_scope": "input_line_strength/input_VNU are loaded LNCOR state. Observed thermal/source operation identity is not independently authenticated original coefficient generation or physical validity.",
+  "limits": [
+    "The ancestry record sees source-loaded LNCOR S, not original AER ASCII coefficients.",
+    "WKL/WKI gas amounts are absent, so absolute initial SUI is not independently reconstructed.",
+    "The 69 prefix group and 3 dominant-negative group answer different questions and are reported separately.",
+    "No tolerance or physical-acceptance gate is introduced by this reader.",
+    "The3 dominant lines have positive stored SP and four negative selected coupling-term grid rows each; this does not prove total negative OD physically valid or cancellation completeness.",
+    "Prospective unavailable-metadata sentinel patch has not been compiled or executed.",
+    "No coefficient values, loaded3-strength values, original rows, full operand vectors or raw ancestry files are included."
+  ]
+}

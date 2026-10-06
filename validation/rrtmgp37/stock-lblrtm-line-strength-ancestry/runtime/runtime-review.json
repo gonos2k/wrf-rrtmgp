@@ -1,0 +1,104 @@
+{
+  "schema": "UDM37_LEFT_CENSORED_ANCESTRY_RUNTIME_REVIEW_V1",
+  "status": "PASS_SCOPED_RUNTIME_PREPARATION_REVIEW",
+  "reviewed_plan": {
+    "path": "build/udm37-lblrtm-left-censored-ancestry-run-v2/plan.json",
+    "sha256": "9aeccfd5d28b658a1a6f03900be0ce40e530fa61c306b9818416dae4c407b13a",
+    "size_bytes": 53039
+  },
+  "reviewed_runner": {
+    "path": "build/udm37-lblrtm-left-censored-ancestry-run-v2/run_once.py",
+    "sha256": "8abbe8f2712a3385e1478d22157e33e0f67ef16a1b94bf060b7e3ceb1d8306de",
+    "size_bytes": 20327
+  },
+  "reviewed_stage": {
+    "path": "build/udm37-lblrtm-left-censored-ancestry-run-v2/staging/stage-receipt.json",
+    "sha256": "b8797fb4c8be282499d1d5aad29ad6df50c43a51429e82baabdebfcfc6fd7813",
+    "size_bytes": 48592,
+    "status": "ANCESTRY_SOURCE_STAGED_NOT_COMPILED"
+  },
+  "reviewed_case_stage": {
+    "path": "build/udm37-lblrtm-left-censored-ancestry-run-v2/runs/od-v1/case-stage.json",
+    "sha256": "9a2b58f36499ebbe9e78ede03b53c1f6897d9233d49eb9c07f8cd316bd72cb90",
+    "size_bytes": 15148,
+    "status": "STAGED_NOT_RUN"
+  },
+  "reviewed_preparation_receipt": {
+    "path": "build/udm37-lblrtm-left-censored-ancestry-run-v2/preparation-receipt.json",
+    "sha256": "e6204626164278246de94acff322fa233183065c961e72267764b46c17fdefe0",
+    "status": "PREPARED_FROZEN_NOT_EXECUTED"
+  },
+  "source_identity": {
+    "donor_tree": "build/udm37-lblrtm-candidate-decision-run-v3/staging/source/LBLRTM",
+    "staged_tree": "build/udm37-lblrtm-left-censored-ancestry-run-v2/staging/source/LBLRTM",
+    "candidate_oprop_sha256": "63f6383c698e2e63e9dcde3956f0f936364b38aeffeb23f41284cdfb8e19bf65",
+    "expected_changed_source_path": "src/oprop.f90",
+    "tree_entry_counts_equal": 471,
+    "only_tree_path_metadata_difference": "src/oprop.f90 size 498873 to 504734 bytes; all paths/types/symlink targets otherwise match donor.",
+    "protected_source_pins_checked": 58,
+    "protected_source_bytes_checked": 4240042,
+    "protected_source_receipt_mismatches": 0,
+    "protected_source_byte_differences_from_donor": ["src/oprop.f90"],
+    "source_v2_reviews": [
+      {"path": "build/udm37-lblrtm-left-censored-ancestry-source-v2/root-static-review.json", "sha256": "0122391c087c59e3d01852cc4f66f91daf65f8a61161f6ef45afa7638a3d8f75"},
+      {"path": "build/udm37-lblrtm-left-censored-ancestry-static-review-v2/review.json", "sha256": "92a13bf011d0adb4dc62aab5190080bb8a2ec63581f280c00e01476e8d540bb9"}
+    ]
+  },
+  "prebuild_readback": {
+    "candidate_executable_sha256": "ce8ceef48506f6a36d38633c34ee1a60408a3ce5b99c6078dda3e29fcaacc8c4",
+    "candidate_executable_size_bytes": 14373328,
+    "candidate_executable_receipt_match": true,
+    "prebuild_objects": {
+      "total": 21,
+      "unchanged_non_oprop": 20,
+      "oprop": 1,
+      "bytes_hash_checked": 15446272,
+      "mismatches": 0
+    },
+    "runtime_libraries": {
+      "count": 47,
+      "bytes_hash_checked": 68750792,
+      "mismatches": 0
+    }
+  },
+  "input_identity": {
+    "prior_receipt": "build/udm37-lblrtm-held-state-continuum-od-run-v1/runs/od-v1/prepared.json",
+    "prior_receipt_sha256": "7195f13f22acfb3664908f824af3f6b63dbed059150b20da96b8248c58ad3d48",
+    "prior_and_staged_count": 38,
+    "same_paths_targets_hashes_sizes_after_schema_normalization": true,
+    "large_TAPE3_bytes_rehashed": false
+  },
+  "baseline_and_authentication": {
+    "baseline_postflight": "build/udm37-lblrtm-candidate-decision-run-v3/solver-postflight.json",
+    "baseline_postflight_sha256": "cfb96a1dcc02df85e598e86f81c9dc087790676b81f58ddb63b484851e337169",
+    "baseline_actual_child_rc": 0,
+    "baseline_output_count": 62,
+    "external_build_and_solver_authorizations_present": false,
+    "new_build_or_solver_receipts_or_locks_present": false,
+    "new_build_or_solver_authorized_by_this_review": false
+  },
+  "runner_contract_review": {
+    "identical_to_historically_reviewed_runner_sha256": "8abbe8f2712a3385e1478d22157e33e0f67ef16a1b94bf060b7e3ceb1d8306de",
+    "external_plan_bound_authorization": true,
+    "runtime_review_status_and_plan_runner_pins_required": true,
+    "one_use_attempt_locks_and_no_retry": true,
+    "bounded_process_group_termination_and_reaping": true,
+    "durable_child_rc_before_output_processing": true,
+    "incremental_build_required_to_change_only_oprop_object": true,
+    "solver_gated_on_successful_oprop_only_build": true,
+    "solver_outputs_gated_on_exact_diagnostic_hashes_and_output_inventory": true,
+    "case_scope": {
+      "prefix_group_count": 69,
+      "dominant_contributor_group_count": 3,
+      "new_extra_output_only": "UDM37_ANCESTRY",
+      "physics_or_threshold_changes": false
+    }
+  },
+  "non_actions": {
+    "compiler_invocations": 0,
+    "solver_invocations": 0,
+    "raw_TAPE3_or_OD_reads": 0,
+    "large_spectral_inputs_rehashed": false
+  },
+  "scope_note": "This status certifies only the staged source, runner, pins, inputs, and prelaunch contracts. It is not a build/solver authorization and makes no result or physical-validity claim."
+}

@@ -1,0 +1,26 @@
+{
+  "status": "PASS_SCOPED_STATIC_REVIEW_WITH_NONBLOCKING_SCHEMA_LABEL_NOTE",
+  "reviewed_at": "2026-10-06",
+  "scope": "Read frozen v5 plan/script and compare v4-to-v5 changes only. No saved runtime artifact, authorization, raw data, solver, build, or reader execution.",
+  "pins": {
+    "plan": {
+      "path": "build/udm37-lblrtm-candidate-decision-ancestry-reader-preparation-v5/plan.json",
+      "sha256": "1587e1eec9316ec4ef8411f1aaf459bf1da33b4ebbb2044cb7c8dad155728f67"
+    },
+    "reader": {
+      "path": "build/udm37-lblrtm-candidate-decision-ancestry-reader-preparation-v5/read_saved_ancestry.py",
+      "sha256": "79605d8813734b3990480878af23297437384ce28715e683b69d00f6c0c1de70"
+    },
+    "parent_v4_plan": "c4f1e1b0bdcb90679d769cb5c8e692bc2561d608b876c969be385b56af2b1cc7",
+    "parent_v4_reader": "c529df38e69a1f6a383ccb3328807daa8b41f907bc77a839fbae867cb90ca096"
+  },
+  "findings": {
+    "reader_predicates": "PASS: v5 reader diff from v4 changes only the returned comparison label and metadata allowlist to include KPANEL / source-uninitialized metadata. The phase2-only token14/15 and phase3-only token13 predicates and complete I21-slot checks are unchanged.",
+    "plan_scope": "PASS: phase2 IPANEL/IDATA reason2..9 and phase3 KPANEL reason10..13 are both stated. Prohibitions now exclude all other fields/phases and all R3/PANEL/OD data. Plan source basis cites both LNCOR1 and CNVFNV and pins the source review; outer RC3 and strict OD failure remain preserved.",
+    "schema_label": "NONBLOCKING: plan schema field still says PREPARATION_V4 although this is a v5 label-only successor. If schema denotes only the underlying artifact layout, this is compatible; otherwise rename/document before publication."
+  },
+  "limitations": [
+    "Static review only; no runtime data values or comparison outcome are asserted.",
+    "The reader remains not executed/unauthorized; this review grants no authorization."
+  ]
+}

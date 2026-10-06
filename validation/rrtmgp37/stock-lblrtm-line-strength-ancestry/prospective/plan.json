@@ -1,0 +1,58 @@
+{
+  "status": "PROSPECTIVE_UNCOMPILED_UNRUN_DIAGNOSTIC_PATCH",
+  "base_executed_source": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-left-censored-ancestry-source-v2/oprop.ancestry.f90",
+    "sha256": "63f6383c698e2e63e9dcde3956f0f936364b38aeffeb23f41284cdfb8e19bf65",
+    "size_bytes": 504734
+  },
+  "preserved_v1": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-ancestry-unavailable-metadata-source-v1/plan.json",
+    "sha256": "09b1d2c9e2687abf60ad85da200fbf23afc3b97f0ec7ff082cfb444978684a5a",
+    "size_bytes": 1703
+  },
+  "prospective_source": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-ancestry-unavailable-metadata-source-v2/oprop.prospective.f90",
+    "sha256": "dce10c47b814c1ee0395ea34268dc19f51ed68c16d8426daf595b8c63e02d351",
+    "size_bytes": 504662
+  },
+  "patch": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-ancestry-unavailable-metadata-source-v2/unavailable-diagnostic-metadata.patch",
+    "sha256": "8e2f31071a417272bccc9796b63101a5d0a696b78a05180d5e5e4e8bd488d1c4",
+    "size_bytes": 5031
+  },
+  "delta_from_prospective_v1": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-ancestry-unavailable-metadata-source-v2/v1-to-v2.patch",
+    "sha256": "b74eb1727f60ae12091638e00cf7d783fbdd9cb45d9263139fc2d014481db75b",
+    "size_bytes": 2166
+  },
+  "source_finding": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-ancestry-unavailable-metadata-source-v2/source-finding.json",
+    "sha256": "1dfc2655fddde098592ff7ef59460faf08a7246151308af68cb690e435d6077c",
+    "size_bytes": 1913
+  },
+  "change": "Keep8 LNCOR1 phase2 IPANEL/IDATA unavailable sentinel argument replacements; add4 CNVFNV phase3 KPANEL argument replacements. No source arithmetic, branch or common-block change.",
+  "availability_contract": [
+    {
+      "phase": 2,
+      "unavailable_fields": [
+        "IPANEL",
+        "IDATA"
+      ],
+      "calls": 8
+    },
+    {
+      "phase": 3,
+      "unavailable_fields": [
+        "KPANEL"
+      ],
+      "calls": 4
+    }
+  ],
+  "not_claimed": "No execution of this fix; no evidence it repaired any existing run. Original raw files and strict failed contracts are retained.",
+  "counts": {
+    "compiler": 0,
+    "solver": 0,
+    "model": 0,
+    "reader": 0
+  }
+}

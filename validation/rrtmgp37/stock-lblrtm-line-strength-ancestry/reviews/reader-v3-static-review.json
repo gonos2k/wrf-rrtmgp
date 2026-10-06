@@ -1,0 +1,49 @@
+{
+  "status": "PASS_SCOPED_STATIC_PREEXECUTION_REVIEW",
+  "reviewed_at": "2026-10-06",
+  "review_scope": "Frozen plan and reader code only. No saved candidate/baseline output, raw OD file, authorization, runtime artifact, build, or solver was opened/executed.",
+  "pins": {
+    "plan": {
+      "path": "build/udm37-lblrtm-candidate-decision-ancestry-reader-preparation-v3/plan.json",
+      "sha256": "98505311f59998e8fa0296d2f74cd9c2be4aca62b33ba42a8fc22d44662d0808"
+    },
+    "reader": {
+      "path": "build/udm37-lblrtm-candidate-decision-ancestry-reader-preparation-v3/read_saved_ancestry.py",
+      "sha256": "c160f85231c4183982d53b47eb2ae52d052b56c736ece7d5268db7dc71eadf07"
+    },
+    "parent_v2_plan": "947c0295b1e034f72149deb6311bc0c4616d46fc2af505bfd5d9c92a9acebee3",
+    "parent_v2_reader": "3cfc8fdae2ad01618bb42cc3215b9741599641c4bd056f26db35e0988994d807"
+  },
+  "review_findings": {
+    "metadata_mask": {
+      "result": "PASS",
+      "detail": "The v3 comparator still permits differences only in token positions 14/15 and only on phase-2 reason 2..9 rows. It now masks the complete contiguous byte span from the end of token 13 through the end of token 15, covering both fields and their leading padding; all bytes before and after that span are compared exactly. Record count, token count, tag, all other tokens, and unchanged-line bytes remain strict. This fixes the v2 padding false-rejection without broad line whitespace normalization."
+    },
+    "repository_root": {
+      "result": "PASS",
+      "detail": "For this file location ROOT = HERE.parents[1] resolves to the repository root: the reader directory is directly under repository/build. This makes relative pins such as build/... resolve from the correct root; v2 parents[2] was one level too high."
+    },
+    "scope_and_gates": {
+      "result": "PASS",
+      "detail": "Plan retains PREPARED_NOT_AUTHORIZED status, exact 99-artifact inventory, terminal child RC0 plus timeout/exception/reaped/PID/cwd checks before artifact verification, and a new one-use output directory. The original outer runner RC3 and negative-OD FAIL are explicitly preserved."
+    },
+    "ancestry_join_logic": {
+      "result": "PASS_SCOPED",
+      "detail": "The 69-prefix group joins by full allowlist identity to earlier-VFT events and compares only explicitly transported source fields against the selected phase-3 reason-12 event; missing earlier ancestry is a hard failure, not inferred. The three dominant rows require selected-window phase-2 reason-9 same-call matches for corrected SUI/SP/SPPSP/etc. Phase-3 SUI sentinels are not compared as computed values. Thermal and SP/SPPSP source-equation residuals are explicitly descriptive, not bitwise acceptance thresholds."
+    },
+    "candidate_exception_scope": {
+      "result": "PASS_SCOPED",
+      "detail": "The raw CAND difference is preserved as a strict failure. The reader permits only the two source-reviewed undefined IPANEL/IDATA fields, only phase 2 reasons 2..9; phase 1/3, every other token, R3/PANEL files, spectra, and OD values remain outside the exemption."
+    },
+    "plan_preservation": {
+      "result": "PASS",
+      "detail": "V3 carries the complete preparation pins, receipt/status, artifact roster, join contract, and known limitations. The v2 tree is unchanged."
+    }
+  },
+  "limitations": [
+    "This is static review only; no report result or ancestry match is asserted.",
+    "The independent review did not execute the local comparator against solver artifacts.",
+    "Even a future scoped reader PASS cannot supersede the outer runner RC3 or close negative-OD physical validity."
+  ],
+  "authorization": "None granted. The saved reader remains unexecuted until a separate exact one-use authorization."
+}
