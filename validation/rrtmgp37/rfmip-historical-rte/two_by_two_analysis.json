@@ -1,0 +1,887 @@
+{
+  "2x2_definition": {
+    "F(current,current)": "Current RTE with current optics",
+    "F(current,historical)": "Current RTE with historical optics",
+    "F(historical,current)": "Retained historical RTE with current optics",
+    "F(historical,historical)": "Retained historical RTE with historical optics",
+    "closure": "optics_effect_current_runtime + runtime_effect_current_optics + interaction - total_diagonal_change",
+    "interaction": "optics_effect_historical_runtime - optics_effect_current_runtime",
+    "optics_effect_current_runtime": "F(current,historical) - F(current,current)",
+    "optics_effect_historical_runtime": "F(historical,historical) - F(historical,current)",
+    "runtime_effect_current_optics": "F(historical,current) - F(current,current)",
+    "runtime_effect_historical_optics": "F(historical,historical) - F(current,historical)",
+    "total_diagonal_change": "F(historical,historical) - F(current,current)"
+  },
+  "anchor_checks": {
+    "current_runtime_current_optics_solver_exact_saved": true,
+    "current_runtime_current_optics_written_exact_saved": true,
+    "historical_runtime_historical_optics_solver_exact_saved": true,
+    "historical_runtime_historical_optics_written_exact_saved": true,
+    "solver_written_streams_equal_for_all_four_arms": {
+      "current_current_optics": true,
+      "current_historical_optics": true,
+      "historical_current_optics": true,
+      "historical_historical_optics": true
+    }
+  },
+  "component_metrics_by_direction_W_m2": {
+    "component_closure": {
+      "down": {
+        "count": 1220,
+        "max": 0.0,
+        "max_abs": 0.0,
+        "mean": 0.0,
+        "mean_abs": 0.0,
+        "min": 0.0,
+        "rms": 0.0
+      },
+      "up": {
+        "count": 1220,
+        "max": 0.0,
+        "max_abs": 0.0,
+        "mean": 0.0,
+        "mean_abs": 0.0,
+        "min": 0.0,
+        "rms": 0.0
+      }
+    },
+    "interaction": {
+      "down": {
+        "count": 1220,
+        "max": 4.4161652112961747e-10,
+        "max_abs": 5.276774572848808e-10,
+        "mean": -2.7535977141433548e-11,
+        "mean_abs": 7.581887030773644e-11,
+        "min": -5.276774572848808e-10,
+        "rms": 1.4659619224472158e-10
+      },
+      "up": {
+        "count": 1220,
+        "max": 1.0157918950426392e-10,
+        "max_abs": 2.742979177128291e-10,
+        "mean": -3.438837557153375e-11,
+        "mean_abs": 5.970730212613459e-11,
+        "min": -2.742979177128291e-10,
+        "rms": 9.208488438061667e-11
+      }
+    },
+    "optics_effect_current_runtime": {
+      "down": {
+        "count": 1220,
+        "max": 2.158137704100227e-07,
+        "max_abs": 2.158137704100227e-07,
+        "mean": 2.649684184413419e-08,
+        "mean_abs": 2.6496911360839877e-08,
+        "min": -3.524291969370097e-11,
+        "rms": 4.775720416374294e-08
+      },
+      "up": {
+        "count": 1220,
+        "max": 5.59292629986885e-08,
+        "max_abs": 5.59292629986885e-08,
+        "mean": 2.188045392811967e-08,
+        "mean_abs": 2.188045392811967e-08,
+        "min": 5.091255417255525e-09,
+        "rms": 2.5870622073145923e-08
+      }
+    },
+    "optics_effect_historical_runtime": {
+      "down": {
+        "count": 1220,
+        "max": 2.1618996015604353e-07,
+        "max_abs": 2.1618996015604353e-07,
+        "mean": 2.6469305866992757e-08,
+        "mean_abs": 2.646933139993828e-08,
+        "min": -9.72022462519817e-12,
+        "rms": 4.772135438610592e-08
+      },
+      "up": {
+        "count": 1220,
+        "max": 5.5683983646304114e-08,
+        "max_abs": 5.5683983646304114e-08,
+        "mean": 2.1846065552548136e-08,
+        "mean_abs": 2.1846065552548136e-08,
+        "min": 5.0947299712333916e-09,
+        "rms": 2.5818350228793756e-08
+      }
+    },
+    "runtime_effect_current_optics": {
+      "down": {
+        "count": 1220,
+        "max": 6.059053703211248e-07,
+        "max_abs": 6.059053703211248e-07,
+        "mean": 5.810157003385238e-08,
+        "mean_abs": 7.868411250351752e-08,
+        "min": -1.100393092201557e-07,
+        "rms": 1.2472133578472176e-07
+      },
+      "up": {
+        "count": 1220,
+        "max": 8.301483944705979e-08,
+        "max_abs": 5.032030117035902e-07,
+        "mean": -3.625532466157501e-08,
+        "mean_abs": 6.499977644067225e-08,
+        "min": -5.032030117035902e-07,
+        "rms": 9.788121317406218e-08
+      }
+    },
+    "runtime_effect_historical_optics": {
+      "down": {
+        "count": 1220,
+        "max": 6.062815600671456e-07,
+        "max_abs": 6.062815600671456e-07,
+        "mean": 5.8074034056710946e-08,
+        "mean_abs": 7.866284821919508e-08,
+        "min": -1.1006579825334484e-07,
+        "rms": 1.2470410155398189e-07
+      },
+      "up": {
+        "count": 1220,
+        "max": 8.2750119645425e-08,
+        "max_abs": 5.032047312170107e-07,
+        "mean": -3.6289713037146544e-08,
+        "mean_abs": 6.49750365016131e-08,
+        "min": -5.032047312170107e-07,
+        "rms": 9.786810788391212e-08
+      }
+    },
+    "total_diagonal_change": {
+      "down": {
+        "count": 1220,
+        "max": 8.220953304771683e-07,
+        "max_abs": 8.220953304771683e-07,
+        "mean": 8.457087590084514e-08,
+        "mean_abs": 9.31434227670222e-08,
+        "min": -6.809978003730066e-08,
+        "rms": 1.566857931337262e-07
+      },
+      "up": {
+        "count": 1220,
+        "max": 1.3618975458484783e-07,
+        "max_abs": 4.880443924548672e-07,
+        "mean": -1.4409259109026875e-08,
+        "mean_abs": 6.917069142310002e-08,
+        "min": -4.880443924548672e-07,
+        "rms": 9.833437818211479e-08
+      }
+    }
+  },
+  "schema": "RFMIP_HISTORICAL_RTE_2X2_FIXED_OPTICS_ANALYSIS_V1",
+  "scope": "Saved-only independent parsing and arithmetic over the two retained 20-profile fixed-optics RTE runs. No build, solver, or model execution by this analyzer.",
+  "scope_counts": {
+    "directions": [
+      "up",
+      "down"
+    ],
+    "flux_levels": 61,
+    "flux_values_per_arm": 2440,
+    "forecasts": 0,
+    "gas_optics_calls": 0,
+    "new_historical_runtime_rte_calls_in_this_stage": 40,
+    "profiles": 20,
+    "rte_calls_current_runtime": 40,
+    "rte_calls_historical_runtime": 40
+  },
+  "selected_original_21_strict_failure_diagnostic": {
+    "atol_W_m2": 1e-05,
+    "count": 21,
+    "global_strict_gate_changed": false,
+    "rows": [
+      {
+        "current_runtime_current_optics_W_m2": 999.9175107892781,
+        "current_runtime_current_optics_cast_f32_minus_reference_W_m2": -6.103515625e-05,
+        "current_runtime_current_optics_minus_reference_W_m2": -3.0714628110217745e-05,
+        "current_runtime_historical_optics_W_m2": 999.9175109539099,
+        "current_runtime_historical_optics_cast_f32_minus_reference_W_m2": -6.103515625e-05,
+        "current_runtime_historical_optics_minus_reference_W_m2": -3.054999638152367e-05,
+        "diagonal_delta_total_W_m2": 5.456593044073088e-08,
+        "historical_optics_historical_runtime_cast_f32_minus_reference_W_m2": -6.103515625e-05,
+        "historical_optics_historical_runtime_minus_f32_reference_W_m2": -3.0660062179777015e-05,
+        "historical_runtime_current_optics_W_m2": 999.9175106792388,
+        "historical_runtime_current_optics_cast_f32_minus_reference_W_m2": -6.103515625e-05,
+        "historical_runtime_current_optics_minus_reference_W_m2": -3.08246674194379e-05,
+        "historical_runtime_historical_optics_W_m2": 999.9175108438441,
+        "historical_runtime_historical_optics_cast_f32_minus_reference_W_m2": -6.103515625e-05,
+        "historical_runtime_historical_optics_minus_reference_W_m2": -3.0660062179777015e-05,
+        "key_one_based": [
+          2,
+          7
+        ],
+        "level_index0": 60,
+        "published_reference_f32_W_m2": 999.9175415039062,
+        "saved_historical_solver_W_m2": 999.9175108438441,
+        "saved_historical_written_W_m2": 999.9175108438441,
+        "variable": "RSD"
+      },
+      {
+        "current_runtime_current_optics_W_m2": 653.5708923180239,
+        "current_runtime_current_optics_cast_f32_minus_reference_W_m2": -6.103515625e-05,
+        "current_runtime_current_optics_minus_reference_W_m2": -3.053353862014774e-05,
+        "current_runtime_historical_optics_W_m2": 653.5708923180301,
+        "current_runtime_historical_optics_cast_f32_minus_reference_W_m2": -6.103515625e-05,
+        "current_runtime_historical_optics_minus_reference_W_m2": -3.053353236737166e-05,
+        "diagonal_delta_total_W_m2": 7.682956493226811e-09,
+        "historical_optics_historical_runtime_cast_f32_minus_reference_W_m2": -6.103515625e-05,
+        "historical_optics_historical_runtime_minus_f32_reference_W_m2": -3.052585566365451e-05,
+        "historical_runtime_current_optics_W_m2": 653.5708923257005,
+        "historical_runtime_current_optics_cast_f32_minus_reference_W_m2": -6.103515625e-05,
+        "historical_runtime_current_optics_minus_reference_W_m2": -3.052586203011742e-05,
+        "historical_runtime_historical_optics_W_m2": 653.5708923257068,
+        "historical_runtime_historical_optics_cast_f32_minus_reference_W_m2": -6.103515625e-05,
+        "historical_runtime_historical_optics_minus_reference_W_m2": -3.052585566365451e-05,
+        "key_one_based": [
+          4,
+          39
+        ],
+        "level_index0": 13,
+        "published_reference_f32_W_m2": 653.5709228515625,
+        "saved_historical_solver_W_m2": 653.5708923257068,
+        "saved_historical_written_W_m2": 653.5708923257068,
+        "variable": "RSD"
+      },
+      {
+        "current_runtime_current_optics_W_m2": 561.466705026712,
+        "current_runtime_current_optics_cast_f32_minus_reference_W_m2": -6.103515625e-05,
+        "current_runtime_current_optics_minus_reference_W_m2": -3.0813131729701126e-05,
+        "current_runtime_historical_optics_W_m2": 561.4667051210822,
+        "current_runtime_historical_optics_cast_f32_minus_reference_W_m2": -6.103515625e-05,
+        "current_runtime_historical_optics_minus_reference_W_m2": -3.071876153626363e-05,
+        "diagonal_delta_total_W_m2": 2.813346782204462e-07,
+        "historical_optics_historical_runtime_cast_f32_minus_reference_W_m2": -6.103515625e-05,
+        "historical_optics_historical_runtime_minus_f32_reference_W_m2": -3.053179705148068e-05,
+        "historical_runtime_current_optics_W_m2": 561.4667052140957,
+        "historical_runtime_current_optics_cast_f32_minus_reference_W_m2": -6.103515625e-05,
+        "historical_runtime_current_optics_minus_reference_W_m2": -3.06257480815475e-05,
+        "historical_runtime_historical_optics_W_m2": 561.4667053080467,
+        "historical_runtime_historical_optics_cast_f32_minus_reference_W_m2": -6.103515625e-05,
+        "historical_runtime_historical_optics_minus_reference_W_m2": -3.053179705148068e-05,
+        "key_one_based": [
+          4,
+          40
+        ],
+        "level_index0": 47,
+        "published_reference_f32_W_m2": 561.4667358398438,
+        "saved_historical_solver_W_m2": 561.4667053080467,
+        "saved_historical_written_W_m2": 561.4667053080467,
+        "variable": "RSD"
+      },
+      {
+        "current_runtime_current_optics_W_m2": 358.33024594000693,
+        "current_runtime_current_optics_cast_f32_minus_reference_W_m2": -3.0517578125e-05,
+        "current_runtime_current_optics_minus_reference_W_m2": -1.529046181758531e-05,
+        "current_runtime_historical_optics_W_m2": 358.3302459809884,
+        "current_runtime_historical_optics_cast_f32_minus_reference_W_m2": 0.0,
+        "current_runtime_historical_optics_minus_reference_W_m2": -1.5249480327383935e-05,
+        "diagonal_delta_total_W_m2": -1.938985860761022e-09,
+        "historical_optics_historical_runtime_cast_f32_minus_reference_W_m2": -3.0517578125e-05,
+        "historical_optics_historical_runtime_minus_f32_reference_W_m2": -1.529240080344607e-05,
+        "historical_runtime_current_optics_W_m2": 358.3302458972495,
+        "historical_runtime_current_optics_cast_f32_minus_reference_W_m2": -3.0517578125e-05,
+        "historical_runtime_current_optics_minus_reference_W_m2": -1.5333219266722153e-05,
+        "historical_runtime_historical_optics_W_m2": 358.33024593806795,
+        "historical_runtime_historical_optics_cast_f32_minus_reference_W_m2": -3.0517578125e-05,
+        "historical_runtime_historical_optics_minus_reference_W_m2": -1.529240080344607e-05,
+        "key_one_based": [
+          6,
+          99
+        ],
+        "level_index0": 45,
+        "published_reference_f32_W_m2": 358.33026123046875,
+        "saved_historical_solver_W_m2": 358.33024593806795,
+        "saved_historical_written_W_m2": 358.33024593806795,
+        "variable": "RSD"
+      },
+      {
+        "current_runtime_current_optics_W_m2": 311.9726714720684,
+        "current_runtime_current_optics_cast_f32_minus_reference_W_m2": -3.0517578125e-05,
+        "current_runtime_current_optics_minus_reference_W_m2": -1.5295509740553825e-05,
+        "current_runtime_historical_optics_W_m2": 311.97267155371526,
+        "current_runtime_historical_optics_cast_f32_minus_reference_W_m2": 0.0,
+        "current_runtime_historical_optics_minus_reference_W_m2": -1.521386286640336e-05,
+        "diagonal_delta_total_W_m2": 3.622665190050611e-08,
+        "historical_optics_historical_runtime_cast_f32_minus_reference_W_m2": -3.0517578125e-05,
+        "historical_optics_historical_runtime_minus_f32_reference_W_m2": -1.525928308865332e-05,
+        "historical_runtime_current_optics_W_m2": 311.9726714265897,
+        "historical_runtime_current_optics_cast_f32_minus_reference_W_m2": -3.0517578125e-05,
+        "historical_runtime_current_optics_minus_reference_W_m2": -1.5340988397838373e-05,
+        "historical_runtime_historical_optics_W_m2": 311.97267150829504,
+        "historical_runtime_historical_optics_cast_f32_minus_reference_W_m2": -3.0517578125e-05,
+        "historical_runtime_historical_optics_minus_reference_W_m2": -1.525928308865332e-05,
+        "key_one_based": [
+          6,
+          99
+        ],
+        "level_index0": 55,
+        "published_reference_f32_W_m2": 311.9726867675781,
+        "saved_historical_solver_W_m2": 311.97267150829504,
+        "saved_historical_written_W_m2": 311.97267150829504,
+        "variable": "RSD"
+      },
+      {
+        "current_runtime_current_optics_W_m2": 928.7009577310605,
+        "current_runtime_current_optics_cast_f32_minus_reference_W_m2": -6.103515625e-05,
+        "current_runtime_current_optics_minus_reference_W_m2": -3.1038470751809655e-05,
+        "current_runtime_historical_optics_W_m2": 928.700957873738,
+        "current_runtime_historical_optics_cast_f32_minus_reference_W_m2": -6.103515625e-05,
+        "current_runtime_historical_optics_minus_reference_W_m2": -3.089579320203484e-05,
+        "diagonal_delta_total_W_m2": 5.134101002113312e-07,
+        "historical_optics_historical_runtime_cast_f32_minus_reference_W_m2": -6.103515625e-05,
+        "historical_optics_historical_runtime_minus_f32_reference_W_m2": -3.0525060651598324e-05,
+        "historical_runtime_current_optics_W_m2": 928.7009581015229,
+        "historical_runtime_current_optics_cast_f32_minus_reference_W_m2": -6.103515625e-05,
+        "historical_runtime_current_optics_minus_reference_W_m2": -3.066800832129957e-05,
+        "historical_runtime_historical_optics_W_m2": 928.7009582444706,
+        "historical_runtime_historical_optics_cast_f32_minus_reference_W_m2": -6.103515625e-05,
+        "historical_runtime_historical_optics_minus_reference_W_m2": -3.0525060651598324e-05,
+        "key_one_based": [
+          7,
+          83
+        ],
+        "level_index0": 60,
+        "published_reference_f32_W_m2": 928.7009887695312,
+        "saved_historical_solver_W_m2": 928.7009582444706,
+        "saved_historical_written_W_m2": 928.7009582444706,
+        "variable": "RSD"
+      },
+      {
+        "current_runtime_current_optics_W_m2": 846.4911803994894,
+        "current_runtime_current_optics_cast_f32_minus_reference_W_m2": -6.103515625e-05,
+        "current_runtime_current_optics_minus_reference_W_m2": -3.0538010605596355e-05,
+        "current_runtime_historical_optics_W_m2": 846.4911803994895,
+        "current_runtime_historical_optics_cast_f32_minus_reference_W_m2": -6.103515625e-05,
+        "current_runtime_historical_optics_minus_reference_W_m2": -3.053801049190952e-05,
+        "diagonal_delta_total_W_m2": 1.6926378521020524e-08,
+        "historical_optics_historical_runtime_cast_f32_minus_reference_W_m2": -6.103515625e-05,
+        "historical_optics_historical_runtime_minus_f32_reference_W_m2": -3.0521084227075335e-05,
+        "historical_runtime_current_optics_W_m2": 846.4911804164159,
+        "historical_runtime_current_optics_cast_f32_minus_reference_W_m2": -6.103515625e-05,
+        "historical_runtime_current_optics_minus_reference_W_m2": -3.05210841133885e-05,
+        "historical_runtime_historical_optics_W_m2": 846.4911804164158,
+        "historical_runtime_historical_optics_cast_f32_minus_reference_W_m2": -6.103515625e-05,
+        "historical_runtime_historical_optics_minus_reference_W_m2": -3.0521084227075335e-05,
+        "key_one_based": [
+          8,
+          52
+        ],
+        "level_index0": 5,
+        "published_reference_f32_W_m2": 846.4912109375,
+        "saved_historical_solver_W_m2": 846.4911804164158,
+        "saved_historical_written_W_m2": 846.4911804164158,
+        "variable": "RSD"
+      },
+      {
+        "current_runtime_current_optics_W_m2": 415.5838165302146,
+        "current_runtime_current_optics_cast_f32_minus_reference_W_m2": 0.0,
+        "current_runtime_current_optics_minus_reference_W_m2": -1.5256894755566464e-05,
+        "current_runtime_historical_optics_W_m2": 415.58381653031154,
+        "current_runtime_historical_optics_cast_f32_minus_reference_W_m2": 0.0,
+        "current_runtime_historical_optics_minus_reference_W_m2": -1.5256797837537306e-05,
+        "diagonal_delta_total_W_m2": -2.01902139451704e-08,
+        "historical_optics_historical_runtime_cast_f32_minus_reference_W_m2": -3.0517578125e-05,
+        "historical_optics_historical_runtime_minus_f32_reference_W_m2": -1.5277084969511634e-05,
+        "historical_runtime_current_optics_W_m2": 415.58381650992715,
+        "historical_runtime_current_optics_cast_f32_minus_reference_W_m2": -3.0517578125e-05,
+        "historical_runtime_current_optics_minus_reference_W_m2": -1.5277182228601305e-05,
+        "historical_runtime_historical_optics_W_m2": 415.5838165100244,
+        "historical_runtime_historical_optics_cast_f32_minus_reference_W_m2": -3.0517578125e-05,
+        "historical_runtime_historical_optics_minus_reference_W_m2": -1.5277084969511634e-05,
+        "key_one_based": [
+          8,
+          73
+        ],
+        "level_index0": 22,
+        "published_reference_f32_W_m2": 415.5838317871094,
+        "saved_historical_solver_W_m2": 415.5838165100244,
+        "saved_historical_written_W_m2": 415.5838165100244,
+        "variable": "RSD"
+      },
+      {
+        "current_runtime_current_optics_W_m2": 408.79447937523946,
+        "current_runtime_current_optics_cast_f32_minus_reference_W_m2": 0.0,
+        "current_runtime_current_optics_minus_reference_W_m2": -1.5253666788339615e-05,
+        "current_runtime_historical_optics_W_m2": 408.79447937640737,
+        "current_runtime_historical_optics_cast_f32_minus_reference_W_m2": 0.0,
+        "current_runtime_historical_optics_minus_reference_W_m2": -1.52524988834557e-05,
+        "diagonal_delta_total_W_m2": -2.547562871768605e-08,
+        "historical_optics_historical_runtime_cast_f32_minus_reference_W_m2": -3.0517578125e-05,
+        "historical_optics_historical_runtime_minus_f32_reference_W_m2": -1.52791424170573e-05,
+        "historical_runtime_current_optics_W_m2": 408.7944793485965,
+        "historical_runtime_current_optics_cast_f32_minus_reference_W_m2": -3.0517578125e-05,
+        "historical_runtime_current_optics_minus_reference_W_m2": -1.5280309753507026e-05,
+        "historical_runtime_historical_optics_W_m2": 408.79447934976383,
+        "historical_runtime_historical_optics_cast_f32_minus_reference_W_m2": -3.0517578125e-05,
+        "historical_runtime_historical_optics_minus_reference_W_m2": -1.52791424170573e-05,
+        "key_one_based": [
+          9,
+          73
+        ],
+        "level_index0": 28,
+        "published_reference_f32_W_m2": 408.79449462890625,
+        "saved_historical_solver_W_m2": 408.79447934976383,
+        "saved_historical_written_W_m2": 408.79447934976383,
+        "variable": "RSD"
+      },
+      {
+        "current_runtime_current_optics_W_m2": 409.03712444182173,
+        "current_runtime_current_optics_cast_f32_minus_reference_W_m2": 0.0,
+        "current_runtime_current_optics_minus_reference_W_m2": 1.5066821731579694e-05,
+        "current_runtime_historical_optics_W_m2": 409.03712451309724,
+        "current_runtime_historical_optics_cast_f32_minus_reference_W_m2": 0.0,
+        "current_runtime_historical_optics_minus_reference_W_m2": 1.513809723974191e-05,
+        "diagonal_delta_total_W_m2": 2.2081377437643823e-07,
+        "historical_optics_historical_runtime_cast_f32_minus_reference_W_m2": 3.0517578125e-05,
+        "historical_optics_historical_runtime_minus_f32_reference_W_m2": 1.5287635505956132e-05,
+        "historical_runtime_current_optics_W_m2": 409.0371245913047,
+        "historical_runtime_current_optics_cast_f32_minus_reference_W_m2": 0.0,
+        "historical_runtime_current_optics_minus_reference_W_m2": 1.5216304689147364e-05,
+        "historical_runtime_historical_optics_W_m2": 409.0371246626355,
+        "historical_runtime_historical_optics_cast_f32_minus_reference_W_m2": 3.0517578125e-05,
+        "historical_runtime_historical_optics_minus_reference_W_m2": 1.5287635505956132e-05,
+        "key_one_based": [
+          11,
+          86
+        ],
+        "level_index0": 59,
+        "published_reference_f32_W_m2": 409.037109375,
+        "saved_historical_solver_W_m2": 409.0371246626355,
+        "saved_historical_written_W_m2": 409.0371246626355,
+        "variable": "RSD"
+      },
+      {
+        "current_runtime_current_optics_W_m2": 317.4220427619168,
+        "current_runtime_current_optics_cast_f32_minus_reference_W_m2": -3.0517578125e-05,
+        "current_runtime_current_optics_minus_reference_W_m2": -1.5343551922342158e-05,
+        "current_runtime_historical_optics_W_m2": 317.42204283819075,
+        "current_runtime_historical_optics_cast_f32_minus_reference_W_m2": -3.0517578125e-05,
+        "current_runtime_historical_optics_minus_reference_W_m2": -1.5267278001829254e-05,
+        "diagonal_delta_total_W_m2": 2.556146228016587e-08,
+        "historical_optics_historical_runtime_cast_f32_minus_reference_W_m2": -3.0517578125e-05,
+        "historical_optics_historical_runtime_minus_f32_reference_W_m2": -1.5317990460061992e-05,
+        "historical_runtime_current_optics_W_m2": 317.42204271114497,
+        "historical_runtime_current_optics_cast_f32_minus_reference_W_m2": -3.0517578125e-05,
+        "historical_runtime_current_optics_minus_reference_W_m2": -1.5394323781947605e-05,
+        "historical_runtime_historical_optics_W_m2": 317.4220427874783,
+        "historical_runtime_historical_optics_cast_f32_minus_reference_W_m2": -3.0517578125e-05,
+        "historical_runtime_historical_optics_minus_reference_W_m2": -1.5317990460061992e-05,
+        "key_one_based": [
+          15,
+          99
+        ],
+        "level_index0": 51,
+        "published_reference_f32_W_m2": 317.42205810546875,
+        "saved_historical_solver_W_m2": 317.4220427874783,
+        "saved_historical_written_W_m2": 317.4220427874783,
+        "variable": "RSD"
+      },
+      {
+        "current_runtime_current_optics_W_m2": 999.5570976004859,
+        "current_runtime_current_optics_cast_f32_minus_reference_W_m2": 0.0,
+        "current_runtime_current_optics_minus_reference_W_m2": 2.9729392167610058e-05,
+        "current_runtime_historical_optics_W_m2": 999.5570978135937,
+        "current_runtime_historical_optics_cast_f32_minus_reference_W_m2": 0.0,
+        "current_runtime_historical_optics_minus_reference_W_m2": 2.994249996390863e-05,
+        "diagonal_delta_total_W_m2": 7.978571829880821e-07,
+        "historical_optics_historical_runtime_cast_f32_minus_reference_W_m2": 6.103515625e-05,
+        "historical_optics_historical_runtime_minus_f32_reference_W_m2": 3.052724935059814e-05,
+        "historical_runtime_current_optics_W_m2": 999.5570981848572,
+        "historical_runtime_current_optics_cast_f32_minus_reference_W_m2": 0.0,
+        "historical_runtime_current_optics_minus_reference_W_m2": 3.0313763431877305e-05,
+        "historical_runtime_historical_optics_W_m2": 999.5570983983431,
+        "historical_runtime_historical_optics_cast_f32_minus_reference_W_m2": 6.103515625e-05,
+        "historical_runtime_historical_optics_minus_reference_W_m2": 3.052724935059814e-05,
+        "key_one_based": [
+          16,
+          76
+        ],
+        "level_index0": 57,
+        "published_reference_f32_W_m2": 999.5570678710938,
+        "saved_historical_solver_W_m2": 999.5570983983431,
+        "saved_historical_written_W_m2": 999.5570983983431,
+        "variable": "RSD"
+      },
+      {
+        "current_runtime_current_optics_W_m2": 425.25205976110936,
+        "current_runtime_current_optics_cast_f32_minus_reference_W_m2": 0.0,
+        "current_runtime_current_optics_minus_reference_W_m2": 1.5083374989899312e-05,
+        "current_runtime_historical_optics_W_m2": 425.25205981381026,
+        "current_runtime_historical_optics_cast_f32_minus_reference_W_m2": 0.0,
+        "current_runtime_historical_optics_minus_reference_W_m2": 1.513607588776722e-05,
+        "diagonal_delta_total_W_m2": 1.8964300352308783e-07,
+        "historical_optics_historical_runtime_cast_f32_minus_reference_W_m2": 3.0517578125e-05,
+        "historical_optics_historical_runtime_minus_f32_reference_W_m2": 1.52730179934224e-05,
+        "historical_runtime_current_optics_W_m2": 425.25205989805124,
+        "historical_runtime_current_optics_cast_f32_minus_reference_W_m2": 0.0,
+        "historical_runtime_current_optics_minus_reference_W_m2": 1.5220316868180817e-05,
+        "historical_runtime_historical_optics_W_m2": 425.25205995075237,
+        "historical_runtime_historical_optics_cast_f32_minus_reference_W_m2": 3.0517578125e-05,
+        "historical_runtime_historical_optics_minus_reference_W_m2": 1.52730179934224e-05,
+        "key_one_based": [
+          17,
+          86
+        ],
+        "level_index0": 49,
+        "published_reference_f32_W_m2": 425.2520446777344,
+        "saved_historical_solver_W_m2": 425.25205995075237,
+        "saved_historical_written_W_m2": 425.25205995075237,
+        "variable": "RSD"
+      },
+      {
+        "current_runtime_current_optics_W_m2": 148.95035552798356,
+        "current_runtime_current_optics_cast_f32_minus_reference_W_m2": 0.0,
+        "current_runtime_current_optics_minus_reference_W_m2": 7.6275929359326256e-06,
+        "current_runtime_historical_optics_W_m2": 148.95035556050018,
+        "current_runtime_historical_optics_cast_f32_minus_reference_W_m2": 1.52587890625e-05,
+        "current_runtime_historical_optics_minus_reference_W_m2": 7.660109559992634e-06,
+        "diagonal_delta_total_W_m2": 5.217970056037302e-09,
+        "historical_optics_historical_runtime_cast_f32_minus_reference_W_m2": 1.52587890625e-05,
+        "historical_optics_historical_runtime_minus_f32_reference_W_m2": 7.632810905988663e-06,
+        "historical_runtime_current_optics_W_m2": 148.9503555007164,
+        "historical_runtime_current_optics_cast_f32_minus_reference_W_m2": 0.0,
+        "historical_runtime_current_optics_minus_reference_W_m2": 7.600325773182703e-06,
+        "historical_runtime_historical_optics_W_m2": 148.95035553320153,
+        "historical_runtime_historical_optics_cast_f32_minus_reference_W_m2": 1.52587890625e-05,
+        "historical_runtime_historical_optics_minus_reference_W_m2": 7.632810905988663e-06,
+        "key_one_based": [
+          1,
+          88
+        ],
+        "level_index0": 0,
+        "published_reference_f32_W_m2": 148.95034790039062,
+        "saved_historical_solver_W_m2": 148.95035553320153,
+        "saved_historical_written_W_m2": 148.95035553320153,
+        "variable": "RSU"
+      },
+      {
+        "current_runtime_current_optics_W_m2": 274.7982330739701,
+        "current_runtime_current_optics_cast_f32_minus_reference_W_m2": 0.0,
+        "current_runtime_current_optics_minus_reference_W_m2": -1.5217045529425377e-05,
+        "current_runtime_historical_optics_W_m2": 274.7982331221755,
+        "current_runtime_historical_optics_cast_f32_minus_reference_W_m2": 0.0,
+        "current_runtime_historical_optics_minus_reference_W_m2": -1.5168840150181495e-05,
+        "diagonal_delta_total_W_m2": -8.789538696873933e-08,
+        "historical_optics_historical_runtime_cast_f32_minus_reference_W_m2": -3.0517578125e-05,
+        "historical_optics_historical_runtime_minus_f32_reference_W_m2": -1.5304940916394116e-05,
+        "historical_runtime_current_optics_W_m2": 274.798232937774,
+        "historical_runtime_current_optics_cast_f32_minus_reference_W_m2": -3.0517578125e-05,
+        "historical_runtime_current_optics_minus_reference_W_m2": -1.5353241622051428e-05,
+        "historical_runtime_historical_optics_W_m2": 274.7982329860747,
+        "historical_runtime_historical_optics_cast_f32_minus_reference_W_m2": -3.0517578125e-05,
+        "historical_runtime_historical_optics_minus_reference_W_m2": -1.5304940916394116e-05,
+        "key_one_based": [
+          2,
+          2
+        ],
+        "level_index0": 5,
+        "published_reference_f32_W_m2": 274.7982482910156,
+        "saved_historical_solver_W_m2": 274.7982329860747,
+        "saved_historical_written_W_m2": 274.7982329860747,
+        "variable": "RSU"
+      },
+      {
+        "current_runtime_current_optics_W_m2": 228.70218644777643,
+        "current_runtime_current_optics_cast_f32_minus_reference_W_m2": -1.52587890625e-05,
+        "current_runtime_current_optics_minus_reference_W_m2": -7.766090760696898e-06,
+        "current_runtime_historical_optics_W_m2": 228.70218650369637,
+        "current_runtime_historical_optics_cast_f32_minus_reference_W_m2": -1.52587890625e-05,
+        "current_runtime_historical_optics_minus_reference_W_m2": -7.710170820018902e-06,
+        "diagonal_delta_total_W_m2": 1.3417769650914124e-07,
+        "historical_optics_historical_runtime_cast_f32_minus_reference_W_m2": -1.52587890625e-05,
+        "historical_optics_historical_runtime_minus_f32_reference_W_m2": -7.631913064187756e-06,
+        "historical_runtime_current_optics_W_m2": 228.7021865262779,
+        "historical_runtime_current_optics_cast_f32_minus_reference_W_m2": -1.52587890625e-05,
+        "historical_runtime_current_optics_minus_reference_W_m2": -7.687589288707386e-06,
+        "historical_runtime_historical_optics_W_m2": 228.70218658195412,
+        "historical_runtime_historical_optics_cast_f32_minus_reference_W_m2": -1.52587890625e-05,
+        "historical_runtime_historical_optics_minus_reference_W_m2": -7.631913064187756e-06,
+        "key_one_based": [
+          5,
+          50
+        ],
+        "level_index0": 28,
+        "published_reference_f32_W_m2": 228.7021942138672,
+        "saved_historical_solver_W_m2": 228.70218658195412,
+        "saved_historical_written_W_m2": 228.70218658195412,
+        "variable": "RSU"
+      },
+      {
+        "current_runtime_current_optics_W_m2": 128.8075639689897,
+        "current_runtime_current_optics_cast_f32_minus_reference_W_m2": 1.52587890625e-05,
+        "current_runtime_current_optics_minus_reference_W_m2": 7.816645961611357e-06,
+        "current_runtime_historical_optics_W_m2": 128.80756399140725,
+        "current_runtime_historical_optics_cast_f32_minus_reference_W_m2": 1.52587890625e-05,
+        "current_runtime_historical_optics_minus_reference_W_m2": 7.83906349965946e-06,
+        "diagonal_delta_total_W_m2": -1.812845482618286e-07,
+        "historical_optics_historical_runtime_cast_f32_minus_reference_W_m2": 1.52587890625e-05,
+        "historical_optics_historical_runtime_minus_f32_reference_W_m2": 7.635361413349528e-06,
+        "historical_runtime_current_optics_W_m2": 128.8075637653497,
+        "historical_runtime_current_optics_cast_f32_minus_reference_W_m2": 0.0,
+        "historical_runtime_current_optics_minus_reference_W_m2": 7.613005948314822e-06,
+        "historical_runtime_historical_optics_W_m2": 128.80756378770516,
+        "historical_runtime_historical_optics_cast_f32_minus_reference_W_m2": 1.52587890625e-05,
+        "historical_runtime_historical_optics_minus_reference_W_m2": 7.635361413349528e-06,
+        "key_one_based": [
+          7,
+          1
+        ],
+        "level_index0": 8,
+        "published_reference_f32_W_m2": 128.80755615234375,
+        "saved_historical_solver_W_m2": 128.80756378770516,
+        "saved_historical_written_W_m2": 128.80756378770516,
+        "variable": "RSU"
+      },
+      {
+        "current_runtime_current_optics_W_m2": 220.88256059601025,
+        "current_runtime_current_optics_cast_f32_minus_reference_W_m2": -1.52587890625e-05,
+        "current_runtime_current_optics_minus_reference_W_m2": -7.7633647492803e-06,
+        "current_runtime_historical_optics_W_m2": 220.88256064809508,
+        "current_runtime_historical_optics_cast_f32_minus_reference_W_m2": -1.52587890625e-05,
+        "current_runtime_historical_optics_minus_reference_W_m2": -7.711279920386005e-06,
+        "diagonal_delta_total_W_m2": 1.325609275681927e-07,
+        "historical_optics_historical_runtime_cast_f32_minus_reference_W_m2": -1.52587890625e-05,
+        "historical_optics_historical_runtime_minus_f32_reference_W_m2": -7.630803821712107e-06,
+        "historical_runtime_current_optics_W_m2": 220.88256067674334,
+        "historical_runtime_current_optics_cast_f32_minus_reference_W_m2": -1.52587890625e-05,
+        "historical_runtime_current_optics_minus_reference_W_m2": -7.682631661509731e-06,
+        "historical_runtime_historical_optics_W_m2": 220.88256072857118,
+        "historical_runtime_historical_optics_cast_f32_minus_reference_W_m2": -1.52587890625e-05,
+        "historical_runtime_historical_optics_minus_reference_W_m2": -7.630803821712107e-06,
+        "key_one_based": [
+          7,
+          50
+        ],
+        "level_index0": 36,
+        "published_reference_f32_W_m2": 220.882568359375,
+        "saved_historical_solver_W_m2": 220.88256072857118,
+        "saved_historical_written_W_m2": 220.88256072857118,
+        "variable": "RSU"
+      },
+      {
+        "current_runtime_current_optics_W_m2": 129.11582209500656,
+        "current_runtime_current_optics_cast_f32_minus_reference_W_m2": 1.52587890625e-05,
+        "current_runtime_current_optics_minus_reference_W_m2": 7.886022189040887e-06,
+        "current_runtime_historical_optics_W_m2": 129.11582211792143,
+        "current_runtime_historical_optics_cast_f32_minus_reference_W_m2": 1.52587890625e-05,
+        "current_runtime_historical_optics_minus_reference_W_m2": 7.908937050160603e-06,
+        "diagonal_delta_total_W_m2": -2.120928002113942e-07,
+        "historical_optics_historical_runtime_cast_f32_minus_reference_W_m2": 1.52587890625e-05,
+        "historical_optics_historical_runtime_minus_f32_reference_W_m2": 7.673929388829492e-06,
+        "historical_runtime_current_optics_W_m2": 129.1158218600609,
+        "historical_runtime_current_optics_cast_f32_minus_reference_W_m2": 1.52587890625e-05,
+        "historical_runtime_current_optics_minus_reference_W_m2": 7.651076515458044e-06,
+        "historical_runtime_historical_optics_W_m2": 129.11582188291376,
+        "historical_runtime_historical_optics_cast_f32_minus_reference_W_m2": 1.52587890625e-05,
+        "historical_runtime_historical_optics_minus_reference_W_m2": 7.673929388829492e-06,
+        "key_one_based": [
+          11,
+          1
+        ],
+        "level_index0": 2,
+        "published_reference_f32_W_m2": 129.11581420898438,
+        "saved_historical_solver_W_m2": 129.11582188291376,
+        "saved_historical_written_W_m2": 129.11582188291376,
+        "variable": "RSU"
+      },
+      {
+        "current_runtime_current_optics_W_m2": 148.95035552798356,
+        "current_runtime_current_optics_cast_f32_minus_reference_W_m2": 0.0,
+        "current_runtime_current_optics_minus_reference_W_m2": 7.6275929359326256e-06,
+        "current_runtime_historical_optics_W_m2": 148.95035556050018,
+        "current_runtime_historical_optics_cast_f32_minus_reference_W_m2": 1.52587890625e-05,
+        "current_runtime_historical_optics_minus_reference_W_m2": 7.660109559992634e-06,
+        "diagonal_delta_total_W_m2": 5.217970056037302e-09,
+        "historical_optics_historical_runtime_cast_f32_minus_reference_W_m2": 1.52587890625e-05,
+        "historical_optics_historical_runtime_minus_f32_reference_W_m2": 7.632810905988663e-06,
+        "historical_runtime_current_optics_W_m2": 148.9503555007164,
+        "historical_runtime_current_optics_cast_f32_minus_reference_W_m2": 0.0,
+        "historical_runtime_current_optics_minus_reference_W_m2": 7.600325773182703e-06,
+        "historical_runtime_historical_optics_W_m2": 148.95035553320153,
+        "historical_runtime_historical_optics_cast_f32_minus_reference_W_m2": 1.52587890625e-05,
+        "historical_runtime_historical_optics_minus_reference_W_m2": 7.632810905988663e-06,
+        "key_one_based": [
+          13,
+          88
+        ],
+        "level_index0": 0,
+        "published_reference_f32_W_m2": 148.95034790039062,
+        "saved_historical_solver_W_m2": 148.95035553320153,
+        "saved_historical_written_W_m2": 148.95035553320153,
+        "variable": "RSU"
+      },
+      {
+        "current_runtime_current_optics_W_m2": 139.55997461669855,
+        "current_runtime_current_optics_cast_f32_minus_reference_W_m2": -1.52587890625e-05,
+        "current_runtime_current_optics_minus_reference_W_m2": -7.683106133526962e-06,
+        "current_runtime_historical_optics_W_m2": 139.55997464180635,
+        "current_runtime_historical_optics_cast_f32_minus_reference_W_m2": -1.52587890625e-05,
+        "current_runtime_historical_optics_minus_reference_W_m2": -7.657998338572725e-06,
+        "diagonal_delta_total_W_m2": 3.402610104785708e-08,
+        "historical_optics_historical_runtime_cast_f32_minus_reference_W_m2": -1.52587890625e-05,
+        "historical_optics_historical_runtime_minus_f32_reference_W_m2": -7.649080032479105e-06,
+        "historical_runtime_current_optics_W_m2": 139.5599746256916,
+        "historical_runtime_current_optics_cast_f32_minus_reference_W_m2": -1.52587890625e-05,
+        "historical_runtime_current_optics_minus_reference_W_m2": -7.674113078337541e-06,
+        "historical_runtime_historical_optics_W_m2": 139.55997465072466,
+        "historical_runtime_historical_optics_cast_f32_minus_reference_W_m2": -1.52587890625e-05,
+        "historical_runtime_historical_optics_minus_reference_W_m2": -7.649080032479105e-06,
+        "key_one_based": [
+          14,
+          26
+        ],
+        "level_index0": 26,
+        "published_reference_f32_W_m2": 139.5599822998047,
+        "saved_historical_solver_W_m2": 139.55997465072466,
+        "saved_historical_written_W_m2": 139.55997465072466,
+        "variable": "RSU"
+      }
+    ],
+    "rtol": 0,
+    "scope_note": "Only the 21 previously selected cells associated with these 20 profiles are reported; this is not a census or closure of all strict RFMIP failures.",
+    "selected_subset_only_fail_counts_vs_published_f32_reference": {
+      "current_runtime_current_optics": {
+        "cast_f32": 13,
+        "double": 14
+      },
+      "current_runtime_historical_optics": {
+        "cast_f32": 13,
+        "double": 14
+      },
+      "historical_runtime_current_optics": {
+        "cast_f32": 15,
+        "double": 14
+      },
+      "historical_runtime_historical_optics": {
+        "cast_f32": 21,
+        "double": 14
+      }
+    }
+  },
+  "source_and_build_provenance": {
+    "coefficient_descriptor_pins": {
+      "current_sw": {
+        "file": "rrtmgp-gas-sw-g224.nc",
+        "sha256": "584f1dd41ea9fc07d4ee3754eb1dafbd46ad3161cd6fd20fa06b6922b6f0702e",
+        "size_bytes": 11083642
+      },
+      "historical_sw": {
+        "file": "authentic-v1.0-sw-g224.nc",
+        "sha256": "b9f4b15796d132880fffb49ac45c29753c1ee70a8ee3fed733899cb315c75e9b",
+        "size_bytes": 14954928
+      }
+    },
+    "cross_runtime_optics_context": {
+      "current_runtime_historical_optics_solver_and_written_sha256": "1169f986217a259640a4784df7ff75c2e0651a190cbecef24191266fc3d77c53",
+      "historical_runtime_diagonal_anchor_sha256": "58d33eba302936e3e6ea5929c47dd6f6b1b31c68a916ec29ab3ddf61bfa09309",
+      "label": "Current-runtime replay using historical optics. This is a cross-runtime/off-diagonal arm, not the historical-runtime/historical-optics (HH) historical diagonal anchor."
+    },
+    "current_runtime": {
+      "build_plan": {
+        "path": "current-runtime-fixed-rte-run-plan.json",
+        "sha256": "627edcc68416791620621676cf49305c2c2e5f2c0d657fe79a2eae028d245535"
+      },
+      "compiler": "/usr/bin/gfortran 13.3.0",
+      "compiler_sha256": "7e292e9d5da17a37bb1c17a06afb6463db786c70827fd6893ed31a86715b03c3",
+      "current_saved_solver_sha256": "b59eab02e4b79fdb6ea019393a4ac10ac696cfdcf9a8157d6c1b12c6ab8a54ee",
+      "flags": [
+        "-O0",
+        "-ffree-line-length-none"
+      ],
+      "rte_runtime_anchor_execution_sha256": "de63e764cf2bb4649b54ad444d2662f8c3b7e2013aa7ba7c17019c2634e998fc",
+      "source_commit": "41c5fcd950fed09b8afe186dede266824eca7fd3",
+      "source_repository": "earth-system-radiation/rte-rrtmgp"
+    },
+    "harness": {
+      "sha256": "5a46c11921b045a3dc1ff9bbe911cd2f886250773b8686dfe1345ff042fd9925",
+      "size_bytes": 14629,
+      "source": "frozen fixed-optics harness, byte-identical to current-runtime replay harness"
+    },
+    "historical_runtime": {
+      "build_receipt": {
+        "path": "historical-build-receipt.json",
+        "sha256": "56b1d6b1f9c947471927e33393850c8565f27c2e6fb918e52dd227dbf628f643"
+      },
+      "compile_link_compiler": {
+        "path": "/usr/bin/x86_64-linux-gnu-gfortran-13",
+        "sha256": "7e292e9d5da17a37bb1c17a06afb6463db786c70827fd6893ed31a86715b03c3",
+        "size": 1027128
+      },
+      "flags": [
+        "-O0",
+        "-ffree-line-length-none"
+      ],
+      "historical_saved_solver_anchor_sha256": "58d33eba302936e3e6ea5929c47dd6f6b1b31c68a916ec29ab3ddf61bfa09309",
+      "historical_saved_written_anchor_sha256": "58d33eba302936e3e6ea5929c47dd6f6b1b31c68a916ec29ab3ddf61bfa09309",
+      "newly_compiled_harness_binary": {
+        "path": "(retained in original root execution directory; hash/size only)",
+        "sha256": "37acf1f3a41e1dc18c4616bc3b4bafe698751e61c31b086d6c0dbcfe8408f74c",
+        "size_bytes": 360560
+      },
+      "replay_plan": {
+        "path": "historical-replay-plan.json",
+        "sha256": "dcdaf8187110b3e53dee38196b726d8224fddfcf7c0733ceedf19172128429bb"
+      },
+      "runtime_closure_pinned_libraries": 47,
+      "source_commit": "ed5b0113109fcd23a010a90c61f21bad551146ef"
+    },
+    "interpretation": "Different retained source/build/runtime stacks; not a pure algorithm-only attribution. This is not authenticated original published executable/compiler provenance.",
+    "runtime_build_summary_pin": {
+      "path": "provenance/runtime-build-summary.json",
+      "sha256": "8f849807eb78237c089cdd581023d2c21d11063f605a0e85db55850e008f70db"
+    },
+    "warning": "The comparison changes the retained RTE source/build/runtime stack and can also reflect its compiler/build path; the difference is not isolated as a pure algorithm change. Historical optics were reused across distinct coefficient/g-point metadata; no per-g-point physical equivalence is claimed."
+  },
+  "status": "PASS_SCOPED_HISTORICAL_REPLAY_AND_COMPONENT_DECOMPOSITION_NOT_GLOBAL_STRICT_PASS",
+  "strict_and_scientific_limits": [
+    "The original strict RFMIP gate and all 21 selected failures are preserved; no tolerance changed.",
+    "A bitwise historical-runtime match verifies this saved 20-profile replay only; it does not establish historical published-executable provenance or physical accuracy.",
+    "The interaction term is a finite-sample 2x2 decomposition over broadband fluxes at matched profile and level indices, not a g-point pairing or universal attribution."
+  ],
+  "terminal_receipts": {
+    "current_runtime": {
+      "path": "../rfmip-fixed-rte/execution-v4/execution.json",
+      "rte_calls": 40,
+      "runner_plan_sha256": null,
+      "sha256": "de63e764cf2bb4649b54ad444d2662f8c3b7e2013aa7ba7c17019c2634e998fc",
+      "status": "PASS_SCOPED_FIXED_RTE_BASELINE_REPRODUCTION"
+    },
+    "historical_runtime": {
+      "children": [
+        {
+          "label": "compile",
+          "rc": 0,
+          "reaped": true,
+          "timeout": false
+        },
+        {
+          "label": "link",
+          "rc": 0,
+          "reaped": true,
+          "timeout": false
+        },
+        {
+          "label": "ldd",
+          "rc": 0,
+          "reaped": true,
+          "timeout": false
+        },
+        {
+          "label": "historical_rte_40_calls",
+          "rc": 0,
+          "reaped": true,
+          "timeout": false
+        },
+        {
+          "label": "historical_exact_validation",
+          "rc": 0,
+          "reaped": true,
+          "timeout": false
+        }
+      ],
+      "path": "execution/execution.json",
+      "plan_sha256": "dcdaf8187110b3e53dee38196b726d8224fddfcf7c0733ceedf19172128429bb",
+      "research_status": "HISTORICAL_RTE_BASELINE_EXACT",
+      "runner_sha256": "3d9a88b3c31303633432178be2ce7ceca7042b5230737a748ac03c723bce721d",
+      "sha256": "5e21ba94671dd5f2c876b823146a8c4e7782d2a67aede05e6958bffbd92ea8de",
+      "status": "TERMINAL"
+    }
+  }
+}
