@@ -1,0 +1,41 @@
+{
+  "CF_after_source_clamps": 0.5800508260726929,
+  "CF_raw_margin_above_floor": 0.08005082607269287,
+  "CF_raw_margin_below_snap": 0.4099491834640503,
+  "QC_divide_multiply_roundtrip": 9.999999747378752e-05,
+  "QC_divided": 0.00017239867884200066,
+  "QC_roundtrip_exact_for_this_tuple": true,
+  "conditional_inputs": {
+    "QC": 9.999999747378752e-05,
+    "QI": 0.0,
+    "dxmeter": 10000.0
+  },
+  "counts": {
+    "RTE": 0,
+    "WRF_model": 0,
+    "compiler": 0,
+    "input_writes": 0,
+    "pure_python_source_expression_runs": 1,
+    "source_edits": 0
+  },
+  "cvf_max": 0.472217857837677,
+  "cvf_min": 0.5321250557899475,
+  "limits": [
+    "QI=0 and actual conversion QC equal selected hypothetical input are conditions, not runtime observations.",
+    "cldf_diag arguments T/P/Q are unused in this source; actual native dxmeter is fixed10000m, not gridDX.",
+    "C libm powf plus explicit binary32 arithmetic is a source-expression evaluation, not a newly compiled native acceptance test or universal compiler identity.",
+    "Input/dynamics/preprocessing may change QC/QI before diagnostic; future actual gate must use captured states and source-derived CF.",
+    "No count units/population/PSD/radiation correction or physical approval."
+  ],
+  "predicted_future_model_CF": false,
+  "source_constants": {
+    "QC_plus_QI_cutoff": 1e-06,
+    "cldf_min": 0.5,
+    "cldmax": 100.0,
+    "cldmin": 50.0,
+    "dxmeter_m": 10000.0
+  },
+  "source_sha256": "9f25a1aaebd0d29ba3ecdf86c9fe65065cf920fc187bdfd904e8b8192bc7e3c8",
+  "status": "PASS_SCOPED_CONDITIONAL_SOURCE_EXPRESSION_CERTIFICATE",
+  "unclamped_CF": 0.5800508260726929
+}

@@ -1,0 +1,147 @@
+{
+  "schema": "FRACTIONAL_CF_ARCHIVE_SCOPE_V1",
+  "state_at_package_creation": "LOCAL_PREPARATION_NOT_PUBLISHED",
+  "base": {
+    "number": 143,
+    "state": "OPEN",
+    "merged": false,
+    "head": "7e3828df59206c58f9f08694a5b4cbc4268cfc81",
+    "branch": "evidence-udm37-positive-activation",
+    "url": "https://github.com/gonos2k/wrf-rrtmgp/pull/143",
+    "query_scope": "Actual gh api result at proposal creation; recheck before worktree creation/publication."
+  },
+  "source": {
+    "head": "11623344baae090c621f796e93e5d98d78ea1fe0",
+    "tree": "8e9d6aea8d1fbfa59765bfd57eb880a7b726378b"
+  },
+  "build_wrf": {
+    "sha256": "b340f016d83253a764b337a8af423195a278d922d755d73701c41e121f71fc59",
+    "size_bytes": 51799480
+  },
+  "input": {
+    "sha256": "dd9bcee9457db0071fd43355472039f8c8731c71c3c7b655fa7a128d0d682cc1",
+    "size_bytes": 10975310
+  },
+  "actual_model_calls": 2,
+  "actual_model_rcs": [
+    0,
+    0
+  ],
+  "capture_counts": {
+    "CF_packets": 8,
+    "CF_rows": 352,
+    "NUMBER_packets": 20,
+    "NUMBER_rows": 880,
+    "QNN_packets": 24,
+    "QNN_rows": 1056
+  },
+  "actual_selected": [
+    {
+      "XTIME_minutes": 0.0,
+      "domain": 1,
+      "helper_NC_raw": 199167296.0,
+      "helper_QC": 0.00018817067029885948,
+      "i": 23,
+      "j": 2,
+      "k": 7,
+      "predivision_CF": 0.6835536956787109,
+      "predivision_NC_raw": 99186352.0,
+      "predivision_QC": 0.00012121071631554514,
+      "returned_RE_cloud_m": 6.220532668521628e-06,
+      "step": 1,
+      "substep": 1,
+      "tile": 1
+    },
+    {
+      "XTIME_minutes": 1.0,
+      "domain": 1,
+      "helper_NC_raw": 196090928.0,
+      "helper_QC": 2.36614141613245e-05,
+      "i": 23,
+      "j": 2,
+      "k": 7,
+      "predivision_CF": 0.9798682928085327,
+      "predivision_NC_raw": 196143984.0,
+      "predivision_QC": 0.00018539067241363227,
+      "returned_RE_cloud_m": 3.1359561489807675e-06,
+      "step": 2,
+      "substep": 1,
+      "tile": 1
+    }
+  ],
+  "conditional_certificate_CF": {
+    "CF_after_source_clamps": 0.5800508260726929,
+    "CF_raw_margin_above_floor": 0.08005082607269287,
+    "CF_raw_margin_below_snap": 0.4099491834640503,
+    "QC_divide_multiply_roundtrip": 9.999999747378752e-05,
+    "QC_divided": 0.00017239867884200066,
+    "QC_roundtrip_exact_for_this_tuple": true,
+    "conditional_inputs": {
+      "QC": 9.999999747378752e-05,
+      "QI": 0.0,
+      "dxmeter": 10000.0
+    },
+    "counts": {
+      "RTE": 0,
+      "WRF_model": 0,
+      "compiler": 0,
+      "input_writes": 0,
+      "pure_python_source_expression_runs": 1,
+      "source_edits": 0
+    },
+    "cvf_max": 0.472217857837677,
+    "cvf_min": 0.5321250557899475,
+    "limits": [
+      "QI=0 and actual conversion QC equal selected hypothetical input are conditions, not runtime observations.",
+      "cldf_diag arguments T/P/Q are unused in this source; actual native dxmeter is fixed10000m, not gridDX.",
+      "C libm powf plus explicit binary32 arithmetic is a source-expression evaluation, not a newly compiled native acceptance test or universal compiler identity.",
+      "Input/dynamics/preprocessing may change QC/QI before diagnostic; future actual gate must use captured states and source-derived CF.",
+      "No count units/population/PSD/radiation correction or physical approval."
+    ],
+    "predicted_future_model_CF": false,
+    "source_constants": {
+      "QC_plus_QI_cutoff": 1e-06,
+      "cldf_min": 0.5,
+      "cldmax": 100.0,
+      "cldmin": 50.0,
+      "dxmeter_m": 10000.0
+    },
+    "source_sha256": "9f25a1aaebd0d29ba3ecdf86c9fe65065cf920fc187bdfd904e8b8192bc7e3c8",
+    "status": "PASS_SCOPED_CONDITIONAL_SOURCE_EXPRESSION_CERTIFICATE",
+    "unclamped_CF": 0.5800508260726929
+  },
+  "external_outputs": [
+    {
+      "kind": "wrfout_d01_2016-10-06_00:00:00",
+      "sha256": "6118c5310069f6723604d636ad7731c2c222a35fe7d255cbf835ff7fc7dd52a5",
+      "size_bytes": 172538204,
+      "variables": 231,
+      "entire_file_exact": true
+    },
+    {
+      "kind": "wrfrst_d01_2016-10-06_00:02:00",
+      "sha256": "d730fd777a0da205c1e60f3a2abf027d9b8e6e8d41cd7194399dbb1105da75f3",
+      "size_bytes": 193255236,
+      "variables": 668,
+      "entire_file_exact": true
+    }
+  ],
+  "scope": "Observed native temporary six-mass CF division/restoration with unchanged NN/NC/NR at those immediate transforms; intervening process changes are descriptive.",
+  "physical_open": [
+    "Nc/CCN unit authority",
+    "PSD/LUT population",
+    "CF extrapolation physical calibration",
+    "RFMIP strictFAIL",
+    "LBL negativeODFAIL",
+    "Physical flux/forecast truth"
+  ],
+  "CI_scope": "Saved metadata/packet/source relationships only; no fresh models, NetCDF opening, compiler or libm coefficient/table proof.",
+  "historical_status_note": "Original copied plan/prepared/review statuses are creation-time metadata, not current publication status. Originalinput differs by QC oneelement from4be, twointerventions from849f.",
+  "excluded": [
+    "Raw full controlled_env/buildplan/internalIPs/session metadata",
+    "AuthorityJSON/one-use lock",
+    "Large NetCDF/input/executable/library data",
+    "External AERlinebanks/coefficient vectors/signed URLs"
+  ],
+  "scientific_accepted": false
+}
