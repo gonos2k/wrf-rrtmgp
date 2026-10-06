@@ -1,0 +1,2939 @@
+{
+  "status": "PASS_SCOPED_WARM_LIQUID_RADIUS_STAGE",
+  "fixture": {
+    "type": "manufactured_contiguous_warm_saturated_column",
+    "warm_layers": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32
+    ],
+    "layer_index_zero_based": 6,
+    "temperature_k_mean": 280.09821311669026,
+    "qc_initial_kg_kg": 0.0001,
+    "raw_nc_initial": 100000000.0,
+    "nc_physical_units_claim": false,
+    "vapor_rule": "1.0001 * 0.622 * es / (p-es); es=611.2 exp(17.67(T-273.15)/(T-29.65))",
+    "initial_sha256": "814aed600de40c5f27fe40ed6f13e34b5bf2da8e1998451e4ca360de2ded96dd",
+    "planned_wrf_forecasts": 1,
+    "planned_independent_replays": 2
+  },
+  "radius_stage": {
+    "schema": "UDM_RADIUS_STAGE_JOIN_V1",
+    "status": "SAVED_STAGE_CONTRACT_CHECKED",
+    "scope": "Saved diagnostic transfer only; manufactured fixtures do not establish physics accuracy.",
+    "producer_packets": 6,
+    "radiation_packets": 2,
+    "matched_consumers": 2,
+    "bootstrap_consumers": 0,
+    "joins": [
+      {
+        "phase": "LW",
+        "domain": 1,
+        "i": 1,
+        "j": 1,
+        "radiation_step": 2,
+        "radiation_seconds": 10.0,
+        "consumer": {
+          "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-radius-stage-pr-work/build/radius-stage-warm-block-scm/capture-on/capture/lw.raw",
+          "sha256": "7e86db8964d1ddfbf6fcf8af412910ec16fbb9919688e31fec0bf67b9855b782",
+          "size_bytes": 104826
+        },
+        "status": "MATCHED_RADIUS_TRANSFER",
+        "producer": {
+          "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-radius-stage-pr-work/build/radius-stage-warm-block-scm/capture-on/capture/udm_radius_d1_i1_j1_step1.raw",
+          "sha256": "5e8b83b867e2e0848576789e67d7e713666d9efdff94e6e7b08da462b79ae166",
+          "size_bytes": 15837
+        },
+        "producer_step": 1,
+        "step_lag": 1,
+        "producer_seconds": 0.0,
+        "time_lag_seconds": 10.0,
+        "latest_earlier_producer": true,
+        "all_three_radius_arrays_binary64_exact": true,
+        "native_k_bounds": [
+          1,
+          59
+        ],
+        "current_state_changes_vs_producer": {
+          "SOURCE_QC": 0,
+          "SOURCE_QI": 0,
+          "SOURCE_QS": 0,
+          "SOURCE_QNC": 0,
+          "SOURCE_T": 38
+        },
+        "current_rho_changed_layers": 59
+      },
+      {
+        "phase": "SW",
+        "domain": 1,
+        "i": 1,
+        "j": 1,
+        "radiation_step": 2,
+        "radiation_seconds": 10.0,
+        "consumer": {
+          "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-radius-stage-pr-work/build/radius-stage-warm-block-scm/capture-on/capture/sw.raw",
+          "sha256": "beee6c6ed18dafbe4915c3eb1d87f313cec380775ffca02fbfd9a5a02a143530",
+          "size_bytes": 98639
+        },
+        "status": "MATCHED_RADIUS_TRANSFER",
+        "producer": {
+          "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-radius-stage-pr-work/build/radius-stage-warm-block-scm/capture-on/capture/udm_radius_d1_i1_j1_step1.raw",
+          "sha256": "5e8b83b867e2e0848576789e67d7e713666d9efdff94e6e7b08da462b79ae166",
+          "size_bytes": 15837
+        },
+        "producer_step": 1,
+        "step_lag": 1,
+        "producer_seconds": 0.0,
+        "time_lag_seconds": 10.0,
+        "latest_earlier_producer": true,
+        "all_three_radius_arrays_binary64_exact": true,
+        "native_k_bounds": [
+          1,
+          59
+        ],
+        "current_state_changes_vs_producer": {
+          "SOURCE_QC": 0,
+          "SOURCE_QI": 0,
+          "SOURCE_QS": 0,
+          "SOURCE_QNC": 0,
+          "SOURCE_T": 38
+        },
+        "current_rho_changed_layers": 59
+      }
+    ],
+    "producer_pins": [
+      {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-radius-stage-pr-work/build/radius-stage-warm-block-scm/capture-on/capture/udm_radius_d1_i1_j1_step1.raw",
+        "sha256": "5e8b83b867e2e0848576789e67d7e713666d9efdff94e6e7b08da462b79ae166",
+        "size_bytes": 15837
+      },
+      {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-radius-stage-pr-work/build/radius-stage-warm-block-scm/capture-on/capture/udm_radius_d1_i1_j1_step2.raw",
+        "sha256": "b610ea16d949e774e1c464a39e43c07ae027a12b68ebe40211610a0d78216672",
+        "size_bytes": 15837
+      },
+      {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-radius-stage-pr-work/build/radius-stage-warm-block-scm/capture-on/capture/udm_radius_d1_i1_j1_step3.raw",
+        "sha256": "727872cc32e6eb6c34b1db6ab7b380b213c0e4a38692df943073ce56bf695f0d",
+        "size_bytes": 15837
+      },
+      {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-radius-stage-pr-work/build/radius-stage-warm-block-scm/capture-on/capture/udm_radius_d1_i1_j1_step4.raw",
+        "sha256": "b47dd911518c33db4a5c368401a613a13994bb1cc4b211cba133be79574afc9d",
+        "size_bytes": 15837
+      },
+      {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-radius-stage-pr-work/build/radius-stage-warm-block-scm/capture-on/capture/udm_radius_d1_i1_j1_step5.raw",
+        "sha256": "7321c2e0f7356b1860816376a3d6301f8983c79be644fbb8b1119d8b19a5d5c6",
+        "size_bytes": 15837
+      },
+      {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-radius-stage-pr-work/build/radius-stage-warm-block-scm/capture-on/capture/udm_radius_d1_i1_j1_step6.raw",
+        "sha256": "b388eaa21f0031c12c3b2d424e655dbe00a0daacfc42c8dc4f5d6a4db94c61a9",
+        "size_bytes": 15837
+      }
+    ],
+    "physical_gates_closed": [],
+    "model_or_solver_invocations": 0,
+    "conditional_liquid_formula": [
+      {
+        "producer": {
+          "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-radius-stage-pr-work/build/radius-stage-warm-block-scm/capture-on/capture/udm_radius_d1_i1_j1_step1.raw",
+          "sha256": "5e8b83b867e2e0848576789e67d7e713666d9efdff94e6e7b08da462b79ae166",
+          "size_bytes": 15837
+        },
+        "status": "CONDITIONAL_REAL64_MATH_ONLY",
+        "rows": [
+          {
+            "native_k": 1,
+            "guard_active": true,
+            "captured_radius_m": 9.848663466982543e-06,
+            "ideal_unbounded_radius_m": 9.848667049548721e-06,
+            "ideal_bounded_radius_m": 9.848667049548721e-06,
+            "captured_minus_ideal_m": -3.582566177650682e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 2,
+            "guard_active": true,
+            "captured_radius_m": 9.701501767267473e-06,
+            "ideal_unbounded_radius_m": 9.701504560453435e-06,
+            "ideal_bounded_radius_m": 9.701504560453435e-06,
+            "captured_minus_ideal_m": -2.793185962133237e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 3,
+            "guard_active": true,
+            "captured_radius_m": 9.537701771478169e-06,
+            "ideal_unbounded_radius_m": 9.537705238066517e-06,
+            "ideal_bounded_radius_m": 9.537705238066517e-06,
+            "captured_minus_ideal_m": -3.4665883478937707e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 4,
+            "guard_active": true,
+            "captured_radius_m": 9.370290172228124e-06,
+            "ideal_unbounded_radius_m": 9.370293277760757e-06,
+            "ideal_bounded_radius_m": 9.370293277760757e-06,
+            "captured_minus_ideal_m": -3.1055326326745025e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 5,
+            "guard_active": true,
+            "captured_radius_m": 9.198875886795577e-06,
+            "ideal_unbounded_radius_m": 9.198878859302808e-06,
+            "ideal_bounded_radius_m": 9.198878859302808e-06,
+            "captured_minus_ideal_m": -2.9725072314739026e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 6,
+            "guard_active": true,
+            "captured_radius_m": 9.023175152833574e-06,
+            "ideal_unbounded_radius_m": 9.023178205571893e-06,
+            "ideal_bounded_radius_m": 9.023178205571893e-06,
+            "captured_minus_ideal_m": -3.052738319292772e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 7,
+            "guard_active": true,
+            "captured_radius_m": 8.842613169690594e-06,
+            "ideal_unbounded_radius_m": 8.842616172069215e-06,
+            "ideal_bounded_radius_m": 8.842616172069215e-06,
+            "captured_minus_ideal_m": -3.0023786208528734e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 8,
+            "guard_active": true,
+            "captured_radius_m": 8.656603313283995e-06,
+            "ideal_unbounded_radius_m": 8.656606503448904e-06,
+            "ideal_bounded_radius_m": 8.656606503448904e-06,
+            "captured_minus_ideal_m": -3.190164908769503e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 9,
+            "guard_active": true,
+            "captured_radius_m": 8.46470629767282e-06,
+            "ideal_unbounded_radius_m": 8.464708666739254e-06,
+            "ideal_bounded_radius_m": 8.464708666739254e-06,
+            "captured_minus_ideal_m": -2.3690664349289596e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 10,
+            "guard_active": true,
+            "captured_radius_m": 8.266007171187084e-06,
+            "ideal_unbounded_radius_m": 8.266010396687018e-06,
+            "ideal_bounded_radius_m": 8.266010396687018e-06,
+            "captured_minus_ideal_m": -3.225499933402873e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 11,
+            "guard_active": true,
+            "captured_radius_m": 8.093142241705209e-06,
+            "ideal_unbounded_radius_m": 8.093145322143484e-06,
+            "ideal_bounded_radius_m": 8.093145322143484e-06,
+            "captured_minus_ideal_m": -3.0804382753369525e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 12,
+            "guard_active": true,
+            "captured_radius_m": 7.87723547546193e-06,
+            "ideal_unbounded_radius_m": 7.877238783277318e-06,
+            "ideal_bounded_radius_m": 7.877238783277318e-06,
+            "captured_minus_ideal_m": -3.3078153880398845e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 13,
+            "guard_active": true,
+            "captured_radius_m": 7.677745088585652e-06,
+            "ideal_unbounded_radius_m": 7.677747597445314e-06,
+            "ideal_bounded_radius_m": 7.677747597445314e-06,
+            "captured_minus_ideal_m": -2.5088596615653732e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 14,
+            "guard_active": true,
+            "captured_radius_m": 7.477716280845925e-06,
+            "ideal_unbounded_radius_m": 7.477718198906381e-06,
+            "ideal_bounded_radius_m": 7.477718198906381e-06,
+            "captured_minus_ideal_m": -1.918060455675572e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 15,
+            "guard_active": true,
+            "captured_radius_m": 8.445814273727592e-06,
+            "ideal_unbounded_radius_m": 8.445817269945276e-06,
+            "ideal_bounded_radius_m": 8.445817269945276e-06,
+            "captured_minus_ideal_m": -2.996217684359372e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 16,
+            "guard_active": true,
+            "captured_radius_m": 9.865382708085235e-06,
+            "ideal_unbounded_radius_m": 9.865386306007288e-06,
+            "ideal_bounded_radius_m": 9.865386306007288e-06,
+            "captured_minus_ideal_m": -3.5979220531980483e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 17,
+            "guard_active": true,
+            "captured_radius_m": 9.74095928540919e-06,
+            "ideal_unbounded_radius_m": 9.740962226039348e-06,
+            "ideal_bounded_radius_m": 9.740962226039348e-06,
+            "captured_minus_ideal_m": -2.940630157861326e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 18,
+            "guard_active": true,
+            "captured_radius_m": 9.6090743681998e-06,
+            "ideal_unbounded_radius_m": 9.609077972337207e-06,
+            "ideal_bounded_radius_m": 9.609077972337207e-06,
+            "captured_minus_ideal_m": -3.604137408170279e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 19,
+            "guard_active": true,
+            "captured_radius_m": 9.469088581681717e-06,
+            "ideal_unbounded_radius_m": 9.469091850051686e-06,
+            "ideal_bounded_radius_m": 9.469091850051686e-06,
+            "captured_minus_ideal_m": -3.2683699683174394e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 20,
+            "guard_active": true,
+            "captured_radius_m": 9.320530807599425e-06,
+            "ideal_unbounded_radius_m": 9.320533368869152e-06,
+            "ideal_bounded_radius_m": 9.320533368869152e-06,
+            "captured_minus_ideal_m": -2.561269726920911e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 21,
+            "guard_active": true,
+            "captured_radius_m": 9.162841706711333e-06,
+            "ideal_unbounded_radius_m": 9.16284479619218e-06,
+            "ideal_bounded_radius_m": 9.16284479619218e-06,
+            "captured_minus_ideal_m": -3.0894808467161333e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 22,
+            "guard_active": true,
+            "captured_radius_m": 8.995132702693809e-06,
+            "ideal_unbounded_radius_m": 8.995135848167426e-06,
+            "ideal_bounded_radius_m": 8.995135848167426e-06,
+            "captured_minus_ideal_m": -3.145473617493068e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 23,
+            "guard_active": true,
+            "captured_radius_m": 8.816532499622554e-06,
+            "ideal_unbounded_radius_m": 8.816535088721992e-06,
+            "ideal_bounded_radius_m": 8.816535088721992e-06,
+            "captured_minus_ideal_m": -2.5890994382482156e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 24,
+            "guard_active": true,
+            "captured_radius_m": 8.625579539511818e-06,
+            "ideal_unbounded_radius_m": 8.625582849386113e-06,
+            "ideal_bounded_radius_m": 8.625582849386113e-06,
+            "captured_minus_ideal_m": -3.309874294741698e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 25,
+            "guard_active": true,
+            "captured_radius_m": 8.42099962028442e-06,
+            "ideal_unbounded_radius_m": 8.421003004037002e-06,
+            "ideal_bounded_radius_m": 8.421003004037002e-06,
+            "captured_minus_ideal_m": -3.3837525829401175e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 26,
+            "guard_active": true,
+            "captured_radius_m": 8.201182026823517e-06,
+            "ideal_unbounded_radius_m": 8.201184830813832e-06,
+            "ideal_bounded_radius_m": 8.201184830813832e-06,
+            "captured_minus_ideal_m": -2.8039903146088617e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 27,
+            "guard_active": true,
+            "captured_radius_m": 8.159982826327905e-06,
+            "ideal_unbounded_radius_m": 8.159986235381714e-06,
+            "ideal_bounded_radius_m": 8.159986235381714e-06,
+            "captured_minus_ideal_m": -3.4090538094403095e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 28,
+            "guard_active": true,
+            "captured_radius_m": 8.115540367725771e-06,
+            "ideal_unbounded_radius_m": 8.115543022551806e-06,
+            "ideal_bounded_radius_m": 8.115543022551806e-06,
+            "captured_minus_ideal_m": -2.654826035522256e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 29,
+            "guard_active": true,
+            "captured_radius_m": 8.06404113973258e-06,
+            "ideal_unbounded_radius_m": 8.064044274192712e-06,
+            "ideal_bounded_radius_m": 8.064044274192712e-06,
+            "captured_minus_ideal_m": -3.1344601308887004e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 30,
+            "guard_active": true,
+            "captured_radius_m": 8.00501584308222e-06,
+            "ideal_unbounded_radius_m": 8.00501872079512e-06,
+            "ideal_bounded_radius_m": 8.00501872079512e-06,
+            "captured_minus_ideal_m": -2.877712901210917e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 31,
+            "guard_active": true,
+            "captured_radius_m": 7.937715963635128e-06,
+            "ideal_unbounded_radius_m": 7.937718260729265e-06,
+            "ideal_bounded_radius_m": 7.937718260729265e-06,
+            "captured_minus_ideal_m": -2.29709413688032e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 32,
+            "guard_active": true,
+            "captured_radius_m": 7.862298843974713e-06,
+            "ideal_unbounded_radius_m": 7.86230126065603e-06,
+            "ideal_bounded_radius_m": 7.86230126065603e-06,
+            "captured_minus_ideal_m": -2.416681316327017e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 33,
+            "guard_active": true,
+            "captured_radius_m": 7.783581168041565e-06,
+            "ideal_unbounded_radius_m": 7.78358415914698e-06,
+            "ideal_bounded_radius_m": 7.78358415914698e-06,
+            "captured_minus_ideal_m": -2.9911054153121527e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 34,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 35,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 36,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 37,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 38,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 39,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 40,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 41,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 42,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 43,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 44,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 45,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 46,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 47,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 48,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 49,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 50,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 51,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 52,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 53,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 54,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 55,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 56,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 57,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 58,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 59,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          }
+        ],
+        "formula": "0.5 / (pi*rho_water*nc/(6*qc*rho))**(1/3), bounded 2.51e-6..50e-6 m",
+        "limits": "Declared constants/default-real operation rounding may differ. No compiler-bit identity, Nc unit resolution or radiation PSD equivalence is claimed."
+      },
+      {
+        "producer": {
+          "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-radius-stage-pr-work/build/radius-stage-warm-block-scm/capture-on/capture/udm_radius_d1_i1_j1_step2.raw",
+          "sha256": "b610ea16d949e774e1c464a39e43c07ae027a12b68ebe40211610a0d78216672",
+          "size_bytes": 15837
+        },
+        "status": "CONDITIONAL_REAL64_MATH_ONLY",
+        "rows": [
+          {
+            "native_k": 1,
+            "guard_active": true,
+            "captured_radius_m": 9.876170224742964e-06,
+            "ideal_unbounded_radius_m": 9.876174097849455e-06,
+            "ideal_bounded_radius_m": 9.876174097849455e-06,
+            "captured_minus_ideal_m": -3.873106491490588e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 2,
+            "guard_active": true,
+            "captured_radius_m": 9.717867214931175e-06,
+            "ideal_unbounded_radius_m": 9.717870135896694e-06,
+            "ideal_bounded_radius_m": 9.717870135896694e-06,
+            "captured_minus_ideal_m": -2.9209655188849014e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 3,
+            "guard_active": true,
+            "captured_radius_m": 9.540560313325841e-06,
+            "ideal_unbounded_radius_m": 9.540563378014616e-06,
+            "ideal_bounded_radius_m": 9.540563378014616e-06,
+            "captured_minus_ideal_m": -3.0646887751086677e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 4,
+            "guard_active": true,
+            "captured_radius_m": 9.361425327369943e-06,
+            "ideal_unbounded_radius_m": 9.36142787502607e-06,
+            "ideal_bounded_radius_m": 9.36142787502607e-06,
+            "captured_minus_ideal_m": -2.5476561269952794e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 5,
+            "guard_active": true,
+            "captured_radius_m": 9.180700544675346e-06,
+            "ideal_unbounded_radius_m": 9.18070365042986e-06,
+            "ideal_bounded_radius_m": 9.18070365042986e-06,
+            "captured_minus_ideal_m": -3.1057545129550357e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 6,
+            "guard_active": true,
+            "captured_radius_m": 8.997652912512422e-06,
+            "ideal_unbounded_radius_m": 8.99765582874963e-06,
+            "ideal_bounded_radius_m": 8.99765582874963e-06,
+            "captured_minus_ideal_m": -2.9162372081786066e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 7,
+            "guard_active": true,
+            "captured_radius_m": 8.810428880678955e-06,
+            "ideal_unbounded_radius_m": 8.810432035922666e-06,
+            "ideal_bounded_radius_m": 8.810432035922666e-06,
+            "captured_minus_ideal_m": -3.1552437105528434e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 8,
+            "guard_active": true,
+            "captured_radius_m": 8.6174131865846e-06,
+            "ideal_unbounded_radius_m": 8.617416588093392e-06,
+            "ideal_bounded_radius_m": 8.617416588093392e-06,
+            "captured_minus_ideal_m": -3.4015087923118742e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 9,
+            "guard_active": true,
+            "captured_radius_m": 8.41656765260268e-06,
+            "ideal_unbounded_radius_m": 8.416570354881404e-06,
+            "ideal_bounded_radius_m": 8.416570354881404e-06,
+            "captured_minus_ideal_m": -2.7022787236634415e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 10,
+            "guard_active": true,
+            "captured_radius_m": 8.205505764635745e-06,
+            "ideal_unbounded_radius_m": 8.205508117141672e-06,
+            "ideal_bounded_radius_m": 8.205508117141672e-06,
+            "captured_minus_ideal_m": -2.352505926064667e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 11,
+            "guard_active": true,
+            "captured_radius_m": 8.009708835743368e-06,
+            "ideal_unbounded_radius_m": 8.009712321228397e-06,
+            "ideal_bounded_radius_m": 8.009712321228397e-06,
+            "captured_minus_ideal_m": -3.485485029530765e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 12,
+            "guard_active": true,
+            "captured_radius_m": 7.753596946713515e-06,
+            "ideal_unbounded_radius_m": 7.753599425405295e-06,
+            "ideal_bounded_radius_m": 7.753599425405295e-06,
+            "captured_minus_ideal_m": -2.4786917801616773e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 13,
+            "guard_active": true,
+            "captured_radius_m": 7.48970205677324e-06,
+            "ideal_unbounded_radius_m": 7.489704760504593e-06,
+            "ideal_bounded_radius_m": 7.489704760504593e-06,
+            "captured_minus_ideal_m": -2.7037313529807306e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 14,
+            "guard_active": true,
+            "captured_radius_m": 7.216973699541995e-06,
+            "ideal_unbounded_radius_m": 7.216976683646853e-06,
+            "ideal_bounded_radius_m": 7.216976683646853e-06,
+            "captured_minus_ideal_m": -2.9841048574096854e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 15,
+            "guard_active": true,
+            "captured_radius_m": 8.329223419423215e-06,
+            "ideal_unbounded_radius_m": 8.329226448574421e-06,
+            "ideal_bounded_radius_m": 8.329226448574421e-06,
+            "captured_minus_ideal_m": -3.0291512062628843e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 16,
+            "guard_active": true,
+            "captured_radius_m": 9.474832040723413e-06,
+            "ideal_unbounded_radius_m": 9.474835211222631e-06,
+            "ideal_bounded_radius_m": 9.474835211222631e-06,
+            "captured_minus_ideal_m": -3.1704992177781577e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 17,
+            "guard_active": true,
+            "captured_radius_m": 9.755479368322995e-06,
+            "ideal_unbounded_radius_m": 9.755482188795823e-06,
+            "ideal_bounded_radius_m": 9.755482188795823e-06,
+            "captured_minus_ideal_m": -2.820472828679371e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 18,
+            "guard_active": true,
+            "captured_radius_m": 9.599320947017986e-06,
+            "ideal_unbounded_radius_m": 9.599323872004696e-06,
+            "ideal_bounded_radius_m": 9.599323872004696e-06,
+            "captured_minus_ideal_m": -2.9249867095461693e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 19,
+            "guard_active": true,
+            "captured_radius_m": 9.450295692658983e-06,
+            "ideal_unbounded_radius_m": 9.450298556243222e-06,
+            "ideal_bounded_radius_m": 9.450298556243222e-06,
+            "captured_minus_ideal_m": -2.8635842391847846e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 20,
+            "guard_active": true,
+            "captured_radius_m": 9.302248145104386e-06,
+            "ideal_unbounded_radius_m": 9.302251637343124e-06,
+            "ideal_bounded_radius_m": 9.302251637343124e-06,
+            "captured_minus_ideal_m": -3.49223873831548e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 21,
+            "guard_active": true,
+            "captured_radius_m": 9.142489034275059e-06,
+            "ideal_unbounded_radius_m": 9.142491906696684e-06,
+            "ideal_bounded_radius_m": 9.142491906696684e-06,
+            "captured_minus_ideal_m": -2.8724216253028225e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 22,
+            "guard_active": true,
+            "captured_radius_m": 8.961736966739409e-06,
+            "ideal_unbounded_radius_m": 8.961740525160971e-06,
+            "ideal_bounded_radius_m": 8.961740525160971e-06,
+            "captured_minus_ideal_m": -3.5584215627815045e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 23,
+            "guard_active": true,
+            "captured_radius_m": 8.754859663895331e-06,
+            "ideal_unbounded_radius_m": 8.7548619762706e-06,
+            "ideal_bounded_radius_m": 8.7548619762706e-06,
+            "captured_minus_ideal_m": -2.3123752685463546e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 24,
+            "guard_active": true,
+            "captured_radius_m": 8.523622454958968e-06,
+            "ideal_unbounded_radius_m": 8.523625883082005e-06,
+            "ideal_bounded_radius_m": 8.523625883082005e-06,
+            "captured_minus_ideal_m": -3.428123036770857e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 25,
+            "guard_active": true,
+            "captured_radius_m": 8.27185795060359e-06,
+            "ideal_unbounded_radius_m": 8.271860562974452e-06,
+            "ideal_bounded_radius_m": 8.271860562974452e-06,
+            "captured_minus_ideal_m": -2.6123708620986617e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 26,
+            "guard_active": true,
+            "captured_radius_m": 8.00375437393086e-06,
+            "ideal_unbounded_radius_m": 8.003757515547273e-06,
+            "ideal_bounded_radius_m": 8.003757515547273e-06,
+            "captured_minus_ideal_m": -3.1416164124103887e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 27,
+            "guard_active": true,
+            "captured_radius_m": 7.959217327879742e-06,
+            "ideal_unbounded_radius_m": 7.959220049142718e-06,
+            "ideal_bounded_radius_m": 7.959220049142718e-06,
+            "captured_minus_ideal_m": -2.7212629766487206e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 28,
+            "guard_active": true,
+            "captured_radius_m": 7.9226711022784e-06,
+            "ideal_unbounded_radius_m": 7.922674011049973e-06,
+            "ideal_bounded_radius_m": 7.922674011049973e-06,
+            "captured_minus_ideal_m": -2.908771573283922e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 29,
+            "guard_active": true,
+            "captured_radius_m": 7.884757906140294e-06,
+            "ideal_unbounded_radius_m": 7.884760357929745e-06,
+            "ideal_bounded_radius_m": 7.884760357929745e-06,
+            "captured_minus_ideal_m": -2.4517894513270038e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 30,
+            "guard_active": true,
+            "captured_radius_m": 7.834476491552778e-06,
+            "ideal_unbounded_radius_m": 7.834479159540358e-06,
+            "ideal_bounded_radius_m": 7.834479159540358e-06,
+            "captured_minus_ideal_m": -2.6679875807402017e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 31,
+            "guard_active": true,
+            "captured_radius_m": 7.761605957057327e-06,
+            "ideal_unbounded_radius_m": 7.76160845830813e-06,
+            "ideal_bounded_radius_m": 7.76160845830813e-06,
+            "captured_minus_ideal_m": -2.5012508035637034e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 32,
+            "guard_active": true,
+            "captured_radius_m": 7.679351256228983e-06,
+            "ideal_unbounded_radius_m": 7.679354218468553e-06,
+            "ideal_bounded_radius_m": 7.679354218468553e-06,
+            "captured_minus_ideal_m": -2.9622395692380536e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 33,
+            "guard_active": true,
+            "captured_radius_m": 7.638278475496918e-06,
+            "ideal_unbounded_radius_m": 7.638281585507887e-06,
+            "ideal_bounded_radius_m": 7.638281585507887e-06,
+            "captured_minus_ideal_m": -3.1100109687114694e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 34,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 35,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 36,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 37,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 38,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 39,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 40,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 41,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 42,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 43,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 44,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 45,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 46,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 47,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 48,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 49,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 50,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 51,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 52,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 53,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 54,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 55,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 56,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 57,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 58,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 59,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          }
+        ],
+        "formula": "0.5 / (pi*rho_water*nc/(6*qc*rho))**(1/3), bounded 2.51e-6..50e-6 m",
+        "limits": "Declared constants/default-real operation rounding may differ. No compiler-bit identity, Nc unit resolution or radiation PSD equivalence is claimed."
+      },
+      {
+        "producer": {
+          "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-radius-stage-pr-work/build/radius-stage-warm-block-scm/capture-on/capture/udm_radius_d1_i1_j1_step3.raw",
+          "sha256": "727872cc32e6eb6c34b1db6ab7b380b213c0e4a38692df943073ce56bf695f0d",
+          "size_bytes": 15837
+        },
+        "status": "CONDITIONAL_REAL64_MATH_ONLY",
+        "rows": [
+          {
+            "native_k": 1,
+            "guard_active": true,
+            "captured_radius_m": 9.834699085331522e-06,
+            "ideal_unbounded_radius_m": 9.834701995372388e-06,
+            "ideal_bounded_radius_m": 9.834701995372388e-06,
+            "captured_minus_ideal_m": -2.91004086570791e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 2,
+            "guard_active": true,
+            "captured_radius_m": 9.706873242976144e-06,
+            "ideal_unbounded_radius_m": 9.706877595974407e-06,
+            "ideal_bounded_radius_m": 9.706877595974407e-06,
+            "captured_minus_ideal_m": -4.352998262749917e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 3,
+            "guard_active": true,
+            "captured_radius_m": 9.566164408170152e-06,
+            "ideal_unbounded_radius_m": 9.566167162346856e-06,
+            "ideal_bounded_radius_m": 9.566167162346856e-06,
+            "captured_minus_ideal_m": -2.7541767033922556e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 4,
+            "guard_active": true,
+            "captured_radius_m": 9.046695595316123e-06,
+            "ideal_unbounded_radius_m": 9.046698351019688e-06,
+            "ideal_bounded_radius_m": 9.046698351019688e-06,
+            "captured_minus_ideal_m": -2.755703564982976e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 5,
+            "guard_active": true,
+            "captured_radius_m": 8.612029887444805e-06,
+            "ideal_unbounded_radius_m": 8.612032961098664e-06,
+            "ideal_bounded_radius_m": 8.612032961098664e-06,
+            "captured_minus_ideal_m": -3.0736538582197678e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 6,
+            "guard_active": true,
+            "captured_radius_m": 8.469858585158363e-06,
+            "ideal_unbounded_radius_m": 8.469861509919023e-06,
+            "ideal_bounded_radius_m": 8.469861509919023e-06,
+            "captured_minus_ideal_m": -2.9247606601694696e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 7,
+            "guard_active": true,
+            "captured_radius_m": 8.31960733194137e-06,
+            "ideal_unbounded_radius_m": 8.319609944101323e-06,
+            "ideal_bounded_radius_m": 8.319609944101323e-06,
+            "captured_minus_ideal_m": -2.6121599525888613e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 8,
+            "guard_active": true,
+            "captured_radius_m": 8.15954444988165e-06,
+            "ideal_unbounded_radius_m": 8.159546933964136e-06,
+            "ideal_bounded_radius_m": 8.159546933964136e-06,
+            "captured_minus_ideal_m": -2.484082485879318e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 9,
+            "guard_active": true,
+            "captured_radius_m": 7.988463949004654e-06,
+            "ideal_unbounded_radius_m": 7.988466197209362e-06,
+            "ideal_bounded_radius_m": 7.988466197209362e-06,
+            "captured_minus_ideal_m": -2.24820470806587e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 10,
+            "guard_active": true,
+            "captured_radius_m": 7.806949724908918e-06,
+            "ideal_unbounded_radius_m": 7.806952061828503e-06,
+            "ideal_bounded_radius_m": 7.806952061828503e-06,
+            "captured_minus_ideal_m": -2.3369195847108143e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 11,
+            "guard_active": true,
+            "captured_radius_m": 7.639986506546848e-06,
+            "ideal_unbounded_radius_m": 7.639988895584388e-06,
+            "ideal_bounded_radius_m": 7.639988895584388e-06,
+            "captured_minus_ideal_m": -2.3890375405900962e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 12,
+            "guard_active": true,
+            "captured_radius_m": 7.448983978974866e-06,
+            "ideal_unbounded_radius_m": 7.448986135608863e-06,
+            "ideal_bounded_radius_m": 7.448986135608863e-06,
+            "captured_minus_ideal_m": -2.1566339971588197e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 13,
+            "guard_active": true,
+            "captured_radius_m": 7.276364613062469e-06,
+            "ideal_unbounded_radius_m": 7.276367461707887e-06,
+            "ideal_bounded_radius_m": 7.276367461707887e-06,
+            "captured_minus_ideal_m": -2.848645418096691e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 14,
+            "guard_active": true,
+            "captured_radius_m": 7.091820407367777e-06,
+            "ideal_unbounded_radius_m": 7.091823273817725e-06,
+            "ideal_bounded_radius_m": 7.091823273817725e-06,
+            "captured_minus_ideal_m": -2.8664499481569896e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 15,
+            "guard_active": true,
+            "captured_radius_m": 7.94364223111188e-06,
+            "ideal_unbounded_radius_m": 7.94364462238116e-06,
+            "ideal_bounded_radius_m": 7.94364462238116e-06,
+            "captured_minus_ideal_m": -2.3912692792825993e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 16,
+            "guard_active": true,
+            "captured_radius_m": 9.466406481806189e-06,
+            "ideal_unbounded_radius_m": 9.466410541743529e-06,
+            "ideal_bounded_radius_m": 9.466410541743529e-06,
+            "captured_minus_ideal_m": -4.059937339795242e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 17,
+            "guard_active": true,
+            "captured_radius_m": 9.78068510448793e-06,
+            "ideal_unbounded_radius_m": 9.780688148156904e-06,
+            "ideal_bounded_radius_m": 9.780688148156904e-06,
+            "captured_minus_ideal_m": -3.0436689748961944e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 18,
+            "guard_active": true,
+            "captured_radius_m": 8.979791346064303e-06,
+            "ideal_unbounded_radius_m": 8.979794149945952e-06,
+            "ideal_bounded_radius_m": 8.979794149945952e-06,
+            "captured_minus_ideal_m": -2.8038816487520584e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 19,
+            "guard_active": true,
+            "captured_radius_m": 8.856434760673437e-06,
+            "ideal_unbounded_radius_m": 8.856437647141134e-06,
+            "ideal_bounded_radius_m": 8.856437647141134e-06,
+            "captured_minus_ideal_m": -2.8864676965344e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 20,
+            "guard_active": true,
+            "captured_radius_m": 8.71224528964376e-06,
+            "ideal_unbounded_radius_m": 8.712248170465908e-06,
+            "ideal_bounded_radius_m": 8.712248170465908e-06,
+            "captured_minus_ideal_m": -2.8808221474020505e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 21,
+            "guard_active": true,
+            "captured_radius_m": 8.560509741073474e-06,
+            "ideal_unbounded_radius_m": 8.560513289541458e-06,
+            "ideal_bounded_radius_m": 8.560513289541458e-06,
+            "captured_minus_ideal_m": -3.548467983750629e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 22,
+            "guard_active": true,
+            "captured_radius_m": 8.40909342514351e-06,
+            "ideal_unbounded_radius_m": 8.409096316797266e-06,
+            "ideal_bounded_radius_m": 8.409096316797266e-06,
+            "captured_minus_ideal_m": -2.891653755703852e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 23,
+            "guard_active": true,
+            "captured_radius_m": 8.252066436398309e-06,
+            "ideal_unbounded_radius_m": 8.252069293627732e-06,
+            "ideal_bounded_radius_m": 8.252069293627732e-06,
+            "captured_minus_ideal_m": -2.85722942362592e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 24,
+            "guard_active": true,
+            "captured_radius_m": 8.084485671133734e-06,
+            "ideal_unbounded_radius_m": 8.08448817936138e-06,
+            "ideal_bounded_radius_m": 8.08448817936138e-06,
+            "captured_minus_ideal_m": -2.5082276462377135e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 25,
+            "guard_active": true,
+            "captured_radius_m": 7.903243385953829e-06,
+            "ideal_unbounded_radius_m": 7.903246616782656e-06,
+            "ideal_bounded_radius_m": 7.903246616782656e-06,
+            "captured_minus_ideal_m": -3.2308288277382207e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 26,
+            "guard_active": true,
+            "captured_radius_m": 7.707772965659387e-06,
+            "ideal_unbounded_radius_m": 7.707776147656474e-06,
+            "ideal_bounded_radius_m": 7.707776147656474e-06,
+            "captured_minus_ideal_m": -3.1819970869496764e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 27,
+            "guard_active": true,
+            "captured_radius_m": 7.662483767489903e-06,
+            "ideal_unbounded_radius_m": 7.662486063519499e-06,
+            "ideal_bounded_radius_m": 7.662486063519499e-06,
+            "captured_minus_ideal_m": -2.296029596036606e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 28,
+            "guard_active": true,
+            "captured_radius_m": 7.611602541146567e-06,
+            "ideal_unbounded_radius_m": 7.611605230549505e-06,
+            "ideal_bounded_radius_m": 7.611605230549505e-06,
+            "captured_minus_ideal_m": -2.6894029377157462e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 29,
+            "guard_active": true,
+            "captured_radius_m": 7.546845154138282e-06,
+            "ideal_unbounded_radius_m": 7.5468479010626935e-06,
+            "ideal_bounded_radius_m": 7.5468479010626935e-06,
+            "captured_minus_ideal_m": -2.746924411533029e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 30,
+            "guard_active": true,
+            "captured_radius_m": 7.469820047845133e-06,
+            "ideal_unbounded_radius_m": 7.469823377292348e-06,
+            "ideal_bounded_radius_m": 7.469823377292348e-06,
+            "captured_minus_ideal_m": -3.329447215296528e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 31,
+            "guard_active": true,
+            "captured_radius_m": 7.3922337833209895e-06,
+            "ideal_unbounded_radius_m": 7.392235878214583e-06,
+            "ideal_bounded_radius_m": 7.392235878214583e-06,
+            "captured_minus_ideal_m": -2.0948935936857655e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 32,
+            "guard_active": true,
+            "captured_radius_m": 7.307488431251841e-06,
+            "ideal_unbounded_radius_m": 7.3074911493132894e-06,
+            "ideal_bounded_radius_m": 7.3074911493132894e-06,
+            "captured_minus_ideal_m": -2.7180614487590823e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 33,
+            "guard_active": true,
+            "captured_radius_m": 7.185984486568486e-06,
+            "ideal_unbounded_radius_m": 7.1859864542303935e-06,
+            "ideal_bounded_radius_m": 7.1859864542303935e-06,
+            "captured_minus_ideal_m": -1.9676619071617475e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 34,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 35,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 36,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 37,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 38,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 39,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 40,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 41,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 42,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 43,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 44,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 45,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 46,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 47,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 48,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 49,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 50,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 51,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 52,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 53,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 54,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 55,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 56,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 57,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 58,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 59,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          }
+        ],
+        "formula": "0.5 / (pi*rho_water*nc/(6*qc*rho))**(1/3), bounded 2.51e-6..50e-6 m",
+        "limits": "Declared constants/default-real operation rounding may differ. No compiler-bit identity, Nc unit resolution or radiation PSD equivalence is claimed."
+      },
+      {
+        "producer": {
+          "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-radius-stage-pr-work/build/radius-stage-warm-block-scm/capture-on/capture/udm_radius_d1_i1_j1_step4.raw",
+          "sha256": "b47dd911518c33db4a5c368401a613a13994bb1cc4b211cba133be79574afc9d",
+          "size_bytes": 15837
+        },
+        "status": "CONDITIONAL_REAL64_MATH_ONLY",
+        "rows": [
+          {
+            "native_k": 1,
+            "guard_active": true,
+            "captured_radius_m": 9.594113180355635e-06,
+            "ideal_unbounded_radius_m": 9.59411623661835e-06,
+            "ideal_bounded_radius_m": 9.59411623661835e-06,
+            "captured_minus_ideal_m": -3.05626271496608e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 2,
+            "guard_active": true,
+            "captured_radius_m": 9.480026164965238e-06,
+            "ideal_unbounded_radius_m": 9.480030164666753e-06,
+            "ideal_bounded_radius_m": 9.480030164666753e-06,
+            "captured_minus_ideal_m": -3.999701515017165e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 3,
+            "guard_active": true,
+            "captured_radius_m": 9.347774721391033e-06,
+            "ideal_unbounded_radius_m": 9.347778455449469e-06,
+            "ideal_bounded_radius_m": 9.347778455449469e-06,
+            "captured_minus_ideal_m": -3.734058435313258e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 4,
+            "guard_active": true,
+            "captured_radius_m": 8.844089279591572e-06,
+            "ideal_unbounded_radius_m": 8.84409283089824e-06,
+            "ideal_bounded_radius_m": 8.84409283089824e-06,
+            "captured_minus_ideal_m": -3.551306668983685e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 5,
+            "guard_active": true,
+            "captured_radius_m": 8.424661245953757e-06,
+            "ideal_unbounded_radius_m": 8.4246638350165e-06,
+            "ideal_bounded_radius_m": 8.4246638350165e-06,
+            "captured_minus_ideal_m": -2.5890627430868746e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 6,
+            "guard_active": true,
+            "captured_radius_m": 8.292779966723174e-06,
+            "ideal_unbounded_radius_m": 8.292782805478965e-06,
+            "ideal_bounded_radius_m": 8.292782805478965e-06,
+            "captured_minus_ideal_m": -2.838755790900366e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 7,
+            "guard_active": true,
+            "captured_radius_m": 8.154861461662222e-06,
+            "ideal_unbounded_radius_m": 8.154864472125875e-06,
+            "ideal_bounded_radius_m": 8.154864472125875e-06,
+            "captured_minus_ideal_m": -3.0104636536724353e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 8,
+            "guard_active": true,
+            "captured_radius_m": 8.009829798538703e-06,
+            "ideal_unbounded_radius_m": 8.009832706625378e-06,
+            "ideal_bounded_radius_m": 8.009832706625378e-06,
+            "captured_minus_ideal_m": -2.9080866743012336e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 9,
+            "guard_active": true,
+            "captured_radius_m": 7.857097443775274e-06,
+            "ideal_unbounded_radius_m": 7.857100610746979e-06,
+            "ideal_bounded_radius_m": 7.857100610746979e-06,
+            "captured_minus_ideal_m": -3.166971705023604e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 10,
+            "guard_active": true,
+            "captured_radius_m": 7.696387001487892e-06,
+            "ideal_unbounded_radius_m": 7.696389193823049e-06,
+            "ideal_bounded_radius_m": 7.696389193823049e-06,
+            "captured_minus_ideal_m": -2.192335156865838e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 11,
+            "guard_active": true,
+            "captured_radius_m": 7.542400453530718e-06,
+            "ideal_unbounded_radius_m": 7.54240330400717e-06,
+            "ideal_bounded_radius_m": 7.54240330400717e-06,
+            "captured_minus_ideal_m": -2.8504764526069023e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 12,
+            "guard_active": true,
+            "captured_radius_m": 7.352434295171406e-06,
+            "ideal_unbounded_radius_m": 7.352436581916563e-06,
+            "ideal_bounded_radius_m": 7.352436581916563e-06,
+            "captured_minus_ideal_m": -2.2867451569404357e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 13,
+            "guard_active": true,
+            "captured_radius_m": 7.161263965826947e-06,
+            "ideal_unbounded_radius_m": 7.161266188466065e-06,
+            "ideal_bounded_radius_m": 7.161266188466065e-06,
+            "captured_minus_ideal_m": -2.2226391175006422e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 14,
+            "guard_active": true,
+            "captured_radius_m": 6.9605121097993106e-06,
+            "ideal_unbounded_radius_m": 6.96051434779757e-06,
+            "ideal_bounded_radius_m": 6.96051434779757e-06,
+            "captured_minus_ideal_m": -2.237998259207053e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 15,
+            "guard_active": true,
+            "captured_radius_m": 7.814207492629066e-06,
+            "ideal_unbounded_radius_m": 7.814210361064703e-06,
+            "ideal_bounded_radius_m": 7.814210361064703e-06,
+            "captured_minus_ideal_m": -2.8684356373308425e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 16,
+            "guard_active": true,
+            "captured_radius_m": 9.318867341789883e-06,
+            "ideal_unbounded_radius_m": 9.31887018990141e-06,
+            "ideal_bounded_radius_m": 9.31887018990141e-06,
+            "captured_minus_ideal_m": -2.848111527300806e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 17,
+            "guard_active": true,
+            "captured_radius_m": 9.618377589504234e-06,
+            "ideal_unbounded_radius_m": 9.618380554596755e-06,
+            "ideal_bounded_radius_m": 9.618380554596755e-06,
+            "captured_minus_ideal_m": -2.965092520200007e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 18,
+            "guard_active": true,
+            "captured_radius_m": 8.806632649793755e-06,
+            "ideal_unbounded_radius_m": 8.806635710263405e-06,
+            "ideal_bounded_radius_m": 8.806635710263405e-06,
+            "captured_minus_ideal_m": -3.0604696497882854e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 19,
+            "guard_active": true,
+            "captured_radius_m": 8.6742529674666e-06,
+            "ideal_unbounded_radius_m": 8.674256136770424e-06,
+            "ideal_bounded_radius_m": 8.674256136770424e-06,
+            "captured_minus_ideal_m": -3.1693038238966202e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 20,
+            "guard_active": true,
+            "captured_radius_m": 8.533785148756579e-06,
+            "ideal_unbounded_radius_m": 8.533787843619756e-06,
+            "ideal_bounded_radius_m": 8.533787843619756e-06,
+            "captured_minus_ideal_m": -2.69486317721506e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 21,
+            "guard_active": true,
+            "captured_radius_m": 8.386165973206516e-06,
+            "ideal_unbounded_radius_m": 8.386168540765182e-06,
+            "ideal_bounded_radius_m": 8.386168540765182e-06,
+            "captured_minus_ideal_m": -2.567558665339336e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 22,
+            "guard_active": true,
+            "captured_radius_m": 8.229015293181874e-06,
+            "ideal_unbounded_radius_m": 8.229018255747839e-06,
+            "ideal_bounded_radius_m": 8.229018255747839e-06,
+            "captured_minus_ideal_m": -2.9625659649139486e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 23,
+            "guard_active": true,
+            "captured_radius_m": 8.069987416092772e-06,
+            "ideal_unbounded_radius_m": 8.069989733309354e-06,
+            "ideal_bounded_radius_m": 8.069989733309354e-06,
+            "captured_minus_ideal_m": -2.3172165819181426e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 24,
+            "guard_active": true,
+            "captured_radius_m": 7.910306521807797e-06,
+            "ideal_unbounded_radius_m": 7.910309288133774e-06,
+            "ideal_bounded_radius_m": 7.910309288133774e-06,
+            "captured_minus_ideal_m": -2.7663259764755966e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 25,
+            "guard_active": true,
+            "captured_radius_m": 7.744250979158096e-06,
+            "ideal_unbounded_radius_m": 7.74425430936658e-06,
+            "ideal_bounded_radius_m": 7.74425430936658e-06,
+            "captured_minus_ideal_m": -3.330208484463807e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 26,
+            "guard_active": true,
+            "captured_radius_m": 7.562347946077352e-06,
+            "ideal_unbounded_radius_m": 7.562350392685604e-06,
+            "ideal_bounded_radius_m": 7.562350392685604e-06,
+            "captured_minus_ideal_m": -2.44660825158557e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 27,
+            "guard_active": true,
+            "captured_radius_m": 7.526310128014302e-06,
+            "ideal_unbounded_radius_m": 7.526312719865458e-06,
+            "ideal_bounded_radius_m": 7.526312719865458e-06,
+            "captured_minus_ideal_m": -2.591851156067478e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 28,
+            "guard_active": true,
+            "captured_radius_m": 7.4792010309465695e-06,
+            "ideal_unbounded_radius_m": 7.479202991815439e-06,
+            "ideal_bounded_radius_m": 7.479202991815439e-06,
+            "captured_minus_ideal_m": -1.9608688697902586e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 29,
+            "guard_active": true,
+            "captured_radius_m": 7.4249651333957445e-06,
+            "ideal_unbounded_radius_m": 7.4249676795340105e-06,
+            "ideal_bounded_radius_m": 7.4249676795340105e-06,
+            "captured_minus_ideal_m": -2.5461382659766564e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 30,
+            "guard_active": true,
+            "captured_radius_m": 7.370833827735623e-06,
+            "ideal_unbounded_radius_m": 7.370837023062934e-06,
+            "ideal_bounded_radius_m": 7.370837023062934e-06,
+            "captured_minus_ideal_m": -3.1953273103087383e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 31,
+            "guard_active": true,
+            "captured_radius_m": 7.313128207897535e-06,
+            "ideal_unbounded_radius_m": 7.313130637336876e-06,
+            "ideal_bounded_radius_m": 7.313130637336876e-06,
+            "captured_minus_ideal_m": -2.4294393418251544e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 32,
+            "guard_active": true,
+            "captured_radius_m": 7.246072527777869e-06,
+            "ideal_unbounded_radius_m": 7.246074883103678e-06,
+            "ideal_bounded_radius_m": 7.246074883103678e-06,
+            "captured_minus_ideal_m": -2.35532580886036e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 33,
+            "guard_active": true,
+            "captured_radius_m": 7.210257990664104e-06,
+            "ideal_unbounded_radius_m": 7.2102601487145715e-06,
+            "ideal_bounded_radius_m": 7.2102601487145715e-06,
+            "captured_minus_ideal_m": -2.1580504674866235e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 34,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 35,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 36,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 37,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 38,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 39,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 40,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 41,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 42,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 43,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 44,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 45,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 46,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 47,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 48,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 49,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 50,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 51,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 52,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 53,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 54,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 55,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 56,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 57,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 58,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 59,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          }
+        ],
+        "formula": "0.5 / (pi*rho_water*nc/(6*qc*rho))**(1/3), bounded 2.51e-6..50e-6 m",
+        "limits": "Declared constants/default-real operation rounding may differ. No compiler-bit identity, Nc unit resolution or radiation PSD equivalence is claimed."
+      },
+      {
+        "producer": {
+          "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-radius-stage-pr-work/build/radius-stage-warm-block-scm/capture-on/capture/udm_radius_d1_i1_j1_step5.raw",
+          "sha256": "7321c2e0f7356b1860816376a3d6301f8983c79be644fbb8b1119d8b19a5d5c6",
+          "size_bytes": 15837
+        },
+        "status": "CONDITIONAL_REAL64_MATH_ONLY",
+        "rows": [
+          {
+            "native_k": 1,
+            "guard_active": true,
+            "captured_radius_m": 8.988834451884031e-06,
+            "ideal_unbounded_radius_m": 8.988837181186413e-06,
+            "ideal_bounded_radius_m": 8.988837181186413e-06,
+            "captured_minus_ideal_m": -2.7293023814974797e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 2,
+            "guard_active": true,
+            "captured_radius_m": 8.889043783710804e-06,
+            "ideal_unbounded_radius_m": 8.889046862305053e-06,
+            "ideal_bounded_radius_m": 8.889046862305053e-06,
+            "captured_minus_ideal_m": -3.078594249035396e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 3,
+            "guard_active": true,
+            "captured_radius_m": 8.766256542003248e-06,
+            "ideal_unbounded_radius_m": 8.76626014364594e-06,
+            "ideal_bounded_radius_m": 8.76626014364594e-06,
+            "captured_minus_ideal_m": -3.601642692852708e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 4,
+            "guard_active": true,
+            "captured_radius_m": 8.358791092177853e-06,
+            "ideal_unbounded_radius_m": 8.358794074613776e-06,
+            "ideal_bounded_radius_m": 8.358794074613776e-06,
+            "captured_minus_ideal_m": -2.9824359229827218e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 5,
+            "guard_active": true,
+            "captured_radius_m": 8.009875273273792e-06,
+            "ideal_unbounded_radius_m": 8.009878351748838e-06,
+            "ideal_bounded_radius_m": 8.009878351748838e-06,
+            "captured_minus_ideal_m": -3.078475046088729e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 6,
+            "guard_active": true,
+            "captured_radius_m": 7.886500497988891e-06,
+            "ideal_unbounded_radius_m": 7.886503486516617e-06,
+            "ideal_bounded_radius_m": 7.886503486516617e-06,
+            "captured_minus_ideal_m": -2.9885277263411343e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 7,
+            "guard_active": true,
+            "captured_radius_m": 7.758194442430977e-06,
+            "ideal_unbounded_radius_m": 7.75819715200536e-06,
+            "ideal_bounded_radius_m": 7.75819715200536e-06,
+            "captured_minus_ideal_m": -2.7095743827625345e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 8,
+            "guard_active": true,
+            "captured_radius_m": 7.623426427016966e-06,
+            "ideal_unbounded_radius_m": 7.623429581357481e-06,
+            "ideal_bounded_radius_m": 7.623429581357481e-06,
+            "captured_minus_ideal_m": -3.1543405150860214e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 9,
+            "guard_active": true,
+            "captured_radius_m": 7.48080174162169e-06,
+            "ideal_unbounded_radius_m": 7.480804220016964e-06,
+            "ideal_bounded_radius_m": 7.480804220016964e-06,
+            "captured_minus_ideal_m": -2.478395273737392e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 10,
+            "guard_active": true,
+            "captured_radius_m": 7.329354957619216e-06,
+            "ideal_unbounded_radius_m": 7.329357769940125e-06,
+            "ideal_bounded_radius_m": 7.329357769940125e-06,
+            "captured_minus_ideal_m": -2.812320909056096e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 11,
+            "guard_active": true,
+            "captured_radius_m": 7.180262400652282e-06,
+            "ideal_unbounded_radius_m": 7.180265334847126e-06,
+            "ideal_bounded_radius_m": 7.180265334847126e-06,
+            "captured_minus_ideal_m": -2.9341948436792864e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 12,
+            "guard_active": true,
+            "captured_radius_m": 7.1094532358984e-06,
+            "ideal_unbounded_radius_m": 7.109455679966015e-06,
+            "ideal_bounded_radius_m": 7.109455679966015e-06,
+            "captured_minus_ideal_m": -2.4440676152237962e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 13,
+            "guard_active": true,
+            "captured_radius_m": 7.223412922030548e-06,
+            "ideal_unbounded_radius_m": 7.2234152238844625e-06,
+            "ideal_bounded_radius_m": 7.2234152238844625e-06,
+            "captured_minus_ideal_m": -2.3018539148606052e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 14,
+            "guard_active": true,
+            "captured_radius_m": 7.000699952186551e-06,
+            "ideal_unbounded_radius_m": 7.000702259943392e-06,
+            "ideal_bounded_radius_m": 7.000702259943392e-06,
+            "captured_minus_ideal_m": -2.3077568408832083e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 15,
+            "guard_active": true,
+            "captured_radius_m": 7.866444320825394e-06,
+            "ideal_unbounded_radius_m": 7.86644693980248e-06,
+            "ideal_bounded_radius_m": 7.86644693980248e-06,
+            "captured_minus_ideal_m": -2.6189770855066007e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 16,
+            "guard_active": true,
+            "captured_radius_m": 8.79391791386297e-06,
+            "ideal_unbounded_radius_m": 8.793920916836513e-06,
+            "ideal_bounded_radius_m": 8.793920916836513e-06,
+            "captured_minus_ideal_m": -3.002973542913707e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 17,
+            "guard_active": true,
+            "captured_radius_m": 8.9985651356983e-06,
+            "ideal_unbounded_radius_m": 8.998568464030217e-06,
+            "ideal_bounded_radius_m": 8.998568464030217e-06,
+            "captured_minus_ideal_m": -3.328331916850483e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 18,
+            "guard_active": true,
+            "captured_radius_m": 8.350933057954535e-06,
+            "ideal_unbounded_radius_m": 8.350935513880495e-06,
+            "ideal_bounded_radius_m": 8.350935513880495e-06,
+            "captured_minus_ideal_m": -2.4559259604418427e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 19,
+            "guard_active": true,
+            "captured_radius_m": 8.233781045419164e-06,
+            "ideal_unbounded_radius_m": 8.233783875203888e-06,
+            "ideal_bounded_radius_m": 8.233783875203888e-06,
+            "captured_minus_ideal_m": -2.8297847243485266e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 20,
+            "guard_active": true,
+            "captured_radius_m": 8.112830073514488e-06,
+            "ideal_unbounded_radius_m": 8.112832395688902e-06,
+            "ideal_bounded_radius_m": 8.112832395688902e-06,
+            "captured_minus_ideal_m": -2.3221744148362207e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 21,
+            "guard_active": true,
+            "captured_radius_m": 7.98589735495625e-06,
+            "ideal_unbounded_radius_m": 7.985900473036965e-06,
+            "ideal_bounded_radius_m": 7.985900473036965e-06,
+            "captured_minus_ideal_m": -3.1180807142803992e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 22,
+            "guard_active": true,
+            "captured_radius_m": 7.846868356864434e-06,
+            "ideal_unbounded_radius_m": 7.846871057515355e-06,
+            "ideal_bounded_radius_m": 7.846871057515355e-06,
+            "captured_minus_ideal_m": -2.7006509211563966e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 23,
+            "guard_active": true,
+            "captured_radius_m": 7.695793101447634e-06,
+            "ideal_unbounded_radius_m": 7.695795506610123e-06,
+            "ideal_bounded_radius_m": 7.695795506610123e-06,
+            "captured_minus_ideal_m": -2.4051624881722515e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 24,
+            "guard_active": true,
+            "captured_radius_m": 7.532927611464402e-06,
+            "ideal_unbounded_radius_m": 7.532930305284769e-06,
+            "ideal_bounded_radius_m": 7.532930305284769e-06,
+            "captured_minus_ideal_m": -2.693820367001608e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 25,
+            "guard_active": true,
+            "captured_radius_m": 7.357562481047353e-06,
+            "ideal_unbounded_radius_m": 7.357564676853329e-06,
+            "ideal_bounded_radius_m": 7.357564676853329e-06,
+            "captured_minus_ideal_m": -2.1958059760111663e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 26,
+            "guard_active": true,
+            "captured_radius_m": 7.616143648192519e-06,
+            "ideal_unbounded_radius_m": 7.61614622804641e-06,
+            "ideal_bounded_radius_m": 7.61614622804641e-06,
+            "captured_minus_ideal_m": -2.5798538906698183e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 27,
+            "guard_active": true,
+            "captured_radius_m": 7.56926192480023e-06,
+            "ideal_unbounded_radius_m": 7.5692641867582935e-06,
+            "ideal_bounded_radius_m": 7.5692641867582935e-06,
+            "captured_minus_ideal_m": -2.261958063345601e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 28,
+            "guard_active": true,
+            "captured_radius_m": 7.517820904467953e-06,
+            "ideal_unbounded_radius_m": 7.517823585815118e-06,
+            "ideal_bounded_radius_m": 7.517823585815118e-06,
+            "captured_minus_ideal_m": -2.6813471648023143e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 29,
+            "guard_active": true,
+            "captured_radius_m": 7.462336725438945e-06,
+            "ideal_unbounded_radius_m": 7.462339351955668e-06,
+            "ideal_bounded_radius_m": 7.462339351955668e-06,
+            "captured_minus_ideal_m": -2.626516723128788e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 30,
+            "guard_active": true,
+            "captured_radius_m": 7.404994903481565e-06,
+            "ideal_unbounded_radius_m": 7.404997368046331e-06,
+            "ideal_bounded_radius_m": 7.404997368046331e-06,
+            "captured_minus_ideal_m": -2.4645647656146275e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 31,
+            "guard_active": true,
+            "captured_radius_m": 7.344059667957481e-06,
+            "ideal_unbounded_radius_m": 7.344062220885715e-06,
+            "ideal_bounded_radius_m": 7.344062220885715e-06,
+            "captured_minus_ideal_m": -2.5529282337007444e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 32,
+            "guard_active": true,
+            "captured_radius_m": 7.2799484769348055e-06,
+            "ideal_unbounded_radius_m": 7.279951533717224e-06,
+            "ideal_bounded_radius_m": 7.279951533717224e-06,
+            "captured_minus_ideal_m": -3.0567824188071314e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 33,
+            "guard_active": true,
+            "captured_radius_m": 7.2445895966666285e-06,
+            "ideal_unbounded_radius_m": 7.244592094466226e-06,
+            "ideal_bounded_radius_m": 7.244592094466226e-06,
+            "captured_minus_ideal_m": -2.497799597466269e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 34,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 35,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 36,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 37,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 38,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 39,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 40,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 41,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 42,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 43,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 44,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 45,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 46,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 47,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 48,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 49,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 50,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 51,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 52,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 53,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 54,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 55,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 56,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 57,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 58,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 59,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          }
+        ],
+        "formula": "0.5 / (pi*rho_water*nc/(6*qc*rho))**(1/3), bounded 2.51e-6..50e-6 m",
+        "limits": "Declared constants/default-real operation rounding may differ. No compiler-bit identity, Nc unit resolution or radiation PSD equivalence is claimed."
+      },
+      {
+        "producer": {
+          "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-radius-stage-pr-work/build/radius-stage-warm-block-scm/capture-on/capture/udm_radius_d1_i1_j1_step6.raw",
+          "sha256": "b388eaa21f0031c12c3b2d424e655dbe00a0daacfc42c8dc4f5d6a4db94c61a9",
+          "size_bytes": 15837
+        },
+        "status": "CONDITIONAL_REAL64_MATH_ONLY",
+        "rows": [
+          {
+            "native_k": 1,
+            "guard_active": true,
+            "captured_radius_m": 8.981699465948623e-06,
+            "ideal_unbounded_radius_m": 8.981702038519373e-06,
+            "ideal_bounded_radius_m": 8.981702038519373e-06,
+            "captured_minus_ideal_m": -2.5725707507176857e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 2,
+            "guard_active": true,
+            "captured_radius_m": 8.890150638762861e-06,
+            "ideal_unbounded_radius_m": 8.89015396365499e-06,
+            "ideal_bounded_radius_m": 8.89015396365499e-06,
+            "captured_minus_ideal_m": -3.3248921279101446e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 3,
+            "guard_active": true,
+            "captured_radius_m": 8.773301487963181e-06,
+            "ideal_unbounded_radius_m": 8.77330496853679e-06,
+            "ideal_bounded_radius_m": 8.77330496853679e-06,
+            "captured_minus_ideal_m": -3.4805736089359987e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 4,
+            "guard_active": true,
+            "captured_radius_m": 8.370273462787736e-06,
+            "ideal_unbounded_radius_m": 8.370275927266056e-06,
+            "ideal_bounded_radius_m": 8.370275927266056e-06,
+            "captured_minus_ideal_m": -2.4644783199731296e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 5,
+            "guard_active": true,
+            "captured_radius_m": 8.024621820368338e-06,
+            "ideal_unbounded_radius_m": 8.024624504718636e-06,
+            "ideal_bounded_radius_m": 8.024624504718636e-06,
+            "captured_minus_ideal_m": -2.684350297246915e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 6,
+            "guard_active": true,
+            "captured_radius_m": 7.903267032816075e-06,
+            "ideal_unbounded_radius_m": 7.903270208953755e-06,
+            "ideal_bounded_radius_m": 7.903270208953755e-06,
+            "captured_minus_ideal_m": -3.1761376806328703e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 7,
+            "guard_active": true,
+            "captured_radius_m": 7.775902304274496e-06,
+            "ideal_unbounded_radius_m": 7.775904338251412e-06,
+            "ideal_bounded_radius_m": 7.775904338251412e-06,
+            "captured_minus_ideal_m": -2.033976916201389e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 8,
+            "guard_active": true,
+            "captured_radius_m": 7.640694093424827e-06,
+            "ideal_unbounded_radius_m": 7.640697347673199e-06,
+            "ideal_bounded_radius_m": 7.640697347673199e-06,
+            "captured_minus_ideal_m": -3.254248372240153e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 9,
+            "guard_active": true,
+            "captured_radius_m": 7.495717909478117e-06,
+            "ideal_unbounded_radius_m": 7.495720844339924e-06,
+            "ideal_bounded_radius_m": 7.495720844339924e-06,
+            "captured_minus_ideal_m": -2.9348618075863498e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 10,
+            "guard_active": true,
+            "captured_radius_m": 7.340294814639492e-06,
+            "ideal_unbounded_radius_m": 7.340297094969603e-06,
+            "ideal_bounded_radius_m": 7.340297094969603e-06,
+            "captured_minus_ideal_m": -2.280330111409791e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 11,
+            "guard_active": true,
+            "captured_radius_m": 7.185059530456783e-06,
+            "ideal_unbounded_radius_m": 7.185062313870865e-06,
+            "ideal_bounded_radius_m": 7.185062313870865e-06,
+            "captured_minus_ideal_m": -2.783414081833943e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 12,
+            "guard_active": true,
+            "captured_radius_m": 7.111348168109544e-06,
+            "ideal_unbounded_radius_m": 7.111350386972596e-06,
+            "ideal_bounded_radius_m": 7.111350386972596e-06,
+            "captured_minus_ideal_m": -2.218863052245079e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 13,
+            "guard_active": true,
+            "captured_radius_m": 7.223663033073535e-06,
+            "ideal_unbounded_radius_m": 7.223665295455016e-06,
+            "ideal_bounded_radius_m": 7.223665295455016e-06,
+            "captured_minus_ideal_m": -2.2623814807163733e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 14,
+            "guard_active": true,
+            "captured_radius_m": 6.994142495386768e-06,
+            "ideal_unbounded_radius_m": 6.994145677956901e-06,
+            "ideal_bounded_radius_m": 6.994145677956901e-06,
+            "captured_minus_ideal_m": -3.182570132690581e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 15,
+            "guard_active": true,
+            "captured_radius_m": 7.863798600737937e-06,
+            "ideal_unbounded_radius_m": 7.86380177766609e-06,
+            "ideal_bounded_radius_m": 7.86380177766609e-06,
+            "captured_minus_ideal_m": -3.1769281538021046e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 16,
+            "guard_active": true,
+            "captured_radius_m": 8.797277587291319e-06,
+            "ideal_unbounded_radius_m": 8.79728052530964e-06,
+            "ideal_bounded_radius_m": 8.79728052530964e-06,
+            "captured_minus_ideal_m": -2.938018321604072e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 17,
+            "guard_active": true,
+            "captured_radius_m": 9.000102181744296e-06,
+            "ideal_unbounded_radius_m": 9.000104994699028e-06,
+            "ideal_bounded_radius_m": 9.000104994699028e-06,
+            "captured_minus_ideal_m": -2.8129547319520653e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 18,
+            "guard_active": true,
+            "captured_radius_m": 8.356019861821551e-06,
+            "ideal_unbounded_radius_m": 8.35602270552838e-06,
+            "ideal_bounded_radius_m": 8.35602270552838e-06,
+            "captured_minus_ideal_m": -2.8437068289201414e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 19,
+            "guard_active": true,
+            "captured_radius_m": 8.237456313509028e-06,
+            "ideal_unbounded_radius_m": 8.237459519312002e-06,
+            "ideal_bounded_radius_m": 8.237459519312002e-06,
+            "captured_minus_ideal_m": -3.205802973343247e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 20,
+            "guard_active": true,
+            "captured_radius_m": 8.111239367281087e-06,
+            "ideal_unbounded_radius_m": 8.11124256941506e-06,
+            "ideal_bounded_radius_m": 8.11124256941506e-06,
+            "captured_minus_ideal_m": -3.2021339738992497e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 21,
+            "guard_active": true,
+            "captured_radius_m": 7.979595466167666e-06,
+            "ideal_unbounded_radius_m": 7.979597640743407e-06,
+            "ideal_bounded_radius_m": 7.979597640743407e-06,
+            "captured_minus_ideal_m": -2.174575740627343e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 22,
+            "guard_active": true,
+            "captured_radius_m": 7.83778614277253e-06,
+            "ideal_unbounded_radius_m": 7.83778920385575e-06,
+            "ideal_bounded_radius_m": 7.83778920385575e-06,
+            "captured_minus_ideal_m": -3.0610832201264856e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 23,
+            "guard_active": true,
+            "captured_radius_m": 7.682362593186554e-06,
+            "ideal_unbounded_radius_m": 7.682364980077542e-06,
+            "ideal_bounded_radius_m": 7.682364980077542e-06,
+            "captured_minus_ideal_m": -2.3868909880010985e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 24,
+            "guard_active": true,
+            "captured_radius_m": 7.512485808547353e-06,
+            "ideal_unbounded_radius_m": 7.512488328468515e-06,
+            "ideal_bounded_radius_m": 7.512488328468515e-06,
+            "captured_minus_ideal_m": -2.519921161385323e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 25,
+            "guard_active": true,
+            "captured_radius_m": 7.328261290240334e-06,
+            "ideal_unbounded_radius_m": 7.328264191749967e-06,
+            "ideal_bounded_radius_m": 7.328264191749967e-06,
+            "captured_minus_ideal_m": -2.9015096328723934e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 26,
+            "guard_active": true,
+            "captured_radius_m": 7.5778280006488785e-06,
+            "ideal_unbounded_radius_m": 7.577830315780285e-06,
+            "ideal_bounded_radius_m": 7.577830315780285e-06,
+            "captured_minus_ideal_m": -2.315131406183536e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 27,
+            "guard_active": true,
+            "captured_radius_m": 7.531756182288518e-06,
+            "ideal_unbounded_radius_m": 7.531758825084788e-06,
+            "ideal_bounded_radius_m": 7.531758825084788e-06,
+            "captured_minus_ideal_m": -2.64279626947041e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 28,
+            "guard_active": true,
+            "captured_radius_m": 7.485662990802666e-06,
+            "ideal_unbounded_radius_m": 7.485665659729069e-06,
+            "ideal_bounded_radius_m": 7.485665659729069e-06,
+            "captured_minus_ideal_m": -2.6689264024127852e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 29,
+            "guard_active": true,
+            "captured_radius_m": 7.433464816131163e-06,
+            "ideal_unbounded_radius_m": 7.433467452465948e-06,
+            "ideal_bounded_radius_m": 7.433467452465948e-06,
+            "captured_minus_ideal_m": -2.636334784511399e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 30,
+            "guard_active": true,
+            "captured_radius_m": 7.374300821538782e-06,
+            "ideal_unbounded_radius_m": 7.3743029255441824e-06,
+            "ideal_bounded_radius_m": 7.3743029255441824e-06,
+            "captured_minus_ideal_m": -2.104005400691022e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 31,
+            "guard_active": true,
+            "captured_radius_m": 7.3095557127089705e-06,
+            "ideal_unbounded_radius_m": 7.309558093196033e-06,
+            "ideal_bounded_radius_m": 7.309558093196033e-06,
+            "captured_minus_ideal_m": -2.380487062318985e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 32,
+            "guard_active": true,
+            "captured_radius_m": 7.239204933284782e-06,
+            "ideal_unbounded_radius_m": 7.239207551830791e-06,
+            "ideal_bounded_radius_m": 7.239207551830791e-06,
+            "captured_minus_ideal_m": -2.6185460092639193e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 33,
+            "guard_active": true,
+            "captured_radius_m": 7.193943929451052e-06,
+            "ideal_unbounded_radius_m": 7.193945991201781e-06,
+            "ideal_bounded_radius_m": 7.193945991201781e-06,
+            "captured_minus_ideal_m": -2.061750729283405e-12,
+            "ideal_bound_active": false
+          },
+          {
+            "native_k": 34,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 35,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 36,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 37,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 38,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 39,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 40,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 41,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 42,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 43,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 44,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 45,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 46,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 47,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 48,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 49,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 50,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 51,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 52,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 53,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 54,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 55,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 56,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 57,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 58,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          },
+          {
+            "native_k": 59,
+            "guard_active": false,
+            "captured_radius_m": 2.5100000584643567e-06
+          }
+        ],
+        "formula": "0.5 / (pi*rho_water*nc/(6*qc*rho))**(1/3), bounded 2.51e-6..50e-6 m",
+        "limits": "Declared constants/default-real operation rounding may differ. No compiler-bit identity, Nc unit resolution or radiation PSD equivalence is claimed."
+      }
+    ]
+  },
+  "independent_replay": {
+    "LW": {
+      "phase": "LW",
+      "call": 2,
+      "header": [
+        1,
+        103,
+        2,
+        679102813,
+        4
+      ],
+      "dry_layer_mass_source": "native_dry_layer_mass",
+      "udm_paths": {
+        "L": {
+          "grid_mass_max_abs_error": 2.132098231300006e-06,
+          "grid_positive_layers": 33,
+          "omitted_positive_layers": 0
+        },
+        "I": {
+          "grid_mass_max_abs_error": 5.913600347184911e-07,
+          "grid_positive_layers": 9,
+          "omitted_positive_layers": 1
+        },
+        "R": {
+          "grid_mass_max_abs_error": 0.0,
+          "grid_positive_layers": 0,
+          "omitted_positive_layers": 0
+        },
+        "S": {
+          "grid_mass_max_abs_error": 0.0,
+          "grid_positive_layers": 0,
+          "omitted_positive_layers": 0
+        },
+        "G": {
+          "grid_mass_max_abs_error": 0.0,
+          "grid_positive_layers": 0,
+          "omitted_positive_layers": 0
+        },
+        "H": {
+          "grid_mass_max_abs_error": 0.0,
+          "grid_positive_layers": 0,
+          "omitted_positive_layers": 0
+        }
+      },
+      "native_radius_second_call": {
+        "REL": {
+          "diagnosed_layers": 33,
+          "max_um": 9.865382708085235
+        },
+        "REI": {
+          "diagnosed_layers": 9,
+          "max_um": 125.00000593718141
+        },
+        "RES": {
+          "diagnosed_layers": 0,
+          "max_um": null
+        }
+      },
+      "reference_sections_compared": 18,
+      "raw_column": {
+        "i": 1,
+        "j": 1
+      }
+    },
+    "SW": {
+      "phase": "SW",
+      "call": 2,
+      "header": [
+        1,
+        60,
+        2,
+        679102814,
+        4
+      ],
+      "dry_layer_mass_source": "native_dry_layer_mass",
+      "udm_paths": {
+        "L": {
+          "grid_mass_max_abs_error": 2.132098231300006e-06,
+          "grid_positive_layers": 33,
+          "omitted_positive_layers": 0
+        },
+        "I": {
+          "grid_mass_max_abs_error": 5.913600347184911e-07,
+          "grid_positive_layers": 9,
+          "omitted_positive_layers": 1
+        },
+        "R": {
+          "grid_mass_max_abs_error": 0.0,
+          "grid_positive_layers": 0,
+          "omitted_positive_layers": 0
+        },
+        "S": {
+          "grid_mass_max_abs_error": 0.0,
+          "grid_positive_layers": 0,
+          "omitted_positive_layers": 0
+        },
+        "G": {
+          "grid_mass_max_abs_error": 0.0,
+          "grid_positive_layers": 0,
+          "omitted_positive_layers": 0
+        },
+        "H": {
+          "grid_mass_max_abs_error": 0.0,
+          "grid_positive_layers": 0,
+          "omitted_positive_layers": 0
+        }
+      },
+      "native_radius_second_call": {
+        "REL": {
+          "diagnosed_layers": 33,
+          "max_um": 9.865382708085235
+        },
+        "REI": {
+          "diagnosed_layers": 9,
+          "max_um": 125.00000593718141
+        },
+        "RES": {
+          "diagnosed_layers": 0,
+          "max_um": null
+        }
+      },
+      "reference_sections_compared": 37,
+      "raw_column": {
+        "i": 1,
+        "j": 1
+      }
+    }
+  },
+  "wet_liquid_packet_rows": 198,
+  "max_abs_captured_minus_ideal_m": 4.352998262749917e-12,
+  "actual_wrf_forecasts": 1,
+  "actual_independent_replays": 2,
+  "Nc_unit_gate_closed": false,
+  "physical_radius_moment_gate_closed": false
+}

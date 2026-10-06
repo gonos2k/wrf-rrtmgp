@@ -1,0 +1,76 @@
+{
+  "base_report_sha256": "99db8ff4dc72308e5f3775b2ca53105964b8bf8cc0326f34539a81af7cfba888",
+  "conclusion": {
+    "operational_claim": "No operational native-physics failure is inferred from the guard, Registry label, or dimensional conflict alone.",
+    "port_guidance": "The port should retain native expression semantics and exact input tuples; do not add a default rho correction. Resolve input/source conventions separately with producer-specific evidence before any physics change.",
+    "revised_wording": "There is a source-level unit-contract conflict: Registry and some documented producers represent QNC as #/kg, internal UDM formulas generate/use volume-style #/m^3, and the native radius guard is conditionally compatible with #/kg while the adjacent lambda expression is not. The available evidence does not establish a universal unit for all incoming QNC states."
+  },
+  "qualifications": {
+    "firm_equation_requirement": {
+      "basis": "lambda^3 = (pi*rho_water/6)*NC/(q_c*rho), with q_c dimensionless and both densities kg m^-3.",
+      "claim": "The native slope-cloud and effective-radius lambda equations require their direct NC argument to be a volume number concentration (# m^-3) if lambda is to be m^-1.",
+      "limit": "This establishes a requirement of the equations, not the physical unit of each WRF input value."
+    },
+    "guard_interpretation": {
+      "code": "rnc=max(R2,nc*rho); radius loop skips when rnc<=R2; R2 is an unlabeled numeric constant 1.e-6.",
+      "conditional_dimensional_reading": "nc*rho would be a volume concentration if nc were mass-specific (# kg^-1); if nc is already volumetric, the product has no number-concentration units.",
+      "interpretation": "Treat this as evidence of conflicting coding conventions, not as proof that the guard defines the native NC unit or that ordinary runs are operationally wrong.",
+      "why_not_decisive": "R2 has no unit annotation, the variable is only a floor/guard, and no source declares that R2 is an independent physical unit standard. For ordinary positive NC magnitudes the guard may simply pass; it does not prove what NC represents. The adjacent lambda equation still uses unmultiplied NC."
+    },
+    "initialization_clipping_and_restore": {
+      "UDM_input": "UDM copies NC into local ncr unchanged. Its negative-input path can clamp NC to zero; otherwise it retains the incoming NC value. Neither action multiplies or divides by density.",
+      "actual_udm_init_path": "The inspected UDM physics initialization calls udminit for constants only. The ordinary real.exe interpolation of qnc_gc copies/interpolates the field without a density conversion at that call. Positive initial/boundary/restart QNC may have other producer provenance; this source review did not resolve it.",
+      "conditional_regeneration": "adjust_number_concent can replace NC when it is at/below ncmin or violates diameter bounds; its replacement formula den*q*lambda^3/pidnc has units # m^-3. For an already in-range NC it leaves the value as received. This is not a general conversion of stored state.",
+      "internal_number_updates": "Registry ccn_conc is # m^-3; module_microphysics_driver.F:931-938 initializes QNN_CURR directly from ccn_conc under its presence guard. The UDM call receives ccn_preinitialized=.true. and does not reset it. UDM itself initializes NN directly from CCN0 only when its initialize_ccn rule is enabled. Activation transfers CCN into cloud NC directly, and cloud-ice melting adds a formula-derived number source; these internal operations use volume-style numerical conventions but do not convert every external cloud NC input.",
+      "real_exe_fallback": "The QNC fallback makes a volume concentration from QC*rho and divides by rho before storing it (# kg^-1), but the enclosing generic initialization block is explicitly limited to Thompson, ThompsonAero, and RCON_MP. It excludes UDM and cannot establish UDM initialization behavior."
+    },
+    "scalar_transport": {
+      "finding": "QNC is registered and passed through WRF as a generic scalar; dyn_em passes scalar slots, including QNC, to generic scalar-advection routines without a QNC-specific rho conversion. Registry and CAMUW PBL argument comments explicitly label QNC as #/kg.",
+      "limit": "Generic scalar transport preserves the field value under the framework tracer transport; it does not resolve the discrepancy with UDM formulas. The units metadata and user-selected input producers still need to be correct for the specific run."
+    },
+    "warm_tuple_observation": {
+      "does_not_establish": "This is not an independent physical unit measurement. It establishes the source tuple and resulting implementation behavior, not whether that tuple is truly #/m^3 or whether source labels/producers are correct.",
+      "observation": "The supplied 198 warm producer tuples show the native radius calculation behaving numerically as its unmultiplied-NC lambda equation specifies."
+    }
+  },
+  "scope": "Read-only source clarification. The base report is preserved unchanged. No runtime/build/model activity.",
+  "source_pins": [
+    {
+      "lines": "328-336; 350-361; 431-442; 863-890; 1069-1072; 1207-1212; 2510-2519; 3027-3040; 3597-3628; 3719-3740",
+      "path": "WRF/phys/module_mp_udm.F",
+      "sha256": "872737fe3a0cebf941d3ee45056fb60aadf465f0f72d72d1a2c7abac6709351d"
+    },
+    {
+      "lines": "4800-4812; 4827-4845; 9127-9163",
+      "path": "WRF/dyn_em/module_initialize_real.F",
+      "sha256": "81b40b4ae6891d522b2e30d8cee2036c20e139ef9e780c9a17b0d895ca13d87f"
+    },
+    {
+      "lines": "4855-4864",
+      "path": "WRF/phys/module_physics_init.F",
+      "sha256": "bc9cd3a7e3d908678b52d53aa8ef7d7ad760a8e57958e044e35dc560b1bc1375"
+    },
+    {
+      "lines": "544-545; 2701",
+      "path": "WRF/Registry/Registry.EM_COMMON",
+      "sha256": "87e21a476a06b7e0c926b2d939eaf1028810cba8a7d1e6fc585b50b599f99729"
+    },
+    {
+      "lines": "1265-1339",
+      "path": "WRF/dyn_em/module_em.F",
+      "sha256": "67c5842c1c5d407a26139f26bd317f3016c610aeaf60207dfd21394ddb81482c"
+    },
+    {
+      "lines": "178-183; 403-410",
+      "path": "WRF/phys/module_bl_camuwpbl_driver.F",
+      "sha256": "253886780ae99823608f28bbcf68e1bfdc97483fe6fe2d7df24866c2f2b1e42a"
+    },
+    {
+      "lines": "931-938; 2836-2878",
+      "path": "WRF/phys/module_microphysics_driver.F",
+      "sha256": "5f365f23e540a7ef3a37153426517aedf9c79b7802d37d8240ac880a0ed46f25"
+    }
+  ],
+  "supplements": "source-review.json",
+  "title": "UDM NC convention: guard, source generation, and transport qualification"
+}
