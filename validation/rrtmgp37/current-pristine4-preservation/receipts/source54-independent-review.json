@@ -1,0 +1,98 @@
+{
+  "schema": "udm37-source54-pristine-independent-review-v1",
+  "status": "PASS_SCOPED_TWO_CASES",
+  "scope": "Read-only independent review of the source54 serial build and two RA4 60-second SCM comparisons. No build or model invocation by reviewer.",
+  "candidate": {
+    "root": "build/udm37-source54-pristine-serial-regression-v1",
+    "build_status": "BUILD_PASS",
+    "compile_returncode": 0,
+    "compiler": "GNU Fortran 13.3.0",
+    "compile_command": "timeout --signal=TERM --kill-after=30s 1800s env NETCDF=... LD_LIBRARY_PATH=... csh -f ./compile -j 12 em_scm_xy",
+    "configure": {
+      "official_sha256": "af7642a54474c075b27f7010db139bef116645e4ba57463be2644cf689791365",
+      "isolated_sha256": "6a2fcd322bbff92ff61a141671d492eb8d74e3d56af28582306c024775b89c68",
+      "diff_sha256": "cbf29bfff0c47efe6578074b4004492e0a7fb15aef4672ad660093b510e611b8",
+      "diff_scope": "One RRTMGP build-module include path only; compiler, precision, optimization, serial/OpenMP options unchanged."
+    },
+    "executables": {
+      "wrf.exe": {
+        "sha256": "7d6526f4c509aa93d2b28c73db6c782d72e68ef76fc1658ceb360250adf03caa",
+        "bytes": 50197544,
+        "independently_rehashed": true
+      },
+      "ideal.exe": {
+        "sha256": "cdda5b9574738cba7cb4620bc2c4c56db7611cfcff236cd40457ca33c0c67f7d",
+        "bytes": 38019960,
+        "independently_rehashed": true
+      }
+    },
+    "source": {
+      "pinned_source_manifest": "build/udm37-restart-cloud-diagnostics-gnu-v1/source-manifest-v4.json",
+      "source_manifest_sha256": "03b2ddf6d45a37e95a1b07a4d37c2401704bb67569c0290391dea0397fcabe98",
+      "all_5835_Wrf_manifest_entries_match_frozen_source_v4": true,
+      "all_5835_Wrf_manifest_entries_match_built_source_copy": true,
+      "all_5833_unchanged_Wrf_entries_match_PR58_worktree": true,
+      "two_PR58_differences": [
+        "WRF/doc/rrtmgp/README.md (documentation update)",
+        "WRF/doc/rrtmgp/RUNTIME_CONTRACTS.md (documentation update)"
+      ],
+      "key_compiled_source_sha256": {
+        "WRF/Registry/Registry.EM_COMMON": "87e21a476a06b7e0c926b2d939eaf1028810cba8a7d1e6fc585b50b599f99729",
+        "WRF/phys/module_mp_udm.F": "872737fe3a0cebf941d3ee45056fb60aadf465f0f72d72d1a2c7abac6709351d",
+        "WRF/phys/module_physics_init.F": "bc9cd3a7e3d908678b52d53aa8ef7d7ad760a8e57958e044e35dc560b1bc1375",
+        "WRF/phys/module_ra_rrtmg_lw.F": "9723f1de10ba1b16af7cb0305747f033d70ef488e5c046a6e7c16b65baffeea2",
+        "WRF/phys/module_ra_rrtmg_sw.F": "9c64bbea29522ff472ed5e2a86aed0059b26ffb8462786eea54d6e302218b517",
+        "WRF/phys/module_radiation_driver.F": "6790dc884c53fff201f15713d60197f54b43dc53b545ed44eb2397e9d2d3687f",
+        "WRF/share/input_wrf.F": "61593904fbf9c0f367e1544d9dcd973b6003d67fdbe9e9adc41e35d529fd499b"
+      }
+    }
+  },
+  "cases": {
+    "control": {
+      "status": "PASS",
+      "returncode": 0,
+      "success_complete_marker": true,
+      "elapsed_seconds": 1.916863003745675,
+      "actual_namelist_and_wrfinput_match_pinned_official_assets": true,
+      "actual_history_sha256": "cc34da6667b2569063f7b302985a9e9b44dac4f4b528989255404c1a5cf9da8f",
+      "official_history_sha256": "cc34da6667b2569063f7b302985a9e9b44dac4f4b528989255404c1a5cf9da8f",
+      "whole_file_byte_identical": true,
+      "variables_equal": "208/208; exact bytes, dtypes, dimensions, variable/global attributes; no extras or omissions",
+      "process_pid": 3282211,
+      "run_window_utc": ["2026-10-04T04:49:41.939165+00:00", "2026-10-04T04:49:43.856105+00:00"]
+    },
+    "mixed": {
+      "status": "PASS",
+      "returncode": 0,
+      "success_complete_marker": true,
+      "elapsed_seconds": 1.9165371526032686,
+      "actual_namelist_and_wrfinput_match_pinned_official_assets": true,
+      "actual_history_sha256": "e04dd6fbd89a3df30e9d65e518d022ba2086291b6443268b7a09e293d4f4f216",
+      "official_history_sha256": "e04dd6fbd89a3df30e9d65e518d022ba2086291b6443268b7a09e293d4f4f216",
+      "whole_file_byte_identical": true,
+      "variables_equal": "208/208; exact bytes, dtypes, dimensions, variable/global attributes; no extras or omissions",
+      "process_pid": 3282272,
+      "run_window_utc": ["2026-10-04T04:49:44.928411+00:00", "2026-10-04T04:49:46.845029+00:00"]
+    }
+  },
+  "freshness_and_scope": {
+    "run_duration_each": "Exactly 60 seconds by pinned namelist: start 1999-10-22 19:00:00, end 19:01:00; time step 10 s.",
+    "fresh_run_evidence": "Runner refuses a pre-existing case-output root and per-case directories, excludes official wrfout/run logs when staging, copies the pinned initial state and runtime assets, and launches each new WRF executable once with distinct PID. Official reference outputs were not rerun or modified.",
+    "official_history_and_input_hashes_rechecked": true,
+    "static_runtime_assets_pre_post_unchanged": true,
+    "cases": "Two serial RA4/RA4 cases only (control and mixed); no statement about RA37, forecasts beyond 60 seconds, platform breadth, or broader physics equivalence."
+  },
+  "material_findings": [],
+  "limitations": [
+    "The full compiler stdout was not persisted to a file: it was consumed from the unified execution session. The receipt preserves the terminal success line, return code, timestamps, compiler/configuration and executable hashes; this review does not claim a complete compiler transcript.",
+    "Case runtimes are serial SCM fixtures and validate only the recorded output against existing official pristine histories."
+  ],
+  "review_verification": {
+    "independent_rehash_checks": "PASS",
+    "manifest_file_checks": "PASS (5,835 WRF entries against source-v4 manifest, copied source, and PR58 candidate; PR58 differs only in the two reviewed documentation files)",
+    "output_byte_comparisons": "PASS (both actual output files independently hash to the official output files)",
+    "model_invocations_by_reviewer": 0,
+    "builds_by_reviewer": 0,
+    "worktrees_edited": 0
+  }
+}
