@@ -1,0 +1,48 @@
+{
+  "format": "lblrtm-od-parser-source-pins-v1",
+  "status": "PREPARED_NOT_RUN",
+  "sources": {
+    "lblrtm_source": {
+      "path": "build/udm37-lblrtm-stock-build-v1/attempt-1/source/LBLRTM/src/lblrtm.f90",
+      "sha256": "9ae22638469c4b9e60187b53e47f0a80d5fb502ffd4052f63f88f442dac45aca",
+      "size_bytes": 387500
+    },
+    "oprop_source": {
+      "path": "build/udm37-lblrtm-stock-build-v1/attempt-1/source/LBLRTM/src/oprop.f90",
+      "sha256": "7cf594968ec331da3df75429262c1023c21fc461cbbae208253b0fa870685ef8",
+      "size_bytes": 481997
+    },
+    "gfortran_io_source": {
+      "path": "build/udm37-lblrtm-stock-build-v1/attempt-1/source/LBLRTM/aer_rt_utils/util_gfortran.f90",
+      "sha256": "64d679afbffa23f81c5faf3289c562b37ee65019d5ff176dd19528cef71b99e2",
+      "size_bytes": 18911
+    },
+    "makefile_common": {
+      "path": "build/udm37-lblrtm-stock-build-v1/attempt-1/source/LBLRTM/build/makefile.common",
+      "sha256": "c7f91b5660102d409d2785a1be501171aa261b6056579b6fca0ed9b5ff0fff78",
+      "size_bytes": 13126
+    },
+    "deck": {
+      "path": "build/udm37-lblrtm-held-state-deck-v1/TAPE5",
+      "sha256": "91a6e55bd31c420659acb80156ca99dd3ddb5d186dfd33558500e6cbb137c450",
+      "size_bytes": 29428
+    },
+    "parser": {
+      "path": "build/udm37-lblrtm-od-output-parser-v1/parse_od.py",
+      "sha256": "d172651ea902c6d7157b34678742db721872bbb7d153ac923bebeb9e9a79759a",
+      "size_bytes": 8999
+    },
+    "readme": {
+      "path": "build/udm37-lblrtm-od-output-parser-v1/README.md",
+      "sha256": "84ed33809be91cdf9e8e69922aed2280399ffe5b5a4bf5c17243e98f882f24bb",
+      "size_bytes": 2589
+    }
+  },
+  "source_locations": {
+    "lblrtm_source": "input opens TAPE9-12: 610-617; header sentinel and derived header sizes: 638-645; ENDFIL six-value record: 1368-1377; IMRG=1 layer loop: 2213-2245; TAPE5 layer records: 4644-4739",
+    "oprop_source": "ODdeflt path/default IOD branch: 176-177, 344-351, 397-414; FILHDR/XPANEL layouts: 107-116; panel records: 1424-1426, 1441-1453, 1521-1529",
+    "gfortran_io_source": "BUFOUT writes one unformatted record: 262-276",
+    "makefile_common": "GNU double/integer8 with four-byte record markers: 217-221"
+  },
+  "scope": "source review and parser preparation only; no LBLRTM execution or build performed by this task"
+}
