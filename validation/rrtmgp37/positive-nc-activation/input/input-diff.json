@@ -1,0 +1,59 @@
+{
+  "additive_qv_offset": 0.0011429302394390106,
+  "baseline_input": {
+    "path": "build/udm37-positive-nc-stage-runtime-2min-v2/stage/on/wrfinput_d01",
+    "sha256": "849f340d8d74b8e252b40d41c2d660126ae7a7b755d2e2b9eb24e988c97efc03",
+    "size_bytes": 10699727
+  },
+  "baseline_input_qvapor": 0.017006712034344673,
+  "baseline_stage30_state": {
+    "NCCN_m3": 100000000.0,
+    "NC_m3": 98857920.0,
+    "P_Pa": 92848.9140625,
+    "QV_kg_kg": 0.01701768860220909,
+    "T_K": 295.0775451660156
+  },
+  "changed_element_count": 1,
+  "changed_variable_data_arrays": [
+    "QVAPOR"
+  ],
+  "derived_input": {
+    "path": "build/udm37-activation-supersat-input-v1/derived/wrfinput_d01",
+    "sha256": "4be27d2dfbec0286a5dc7e8a73d0b2ee78de028e7cacf735fd8b393567e44380",
+    "size_bytes": 10975310
+  },
+  "derived_input_qvapor": 0.018149642273783684,
+  "full_variable_comparison": "Every variable was independently read from baseline and derived inputs; only QVAPOR data digest differs, and exact changed-index scan has one element.",
+  "interpretation": "The offset is computed from a saved UDM call-boundary state, then applied to the initial input QVAPOR element. Upstream dynamics and microphysics may change the resulting call-boundary state; future runtime must recompute RH and NC_ACT from packets. This is a deliberate single-state perturbation, not a physical validation.",
+  "location_fortran_1based": {
+    "i": 23,
+    "j": 2,
+    "native_k": 7
+  },
+  "new_model_runs": 0,
+  "python_index_0based": [
+    0,
+    6,
+    1,
+    22
+  ],
+  "schema": "UDM_ACTIVATION_SINGLE_QV_INPUT_INTERVENTION_V1",
+  "source_lookup": {
+    "default_real_bits": 32,
+    "ep2": 0.6217504143714905,
+    "operation_order": "source-default-REAL table/formula/interpolation/ep2*es/(p-es)",
+    "qsat_mixing_ratio": 0.01810630038380623,
+    "svp_pa": 2627.3857421875,
+    "table_fraction": 0.876953125,
+    "table_index_1based": 5754
+  },
+  "source_stage30_packet": {
+    "path": "build/udm37-positive-nc-stage-runtime-2min-v2/stage/on/number_capture/number_d1_tile1_i23_j2_step1_stage30_sub1.raw",
+    "sha256": "b7fdfb7c6130c0133ab13fd2740f272ec68bb98b5fd97eb0481cf50b94dd9454",
+    "size_bytes": 16875
+  },
+  "status": "PREPARED_INPUT_ONLY_NOT_RUNTIME_AUTHORIZATION",
+  "target_call_boundary_qv": 0.018160618841648102,
+  "target_rh": 1.003,
+  "unchanged_dimensions_global_attrs_variable_roster_variable_metadata": true
+}
