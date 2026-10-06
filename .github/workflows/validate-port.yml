@@ -123,6 +123,8 @@ jobs:
           sudo apt-get install -y git make cmake gfortran libnetcdf-dev libnetcdff-dev python3-numpy python3-netcdf4 ripgrep
       - name: Compare pinned upstream and current vendored CPU RFMIP at g128/g112
         run: bash validation/rrtmgp37/upstream-reference/run_rfmip.sh build/independent-rfmip
+      - name: Compare fully vendored cloud optics with the pinned all-sky driver
+        run: bash validation/rrtmgp37/upstream-reference/run_allsky.sh build/independent-rfmip
       - name: Save independent fluxes, source pins, hashes and comparison status
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
@@ -135,6 +137,15 @@ jobs:
             build/independent-rfmip/compiler.txt
             build/independent-rfmip/vendor-checkout-head.txt
             build/independent-rfmip/run-*/*.nc
+            build/independent-rfmip/allsky/run.log
+            build/independent-rfmip/allsky/*.json
+            build/independent-rfmip/allsky/*sha256.txt
+            build/independent-rfmip/allsky/compiler.txt
+            build/independent-rfmip/allsky/loader-only-adaptation.diff
+            build/independent-rfmip/allsky/vendor-link.map
+            build/independent-rfmip/allsky/vendor-frontend-symbol-evidence.txt
+            build/independent-rfmip/allsky/original-band-*/original-run.log
+            build/independent-rfmip/allsky/run-*/*.nc
           retention-days: 30
           if-no-files-found: warn
   serial-scm:

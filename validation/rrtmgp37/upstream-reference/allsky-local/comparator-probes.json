@@ -1,0 +1,55 @@
+{
+  "source_outputs": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp/build/independent-rfmip-local-pr13/allsky-units",
+  "scope": "Actual NetCDF output mutation checks; baseline plus six independently rejected corruptions/cloud-free degeneration",
+  "results": [
+    {
+      "case": "baseline",
+      "expected_exit": 0,
+      "actual_exit": 0,
+      "status": "PASS",
+      "error": null
+    },
+    {
+      "case": "changed_flux",
+      "expected_exit": 1,
+      "actual_exit": 1,
+      "status": "FAIL",
+      "error": "ValueError: sw-g112.nc:sw_flux_dn: shape, dtype, dimensions, units, or values differ"
+    },
+    {
+      "case": "nan_flux",
+      "expected_exit": 1,
+      "actual_exit": 1,
+      "status": "FAIL",
+      "error": "ValueError: /NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp/build/pr14-comparator-probes/nan_flux/vendor/sw-g112.nc:sw_flux_dn: nonfinite values"
+    },
+    {
+      "case": "masked_flux",
+      "expected_exit": 1,
+      "actual_exit": 1,
+      "status": "FAIL",
+      "error": "ValueError: /NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp/build/pr14-comparator-probes/masked_flux/vendor/sw-g112.nc:sw_flux_dn: masked samples are not allowed"
+    },
+    {
+      "case": "units_mismatch",
+      "expected_exit": 1,
+      "actual_exit": 1,
+      "status": "FAIL",
+      "error": "ValueError: sw-g112.nc:sw_flux_dn: shape, dtype, dimensions, units, or values differ"
+    },
+    {
+      "case": "missing_flux",
+      "expected_exit": 1,
+      "actual_exit": 1,
+      "status": "FAIL",
+      "error": "ValueError: sw-g112.nc: variable names differ"
+    },
+    {
+      "case": "both_clear_liquid",
+      "expected_exit": 1,
+      "actual_exit": 1,
+      "status": "FAIL",
+      "error": "ValueError: sw-g112.nc: lwp has no cloudy cells; cloud path not exercised"
+    }
+  ]
+}
