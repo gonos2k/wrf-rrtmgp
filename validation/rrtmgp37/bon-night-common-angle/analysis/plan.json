@@ -1,0 +1,84 @@
+{
+  "schema": "udm37-bon-night-common-angle-attribution-plan-v1",
+  "status": "PREPARED_BEFORE_NUMERICAL_EVALUATION",
+  "pins": {
+    "packet": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-legacy-lw-source-export-bon-audit-v2/cases/SOURCE_ON/legacy-export/rrtmg4_d01_i13_j46_step721_lw.txt",
+      "sha256": "bd614b57362b48ab8e00b179fc3464925b9c49a8eef0a472489f87fd89e15c7f",
+      "bytes": 2539937
+    },
+    "input": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-dry-column-attribution-v1/matched-legacy-dry.input",
+      "sha256": "292f9569b059c373c9cb14f1574cb8835627331574592a19d641ef07c21ec918",
+      "bytes": 39535
+    },
+    "gp_result": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-n2-attribution-v1/run-preparation-v1/run-v1/n2-0p7808.result",
+      "sha256": "b578e9983b5817297db75baac026af98b84a3cbcd3653aadf2e4db5930ce5732",
+      "bytes": 763371
+    },
+    "gp_source": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-n2-attribution-v1/run-preparation-v1/run-v1/n2-0p7808.result.lw_transport",
+      "sha256": "bb53daf55ea9b6f91c9d0dbc4f132eff11b3ab76fd278bacb327571a1642e792",
+      "bytes": 308081
+    },
+    "legacy_helper": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-legacy-lw-math-v2/legacy_lw_replay.py",
+      "sha256": "691497decf3992435ada71b6af84e25e88773f534f385c1a56050e370a1aea00",
+      "bytes": 16092
+    },
+    "angular_helper": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-lw-angular-math-v1/angular_reference.py",
+      "sha256": "a64dfa9f3ff90cc788028c1cb0f5ab4d0be1316c49ef74e833b8dddc4eb5cb48",
+      "bytes": 13139
+    },
+    "legacy_actual_replay": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-legacy-lw-actual-math-v1/result.json",
+      "sha256": "fe33f4e670083ebdba0b501a5ef3a199f42bcb6487126a965ec5161142f57086",
+      "bytes": 2846
+    },
+    "legacy_actual_review": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-legacy-lw-actual-math-review-v1/review.json",
+      "sha256": "c77dd45bf0ab9fb857f1fc3e6c234a35a9f1c135b55a4393566dc7ae00f99330",
+      "bytes": 7548
+    },
+    "common_result": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-common-band-source-math-v1/result.json",
+      "sha256": "e09857e32dfe021f84706ed4e6f0f5074458ef4b44cb3b13b3d6c43924cc2040",
+      "bytes": 302546
+    },
+    "legacy_source": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-independent-opacity-pr-work/WRF/phys/module_ra_rrtmg_lw.F",
+      "sha256": "09164a1048f2be2001ac6e161da3c0c48f9e74e4ff57271f445032392d9153ef",
+      "bytes": 713929
+    },
+    "optical_scope": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-common-band-source-math-v1/optical-scope-addendum-v1.json",
+      "sha256": "2327e14f1b1311a17d2b44622c7b2e527e6834b396ef8a9a76dbc05fe05331a7",
+      "bytes": 722
+    }
+  },
+  "quadrature_orders": [
+    256,
+    512,
+    1024,
+    2048
+  ],
+  "quadrature_tolerance_Wm2": 1e-09,
+  "closure_tolerance_Wm2": 1e-09,
+  "scope": "Same held clear LW BON diagnostic state; 45 layers =32 native +13 upper extension. Own 140/128 gpoints remain separate. Common physical bands3-13 only for paired claims.",
+  "formulas": {
+    "legacy_exact_source": "A*[B_layer+(B_lower_face-B_layer)*(1-2/x+2/(exp(x)-1))]*layer_fraction, A=1-exp(-x), x=tau/mu. This equals RTE linear-source expression with layer-local face fraction.",
+    "emitter": "pi*source_layer_dn(mu)*exp(-sum(tau_below)/mu), summed only within each own spectrum; angular weights integrate 2mu dmu.",
+    "split": "GPnative-Lnative=(GPnative-GPintegral)+(GPintegral-Lintegral)+(Lintegral-Lexactnative)+(Lexactnative-Lcaptured)."
+  },
+  "limitations": [
+    "Exact legacy angle removes lookup, thin-layer polynomial and float32 approximations; it is not a reconstruction of the retained native bitwise recurrence (already separately validated).",
+    "Both exact emissions use the algebraically shared linear thermal-source closure, with engine-native source fractions and optical depths. Legacy uses layer-local fractions at faces; GP uses captured geometric interlayer fractions.",
+    "Own-spectrum common-angle residual still combines optical coefficients, k-discretization and source-fraction interpolation; it is not pure opacity causality or a physical accuracy judgment.",
+    "No across-engine gpoint pairing, optical-depth/source swapping, source-fraction renormalization, production source changes or new compiled RTE/replay/model/build.",
+    "All-engine totals have different band edges and remain unpaired spectrum totals; the paired attribution is common bands3-13."
+  ],
+  "quadrature_gate": "All successive emitter, per-band, common3-13 total and all-engine-native total changes <=1e-9 W/m2; cap2048.",
+  "optical_scope": "Captured GP TOTAL_TAU must exactly equal GAS_TAU and GAS_TAU_RAW. Tiny unassembled frozen diagnostic is not transported; no claim of generic hydrometeor-free state."
+}

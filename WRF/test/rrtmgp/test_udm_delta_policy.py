@@ -80,8 +80,8 @@ def main() -> int:
         source = capture / "sw.input"
         production = capture / "sw.result"
         phase, nc, nl, overlap, seed, iceflag, records = read_input(source)
-        if (phase, nc) != ("SW", 1) or source.read_text().splitlines()[0].strip() != "RRTMGP_REPLAY_V4":
-            raise RuntimeError("adapter did not capture one-column V4 SW input")
+        if (phase, nc) != ("SW", 1) or source.read_text().splitlines()[0].strip() not in {"RRTMGP_REPLAY_V4", "RRTMGP_REPLAY_V5", "RRTMGP_REPLAY_V6"}:
+            raise RuntimeError("adapter did not capture one-column V4/V5/V6 SW input")
         # Add liquid and ice paths so all policies compare the composition
         # step with active cloud and captured rain/snow optics.
         variant = root / "sw-cloudy.input"

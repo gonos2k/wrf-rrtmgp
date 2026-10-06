@@ -1,0 +1,191 @@
+{
+  "PR75_prior_analysis": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-current-rrtmg4-optics-export-analysis-v1/actual-same-call-comparison-v3.json",
+    "sha256": "d73d13fe886eb29a9ba5598d7b4264dce4af5ad286e7b95b2b3bf7da6b8431b3",
+    "size_bytes": 104136
+  },
+  "byte_identical_reproduction": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rrtmg4-export-independent-review-v1/dry-gas-synthesis-review-v1/reproduced-analysis.json",
+    "sha256": "faddcff23c95c8a828e8f51b6732923365a29ad216ddb6fa41c76fe7223aced7",
+    "size_bytes": 53814
+  },
+  "findings": [
+    "Native44 heating and upper-extension heating are separately tabulated. Fixed extension input does not imply unchanged extension radiative heating.",
+    "Surface index0 and TOA index\u22121 are verified from strictly decreasing captured PLEV; reported HR layer31 is array index30.",
+    "New dry residual uses native44 and GP denominator; PR75 uses legacy denominator and phase solver extent for its mean. Do not directly compare their percentages as a changed physical result.",
+    "Aggregate baseline REAL32 identity is sufficient for the scoped held-gas sensitivity; six SW visible/NIR partition mismatches remain disclosed. Source accumulation precision distinction is supported but not proved by exact per-band emulation.",
+    "The sensitivity is far smaller than several retained PR75 engine-configuration endpoint contrasts, but those contrasts include different occurrence/masks/sizes/optics/spectral treatment. This does not isolate their cause or establish accuracy."
+  ],
+  "frozen_analysis_files": {
+    "README.md": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-dry-gas-causal-analysis-v1/README.md",
+      "sha256": "10064412fcf823dd00dda10db1988ebc94630651742c52b32168c96350492664",
+      "size_bytes": 3366
+    },
+    "analysis.json": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-dry-gas-causal-analysis-v1/analysis.json",
+      "sha256": "faddcff23c95c8a828e8f51b6732923365a29ad216ddb6fa41c76fe7223aced7",
+      "size_bytes": 53814
+    },
+    "analyze.py": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-dry-gas-causal-analysis-v1/analyze.py",
+      "sha256": "99881b1aad5f26cc6bd43a28f75236bc3d3b423dc8b5dd6eb6e3ad47bcb5da44",
+      "size_bytes": 9786
+    }
+  },
+  "limits": [
+    "One actual captured column, one LW/SW call; no observations/domain statistics/forecast-effect ranking.",
+    "Original input drymass only44 tokens changed; all other input/state/path/seed/table records fixed as independently verified in the terminal review.",
+    "A fresh analysis reproduction wrote only the private redirected output; reviewer performed zero build/model/solver/REAL calls."
+  ],
+  "partition_addendum": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rrtmg4-export-independent-review-v1/dry-gas-four-call-terminal-review-v2/partition-boundary-addendum-v1.json",
+    "sha256": "0d081faf21cf592341f57d0c91d9eaff38cad6148551516caa39acb30eed06a2",
+    "size_bytes": 5876
+  },
+  "phases": {
+    "LW": {
+      "PR75_denominator_extent_distinction": {
+        "PR75_all_solver_layers_abs_mean": 0.0013513591266985467,
+        "PR75_captured_native44_GP_minus_legacy_over_legacy_abs_max": 0.0028832335537967908,
+        "PR75_mean_layer_count": 57,
+        "current_native44_abs_mean": 0.0016518688903722613,
+        "current_native44_legacy_minus_GP_over_GP_max": 0.0028915706272522905
+      },
+      "PR75_distinct_residual_comparisons": {
+        "surface_clear_down": {
+          "dry_only_counterfactual_minus_baseline_W_m2": 0.08915655036588532,
+          "interpretation": "Distinct comparisons; not a fraction of an accuracy error explained.",
+          "prior_PR75_GP_minus_legacy_W_m2": 3.19549560546875
+        },
+        "surface_down": {
+          "dry_only_counterfactual_minus_baseline_W_m2": 0.008408514746577112,
+          "interpretation": "Distinct comparisons; not a fraction of an accuracy error explained.",
+          "prior_PR75_GP_minus_legacy_W_m2": 1.6085205078125
+        },
+        "toa_clear_up": {
+          "dry_only_counterfactual_minus_baseline_W_m2": -0.06128339824311979,
+          "interpretation": "Distinct comparisons; not a fraction of an accuracy error explained.",
+          "prior_PR75_GP_minus_legacy_W_m2": -2.412017822265625
+        },
+        "toa_up": {
+          "dry_only_counterfactual_minus_baseline_W_m2": -0.00019593594038269657,
+          "interpretation": "Distinct comparisons; not a fraction of an accuracy error explained.",
+          "prior_PR75_GP_minus_legacy_W_m2": 2.139984130859375
+        }
+      },
+      "extension_layer_count": 13,
+      "extension_max_heating_delta_K_day": 4.996817861901981e-05,
+      "layer31_heating_delta_K_day": 0.00026333132013434124,
+      "native44_max_heating_delta_K_day": 0.0007512611737585662,
+      "native44_max_heating_delta_layer_1based": 6,
+      "pressure_interfaces_hPa_surface_to_top": [
+        985.7008666992188,
+        0.0
+      ],
+      "strictly_decreasing_pressure": true,
+      "verified_endpoint_metrics": {
+        "surface_clear_down": {
+          "baseline": 430.99001174891237,
+          "counterfactual": 431.07916829927825,
+          "delta_cf_minus_baseline": 0.08915655036588532,
+          "units": "W m-2"
+        },
+        "surface_down": {
+          "baseline": 451.9713584426903,
+          "counterfactual": 451.9797669574369,
+          "delta_cf_minus_baseline": 0.008408514746577112,
+          "units": "W m-2"
+        },
+        "toa_clear_up": {
+          "baseline": 258.90850331739813,
+          "counterfactual": 258.847219919155,
+          "delta_cf_minus_baseline": -0.06128339824311979,
+          "units": "W m-2"
+        },
+        "toa_up": {
+          "baseline": 107.14113207872828,
+          "counterfactual": 107.1409361427879,
+          "delta_cf_minus_baseline": -0.00019593594038269657,
+          "units": "W m-2"
+        }
+      }
+    },
+    "SW": {
+      "PR75_denominator_extent_distinction": {
+        "PR75_all_solver_layers_abs_mean": 0.0016192001881444222,
+        "PR75_captured_native44_GP_minus_legacy_over_legacy_abs_max": 0.0028832335537967908,
+        "PR75_mean_layer_count": 45,
+        "current_native44_abs_mean": 0.0016518688903722613,
+        "current_native44_legacy_minus_GP_over_GP_max": 0.0028915706272522905
+      },
+      "PR75_distinct_residual_comparisons": {
+        "surface_clear_down": {
+          "dry_only_counterfactual_minus_baseline_W_m2": -0.06917689900542712,
+          "interpretation": "Distinct comparisons; not a fraction of an accuracy error explained.",
+          "prior_PR75_GP_minus_legacy_W_m2": -4.193443298339844
+        },
+        "surface_down": {
+          "dry_only_counterfactual_minus_baseline_W_m2": -0.00021307993012636972,
+          "interpretation": "Distinct comparisons; not a fraction of an accuracy error explained.",
+          "prior_PR75_GP_minus_legacy_W_m2": -0.04982444643974304
+        },
+        "toa_clear_up": {
+          "dry_only_counterfactual_minus_baseline_W_m2": 0.017382569157092576,
+          "interpretation": "Distinct comparisons; not a fraction of an accuracy error explained.",
+          "prior_PR75_GP_minus_legacy_W_m2": -1.3103370666503906
+        },
+        "toa_up": {
+          "dry_only_counterfactual_minus_baseline_W_m2": -0.0014414245053444574,
+          "interpretation": "Distinct comparisons; not a fraction of an accuracy error explained.",
+          "prior_PR75_GP_minus_legacy_W_m2": -10.722763061523438
+        }
+      },
+      "extension_layer_count": 1,
+      "extension_max_heating_delta_K_day": 5.709999880476602e-06,
+      "layer31_heating_delta_K_day": -1.329274776518119e-05,
+      "native44_max_heating_delta_K_day": 0.0002125331708452416,
+      "native44_max_heating_delta_layer_1based": 44,
+      "pressure_interfaces_hPa_surface_to_top": [
+        985.7008666992188,
+        9.999999747378752e-06
+      ],
+      "strictly_decreasing_pressure": true,
+      "verified_endpoint_metrics": {
+        "surface_clear_down": {
+          "baseline": 93.25713296158561,
+          "counterfactual": 93.18795606258018,
+          "delta_cf_minus_baseline": -0.06917689900542712,
+          "units": "W m-2"
+        },
+        "surface_down": {
+          "baseline": 0.379629606799925,
+          "counterfactual": 0.37941652686979865,
+          "delta_cf_minus_baseline": -0.00021307993012636972,
+          "units": "W m-2"
+        },
+        "toa_clear_up": {
+          "baseline": 40.110625760764094,
+          "counterfactual": 40.12800832992119,
+          "delta_cf_minus_baseline": 0.017382569157092576,
+          "units": "W m-2"
+        },
+        "toa_up": {
+          "baseline": 149.23369627919246,
+          "counterfactual": 149.2322548546871,
+          "delta_cf_minus_baseline": -0.0014414245053444574,
+          "units": "W m-2"
+        }
+      }
+    }
+  },
+  "reviewer_erratum": "One prior-analysis path lookup guessed actual-runtime-review-v3.json; the frozen numerical artifact is actual-same-call-comparison-v3.json. No artifact changed.",
+  "schema": "udm37-dry-gas-synthesis-independent-review-v1",
+  "status": "PASS_SCOPED_DESCRIPTIVE_SYNTHESIS",
+  "terminal_independent_review": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rrtmg4-export-independent-review-v1/dry-gas-four-call-terminal-review-v2/review.json",
+    "sha256": "d62f84647d3f56b31ba560277b0546df8fd78e8079fee589c617337518f52c98",
+    "size_bytes": 33296
+  },
+  "timestamp_utc": "2026-10-04T20:16:18.671042+00:00"
+}

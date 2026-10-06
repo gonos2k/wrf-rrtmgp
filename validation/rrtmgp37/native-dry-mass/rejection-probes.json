@@ -1,0 +1,17 @@
+{
+  "status": "PASS",
+  "probes": [
+    {
+      "probe": "corrupt-native-mass",
+      "exit_code": 1,
+      "rejected": true,
+      "message": "UDM native-mass validation failed: DRY_LAYER_MASS_KG_M2 vs independent MU/MUB/DNW/C1H/C2H: layer 1 differs by 0.1; REAL32 tolerance 5.78669387e-05; actual=60.7778831, expected=60.6778831"
+    },
+    {
+      "probe": "mismatch-source-QV",
+      "exit_code": 1,
+      "rejected": true,
+      "message": "UDM native-mass validation failed: QV versus QVAPOR: capture does not exactly match source state"
+    }
+  ]
+}

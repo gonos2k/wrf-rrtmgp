@@ -1,0 +1,44 @@
+{
+  "schema": "solrad-station-selection-v1",
+  "selection": "All three geometrically in-domain official SOLRAD sites, before scoring; only STE has 2016 data in this campaign. No alternate boundary-nearest SURFRAD substitutes.",
+  "window_utc": [
+    "2016-10-06T00:00:00",
+    "2016-10-08T00:00:00"
+  ],
+  "primary_report_url": "https://gml.noaa.gov/publications/summary_reports/summary_report_28.pdf",
+  "report_table": "7-3, original ISIS station operating periods",
+  "sites": [
+    {
+      "site": "ort",
+      "lat": 35.96101,
+      "lon": -84.28838,
+      "end_date_from_report": "2007-06-08",
+      "attempted_files": 3,
+      "http_result": "403",
+      "scored": false
+    },
+    {
+      "site": "tlh",
+      "lat": 30.39675,
+      "lon": -84.32955,
+      "end_date_from_report": "2002-10-30",
+      "attempted_files": 3,
+      "http_result": "403",
+      "scored": false
+    },
+    {
+      "site": "ste",
+      "lat": 38.97203,
+      "lon": -77.4869,
+      "header_matches_2016": true,
+      "attempted_files": 3,
+      "http_result": "200",
+      "scored": true,
+      "scope": "one station in lateral-boundary zone"
+    }
+  ],
+  "primary_reference": "DNI * max(cos(supplied SZA),0) + DHI; all 60 QC0 minutes required, no PSP fallback",
+  "secondary_reference": "Independent measured global PSP; separate metrics, all 60 QC0 minutes required",
+  "hour_classification": "at least 30 of 60 observed minutes with SZA<90 degrees; fixed before calculating errors",
+  "protocol": "Period-end minute samples (start,end]; no interpolation, shift, station/grid tuning or negative measured-irradiance clipping."
+}

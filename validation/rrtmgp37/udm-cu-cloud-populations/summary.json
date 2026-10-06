@@ -1,0 +1,64 @@
+{
+  "status": "PASS_SCOPED_CU_ADAPTER_WITH_RA37_CHECKPOINT_GATE_OPEN",
+  "base_commit": "22ab474286c7b808d6f81e08ce457ddf6ba8e9cb",
+  "production_sha256": {
+    "WRF/phys/module_radiation_driver.F": "6790dc884c53fff201f15713d60197f54b43dc53b545ed44eb2397e9d2d3687f",
+    "WRF/phys/module_ra_rrtmg_lw.F": "64dddfeecf7eff123aa6eadc776999584f6aa4822eb24cb46f3774213d8ba090",
+    "WRF/phys/module_ra_rrtmg_sw.F": "6710853e098b2dbbd8c613c728ab949102a76665442fae419498be48cbbf6f59",
+    "WRF/phys/module_ra_rrtmgp.F": "07d9de67948bcaa6aae1c1da44c945974850397715564055e73548aa5aa022ac",
+    "WRF/phys/module_ra_rrtmgp_input.F": "47dcd1fbe84ec2f5bc21598e05024f38b9f4a4a7decb51cb7e51f7e21d01357f",
+    "WRF/phys/module_ra_rrtmgp_trace.F": "f9d7f16566881b3b4a9351290e6750e87f8212647db7479a45be53659facc53a"
+  },
+  "receipts": {
+    "winter37": {
+      "path": "build/udm-cu-winter24h-v1/staged-v2/execution-receipt.json",
+      "sha256": "86547d08d860e79a92b855bd13963a7aa25d6474f2aa60b77f6c95ab638f776e",
+      "status": "FAIL_STOPPED",
+      "size_bytes": 2250068
+    },
+    "ra4": {
+      "path": "build/udm-cu-winter24h-v1/staged-ra4-only-v3/execution-receipt.json",
+      "sha256": "a570b1b3646ab4c0a5c9ca4ca3df06e15b0680cf386386eeff6cc0e83e12e25f",
+      "status": "PASS_RA4_PRESERVATION24H",
+      "size_bytes": 2246798
+    },
+    "ra4_restart": {
+      "path": "build/udm-cu-winter24h-v1/restart13h-ra4-staged-v1/restart-execution-v1.json",
+      "sha256": "a6679ab7f34c4a2b22f79e81a99646a054437774bd87b0c631c0791b2d3a2f00",
+      "status": "PASS_RA4_OWN_RESTART13H",
+      "size_bytes": 883591
+    },
+    "serial_posthoc": {
+      "path": "build/udm-cu-corrected-winter-v1/daylight-serial-posthoc-v1.json",
+      "sha256": "c4fe27b8f29020512c638696c8aa3dae2311db7362b3552c545ed9d22e54a1ac",
+      "status": null,
+      "size_bytes": 43058
+    },
+    "serial_original_fail": {
+      "path": "build/udm-cu-corrected-winter-v1/staged-daylight-serial-v3-final/execution-receipt.json",
+      "sha256": "2b77aa78303717382f94450355e12dfed7051ccd0fc0c266970a7a7f9c26fbc3",
+      "status": "FAIL",
+      "size_bytes": 265859
+    }
+  },
+  "gates": {
+    "fresh_gnu_mpi_and_serial_em_real": "PASS",
+    "standalone_focused_tests": 26,
+    "controlled_sweep": "130/131 + corrected default-stack overlap1/1; no claim ofrerunentire131",
+    "standalone_cu_replays": 20,
+    "no_cu_executions": 22,
+    "no_cu_full_capture_files_byte_exact": 24,
+    "actual_LW_replay_sections": 24,
+    "actual_SW_replay_sections": 54,
+    "winter37_3h": "PASS through15:00",
+    "winter37_24h_history": "25Times/224numericfinite",
+    "winter37_checkpoint": "FAIL USTMNaN at12/24h and QZ0NaN at24h; no37restartrun",
+    "ra4_24h": "222vars/allmetadata/rawbytes andwholefileexactpristine-verifiedbaseline;bothcheckpointsfinite",
+    "ra4_own_restart12to13h": "all222vars/rawbytesexactcontinuous01Z;onlySTART_DATEcontrolattributechange",
+    "observational_accuracy": "NOT_ESTABLISHED",
+    "new_CU_OMP_and_decomposition": "NOT_ESTABLISHED"
+  },
+  "reference_scope": "Independentadapterpath;sharespinnedRRTMGPvendor/data andfrozenG/H table;notindependentphysicalmodel.",
+  "metadata_scope": "Publicationvalidationmetadata/documentationupdatedafterbuild; sixproductionidentitiesaboveexactto testedbuilds.",
+  "original_failures_retained": "Initialcompilefailure/invalidempty syntaxcheck; serialharnesslog/clock andpath-bookkeepingFAIL retained withseparateposthoc;37checkpointFAILgenuineandOPEN."
+}

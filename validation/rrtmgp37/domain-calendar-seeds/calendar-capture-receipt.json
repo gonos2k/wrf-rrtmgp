@@ -1,0 +1,98 @@
+{
+  "status": "PASS",
+  "scope": "actual RRTMGP 37/37 WRF trace proves production seed metadata is read from each run's calendar; no forecast claim",
+  "repository": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp",
+  "restart_root": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp/build/udm-domain-seeds-pr16/restart/run-publish-37",
+  "output_root": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp/build/udm-domain-seeds-pr16/restart/seed-capture-published",
+  "radiation_options": [
+    37,
+    37
+  ],
+  "microphysics_option": 27,
+  "environment": {
+    "WRF_RRTMGP_CAPTURE_CALL": "1",
+    "WRF_RRTMGP_CAPTURE_ALL": "unset",
+    "WRF_RRTMGP_AUDIT_DIR": "unset",
+    "OMP_NUM_THREADS": "1"
+  },
+  "runs": [
+    {
+      "case": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp/build/udm-domain-seeds-pr16/restart/seed-capture-published/calendar-resume-2000",
+      "source_case": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp/build/udm-domain-seeds-pr16/restart/run-publish-37/calendar/split-2",
+      "expected_time": "2000-01-01_00:00:10",
+      "checkpoint": "wrfrst_d01_2000-01-01_00:00:00",
+      "success_marker": true,
+      "wrf_returncode": 0,
+      "physics_options": [
+        37,
+        37,
+        27
+      ],
+      "executable": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp/WRF/main/wrf.exe",
+      "executable_sha256_before": "c52e08b0d88ab7bb267bbf9846b0654c27fc76607e5a44bf9132cc6029aa594a",
+      "executable_sha256_after": "c52e08b0d88ab7bb267bbf9846b0654c27fc76607e5a44bf9132cc6029aa594a",
+      "capture_directory": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp/build/udm-domain-seeds-pr16/restart/seed-capture-published/calendar-resume-2000/capture",
+      "capture_files": {
+        "lw.input": "b0df3e7820b8ae2c6971cba95ae6625901cd021cc2a514bec0c0c2d27fe722c6",
+        "lw.raw": "ed043f40dc55a02fc8f3a0aeea6b4ad11fa40f9aeee4433f4a7c1b265dfa4186",
+        "lw.result": "3ed860f0b7de918eed701a965bf7fd93b9de72b27e217b696c7057d5d9665760"
+      },
+      "validator": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp/WRF/test/rrtmgp/test_domain_seed_capture.py",
+      "validator_sha256": "be8396811bce3f386405d8f4a43d01160e37fd0796f858e5866b869ce87c80a8",
+      "validation_receipt": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp/build/udm-domain-seeds-pr16/restart/seed-capture-published/calendar-resume-2000/domain_seed_validation.json",
+      "phase_seed_year_day": {
+        "LW": [
+          2000,
+          1
+        ]
+      },
+      "phase_seed_values": {
+        "LW": 847516934
+      },
+      "independent_validation": "PASS"
+    },
+    {
+      "case": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp/build/udm-domain-seeds-pr16/restart/seed-capture-published/continuous-1999",
+      "source_case": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp/build/udm-domain-seeds-pr16/restart/run-publish-37/control/continuous",
+      "expected_time": "1999-10-22_19:00:00",
+      "checkpoint": null,
+      "success_marker": true,
+      "wrf_returncode": 0,
+      "physics_options": [
+        37,
+        37,
+        27
+      ],
+      "executable": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp/WRF/main/wrf.exe",
+      "executable_sha256_before": "c52e08b0d88ab7bb267bbf9846b0654c27fc76607e5a44bf9132cc6029aa594a",
+      "executable_sha256_after": "c52e08b0d88ab7bb267bbf9846b0654c27fc76607e5a44bf9132cc6029aa594a",
+      "capture_directory": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp/build/udm-domain-seeds-pr16/restart/seed-capture-published/continuous-1999/capture",
+      "capture_files": {
+        "lw.input": "dc46948484b67db12670a64771734269dc740375f66a77a47424070098a0100b",
+        "lw.raw": "51111f1c945e9ac10813150b772db2561046dab434c4293df45bf3179192a2e6",
+        "lw.result": "fe0dfeef2e2f0a8b995a4b338023b608c42af60a84336fbbd76e4a6934dd7f72",
+        "sw.input": "760952f51d549458042f108b453d547654781eeb642457710a94ef309c55253e",
+        "sw.raw": "8cef2cb19f9fcca403b4dc3380b5e232412019b7222f6ad0a0a2a84e0211978c",
+        "sw.result": "9f6d91043db4938cdffb795ab1189755a0619470eda6f2d644a452b44f17b1bd"
+      },
+      "validator": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp/WRF/test/rrtmgp/test_domain_seed_capture.py",
+      "validator_sha256": "be8396811bce3f386405d8f4a43d01160e37fd0796f858e5866b869ce87c80a8",
+      "validation_receipt": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp/build/udm-domain-seeds-pr16/restart/seed-capture-published/continuous-1999/domain_seed_validation.json",
+      "phase_seed_year_day": {
+        "LW": [
+          1999,
+          295
+        ],
+        "SW": [
+          1999,
+          295
+        ]
+      },
+      "phase_seed_values": {
+        "LW": 679102813,
+        "SW": 679102814
+      },
+      "independent_validation": "PASS"
+    }
+  ]
+}

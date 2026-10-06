@@ -1,0 +1,55 @@
+{
+  "actions": [
+    {
+      "argv": [
+        "git",
+        "init",
+        "-q"
+      ],
+      "returncode": 0
+    },
+    {
+      "argv": [
+        "git",
+        "remote",
+        "add",
+        "origin",
+        "https://github.com/earth-system-radiation/rte-rrtmgp.git"
+      ],
+      "returncode": 0
+    },
+    {
+      "argv": [
+        "git",
+        "sparse-checkout",
+        "set",
+        "--no-cone",
+        "--stdin"
+      ],
+      "returncode": 0
+    },
+    {
+      "argv": [
+        "git",
+        "fetch",
+        "--filter=blob:none",
+        "--depth=1",
+        "origin",
+        "ed5b0113109fcd23a010a90c61f21bad551146ef"
+      ],
+      "returncode": 0
+    },
+    {
+      "argv": [
+        "git",
+        "checkout",
+        "--detach",
+        "FETCH_HEAD"
+      ],
+      "returncode": 0
+    }
+  ],
+  "source_pin": "ed5b0113109fcd23a010a90c61f21bad551146ef",
+  "excluded_from_checkout": "**/*.nc; authenticated historical SW coefficient is retained separately",
+  "model_build_solver_calls": 0
+}

@@ -1,0 +1,131 @@
+{
+  "build": {
+    "build_log": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-pr60-active-cu-current-build-v1/build-em_real-v1.log",
+      "sha256": "4b6085fdfd69bc6510b76a97d8ca1158e40dd9881aea7d812aab7d83404d2b22",
+      "size_bytes": 2020192
+    },
+    "command": [
+      "csh",
+      "-f",
+      "./compile",
+      "-j",
+      "12",
+      "em_real"
+    ],
+    "compiler_scope": "GNU Fortran 13.3.0; MPICH 4.2.0 ch3:sock dm+sm; NetCDF 4.9.2",
+    "configure_matches_pinned_template": true,
+    "configure_sha256": "44f85b7fc9b6994cb3784567e69d310580740a021b5f1ab1efb0586f25cfcba2",
+    "dependency_inventory_after_matches_before": true,
+    "executables": {
+      "real.exe": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-pr60-active-cu-current-build-v1/source-v3/WRF/main/real.exe",
+        "sha256": "632b2c3ff4cef46773dd50087289f8bf0d9d552b979ef94062b8d390beb9d54e",
+        "size_bytes": 43822408
+      },
+      "wrf.exe": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-pr60-active-cu-current-build-v1/source-v3/WRF/main/wrf.exe",
+        "sha256": "6378764a2119e3475a4ec8b80cce20f5434739c428dc7fb401c899bcdeb309ed",
+        "size_bytes": 59162832
+      }
+    },
+    "model_invocations": 0,
+    "returncode": 0,
+    "runtime_libraries": {
+      "real.exe": {
+        "all_paths_and_hashes_match": true,
+        "inventory_output_sha256": "e612a24d558b96ead443e72cd0b69ff4c845e095ccef2028b7e41d34a8f3a19c",
+        "ldd_rc": 0,
+        "resolved_count": 51
+      },
+      "wrf.exe": {
+        "all_paths_and_hashes_match": true,
+        "inventory_output_sha256": "9dd9b253a7f2ca55c238c27cdb161c2e7f83d9517f5aef50d87dca26a842a933",
+        "ldd_rc": 0,
+        "resolved_count": 51
+      }
+    },
+    "runtime_library_mismatches": [],
+    "shared_dependency_manifest": {
+      "count": 1582,
+      "manifest_sha256": "7e398b8bda61185cc11a870aca19dc5e801bb77b0cfcf56478cf1c26fb33d3cf",
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-ccn-tile-init-gnu-v1/shared-dependencies-before-v1.json",
+      "sha256": "e49061863c79e836747d21559950b90e2f6d40b798dbbc8d08895d1cf4a87290"
+    },
+    "source_after_matches_before": true,
+    "status": "BUILD_PASS",
+    "successful_footer": true,
+    "timed_out": false
+  },
+  "candidate": {
+    "expected_head": "b66bd3724890c3d3a8d415e221a748309f93597e",
+    "fortran_differences_from_d05_source_v4": [
+      "WRF/phys/module_ra_rrtmg_lw.F",
+      "WRF/phys/module_ra_rrtmg_sw.F",
+      "WRF/test/rrtmgp/test_phase_path_stats.f90"
+    ],
+    "head": "b66bd3724890c3d3a8d415e221a748309f93597e",
+    "preparation_status": "SOURCE_PREPARED_NOT_BUILT",
+    "production_fortran_differences_from_d05_source_v4": [
+      "WRF/phys/module_ra_rrtmg_lw.F",
+      "WRF/phys/module_ra_rrtmg_sw.F"
+    ],
+    "repository": "gonos2k/wrf-rrtmgp",
+    "snapshot_manifest_sha256": "2b4bf42854acf7fc3a7de91d05741e201b6c8b206c473120813fc14c6b4f101b",
+    "source_entry_count": 6805,
+    "source_freeze_sha256": "cd9c954908b614a437e1fe8dd5365c379209a24d112717e3997de6e1a39eec53",
+    "source_rehash": {
+      "missing_files": 0,
+      "regular_mismatches": 0,
+      "symlink_mismatches": 0
+    },
+    "tracked_fortran_common_with_d05_source_v4": 2182,
+    "tracked_fortran_missing_from_d05": [],
+    "worktree_clean": true
+  },
+  "conclusion": "PASS: PR60 tracked source snapshot, GNU/MPICH build, executable/link/dependency identities, and active-CU staged case are internally consistent. Stage remains not run; no model invocation evidence is claimed.",
+  "schema": "pr60-independent-prerun-review-v1",
+  "scope": "Read-only authentication of fresh current-source em_real build and staged active-CU long-b1 case; no REAL/WRF/model run performed.",
+  "staging": {
+    "broken_symlink_count": 0,
+    "candidate_case": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-pr60-active-cu-current-build-v1/runs-v1/case-pr60-cu-active",
+    "expected_initial_input_hashes": {
+      "wrfbdy_d01": "ba4241de4f4661a77733cf157f0c87f90668f107df86f8c92d092b56d7bd7bd4",
+      "wrfinput_d01": "0cc7e188ef585a93ab52550816c6af236932254820fb1bc6937f464bfed38637"
+    },
+    "matches_long_b1_namelist": true,
+    "model_invocations": 0,
+    "model_launched": false,
+    "namelist_sha256": "be55e9b8fdd6eb6494b3642d5cae8226b31be8dd509ea4fd8121a8baa704e47d",
+    "namelist_size_bytes": 5159,
+    "nonlink_regular_files": [
+      "namelist.input"
+    ],
+    "physics_values": {
+      "cu_physics": [
+        "1"
+      ],
+      "mp_physics": [
+        "27"
+      ],
+      "ra_lw_physics": [
+        "37"
+      ],
+      "ra_sw_physics": [
+        "37"
+      ],
+      "rrtmgp_udm_frozen_optics": [
+        "1"
+      ]
+    },
+    "stage_receipt_sha256": "7e27b36c1a6437582dafdc803c239eb489b7acb366677d9307c83e7e6b085e60",
+    "staged_input_hashes_match": {
+      "wrfbdy_d01": true,
+      "wrfinput_d01": true
+    },
+    "status": "STAGED_NOT_RUN",
+    "symlink_count": 97,
+    "wrf_exe_link_targets_current_build": true
+  },
+  "verdict": "PASS"
+}

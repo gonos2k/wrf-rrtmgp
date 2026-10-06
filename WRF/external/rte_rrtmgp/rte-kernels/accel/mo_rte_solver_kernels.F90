@@ -119,14 +119,20 @@ contains
 
     !$acc        data create(   tau_loc,trans,source_dn,source_up ) &
     !$acc             copyin(   D, tau, lev_source)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target data map(alloc:tau_loc,trans,source_dn,source_up ) &
     !$omp             map(to:   D, tau, lev_source)
+#endif
 
     !$acc        enter data create(   flux_dn,flux_up)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target enter data map(alloc:flux_dn,flux_up)
+#endif
 
     !$acc                         parallel loop    collapse(2)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target teams distribute parallel do simd collapse(2)
+#endif
     do igpt = 1, ngpt
       do icol = 1, ncol
         !
@@ -138,12 +144,18 @@ contains
     end do
 
     !$acc        data create(   An, Cn)  copyin(g)          if(do_rescaling)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target data map(alloc:An, Cn)  map(to:g)          if(do_rescaling)
+#endif
     !$acc        data copyin(sfc_srcJac) create(   gpt_Jac) if(do_Jacobians)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target data map(to:sfc_srcJac) map(alloc:gpt_Jac) if(do_Jacobians)
+#endif
 
     !$acc parallel loop no_create(An, Cn, gpt_Jac, g) collapse(3)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target teams distribute parallel do simd collapse(3)
+#endif
     do igpt = 1, ngpt
       do ilay = 1, nlay
         do icol = 1, ncol
@@ -189,7 +201,9 @@ contains
     ! Surface reflection and emission
     !
     !$acc                         parallel loop    collapse(2) no_create(gpt_Jac, sfc_srcJac)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target teams distribute parallel do simd collapse(2)
+#endif
     do igpt = 1, ngpt
       do icol = 1, ncol
         !
@@ -222,7 +236,9 @@ contains
       call sum_broadband_factor(ncol, nlay+1, ngpt, pi * weight, flux_dn, broadband_dn)
       call sum_broadband_factor(ncol, nlay+1, ngpt, pi * weight, flux_up, broadband_up)
       !$acc        exit data delete(     flux_dn,flux_up)
+#ifndef RRTMGP_CPU_ONLY
       !$omp target exit data map(release:flux_dn,flux_up)
+#endif
     else
       !
       ! Convert intensity to flux assuming azimuthal isotropy and quadrature weight
@@ -230,7 +246,9 @@ contains
       call apply_factor_3D(ncol, nlay+1, ngpt, pi * weight, flux_dn)
       call apply_factor_3D(ncol, nlay+1, ngpt, pi * weight, flux_up)
       !$acc        exit data copyout( flux_dn,flux_up)
+#ifndef RRTMGP_CPU_ONLY
       !$omp target exit data map(from:flux_dn,flux_up)
+#endif
     end if
     !
     ! Only broadband-integrated Jacobians are provided
@@ -240,11 +258,17 @@ contains
     end if
 
     !$acc        end data
+#ifndef RRTMGP_CPU_ONLY
     !$omp end target data
+#endif
     !$acc        end data
+#ifndef RRTMGP_CPU_ONLY
     !$omp end target data
+#endif
     !$acc        end data
+#ifndef RRTMGP_CPU_ONLY
     !$omp end target data
+#endif
   end subroutine lw_solver_noscat_oneangle
   ! ---------------------------------------------------------------
   !
@@ -302,13 +326,21 @@ contains
     ! ------------------------------------
 
     !$acc        data copyin(Ds, tau, lay_source, lev_source, sfc_emis, sfc_src)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target data map(to:Ds, tau, lay_source, lev_source, sfc_emis, sfc_src)
+#endif
     !$acc        data copyout( flux_up, flux_dn)             if (.not. do_broadband)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target data map(from:flux_up, flux_dn)             if (.not. do_broadband)
+#endif
     !$acc        data copyout( broadband_up, broadband_dn)   if (      do_broadband)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target data map(from:broadband_up, broadband_dn)   if (      do_broadband)
+#endif
     !$acc        data copyin(sfc_srcJac)   copyout(flux_upJac) if (do_Jacobians)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target data map(to:sfc_srcJac), map(from:flux_upJac) if (do_Jacobians)
+#endif
 
     if(do_broadband) then
       this_broadband_up => broadband_up
@@ -322,7 +354,9 @@ contains
     end if
 
     !$acc        data create(   this_broadband_up, this_broadband_dn, this_flux_up, this_flux_dn)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target data map(alloc:this_broadband_up, this_broadband_dn, this_flux_up, this_flux_dn)
+#endif
     call lw_solver_noscat_oneangle(ncol, nlay, ngpt, &
                           top_at_1, Ds(:,:,1), weights(1), tau, &
                           lay_source, lev_source, sfc_emis, sfc_src, &
@@ -332,7 +366,9 @@ contains
                           do_Jacobians, sfc_srcJac, flux_upJac,     &
                           do_rescaling, ssa, g)
     !$acc end data
+#ifndef RRTMGP_CPU_ONLY
     !$omp end target data
+#endif
 
     if(nmus > 1) then
       !
@@ -355,7 +391,9 @@ contains
       ! For more than one angle use local arrays
       !
       !$acc        data create(   this_broadband_up, this_broadband_dn, this_flux_up, this_flux_dn)
+#ifndef RRTMGP_CPU_ONLY
       !$omp target data map(alloc:this_broadband_up, this_broadband_dn, this_flux_up, this_flux_dn)
+#endif
       do imu = 2, nmus
         call lw_solver_noscat_oneangle(ncol, nlay, ngpt, &
                               top_at_1, Ds(:,:,imu), weights(imu), tau, &
@@ -377,17 +415,27 @@ contains
         end if
       end do
       !$acc end data
+#ifndef RRTMGP_CPU_ONLY
       !$omp end target data
+#endif
     end if
 
     !$acc end data
+#ifndef RRTMGP_CPU_ONLY
     !$omp end target data
+#endif
     !$acc end data
+#ifndef RRTMGP_CPU_ONLY
     !$omp end target data
+#endif
     !$acc end data
+#ifndef RRTMGP_CPU_ONLY
     !$omp end target data
+#endif
     !$acc end data
+#ifndef RRTMGP_CPU_ONLY
     !$omp end target data
+#endif
 
     ! Cleanup
     if (.not. associated(this_broadband_up, broadband_up)) then
@@ -434,9 +482,13 @@ contains
     ! ------------------------------------
     ! ------------------------------------
     !$acc enter        data copyin(tau, ssa, g, lay_source, lev_source, sfc_emis, sfc_src, flux_dn)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target enter data map(to:tau, ssa, g, lay_source, lev_source, sfc_emis, sfc_src, flux_dn)
+#endif
     !$acc enter        data create(   flux_up, Rdif, Tdif, gamma1, gamma2, sfc_albedo, source_dn, source_up, source_sfc)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target enter data map(alloc:flux_up, Rdif, Tdif, gamma1, gamma2, sfc_albedo, source_dn, source_up, source_sfc)
+#endif
     !
     ! RRTMGP provides source functions at each level using the spectral mapping
     !   of each adjacent layer. Combine these for two-stream calculations
@@ -460,7 +512,9 @@ contains
                         source_dn, source_up, source_sfc)
 
     !$acc                         parallel loop    collapse(2)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target teams distribute parallel do simd collapse(2)
+#endif
     do igpt = 1, ngpt
       do icol = 1, ncol
         sfc_albedo(icol,          igpt) = 1._wp - sfc_emis(icol,igpt)
@@ -476,11 +530,17 @@ contains
                 source_dn, source_up, source_sfc,  &
                 flux_up, flux_dn)
     !$acc        exit data delete(     tau, ssa, g, lay_source, lev_source, sfc_emis, sfc_src)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target exit data map(release:tau, ssa, g, lay_source, lev_source, sfc_emis, sfc_src)
+#endif
     !$acc        exit data delete(     Rdif, Tdif, gamma1, gamma2, sfc_albedo, source_dn, source_up, source_sfc)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target exit data map(release:Rdif, Tdif, gamma1, gamma2, sfc_albedo, source_dn, source_up, source_sfc)
+#endif
     !$acc exit data copyout(flux_up, flux_dn)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target exit data map(from:flux_up, flux_dn)
+#endif
   end subroutine lw_solver_2stream
   ! -------------------------------------------------------------------------------------------------
   !
@@ -504,7 +564,9 @@ contains
     ! ------------------------------------
     ! ------------------------------------
     !$acc enter data copyin(tau, mu0) create(flux_dir)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target enter data map(to:tau, mu0) map(alloc:flux_dir)
+#endif
     ! Indexing into arrays for upward and downward propagation depends on the vertical
     !   orientation of the arrays (whether the domain top is at the first or last index)
     ! We write the loops out explicitly so compilers will have no trouble optimizing them.
@@ -516,7 +578,9 @@ contains
       ! layer index = level index - 1
       ! previous level is up (-1)
       !$acc parallel loop collapse(2)
+#ifndef RRTMGP_CPU_ONLY
       !$omp target teams distribute parallel do simd collapse(2)
+#endif
       do igpt = 1, ngpt
         do icol = 1, ncol
           flux_dir(icol,    1,igpt) = inc_flux_dir(icol,   igpt) * mu0(icol, 1)
@@ -529,7 +593,9 @@ contains
       ! layer index = level index
       ! previous level is up (+1)
       !$acc parallel loop collapse(2)
+#ifndef RRTMGP_CPU_ONLY
       !$omp target teams distribute parallel do simd collapse(2)
+#endif
       do igpt = 1, ngpt
         do icol = 1, ncol
           flux_dir(icol,nlay+1,igpt) = inc_flux_dir(icol, igpt) * mu0(icol, nlay)
@@ -540,7 +606,9 @@ contains
       end do
     end if
     !$acc exit data delete(tau, mu0) copyout(flux_dir)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target exit data map(release:tau, mu0) map(from:flux_dir)
+#endif
   end subroutine sw_solver_noscat
   ! -------------------------------------------------------------------------------------------------
   !
@@ -602,14 +670,20 @@ contains
     !
     !$acc        data create(   gpt_flux_up, gpt_flux_dn, gpt_flux_dir) &
     !$acc             copyin(   mu0)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target data map(alloc:gpt_flux_up, gpt_flux_dn, gpt_flux_dir) &
     !$omp             map(to:   mu0)
+#endif
 
     !$acc        data copyout(flux_up, flux_dn, flux_dir) if (.not. do_broadband)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target data map(to: flux_up, flux_dn, flux_dir) if (.not. do_broadband)
+#endif
 
     !$acc  parallel loop collapse(2)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target teams distribute parallel do simd collapse(2)
+#endif
     do igpt = 1, ngpt
       do icol = 1, ncol
         gpt_flux_dir(icol, top_level, igpt)  = inc_flux_dir(icol,igpt) * mu0(icol, top_layer)
@@ -621,7 +695,9 @@ contains
     !
     if(has_dif_bc) then
       !$acc                         parallel loop    collapse(2)
+#ifndef RRTMGP_CPU_ONLY
       !$omp target teams distribute parallel do simd collapse(2)
+#endif
       do igpt = 1, ngpt
         do icol = 1, ncol
           gpt_flux_dn(icol, top_level, igpt)  = inc_flux_dif(icol,igpt)
@@ -629,7 +705,9 @@ contains
       end do
     else
       !$acc                         parallel loop    collapse(2)
+#ifndef RRTMGP_CPU_ONLY
       !$omp target teams distribute parallel do simd collapse(2)
+#endif
       do igpt = 1, ngpt
         do icol = 1, ncol
           gpt_flux_dn(icol, top_level, igpt)  = 0._wp
@@ -641,7 +719,9 @@ contains
     ! Direct-beam radiation and source for diffuse radiation
     !
     !$acc        data create(   Rdif, Tdif, source_up, source_dn, source_srf)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target data map(alloc:Rdif, Tdif, source_up, source_dn, source_srf)
+#endif
     call sw_dif_and_source(ncol, nlay, ngpt, top_at_1, mu0, sfc_alb_dir, &
                            tau, ssa, g,                                  &
                            Rdif, Tdif, source_dn, source_up, source_srf, gpt_flux_dir)
@@ -650,14 +730,18 @@ contains
                 sfc_alb_dif, Rdif, Tdif,      &
                 source_dn, source_up, source_srf, gpt_flux_up, gpt_flux_dn)
     !$acc        end data
+#ifndef RRTMGP_CPU_ONLY
     !$omp end target data
+#endif
 
     if(do_broadband) then
       !
       ! Broadband integration
       !
       !$acc        data copyout( broadband_up, broadband_dn, broadband_dir)
+#ifndef RRTMGP_CPU_ONLY
       !$omp target data map(from:broadband_up, broadband_dn, broadband_dir)
+#endif
       call sum_broadband_factor(ncol, nlay+1, ngpt, 1._wp, gpt_flux_up,  broadband_up)
       call sum_broadband_factor(ncol, nlay+1, ngpt, 1._wp, gpt_flux_dn,  broadband_dn)
       call sum_broadband_factor(ncol, nlay+1, ngpt, 1._wp, gpt_flux_dir, broadband_dir)
@@ -666,7 +750,9 @@ contains
       !
       call add_arrays          (ncol, nlay+1, broadband_dir, broadband_dn)
       !$acc        end data
+#ifndef RRTMGP_CPU_ONLY
       !$omp end target data
+#endif
     else
       !
       ! adding computes only diffuse flux; flux_dn is total
@@ -675,9 +761,13 @@ contains
     end if
 
     !$acc        end data
+#ifndef RRTMGP_CPU_ONLY
     !$omp end target data
+#endif
     !$acc        end data
+#ifndef RRTMGP_CPU_ONLY
     !$omp end target data
+#endif
 
     if (do_broadband) then
       deallocate(gpt_flux_up, gpt_flux_dn, gpt_flux_dir)
@@ -697,7 +787,9 @@ contains
   subroutine lw_source_noscat(top_at_1, lay_source, lev_source, levp1_source, tau, trans, &
                               source_dn, source_up)
     !$acc routine seq
+#ifndef RRTMGP_CPU_ONLY
     !$omp declare target
+#endif
     !
     logical(wl), intent(in) :: top_at_1
     real(wp),    intent(in) :: lay_source,   & ! Planck source at layer center
@@ -758,7 +850,9 @@ contains
       ! Top of domain is index 1
       !
       !$acc  parallel loop collapse(2)
+#ifndef RRTMGP_CPU_ONLY
       !$omp target teams distribute parallel do simd collapse(2)
+#endif
       do igpt = 1, ngpt
         do icol = 1, ncol
           do ilev = 2, nlay+1
@@ -771,7 +865,9 @@ contains
       ! Top of domain is index nlay+1
       !
       !$acc  parallel loop collapse(2)
+#ifndef RRTMGP_CPU_ONLY
       !$omp target teams distribute parallel do simd collapse(2)
+#endif
       do igpt = 1, ngpt
         do icol = 1, ncol
           do ilev = nlay, 1, -1
@@ -802,7 +898,9 @@ contains
       ! Top of domain is index 1
       !
       !$acc  parallel loop collapse(2) no_create(radn_upJac)
+#ifndef RRTMGP_CPU_ONLY
       !$omp target teams distribute parallel do simd collapse(2)
+#endif
       do igpt = 1, ngpt
         do icol = 1, ncol
           do ilev = nlay, 1, -1
@@ -821,7 +919,9 @@ contains
       ! Top of domain is index nlay+1
       !
       !$acc  parallel loop collapse(2) no_create(radn_upJac)
+#ifndef RRTMGP_CPU_ONLY
       !$omp target teams distribute parallel do simd collapse(2)
+#endif
       do igpt = 1, ngpt
         do icol = 1, ncol
           do ilev = 2, nlay+1
@@ -865,12 +965,18 @@ contains
     ! ---------------------------------
     ! ---------------------------------
     !$acc enter data copyin(tau, w0, g)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target enter data map(to:tau, w0, g)
+#endif
     !$acc enter data create(gamma1, gamma2, Rdif, Tdif)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target enter data map(alloc:gamma1, gamma2, Rdif, Tdif)
+#endif
 
     !$acc  parallel loop collapse(3)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target teams distribute parallel do simd collapse(3)
+#endif
     do igpt = 1, ngpt
       do ilay = 1, nlay
         do icol = 1, ncol
@@ -910,9 +1016,13 @@ contains
       end do
     end do
     !$acc exit data delete (tau, w0, g)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target exit data map(release:tau, w0, g)
+#endif
     !$acc exit data copyout(gamma1, gamma2, Rdif, Tdif)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target exit data map(from:gamma1, gamma2, Rdif, Tdif)
+#endif
   end subroutine lw_two_stream
   ! ---------------------------------------------------------------
   !
@@ -944,12 +1054,18 @@ contains
     ! ---------------------------------------------------------------
     ! ---------------------------------
     !$acc enter data copyin(sfc_emis, sfc_src, lay_source, tau, gamma1, gamma2, rdif, tdif, lev_source)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target enter data map(to:sfc_emis, sfc_src, lay_source, tau, gamma1, gamma2, rdif, tdif, lev_source)
+#endif
     !$acc enter data create(source_dn, source_up, source_sfc)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target enter data map(alloc:source_dn, source_up, source_sfc)
+#endif
 
     !$acc parallel loop collapse(3)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target teams distribute parallel do simd collapse(3)
+#endif
     do igpt = 1, ngpt
       do ilay = 1, nlay
         do icol = 1, ncol
@@ -980,9 +1096,13 @@ contains
       end do
     end do
     !$acc exit data delete(sfc_emis, sfc_src, lay_source, tau, gamma1, gamma2, rdif, tdif, lev_source)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target exit data map(release:sfc_emis, sfc_src, lay_source, tau, gamma1, gamma2, rdif, tdif, lev_source)
+#endif
     !$acc exit data copyout(source_dn, source_up, source_sfc)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target exit data map(from:source_dn, source_up, source_sfc)
+#endif
 
   end subroutine lw_source_2str
   ! -------------------------------------------------------------------------------------------------
@@ -1035,7 +1155,9 @@ contains
     real(wp) :: tau_s, w0_s, g_s, mu0_s
     ! ---------------------------------
     !$acc  parallel loop collapse(2)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target teams distribute parallel do simd collapse(2)
+#endif
     do igpt = 1, ngpt
       do icol = 1, ncol
         do ilay = 1, nlay
@@ -1186,13 +1308,19 @@ contains
     ! We write the loops out explicitly so compilers will have no trouble optimizing them.
     !
     !$acc enter data copyin(albedo_sfc, rdif, tdif, src_dn, src_up, src_sfc, flux_dn)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target enter data map(to:albedo_sfc, rdif, tdif, src_dn, src_up, src_sfc, flux_dn)
+#endif
     !$acc enter data create(flux_up, albedo, src, denom)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target enter data map(alloc:flux_up, albedo, src, denom)
+#endif
 
     if(top_at_1) then
       !$acc parallel loop gang vector collapse(2)
+#ifndef RRTMGP_CPU_ONLY
       !$omp target teams distribute parallel do simd collapse(2)
+#endif
       do igpt = 1, ngpt
         do icol = 1, ncol
           ilev = nlay + 1
@@ -1240,7 +1368,9 @@ contains
     else
 
       !$acc parallel loop collapse(2)
+#ifndef RRTMGP_CPU_ONLY
       !$omp target teams distribute parallel do simd collapse(2)
+#endif
       do igpt = 1, ngpt
         do icol = 1, ncol
           ilev = 1
@@ -1287,9 +1417,13 @@ contains
       end do
     end if
     !$acc exit data delete(albedo_sfc, rdif, tdif, src_dn, src_up, src_sfc, albedo, src, denom)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target exit data map(release:albedo_sfc, rdif, tdif, src_dn, src_up, src_sfc, albedo, src, denom)
+#endif
     !$acc exit data copyout(flux_up, flux_dn)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target exit data map(from:flux_up, flux_dn)
+#endif
   end subroutine adding
 ! -------------------------------------------------------------------------------------------------
 !
@@ -1325,7 +1459,9 @@ subroutine lw_transport_1rescl(ncol, nlay, ngpt, top_at_1, &
       !
       ! Downward propagation
       !$acc                         parallel loop    collapse(2) no_create(radn_up_Jac)
+#ifndef RRTMGP_CPU_ONLY
       !$omp target teams distribute parallel do simd collapse(2)
+#endif
       do igpt = 1, ngpt
         do icol = 1, ncol
           ! Upward propagation
@@ -1360,7 +1496,9 @@ subroutine lw_transport_1rescl(ncol, nlay, ngpt, top_at_1, &
       enddo
     else
       !$acc  parallel loop collapse(2) no_create(radn_up_Jac)
+#ifndef RRTMGP_CPU_ONLY
       !$omp target teams distribute parallel do simd collapse(2)
+#endif
       do igpt = 1, ngpt
         do icol = 1, ncol
           ! Upward propagation
@@ -1409,7 +1547,9 @@ subroutine lw_transport_1rescl(ncol, nlay, ngpt, top_at_1, &
   real(wp) :: scalar ! local scalar version
 
   !$acc                         parallel loop gang vector collapse(2)
+#ifndef RRTMGP_CPU_ONLY
   !$omp target teams distribute parallel do simd          collapse(2)
+#endif
   do ilev = 1, nlev
     do icol = 1, ncol
 
@@ -1435,7 +1575,9 @@ subroutine lw_transport_1rescl(ncol, nlay, ngpt, top_at_1, &
     integer  :: icol, ilev, igpt
 
     !$acc                         parallel loop gang vector collapse(3)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target teams distribute parallel do simd          collapse(3)
+#endif
     do igpt = 1, ngpt
       do ilev = 1, nlev
         do icol = 1, ncol
@@ -1456,7 +1598,9 @@ subroutine lw_transport_1rescl(ncol, nlay, ngpt, top_at_1, &
     integer  :: icol, ilev, igpt
 
     !$acc                         parallel loop gang vector collapse(3)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target teams distribute parallel do simd          collapse(3)
+#endif
     do igpt = 1, ngpt
       do ilev = 1, nlev
         do icol = 1, ncol
@@ -1474,7 +1618,9 @@ subroutine lw_transport_1rescl(ncol, nlay, ngpt, top_at_1, &
     integer  :: icol, ilev
 
     !$acc                         parallel loop gang vector collapse(2)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target teams distribute parallel do simd          collapse(2)
+#endif
     do ilev = 1, nlev
       do icol = 1, ncol
         array(icol, ilev) = array(icol, ilev) + increment(icol, ilev)

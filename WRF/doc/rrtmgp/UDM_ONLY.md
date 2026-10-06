@@ -20,7 +20,9 @@ UDM 기준은 공개 WRF `06d4240ae989cc3e50af412bb472df3d9048783c`의 `phys/mod
 | qh | 양의 질량이면 WRF fatal | 광학 미지원; 근거 없는 허용 하한 없음 |
 | qnc/qnr/qnn | UDM 미세물리 내부 | qnc는 native liquid radius 계산에 사용 |
 
-`rrtmgp_build_udm_inputs`의 6개 phase 열은 L/I/R/S/G/H 순서다. `WP_grid=q×dp_hPa×100/g×1000` (g/m²), `cf>0`에서 `WP_in=WP_grid/cf`를 계산한다. 크기와 질량을 RRTMG의 0.99 계수, 130 µm 제한, Fu 크기 배율로 다시 보정하지 않는다. builder는 qg의 준비 경로도 계산하지만 production wrapper가 실제 `GWP_RADIATION=0` 및 `GWP_OMITTED=GWP_GRID`로 기록한다.
+`rrtmgp_build_udm_inputs`의 6개 phase 열은 L/I/R/S/G/H 순서다. production 37은 native 건조층 질량으로 `WP_grid=q×Mdry×1000` (g/m²), `cf>0`에서 `WP_in=WP_grid/cf`를 계산한다. `Mdry=-DNW×(C1H×MUT+C2H)/g`이며 moisture-loaded `P8W` 차분을 질량분모로 쓰지 않는다. 직접 historical builder 호출의 배열 생략만 과거 `Δp/g` 근사를 유지한다. [분모·전달·독립 검사](NATIVE_DRY_MASS.md)를 따른다. 크기와 질량을 RRTMG의 0.99 계수, 130 µm 제한, Fu 크기 배율로 다시 보정하지 않는다. builder는 qg의 준비 경로도 계산하지만 production wrapper가 실제 `GWP_RADIATION=0` 및 `GWP_OMITTED=GWP_GRID`로 기록한다.
+
+음수 입력은 [UDM process-scale 계약](NEGATIVE_INPUT_CONTRACT.md)에 따라 37번의 복사 입력 복사본에서만 제한적으로 0으로 보정한다. 원래 음수값과 phase별 수분경로 보정량을 보존하며 상한 이상의 음수와 모든 양의 hail은 계속 거부한다. 이는 부동소수점 오차가 입증됐다는 의미가 아니다.
 
 유효반경 플래그는 UDM+37/37에서만 활성화된다. UDM 첫 미세물리 호출 후에는 native radii를 전달한다. 첫 복사 호출이 미세물리보다 먼저 실행되어 wet/cloudy 입력이 정확히 `RE_*_BG`인 경우에만 기존 초기 host 반경 보완을 허용한다. 이는 startup 예외이며 다른 미세물리 반경 mapping을 지원한다는 뜻이 아니다. UDM 최소값 2.51/5.01/25 µm는 WRF 배경값 2.49/4.99/9.99 µm와 다르다.
 
@@ -51,4 +53,23 @@ python3 WRF/test/rrtmgp/test_udm_scm.py build/udm-scm --reference-executable bui
 
 수상별 질량/반경 계약, 실제 outer UDM 밀도 회귀, rain/snow 광학 및 actual-column replay를 검증한다. 수정 전 4/4 결과와 bitwise 비교하려면 동일 초기 입력을 가진 실제 baseline 실행 디렉터리를 제공해야 한다. 같은 새 실행 파일의 반복 실행만으로 수정 전 보존을 주장하지 않는다.
 
-짧은 직렬 SCM, 자체 energy/flux 계약 및 독립 replay 성공을 일반 예보 정확도나 NOAA 운영 동등성으로 확대하지 않는다. 1–24시간 이상 real-data 예보, 관측 검증, MPI/OpenMP/restart/nest, UDM cloud fraction 장시간 평가, graupel/hail 광학 및 batching은 완료 조건과 별도로 남는다.
+짧은 직렬 SCM, 자체 energy/flux 계약 및 독립 replay 성공을 일반 예보 정확도나 NOAA 운영 동등성으로 확대하지 않는다. [후속 실행 근거](CPU_OPENMP.md)에서 실제 OMP1/2 SCM, 10분 MPI1/2·MPI2/OMP2, 계수 누락 MPI 종료 및 직렬 restart 계약을 확인했다. 37번의 24시간 시도는 음수 QI 입력으로 중단됐으며, [native 진단](NATIVE_HYDRO_DIAGNOSTICS.md)으로 크기와 위치를 측정한다. 장시간 예보·관측 검증·MPI restart·nest·UDM cloud fraction 장시간 평가·graupel/hail 광학 및 batching은 남은 조건이다.
+
+## Opt-in frozen precipitation experiment
+
+The default contract above still omits graupel with diagnostics and rejects
+positive hail. `rrtmgp_udm_frozen_optics=1` selects a separate homogeneous-ice
+sphere exponential-PSD table for G/H with uniform occurrence=1, preserving
+positive grid paths without a cloud-fraction divisor. This is an explicit
+research configuration; see [UDM_FROZEN_EXPERIMENT.md](UDM_FROZEN_EXPERIMENT.md)
+for table identity, size reconstruction, optics and replay contracts.
+Default mode and RRTMG4 behavior are preserved and tested separately.
+
+PR20's explicit mode-1 executable completed a four-rank 24-hour real-data
+trial with positive graupel and hail. A separate 12-hour checkpoint and
+12-to-13-hour restart reproduced every numeric field of the continuous
+13-hour output exactly; global `START_DATE` differs and the strict overall
+metadata comparison therefore does not pass. These scoped runtime results
+supersede the earlier failed mode-0 long-run attempt for this experimental
+configuration only. They do not validate observation accuracy or the later
+PR21 trace-gas correction over 24 hours. See the [actual-domain receipts](../../../validation/rrtmgp37/realdata-parallel/README.md).

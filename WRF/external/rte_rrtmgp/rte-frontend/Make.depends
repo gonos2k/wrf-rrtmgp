@@ -1,5 +1,6 @@
 RTE_FORTRAN_INTERFACE = \
   mo_rte_kind.o \
+  mo_rte_scalar_math.o \
   mo_rte_config.o \
   mo_rte_util_array_validation.o \
   mo_optical_props.o \
@@ -12,6 +13,10 @@ RTE_FORTRAN_INTERFACE = \
 # RTE - Radiative transfer for energetics
 ##################################
 #
+#
+# CPU scalar-libm boundary.  Depend only on mo_rte_kind so this module can
+# safely be used by both RTE kernels and RRTMGP gas-optics consumers.
+mo_rte_scalar_math.o: mo_rte_kind.o mo_rte_scalar_math.F90
 #
 mo_rte_config.o: mo_rte_config.F90 mo_rte_kind.o
 #

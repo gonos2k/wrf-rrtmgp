@@ -1,0 +1,128 @@
+{
+  "build_attempts": [
+    {
+      "causal_note": "physics_mmm/bl_shinhong compiled before ccpp_kind_types.mod was ready; downstream missing modules and links are cascading errors",
+      "compile_log_sha256": "3498a56531ce04b77f0c9ec63a8aed6d59c96bfeea0c1b35b049307ceacde787",
+      "first_relevant_error": "Fatal Error: Cannot open module file \u2018ccpp_kind_types.mod\u2019 for reading at (1): No such file or directory",
+      "launch_receipt": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-sw-direct-wrf/build-launch.log.attempt-j12",
+      "parallelism": "-j12",
+      "status": "BUILD_FAIL"
+    },
+    {
+      "compile_log_sha256": "5db5047c4fb96900ac25d6c38666a577d9a36c8c0fbc3debee465616b1971267",
+      "launch_receipt": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-sw-direct-wrf/build-launch-j1.log",
+      "parallelism": "-j1",
+      "same_tree_recovery": true,
+      "status": "BUILD_PASS"
+    }
+  ],
+  "compiler": "GNU Fortran (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0",
+  "configure_sha256": "b5c234db6278ef88e2b03bc0329168163e3b1257188a3c55d5c1ebfb2b1224ac",
+  "configured_netCDF_prefix": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/netcdf",
+  "ctest": {
+    "command": [
+      "ctest",
+      "--test-dir",
+      "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-sw-direct-work/build/sw-direct",
+      "--output-on-failure"
+    ],
+    "elapsed_seconds": 49.119,
+    "exit_code": 0,
+    "failed": 0,
+    "netcdf_ld_library_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/netcdf/lib",
+    "output_log": "ctest-output.log",
+    "passed": 95,
+    "status": "PASS",
+    "total": 95
+  },
+  "executables": {
+    "ideal": {
+      "bytes": 37675872,
+      "label": "current direct-diagnostic ideal.exe",
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-sw-direct-wrf/source/WRF/main/ideal.exe",
+      "sha256": "174b59a09029921afe17095523549c352ae89dbce77fdaf093ae39ac9201c65f"
+    },
+    "parent_wrf": {
+      "bytes": 49783712,
+      "label": "PR21 parent WRF used for mode-zero bitwise comparison",
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-lw-trace-gases-wrf/source/WRF/main/wrf.exe",
+      "sha256": "08202d056264d3faec4a0fbfb882213ddb16e02befa653bce097c61aa8554803"
+    },
+    "reference_column": {
+      "bytes": 2140520,
+      "label": "standalone independent V9 reference",
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-sw-direct-work/build/sw-direct/reference_column",
+      "sha256": "aa734a23cfbfea927c8bd25eb6006b39a98b92b3a62b86699c5a43d71c15f88e"
+    },
+    "wrf": {
+      "bytes": 49841168,
+      "label": "current direct-diagnostic WRF",
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-sw-direct-wrf/source/WRF/main/wrf.exe",
+      "sha256": "097d3486a971de2b67524b6c8fb2bf69a00082393f7058876aed71a04e8e6e6b"
+    }
+  },
+  "logs": {
+    "configure": {
+      "bytes": 9321,
+      "label": "configure",
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-sw-direct-wrf/configure.log",
+      "sha256": "242b7e8a0ee67bf783b899dc1cd3d766606a67092c942a5a6b06faddc02a8c58"
+    },
+    "j12_compile": {
+      "bytes": 1665713,
+      "label": "j12_compile",
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-sw-direct-wrf/build-em_scm_xy.log.attempt-j12",
+      "sha256": "3498a56531ce04b77f0c9ec63a8aed6d59c96bfeea0c1b35b049307ceacde787"
+    },
+    "j12_launch": {
+      "bytes": 296,
+      "label": "j12_launch",
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-sw-direct-wrf/build-launch.log.attempt-j12",
+      "sha256": "b18ce15186e8fde3f62b85e446ab435e46ba3bc9cd86c884cec14788fd9d874a"
+    },
+    "j1_compile": {
+      "bytes": 90121,
+      "label": "j1_compile",
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-sw-direct-wrf/build-em_scm_xy.log",
+      "sha256": "5db5047c4fb96900ac25d6c38666a577d9a36c8c0fbc3debee465616b1971267"
+    },
+    "j1_launch": {
+      "bytes": 418,
+      "label": "j1_launch",
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-sw-direct-wrf/build-launch-j1.log",
+      "sha256": "1ae09e4645e5454a45c02fc4ab9e7751226a1ae2c52682dd724d8eddeead0487"
+    }
+  },
+  "recovery_build_receipt": "build/wrf-build-receipt.json",
+  "scm_summary": {
+    "forecast_readiness_claimed": false,
+    "initial_fixture_only": true,
+    "result": "frozen-scm-result.json",
+    "runtime_minutes": 1,
+    "scientific_accuracy_claimed": false,
+    "status": "PASS_RUNTIME_EXPERIMENTAL_ONLY"
+  },
+  "scope_note": "A same-tree serial recovery passed after the parallel dependency failure. No model outputs, executable bytes, or source bytes were modified during the SCM harness run.",
+  "source_files": {
+    "WRF/phys/module_ra_rrtmg_lw.F": "d934c066ae06466bca4ed37a9ca506b859f505c5919743bb34de1f6a311abb67",
+    "WRF/phys/module_ra_rrtmg_sw.F": "af506d43332c1b57cf55b6c60ab27d40769ed5ef1ea57c59d34cd72a7bd5d4d7",
+    "WRF/phys/module_ra_rrtmgp.F": "74378cc255088422ff8f770c1f342e135c538436d0bc0dcf67ec7b7abde1f5bb",
+    "WRF/phys/module_ra_rrtmgp_frozen.F": "dc468bf7e9e4f3883a8ad715dc4c25db4c1ff054637810fb178a02029edbed1d",
+    "WRF/phys/module_ra_rrtmgp_hash.F": "4bf4fd8dbeaf3309c2f4193ccd78ee2a8abf47fc228f5023a63798cc5ee993f6",
+    "WRF/phys/module_ra_rrtmgp_input.F": "1460460a23b2b2b552f726c8c01a174a956da7a9d472e8a90b33c2d6ed245eff",
+    "WRF/phys/module_ra_rrtmgp_trace.F": "53ab9c57a605bb929bdb5186b9b2e004044fdf0f2eaeceff042e2ea14ed2e9ae"
+  },
+  "source_manifest": "build/wrf-build-receipt.json",
+  "source_manifest_count": 13,
+  "source_revision": "e73b353f2b76f323809f99bed19a29eaaf25af02",
+  "status": "BUILD_PASS_AFTER_SERIAL_RECOVERY",
+  "validation_scripts": {
+    "compare_column_replay.py": "300c25de26330c0ac413c6e3d82434374457b10fbae1da77680d2d9db3601454",
+    "test_column_replay.py": "92d83380adb940f5a3d32b325fc4daa0ec563ae1ef72504c7b99b36747b5e59d",
+    "test_frozen_scm.py": "140445cbe18300a564c25e80d24d593071d07f1c29cf759dbe47f8112eeba377",
+    "test_native_gas_columns.py": "46e38590a8a757113eca0f976c57b7a49ab85dcc386391a8795b0119a993bb45",
+    "test_udm_cf_replay.py": "3d97a25369823ed5d86566e05fb8a9556f84743f7b14888509efb95cbfaf0bbf",
+    "test_udm_native_mass.py": "dd74ff6d2f17bd81a02d7856a700099d9471f2531715eedc9252a2f118a98674"
+  },
+  "worktree": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-sw-direct-wrf/source"
+}

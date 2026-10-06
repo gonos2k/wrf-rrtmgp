@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import os
 import re
@@ -28,6 +29,8 @@ RAW_FIELDS = {"DP_HPA", "CF", "QC", "QI", "QS", "T", "QV", "REL", "REI", "RES",
 Q_NAMES = ("QC", "QI", "QS")
 SOURCE_NAMES = {"QC": "SOURCE_QC", "QI": "SOURCE_QI", "QS": "SOURCE_QS"}
 FLAG_NAMES = {"QC": "F_QC", "QI": "F_QI", "QS": "F_QS"}
+FROZEN_NAMES = {"GWP", "HWP", "LAMBDA_G", "LAMBDA_H", "FROZEN_MODE",
+                "FROZEN_OCCURRENCE", "FROZEN_TABLE_SHA256_BYTES"}
 
 
 class ReplayError(RuntimeError):
@@ -67,18 +70,18 @@ def read_records(path: Path, magic: str, header_count: int) -> tuple[list[str], 
         line_no = pos + 1
         fields = lines[pos].split()
         pos += 1
-        if len(fields) != 3:
-            fail(f"{path}:{line_no}: expected name and two dimensions")
+        if len(fields) not in (3, 4):
+            fail(f"{path}:{line_no}: expected name and two or three dimensions")
         name = fields[0].upper()
         if name in records:
             fail(f"{path}:{line_no}: duplicate record {name}")
         try:
-            nrow, ncol = int(fields[1]), int(fields[2])
+            shape = tuple(int(value) for value in fields[1:])
         except ValueError as exc:
             raise ReplayError(f"{path}:{line_no}: invalid dimensions for {name}") from exc
-        if nrow < 1 or ncol < 1:
+        if min(shape) < 1:
             fail(f"{path}:{line_no}: nonpositive dimensions for {name}")
-        count = nrow * ncol
+        count = int(np.prod(shape))
         values: list[float] = []
         while len(values) < count and pos < len(lines):
             row_line = pos + 1
@@ -89,7 +92,7 @@ def read_records(path: Path, magic: str, header_count: int) -> tuple[list[str], 
                 fail(f"{path}:{row_line}: too many values in {name}")
         if len(values) != count:
             fail(f"{path}: {name} expected {count} values, found {len(values)}")
-        records[name] = np.asarray(values, dtype=np.float64).reshape((nrow, ncol), order="F")
+        records[name] = np.asarray(values, dtype=np.float64).reshape(shape, order="F")
     return first, records
 
 
@@ -143,6 +146,11 @@ def read_raw(path: Path) -> tuple[str, int, int, dict[str, np.ndarray]]:
         fail(f"{path}: raw snapshot missing required fields: {', '.join(absent)}")
     if len(records["DP_HPA"]) != nl:
         fail(f"{path}: DP_HPA count differs from raw nl={nl}")
+    validate_udm_cf_extent(records, nl, path)
+    if "DRY_LAYER_MASS_KG_M2" in records:
+        dry_mass = records["DRY_LAYER_MASS_KG_M2"]
+        if dry_mass.shape != (nl,) or not np.isfinite(dry_mass).all() or np.any(dry_mass <= 0.0):
+            fail(f"{path}: DRY_LAYER_MASS_KG_M2 must contain nl finite positive values")
     for field in ("CF", "QC", "QI", "QS", "T", "QV", "REL", "REI", "RES", "P_HPA", "SOURCE_T",
                   "SOURCE_P_PA", "PI"):
         if field == "SOURCE_P_PA" and field not in records:
@@ -158,10 +166,152 @@ def read_raw(path: Path) -> tuple[str, int, int, dict[str, np.ndarray]]:
     return phase, i, j, records
 
 
+def validate_udm_cf_extent(records: dict[str, np.ndarray], nl: int, path: Path) -> int | None:
+    """Validate the optional UDM top/step pair; None means legacy extent unknown."""
+    top_values = records.get("UDM_CF_TOP")
+    step_values = records.get("UDM_CF_SOURCE_STEP")
+    if top_values is None:
+        return None
+    if step_values is None:
+        fail(f"{path}: UDM_CF_TOP requires UDM_CF_SOURCE_STEP")
+    if top_values.size != 1 or step_values.size != 1:
+        fail(f"{path}: UDM_CF_TOP and UDM_CF_SOURCE_STEP must be scalar")
+    top_raw = float(top_values[0])
+    step_raw = float(step_values[0])
+    if not np.isfinite(top_raw) or top_raw != np.floor(top_raw):
+        fail(f"{path}: UDM_CF_TOP must be a finite integer")
+    if not np.isfinite(step_raw) or step_raw != np.floor(step_raw):
+        fail(f"{path}: UDM_CF_SOURCE_STEP must be a finite integer")
+    top, step = int(top_raw), int(step_raw)
+    if top < -1 or top > nl or step < -1:
+        fail(f"{path}: UDM_CF_TOP/UDM_CF_SOURCE_STEP outside valid bounds")
+    if (top == -1) != (step == -1):
+        fail(f"{path}: UDM_CF_TOP=-1 and source step=-1 must identify the same not-called state")
+    return top
+
+
+def _exact_real_storage(actual: np.ndarray, expected: np.ndarray, label: str, path: Path) -> None:
+    """Require exact default-real or real64 storage of a stated arithmetic identity."""
+    actual = np.asarray(actual, dtype=np.float64)
+    expected = np.asarray(expected, dtype=np.float64)
+    if actual.shape != expected.shape:
+        fail(f"{path}: {label} shape {actual.shape} != expected {expected.shape}")
+    expected_single = expected.astype(np.float32).astype(np.float64)
+    actual_bytes = np.ascontiguousarray(actual, dtype=np.float64).tobytes()
+    expected_bytes = np.ascontiguousarray(expected, dtype=np.float64).tobytes()
+    single_bytes = np.ascontiguousarray(expected_single, dtype=np.float64).tobytes()
+    if actual_bytes not in {expected_bytes, single_bytes}:
+        delta = float(np.max(np.abs(actual - expected), initial=0.0))
+        fail(f"{path}: {label} fails exact host-real/real64 identity (max abs {delta})")
+
+
+def validate_cu_population_records(records: dict[str, np.ndarray], nc: int, nl: int,
+                                   phase: str, version: str, path: Path) -> None:
+    """Validate adapter-side CU policy/profiles and V11 raw optical decomposition."""
+    if (version, phase) not in {("RRTMGP_REPLAY_V10", "LW"), ("RRTMGP_REPLAY_V11", "SW"), ("RRTMGP_REPLAY_V13", "LW")}:
+        fail(f"{path}: CU replay version/phase mismatch")
+    scalars = ("CU_POPULATION_POLICY", "CU_RADIUS_POLICY", "CU_OCCURRENCE_POLICY")
+    for name in scalars:
+        value = records.get(name)
+        if value is None or value.shape != (1, 1) or not np.isfinite(value).all() or value.item() != 1.0:
+            fail(f"{path}: {version} requires scalar {name}=1")
+    matrices = ("CU_LWP", "CU_IWP", "CU_REL", "CU_REI")
+    for name in matrices:
+        value = records.get(name)
+        if value is None or value.shape != (nc, nl):
+            fail(f"{path}: {version} {name} must have shape (nc,nl)")
+        if not np.isfinite(value).all():
+            fail(f"{path}: {version} {name} must be finite")
+    for name in ("CU_LWP", "CU_IWP"):
+        if np.any(records[name] < 0.0):
+            fail(f"{path}: {version} {name} must be nonnegative")
+    for name in ("CU_REL", "CU_REI"):
+        if np.any(records[name] <= 0.0):
+            fail(f"{path}: {version} {name} must be positive finite radii")
+    if version in {"RRTMGP_REPLAY_V11", "RRTMGP_REPLAY_V13"} and phase == "SW":
+        components = ("RAW_CLOUD_TAU", "RAW_NATIVE_CLOUD_TAU", "RAW_CU_CLOUD_TAU")
+        for name in components:
+            value = records.get(name)
+            if value is None or value.ndim != 3 or value.shape[:2] != (nc, nl):
+                fail(f"{path}: V11 {name} must have shape (nc,nl,nband)")
+            if not np.isfinite(value).all() or np.any(value < 0.0):
+                fail(f"{path}: V11 {name} must be finite and nonnegative")
+        combined = (records["RAW_NATIVE_CLOUD_TAU"].astype(np.float64) +
+                    records["RAW_CU_CLOUD_TAU"].astype(np.float64)).astype(np.float32).astype(np.float64)
+        _exact_real_storage(records["RAW_CLOUD_TAU"], combined,
+                            "RAW_CLOUD_TAU=native+CU", path)
+    elif {"RAW_NATIVE_CLOUD_TAU", "RAW_CU_CLOUD_TAU"} & records.keys():
+        fail(f"{path}: raw native/CU optical decomposition is only valid in V11 SW")
+
+
+def validate_cu_population_raw(raw: dict[str, np.ndarray], adapter: dict[str, np.ndarray],
+                               nl: int, path: Path) -> None:
+    """Check raw microphysics provenance, signed q closure and native path partition."""
+    required = (
+        "CF", "NATIVE_QC", "NATIVE_QI", "CU_QC", "CU_QI", "DP_CU", "SH_CU", "CF_CU",
+        "DRY_MASS_KG_M2", "SOURCE_QC", "SOURCE_QI", "CU_ACCEPTED_GRID_LWP", "CU_ACCEPTED_GRID_IWP",
+        "CU_REJECTED_GRID_LWP", "CU_REJECTED_GRID_IWP", "CU_OMITTED_CF0_LWP", "CU_OMITTED_CF0_IWP",
+        "CU_REL_RAW", "CU_REI_RAW",
+    )
+    for name in required:
+        value = raw.get(name)
+        if value is None or value.shape != (nl,) or not np.isfinite(value).all():
+            fail(f"{path}: CU raw record {name} must be present, finite, and length nl")
+    for name in ("CU_POPULATION_POLICY", "CU_RADIUS_POLICY", "CU_OCCURRENCE_POLICY"):
+        value = raw.get(name)
+        if value is None or value.shape != (1,) or not np.isfinite(value).all() or value.item() != 1.0:
+            fail(f"{path}: raw {name} must be scalar one")
+        if name not in adapter or adapter[name].shape != (1, 1) or adapter[name].item() != value.item():
+            fail(f"{path}: raw and adapter {name} disagree")
+    for name in ("CF", "CF_CU", "DP_CU", "SH_CU"):
+        if np.any((raw[name] < 0.0) | (raw[name] > 1.0)):
+            fail(f"{path}: CU raw {name} must lie in [0,1]")
+    if np.any(raw["DRY_MASS_KG_M2"] <= 0.0):
+        fail(f"{path}: CU raw dry mass must be positive")
+    dp_sh = raw["DP_CU"].astype(np.float32) + raw["SH_CU"].astype(np.float32)
+    _exact_real_storage(raw["CF_CU"], dp_sh.astype(np.float64), "CF_CU=DP_CU+SH_CU", path)
+    if np.any((raw["CF"] == 0.0) & (raw["CF_CU"] > 0.0)):
+        fail(f"{path}: CU fraction is positive in clear combined-cloud layer")
+    if np.any(raw["CF_CU"] > raw["CF"]):
+        fail(f"{path}: CU fraction exceeds combined cloud fraction")
+    for species in ("QC", "QI"):
+        native = raw[f"NATIVE_{species}"].astype(np.float32)
+        qcu = raw[f"CU_{species}"].astype(np.float32)
+        cfcu = raw["CF_CU"].astype(np.float32)
+        # This reproduces the host's binary32 multiply followed by add.
+        expected_source = (native + qcu * cfcu).astype(np.float64)
+        _exact_real_storage(raw[f"SOURCE_{species}"], expected_source,
+                            f"SOURCE_{species}=NATIVE_{species}+CU_{species}*CF_CU", path)
+        _exact_real_storage(raw[species], raw[f"NATIVE_{species}"],
+                            f"working {species}=native {species}", path)
+    for suffix, species in (("LWP", "QC"), ("IWP", "QI")):
+        qcu = raw[f"CU_{species}"].astype(np.float64)
+        accepted = (raw["DRY_MASS_KG_M2"] * 1000.0 * raw["CF_CU"] * np.maximum(qcu, 0.0))
+        rejected = (raw["DRY_MASS_KG_M2"] * 1000.0 * raw["CF_CU"] * np.maximum(-qcu, 0.0))
+        _exact_real_storage(raw[f"CU_ACCEPTED_GRID_{suffix}"], accepted,
+                            f"CU_ACCEPTED_GRID_{suffix}", path)
+        _exact_real_storage(raw[f"CU_REJECTED_GRID_{suffix}"], rejected,
+                            f"CU_REJECTED_GRID_{suffix}", path)
+        omitted = np.where(raw["CF"] == 0.0, accepted, 0.0)
+        _exact_real_storage(raw[f"CU_OMITTED_CF0_{suffix}"], omitted,
+                            f"CU_OMITTED_CF0_{suffix}", path)
+        expected_incloud = np.zeros(nl, dtype=np.float64)
+        cloudy = raw["CF"] > 0.0
+        expected_incloud[cloudy] = accepted[cloudy] / raw["CF"][cloudy]
+        _exact_real_storage(adapter[f"CU_{suffix}"][0, :nl], expected_incloud,
+                            f"adapter CU_{suffix}=grid path/CF", path)
+        if np.any(raw["CU_REL_RAW"] <= 0.0) or np.any(raw["CU_REI_RAW"] <= 0.0):
+            fail(f"{path}: raw CU radii must be positive")
+        _exact_real_storage(adapter[f"CU_{suffix}"][0, :nl], expected_incloud,
+                            f"adapter CU_{suffix} grid-path closure", path)
+    _exact_real_storage(adapter["CU_REL"][0, :nl], raw["CU_REL_RAW"], "adapter CU_REL raw-radius mapping", path)
+    _exact_real_storage(adapter["CU_REI"][0, :nl], raw["CU_REI_RAW"], "adapter CU_REI raw-radius mapping", path)
+
+
 def read_input(path: Path) -> tuple[str, int, int, int, int, int, dict[str, np.ndarray]]:
     lines = path.read_text(encoding="ascii").splitlines()
-    if len(lines) < 2 or lines[0].strip() not in {"RRTMGP_REPLAY_V1", "RRTMGP_REPLAY_V2", "RRTMGP_REPLAY_V3", "RRTMGP_REPLAY_V4"}:
-        fail(f"{path}: expected RRTMGP_REPLAY_V1, V2, or V3 first line")
+    if len(lines) < 2 or lines[0].strip() not in {"RRTMGP_REPLAY_V1", "RRTMGP_REPLAY_V2", "RRTMGP_REPLAY_V3", "RRTMGP_REPLAY_V4", "RRTMGP_REPLAY_V5", "RRTMGP_REPLAY_V6", "RRTMGP_REPLAY_V7", "RRTMGP_REPLAY_V8", "RRTMGP_REPLAY_V9", "RRTMGP_REPLAY_V10", "RRTMGP_REPLAY_V11", "RRTMGP_REPLAY_V12", "RRTMGP_REPLAY_V13"}:
+        fail(f"{path}: unsupported replay format version")
     header = lines[1].split()
     if len(header) != 6:
         fail(f"{path}: expected phase/nc/nl/overlap/seed/iceflag on line 2")
@@ -184,19 +334,218 @@ def read_input(path: Path) -> tuple[str, int, int, int, int, int, dict[str, np.n
         roughness = records.get("ICE_ROUGHNESS")
         if roughness is None or roughness.shape != (1, 1) or roughness.item() not in (1, 2, 3):
             fail(f"{path}: V2/V3 requires scalar ICE_ROUGHNESS in {{1, 2, 3}}")
-    if lines[0].strip() in {"RRTMGP_REPLAY_V3", "RRTMGP_REPLAY_V4"} and phase == "SW":
+    if lines[0].strip() in {"RRTMGP_REPLAY_V3", "RRTMGP_REPLAY_V4", "RRTMGP_REPLAY_V5", "RRTMGP_REPLAY_V6", "RRTMGP_REPLAY_V7", "RRTMGP_REPLAY_V8", "RRTMGP_REPLAY_V9", "RRTMGP_REPLAY_V11"} and phase == "SW":
         policy = records.get("SW_BAND_PARTITION")
         if policy is None or policy.shape != (1, 1) or policy.item() != 1:
             fail(f"{path}: V3 SW requires scalar SW_BAND_PARTITION=1 (CCPP transition)")
     if lines[0].strip() == "RRTMGP_REPLAY_V4":
         policy = records.get("PRECIPITATION_OPTICS")
         if policy is None or policy.shape != (1, 1) or policy.item() != 1:
-            fail(f"{path}: V4 requires scalar PRECIPITATION_OPTICS=1")
+            fail(f"{path}: V4/V5 requires scalar PRECIPITATION_OPTICS=1")
         rain = records.get("RWP")
         if rain is None or rain.shape != (nc, nl) or np.any(rain < 0):
             fail(f"{path}: V4 requires nonnegative RWP matching column layers")
+    if lines[0].strip() in {"RRTMGP_REPLAY_V5", "RRTMGP_REPLAY_V6", "RRTMGP_REPLAY_V7", "RRTMGP_REPLAY_V8", "RRTMGP_REPLAY_V9", "RRTMGP_REPLAY_V10", "RRTMGP_REPLAY_V11", "RRTMGP_REPLAY_V12", "RRTMGP_REPLAY_V13"}:
+        policy = records.get("PRECIPITATION_OPTICS")
+        rain = records.get("RWP")
+        if (policy is None) != (rain is None):
+            fail(f"{path}: V5-V9 precipitation policy and RWP must appear together")
+        if policy is not None and (policy.shape != (1, 1) or policy.item() != 1):
+            fail(f"{path}: V5-V9 PRECIPITATION_OPTICS must be one when present")
+        if rain is not None and (rain.shape != (nc, nl) or np.any(~np.isfinite(rain)) or np.any(rain < 0)):
+            fail(f"{path}: V5-V9 RWP must be finite/nonnegative and match column layers")
+    if lines[0].strip() == "RRTMGP_REPLAY_V6":
+        native = records.get("NATIVE_DRY_LAYER_MASS_KG_M2")
+        if native is None or native.shape[0] != nc or not 1 <= native.shape[1] <= nl:
+            fail(f"{path}: V6 requires NATIVE_DRY_LAYER_MASS_KG_M2 shape (nc, nnative), 1 <= nnative <= nl")
+        if not np.isfinite(native).all() or np.any(native <= 0):
+            fail(f"{path}: V6 native dry layer mass must be finite and positive")
+    if lines[0].strip() in {"RRTMGP_REPLAY_V5", "RRTMGP_REPLAY_V6", "RRTMGP_REPLAY_V7", "RRTMGP_REPLAY_V8", "RRTMGP_REPLAY_V9", "RRTMGP_REPLAY_V10", "RRTMGP_REPLAY_V11", "RRTMGP_REPLAY_V12", "RRTMGP_REPLAY_V13"}:
+        for name in ("GRAVITY", "CP_DRY", "MOL_WEIGHT_DRY"):
+            value = records.get(name)
+            if value is None or value.shape != (1, 1) or not np.isfinite(value).all() or value.item() <= 0:
+                fail(f"{path}: V5-V9 requires positive finite scalar {name}")
+    version = lines[0].strip()
+    if version not in {"RRTMGP_REPLAY_V12", "RRTMGP_REPLAY_V13"} and \
+            {"VMR_N2", "TRACE_GASES_PRESENT"} & records.keys():
+        fail(f"{path}: N2 background fields require RRTMGP_REPLAY_V12/V13")
+    cu_input_names = {"CU_POPULATION_POLICY", "CU_RADIUS_POLICY", "CU_OCCURRENCE_POLICY",
+                      "CU_LWP", "CU_IWP", "CU_REL", "CU_REI"}
+    if version not in {"RRTMGP_REPLAY_V10", "RRTMGP_REPLAY_V11", "RRTMGP_REPLAY_V13"} and cu_input_names & records.keys():
+        fail(f"{path}: CU population records require RRTMGP_REPLAY_V10/V11/V13")
+    if version == "RRTMGP_REPLAY_V12" and cu_input_names & records.keys():
+        fail(f"{path}: V12 must not contain CU population records")
+    if version == "RRTMGP_REPLAY_V13" and not cu_input_names <= records.keys():
+        fail(f"{path}: V13 requires the full CU population record set")
+    frozen_names = {"GWP", "HWP", "LAMBDA_G", "LAMBDA_H", "FROZEN_MODE",
+                    "FROZEN_OCCURRENCE", "FROZEN_TABLE_SHA256_BYTES"}
+    trace_gas_names = {"VMR_CFC11", "VMR_CFC12", "VMR_CFC22", "VMR_CCL4"}
+    if version in {"RRTMGP_REPLAY_V8", "RRTMGP_REPLAY_V10"}:
+        if phase != "LW":
+            fail(f"{path}: V8/V10 are only valid for LW")
+        missing = trace_gas_names - records.keys()
+        if missing:
+            fail(f"{path}: V8/V10 missing required LW gas records: {', '.join(sorted(missing))}")
+        for name in trace_gas_names:
+            values = records[name]
+            if values.shape != (nc, nl) or not np.isfinite(values).all() or np.any(values < 0.0):
+                fail(f"{path}: V8/V10 {name} must be finite/nonnegative with shape (nc,nl)")
+    elif version in {"RRTMGP_REPLAY_V12", "RRTMGP_REPLAY_V13"}:
+        if phase != "LW":
+            fail(f"{path}: V12/V13 are only valid for LW")
+        n2 = records.get("VMR_N2")
+        if n2 is None or n2.shape != (nc, nl) or not np.isfinite(n2).all() or \
+                np.any(n2 < 0.0) or np.any(n2 > 1.0):
+            fail(f"{path}: V12/V13 VMR_N2 must be finite in [0,1] with shape (nc,nl)")
+        flag = records.get("TRACE_GASES_PRESENT")
+        if flag is None or flag.shape != (1, 1) or not np.isfinite(flag).all() or flag.item() not in (0.0, 1.0):
+            fail(f"{path}: V12/V13 TRACE_GASES_PRESENT must be scalar zero or one")
+        if flag.item() == 1.0:
+            missing = trace_gas_names - records.keys()
+            if missing:
+                fail(f"{path}: V12/V13 trace-gas flag requires all CFC records: {', '.join(sorted(missing))}")
+            for name in trace_gas_names:
+                values = records[name]
+                if values.shape != (nc, nl) or not np.isfinite(values).all() or np.any(values < 0.0):
+                    fail(f"{path}: V12/V13 {name} must be finite/nonnegative with shape (nc,nl)")
+        elif trace_gas_names & records.keys():
+            fail(f"{path}: V12/V13 CFC records conflict with TRACE_GASES_PRESENT=0")
+    elif trace_gas_names & records.keys():
+        fail(f"{path}: LW trace-gas VMR records require V8/V10/V12/V13")
+    if version == "RRTMGP_REPLAY_V7":
+        required = frozen_names
+        missing = required - records.keys()
+        if missing:
+            fail(f"{path}: V7 missing required frozen metadata/input records: {', '.join(sorted(missing))}")
+        for name in ("GWP", "HWP", "LAMBDA_G", "LAMBDA_H"):
+            values = records[name]
+            if values.shape != (nc, nl):
+                fail(f"{path}: V7 {name} must have shape (nc,nl)")
+            if name in {"GWP", "HWP"} and np.any(values < 0.0):
+                fail(f"{path}: V7 {name} must be nonnegative")
+            if name in {"LAMBDA_G", "LAMBDA_H"} and np.any(values <= 0.0):
+                fail(f"{path}: V7 {name} must be positive")
+        for name in ("FROZEN_MODE", "FROZEN_OCCURRENCE"):
+            values = records[name]
+            if values.shape != (1, 1) or values.item() != 1.0:
+                fail(f"{path}: V7 {name} must be scalar one")
+        hash_bytes = records["FROZEN_TABLE_SHA256_BYTES"]
+        if hash_bytes.shape != (64, 1) or not np.isfinite(hash_bytes).all():
+            fail(f"{path}: V7 SHA bytes must have shape (64,1)")
+        if np.any(hash_bytes != np.floor(hash_bytes)) or np.any((hash_bytes < 48) | (hash_bytes > 102)):
+            fail(f"{path}: V7 SHA bytes must be integer lowercase-hex ASCII")
+        digest = "".join(chr(int(value)) for value in hash_bytes[:, 0])
+        if len(digest) != 64 or any(char not in "0123456789abcdef" for char in digest):
+            fail(f"{path}: V7 SHA bytes are not lowercase hexadecimal")
+        native = records.get("NATIVE_DRY_LAYER_MASS_KG_M2")
+        if native is not None and (native.shape[0] != nc or not 1 <= native.shape[1] <= nl
+                                   or not np.isfinite(native).all() or np.any(native <= 0.0)):
+            fail(f"{path}: V7 optional native dry mass has invalid shape or values")
+    elif version in {"RRTMGP_REPLAY_V8", "RRTMGP_REPLAY_V10", "RRTMGP_REPLAY_V12", "RRTMGP_REPLAY_V13"}:
+        present_frozen = frozen_names & records.keys()
+        if present_frozen and present_frozen != frozen_names:
+            fail(f"{path}: V8 frozen-optics metadata must be complete when present")
+        if present_frozen:
+            # Reuse the same strict record validation as V7 through a recursive
+            # temporary view, without changing the V8 gas-record contract.
+            for name in ("GWP", "HWP", "LAMBDA_G", "LAMBDA_H"):
+                values = records.get(name)
+                if values is None or values.shape != (nc, nl) or not np.isfinite(values).all():
+                    fail(f"{path}: V8 {name} must be finite with shape (nc,nl)")
+                if name in {"GWP", "HWP"} and np.any(values < 0.0):
+                    fail(f"{path}: V8 {name} must be nonnegative")
+                if name in {"LAMBDA_G", "LAMBDA_H"} and np.any(values <= 0.0):
+                    fail(f"{path}: V8 {name} must be positive")
+            for name in ("FROZEN_MODE", "FROZEN_OCCURRENCE"):
+                values = records[name]
+                if values.shape != (1, 1) or not np.isfinite(values).all() or values.item() != 1.0:
+                    fail(f"{path}: V8 {name} must be scalar one")
+            hash_bytes = records["FROZEN_TABLE_SHA256_BYTES"]
+            if hash_bytes.shape != (64, 1) or not np.isfinite(hash_bytes).all() or \
+                    np.any(hash_bytes != np.floor(hash_bytes)) or np.any((hash_bytes < 48) | (hash_bytes > 102)):
+                fail(f"{path}: V8 SHA bytes must be integer lowercase-hex ASCII")
+            digest = "".join(chr(int(value)) for value in hash_bytes[:, 0])
+            if any(char not in "0123456789abcdef" for char in digest):
+                fail(f"{path}: V8 SHA bytes are not lowercase hexadecimal")
+    elif frozen_names & records.keys():
+        if version not in {"RRTMGP_REPLAY_V9", "RRTMGP_REPLAY_V10", "RRTMGP_REPLAY_V11", "RRTMGP_REPLAY_V12", "RRTMGP_REPLAY_V13"}:
+            fail(f"{path}: frozen-optics records require RRTMGP_REPLAY_V7 through V11")
+    if version in {"RRTMGP_REPLAY_V9", "RRTMGP_REPLAY_V11"}:
+        if phase != "SW":
+            fail(f"{path}: V9/V11 are only valid for SW")
+        names = {"SW_DIRECT_PREDELTA_POLICY", "TOA_GPOINT", "RAW_GAS_TAU", "MCICA_MASK",
+                 "RAW_CLOUD_TAU", "RAW_PRECIP_TAU", "RAW_GRAUPEL_TAU_EXT", "RAW_HAIL_TAU_EXT",
+                 "BAND_LIMS_GPOINT", "BAND_LIMS_WAVENUMBER", "VISIBLE_WEIGHT"}
+        missing = names - records.keys()
+        if missing:
+            fail(f"{path}: V9/V11 missing direct-diagnostic records: {', '.join(sorted(missing))}")
+        scalar = records["SW_DIRECT_PREDELTA_POLICY"]
+        if scalar.shape != (1, 1) or scalar.item() != 1.0:
+            fail(f"{path}: V9/V11 SW_DIRECT_PREDELTA_POLICY must equal one")
+        present_frozen = frozen_names & records.keys()
+        if present_frozen and present_frozen != frozen_names:
+            fail(f"{path}: V9 frozen inputs/metadata must be complete when present")
+        if present_frozen:
+            for name in ("GWP", "HWP", "LAMBDA_G", "LAMBDA_H"):
+                values = records[name]
+                if values.shape != (nc, nl) or not np.isfinite(values).all():
+                    fail(f"{path}: V9 {name} must be finite with shape (nc,nl)")
+                if name in {"GWP", "HWP"} and np.any(values < 0.0):
+                    fail(f"{path}: V9 {name} must be nonnegative")
+                if name in {"LAMBDA_G", "LAMBDA_H"} and np.any(values <= 0.0):
+                    fail(f"{path}: V9 {name} must be positive")
+            for name in ("FROZEN_MODE", "FROZEN_OCCURRENCE"):
+                values = records[name]
+                if values.shape != (1, 1) or not np.isfinite(values).all() or values.item() != 1.0:
+                    fail(f"{path}: V9 {name} must be scalar one")
+            hash_bytes = records["FROZEN_TABLE_SHA256_BYTES"]
+            if hash_bytes.shape != (64, 1) or not np.isfinite(hash_bytes).all() or \
+                    np.any(hash_bytes != np.floor(hash_bytes)) or np.any((hash_bytes < 48) | (hash_bytes > 102)):
+                fail(f"{path}: V9 frozen table SHA bytes must be lowercase-hex ASCII")
+            digest = "".join(chr(int(value)) for value in hash_bytes[:, 0])
+            if any(char not in "0123456789abcdef" for char in digest):
+                fail(f"{path}: V9 frozen table SHA is not lowercase hexadecimal")
+        toa, gas_tau, mask = records["TOA_GPOINT"], records["RAW_GAS_TAU"], records["MCICA_MASK"]
+        if toa.ndim != 2 or toa.shape[0] != nc or toa.shape[1] < 1:
+            fail(f"{path}: V9 TOA_GPOINT must have shape (nc,ngpt)")
+        if gas_tau.shape != (nc, nl, toa.shape[1]) or mask.shape != gas_tau.shape:
+            fail(f"{path}: V9 gas tau and mask must match (nc,nl,ngpt)")
+        if np.any(toa < 0.0) or np.any(gas_tau < 0.0) or np.any((mask != 0.0) & (mask != 1.0)):
+            fail(f"{path}: V9 TOA/tau must be nonnegative and mask must be binary")
+        bands = records["BAND_LIMS_GPOINT"]
+        wavenumbers = records["BAND_LIMS_WAVENUMBER"]
+        visible = records["VISIBLE_WEIGHT"]
+        if bands.ndim != 2 or bands.shape[0] != 2 or bands.shape[1] < 1 or \
+                wavenumbers.shape != bands.shape or visible.shape != (bands.shape[1], 1):
+            fail(f"{path}: V9 band mapping, wavenumber limits, and visible weights have inconsistent shapes")
+        if np.any(~np.isfinite(bands)) or np.any(bands != np.floor(bands)) or \
+                np.any(~np.isfinite(wavenumbers)) or np.any(wavenumbers <= 0.0) or \
+                np.any(~np.isfinite(visible)) or np.any((visible < 0.0) | (visible > 1.0)):
+            fail(f"{path}: V9 spectral metadata has invalid values")
+        expected_band = 1
+        for lo, hi in bands.T.astype(int):
+            if lo != expected_band or hi < lo or hi > toa.shape[1]:
+                fail(f"{path}: V9 g-point band limits must be contiguous, ordered, and in range")
+            expected_band = hi + 1
+        if expected_band != toa.shape[1] + 1:
+            fail(f"{path}: V9 g-point band limits do not cover every g-point")
+        for name in ("RAW_CLOUD_TAU", "RAW_PRECIP_TAU", "RAW_GRAUPEL_TAU_EXT", "RAW_HAIL_TAU_EXT"):
+            values = records[name]
+            if values.ndim != 3 or values.shape[:2] != (nc, nl) or values.shape[2] != bands.shape[1]:
+                fail(f"{path}: V9 {name} must have shape (nc,nl,nband)")
+            if np.any(values < 0.0):
+                fail(f"{path}: V9 {name} must be nonnegative")
+        if not present_frozen and (np.any(records["RAW_GRAUPEL_TAU_EXT"] != 0.0) or
+                                   np.any(records["RAW_HAIL_TAU_EXT"] != 0.0)):
+            fail(f"{path}: V9 frozen extinction must be zero without frozen metadata")
+    if version in {"RRTMGP_REPLAY_V10", "RRTMGP_REPLAY_V11", "RRTMGP_REPLAY_V13"}:
+        validate_cu_population_records(records, nc, nl, phase, version, path)
     for name, values in records.items():
-        if name in {"ICE_ROUGHNESS", "SW_BAND_PARTITION", "PRECIPITATION_OPTICS"}:
+        if name in {"ICE_ROUGHNESS", "SW_BAND_PARTITION", "PRECIPITATION_OPTICS",
+                    "GRAVITY", "CP_DRY", "MOL_WEIGHT_DRY", "SOLAR", "FROZEN_MODE",
+                    "FROZEN_OCCURRENCE", "FROZEN_TABLE_SHA256_BYTES", "SW_DIRECT_PREDELTA_POLICY",
+                    "CU_POPULATION_POLICY", "CU_RADIUS_POLICY", "CU_OCCURRENCE_POLICY", "TRACE_GASES_PRESENT",
+                    "BAND_LIMS_GPOINT", "BAND_LIMS_WAVENUMBER", "VISIBLE_WEIGHT"}:
             continue
         if values.shape[0] != nc:
             fail(f"{path}: {name} first dimension {values.shape[0]} != nc={nc}")
@@ -225,6 +574,170 @@ def assert_close(actual: np.ndarray, expected: np.ndarray, label: str,
         fail(f"{label}: mismatch at {index}: actual={actual[index]} expected={expected[index]} "
              f"difference={difference[index]} tolerance={tolerance[index]}")
     return float(difference.max(initial=0.0))
+
+
+def dry_layer_mass_kg_m2(raw: dict[str, np.ndarray], nl: int,
+                         require_native: bool = False) -> tuple[np.ndarray, str]:
+    """Return dry-air layer mass; historical captures use their explicit dp/g contract."""
+    native = raw.get("DRY_LAYER_MASS_KG_M2")
+    if native is not None:
+        values = np.asarray(native, dtype=np.float64)
+        if values.shape != (nl,) or not np.isfinite(values).all() or np.any(values <= 0.0):
+            fail("DRY_LAYER_MASS_KG_M2 must contain nl finite positive values")
+        return values.copy(), "native_dry_layer_mass"
+    if require_native:
+        fail("fresh UDM raw capture is missing DRY_LAYER_MASS_KG_M2")
+    dp = np.asarray(raw["DP_HPA"][:nl], dtype=np.float64)
+    gravity = float(raw["GRAVITY"][0])
+    if dp.shape != (nl,) or not np.isfinite(dp).all() or np.any(dp <= 0.0):
+        fail("legacy DP_HPA must contain nl finite positive values")
+    if not np.isfinite(gravity) or gravity <= 0.0:
+        fail("legacy GRAVITY must be finite and positive")
+    return dp * 100.0 / gravity, "legacy_dp_over_gravity"
+
+
+def corrected_hydrometeor(raw: dict[str, np.ndarray], q_name: str,
+                          path_name: str, nl: int) -> np.ndarray:
+    """Reconstruct the optional negative-input contract from preserved raw q.
+
+    Legacy captures remain strict; new captures must include the independent
+    correction records even when no negative input was accepted.
+    """
+    q = raw[q_name][:nl]
+    if q.shape != (nl,) or not np.isfinite(q).all():
+        fail(f"{q_name}: wrong shape or nonfinite raw hydrometeor")
+    limits = raw.get("NEGATIVE_Q_LIMITS")
+    if limits is None:
+        if np.any(q < 0.0):
+            fail(f"{q_name}: negative raw q without an explicit negative-input contract")
+        return q
+    if limits.shape != (6,) or not np.isfinite(limits).all() or np.any(limits < 0.0):
+        fail("NEGATIVE_Q_LIMITS must contain six finite nonnegative bounds")
+    base_q_name = q_name.removeprefix("SOURCE_")
+    phase_index = {"QC": 0, "QI": 1, "QR": 2, "QS": 3, "QG": 4, "QH": 5}[base_q_name]
+    clipped_name = f"NUMERIC_CLIPPED_{base_q_name}"
+    correction_name = f"NEGATIVE_GRID_CORRECTION_{path_name}"
+    for name in (clipped_name, correction_name):
+        if name not in raw or raw[name].shape != (nl,) or not np.isfinite(raw[name]).all():
+            fail(f"{name}: missing, wrong shape, or nonfinite correction record")
+    negative = q < 0.0
+    if np.any((-q[negative]) >= limits[phase_index]):
+        fail(f"{q_name}: accepted raw negative exceeds its strict bound")
+    clipped = np.where(negative, q, 0.0)
+    assert_close(raw[clipped_name], clipped, clipped_name, rtol=0.0, atol=0.0)
+    dry_mass, _ = dry_layer_mass_kg_m2(raw, nl)
+    expected_correction = -clipped * dry_mass * 1000.0
+    # Default REAL paths may underflow to zero; clipped q remains available for
+    # counts. This is one representable float32 quantum, not a physics tolerance.
+    quantum = float(np.nextafter(np.float32(0.), np.float32(1.)))
+    assert_close(raw[correction_name], expected_correction, correction_name, rtol=1.e-6, atol=quantum)
+    if np.any(raw[correction_name] < 0.0):
+        fail(f"{correction_name}: correction must be nonnegative")
+    return np.where(negative, 0.0, q)
+
+
+def frozen_input_policy(inp: dict[str, np.ndarray], nc: int, nl: int) -> str | None:
+    """Return the validated mode1 table digest; absent frozen records mean mode0."""
+    present = FROZEN_NAMES & inp.keys()
+    if not present:
+        return None
+    if present != FROZEN_NAMES:
+        fail("frozen inputs/metadata must be complete when present")
+    for name in ("GWP", "HWP", "LAMBDA_G", "LAMBDA_H"):
+        values = inp[name]
+        if values.shape != (nc, nl) or not np.isfinite(values).all():
+            fail(f"{name}: frozen input must be finite with shape (nc,nl)")
+        if name in {"GWP", "HWP"} and np.any(values < 0.0):
+            fail(f"{name}: frozen path must be nonnegative")
+        if name in {"LAMBDA_G", "LAMBDA_H"} and np.any(values <= 0.0):
+            fail(f"{name}: frozen slope must be positive")
+    for name in ("FROZEN_MODE", "FROZEN_OCCURRENCE"):
+        values = inp[name]
+        if values.shape != (1, 1) or not np.isfinite(values).all() or values.item() != 1.0:
+            fail(f"{name}: frozen policy must be scalar one")
+    hash_bytes = inp["FROZEN_TABLE_SHA256_BYTES"]
+    if hash_bytes.shape != (64, 1) or not np.isfinite(hash_bytes).all() or \
+            np.any(hash_bytes != np.floor(hash_bytes)):
+        fail("frozen table SHA bytes must be integer lowercase-hex ASCII with shape (64,1)")
+    if np.any(~np.isin(hash_bytes, [ord(char) for char in "0123456789abcdef"])):
+        fail("frozen table SHA bytes must be lowercase hexadecimal")
+    return "".join(chr(int(value)) for value in hash_bytes[:, 0])
+
+
+def verify_frozen_table(inp: dict[str, np.ndarray], nc: int, nl: int,
+                        case_dir: Path) -> None:
+    digest = frozen_input_policy(inp, nc, nl)
+    if digest is None:
+        return
+    table_name = os.environ.get("WRF_RRTMGP_FROZEN_TABLE")
+    if not table_name:
+        fail("mode1 replay requires WRF_RRTMGP_FROZEN_TABLE for table identity")
+    table = Path(table_name)
+    if not table.is_absolute():
+        table = case_dir / table
+    if not table.is_file() or hashlib.sha256(table.read_bytes()).hexdigest() != digest:
+        fail("mode1 replay frozen table identity differs from captured SHA256")
+
+
+def compare_frozen_paths(phase: str, raw: dict[str, np.ndarray],
+                         inp: dict[str, np.ndarray], raw_nl: int,
+                         adapter_nl: int) -> dict[str, float]:
+    """Check native G/H mass under the recorded mode, including numerical corrections."""
+    frozen = frozen_input_policy(inp, 1, adapter_nl) is not None
+    lambda_names = {"FROZEN_LAMBDA_G_M-1", "FROZEN_LAMBDA_H_M-1"}
+    present_lambda = lambda_names & raw.keys()
+    if present_lambda and not frozen:
+        fail(f"{phase}: raw frozen slopes require complete mode1 input metadata")
+    if not frozen and "NEGATIVE_Q_LIMITS" not in raw:
+        return {}  # Historical mode0 captures predate the six-phase raw contract.
+    dry_mass, _ = dry_layer_mass_kg_m2(raw, raw_nl, require_native=frozen)
+    differences: dict[str, float] = {}
+    if frozen:
+        native = inp.get("NATIVE_DRY_LAYER_MASS_KG_M2")
+        if native is None:
+            fail(f"{phase}: mode1 input requires native dry layer mass")
+        differences["NATIVE_DRY_LAYER_MASS_KG_M2"] = assert_close(
+            native, dry_mass[None, :], f"{phase}: frozen native dry mass", rtol=0., atol=0.)
+        if present_lambda and present_lambda != lambda_names:
+            fail(f"{phase}: raw frozen slope records must appear together")
+    for q_name, path_name, slope_name in (("QG", "GWP", "LAMBDA_G"),
+                                         ("QH", "HWP", "LAMBDA_H")):
+        if q_name not in raw:
+            fail(f"{phase}: six-phase mass contract omitted {q_name}")
+        q = corrected_hydrometeor(raw, q_name, path_name, raw_nl)
+        if not frozen and q_name == "QH" and np.any(q > 0.0):
+            fail(f"{phase}: positive hail must be refused before optical replay")
+        expected_grid = dry_mass * 1000.0 * q
+        zero = np.zeros_like(expected_grid)
+        for suffix, expected in (("GRID", expected_grid),
+                                 ("OMITTED", zero if frozen else expected_grid),
+                                 ("RADIATION", expected_grid if frozen else zero)):
+            name = f"{path_name}_{suffix}"
+            if name not in raw:
+                fail(f"{phase}: six-phase mass contract omitted {name}")
+            exact_zero = frozen and suffix == "OMITTED"
+            differences[name] = assert_close(raw[name], expected,
+                f"{phase}: {name} mode{int(frozen)} mass contract",
+                rtol=0. if exact_zero else 1.e-6, atol=0. if exact_zero else 1.e-12)
+        if frozen:
+            differences[f"{path_name}_grid_to_radiation"] = assert_close(
+                raw[path_name+"_RADIATION"], raw[path_name+"_GRID"],
+                f"{phase}: mode1 {path_name} radiation preserves grid path", rtol=0., atol=0.)
+            differences[path_name] = assert_close(inp[path_name][0, :raw_nl], expected_grid,
+                f"{phase}: adapter {path_name} mode1 native mass", rtol=1.e-6, atol=1.e-12)
+            differences[f"{path_name}_radiation_to_adapter"] = assert_close(
+                inp[path_name][0, :raw_nl], raw[path_name+"_RADIATION"],
+                f"{phase}: mode1 adapter {path_name} preserves radiation path", rtol=0., atol=0.)
+            differences[f"{path_name}_padded"] = assert_close(
+                inp[path_name][0, raw_nl:], np.zeros(adapter_nl-raw_nl),
+                f"{phase}: padded {path_name} must be zero", rtol=0., atol=0.)
+            raw_slope = f"FROZEN_{slope_name}_M-1"
+            if raw_slope in raw:
+                if np.any(raw[raw_slope] <= 0.0):
+                    fail(f"{phase}: {raw_slope} must be positive")
+                differences[slope_name] = assert_close(inp[slope_name][0, :raw_nl], raw[raw_slope],
+                    f"{phase}: adapter {slope_name} vs raw frozen slope", rtol=0., atol=0.)
+    return differences
 
 
 def compare_input_to_raw(phase: str, raw: dict[str, np.ndarray],
@@ -278,17 +791,18 @@ def compare_input_to_raw(phase: str, raw: dict[str, np.ndarray],
     cf_error = assert_close(inp["CF"][:, :raw_nl], raw["CF"][None, :raw_nl],
                             f"{phase}: adapter CF vs raw CF", rtol=0.0, atol=0.0)
 
-    gravity = float(raw["GRAVITY"][0])
-    if not np.isfinite(gravity) or gravity <= 0.0:
-        fail(f"{phase}: raw gravity must be finite and positive")
+    dry_mass, dry_mass_source = dry_layer_mass_kg_m2(raw, raw_nl)
     cf = raw["CF"][:raw_nl]
-    dp = raw["DP_HPA"][:raw_nl]
     path_expected: dict[str, np.ndarray] = {}
     omitted: dict[str, Any] = {}
     path_differences: dict[str, float] = {}
+    cu_native_names = {"NATIVE_QC", "NATIVE_QI"} <= raw.keys()
     for path_name, q_name in (("LWP", "QC"), ("IWP", "QI"), ("SWP", "QS")) + ((("RWP", "QR"),) if "RWP" in inp else ()):
-        q = raw[q_name][:raw_nl]
-        grid_path = dp * 100.0 / gravity * 1000.0 * q
+        q_raw = dict(raw)
+        if cu_native_names and q_name in {"QC", "QI"}:
+            q_raw[q_name] = raw[f"NATIVE_{q_name}"]
+        q = corrected_hydrometeor(q_raw, q_name, path_name, raw_nl)
+        grid_path = dry_mass * 1000.0 * q
         expected = np.zeros(raw_nl, dtype=np.float64)
         wet = cf > 0.0
         expected[wet] = grid_path[wet] / cf[wet]
@@ -303,6 +817,7 @@ def compare_input_to_raw(phase: str, raw: dict[str, np.ndarray],
             "total_grid_box_mass_g_m2_across_snapshot_layers": float(grid_path[excluded].sum()),
             "max_grid_box_mass_g_m2_per_layer": float(grid_path[excluded].max(initial=0.0)),
         }
+    path_differences.update(compare_frozen_paths(phase, raw, inp, raw_nl, adapter_nl))
     radius_differences = {
         name: assert_close(inp[name][0, :raw_nl], raw[source][:raw_nl],
                            f"{phase}: {name} vs raw {source}", rtol=0.0, atol=0.0)
@@ -376,7 +891,8 @@ def compare_input_to_raw(phase: str, raw: dict[str, np.ndarray],
                           "top_domain_layer_temperature_interpolated_from_tlev": phase == "LW",
                           "max_h2o_qv_times_amd_w_difference": h2o_error},
         "cloud_paths": {"max_adapter_path_differences_g_m2": path_differences,
-                        "cf_zero_condensate_omission": omitted},
+                        "cf_zero_condensate_omission": omitted,
+                        "dry_layer_mass_source": dry_mass_source},
         "radii": {"max_difference_um": radius_differences,
                   "selection_counts": radius_selection_counts},
         "raw_mapped_q_negative_snapshot": negative_q,
@@ -389,6 +905,7 @@ def check_microphysics_mapping(mp_physics: int, raw: dict[str, np.ndarray],
     if missing_flags:
         fail(f"{phase}: raw snapshot missing source flags: {', '.join(missing_flags)}")
     flags = {q: bool(raw.get(FLAG_NAMES[q], np.array([0.0]))[0] != 0.0) for q in Q_NAMES}
+    cu_native_names = {"NATIVE_QC", "NATIVE_QI"} <= raw.keys()
     present_sources = sorted(SOURCE_NAMES[q] for q in Q_NAMES if SOURCE_NAMES[q] in raw)
     checks: list[str] = []
     expected_flags = {
@@ -406,18 +923,20 @@ def check_microphysics_mapping(mp_physics: int, raw: dict[str, np.ndarray],
             source = SOURCE_NAMES[q]
             if source not in raw:
                 fail(f"{phase}: MP4 mapping needs {source} capture")
-            assert_close(raw[q][:raw_nl], raw[source][:raw_nl], f"{phase}: MP4 preserved {q}",
+            compare_name = f"NATIVE_{q}" if cu_native_names and q in {"QC", "QI"} else source
+            assert_close(raw[q][:raw_nl], raw[compare_name][:raw_nl], f"{phase}: MP4 preserved {q}",
                          rtol=0.0, atol=0.0)
-            checks.append(f"{q}=source_{q}")
+            checks.append(f"{q}={compare_name.lower()}")
         mapping = "udm_all_native_species_preserved" if mp_physics == 27 else "mp4_all_species_preserved"
     elif mp_physics in {5, 15, 85}:
         for q in ("QC", "QI"):
             source = SOURCE_NAMES[q]
             if source not in raw:
                 fail(f"{phase}: MP{mp_physics} mapping needs {source} capture")
-            assert_close(raw[q][:raw_nl], raw[source][:raw_nl], f"{phase}: MP{mp_physics} mapped {q}",
+            compare_name = f"NATIVE_{q}" if cu_native_names and q in {"QC", "QI"} else source
+            assert_close(raw[q][:raw_nl], raw[compare_name][:raw_nl], f"{phase}: MP{mp_physics} mapped {q}",
                          rtol=0.0, atol=0.0)
-            checks.append(f"{q}=source_{q}")
+            checks.append(f"{q}={compare_name.lower()}")
         assert_close(raw["QS"][:raw_nl], np.zeros_like(raw["QS"][:raw_nl]),
                      f"{phase}: MP{mp_physics} snow path source must be zero", rtol=0.0, atol=0.0)
         checks.append("QS=0 (Ferrier ice field carries frozen condensate)")
@@ -427,9 +946,10 @@ def check_microphysics_mapping(mp_physics: int, raw: dict[str, np.ndarray],
             source = SOURCE_NAMES[q]
             if source not in raw:
                 fail(f"{phase}: MP95 mapping needs {source} capture")
-            assert_close(raw[q][:raw_nl], raw[source][:raw_nl], f"{phase}: MP95 restored/retained {q}",
+            compare_name = f"NATIVE_{q}" if cu_native_names and q in {"QC", "QI"} else source
+            assert_close(raw[q][:raw_nl], raw[compare_name][:raw_nl], f"{phase}: MP95 restored/retained {q}",
                          rtol=0.0, atol=0.0)
-            checks.append(f"{q}=source_{q}")
+            checks.append(f"{q}={compare_name.lower()}")
         assert_close(raw["QI"][:raw_nl], np.zeros_like(raw["QI"][:raw_nl]),
                      f"{phase}: MP95 QI must be zero", rtol=0.0, atol=0.0)
         checks.append("QI=0 (combined ice/snow remains in QS)")
@@ -442,9 +962,10 @@ def check_microphysics_mapping(mp_physics: int, raw: dict[str, np.ndarray],
             if flags[q]:
                 if source not in raw:
                     fail(f"{phase}: flagged {q} source has no {source} capture")
-                assert_close(raw[q][:raw_nl], raw[source][:raw_nl],
+                compare_name = f"NATIVE_{q}" if cu_native_names and q in {"QC", "QI"} else source
+                assert_close(raw[q][:raw_nl], raw[compare_name][:raw_nl],
                              f"{phase}: flagged source mapping {q}", rtol=0.0, atol=0.0)
-                checks.append(f"{q}=source_{q}")
+                checks.append(f"{q}={compare_name.lower()}")
         mapping = "generic_source_and_flag_report"
     return {"mp_physics": mp_physics, "source_flags": flags,
             "generic_raw_sources_present": present_sources,
@@ -492,10 +1013,14 @@ def check_wrf_diagnostics(phase: str, result: dict[str, Any], raw: dict[str, np.
         surface_net = sections["DN"][:, :1, :] - sections["UP"][:, :1, :]
         errors["wrf_gsw"] = assert_close(sections["WRF_GSW"], surface_net, "SW: WRF_GSW vs DN-UP",
                                          rtol=5.0e-7, atol=2.0e-5)
-        errors["wrf_swddir"] = assert_close(sections["WRF_SWDDIR"], sections["DIRECT"][:, :1, :],
-                                           "SW: WRF_SWDDIR vs direct", rtol=5.0e-7, atol=2.0e-5)
-        errors["wrf_swddif"] = assert_close(sections["WRF_SWDDIF"], sections["DIFFUSE"][:, :1, :],
-                                           "SW: WRF_SWDDIF vs diffuse", rtol=5.0e-7, atol=2.0e-5)
+        predelta = sections.get("DIRECT_PREDELTA", sections["DIRECT"])
+        errors["wrf_swddir"] = assert_close(sections["WRF_SWDDIR"], predelta[:, :1, :],
+                                           "SW: WRF_SWDDIR vs configured direct diagnostic",
+                                           rtol=5.0e-7, atol=2.0e-5)
+        expected_diffuse = sections["DN"][:, :1, :] - predelta[:, :1, :]
+        errors["wrf_swddif"] = assert_close(sections["WRF_SWDDIF"], expected_diffuse,
+                                           "SW: WRF_SWDDIF vs total-down minus configured direct",
+                                           rtol=5.0e-7, atol=2.0e-5)
     return errors
 
 
@@ -575,10 +1100,12 @@ def validate_cloud_fixture_phase(phase: str, fixture: dict[str, Any], raw: dict[
     path_names = {"QC": ("QC", "LWP"), "QI": ("QI", "IWP"), "QS": ("QS", "SWP")}
     path_masses: dict[str, Any] = {}
     for source, expected_q in active_paths.items():
-        actual_q = float(raw[source][layer])
+        native_name = f"NATIVE_{source}"
+        actual_q = float(raw[native_name if native_name in raw else source][layer])
         if actual_q <= 0.0:
             fail(f"{phase}: cloud fixture {source} is not positive at layer {layer}: {actual_q}")
-        raw_grid_mass = actual_q * float(raw["DP_HPA"][layer]) * 100.0 / float(raw["GRAVITY"][0]) * 1000.0
+        dry_mass, _ = dry_layer_mass_kg_m2(raw, raw_nl)
+        raw_grid_mass = actual_q * float(dry_mass[layer]) * 1000.0
         q_name, path_name = path_names[source]
         path = float(adapter[path_name][0, layer])
         if raw["CF"][layer] <= 0.0 or path <= 0.0:
@@ -616,6 +1143,13 @@ def validate_capture(case_dir: Path, phase: str, mp_physics: int,
         fail(f"{phase}: captured MP_PHYSICS={captured_mp}, requested {mp_physics}")
     if nc != 1 or nl < raw_nl:
         fail(f"{phase}: expected one captured WRF column and adapter nl>={raw_nl}; got {nc}x{nl}")
+    if input_phase == phase and any(name in adapter for name in
+                                    ("CU_POPULATION_POLICY", "CU_LWP", "CU_IWP", "CU_REL", "CU_REI")):
+        if not all(name in adapter for name in
+                   ("CU_POPULATION_POLICY", "CU_LWP", "CU_IWP", "CU_REL", "CU_REI")):
+            fail(f"{phase}: partial CU population input records")
+        validate_cu_population_raw(raw, adapter, raw_nl, capture / f"{phase.lower()}.raw")
+    verify_frozen_table(adapter, nc, nl, case_dir)
     adapter_checks = compare_input_to_raw(phase, raw, adapter, raw_nl)
     mapping = check_microphysics_mapping(mp_physics, raw, adapter, phase, raw_nl)
     ref_output = capture / f"{phase.lower()}.reference.result"

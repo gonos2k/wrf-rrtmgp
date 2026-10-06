@@ -1,0 +1,81 @@
+{
+  "status": "READ_ONLY_SOURCE_AUDIT_NO_ROOT_CAUSE_ESTABLISHED",
+  "failure": {
+    "run": "build/udm37-matthew-extended-planck-48h-v1/ra37",
+    "execution_receipt": {
+      "path": "build/udm37-matthew-extended-planck-48h-v1/execution-receipt.json",
+      "sha256": "f74c10501612c6f59c9c2999fe581aa927bc14e3a20d3b57c50830a9abce3c9a",
+      "returncode": 1,
+      "launcher": "MPI4; rank 0 emitted the fatal and MPI_Abort"
+    },
+    "fatal_log": {
+      "path": "build/udm37-matthew-extended-planck-48h-v1/ra37/rsl.error.0000",
+      "sha256": "eee50aa000f3cf9f7e597f0d5b08deef2a1195898343e6f2d7ba7ddc4deb0ffa",
+      "message": "RRTMGP_FATAL [module_ra_rrtmgp_input.F]: RRTMGP_INPUT_DP_HPA_NOT_FINITE at column=1 layer=1"
+    },
+    "last_completed_timing_marker": "2016-10-06_00:50:00",
+    "temperature_table_retry": "The prior 00:40 LW frozen-temperature range failure was passed by this extended-temperature table run; this later failure is distinct."
+  },
+  "source_pins": {
+    "lw_wrapper": {
+      "path": "build/udm37-pr65-fatal-reporter-wrf-build-v1/source-copy/WRF/phys/module_ra_rrtmg_lw.F",
+      "sha256": "a1f36ea81f9ecb26a9dbdd5ec99bf6f15bbad072bad59ca56e46f3001448ccaf"
+    },
+    "input_builder": {
+      "path": "build/udm37-pr65-fatal-reporter-wrf-build-v1/source-copy/WRF/phys/module_ra_rrtmgp_input.F",
+      "sha256": "c9bcb7dac958c47a34036414389233cf71ae824f70f4a23ffce0c4047b558eea"
+    },
+    "host_driver": {
+      "path": "build/udm37-pr65-fatal-reporter-wrf-build-v1/source-copy/WRF/dyn_em/module_first_rk_step_part1.F",
+      "sha256": "bb1384a82aad375f9f8392da2a16046571919556a2deacf1523992dacc49891f"
+    },
+    "failed_executable": {
+      "path": "build/udm37-matthew-extended-planck-48h-v1/ra37/wrf.exe",
+      "sha256": "17e37d7461d90bf4eac4110879ecf4716e515fd155aca9754ff74d573ca01725"
+    },
+    "expanded_table": {
+      "path": "build/udm37-frozen-planck-coverage-v1/runs/frozen-planck-150-330-step5-plus233-v1/frozen-ice-psd-moments.nc",
+      "sha256": "ebeafb9746164d5414a45eab4061c5c855f0f91e92be77003b3829722514fe6a"
+    }
+  },
+  "source_trace": [
+    {
+      "path_and_lines": "module_ra_rrtmg_lw.F:12202-12205,12490-12500",
+      "fact": "The wrapper copies interface pressure as Pw1D(k)=p8w(i,k,j)/100, sets plev(1)=pw1d(1), plev(k+1)=pw1d(k+1), and computes pdel(k)=plev(k)-plev(k+1). The layer ordering comment says bottom to top."
+    },
+    {
+      "path_and_lines": "module_ra_rrtmg_lw.F:13001-13018",
+      "fact": "The UDM builder validates this pressure-thickness vector before the radiation column is queued/flushed into rrtmgp_lw_column."
+    },
+    {
+      "path_and_lines": "module_ra_rrtmgp_input.F:392-393,792-837",
+      "fact": "The first pressure validation is rrtmgp_check_positive('dp_hpa',RESHAPE(dp_hpa,[n,1])). That calls check_finite and emits DP_HPA_NOT_FINITE on a nonfinite value. This failure occurs before frozen-optics lookup or RTE evaluation for that call."
+    },
+    {
+      "path_and_lines": "module_first_rk_step_part1.F:274-290,309-310",
+      "fact": "Host UDM dry layer mass is built separately from pressure as -DNW*(C1H*MUT+C2H)/g. Radiation still receives p8w and passes it to the wrapper. Thus the UDM dry-mass denominator is not the source of the named DP_HPA validation failure."
+    },
+    {
+      "path_and_lines": "module_ra_rrtmgp.F:361-405 (SW) and frozen LW add path in same adapter",
+      "fact": "Frozen optics are added inside the RRTMGP adapter after a column call begins. They cannot directly alter p8w or this call's pdel before the builder check; a previous radiation heating feedback could only be an indirect trajectory influence."
+    }
+  ],
+  "interpretation": {
+    "established": [
+      "At 00:50 the UDM LW builder received a nonfinite dp_hpa element at the first element of the vector it checked.",
+      "dp_hpa is formed from adjacent WRF interface pressures p8w divided by 100 and differenced."
+    ],
+    "not_established": [
+      "The exact rank-local/global i,j or WRF k index, p8w values on both interfaces, whether either p8w operand was already nonfinite, and which preceding timestep first produced the bad state are absent from the fatal record.",
+      "No source evidence establishes whether the pressure state became nonfinite from unrelated WRF dynamics, from an indirect prior radiation-heating feedback, or another model-state issue.",
+      "The accepted RA4 run uses the same initial and boundary files (wrfinput SHA 6adeb00d56b83ef7749502059e35d27adb5114ac0e03adb323e86aa68b946fe3; wrfbdy SHA 2298ac9b6dfec71e434648f66160f6555f89ec351398a4abf76754d1f934d29b) and completes, but its different radiation trajectory means this does not isolate the cause or prove that the RA37 pressure at 00:50 should match."
+    ],
+    "diagnostic_message_limitation": "The generic helper reshapes the 1-D layer vector to (n,1), but its checker prints the first index as 'column' and the singleton second index as 'layer'. Therefore 'column=1 layer=1' does not identify a global WRF column; it is a misleading generic array-index label. The caller's global i,j context is bypassed by this generic check."
+  },
+  "bounded_next_diagnostic_if_root_authorizes": [
+    "At the builder boundary, before the generic checker, record global i,j, rank/tile bounds, WRF k and vector index, p8w(k), p8w(k+1), pdel_hPa, and IEEE-finite flags, with immediate flush. Do not change acceptance, clamp, or continue after invalid pressure.",
+    "For the immediately preceding successful LW call at the same global cell, capture the exact pressure/temperature/gases/cloud/frozen paths, G/H lookup temperature and optical outputs, RTE flux/heating outputs, and host heating tendency applied to dynamics; this tests the only plausible frozen-optics feedback route without conflating it with the pressure builder.",
+    "Compare against the matching successful RA4 arm only as a distinct coupled trajectory. Do not infer same-state pressure equivalence from common initial/boundary files."
+  ],
+  "execution": {"models_run": 0, "builds_run": 0, "source_edits": 0}
+}

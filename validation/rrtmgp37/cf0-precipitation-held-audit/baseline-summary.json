@@ -1,0 +1,1562 @@
+{
+  "schema": "cf0-original-four-baselines-compact-v1",
+  "original_receipt": {
+    "path": "build/udm37-cf0-precip-original-baseline-v1/runs-v2/execution.json",
+    "bytes": 139875,
+    "sha256": "6838371c26a859461f7bd9f1ba704930add1aaa65190e3c208f859224f807f73"
+  },
+  "status": "PASS_SCOPED_FOUR_ORIGINAL_DOUBLE_BASELINES",
+  "attempts": 4,
+  "sidecar_calls": 0,
+  "cases": [
+    {
+      "anchor": "cf0_rain_low_cloud_proxy",
+      "species": "rain",
+      "phase": "LW",
+      "status": "PASS_STRICT_ORIGINAL_DOUBLE_BASELINE",
+      "input_pin": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-precip-original-baseline-v1/runs-v2/rain-lw/input",
+        "bytes": 35854,
+        "sha256": "e020db768f3dca001862a911826a4539a80f7aead0e89267cb5b341498f19c94"
+      },
+      "raw_pin": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-precip-original-baseline-v1/runs-v2/rain-lw/raw",
+        "bytes": 70988,
+        "sha256": "53f666aed40d48e6752712a8f81fa213dc916cc7aef1e082a899dd6215a94bf3"
+      },
+      "production_pin": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-precip-original-baseline-v1/runs-v2/rain-lw/production.result",
+        "bytes": 756759,
+        "sha256": "65d4d15b61ca0945efe58e1a5d250828fbf8d6b53e02c17679c74719db996ce9"
+      },
+      "return_code": 0,
+      "elapsed_seconds": 0.16493275947868824,
+      "output_pins": [
+        {
+          "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-precip-original-baseline-v1/runs-v2/rain-lw/reference.result",
+          "bytes": 755645,
+          "sha256": "dc3e249e4e3f84018e3ebf5fb2dd84434f6dc18b01fefbc3f08f709d8892e572"
+        },
+        {
+          "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-precip-original-baseline-v1/runs-v2/rain-lw/stdout",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-precip-original-baseline-v1/runs-v2/rain-lw/stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "compared_sections": 20,
+      "all_original_comparison_sections_passed": true,
+      "exact_double_oracle": {
+        "result": {
+          "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-precip-original-baseline-v1/runs-v2/rain-lw/reference.result",
+          "bytes": 755645,
+          "sha256": "dc3e249e4e3f84018e3ebf5fb2dd84434f6dc18b01fefbc3f08f709d8892e572"
+        },
+        "phase": "LW",
+        "nc": 1,
+        "nl": 47,
+        "ordered_sections": [
+          "GAS_COL_DRY",
+          "GAS_TAU",
+          "GAS_TAU_RAW",
+          "PRECIP_TAU",
+          "CLOUD_TAU",
+          "GRAUPEL_TAU_ABS",
+          "HAIL_TAU_ABS",
+          "FROZEN_TAU",
+          "PREPARED_TAU",
+          "MASK",
+          "TOTAL_TAU",
+          "RL_USED",
+          "DI_USED",
+          "DS_USED",
+          "UP",
+          "DN",
+          "HR",
+          "UPC",
+          "DNC",
+          "HRC"
+        ],
+        "arrays": {
+          "GAS_COL_DRY": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              47,
+              1
+            ],
+            "ieee_bytes_sha256": "7cfd5d410aff5396c5ea8a7cac2de27510ba3ac23c73934f5c624171079b4ffd"
+          },
+          "GAS_TAU": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              47,
+              128
+            ],
+            "ieee_bytes_sha256": "7b2f617fddd78948d8189eb98e575bb16a0378cf13119a183d51b65de7b3dcd7"
+          },
+          "GAS_TAU_RAW": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              47,
+              128
+            ],
+            "ieee_bytes_sha256": "7b2f617fddd78948d8189eb98e575bb16a0378cf13119a183d51b65de7b3dcd7"
+          },
+          "PRECIP_TAU": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              47,
+              16
+            ],
+            "ieee_bytes_sha256": "8828f83afe8184ef5ae48f5351995a80af18f73be1a9e38abdfbcd7b0ec4f9cf"
+          },
+          "CLOUD_TAU": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              47,
+              16
+            ],
+            "ieee_bytes_sha256": "a80530ba405e0aa761781e75d911a4f8877b3350ad4e4645797c1bc8505ef687"
+          },
+          "GRAUPEL_TAU_ABS": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              47,
+              16
+            ],
+            "ieee_bytes_sha256": "b8b43711ff31e970cd877d4c1e0a7f7c7caf9ba87fe99cf3ed0a3663fdb02548"
+          },
+          "HAIL_TAU_ABS": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              47,
+              16
+            ],
+            "ieee_bytes_sha256": "71e9ceca9252eff2223653080081ddaa4d3b6ad9bb8f419d4913143682d2fe9b"
+          },
+          "FROZEN_TAU": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              47,
+              16
+            ],
+            "ieee_bytes_sha256": "affd8515107fe5aa0124babe969a2abfcc9baefbdeeeb13800190c5e2371d093"
+          },
+          "PREPARED_TAU": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              47,
+              16
+            ],
+            "ieee_bytes_sha256": "a80530ba405e0aa761781e75d911a4f8877b3350ad4e4645797c1bc8505ef687"
+          },
+          "MASK": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              47,
+              128
+            ],
+            "ieee_bytes_sha256": "160f0d62480439590e0be3575a2da45fa6b0a72fbc4ab931ad951638f1e67da7"
+          },
+          "TOTAL_TAU": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              47,
+              128
+            ],
+            "ieee_bytes_sha256": "23a766b7da8a9be6355c7d80295723ef59807a4a0213b3cf16f4ce80ac97c0d5"
+          },
+          "RL_USED": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              47,
+              1
+            ],
+            "ieee_bytes_sha256": "7a33b95987d5e62639330738080a2be583367293d99ac148b2ff63e9d792e372"
+          },
+          "DI_USED": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              47,
+              1
+            ],
+            "ieee_bytes_sha256": "1d27ea14bd5eb46c87d85d8e3924a387d3ebaff88a6c2fd913dfd5e30cc8b16c"
+          },
+          "DS_USED": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              47,
+              1
+            ],
+            "ieee_bytes_sha256": "d3a569ea5960fcf00810519dca26de78905d8b051ac77e8a0d2c15520d9adc4f"
+          },
+          "UP": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              48,
+              1
+            ],
+            "ieee_bytes_sha256": "13b21023f80a69959ee8b2f5f87d4da05e8a6d9010fa4ccc96ef6478e373c8aa"
+          },
+          "DN": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              48,
+              1
+            ],
+            "ieee_bytes_sha256": "bf1f6d50c4a36c7774c1d0077000a349bcfaba8c1934dd6777a6c58cd2863b22"
+          },
+          "HR": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              47,
+              1
+            ],
+            "ieee_bytes_sha256": "4e0e6095ed420c562dd54b27c03d9dedf5a214faff88a90900de52ab0e01f084"
+          },
+          "UPC": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              48,
+              1
+            ],
+            "ieee_bytes_sha256": "a833bc8103d99bd22c9136d28d6b618593f4f3686961ffe635f9b2398fbb1898"
+          },
+          "DNC": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              48,
+              1
+            ],
+            "ieee_bytes_sha256": "d6b6aeabc887e6ab78b6e3f76d103a5159730dee99f7c2d9edb8fa90d3148a98"
+          },
+          "HRC": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              47,
+              1
+            ],
+            "ieee_bytes_sha256": "4bf75c902020e17887ab9fc0ea6793c872a09e68531f58c0da5b2ad1dddf78f0"
+          }
+        },
+        "different_d37_46c_result_bitwise_compared": false
+      }
+    },
+    {
+      "anchor": "cf0_rain_low_cloud_proxy",
+      "species": "rain",
+      "phase": "SW",
+      "status": "PASS_STRICT_ORIGINAL_DOUBLE_BASELINE",
+      "input_pin": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-precip-original-baseline-v1/runs-v2/rain-sw/input",
+        "bytes": 322772,
+        "sha256": "b6a202adf90a265e390d765ec674efa0b9f48f209bc61ce2632abfbffaefc3b9"
+      },
+      "raw_pin": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-precip-original-baseline-v1/runs-v2/rain-sw/raw",
+        "bytes": 66881,
+        "sha256": "39fb118958619b34f7e0101bcd669d5e6c45398437321e5d40599d2a2c22de09"
+      },
+      "production_pin": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-precip-original-baseline-v1/runs-v2/rain-sw/production.result",
+        "bytes": 1101655,
+        "sha256": "3e71a17d1f4f3a0442b682fd6db54b24944fb3b0575144711ad5a6bcb960533d"
+      },
+      "return_code": 0,
+      "elapsed_seconds": 0.1646090168505907,
+      "output_pins": [
+        {
+          "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-precip-original-baseline-v1/runs-v2/rain-sw/reference.result",
+          "bytes": 1100495,
+          "sha256": "af076b0f30d2af022ea70faa139ac6f579be8fd34ffb9833b8357e7d90215511"
+        },
+        {
+          "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-precip-original-baseline-v1/runs-v2/rain-sw/stdout",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-precip-original-baseline-v1/runs-v2/rain-sw/stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "compared_sections": 46,
+      "all_original_comparison_sections_passed": true,
+      "exact_double_oracle": {
+        "result": {
+          "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-precip-original-baseline-v1/runs-v2/rain-sw/reference.result",
+          "bytes": 1100495,
+          "sha256": "af076b0f30d2af022ea70faa139ac6f579be8fd34ffb9833b8357e7d90215511"
+        },
+        "phase": "SW",
+        "nc": 1,
+        "nl": 40,
+        "ordered_sections": [
+          "GAS_COL_DRY",
+          "GAS_TAU",
+          "GAS_SSA",
+          "GAS_G",
+          "PRECIP_TAU",
+          "PRECIP_SSA",
+          "PRECIP_G",
+          "CLOUD_TAU",
+          "CLOUD_SSA",
+          "CLOUD_G",
+          "GRAUPEL_TAU_EXT",
+          "GRAUPEL_TAU_SCA",
+          "GRAUPEL_TAU_SCA_G",
+          "HAIL_TAU_EXT",
+          "HAIL_TAU_SCA",
+          "HAIL_TAU_SCA_G",
+          "FROZEN_TAU",
+          "FROZEN_SSA",
+          "FROZEN_G",
+          "PREPARED_TAU",
+          "PREPARED_SSA",
+          "PREPARED_G",
+          "MASK",
+          "TOTAL_TAU",
+          "TOTAL_SSA",
+          "TOTAL_G",
+          "RL_USED",
+          "DI_USED",
+          "DS_USED",
+          "UP",
+          "DN",
+          "HR",
+          "UPC",
+          "DNC",
+          "HRC",
+          "DIRECT",
+          "DIFFUSE",
+          "DIRECTC",
+          "VISDIR",
+          "VISDIF",
+          "NIRDIR",
+          "NIRDIF",
+          "DIRECT_PREDELTA",
+          "DIRECTC_PREDELTA",
+          "VISDIR_PREDELTA",
+          "NIRDIR_PREDELTA"
+        ],
+        "arrays": {
+          "GAS_COL_DRY": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              40,
+              1
+            ],
+            "ieee_bytes_sha256": "d46918ab01423acd8c4615adb3cef0d5e3349e5f99d704b75ebff96caedfd01f"
+          },
+          "GAS_TAU": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              40,
+              112
+            ],
+            "ieee_bytes_sha256": "bbd96694ef2fed31c1c90f58b6398247cf97b8aa7b042329b11222dea01179f5"
+          },
+          "GAS_SSA": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              40,
+              112
+            ],
+            "ieee_bytes_sha256": "91da35d054d390b03e520f3af591991616789de1f99d293626ae3a43eb1defa6"
+          },
+          "GAS_G": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              40,
+              112
+            ],
+            "ieee_bytes_sha256": "03b076d4495e9e512a4b5503d14dd53141870ac26003eb0e6d6e174c469f35e1"
+          },
+          "PRECIP_TAU": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              40,
+              14
+            ],
+            "ieee_bytes_sha256": "069b0c522bd32b478192a4870b0fd3a0d2ac57c11f30df2f226819dcac833306"
+          },
+          "PRECIP_SSA": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              40,
+              14
+            ],
+            "ieee_bytes_sha256": "7bb13be75d1e1093ef719dd4ba507fa90b91b4fdca631eaf1eb507b762033999"
+          },
+          "PRECIP_G": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              40,
+              14
+            ],
+            "ieee_bytes_sha256": "265c105f23ea51830ffbaa38f249368683e8c61489bfe2ea098779fd862cad10"
+          },
+          "CLOUD_TAU": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              40,
+              14
+            ],
+            "ieee_bytes_sha256": "97f90bf645cb7bead8295b9c9aec1ebf5cabb238f63b4a608113221cb260840d"
+          },
+          "CLOUD_SSA": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              40,
+              14
+            ],
+            "ieee_bytes_sha256": "aa946dd6506407af5158801630ac0e649444e82ea3972f1ebbb213cb5599fe55"
+          },
+          "CLOUD_G": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              40,
+              14
+            ],
+            "ieee_bytes_sha256": "79f8d154a07d298cdd281d5e24c7427b95ad1ea4a5b635c55e8cf6d0c94c7c2b"
+          },
+          "GRAUPEL_TAU_EXT": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              40,
+              14
+            ],
+            "ieee_bytes_sha256": "23924fcf75c3fef73ea8bc03d8da849ca1b5d33788cbb7b0a8fb7c6330ef9823"
+          },
+          "GRAUPEL_TAU_SCA": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              40,
+              14
+            ],
+            "ieee_bytes_sha256": "823d74142eba7d8c7fb4991544e4d97fafa09978362eb7b46a36a4c5b39a629b"
+          },
+          "GRAUPEL_TAU_SCA_G": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              40,
+              14
+            ],
+            "ieee_bytes_sha256": "e31ca696ec083313c017467ceecdf5f487467383702266386b4ec09b552e7390"
+          },
+          "HAIL_TAU_EXT": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              40,
+              14
+            ],
+            "ieee_bytes_sha256": "72a588ddca52efa5a32803ea5335a3524e9aede7a6950048bee257d4a79ee402"
+          },
+          "HAIL_TAU_SCA": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              40,
+              14
+            ],
+            "ieee_bytes_sha256": "05ee2f11918e763a9d980cf8e44ded3067725708ff244a2344bb12d0249ec015"
+          },
+          "HAIL_TAU_SCA_G": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              40,
+              14
+            ],
+            "ieee_bytes_sha256": "11eedd621abf8731252d079df263535a7530b730d33db20e40ce56dc06e54fcd"
+          },
+          "FROZEN_TAU": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              40,
+              14
+            ],
+            "ieee_bytes_sha256": "614247614ad5d83c4e38c33a3ea7ec2c458b908633f3e391480c07d1457e6ce2"
+          },
+          "FROZEN_SSA": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              40,
+              14
+            ],
+            "ieee_bytes_sha256": "9aec9e9459c88d5e2fe29b2c079293fb0ca1f3ddf1607626e1c33baca8822701"
+          },
+          "FROZEN_G": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              40,
+              14
+            ],
+            "ieee_bytes_sha256": "8ce20a04c77993349bf5bd7f443fed9ad2cbfcea51bab0a9c26558d76a742737"
+          },
+          "PREPARED_TAU": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              40,
+              14
+            ],
+            "ieee_bytes_sha256": "97f90bf645cb7bead8295b9c9aec1ebf5cabb238f63b4a608113221cb260840d"
+          },
+          "PREPARED_SSA": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              40,
+              14
+            ],
+            "ieee_bytes_sha256": "aa946dd6506407af5158801630ac0e649444e82ea3972f1ebbb213cb5599fe55"
+          },
+          "PREPARED_G": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              40,
+              14
+            ],
+            "ieee_bytes_sha256": "79f8d154a07d298cdd281d5e24c7427b95ad1ea4a5b635c55e8cf6d0c94c7c2b"
+          },
+          "MASK": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              40,
+              112
+            ],
+            "ieee_bytes_sha256": "4696255f16cb818a9442912e657833a86c3c0caaf2f1e4a287c2266c466a3a44"
+          },
+          "TOTAL_TAU": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              40,
+              112
+            ],
+            "ieee_bytes_sha256": "8234adf7f31c0c3916a94c10d36508113b586ff4d8c8b8f546eebc321a8a5a09"
+          },
+          "TOTAL_SSA": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              40,
+              112
+            ],
+            "ieee_bytes_sha256": "93c60fcc3f7f91a20e6b5b44af2dd0e568071a8c11938b62d70dc3550d8e99e7"
+          },
+          "TOTAL_G": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              40,
+              112
+            ],
+            "ieee_bytes_sha256": "caadb9382f1f1cca53ae2a52aef1e045b8f0086513a8bf6cac0ad498e94bede7"
+          },
+          "RL_USED": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              40,
+              1
+            ],
+            "ieee_bytes_sha256": "551665ee0556dd1189e5c329dd3dbc6a5d7529db7e4e4a496fba994395f88a1f"
+          },
+          "DI_USED": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              40,
+              1
+            ],
+            "ieee_bytes_sha256": "00e52f0c950b58b2289feb847bd5062d547c637e94de2d7250380086457edaf3"
+          },
+          "DS_USED": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              40,
+              1
+            ],
+            "ieee_bytes_sha256": "871ca6d6c7722ef8f799daa42a9a720ffe5fdec39039edcb5794b0fe3c88f0aa"
+          },
+          "UP": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              41,
+              1
+            ],
+            "ieee_bytes_sha256": "6d5e184f0221ee01f09fedcab0fe78212994dfba8115ce4b9629160274939861"
+          },
+          "DN": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              41,
+              1
+            ],
+            "ieee_bytes_sha256": "7b374c0dc6996348149292bbf0be3d71e0e5999227f0cf61a1f2d69d3ed91bfe"
+          },
+          "HR": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              40,
+              1
+            ],
+            "ieee_bytes_sha256": "7b1b78fb7bad9aac87854e1e27e07d9dfdec5c21b9a36bbbbff834a4a687ef7b"
+          },
+          "UPC": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              41,
+              1
+            ],
+            "ieee_bytes_sha256": "f2d366c8e2284c4686233e279d8312a7a18d29fd26335776e1624fd81a0a0c3a"
+          },
+          "DNC": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              41,
+              1
+            ],
+            "ieee_bytes_sha256": "21f926691f19a13c394fce0be136b799270ab80a2fa1a51acf2be4ef84457958"
+          },
+          "HRC": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              40,
+              1
+            ],
+            "ieee_bytes_sha256": "950e9d73e252ca6a0436262cb812d35d1d842eb175c2a9fc53d1b69371120f0b"
+          },
+          "DIRECT": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              41,
+              1
+            ],
+            "ieee_bytes_sha256": "c4c23bd82ad11cb672df3b31cd73e6c4119b8ad532b925c8508d79076cabb7e2"
+          },
+          "DIFFUSE": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              41,
+              1
+            ],
+            "ieee_bytes_sha256": "29a8047b3842e988821487d58d3ece218e944faf9ee93ce75ed821412cb6b6f5"
+          },
+          "DIRECTC": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              41,
+              1
+            ],
+            "ieee_bytes_sha256": "2e6249ca15124cc910d94a16175004fc6dca8bd27dc63245622f389a7743de7c"
+          },
+          "VISDIR": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              41,
+              1
+            ],
+            "ieee_bytes_sha256": "bac1d8c91afad4fce169a5eeb5df16fd8c4989b2be9647c6fc2921fc1a3892b5"
+          },
+          "VISDIF": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              41,
+              1
+            ],
+            "ieee_bytes_sha256": "7ef37413a9a5783739128147a484c41473416b4ca4ed5df99e5c08256bfc38cb"
+          },
+          "NIRDIR": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              41,
+              1
+            ],
+            "ieee_bytes_sha256": "21ac9efd1726199442f853c2617c6c13fe5b16357b1da35bf5b280a659ecfe8b"
+          },
+          "NIRDIF": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              41,
+              1
+            ],
+            "ieee_bytes_sha256": "8b8287e710790051c0af8ef4e594a3a18a0fcac38e9c932a0199cf0a7415cbe3"
+          },
+          "DIRECT_PREDELTA": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              41,
+              1
+            ],
+            "ieee_bytes_sha256": "ac99227f97daa0602409205f895621cb794dbbaa3943bf295b21402c106d6bb2"
+          },
+          "DIRECTC_PREDELTA": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              41,
+              1
+            ],
+            "ieee_bytes_sha256": "2e6249ca15124cc910d94a16175004fc6dca8bd27dc63245622f389a7743de7c"
+          },
+          "VISDIR_PREDELTA": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              41,
+              1
+            ],
+            "ieee_bytes_sha256": "ebe3d782ecea5585ded5d2e438ec1fc35eefccd9b8533a70084036ef1291a905"
+          },
+          "NIRDIR_PREDELTA": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              41,
+              1
+            ],
+            "ieee_bytes_sha256": "9d622aecbff6fa42e483fe9a9f3cb402a25e59596d3ca0073d8b48f730ddc8b3"
+          }
+        },
+        "different_d37_46c_result_bitwise_compared": false
+      }
+    },
+    {
+      "anchor": "material_cf0_snow_daylight_proxy",
+      "species": "snow",
+      "phase": "LW",
+      "status": "PASS_STRICT_ORIGINAL_DOUBLE_BASELINE",
+      "input_pin": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-precip-original-baseline-v1/runs-v2/snow-lw/input",
+        "bytes": 35854,
+        "sha256": "7bf8b8bc31219eafaf1b63c2d5296fcb7bdda7ec1b3a350c2bc0f35a46832c67"
+      },
+      "raw_pin": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-precip-original-baseline-v1/runs-v2/snow-lw/raw",
+        "bytes": 70989,
+        "sha256": "00692eb442b9210cc061dbcf79e57a930b427e2a0b976446e4d3ce4ec54a9c01"
+      },
+      "production_pin": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-precip-original-baseline-v1/runs-v2/snow-lw/production.result",
+        "bytes": 756759,
+        "sha256": "7285984de7e2b86f775aee73c4293752f76083937e7d15bc00fba5a678e7c1dc"
+      },
+      "return_code": 0,
+      "elapsed_seconds": 0.16469929181039333,
+      "output_pins": [
+        {
+          "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-precip-original-baseline-v1/runs-v2/snow-lw/reference.result",
+          "bytes": 755645,
+          "sha256": "cf5f3e2c47add666654ecee3030447208912852d3ead03b4f1fad3bd00817b73"
+        },
+        {
+          "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-precip-original-baseline-v1/runs-v2/snow-lw/stdout",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-precip-original-baseline-v1/runs-v2/snow-lw/stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "compared_sections": 20,
+      "all_original_comparison_sections_passed": true,
+      "exact_double_oracle": {
+        "result": {
+          "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-precip-original-baseline-v1/runs-v2/snow-lw/reference.result",
+          "bytes": 755645,
+          "sha256": "cf5f3e2c47add666654ecee3030447208912852d3ead03b4f1fad3bd00817b73"
+        },
+        "phase": "LW",
+        "nc": 1,
+        "nl": 47,
+        "ordered_sections": [
+          "GAS_COL_DRY",
+          "GAS_TAU",
+          "GAS_TAU_RAW",
+          "PRECIP_TAU",
+          "CLOUD_TAU",
+          "GRAUPEL_TAU_ABS",
+          "HAIL_TAU_ABS",
+          "FROZEN_TAU",
+          "PREPARED_TAU",
+          "MASK",
+          "TOTAL_TAU",
+          "RL_USED",
+          "DI_USED",
+          "DS_USED",
+          "UP",
+          "DN",
+          "HR",
+          "UPC",
+          "DNC",
+          "HRC"
+        ],
+        "arrays": {
+          "GAS_COL_DRY": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              47,
+              1
+            ],
+            "ieee_bytes_sha256": "49e37986343bc25f6ff8b9a2a04cef1e5f1eb7cd1c7aa159da6caf01ac3dad97"
+          },
+          "GAS_TAU": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              47,
+              128
+            ],
+            "ieee_bytes_sha256": "431d99a8c10729c1ef0b631b0beb6ff80c06674e529752f704f54659b5702349"
+          },
+          "GAS_TAU_RAW": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              47,
+              128
+            ],
+            "ieee_bytes_sha256": "431d99a8c10729c1ef0b631b0beb6ff80c06674e529752f704f54659b5702349"
+          },
+          "PRECIP_TAU": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              47,
+              16
+            ],
+            "ieee_bytes_sha256": "7d9acdedfdf3799653a2843491b25ba46962db31bb9ac8cdc39375616c545b12"
+          },
+          "CLOUD_TAU": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              47,
+              16
+            ],
+            "ieee_bytes_sha256": "145ae222672f8e0891bc619097178fd1481fb30576a09cd4d351a2e32c4e405e"
+          },
+          "GRAUPEL_TAU_ABS": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              47,
+              16
+            ],
+            "ieee_bytes_sha256": "e1054c8990be0a1e44ec4616cd93284e8629213953573cb5a9794b8bc8b1a4b9"
+          },
+          "HAIL_TAU_ABS": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              47,
+              16
+            ],
+            "ieee_bytes_sha256": "b4486e48053c404616bee8949fda6e5013dd1fcf91d0af82f3b5d6e78fb2c7f6"
+          },
+          "FROZEN_TAU": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              47,
+              16
+            ],
+            "ieee_bytes_sha256": "c846abb21ff209b8cea3bf78c472612bd14141c89d3541a9f339ca0eb9b2b06e"
+          },
+          "PREPARED_TAU": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              47,
+              16
+            ],
+            "ieee_bytes_sha256": "145ae222672f8e0891bc619097178fd1481fb30576a09cd4d351a2e32c4e405e"
+          },
+          "MASK": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              47,
+              128
+            ],
+            "ieee_bytes_sha256": "439994ffa123fad1ecf463c998231ecb88f1da22167a8ad4ecc482e7099de57e"
+          },
+          "TOTAL_TAU": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              47,
+              128
+            ],
+            "ieee_bytes_sha256": "b30ec0d5dab44beb8874f3607dcb1df1ff42385536bd761f0948d4178ba71091"
+          },
+          "RL_USED": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              47,
+              1
+            ],
+            "ieee_bytes_sha256": "931f537dec656874555274863936a98cd75f98e7dce3b40648e40eedefdd3f43"
+          },
+          "DI_USED": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              47,
+              1
+            ],
+            "ieee_bytes_sha256": "da24cddbd9245b1d47b65d0d694bb03b3be294e2e3599ff015dd4a6793eedc4b"
+          },
+          "DS_USED": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              47,
+              1
+            ],
+            "ieee_bytes_sha256": "f25b75d83fab4977aec7259e483b82f9343ec525599ad182caa6d8ba8d770257"
+          },
+          "UP": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              48,
+              1
+            ],
+            "ieee_bytes_sha256": "5ce9e53f048d2e2f8375aa35ed329c6bd42fa00b50108cd080f280e5d3a83b6e"
+          },
+          "DN": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              48,
+              1
+            ],
+            "ieee_bytes_sha256": "fd0bb757352fbbd6c57698ce77e24ba6963ff2b35e6cce9777701ab25dc0f152"
+          },
+          "HR": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              47,
+              1
+            ],
+            "ieee_bytes_sha256": "7f1397b6f7520924483aa0457149c9bdb0edcb18378abe648c9721d724d928c0"
+          },
+          "UPC": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              48,
+              1
+            ],
+            "ieee_bytes_sha256": "fee7fe3f4313f9291454c290a68d68693ec11d2d456736f000461b5130931595"
+          },
+          "DNC": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              48,
+              1
+            ],
+            "ieee_bytes_sha256": "017c81a1fc069d07b21f040b675b275ba68bb20e249bdbe21c76c9fc5fe7a9bb"
+          },
+          "HRC": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              47,
+              1
+            ],
+            "ieee_bytes_sha256": "dda3e8cf71043184a49fc906fedc1154e9833f94f2c7c94a2e35827549249a4e"
+          }
+        },
+        "different_d37_46c_result_bitwise_compared": false
+      }
+    },
+    {
+      "anchor": "material_cf0_snow_daylight_proxy",
+      "species": "snow",
+      "phase": "SW",
+      "status": "PASS_STRICT_ORIGINAL_DOUBLE_BASELINE",
+      "input_pin": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-precip-original-baseline-v1/runs-v2/snow-sw/input",
+        "bytes": 322772,
+        "sha256": "bb4697be31d26e67c8b5d4e26997e1dc3fbd463b5027417a5dac835581bfc58b"
+      },
+      "raw_pin": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-precip-original-baseline-v1/runs-v2/snow-sw/raw",
+        "bytes": 66882,
+        "sha256": "b58e74bf8cfc762ddb909309e90714be8526bf0b60abfdd46db2d447d6c9604a"
+      },
+      "production_pin": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-precip-original-baseline-v1/runs-v2/snow-sw/production.result",
+        "bytes": 1101655,
+        "sha256": "bc9d39494e762db8ea7a504d1103bfa12e715d73bedcece08b876f8a76f02e84"
+      },
+      "return_code": 0,
+      "elapsed_seconds": 0.16520323604345322,
+      "output_pins": [
+        {
+          "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-precip-original-baseline-v1/runs-v2/snow-sw/reference.result",
+          "bytes": 1100495,
+          "sha256": "310ed79749b0e7ab366290ac51aa92c982e8cd5efc11d8666462f5053cb4cacb"
+        },
+        {
+          "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-precip-original-baseline-v1/runs-v2/snow-sw/stdout",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-precip-original-baseline-v1/runs-v2/snow-sw/stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "compared_sections": 46,
+      "all_original_comparison_sections_passed": true,
+      "exact_double_oracle": {
+        "result": {
+          "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-precip-original-baseline-v1/runs-v2/snow-sw/reference.result",
+          "bytes": 1100495,
+          "sha256": "310ed79749b0e7ab366290ac51aa92c982e8cd5efc11d8666462f5053cb4cacb"
+        },
+        "phase": "SW",
+        "nc": 1,
+        "nl": 40,
+        "ordered_sections": [
+          "GAS_COL_DRY",
+          "GAS_TAU",
+          "GAS_SSA",
+          "GAS_G",
+          "PRECIP_TAU",
+          "PRECIP_SSA",
+          "PRECIP_G",
+          "CLOUD_TAU",
+          "CLOUD_SSA",
+          "CLOUD_G",
+          "GRAUPEL_TAU_EXT",
+          "GRAUPEL_TAU_SCA",
+          "GRAUPEL_TAU_SCA_G",
+          "HAIL_TAU_EXT",
+          "HAIL_TAU_SCA",
+          "HAIL_TAU_SCA_G",
+          "FROZEN_TAU",
+          "FROZEN_SSA",
+          "FROZEN_G",
+          "PREPARED_TAU",
+          "PREPARED_SSA",
+          "PREPARED_G",
+          "MASK",
+          "TOTAL_TAU",
+          "TOTAL_SSA",
+          "TOTAL_G",
+          "RL_USED",
+          "DI_USED",
+          "DS_USED",
+          "UP",
+          "DN",
+          "HR",
+          "UPC",
+          "DNC",
+          "HRC",
+          "DIRECT",
+          "DIFFUSE",
+          "DIRECTC",
+          "VISDIR",
+          "VISDIF",
+          "NIRDIR",
+          "NIRDIF",
+          "DIRECT_PREDELTA",
+          "DIRECTC_PREDELTA",
+          "VISDIR_PREDELTA",
+          "NIRDIR_PREDELTA"
+        ],
+        "arrays": {
+          "GAS_COL_DRY": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              40,
+              1
+            ],
+            "ieee_bytes_sha256": "ce84d43d6f319d355181374c5098cee57cf575aa4c7ae1a4577723c45b33f840"
+          },
+          "GAS_TAU": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              40,
+              112
+            ],
+            "ieee_bytes_sha256": "633d656ed19950f9fd1aa4331c7888629cb37e9ae80b4d9bb349b6ded75d97e8"
+          },
+          "GAS_SSA": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              40,
+              112
+            ],
+            "ieee_bytes_sha256": "2bcc11c51c00032c52d81ee820f2fb917b035687048cb6e7932be4174d524227"
+          },
+          "GAS_G": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              40,
+              112
+            ],
+            "ieee_bytes_sha256": "03b076d4495e9e512a4b5503d14dd53141870ac26003eb0e6d6e174c469f35e1"
+          },
+          "PRECIP_TAU": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              40,
+              14
+            ],
+            "ieee_bytes_sha256": "7291aee06047ae249e33e772bfd25003b7e19f3321bde4232941b0af2f32daed"
+          },
+          "PRECIP_SSA": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              40,
+              14
+            ],
+            "ieee_bytes_sha256": "bfad060e2668169da92649384655ee7a24fdfc8bccace3703edb6c050cf87b51"
+          },
+          "PRECIP_G": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              40,
+              14
+            ],
+            "ieee_bytes_sha256": "e6f1dc9ee1c5dba3e0dec1cad1a4158599eeaee67c1db072525aa6cf38e13cb4"
+          },
+          "CLOUD_TAU": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              40,
+              14
+            ],
+            "ieee_bytes_sha256": "0f5bdd7469bdd92bc7cd1dda19d81129c5579b7f193422f8c5ffc942f781ac96"
+          },
+          "CLOUD_SSA": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              40,
+              14
+            ],
+            "ieee_bytes_sha256": "dc481b4b253524d0cde9e4ddc7da65a5c0d5324d0f960eb76f067eb9cf4fca49"
+          },
+          "CLOUD_G": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              40,
+              14
+            ],
+            "ieee_bytes_sha256": "4c7a17a3acf4b2beaee15e0b5f04658f2f9140a222172f769b6ff662d8dcc54e"
+          },
+          "GRAUPEL_TAU_EXT": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              40,
+              14
+            ],
+            "ieee_bytes_sha256": "08043267ce4f737a1b81a723dd69422a8bcdc678bc5e37056273c91c54c10f5a"
+          },
+          "GRAUPEL_TAU_SCA": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              40,
+              14
+            ],
+            "ieee_bytes_sha256": "9775df6ff194726e0c18cbe57425abebd27a097b3db5b7b3da3a30424bfcc9a0"
+          },
+          "GRAUPEL_TAU_SCA_G": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              40,
+              14
+            ],
+            "ieee_bytes_sha256": "0576ab0fc1c3c1341d763806a5f9deea616e73b3d3e0a9f2bff6a3aeaf124f63"
+          },
+          "HAIL_TAU_EXT": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              40,
+              14
+            ],
+            "ieee_bytes_sha256": "af9018818f820e198bdc98431d75999fd12fa6bbf52e1b305da5514234d2b860"
+          },
+          "HAIL_TAU_SCA": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              40,
+              14
+            ],
+            "ieee_bytes_sha256": "7fa5e83b625df3166ea6ef42238f4c2331b633db707a5815da453560fc2ff520"
+          },
+          "HAIL_TAU_SCA_G": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              40,
+              14
+            ],
+            "ieee_bytes_sha256": "706b423d94b271ec2b9f37c0c1f1f635ae0f3e8c4e3ddf190783800e070362c6"
+          },
+          "FROZEN_TAU": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              40,
+              14
+            ],
+            "ieee_bytes_sha256": "e480fee3788093f3c76d9af1ecad5da0aced082e8a56c3563640db19a4e0ae4a"
+          },
+          "FROZEN_SSA": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              40,
+              14
+            ],
+            "ieee_bytes_sha256": "da64e9ff05d1aba42ad3b6fbdc5d78024530a4edf09b5508095a6386e50183d2"
+          },
+          "FROZEN_G": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              40,
+              14
+            ],
+            "ieee_bytes_sha256": "906422044f53daa7d326150bb29518c8750909260d68c183c5dfa72ce0baf31c"
+          },
+          "PREPARED_TAU": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              40,
+              14
+            ],
+            "ieee_bytes_sha256": "0f5bdd7469bdd92bc7cd1dda19d81129c5579b7f193422f8c5ffc942f781ac96"
+          },
+          "PREPARED_SSA": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              40,
+              14
+            ],
+            "ieee_bytes_sha256": "dc481b4b253524d0cde9e4ddc7da65a5c0d5324d0f960eb76f067eb9cf4fca49"
+          },
+          "PREPARED_G": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              40,
+              14
+            ],
+            "ieee_bytes_sha256": "4c7a17a3acf4b2beaee15e0b5f04658f2f9140a222172f769b6ff662d8dcc54e"
+          },
+          "MASK": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              40,
+              112
+            ],
+            "ieee_bytes_sha256": "05c1c468656293d1c00c195db95e5f947ee175b7ec495fc2d4d2b41e8e9c4c1c"
+          },
+          "TOTAL_TAU": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              40,
+              112
+            ],
+            "ieee_bytes_sha256": "e90dc30306ca3354979918691eec52149fff628e2506303f6bf31fef643dd7e0"
+          },
+          "TOTAL_SSA": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              40,
+              112
+            ],
+            "ieee_bytes_sha256": "217dfc887205b95c76d92eee49e3462e76d20286020977b2171f4024e7f126b0"
+          },
+          "TOTAL_G": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              40,
+              112
+            ],
+            "ieee_bytes_sha256": "3dce165e0684687be8d1670cc3e054b72fa38399d605fd37687bd1a18356fcd7"
+          },
+          "RL_USED": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              40,
+              1
+            ],
+            "ieee_bytes_sha256": "588b3f6a4ff2cad5ed565b602221fc8a1b30e717241a31d2d9a08366183a8493"
+          },
+          "DI_USED": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              40,
+              1
+            ],
+            "ieee_bytes_sha256": "a7274089c7e914e7d9a649095fd674d43ee0f2d20af2fd0d10f9a4b405f76f67"
+          },
+          "DS_USED": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              40,
+              1
+            ],
+            "ieee_bytes_sha256": "14759d55343b6cfcc1feca6e20e46fa5409f5c929f125390b2862f28c848385e"
+          },
+          "UP": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              41,
+              1
+            ],
+            "ieee_bytes_sha256": "d7702cefdb7df54bae4b930e29d246dc0bebf0bf7f3f1a0df9e59b7b316346f3"
+          },
+          "DN": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              41,
+              1
+            ],
+            "ieee_bytes_sha256": "80aeada4b008a7b5243a89d7474ba0ee9b3dca31f24c2d646bc0c460f3597a76"
+          },
+          "HR": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              40,
+              1
+            ],
+            "ieee_bytes_sha256": "85912492f56a4c065a8ed72a88bc15e12a292c8164473497c4fff75f506867e2"
+          },
+          "UPC": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              41,
+              1
+            ],
+            "ieee_bytes_sha256": "8f22b119ff6daa5b5772fe8d4c73082341402c3d3d3c247f0727cc28e8428fda"
+          },
+          "DNC": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              41,
+              1
+            ],
+            "ieee_bytes_sha256": "1755773ac7050b66739548a9e48217b5b795346d11d6d1eb0e9693c3367d429a"
+          },
+          "HRC": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              40,
+              1
+            ],
+            "ieee_bytes_sha256": "95ced9b109a2e6b2cd7c3b28d90316e78909627a8c9bd7ee5a8a069c20ee521e"
+          },
+          "DIRECT": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              41,
+              1
+            ],
+            "ieee_bytes_sha256": "9191a822467370827ea45d58b68de8d059739d642637025100aad3fb9234308e"
+          },
+          "DIFFUSE": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              41,
+              1
+            ],
+            "ieee_bytes_sha256": "cb2d65c8ce6e935ce1554678661d58bca41ba3c3a41a1e2013e142cefcf974a4"
+          },
+          "DIRECTC": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              41,
+              1
+            ],
+            "ieee_bytes_sha256": "cab1312bcbe4bb2681dde8be8a54283e871ffcf396c005579714348d11b1790f"
+          },
+          "VISDIR": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              41,
+              1
+            ],
+            "ieee_bytes_sha256": "db0e8ee646c7f1adb9d38c12ef16cd6ffe70c7c1ba0fc6aaa4a888ac73cae945"
+          },
+          "VISDIF": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              41,
+              1
+            ],
+            "ieee_bytes_sha256": "263cb60cfc6666817d008976a092caabd09fe02e664f8518410d0329225014a6"
+          },
+          "NIRDIR": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              41,
+              1
+            ],
+            "ieee_bytes_sha256": "03fed012fa3e71204de4b778635d91b7097121074ddaccfa7f32a8284b4289a1"
+          },
+          "NIRDIF": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              41,
+              1
+            ],
+            "ieee_bytes_sha256": "72254ac4ad71b415effb2e2f4bbb2953308f5af8fa78d4741b36a85b14792ade"
+          },
+          "DIRECT_PREDELTA": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              41,
+              1
+            ],
+            "ieee_bytes_sha256": "5a9676fcd14700a30d95a5112a36dbedb947db9064e3f8fee6fcdd4f2a0a49e1"
+          },
+          "DIRECTC_PREDELTA": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              41,
+              1
+            ],
+            "ieee_bytes_sha256": "cab1312bcbe4bb2681dde8be8a54283e871ffcf396c005579714348d11b1790f"
+          },
+          "VISDIR_PREDELTA": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              41,
+              1
+            ],
+            "ieee_bytes_sha256": "7d51a22bbea0ac4bca67e0625e00721d217aaad858af59b3f74558ff3bc4edf6"
+          },
+          "NIRDIR_PREDELTA": {
+            "dtype": "float64",
+            "shape": [
+              1,
+              41,
+              1
+            ],
+            "ieee_bytes_sha256": "c987800d3233730ca655239b3c0c18bf4ef307f3ef021f683b60f2da188ddb3f"
+          }
+        },
+        "different_d37_46c_result_bitwise_compared": false
+      }
+    }
+  ],
+  "interpretation": "Original production comparison uses existing tolerances. Future zero controls must match these exact double reference outputs bitwise; production outputs from other executable builds are not bitwise oracles."
+}

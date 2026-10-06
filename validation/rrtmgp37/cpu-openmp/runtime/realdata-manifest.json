@@ -1,0 +1,105 @@
+{
+  "case": "NCAR WRF developer test 2010061100",
+  "official_namelist_template": "build/realdata-wrf-dev/namelist.input",
+  "scratch_real_init": "build/udm-realdata-smoke/real_init",
+  "initialization_window": "2010-06-11_00:00:00 through 2010-06-12_00:00:00 UTC, six-hourly metgrid boundaries",
+  "working_namelist": "build/udm-realdata-smoke/real_init/namelist.input",
+  "input_met_em": [
+    {
+      "name": "met_em.d01.2010-06-11_00:00:00.nc",
+      "target": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/realdata-wrf-dev/case2010061100/met_em.d01.2010-06-11_00:00:00.nc",
+      "sha256": "f5ab772fbc4f469f121123fdcac8dfca13ad46e78a8ede2914be4f277ebfa6d3"
+    },
+    {
+      "name": "met_em.d01.2010-06-11_06:00:00.nc",
+      "target": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/realdata-wrf-dev/case2010061100/met_em.d01.2010-06-11_06:00:00.nc",
+      "sha256": "c95517bf0137f7bea95d085c1607566a1d3b4449a24a2ff855301a76b25d16b6"
+    },
+    {
+      "name": "met_em.d01.2010-06-11_12:00:00.nc",
+      "target": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/realdata-wrf-dev/case2010061100/met_em.d01.2010-06-11_12:00:00.nc",
+      "sha256": "6172d2ab8236a66ffaed148facadefb7ead829776e6ff4dfdf928c8a750b027a"
+    },
+    {
+      "name": "met_em.d01.2010-06-11_18:00:00.nc",
+      "target": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/realdata-wrf-dev/case2010061100/met_em.d01.2010-06-11_18:00:00.nc",
+      "sha256": "ea1bf301fe1bba7342760622acda844ba9b17d45ac4fdce4b31ca0f32a0f85bd"
+    },
+    {
+      "name": "met_em.d01.2010-06-12_00:00:00.nc",
+      "target": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/realdata-wrf-dev/case2010061100/met_em.d01.2010-06-12_00:00:00.nc",
+      "sha256": "23295b810543834c5344b742006cd6d1d0dc15d956bbf614050483566140ee71"
+    }
+  ],
+  "model_executable": "build/mpi-wrf-udm-contracts/WRF/main/real.exe",
+  "status": "real.exe initialization and 10-minute MPI1/MPI2 smoke passed; full 24-hour forecast not run",
+  "namelist_key_settings": {
+    "start": "2010-06-11_00:00:00 UTC",
+    "end_real": "2010-06-12_00:00:00 UTC",
+    "smoke_end": "2010-06-11_00:10:00 UTC",
+    "time_step_seconds": 60,
+    "radt_minutes": 10,
+    "mp_physics": 27,
+    "ra_lw_physics": 37,
+    "ra_sw_physics": 37,
+    "use_mp_re": 1,
+    "num_land_cat": 24,
+    "aer_opt": 0,
+    "cldovrlp": 2,
+    "swint_opt": 0
+  },
+  "real_initialization": {
+    "status": "SUCCESS COMPLETE REAL_EM INIT",
+    "mpi_ranks": 1,
+    "omp_threads": 1,
+    "wrfinput_sha256": "5ef7abe34c516fba107f346bdbdb3777edacb5d48493df467ea2dd8bcf6a75ff",
+    "wrfbdy_sha256": "e687b73730ab9a2cee4842e1a92b225a4edb074ba080b6053d96d81ec1731a2d",
+    "log": "build/udm-realdata-smoke/real_init/real-final.log"
+  },
+  "executables": {
+    "real.exe_sha256": "3c22fe14634c528063d9d6f001726381f6ba891ca5efb0684b5f443dc8e50f61",
+    "wrf.exe_sha256": "ab2d648284d54ff2b0ff3c90e738e3f91f31169b9677190096c7fc9231c08424",
+    "build_log": "build/mpi-wrf-udm-contracts/build-em_real-final.log"
+  },
+  "smoke_runs": {
+    "mpi1_omp1": {
+      "status": "SUCCESS COMPLETE WRF",
+      "exit_code": 0,
+      "steps": "2010-06-11_00:01:00 through 00:10:00 UTC",
+      "log": "build/udm-realdata-smoke/mpi1_omp1/rsl.out.0000",
+      "omp_threads": 1
+    },
+    "mpi2_omp1": {
+      "status": "SUCCESS COMPLETE WRF",
+      "exit_code": 0,
+      "all_ranks_completed": true,
+      "steps": "2010-06-11_00:01:00 through 00:10:00 UTC",
+      "logs": [
+        "build/udm-realdata-smoke/mpi2_omp1/rsl.out.0000",
+        "build/udm-realdata-smoke/mpi2_omp1/rsl.out.0001"
+      ],
+      "omp_threads": 1
+    },
+    "comparison_at_2010-06-11_00:10:00": {
+      "matching_numeric_variables": 203,
+      "nonfinite_variables": 0,
+      "max_absolute_difference": 0.0,
+      "rmse_all_common_values": 0.0,
+      "interpretation": "bitwise-equal outputs for this 10-minute case; does not establish long-run stability"
+    }
+  },
+  "missing_coefficient_negative_test": {
+    "ranks": 2,
+    "omp_threads": 1,
+    "timeout_seconds": 90,
+    "exit_code": 1,
+    "timed_out": false,
+    "fatal": "RRTMGP load_and_init cannot open rrtmgp-gas-lw-g128.nc under intentionally nonexistent rrtmgp_data_path",
+    "mpi_abort_observed": true,
+    "rank_logs": [
+      "build/udm-realdata-smoke/mpi2_missing_coeff/rsl.error.0000",
+      "build/udm-realdata-smoke/mpi2_missing_coeff/rsl.error.0001"
+    ],
+    "interpretation": "collective termination observed; no timeout/hang; rank 0 reports WRF FATAL and MPI_Abort"
+  }
+}

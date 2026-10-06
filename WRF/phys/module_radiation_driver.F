@@ -98,7 +98,9 @@ CONTAINS
               , lradius,iradius                                           &
 #endif
               , cldfra_dp, cldfra_sh                                      &
-              , re_cloud, re_ice, re_snow, udm_cldfra, udm_cf_step           &
+              , re_cloud, re_ice, re_snow, udm_cldfra, udm_cf_step, udm_cf_top &
+              , udm_dry_layer_mass                                         &
+              , udm_seed_day                                               &
               , has_reqc, has_reqi, has_reqs                              &
               , PB                                                        &
               , F_ICE_PHY,F_RAIN_PHY                                      &
@@ -295,8 +297,9 @@ CONTAINS
    USE module_ra_gsfcsw     , ONLY : gsfcswrad
    USE module_ra_rrtm       , ONLY : rrtmlwrad
    USE module_ra_rrtmg_lw   , ONLY : rrtmg_lwrad, rrtmg_lwinit
-   USE module_ra_rrtmgp_audit, ONLY: audit_enabled, audit_samples, audit_native4, audit_moments
-   USE module_ra_rrtmgp_trace, ONLY: trace_suspend
+   USE module_ra_rrtmgp_audit, ONLY: audit_enabled, audit_samples, audit_native4, audit_moments, hydro_snapshot
+   USE module_rrtmg4_optics_export, ONLY: rrtmg4_export_begin, rrtmg4_export_end
+   USE module_ra_rrtmgp_trace, ONLY: trace_suspend, trace_column_selection, trace_column_in_tile
    USE module_ra_rrtmg_sw   , ONLY : rrtmg_swrad
 #if( BUILD_RRTMG_FAST == 1)
    USE module_ra_rrtmg_lwf  , ONLY : rrtmg_lwrad_fast
@@ -850,7 +853,10 @@ CONTAINS
 
 !..G. Thompson
    REAL, OPTIONAL, INTENT(IN) :: udm_cldfra(ims:ime,kms:kme,jms:jme)
+   REAL, OPTIONAL, INTENT(IN) :: udm_dry_layer_mass(ims:ime,kms:kme,jms:jme)
+   INTEGER, OPTIONAL, INTENT(IN) :: udm_seed_day
    INTEGER, OPTIONAL, INTENT(IN) :: udm_cf_step(ims:ime,jms:jme)
+   INTEGER, OPTIONAL, INTENT(IN) :: udm_cf_top(ims:ime,jms:jme)
    REAL, DIMENSION(ims:ime,kms:kme,jms:jme), INTENT(INOUT):: re_cloud, re_ice, re_snow
    INTEGER, INTENT(INOUT):: has_reqc, has_reqi, has_reqs
 
@@ -965,6 +971,7 @@ CONTAINS
    REAL    ::    DECLIN,SOLCON,XXLAT,TLOCTM,XT24, CEN_LAT, cldfra_cup_mod
    INTEGER ::    i,j,k,its,ite,jts,jte,ij
    INTEGER ::    STEPABS
+   INTEGER ::    cu_population_policy
    LOGICAL ::    gfdl_lw,gfdl_sw, compute_cldfra_cup
    LOGICAL ::    doabsems
    LOGICAL, EXTERNAL :: wrf_dm_on_monitor
@@ -1234,6 +1241,56 @@ CONTAINS
                           declin,degrad,xlong,xlat,coszen,hrang)
 
        ! backup the incoming hydrometeors
+
+         cu_population_policy=0
+         IF(mp_physics==27.AND.(lw_physics==RRTMGP_LWSCHEME.OR.sw_physics==RRTMGP_SWSCHEME)) THEN
+            ! Preserve the established RRTMGP path when no convective cloud
+            ! augmenter is active.  Only diagnosed KF (icloud_cu=2) has a
+            ! separately represented cloud population in policy 1.
+            IF(icloud_cu==1) CALL wrf_error_fatal( &
+              'RRTMGP_INPUT_CU_UNSUPPORTED: icloud_cu=1 augmentation is not represented')
+            IF(icloud_cu/=0.AND.icloud_cu/=2) CALL wrf_error_fatal( &
+              'RRTMGP_INPUT_CU_UNSUPPORTED: unsupported active icloud_cu mode')
+            IF(aercu_opt>0.) CALL wrf_error_fatal( &
+              'RRTMGP_INPUT_CU_UNSUPPORTED: aercu_opt augmentation is not represented')
+            IF(PRESENT(shcu_physics)) THEN
+               IF(shcu_physics==5) CALL wrf_error_fatal( &
+                 'RRTMGP_INPUT_CU_UNSUPPORTED: shallow-cumulus cloud-fraction augmentation is not represented')
+            END IF
+            IF(cu_physics==KFCUPSCHEME.AND.PRESENT(cldfra_cup)) CALL wrf_error_fatal( &
+              'RRTMGP_INPUT_CU_UNSUPPORTED: KFCUP cloud-fraction/condensate override is not represented')
+            IF(cu_physics==BMJSCHEME.AND.bmj_rad_feedback) CALL wrf_error_fatal( &
+              'RRTMGP_INPUT_CU_UNSUPPORTED: BMJ radiation cloud feedback is not represented')
+            IF(PRESENT(icloud_bl)) THEN
+               IF(icloud_bl>0) CALL wrf_error_fatal( &
+                 'RRTMGP_INPUT_CU_UNSUPPORTED: BL cloud augmentation is not represented')
+            END IF
+#if (EM_CORE == 1)
+            IF(PRESENT(F_QI2)) THEN
+               IF(F_QI2) CALL wrf_error_fatal( &
+                 'RRTMGP_INPUT_CU_UNSUPPORTED: secondary ice augmentation is not represented')
+            END IF
+            IF(PRESENT(F_QI3)) THEN
+               IF(F_QI3) CALL wrf_error_fatal( &
+                 'RRTMGP_INPUT_CU_UNSUPPORTED: tertiary ice augmentation is not represented')
+            END IF
+#endif
+            IF(icloud_cu==2) THEN
+               IF(cu_physics/=1) CALL wrf_error_fatal( &
+                 'RRTMGP_INPUT_CU_UNSUPPORTED: diagnosed KF requires cu_physics=1')
+               IF(.NOT.PRESENT(CLDFRA_DP).OR..NOT.PRESENT(CLDFRA_SH)) CALL wrf_error_fatal( &
+                 'RRTMGP_INPUT_CU_UNSUPPORTED: diagnosed KF fractions are required')
+               IF(.NOT.PRESENT(F_QC).OR..NOT.PRESENT(F_QI)) CALL wrf_error_fatal( &
+                 'RRTMGP_INPUT_CU_UNSUPPORTED: native QC/QI flags are required')
+               IF(.NOT.F_QC.OR..NOT.F_QI) CALL wrf_error_fatal( &
+                 'RRTMGP_INPUT_CU_UNSUPPORTED: native QC/QI are required')
+               IF(.NOT.PRESENT(udm_dry_layer_mass)) CALL wrf_error_fatal( &
+                 'RRTMGP_INPUT_CU_UNSUPPORTED: native dry-layer mass is required')
+               IF(icloud/=1) CALL wrf_error_fatal( &
+                 'RRTMGP_INPUT_CU_UNSUPPORTED: ICLOUD=1 is required for diagnosed KF fraction')
+               cu_population_policy=1
+            END IF
+         END IF
 
          IF ( F_QC ) THEN
            DO j=jts,jte
@@ -1623,6 +1680,22 @@ CONTAINS
    ENDIF Solar_step
 
    Radiation_step: IF ( run_param ) then
+     ! Observe UDM's actual radiation inputs once for both spectral branches,
+     ! after radiation cloud fraction/feedback preparation and before any
+     ! wrapper clipping or strict validation. This opt-in observer is also
+     ! available on the unchanged 4/4 baseline; it never changes model fields.
+     IF(mp_physics==27.AND.(lw_physics==4.OR.lw_physics==37).AND. &
+        (sw_physics==4.OR.sw_physics==37)) THEN
+       IF(PRESENT(QC).AND.PRESENT(QI).AND.PRESENT(QR).AND.PRESENT(QS).AND. &
+          PRESENT(QG).AND.PRESENT(QH).AND.PRESENT(CLDFRA)) THEN
+         DO ij=1,num_tiles
+           CALL hydro_snapshot(id,itimestep,xtime*60.,lw_physics,sw_physics,g, &
+                ims,ime,kms,kme,jms,jme,i_start(ij),MIN(i_end(ij),ide-1), &
+                kts,MIN(kte,kde-1),j_start(ij),MIN(j_end(ij),jde-1), &
+                p8w,cldfra,qc,qi,qr,qs,qg,qh)
+         END DO
+       END IF
+     END IF
 ! CAM-specific additional radiation frequency - cam_abs_freq_s (=21600s by default)
      STEPABS = nint(cam_abs_freq_s/(dt*STEPRA))*STEPRA
      IF (itimestep .eq. 1 .or. mod(itimestep,STEPABS) .eq. 1 + ra_call_offset &
@@ -2071,6 +2144,7 @@ CONTAINS
                               its, ite, jts, jte, kts, kte     )
              ENDIF
 
+             IF(cu_population_policy==1.AND.lw_physics==RRTMGP_LWSCHEME) THEN
              CALL RRTMG_LWRAD(                                      &
                   RTHRATENLW=RTHRATEN,                              &
                   RTHRATENLWC=RTHRATENLWC,                          &
@@ -2124,11 +2198,76 @@ CONTAINS
                   LWUPFLX=LWUPFLX,LWUPFLXC=LWUPFLXC,                &
                   LWDNFLX=LWDNFLX,LWDNFLXC=LWDNFLXC,                &
                   mp_physics=mp_physics                             ,USE_RRTMGP=(lw_physics==RRTMGP_LWSCHEME) , &
-                  udm_cldfra=udm_cldfra,udm_cf_step=udm_cf_step, &
+                  udm_cldfra=udm_cldfra,udm_cf_step=udm_cf_step,udm_cf_top=udm_cf_top, &
+                  udm_dry_layer_mass=udm_dry_layer_mass, &
+                    rrtmgp_domain_id=id,rrtmgp_calendar_day=udm_seed_day, &
+                  audit_step=itimestep,audit_time=xtime*60. , &
+                  native_qc3d=qc_save,native_qi3d=qi_save, &
+                  cu_qc3d=qc_cu,cu_qi3d=qi_cu,cu_cf3d=cldfra_cu, &
+                  cu_dp3d=cldfra_dp,cu_sh3d=cldfra_sh,cu_population_policy=cu_population_policy )
+             ELSE
+                CALL RRTMG_LWRAD(                                      &
+                  RTHRATENLW=RTHRATEN,                              &
+                  RTHRATENLWC=RTHRATENLWC,                          &
+                  LWUPT=LWUPT,LWUPTC=LWUPTC,LWUPTCLN=LWUPTCLN,      &
+                  LWDNT=LWDNT,LWDNTC=LWDNTC,LWDNTCLN=LWDNTCLN,      &
+                  LWUPB=LWUPB,LWUPBC=LWUPBC,LWUPBCLN=LWUPBCLN,      &
+                  LWDNB=LWDNB,LWDNBC=LWDNBC,LWDNBCLN=LWDNBCLN,      &
+                  GLW=GLW,OLR=RLWTOA,LWCF=LWCF,                     &
+                  EMISS=EMISS,                                      &
+                  P8W=p8w,P3D=p,PI3D=pi,DZ8W=dz8w,TSK=tsk,T3D=t,    &
+                  T8W=t8w,RHO3D=rho,R=R_d,G=G,                      &
+                  ICLOUD=icloud,WARM_RAIN=warm_rain,CLDFRA3D=CLDFRA,&
+                  cldovrlp=cldovrlp,idcor=idcor,XLAT=XLAT,          &
+#if (EM_CORE == 1)
+                  LRADIUS=lradius, IRADIUS=iradius,                 &
+#endif
+                  IS_CAMMGMP_USED=is_cammgmp_used,                  &
+
+!ckay
+!                 CLDFRA_KF3D=cldfra_KF,QC_KF3D=qc_KF,QI_KF3D=qi_KF,&
+                  F_ICE_PHY=F_ICE_PHY,F_RAIN_PHY=F_RAIN_PHY,        &
+                  XLAND=XLAND,XICE=XICE,SNOW=SNOW,                  &
+                  QV3D=QV,QC3D=QC,QR3D=QR,                          &
+                  QI3D=QI,QS3D=QS,QG3D=QG,QH3D=QH,F_QH=F_QH,                          &
+                  O3INPUT=O3INPUT,O33D=O3RAD,                       &
+                  F_QV=F_QV,F_QC=F_QC,F_QR=F_QR,                    &
+                  F_QI=F_QI,F_QS=F_QS,F_QG=F_QG,                    &
+                  RE_CLOUD=re_cloud,RE_ICE=re_ice,RE_SNOW=re_snow,  & ! G. Thompson
+                  has_reqc=has_reqc,has_reqi=has_reqi,has_reqs=has_reqs, & ! G. Thompson
+#if ( WRF_CHEM == 1 )
+                  TAUAERLW1=tauaerlw1,TAUAERLW2=tauaerlw2,          & ! jcb
+                  TAUAERLW3=tauaerlw3,TAUAERLW4=tauaerlw4,          & ! jcb
+                  TAUAERLW5=tauaerlw5,TAUAERLW6=tauaerlw6,          & ! jcb
+                  TAUAERLW7=tauaerlw7,TAUAERLW8=tauaerlw8,          & ! jcb
+                  TAUAERLW9=tauaerlw9,TAUAERLW10=tauaerlw10,        & ! jcb
+                  TAUAERLW11=tauaerlw11,TAUAERLW12=tauaerlw12,      & ! jcb
+                  TAUAERLW13=tauaerlw13,TAUAERLW14=tauaerlw14,      & ! jcb
+                  TAUAERLW15=tauaerlw15,TAUAERLW16=tauaerlw16,      & ! jcb
+                  aer_ra_feedback=aer_ra_feedback,                  &
+!jdfcz            progn=progn,prescribe=prescribe,                   &
+                  progn=progn,                                      &
+#endif
+                  calc_clean_atm_diag=calc_clean_atm_diag,          &
+                  QNDROP3D=qndrop,F_QNDROP=f_qndrop,                &
+!ccc Added for time-varying trace gases.
+                  YR=YR,JULIAN=JULIAN,GHG_INPUT=GHG_INPUT,          &
+!ccc
+                  IDS=ids,IDE=ide, JDS=jds,JDE=jde, KDS=kds,KDE=kde,&
+                  IMS=ims,IME=ime, JMS=jms,JME=jme, KMS=kms,KME=kme,&
+                  ITS=its,ITE=ite, JTS=jts,JTE=jte, KTS=kts,KTE=kte,&
+                  LWUPFLX=LWUPFLX,LWUPFLXC=LWUPFLXC,                &
+                  LWDNFLX=LWDNFLX,LWDNFLXC=LWDNFLXC,                &
+                  mp_physics=mp_physics                             ,USE_RRTMGP=(lw_physics==RRTMGP_LWSCHEME) , &
+                  udm_cldfra=udm_cldfra,udm_cf_step=udm_cf_step,udm_cf_top=udm_cf_top, &
+                  udm_dry_layer_mass=udm_dry_layer_mass, &
+                    rrtmgp_domain_id=id,rrtmgp_calendar_day=udm_seed_day, &
                   audit_step=itimestep,audit_time=xtime*60. )
+             END IF
              ! Serialized opt-in diagnostic: scratch outputs never feed the forecast.
              IF (lw_physics==RRTMGP_LWSCHEME) THEN
               IF (audit_enabled()) THEN
+               IF (trace_column_in_tile(ids,ide,jds,jde,its,ite,jts,jte)) THEN
                BLOCK
                 USE, INTRINSIC :: iso_fortran_env, ONLY: real64
                 TYPE(audit_moments) :: grid_stats, domain_stats
@@ -2136,22 +2275,32 @@ CONTAINS
                 REAL(real64), ALLOCATABLE :: x37(:,:,:),x4(:,:,:),op37(:,:,:),op4(:,:,:)
                 REAL(real64), ALLOCATABLE :: d37(:,:,:),d4(:,:,:),dop37(:,:,:),dop4(:,:,:)
                 CHARACTER(LEN=24), ALLOCATABLE :: labels(:)
+                CHARACTER(LEN=24) :: cell_scope,mean_scope
                 INTEGER :: nmetrics,m,engine,seed,native,ak,ai,aj,slot
+                INTEGER :: a_its,a_ite,a_jts,a_jte,target_i,target_j
+                LOGICAL :: selected_column
+                CALL trace_column_selection(ids,ide,jds,jde,selected_column,target_i,target_j)
+                a_its=its;a_ite=ite;a_jts=jts;a_jte=jte
+                cell_scope='full_tile_cell';mean_scope='full_tile_mean'
+                IF(selected_column) THEN
+                  a_its=target_i;a_ite=target_i;a_jts=target_j;a_jte=target_j
+                  cell_scope='selected_column';mean_scope='selected_column'
+                END IF
                 nmetrics=2+kte-kts+1
                 ALLOCATE(ah(ims:ime,kms:kme,jms:jme,2),af(ims:ime,jms:jme,3),ao3(ims:ime,kms:kme,jms:jme))
-                ALLOCATE(x37(its:ite,jts:jte,nmetrics),x4(its:ite,jts:jte,nmetrics), &
-                  op37(its:ite,jts:jte,nmetrics),op4(its:ite,jts:jte,nmetrics),labels(nmetrics))
+                ALLOCATE(x37(a_its:a_ite,a_jts:a_jte,nmetrics),x4(a_its:a_ite,a_jts:a_jte,nmetrics), &
+                  op37(a_its:a_ite,a_jts:a_jte,nmetrics),op4(a_its:a_ite,a_jts:a_jte,nmetrics),labels(nmetrics))
                 ALLOCATE(d37(1,1,nmetrics),d4(1,1,nmetrics),dop37(1,1,nmetrics),dop4(1,1,nmetrics))
-                CALL grid_stats%init(ite-its+1,jte-jts+1,nmetrics,its,jts)
+                CALL grid_stats%init(a_ite-a_its+1,a_jte-a_jts+1,nmetrics,a_its,a_jts)
                 CALL domain_stats%init(1,1,nmetrics,0,0)
                 labels(1)='SURFACE_DOWN'
-                op37(:,:,1)=REAL(GLW(its:ite,jts:jte),real64)
+                op37(:,:,1)=REAL(GLW(a_its:a_ite,a_jts:a_jte),real64)
                 labels(2)='TOA_UP'
-                op37(:,:,2)=REAL(RLWTOA(its:ite,jts:jte),real64)
+                op37(:,:,2)=REAL(RLWTOA(a_its:a_ite,a_jts:a_jte),real64)
                 DO ak=kts,kte
                  slot=2+ak-kts+1
                  WRITE(labels(slot),'("HEAT_",I0)') ak
-                 op37(:,:,slot)=REAL(RTHRATEN(its:ite,ak,jts:jte)*pi(its:ite,ak,jts:jte)*86400.,real64)
+                 op37(:,:,slot)=REAL(RTHRATEN(a_its:a_ite,ak,a_jts:a_jte)*pi(a_its:a_ite,ak,a_jts:a_jte)*86400.,real64)
                 END DO
                 CALL trace_suspend(.TRUE.)
                 DO m=0,audit_samples()
@@ -2162,6 +2311,8 @@ CONTAINS
                   native=audit_native4()
                   IF(engine==37) native=1
                   ah=0.;af=0.;ao3=O3RAD
+                  IF(m==0.AND.engine==4.AND.native==1.AND.selected_column) &
+                    CALL rrtmg4_export_begin('lw',id,itimestep,xtime*60.,target_i,target_j)
                   CALL RRTMG_LWRAD( &
                     p8w=p8w, &
                     p3d=p, &
@@ -2223,52 +2374,60 @@ CONTAINS
                     jme=jme, &
                     kms=kms, &
                     kme=kme, &
-                    its=its, &
-                    ite=ite, &
-                    jts=jts, &
-                    jte=jte, &
+                    its=a_its, &
+                    ite=a_ite, &
+                    jts=a_jts, &
+                    jte=a_jte, &
                     kts=kts, &
                     kte=kte, &
                     mp_physics=mp_physics, &
                     emiss=EMISS, &
                     use_rrtmgp=engine==37, &
+                    udm_dry_layer_mass=udm_dry_layer_mass, &
+                    rrtmgp_domain_id=id,rrtmgp_calendar_day=udm_seed_day, &
                     mcica_seed_override=seed, &
+                    native_qc3d=qc_save,native_qi3d=qi_save, &
+                    cu_qc3d=qc_cu,cu_qi3d=qi_cu,cu_cf3d=cldfra_cu, &
+                    cu_dp3d=cldfra_dp,cu_sh3d=cldfra_sh, &
+                    cu_population_policy=MERGE(cu_population_policy,0,engine==37), &
                     glw=af(:,:,1), &
                     olr=af(:,:,2), &
                     lwcf=af(:,:,3), &
                     rthratenlw=ah(:,:,:,1), &
                     rthratenlwc=ah(:,:,:,2) )
+                  CALL rrtmg4_export_end()
                   IF(engine==4) THEN
-                   x4(:,:,1)=REAL(af(its:ite,jts:jte,1),real64)
-                   x4(:,:,2)=REAL(af(its:ite,jts:jte,2),real64)
+                   x4(:,:,1)=REAL(af(a_its:a_ite,a_jts:a_jte,1),real64)
+                   x4(:,:,2)=REAL(af(a_its:a_ite,a_jts:a_jte,2),real64)
                    DO ak=kts,kte
-                    x4(:,:,2+ak-kts+1)=REAL(ah(its:ite,ak,jts:jte,1)*pi(its:ite,ak,jts:jte)*86400.,real64)
+                    x4(:,:,2+ak-kts+1)=REAL(ah(a_its:a_ite,ak,a_jts:a_jte,1)*pi(a_its:a_ite,ak,a_jts:a_jte)*86400.,real64)
                    END DO
                    IF(m==0) op4=x4
                   ELSE
-                   x37(:,:,1)=REAL(af(its:ite,jts:jte,1),real64)
-                   x37(:,:,2)=REAL(af(its:ite,jts:jte,2),real64)
+                   x37(:,:,1)=REAL(af(a_its:a_ite,a_jts:a_jte,1),real64)
+                   x37(:,:,2)=REAL(af(a_its:a_ite,a_jts:a_jte,2),real64)
                    DO ak=kts,kte
-                    x37(:,:,2+ak-kts+1)=REAL(ah(its:ite,ak,jts:jte,1)*pi(its:ite,ak,jts:jte)*86400.,real64)
+                    x37(:,:,2+ak-kts+1)=REAL(ah(a_its:a_ite,ak,a_jts:a_jte,1)*pi(a_its:a_ite,ak,a_jts:a_jte)*86400.,real64)
                    END DO
                   END IF
                  END DO
                  IF(m==0) CYCLE
                  CALL grid_stats%add(x37,x4)
                  DO slot=1,nmetrics
-                  d37(1,1,slot)=SUM(x37(:,:,slot))/((ite-its+1)*(jte-jts+1))
-                  d4(1,1,slot)=SUM(x4(:,:,slot))/((ite-its+1)*(jte-jts+1))
+                  d37(1,1,slot)=SUM(x37(:,:,slot))/((a_ite-a_its+1)*(a_jte-a_jts+1))
+                  d4(1,1,slot)=SUM(x4(:,:,slot))/((a_ite-a_its+1)*(a_jte-a_jts+1))
                  END DO
                  CALL domain_stats%add(d37,d4)
                 END DO
                 CALL trace_suspend(.FALSE.)
                 DO slot=1,nmetrics
-                 dop37(1,1,slot)=SUM(op37(:,:,slot))/((ite-its+1)*(jte-jts+1))
-                 dop4(1,1,slot)=SUM(op4(:,:,slot))/((ite-its+1)*(jte-jts+1))
+                 dop37(1,1,slot)=SUM(op37(:,:,slot))/((a_ite-a_its+1)*(a_jte-a_jts+1))
+                 dop4(1,1,slot)=SUM(op4(:,:,slot))/((a_ite-a_its+1)*(a_jte-a_jts+1))
                 END DO
-                CALL grid_stats%write('lw',id,itimestep,xtime*60.,op37,op4,labels)
-                CALL domain_stats%write('lw',id,itimestep,xtime*60.,dop37,dop4,labels)
+                CALL grid_stats%write('lw',id,itimestep,xtime*60.,op37,op4,labels,cell_scope)
+                CALL domain_stats%write('lw',id,itimestep,xtime*60.,dop37,dop4,labels,mean_scope)
                END BLOCK
+               END IF
               END IF
              END IF
 
@@ -2745,7 +2904,121 @@ CONTAINS
                 proceed_cmaq_sw = .false.
              end if
 
+             IF(cu_population_policy==1.AND.sw_physics==RRTMGP_SWSCHEME) THEN
              CALL RRTMG_SWRAD(                                         &
+                     RTHRATENSW=RTHRATENSW,                            &
+                     RTHRATENSWC=RTHRATENSWC,                          &
+                     SWUPT=SWUPT,SWUPTC=SWUPTC,SWUPTCLN=SWUPTCLN,      &
+                     SWDNT=SWDNT,SWDNTC=SWDNTC,SWDNTCLN=SWDNTCLN,      &
+                     SWUPB=SWUPB,SWUPBC=SWUPBC,SWUPBCLN=SWUPBCLN,      &
+                     SWDNB=SWDNB,SWDNBC=SWDNBC,SWDNBCLN=SWDNBCLN,      &
+                     SWCF=SWCF,GSW=GSW,                                &
+                     XTIME=XTIME,GMT=GMT,XLAT=XLAT,XLONG=XLONG,        &
+                     RADT=RADT,DEGRAD=DEGRAD,DECLIN=DECLIN,            &
+                     COSZR=COSZR,JULDAY=JULDAY,SOLCON=SOLCON,          &
+                     ALBEDO=ALBEDO,t3d=t,t8w=t8w,TSK=TSK,              &
+                     p3d=p,p8w=p8w,pi3d=pi,rho3d=rho,                  &
+                     dz8w=dz8w,CLDFRA3D=CLDFRA,GHG_INPUT=GHG_INPUT,    &
+#if (EM_CORE == 1)
+                     LRADIUS=lradius, IRADIUS=iradius,                 &
+#endif
+                     IS_CAMMGMP_USED=is_cammgmp_used,                  &
+                     R=R_D,G=G,              &
+!ckay
+!                    CLDFRA_KF3D=cldfra_KF,QC_KF3D=qc_KF,QI_KF3D=qi_KF,&
+                     ICLOUD=icloud,WARM_RAIN=warm_rain,                &
+                     cldovrlp=cldovrlp,idcor=idcor,                    &
+                     F_ICE_PHY=F_ICE_PHY,F_RAIN_PHY=F_RAIN_PHY,        &
+                     XLAND=XLAND,XICE=XICE,SNOW=SNOW,                  &
+                     QV3D=qv,QC3D=qc,QR3D=qr,                          &
+                     QI3D=qi,QS3D=qs,QG3D=qg,QH3D=QH,F_QH=F_QH,                          &
+                     O3INPUT=O3INPUT,O33D=O3RAD,                       &
+                     AER_OPT=AER_OPT,aerod=aerod,no_src=no_src_types,  &
+                     ALSWVISDIR=alswvisdir ,ALSWVISDIF=alswvisdif,     &  !Zhenxin ssib alb comp (06/2010)
+                     ALSWNIRDIR=alswnirdir ,ALSWNIRDIF=alswnirdif,     &  !Zhenxin ssib alb comp (06/2010)
+                     SWVISDIR=swvisdir ,SWVISDIF=swvisdif,             &  !Zhenxin ssib swr comp (06/2010)
+                     SWNIRDIR=swnirdir ,SWNIRDIF=swnirdif,             &  !Zhenxin ssib swr comp (06/2010)
+                     SF_SURFACE_PHYSICS=sf_surface_physics,            &  !Zhenxin ssib sw_phy   (06/2010)
+                     F_QV=f_qv,F_QC=f_qc,F_QR=f_qr,                    &
+                     F_QI=f_qi,F_QS=f_qs,F_QG=f_qg,                    &
+                     RE_CLOUD=re_cloud,RE_ICE=re_ice,RE_SNOW=re_snow,  & ! G. Thompson
+                     has_reqc=has_reqc,has_reqi=has_reqi,has_reqs=has_reqs, & ! G. Thompson
+#if ( WRF_CHEM == 1 )
+                     TAUAER300=tauaer300,TAUAER400=tauaer400,          & ! jcb
+                     TAUAER600=tauaer600,TAUAER999=tauaer999,          & ! jcb
+                     GAER300=gaer300,GAER400=gaer400,                  & ! jcb
+                     GAER600=gaer600,GAER999=gaer999,                  & ! jcb
+                     WAER300=waer300,WAER400=waer400,                  & ! jcb
+                     WAER600=waer600,WAER999=waer999,                  & ! jcb
+                     aer_ra_feedback=aer_ra_feedback,                  &
+!jdfcz               progn=progn,prescribe=prescribe,                  &
+                     progn=progn,                                      &
+#endif
+                     calc_clean_atm_diag=calc_clean_atm_diag,          &
+                     QNDROP3D=qndrop,F_QNDROP=f_qndrop,                &
+                     IDS=ids,IDE=ide, JDS=jds,JDE=jde, KDS=kds,KDE=kde,&
+                     IMS=ims,IME=ime, JMS=jms,JME=jme, KMS=kms,KME=kme,&
+                     ITS=its,ITE=ite, JTS=jts,JTE=jte, KTS=kts,KTE=kte,&
+                     SWUPFLX=SWUPFLX,SWUPFLXC=SWUPFLXC,                &
+                     SWDNFLX=SWDNFLX,SWDNFLXC=SWDNFLXC,                &
+                     tauaer3d_sw=tauaer_sw,                             & ! jararias 2013/11
+                     ssaaer3d_sw=ssaaer_sw,                             & ! jararias 2013/11
+                     asyaer3d_sw=asyaer_sw,                             & ! jararias 2013/11
+                     swddir=swddir,swddni=swddni,swddif=swddif,         & ! jararias 2013/08/10
+                     swdownc=swdownc, swddnic=swddnic, swddirc=swddirc, & ! PAJ
+                     obscur=obscur_loc,                                 &
+                     xcoszen=coszen,yr=yr,julian=julian,mp_physics=mp_physics, &   ! jararias 2013/08/14
+                     proceed_cmaq_sw=proceed_cmaq_sw,                   & ! WRF-CMAQ coupled model
+                     nmode=3,                                           & ! WRF-CMAQ coupled model
+                     mass_ws_i=mass_ws_i,                               & ! WRF-CMAQ coupled model
+                     mass_ws_j=mass_ws_j,                               & ! WRF-CMAQ coupled model
+                     mass_ws_k=mass_ws_k,                               & ! WRF-CMAQ coupled model
+                     mass_in_i=mass_in_i,                               & ! WRF-CMAQ coupled model
+                     mass_in_j=mass_in_j,                               & ! WRF-CMAQ coupled model
+                     mass_in_k=mass_in_k,                               & ! WRF-CMAQ coupled model
+                     mass_ec_i=mass_ec_i,                               & ! WRF-CMAQ coupled model
+                     mass_ec_j=mass_ec_j,                               & ! WRF-CMAQ coupled model
+                     mass_ec_k=mass_ec_k,                               & ! WRF-CMAQ coupled model
+                     mass_ss_i=mass_ss_i,                               & ! WRF-CMAQ coupled model
+                     mass_ss_j=mass_ss_j,                               & ! WRF-CMAQ coupled model
+                     mass_ss_k=mass_ss_k,                               & ! WRF-CMAQ coupled model
+                     mass_h2o_i=mass_h2o_i,                             & ! WRF-CMAQ coupled model
+                     mass_h2o_j=mass_h2o_j,                             & ! WRF-CMAQ coupled model
+                     mass_h2o_k=mass_h2o_k,                             & ! WRF-CMAQ coupled model
+                     dgn_i=dgn_i,                                       & ! WRF-CMAQ coupled model
+                     dgn_j=dgn_j,                                       & ! WRF-CMAQ coupled model
+                     dgn_k=dgn_k,                                       & ! WRF-CMAQ coupled model
+                     sig_i=sig_i,                                       & ! WRF-CMAQ coupled model
+                     sig_j=sig_j,                                       & ! WRF-CMAQ coupled model
+                     sig_k=sig_k,                                       & ! WRF-CMAQ coupled model
+                     gtauxar_01=sw_gtauxar_01,                          & ! WRF-CMAQ coupled model
+                     gtauxar_02=sw_gtauxar_02,                          & ! WRF-CMAQ coupled model
+                     gtauxar_03=sw_gtauxar_03,                          & ! WRF-CMAQ coupled model
+                     gtauxar_04=sw_gtauxar_04,                          & ! WRF-CMAQ coupled model
+                     gtauxar_05=sw_gtauxar_05,                          & ! WRF-CMAQ coupled model
+                     asy_fac_01=sw_asy_fac_01,                          & ! WRF-CMAQ coupled model
+                     asy_fac_02=sw_asy_fac_02,                          & ! WRF-CMAQ coupled model
+                     asy_fac_03=sw_asy_fac_03,                          & ! WRF-CMAQ coupled model
+                     asy_fac_04=sw_asy_fac_04,                          & ! WRF-CMAQ coupled model
+                     asy_fac_05=sw_asy_fac_05,                          & ! WRF-CMAQ coupled model
+                     ssa_01=sw_ssa_01,                                  & ! WRF-CMAQ coupled model
+                     ssa_02=sw_ssa_02,                                  & ! WRF-CMAQ coupled model
+                     ssa_03=sw_ssa_03,                                  & ! WRF-CMAQ coupled model
+                     ssa_04=sw_ssa_04,                                  & ! WRF-CMAQ coupled model
+                     ssa_05=sw_ssa_05,                                  & ! WRF-CMAQ coupled model
+                     sw_zbbcddir=sw_zbbcddir,                           & ! WRF-CMAQ coupled model
+                     sw_dirdflux=sw_dirdflux,                           & ! WRF-CMAQ coupled model
+                     sw_difdflux=sw_difdflux                            & ! WRF-CMAQ coupled model
+                                                                        ,USE_RRTMGP=(sw_physics==RRTMGP_SWSCHEME) , &
+                  udm_cldfra=udm_cldfra,udm_cf_step=udm_cf_step,udm_cf_top=udm_cf_top, &
+                  udm_dry_layer_mass=udm_dry_layer_mass, &
+                    rrtmgp_domain_id=id,rrtmgp_calendar_day=udm_seed_day, &
+                  audit_step=itimestep,audit_time=xtime*60. , &
+                     native_qc3d=qc_save,native_qi3d=qi_save, &
+                     cu_qc3d=qc_cu,cu_qi3d=qi_cu,cu_cf3d=cldfra_cu, &
+                     cu_dp3d=cldfra_dp,cu_sh3d=cldfra_sh,cu_population_policy=cu_population_policy )
+             ELSE
+                CALL RRTMG_SWRAD(                                         &
                      RTHRATENSW=RTHRATENSW,                            &
                      RTHRATENSWC=RTHRATENSWC,                          &
                      SWUPT=SWUPT,SWUPTC=SWUPTC,SWUPTCLN=SWUPTCLN,      &
@@ -2850,11 +3123,15 @@ CONTAINS
                      sw_dirdflux=sw_dirdflux,                           & ! WRF-CMAQ coupled model
                      sw_difdflux=sw_difdflux                            & ! WRF-CMAQ coupled model
                                                                         ,USE_RRTMGP=(sw_physics==RRTMGP_SWSCHEME) , &
-                  udm_cldfra=udm_cldfra,udm_cf_step=udm_cf_step, &
+                  udm_cldfra=udm_cldfra,udm_cf_step=udm_cf_step,udm_cf_top=udm_cf_top, &
+                  udm_dry_layer_mass=udm_dry_layer_mass, &
+                    rrtmgp_domain_id=id,rrtmgp_calendar_day=udm_seed_day, &
                   audit_step=itimestep,audit_time=xtime*60. )
+             END IF
              ! Serialized opt-in diagnostic: scratch outputs never feed the forecast.
              IF (sw_physics==RRTMGP_SWSCHEME) THEN
               IF (audit_enabled()) THEN
+               IF (trace_column_in_tile(ids,ide,jds,jde,its,ite,jts,jte)) THEN
                BLOCK
                 USE, INTRINSIC :: iso_fortran_env, ONLY: real64
                 TYPE(audit_moments) :: grid_stats, domain_stats
@@ -2862,26 +3139,36 @@ CONTAINS
                 REAL(real64), ALLOCATABLE :: x37(:,:,:),x4(:,:,:),op37(:,:,:),op4(:,:,:)
                 REAL(real64), ALLOCATABLE :: d37(:,:,:),d4(:,:,:),dop37(:,:,:),dop4(:,:,:)
                 CHARACTER(LEN=24), ALLOCATABLE :: labels(:)
+                CHARACTER(LEN=24) :: cell_scope,mean_scope
                 INTEGER :: nmetrics,m,engine,seed,native,ak,ai,aj,slot
+                INTEGER :: a_its,a_ite,a_jts,a_jte,target_i,target_j
+                LOGICAL :: selected_column
+                CALL trace_column_selection(ids,ide,jds,jde,selected_column,target_i,target_j)
+                a_its=its;a_ite=ite;a_jts=jts;a_jte=jte
+                cell_scope='full_tile_cell';mean_scope='full_tile_mean'
+                IF(selected_column) THEN
+                  a_its=target_i;a_ite=target_i;a_jts=target_j;a_jte=target_j
+                  cell_scope='selected_column';mean_scope='selected_column'
+                END IF
                 nmetrics=4+kte-kts+1
                 ALLOCATE(ah(ims:ime,kms:kme,jms:jme,2),af(ims:ime,jms:jme,21),ao3(ims:ime,kms:kme,jms:jme))
-                ALLOCATE(x37(its:ite,jts:jte,nmetrics),x4(its:ite,jts:jte,nmetrics), &
-                  op37(its:ite,jts:jte,nmetrics),op4(its:ite,jts:jte,nmetrics),labels(nmetrics))
+                ALLOCATE(x37(a_its:a_ite,a_jts:a_jte,nmetrics),x4(a_its:a_ite,a_jts:a_jte,nmetrics), &
+                  op37(a_its:a_ite,a_jts:a_jte,nmetrics),op4(a_its:a_ite,a_jts:a_jte,nmetrics),labels(nmetrics))
                 ALLOCATE(d37(1,1,nmetrics),d4(1,1,nmetrics),dop37(1,1,nmetrics),dop4(1,1,nmetrics))
-                CALL grid_stats%init(ite-its+1,jte-jts+1,nmetrics,its,jts)
+                CALL grid_stats%init(a_ite-a_its+1,a_jte-a_jts+1,nmetrics,a_its,a_jts)
                 CALL domain_stats%init(1,1,nmetrics,0,0)
                 labels(1)='SURFACE_DOWN'
-                op37(:,:,1)=REAL(SWDNB(its:ite,jts:jte),real64)
+                op37(:,:,1)=REAL(SWDNB(a_its:a_ite,a_jts:a_jte),real64)
                 labels(2)='TOA_UP'
-                op37(:,:,2)=REAL(SWUPT(its:ite,jts:jte),real64)
+                op37(:,:,2)=REAL(SWUPT(a_its:a_ite,a_jts:a_jte),real64)
                 labels(3)='SW_NET'
-                op37(:,:,3)=REAL(GSW(its:ite,jts:jte),real64)
+                op37(:,:,3)=REAL(GSW(a_its:a_ite,a_jts:a_jte),real64)
                 labels(4)='SW_DIRECT'
-                op37(:,:,4)=REAL(SWDDIR(its:ite,jts:jte),real64)
+                op37(:,:,4)=REAL(SWDDIR(a_its:a_ite,a_jts:a_jte),real64)
                 DO ak=kts,kte
                  slot=4+ak-kts+1
                  WRITE(labels(slot),'("HEAT_",I0)') ak
-                 op37(:,:,slot)=REAL(RTHRATENSW(its:ite,ak,jts:jte)*pi(its:ite,ak,jts:jte)*86400.,real64)
+                 op37(:,:,slot)=REAL(RTHRATENSW(a_its:a_ite,ak,a_jts:a_jte)*pi(a_its:a_ite,ak,a_jts:a_jte)*86400.,real64)
                 END DO
                 CALL trace_suspend(.TRUE.)
                 DO m=0,audit_samples()
@@ -2892,6 +3179,9 @@ CONTAINS
                   native=audit_native4()
                   IF(engine==37) native=1
                   ah=0.;af=0.;ao3=O3RAD
+                  IF(m==0.AND.engine==4.AND.native==1.AND.selected_column) &
+                    CALL rrtmg4_export_begin('sw',id,itimestep,xtime*60.,target_i,target_j, &
+                                              solar_cosine=coszen(target_i,target_j))
                   CALL RRTMG_SWRAD( &
                     p8w=p8w, &
                     p3d=p, &
@@ -2953,10 +3243,10 @@ CONTAINS
                     jme=jme, &
                     kms=kms, &
                     kme=kme, &
-                    its=its, &
-                    ite=ite, &
-                    jts=jts, &
-                    jte=jte, &
+                    its=a_its, &
+                    ite=a_ite, &
+                    jts=a_jts, &
+                    jte=a_jte, &
                     kts=kts, &
                     kte=kte, &
                     mp_physics=mp_physics, &
@@ -2982,7 +3272,13 @@ CONTAINS
                     xcoszen=coszen, &
                     proceed_cmaq_sw=proceed_cmaq_sw, &
                     use_rrtmgp=engine==37, &
+                    udm_dry_layer_mass=udm_dry_layer_mass, &
+                    rrtmgp_domain_id=id,rrtmgp_calendar_day=udm_seed_day, &
                     mcica_seed_override=seed, &
+                    native_qc3d=qc_save,native_qi3d=qi_save, &
+                    cu_qc3d=qc_cu,cu_qi3d=qi_cu,cu_cf3d=cldfra_cu, &
+                    cu_dp3d=cldfra_dp,cu_sh3d=cldfra_sh, &
+                    cu_population_policy=MERGE(cu_population_policy,0,engine==37), &
                     swdnb=af(:,:,1), &
                     swupt=af(:,:,2), &
                     gsw=af(:,:,3), &
@@ -3006,41 +3302,43 @@ CONTAINS
                     swddirc=af(:,:,21), &
                     rthratensw=ah(:,:,:,1), &
                     rthratenswc=ah(:,:,:,2) )
+                  CALL rrtmg4_export_end()
                   IF(engine==4) THEN
-                   x4(:,:,1)=REAL(af(its:ite,jts:jte,1),real64)
-                   x4(:,:,2)=REAL(af(its:ite,jts:jte,2),real64)
-                   x4(:,:,3)=REAL(af(its:ite,jts:jte,3),real64)
-                   x4(:,:,4)=REAL(af(its:ite,jts:jte,4),real64)
+                   x4(:,:,1)=REAL(af(a_its:a_ite,a_jts:a_jte,1),real64)
+                   x4(:,:,2)=REAL(af(a_its:a_ite,a_jts:a_jte,2),real64)
+                   x4(:,:,3)=REAL(af(a_its:a_ite,a_jts:a_jte,3),real64)
+                   x4(:,:,4)=REAL(af(a_its:a_ite,a_jts:a_jte,4),real64)
                    DO ak=kts,kte
-                    x4(:,:,4+ak-kts+1)=REAL(ah(its:ite,ak,jts:jte,1)*pi(its:ite,ak,jts:jte)*86400.,real64)
+                    x4(:,:,4+ak-kts+1)=REAL(ah(a_its:a_ite,ak,a_jts:a_jte,1)*pi(a_its:a_ite,ak,a_jts:a_jte)*86400.,real64)
                    END DO
                    IF(m==0) op4=x4
                   ELSE
-                   x37(:,:,1)=REAL(af(its:ite,jts:jte,1),real64)
-                   x37(:,:,2)=REAL(af(its:ite,jts:jte,2),real64)
-                   x37(:,:,3)=REAL(af(its:ite,jts:jte,3),real64)
-                   x37(:,:,4)=REAL(af(its:ite,jts:jte,4),real64)
+                   x37(:,:,1)=REAL(af(a_its:a_ite,a_jts:a_jte,1),real64)
+                   x37(:,:,2)=REAL(af(a_its:a_ite,a_jts:a_jte,2),real64)
+                   x37(:,:,3)=REAL(af(a_its:a_ite,a_jts:a_jte,3),real64)
+                   x37(:,:,4)=REAL(af(a_its:a_ite,a_jts:a_jte,4),real64)
                    DO ak=kts,kte
-                    x37(:,:,4+ak-kts+1)=REAL(ah(its:ite,ak,jts:jte,1)*pi(its:ite,ak,jts:jte)*86400.,real64)
+                    x37(:,:,4+ak-kts+1)=REAL(ah(a_its:a_ite,ak,a_jts:a_jte,1)*pi(a_its:a_ite,ak,a_jts:a_jte)*86400.,real64)
                    END DO
                   END IF
                  END DO
                  IF(m==0) CYCLE
                  CALL grid_stats%add(x37,x4)
                  DO slot=1,nmetrics
-                  d37(1,1,slot)=SUM(x37(:,:,slot))/((ite-its+1)*(jte-jts+1))
-                  d4(1,1,slot)=SUM(x4(:,:,slot))/((ite-its+1)*(jte-jts+1))
+                  d37(1,1,slot)=SUM(x37(:,:,slot))/((a_ite-a_its+1)*(a_jte-a_jts+1))
+                  d4(1,1,slot)=SUM(x4(:,:,slot))/((a_ite-a_its+1)*(a_jte-a_jts+1))
                  END DO
                  CALL domain_stats%add(d37,d4)
                 END DO
                 CALL trace_suspend(.FALSE.)
                 DO slot=1,nmetrics
-                 dop37(1,1,slot)=SUM(op37(:,:,slot))/((ite-its+1)*(jte-jts+1))
-                 dop4(1,1,slot)=SUM(op4(:,:,slot))/((ite-its+1)*(jte-jts+1))
+                 dop37(1,1,slot)=SUM(op37(:,:,slot))/((a_ite-a_its+1)*(a_jte-a_jts+1))
+                 dop4(1,1,slot)=SUM(op4(:,:,slot))/((a_ite-a_its+1)*(a_jte-a_jts+1))
                 END DO
-                CALL grid_stats%write('sw',id,itimestep,xtime*60.,op37,op4,labels)
-                CALL domain_stats%write('sw',id,itimestep,xtime*60.,dop37,dop4,labels)
+                CALL grid_stats%write('sw',id,itimestep,xtime*60.,op37,op4,labels,cell_scope)
+                CALL domain_stats%write('sw',id,itimestep,xtime*60.,dop37,dop4,labels,mean_scope)
                END BLOCK
+               END IF
               END IF
              END IF
 

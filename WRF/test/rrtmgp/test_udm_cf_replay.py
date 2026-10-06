@@ -1,8 +1,12 @@
 #!/usr/bin/env python3
-"""Compare independent V4 LW/SW replays under diagnostic cloud-fraction policies.
+"""Compare independent V4–V9 LW/SW replays under diagnostic CF policies.
 
 The B and C variants are controlled counterfactuals, not production choices.
-Use a V4 input and the sibling RRTMGP_RAW_V1 snapshot from the same call.
+Use a replay input and sibling RRTMGP_RAW_V1 snapshot from the same call. All
+records not explicitly varied (including CFC and optional frozen optics) are
+retained byte-for-byte. For V9 SW inputs, derived direct-diagnostic records
+are intentionally removed and the variant is projected to the matching
+legacy schema; their values would be stale after changing CF/seed controls.
 """
 from __future__ import annotations
 
@@ -18,10 +22,21 @@ from typing import Any
 import numpy as np
 
 from compare_column_replay import compare, read_result
-from test_column_replay import read_input, read_raw
+from test_column_replay import (assert_close, corrected_hydrometeor, dry_layer_mass_kg_m2,
+                                read_input, read_raw, validate_udm_cf_extent)
 
 
 PATHS = {"LWP": "LWP", "IWP": "IWP", "RWP": "RWP", "SWP": "SWP"}
+SUPPORTED_REPLAY_VERSIONS = {
+    "RRTMGP_REPLAY_V4", "RRTMGP_REPLAY_V5", "RRTMGP_REPLAY_V6",
+    "RRTMGP_REPLAY_V7", "RRTMGP_REPLAY_V8", "RRTMGP_REPLAY_V9",
+    "RRTMGP_REPLAY_V10", "RRTMGP_REPLAY_V11", "RRTMGP_REPLAY_V12", "RRTMGP_REPLAY_V13",
+}
+V9_DIRECT_RECORDS = {
+    "SW_DIRECT_PREDELTA_POLICY", "TOA_GPOINT", "RAW_GAS_TAU", "MCICA_MASK",
+    "RAW_CLOUD_TAU", "RAW_PRECIP_TAU", "RAW_GRAUPEL_TAU_EXT", "RAW_HAIL_TAU_EXT",
+    "BAND_LIMS_GPOINT", "BAND_LIMS_WAVENUMBER", "VISIBLE_WEIGHT",
+}
 GRID_NAMES = {
     "LWP": ("GRID_LWP", "LWP_GRID"),
     "IWP": ("GRID_IWP", "IWP_GRID"),
@@ -38,6 +53,28 @@ def fail(message: str) -> None:
     raise RuntimeError(message)
 
 
+def b_last_cf_mode(original_cf: np.ndarray, used_cf: np.ndarray | None,
+                   extent: int | None) -> np.ndarray | None:
+    """Use UDM CF only where its recorded diagnostic extent is defined."""
+    if used_cf is None:
+        return None
+    used = np.asarray(used_cf, dtype=np.float64).reshape(-1)
+    original = np.asarray(original_cf, dtype=np.float64).reshape(-1)
+    if used.size != original.size:
+        fail("UDM_CF_USED and original radiation CF lengths differ")
+    if extent is None:  # Legacy raw capture: preserve old replay, but caller labels it unknown.
+        return used.copy()
+    if extent == -1:
+        return None
+    if extent < 0 or extent > original.size:
+        fail("UDM_CF_TOP outside native radiation layers")
+    if not np.isfinite(used[:extent]).all() or np.any((used[:extent] < 0.0) | (used[:extent] > 1.0)):
+        fail("UDM_CF_USED invalid inside recorded diagnostic extent")
+    hybrid = original.copy()
+    hybrid[:extent] = used[:extent]
+    return hybrid
+
+
 def first_field(records: dict[str, np.ndarray], names: tuple[str, ...]) -> np.ndarray | None:
     return next((records[name] for name in names if name in records), None)
 
@@ -46,24 +83,27 @@ def write_variant(source: Path, destination: Path, updates: dict[str, np.ndarray
                   seed: int) -> None:
     lines = source.read_text(encoding="ascii").splitlines()
     if len(lines) < 2:
-        fail(f"{source}: truncated V4 replay")
+        fail(f"{source}: truncated replay input")
     header = lines[1].split()
     if len(header) != 6:
         fail(f"{source}: invalid replay header")
     header[4] = str(seed)
-    out = [lines[0], " ".join(header)]
+    source_version = lines[0].strip()
+    out = ["RRTMGP_REPLAY_V9" if source_version == "RRTMGP_REPLAY_V9" else source_version,
+           " ".join(header)]
     pos = 2
     seen: set[str] = set()
+    kept: set[str] = set()
     while pos < len(lines):
         fields = lines[pos].split()
-        if len(fields) != 3:
+        if len(fields) not in (3, 4):
             fail(f"{source}:{pos + 1}: invalid section header")
         name = fields[0].upper()
         try:
-            shape = (int(fields[1]), int(fields[2]))
+            shape = tuple(int(value) for value in fields[1:])
         except ValueError as exc:
             raise RuntimeError(f"{source}:{pos + 1}: invalid shape") from exc
-        count = shape[0] * shape[1]
+        count = int(np.prod(shape))
         pos += 1
         values: list[str] = []
         found = 0
@@ -74,19 +114,57 @@ def write_variant(source: Path, destination: Path, updates: dict[str, np.ndarray
         if found != count:
             fail(f"{source}: truncated {name} data")
         seen.add(name)
+        if source_version == "RRTMGP_REPLAY_V9" and name in V9_DIRECT_RECORDS:
+            continue
         if name not in updates:
-            out.append(" ".join([name, str(shape[0]), str(shape[1])]))
+            out.append(" ".join([name, *(str(dim) for dim in shape)]))
             out.extend(values)
+            kept.add(name)
             continue
         array = np.asarray(updates[name], dtype=np.float64)
         if array.shape != shape or not np.isfinite(array).all():
             fail(f"{name} replacement shape or values are invalid")
-        out.append(f"{name} {shape[0]} {shape[1]}")
+        out.append(" ".join([name, *(str(dim) for dim in shape)]))
         out.extend(f"{float(value):.16E}" for value in array.flatten(order="F"))
+        kept.add(name)
     missing = sorted(updates.keys() - seen)
     if missing:
-        fail(f"V4 input has no sections for updates: {missing}")
+        fail(f"replay input has no sections for updates: {missing}")
+    if source_version == "RRTMGP_REPLAY_V9":
+        frozen = "FROZEN_MODE" in kept
+        if frozen:
+            out[0] = "RRTMGP_REPLAY_V7"
+        elif "NATIVE_DRY_LAYER_MASS_KG_M2" in kept:
+            out[0] = "RRTMGP_REPLAY_V6"
+        else:
+            out[0] = "RRTMGP_REPLAY_V5"
     destination.write_text("\n".join(out) + "\n", encoding="ascii")
+
+
+def assert_variant_preserves_records(source: Path, variant: Path,
+                                     updates: dict[str, np.ndarray],
+                                     source_records: dict[str, np.ndarray]) -> None:
+    """Ensure variants preserve every input other than the declared controls."""
+    _, nc, nl, _, _, _, records = read_input(variant)
+    _, source_nc, source_nl, _, _, _, original = read_input(source)
+    dropped = V9_DIRECT_RECORDS if source.read_text(encoding="ascii").splitlines()[0].strip() == "RRTMGP_REPLAY_V9" else set()
+    expected_keys = original.keys() - dropped
+    if (nc, nl) != (source_nc, source_nl) or records.keys() != expected_keys:
+        fail(f"{variant}: replay dimensions/sections changed while writing policy variant")
+    if source_records.keys() != original.keys():
+        fail(f"{source}: parsed sections changed unexpectedly")
+    for name, values in original.items():
+        if name not in updates and name not in dropped and not np.array_equal(records[name], values):
+            fail(f"{variant}: unmodified section {name} changed or was stripped")
+    # Strict replay parsing validates schema-dependent gas presence. Keep an
+    # explicit invariant for gas/background/frozen records this test must
+    # never rewrite, even if their values happen to be all zero.
+    for name in ("VMR_CFC11", "VMR_CFC12", "VMR_CFC22", "VMR_CCL4",
+                 "VMR_N2", "TRACE_GASES_PRESENT",
+                 "GWP", "HWP", "LAMBDA_G", "LAMBDA_H", "FROZEN_MODE",
+                 "FROZEN_OCCURRENCE", "FROZEN_TABLE_SHA256_BYTES"):
+        if name in original and (name in updates or not np.array_equal(records[name], original[name])):
+            fail(f"{variant}: protected gas/frozen section {name} was changed")
 
 
 def run_reference(executable: Path, data_dir: Path, input_path: Path,
@@ -100,14 +178,14 @@ def run_reference(executable: Path, data_dir: Path, input_path: Path,
 def raw_grid_paths(raw: dict[str, np.ndarray], inputs: dict[str, np.ndarray],
                    raw_nl: int, gravity: float) -> tuple[dict[str, np.ndarray], dict[str, float]]:
     original_cf = inputs["CF"][0, :raw_nl]
-    dp = raw["DP_HPA"][:raw_nl]
+    dry_mass, _ = dry_layer_mass_kg_m2(raw, raw_nl)
     grid: dict[str, np.ndarray] = {}
     wet_path_error: dict[str, float] = {}
     for path_name, input_name in PATHS.items():
         if input_name not in inputs:
             if path_name == "RWP":
                 continue
-            fail(f"V4 input is missing {input_name}")
+                fail(f"replay input is missing {input_name}")
         path = inputs[input_name][0, :raw_nl]
         reconstructed = original_cf * path
         direct = first_field(raw, GRID_NAMES[path_name])
@@ -118,10 +196,16 @@ def raw_grid_paths(raw: dict[str, np.ndarray], inputs: dict[str, np.ndarray],
             if np.any(~np.isfinite(direct)) or np.any(direct < 0.0):
                 fail(f"raw grid path {path_name} must be finite and nonnegative")
             wet = original_cf > 0.0
+            qname = Q_NAMES[path_name]
+            if qname in raw:
+                q = corrected_hydrometeor(raw, qname, path_name, raw_nl)
+                assert_close(direct, q * dry_mass * 1000.0,
+                             f"raw {path_name} grid mass from {qname} and dry layer mass",
+                             rtol=5.0e-6, atol=1.0e-8)
             wet_path_error[path_name] = float(np.max(np.abs(direct[wet] - reconstructed[wet]), initial=0.0))
             scale = max(1.0, float(np.max(np.abs(direct[wet]), initial=0.0)))
             if not np.allclose(direct[wet], reconstructed[wet], rtol=5.0e-6, atol=1.0e-5 * scale):
-                fail(f"raw grid {path_name} disagrees with original CF times V4 in-cloud path")
+                fail(f"raw grid {path_name} disagrees with original CF times replay in-cloud path")
             grid[path_name] = direct.copy()
             continue
         missing_clear = (original_cf == 0.0) & (path <= 0.0)
@@ -129,8 +213,8 @@ def raw_grid_paths(raw: dict[str, np.ndarray], inputs: dict[str, np.ndarray],
         if np.any(missing_clear):
             if qname not in raw:
                 fail(f"cannot recover clear-grid {path_name}: raw {qname} or grid path is missing")
-            q = raw[qname][:raw_nl]
-            recovered = q * dp * 100.0 / gravity * 1000.0
+            q = corrected_hydrometeor(raw, qname, path_name, raw_nl)
+            recovered = q * dry_mass * 1000.0
             reconstructed[missing_clear] = recovered[missing_clear]
         grid[path_name] = reconstructed
         wet_path_error[path_name] = 0.0
@@ -192,10 +276,12 @@ def main() -> int:
     phase, raw_i, raw_j, raw = read_raw(raw_path)
     phase_in, nc, nl, overlap, base_seed, iceflag, input_records = read_input(input_path)
     if phase != phase_in or nc != 1 or nl < len(raw["DP_HPA"]):
-        fail("expected paired one-column LW/SW raw/V4 input covering the native raw layers")
-    if input_path.read_text(encoding="ascii").splitlines()[0].strip() != "RRTMGP_REPLAY_V4":
-        fail("input must be RRTMGP_REPLAY_V4")
+        fail("expected paired one-column LW/SW replay input covering the native raw layers")
+    replay_version = input_path.read_text(encoding="ascii").splitlines()[0].strip()
+    if replay_version not in SUPPORTED_REPLAY_VERSIONS:
+        fail(f"unsupported replay format {replay_version}")
     raw_nl = len(raw["DP_HPA"])
+    cf_top = validate_udm_cf_extent(raw, raw_nl, raw_path)
     if raw_i < 1 or raw_j < 1:
         fail("raw snapshot has invalid source indices")
     gravity = float(raw["GRAVITY"][0])
@@ -203,7 +289,7 @@ def main() -> int:
         fail("raw gravity must be finite and positive")
     original_cf = input_records["CF"][0, :raw_nl].copy()
     if np.any((original_cf < 0.0) | (original_cf > 1.0)):
-        fail("V4 input CF outside [0,1]")
+        fail("replay input CF outside [0,1]")
     grid_paths, wet_reconstruction_errors = raw_grid_paths(raw, input_records, raw_nl, gravity)
 
     cf_modes = ("A", "B", "B_now", "C") if args.cf_policy == "all" else (args.cf_policy,)
@@ -212,23 +298,45 @@ def main() -> int:
     used_cf = first_field(raw, USED_CF_NAMES)
     recomputed_cf = first_field(raw, RECOMPUTED_CF_NAMES)
 
-    def normalize_cf(field: np.ndarray | None, name: str) -> np.ndarray | None:
+    def normalize_cf(field: np.ndarray | None, name: str, extent: int | None = None) -> np.ndarray | None:
         if field is None:
             return None
         values = np.asarray(field, dtype=np.float64).reshape(-1)
         if values.size == 1:
             values = np.full(raw_nl, values.item())
-        if values.size != raw_nl or np.any(~np.isfinite(values)):
-            fail(f"{name} must be finite and have raw native-layer length")
-        if np.any((values < 0.0) & (values != -1.0)) or np.any(values > 1.0):
-            fail(f"{name} values must be in [0,1] or sentinel -1")
+        if values.size != raw_nl:
+            fail(f"{name} must have raw native-layer length")
+        checked = values if extent is None else values[:extent]
+        if np.any(~np.isfinite(checked)):
+            fail(f"{name} values within its declared extent must be finite")
+        if np.any((checked < 0.0) & (checked != -1.0)) or np.any(checked > 1.0):
+            fail(f"{name} values within its declared extent must be in [0,1] or sentinel -1")
+        if extent is not None and np.any(checked == -1.0):
+            fail(f"{name} contains not-called sentinels inside its declared diagnostic extent")
         return values
 
-    used_cf = normalize_cf(used_cf, "UDM_CF_USED")
+    used_cf = normalize_cf(used_cf, "UDM_CF_USED", cf_top if cf_top is not None and cf_top >= 0 else None)
     recomputed_cf = normalize_cf(recomputed_cf, "UDM_CF_RECOMPUTED")
     cf_values = {"A": original_cf, "C": original_cf}
-    if used_cf is not None:
-        cf_values["B"] = used_cf
+    b_extent_metadata: dict[str, Any]
+    if cf_top is None:
+        if used_cf is not None:
+            cf_values["B"] = b_last_cf_mode(original_cf, used_cf, None)
+            b_extent_metadata = {"extent_status": "LEGACY_UNKNOWN", "known_layers": None,
+                                 "unknown_layers": raw_nl,
+                                 "cf_semantics": "legacy whole working vector; extent unavailable"}
+        else:
+            b_extent_metadata = {"extent_status": "MISSING_CF_USED", "known_layers": None,
+                                 "unknown_layers": raw_nl}
+    elif cf_top == -1:
+        b_extent_metadata = {"extent_status": "NOT_CALLED", "known_layers": 0,
+                             "unknown_layers": raw_nl}
+    else:
+        b_extent_metadata = {"extent_status": "EXTENT_LIMITED_HYBRID", "known_layers": cf_top,
+                             "unknown_layers": raw_nl - cf_top,
+                             "cf_semantics": "UDM_CF_USED on 1:top; original radiation CF above top"}
+        if used_cf is not None:
+            cf_values["B"] = b_last_cf_mode(original_cf, used_cf, cf_top)
     if recomputed_cf is not None:
         cf_values["B_now"] = recomputed_cf
 
@@ -245,17 +353,24 @@ def main() -> int:
     diagnostics: dict[str, Any] = {}
     for mode in cf_modes:
         diagnostics[mode] = {}
+        if mode == "B":
+            diagnostics[mode].update(b_extent_metadata)
         if mode not in cf_values:
             missing_cf = "UDM_CF_USED" if mode == "B" else "UDM_CF_RECOMPUTED"
-            diagnostics[mode]["status"] = f"SKIPPED_MISSING_{missing_cf}"
+            diagnostics[mode]["status"] = ("SKIPPED_NOT_CALLED" if mode == "B" and cf_top == -1
+                                             else f"SKIPPED_MISSING_{missing_cf}")
             if args.cf_policy == mode:
-                fail(f"requested CF policy {mode} requires raw {missing_cf}")
+                fail(f"requested CF policy {mode} requires raw {missing_cf} and a called diagnostic")
             continue
         cf_mode = np.asarray(cf_values[mode], dtype=np.float64)
         if np.any(cf_mode == -1.0):
             diagnostics[mode]["status"] = "SKIPPED_SENTINEL_MINUS_ONE"
             diagnostics[mode]["sentinel_layers"] = int(np.count_nonzero(cf_mode == -1.0))
             continue
+        if mode == "B" and cf_top is None:
+            diagnostics[mode]["status"] = "READY_LEGACY_EXTENT_UNKNOWN"
+        elif mode == "B":
+            diagnostics[mode]["status"] = "READY_EXTENT_LIMITED_HYBRID"
         mode_inputs[mode] = {}
         for graupel_mode in graupel_modes:
             updates = {name: values.copy() for name, values in input_records.items()
@@ -294,14 +409,14 @@ def main() -> int:
                 graupel_diag.update({"raw_grid_mass_available": True, "optical_mapping": "omitted"})
             else:
                 if "SWP" not in updates:
-                    fail("as-snow mapping requires SWP in the V4 replay input")
+                    fail("as-snow mapping requires SWP in the replay input")
                 if "RES" not in input_records or "RES" not in raw:
                     fail("as-snow mapping requires the native UDM snow radius RES")
                 native_res = raw["RES"][:raw_nl]
                 if native_res.size != raw_nl or not np.allclose(
                     input_records["RES"][0, :raw_nl], native_res, rtol=0.0, atol=0.0
                 ):
-                    fail("V4 RES differs from raw native UDM snow radii")
+                    fail("replay RES differs from raw native UDM snow radii")
                 qg_path = np.zeros(raw_nl, dtype=np.float64)
                 positive_cf = cf_mode > 0.0
                 if mode == "C":
@@ -363,10 +478,14 @@ def main() -> int:
         for mode, variants in mode_inputs.items():
             for graupel_mode, (updates, _graupel_diag) in variants.items():
                 variant_path = tmp / f"cf-{mode}-graupel-{graupel_mode}.input"
+                variant_verified = False
                 for policy in sw_policies:
                     for seed_offset, seed in enumerate(seed_values):
                         run_index += 1
                         write_variant(input_path, variant_path, updates, seed)
+                        if not variant_verified:
+                            assert_variant_preserves_records(input_path, variant_path, updates, input_records)
+                            variant_verified = True
                         out_path = tmp / f"{mode}-{graupel_mode}-{policy}-{seed_offset}.result"
                         run = run_reference(reference, data_dir, variant_path, out_path, policy)
                         if run.returncode:
@@ -380,7 +499,7 @@ def main() -> int:
                                 text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, check=False,
                             )
                             if default_run.returncode:
-                                fail(f"default V4 reference failed: {default_run.stdout[-1400:]}")
+                                fail(f"default reference failed: {default_run.stdout[-1400:]}")
                             report = compare(read_result(default_path), result)
                             if not report.get("passed"):
                                 fail("explicit delta policy 1 differs from the default reference path")
@@ -416,13 +535,31 @@ def main() -> int:
                     }
     summary = {
         "status": "PASS" if mode_inputs else "SKIPPED_SENTINEL_MINUS_ONE",
-        "experiment": f"V4 {phase} replay with common captured microphysics paths and independent cloud-mask seeds",
-        "source_capture": {"input": str(input_path), "raw": str(raw_path), "i": raw_i, "j": raw_j,
+        "experiment": f"{replay_version} {phase} replay with common captured microphysics paths and independent cloud-mask seeds",
+        "source_capture": {"input": str(input_path), "input_format": replay_version,
+                           "cfc_record_schema_valid": (
+                               (all(name in input_records for name in
+                                    ("VMR_CFC11", "VMR_CFC12", "VMR_CFC22", "VMR_CCL4"))
+                                if replay_version in {"RRTMGP_REPLAY_V8", "RRTMGP_REPLAY_V10"}
+                                else ((int(input_records["TRACE_GASES_PRESENT"].item()) == 1) ==
+                                      all(name in input_records for name in
+                                          ("VMR_CFC11", "VMR_CFC12", "VMR_CFC22", "VMR_CCL4")))
+                                if replay_version in {"RRTMGP_REPLAY_V12", "RRTMGP_REPLAY_V13"} else None)),
+                           "n2_profile_preserved": "VMR_N2" in input_records,
+                           "trace_gases_present": (int(input_records["TRACE_GASES_PRESENT"].item())
+                               if "TRACE_GASES_PRESENT" in input_records else None),
+                           "frozen_metadata_present": any(name in input_records for name in
+                               ("GWP", "HWP", "LAMBDA_G", "LAMBDA_H", "FROZEN_MODE",
+                                "FROZEN_OCCURRENCE", "FROZEN_TABLE_SHA256_BYTES")),
+                           "variant_unmodified_records_preserved_exactly": True,
+                           "raw": str(raw_path), "i": raw_i, "j": raw_j,
                            "native_raw_layers": raw_nl, "extended_replay_layers": nl},
+        "dry_layer_mass_source": ("native_dry_layer_mass" if "DRY_LAYER_MASS_KG_M2" in raw
+                                  else "legacy_dp_over_gravity"),
         "seed_ensemble": {"count": args.seeds, "seeds": seed_values},
         "policy_labels": {
-            "A": "original V4 radiation CF and in-cloud paths",
-            "B": "last actual UDM_CF_USED; recompute in-cloud paths from preserved grid-box mass; zero-CF grid mass is omitted",
+            "A": "original captured radiation CF and in-cloud paths",
+            "B": "extent-limited hybrid: UDM_CF_USED on 1:UDM_CF_TOP, original radiation CF above top; legacy raw without top retains whole working vector but is explicitly extent-unknown; recompute paths with the selected CF",
             "B_now": "current-state UDM_CF_RECOMPUTED; recompute paths from preserved grid-box mass; zero-CF grid mass is omitted",
             "C": "original radiation CF with grid-mean paths passed as in-cloud paths; intentionally non-mass-preserving counterfactual",
         },

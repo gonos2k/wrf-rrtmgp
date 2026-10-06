@@ -1,0 +1,173 @@
+{
+  "common_band_wavenumber_cm_inverse": [
+    {
+      "band": 3,
+      "hi": 630,
+      "lo": 500
+    },
+    {
+      "band": 4,
+      "hi": 700,
+      "lo": 630
+    },
+    {
+      "band": 5,
+      "hi": 820,
+      "lo": 700
+    },
+    {
+      "band": 6,
+      "hi": 980,
+      "lo": 820
+    },
+    {
+      "band": 7,
+      "hi": 1080,
+      "lo": 980
+    },
+    {
+      "band": 8,
+      "hi": 1180,
+      "lo": 1080
+    },
+    {
+      "band": 9,
+      "hi": 1390,
+      "lo": 1180
+    },
+    {
+      "band": 10,
+      "hi": 1480,
+      "lo": 1390
+    },
+    {
+      "band": 11,
+      "hi": 1800,
+      "lo": 1480
+    },
+    {
+      "band": 12,
+      "hi": 2080,
+      "lo": 1800
+    },
+    {
+      "band": 13,
+      "hi": 2250,
+      "lo": 2080
+    }
+  ],
+  "comparison_contract": [
+    "Legacy raw-native comparison: compare RTE_PLANCK_LAYER_NATIVE, LEVEL_NATIVE, SURFACE_NATIVE per band against independent SI B_band at the corresponding captured temperatures. Apply the documented wavenumber-width/unit convention only after deriving it from the legacy source conversion; retain raw Planck and DELWAVE as separate recorded quantities.",
+    "Legacy conversion hypothesis to test, not assume: the RRTMG transport weights spectral terms by DELWAVE and later multiplies diffuse flux by FLUXFAC=pi*2e4 after WTDIFF=0.5. Preserve this full expression and test whether its raw native Planck operand corresponds to the SI spectral-radiance integral after the relevant wavenumber conversion; do not apply pi, 1e4, or WTDIFF twice.",
+    "Legacy radiance-to-flux check: preserve RTE_WTDIFF=0.5 and RTE_FLUXFAC exactly. Source defines fluxfac=pi*2e4; report raw radiance-side and resulting native-source convention separately so a factor-of-pi or 1e4 assumption cannot be hidden.",
+    "GP source comparison: for each native layer/level/surface and physical band, independently sum the saved GP source across only the g-points assigned to that band. Compare with the corresponding interpolated raw band Planck value times the independently recovered g-point Planck-fraction sum. Report raw Planck, fraction sum, and mapped source separately.",
+    "The saved GP sidecar only carries SOURCE_LAYER (1,45,128), SOURCE_LEVEL (1,46,128), SOURCE_SURFACE (1,1,128). It does not carry raw interpolated planck_function or pfrac, so closure cannot be diagnosed from the existing sidecar alone.",
+    "Preferred acquisition: add a temporary/reviewed observer at compute_Planck_source that records the existing planck_function arrays and pfrac before mapping. Otherwise reconstruct with the same pinned coefficient file, same input temperatures, same frontend totplnk_delta, exact interpolate1D/interpolate3D_byflav routines and indices; validate reconstruction against saved source arrays. No independent renormalization.",
+    "Surface: legacy plankbnd is emissivity weighted in the pinned legacy source; GP SOURCE_SURFACE is produced before the solver receives sfc_emis. For a blackbody-only comparison use raw GP surface Planck; for physical surface source apply the same emissivity exactly once and label that step.",
+    "Do not pair individual legacy and GP g-points. Do not compare bands 1-2 or 14-16: only bands 3-13 have identical physical edges. Do not average unlike g-point counts."
+  ],
+  "formula": {
+    "band_radiance": "B_band(T) = integral from 100*lo_cm to 100*hi_cm of B_sigma(T) d sigma_m.",
+    "cm_inverse_to_m_inverse": "sigma_m = 100 * sigma_cm. Integrate B_sigma over sigma_m bounds; do not insert a guessed scale factor.",
+    "constants_precision": "Use the exact SI constants listed above in float64; record quadrature and convergence checks. No rounded older radiation constants.",
+    "hemispheric_blackbody_exitance_check": "M_band(T)=pi*B_band(T); full-spectrum check integrates to sigma_SB*T^4 where sigma_SB=2*pi^5*k^4/(15*h^3*c^2).",
+    "spectral_radiance_per_m_inverse": "B_sigma(T) = 2*h*c^2*sigma^3 / expm1(h*c*sigma/(k*T)); sigma in m^-1; units W m^-2 sr^-1 (m^-1)^-1."
+  },
+  "mapping_details": {
+    "gp_band_source": "Kernel maps planck_function(band) times pfrac(g-point) to lay_src; level interior uses sqrt(pfrac(below)*pfrac(above)), not one layer fraction.",
+    "legacy_export_shapes": "RTE_PLANCK_LAYER_NATIVE has 16 x 45; LEVEL_NATIVE 16 x 46; SURFACE_NATIVE 16. Export stores native band ordering.",
+    "legacy_zero_fraction_caveat": "Existing audit found upper-layer legacy band-12 Planck fractions zero while raw native band-12 Planck remains defined. Keep the raw Planck comparison separate from source-fraction mapping; do not call those zeros missing Planck values.",
+    "temperature_interpolation": "GP frontend derives totplnk_delta=(temp_ref_max-temp_ref_min)/(nPlanckTemp-1) and assumes Planck/absorption reference grids align and are equally spaced. Capture exact temperatures and interpolation bounds."
+  },
+  "pins": {
+    "gp_coefficients": {
+      "bytes": 11679993,
+      "path": "build/udm37-bon-night-lw-transport-evidence-pr-work/WRF/run/rrtmgp-gas-lw-g128.nc",
+      "sha256": "70ad65d116531122660318e5da2a2af9db74b425916202860e9527ef2375b8f6"
+    },
+    "gp_frontend": {
+      "bytes": 105578,
+      "path": "build/udm37-bon-night-lw-transport-evidence-pr-work/external/rte-rrtmgp/rrtmgp-frontend/mo_gas_optics_rrtmgp.F90",
+      "sha256": "661a6b7aaec09c46b62a8e2c27c25cdfba5f52c695fcd7ec30701fc4f2a8349c"
+    },
+    "gp_kernel": {
+      "bytes": 41772,
+      "path": "build/udm37-bon-night-lw-transport-evidence-pr-work/external/rte-rrtmgp/rrtmgp-kernels/mo_gas_optics_rrtmgp_kernels.F90",
+      "sha256": "d0751c5c0a43fd7a9fac79b99be0645763c549f08052d1e7c55d54992a43afb8"
+    },
+    "gp_native_input": {
+      "bytes": 39535,
+      "path": "build/udm37-bon-night-dry-column-attribution-v1/matched-legacy-dry.input",
+      "sha256": "292f9569b059c373c9cb14f1574cb8835627331574592a19d641ef07c21ec918"
+    },
+    "gp_raw_nativeN2_result": {
+      "bytes": 763371,
+      "path": "build/udm37-bon-night-n2-attribution-v1/run-preparation-v1/run-v1/n2-0p7808.result",
+      "sha256": "b578e9983b5817297db75baac026af98b84a3cbcd3653aadf2e4db5930ce5732"
+    },
+    "gp_raw_nativeN2_transport": {
+      "bytes": 308081,
+      "path": "build/udm37-bon-night-n2-attribution-v1/run-preparation-v1/run-v1/n2-0p7808.result.lw_transport",
+      "sha256": "bb53daf55ea9b6f91c9d0dbc4f132eff11b3ab76fd278bacb327571a1642e792"
+    },
+    "gp_solver": {
+      "bytes": 62389,
+      "path": "build/udm37-bon-night-lw-transport-evidence-pr-work/external/rte-rrtmgp/rte-kernels/mo_rte_solver_kernels.F90",
+      "sha256": "d73a6588a6041044bf923b09e58b939b443976903c49a07a17a5020a69dcf677"
+    },
+    "legacy_export": {
+      "bytes": 2539937,
+      "path": "build/udm37-legacy-lw-source-export-bon-audit-v2/cases/SOURCE_ON/legacy-export/rrtmg4_d01_i13_j46_step721_lw.txt",
+      "sha256": "bd614b57362b48ab8e00b179fc3464925b9c49a8eef0a472489f87fd89e15c7f"
+    },
+    "legacy_source": {
+      "bytes": 713929,
+      "path": "build/udm37-legacy-lw-source-export-pr-work/WRF/phys/module_ra_rrtmg_lw.F",
+      "sha256": "09164a1048f2be2001ac6e161da3c0c48f9e74e4ff57271f445032392d9153ef"
+    }
+  },
+  "planned_validation": {
+    "assertions": "First verify old-output bytes and source/input/table pins. Verify band edge arrays and dimensions. Check raw Planck vs SI integral and GP source identity against mapped Planck*fraction without modifying fractions. Separately verify full-spectrum Planck integral against Stefan-Boltzmann as an implementation check.",
+    "nonclaims": "No acceptance tolerance is set here. No numerical result has been produced. Differences may arise from spectral truncation/band definitions, table generation, interpolation, conventions, or precision and require evidence.",
+    "quadrature": "Use float64 Gauss-Legendre quadrature at increasing node counts (e.g. 64,128,256), report convergence by temperature/band; this is a future plan only.",
+    "temperature_inputs": "Use captured TLAY(45), TLEV(46), TSFC(1) from the pinned native input; test each corresponding raw record without averaging over layers."
+  },
+  "purpose": "Specify a reproducible SI Planck/source cross-check for a held 45-layer BON LW input, distinguishing raw band Planck values from g-point Planck-fraction mapping.",
+  "scope": {
+    "common_bands_only": [
+      3,
+      13
+    ],
+    "no_accuracy_or_engine_winner_claim": true,
+    "no_numerical_integration_performed": true,
+    "no_solver_or_model_calls": true,
+    "no_source_or_production_edits": true,
+    "profile": "selected BON native 45-layer held state; one column"
+  },
+  "source_locations": {
+    "gp_frontend": "external/rte-rrtmgp/rrtmgp-frontend/mo_gas_optics_rrtmgp.F90:1010-1026 table storage and totplnk_delta.",
+    "gp_solver": "external/rte-rrtmgp/rte-kernels/mo_rte_solver_kernels.F90:63-76 source declarations, 223-224 pi-weighted flux output; interpret units with care.",
+    "gp_source_kernel": "external/rte-rrtmgp/rrtmgp-kernels/mo_gas_optics_rrtmgp_kernels.F90:616-632 pfrac interpolation; 638-651 surface mapping; 655-675 layer mapping; 677-708 level mapping/geometric interior fraction.",
+    "legacy_planck_generation": "WRF/phys/module_ra_rrtmg_lw.F:3759-3770, 3782-3803 (native Planck tables and surface emissivity); 8250 (FLUXFAC); 3105-3110 (WTDIFF description); 3277-3286 (exported fields)."
+  },
+  "sources": {
+    "planck_law": {
+      "facts": "NIST technical note presents Planck spectral radiance as a function of frequency/wavelength. Use the wavenumber equation below as a variable transformation, not as a verbatim NIST equation.",
+      "url": "https://nvlpubs.nist.gov/nistpubs/Legacy/TN/nbstechnicalnote910-8.pdf"
+    },
+    "si_constants": {
+      "facts": "Exact SI values c=299792458 m s-1, h=6.62607015e-34 J s, k=1.380649e-23 J K-1.",
+      "url": "https://www.nist.gov/pml/special-publication-330/sp-330-section-2"
+    },
+    "wavenumber_unit": {
+      "facts": "SI wavenumber unit is reciprocal metre.",
+      "url": "https://www.nist.gov/pml/special-publication-811/nist-guide-si-chapter-4-two-classes-si-units-and-si-prefixes"
+    }
+  },
+  "status": "PREPARED_DESIGN_ONLY_NO_INTEGRATION_NO_SOLVER",
+  "unresolved_unit_check": [
+    "The pinned coefficient NetCDF has no units attribute on totplnk or plank_fraction. Legacy source comments describe units as generally cgs and uses WTDIFF=0.5 and fluxfac=pi*2e4. The SI comparison must establish the raw-table convention from generation/source metadata or demonstrated scaling; do not silently choose radiance vs hemispheric exitance or multiply by a fitted constant.",
+    "The RTE solver comments label source arrays W/m2 and subsequently applies angular pi weighting. The independent plan must trace the convention through solver and source kernel before asserting an SI unit equivalence.",
+    "The direct legacy Planck integrand normalization must be reconciled from its original table-generation constants and native convention. The transport-level product (WTDIFF*FLUXFAC) is known, but it alone does not prove whether a raw exported Planck ordinate is per cm-1, per m-1, or a cgs-scaled value."
+  ]
+}

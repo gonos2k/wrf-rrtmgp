@@ -1,0 +1,356 @@
+{
+  "schema": "udm37-ice-optics-attribution-derived-v1",
+  "scope": "offline arithmetic derived only from the five pinned bridge JSON records; no executable/model run",
+  "accuracy_claim": false,
+  "source_identity": {
+    "worktree_head": "9b6c09332e1b0cb3c919882646070443472754ac",
+    "bridge_json": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-nested-batching-restart-evidence-pr-work/validation/rrtmgp37/runtime-contracts/ice-optics-attribution.json",
+      "sha256": "e84cf0f6a3b2e1d4167fa260c556249cca413964da3acd69d89008c0b925563a"
+    },
+    "bridge_runner": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-nested-batching-restart-evidence-pr-work/WRF/test/rrtmgp/test_rrtmg_optics_attribution.py",
+      "sha256": "8e7cfc2b42869c279d5e067068315e1937e54f88e186b0a454575015d641330b"
+    },
+    "runtime_contracts_doc": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-nested-batching-restart-evidence-pr-work/WRF/doc/rrtmgp/RUNTIME_CONTRACTS.md",
+      "sha256": "049f169640f51a4010b1cfddc45d1f803b567c790de6a2f720048c5bbd0f6de0"
+    },
+    "historical_same_state_report": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-nested-batching-restart-evidence-pr-work/validation/rrtmgp37/udm-physics-audit/REPORT_ko.md",
+      "sha256": "2ffb7bd1055392d225900cbe8242116f8fb73b641bac929dd1cf979a3774bac3"
+    }
+  },
+  "interpretation": {
+    "actual_37_minus_4_surface_down_w_m2": {
+      "min": 61.858917236328125,
+      "max": 61.87881469726568
+    },
+    "native_wrapper_optics_swap_delta_from_rrtmgp_baseline_w_m2": {
+      "min": -65.01731057483738,
+      "max": -64.98125788000152
+    },
+    "native_wrapper_hybrid_residual_vs_actual_rrtmg4_w_m2": {
+      "min": -3.1493278362734145,
+      "max": -3.109399750013438
+    },
+    "native_physical_fu_hybrid_residual_vs_actual_rrtmg4_w_m2": {
+      "min": 2.22371778306956,
+      "max": 2.267019612728973
+    },
+    "generic_rrtmg_hybrid_residual_vs_actual_rrtmg4_w_m2": {
+      "min": 3.811976902843071,
+      "max": 4.543904074597833
+    },
+    "fu_and_generic_hybrid_residual_combined_range_w_m2": {
+      "min": 2.22371778306956,
+      "max": 4.543904074597833
+    }
+  },
+  "documented_residual_crosscheck": {
+    "runtime_contracts_doc_approximate_range_w_m2": {
+      "min": -3.16,
+      "max": -3.12
+    },
+    "rederived_from_pinned_json_native_wrapper_range_w_m2": {
+      "min": -3.1493278362734145,
+      "max": -3.109399750013438
+    },
+    "status": "RECONCILE_APPROXIMATE_TEXT_WITH_PINNED_CASE_ARITHMETIC",
+    "note": "The current doc range does not exactly bracket the five arithmetic values from the pinned JSON. Preserve both; this derived artifact does not infer which earlier rounding/subset explains the text."
+  },
+  "caveats": [
+    "RRTMG 2600 and pinned RRTMGP 2680 cm-1 shared edge differ; approximate ordered-band correspondence",
+    "The swapped-optics outputs use the RRTMGP reference solver and its gas optics; hybrid residuals versus actual RRTMG4 are not pure RTE-only differences.",
+    "Held-fixed exactness applies within each RRTMGP baseline/optics-swap pair to the listed gas, mask, clear-sky flux/heating, and clear direct fields.",
+    "Actual 37-minus-4 rows are native-radius mode 1; the historical same-state report's approximately +54 W/m2 control values used the generic RRTMG4 radius path. These are different counterfactuals and are retained separately.",
+    "No source-version explanation for the separate published-RFMIP SW tolerance failure is addressed by this bridge."
+  ],
+  "cases": [
+    {
+      "capture": "sw_000002.input",
+      "actual_wrf_radius_mode": 1,
+      "actual_37_minus_4_surface_down_w_m2": 61.86798095703119,
+      "actual_37_w_m2": 364.5632934570312,
+      "actual_4_w_m2": 302.6953125,
+      "rrtmgp_baseline_w_m2": 364.56329523856397,
+      "held_fixed_exact_zero_max_differences": {
+        "native_wrapper": {
+          "GAS_TAU": 0.0,
+          "GAS_SSA": 0.0,
+          "GAS_G": 0.0,
+          "MASK": 0.0,
+          "UPC": 0.0,
+          "DNC": 0.0,
+          "HRC": 0.0,
+          "DIRECTC": 0.0
+        },
+        "native_physical_fu": {
+          "GAS_TAU": 0.0,
+          "GAS_SSA": 0.0,
+          "GAS_G": 0.0,
+          "MASK": 0.0,
+          "UPC": 0.0,
+          "DNC": 0.0,
+          "HRC": 0.0,
+          "DIRECTC": 0.0
+        },
+        "generic_rrtmg": {
+          "GAS_TAU": 0.0,
+          "GAS_SSA": 0.0,
+          "GAS_G": 0.0,
+          "MASK": 0.0,
+          "UPC": 0.0,
+          "DNC": 0.0,
+          "HRC": 0.0,
+          "DIRECTC": 0.0
+        }
+      },
+      "variants": {
+        "native_wrapper": {
+          "rrtmgp_optics_swap_delta_from_baseline_w_m2": -65.01731057483738,
+          "hybrid_rrtmgp_with_swapped_optics_minus_actual_rrtmg4_w_m2": -3.1493278362734145,
+          "swapped_case_surface_down_w_m2": 299.5459846637266
+        },
+        "native_physical_fu": {
+          "rrtmgp_optics_swap_delta_from_baseline_w_m2": -59.61438530675588,
+          "hybrid_rrtmgp_with_swapped_optics_minus_actual_rrtmg4_w_m2": 2.253597431808089,
+          "swapped_case_surface_down_w_m2": 304.9489099318081
+        },
+        "generic_rrtmg": {
+          "rrtmgp_optics_swap_delta_from_baseline_w_m2": -57.324078663966134,
+          "hybrid_rrtmgp_with_swapped_optics_minus_actual_rrtmg4_w_m2": 4.543904074597833,
+          "swapped_case_surface_down_w_m2": 307.23921657459783
+        }
+      }
+    },
+    {
+      "capture": "sw_000003.input",
+      "actual_wrf_radius_mode": 1,
+      "actual_37_minus_4_surface_down_w_m2": 61.875244140625,
+      "actual_37_w_m2": 364.2010192871094,
+      "actual_4_w_m2": 302.3257751464844,
+      "rrtmgp_baseline_w_m2": 364.20101114100237,
+      "held_fixed_exact_zero_max_differences": {
+        "native_wrapper": {
+          "GAS_TAU": 0.0,
+          "GAS_SSA": 0.0,
+          "GAS_G": 0.0,
+          "MASK": 0.0,
+          "UPC": 0.0,
+          "DNC": 0.0,
+          "HRC": 0.0,
+          "DIRECTC": 0.0
+        },
+        "native_physical_fu": {
+          "GAS_TAU": 0.0,
+          "GAS_SSA": 0.0,
+          "GAS_G": 0.0,
+          "MASK": 0.0,
+          "UPC": 0.0,
+          "DNC": 0.0,
+          "HRC": 0.0,
+          "DIRECTC": 0.0
+        },
+        "generic_rrtmg": {
+          "GAS_TAU": 0.0,
+          "GAS_SSA": 0.0,
+          "GAS_G": 0.0,
+          "MASK": 0.0,
+          "UPC": 0.0,
+          "DNC": 0.0,
+          "HRC": 0.0,
+          "DIRECTC": 0.0
+        }
+      },
+      "variants": {
+        "native_wrapper": {
+          "rrtmgp_optics_swap_delta_from_baseline_w_m2": -65.01509866518376,
+          "hybrid_rrtmgp_with_swapped_optics_minus_actual_rrtmg4_w_m2": -3.1398626706657637,
+          "swapped_case_surface_down_w_m2": 299.1859124758186
+        },
+        "native_physical_fu": {
+          "rrtmgp_optics_swap_delta_from_baseline_w_m2": -59.65151821144843,
+          "hybrid_rrtmgp_with_swapped_optics_minus_actual_rrtmg4_w_m2": 2.22371778306956,
+          "swapped_case_surface_down_w_m2": 304.54949292955394
+        },
+        "generic_rrtmg": {
+          "rrtmgp_optics_swap_delta_from_baseline_w_m2": -58.06325909167492,
+          "hybrid_rrtmgp_with_swapped_optics_minus_actual_rrtmg4_w_m2": 3.811976902843071,
+          "swapped_case_surface_down_w_m2": 306.13775204932745
+        }
+      }
+    },
+    {
+      "capture": "sw_000004.input",
+      "actual_wrf_radius_mode": 1,
+      "actual_37_minus_4_surface_down_w_m2": 61.858917236328125,
+      "actual_37_w_m2": 364.6515197753906,
+      "actual_4_w_m2": 302.7926025390625,
+      "rrtmgp_baseline_w_m2": 364.6515333578161,
+      "held_fixed_exact_zero_max_differences": {
+        "native_wrapper": {
+          "GAS_TAU": 0.0,
+          "GAS_SSA": 0.0,
+          "GAS_G": 0.0,
+          "MASK": 0.0,
+          "UPC": 0.0,
+          "DNC": 0.0,
+          "HRC": 0.0,
+          "DIRECTC": 0.0
+        },
+        "native_physical_fu": {
+          "GAS_TAU": 0.0,
+          "GAS_SSA": 0.0,
+          "GAS_G": 0.0,
+          "MASK": 0.0,
+          "UPC": 0.0,
+          "DNC": 0.0,
+          "HRC": 0.0,
+          "DIRECTC": 0.0
+        },
+        "generic_rrtmg": {
+          "GAS_TAU": 0.0,
+          "GAS_SSA": 0.0,
+          "GAS_G": 0.0,
+          "MASK": 0.0,
+          "UPC": 0.0,
+          "DNC": 0.0,
+          "HRC": 0.0,
+          "DIRECTC": 0.0
+        }
+      },
+      "variants": {
+        "native_wrapper": {
+          "rrtmgp_optics_swap_delta_from_baseline_w_m2": -64.99783745843104,
+          "hybrid_rrtmgp_with_swapped_optics_minus_actual_rrtmg4_w_m2": -3.1389066396774297,
+          "swapped_case_surface_down_w_m2": 299.65369589938507
+        },
+        "native_physical_fu": {
+          "rrtmgp_optics_swap_delta_from_baseline_w_m2": -59.612182504992234,
+          "hybrid_rrtmgp_with_swapped_optics_minus_actual_rrtmg4_w_m2": 2.2467483137613726,
+          "swapped_case_surface_down_w_m2": 305.0393508528239
+        },
+        "generic_rrtmg": {
+          "rrtmgp_optics_swap_delta_from_baseline_w_m2": -57.53425440623789,
+          "hybrid_rrtmgp_with_swapped_optics_minus_actual_rrtmg4_w_m2": 4.324676412515714,
+          "swapped_case_surface_down_w_m2": 307.1172789515782
+        }
+      }
+    },
+    {
+      "capture": "sw_000005.input",
+      "actual_wrf_radius_mode": 1,
+      "actual_37_minus_4_surface_down_w_m2": 61.87881469726568,
+      "actual_37_w_m2": 364.9128112792969,
+      "actual_4_w_m2": 303.0339965820312,
+      "rrtmgp_baseline_w_m2": 364.9128169186941,
+      "held_fixed_exact_zero_max_differences": {
+        "native_wrapper": {
+          "GAS_TAU": 0.0,
+          "GAS_SSA": 0.0,
+          "GAS_G": 0.0,
+          "MASK": 0.0,
+          "UPC": 0.0,
+          "DNC": 0.0,
+          "HRC": 0.0,
+          "DIRECTC": 0.0
+        },
+        "native_physical_fu": {
+          "GAS_TAU": 0.0,
+          "GAS_SSA": 0.0,
+          "GAS_G": 0.0,
+          "MASK": 0.0,
+          "UPC": 0.0,
+          "DNC": 0.0,
+          "HRC": 0.0,
+          "DIRECTC": 0.0
+        },
+        "generic_rrtmg": {
+          "GAS_TAU": 0.0,
+          "GAS_SSA": 0.0,
+          "GAS_G": 0.0,
+          "MASK": 0.0,
+          "UPC": 0.0,
+          "DNC": 0.0,
+          "HRC": 0.0,
+          "DIRECTC": 0.0
+        }
+      },
+      "variants": {
+        "native_wrapper": {
+          "rrtmgp_optics_swap_delta_from_baseline_w_m2": -65.00144054130402,
+          "hybrid_rrtmgp_with_swapped_optics_minus_actual_rrtmg4_w_m2": -3.122620204641123,
+          "swapped_case_surface_down_w_m2": 299.91137637739007
+        },
+        "native_physical_fu": {
+          "rrtmgp_optics_swap_delta_from_baseline_w_m2": -59.61892824137027,
+          "hybrid_rrtmgp_with_swapped_optics_minus_actual_rrtmg4_w_m2": 2.259892095292628,
+          "swapped_case_surface_down_w_m2": 305.2938886773238
+        },
+        "generic_rrtmg": {
+          "rrtmgp_optics_swap_delta_from_baseline_w_m2": -57.553505258195855,
+          "hybrid_rrtmgp_with_swapped_optics_minus_actual_rrtmg4_w_m2": 4.325315078467042,
+          "swapped_case_surface_down_w_m2": 307.35931166049824
+        }
+      }
+    },
+    {
+      "capture": "sw_000006.input",
+      "actual_wrf_radius_mode": 1,
+      "actual_37_minus_4_surface_down_w_m2": 61.87185668945318,
+      "actual_37_w_m2": 364.9955444335938,
+      "actual_4_w_m2": 303.1236877441406,
+      "rrtmgp_baseline_w_m2": 364.9955458741287,
+      "held_fixed_exact_zero_max_differences": {
+        "native_wrapper": {
+          "GAS_TAU": 0.0,
+          "GAS_SSA": 0.0,
+          "GAS_G": 0.0,
+          "MASK": 0.0,
+          "UPC": 0.0,
+          "DNC": 0.0,
+          "HRC": 0.0,
+          "DIRECTC": 0.0
+        },
+        "native_physical_fu": {
+          "GAS_TAU": 0.0,
+          "GAS_SSA": 0.0,
+          "GAS_G": 0.0,
+          "MASK": 0.0,
+          "UPC": 0.0,
+          "DNC": 0.0,
+          "HRC": 0.0,
+          "DIRECTC": 0.0
+        },
+        "generic_rrtmg": {
+          "GAS_TAU": 0.0,
+          "GAS_SSA": 0.0,
+          "GAS_G": 0.0,
+          "MASK": 0.0,
+          "UPC": 0.0,
+          "DNC": 0.0,
+          "HRC": 0.0,
+          "DIRECTC": 0.0
+        }
+      },
+      "variants": {
+        "native_wrapper": {
+          "rrtmgp_optics_swap_delta_from_baseline_w_m2": -64.98125788000152,
+          "hybrid_rrtmgp_with_swapped_optics_minus_actual_rrtmg4_w_m2": -3.109399750013438,
+          "swapped_case_surface_down_w_m2": 300.0142879941272
+        },
+        "native_physical_fu": {
+          "rrtmgp_optics_swap_delta_from_baseline_w_m2": -59.60483851725911,
+          "hybrid_rrtmgp_with_swapped_optics_minus_actual_rrtmg4_w_m2": 2.267019612728973,
+          "swapped_case_surface_down_w_m2": 305.3907073568696
+        },
+        "generic_rrtmg": {
+          "rrtmgp_optics_swap_delta_from_baseline_w_m2": -57.370054010293586,
+          "hybrid_rrtmgp_with_swapped_optics_minus_actual_rrtmg4_w_m2": 4.501804119694498,
+          "swapped_case_surface_down_w_m2": 307.6254918638351
+        }
+      }
+    }
+  ]
+}

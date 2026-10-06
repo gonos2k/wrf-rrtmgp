@@ -197,6 +197,15 @@
 !-------------------------------------------------------------------------------
 contains
 !-------------------------------------------------------------------------------
+! Expose native process activation scales for an explicit radiation-input
+! contract. These are not floating-point error bounds. The radiation host may
+! use them to bound negative-only corrections; no positive mass is discarded.
+! Order: cloud liquid, cloud ice, rain, snow, graupel, hail (kg/kg).
+pure function udm_radiation_negative_limits() result(limits)
+  real :: limits(6)
+  limits = [qcmin,qcmin,qrmin,qrmin,qrmin,qrmin]
+end function udm_radiation_negative_limits
+!-------------------------------------------------------------------------------
 !
 subroutine udm(th, q, qc, qr, qi, qs, qg, qh                                  &
                  ,nn, nc, nr                                                   &
@@ -219,7 +228,8 @@ subroutine udm(th, q, qc, qr, qi, qs, qg, qh                                  &
                  ,ids,ide, jds,jde, kds,kde                                    &
                  ,ims,ime, jms,jme, kms,kme                                    &
                  ,its,ite, jts,jte, kts,kte                                    &
-                 ,udm_cldfra, udm_cf_step                                      &
+                 ,udm_cldfra, udm_cf_step, udm_cf_top                           &
+                 ,ccn_preinitialized                                          &
                                                                                )
 !-------------------------------------------------------------------------------
   implicit none
@@ -231,6 +241,8 @@ subroutine udm(th, q, qc, qr, qi, qs, qg, qh                                  &
                                       its,ite, jts,jte, kts,kte
   real, dimension(ims:ime,kms:kme,jms:jme), optional, intent(inout) :: udm_cldfra
   integer, dimension(ims:ime,jms:jme), optional, intent(inout) :: udm_cf_step
+  integer, dimension(ims:ime,jms:jme), optional, intent(inout) :: udm_cf_top
+  logical, optional, intent(in) :: ccn_preinitialized
   real,              intent(in   ) :: delt, g, ccn0, rd, rv, t0c,     &
                                       den0, cpd, cpv, ep1, ep2,       &
                                       qmin, xls, xlv0, xlf0, cliq,    &
@@ -290,6 +302,7 @@ subroutine udm(th, q, qc, qr, qi, qs, qg, qh                                  &
   real, dimension( its:ite , kts:kte, 2 ) ::   qci
   real, dimension( its:ite , kts:kte, 4 ) ::   qrs, ncr
   integer                                 ::   i,j,k
+  logical :: initialize_ccn
 !
 ! for reflectivlity
 !
@@ -306,7 +319,13 @@ subroutine udm(th, q, qc, qr, qi, qs, qg, qh                                  &
 !
   if (present(udm_cldfra)) udm_cldfra(its:ite,kts:kte,jts:jte)=-1.
   if (present(udm_cf_step)) udm_cf_step(its:ite,jts:jte)=-1
-      if (itimestep==1) then
+  if (present(udm_cf_top)) udm_cf_top(its:ite,jts:jte)=-1
+! A caller that initialized the full memory domain before parallel tiles must
+! not let this tile reset another tile's already advanced CCN state.
+! Omitting the argument preserves the legacy call and its timestep rule.
+  initialize_ccn = .true.
+  if (present(ccn_preinitialized)) initialize_ccn = .not. ccn_preinitialized
+      if (itimestep==1 .and. initialize_ccn) then
         do j = jms,jme
           do k = kms,kme
             do i = ims,ime
@@ -345,6 +364,28 @@ subroutine udm(th, q, qc, qr, qi, qs, qg, qh                                  &
 !
          if (present(udm_cldfra) .and. present(udm_cf_step) .and. &
              has_reqc==1 .and. has_reqi==1 .and. has_reqs==1) then
+         if (present(udm_cf_top)) then
+         call udm2d(t, q(ims,kms,j), qci, qrs                     &
+                    ,ncr                                           &
+                    ,den(ims,kms,j)                                &
+                    ,p(ims,kms,j), delz(ims,kms,j)                 &
+                    ,delt,g, cpd, cpv, rd, rv, t0c                 &
+                    ,ep1, ep2, qmin                                &
+                    ,xls, xlv0, xlf0, den0, denr                   &
+                    ,cliq,cice,psat                                &
+                    ,j                                             &
+                    ,slimsk(its,j)                                 &
+                    ,rain(ims,j),rainncv(ims,j)                    &
+                    ,sr(ims,j)                                     &
+                    ,ids,ide, jds,jde, kds,kde                     &
+                    ,ims,ime, jms,jme, kms,kme                     &
+                    ,its,ite, jts,jte, kts,kte                     &
+                    ,snow(ims,j),snowncv(ims,j)                    &
+                    ,graupel(ims,j),graupelncv(ims,j)              &
+                    ,hail(ims,j),hailncv(ims,j),itimestep           &
+                    ,udm_cldfra(:,:,j),udm_cf_step(:,j),udm_cf_top(:,j) &
+                                                                   )
+         else
          call udm2d(t, q(ims,kms,j), qci, qrs                     &
                     ,ncr                                           &
                     ,den(ims,kms,j)                                &
@@ -365,6 +406,7 @@ subroutine udm(th, q, qc, qr, qi, qs, qg, qh                                  &
                     ,hail(ims,j),hailncv(ims,j),itimestep           &
                     ,udm_cldfra(:,:,j),udm_cf_step(:,j)             &
                                                                    )
+         endif
          else
          call udm2d(t, q(ims,kms,j), qci, qrs                     &
                     ,ncr                                           &
@@ -377,7 +419,7 @@ subroutine udm(th, q, qc, qr, qi, qs, qg, qh                                  &
                     ,j                                             &
                     ,slimsk(its,j)                                 &
                     ,rain(ims,j),rainncv(ims,j)                    &
-                    ,sr                                            &
+                    ,sr(ims,j)                                     &
                     ,ids,ide, jds,jde, kds,kde                     &
                     ,ims,ime, jms,jme, kms,kme                     &
                     ,its,ite, jts,jte, kts,kte                     &
@@ -473,7 +515,7 @@ subroutine udm2d(t1, q1                                          &
                    ,snow,snowncv                                  &
                    ,graupel,graupelncv                            &
                    ,hail,hailncv,itimestep                       &
-                   ,udm_cldfra,udm_cf_step                       &
+                   ,udm_cldfra,udm_cf_step,udm_cf_top            &
                                                                   )
 !
 !-------------------------------------------------------------------------------
@@ -580,6 +622,7 @@ subroutine udm2d(t1, q1                                          &
    integer, intent(in) :: itimestep
    real, dimension(ims:ime,kms:kme), optional, intent(inout) :: udm_cldfra
    integer, dimension(ims:ime), optional, intent(inout) :: udm_cf_step
+   integer, dimension(ims:ime), optional, intent(inout) :: udm_cf_top
    real                        , intent(in   ) :: delt
    real                        , intent(in   ) :: g, cpd, cpv, t0c,&
                                                              rd, rv, ep1, ep2
@@ -883,6 +926,7 @@ subroutine udm2d(t1, q1                                          &
 !
  if (present(udm_cldfra)) udm_cldfra(its:ite,kts:kte)=-1.
  if (present(udm_cf_step)) udm_cf_step(its:ite)=-1
+ if (present(udm_cf_top)) udm_cf_top(its:ite)=-1
  inner_loop : do loop = 1, loops ! sub-stepping with cld timestep = 180s
 !
 !-------------------------------------------------------------------------------
@@ -1034,6 +1078,7 @@ subroutine udm2d(t1, q1                                          &
         dxmeter(i),cldf(:),ktop)
    if (present(udm_cldfra)) udm_cldfra(i,kts:kte)=cldf(:)
    if (present(udm_cf_step)) udm_cf_step(i)=itimestep
+   if (present(udm_cf_top)) udm_cf_top(i)=ktop
 !
    do k = ktop, kts, -1
 ! change condensate variables to in-cloud variables
@@ -3341,7 +3386,9 @@ subroutine cldf_diag(idim, kdim, t, p, q, qc, qi, dx,cldf, ktop)
    real, dimension(idim, kdim), intent(in   ) :: t, p, q
    real, dimension(idim, kdim), intent(in   ) :: qc
    real, dimension(idim, kdim), intent(in   ) :: qi
-   real, dimension(idim, kdim), intent(out  ) :: cldf
+   ! Only levels 1:ktop are diagnosed; preserve the caller's initialized
+   ! working cloud fraction above ktop for later precipitation calculations.
+   real, dimension(idim, kdim), intent(inout) :: cldf
 ! local
    integer :: i, k, kk
    real, parameter :: cldmin = 50., cldmax = 100.

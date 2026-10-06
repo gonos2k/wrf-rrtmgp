@@ -14,6 +14,7 @@ program test_udm_native_radii
   real :: re_cloud(nx,nz,1), re_ice(nx,nz,1), re_snow(nx,nz,1)
   real :: used_cf(nx,nz,1)
   integer :: used_cf_step(nx,1)
+  integer :: used_cf_top(nx,1)
   real :: rho_case(2), radii(3,2,3), direct_radii(3,2), number_radii(2)
   real :: rt(1), rqc(1), rqi(1), rqs(1), rrho(1), rnc(1), rcloud(1), rice(1), rsnow(1)
   integer :: c,k
@@ -36,12 +37,12 @@ program test_udm_native_radii
       q(1,k,1)=0.001
       q(2,k,1)=0.001
     end do
-    used_cf=-1.; used_cf_step=-1
+    used_cf=-1.; used_cf_step=-1; used_cf_top=-1
     ! The optional output spans a larger memory tile than this call's active
     ! tile. Preserve a valid prior record outside the active bounds in one
     ! density case, and verify the sentinel is likewise preserved in the other.
     if (c==1) then
-      used_cf(3,:,1)=0.25; used_cf_step(3,1)=17
+      used_cf(3,:,1)=0.25; used_cf_step(3,1)=17; used_cf_top(3,1)=2
     end if
     re_cloud=-99.; re_ice=-99.; re_snow=-99.
     qc(1,2,1)=1.e-3; qc(2,2,1)=1.e-3; nc(1,2,1)=1.e8; nc(2,2,1)=1.e8
@@ -56,7 +57,7 @@ program test_udm_native_radii
          graupel=graupel,graupelncv=graupelncv,itimestep=1,has_reqc=1,has_reqi=1,has_reqs=1, &
          re_cloud=re_cloud,re_ice=re_ice,re_snow=re_snow,ids=1,ide=3,jds=1,jde=1,kds=1,kde=nz, &
          ims=1,ime=3,jms=1,jme=1,kms=1,kme=nz,its=1,ite=2,jts=1,jte=1,kts=1,kte=nz, &
-         udm_cldfra=used_cf,udm_cf_step=used_cf_step)
+         udm_cldfra=used_cf,udm_cf_step=used_cf_step,udm_cf_top=used_cf_top)
     radii(:,c,1)=re_cloud(1,:,1)
     radii(:,c,2)=re_ice(1,:,1)
     radii(:,c,3)=re_snow(1,:,1)
@@ -66,11 +67,12 @@ program test_udm_native_radii
         any(used_cf(1:2,:,1)>1.)) &
          error stop 'actual UDM cldf_diag output outside [0,1]'
     if (any(used_cf_step(1:2,1)/=1)) error stop 'UDM cldf_diag source step not recorded'
+    if (any(used_cf_top(1:2,1)/=2)) error stop 'UDM cldf_diag exact native top not recorded'
     if (c==1) then
-      if (any(used_cf(3,:,1)/=0.25) .or. used_cf_step(3,1)/=17) &
+      if (any(used_cf(3,:,1)/=0.25) .or. used_cf_step(3,1)/=17 .or. used_cf_top(3,1)/=2) &
            error stop 'out-of-tile prior UDM diagnostic must be preserved'
     else
-      if (any(used_cf(3,:,1)/=-1.) .or. used_cf_step(3,1)/=-1) &
+      if (any(used_cf(3,:,1)/=-1.) .or. used_cf_step(3,1)/=-1 .or. used_cf_top(3,1)/=-1) &
            error stop 'out-of-tile sentinel must be preserved'
     end if
     write(*,'(A,I0,9(1X,ES12.4))') 'CASE ',c,re_cloud(1,2,1),re_ice(1,2,1),re_snow(1,2,1), &
@@ -117,14 +119,34 @@ program test_udm_native_radii
        graupel=graupel,graupelncv=graupelncv,itimestep=2,has_reqc=1,has_reqi=1,has_reqs=1, &
        re_cloud=re_cloud,re_ice=re_ice,re_snow=re_snow,ids=1,ide=3,jds=1,jde=1,kds=1,kde=nz, &
        ims=1,ime=3,jms=1,jme=1,kms=1,kme=nz,its=1,ite=2,jts=1,jte=1,kts=1,kte=nz, &
-       udm_cldfra=used_cf,udm_cf_step=used_cf_step)
+       udm_cldfra=used_cf,udm_cf_step=used_cf_step,udm_cf_top=used_cf_top)
   if (any(used_cf(1:2,:,1)/=-1.) .or. any(used_cf_step(1:2,1)/=-1)) &
        error stop 'clear column skipped by udm2d must retain invalid sentinel'
-  if (any(used_cf(3,:,1)/=-1.) .or. used_cf_step(3,1)/=-1) &
+  if (any(used_cf_top(1:2,1)/=-1)) error stop 'clear diagnostic top must retain not-called sentinel'
+  if (any(used_cf(3,:,1)/=-1.) .or. used_cf_step(3,1)/=-1 .or. used_cf_top(3,1)/=-1) &
        error stop 'skipped tile column must retain invalid sentinel'
+
+  ! Snow-only work executes UDM2D but has no cloud/ice top, so its
+  ! cldf_diag call has an exact empty extent (0), distinct from not-called (-1).
+  qr=0.; qs=0.; qs(1,2,1)=1.e-4; nr=1.e6
+  used_cf=-1.; used_cf_step=-1; used_cf_top=-1
+  call udm(th=th,q=q,qc=qc,qr=qr,qi=qi,qs=qs,qg=qg,qh=qh,nn=nn,nc=nc,nr=nr, &
+       den=den,pii=pii,p=p,delz=delz,delt=1.e-3,g=9.81,cpd=1004.,cpv=1850.,ccn0=1.e8, &
+       rd=287.,rv=461.,t0c=273.15,ep1=0.608,ep2=0.622,qmin=1.e-12,xls=2.5e6, &
+       xlv0=2.5e6,xlf0=3.34e5,den0=1.,denr=1000.,cliq=4186.,cice=2106.,psat=610., &
+       xland=xland,xice=xice,rain=rain,rainncv=rainncv,snow=snow,snowncv=snowncv, &
+       hail=hail,hailncv=hailncv,sr=sr,refl_10cm=refl,diagflag=.false.,do_radar_ref=0, &
+       graupel=graupel,graupelncv=graupelncv,itimestep=3,has_reqc=1,has_reqi=1,has_reqs=1, &
+       re_cloud=re_cloud,re_ice=re_ice,re_snow=re_snow,ids=1,ide=3,jds=1,jde=1,kds=1,kde=nz, &
+       ims=1,ime=3,jms=1,jme=1,kms=1,kme=nz,its=1,ite=2,jts=1,jte=1,kts=1,kte=nz, &
+       udm_cldfra=used_cf,udm_cf_step=used_cf_step,udm_cf_top=used_cf_top)
+  if (used_cf_top(1,1)/=0 .or. used_cf_step(1,1)/=3) &
+       error stop 'snow-only UDM call must record empty CF extent and call step'
+  if (used_cf_top(2,1)/=-1 .or. used_cf_step(2,1)/=-1) &
+       error stop 'clear column beside precip-only column must remain not-called'
   write(*,'(A,6(1X,ES14.6))') 'UDM_NATIVE_RADII',radii(2,1,1),radii(2,2,1), &
        radii(2,1,2),radii(2,2,2),radii(2,1,3),radii(2,2,3)
   write(*,'(A,6(1X,ES14.6))') 'UDM_DIRECT_DENSITY_RESPONSE',direct_radii(:,1),direct_radii(:,2)
   write(*,'(A,2(1X,ES14.6))') 'UDM_DIRECT_NUMBER_RESPONSE',number_radii
-  write(*,'(A)') 'UDM outer-call native-density test passed'
+  write(*,'(A)') 'UDM outer-call native-density and CF extent test passed'
 end program test_udm_native_radii

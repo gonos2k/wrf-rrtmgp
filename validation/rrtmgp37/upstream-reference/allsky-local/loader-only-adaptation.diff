@@ -1,0 +1,32 @@
+--- /NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp/build/independent-rfmip-local-pr13/source/examples/all-sky/mo_load_cloud_coefficients.F90
++++ /NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp/build/independent-rfmip-local-pr13/allsky-units/source/examples/all-sky/mo_load_cloud_coefficients.F90
+@@ -60,8 +60,8 @@
+     ! Read LUT constants
+     radliq_lwr = read_field(ncid, 'radliq_lwr')
+     radliq_upr = read_field(ncid, 'radliq_upr')
+-    radice_lwr = read_field(ncid, 'radice_lwr')
+-    radice_upr = read_field(ncid, 'radice_upr')
++    radice_lwr = read_field(ncid, 'diamice_lwr')
++    radice_upr = read_field(ncid, 'diamice_upr')
+ 
+     ! Allocate cloud property lookup table input arrays
+     allocate(lut_extliq(nsize_liq, nband), &
+@@ -72,12 +72,12 @@
+              lut_asyice(nsize_ice, nband, nrghice))
+ 
+     ! Read LUT coefficients
+-    lut_extliq = read_field(ncid, 'lut_extliq',  nsize_liq, nband)
+-    lut_ssaliq = read_field(ncid, 'lut_ssaliq',  nsize_liq, nband)
+-    lut_asyliq = read_field(ncid, 'lut_asyliq',  nsize_liq, nband)
+-    lut_extice = read_field(ncid, 'lut_extice',  nsize_ice, nband, nrghice)
+-    lut_ssaice = read_field(ncid, 'lut_ssaice',  nsize_ice, nband, nrghice)
+-    lut_asyice = read_field(ncid, 'lut_asyice',  nsize_ice, nband, nrghice)
++    lut_extliq = read_field(ncid, 'extliq',  nsize_liq, nband)
++    lut_ssaliq = read_field(ncid, 'ssaliq',  nsize_liq, nband)
++    lut_asyliq = read_field(ncid, 'asyliq',  nsize_liq, nband)
++    lut_extice = read_field(ncid, 'extice',  nsize_ice, nband, nrghice)
++    lut_ssaice = read_field(ncid, 'ssaice',  nsize_ice, nband, nrghice)
++    lut_asyice = read_field(ncid, 'asyice',  nsize_ice, nband, nrghice)
+ 
+     ncid = nf90_close(ncid)
+     call stop_on_err(cloud_spec%load(band_lims_wvn,                      &

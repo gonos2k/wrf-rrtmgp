@@ -1,0 +1,40 @@
+{
+  "capture_directory": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-sw-direct-work/build/udm-sw-direct-scm-final2/frozen-mixed-call1/capture",
+  "checks": [
+    "trace NATIVE_DRY_LAYER_MASS_KG_M2 bitwise-equals raw DRY_LAYER_MASS_KG_M2",
+    "native GAS_COL_DRY equals Avogadro/(M_dry*10000) times dry mass",
+    "extended GAS_COL_DRY equals the pinned pressure/H2O helper calculation"
+  ],
+  "phases": [
+    {
+      "gas_col_dry_max_abs_error": 67108864.0,
+      "gas_col_dry_relative_max_error": 2.1239216917046125e-16,
+      "input_sha256": "2ab0a57aee15e6f5cbc1ed48d053bbf55a937424e1e83a4ddf3cc038da18d681",
+      "magic": "RRTMGP_REPLAY_V8",
+      "missing_v8_cfc_rejected": true,
+      "native_layers": 59,
+      "native_mass_exact_raw_match": true,
+      "native_mass_sha256": "6482aaae8e3d0b22c1a92be4607f8c2af01407f224d9e223656da3b1ce3c474a",
+      "nc": 1,
+      "nl": 103,
+      "phase": "LW",
+      "result_sha256": "2eafcef1691a55d1b85f46167c06e720120cc701c6bd1a96ed4ce6e07e3835cb"
+    },
+    {
+      "gas_col_dry_max_abs_error": 67108864.0,
+      "gas_col_dry_relative_max_error": 2.1239216917046125e-16,
+      "input_sha256": "e22b7588f0a97889738c70c83de9c4e2aa23ad5f4fbf10daaf6ab85bd16396e7",
+      "magic": "RRTMGP_REPLAY_V9",
+      "missing_v8_cfc_rejected": null,
+      "native_layers": 59,
+      "native_mass_exact_raw_match": true,
+      "native_mass_sha256": "6482aaae8e3d0b22c1a92be4607f8c2af01407f224d9e223656da3b1ce3c474a",
+      "nc": 1,
+      "nl": 60,
+      "phase": "SW",
+      "result_sha256": "8c9bb8318d956200143c1b7d0c2f4cf014ccb249dd2a60e3b4dd78e14348ec27"
+    }
+  ],
+  "scope": "actual WRF capture native-mass and full gas-column formula validation",
+  "status": "PASS"
+}

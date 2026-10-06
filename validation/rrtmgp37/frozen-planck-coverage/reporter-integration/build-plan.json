@@ -1,0 +1,134 @@
+{
+  "schema": "udm37-pr65-copied-incremental-build-plan-v1",
+  "status": "PREPARED_NOT_EXECUTED",
+  "purpose": "Fresh isolated copied incremental em_real build to validate the PR65 OpenMP fatal reporter at WRF integration level.",
+  "source": {
+    "baseline_build": "build/udm37-pr60-active-cu-current-build-v1",
+    "baseline_source_tree": "build/udm37-pr60-active-cu-current-build-v1/source-v3",
+    "baseline_source_manifest": {
+      "path": "build/udm37-pr60-active-cu-current-build-v1/source-manifest-v3.json",
+      "sha256": "7bd66dd4fe6a94956fb0188b464281d17d182b8567c49b3992b68dffeff326c3"
+    },
+    "baseline_source_freeze": {
+      "path": "build/udm37-pr60-active-cu-current-build-v1/source-freeze-v3.json",
+      "sha256": "cd9c954908b614a437e1fe8dd5365c379209a24d112717e3997de6e1a39eec53"
+    },
+    "baseline_build_result": {
+      "path": "build/udm37-pr60-active-cu-current-build-v1/build-result-v1.json",
+      "sha256": "b3b5ee71c31e8c9674aa804faeeee9b50c5b68af0ac6e7440e1568c1f283f0f6"
+    },
+    "baseline_executable": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-pr60-active-cu-current-build-v1/source-v3/WRF/main/wrf.exe",
+      "sha256": "6378764a2119e3475a4ec8b80cce20f5434739c428dc7fb401c899bcdeb309ed",
+      "size_bytes": 59162832
+    },
+    "pr65_checkout": "build/udm37-matthew-48h-pr-work",
+    "pr65_head": "d3088f1ea0a532f286ea3d42415ecba5d4411aea",
+    "production_overlay": [
+      {
+        "path": "WRF/phys/module_ra_rrtmgp.F",
+        "baseline_sha256": "719504c7221aef989c52090a347c6f6c5fb3f85828cf4e741309790a8314a886",
+        "overlay_sha256": "fcf86164b0fa704fec6b49e0536ce6106e89f7a83687c2d60c291f5b05123721"
+      },
+      {
+        "path": "WRF/phys/module_ra_rrtmgp_input.F",
+        "baseline_sha256": "47dcd1fbe84ec2f5bc21598e05024f38b9f4a4a7decb51cb7e51f7e21d01357f",
+        "overlay_sha256": "c9bcb7dac958c47a34036414389233cf71ae824f70f4a23ffce0c4047b558eea"
+      },
+      {
+        "path": "WRF/phys/module_ra_rrtmg_lw.F",
+        "baseline_sha256": "83179d79a383947e0631ec19fc4f1d2d93c86add4c51a32cbd3ae4a5e07e1440",
+        "overlay_sha256": "a1f36ea81f9ecb26a9dbdd5ec99bf6f15bbad072bad59ca56e46f3001448ccaf"
+      },
+      {
+        "path": "WRF/phys/module_ra_rrtmg_sw.F",
+        "baseline_sha256": "711e16c6722c89d24ac83e019b62f372dca1fd85a3d7ad1382171ade2b2e479b",
+        "overlay_sha256": "0df9691c5ed479be29d50d7cf54fdd2f251e5ae8d1775f517ab2b89402c2a768"
+      }
+    ],
+    "source_comparison": {
+      "common_Wrf_F_sources": 955,
+      "changed_common_Wrf_F_sources": [
+        "WRF/phys/module_ra_rrtmg_lw.F",
+        "WRF/phys/module_ra_rrtmg_sw.F",
+        "WRF/phys/module_ra_rrtmgp.F",
+        "WRF/phys/module_ra_rrtmgp_input.F"
+      ],
+      "common_Wrf_F90_sources": 546,
+      "changed_common_Wrf_F90_sources": [],
+      "common_Wrf_f_sources": 267,
+      "changed_common_Wrf_f_sources": [],
+      "common_Wrf_f90_sources": 412,
+      "changed_common_Wrf_f90_sources": [
+        "WRF/test/rrtmgp/reference_column.f90"
+      ],
+      "note": "The single differing .f90 is a test reference outside the WRF physics build and is deliberately not overlaid. The build starts from the already-built PR60 snapshot and overlays only the four changed production .F files."
+    }
+  },
+  "build": {
+    "classification": "copied_incremental_build_not_pristine_clean_build",
+    "command": [
+      "csh",
+      "-f",
+      "./compile",
+      "-j",
+      "12",
+      "em_real"
+    ],
+    "cwd_suffix": "WRF",
+    "timeout_seconds": 1800,
+    "force_rebuild_remove_before_compile": [
+      "WRF/phys/module_ra_rrtmgp_input.o",
+      "WRF/phys/module_ra_rrtmgp_input.mod",
+      "WRF/phys/module_ra_rrtmgp.o",
+      "WRF/phys/module_ra_rrtmgp.mod",
+      "WRF/phys/module_ra_rrtmg_lw.o",
+      "WRF/phys/module_ra_rrtmg_sw.o"
+    ],
+    "environment_from": "baseline source-freeze-v3.json; TMPDIR changes only to the new isolated build's own tmp directory",
+    "config_sha256": "44f85b7fc9b6994cb3784567e69d310580740a021b5f1ab1efb0586f25cfcba2",
+    "shared_dependencies": {
+      "path": "build/udm37-ccn-tile-init-gnu-v1/shared-dependencies-before-v1.json",
+      "sha256": "e49061863c79e836747d21559950b90e2f6d40b798dbbc8d08895d1cf4a87290",
+      "entry_count": 1582
+    },
+    "outputs": [
+      "WRF/main/wrf.exe",
+      "WRF/main/real.exe"
+    ],
+    "required_build_evidence": [
+      "child PID/process group",
+      "exact command and controlled environment",
+      "stdout/stderr log",
+      "observed return code",
+      "SUCCESS COMPLETE WRF/REAL footer classification",
+      "before/after source and dependency pins",
+      "both executable hashes and ldd closures"
+    ],
+    "model_invocations": 0
+  },
+  "execution": {
+    "runner": "build/udm37-pr65-fatal-reporter-wrf-build-v1/incremental_build.py",
+    "default_action": "preflight-only; no copy, compile or model launch",
+    "authorization_required_for_copy_or_compile": "build/udm37-pr65-fatal-reporter-wrf-build-v1/root-authorization.json",
+    "planned_candidate_source": "build/udm37-pr65-fatal-reporter-wrf-build-v1/source-copy",
+    "planned_receipt": "build/udm37-pr65-fatal-reporter-wrf-build-v1/build-receipt.json",
+    "planned_log": "build/udm37-pr65-fatal-reporter-wrf-build-v1/build.log",
+    "authorization_schema": "udm37-pr65-wrf-build-authorization-v1; approved=true; exact plan_sha256 and runner_sha256 required",
+    "preflight_command": [
+      "python3",
+      "build/udm37-pr65-fatal-reporter-wrf-build-v1/incremental_build.py"
+    ],
+    "authorized_build_command": [
+      "python3",
+      "build/udm37-pr65-fatal-reporter-wrf-build-v1/incremental_build.py",
+      "--execute",
+      "--authorization",
+      "<reviewed-authorization.json>",
+      "--plan-sha256",
+      "<reviewed-plan-sha256>"
+    ],
+    "preflight_receipt": "build/udm37-pr65-fatal-reporter-wrf-build-v1/preflight-v1.json",
+    "source_manifest_candidate_sha256": "computed from baseline manifest plus exactly four pinned overlay records during preflight"
+  }
+}

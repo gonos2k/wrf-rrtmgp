@@ -1,0 +1,183 @@
+{
+  "schema": "CF0_MATERIAL_ANCHOR_FROZEN_TABLE_ADDENDUM_V1",
+  "status": "PASS_SCOPED_TABLE_IDENTITY_AND_QUERY_RANGE",
+  "supersedes_no_files": true,
+  "prior_input_review_sha256": "b78e00822d44b8f10f25ec1e67a4939594fbb077c183e85be42e12658704a2ec",
+  "runtime_table": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-alternate-jan2000-data/paired-forecast-v2/ra37/frozen-ice-psd-moments.nc",
+    "sha256": "8cb00850c3f885f5ec0306563c1ec0a55b512478a7395d626c1c99cebf280583",
+    "size_bytes": 58629
+  },
+  "table_bounds": {
+    "lambda_m_inv": [
+      300.0,
+      20000.0
+    ],
+    "temperature_K": [
+      180.0,
+      300.0
+    ]
+  },
+  "captures": [
+    {
+      "anchor": "winter_native_cu",
+      "phase": "LW",
+      "native_layers": 32,
+      "engine_layers": 45,
+      "table_hash_input": "8cb00850c3f885f5ec0306563c1ec0a55b512478a7395d626c1c99cebf280583",
+      "species": [
+        {
+          "path": "GWP",
+          "positive_layers": 12,
+          "lambda_min_max": [
+            20000.0,
+            20000.0
+          ],
+          "positive_layer_temperature_min_max": [
+            252.02755737304688,
+            265.99072265625
+          ],
+          "active_path_sum_g_m2": 2.576383901490964e-06
+        },
+        {
+          "path": "HWP",
+          "positive_layers": 9,
+          "lambda_min_max": [
+            20000.0,
+            20000.0
+          ],
+          "positive_layer_temperature_min_max": [
+            252.02755737304688,
+            265.99072265625
+          ],
+          "active_path_sum_g_m2": 2.0098973705915387e-08
+        }
+      ]
+    },
+    {
+      "anchor": "winter_native_cu",
+      "phase": "SW",
+      "native_layers": 32,
+      "engine_layers": 33,
+      "table_hash_input": "8cb00850c3f885f5ec0306563c1ec0a55b512478a7395d626c1c99cebf280583",
+      "species": [
+        {
+          "path": "GWP",
+          "positive_layers": 12,
+          "lambda_min_max": [
+            20000.0,
+            20000.0
+          ],
+          "positive_layer_temperature_min_max": [
+            252.02755737304688,
+            265.99072265625
+          ],
+          "active_path_sum_g_m2": 2.576383901490964e-06
+        },
+        {
+          "path": "HWP",
+          "positive_layers": 9,
+          "lambda_min_max": [
+            20000.0,
+            20000.0
+          ],
+          "positive_layer_temperature_min_max": [
+            252.02755737304688,
+            265.99072265625
+          ],
+          "active_path_sum_g_m2": 2.0098973705915387e-08
+        }
+      ]
+    },
+    {
+      "anchor": "material_cf0_snow_low_cloud",
+      "phase": "LW",
+      "native_layers": 39,
+      "engine_layers": 47,
+      "table_hash_input": "8cb00850c3f885f5ec0306563c1ec0a55b512478a7395d626c1c99cebf280583",
+      "species": [
+        {
+          "path": "GWP",
+          "positive_layers": 12,
+          "lambda_min_max": [
+            11572.365234375,
+            20000.0
+          ],
+          "positive_layer_temperature_min_max": [
+            213.14569091796875,
+            272.71600341796875
+          ],
+          "active_path_sum_g_m2": 0.3833532708267251
+        },
+        {
+          "path": "HWP",
+          "positive_layers": 12,
+          "lambda_min_max": [
+            15149.9658203125,
+            20000.0
+          ],
+          "positive_layer_temperature_min_max": [
+            200.9302215576172,
+            268.943115234375
+          ],
+          "active_path_sum_g_m2": 0.002243054274033916
+        }
+      ]
+    },
+    {
+      "anchor": "material_cf0_snow_low_cloud",
+      "phase": "SW",
+      "native_layers": 39,
+      "engine_layers": 40,
+      "table_hash_input": "8cb00850c3f885f5ec0306563c1ec0a55b512478a7395d626c1c99cebf280583",
+      "species": [
+        {
+          "path": "GWP",
+          "positive_layers": 12,
+          "lambda_min_max": [
+            11572.365234375,
+            20000.0
+          ],
+          "positive_layer_temperature_min_max": [
+            213.14569091796875,
+            272.71600341796875
+          ],
+          "active_path_sum_g_m2": 0.3833532708267251
+        },
+        {
+          "path": "HWP",
+          "positive_layers": 12,
+          "lambda_min_max": [
+            15149.9658203125,
+            20000.0
+          ],
+          "positive_layer_temperature_min_max": [
+            200.9302215576172,
+            268.943115234375
+          ],
+          "active_path_sum_g_m2": 0.002243054274033916
+        }
+      ]
+    }
+  ],
+  "source_basis": {
+    "reference_source": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/cf0-cu-src-v1/WRF/test/rrtmgp/reference_column.f90",
+      "sha256": "6e82effd7d25242656858a8242c7e6941fced6aec0ec4d906762ef3ccb1b4ff0",
+      "size_bytes": 87769
+    },
+    "frozen_query_source": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/cf0-cu-src-v1/WRF/phys/module_ra_rrtmgp_frozen.F",
+      "sha256": "dc468bf7e9e4f3883a8ad715dc4c25db4c1ff054637810fb178a02029edbed1d",
+      "size_bytes": 26288
+    },
+    "identity_lines": "327-361 and426-451",
+    "positive_path_query_lines": "SW194-205; LW257-272"
+  },
+  "errata": [
+    "Prior summary incorrectly suggested the new runtime must use expanded ebe table; all four unchanged captures explicitly require original8cb table. Fresh build donor ebe table remains build provenance and must not be confused with selected runtime environment. No input hash rewrite authorized.",
+    "Prior input review checked path/radius/header joins, not runtime table identity or active query range; this additive review supplies that missing check."
+  ],
+  "runtime_readiness": "PENDING_FROZEN_RUNNER_REVIEW",
+  "new_solver_build_WRF_calls": 0
+}

@@ -1,0 +1,670 @@
+{
+  "arms": {
+    "ra37": {
+      "WRF_RRTMGP_BATCH_SIZE": "32",
+      "directory": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-matthew-dt60-paired-48h-v1/ra37",
+      "frozen_optics_mode": 1,
+      "ra_lw_physics": 37,
+      "ra_sw_physics": 37,
+      "table": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-frozen-planck-coverage-v1/runs/frozen-planck-150-330-step5-plus233-v1/frozen-ice-psd-moments.nc",
+        "sha256": "ebeafb9746164d5414a45eab4061c5c855f0f91e92be77003b3829722514fe6a",
+        "size_bytes": 163599
+      }
+    },
+    "ra4": {
+      "WRF_RRTMGP_BATCH_SIZE": "unset",
+      "directory": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-matthew-dt60-paired-48h-v1/ra4",
+      "frozen_optics_mode": 0,
+      "ra_lw_physics": 4,
+      "ra_sw_physics": 4
+    }
+  },
+  "binary_source_build": "PR65 fatal-reporter copied incremental em_real build; hash is explicitly not a PR67/PR68-guard build.",
+  "environment": {
+    "LD_LIBRARY_PATH": [
+      "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/netcdf/lib",
+      "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/root/usr/lib/x86_64-linux-gnu",
+      "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/mpich-sock/lib"
+    ],
+    "MPICH_INTERFACE_HOSTNAME": "127.0.0.1",
+    "OMP_STACKSIZE": "512M",
+    "WRF_RRTMGP_BATCH_SIZE": {
+      "ra37": "32",
+      "ra4": "unset"
+    },
+    "clear_names": [
+      "LD_PRELOAD",
+      "LD_AUDIT"
+    ],
+    "clear_prefixes": [
+      "OMP_",
+      "GOMP_",
+      "KMP_",
+      "WRF_RRTMGP_",
+      "WRF_UDM_BOUNDARY_CAPTURE"
+    ],
+    "launcher": "mpiexec.hydra -launcher fork -iface lo -n 4",
+    "master_RLIMIT_STACK_bytes": 536870912,
+    "mpi_ranks": 4,
+    "openmp_threads": 2
+  },
+  "executable": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-matthew-dt60-paired-48h-v1/ra4/wrf.exe",
+    "sha256": "17e37d7461d90bf4eac4110879ecf4716e515fd155aca9754ff74d573ca01725",
+    "size_bytes": 59162968
+  },
+  "forecast": {
+    "cudt_minutes": 5,
+    "duration_seconds": 172800,
+    "end": "2016-10-08_00:00:00",
+    "expected_history_records": 49,
+    "expected_history_times": [
+      "2016-10-06_00:00:00",
+      "2016-10-06_01:00:00",
+      "2016-10-06_02:00:00",
+      "2016-10-06_03:00:00",
+      "2016-10-06_04:00:00",
+      "2016-10-06_05:00:00",
+      "2016-10-06_06:00:00",
+      "2016-10-06_07:00:00",
+      "2016-10-06_08:00:00",
+      "2016-10-06_09:00:00",
+      "2016-10-06_10:00:00",
+      "2016-10-06_11:00:00",
+      "2016-10-06_12:00:00",
+      "2016-10-06_13:00:00",
+      "2016-10-06_14:00:00",
+      "2016-10-06_15:00:00",
+      "2016-10-06_16:00:00",
+      "2016-10-06_17:00:00",
+      "2016-10-06_18:00:00",
+      "2016-10-06_19:00:00",
+      "2016-10-06_20:00:00",
+      "2016-10-06_21:00:00",
+      "2016-10-06_22:00:00",
+      "2016-10-06_23:00:00",
+      "2016-10-07_00:00:00",
+      "2016-10-07_01:00:00",
+      "2016-10-07_02:00:00",
+      "2016-10-07_03:00:00",
+      "2016-10-07_04:00:00",
+      "2016-10-07_05:00:00",
+      "2016-10-07_06:00:00",
+      "2016-10-07_07:00:00",
+      "2016-10-07_08:00:00",
+      "2016-10-07_09:00:00",
+      "2016-10-07_10:00:00",
+      "2016-10-07_11:00:00",
+      "2016-10-07_12:00:00",
+      "2016-10-07_13:00:00",
+      "2016-10-07_14:00:00",
+      "2016-10-07_15:00:00",
+      "2016-10-07_16:00:00",
+      "2016-10-07_17:00:00",
+      "2016-10-07_18:00:00",
+      "2016-10-07_19:00:00",
+      "2016-10-07_20:00:00",
+      "2016-10-07_21:00:00",
+      "2016-10-07_22:00:00",
+      "2016-10-07_23:00:00",
+      "2016-10-08_00:00:00"
+    ],
+    "expected_restart_count": 4,
+    "expected_restart_files": [
+      "wrfrst_d01_2016-10-06_12:00:00",
+      "wrfrst_d01_2016-10-07_00:00:00",
+      "wrfrst_d01_2016-10-07_12:00:00",
+      "wrfrst_d01_2016-10-08_00:00:00"
+    ],
+    "history_interval_seconds": 3600,
+    "radt_minutes": 10,
+    "restart_interval_minutes": 720,
+    "start": "2016-10-06_00:00:00",
+    "time_step_seconds": 60
+  },
+  "forecast_invocations": 0,
+  "future_runner_contract": {
+    "all_numeric_quality_scanner": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-matthew-dt60-paired-48h-v1/validate_all_numeric.py",
+      "sha256": "82223e77d62dbddf226406b0e1dc49eff6ee4bad3295da7ff376bdd211f70999",
+      "size_bytes": 3771
+    },
+    "authorization": "root authorization must bind exact plan, manifest, runner, and stage-readback hashes; no authorization currently staged",
+    "durable_process_returncode_before_any_output_analysis": true,
+    "expected_statuses": [
+      "PASS_BOTH_VALIDATED_DESCRIPTIVE",
+      "FAIL_PRESERVED",
+      "POSTPROCESS_FAIL_PRESERVED"
+    ],
+    "max_model_invocations": 2,
+    "max_seconds_per_arm": 7200,
+    "must_set_master_RLIMIT_STACK_bytes": 536870912,
+    "must_verify_tool_runtime_dependency_and_boundary_pins_before_and_after": true,
+    "native_ww_analyzer": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-matthew-dt60-paired-48h-v1/analyze_native_ww.py",
+      "sha256": "44397b9add9a78fa17db27c38b20c28a83c4e7bf520764f090a481788252498f",
+      "size_bytes": 9074
+    },
+    "pair_comparator": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-matthew-dt60-paired-48h-v1/compare_pair.py",
+      "sha256": "63c2a6bdfb2a179c0cc8b19e014e6b7f93e4e98354d346cb4de6e1aee2897e44",
+      "size_bytes": 2687
+    },
+    "runner": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-matthew-dt60-paired-48h-v1/run_pair_once.py",
+      "sha256": "34be1cac87c032bc4f2ed3f4d42a2dd13f7ab27c7207beb55b4e5a6e11d975e8",
+      "size_bytes": 14679
+    },
+    "sequential_order": [
+      "ra4",
+      "ra37"
+    ],
+    "stop_on_first_failed_arm": true,
+    "success_requires": {
+      "fatal_markers": 0,
+      "four_unique_MPI_ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "returncode": 0,
+      "success_markers_may_duplicate_between_rsl_out_and_error": true,
+      "timeout": false
+    },
+    "validator": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-matthew-dt60-paired-48h-v1/validate_forecast_outputs_v2.py",
+      "sha256": "c6ef849c7aa491508cf6a14b81405d1c6c4f820265e51d9fa5db2df247671b11",
+      "size_bytes": 23664
+    }
+  },
+  "inputs": {
+    "boundary_times": [
+      "2016-10-06_00:00:00",
+      "2016-10-06_06:00:00",
+      "2016-10-06_12:00:00",
+      "2016-10-06_18:00:00",
+      "2016-10-07_00:00:00",
+      "2016-10-07_06:00:00",
+      "2016-10-07_12:00:00",
+      "2016-10-07_18:00:00"
+    ],
+    "next_bdy_coverage_endpoint": "2016-10-08_00:00:00",
+    "next_bdy_metadata_variable": "md___nextbdytimee_x_t_d_o_m_a_i_n_m_e_t_a_data_",
+    "next_bdy_times": [
+      "2016-10-06_06:00:00",
+      "2016-10-06_12:00:00",
+      "2016-10-06_18:00:00",
+      "2016-10-07_00:00:00",
+      "2016-10-07_06:00:00",
+      "2016-10-07_12:00:00",
+      "2016-10-07_18:00:00",
+      "2016-10-08_00:00:00"
+    ],
+    "radiation_iofields": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-matthew-dt60-paired-48h-v1/ra4/radiation_iofields.txt",
+      "sha256": "586dae3b67aadf5b28a9af2b1b4a3970f466f3449230865cbc23b2068c446a3b",
+      "size_bytes": 134
+    },
+    "valid_horizon_evidence": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-matthew-paired-48h-v1/ra4-postflight-v2-final.json",
+      "sha256": "8d7c73c548d33aa3d9a41cdaf34d6077d2f8c4db07262794ce978bc540a0a36d",
+      "size_bytes": 180520
+    },
+    "wrfbdy_d01": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-matthew-dt60-paired-48h-v1/ra4/wrfbdy_d01",
+      "sha256": "2298ac9b6dfec71e434648f66160f6555f89ec351398a4abf76754d1f934d29b",
+      "size_bytes": 22126192
+    },
+    "wrfinput_d01": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-matthew-dt60-paired-48h-v1/ra4/wrfinput_d01",
+      "sha256": "6adeb00d56b83ef7749502059e35d27adb5114ac0e03adb323e86aa68b946fe3",
+      "size_bytes": 10693939
+    }
+  },
+  "model_invocations": 0,
+  "mpi": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/mpich-sock/bin/mpiexec.hydra",
+    "sha256": "7cbfc90b3903375252de00c92fd0ec8d51274da76365028de5c6edd645416946",
+    "size_bytes": 1856368
+  },
+  "namelist_differences_only": {
+    "ra_lw_physics": [
+      4,
+      37
+    ],
+    "ra_sw_physics": [
+      4,
+      37
+    ],
+    "rrtmgp_udm_frozen_optics": [
+      0,
+      1
+    ],
+    "rrtmgp_udm_frozen_table": [
+      "",
+      "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-frozen-planck-coverage-v1/runs/frozen-planck-150-330-step5-plus233-v1/frozen-ice-psd-moments.nc"
+    ]
+  },
+  "provenance": {
+    "dt60_one_hour_execution": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-matthew-dt60-pair-v1/execution-receipt.json",
+      "sha256": "d86fe8a57e14ad82fe9a2e7313b5d42a9379fc8eaecfc9deb36431b04439bd92",
+      "size_bytes": 274656
+    },
+    "dt60_one_hour_stage": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-matthew-dt60-pair-v1/plan.json",
+      "sha256": "326c88bdd2700b9265c5f6d4f5661744a77fd1caf10347f4f4c8724e35137d05",
+      "size_bytes": 124714
+    },
+    "old_48h_RA4_executable": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-pr60-active-cu-current-build-v1/source-v3/WRF/main/wrf.exe",
+      "sha256": "6378764a2119e3475a4ec8b80cce20f5434739c428dc7fb401c899bcdeb309ed",
+      "size_bytes": 59162832
+    },
+    "old_48h_RA4_postflight": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-matthew-paired-48h-v1/ra4-postflight-v2-final.json",
+      "sha256": "8d7c73c548d33aa3d9a41cdaf34d6077d2f8c4db07262794ce978bc540a0a36d",
+      "size_bytes": 180520
+    },
+    "pr65_build_original_receipt": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-pr65-fatal-reporter-wrf-build-v1/build-receipt.json",
+      "sha256": "9dc829bc7333d0c5f8f0cf7d1937628fdd2c6c25d039b4644f7227cc65a2758f",
+      "size_bytes": 2136018
+    },
+    "pr65_build_plan": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-pr65-fatal-reporter-wrf-build-v1/build-plan.json",
+      "sha256": "4f030a8db1ebd74abb6eed0dface8ed9b6fb1b379439de451a22463fe1082f93",
+      "size_bytes": 6024
+    },
+    "pr65_build_postflight": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-pr65-fatal-reporter-wrf-build-v1/build-postflight-v2.json",
+      "sha256": "ce67d283f3fe9dbaf8943d3760eb92c7701f0dd4163d35486a1dcb16b643c340",
+      "size_bytes": 28544
+    },
+    "pr65_real_executable": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-pr65-fatal-reporter-wrf-build-v1/source-copy/WRF/main/real.exe",
+      "sha256": "cd43712e136e07166748417c6f0c191c8a8a51aa7a354dbd5b675ca7d6208298",
+      "size_bytes": 43822544
+    },
+    "pr65_runtime_libraries": [
+      {
+        "name": "libnetcdff.so.7",
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/root/usr/lib/x86_64-linux-gnu/libnetcdff.so.7.1.0",
+        "sha256": "9e8fe96709d71af61b88ad88caff7db8899369162b96aee66ecd6a553a5370f9",
+        "size_bytes": 653744
+      },
+      {
+        "name": "libgfortran.so.5",
+        "path": "/usr/lib/x86_64-linux-gnu/libgfortran.so.5.0.0",
+        "sha256": "5b574c8ad93f1d816afa2d53fb33684ff8f9a0de0fcbe51e0ec21ddf0a56a028",
+        "size_bytes": 3263912
+      },
+      {
+        "name": "libm.so.6",
+        "path": "/usr/lib/x86_64-linux-gnu/libm.so.6",
+        "sha256": "f06f2ce1f1833df5f41cf13b6447ff07bea993ad9b27297d3428c2f70ab3f0e7",
+        "size_bytes": 952616
+      },
+      {
+        "name": "libmvec.so.1",
+        "path": "/usr/lib/x86_64-linux-gnu/libmvec.so.1",
+        "sha256": "2f435206d0df590a958be1a0bb06457b8a284d27608280644b7a22238d300b45",
+        "size_bytes": 1018144
+      },
+      {
+        "name": "libmpifort.so.12",
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/mpich-sock/lib/libmpifort.so.12.4.0",
+        "sha256": "eb479b245c600e206d10991dac5f459147c556c16cb74e22b851a27c58e15016",
+        "size_bytes": 1234712
+      },
+      {
+        "name": "libmpi.so.12",
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/mpich-sock/lib/libmpi.so.12.4.0",
+        "sha256": "76a5bf3c52b9143a05f67319fb82fa2cf8d31276df694c4a4e3c2d2aad491cf0",
+        "size_bytes": 5402592
+      },
+      {
+        "name": "libgomp.so.1",
+        "path": "/usr/lib/x86_64-linux-gnu/libgomp.so.1.0.0",
+        "sha256": "16c68465193c58900805106b70b26eecd6da5da42155f237ccddb922a3280ee6",
+        "size_bytes": 352304
+      },
+      {
+        "name": "libgcc_s.so.1",
+        "path": "/usr/lib/x86_64-linux-gnu/libgcc_s.so.1",
+        "sha256": "02f3f192bf5f79b811f1e34a650fea443d407408703448906585232383957f60",
+        "size_bytes": 183024
+      },
+      {
+        "name": "libc.so.6",
+        "path": "/usr/lib/x86_64-linux-gnu/libc.so.6",
+        "sha256": "511f825ee075610ac9c0f7f91e2c13de2000d0f7b859f6461137e809a0a009d0",
+        "size_bytes": 2125328
+      },
+      {
+        "name": "libnetcdf.so.19",
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/root/usr/lib/x86_64-linux-gnu/libnetcdf.so.19",
+        "sha256": "04fc972259131718fd96f0ea876654fe0a410a4af1635349dc8ec1590764f0f5",
+        "size_bytes": 1395960
+      },
+      {
+        "name": "ld-linux-x86-64.so.2",
+        "path": "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2",
+        "sha256": "6222a16be7f2d458d6870efe6e715fc0c8d45766fb79cf7dcc3125538d703e28",
+        "size_bytes": 236616
+      },
+      {
+        "name": "libhdf5_serial_hl.so.100",
+        "path": "/usr/lib/x86_64-linux-gnu/libhdf5_serial_hl.so.100.1.7",
+        "sha256": "f7612eea5f3df4d0fb7b7d8d0840b79ee25958e00da8d4934fe869ae36431a2b",
+        "size_bytes": 142800
+      },
+      {
+        "name": "libhdf5_serial.so.103",
+        "path": "/usr/lib/x86_64-linux-gnu/libhdf5_serial.so.103.4.0",
+        "sha256": "aa9c9c402261b73469d0b79fe0d585537bdea8d4b5dab872fab613640277db0e",
+        "size_bytes": 3613632
+      },
+      {
+        "name": "libcurl-gnutls.so.4",
+        "path": "/usr/lib/x86_64-linux-gnu/libcurl-gnutls.so.4.8.0",
+        "sha256": "25a1efac8eb6e18913a29baf0d5340ae842398cb944c9e847bed7cb2a7a8f765",
+        "size_bytes": 765856
+      },
+      {
+        "name": "libxml2.so.2",
+        "path": "/usr/lib/x86_64-linux-gnu/libxml2.so.2.9.14",
+        "sha256": "0ec89f65e1868cb79caa8a4cd5f47194ce95ac09f7a1d49e76049f391254a3a3",
+        "size_bytes": 1967424
+      },
+      {
+        "name": "libcrypto.so.3",
+        "path": "/usr/lib/x86_64-linux-gnu/libcrypto.so.3",
+        "sha256": "c19c2cf8d7cf91c4f273b1d3bbc56a9d19c91a739bfe57ad630756ee8ede7b77",
+        "size_bytes": 5305304
+      },
+      {
+        "name": "libcurl.so.4",
+        "path": "/usr/lib/x86_64-linux-gnu/libcurl.so.4.8.0",
+        "sha256": "bc0f65f0c1574a232b9cbd90bd5b45e04a1a263a04eae36007336dd5bbb2293c",
+        "size_bytes": 786336
+      },
+      {
+        "name": "libsz.so.2",
+        "path": "/usr/lib/x86_64-linux-gnu/libsz.so.2.0.1",
+        "sha256": "e73fa40252e84d38d64f9b3268ae6679530a777a55d6478d6b24de176d845c4b",
+        "size_bytes": 14256
+      },
+      {
+        "name": "libz.so.1",
+        "path": "/usr/lib/x86_64-linux-gnu/libz.so.1.3",
+        "sha256": "9b64150b28505a33d6bc3ecf709c279f6de97a1c184dbda65d06ee4537f6d286",
+        "size_bytes": 113000
+      },
+      {
+        "name": "libnghttp2.so.14",
+        "path": "/usr/lib/x86_64-linux-gnu/libnghttp2.so.14.26.0",
+        "sha256": "398c6d2025210279f4c7413ebdb7f4c63bc5afda5ec3b1ccc58885a65acc2b78",
+        "size_bytes": 170352
+      },
+      {
+        "name": "libidn2.so.0",
+        "path": "/usr/lib/x86_64-linux-gnu/libidn2.so.0.4.0",
+        "sha256": "6e632fd9a3125db60bbc623719bbc17b0470330321c5b1c57f1ff7190e5551ad",
+        "size_bytes": 133192
+      },
+      {
+        "name": "librtmp.so.1",
+        "path": "/usr/lib/x86_64-linux-gnu/librtmp.so.1",
+        "sha256": "15a2a75e8c437b9c99971b5ee10278ab110beef1a56d1d9e5d6759ea140e98ac",
+        "size_bytes": 121848
+      },
+      {
+        "name": "libssh.so.4",
+        "path": "/usr/lib/x86_64-linux-gnu/libssh.so.4.9.6",
+        "sha256": "ed3828e179eaea8effe1b6b001ae827b38de4575d2fa768c04489dc74b54ccde",
+        "size_bytes": 458264
+      },
+      {
+        "name": "libpsl.so.5",
+        "path": "/usr/lib/x86_64-linux-gnu/libpsl.so.5.3.4",
+        "sha256": "ae6c5a9aecc249fc66e03c16ec6c4385d09d7e12e0ea7694bb831ab4fee8133c",
+        "size_bytes": 75768
+      },
+      {
+        "name": "libnettle.so.8",
+        "path": "/usr/lib/x86_64-linux-gnu/libnettle.so.8.8",
+        "sha256": "a245ed916229583d6fe0b07657b3ed945bc148c28cc08b5266295f620d2b91cc",
+        "size_bytes": 342280
+      },
+      {
+        "name": "libgnutls.so.30",
+        "path": "/usr/lib/x86_64-linux-gnu/libgnutls.so.30.37.1",
+        "sha256": "96137275400f39510c9a533c6ad8a921e94266e664e7e09c9ad6ea9f23277c23",
+        "size_bytes": 2057632
+      },
+      {
+        "name": "libgssapi_krb5.so.2",
+        "path": "/usr/lib/x86_64-linux-gnu/libgssapi_krb5.so.2.2",
+        "sha256": "b9a20df712d206654477c079f03b568276933e91cbe237e62af791f0f3ab8d8b",
+        "size_bytes": 338696
+      },
+      {
+        "name": "libldap.so.2",
+        "path": "/usr/lib/x86_64-linux-gnu/libldap.so.2.0.200",
+        "sha256": "4a0664ab6a8a66c685e78d5604b79df330f5710f0c5e2c382536a8325dc4c2a4",
+        "size_bytes": 372400
+      },
+      {
+        "name": "liblber.so.2",
+        "path": "/usr/lib/x86_64-linux-gnu/liblber.so.2.0.200",
+        "sha256": "6f6935b26c962d5b51ef2011332472cfd96ff244a4edc9d47120be6faa70e602",
+        "size_bytes": 59888
+      },
+      {
+        "name": "libzstd.so.1",
+        "path": "/usr/lib/x86_64-linux-gnu/libzstd.so.1.5.5",
+        "sha256": "0a2128bc10841fb29e76d08d945864dfb0b6a66da5df6df5d8299197439e54bb",
+        "size_bytes": 755864
+      },
+      {
+        "name": "libbrotlidec.so.1",
+        "path": "/usr/lib/x86_64-linux-gnu/libbrotlidec.so.1.1.0",
+        "sha256": "64d8a5019d4c294b89fde1193343ea324bbd8603652554e5545f0a01595fa2c5",
+        "size_bytes": 51512
+      },
+      {
+        "name": "libicuuc.so.74",
+        "path": "/usr/lib/x86_64-linux-gnu/libicuuc.so.74.2",
+        "sha256": "7560aadde38e5f4237a47a1ddd5891f9b36768a77a60faae30beee003ac01901",
+        "size_bytes": 2140336
+      },
+      {
+        "name": "liblzma.so.5",
+        "path": "/usr/lib/x86_64-linux-gnu/liblzma.so.5.4.5",
+        "sha256": "a9793942a8a5f6f4d0f523ef9e0a5be4f0033f2c6c28520cd2b4e706d53c6e17",
+        "size_bytes": 202904
+      },
+      {
+        "name": "libssl.so.3",
+        "path": "/usr/lib/x86_64-linux-gnu/libssl.so.3",
+        "sha256": "63597a81ef19496ad0423cbaaf04d5b0244c7a9e261e331a5a7f3ac0fcdb9590",
+        "size_bytes": 696512
+      },
+      {
+        "name": "libaec.so.0",
+        "path": "/usr/lib/x86_64-linux-gnu/libaec.so.0.1.2",
+        "sha256": "4fd52145f7a3f0648b3f5a9527bc3143f96e47768bb68acd62bd12399871ddcc",
+        "size_bytes": 34808
+      },
+      {
+        "name": "libunistring.so.5",
+        "path": "/usr/lib/x86_64-linux-gnu/libunistring.so.5.0.0",
+        "sha256": "7bcf825cd449892db5105ad2aed91dcf94a27b796426600c765720c584c54dd1",
+        "size_bytes": 1755312
+      },
+      {
+        "name": "libhogweed.so.6",
+        "path": "/usr/lib/x86_64-linux-gnu/libhogweed.so.6.8",
+        "sha256": "c3c606139d4f7776efa4dbd4a6b62e30c916b07a0cafd8c3ef173d6f093607e3",
+        "size_bytes": 288920
+      },
+      {
+        "name": "libgmp.so.10",
+        "path": "/usr/lib/x86_64-linux-gnu/libgmp.so.10.5.0",
+        "sha256": "0ccdfb6d6f5c039465f6d002cf7e4c072d48ac6a2cffc8dd6c748dec31592804",
+        "size_bytes": 534896
+      },
+      {
+        "name": "libp11-kit.so.0",
+        "path": "/usr/lib/x86_64-linux-gnu/libp11-kit.so.0.3.1",
+        "sha256": "c6b469a006685ebf2075e200180c3b21f41b88ad722c5697d736ea558cfe3ea1",
+        "size_bytes": 1714008
+      },
+      {
+        "name": "libtasn1.so.6",
+        "path": "/usr/lib/x86_64-linux-gnu/libtasn1.so.6.6.3",
+        "sha256": "7c9c7830afbaac7b07ec21ddaa6b4d606423432c264efd2636e8ca9734b4d7b6",
+        "size_bytes": 88216
+      },
+      {
+        "name": "libkrb5.so.3",
+        "path": "/usr/lib/x86_64-linux-gnu/libkrb5.so.3.3",
+        "sha256": "52c143c9c77a223a4dac5449eac41fd2490e37c8a30430f1559c1421f4f8ed73",
+        "size_bytes": 823488
+      },
+      {
+        "name": "libk5crypto.so.3",
+        "path": "/usr/lib/x86_64-linux-gnu/libk5crypto.so.3.1",
+        "sha256": "8394027f2be7c2cc7b2da4797476a8b688a21f75ee231941fa2df8d00ba79d08",
+        "size_bytes": 178648
+      },
+      {
+        "name": "libcom_err.so.2",
+        "path": "/usr/lib/x86_64-linux-gnu/libcom_err.so.2.1",
+        "sha256": "022943b3b11c860b049bce41342f1c2594941b7b401d95dfdf235521099fee08",
+        "size_bytes": 18504
+      },
+      {
+        "name": "libkrb5support.so.0",
+        "path": "/usr/lib/x86_64-linux-gnu/libkrb5support.so.0.1",
+        "sha256": "8e1ef5a40f7b0d5b0fbcd6e4f28dd50b263650338a2bb72503be34632f3629d6",
+        "size_bytes": 47904
+      },
+      {
+        "name": "libsasl2.so.2",
+        "path": "/usr/lib/x86_64-linux-gnu/libsasl2.so.2.0.25",
+        "sha256": "a0f410ad093236856eee59c4ff2838dc04d932ea0993400f23ed77d67d85af34",
+        "size_bytes": 101200
+      },
+      {
+        "name": "libbrotlicommon.so.1",
+        "path": "/usr/lib/x86_64-linux-gnu/libbrotlicommon.so.1.1.0",
+        "sha256": "a91ead095d2c80520c55a89057bbe10b031a075340442e63f44b310f93883a1b",
+        "size_bytes": 141640
+      },
+      {
+        "name": "libicudata.so.74",
+        "path": "/usr/lib/x86_64-linux-gnu/libicudata.so.74.2",
+        "sha256": "ddbb3718b8bd9cbd780e5ab08b4503c30a6c4fa0706ebe5d074ed6b596c1714e",
+        "size_bytes": 30795392
+      },
+      {
+        "name": "libstdc++.so.6",
+        "path": "/usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.33",
+        "sha256": "a68762c86d371e6041f03f03a33a78fa235809ae7d81c90185940c93c3535aed",
+        "size_bytes": 2592224
+      },
+      {
+        "name": "libffi.so.8",
+        "path": "/usr/lib/x86_64-linux-gnu/libffi.so.8.1.4",
+        "sha256": "00f593fe192f2851b8ce23b25cec2488d769beb5a8f63e8c9e563071e1075153",
+        "size_bytes": 47672
+      },
+      {
+        "name": "libkeyutils.so.1",
+        "path": "/usr/lib/x86_64-linux-gnu/libkeyutils.so.1.10",
+        "sha256": "f48214417757f18793ed6e180cc14ee1d6f04252a518fc7270e8ca1d0b4260fe",
+        "size_bytes": 22600
+      },
+      {
+        "name": "libresolv.so.2",
+        "path": "/usr/lib/x86_64-linux-gnu/libresolv.so.2",
+        "sha256": "878e927be164fde61bf85f44c27901a1d569526f5c8f058990e8a4edc3df1fa0",
+        "size_bytes": 68104
+      }
+    ],
+    "pr65_source_executable": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-pr65-fatal-reporter-wrf-build-v1/source-copy/WRF/main/wrf.exe",
+      "sha256": "17e37d7461d90bf4eac4110879ecf4716e515fd155aca9754ff74d573ca01725",
+      "size_bytes": 59162968
+    },
+    "prepare_script": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/prepare_udm37_matthew_dt60_48h_stage.py",
+      "sha256": "702d495a61aac4387ce3be693b35e54c17b05fe172f68daf3e0a0d76e2054421",
+      "size_bytes": 14344
+    },
+    "same_48h_bdy_hash_as_old_RA4": true,
+    "shared_dependency_inventory": {
+      "entry_count": 1582,
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-ccn-tile-init-gnu-v1/shared-dependencies-before-v1.json",
+      "sha256": "e49061863c79e836747d21559950b90e2f6d40b798dbbc8d08895d1cf4a87290",
+      "size_bytes": 482273
+    },
+    "source_manifest_sha256": "1bbdce05c9313537587d6928f3c74f4e99e69438448466fa3ac505b6876a2bb9"
+  },
+  "purpose": "Matched 48-hour RA4/RA37 DT60 experiment following the one-hour DT60 diagnostics. This is a bounded trajectory comparison, not observational accuracy validation.",
+  "schema": "matthew-dt60-paired-48h-stage-plan-v1",
+  "scope_limits": [
+    "PR65 executable has no PR67/PR68 output-finite guard; state explicitly in any later report.",
+    "The frozen G/H optics mode is experimental and does not support a general accuracy claim.",
+    "The paired 48-hour outcomes are coupled trajectory differences, not same-state intrinsic radiation error or observational bias."
+  ],
+  "stage_assets": {
+    "case_entry_count": {
+      "ra37": 104,
+      "ra4": 104
+    },
+    "full_runtime_symlink_count": 99,
+    "native_ww_requested": true,
+    "runtime_assets_source_stage": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-matthew-dt60-pair-v1",
+    "same_assets_across_arms": true
+  },
+  "status": "STAGED_NOT_AUTHORIZED_NOT_RUN",
+  "table": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-frozen-planck-coverage-v1/runs/frozen-planck-150-330-step5-plus233-v1/frozen-ice-psd-moments.nc",
+    "sha256": "ebeafb9746164d5414a45eab4061c5c855f0f91e92be77003b3829722514fe6a",
+    "size_bytes": 163599
+  },
+  "validation": {
+    "all_numeric_scanner": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-matthew-dt60-paired-48h-v1/validate_all_numeric.py",
+      "sha256": "82223e77d62dbddf226406b0e1dc49eff6ee4bad3295da7ff376bdd211f70999",
+      "size_bytes": 3771
+    },
+    "native_ww_analyzer": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-matthew-dt60-paired-48h-v1/analyze_native_ww.py",
+      "sha256": "44397b9add9a78fa17db27c38b20c28a83c4e7bf520764f090a481788252498f",
+      "size_bytes": 9074
+    },
+    "native_ww_dt_seconds": 60,
+    "native_ww_metric": "endpoint-only estimate; no acceptance threshold and no claim about intra-step maxima",
+    "native_ww_times_count": 49,
+    "no_heating_sum_identity_gate": true,
+    "pair_comparator": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-matthew-dt60-paired-48h-v1/compare_pair.py",
+      "sha256": "63c2a6bdfb2a179c0cc8b19e014e6b7f93e4e98354d346cb4de6e1aee2897e44",
+      "size_bytes": 2687
+    },
+    "pair_comparator_is_descriptive_only": true,
+    "validator": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-matthew-dt60-paired-48h-v1/validate_forecast_outputs_v2.py",
+      "sha256": "c6ef849c7aa491508cf6a14b81405d1c6c4f820265e51d9fa5db2df247671b11",
+      "size_bytes": 23664
+    },
+    "validator_expected_scope": "The copied V2 validator checks the declared history/restart field contract, timestamps, restart names and aliases. A separate strict scanner then checks every numeric variable in the full history and all four checkpoints in both raw and decoded NetCDF views for masks, fill markers and nonfinite values.",
+    "validator_reused_from": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-matthew-paired-48h-v1/validate_forecast_outputs_v2.py"
+  }
+}

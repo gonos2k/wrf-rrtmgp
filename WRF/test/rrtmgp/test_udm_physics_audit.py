@@ -28,6 +28,7 @@ import test_udm_scm
 import test_cloud_scm
 from compare_column_replay import compare as compare_replay_results, read_result
 import test_column_replay
+import analyse_udm_physics_audit
 
 WRF_ROOT = test_surface_scm.WRF_ROOT
 VALIDATOR = test_surface_scm.TEMPLATE.parent / "validate_scm.py"
@@ -143,7 +144,8 @@ def _time_strings(run: dict[str, Any]) -> list[datetime]:
     return result
 
 
-def history_metric(run: dict[str, Any], name: str, source_seconds: float) -> tuple[float, str]:
+def history_metric(run: dict[str, Any], name: str, source_seconds: float,
+                   column: tuple[int, int] | None = None) -> tuple[float, str]:
     wanted = _time_strings(run)[0] + timedelta(seconds=float(source_seconds) + 10.0)
     times = _time_strings(run)
     distance = [abs((stamp-wanted).total_seconds()) for stamp in times]
@@ -157,21 +159,34 @@ def history_metric(run: dict[str, Any], name: str, source_seconds: float) -> tup
         fail(f"{run['case']}: {name} lacks record index {index}")
     # i=j=0 CSV records contain the actual tile spatial mean.
     value = np.asarray(arr[index], dtype=np.float64)
-    return float(np.mean(value)), times[index].strftime("%Y-%m-%d_%H:%M:%S")
+    if column is not None:
+        i,j=column
+        if value.ndim!=2 or i<1 or j<1 or j>value.shape[0] or i>value.shape[1]:
+            fail(f"{run['case']}: selected column {column} is outside history array {name} shape {value.shape}")
+        value=value[j-1,i-1]
+    else:
+        value=np.mean(value)
+    return float(value), times[index].strftime("%Y-%m-%d_%H:%M:%S")
 
 
 def read_audit_rows(csv_path: Path) -> list[dict[str, str]]:
     with csv_path.open(newline="", encoding="utf-8") as stream:
         reader = csv.DictReader(stream)
         required = {"phase", "domain", "step", "source_seconds", "i", "j", "metric",
-                    "value37", "value4", "sample_count", "mean37", "mean4", "sd_delta"}
+                    "value37", "value4", "sample_count", "mean37", "mean4", "sd_delta", "scope"}
         if reader.fieldnames is None or not required <= set(reader.fieldnames):
             missing = required - set(reader.fieldnames or [])
             fail(f"{csv_path}: audit CSV lacks required fields {sorted(missing)}")
-        return list(reader)
+        rows = list(reader)
+        try:
+            analyse_udm_physics_audit.validate_scope_rows(rows, csv_path)
+        except ValueError as exc:
+            fail(str(exc))
+        return rows
 
 
-def validate_audit_history_rows(csv_path: Path, run: dict[str, Any], expected_calls: int) -> dict[str, Any]:
+def validate_audit_history_rows(csv_path: Path, run: dict[str, Any], expected_calls: int,
+                                selected_column: tuple[int,int] | None = None) -> dict[str, Any]:
     rows = read_audit_rows(csv_path)
     selected = [r for r in rows if int(r["i"]) == 0 and int(r["j"]) == 0]
     checks = []
@@ -182,7 +197,18 @@ def validate_audit_history_rows(csv_path: Path, run: dict[str, Any], expected_ca
         if history_name is None:
             continue
         seconds = float(row["source_seconds"])
-        actual, timestamp = history_metric(run, history_name, seconds)
+        column=None
+        if row["scope"]=="selected_column":
+            cells=[r for r in rows if r["phase"]==row["phase"] and r["domain"]==row["domain"] and
+                   r["step"]==row["step"] and r["source_seconds"]==row["source_seconds"] and
+                   r["metric"]==row["metric"] and r["radius_mode"]==row["radius_mode"] and
+                   int(r["i"])>0 and int(r["j"])>0]
+            if len(cells)!=1:
+                fail(f"{csv_path}: selected aggregate lacks exactly one matching cell row")
+            column=(int(cells[0]["i"]),int(cells[0]["j"]))
+            if selected_column is not None and column!=selected_column:
+                fail(f"{csv_path}: selected audit point {column} differs from requested {selected_column}")
+        actual, timestamp = history_metric(run, history_name, seconds,column)
         audited = float(row["value37"])
         tolerance = 8.0 * np.finfo(np.float32).eps * max(1.0, abs(actual), abs(audited)) + 1.0e-3
         if abs(actual - audited) > tolerance:
@@ -209,7 +235,8 @@ def validate_audit_history_rows(csv_path: Path, run: dict[str, Any], expected_ca
 
 def attribution_rows(csv_path: Path, coupled37: dict[str, Any], coupled4: dict[str, Any],
                      expected_calls: int) -> list[dict[str, Any]]:
-    rows = [r for r in read_audit_rows(csv_path) if int(r["i"]) == 0 and int(r["j"]) == 0]
+    all_rows=read_audit_rows(csv_path)
+    rows = [r for r in all_rows if int(r["i"]) == 0 and int(r["j"]) == 0]
     output = []
     for row in rows:
         phase, metric = row["phase"].upper(), row["metric"].upper()
@@ -220,8 +247,17 @@ def attribution_rows(csv_path: Path, coupled37: dict[str, Any], coupled4: dict[s
         radius_code = row.get("radius_mode")
         radius_label = ({"0": "PRODUCTION_GENERIC4_RADIUS", "1": "RRTMG4_NATIVE_RADIUS_COUNTERFACTUAL"}
                         .get((radius_code or "").strip(), radius_code or "PRODUCTION_WRAPPER_RADIUS"))
-        hist37, timestamp = history_metric(coupled37, history_name, seconds)
-        hist4, _ = history_metric(coupled4, history_name, seconds)
+        column=None
+        if row["scope"]=="selected_column":
+            cells=[r for r in all_rows if r["phase"]==row["phase"] and r["domain"]==row["domain"] and
+                   r["step"]==row["step"] and r["source_seconds"]==row["source_seconds"] and
+                   r["metric"]==row["metric"] and r["radius_mode"]==row["radius_mode"] and
+                   int(r["i"])>0 and int(r["j"])>0]
+            if len(cells)!=1:
+                fail(f"{csv_path}: selected attribution aggregate lacks exactly one cell row")
+            column=(int(cells[0]["i"]),int(cells[0]["j"]))
+        hist37, timestamp = history_metric(coupled37, history_name, seconds,column)
+        hist4, _ = history_metric(coupled4, history_name, seconds,column)
         coupled_delta = hist37 - hist4
         operational_delta = float(row["value37"]) - float(row["value4"])
         ensemble_delta = float(row["mean37"]) - float(row["mean4"])
@@ -256,7 +292,8 @@ def validate_radius_mode(csv_path: Path, native_counterfactual: bool) -> dict[st
     return {"status": "PASS", "radius_mode_code": int(expected), "radius_mode": label}
 
 
-def validate_raw_calls(case: Path, expected_calls: int) -> dict[str, Any]:
+def validate_raw_calls(case: Path, expected_calls: int,
+                       selected_column: tuple[int,int] | None = None) -> dict[str, Any]:
     raw_dir = case / "capture"
     report: dict[str, Any] = {}
     for phase in ("lw", "sw"):
@@ -266,9 +303,10 @@ def validate_raw_calls(case: Path, expected_calls: int) -> dict[str, Any]:
         per_call = []
         for index, path in enumerate(paths, 1):
             raw_phase, i, j, values = test_column_replay.read_raw(path)
-            if raw_phase != phase.upper() or (i, j) != (1, 1):
+            expected_column=selected_column or (1,1)
+            if raw_phase != phase.upper() or (i, j) != expected_column:
                 fail(f"{path}: unexpected raw capture identity {raw_phase}/{i}/{j}")
-            required = ("UDM_CF_USED", "UDM_CF_SOURCE_STEP", "RADIATION_STEP", "CF")
+            required = ("UDM_CF_USED", "UDM_CF_SOURCE_STEP", "UDM_CF_TOP", "RADIATION_STEP", "CF")
             missing = [key for key in required if key not in values]
             if missing:
                 fail(f"{path}: missing UDM audit evidence {missing}")
@@ -277,20 +315,27 @@ def validate_raw_calls(case: Path, expected_calls: int) -> dict[str, Any]:
             if used.shape != cf.shape:
                 fail(f"{path}: UDM_CF_USED and radiation CF dimensions differ")
             source_step = float(values["UDM_CF_SOURCE_STEP"][0])
+            source_top = float(values["UDM_CF_TOP"][0])
             radiation_step = float(values["RADIATION_STEP"][0])
             if index == 1:
-                if not np.all(used == -1.0):
-                    fail(f"{path}: first-use UDM_CF_USED must be the -1 sentinel")
+                if not np.all(used == -1.0) or source_step != -1.0 or source_top != -1.0:
+                    fail(f"{path}: first-use UDM CF, step and top must all be not-called sentinels")
             else:
                 if (not np.isfinite(used).all() or np.any((used < -1.0) | (used > 1.0)) or
                     np.any((used == -1.0) & (cf > 0.0))):
                     fail(f"{path}: later UDM_CF_USED must be valid for cloudy layers; -1 is allowed only when CF is clear")
                 if not np.any(used >= 0.0):
                     fail(f"{path}: later UDM_CF_USED contains no valid prior microphysics CF")
+                if (not np.isfinite(source_top) or source_top != np.floor(source_top) or
+                    source_top < 0 or source_top > used.size):
+                    fail(f"{path}: later UDM_CF_TOP must be an exact extent in [0,native_layers]")
                 if source_step < 0.0 or source_step >= radiation_step:
                     fail(f"{path}: source step {source_step} must precede radiation step {radiation_step}")
             per_call.append({"file": path.name, "radiation_step": radiation_step,
                              "udm_cf_source_step": source_step,
+                             "udm_cf_top": source_top,
+                             "udm_cf_diagnosed_layers": max(0, int(source_top)),
+                             "udm_cf_extent_unknown_layers": int(used.size - max(0, int(source_top))),
                              "used_min": float(np.min(used)), "used_max": float(np.max(used)),
                              "first_use_sentinel": bool(index == 1)})
         report[phase.upper()] = {"count": len(paths), "calls": per_call}
@@ -328,15 +373,20 @@ def replay_all_captures(case: Path, data_dir: Path, reference_exe: Path,
 
 
 def run_case(seed: dict[str, Any], case: Path, minutes: int, *, option: int, audit: bool,
-             seeds: int, native_rrtmg4_counterfactual: bool = False) -> dict[str, Any]:
+             seeds: int, native_rrtmg4_counterfactual: bool = False,
+             selected_column: tuple[int,int] | None = None) -> dict[str, Any]:
     if audit and option != 37:
         fail("the same-state audit is only defined for RRTMGP option 37")
     make_case(seed, case, minutes, option)
     env = runtime_environment()
     for name in ("WRF_RRTMGP_CAPTURE_DIR", "WRF_RRTMGP_CAPTURE_CALL", "WRF_RRTMGP_CAPTURE_ALL",
-                 "WRF_RRTMGP_AUDIT_DIR", "WRF_RRTMGP_AUDIT_SEEDS", "WRF_RRTMGP_AUDIT_NATIVE4"):
+                 "WRF_RRTMGP_AUDIT_DIR", "WRF_RRTMGP_AUDIT_SEEDS", "WRF_RRTMGP_AUDIT_NATIVE4",
+                 "WRF_RRTMGP_COLUMN_I", "WRF_RRTMGP_COLUMN_J"):
         env.pop(name, None)
     env["OMP_NUM_THREADS"] = "1"
+    if selected_column is not None:
+        env["WRF_RRTMGP_COLUMN_I"] = str(selected_column[0])
+        env["WRF_RRTMGP_COLUMN_J"] = str(selected_column[1])
     if audit:
         audit_dir = case / "audit"
         raw_dir = case / "capture"
@@ -399,8 +449,8 @@ def history_equal(a: dict[str, Any], b: dict[str, Any], label: str) -> dict[str,
             differing.append(name)
     if differing:
         fail(f"{label}: audit changed history arrays: {differing[:25]}")
-    if len(common) != 210:
-        fail(f"{label}: expected all 210 history variables in this build, found {len(common)}")
+    if len(common) != 211:
+        fail(f"{label}: expected all 211 history variables including UDM_CF_TOP, found {len(common)}")
     return {"status": "PASS_BITWISE", "variables": len(common),
             "left_only": sorted(left.keys() - right.keys()), "right_only": sorted(right.keys() - left.keys())}
 
@@ -489,12 +539,19 @@ def main() -> int:
                     help="optional earlier RRTMGP37 mixed case for shared-history comparison")
     ap.add_argument("--native-rrtmg4-counterfactual", action="store_true",
                     help="audit engine4 with native-radius wrapper flags; production history remains unchanged")
+    ap.add_argument("--column-i", type=int, help="optional target WRF mass-column i (requires --column-j)")
+    ap.add_argument("--column-j", type=int, help="optional target WRF mass-column j (requires --column-i)")
     ap.add_argument("--output-json", type=Path, help="receipt path (default WORKDIR/audit-result.json)")
     args = ap.parse_args()
     if args.seeds < 2 or args.seeds > 8192:
         ap.error("--seeds must be between 2 and 8192")
     if args.run_minutes < 1:
         ap.error("--run-minutes must be positive")
+    if (args.column_i is None) != (args.column_j is None):
+        ap.error("--column-i and --column-j must be supplied together")
+    if args.column_i is not None and (args.column_i < 1 or args.column_j < 1):
+        ap.error("selected column indices must be positive")
+    selected_column = ((args.column_i,args.column_j) if args.column_i is not None else None)
     expected_calls = args.run_minutes * 6
     root = args.workdir.expanduser().resolve()
     if root.exists():
@@ -525,6 +582,8 @@ def main() -> int:
     native4 = bool(args.native_rrtmg4_counterfactual)
     summary: dict[str, Any] = {"status": "FAIL", "schema": "UDM_PHYSICS_AUDIT_RUN_V1",
         "seeds": args.seeds, "run_minutes": args.run_minutes, "pairs": {},
+        "audit_scope": ("selected_column" if selected_column else "full_tile"),
+        "selected_column_ij": selected_column,
         "audit_engine4_radius_mode": ("RRTMG4_NATIVE_RADIUS_COUNTERFACTUAL" if native4
                                       else "PRODUCTION_GENERIC4_RADIUS"),
         "audit_engine4_counterfactual_limitations": (
@@ -542,15 +601,15 @@ def main() -> int:
         case_root = root / label
         case_root.mkdir()
         off = run_case(seed, case_root / "audit-off", args.run_minutes, option=37,
-                       audit=False, seeds=args.seeds)
+                       audit=False, seeds=args.seeds,selected_column=selected_column)
         on = run_case(seed, case_root / "audit-on", args.run_minutes, option=37,
                       audit=True, seeds=args.seeds,
-                      native_rrtmg4_counterfactual=native4)
+                      native_rrtmg4_counterfactual=native4,selected_column=selected_column)
         if off["wrfinput_sha256"] != on["wrfinput_sha256"]:
             fail(f"{label}: audit OFF/ON initial states differ")
         bitwise = history_equal(off, on, f"{label} audit OFF/ON")
         ra4 = run_case(seed, case_root / "rrtmg4-reference", args.run_minutes, option=4,
-                       audit=False, seeds=args.seeds)
+                       audit=False, seeds=args.seeds,selected_column=selected_column)
         if seed.get("baseline_history"):
             bitwise_baseline = baseline_equal(ra4, seed, f"{label} RRTMG4 baseline preservation")
         else:
@@ -558,8 +617,8 @@ def main() -> int:
         ra4_receipt = {k: v for k, v in ra4.items() if k != "arrays"}
         csv_path = Path(on["audit_csv"])
         radius_mode = validate_radius_mode(csv_path, native4)
-        audit_history = validate_audit_history_rows(csv_path, on, expected_calls)
-        raw_contract = validate_raw_calls(Path(on["case"]), expected_calls)
+        audit_history = validate_audit_history_rows(csv_path, on, expected_calls,selected_column)
+        raw_contract = validate_raw_calls(Path(on["case"]), expected_calls,selected_column)
         independent_replay = replay_all_captures(Path(on["case"]), DATA_DIR, REFERENCE_EXE, expected_calls)
         attribution = attribution_rows(csv_path, on, ra4, expected_calls)
         prior_path = args.prior_control_37 if label == "control" else args.prior_mixed_37

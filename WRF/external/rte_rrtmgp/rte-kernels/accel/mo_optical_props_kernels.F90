@@ -63,10 +63,12 @@ contains
     !$acc&     copy(ssa(:ncol,:nlay,:ngpt),tau(:ncol,:nlay,:ngpt)) &
     !$acc&     copyin(f(:ncol,:nlay,:ngpt)) &
     !$acc&     copy(g(:ncol,:nlay,:ngpt))
+#ifndef RRTMGP_CPU_ONLY
     !$omp target teams distribute parallel do simd collapse(3) &
     !$omp& map(tofrom:ssa, tau) &
     !$omp& map(to:f) &
     !$omp& map(tofrom:g)
+#endif
     do igpt = 1, ngpt
       do ilay = 1, nlay
         do icol = 1, ncol
@@ -96,8 +98,10 @@ contains
 
     !$acc  parallel loop collapse(3) &
     !$acc&     copy(tau(:ncol,:nlay,:ngpt),ssa(:ncol,:nlay,:ngpt),g(:ncol,:nlay,:ngpt))
+#ifndef RRTMGP_CPU_ONLY
     !$omp target teams distribute parallel do simd collapse(3) &
     !$omp& map(tofrom:tau, ssa, g)
+#endif
     do igpt = 1, ngpt
       do ilay = 1, nlay
         do icol = 1, ncol
@@ -149,9 +153,11 @@ contains
     !$acc data copyin(tau2)
 
     !$acc  parallel loop collapse(3) 
+#ifndef RRTMGP_CPU_ONLY
     !$omp target teams distribute parallel do simd collapse(3) &
     !$omp& map(to:tau2) &
     !$omp& map(tofrom:tau1)
+#endif
     do igpt = 1, ngpt
       do ilay = 1, nlay
         do icol = 1, ncol
@@ -185,10 +191,12 @@ contains
     !$acc data copyin(tau2, ssa2)
 
     !$acc  parallel loop collapse(3)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target teams distribute parallel do simd collapse(3) &
     !$omp& map(to:tau2) &
     !$omp& map(tofrom:tau1) &
     !$omp& map(to:ssa2)
+#endif
     do igpt = 1, ngpt
       do ilay = 1, nlay
         do icol = 1, ncol
@@ -222,10 +230,12 @@ contains
     !$acc data copyin(tau2, ssa2)
 
     !$acc  parallel loop collapse(3)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target teams distribute parallel do simd collapse(3) &
     !$omp& map(to:tau2) &
     !$omp& map(tofrom:tau1) &
     !$omp& map(to:ssa2)
+#endif
     do igpt = 1, ngpt
       do ilay = 1, nlay
         do icol = 1, ncol
@@ -261,10 +271,12 @@ contains
     !$acc data copyin(tau2)
 
     !$acc  parallel loop collapse(3)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target teams distribute parallel do simd collapse(3) &
     !$omp& map(tofrom:ssa1) &
     !$omp& map(to:tau2) &
     !$omp& map(tofrom:tau1)
+#endif
     do igpt = 1, ngpt
       do ilay = 1, nlay
         do icol = 1, ncol
@@ -303,11 +315,13 @@ contains
     !$acc data copyin(tau2, ssa2, g2)
 
     !$acc  parallel loop collapse(3)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target teams distribute parallel do simd collapse(3) &
     !$omp& map(to:g2) &
     !$omp& map(tofrom:ssa1) &
     !$omp& map(to:ssa2, tau2) &
     !$omp& map(tofrom:tau1, g1)
+#endif
     do igpt = 1, ngpt
       do ilay = 1, nlay
         do icol = 1, ncol
@@ -355,11 +369,13 @@ contains
     !$acc data copyin(tau2, ssa2, p2)
 
     !$acc  parallel loop collapse(3)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target teams distribute parallel do simd collapse(3) &
     !$omp& map(to:p2) &
     !$omp& map(tofrom:ssa1) &
     !$omp& map(to:ssa2, tau2) &
     !$omp& map(tofrom:tau1, g1)
+#endif
     do igpt = 1, ngpt
       do ilay = 1, nlay
         do icol = 1, ncol
@@ -406,10 +422,12 @@ contains
     !$acc data copyin(tau2)
 
     !$acc  parallel loop collapse(3)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target teams distribute parallel do simd collapse(3) &
     !$omp& map(tofrom:ssa1) &
     !$omp& map(to:tau2) &
     !$omp& map(tofrom:tau1)
+#endif
     do igpt = 1, ngpt
       do ilay = 1, nlay
         do icol = 1, ncol
@@ -452,12 +470,14 @@ contains
     !$acc data copyin(tau2, ssa2, g2)
 
     !$acc parallel loop collapse(3)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target teams distribute parallel do simd collapse(3) &
     !$omp& map(tofrom:p1, ssa1) &
     !$omp& map(to:ssa2) &
     !$omp& map(tofrom:tau1) &
     !$omp& map(to:g2) &
     !$omp& map(to:tau2)
+#endif
     do igpt = 1, ngpt
       do ilay = 1, nlay
         do icol = 1, ncol
@@ -513,11 +533,13 @@ contains
     !$acc data copyin(tau2, ssa2, p2)
 
     !$acc  parallel loop collapse(3)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target teams distribute parallel do simd collapse(3) &
     !$omp& map(to:p2) &
     !$omp& map(tofrom:ssa1) &
     !$omp& map(to:ssa2, tau2) &
     !$omp& map(tofrom:tau1, p1)
+#endif
     do igpt = 1, ngpt
       do ilay = 1, nlay
         do icol = 1, ncol
@@ -568,10 +590,12 @@ contains
     !$acc data copyin(tau2, gpt_lims)
 
     !$acc parallel loop collapse(3)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target teams distribute parallel do simd collapse(3) &
     !$omp& map(to:tau2) &
     !$omp& map(tofrom:tau1) &
     !$omp& map(to:gpt_lims)
+#endif
     do igpt = 1 , ngpt
       do ilay = 1 , nlay
         do icol = 1 , ncol
@@ -608,10 +632,12 @@ contains
     !$acc data copyin(tau2, ssa2, gpt_lims)
 
     !$acc parallel loop collapse(3)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target teams distribute parallel do simd collapse(3) &
     !$omp& map(to:tau2, ssa2) &
     !$omp& map(tofrom:tau1) &
     !$omp& map(to:gpt_lims)
+#endif
     do igpt = 1 , ngpt
       do ilay = 1 , nlay
         do icol = 1 , ncol
@@ -648,10 +674,12 @@ contains
     !$acc data copyin(tau2, ssa2, gpt_lims)
 
     !$acc parallel loop collapse(3)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target teams distribute parallel do simd collapse(3) &
     !$omp& map(to:gpt_lims, tau2) &
     !$omp& map(tofrom:tau1) &
     !$omp& map(to:ssa2)
+#endif
     do igpt = 1 , ngpt
       do ilay = 1 , nlay
         do icol = 1 , ncol
@@ -691,11 +719,13 @@ contains
     !$acc data copyin(tau2, gpt_lims)
 
     !$acc parallel loop collapse(3)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target teams distribute parallel do simd collapse(3) &
     !$omp& map(tofrom:tau1) &
     !$omp& map(to:tau2) &
     !$omp& map(tofrom:ssa1) &
     !$omp& map(to:gpt_lims)
+#endif
     do igpt = 1 , ngpt
       do ilay = 1, nlay
         do icol = 1, ncol
@@ -736,6 +766,7 @@ contains
     !$acc data copyin(tau2, ssa2, g2, gpt_lims)
 
     !$acc parallel loop collapse(3)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target teams distribute parallel do simd collapse(3) &
     !$omp& map(tofrom:tau1) &
     !$omp& map(to:tau2, ssa2) &
@@ -743,6 +774,7 @@ contains
     !$omp& map(to:gpt_lims) &
     !$omp& map(tofrom:g1) &
     !$omp& map(to:g2)
+#endif
     do igpt = 1 , ngpt
       do ilay = 1, nlay
         do icol = 1, ncol
@@ -793,12 +825,14 @@ contains
     !$acc data copyin(tau2, ssa2, p2, gpt_lims)
 
     !$acc parallel loop collapse(3)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target teams distribute parallel do simd collapse(3) &
     !$omp& map(tofrom:tau1) &
     !$omp& map(to:tau2, ssa2) &
     !$omp& map(tofrom:ssa1) &
     !$omp& map(to:p2, gpt_lims) &
     !$omp& map(tofrom:g1)
+#endif
     do igpt = 1 , ngpt
       do ilay = 1, nlay
         do icol = 1, ncol
@@ -848,11 +882,13 @@ contains
     !$acc data copyin(tau2, gpt_lims)
 
     !$acc parallel loop collapse(3)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target teams distribute parallel do simd collapse(3) &
     !$omp& map(tofrom:tau1) &
     !$omp& map(to:tau2) &
     !$omp& map(tofrom:ssa1) &
     !$omp& map(to:gpt_lims)
+#endif
     do igpt = 1 , ngpt
       do ilay = 1, nlay
         do icol = 1, ncol
@@ -898,12 +934,14 @@ contains
     !$acc data copyin(tau2, ssa2, g2, gpt_lims)
 
     !$acc parallel loop collapse(3)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target teams distribute parallel do simd collapse(3) &
     !$omp& map(tofrom:tau1) &
     !$omp& map(to:ssa2) &
     !$omp& map(tofrom:ssa1, p1) &
     !$omp& map(to:tau2) &
     !$omp& map(to:gpt_lims, g2)
+#endif
     do igpt = 1 , ngpt
       do ilay = 1, nlay
         do icol = 1, ncol
@@ -962,6 +1000,7 @@ contains
     !$acc data copyin(tau2, ssa2, p2, gpt_lims)
 
     !$acc parallel loop collapse(3)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target teams distribute parallel do simd collapse(3) &
     !$omp& map(to:p2) &
     !$omp& map(tofrom:ssa1) &
@@ -970,6 +1009,7 @@ contains
     !$omp& map(to:tau2) &
     !$omp& map(tofrom:p1) &
     !$omp& map(to:gpt_lims)
+#endif
     do igpt = 1 , ngpt
       do ilay = 1, nlay
         do icol = 1, ncol
@@ -1015,9 +1055,11 @@ contains
     !$acc parallel loop collapse(3) &
     !$acc&     copyout(array_out) &
     !$acc&     copyin(array_in)
+#ifndef RRTMGP_CPU_ONLY
     !$omp target teams distribute parallel do simd collapse(3) &
     !$omp& map(from:array_out) &
     !$omp& map(to:array_in)
+#endif
     do igpt = 1, ngpt
       do ilay = 1, nlay
         do icol = colS, colE
@@ -1041,9 +1083,11 @@ contains
     !$acc parallel loop collapse(4) &
     !$acc&     copyout(array_out(:nmom,:cole-cols+1,:nlay,:ngpt)) &
     !$acc&     copyin(array_in(:nmom,cols:cole,:nlay,:ngpt))
+#ifndef RRTMGP_CPU_ONLY
     !$omp target teams distribute parallel do simd collapse(4) &
     !$omp& map(from:array_out) &
     !$omp& map(to:array_in)
+#endif
     do igpt = 1, ngpt
       do ilay = 1, nlay
         do icol = colS, colE
@@ -1074,10 +1118,12 @@ contains
     !$acc&     copyin(ssa_in(cols:cole,:nlay,:ngpt)) &
     !$acc&     copyout(tau_out(:cole-cols+1,:nlay,:ngpt)) &
     !$acc&     copyin(tau_in(cols:cole,:nlay,:ngpt))
+#ifndef RRTMGP_CPU_ONLY
     !$omp target teams distribute parallel do simd collapse(3) &
     !$omp& map(to:ssa_in) &
     !$omp& map(from:tau_out) &
     !$omp& map(to:tau_in)
+#endif
     do igpt = 1, ngpt
       do ilay = 1, nlay
         do icol = colS, colE

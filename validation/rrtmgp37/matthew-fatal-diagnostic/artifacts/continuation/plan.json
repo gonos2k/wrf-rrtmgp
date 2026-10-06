@@ -1,0 +1,89 @@
+{
+  "arm": "ra37",
+  "authorization_contract": {
+    "manifest_sha256": "63664835fac36101348761f5c4340da683789e0e11b60b3e8fffca20c6c83b6f",
+    "plan_sha256": "sha256(this exact plan)",
+    "ra4_postflight_sha256": "corrected RA4 PASS receipt SHA256",
+    "runner_sha256": "sha256(run_ra37_once.py)",
+    "status": "AUTHORIZED_RA37_CONTINUATION",
+    "validator_sha256": "corrected validator SHA256"
+  },
+  "batch_size": 32,
+  "corrected_ra4_postflight_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-matthew-paired-48h-v1/ra4-postflight-v2-final.json",
+  "corrected_ra4_postflight_sha256": "8d7c73c548d33aa3d9a41cdaf34d6077d2f8c4db07262794ce978bc540a0a36d",
+  "corrected_ra4_postflight_status": "PASS",
+  "corrected_validator": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-matthew-paired-48h-v1/validate_forecast_outputs_v2.py",
+    "sha256": "c6ef849c7aa491508cf6a14b81405d1c6c4f820265e51d9fa5db2df247671b11",
+    "size_bytes": 23664
+  },
+  "expected_postflight": {
+    "history_end": "2016-10-08_00:00:00",
+    "history_start": "2016-10-06_00:00:00",
+    "history_times_count": 49,
+    "restart_times": [
+      "2016-10-06_12:00:00",
+      "2016-10-07_00:00:00",
+      "2016-10-07_12:00:00",
+      "2016-10-08_00:00:00"
+    ],
+    "validator_status": "PASS"
+  },
+  "model_invocations_max": 1,
+  "mpi_ranks": 4,
+  "mpiexec": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/mpich-sock/bin/mpiexec.hydra",
+    "sha256": "7cbfc90b3903375252de00c92fd0ec8d51274da76365028de5c6edd645416946",
+    "size_bytes": 1856368
+  },
+  "no_retry": true,
+  "omp_stacksize": "512M",
+  "omp_threads": 2,
+  "original_execution_receipt_sha256": "3335be3ae44794fb3d98a64c97a6df75c1bda3b987b3ae3e7b2a583bb0c01740",
+  "original_execution_status": "FAIL_PRESERVED",
+  "original_forecast_invocations": 1,
+  "original_manifest_sha256": "63664835fac36101348761f5c4340da683789e0e11b60b3e8fffca20c6c83b6f",
+  "original_plan_sha256": "99f45ec6e22b4a6714fe09d173215ee9bd8ea13339928177d63f58c6c631919c",
+  "original_ra37_forecast_invocations": 0,
+  "original_ra4_failed_validator_receipt_sha256": "ebda7dffa12b8b59575b5d2900bb125ebf30b98fe0acefd412c730c6db68953d",
+  "original_runner_sha256": "4288132f380c268f4efc66fcfe6afdf85c0976218c9ec1a2a9534ab9131883c6",
+  "original_validator_sha256": "9f84a24a82e6c17bc36e2b5391c9b86bce4a80f7d543a7b197c96e0ec6cfc815",
+  "pair_interpretation": "RA37 continuation is independently receipted; the original paired-launch receipt remains FAIL_PRESERVED. Any later descriptive comparison must explicitly join the original RA4 receipt and this RA37 continuation receipt; it is not a single successful paired-run receipt.",
+  "ra4_expanded_log_review_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-matthew-paired-48h-v1/ra4-expanded-log-review-v1.json",
+  "ra4_expanded_log_review_sha256": "311a1a49bb3cee7bd045a840dda6715cf2a83928038c1992b85321a22e4a1d55",
+  "ra4_expanded_log_review_status": "SCOPED_RA4_PROCESS_SUCCESS_AND_EXPANDED_LOG_SCAN_PASS",
+  "run_directory_name": "ra37-output-v1",
+  "run_directory_policy": "verify original unused RA37 stage against all original pins; create a symlink-preserving copy under this directory and execute only in the copy",
+  "run_directory_source": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-matthew-paired-48h-v1/ra37",
+  "runner_sha256": "3eb7cd525e0546161cef0dae8943ea8c6bdd188a224bc4f1f09250b868b04c18",
+  "schema": "matthew-ra37-continuation-plan-v1",
+  "staged_environment": {
+    "LD_LIBRARY_PATH": [
+      "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/netcdf/lib",
+      "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/root/usr/lib/x86_64-linux-gnu",
+      "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/mpich-sock/lib"
+    ],
+    "MPICH_INTERFACE_HOSTNAME": "127.0.0.1",
+    "OMP_NUM_THREADS": "2",
+    "OMP_STACKSIZE": "512M",
+    "stripped_names": [
+      "LD_PRELOAD",
+      "LD_AUDIT"
+    ],
+    "stripped_prefixes": [
+      "WRF_RRTMGP_",
+      "WRF_UDM_BOUNDARY_CAPTURE",
+      "OMP_",
+      "GOMP_",
+      "KMP_"
+    ]
+  },
+  "status": "READY_FOR_ROOT_AUTHORIZATION",
+  "timeout_seconds": 3600,
+  "validator_receipt_output_name": "forecast-postflight-continuation.json",
+  "wrf_executable": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-pr60-active-cu-current-build-v1/source-v3/WRF/main/wrf.exe",
+    "sha256": "6378764a2119e3475a4ec8b80cce20f5434739c428dc7fb401c899bcdeb309ed",
+    "size_bytes": 59162832
+  }
+}

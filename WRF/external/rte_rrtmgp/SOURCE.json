@@ -5,6 +5,9 @@
   "local_changes": [
     "LUT reader uses current rrtmgp-data field names and ice diameter coordinates",
     "Correct the upstream CITATION.cff repository-code URL",
-    "WRF Make wrapper declares explicit archive objects and invalidates owned generated files on compiler/flags/include/kernel/object-inventory changes"
+    "WRF Make wrapper declares explicit archive objects and invalidates owned generated files on compiler/flags/include/kernel/object-inventory changes",
+    "NetCDF gas/cloud coefficient failures support a host fatal callback; WRF installs its MPI-aware fatal routine, standalone defaults to error stop",
+    "WRF CPU-only builds guard pinned GPU OpenMP target/declare directives with RRTMGP_CPU_ONLY while retaining host OpenMP compiler flags and ordinary Fortran kernel bodies",
+    "CPU RRTMGP exp/log/cos calls route through a separate elemental scalar-libm translation unit compiled without IPO/LTO; ordinary kernel vectorization and accelerator branches are unchanged"
   ]
 }

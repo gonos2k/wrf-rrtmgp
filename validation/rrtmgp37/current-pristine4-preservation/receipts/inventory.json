@@ -1,0 +1,296 @@
+{
+  "existing_pristine_4_comparison": {
+    "receipt_path": "build/pristine-udm4-runtime/pristine-comparison.json",
+    "receipt_sha256": "cd3ee35bf1295ded76a7a78545c9a65bb33d1398b32ba89d9946b0624d5659aa",
+    "scope": "control and mixed SCM outputs, 7 history records, 208 variables each; official WRF4 output compared with archived prior RA4 outputs. Not current PR74."
+  },
+  "known_gap": "No current 5f3034e9 source build or RA4 UDM4 runtime exists in these receipts. The 5f head must not inherit the source-v4/PR58 two-case result as a current-head test.",
+  "last_tested_current_ra4_source": {
+    "binary_path": "build/udm37-source54-pristine-serial-regression-v1/WRF/main/wrf.exe",
+    "binary_sha256": "7d6526f4c509aa93d2b28c73db6c782d72e68ef76fc1658ceb360250adf03caa",
+    "case_receipts": {
+      "control": {
+        "equal_variables": 208,
+        "path": "build/udm37-source54-pristine-serial-regression-v1/control-receipt.json",
+        "result": "PASS",
+        "sha256": "89972f75f9c84353173189b336c022b6664de39184874755123f0ea8ce766018",
+        "total_variables": 208
+      },
+      "mixed": {
+        "equal_variables": 208,
+        "path": "build/udm37-source54-pristine-serial-regression-v1/mixed-receipt.json",
+        "result": "PASS",
+        "sha256": "b9b6b0b559769d9c44886ce50efbd44f9d95c381c9bcd65231476922f01f4f62",
+        "total_variables": 208
+      }
+    },
+    "compile_returncode": 0,
+    "compile_status": "BUILD_PASS",
+    "compiler": "GNU Fortran (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0",
+    "configure_diff_sha256": "cbf29bfff0c47efe6578074b4004492e0a7fb15aef4672ad660093b510e611b8",
+    "configure_sha256": "6a2fcd322bbff92ff61a141671d492eb8d74e3d56af28582306c024775b89c68",
+    "independent_review": {
+      "path": "build/udm37-source54-pristine-root-review-v1/review.json",
+      "sha256": "15a37525525eafff5a35eb43d8ed38e291b58ced14053d2713d009eb4dc4fe6a",
+      "status": "PASS_SCOPED_TWO_CASES"
+    },
+    "manifest_path": "build/udm37-restart-cloud-diagnostics-gnu-v1/source-manifest-v4.json",
+    "manifest_sha256": "03b2ddf6d45a37e95a1b07a4d37c2401704bb67569c0290391dea0397fcabe98",
+    "source_label": "source-v4, matched PR58 worktree except documentation files according to independent review"
+  },
+  "minimum_proposed_validation": {
+    "bounded_scope": "This checks these two one-minute SCM cases only; it does not establish longer forecast/restart parity or radiation accuracy.",
+    "build_mode": "fresh GNU 13.3 serial SCM em_scm_xy, default-real-32, no nesting; current exact 5f source; use the official configure as base with only the already-required RRTMGP module include-path line. Record exact configure diff and compile flags; do not relink/reuse source54 objects.",
+    "cases": [
+      "control",
+      "mixed"
+    ],
+    "comparison": "Compare each seven-record current history against the immutable official pristine file and the prior source54 current RA4 file: identical complete variable sets, dims, dtype, variable/global attrs, raw array bytes, and whole-file SHA. All 208 shared variables expected, no exclusions; failure remains failure. Pin source/config/binary/input/runtime assets pre/post and require four-rank not relevant (serial SCM), RC 0 and SUCCESS COMPLETE WRF.",
+    "duration_seconds": 60,
+    "input_policy": "Copy only the input/runtime files from the already-pinned pristine-udm4-runtime cases into two fresh output directories. Do not alter physics flags, input state, tables, IO selection, or namelist. Keep WRF_RRTMGP_RRTMG4_EXPORT_DIR and all WRF_RRTMGP_* observer/audit env unset.",
+    "new_build_required": true,
+    "runs": 2
+  },
+  "official_pristine_reference": {
+    "binary_path": "build/pristine-wrf-v4.8/main/wrf.exe",
+    "binary_sha256": "cbd07fbc9458aca0861e1ed08976501ab6ae02931a05234596996869d7b12b02",
+    "compiler": "GNU Fortran 13.3.0",
+    "configure_sha256": "af7642a54474c075b27f7010db139bef116645e4ba57463be2644cf689791365",
+    "default_real_bytes": 4,
+    "serial": true,
+    "source_commit": "06d4240ae989cc3e50af412bb472df3d9048783c"
+  },
+  "receipt_pins": {
+    "official_binary": {
+      "path": "build/pristine-wrf-v4.8/main/wrf.exe",
+      "sha256": "cbd07fbc9458aca0861e1ed08976501ab6ae02931a05234596996869d7b12b02",
+      "size_bytes": 48391696
+    },
+    "official_comparison": {
+      "path": "build/pristine-udm4-runtime/pristine-comparison.json",
+      "sha256": "cd3ee35bf1295ded76a7a78545c9a65bb33d1398b32ba89d9946b0624d5659aa",
+      "size_bytes": 1891
+    },
+    "official_configure": {
+      "path": "build/pristine-wrf-v4.8/configure.wrf",
+      "sha256": "af7642a54474c075b27f7010db139bef116645e4ba57463be2644cf689791365",
+      "size_bytes": 21000
+    },
+    "source54_build": {
+      "path": "build/udm37-source54-pristine-serial-regression-v1/build-receipt.json",
+      "sha256": "56c9febd910c48d1b4a38f17ed4b61913aabefe94dde5ed34de990d9e418958c",
+      "size_bytes": 15223
+    },
+    "source54_config": {
+      "path": "build/udm37-source54-pristine-serial-regression-v1/WRF/configure.wrf",
+      "sha256": "6a2fcd322bbff92ff61a141671d492eb8d74e3d56af28582306c024775b89c68",
+      "size_bytes": 21072
+    },
+    "source54_config_diff": {
+      "path": "build/udm37-source54-pristine-serial-regression-v1/configure.wrf.diff",
+      "sha256": "cbf29bfff0c47efe6578074b4004492e0a7fb15aef4672ad660093b510e611b8",
+      "size_bytes": 488
+    },
+    "source54_control": {
+      "path": "build/udm37-source54-pristine-serial-regression-v1/control-receipt.json",
+      "sha256": "89972f75f9c84353173189b336c022b6664de39184874755123f0ea8ce766018",
+      "size_bytes": 129752
+    },
+    "source54_final": {
+      "path": "build/udm37-source54-pristine-serial-regression-v1/final-receipt.json",
+      "sha256": "f49a57adb96798fa67f3c0ecd84359f2587bbe8e9d174b9571e55906833c2203",
+      "size_bytes": 5153
+    },
+    "source54_manifest": {
+      "path": "build/udm37-restart-cloud-diagnostics-gnu-v1/source-manifest-v4.json",
+      "sha256": "03b2ddf6d45a37e95a1b07a4d37c2401704bb67569c0290391dea0397fcabe98",
+      "size_bytes": 1979449
+    },
+    "source54_mixed": {
+      "path": "build/udm37-source54-pristine-serial-regression-v1/mixed-receipt.json",
+      "sha256": "b9b6b0b559769d9c44886ce50efbd44f9d95c381c9bcd65231476922f01f4f62",
+      "size_bytes": 129745
+    },
+    "source54_review": {
+      "path": "build/udm37-source54-pristine-root-review-v1/review.json",
+      "sha256": "15a37525525eafff5a35eb43d8ed38e291b58ced14053d2713d009eb4dc4fe6a",
+      "size_bytes": 5939
+    }
+  },
+  "schema": "udm37-pristine-current-source-audit-v1",
+  "source_difference_since_source54": {
+    "current_changed_Wrf_entries": [
+      {
+        "current_sha256": "0fa01837659756c44fb89625f43c891dfa6ff07974f8dff94ef573192f17edf7",
+        "path": "WRF/doc/rrtmgp/COLUMN_REPLAY.md",
+        "source54_sha256": "c10dcc607e36fe91d29fd36bf0ec04c7eabf45563ff73e22a586fc8c1b90b579"
+      },
+      {
+        "current_sha256": "bcf03b430bbf3e6c925eef2a3caaff9dfb948cb28ca5929c65df005bf0972c28",
+        "path": "WRF/doc/rrtmgp/INDEPENDENT_REFERENCE.md",
+        "source54_sha256": "f68980787e719c624914cf14c716589a18e0f4ce95aecf364d22a2c47fc3f60b"
+      },
+      {
+        "current_sha256": "5afc4ccae87c12bb242de1ec96ecee5fb4f944e04ec13a241738aae50430d980",
+        "path": "WRF/doc/rrtmgp/PHASE_PATH_DIAGNOSTICS.md",
+        "source54_sha256": "ecd9360edbef7e287bdef13686bd9b05b3d480b6fdb45f45741561ce1281276d"
+      },
+      {
+        "current_sha256": "65f1a870caa1f9bc65c6c63c3e9c3558e73839c90f23288dab69c0305428c839",
+        "path": "WRF/doc/rrtmgp/PHYSICS_AUDIT.md",
+        "source54_sha256": "f25cfa632fde5c00133a4bc9dcda686c7b99f8e381d850feb42cf2605b1c2bf6"
+      },
+      {
+        "current_sha256": "5b22a9b92a17042282933cfdeddc810079305375f35239a0e944ae1624bfd082",
+        "path": "WRF/doc/rrtmgp/README.md",
+        "source54_sha256": "13bcd27ff134223c84c3bb28035ba88e626164fbc502869aaf79b91945b3c07e"
+      },
+      {
+        "current_sha256": "d351228b9dad387bc70738c2f0779d5d8cbd51107e1e00a69fde38f151913b45",
+        "path": "WRF/doc/rrtmgp/REVIEW_FOLLOWUP.md",
+        "source54_sha256": "660b9b1c81a002b7cea361ece1a44516e7c6e1c16508714a0d074f716a90518e"
+      },
+      {
+        "current_sha256": "e62c88e7d9cd75e023151afefd428e321065e442e39e1e83aba599d95a7c4706",
+        "path": "WRF/doc/rrtmgp/RUNTIME_CONTRACTS.md",
+        "source54_sha256": "049f169640f51a4010b1cfddc45d1f803b567c790de6a2f720048c5bbd0f6de0"
+      },
+      {
+        "current_sha256": "ecada0114e5cda1ce1c60b6f191d696d02e86de914f9b4cf6b2efa3df6edf4a6",
+        "path": "WRF/main/depend.common",
+        "source54_sha256": "8dc54c936a0e6d9e325c388151e48671196fa97ecb2cccf0a7ccd4ed9e18bcab"
+      },
+      {
+        "current_sha256": "20f04876265f34901dd5b44e3c87078a0e40acee13fe2df59fbfff331d9211c1",
+        "path": "WRF/phys/module_ra_rrtmg_lw.F",
+        "source54_sha256": "9723f1de10ba1b16af7cb0305747f033d70ef488e5c046a6e7c16b65baffeea2"
+      },
+      {
+        "current_sha256": "fd2af1a10d8cf5033d77c7beb061fa7fadc70c79166383c639a63e9b49de8f1d",
+        "path": "WRF/phys/module_ra_rrtmg_sw.F",
+        "source54_sha256": "9c64bbea29522ff472ed5e2a86aed0059b26ffb8462786eea54d6e302218b517"
+      },
+      {
+        "current_sha256": "b3932fa4e88202d5fe0fb660764bec9a07d031c03b501c20ee6ef259828ffa69",
+        "path": "WRF/phys/module_ra_rrtmgp.F",
+        "source54_sha256": "719504c7221aef989c52090a347c6f6c5fb3f85828cf4e741309790a8314a886"
+      },
+      {
+        "current_sha256": "c934c03c25cecd027e06dc6ac4d2e3aeab8031671daa229046441b71055698a7",
+        "path": "WRF/phys/module_ra_rrtmgp_audit.F",
+        "source54_sha256": "42642b1f1dc9e55e8d502acc7367db2ec80c1dc8e8f7d1df30927d70a0575b55"
+      },
+      {
+        "current_sha256": "65e61158b31d83d34da98dac51524606733b3fde4a89743498f9b1cd52646274",
+        "path": "WRF/phys/module_ra_rrtmgp_input.F",
+        "source54_sha256": "47dcd1fbe84ec2f5bc21598e05024f38b9f4a4a7decb51cb7e51f7e21d01357f"
+      },
+      {
+        "current_sha256": "9fb2a497ef77c4296b68b9e104e24970452a26461ab29daa16601ae9d4a67c67",
+        "path": "WRF/phys/module_radiation_driver.F",
+        "source54_sha256": "6790dc884c53fff201f15713d60197f54b43dc53b545ed44eb2397e9d2d3687f"
+      },
+      {
+        "current_sha256": "f8320a6d12fc256ebcbf1e7688c1902d3ab831bb971f0889f35c450fb5d6f452",
+        "path": "WRF/test/rrtmgp/CMakeLists.txt",
+        "source54_sha256": "77b2495233f74484df3477b5f5a11e854684178729d4edfc2999bd8289099ac9"
+      },
+      {
+        "current_sha256": "4ec2d9a06982fdf2ce02a3e5a93341b4476b7561ad8cdca99c158a38d729628f",
+        "path": "WRF/test/rrtmgp/UDM_CU_POPULATIONS.md",
+        "source54_sha256": "170422592f808b147d52590f703e24c269aaed5a7a162d260d8bc1c0791f4dd9"
+      },
+      {
+        "current_sha256": "6099a3819268d3ee17bbcbaf0610c03822c09247da6ac5bdfdef66c9190533a7",
+        "path": "WRF/test/rrtmgp/compare_column_replay.py",
+        "source54_sha256": "c5475c356d60fd093185a8bbb3f08ade8e1caa2f3672bd60540fd2ad2bfe662b"
+      },
+      {
+        "current_sha256": "93214328388a1a7e242be1a298d34ae61e76f81d201ed9cf039e7f07ac580e6f",
+        "path": "WRF/test/rrtmgp/reference_column.f90",
+        "source54_sha256": "9ab10866c9b398c059310c74b3824b7273c42f180dd48a1643229d76714464cd"
+      },
+      {
+        "current_sha256": "ff7b7dc80bd4246ec0aef06ca605ae4cdcdc8201b1d76203c15a6d94c340e681",
+        "path": "WRF/test/rrtmgp/test_columns.f90",
+        "source54_sha256": "7b38525240b06bfebe62cad35fb45c09b6f0b010d03ec2988b1f5d96b45d2690"
+      },
+      {
+        "current_sha256": "ac1fdc841283c2b8a87743d2318d37dc007db54eb83df3badf83f36da07c61ee",
+        "path": "WRF/test/rrtmgp/test_phase_path_stats.f90",
+        "source54_sha256": "d1ff914b9a3b0f589f170de79818f36a067085171a7df7ab228c9a70d25c0fc9"
+      },
+      {
+        "current_sha256": "32a5c0aa40244eac703c690ff82ec402ad240e803aabd97243994fc5815b8818",
+        "path": "WRF/test/rrtmgp/test_sw_predelta_direct.f90",
+        "source54_sha256": "17516385c7ff87629972305e08d2c7639062e99d22112a5f111d669b01140861"
+      },
+      {
+        "current_sha256": "1d48b3908206398a0022981e8a1ffc214d34d220a4996c8a36097fe8740e075b",
+        "path": "WRF/test/rrtmgp/test_udm_negative_policy.f90",
+        "source54_sha256": "60946c59b52ac5e8c3f75cbb4576c3dbde26c086fcdaa0ab5be7b522360132c7"
+      },
+      {
+        "current_sha256": "11ce7bc1aec57a577061371ac58b11065874e44965efa3312c72df1d149bb29d",
+        "path": "WRF/test/rrtmgp/test_udm_negative_policy.py",
+        "source54_sha256": "c37d78ecf0d11b7862ff58c22d6d13128cc8bd25f5c8ec0cf5c2899cdc1e258e"
+      }
+    ],
+    "current_changed_count": 23,
+    "ra4_relevant_anchor_hashes": {
+      "WRF/Registry/Registry.EM_COMMON": {
+        "changed_since_source54": false,
+        "current_sha256": "87e21a476a06b7e0c926b2d939eaf1028810cba8a7d1e6fc585b50b599f99729",
+        "source54_sha256": "87e21a476a06b7e0c926b2d939eaf1028810cba8a7d1e6fc585b50b599f99729"
+      },
+      "WRF/phys/module_mp_udm.F": {
+        "changed_since_source54": false,
+        "current_sha256": "872737fe3a0cebf941d3ee45056fb60aadf465f0f72d72d1a2c7abac6709351d",
+        "source54_sha256": "872737fe3a0cebf941d3ee45056fb60aadf465f0f72d72d1a2c7abac6709351d"
+      },
+      "WRF/phys/module_physics_init.F": {
+        "changed_since_source54": false,
+        "current_sha256": "bc9cd3a7e3d908678b52d53aa8ef7d7ad760a8e57958e044e35dc560b1bc1375",
+        "source54_sha256": "bc9cd3a7e3d908678b52d53aa8ef7d7ad760a8e57958e044e35dc560b1bc1375"
+      },
+      "WRF/phys/module_ra_rrtmg_lw.F": {
+        "changed_since_source54": true,
+        "current_sha256": "20f04876265f34901dd5b44e3c87078a0e40acee13fe2df59fbfff331d9211c1",
+        "source54_sha256": "9723f1de10ba1b16af7cb0305747f033d70ef488e5c046a6e7c16b65baffeea2"
+      },
+      "WRF/phys/module_ra_rrtmg_sw.F": {
+        "changed_since_source54": true,
+        "current_sha256": "fd2af1a10d8cf5033d77c7beb061fa7fadc70c79166383c639a63e9b49de8f1d",
+        "source54_sha256": "9c64bbea29522ff472ed5e2a86aed0059b26ffb8462786eea54d6e302218b517"
+      },
+      "WRF/phys/module_ra_rrtmgp.F": {
+        "changed_since_source54": true,
+        "current_sha256": "b3932fa4e88202d5fe0fb660764bec9a07d031c03b501c20ee6ef259828ffa69",
+        "source54_sha256": "719504c7221aef989c52090a347c6f6c5fb3f85828cf4e741309790a8314a886"
+      },
+      "WRF/phys/module_ra_rrtmgp_audit.F": {
+        "changed_since_source54": true,
+        "current_sha256": "c934c03c25cecd027e06dc6ac4d2e3aeab8031671daa229046441b71055698a7",
+        "source54_sha256": "42642b1f1dc9e55e8d502acc7367db2ec80c1dc8e8f7d1df30927d70a0575b55"
+      },
+      "WRF/phys/module_ra_rrtmgp_input.F": {
+        "changed_since_source54": true,
+        "current_sha256": "65e61158b31d83d34da98dac51524606733b3fde4a89743498f9b1cd52646274",
+        "source54_sha256": "47dcd1fbe84ec2f5bc21598e05024f38b9f4a4a7decb51cb7e51f7e21d01357f"
+      },
+      "WRF/phys/module_radiation_driver.F": {
+        "changed_since_source54": true,
+        "current_sha256": "9fb2a497ef77c4296b68b9e104e24970452a26461ab29daa16601ae9d4a67c67",
+        "source54_sha256": "6790dc884c53fff201f15713d60197f54b43dc53b545ed44eb2397e9d2d3687f"
+      }
+    },
+    "source54_entry_count": 6760
+  },
+  "status": "INVENTORY_COMPLETE_CURRENT_HEAD_UNTESTED",
+  "target_current_source": {
+    "based_on": "PR70 source 1cb6920a43d8ba10ecfa179487839f9df7022cb4",
+    "branch": "feat-udm37-rrtmg4-optics-export",
+    "commit": "5f3034e9c43209a352977da4885a3fc15b46c532",
+    "worktree": "build/udm37-current-rrtmg4-optics-export-work"
+  }
+}

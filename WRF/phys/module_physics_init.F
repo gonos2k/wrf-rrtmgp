@@ -292,7 +292,7 @@ CONTAINS
 #endif
 #endif
                          ,NoahmpIO                                                &
-                         ,udm_cldfra, udm_cf_step                                &
+                         ,udm_cldfra, udm_cf_step, udm_cf_top                                &
                          )
 
 !-----------------------------------------------------------------
@@ -312,6 +312,7 @@ CONTAINS
    TYPE (grid_config_rec_type)              :: config_flags
    REAL, DIMENSION(:,:,:), OPTIONAL, POINTER, INTENT(INOUT) :: udm_cldfra
    INTEGER, DIMENSION(:,:), OPTIONAL, POINTER, INTENT(INOUT) :: udm_cf_step
+   INTEGER, DIMENSION(:,:), OPTIONAL, POINTER, INTENT(INOUT) :: udm_cf_top
 
    INTEGER , INTENT(IN)        :: id
    INTEGER , INTENT(IN) ,OPTIONAL       :: tmn_update
@@ -1161,7 +1162,9 @@ CHARACTER(LEN=8) :: name
 
    ENDIF ! use_mp_re .EQ. 1
 
-   IF (config_flags%mp_physics == UDMSCHEME .AND. &
+   ! Restore these diagnostics from a new-format checkpoint on restart.
+   ! Only a cold start has no last microphysics call to report.
+   IF (.NOT. restart .AND. config_flags%mp_physics == UDMSCHEME .AND. &
        config_flags%ra_lw_physics == RRTMGP_LWSCHEME .AND. &
        config_flags%ra_sw_physics == RRTMGP_SWSCHEME) THEN
       IF (PRESENT(udm_cldfra)) THEN
@@ -1169,6 +1172,9 @@ CHARACTER(LEN=8) :: name
       ENDIF
       IF (PRESENT(udm_cf_step)) THEN
          IF (ASSOCIATED(udm_cf_step)) udm_cf_step = -1
+      ENDIF
+      IF (PRESENT(udm_cf_top)) THEN
+         IF (ASSOCIATED(udm_cf_top)) udm_cf_top = -1
       ENDIF
    ENDIF
 
@@ -2431,7 +2437,10 @@ CHARACTER(LEN=8) :: name
 
         CASE (RRTMG_LWSCHEME,RRTMGP_LWSCHEME)
              IF(config_flags%ra_lw_physics==RRTMGP_LWSCHEME) &
-                  CALL rrtmgp_init(config_flags%rrtmgp_data_path,config_flags%rrtmgp_ice_roughness)
+                  CALL rrtmgp_init(config_flags%rrtmgp_data_path,config_flags%rrtmgp_ice_roughness, &
+                       gravity=g,cp_dry=cp,mol_weight_dry=mwdry*1.e-3, &
+                       frozen_optics=config_flags%rrtmgp_udm_frozen_optics, &
+                       frozen_table=config_flags%rrtmgp_udm_frozen_table)
              CALL rrtmg_lwinit(                             &
                            p_top, allowed_to_read ,         &
                            ids, ide, jds, jde, kds, kde,    &
@@ -2547,7 +2556,10 @@ CHARACTER(LEN=8) :: name
 
         CASE (RRTMG_SWSCHEME,RRTMGP_SWSCHEME)
              IF(config_flags%ra_sw_physics==RRTMGP_SWSCHEME) &
-                  CALL rrtmgp_init(config_flags%rrtmgp_data_path,config_flags%rrtmgp_ice_roughness)
+                  CALL rrtmgp_init(config_flags%rrtmgp_data_path,config_flags%rrtmgp_ice_roughness, &
+                       gravity=g,cp_dry=cp,mol_weight_dry=mwdry*1.e-3, &
+                       frozen_optics=config_flags%rrtmgp_udm_frozen_optics, &
+                       frozen_table=config_flags%rrtmgp_udm_frozen_table)
              CALL rrtmg_swinit(                             &
                            allowed_to_read ,                &
                            ids, ide, jds, jde, kds, kde,    &

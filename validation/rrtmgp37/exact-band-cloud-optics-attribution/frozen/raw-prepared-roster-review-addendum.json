@@ -1,0 +1,69 @@
+{
+  "schema": "exact-band-cloud-swap-review-addendum-v1",
+  "created_utc": "2026-10-04T22:44:58.813443+00:00",
+  "status": "PASS_SCOPED_DESCRIPTIVE_RECOMPUTATION_AND_REVIEW_ERRATUM",
+  "calls": {
+    "standalone_solver": 0,
+    "build": 0,
+    "WRF": 0,
+    "REAL": 0
+  },
+  "raw_vs_prepared": {
+    "report": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-same-call-raw-vs-prepared-v1/raw-vs-prepared.json",
+      "sha256": "927e70d471feb5e4e56f5b760f475cfdc6f87a8cdb14866555b74bb62177f0d8",
+      "size_bytes": 32549
+    },
+    "analysis_source": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-same-call-raw-vs-prepared-v1/analyse.py",
+      "sha256": "d5a290d7cc67d1bde16141be08292759895d6158a1226eb9c67efb06a2697220",
+      "size_bytes": 6053
+    },
+    "method": "Previously completed read-only independent parsing of original actual export, GP input and same-executable baseline; reconstructed all 11 numeric fields per 36 exact-band/layer rows and compared IEEE64 packed bits. No repetition of numerical calls.",
+    "rows_checked": 36,
+    "numeric_values_checked": 396,
+    "all_numeric_values_binary64_bit_equal": true,
+    "layer31_ratios": {
+      "legacy_raw_over_gp_raw": [
+        1.560471737888229,
+        1.6223274643487826
+      ],
+      "legacy_prepared_over_gp_prepared": [
+        1.2319519626157824,
+        1.7626773866742815
+      ]
+    },
+    "limits": [
+      "Native/CU raw extinction is wp; precipitation raw extinction comes from captured REAL32 values promoted to REAL64.",
+      "Legacy and GP use different mass/size/ice/snow conventions and optical models. Discrepancy preceding delta scaling does not isolate a delta-transform bug.",
+      "No spectral weighting, gpoint averaging, flux/accuracy result or two unmatched-band approximation."
+    ]
+  },
+  "withdrawn_review_finding": {
+    "claim": "SW BASELINE_SECTIONS omits mandatory GAS_TAU_RAW",
+    "verdict": "FALSE_ALARM_WITHDRAWN",
+    "reason": "Reviewer incorrectly carried the LW raw-gas field into the SW result roster. Actual V11 SW output does not include GAS_TAU_RAW; source write guard emits it only for V8/V10.",
+    "actual_baseline": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-retained-cu-runtime-v1/run-v1/outputs/baseline-sw.result",
+      "sha256": "5afeb243d0d8e85a36d8c3dd5be7fe8c6c41a2034a142596d9e1d6d765dac53d",
+      "size_bytes": 1338695
+    },
+    "actual_sections": 54,
+    "draft_declared_sections": 54,
+    "set_difference_actual_minus_declared": [],
+    "set_difference_declared_minus_actual": [],
+    "gas_sections": [
+      "GAS_COL_DRY",
+      "GAS_G",
+      "GAS_SSA",
+      "GAS_TAU"
+    ],
+    "no_runner_roster_change_needed": true,
+    "owner_and_root_notified": true
+  },
+  "remaining_valid_draft_findings": [
+    "Use final v4/prepared path and sw_gas_coefficients_executed_tree key.",
+    "Place post-Popen durable PID/count writes inside process-group interruption cleanup."
+  ],
+  "reviewer_checker_invocation_erratum": "First offline checker invocation used v4 directory instead of its prepared subdirectory and stopped at missing plan before analysis/output. Corrected path then passed; no generator/input/numerical changes."
+}

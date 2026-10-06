@@ -1,0 +1,86 @@
+{
+  "status": "PASS_COMPONENT_CHECKS",
+  "schema": "output-finite-component-validation-v1",
+  "source_head": "33632eafff3fa06a164c7c56f258fac6fb545205",
+  "source_pins": {
+    "WRF/phys/module_ra_rrtmgp.F": "b3932fa4e88202d5fe0fb660764bec9a07d031c03b501c20ee6ef259828ffa69",
+    "WRF/test/rrtmgp/CMakeLists.txt": "f8320a6d12fc256ebcbf1e7688c1902d3ab831bb971f0889f35c450fb5d6f452",
+    "WRF/test/rrtmgp/test_columns.f90": "ff7b7dc80bd4246ec0aef06ca605ae4cdcdc8201b1d76203c15a6d94c340e681",
+    "WRF/test/rrtmgp/test_sw_predelta_direct.f90": "32a5c0aa40244eac703c690ff82ec402ad240e803aabd97243994fc5815b8818",
+    "WRF/test/rrtmgp/generate_output_finite_fault_sources.py": "05da60888a3bedeb4148757605cc347360d7daa93df5632cfbf47ee782a60e4a",
+    "WRF/test/rrtmgp/test_output_finite_fault.f90": "80e4580a378e3d3560a10a48482de98569f4d9d20a8781d6fd6c2413f1e9e800",
+    "WRF/test/rrtmgp/test_output_finite_fault.py": "f598c857c45c30869dfb69c38c61973b319d40b40141d4f3185ebd52dab7cfbf",
+    "config/registration37.json": "888a788187cfa1cd5cd150b12b70cbcf65d7000df8f7db74aa65a6e688512252"
+  },
+  "started_utc": "2026-10-04T11:52:05.332632+00:00",
+  "model_invocations": 0,
+  "steps": [
+    {
+      "command": [
+        "/usr/local/bin/cmake",
+        "-S",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-output-finite-pr-work/WRF/test/rrtmgp",
+        "-B",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-output-finite-components-v1",
+        "-DNETCDF_INCLUDE_DIR=/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/netcdf/include",
+        "-DNETCDF_LIBRARY_DIR=/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/netcdf/lib",
+        "-DRRTMGP_DATA_DIR=/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-pr60-active-cu-current-build-v1/source-v3/WRF/run",
+        "-DPython3_EXECUTABLE=/usr/bin/python3.12"
+      ],
+      "started_utc": "2026-10-04T11:52:05.333782+00:00",
+      "returncode": 0,
+      "log": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-output-finite-components-v1/step-0.log",
+      "log_sha256": "d8a88d9629e181c796c02a586957b69555e8afa8be6404a696afcacd273b627e",
+      "ended_utc": "2026-10-04T11:52:06.030082+00:00"
+    },
+    {
+      "command": [
+        "/usr/local/bin/cmake",
+        "--build",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-output-finite-components-v1",
+        "-j",
+        "12",
+        "--target",
+        "test_rrtmgp_columns",
+        "test_rrtmgp_multicolumn",
+        "test_rrtmgp_workspace",
+        "test_rrtmgp_sw_predelta_direct",
+        "test_rrtmgp_output_finite_lw_clear_flux_nan",
+        "test_rrtmgp_output_finite_sw_allsky_heat_nan",
+        "test_rrtmgp_output_finite_lw_allsky_default_overflow"
+      ],
+      "started_utc": "2026-10-04T11:52:06.031077+00:00",
+      "returncode": 0,
+      "log": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-output-finite-components-v1/step-1.log",
+      "log_sha256": "dc958ed1f246c8783dda3bcf09952a5e86d990d8f736fe0bac34b274e99c68b2",
+      "ended_utc": "2026-10-04T11:52:14.256226+00:00"
+    },
+    {
+      "command": [
+        "/usr/local/bin/ctest",
+        "--test-dir",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-output-finite-components-v1",
+        "--output-on-failure",
+        "-R",
+        "^(wrf_rrtmgp_columns|multi_column_equivalence|workspace_reuse_states_mode[01]|sw_predelta_direct_(clear|cloud|overlap_zero|night)|reject_output_finite_.*)$"
+      ],
+      "started_utc": "2026-10-04T11:52:14.257333+00:00",
+      "returncode": 0,
+      "log": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-output-finite-components-v1/step-2.log",
+      "log_sha256": "a9e4ef4aa784391eda8e5711b70cdca12476efe9b1954de5551054fc9040b63e",
+      "ended_utc": "2026-10-04T11:52:59.678626+00:00"
+    }
+  ],
+  "postflight_pins": {
+    "WRF/phys/module_ra_rrtmgp.F": "b3932fa4e88202d5fe0fb660764bec9a07d031c03b501c20ee6ef259828ffa69",
+    "WRF/test/rrtmgp/CMakeLists.txt": "f8320a6d12fc256ebcbf1e7688c1902d3ab831bb971f0889f35c450fb5d6f452",
+    "WRF/test/rrtmgp/test_columns.f90": "ff7b7dc80bd4246ec0aef06ca605ae4cdcdc8201b1d76203c15a6d94c340e681",
+    "WRF/test/rrtmgp/test_sw_predelta_direct.f90": "32a5c0aa40244eac703c690ff82ec402ad240e803aabd97243994fc5815b8818",
+    "WRF/test/rrtmgp/generate_output_finite_fault_sources.py": "05da60888a3bedeb4148757605cc347360d7daa93df5632cfbf47ee782a60e4a",
+    "WRF/test/rrtmgp/test_output_finite_fault.f90": "80e4580a378e3d3560a10a48482de98569f4d9d20a8781d6fd6c2413f1e9e800",
+    "WRF/test/rrtmgp/test_output_finite_fault.py": "f598c857c45c30869dfb69c38c61973b319d40b40141d4f3185ebd52dab7cfbf",
+    "config/registration37.json": "888a788187cfa1cd5cd150b12b70cbcf65d7000df8f7db74aa65a6e688512252"
+  },
+  "sources_unchanged": true,
+  "finished_utc": "2026-10-04T11:52:59.680342+00:00"
+}

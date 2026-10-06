@@ -1,0 +1,50 @@
+{
+  "schema": "udm37-output-finite-independent-review-v2",
+  "status": "PASS_SCOPED_FOLLOWUP_REVIEW",
+  "review_scope": "Additive review of the follow-up provenance, precision-dependent skip handling, and contract wording. The production adapter was not re-reviewed beyond confirming its hash is unchanged from v1.",
+  "production_adapter_unchanged": {
+    "path": "build/udm37-output-finite-pr-work/WRF/phys/module_ra_rrtmgp.F",
+    "sha256": "b3932fa4e88202d5fe0fb660764bec9a07d031c03b501c20ee6ef259828ffa69"
+  },
+  "findings": [
+    {
+      "id": "generator-provenance",
+      "status": "PASS",
+      "path": "build/udm37-output-finite-pr-work/WRF/test/rrtmgp/generate_output_finite_fault_sources.py",
+      "sha256": "05da60888a3bedeb4148757605cc347360d7daa93df5632cfbf47ee782a60e4a",
+      "detail": "Generated fault-source manifest binds the original adapter hash, generated-file hashes, exact anchor text, one-based occurrence and anchor count, and injected fault description. Ambiguous anchor counts fail closed."
+    },
+    {
+      "id": "kind-aware-skip",
+      "status": "PASS",
+      "paths": {
+        "driver": "build/udm37-output-finite-pr-work/WRF/test/rrtmgp/test_output_finite_fault.f90",
+        "driver_sha256": "80e4580a378e3d3560a10a48482de98569f4d9d20a8781d6fd6c2413f1e9e800",
+        "python_harness": "build/udm37-output-finite-pr-work/WRF/test/rrtmgp/test_output_finite_fault.py",
+        "python_harness_sha256": "f598c857c45c30869dfb69c38c61973b319d40b40141d4f3185ebd52dab7cfbf",
+        "cmake": "build/udm37-output-finite-pr-work/WRF/test/rrtmgp/CMakeLists.txt",
+        "cmake_sha256": "f8320a6d12fc256ebcbf1e7688c1902d3ab831bb971f0889f35c450fb5d6f452"
+      },
+      "detail": "The default-REAL conversion-overflow case checks HUGE(default REAL) against HUGE(wp). If default REAL is not narrower, the Fortran fixture emits a dedicated skip marker and returns 77; Python accepts that only for this named case, and CTest maps 77 to SKIP_RETURN_CODE. Other fault cases still require their exact guard diagnostic and nonzero termination."
+    },
+    {
+      "id": "contract-scope-wording",
+      "status": "PASS",
+      "path": "build/udm37-output-finite-pr-work/WRF/doc/rrtmgp/OUTPUT_FINITE_CONTRACT.md",
+      "sha256": "baaaccfa990d000df1daf2b25364f7d2f92e96ba2fdcb66f3207952fc79245f6",
+      "detail": "Documentation limits the check to fail-fast output validation and explicitly avoids claiming it fixes the separate thermodynamic failure or establishes forecast accuracy."
+    }
+  ],
+  "focused_validation": {
+    "receipt": "build/udm37-output-finite-components-v1/component-receipt.json",
+    "receipt_sha256": "df172eb3265fdcec569be0921ba01b228b76599c5d61af94545d5e5efca4b0cd",
+    "ctest_log": "build/udm37-output-finite-components-v1/step-2.log",
+    "ctest_log_sha256": "a9e4ef4aa784391eda8e5711b70cdca12476efe9b1954de5551054fc9040b63e",
+    "result": "PASS: 11/11 CTest cases; zero model invocations",
+    "note": "Read existing root-owned receipt and log only; this review did not run tests or builds."
+  },
+  "limitations": [
+    "This is a scoped follow-up review, not a second full review of adapter arithmetic or all original tests.",
+    "The overflow fault is skipped on configurations where default REAL is not narrower than wp; this is represented as a CTest skip, not a passing overflow-path execution."
+  ]
+}

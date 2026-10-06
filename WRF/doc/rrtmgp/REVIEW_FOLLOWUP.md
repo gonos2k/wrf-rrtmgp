@@ -1,5 +1,7 @@
 # 구름 입력 분리 이후 검토 반영
 
+> **역사적 상태 스냅샷.** 이 문서의 열린 항목과 “계속 ncol=1” 문장은 기준 커밋 `c705c4474d965db1b1cb78066e8c07d3c31a518d` 당시의 기록이다. 아래 실패·수치·시험 이력은 보존한다. 현재 코드는 opt-in 컬럼 packing을 포함하며, 후속 실행 범위는 아래의 현재 상태 절에서 별도로 연결한다.
+
 기준 main은 `c705c4474d965db1b1cb78066e8c07d3c31a518d`이다. 이번 변경은 작은 구름분율의 표본 시험, 미세물리 분류 계약, 실제 WRF 기둥의 독립 재생에 집중한다. 이전 SWDOWN 직접 반환, 정확한 양의 cf 질량 변환과 기존 4번 경로는 유지한다.
 
 ## 작은 cf와 McICA
@@ -27,4 +29,6 @@ GNU serial 표준 `compile -j 12 em_scm_xy` 경로로 실행 파일을 다시 �
 - 실제 누적 에너지 시간적분, 공식 원본 4/4 회귀, 24–48시간·restart·둥지·MPI/OpenMP 및 집단 오류 종료.
 - WRF tile packing 32–256컬럼, 실행시간·할당량 측정. WRF는 계속 ncol=1이다.
 
-현재 재생 진단은 GNU 직렬 개발 실행에 한정한다. 전체 예보의 안정성·정확도·병렬 운용 적합성은 이 시험으로 확정하지 않는다.
+현재 상태와 역사 기록을 구분한다. 옵션 37 래퍼에는 `WRF_RRTMGP_BATCH_SIZE` 기반의 opt-in 32/64/128 컬럼 packing이 구현되었고 기본값은 batch 1이다. source-matched B1/B32/64/128 회귀와 제한된 40분 성능 측정은 [batch regression](../../../validation/rrtmgp37/column-batching-regression/README.md) 및 [성능 기록](../../../validation/rrtmgp37/column-batching-performance/README.md)을 따른다. 이 결과는 모든 설정의 scaling 또는 accuracy를 뜻하지 않는다.
+
+후속 자료에는 [누적 flux recurrence 검사](../../../validation/rrtmgp37/runtime-contracts/accumulation-final.json), [짧은 공식 RA4 보존 사례](../../../validation/rrtmgp37/reference-residual-audit/serial-ra4/README.md), [24시간 및 own-restart 실행](../../../validation/rrtmgp37/domain-calendar-seeds/fresh-restart/README.md), [1시간 nested MPI4/OMP2 pilot](../../../validation/rrtmgp37/nested-batching-restart/README.md)가 있다. 각각 고정된 실행·사례의 범위로 해석한다. 48시간 예보, 일반 분해 불변성, 전체 운용 안정성·물리 정확도는 이들 시험으로 확정하지 않는다.

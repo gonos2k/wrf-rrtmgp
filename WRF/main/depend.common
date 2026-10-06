@@ -2326,7 +2326,7 @@ module_sf_sfclayrev.o: \
 	physics_mmm/sf_sfclayrev.o
 
 
-module_ra_rrtmg_sw.o: module_ra_rrtmgp.o \
+module_ra_rrtmg_sw.o: module_ra_rrtmgp.o module_ra_rrtmgp_audit.o \
 	../share/module_model_constants.o \
 	module_ra_clWRF_support.o \
 	../frame/module_wrf_error.o \
@@ -2347,7 +2347,7 @@ module_ra_rrtmg_swk.o: \
 	module_ra_effective_radius.o 
 
 
-module_ra_rrtmg_lw.o: module_ra_rrtmgp.o \
+module_ra_rrtmg_lw.o: module_ra_rrtmgp.o module_ra_rrtmgp_audit.o \
 	../frame/module_wrf_error.o \
 	../share/module_model_constants.o \
 	module_ra_clWRF_support.o 
@@ -3033,6 +3033,9 @@ physics_mmm/mp_wsm6_effectRad.o: \
 physics_mmm/bl_ysu.o: \
 	ccpp_kind_types.o
 
+
+physics_mmm/bl_shinhong.o: \
+	ccpp_kind_types.o
 
 physics_mmm/bl_gwdo.o : \
 	ccpp_kind_types.o
@@ -4367,7 +4370,8 @@ start_em.o : \
 	../share/module_trajectory.o \
 	../frame/module_wrf_error.o
 
-module_ra_rrtmgp.o: module_ra_rrtmgp_precip.o module_ra_rrtmgp_trace.o module_ra_rrtmgp_input.o ../frame/module_wrf_error.o
+module_ra_rrtmgp_frozen.o: module_ra_rrtmgp_hash.o
+module_ra_rrtmgp.o: module_ra_rrtmgp_frozen.o module_ra_rrtmgp_precip.o module_ra_rrtmgp_trace.o module_ra_rrtmgp_input.o ../frame/module_wrf_error.o
 module_ra_rrtmgp_input.o: ../frame/module_wrf_error.o
 module_mp_udm.o: module_mp_radar.o module_gfs_machine.o
 module_physics_init.o module_microphysics_driver.o: module_mp_udm.o

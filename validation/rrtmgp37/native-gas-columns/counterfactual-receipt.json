@@ -1,0 +1,758 @@
+{
+  "scope": "Same captured V6 SCM states replayed with native dry-mass columns and a V5 pressure/VMR counterfactual. Only V6 magic and NATIVE_DRY_LAYER_MASS_KG_M2 are removed for V5; all other input record bytes are preserved.",
+  "environment": {
+    "reference_executable": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp/build/udm-native-gas-pr17/standalone/reference_column",
+    "reference_sha256": "e72d5cfb60438f7d4d0e5ab675f2050584ab599371f4c5b23edf905ae4723480",
+    "runner_sha256": "b1d8ea4f5d1f0f6d2a7f76a51e475ca2e5b9c49e07d6ea51a8587c25c946223a",
+    "repo_root": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp",
+    "data_dir": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp/WRF/run",
+    "reference_source_sha256": "35fa05b40adde5dabf2f3056281c744f96e2362241be586ecd014057c1c0b184",
+    "gas_backend_source_sha256": "1acecdaf6d14a48708ac20f3bacf45509fc08ee45b6729e73576991a6f323c37",
+    "capture_trace_source_sha256": "d7bd13ce00d960715d49880f2122c4c649ea9add2a89a73c418ca567ba342606",
+    "gas_cloud_data_sha256": {
+      "rrtmgp-gas-lw-g128.nc": "70ad65d116531122660318e5da2a2af9db74b425916202860e9527ef2375b8f6",
+      "rrtmgp-gas-sw-g112.nc": "361ed541324068ded28a275a4dd757bcaa0a845aebefa630f43a04678668fe62",
+      "rrtmgp-clouds-lw-bnd.nc": "09d6704c5b863b4c3ceb417d20bb3076ec492e6bf2dfbcc9f3c5996a3706f0b0",
+      "rrtmgp-clouds-sw-bnd.nc": "7671835992a45afe66244b591a02c0b3df73d7d59ecb746bbffd9763497651cd"
+    },
+    "git_head": "babe0afbe77c2dd28050e60acdbafefd56221151"
+  },
+  "cases": {
+    "control": {
+      "LW": {
+        "phase": "LW",
+        "input": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp/build/udm-native-gas-pr17/scm-reviewed/control/ra37-call1/capture/lw.input",
+        "ncol": 1,
+        "total_layers": 103,
+        "native_layers": 59,
+        "native_extension_layer_count": 44,
+        "native_mass_sha256": "79213d31d55e7033823308d441493c0e449c7dc9e0915fca7ecfab30f8aac09b",
+        "native_column": {
+          "min_kg_m2": 60.67788314819336,
+          "max_kg_m2": 258.6768493652344
+        },
+        "mutation_proof": {
+          "only_magic_and_native_mass_changed": true,
+          "preserved_input_records_sha256": "61e59456034258d631c59d5792cf68201409c192e60bf0e381ad7e83ea32f211",
+          "counterfactual_preserved_records_sha256": "61e59456034258d631c59d5792cf68201409c192e60bf0e381ad7e83ea32f211"
+        },
+        "dry_column_actual_scm_native_vs_pressure_fallback": {
+          "max_abs": 1.8443786732437504e+18,
+          "mean_abs": 3.37876242418819e+17,
+          "max_relative": 1.0454081907666847e-05
+        },
+        "dry_column_actual_scm_native_prefix_first_native_layers": {
+          "max_abs": 1.8443786732437504e+18,
+          "mean_abs": 5.898517452396332e+17,
+          "max_relative": 1.0454081907666847e-05
+        },
+        "dry_column_native_reference_vs_pressure": {
+          "max_abs": 1.8443786732437504e+18,
+          "mean_abs": 3.3787624241930765e+17,
+          "max_relative": 1.045408190754948e-05
+        },
+        "dry_column_extension_exact_zero": true,
+        "dry_column_extension_max_abs": 0.0,
+        "gas_tau_actual_scm_native_vs_pressure_fallback": {
+          "max_abs": 0.1481741308052733,
+          "mean_abs": 0.0006729987946828104,
+          "max_relative": 1.0454081908114008e-05
+        },
+        "gas_tau_actual_scm_native_prefix_first_native_layers": {
+          "max_abs": 0.1481741308052733,
+          "mean_abs": 0.0011748962008869405,
+          "max_relative": 1.0454081908114008e-05
+        },
+        "gas_tau_native_reference_vs_pressure": {
+          "max_abs": 0.1481741308052733,
+          "mean_abs": 0.0006729987946824099,
+          "max_relative": 1.0454081908136281e-05
+        },
+        "gas_tau_extension_exact_zero": true,
+        "gas_tau_extension_max_abs": 0.0,
+        "surface_toa_flux": {
+          "UP": {
+            "surface_actual_native_scm": [
+              379.5956115722656
+            ],
+            "surface_pressure_fallback": [
+              379.59559927168556
+            ],
+            "surface_delta_actual_minus_fallback": [
+              1.2300580067403644e-05
+            ],
+            "toa_actual_native_scm": [
+              243.8873748779297
+            ],
+            "toa_pressure_fallback": [
+              243.88736595146233
+            ],
+            "toa_delta_actual_minus_fallback": [
+              8.926467359060553e-06
+            ],
+            "all_interfaces_actual_vs_fallback": {
+              "max_abs": 2.0116779865020362e-05,
+              "mean_abs": 7.273925390358307e-06,
+              "max_relative": 6.288967091695334e-08
+            },
+            "surface_native_reference": [
+              379.5955998660396
+            ],
+            "surface_delta_native_reference_minus_fallback": [
+              5.943540486441634e-07
+            ],
+            "toa_native_reference": [
+              243.8873681015582
+            ],
+            "toa_delta_native_reference_minus_fallback": [
+              2.1500958666820225e-06
+            ],
+            "all_interfaces_native_reference_vs_fallback": {
+              "max_abs": 1.274607524237581e-05,
+              "mean_abs": 2.7627199913765185e-06,
+              "max_relative": 3.591583858868488e-08
+            }
+          },
+          "DN": {
+            "surface_actual_native_scm": [
+              259.1898498535156
+            ],
+            "surface_pressure_fallback": [
+              259.1898285228848
+            ],
+            "surface_delta_actual_minus_fallback": [
+              2.1330630829652364e-05
+            ],
+            "toa_actual_native_scm": [
+              0.0
+            ],
+            "toa_pressure_fallback": [
+              0.0
+            ],
+            "toa_delta_actual_minus_fallback": [
+              0.0
+            ],
+            "all_interfaces_actual_vs_fallback": {
+              "max_abs": 2.5796607047823272e-05,
+              "mean_abs": 5.0068847705129715e-06,
+              "max_relative": 1.2349506869274962e-07
+            },
+            "surface_native_reference": [
+              259.18983595231146
+            ],
+            "surface_delta_native_reference_minus_fallback": [
+              7.429426659655292e-06
+            ],
+            "toa_native_reference": [
+              0.0
+            ],
+            "toa_delta_native_reference_minus_fallback": [
+              0.0
+            ],
+            "all_interfaces_native_reference_vs_fallback": {
+              "max_abs": 2.219593446284307e-05,
+              "mean_abs": 4.693621293918081e-06,
+              "max_relative": 1.1338677673335396e-07
+            }
+          }
+        },
+        "heating_rate_actual_scm_native_vs_pressure_fallback": {
+          "max_abs": 1.0550135291387264e-05,
+          "mean_abs": 1.8943370066150704e-06,
+          "max_relative": 4.512036953549318e-05
+        },
+        "heating_rate_native_reference_vs_pressure": {
+          "max_abs": 1.0540764558530924e-05,
+          "mean_abs": 1.8846871171562902e-06,
+          "max_relative": 4.516376866677663e-05
+        },
+        "heating_rate_max_abs_actual_minus_fallback": 1.0550135291387264e-05,
+        "actual_scm_vs_native_reference": {
+          "GAS_COL_DRY": {
+            "max_abs": 67108864.0,
+            "mean_abs": 6352538.097087379,
+            "max_relative": 2.123921691704613e-16
+          },
+          "GAS_TAU": {
+            "max_abs": 3.637978807091713e-12,
+            "mean_abs": 9.20572258148849e-15,
+            "max_relative": 9.44222964873712e-16
+          },
+          "UP": {
+            "max_abs": 1.5242071924603806e-05,
+            "mean_abs": 6.444784191308792e-06,
+            "max_relative": 5.395028569242102e-08
+          },
+          "DN": {
+            "max_abs": 1.3901204169997072e-05,
+            "mean_abs": 1.742136690326882e-06,
+            "max_relative": 5.750765333309677e-08
+          },
+          "HR": {
+            "max_abs": 1.5462403446520057e-07,
+            "mean_abs": 2.2448741850581322e-08,
+            "max_relative": 5.037200150678769e-08
+          }
+        },
+        "artifacts": {
+          "source_v6_sha256": "79213d31d55e7033823308d441493c0e449c7dc9e0915fca7ecfab30f8aac09b",
+          "source_actual_result_sha256": "64623d1f880f4805bce7911080e4a4368dbbb27865f9197f20f91e6d7a6c902d",
+          "native_replay_result_sha256": "5da158c1a7d27977dafbe91b2115f7c0afefc4cdaa487524c1cbc0ba6fd7043b",
+          "fallback_v5_input_sha256": "dc46948484b67db12670a64771734269dc740375f66a77a47424070098a0100b",
+          "fallback_v5_result_sha256": "2bd77ff125b002b2c2aa9ed422be4518f18e626f0c75de8f925cd9bd8e8d7799"
+        }
+      },
+      "SW": {
+        "phase": "SW",
+        "input": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp/build/udm-native-gas-pr17/scm-reviewed/control/ra37-call1/capture/sw.input",
+        "ncol": 1,
+        "total_layers": 60,
+        "native_layers": 59,
+        "native_extension_layer_count": 1,
+        "native_mass_sha256": "d60d3b0178a8e6241d2cc85eefd6e67ee1ce2b4cb95363424cfa93fa2aab6ff0",
+        "native_column": {
+          "min_kg_m2": 60.67788314819336,
+          "max_kg_m2": 258.6768493652344
+        },
+        "mutation_proof": {
+          "only_magic_and_native_mass_changed": true,
+          "preserved_input_records_sha256": "3a672956651166399d49812ba9f47eac6c477b3d9b4a426c815ee5a6d28aa145",
+          "counterfactual_preserved_records_sha256": "3a672956651166399d49812ba9f47eac6c477b3d9b4a426c815ee5a6d28aa145"
+        },
+        "dry_column_actual_scm_native_vs_pressure_fallback": {
+          "max_abs": 1.8443786732437504e+18,
+          "mean_abs": 5.800208828189725e+17,
+          "max_relative": 1.0454081907666847e-05
+        },
+        "dry_column_actual_scm_native_prefix_first_native_layers": {
+          "max_abs": 1.8443786732437504e+18,
+          "mean_abs": 5.898517452396332e+17,
+          "max_relative": 1.0454081907666847e-05
+        },
+        "dry_column_native_reference_vs_pressure": {
+          "max_abs": 1.8443786732437504e+18,
+          "mean_abs": 5.800208828198115e+17,
+          "max_relative": 1.045408190754948e-05
+        },
+        "dry_column_extension_exact_zero": true,
+        "dry_column_extension_max_abs": 0.0,
+        "gas_tau_actual_scm_native_vs_pressure_fallback": {
+          "max_abs": 0.00818168828823218,
+          "mean_abs": 8.090534790932946e-05,
+          "max_relative": 1.045408190816659e-05
+        },
+        "gas_tau_actual_scm_native_prefix_first_native_layers": {
+          "max_abs": 0.00818168828823218,
+          "mean_abs": 8.227662499253845e-05,
+          "max_relative": 1.045408190816659e-05
+        },
+        "gas_tau_native_reference_vs_pressure": {
+          "max_abs": 0.00818168828823218,
+          "mean_abs": 8.090534790979467e-05,
+          "max_relative": 1.045408190816659e-05
+        },
+        "gas_tau_extension_exact_zero": true,
+        "gas_tau_extension_max_abs": 0.0,
+        "surface_toa_flux": {
+          "UP": {
+            "surface_actual_native_scm": [
+              137.46212768554688
+            ],
+            "surface_pressure_fallback": [
+              137.46212453759185
+            ],
+            "surface_delta_actual_minus_fallback": [
+              3.1479550273161294e-06
+            ],
+            "toa_actual_native_scm": [
+              168.97132873535156
+            ],
+            "toa_pressure_fallback": [
+              168.97132366122256
+            ],
+            "toa_delta_actual_minus_fallback": [
+              5.074129006743533e-06
+            ],
+            "all_interfaces_actual_vs_fallback": {
+              "max_abs": 9.552027563586307e-06,
+              "mean_abs": 3.683549455665164e-06,
+              "max_relative": 6.896490154233478e-08
+            },
+            "surface_native_reference": [
+              137.4621254305787
+            ],
+            "surface_delta_native_reference_minus_fallback": [
+              8.929868613449798e-07
+            ],
+            "toa_native_reference": [
+              168.9713220884056
+            ],
+            "toa_delta_native_reference_minus_fallback": [
+              -1.5728169557860383e-06
+            ],
+            "all_interfaces_native_reference_vs_fallback": {
+              "max_abs": 4.5315032366488595e-06,
+              "mean_abs": 1.621735583419232e-06,
+              "max_relative": 3.264493207540513e-08
+            }
+          },
+          "DN": {
+            "surface_actual_native_scm": [
+              687.3106079101562
+            ],
+            "surface_pressure_fallback": [
+              687.3106124462328
+            ],
+            "surface_delta_actual_minus_fallback": [
+              -4.536076517069887e-06
+            ],
+            "toa_actual_native_scm": [
+              870.1965942382812
+            ],
+            "toa_pressure_fallback": [
+              870.1965768099908
+            ],
+            "toa_delta_actual_minus_fallback": [
+              1.742829044815153e-05
+            ],
+            "all_interfaces_actual_vs_fallback": {
+              "max_abs": 5.069728240414406e-05,
+              "mean_abs": 2.1187477860159383e-05,
+              "max_relative": 7.216217777518282e-08
+            },
+            "surface_native_reference": [
+              687.3106169111672
+            ],
+            "surface_delta_native_reference_minus_fallback": [
+              4.464934477255156e-06
+            ],
+            "toa_native_reference": [
+              870.1965768099908
+            ],
+            "toa_delta_native_reference_minus_fallback": [
+              0.0
+            ],
+            "all_interfaces_native_reference_vs_fallback": {
+              "max_abs": 3.443962089022534e-05,
+              "mean_abs": 1.1047553172949071e-05,
+              "max_relative": 4.929568984631141e-08
+            }
+          }
+        },
+        "heating_rate_actual_scm_native_vs_pressure_fallback": {
+          "max_abs": 1.2355798114649374e-05,
+          "mean_abs": 3.1897901455006186e-06,
+          "max_relative": 1.064575372665259e-05
+        },
+        "heating_rate_native_reference_vs_pressure": {
+          "max_abs": 1.2412337659473138e-05,
+          "mean_abs": 3.1864961598460085e-06,
+          "max_relative": 1.0605330867105438e-05
+        },
+        "heating_rate_max_abs_actual_minus_fallback": 1.2355798114649374e-05,
+        "actual_scm_vs_native_reference": {
+          "GAS_COL_DRY": {
+            "max_abs": 67108864.0,
+            "mean_abs": 10905190.4,
+            "max_relative": 2.123921691704613e-16
+          },
+          "GAS_TAU": {
+            "max_abs": 9.094947017729282e-13,
+            "mean_abs": 1.7444879467545577e-15,
+            "max_relative": 7.843235810241994e-16
+          },
+          "UP": {
+            "max_abs": 7.464121466682627e-06,
+            "mean_abs": 3.821728939112559e-06,
+            "max_relative": 5.006613170041912e-08
+          },
+          "DN": {
+            "max_abs": 3.002638004545588e-05,
+            "mean_abs": 1.652150014378407e-05,
+            "max_relative": 4.322675829361706e-08
+          },
+          "HR": {
+            "max_abs": 1.057109590973937e-07,
+            "mean_abs": 3.0329419642427524e-08,
+            "max_relative": 5.3606678358877234e-08
+          }
+        },
+        "artifacts": {
+          "source_v6_sha256": "d60d3b0178a8e6241d2cc85eefd6e67ee1ce2b4cb95363424cfa93fa2aab6ff0",
+          "source_actual_result_sha256": "f5b8b6883770cd5959ae78013d055eeaaddb530d1bbfdd286d6f59e9798bd49f",
+          "native_replay_result_sha256": "823857fdb90ac0cf9beacbcec481dda8b85567b05ba63a99679e7ce2d7e572c7",
+          "fallback_v5_input_sha256": "3364c1d9dda9a7d0b24d2a94197488a0ffda828ad9d3ca500208d6248c1d881b",
+          "fallback_v5_result_sha256": "c37854802e64acfe7bde3d7e25662558021c1c914f864d9c72e4a3d7315afa79"
+        }
+      }
+    },
+    "mixed": {
+      "LW": {
+        "phase": "LW",
+        "input": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp/build/udm-native-gas-pr17/scm-reviewed/mixed/ra37-call1/capture/lw.input",
+        "ncol": 1,
+        "total_layers": 103,
+        "native_layers": 59,
+        "native_extension_layer_count": 44,
+        "native_mass_sha256": "114708983ffc7b1a64194bf4a0a9026a435c08a82c692690889eb68a4701990e",
+        "native_column": {
+          "min_kg_m2": 60.67788314819336,
+          "max_kg_m2": 258.6768493652344
+        },
+        "mutation_proof": {
+          "only_magic_and_native_mass_changed": true,
+          "preserved_input_records_sha256": "68114a32dc5ea565760c1fca4a1c35efa46b48bbe4afe71273d9afa30fd90c5c",
+          "counterfactual_preserved_records_sha256": "68114a32dc5ea565760c1fca4a1c35efa46b48bbe4afe71273d9afa30fd90c5c"
+        },
+        "dry_column_actual_scm_native_vs_pressure_fallback": {
+          "max_abs": 2.013463155971195e+19,
+          "mean_abs": 4.8675060043401683e+17,
+          "max_relative": 5.0534862110824767e-05
+        },
+        "dry_column_actual_scm_native_prefix_first_native_layers": {
+          "max_abs": 2.013463155971195e+19,
+          "mean_abs": 8.497510482153175e+17,
+          "max_relative": 5.0534862110824767e-05
+        },
+        "dry_column_native_reference_vs_pressure": {
+          "max_abs": 2.013463155971195e+19,
+          "mean_abs": 4.8675060043385395e+17,
+          "max_relative": 5.0534862110824767e-05
+        },
+        "dry_column_extension_exact_zero": true,
+        "dry_column_extension_max_abs": 0.0,
+        "gas_tau_actual_scm_native_vs_pressure_fallback": {
+          "max_abs": 0.17687755597899013,
+          "mean_abs": 0.0006587520038658985,
+          "max_relative": 5.053486211137319e-05
+        },
+        "gas_tau_actual_scm_native_prefix_first_native_layers": {
+          "max_abs": 0.17687755597899013,
+          "mean_abs": 0.001150024684715043,
+          "max_relative": 5.053486211137319e-05
+        },
+        "gas_tau_native_reference_vs_pressure": {
+          "max_abs": 0.17687755597899013,
+          "mean_abs": 0.0006587520038625231,
+          "max_relative": 5.053486211137319e-05
+        },
+        "gas_tau_extension_exact_zero": true,
+        "gas_tau_extension_max_abs": 0.0,
+        "surface_toa_flux": {
+          "UP": {
+            "surface_actual_native_scm": [
+              379.75927734375
+            ],
+            "surface_pressure_fallback": [
+              379.7592817017688
+            ],
+            "surface_delta_actual_minus_fallback": [
+              -4.358018827588239e-06
+            ],
+            "toa_actual_native_scm": [
+              241.2577362060547
+            ],
+            "toa_pressure_fallback": [
+              241.25771594524198
+            ],
+            "toa_delta_actual_minus_fallback": [
+              2.0260812704009368e-05
+            ],
+            "all_interfaces_actual_vs_fallback": {
+              "max_abs": 9.018045886932669e-05,
+              "mean_abs": 1.970323874736288e-05,
+              "max_relative": 3.05250871814977e-07
+            },
+            "surface_native_reference": [
+              379.7592825260259
+            ],
+            "surface_delta_native_reference_minus_fallback": [
+              8.242570856964448e-07
+            ],
+            "toa_native_reference": [
+              241.2577406179285
+            ],
+            "toa_delta_native_reference_minus_fallback": [
+              2.4672686521398646e-05
+            ],
+            "all_interfaces_native_reference_vs_fallback": {
+              "max_abs": 7.81675169605478e-05,
+              "mean_abs": 1.7915185962963802e-05,
+              "max_relative": 2.6458839308407e-07
+            }
+          },
+          "DN": {
+            "surface_actual_native_scm": [
+              261.2358703613281
+            ],
+            "surface_pressure_fallback": [
+              261.23585932578305
+            ],
+            "surface_delta_actual_minus_fallback": [
+              1.1035545071536035e-05
+            ],
+            "toa_actual_native_scm": [
+              0.0
+            ],
+            "toa_pressure_fallback": [
+              0.0
+            ],
+            "toa_delta_actual_minus_fallback": [
+              0.0
+            ],
+            "all_interfaces_actual_vs_fallback": {
+              "max_abs": 0.0001842278676207343,
+              "mean_abs": 1.3739420661355969e-05,
+              "max_relative": 2.058357684551638e-06
+            },
+            "surface_native_reference": [
+              261.2358696290026
+            ],
+            "surface_delta_native_reference_minus_fallback": [
+              1.0303219539764541e-05
+            ],
+            "toa_native_reference": [
+              0.0
+            ],
+            "toa_delta_native_reference_minus_fallback": [
+              0.0
+            ],
+            "all_interfaces_native_reference_vs_fallback": {
+              "max_abs": 0.00018226966710699344,
+              "mean_abs": 1.3852653907827553e-05,
+              "max_relative": 2.0364789257763955e-06
+            }
+          }
+        },
+        "heating_rate_actual_scm_native_vs_pressure_fallback": {
+          "max_abs": 4.686959826960546e-05,
+          "mean_abs": 2.891734827600285e-06,
+          "max_relative": 9.890754421123512e-05
+        },
+        "heating_rate_native_reference_vs_pressure": {
+          "max_abs": 4.690633077264472e-05,
+          "mean_abs": 2.893043953457651e-06,
+          "max_relative": 9.885701892889477e-05
+        },
+        "heating_rate_max_abs_actual_minus_fallback": 4.686959826960546e-05,
+        "actual_scm_vs_native_reference": {
+          "GAS_COL_DRY": {
+            "max_abs": 67108864.0,
+            "mean_abs": 6352538.097087379,
+            "max_relative": 2.123921691704613e-16
+          },
+          "GAS_TAU": {
+            "max_abs": 5.4569682106375694e-12,
+            "mean_abs": 9.764167112939075e-15,
+            "max_relative": 8.99559527320218e-16
+          },
+          "UP": {
+            "max_abs": 1.4942955658625579e-05,
+            "mean_abs": 5.661018642163422e-06,
+            "max_relative": 5.754476254971675e-08
+          },
+          "DN": {
+            "max_abs": 1.4715615975546825e-05,
+            "mean_abs": 1.9091236081586897e-06,
+            "max_relative": 5.750765333309677e-08
+          },
+          "HR": {
+            "max_abs": 2.016031865892387e-07,
+            "mean_abs": 1.619244808875639e-08,
+            "max_relative": 5.5775036778465564e-08
+          }
+        },
+        "artifacts": {
+          "source_v6_sha256": "114708983ffc7b1a64194bf4a0a9026a435c08a82c692690889eb68a4701990e",
+          "source_actual_result_sha256": "65630809c9f18ac30981008cca5b50d8cf757752352704f4523d5e819209c8ff",
+          "native_replay_result_sha256": "8c60887f6f054a2211333303362f6e32e04da634f784dc1bf1ac720f72688041",
+          "fallback_v5_input_sha256": "d542dd9a201b96f388e9ef2c5ec24372e4e1d7920c2712e1585fd07d82466b66",
+          "fallback_v5_result_sha256": "bb1f0ed6629f405ec569ad23dc2c9f1f517f192f1d703bb1cf8223cbe5eddbfb"
+        }
+      },
+      "SW": {
+        "phase": "SW",
+        "input": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp/build/udm-native-gas-pr17/scm-reviewed/mixed/ra37-call1/capture/sw.input",
+        "ncol": 1,
+        "total_layers": 60,
+        "native_layers": 59,
+        "native_extension_layer_count": 1,
+        "native_mass_sha256": "29a5c0c66bad6cd4215ba10d5cde02d18bb6361261b86fe4ec360f7c93646054",
+        "native_column": {
+          "min_kg_m2": 60.67788314819336,
+          "max_kg_m2": 258.6768493652344
+        },
+        "mutation_proof": {
+          "only_magic_and_native_mass_changed": true,
+          "preserved_input_records_sha256": "26434db28674ae52d602d0e3985bc022fe172562aa02e630c8d727410dee080f",
+          "counterfactual_preserved_records_sha256": "26434db28674ae52d602d0e3985bc022fe172562aa02e630c8d727410dee080f"
+        },
+        "dry_column_actual_scm_native_vs_pressure_fallback": {
+          "max_abs": 2.013463155971195e+19,
+          "mean_abs": 8.355885307450621e+17,
+          "max_relative": 5.0534862110824767e-05
+        },
+        "dry_column_actual_scm_native_prefix_first_native_layers": {
+          "max_abs": 2.013463155971195e+19,
+          "mean_abs": 8.497510482153175e+17,
+          "max_relative": 5.0534862110824767e-05
+        },
+        "dry_column_native_reference_vs_pressure": {
+          "max_abs": 2.013463155971195e+19,
+          "mean_abs": 8.355885307447826e+17,
+          "max_relative": 5.0534862110824767e-05
+        },
+        "dry_column_extension_exact_zero": true,
+        "dry_column_extension_max_abs": 0.0,
+        "gas_tau_actual_scm_native_vs_pressure_fallback": {
+          "max_abs": 0.18774658395341248,
+          "mean_abs": 0.00011540880369318383,
+          "max_relative": 5.053486211137735e-05
+        },
+        "gas_tau_actual_scm_native_prefix_first_native_layers": {
+          "max_abs": 0.18774658395341248,
+          "mean_abs": 0.0001173648851117124,
+          "max_relative": 5.053486211137735e-05
+        },
+        "gas_tau_native_reference_vs_pressure": {
+          "max_abs": 0.18774658395341248,
+          "mean_abs": 0.0001154088036933337,
+          "max_relative": 5.053486211137735e-05
+        },
+        "gas_tau_extension_exact_zero": true,
+        "gas_tau_extension_max_abs": 0.0,
+        "surface_toa_flux": {
+          "UP": {
+            "surface_actual_native_scm": [
+              132.7301483154297
+            ],
+            "surface_pressure_fallback": [
+              132.7301387607159
+            ],
+            "surface_delta_actual_minus_fallback": [
+              9.554713784609703e-06
+            ],
+            "toa_actual_native_scm": [
+              185.72946166992188
+            ],
+            "toa_pressure_fallback": [
+              185.7294931522804
+            ],
+            "toa_delta_actual_minus_fallback": [
+              -3.1482358537004984e-05
+            ],
+            "all_interfaces_actual_vs_fallback": {
+              "max_abs": 3.302731096255229e-05,
+              "mean_abs": 1.4085335944072853e-05,
+              "max_relative": 1.8973271387838223e-07
+            },
+            "surface_native_reference": [
+              132.73014724582626
+            ],
+            "surface_delta_native_reference_minus_fallback": [
+              8.485110356559744e-06
+            ],
+            "toa_native_reference": [
+              185.72946907441113
+            ],
+            "toa_delta_native_reference_minus_fallback": [
+              -2.4077869284155895e-05
+            ],
+            "all_interfaces_native_reference_vs_fallback": {
+              "max_abs": 2.768364180383287e-05,
+              "mean_abs": 1.3766435839614609e-05,
+              "max_relative": 1.575158853966323e-07
+            }
+          },
+          "DN": {
+            "surface_actual_native_scm": [
+              663.6507568359375
+            ],
+            "surface_pressure_fallback": [
+              663.6506839144139
+            ],
+            "surface_delta_actual_minus_fallback": [
+              7.292152361060289e-05
+            ],
+            "toa_actual_native_scm": [
+              870.1965942382812
+            ],
+            "toa_pressure_fallback": [
+              870.1965768099908
+            ],
+            "toa_delta_actual_minus_fallback": [
+              1.742829044815153e-05
+            ],
+            "all_interfaces_actual_vs_fallback": {
+              "max_abs": 0.0001007202462233181,
+              "mean_abs": 5.602477618841014e-05,
+              "max_relative": 1.4821981888262007e-07
+            },
+            "surface_native_reference": [
+              663.6507263399648
+            ],
+            "surface_delta_native_reference_minus_fallback": [
+              4.242555087330402e-05
+            ],
+            "toa_native_reference": [
+              870.1965768099908
+            ],
+            "toa_delta_native_reference_minus_fallback": [
+              0.0
+            ],
+            "all_interfaces_native_reference_vs_fallback": {
+              "max_abs": 9.132006641721091e-05,
+              "mean_abs": 5.1478869032567286e-05,
+              "max_relative": 1.2096488911511145e-07
+            }
+          }
+        },
+        "heating_rate_actual_scm_native_vs_pressure_fallback": {
+          "max_abs": 2.4824827634439828e-05,
+          "mean_abs": 3.3471601314440564e-06,
+          "max_relative": 1.1750948209740434e-05
+        },
+        "heating_rate_native_reference_vs_pressure": {
+          "max_abs": 2.4800375731715008e-05,
+          "mean_abs": 3.3491135171592744e-06,
+          "max_relative": 1.173937378727998e-05
+        },
+        "heating_rate_max_abs_actual_minus_fallback": 2.4824827634439828e-05,
+        "actual_scm_vs_native_reference": {
+          "GAS_COL_DRY": {
+            "max_abs": 67108864.0,
+            "mean_abs": 10905190.4,
+            "max_relative": 2.123921691704613e-16
+          },
+          "GAS_TAU": {
+            "max_abs": 1.3642420526593924e-12,
+            "mean_abs": 2.174886028640694e-15,
+            "max_relative": 9.134834830157568e-16
+          },
+          "UP": {
+            "max_abs": 7.605986667158504e-06,
+            "mean_abs": 3.6932132170701064e-06,
+            "max_relative": 5.352258415406729e-08
+          },
+          "DN": {
+            "max_abs": 3.049597273729887e-05,
+            "mean_abs": 1.4119037939322045e-05,
+            "max_relative": 4.595183901046593e-08
+          },
+          "HR": {
+            "max_abs": 9.682144153089212e-08,
+            "mean_abs": 2.4933935804013116e-08,
+            "max_relative": 4.865159358563388e-08
+          }
+        },
+        "artifacts": {
+          "source_v6_sha256": "29a5c0c66bad6cd4215ba10d5cde02d18bb6361261b86fe4ec360f7c93646054",
+          "source_actual_result_sha256": "a4e69249d6c5114ee07fca06e4509495d2aa9bdf9437d1cec4c66951017d92a7",
+          "native_replay_result_sha256": "1cb6d3de9b43e819f8497c8e3d3bd85274871fe180e49b5722cc6c301b102c4c",
+          "fallback_v5_input_sha256": "893c9860688ba0fdb52e41cbb3fa7b267a73489221dc226ea3f1448fcf2508f1",
+          "fallback_v5_result_sha256": "b0b721f4c31b20eafe685edc102f5d844ddc82bd7c991063af22414ed951226f"
+        }
+      }
+    }
+  }
+}

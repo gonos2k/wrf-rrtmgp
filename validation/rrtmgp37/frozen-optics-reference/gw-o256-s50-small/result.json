@@ -1,0 +1,1187 @@
+{
+  "status": "COMPLETE_NUMERICAL_GENERATION_NOT_MODEL_VALIDATION",
+  "generator_sha256": "44e87a513632251c1d5b7c349742e1950a97c710b64a2c1e9f341b341a6c265e",
+  "kernel_source_sha256": {
+    "tools/udm_frozen_optics/socrates/realtype_rd.f90": "b307501f6de8f380b47a74df03268bfe1af14c03b7425ecd76ca0a211101419b",
+    "tools/udm_frozen_optics/socrates/def_std_io_icf.f90": "11ade5462f11d7866954a6be0e44d91945ebb7b81888f3f532a8fe84168e56ac",
+    "tools/udm_frozen_optics/socrates/error_pcf.f90": "d7220382cf98ecf0bf81bcdc4d75aa943fcfdbedf168a0ffb2defd8db82131eb",
+    "tools/udm_frozen_optics/socrates/mie_scatter.f": "1bcf8fce448ffebb1b75bbbfd5ba156efe984f10fa72ae8aa5201f3eef6355f8",
+    "tools/udm_frozen_optics/mie_dynamic_api.f90": "8c06cb8ed4035db8560a12ca6d73de8c0fe644cced6ab89902933bba0ee4b7ea",
+    "tools/udm_frozen_optics/SOURCE.json": "e8a96926d18ddec03ac2e490bf65b14d80fcfde6ec7d42a3e3a9926b8792d512",
+    "tools/udm_frozen_optics/laguerre.py": "6f977679e2e0267ac3efcc9a9079cbee07ce1835e0d2eb67e105c6cab61b1c07"
+  },
+  "kernel_binary_sha256": "8b28785e1ee9e783bbdeccf9ab0f12c9889bc035f8331c62d6e06fe2879018cd",
+  "kernel_source_adaptation": {
+    "original_sha256": "1bcf8fce448ffebb1b75bbbfd5ba156efe984f10fa72ae8aa5201f3eef6355f8",
+    "compiled_mie_sha256": "e2ff5c81d4956bfcee2542a107d48dac33d7c7be8fd6d1c0a0b79f9f1a428973",
+    "adaptation": "Four CMPLX constructors explicitly preserve KIND=RealK; no other source changes",
+    "constructors": 4
+  },
+  "input_sources": {
+    "IOP_2008_ASCIItable.dat": {
+      "url": "https://atmos.uw.edu/ice_optical_constants/IOP_2008_ASCIItable.dat",
+      "sha256": "891d0e0690cc6c6ed2dfe81291fa20a3af177fa85ef93127c58c5f86d3c370af",
+      "meaning": "Warren-Brandt ice-Ih static refractive-index compilation; not a universal temperature-specific material"
+    },
+    "tsi-ssi_v03r00_reference-spectra_c20240830.txt": {
+      "url": "https://www.ncei.noaa.gov/data/solar-spectral-irradiance/access/ancillary-data/tsi-ssi_v03r00_reference-spectra_c20240830.txt",
+      "sha256": "4a38b3f2343a0271c49fa5678a4eb6d289ea840159cb84b30a6be5f44feacb85",
+      "meaning": "NOAA NNLSSI1 Reference Spectra, BaselineModel column, W m-2 nm-1; not NRLSSI2"
+    }
+  },
+  "gas_data_sha256": {
+    "SW": "361ed541324068ded28a275a4dd757bcaa0a845aebefa630f43a04678668fe62",
+    "LW": "70ad65d116531122660318e5da2a2af9db74b425916202860e9527ef2375b8f6"
+  },
+  "table_sha256": "ad6f0866423c9883a1a7c55d4c521a25102f5ca0de475ea380ccfa303f800fe3",
+  "lambda_grid_m_inv": [
+    20000.0
+  ],
+  "temperatures_K": [
+    180.0,
+    233.0,
+    250.0,
+    300.0
+  ],
+  "order": 256,
+  "max_spectral_step_cm_inv": 50.0,
+  "workers": 8,
+  "max_terms": 32000000,
+  "quadrature_area_weight_pruning_threshold": 1e-16,
+  "quadrature_algorithm": "Golub-Welsch alpha=0, LAPACK STEV; polynomial moments checked before work",
+  "quadrature_nodes_weights_sha256": "ef432adb6812a67c9a286200d85cb6de7949f471065dce1580c486cae62c969f",
+  "spectral_chunk_size": 32,
+  "worker_tasks": 54,
+  "numerical_packages": {
+    "numpy": "1.26.4",
+    "scipy": "1.15.3",
+    "netCDF4": "1.7.4"
+  },
+  "compiler": "GNU Fortran (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0",
+  "kernel_flags": [
+    "-O3",
+    "-fPIC",
+    "-shared",
+    "-ffree-line-length-none"
+  ],
+  "elapsed_seconds": 3.3179015070199966,
+  "rows": [
+    {
+      "phase": "LW",
+      "slope": 20000.0,
+      "band": 0,
+      "moments": [
+        [
+          24663.439685922254,
+          24552.735739590764,
+          24528.320674020135,
+          24474.273757024417
+        ],
+        [
+          12738.350221564326,
+          12612.31673592345,
+          12585.134936235689,
+          12525.703913275223
+        ],
+        [
+          10485.739640840464,
+          10449.798111247379,
+          10441.955810647607,
+          10424.694016434007
+        ],
+        [
+          11925.089464357925,
+          11940.419003667312,
+          11943.185737784444,
+          11948.569843749192
+        ]
+      ],
+      "source_integral": [
+        288432032.98707294,
+        455661072.1950164,
+        511602691.7795387,
+        680260532.8358734
+      ],
+      "spectral_nodes": 6,
+      "spectral_chunks": 1,
+      "needed_terms_max": 295,
+      "dropped_area_weight_fraction": 6.456346204643115e-17,
+      "dropped_mass_weight_fraction": 9.753879651083e-16,
+      "seconds": 0.00259966216981411,
+      "worker_max_rss_kb": 59716
+    },
+    {
+      "phase": "LW",
+      "slope": 20000.0,
+      "band": 1,
+      "moments": [
+        [
+          23329.647804899923,
+          23352.05569643147,
+          23356.10714437674,
+          23363.92586268433
+        ],
+        [
+          13119.469802100995,
+          13213.634583913752,
+          13232.464764943346,
+          13271.416128610139
+        ],
+        [
+          11861.652731360946,
+          11923.23200211242,
+          11935.35138335889,
+          11960.168820501147
+        ],
+        [
+          10210.178002798919,
+          10138.421112517713,
+          10123.642379433388,
+          10092.509734074189
+        ]
+      ],
+      "source_integral": [
+        658672394.177122,
+        1383078005.1491895,
+        1655378061.1076553,
+        2538815828.4391904
+      ],
+      "spectral_nodes": 6,
+      "spectral_chunks": 1,
+      "needed_terms_max": 578,
+      "dropped_area_weight_fraction": 6.456346204643115e-17,
+      "dropped_mass_weight_fraction": 9.753879651083e-16,
+      "seconds": 0.003669906407594681,
+      "worker_max_rss_kb": 59716
+    },
+    {
+      "phase": "LW",
+      "slope": 20000.0,
+      "band": 2,
+      "moments": [
+        [
+          22739.58591934504,
+          22727.145343125354,
+          22724.365663986948,
+          22718.20428124119
+        ],
+        [
+          11960.657425582023,
+          11947.809108833197,
+          11944.956199544495,
+          11938.656461711505
+        ],
+        [
+          11078.260711399656,
+          11070.411023302955,
+          11068.66570244513,
+          11064.808715284435
+        ],
+        [
+          10778.928493763015,
+          10779.336234292155,
+          10779.409464442446,
+          10779.54781952968
+        ]
+      ],
+      "source_integral": [
+        258871388.78310597,
+        734021689.517939,
+        938066849.9867659,
+        1660919243.2781296
+      ],
+      "spectral_nodes": 4,
+      "spectral_chunks": 1,
+      "needed_terms_max": 747,
+      "dropped_area_weight_fraction": 6.456346204643115e-17,
+      "dropped_mass_weight_fraction": 9.753879651083e-16,
+      "seconds": 0.003079509362578392,
+      "worker_max_rss_kb": 59716
+    },
+    {
+      "phase": "LW",
+      "slope": 20000.0,
+      "band": 3,
+      "moments": [
+        [
+          22352.01644239189,
+          22348.24773562911,
+          22347.397252919603,
+          22345.49960522096
+        ],
+        [
+          11727.725824518158,
+          11727.867903011042,
+          11727.901722188553,
+          11727.979521285593
+        ],
+        [
+          10908.717740017755,
+          10907.966602718518,
+          10907.797700957595,
+          10907.421646058732
+        ],
+        [
+          10624.290617873721,
+          10620.379832618057,
+          10619.49553073104,
+          10617.520083935355
+        ]
+      ],
+      "source_integral": [
+        101859125.32207981,
+        344344142.996499,
+        457573242.6503563,
+        883102703.642369
+      ],
+      "spectral_nodes": 3,
+      "spectral_chunks": 1,
+      "needed_terms_max": 854,
+      "dropped_area_weight_fraction": 6.456346204643115e-17,
+      "dropped_mass_weight_fraction": 9.753879651083e-16,
+      "seconds": 0.0025801509618759155,
+      "worker_max_rss_kb": 59716
+    },
+    {
+      "phase": "LW",
+      "slope": 20000.0,
+      "band": 4,
+      "moments": [
+        [
+          22011.426224988696,
+          22000.8339190144,
+          21998.41342838862,
+          21992.9701009664
+        ],
+        [
+          11692.37031015358,
+          11688.699939778164,
+          11687.845683437417,
+          11685.903415860848
+        ],
+        [
+          10852.857599099272,
+          10851.026334017579,
+          10850.6048317089,
+          10849.65275736757
+        ],
+        [
+          10319.055914835111,
+          10312.133979236229,
+          10310.567744951195,
+          10307.066685105543
+        ]
+      ],
+      "source_integral": [
+        122450629.27086745,
+        487054073.2680054,
+        671699213.4415449,
+        1409304197.1629179
+      ],
+      "spectral_nodes": 4,
+      "spectral_chunks": 1,
+      "needed_terms_max": 891,
+      "dropped_area_weight_fraction": 6.456346204643115e-17,
+      "dropped_mass_weight_fraction": 9.753879651083e-16,
+      "seconds": 0.0036630649119615555,
+      "worker_max_rss_kb": 59716
+    },
+    {
+      "phase": "LW",
+      "slope": 20000.0,
+      "band": 5,
+      "moments": [
+        [
+          21281.56832632675,
+          21265.892066504814,
+          21262.548200262314,
+          21255.369886094013
+        ],
+        [
+          10997.993585919807,
+          10968.707623126847,
+          10962.155331791126,
+          10947.620238977075
+        ],
+        [
+          10530.869061389674,
+          10518.834405056512,
+          10516.221692897056,
+          10510.546565001365
+        ],
+        [
+          10283.574740406935,
+          10297.184443377962,
+          10300.392868471175,
+          10307.749647116932
+        ]
+      ],
+      "source_integral": [
+        89582011.03715953,
+        454271154.6273264,
+        662376288.0604875,
+        1576017118.1751888
+      ],
+      "spectral_nodes": 5,
+      "spectral_chunks": 1,
+      "needed_terms_max": 874,
+      "dropped_area_weight_fraction": 6.456346204643115e-17,
+      "dropped_mass_weight_fraction": 9.753879651083e-16,
+      "seconds": 0.00489848293364048,
+      "worker_max_rss_kb": 59716
+    },
+    {
+      "phase": "LW",
+      "slope": 20000.0,
+      "band": 6,
+      "moments": [
+        [
+          21837.185659165516,
+          21840.12219306634,
+          21840.76903251875,
+          21842.194029300197
+        ],
+        [
+          11341.063972288346,
+          11351.149058599445,
+          11353.434447772162,
+          11358.563049663231
+        ],
+        [
+          11018.98172587814,
+          11025.073822094917,
+          11026.4470411376,
+          11029.518216001763
+        ],
+        [
+          10496.121686877172,
+          10488.973134466904,
+          10487.334584746597,
+          10483.630979636971
+        ]
+      ],
+      "source_integral": [
+        29464030.963077642,
+        190188514.08632624,
+        292914615.9243353,
+        788087676.5850942
+      ],
+      "spectral_nodes": 3,
+      "spectral_chunks": 1,
+      "needed_terms_max": 1034,
+      "dropped_area_weight_fraction": 6.456346204643115e-17,
+      "dropped_mass_weight_fraction": 9.753879651083e-16,
+      "seconds": 0.0032559148967266083,
+      "worker_max_rss_kb": 59716
+    },
+    {
+      "phase": "LW",
+      "slope": 20000.0,
+      "band": 7,
+      "moments": [
+        [
+          21793.790566622414,
+          21791.087540226945,
+          21790.462906569675,
+          21789.04230653575
+        ],
+        [
+          11498.739149170828,
+          11497.864708974745,
+          11497.658037905663,
+          11497.18151572764
+        ],
+        [
+          11079.676917124687,
+          11078.195640410366,
+          11077.850816744549,
+          11077.063029718061
+        ],
+        [
+          10295.05141745159,
+          10293.222831252193,
+          10292.804868664007,
+          10291.86079080811
+        ]
+      ],
+      "source_integral": [
+        17525205.667087395,
+        135510251.14808902,
+        217541313.10177597,
+        642992899.9157443
+      ],
+      "spectral_nodes": 3,
+      "spectral_chunks": 1,
+      "needed_terms_max": 1160,
+      "dropped_area_weight_fraction": 6.456346204643115e-17,
+      "dropped_mass_weight_fraction": 9.753879651083e-16,
+      "seconds": 0.003511158749461174,
+      "worker_max_rss_kb": 59716
+    },
+    {
+      "phase": "LW",
+      "slope": 20000.0,
+      "band": 8,
+      "moments": [
+        [
+          21634.904088472667,
+          21627.698871228244,
+          21626.010893498507,
+          21622.141483505307
+        ],
+        [
+          11385.020708083119,
+          11377.520239115183,
+          11375.749312294212,
+          11371.670649014191
+        ],
+        [
+          10963.4595386624,
+          10957.10058884674,
+          10955.604223484359,
+          10952.164961592864
+        ],
+        [
+          10249.883380389547,
+          10250.178632113058,
+          10250.26158120429,
+          10250.47083449111
+        ]
+      ],
+      "source_integral": [
+        16360460.76184851,
+        163699619.0604623,
+        279197779.6822108,
+        948611459.284114
+      ],
+      "spectral_nodes": 6,
+      "spectral_chunks": 1,
+      "needed_terms_max": 1397,
+      "dropped_area_weight_fraction": 6.456346204643115e-17,
+      "dropped_mass_weight_fraction": 9.753879651083e-16,
+      "seconds": 0.007665341719985008,
+      "worker_max_rss_kb": 59716
+    },
+    {
+      "phase": "LW",
+      "slope": 20000.0,
+      "band": 9,
+      "moments": [
+        [
+          21474.410047572346,
+          21472.887210956414,
+          21472.53389892285,
+          21471.726331424157
+        ],
+        [
+          11212.462875316889,
+          11211.097756428058,
+          11210.781640325966,
+          11210.059947921989
+        ],
+        [
+          10826.205346063973,
+          10825.23068091073,
+          10825.005190873942,
+          10824.490695793018
+        ],
+        [
+          10261.94717225546,
+          10261.789454528356,
+          10261.752258596887,
+          10261.666383502168
+        ]
+      ],
+      "source_integral": [
+        2822586.871120032,
+        38006536.263380736,
+        69324243.23876822,
+        273943760.4765997
+      ],
+      "spectral_nodes": 3,
+      "spectral_chunks": 1,
+      "needed_terms_max": 1487,
+      "dropped_area_weight_fraction": 6.456346204643115e-17,
+      "dropped_mass_weight_fraction": 9.753879651083e-16,
+      "seconds": 0.004193345084786415,
+      "worker_max_rss_kb": 59716
+    },
+    {
+      "phase": "LW",
+      "slope": 20000.0,
+      "band": 10,
+      "moments": [
+        [
+          21365.17737506684,
+          21358.285531880298,
+          21356.65967125404,
+          21352.923766974316
+        ],
+        [
+          11144.522323584022,
+          11145.737205456991,
+          11146.22782097952,
+          11147.676268420788
+        ],
+        [
+          10786.959167566405,
+          10789.50305364581,
+          10790.266845351123,
+          10792.276987640775
+        ],
+        [
+          10220.65505148281,
+          10212.548326423293,
+          10210.431850274517,
+          10205.247498553521
+        ]
+      ],
+      "source_integral": [
+        3350850.6637497116,
+        60968302.11657194,
+        119595313.66045019,
+        560543371.4655328
+      ],
+      "spectral_nodes": 8,
+      "spectral_chunks": 1,
+      "needed_terms_max": 1774,
+      "dropped_area_weight_fraction": 6.456346204643115e-17,
+      "dropped_mass_weight_fraction": 9.753879651083e-16,
+      "seconds": 0.012304482981562614,
+      "worker_max_rss_kb": 59716
+    },
+    {
+      "phase": "LW",
+      "slope": 20000.0,
+      "band": 11,
+      "moments": [
+        [
+          21249.39337115988,
+          21243.948658672594,
+          21242.628551928658,
+          21239.536464805537
+        ],
+        [
+          11715.43451260976,
+          11732.878012270023,
+          11736.660592196673,
+          11744.871642058284
+        ],
+        [
+          11217.796614194891,
+          11229.295418698684,
+          11231.747404205711,
+          11237.002904953868
+        ],
+        [
+          9533.958858550126,
+          9511.070646402568,
+          9505.967959731977,
+          9494.66482274725
+        ]
+      ],
+      "source_integral": [
+        431880.1432875015,
+        13749813.412741821,
+        30666908.070004184,
+        192466209.7589708
+      ],
+      "spectral_nodes": 7,
+      "spectral_chunks": 1,
+      "needed_terms_max": 2112,
+      "dropped_area_weight_fraction": 6.456346204643115e-17,
+      "dropped_mass_weight_fraction": 9.753879651083e-16,
+      "seconds": 0.012398777529597282,
+      "worker_max_rss_kb": 59716
+    },
+    {
+      "phase": "LW",
+      "slope": 20000.0,
+      "band": 12,
+      "moments": [
+        [
+          21148.729004868557,
+          21145.51102324197,
+          21144.75746950858,
+          21143.025364518086
+        ],
+        [
+          11365.694550269012,
+          11352.21778172379,
+          11349.10629962659,
+          11342.016235757907
+        ],
+        [
+          10932.409581242668,
+          10922.156317114506,
+          10919.791054054447,
+          10914.404303772193
+        ],
+        [
+          9783.034454599545,
+          9793.293241518168,
+          9795.651169881978,
+          9801.009128760174
+        ]
+      ],
+      "source_integral": [
+        55752.815890707185,
+        2778573.2437413745,
+        6861106.664820577,
+        54190350.94951977
+      ],
+      "spectral_nodes": 5,
+      "spectral_chunks": 1,
+      "needed_terms_max": 2282,
+      "dropped_area_weight_fraction": 6.456346204643115e-17,
+      "dropped_mass_weight_fraction": 9.753879651083e-16,
+      "seconds": 0.009728960692882538,
+      "worker_max_rss_kb": 59716
+    },
+    {
+      "phase": "LW",
+      "slope": 20000.0,
+      "band": 13,
+      "moments": [
+        [
+          21075.892675522464,
+          21075.591509704016,
+          21075.531279309558,
+          21075.407520472625
+        ],
+        [
+          11257.092992816471,
+          11263.219885086644,
+          11264.668202610204,
+          11268.019818373414
+        ],
+        [
+          10851.542888081165,
+          10856.127015902699,
+          10857.212089321825,
+          10859.725196165291
+        ],
+        [
+          9818.799682705985,
+          9812.371624617364,
+          9810.863076699348,
+          9807.387702099204
+        ]
+      ],
+      "source_integral": [
+        16143.697192164544,
+        1073805.0060468568,
+        2833440.318117429,
+        26029521.63826829
+      ],
+      "spectral_nodes": 4,
+      "spectral_chunks": 1,
+      "needed_terms_max": 2434,
+      "dropped_area_weight_fraction": 6.456346204643115e-17,
+      "dropped_mass_weight_fraction": 9.753879651083e-16,
+      "seconds": 0.008236980065703392,
+      "worker_max_rss_kb": 59716
+    },
+    {
+      "phase": "LW",
+      "slope": 20000.0,
+      "band": 14,
+      "moments": [
+        [
+          21045.642360224847,
+          21041.79419175514,
+          21040.980834377002,
+          21039.25243187701
+        ],
+        [
+          11696.135673780856,
+          11736.812813299084,
+          11746.888649063645,
+          11770.801911776558
+        ],
+        [
+          11167.4813282183,
+          11195.937175098252,
+          11203.016261247327,
+          11219.861119195497
+        ],
+        [
+          9349.506686443989,
+          9304.981378456056,
+          9294.092185313351,
+          9268.45052010045
+        ]
+      ],
+      "source_integral": [
+        8825.753207681415,
+        821471.7349822893,
+        2347611.1544193095,
+        25960837.305202242
+      ],
+      "spectral_nodes": 7,
+      "spectral_chunks": 1,
+      "needed_terms_max": 2818,
+      "dropped_area_weight_fraction": 6.456346204643115e-17,
+      "dropped_mass_weight_fraction": 9.753879651083e-16,
+      "seconds": 0.015614734962582588,
+      "worker_max_rss_kb": 59716
+    },
+    {
+      "phase": "LW",
+      "slope": 20000.0,
+      "band": 15,
+      "moments": [
+        [
+          20939.72811775194,
+          20931.99304869741,
+          20929.912403934704,
+          20924.71220812789
+        ],
+        [
+          11870.257266295313,
+          11803.373824338856,
+          11788.018977387095,
+          11753.913083845715
+        ],
+        [
+          11200.336440409817,
+          11132.876236730091,
+          11116.399381968587,
+          11077.969290092578
+        ],
+        [
+          9069.470851456614,
+          9128.61922435855,
+          9141.893426547605,
+          9170.79912428217
+        ]
+      ],
+      "source_integral": [
+        1368.6119099525408,
+        232681.85722677576,
+        768214.8125810468,
+        11918287.422240207
+      ],
+      "spectral_nodes": 13,
+      "spectral_chunks": 1,
+      "needed_terms_max": 3972,
+      "dropped_area_weight_fraction": 6.456346204643115e-17,
+      "dropped_mass_weight_fraction": 9.753879651083e-16,
+      "seconds": 0.03399323299527168,
+      "worker_max_rss_kb": 59716
+    },
+    {
+      "phase": "SW",
+      "slope": 20000.0,
+      "band": 0,
+      "moments": [
+        [
+          21211.221175284638
+        ],
+        [
+          11530.023210585032
+        ],
+        [
+          11058.087103978824
+        ],
+        [
+          9681.197964699597
+        ]
+      ],
+      "source_integral": [
+        14.047087519874008
+      ],
+      "spectral_nodes": 39,
+      "spectral_chunks": 2,
+      "needed_terms_max": 2818,
+      "dropped_area_weight_fraction": 6.456346204643115e-17,
+      "dropped_mass_weight_fraction": 9.753879651083e-16,
+      "seconds": 0.06440339237451553,
+      "worker_max_rss_kb": 59128
+    },
+    {
+      "phase": "SW",
+      "slope": 20000.0,
+      "band": 1,
+      "moments": [
+        [
+          20894.23838902015
+        ],
+        [
+          11647.33470633774
+        ],
+        [
+          10913.519601452299
+        ],
+        [
+          9246.903682682409
+        ]
+      ],
+      "source_integral": [
+        10.788423435724923
+      ],
+      "spectral_nodes": 13,
+      "spectral_chunks": 1,
+      "needed_terms_max": 3972,
+      "dropped_area_weight_fraction": 6.456346204643115e-17,
+      "dropped_mass_weight_fraction": 9.753879651083e-16,
+      "seconds": 0.034767257049679756,
+      "worker_max_rss_kb": 59128
+    },
+    {
+      "phase": "SW",
+      "slope": 20000.0,
+      "band": 2,
+      "moments": [
+        [
+          20689.232159113188
+        ],
+        [
+          13722.222851973203
+        ],
+        [
+          13045.46186312604
+        ],
+        [
+          6967.009307139981
+        ]
+      ],
+      "source_integral": [
+        20.160794287556037
+      ],
+      "spectral_nodes": 16,
+      "spectral_chunks": 1,
+      "needed_terms_max": 3701,
+      "dropped_area_weight_fraction": 6.456346204643115e-17,
+      "dropped_mass_weight_fraction": 9.753879651083e-16,
+      "seconds": 0.047991279512643814,
+      "worker_max_rss_kb": 59132
+    },
+    {
+      "phase": "SW",
+      "slope": 20000.0,
+      "band": 3,
+      "moments": [
+        [
+          20716.924587923146
+        ],
+        [
+          18456.441869109178
+        ],
+        [
+          16848.111239739505
+        ],
+        [
+          2260.4827188139607
+        ]
+      ],
+      "source_integral": [
+        23.562552188568308
+      ],
+      "spectral_nodes": 14,
+      "spectral_chunks": 1,
+      "needed_terms_max": 4438,
+      "dropped_area_weight_fraction": 6.456346204643115e-17,
+      "dropped_mass_weight_fraction": 9.753879651083e-16,
+      "seconds": 0.053169962018728256,
+      "worker_max_rss_kb": 59124
+    },
+    {
+      "phase": "SW",
+      "slope": 20000.0,
+      "band": 4,
+      "moments": [
+        [
+          20676.273827033747
+        ],
+        [
+          15307.27621233902
+        ],
+        [
+          14248.228907086967
+        ],
+        [
+          5368.997614694719
+        ]
+      ],
+      "source_integral": [
+        22.257243813420963
+      ],
+      "spectral_nodes": 11,
+      "spectral_chunks": 1,
+      "needed_terms_max": 4952,
+      "dropped_area_weight_fraction": 6.456346204643115e-17,
+      "dropped_mass_weight_fraction": 9.753879651083e-16,
+      "seconds": 0.04487668722867966,
+      "worker_max_rss_kb": 59132
+    },
+    {
+      "phase": "SW",
+      "slope": 20000.0,
+      "band": 5,
+      "moments": [
+        [
+          20610.822885543366
+        ],
+        [
+          18862.737134131952
+        ],
+        [
+          17020.461320378385
+        ],
+        [
+          1748.0857514114066
+        ]
+      ],
+      "source_integral": [
+        54.73263217901084
+      ],
+      "spectral_nodes": 21,
+      "spectral_chunks": 1,
+      "needed_terms_max": 5968,
+      "dropped_area_weight_fraction": 6.456346204643115e-17,
+      "dropped_mass_weight_fraction": 9.753879651083e-16,
+      "seconds": 0.10467476584017277,
+      "worker_max_rss_kb": 59132
+    },
+    {
+      "phase": "SW",
+      "slope": 20000.0,
+      "band": 6,
+      "moments": [
+        [
+          20511.62345787461
+        ],
+        [
+          18812.56841193543
+        ],
+        [
+          16929.089328114576
+        ],
+        [
+          1699.0550459391802
+        ]
+      ],
+      "source_integral": [
+        101.80785338164694
+      ],
+      "spectral_nodes": 32,
+      "spectral_chunks": 1,
+      "needed_terms_max": 7512,
+      "dropped_area_weight_fraction": 6.456346204643115e-17,
+      "dropped_mass_weight_fraction": 9.753879651083e-16,
+      "seconds": 0.19103613682091236,
+      "worker_max_rss_kb": 59132
+    },
+    {
+      "phase": "SW",
+      "slope": 20000.0,
+      "band": 7,
+      "moments": [
+        [
+          20518.129799319104
+        ],
+        [
+          20349.392726674185
+        ],
+        [
+          18099.80786157832
+        ],
+        [
+          168.73707264491097
+        ]
+      ],
+      "source_integral": [
+        23.75175778573694
+      ],
+      "spectral_nodes": 8,
+      "spectral_chunks": 1,
+      "needed_terms_max": 7859,
+      "dropped_area_weight_fraction": 6.456346204643115e-17,
+      "dropped_mass_weight_fraction": 9.753879651083e-16,
+      "seconds": 0.05542833171784878,
+      "worker_max_rss_kb": 59128
+    },
+    {
+      "phase": "SW",
+      "slope": 20000.0,
+      "band": 8,
+      "moments": [
+        [
+          20398.595778602048
+        ],
+        [
+          20373.618498950633
+        ],
+        [
+          18090.793541471758
+        ],
+        [
+          24.97727965141821
+        ]
+      ],
+      "source_integral": [
+        342.7998905011974
+      ],
+      "spectral_nodes": 97,
+      "spectral_chunks": 4,
+      "needed_terms_max": 12615,
+      "dropped_area_weight_fraction": 6.456346204643115e-17,
+      "dropped_mass_weight_fraction": 9.753879651083e-16,
+      "seconds": 0.8181352559477091,
+      "worker_max_rss_kb": 59132
+    },
+    {
+      "phase": "SW",
+      "slope": 20000.0,
+      "band": 9,
+      "moments": [
+        [
+          20319.613138950175
+        ],
+        [
+          20318.816739327372
+        ],
+        [
+          18042.224475205523
+        ],
+        [
+          0.7963996227990039
+        ]
+      ],
+      "source_integral": [
+        217.4021837749986
+      ],
+      "spectral_nodes": 64,
+      "spectral_chunks": 2,
+      "needed_terms_max": 15744,
+      "dropped_area_weight_fraction": 6.456346204643115e-17,
+      "dropped_mass_weight_fraction": 9.753879651083e-16,
+      "seconds": 0.725239684805274,
+      "worker_max_rss_kb": 59132
+    },
+    {
+      "phase": "SW",
+      "slope": 20000.0,
+      "band": 10,
+      "moments": [
+        [
+          20267.208574212764
+        ],
+        [
+          20267.139065217183
+        ],
+        [
+          17984.827117022487
+        ],
+        [
+          0.06950899557814463
+        ]
+      ],
+      "source_integral": [
+        348.4513240207899
+      ],
+      "spectral_nodes": 134,
+      "spectral_chunks": 5,
+      "needed_terms_max": 22410,
+      "dropped_area_weight_fraction": 6.456346204643115e-17,
+      "dropped_mass_weight_fraction": 9.753879651083e-16,
+      "seconds": 2.0178373996168375,
+      "worker_max_rss_kb": 59132
+    },
+    {
+      "phase": "SW",
+      "slope": 20000.0,
+      "band": 11,
+      "moments": [
+        [
+          20220.48287952161
+        ],
+        [
+          20220.48170421585
+        ],
+        [
+          17908.51470545136
+        ],
+        [
+          0.0011753057610481188
+        ]
+      ],
+      "source_integral": [
+        129.93234358284639
+      ],
+      "spectral_nodes": 128,
+      "spectral_chunks": 4,
+      "needed_terms_max": 28897,
+      "dropped_area_weight_fraction": 6.456346204643115e-17,
+      "dropped_mass_weight_fraction": 9.753879651083e-16,
+      "seconds": 2.563231959939003,
+      "worker_max_rss_kb": 59132
+    },
+    {
+      "phase": "SW",
+      "slope": 20000.0,
+      "band": 12,
+      "moments": [
+        [
+          20188.307173807265
+        ],
+        [
+          20188.30612869642
+        ],
+        [
+          17808.919280690705
+        ],
+        [
+          0.0010451108538564677
+        ]
+      ],
+      "source_integral": [
+        46.57494323125818
+      ],
+      "spectral_nodes": 181,
+      "spectral_chunks": 6,
+      "needed_terms_max": 38441,
+      "dropped_area_weight_fraction": 6.456346204643115e-17,
+      "dropped_mass_weight_fraction": 9.753879651083e-16,
+      "seconds": 4.7016881220042706,
+      "worker_max_rss_kb": 59132
+    },
+    {
+      "phase": "SW",
+      "slope": 20000.0,
+      "band": 13,
+      "moments": [
+        [
+          20156.880116843426
+        ],
+        [
+          20156.87869936457
+        ],
+        [
+          17601.700228211048
+        ],
+        [
+          0.0014174788534825212
+        ]
+      ],
+      "source_integral": [
+        2.9728320482177444
+      ],
+      "spectral_nodes": 241,
+      "spectral_chunks": 8,
+      "needed_terms_max": 52331,
+      "dropped_area_weight_fraction": 6.456346204643115e-17,
+      "dropped_mass_weight_fraction": 9.753879651083e-16,
+      "seconds": 8.27432451583445,
+      "worker_max_rss_kb": 59132
+    }
+  ],
+  "limitations": [
+    "No UDM radius or graupel/hail diameter convention is validated by Mie arithmetic.",
+    "Bulk density enters mass normalization; no porosity, habit or wet-particle material model is inferred.",
+    "This is not Hill coefficient reproduction, RRTMGP NRLSSI2 reproduction or observational validation.",
+    "Neither interpolation nor live WRF G/H optics is implemented by this generator.",
+    "Convergence of order, spectral step, size and temperature axes requires separate comparisons."
+  ]
+}

@@ -1,0 +1,336 @@
+{
+  "status": "OBSERVATIONS_VERIFIED_NO_MODEL_COMPARISON",
+  "window_start_exclusive_utc": "2000-01-24T12:00:00Z",
+  "window_end_inclusive_utc": "2000-01-25T12:00:00Z",
+  "record_interval_seconds": 180,
+  "expected_records_per_station": 480,
+  "expected_records_per_hour_channel": 20,
+  "negative_qc0_values_are_retained": true,
+  "no_fill_or_interpolation": true,
+  "offline_verification": {
+    "mode": "offline_no_network",
+    "manifest_entries": 8,
+    "verified_local_files": {
+      "gwn00024.dat": {
+        "sha256": "6c3edac924706826370fa7efe415ec555773c9210dea190bd7e49c563ab431c0",
+        "size_bytes": 113329
+      },
+      "gwn00025.dat": {
+        "sha256": "e18725d4a106fdbc666b89e82e02c244990630708671cba406f6569b8694060b",
+        "size_bytes": 113329
+      },
+      "psu00024.dat": {
+        "sha256": "803bb4be1b1606b4fe26d1b1afd4f2c3970052f85826a6bf77b2f3a1cceac383",
+        "size_bytes": 113326
+      },
+      "psu00025.dat": {
+        "sha256": "cc70d05546f14f3b2c79ce646404909d074dd971e67c5cb9934294dcbf8fff72",
+        "size_bytes": 113326
+      },
+      "bon00024.dat": {
+        "sha256": "62d1ad850b1b970e2882cb8b8e9f07c1b98886c9b3ccbfe8a69dd144c881eca4",
+        "size_bytes": 113325
+      },
+      "bon00025.dat": {
+        "sha256": "429d7deeda5ae70d620b0b207bf0f0d341ad49cf8ad0f4ea0d5bc0c7269be795",
+        "size_bytes": 113325
+      },
+      "metadata/README_SURFRAD.txt": {
+        "sha256": "ed3e5c16f169a9def997877e6037735977f2761c9c3c39d493c8f3127e82f3a6",
+        "size_bytes": 24941
+      },
+      "metadata/surfrad_problems.html": {
+        "sha256": "81e1fadfbef2259cc38b4aa0d4c4d72c6ad95dc2a06df02efd2b59ea11c41355",
+        "size_bytes": 83269
+      }
+    }
+  },
+  "grid_match": {
+    "input_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-alternate-jan2000-data/real-preflight/case/wrfinput_d01",
+    "input_sha256": "0cc7e188ef585a93ab52550816c6af236932254820fb1bc6937f464bfed38637",
+    "stations": {
+      "GWN": {
+        "official_site_lat_lon": [
+          34.2547,
+          -89.8729
+        ],
+        "nearest_cell_i_j_1based": [
+          11,
+          24
+        ],
+        "cell_lat_lon": [
+          34.17831039428711,
+          -89.92462158203125
+        ],
+        "great_circle_distance_m": 9734.86318398203,
+        "cell_HGT_m": 84.2879867553711,
+        "site_elevation_m": 98,
+        "terrain_difference_m": -13.712013244628906,
+        "mapfac_m": 0.9842627048492432
+      },
+      "PSU": {
+        "official_site_lat_lon": [
+          40.72012,
+          -77.93085
+        ],
+        "nearest_cell_i_j_1based": [
+          41,
+          53
+        ],
+        "cell_lat_lon": [
+          40.637413024902344,
+          -77.85830688476562
+        ],
+        "great_circle_distance_m": 11045.3492229176,
+        "cell_HGT_m": 359.27490234375,
+        "site_elevation_m": 376,
+        "terrain_difference_m": -16.72509765625,
+        "mapfac_m": 0.9693074226379395
+      },
+      "BON": {
+        "official_site_lat_lon": [
+          40.05192,
+          -88.37309
+        ],
+        "nearest_cell_i_j_1based": [
+          13,
+          46
+        ],
+        "cell_lat_lon": [
+          40.161033630371094,
+          -88.39398193359375
+        ],
+        "great_circle_distance_m": 12262.293896813933,
+        "cell_HGT_m": 221.812744140625,
+        "site_elevation_m": 213,
+        "terrain_difference_m": 8.812744140625,
+        "mapfac_m": 0.9700216054916382
+      }
+    }
+  },
+  "stations": {
+    "GWN": {
+      "header_site": {
+        "station": "gwn",
+        "name": "Goodwin Creek",
+        "header_lat": 34.25,
+        "header_lon": -89.87,
+        "header_elevation_m": 98,
+        "file_version": 1,
+        "date": "2000-01-25",
+        "record_count": 480
+      },
+      "daily_records": 960,
+      "first_file_record_utc": "2000-01-24T00:00:00Z",
+      "last_file_record_utc": "2000-01-25T23:57:00Z",
+      "target_records": 480,
+      "expected_records": 480,
+      "first_end_utc": "2000-01-24T12:03:00Z",
+      "last_end_utc": "2000-01-25T12:00:00Z",
+      "timestamp_gaps": 0,
+      "unexpected_timestamps": 0,
+      "channels": {
+        "dw_solar": {
+          "target_records": 480,
+          "invalid_qc_or_fill_or_nonfinite": 0,
+          "qc_histogram": {
+            "0": 480
+          },
+          "negative_qc0_values_retained": 272
+        },
+        "uw_solar": {
+          "target_records": 480,
+          "invalid_qc_or_fill_or_nonfinite": 0,
+          "qc_histogram": {
+            "0": 480
+          },
+          "negative_qc0_values_retained": 62
+        },
+        "direct_n": {
+          "target_records": 480,
+          "invalid_qc_or_fill_or_nonfinite": 0,
+          "qc_histogram": {
+            "0": 480
+          },
+          "negative_qc0_values_retained": 11
+        },
+        "diffuse": {
+          "target_records": 480,
+          "invalid_qc_or_fill_or_nonfinite": 0,
+          "qc_histogram": {
+            "0": 480
+          },
+          "negative_qc0_values_retained": 19
+        },
+        "dw_ir": {
+          "target_records": 480,
+          "invalid_qc_or_fill_or_nonfinite": 0,
+          "qc_histogram": {
+            "0": 480
+          },
+          "negative_qc0_values_retained": 0
+        },
+        "uw_ir": {
+          "target_records": 480,
+          "invalid_qc_or_fill_or_nonfinite": 0,
+          "qc_histogram": {
+            "0": 480
+          },
+          "negative_qc0_values_retained": 0
+        }
+      }
+    },
+    "PSU": {
+      "header_site": {
+        "station": "psu",
+        "name": "Penn State",
+        "header_lat": 40.72,
+        "header_lon": -77.93,
+        "header_elevation_m": 376,
+        "file_version": 1,
+        "date": "2000-01-25",
+        "record_count": 480
+      },
+      "daily_records": 960,
+      "first_file_record_utc": "2000-01-24T00:00:00Z",
+      "last_file_record_utc": "2000-01-25T23:57:00Z",
+      "target_records": 480,
+      "expected_records": 480,
+      "first_end_utc": "2000-01-24T12:03:00Z",
+      "last_end_utc": "2000-01-25T12:00:00Z",
+      "timestamp_gaps": 0,
+      "unexpected_timestamps": 0,
+      "channels": {
+        "dw_solar": {
+          "target_records": 480,
+          "invalid_qc_or_fill_or_nonfinite": 0,
+          "qc_histogram": {
+            "0": 480
+          },
+          "negative_qc0_values_retained": 286
+        },
+        "uw_solar": {
+          "target_records": 480,
+          "invalid_qc_or_fill_or_nonfinite": 0,
+          "qc_histogram": {
+            "0": 480
+          },
+          "negative_qc0_values_retained": 223
+        },
+        "direct_n": {
+          "target_records": 480,
+          "invalid_qc_or_fill_or_nonfinite": 0,
+          "qc_histogram": {
+            "0": 480
+          },
+          "negative_qc0_values_retained": 74
+        },
+        "diffuse": {
+          "target_records": 480,
+          "invalid_qc_or_fill_or_nonfinite": 0,
+          "qc_histogram": {
+            "0": 480
+          },
+          "negative_qc0_values_retained": 15
+        },
+        "dw_ir": {
+          "target_records": 480,
+          "invalid_qc_or_fill_or_nonfinite": 0,
+          "qc_histogram": {
+            "0": 480
+          },
+          "negative_qc0_values_retained": 0
+        },
+        "uw_ir": {
+          "target_records": 480,
+          "invalid_qc_or_fill_or_nonfinite": 0,
+          "qc_histogram": {
+            "0": 480
+          },
+          "negative_qc0_values_retained": 0
+        }
+      }
+    },
+    "BON": {
+      "header_site": {
+        "station": "bon",
+        "name": "Bondville",
+        "header_lat": 40.05,
+        "header_lon": -88.37,
+        "header_elevation_m": 213,
+        "file_version": 1,
+        "date": "2000-01-25",
+        "record_count": 480
+      },
+      "daily_records": 960,
+      "first_file_record_utc": "2000-01-24T00:00:00Z",
+      "last_file_record_utc": "2000-01-25T23:57:00Z",
+      "target_records": 480,
+      "expected_records": 480,
+      "first_end_utc": "2000-01-24T12:03:00Z",
+      "last_end_utc": "2000-01-25T12:00:00Z",
+      "timestamp_gaps": 0,
+      "unexpected_timestamps": 0,
+      "channels": {
+        "dw_solar": {
+          "target_records": 480,
+          "invalid_qc_or_fill_or_nonfinite": 0,
+          "qc_histogram": {
+            "0": 480
+          },
+          "negative_qc0_values_retained": 279
+        },
+        "uw_solar": {
+          "target_records": 480,
+          "invalid_qc_or_fill_or_nonfinite": 0,
+          "qc_histogram": {
+            "0": 480
+          },
+          "negative_qc0_values_retained": 228
+        },
+        "direct_n": {
+          "target_records": 480,
+          "invalid_qc_or_fill_or_nonfinite": 0,
+          "qc_histogram": {
+            "0": 480
+          },
+          "negative_qc0_values_retained": 143
+        },
+        "diffuse": {
+          "target_records": 480,
+          "invalid_qc_or_fill_or_nonfinite": 0,
+          "qc_histogram": {
+            "0": 480
+          },
+          "negative_qc0_values_retained": 63
+        },
+        "dw_ir": {
+          "target_records": 480,
+          "invalid_qc_or_fill_or_nonfinite": 0,
+          "qc_histogram": {
+            "0": 480
+          },
+          "negative_qc0_values_retained": 0
+        },
+        "uw_ir": {
+          "target_records": 480,
+          "invalid_qc_or_fill_or_nonfinite": 0,
+          "qc_histogram": {
+            "0": 480
+          },
+          "negative_qc0_values_retained": 0
+        }
+      }
+    }
+  },
+  "hourly_csv": "hourly_observations.csv",
+  "hourly_rows": 432,
+  "parser_sha256": "d0eee4f96fcabd850728a5c6643e3422a9398dd1212bd56442381cf630bd7d68",
+  "test_sha256": "51cb2e2ddc343e4260790fc6e8296322420bef37a6f6d509db543c98a1bb3016",
+  "python_version": "3.12.3",
+  "dependency_versions": {
+    "numpy": "1.26.4",
+    "netCDF4": "1.7.4"
+  },
+  "method_note": "Hourly mean flux is the mean of 20 QC0 3-minute period-end averages; energy is their sum times 180 s. No nighttime negative global/diffuse values are clamped. Incomplete bins would be null, not filled."
+}

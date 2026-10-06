@@ -1,0 +1,19 @@
+# UDM phase-path diagnostics
+
+Option 37 reports cloud-fraction-zero exclusions and cloud-LUT size clipping as tile-local diagnostics. LW and SW are reported separately; ranks are not reduced. The counters describe the calls made by each wrapper, so the two reports must not be added and interpreted as unique atmospheric mass.
+
+`RRTMGP_UDM_CF0_OMITTED` reports LIQ, ICE, RAIN, and SNOW separately. Its `layers` count is the number of layer-cell instances with positive omitted water path. The sum and maximum use each instance's grid-mean water path in g m-2. The sum is a sum of per-layer paths, not an area-integrated mass, a time-integrated precipitation amount, or a domain total. Graupel and hail are outside this four-phase summary and retain their separate existing handling.
+
+`RRTMGP_UDM_LUT_CLIP` reports LIQ and ICE when the cloud path is active: positive grid-mean path, positive cloud fraction, and nonzero overlap mode. SW summaries occur only in the SW radiation branch. Low/high counts use strict comparisons to the initialized phase-specific LUT bounds, matching the adapter's clamp; equality to a bound is not counted as clipping. The liquid coordinate is cloud effective radius in micrometres. The ice coordinate is the adapter's effective diameter in micrometres; for UDM iceflag 4 it is twice the supplied effective radius. Both phases report low/high clipped grid-water-path sums, the eligible grid-water-path sum, the largest affected layer path, and `(low + high clipped path sum) / eligible path sum`.
+
+The ratio is grid-water-path weighted, not a layer-count fraction. These diagnostics quantify how much path is associated with out-of-range size inputs; they do not estimate a flux error or imply that clipping has negligible radiative effect. The statistics do not alter water paths, size coordinates, LUT bounds, or radiation outputs.
+
+The [held-state native ice-layer contribution evidence](ICE_LAYER_CONTRIBUTION.md) measures selected finite-layer contributions with fixed masks. It does not provide clipping-error estimates or independent CF0 precipitation occurrence.
+
+The [current active-CU integration evidence](ACTIVE_CU_DIAGNOSTIC_PRESERVATION.md) records one matched 24 h trajectory and saved-checkpoint comparison for these diagnostics, with the original JSON bookkeeping failure retained separately.
+
+`RRTMGP_UDM_PHASE_PATH` supplies the native LIQ/ICE/RAIN/SNOW total grid-path denominator and the existing CF0 omitted numerator per wrapper invocation and tile. It emits positive native totals even when the omitted path is zero. The sum uses the builder's corrected native grid paths, includes CF0 layers, and excludes diagnosed CU and frozen G/H paths. It is distinct from the positive-CF eligible denominator used for LUT clipping and does not describe all optical exclusions at overlap 0.
+
+New native rows and CU population/clipping rows carry the supplied domain ID, model `itimestep` as `radiation_step`, model source seconds, overlap mode and tile bounds. Absent optional context is explicitly `UNAVAILABLE`; no process-wide call counter or inferred UTC time is introduced. CU clipping summaries now require nonzero overlap, while CU accepted/rejected input summaries remain available at overlap 0. Both CU row types use a 1024-character local buffer. The [field contract and focused tests](../../test/rrtmgp/PHASE_DIAGNOSTIC_CONTRACT.md) explain grouping, denominators, reporting gates and test limits. Historical audit rows are not retroactively assigned these new identifiers or denominators.
+
+The [held-state CF0 precipitation audit](CF0_PRECIPITATION_AUDIT.md) describes a test-only occurrence-one contribution experiment; production occurrence policy remains unchanged.

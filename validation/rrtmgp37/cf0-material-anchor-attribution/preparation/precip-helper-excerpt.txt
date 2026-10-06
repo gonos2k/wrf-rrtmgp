@@ -1,0 +1,115 @@
+--- WRF/test/rrtmgp/reference_column.f90:1402-1436 ---
+ 1402:   SUBROUTINE reference_lw_precip(rain_path,snow_path,snow_radius,band_limits,tau)
+ 1403:     ! Independent replay implementation copied from the pinned public CCPP
+ 1404:     ! RRTMGP source commit 3e6660c6df54e95a0871e990c2294dd397ae3860.
+ 1405:     ! It intentionally does not call module_ra_rrtmgp_precip; results validate
+ 1406:     ! array assembly and core/RTE replay, but not the shared source formula.
+ 1407:     REAL(wp), INTENT(IN) :: rain_path(:,:),snow_path(:,:),snow_radius(:,:),band_limits(:,:)
+ 1408:     REAL(wp), INTENT(OUT) :: tau(:,:,:)
+ 1409:     REAL(wp), PARAMETER :: expected(2,16)=RESHAPE([ &
+ 1410:       10._wp,250._wp,250._wp,500._wp,500._wp,630._wp,630._wp,700._wp, &
+ 1411:       700._wp,820._wp,820._wp,980._wp,980._wp,1080._wp,1080._wp,1180._wp, &
+ 1412:       1180._wp,1390._wp,1390._wp,1480._wp,1480._wp,1800._wp,1800._wp,2080._wp, &
+ 1413:       2080._wp,2250._wp,2250._wp,2390._wp,2390._wp,2680._wp,2680._wp,3250._wp], [2,16])
+ 1414:     REAL(wp) :: tau_rain,tau_snow
+ 1415:     INTEGER :: col,lev
+ 1416:     IF(SIZE(tau,1)/=SIZE(rain_path,1).OR.SIZE(tau,2)/=SIZE(rain_path,2).OR.SIZE(tau,3)/=16) &
+ 1417:       ERROR STOP 'invalid LW precipitation optics shape'
+ 1418:     IF(ANY(SHAPE(rain_path)/=SHAPE(snow_path)).OR.ANY(SHAPE(rain_path)/=SHAPE(snow_radius))) &
+ 1419:       ERROR STOP 'LW precipitation inputs have inconsistent shapes'
+ 1420:     IF(ANY(SHAPE(band_limits)/=SHAPE(expected)).OR.ANY(band_limits/=expected)) &
+ 1421:       ERROR STOP 'LW precipitation bands differ from pinned CCPP order'
+ 1422:     IF(ANY(.NOT.ieee_is_finite(rain_path)).OR.ANY(.NOT.ieee_is_finite(snow_path)).OR. &
+ 1423:        ANY(.NOT.ieee_is_finite(snow_radius))) ERROR STOP 'LW precipitation inputs must be finite'
+ 1424:     IF(ANY(rain_path<0._wp).OR.ANY(snow_path<0._wp)) &
+ 1425:       ERROR STOP 'LW precipitation paths must be nonnegative'
+ 1426:     IF(ANY(snow_path>0._wp.AND.snow_radius<=0._wp)) ERROR STOP 'active snow radius must be positive'
+ 1427:     DO lev=1,SIZE(rain_path,2)
+ 1428:       DO col=1,SIZE(rain_path,1)
+ 1429:         tau_rain=0.33E-3_wp*rain_path(col,lev)
+ 1430:         tau_snow=0._wp
+ 1431:         IF(snow_path(col,lev)>0._wp.AND.snow_radius(col,lev)>10._wp) &
+ 1432:           tau_snow=1.5_wp*1.05756_wp*snow_path(col,lev)/snow_radius(col,lev)
+ 1433:         tau(col,lev,:)=tau_rain+tau_snow
+ 1434:       END DO
+ 1435:     END DO
+ 1436:   END SUBROUTINE reference_lw_precip
+--- WRF/test/rrtmgp/reference_column.f90:1438-1515 ---
+ 1438:   SUBROUTINE reference_sw_precip(rain_path,snow_path,snow_radius,band_limits,tau,ssa,asymmetry,delta_scaled,raw_tau_out)
+ 1439:     ! See the source/validation-scope note above reference_lw_precip.
+ 1440:     REAL(wp), INTENT(IN) :: rain_path(:,:),snow_path(:,:),snow_radius(:,:),band_limits(:,:)
+ 1441:     REAL(wp), INTENT(OUT) :: tau(:,:,:),ssa(:,:,:),asymmetry(:,:,:)
+ 1442:     LOGICAL, OPTIONAL, INTENT(IN) :: delta_scaled
+ 1443:     REAL(wp), OPTIONAL, INTENT(OUT) :: raw_tau_out(:,:,:)
+ 1444:     REAL(wp), PARAMETER :: expected(2,14)=RESHAPE([ &
+ 1445:       820._wp,2680._wp,2680._wp,3250._wp,3250._wp,4000._wp,4000._wp,4650._wp, &
+ 1446:       4650._wp,5150._wp,5150._wp,6150._wp,6150._wp,7700._wp,7700._wp,8050._wp, &
+ 1447:       8050._wp,12850._wp,12850._wp,16000._wp,16000._wp,22650._wp,22650._wp,29000._wp, &
+ 1448:       29000._wp,38000._wp,38000._wp,50000._wp], [2,14])
+ 1449:     ! The upstream tables assign default-real literals into kind(wp) arrays;
+ 1450:     ! preserve that conversion order for exact parity with the pinned source.
+ 1451:     REAL(wp), PARAMETER :: b0r(14)=[.496,.466,.437,.416,.391,.374,.352, &
+ 1452:       .183,.048,.012,0.,0.,0.,0.]
+ 1453:     REAL(wp), PARAMETER :: b0s(14)=[.460,.460,.460,.460,.460,.460,.460, &
+ 1454:       .460,0.,0.,0.,0.,0.,0.]
+ 1455:     REAL(wp), PARAMETER :: b1s(14)=[0.,0.,0.,0.,0.,0.,0.,0., &
+ 1456:       1.62E-5,1.62E-5,0.,0.,0.,0.]
+ 1457:     REAL(wp), PARAMETER :: c0r(14)=[.980,.975,.965,.960,.955,.952,.950, &
+ 1458:       .944,.894,.884,.883,.883,.883,.883]
+ 1459:     REAL(wp), PARAMETER :: c0s(14)=[.970,.970,.970,.970,.970,.970,.970, &
+ 1460:       .970,.970,.970,.700,.700,.700,.700]
+ 1461:     REAL(wp) :: tau_rain,tau_snow,ssa_rain,ssa_snow,asy_rain,asy_snow
+ 1462:     REAL(wp) :: tau_prec,ssa_prec,asy_prec,asyw,ssaw,za1,za2
+ 1463:     LOGICAL :: apply_delta
+ 1464:     INTEGER :: col,lev,band
+ 1465:     apply_delta=.TRUE.
+ 1466:     IF(PRESENT(delta_scaled)) apply_delta=delta_scaled
+ 1467:     IF(SIZE(tau,1)/=SIZE(rain_path,1).OR.SIZE(tau,2)/=SIZE(rain_path,2).OR.SIZE(tau,3)/=14) &
+ 1468:       ERROR STOP 'invalid SW precipitation optics shape'
+ 1469:     IF(ANY(SHAPE(ssa)/=SHAPE(tau)).OR.ANY(SHAPE(asymmetry)/=SHAPE(tau))) &
+ 1470:       ERROR STOP 'SW precipitation optics output shapes differ'
+ 1471:     IF(PRESENT(raw_tau_out)) THEN
+ 1472:       IF(ANY(SHAPE(raw_tau_out)/=SHAPE(tau))) ERROR STOP 'SW raw precipitation output shapes differ'
+ 1473:       raw_tau_out=0._wp
+ 1474:     END IF
+ 1475:     IF(ANY(SHAPE(rain_path)/=SHAPE(snow_path)).OR.ANY(SHAPE(rain_path)/=SHAPE(snow_radius))) &
+ 1476:       ERROR STOP 'SW precipitation inputs have inconsistent shapes'
+ 1477:     IF(ANY(SHAPE(band_limits)/=SHAPE(expected)).OR.ANY(band_limits/=expected)) &
+ 1478:       ERROR STOP 'SW precipitation bands differ from pinned CCPP coefficient order'
+ 1479:     IF(ANY(.NOT.ieee_is_finite(rain_path)).OR.ANY(.NOT.ieee_is_finite(snow_path)).OR. &
+ 1480:        ANY(.NOT.ieee_is_finite(snow_radius))) ERROR STOP 'SW precipitation inputs must be finite'
+ 1481:     IF(ANY(rain_path<0._wp).OR.ANY(snow_path<0._wp)) &
+ 1482:       ERROR STOP 'SW precipitation paths must be nonnegative'
+ 1483:     IF(ANY(snow_path>0._wp.AND.snow_radius<=0._wp)) ERROR STOP 'active snow radius must be positive'
+ 1484:     DO lev=1,SIZE(rain_path,2)
+ 1485:       DO col=1,SIZE(rain_path,1)
+ 1486:         tau_rain=rain_path(col,lev)*3.07E-3_wp
+ 1487:         tau_snow=0._wp
+ 1488:         IF(snow_path(col,lev)>0._wp.AND.snow_radius(col,lev)>10._wp) &
+ 1489:           tau_snow=snow_path(col,lev)*1.09087_wp*(1.5_wp/(1.0315_wp*snow_radius(col,lev)))
+ 1490:         DO band=1,14
+ 1491:           ssa_rain=tau_rain*(1._wp-b0r(band))
+ 1492:           asy_rain=ssa_rain*c0r(band)
+ 1493:           ssa_snow=tau_snow*(1._wp-(b0s(band)+b1s(band)*1.0315_wp*snow_radius(col,lev)))
+ 1494:           asy_snow=ssa_snow*c0s(band)
+ 1495:           tau_prec=MAX(1.E-12_wp,tau_rain+tau_snow)
+ 1496:           IF(PRESENT(raw_tau_out)) raw_tau_out(col,lev,band)=tau_prec
+ 1497:           ssa_prec=MAX(1.E-12_wp,ssa_rain+ssa_snow)
+ 1498:           asy_prec=MAX(1.E-12_wp,asy_rain+asy_snow)
+ 1499:           asyw=asy_prec/MAX(1.E-12_wp,ssa_prec)
+ 1500:           ssaw=MIN(1._wp-1.E-6_wp,ssa_prec/tau_prec)
+ 1501:           IF(apply_delta) THEN
+ 1502:             za1=asyw*asyw
+ 1503:             za2=ssaw*za1
+ 1504:             tau(col,lev,band)=(1._wp-za2)*tau_prec
+ 1505:             ssa(col,lev,band)=(ssaw-za2)/(1._wp-za2)
+ 1506:             asymmetry(col,lev,band)=asyw/(1._wp+asyw)
+ 1507:           ELSE
+ 1508:             tau(col,lev,band)=tau_prec
+ 1509:             ssa(col,lev,band)=ssaw
+ 1510:             asymmetry(col,lev,band)=asyw
+ 1511:           END IF
+ 1512:         END DO
+ 1513:       END DO
+ 1514:     END DO
+ 1515:   END SUBROUTINE reference_sw_precip

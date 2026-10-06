@@ -1,0 +1,271 @@
+{
+  "band12_scope": "Do not transfer the legacy band-12 zero-fraction observation to GP. The retained independent GP pfrac result reports nonzero GP fractions in upper layers while saved GP GAS_TAU_RAW is zero there; the older legacy fraction record has its own zero-fraction upper-layer behavior. These are distinct table/engine facts. This design will reconstruct GP major/minor absorption from its own coefficients and inputs; it will not infer zero GP tau from pfrac alone, normalize fractions, or use legacy fraction masks as GP masks. No band-12 opacity values were computed here.",
+  "coefficient_inventory": {
+    "dims_and_vars_from_pinned_file": {
+      "bands": 16,
+      "gas_names": {
+        "dims": [
+          "absorber",
+          "string_len"
+        ],
+        "shape": [
+          19,
+          32
+        ]
+      },
+      "gpoints": 128,
+      "key_species": {
+        "dims": [
+          "bnd",
+          "atmos_layer",
+          "pair"
+        ],
+        "shape": [
+          16,
+          2,
+          2
+        ]
+      },
+      "kmajor": {
+        "dims": [
+          "temperature",
+          "pressure_interp",
+          "mixing_fraction",
+          "gpt"
+        ],
+        "shape": [
+          14,
+          60,
+          9,
+          128
+        ]
+      },
+      "kminor_lower": {
+        "dims": [
+          "temperature",
+          "mixing_fraction",
+          "contributors_lower"
+        ],
+        "shape": [
+          14,
+          9,
+          485
+        ]
+      },
+      "kminor_upper": {
+        "dims": [
+          "temperature",
+          "mixing_fraction",
+          "contributors_upper"
+        ],
+        "shape": [
+          14,
+          9,
+          308
+        ]
+      },
+      "lower_minor_intervals": 60,
+      "upper_minor_intervals": 34,
+      "vmr_ref": {
+        "dims": [
+          "temperature",
+          "absorber_ext",
+          "atmos_layer"
+        ],
+        "shape": [
+          14,
+          20,
+          2
+        ]
+      }
+    },
+    "major_table_internal_order": "NetCDF exposes kmajor dimensions (temperature,pressure_interp,mixing_fraction,gpt). The Fortran loader reads it with requested extents (ngpt,nmix,npress+1,ntemps), then init_abs_coeffs reshapes to this%kmajor dimensions (temperature,eta,pressure_interp,gpt) using ORDER=(/4,2,3,1/) (frontend:1390-1396). This final internal layout matches the kernel dummy declaration (ntemp,neta,npres+1,ngpt; kernels:222). A Python reader must use NetCDF dimension names; a Fortran-order translation must reproduce both read_field and reshape order.",
+    "minor_filtering": {
+      "full_row_map": "See the separately pinned minor-metadata-inventory-v1.json for each interval's identifier, mapped absorber, active status, inclusive g-point bounds, original and filtered kminor_start, density/complement flags, and scaling gas.",
+      "lower_table": {
+        "excluded": 10,
+        "intervals": 60,
+        "removed_flattened_gpt_coefficients": 78,
+        "retained_for_names_lw": 50
+      },
+      "rule": "For every minor_gases_lower/upper entry, map identifier_minor -> gas_minor to get absorber name; retain when absorber is in host available_gases (frontend reduce_minor_arrays). Coefficient file gas_minor/identifier_minor are not the same strings as every minor_gases interval entry (e.g. h2o_frgn/h2o_self map to h2o).",
+      "upper_table": {
+        "excluded": 9,
+        "intervals": 34,
+        "removed_flattened_gpt_coefficients": 73,
+        "retained_for_names_lw": 25
+      }
+    },
+    "minor_table_internal_order": "NetCDF kminor dimensions are (temperature,mixing_fraction,contributors). The Fortran loader reads kminor_lower/upper using extents (ncontributors,nmixingfracs,ntemps) (mo_load_coefficients.F90:134-137). The frontend filters and repacks each contributor interval and reshapes the compact table; the kernel receives (ntemp,neta,nminork) (mo_gas_optics_rrtmgp_kernels.F90:427). Python should bind fields by NetCDF dimension names, while any Fortran-equivalent translated representation must follow this read/repack/reshape mapping rather than treating flattened contributor positions as g-point IDs. Exact interval metadata and retained starts are in minor-metadata-inventory-v1.json.",
+    "unit_attributes": "The coefficient variables inspected in this NetCDF do not carry units attributes. Use the code's documented column-amount units and formulas; do not infer units solely from array magnitudes or add guessed scale factors."
+  },
+  "exact_pins": [
+    {
+      "git_commit": "58d68cded76ef359b8179845d3b150c4ee45de8f",
+      "path": "build/udm37-bon-common-band-source-pr-work",
+      "role": "production source tree"
+    },
+    {
+      "path": "build/udm37-bon-common-band-source-pr-work/WRF/phys/module_ra_rrtmgp.F",
+      "role": "WRF adapter gas setup and gas-optics call",
+      "sha256": "1852452555fbe667a0a95d59242bcd9c3833f2877fc51f882d5d3d929a058f58"
+    },
+    {
+      "path": "build/udm37-bon-common-band-source-pr-work/WRF/external/rte_rrtmgp/rrtmgp-frontend/mo_gas_optics_rrtmgp.F90",
+      "role": "RRTMGP gas-optics frontend",
+      "sha256": "d5e0a7e56bc811575ec2c9655953a5be64c42a62e4100f65198e1e1b44239adc"
+    },
+    {
+      "path": "build/udm37-bon-common-band-source-pr-work/WRF/external/rte_rrtmgp/rrtmgp-kernels/mo_gas_optics_rrtmgp_kernels.F90",
+      "role": "RRTMGP interpolation/absorption kernels",
+      "sha256": "96be9c4379c4e49a7b13e9b1f8314e78908262f402e913a2a03232987706f6e1"
+    },
+    {
+      "path": "build/udm37-bon-common-band-source-pr-work/WRF/external/rte_rrtmgp/extensions/mo_load_coefficients.F90",
+      "role": "NetCDF coefficient loader",
+      "sha256": "3abc021bf244560f4d7f247be167ad0ecafb6c451f88566a7ce2a0436caebb5b"
+    },
+    {
+      "path": "build/udm37-bon-common-band-source-pr-work/WRF/run/rrtmgp-gas-lw-g128.nc",
+      "role": "LW k-distribution coefficients",
+      "sha256": "70ad65d116531122660318e5da2a2af9db74b425916202860e9527ef2375b8f6"
+    },
+    {
+      "path": "build/udm37-bon-night-dry-column-attribution-v1/matched-legacy-dry.input",
+      "role": "held matched-dry V10 input",
+      "sha256": "292f9569b059c373c9cb14f1574cb8835627331574592a19d641ef07c21ec918"
+    },
+    {
+      "path": "build/udm37-bon-night-n2-attribution-v1/run-preparation-v1/run-v1/n2-0p7808.result",
+      "role": "N2=0.7808 saved reference result",
+      "sha256": "b578e9983b5817297db75baac026af98b84a3cbcd3653aadf2e4db5930ce5732"
+    },
+    {
+      "path": "build/udm37-bon-night-n2-attribution-v1/run-preparation-v1/run-v1/n2-0p7808.result.lw_transport",
+      "role": "N2=0.7808 RRTMGP sidecar",
+      "sha256": "bb53daf55ea9b6f91c9d0dbc4f132eff11b3ab76fd278bacb327571a1642e792"
+    },
+    {
+      "path": "build/udm37-bon-night-n2-attribution-v1/run-preparation-v1/run-v1/execution.json",
+      "role": "saved execution receipt",
+      "sha256": "cbb876791a9ff905356fa90abd65ede8d5f8dde882009d7be48684c74a7a600e"
+    },
+    {
+      "path": "build/udm37-bon-night-independent-pfrac-design-v1/design.json",
+      "role": "companion independent pfrac design (not executed by this plan)",
+      "sha256": "254d4d45094d56a2939db93ca82550a878152ed7744266e81e71b1aed161aae4"
+    },
+    {
+      "path": "build/udm37-bon-night-independent-opacity-design-v1/minor-metadata-inventory-v1.json",
+      "role": "filtered minor-contributor metadata inventory",
+      "sha256": "517b300eb2e89e2f0307c9f08e02d256e969266129dbc35d437b9495644bdef7"
+    },
+    {
+      "path": "build/udm37-bon-night-independent-pfrac-math-v1/result.json",
+      "role": "prior independent GP pfrac result; existing artifact, not recomputed for this design",
+      "sha256": "67d000a0582de7de935e64951e2e7c6a609b793187646b7162bca1e7cb9a2862"
+    }
+  ],
+  "feasibility_and_traps": {
+    "component_scope": "The saved opacity result exposes the combined absorption total but not major, minor, or per-species partial arrays, nor interpolation indices/weights. A complete independent translation can compute those components, but the stored target only checks their final ordered sum; separate component validation would need an additional observer.",
+    "feasible": "A direct independent Python implementation is feasible from the held input, saved N2 argv, pinned coefficient file, and source. It is not a short k-major multiply: reproduce gas-name reduction, flavor maps, contributor filtering/offset correction, pressure regime windows, and density/special-gas rules. For this exact LW file, no Rayleigh term needs to be synthesized or subtracted.",
+    "interpretation": "A successful calculation would validate a source-translated opacity implementation against the pinned GP result. It would not establish spectroscopic truth, RRTMG4 equivalence, or radiation accuracy. Handle GP band-12 upper layers from the pinned GP coefficients and fractions themselves; legacy zero-fraction masks are not transferable.",
+    "not_an_oracle_for": "The pinned LW file has no Rayleigh variables/dimensions, so this call's saved GAS_TAU_RAW is the absorption-only major-plus-minor total and can be directly compared to that sum. The saved result still has no component split by major gas, minor contributor, or gas species. Other coefficient files/phases can activate the generic Rayleigh branch."
+  },
+  "limitations": [
+    "This is a design only. No opacity values or pfrac values were computed.",
+    "Saved GAS_TAU_RAW checks only the final absorption total; there is no stored independent major/minor/species split to use as separate numerical oracle.",
+    "The current capture contains 45 solver diagnostic layers: native32 plus upper extension13. A matching 45-row mass carrier does not mean the WRF native state has 45 layers.",
+    "The previous independent pfrac report is pinned for scope context only; no pfrac arithmetic was repeated here."
+  ],
+  "production_input_contract": {
+    "adapter_pressure_conversion": "Adapter passes REAL(play,wp)*100 and REAL(plev,wp)*100 to gas_optics. Preserve that exact hPa-to-Pa conversion and array orientation.",
+    "cfc_presence": "The four CFC profiles are present as V10 input sections and the N2 replay validator treats them as a complete optional group.",
+    "dry_column": "Adapter starts with get_col_dry(REAL(h2o,wp),REAL(plev,wp)*100); for the supplied 45-row mass carrier it replaces the first 45 diagnostic-layer values with REAL(native_mass,wp)*avogad/(initialized_mol_weight_dry*10000). Track these 45 rows as 32 native layers plus 13 extensions, not as 45 native WRF layers.",
+    "gas_column_amounts": "Frontend sets col_gas(:,:,0)=col_dry and col_gas(:,:,g)=vmr(:,:,g)*col_dry. Source documents col_gas as molecules/cm^2. Do not derive a second dry column if matching the adapter-supplied optional col_dry.",
+    "gas_names_lw_order": [
+      "h2o",
+      "co2",
+      "o3",
+      "n2o",
+      "ch4",
+      "o2",
+      "cfc11",
+      "cfc12",
+      "cfc22",
+      "ccl4",
+      "n2"
+    ],
+    "n2_override_vmr": 0.7808
+  },
+  "proposed_independent_check": [
+    "Parse the held V10 input and execution argv. Bind the 0.7808 N2 override, profile order, exact 45 diagnostic-layer pressure/temperature/mass arrays and separate native32/extension13 labeling.",
+    "Read named variables/dimensions from the pinned LW NetCDF. Build host gas names exactly from module_ra_rrtmgp.F; map vmr_ref and key_species by species names. Apply the sole (0,0)->(2,2) rewrite and preserve table/Fortran 1-based index semantics.",
+    "Rebuild the lower/upper minor interval maps from gas_minor, identifier_minor, minor_gases_lower/upper and available_gases. Retain exact table order, per-interval g-point bounds, coefficient start-offset subtraction, density/complement/scaling-gas flags, and coefficient axis order. Compare that generated metadata map to the pinned minor-metadata-inventory-v1.json before any opacity arithmetic.",
+    "Reconstruct col_dry from the saved matched 45-row mass input using the adapter formula, then col_gas(0)=col_dry and each species column amount=VMR*col_dry. Preserve adapter REAL conversion and play/plev unit conversion.",
+    "Translate interpolation state once from source to obtain jtemp,jpress,jeta,tropo,fmajor,fminor,col_mix. Then calculate major tau, lower-minor tau and upper-minor tau in source accumulation order. Keep partial components for diagnostics, but do not treat them as separately stored oracle values.",
+    "For this pinned LW table, sum major+minor only and compare shape (1,45,128) to saved GAS_TAU_RAW. This file has no Rayleigh variables; do not add or subtract a Rayleigh term. Keep band 12 and upper-extension layers explicitly indexed; do not transfer legacy fracs masks or normalize GP fractions."
+  ],
+  "purpose": "Specify a source-faithful independent reconstruction of LW gas absorption optical depth for the pinned matched-dry 45-layer BON diagnostic column. This is an implementation cross-check, not an accuracy test or transport validation.",
+  "rayleigh_and_saved_field": "For this exact pinned LW coefficient file, Rayleigh is absent: its NetCDF variables and dimensions whose names contain 'rayl' are both empty. The frontend only allocates this%krayl when rayl_lower is allocated (init_abs_coeffs around 1402-1416); compute_gas_taus branches on allocated(this%krayl) at 672 and otherwise calls compute_tau_absorption directly into optical_props%tau at 720-749. Thus the actual BON LW atmos%tau and saved GAS_TAU_RAW are absorption-only for this coefficient file. The generic allocated-Rayleigh branch computes absorption and Rayleigh separately then combines them, but it is not active in this pinned call.",
+  "rayleigh_specific_correction": {
+    "actual_pinned_lw_file": {
+      "path": "build/udm37-bon-common-band-source-pr-work/WRF/run/rrtmgp-gas-lw-g128.nc",
+      "rayleigh_named_dimensions": [],
+      "rayleigh_named_variables": [],
+      "sha256": "70ad65d116531122660318e5da2a2af9db74b425916202860e9527ef2375b8f6"
+    },
+    "comparison_implication": "For this coefficient file and LW call, GAS_TAU_RAW is absorption-only and the independently reconstructed ordered major+minor total is the appropriate direct comparison. This does not generalize to other data files or phases.",
+    "scope": "Metadata/source inspection only; no optical-depth, pfrac, or numerical values computed.",
+    "source_path_proof": [
+      {
+        "fact": "The loader reads/allocates rayl_lower and rayl_upper only if rayl_lower exists; otherwise both allocatables stay unallocated when the LW frontend load is called.",
+        "lines": "165-168, 204-206",
+        "path": "build/udm37-bon-common-band-source-pr-work/WRF/external/rte_rrtmgp/extensions/mo_load_coefficients.F90",
+        "sha256": "3abc021bf244560f4d7f247be167ad0ecafb6c451f88566a7ce2a0436caebb5b"
+      },
+      {
+        "fact": "Frontend allocates this%krayl only if rayl_lower is allocated.",
+        "lines": "1402-1416",
+        "path": "build/udm37-bon-common-band-source-pr-work/WRF/external/rte_rrtmgp/rrtmgp-frontend/mo_gas_optics_rrtmgp.F90",
+        "sha256": "d5e0a7e56bc811575ec2c9655953a5be64c42a62e4100f65198e1e1b44239adc"
+      },
+      {
+        "fact": "When this%krayl is absent, compute_tau_absorption writes directly to optical_props%tau.",
+        "lines": "672-750",
+        "path": "build/udm37-bon-common-band-source-pr-work/WRF/external/rte_rrtmgp/rrtmgp-frontend/mo_gas_optics_rrtmgp.F90",
+        "sha256": "d5e0a7e56bc811575ec2c9655953a5be64c42a62e4100f65198e1e1b44239adc"
+      },
+      {
+        "fact": "Adapter saves atmos%tau as GAS_TAU_RAW.",
+        "lines": "800-812",
+        "path": "build/udm37-bon-common-band-source-pr-work/WRF/phys/module_ra_rrtmgp.F",
+        "sha256": "1852452555fbe667a0a95d59242bcd9c3833f2877fc51f882d5d3d929a058f58"
+      }
+    ],
+    "v1_statement_corrected": "V1 and v2 described GAS_TAU_RAW as absorption plus Rayleigh based on the frontend generic branch; this was not the active path for the pinned LW file."
+  },
+  "schema": "udm37_bon_night_independent_lw_gas_opacity_design_v3",
+  "scope": {
+    "column": "One retained BON nighttime LW call; 45 solver diagnostic layers consist of 32 native WRF layers plus 13 upper extensions.",
+    "excluded": [
+      "No pfrac or optical-depth values are calculated here.",
+      "No build, reference replay, solver, WRF run, or coefficient regeneration.",
+      "No accuracy, independent-truth, or spectral/transport conclusion."
+    ],
+    "input": "Pinned RRTMGP_REPLAY_V10 matched-legacy-dry input, ncol=1, nlay=45; input carries VMR profiles for six major/background gases and four CFCs, and a 45-row matched dry-mass carrier.",
+    "n2": "The paired saved result was produced with explicit command-line N2 VMR override 0.7808. V10 text has no VMR_N2 section. Keep this argv value bound to the saved execution receipt."
+  },
+  "source_algorithm": {
+    "frontend_reduction_and_flavor": "Frontend init (1299-1328) intersects coefficient gas_names with host available_gases, packs runtime gas_names in coefficient table order, and remaps vmr_ref by name. It reduces key_species by species names and rejects missing key gases, builds unique flavors, then maps each g-point to flavor by its band (1445-1454). The only key-pair rewrite is (0,0)->(2,2), documented as safe because those g-points have zero absorption coefficients (1739-1747). Minor identifiers separately map identifier_minor -> gas_minor -> runtime gas indices (1808-1828). Do not assume raw coefficient absorber indices, runtime gas indices, and minor interval identifiers are interchangeable.",
+    "gas_setup": "Adapter module_ra_rrtmgp.F:69-75 defines ordered names_lw and fixed dry-background N2. set_gases_lw:473-512 sets the six standard gases, N2, and all-or-none four-CFC group; gas_dry_column:583-595 constructs dry columns; LW call:800-806 supplies pressure, temperature, gases and col_dry.",
+    "major_absorption": "compute_tau_absorption first calls gas_optical_depths_major (kernels:292-302), looping band then layer. It selects iflav=gpoint_flavor(itropo,band_lims_gpt(1,band)); interpolate3D_byflav weights the four eta/pressure corners for each of two temperature planes, multiplies by the corresponding col_mix value, and adds each band's g-point range to tau (350-401; interpolation kernel 763-790). Keep runtime kmajor order (temperature,eta,pressure_interp,gpt), with the coefficient loader read/reshape contract documented in coefficient_inventory.",
+    "minor_absorption": "compute_tau_absorption zeroes tau, adds major absorption first, then invokes lower and upper minor-gas passes (kernels:276-342). Each interval identifier in minor_gases_lower/upper maps through identifier_minor to gas_minor; the resulting absorber is kept only if present in available_gases. After filtering, the frontend compacts flattened coefficient segments and subtracts lengths of preceding removed g-point intervals from each retained kminor_start (frontend:1971-2088). For an active interval/layer, scaling starts at col_gas(idx_minor); if minor_scales_with_density, multiply by (0.01*play/tlay). If idx_minor_scaling>0, form vmr_fact=1/col_gas(0), dry_fact=1/(1+col_gas(idx_h2o)*vmr_fact), then multiply by either the scaling gas dry VMR or its complement according to scale_by_complement (kernels:407-503). The selected compact kminor segment is interpolated over eta and temperature using fminor/jeta/jtemp and added only to that interval's inclusive g-point range. Preserve lower/upper pressure-region layer limits, not just a per-layer major-flavor selector.",
+    "minor_lower_upper_and_scaling": "The frontend filters lower/upper minor interval rows separately by absorber presence and compacts contributor coefficients while shifting starts for excluded intervals (frontend:1971-2088). Runtime kernel forms layer limits for lower and upper atmosphere (kernels:276-290), then calls minor calculation twice with respective lower/upper metadata (304-342). For each interval, only its g-point limits are changed. Base scaling is the absorber column amount; optional density scaling is times 0.01*play/tlay. If a named scaling gas index is present, dry_fact uses col_gas(0) and h2o column amount; the rule multiplies by special gas dry VMR or complement. Then kminor is interpolated along eta/temp from compact table index kminor_start..start+(gptE-gptS) and added to the same selected tau g-points (407-503). H2O foreign/self identifiers both map to h2o; their own density/scaling/complement flags must be retained, not treated as distinct host VMR species.",
+    "rayleigh_and_saved_field": "For this pinned LW coefficient file, Rayleigh is absent. The NetCDF loader conditionally reads rayl_lower/rayl_upper only when rayl_lower exists (mo_load_coefficients.F90:165-168); this file has neither Rayleigh variables nor Rayleigh-named dimensions. init_abs_coeffs allocates this%krayl only if rayl_lower is allocated (mo_gas_optics_rrtmgp.F90:1402-1416), so compute_gas_taus follows the no-Rayleigh branch (672-750) and compute_tau_absorption writes directly into optical_props%tau. Adapter GAS_TAU_RAW is traced from atmos%tau (module_ra_rrtmgp.F:807-812). Thus the pinned saved LW GAS_TAU_RAW equals the major-plus-minor absorption result, subject to exact source ordering/precision. This is specific to the pinned LW coefficient file, not the generic frontend or other phases/files.",
+    "state_interpolation": "compute_gas_taus (560-671) fetches VMRs by runtime gas name, uses adapter-provided col_dry, sets col_gas(0)=col_dry and col_gas(g)=VMR(g)*col_dry, then computes interpolation state. Kernel interpolation (40-177) produces jtemp/ftemp, jpress/fpress, tropo, per-flavor/per-temperature eta, jeta/feta, col_mix, fmajor/fminor. Preserve index clipping/truncation, runtime flavor order, and source expression order. The same computed arrays feed major and minor optical-depth calculations; this task does not recompute pfrac."
+  },
+  "status": "DESIGN_ONLY_NO_NUMERICAL_RECONSTRUCTION",
+  "supersedes_design_v1_sha256": "dff3f349c99d5eb409e550831b8a28e6aed4168f666ea02497d73ee85cbf22c3",
+  "supersedes_design_v2_sha256": "ede16aed01bef3ec30252f46b5ba81e61b6ec7138cf54a8c154c6c97a54b6b97"
+}

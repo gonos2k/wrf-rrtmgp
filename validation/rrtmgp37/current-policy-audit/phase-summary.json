@@ -1,0 +1,397 @@
+{
+  "channel_duplication": [
+    {
+      "counted_channel": "out",
+      "policy_channel_sequences_identical": true,
+      "policy_records_each_channel": 1897,
+      "rank": 0
+    },
+    {
+      "counted_channel": "out",
+      "policy_channel_sequences_identical": true,
+      "policy_records_each_channel": 1889,
+      "rank": 1
+    },
+    {
+      "counted_channel": "out",
+      "policy_channel_sequences_identical": true,
+      "policy_records_each_channel": 1499,
+      "rank": 2
+    },
+    {
+      "counted_channel": "out",
+      "policy_channel_sequences_identical": true,
+      "policy_records_each_channel": 1864,
+      "rank": 3
+    }
+  ],
+  "counted_records": 7149,
+  "execution_pin": {
+    "path": "build/udm37-restart-cloud-diagnostics-runtime-v2/runs-v2/execution.json",
+    "sha256": "6229e7d6964618fda7b93fd3c9d8788ce86cccabc0f3bb905ef2d5397e08d65e",
+    "size": 14848878
+  },
+  "input_pins": [
+    {
+      "path": "build/udm37-restart-cloud-diagnostics-runtime-v2/runs-v2/execution.json",
+      "sha256": "6229e7d6964618fda7b93fd3c9d8788ce86cccabc0f3bb905ef2d5397e08d65e",
+      "size": 14848878
+    },
+    {
+      "path": "build/udm37-restart-cloud-diagnostics-runtime-v2/runs-v2/cases/long-b32/rsl.out.0000",
+      "sha256": "c2c9317fc4eb24eb9ede7d820b60267bf36476695f21d5067f8621360369cc62",
+      "size": 791756
+    },
+    {
+      "path": "build/udm37-restart-cloud-diagnostics-runtime-v2/runs-v2/cases/long-b32/rsl.error.0000",
+      "sha256": "267078cdb6f30a32030b6a0a5249d9dab931bdc09af32bcbb753fa77f0cae017",
+      "size": 791793
+    },
+    {
+      "path": "build/udm37-restart-cloud-diagnostics-runtime-v2/runs-v2/cases/long-b32/rsl.out.0001",
+      "sha256": "5c0850fb98e2e2cb57ecc69af19c231268955c2994d732e588e7b1d16c5dd284",
+      "size": 649588
+    },
+    {
+      "path": "build/udm37-restart-cloud-diagnostics-runtime-v2/runs-v2/cases/long-b32/rsl.error.0001",
+      "sha256": "838d18686158cf96ccb3ae0049b35b903e909b1dd02e60e2f90f4fdbb39f4c0c",
+      "size": 649625
+    },
+    {
+      "path": "build/udm37-restart-cloud-diagnostics-runtime-v2/runs-v2/cases/long-b32/rsl.out.0002",
+      "sha256": "ac61a0af3177d181a1135e3489aca75648c540ddbc25ec8a954632c159fffc7b",
+      "size": 430307
+    },
+    {
+      "path": "build/udm37-restart-cloud-diagnostics-runtime-v2/runs-v2/cases/long-b32/rsl.error.0002",
+      "sha256": "4c8720b5f23291a848e9b020f80e9ba21f667b6ce97c10867f4a65bcb9cb6157",
+      "size": 430344
+    },
+    {
+      "path": "build/udm37-restart-cloud-diagnostics-runtime-v2/runs-v2/cases/long-b32/rsl.out.0003",
+      "sha256": "4ecc141b890b002aac53023ba365e672de7706ca88dd5eb054d0a1d1f33fcd23",
+      "size": 652820
+    },
+    {
+      "path": "build/udm37-restart-cloud-diagnostics-runtime-v2/runs-v2/cases/long-b32/rsl.error.0003",
+      "sha256": "b71e06b8026b0434cd34d04093e6b15b43fd74c14af50a7f5875b51979dc2a6b",
+      "size": 652857
+    },
+    {
+      "path": "build/udm37-restart-cloud-diagnostics-runtime-v2/runs-v2/cases/long-b32/namelist.input",
+      "sha256": "be55e9b8fdd6eb6494b3642d5cae8226b31be8dd509ea4fd8121a8baa704e47d",
+      "size": 5159
+    },
+    {
+      "path": "build/udm37-restart-cloud-diagnostics-runtime-v2/runs-v2/cases/long-b32/namelist.output",
+      "sha256": "2454ee80fd237ed9bc35e07daf1e23f0460697f3d90dc4c7b4aef2fae38e192e",
+      "size": 89223
+    }
+  ],
+  "input_pre_post_identical": true,
+  "limitations": [
+    "All sums repeat material across radiation calls; neither domain-total mass nor physical domain occurrence fractions.",
+    "LW and SW are separate samples; SW summaries cover wrapper execution in daylight only.",
+    "Native CF0 rain/snow total grid-path denominators are not emitted; an omission fraction is unavailable.",
+    "CU LUT lines lack tile/call identifiers. No adjacency pairing or per-tile CU fraction is inferred under OpenMP.",
+    "preceding_main_time_context is context only, not authenticated radiation-call time.",
+    "Pooled CU denominator uses all accepted CU population paths, including calls with no clipping line, valid here at cldovrlp=2.",
+    "Printed native sums have six-decimal scientific mantissas; pooled values are reconstructed from displayed diagnostics.",
+    "Path fractions and rejection sums do not quantify flux error or observational accuracy.",
+    "No NetCDF state reconstruction, optical replay, forecast, source modification or physical-policy change."
+  ],
+  "new_model_invocations": 0,
+  "parser_pin": {
+    "path": "build/udm37-phase-policy-audit-v1/parse_existing_logs.py",
+    "sha256": "3317972c5b24a5b4f1c2c171cde5c0506481bc9b9d3dda9533b7940e46204740",
+    "size": 9210
+  },
+  "records_pin": {
+    "path": "build/udm37-phase-policy-audit-v1/records.jsonl",
+    "sha256": "871d40afafca8dd54821b6fb7da71ad9c63015677ec44d5e0ff399c73192516f",
+    "size": 2550237
+  },
+  "source_pins": [
+    {
+      "path": "build/udm37-restart-cloud-diagnostics-gnu-v1/source-v4/WRF/phys/module_ra_rrtmgp_input.F",
+      "sha256": "47dcd1fbe84ec2f5bc21598e05024f38b9f4a4a7decb51cb7e51f7e21d01357f",
+      "size": 39498
+    },
+    {
+      "path": "build/udm37-restart-cloud-diagnostics-gnu-v1/source-v4/WRF/phys/module_ra_rrtmgp.F",
+      "sha256": "719504c7221aef989c52090a347c6f6c5fb3f85828cf4e741309790a8314a886",
+      "size": 66501
+    },
+    {
+      "path": "build/udm37-restart-cloud-diagnostics-gnu-v1/source-v4/WRF/phys/module_ra_rrtmg_lw.F",
+      "sha256": "9723f1de10ba1b16af7cb0305747f033d70ef488e5c046a6e7c16b65baffeea2",
+      "size": 703001
+    },
+    {
+      "path": "build/udm37-restart-cloud-diagnostics-gnu-v1/source-v4/WRF/phys/module_ra_rrtmg_sw.F",
+      "sha256": "9c64bbea29522ff472ed5e2a86aed0059b26ffb8462786eea54d6e302218b517",
+      "size": 663791
+    },
+    {
+      "path": "build/udm37-restart-cloud-diagnostics-gnu-v1/source-v4/WRF/phys/module_radiation_driver.F",
+      "sha256": "6790dc884c53fff201f15713d60197f54b43dc53b545ed44eb2397e9d2d3687f",
+      "size": 287929
+    },
+    {
+      "path": "build/udm37-restart-cloud-diagnostics-gnu-v1/source-v4/WRF/dyn_em/module_first_rk_step_part1.F",
+      "sha256": "bb1384a82aad375f9f8392da2a16046571919556a2deacf1523992dacc49891f",
+      "size": 142390
+    }
+  ],
+  "statistics": {
+    "LW:ICE": {
+      "RRTMGP_CU_LUT_CLIP": {
+        "max_over_logged_calls": {
+          "max_high_g_m2": 111.33738708496094,
+          "max_low_g_m2": 0.0
+        },
+        "records": 519,
+        "sum_over_logged_calls": {
+          "eligible_grid_path_g_m2": 6570228.17394523,
+          "high_grid_path_g_m2": 3149761.490171072,
+          "high_layers": 622522.0,
+          "low_grid_path_g_m2": 0.0,
+          "low_layers": 0.0
+        }
+      },
+      "RRTMGP_CU_POPULATION": {
+        "max_over_logged_calls": {
+          "omitted_cf0_max_g_m2": 0.0,
+          "rejected_grid_max_g_m2": 0.026391148567199707
+        },
+        "records": 519,
+        "sum_over_logged_calls": {
+          "accepted_grid_sum_g_m2": 6570228.17394523,
+          "negative_active_count": 1.0,
+          "negative_source_count": 1.0,
+          "omitted_cf0_count": 0.0,
+          "omitted_cf0_sum_g_m2": 0.0,
+          "rejected_grid_sum_g_m2": 0.026391148567199707
+        }
+      },
+      "RRTMGP_UDM_CF0_OMITTED": {
+        "max_over_logged_calls": {
+          "max_layer_grid_wp_g_m2": 1.819425
+        },
+        "records": 572,
+        "sum_over_logged_calls": {
+          "layers": 644970.0,
+          "sum_layer_grid_wp_g_m2": 11243.537721132
+        }
+      },
+      "RRTMGP_UDM_LUT_CLIP": {
+        "max_over_logged_calls": {
+          "max_high_g_m2": 71.94402,
+          "max_low_g_m2": 0.0
+        },
+        "records": 572,
+        "sum_over_logged_calls": {
+          "eligible_layer_wp_sum_g_m2": 26237046.2535955,
+          "high_clipped_layer_wp_sum_g_m2": 6777749.151380848,
+          "high_layers": 478675.0,
+          "low_clipped_layer_wp_sum_g_m2": 0.0,
+          "low_layers": 0.0
+        }
+      },
+      "cu_pooled_logged_accepted_path_clipped_fraction": 0.47939910255502316,
+      "native_pooled_logged_eligible_path_clipped_fraction": 0.258327446080255
+    },
+    "LW:LIQ": {
+      "RRTMGP_CU_POPULATION": {
+        "max_over_logged_calls": {
+          "omitted_cf0_max_g_m2": 0.0,
+          "rejected_grid_max_g_m2": 0.0
+        },
+        "records": 519,
+        "sum_over_logged_calls": {
+          "accepted_grid_sum_g_m2": 33343738.445542984,
+          "negative_active_count": 0.0,
+          "negative_source_count": 0.0,
+          "omitted_cf0_count": 0.0,
+          "omitted_cf0_sum_g_m2": 0.0,
+          "rejected_grid_sum_g_m2": 0.0
+        }
+      },
+      "RRTMGP_UDM_CF0_OMITTED": {
+        "max_over_logged_calls": {
+          "max_layer_grid_wp_g_m2": 1.196004
+        },
+        "records": 461,
+        "sum_over_logged_calls": {
+          "layers": 130961.0,
+          "sum_layer_grid_wp_g_m2": 168.47823888572526
+        }
+      },
+      "RRTMGP_UDM_LUT_CLIP": {
+        "max_over_logged_calls": {
+          "max_high_g_m2": 88.11498,
+          "max_low_g_m2": 0.0
+        },
+        "records": 572,
+        "sum_over_logged_calls": {
+          "eligible_layer_wp_sum_g_m2": 11330536.553823,
+          "high_clipped_layer_wp_sum_g_m2": 13550.12411433,
+          "high_layers": 2477.0,
+          "low_clipped_layer_wp_sum_g_m2": 0.0,
+          "low_layers": 0.0
+        }
+      },
+      "cu_pooled_logged_accepted_path_clipped_fraction": 0.0,
+      "native_pooled_logged_eligible_path_clipped_fraction": 0.001195894302971742
+    },
+    "LW:RAIN": {
+      "RRTMGP_UDM_CF0_OMITTED": {
+        "max_over_logged_calls": {
+          "max_layer_grid_wp_g_m2": 250.7207
+        },
+        "records": 549,
+        "sum_over_logged_calls": {
+          "layers": 972531.0,
+          "sum_layer_grid_wp_g_m2": 4666380.01340176
+        }
+      }
+    },
+    "LW:SNOW": {
+      "RRTMGP_UDM_CF0_OMITTED": {
+        "max_over_logged_calls": {
+          "max_layer_grid_wp_g_m2": 4.304008
+        },
+        "records": 572,
+        "sum_over_logged_calls": {
+          "layers": 2743902.0,
+          "sum_layer_grid_wp_g_m2": 14159.89836847789
+        }
+      }
+    },
+    "SW:ICE": {
+      "RRTMGP_CU_LUT_CLIP": {
+        "max_over_logged_calls": {
+          "max_high_g_m2": 111.33738708496094,
+          "max_low_g_m2": 0.0
+        },
+        "records": 259,
+        "sum_over_logged_calls": {
+          "eligible_grid_path_g_m2": 3327559.618832152,
+          "high_grid_path_g_m2": 1660291.8941623976,
+          "high_layers": 279473.0,
+          "low_grid_path_g_m2": 0.0,
+          "low_layers": 0.0
+        }
+      },
+      "RRTMGP_CU_POPULATION": {
+        "max_over_logged_calls": {
+          "omitted_cf0_max_g_m2": 0.0,
+          "rejected_grid_max_g_m2": 0.026391148567199707
+        },
+        "records": 259,
+        "sum_over_logged_calls": {
+          "accepted_grid_sum_g_m2": 3327559.618832152,
+          "negative_active_count": 1.0,
+          "negative_source_count": 1.0,
+          "omitted_cf0_count": 0.0,
+          "omitted_cf0_sum_g_m2": 0.0,
+          "rejected_grid_sum_g_m2": 0.026391148567199707
+        }
+      },
+      "RRTMGP_UDM_CF0_OMITTED": {
+        "max_over_logged_calls": {
+          "max_layer_grid_wp_g_m2": 1.819425
+        },
+        "records": 261,
+        "sum_over_logged_calls": {
+          "layers": 274050.0,
+          "sum_layer_grid_wp_g_m2": 6270.963060525109
+        }
+      },
+      "RRTMGP_UDM_LUT_CLIP": {
+        "max_over_logged_calls": {
+          "max_high_g_m2": 71.94402,
+          "max_low_g_m2": 0.0
+        },
+        "records": 260,
+        "sum_over_logged_calls": {
+          "eligible_layer_wp_sum_g_m2": 11873987.728366889,
+          "high_clipped_layer_wp_sum_g_m2": 2621492.4677706584,
+          "high_layers": 203308.0,
+          "low_clipped_layer_wp_sum_g_m2": 0.0,
+          "low_layers": 0.0
+        }
+      },
+      "cu_pooled_logged_accepted_path_clipped_fraction": 0.49895180983867615,
+      "native_pooled_logged_eligible_path_clipped_fraction": 0.22077608026391402
+    },
+    "SW:LIQ": {
+      "RRTMGP_CU_POPULATION": {
+        "max_over_logged_calls": {
+          "omitted_cf0_max_g_m2": 0.0,
+          "rejected_grid_max_g_m2": 0.0
+        },
+        "records": 259,
+        "sum_over_logged_calls": {
+          "accepted_grid_sum_g_m2": 16091917.23354246,
+          "negative_active_count": 0.0,
+          "negative_source_count": 0.0,
+          "omitted_cf0_count": 0.0,
+          "omitted_cf0_sum_g_m2": 0.0,
+          "rejected_grid_sum_g_m2": 0.0
+        }
+      },
+      "RRTMGP_UDM_CF0_OMITTED": {
+        "max_over_logged_calls": {
+          "max_layer_grid_wp_g_m2": 1.196004
+        },
+        "records": 208,
+        "sum_over_logged_calls": {
+          "layers": 61379.0,
+          "sum_layer_grid_wp_g_m2": 123.12752576863504
+        }
+      },
+      "RRTMGP_UDM_LUT_CLIP": {
+        "max_over_logged_calls": {
+          "max_high_g_m2": 60.30244,
+          "max_low_g_m2": 0.0
+        },
+        "records": 261,
+        "sum_over_logged_calls": {
+          "eligible_layer_wp_sum_g_m2": 3710888.2379878,
+          "high_clipped_layer_wp_sum_g_m2": 3187.07086253,
+          "high_layers": 614.0,
+          "low_clipped_layer_wp_sum_g_m2": 0.0,
+          "low_layers": 0.0
+        }
+      },
+      "cu_pooled_logged_accepted_path_clipped_fraction": 0.0,
+      "native_pooled_logged_eligible_path_clipped_fraction": 0.0008588431281504086
+    },
+    "SW:RAIN": {
+      "RRTMGP_UDM_CF0_OMITTED": {
+        "max_over_logged_calls": {
+          "max_layer_grid_wp_g_m2": 241.63
+        },
+        "records": 262,
+        "sum_over_logged_calls": {
+          "layers": 427578.0,
+          "sum_layer_grid_wp_g_m2": 1565366.5890295801
+        }
+      }
+    },
+    "SW:SNOW": {
+      "RRTMGP_UDM_CF0_OMITTED": {
+        "max_over_logged_calls": {
+          "max_layer_grid_wp_g_m2": 4.304008
+        },
+        "records": 265,
+        "sum_over_logged_calls": {
+          "layers": 1120498.0,
+          "sum_layer_grid_wp_g_m2": 6092.109867339227
+        }
+      }
+    }
+  },
+  "status": "PASS_READONLY_LOG_EXTRACTION_SCOPED"
+}

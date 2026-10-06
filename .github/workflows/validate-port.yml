@@ -17,6 +17,14 @@ on:
       - 'tools/register37.py'
       - 'tools/compare_registry.py'
       - 'tools/validate.py'
+      - 'tools/udm_frozen_optics/**'
+      - 'validation/rrtmgp37/upstream-reference/**'
+      - 'validation/rrtmgp37/bon-night-common-band-source/**'
+      - 'validation/rrtmgp37/bon-night-planck-source/**'
+      - 'validation/rrtmgp37/bon-night-independent-pfrac/**'
+      - 'validation/rrtmgp37/bon-night-independent-opacity/**'
+      - 'validation/rrtmgp37/bon-night-common-angle/**'
+      - 'validation/rrtmgp37/bon-night-shared-source/**'
       - '.github/workflows/validate-port.yml'
   push:
     branches: [main]
@@ -35,6 +43,14 @@ on:
       - 'tools/register37.py'
       - 'tools/compare_registry.py'
       - 'tools/validate.py'
+      - 'tools/udm_frozen_optics/**'
+      - 'validation/rrtmgp37/upstream-reference/**'
+      - 'validation/rrtmgp37/bon-night-common-band-source/**'
+      - 'validation/rrtmgp37/bon-night-planck-source/**'
+      - 'validation/rrtmgp37/bon-night-independent-pfrac/**'
+      - 'validation/rrtmgp37/bon-night-independent-opacity/**'
+      - 'validation/rrtmgp37/bon-night-common-angle/**'
+      - 'validation/rrtmgp37/bon-night-shared-source/**'
       - '.github/workflows/validate-port.yml'
 permissions:
   contents: read
@@ -51,6 +67,15 @@ jobs:
         run: python3 tools/register37.py --check
       - name: Verify WRF UDM module dependency edges schedule under parallel make
         run: python3 WRF/test/rrtmgp/test_wrf_udm_dependencies.py WRF/main/depend.common
+      - name: Verify frozen same-state LW common-band source evidence
+        run: |
+          python3 -I -S validation/rrtmgp37/bon-night-common-band-source/verify.py --output build/bon-common-band-source-verification.json
+          python3 -I -S validation/rrtmgp37/bon-night-common-band-source/test_verify.py
+          python3 -I -S validation/rrtmgp37/bon-night-planck-source/verify.py --output build/bon-planck-source-verification.json
+          python3 -I -S validation/rrtmgp37/bon-night-independent-pfrac/verify.py --output build/bon-independent-pfrac-verification.json
+          python3 -I -S validation/rrtmgp37/bon-night-independent-opacity/verify.py --output build/bon-independent-opacity-verification.json
+          python3 -I -S validation/rrtmgp37/bon-night-common-angle/verify.py --output build/bon-night-common-angle-verification.json
+          python3 -I -S validation/rrtmgp37/bon-night-shared-source/verify.py --output build/bon-night-shared-source-verification.json
   component-validation:
     needs: registration
     runs-on: ubuntu-24.04
@@ -86,13 +111,147 @@ jobs:
       - name: Install compiler, CMake, and NetCDF C/Fortran
         run: |
           sudo apt-get update -qq
-          sudo apt-get install -y cmake gfortran gcc libnetcdf-dev libnetcdff-dev python3-numpy python3-netcdf4
+          sudo apt-get install -y cmake gfortran gcc libnetcdf-dev libnetcdff-dev python3-numpy python3-netcdf4 python3-scipy
+      - name: Check bounded legacy optics export selection
+        run: python3 WRF/test/rrtmgp/test_rrtmg4_export_selection.py
+      - name: Check legacy LW source observer against the actual transport routine
+        run: python3 WRF/test/rrtmgp/test_legacy_lw_source_export.py
       - name: Build and run standalone WRF column tests
         run: |
           cmake -S WRF/test/rrtmgp -B build/rrtmgp-column-test \
             -DRRTMGP_DATA_DIR="$GITHUB_WORKSPACE/WRF/run"
           cmake --build build/rrtmgp-column-test --parallel 2
           ctest --test-dir build/rrtmgp-column-test --output-on-failure
+  cpu-openmp:
+    needs: registration
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - name: Install CPU OpenMP and NetCDF dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y cmake gfortran gcc libnetcdf-dev libnetcdff-dev python3-numpy python3-netcdf4 python3-scipy
+      - name: Build the library and adapter with host OpenMP and compare actual thread teams
+        run: |
+          cmake -S WRF/test/rrtmgp -B build/cpu-openmp-test \
+            -DRRTMGP_TEST_OPENMP=ON -DRRTMGP_DATA_DIR="$GITHUB_WORKSPACE/WRF/run"
+          cmake --build build/cpu-openmp-test --target test_rrtmgp_openmp test_rrtmgp_frozen_openmp test_rrtmgp_omp_fatal_reason --parallel 2
+          ctest --test-dir build/cpu-openmp-test -R "cpu_openmp_reentrancy|frozen_openmp_queries|omp_fatal_reason_visible_from_worker" --output-on-failure -V
+  frozen-optics-reference:
+    needs: registration
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    env:
+      OPENBLAS_NUM_THREADS: '1'
+      OMP_NUM_THREADS: '1'
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - name: Install offline frozen-particle numerical dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y gfortran python3-numpy python3-scipy python3-netcdf4 python3-venv
+      - name: Check published Mie benchmarks, precision counterfactual, PSD and source transforms
+        run: |
+          python3 tools/udm_frozen_optics/test_reference.py --output-dir build/frozen-reference/kernel-tests
+          python3 tools/udm_frozen_optics/test_controls.py --output-dir build/frozen-reference/control-tests
+          python3 tools/udm_frozen_optics/test_quadrature.py --output-dir build/frozen-reference/quadrature-tests
+      - name: Compare corrected SOCRATES against pinned independent Mie implementation
+        run: |
+          python3 -m venv --system-site-packages build/frozen-reference/venv
+          build/frozen-reference/venv/bin/pip install --require-hashes --no-deps \
+            -r tools/udm_frozen_optics/requirements-independent.txt
+          build/frozen-reference/venv/bin/python tools/udm_frozen_optics/independent_mie_check.py \
+            --output-dir build/frozen-reference/independent
+      - name: Generate a small complete table from pinned public inputs
+        run: |
+          python3 tools/udm_frozen_optics/generate.py \
+            --input-dir build/frozen-reference/input --fetch-inputs \
+            --output-dir build/frozen-reference/smoke \
+            --lambda-grid 15000 20000 --temperatures 233 250 \
+            --order 32 --spectral-step 50 --workers 2
+      - name: Reject malformed tables and inconsistent task receipts
+        run: |
+          python3 tools/udm_frozen_optics/test_artifacts.py \
+            --generation build/frozen-reference/smoke --output-dir build/frozen-reference/rejections
+          python3 tools/udm_frozen_optics/compare.py \
+            --candidate build/frozen-reference/smoke --reference build/frozen-reference/smoke \
+            --output build/frozen-reference/self-comparison.json
+      - name: Check offline lookup units, exact limits and state rejection
+        run: |
+          python3 tools/udm_frozen_optics/test_lookup.py \
+            --generation build/frozen-reference/smoke --output-dir build/frozen-reference/lookup-checks
+          python3 tools/udm_frozen_optics/generate.py \
+            --input-dir build/frozen-reference/input \
+            --output-dir build/frozen-reference/held-out \
+            --lambda-grid 17320.508075688773 --temperatures 241.5 \
+            --order 32 --spectral-step 50 --workers 2
+          python3 tools/udm_frozen_optics/validate_lookup.py \
+            --table build/frozen-reference/smoke --direct build/frozen-reference/held-out \
+            --output build/frozen-reference/interpolation-report.json
+          python3 tools/udm_frozen_optics/test_lookup_validator.py \
+            --table build/frozen-reference/smoke --direct build/frozen-reference/held-out \
+            --output-dir build/frozen-reference/report-contract-checks
+      - name: Save numerical artifacts without claiming live WRF G/H validation
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: validation-frozen-reference-${{ github.run_id }}
+          path: |
+            build/frozen-reference/kernel-tests/result.json
+            build/frozen-reference/control-tests/result.json
+            build/frozen-reference/quadrature-tests/result.json
+            build/frozen-reference/kernel-tests/kernel/*.diff
+            build/frozen-reference/kernel-tests/kernel/source-adaptation.json
+            build/frozen-reference/independent/independent_mie_check.json
+            build/frozen-reference/smoke/result.json
+            build/frozen-reference/smoke/frozen-ice-psd-moments.nc
+            build/frozen-reference/rejections/result.json
+            build/frozen-reference/self-comparison.json
+            build/frozen-reference/lookup-checks/result.json
+            build/frozen-reference/held-out/result.json
+            build/frozen-reference/held-out/frozen-ice-psd-moments.nc
+            build/frozen-reference/interpolation-report.json
+            build/frozen-reference/report-contract-checks/result.json
+          retention-days: 30
+          if-no-files-found: warn
+  independent-rfmip:
+    needs: registration
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - name: Install independent upstream build dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y git make cmake gfortran libnetcdf-dev libnetcdff-dev python3-numpy python3-netcdf4 python3-scipy ripgrep
+      - name: Compare pinned upstream and current vendored CPU RFMIP at g128/g112
+        run: bash validation/rrtmgp37/upstream-reference/run_rfmip.sh build/independent-rfmip
+      - name: Compare fully vendored cloud optics with the pinned all-sky driver
+        run: bash validation/rrtmgp37/upstream-reference/run_allsky.sh build/independent-rfmip
+      - name: Save independent fluxes, source pins, hashes and comparison status
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: validation-independent-rfmip-${{ github.run_id }}
+          path: |
+            build/independent-rfmip/run.log
+            build/independent-rfmip/backend-comparison.json
+            build/independent-rfmip/*SHA256SUMS.txt
+            build/independent-rfmip/compiler.txt
+            build/independent-rfmip/vendor-checkout-head.txt
+            build/independent-rfmip/run-*/*.nc
+            build/independent-rfmip/allsky/run.log
+            build/independent-rfmip/allsky/*.json
+            build/independent-rfmip/allsky/*sha256.txt
+            build/independent-rfmip/allsky/compiler.txt
+            build/independent-rfmip/allsky/loader-only-adaptation.diff
+            build/independent-rfmip/allsky/vendor-link.map
+            build/independent-rfmip/allsky/vendor-frontend-symbol-evidence.txt
+            build/independent-rfmip/allsky/original-band-*/original-run.log
+            build/independent-rfmip/allsky/run-*/*.nc
+          retention-days: 30
+          if-no-files-found: warn
   serial-scm:
     needs: registration
     runs-on: ubuntu-24.04
@@ -102,7 +261,7 @@ jobs:
       - name: Install GNU serial WRF and SCM dependencies
         run: |
           sudo apt-get update -qq
-          sudo apt-get install -y gfortran gcc g++ make cmake csh libnetcdf-dev libnetcdff-dev libhdf5-dev python3-numpy python3-netcdf4 python3-matplotlib ripgrep
+          sudo apt-get install -y gfortran gcc g++ make cmake csh libnetcdf-dev libnetcdff-dev libhdf5-dev python3-numpy python3-netcdf4 python3-scipy python3-matplotlib ripgrep
       - name: Configure and build em_scm_xy
         shell: bash
         run: |
@@ -155,6 +314,56 @@ jobs:
           python3 WRF/test/rrtmgp/test_udm_scm.py build/udm-scm \
             --reference-executable build/replay-reference/reference_column \
             | tee build/udm-scm-result.json
+      - name: Independently reconstruct UDM dry-layer mass from actual WRF coordinates
+        shell: bash
+        run: |
+          set -euo pipefail
+          for case in control mixed; do
+            run_dir="build/udm-scm/$case/ra37-call1"
+            python3 WRF/test/rrtmgp/test_udm_native_mass.py "$run_dir/capture" \
+              "$run_dir/wrfinput_d01" --history "$run_dir/wrfout_d01_1999-10-22_19:00:00" \
+              --time-index 0 --executable WRF/main/wrf.exe \
+              --output "build/udm-scm/$case/native-dry-mass.json"
+          done
+      - name: Independently verify native gas molecular columns and upper extensions
+        shell: bash
+        run: |
+          set -euo pipefail
+          for case in control mixed; do
+            python3 WRF/test/rrtmgp/test_native_gas_columns.py \
+              --capture-dir "build/udm-scm/$case/ra37-call1/capture" \
+              --output "build/udm-scm/$case/native-gas-columns.json"
+          done
+      - name: Independently verify actual UDM domain/calendar McICA seeds
+        shell: bash
+        run: |
+          set -euo pipefail
+          for case in control mixed; do
+            python3 WRF/test/rrtmgp/test_domain_seed_capture.py \
+              "build/udm-scm/$case/ra37-call1/capture" \
+              --expected-domain-id 1 --expected-time 1999-10-22_19:00:00 \
+              --output "build/udm-scm/$case/domain-calendar-seeds.json"
+          done
+      - name: Check actual UDM37 restart across a calendar-year boundary
+        shell: bash
+        run: |
+          set -euo pipefail
+          export LD_LIBRARY_PATH="$RUNNER_TEMP/netcdf/lib:/usr/lib/x86_64-linux-gnu:${LD_LIBRARY_PATH:-}"
+          python3 validation/rrtmgp37/domain-calendar-seeds/test_restart_diagnostics.py
+          python3 validation/rrtmgp37/domain-calendar-seeds/run_restart_determinism.py \
+            --repo . --baseline-root build/udm-scm \
+            --output-root build/domain-seed-restart --calendar-boundary
+          python3 validation/rrtmgp37/domain-calendar-seeds/capture_calendar_seed.py \
+            --repo . --restart-root build/domain-seed-restart \
+            --output-root build/domain-seed-year-capture
+      - name: Check every-step accumulation across held radiation fluxes
+        shell: bash
+        run: |
+          set -euo pipefail
+          export LD_LIBRARY_PATH="$RUNNER_TEMP/netcdf/lib:/usr/lib/x86_64-linux-gnu:${LD_LIBRARY_PATH:-}"
+          python3 WRF/test/rrtmgp/test_rrtmgp_accumulation.py --run-hold-case \
+            --seed-dir build/udm-scm/control/ra37-call1 \
+            --case-dir build/accumulation-contract-hold
       - name: Audit same-state UDM radiation and observer invariance
         shell: bash
         run: |
@@ -182,6 +391,42 @@ jobs:
                 --output "build/udm-physics-audit/$case/${phase}-counterfactual.json"
             done
           done
+      - name: Attribute overcast ice differences with actual WRF RRTMG cloud optics
+        shell: bash
+        run: |
+          set -euo pipefail
+          export LD_LIBRARY_PATH="$RUNNER_TEMP/netcdf/lib:/usr/lib/x86_64-linux-gnu:${LD_LIBRARY_PATH:-}"
+          python3 WRF/test/rrtmgp/build_rrtmg_optics_bridge.py \
+            --netcdf-prefix "$RUNNER_TEMP/netcdf" --output-dir build/rrtmg-cloud-bridge
+          python3 WRF/test/rrtmgp/test_rrtmg_optics_attribution.py \
+            --data-dir WRF/run --reference-executable build/replay-reference/reference_column \
+            --bridge-executable build/rrtmg-cloud-bridge/rrtmg_sw_optics_bridge \
+            --captures build/udm-native4-audit/control/audit-on/capture/sw_000002.input \
+                       build/udm-native4-audit/control/audit-on/capture/sw_000006.input \
+            --audit-csv build/udm-native4-audit/control/audit-on/audit/same_state.csv \
+            --output-dir build/rrtmg-cloud-bridge/attribution-control \
+            > build/rrtmg-cloud-bridge/attribution-control.log
+      - name: Replay opt-in UDM graupel/hail optics through fresh WRF SCM
+        shell: bash
+        run: |
+          set -euo pipefail
+          export LD_LIBRARY_PATH="$RUNNER_TEMP/netcdf/lib:/usr/lib/x86_64-linux-gnu:${LD_LIBRARY_PATH:-}"
+          export OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1
+          python3 WRF/test/rrtmgp/test_frozen_scm.py \
+            --wrf WRF/main/wrf.exe --ideal WRF/main/ideal.exe \
+            --reference build/replay-reference/reference_column \
+            --table validation/rrtmgp37/frozen-optics-lookup/nine-grid-o128-s50 \
+            --output-dir build/frozen-runtime-scm > build/frozen-runtime-scm.log
+      - name: Replay actual LW trace gases and isolate their contribution
+        shell: bash
+        run: |
+          set -euo pipefail
+          export LD_LIBRARY_PATH="$RUNNER_TEMP/netcdf/lib:/usr/lib/x86_64-linux-gnu:${LD_LIBRARY_PATH:-}"
+          export OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1
+          python3 WRF/test/rrtmgp/test_lw_trace_gases_scm.py \
+            --wrf WRF/main/wrf.exe --ideal WRF/main/ideal.exe \
+            --reference build/replay-reference/reference_column \
+            --output-dir build/lw-trace-gases-scm > build/lw-trace-gases-scm.log
       - name: Package SCM evidence with original WRF filenames
         if: always()
         shell: bash

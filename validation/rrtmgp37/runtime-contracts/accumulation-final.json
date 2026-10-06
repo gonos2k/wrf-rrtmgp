@@ -1,0 +1,27 @@
+{
+  "status": "PASS",
+  "case": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp/build/accumulation-contract-hold-final",
+  "history_file": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp/build/accumulation-contract-hold-final/wrfout_d01_1999-10-22_19:00:00",
+  "time_records": 13,
+  "model_timestep_seconds": 10.0,
+  "radiation_call_period_seconds": 30.0,
+  "history_samples_between_radiation_calls": 2,
+  "accumulation_checks": {
+    "ACSWDNB": {
+      "flux": "SWDNB",
+      "compared_model_step_increments": 12,
+      "max_abs_recurrence_error": 0.00152587890625,
+      "adjacent_held_flux_samples": 8,
+      "adjacent_updated_flux_samples": 4
+    },
+    "ACLWDNB": {
+      "flux": "LWDNB",
+      "compared_model_step_increments": 12,
+      "max_abs_recurrence_error": 0.00030517578125,
+      "adjacent_held_flux_samples": 8,
+      "adjacent_updated_flux_samples": 4
+    }
+  },
+  "recurrence": "ACC[n] - ACC[n-1] = flux[n] * DT for every recorded interval",
+  "negative_control": "PASS (corrupted first accumulation sample was rejected)"
+}

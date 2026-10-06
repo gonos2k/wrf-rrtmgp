@@ -1,0 +1,187 @@
+{
+  "captured_production_check": null,
+  "cf_policy_diagnostics": {
+    "A": {
+      "omitted": {
+        "cf_max": 0.0,
+        "cf_min": 0.0,
+        "graupel": {
+          "mode": "omitted",
+          "optical_mapping": "omitted",
+          "raw_grid_mass_available": true
+        },
+        "layer_mean_and_standard_deviation_by_species": {
+          "GWP": {
+            "effective_mass_shift_g_m2": {
+              "layer_maximum_absolute": 0.0,
+              "layer_mean": 0.0,
+              "layer_standard_deviation": 0.0,
+              "sum": 0.0
+            },
+            "omitted_grid_path_g_m2": {
+              "layer_maximum": 0.0,
+              "layer_mean": 0.0,
+              "layer_standard_deviation": 0.0,
+              "sum": 0.0
+            }
+          },
+          "IWP": {
+            "effective_mass_shift_g_m2": {
+              "layer_maximum_absolute": 0.0,
+              "layer_mean": 0.0,
+              "layer_standard_deviation": 0.0,
+              "sum": 0.0
+            },
+            "omitted_grid_path_g_m2": {
+              "layer_maximum": 0.0,
+              "layer_mean": 0.0,
+              "layer_standard_deviation": 0.0,
+              "sum": 0.0
+            }
+          },
+          "LWP": {
+            "effective_mass_shift_g_m2": {
+              "layer_maximum_absolute": 0.0,
+              "layer_mean": 0.0,
+              "layer_standard_deviation": 0.0,
+              "sum": 0.0
+            },
+            "omitted_grid_path_g_m2": {
+              "layer_maximum": 0.0,
+              "layer_mean": 0.0,
+              "layer_standard_deviation": 0.0,
+              "sum": 0.0
+            }
+          },
+          "RWP": {
+            "effective_mass_shift_g_m2": {
+              "layer_maximum_absolute": 0.0,
+              "layer_mean": 0.0,
+              "layer_standard_deviation": 0.0,
+              "sum": 0.0
+            },
+            "omitted_grid_path_g_m2": {
+              "layer_maximum": 0.0,
+              "layer_mean": 0.0,
+              "layer_standard_deviation": 0.0,
+              "sum": 0.0
+            }
+          },
+          "SWP": {
+            "effective_mass_shift_g_m2": {
+              "layer_maximum_absolute": 0.0,
+              "layer_mean": 0.0,
+              "layer_standard_deviation": 0.0,
+              "sum": 0.0
+            },
+            "omitted_grid_path_g_m2": {
+              "layer_maximum": 0.0,
+              "layer_mean": 0.0,
+              "layer_standard_deviation": 0.0,
+              "sum": 0.0
+            }
+          }
+        },
+        "maximum_wet_layer_grid_reconstruction_error_g_m2_by_species": {
+          "IWP": 0.0,
+          "LWP": 0.0,
+          "RWP": 0.0,
+          "SWP": 0.0
+        },
+        "status": "READY",
+        "upper_replay_layers_preserved": 44
+      }
+    }
+  },
+  "default_policy_1_matches_default_reference": true,
+  "delta_policy_labels": {
+    "1": "D(C)+D(P)",
+    "2": "C+D(P)",
+    "3": "D(C+P)"
+  },
+  "delta_policy_scope": "SW delta-scaling benchmark; LW is evaluated once with its unchanged policy.",
+  "dry_layer_mass_source": "legacy_dp_over_gravity",
+  "experiment": "RRTMGP_REPLAY_V4 LW replay with common captured microphysics paths and independent cloud-mask seeds",
+  "graupel_policy_labels": {
+    "as-snow": "counterfactual only: add GWP grid path to SWP using unchanged native UDM RES; no public graupel optical coefficient was verified",
+    "omitted": "keep graupel out of the precipitation optics; report its raw grid-box path separately"
+  },
+  "policy_labels": {
+    "A": "original captured radiation CF and in-cloud paths",
+    "B": "last actual UDM_CF_USED; recompute in-cloud paths from preserved grid-box mass; zero-CF grid mass is omitted",
+    "B_now": "current-state UDM_CF_RECOMPUTED; recompute paths from preserved grid-box mass; zero-CF grid mass is omitted",
+    "C": "original radiation CF with grid-mean paths passed as in-cloud paths; intentionally non-mass-preserving counterfactual"
+  },
+  "scenarios": {
+    "A": {
+      "omitted": {
+        "1": {
+          "metrics": {
+            "max_abs_heating_k_day": {
+              "maximum": 7.518763536271955,
+              "mean": 7.518763536271955,
+              "minimum": 7.518763536271955,
+              "standard_deviation": 0.0
+            },
+            "max_prepared_tau": {
+              "maximum": 0.0,
+              "mean": 0.0,
+              "minimum": 0.0,
+              "standard_deviation": 0.0
+            },
+            "max_total_tau": {
+              "maximum": 19810.477260627336,
+              "mean": 19810.477260627336,
+              "minimum": 19810.477260627336,
+              "standard_deviation": 0.0
+            },
+            "surface_down_w_m2": {
+              "maximum": 259.20046828535027,
+              "mean": 259.20046828535027,
+              "minimum": 259.20046828535027,
+              "standard_deviation": 0.0
+            },
+            "surface_up_w_m2": {
+              "maximum": 379.59645045250517,
+              "mean": 379.59645045250517,
+              "minimum": 379.59645045250517,
+              "standard_deviation": 0.0
+            },
+            "toa_down_w_m2": {
+              "maximum": 0.0,
+              "mean": 0.0,
+              "minimum": 0.0,
+              "standard_deviation": 0.0
+            },
+            "toa_up_w_m2": {
+              "maximum": 243.87679589941692,
+              "mean": 243.87679589941692,
+              "minimum": 243.87679589941692,
+              "standard_deviation": 0.0
+            }
+          },
+          "samples": 1
+        }
+      }
+    }
+  },
+  "seed_ensemble": {
+    "count": 1,
+    "seeds": [
+      401376
+    ]
+  },
+  "source_capture": {
+    "cfc_records_preserved": null,
+    "extended_replay_layers": 103,
+    "frozen_metadata_present": false,
+    "i": 1,
+    "input": "/tmp/udm-cf-v4-compat-79o6b997/lw.input",
+    "input_format": "RRTMGP_REPLAY_V4",
+    "j": 1,
+    "native_raw_layers": 59,
+    "raw": "/tmp/udm-cf-v4-compat-79o6b997/lw.raw",
+    "variant_unmodified_records_preserved_exactly": true
+  },
+  "status": "PASS"
+}

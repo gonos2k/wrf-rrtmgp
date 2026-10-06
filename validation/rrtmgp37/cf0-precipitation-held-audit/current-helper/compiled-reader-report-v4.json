@@ -1,0 +1,524 @@
+{
+  "compiled_fortran_reader_exercised": true,
+  "executables": {
+    "lw_fixture_generator": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-pr64-current-reference-build-v1/test_rrtmgp_lw_trace_gases",
+      "sha256": "16637decf503e1d9fdb4894cd89aa1f59ce292eee0e5d3b0c3fdc21120853fff"
+    },
+    "reference": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-pr64-current-reference-build-v1/reference_column",
+      "sha256": "e5a634fc9151e76e9ea13ef9b0aa418b44df89d258e0e1e824ae5f0afe06349e"
+    },
+    "sw_fixture_generator": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-pr64-current-reference-build-v1/test_rrtmgp_sw_predelta_direct",
+      "sha256": "3b6d80bdc420fce16a89d672a4b57b592d6aa4a0d824e2077daeffffc5618fda"
+    }
+  },
+  "model_invocations": 0,
+  "phases": {
+    "LW": {
+      "baseline_sha256": "11752b183fd429bf20eeb6400c3d812cc1f0f36b9244e52aa7eac0a3464a5609",
+      "capture_sha256": "0b7a257c7a33434168a0f7272ba21a4d74d87fbc02e13b08195ea995ff8e0aba",
+      "dimensions": [
+        1,
+        3
+      ],
+      "input_magic": "RRTMGP_REPLAY_V8",
+      "positive_species": {
+        "rain": {
+          "accepted": true,
+          "audit_sections": {
+            "AUDIT_EXTRA_PRECIP_TAU": [
+              1,
+              3,
+              16
+            ]
+          },
+          "max_abs_rte_response": {
+            "DN": 3.548406140323067,
+            "HR": 0.04802112565611627,
+            "UP": 2.3201718215059373
+          },
+          "max_audit_tau": 0.033,
+          "output_sha256": "5a8ca9e0b256d280cf1d07b93ea95ba6edbb7f67463faf60757da1f274c1466a",
+          "positive_layer_zero_based": 1,
+          "positive_native_layer_count": 1,
+          "sidecar_sha256": "14e563baca73ad26cc571906b61d60aef403aa52b072aac197a0b96fb40adc9e",
+          "synthetic_audit_path_g_m2": 100.0
+        },
+        "snow": {
+          "accepted": true,
+          "audit_sections": {
+            "AUDIT_EXTRA_PRECIP_TAU": [
+              1,
+              3,
+              16
+            ]
+          },
+          "max_abs_rte_response": {
+            "DN": 89.77020245870287,
+            "HR": 1.257532902204347,
+            "UP": 62.86242722530676
+          },
+          "max_audit_tau": 5.287800000000001,
+          "output_sha256": "b2522da6782eda30a3ce799f239f919e8af0557d43e59ab770b8cd5ea6490ea4",
+          "positive_layer_zero_based": 1,
+          "positive_native_layer_count": 1,
+          "sidecar_sha256": "ca056f8b57e30040022c89b70a639b7df9de20dd7a2a3a7ce37dff16724c8591",
+          "synthetic_audit_path_g_m2": 100.0
+        }
+      },
+      "zero_controls": {
+        "rain": {
+          "accepted": true,
+          "output_byte_equal_to_no_sidecar": true,
+          "output_sha256": "11752b183fd429bf20eeb6400c3d812cc1f0f36b9244e52aa7eac0a3464a5609",
+          "section_count": 16,
+          "sidecar_sha256": "bcd17feeb4234893b5dc3f545078e950d9593a498f217ac5081cf89e63556b22"
+        },
+        "snow": {
+          "accepted": true,
+          "output_byte_equal_to_no_sidecar": true,
+          "output_sha256": "11752b183fd429bf20eeb6400c3d812cc1f0f36b9244e52aa7eac0a3464a5609",
+          "section_count": 16,
+          "sidecar_sha256": "b657e658da85d16c54243aa190d78d9b2ad1583adbd13bad0eefa25054873072"
+        }
+      }
+    },
+    "SW": {
+      "baseline_sha256": "0982c55ce2bbb2811d00a496237ed0fd15afcaaf9e2f34878de1cde4bd3eb6a1",
+      "dimensions": [
+        1,
+        3
+      ],
+      "input_magic": "RRTMGP_REPLAY_V9",
+      "positive_species": {
+        "rain": {
+          "accepted": true,
+          "audit_sections": {
+            "AUDIT_DIRECT_PREDELTA": [
+              1,
+              4,
+              1
+            ],
+            "AUDIT_EXTRA_PRECIP_G": [
+              1,
+              3,
+              14
+            ],
+            "AUDIT_EXTRA_PRECIP_SSA": [
+              1,
+              3,
+              14
+            ],
+            "AUDIT_EXTRA_PRECIP_TAU": [
+              1,
+              3,
+              14
+            ],
+            "AUDIT_EXTRA_PRECIP_TAU_RAW": [
+              1,
+              3,
+              14
+            ]
+          },
+          "max_abs_rte_response": {
+            "DN": 35.022822232615,
+            "HR": 0.5523418210175495,
+            "UP": 8.573649911745989
+          },
+          "max_audit_tau": 0.1583992206255791,
+          "output_sha256": "6d6ad0767632007594bd1c9bb4623e8586017661fcb26f395f2d4ceb65bcd330",
+          "positive_layer_zero_based": 1,
+          "positive_native_layer_count": 1,
+          "sidecar_sha256": "8b2a85282b67e8d8a8fff5375110303828dd81b4c4e4bfbc26994b13cd502289",
+          "synthetic_audit_path_g_m2": 100.0
+        },
+        "snow": {
+          "accepted": true,
+          "audit_sections": {
+            "AUDIT_DIRECT_PREDELTA": [
+              1,
+              4,
+              1
+            ],
+            "AUDIT_EXTRA_PRECIP_G": [
+              1,
+              3,
+              14
+            ],
+            "AUDIT_EXTRA_PRECIP_SSA": [
+              1,
+              3,
+              14
+            ],
+            "AUDIT_EXTRA_PRECIP_TAU": [
+              1,
+              3,
+              14
+            ],
+            "AUDIT_EXTRA_PRECIP_TAU_RAW": [
+              1,
+              3,
+              14
+            ]
+          },
+          "max_abs_rte_response": {
+            "DN": 146.0129869393595,
+            "HR": 1.6820119737169505,
+            "UP": 36.43280259972286
+          },
+          "max_audit_tau": 0.8090318750346178,
+          "output_sha256": "a09ca721cf3d85c084ca3f38eb004079f386fb38fe30454605b8434e89104903",
+          "positive_layer_zero_based": 1,
+          "positive_native_layer_count": 1,
+          "sidecar_sha256": "1f9c2324120c9dbf86a078d697320863fd72b7633127f66ec4a888564b04b69b",
+          "synthetic_audit_path_g_m2": 100.0
+        }
+      },
+      "projection": {
+        "layers": 3,
+        "preserved_global_records": [
+          "BAND_LIMS_GPOINT",
+          "BAND_LIMS_WAVENUMBER",
+          "CP_DRY",
+          "GRAVITY",
+          "ICE_ROUGHNESS",
+          "MOL_WEIGHT_DRY",
+          "PRECIPITATION_OPTICS",
+          "SOLAR",
+          "SW_BAND_PARTITION",
+          "SW_DIRECT_PREDELTA_POLICY",
+          "VISIBLE_WEIGHT"
+        ],
+        "projected_columns": 1,
+        "projected_input_sha256": "fc7ac6cb82fa4a13d92c894dfbd5e55b6dbc3525631b075e77ce563c471462a7",
+        "projection_is_synthetic_fixture_only": true,
+        "selected_source_column_one_based": 2,
+        "sliced_per_column_records": [
+          "ANDIF",
+          "ANDIR",
+          "AVDIF",
+          "AVDIR",
+          "CF",
+          "CH4",
+          "CO2",
+          "EMIS",
+          "H2O",
+          "IWP",
+          "LWP",
+          "MCICA_MASK",
+          "MU0",
+          "N2O",
+          "O2",
+          "O3",
+          "PLAY",
+          "PLEV",
+          "RAW_CLOUD_TAU",
+          "RAW_GAS_TAU",
+          "RAW_GRAUPEL_TAU_EXT",
+          "RAW_HAIL_TAU_EXT",
+          "RAW_PRECIP_TAU",
+          "REI",
+          "REL",
+          "RES",
+          "RWP",
+          "SWP",
+          "TLAY",
+          "TLEV",
+          "TOA_GPOINT",
+          "TSFC"
+        ],
+        "source_capture_sha256": "0c5988f801082855d85572e0e40e1f61cfb70fdafbfaada3f7d31adfac7ce668",
+        "source_columns": 2
+      },
+      "zero_controls": {
+        "rain": {
+          "accepted": true,
+          "output_byte_equal_to_no_sidecar": true,
+          "output_sha256": "0982c55ce2bbb2811d00a496237ed0fd15afcaaf9e2f34878de1cde4bd3eb6a1",
+          "section_count": 37,
+          "sidecar_sha256": "c735a7c070893804c8f69da6cc299fee625ba75f058ff7ab02ed2eb9283dcf28"
+        },
+        "snow": {
+          "accepted": true,
+          "output_byte_equal_to_no_sidecar": true,
+          "output_sha256": "0982c55ce2bbb2811d00a496237ed0fd15afcaaf9e2f34878de1cde4bd3eb6a1",
+          "section_count": 37,
+          "sidecar_sha256": "3e37ba4b0b46d3f35b1fcc851cd37825f36f91c7bdcadf0423f6ee974a394dca"
+        }
+      }
+    }
+  },
+  "process_counts": {
+    "fixture_adapter_attempts": 2,
+    "model_forecasts": 0,
+    "reference_column_attempts": 14,
+    "reference_column_rejected_before_output": 4,
+    "reference_column_successes": 10
+  },
+  "process_invocations": [
+    {
+      "argv": [
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-pr64-current-reference-build-v1/test_rrtmgp_lw_trace_gases",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-cu-optics-design-work/WRF/run",
+        "zero"
+      ],
+      "returncode": 0,
+      "role": "fixture_adapter",
+      "timed_out": false,
+      "timeout_seconds": 180
+    },
+    {
+      "argv": [
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-pr64-current-reference-build-v1/reference_column",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-cu-optics-design-work/WRF/run",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-pr64-current-reference-build-v1/current-reader-runtime-v4/cases/run-3meekz95/lw-capture/lw.input",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-pr64-current-reference-build-v1/current-reader-runtime-v4/cases/run-3meekz95/lw-without-sidecar.result"
+      ],
+      "output_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-pr64-current-reference-build-v1/current-reader-runtime-v4/cases/run-3meekz95/lw-without-sidecar.result",
+      "output_path_created": true,
+      "returncode": 0,
+      "role": "reference_column",
+      "timed_out": false,
+      "timeout_seconds": 180
+    },
+    {
+      "argv": [
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-pr64-current-reference-build-v1/reference_column",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-cu-optics-design-work/WRF/run",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-pr64-current-reference-build-v1/current-reader-runtime-v4/cases/run-3meekz95/lw-capture/lw.input",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-pr64-current-reference-build-v1/current-reader-runtime-v4/cases/run-3meekz95/lw-rain-zero.result",
+        "1",
+        "",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-pr64-current-reference-build-v1/current-reader-runtime-v4/cases/run-3meekz95/lw-rain-zero.sidecar"
+      ],
+      "output_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-pr64-current-reference-build-v1/current-reader-runtime-v4/cases/run-3meekz95/lw-rain-zero.result",
+      "output_path_created": true,
+      "returncode": 0,
+      "role": "reference_column",
+      "timed_out": false,
+      "timeout_seconds": 180
+    },
+    {
+      "argv": [
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-pr64-current-reference-build-v1/reference_column",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-cu-optics-design-work/WRF/run",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-pr64-current-reference-build-v1/current-reader-runtime-v4/cases/run-3meekz95/lw-capture/lw.input",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-pr64-current-reference-build-v1/current-reader-runtime-v4/cases/run-3meekz95/lw-rain-positive.result",
+        "1",
+        "",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-pr64-current-reference-build-v1/current-reader-runtime-v4/cases/run-3meekz95/lw-rain-positive.sidecar"
+      ],
+      "output_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-pr64-current-reference-build-v1/current-reader-runtime-v4/cases/run-3meekz95/lw-rain-positive.result",
+      "output_path_created": true,
+      "returncode": 0,
+      "role": "reference_column",
+      "timed_out": false,
+      "timeout_seconds": 180
+    },
+    {
+      "argv": [
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-pr64-current-reference-build-v1/reference_column",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-cu-optics-design-work/WRF/run",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-pr64-current-reference-build-v1/current-reader-runtime-v4/cases/run-3meekz95/lw-capture/lw.input",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-pr64-current-reference-build-v1/current-reader-runtime-v4/cases/run-3meekz95/lw-snow-zero.result",
+        "1",
+        "",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-pr64-current-reference-build-v1/current-reader-runtime-v4/cases/run-3meekz95/lw-snow-zero.sidecar"
+      ],
+      "output_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-pr64-current-reference-build-v1/current-reader-runtime-v4/cases/run-3meekz95/lw-snow-zero.result",
+      "output_path_created": true,
+      "returncode": 0,
+      "role": "reference_column",
+      "timed_out": false,
+      "timeout_seconds": 180
+    },
+    {
+      "argv": [
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-pr64-current-reference-build-v1/reference_column",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-cu-optics-design-work/WRF/run",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-pr64-current-reference-build-v1/current-reader-runtime-v4/cases/run-3meekz95/lw-capture/lw.input",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-pr64-current-reference-build-v1/current-reader-runtime-v4/cases/run-3meekz95/lw-snow-positive.result",
+        "1",
+        "",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-pr64-current-reference-build-v1/current-reader-runtime-v4/cases/run-3meekz95/lw-snow-positive.sidecar"
+      ],
+      "output_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-pr64-current-reference-build-v1/current-reader-runtime-v4/cases/run-3meekz95/lw-snow-positive.result",
+      "output_path_created": true,
+      "returncode": 0,
+      "role": "reference_column",
+      "timed_out": false,
+      "timeout_seconds": 180
+    },
+    {
+      "argv": [
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-pr64-current-reference-build-v1/test_rrtmgp_sw_predelta_direct",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-cu-optics-design-work/WRF/run",
+        "capture_precip"
+      ],
+      "returncode": 0,
+      "role": "fixture_adapter",
+      "timed_out": false,
+      "timeout_seconds": 180
+    },
+    {
+      "argv": [
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-pr64-current-reference-build-v1/reference_column",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-cu-optics-design-work/WRF/run",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-pr64-current-reference-build-v1/current-reader-runtime-v4/cases/run-3meekz95/sw-clear-column-v9.input",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-pr64-current-reference-build-v1/current-reader-runtime-v4/cases/run-3meekz95/sw-without-sidecar.result"
+      ],
+      "output_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-pr64-current-reference-build-v1/current-reader-runtime-v4/cases/run-3meekz95/sw-without-sidecar.result",
+      "output_path_created": true,
+      "returncode": 0,
+      "role": "reference_column",
+      "timed_out": false,
+      "timeout_seconds": 180
+    },
+    {
+      "argv": [
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-pr64-current-reference-build-v1/reference_column",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-cu-optics-design-work/WRF/run",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-pr64-current-reference-build-v1/current-reader-runtime-v4/cases/run-3meekz95/sw-clear-column-v9.input",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-pr64-current-reference-build-v1/current-reader-runtime-v4/cases/run-3meekz95/sw-rain-zero.result",
+        "1",
+        "",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-pr64-current-reference-build-v1/current-reader-runtime-v4/cases/run-3meekz95/sw-rain-zero.sidecar"
+      ],
+      "output_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-pr64-current-reference-build-v1/current-reader-runtime-v4/cases/run-3meekz95/sw-rain-zero.result",
+      "output_path_created": true,
+      "returncode": 0,
+      "role": "reference_column",
+      "timed_out": false,
+      "timeout_seconds": 180
+    },
+    {
+      "argv": [
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-pr64-current-reference-build-v1/reference_column",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-cu-optics-design-work/WRF/run",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-pr64-current-reference-build-v1/current-reader-runtime-v4/cases/run-3meekz95/sw-clear-column-v9.input",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-pr64-current-reference-build-v1/current-reader-runtime-v4/cases/run-3meekz95/sw-rain-positive.result",
+        "1",
+        "",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-pr64-current-reference-build-v1/current-reader-runtime-v4/cases/run-3meekz95/sw-rain-positive.sidecar"
+      ],
+      "output_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-pr64-current-reference-build-v1/current-reader-runtime-v4/cases/run-3meekz95/sw-rain-positive.result",
+      "output_path_created": true,
+      "returncode": 0,
+      "role": "reference_column",
+      "timed_out": false,
+      "timeout_seconds": 180
+    },
+    {
+      "argv": [
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-pr64-current-reference-build-v1/reference_column",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-cu-optics-design-work/WRF/run",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-pr64-current-reference-build-v1/current-reader-runtime-v4/cases/run-3meekz95/sw-clear-column-v9.input",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-pr64-current-reference-build-v1/current-reader-runtime-v4/cases/run-3meekz95/sw-snow-zero.result",
+        "1",
+        "",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-pr64-current-reference-build-v1/current-reader-runtime-v4/cases/run-3meekz95/sw-snow-zero.sidecar"
+      ],
+      "output_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-pr64-current-reference-build-v1/current-reader-runtime-v4/cases/run-3meekz95/sw-snow-zero.result",
+      "output_path_created": true,
+      "returncode": 0,
+      "role": "reference_column",
+      "timed_out": false,
+      "timeout_seconds": 180
+    },
+    {
+      "argv": [
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-pr64-current-reference-build-v1/reference_column",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-cu-optics-design-work/WRF/run",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-pr64-current-reference-build-v1/current-reader-runtime-v4/cases/run-3meekz95/sw-clear-column-v9.input",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-pr64-current-reference-build-v1/current-reader-runtime-v4/cases/run-3meekz95/sw-snow-positive.result",
+        "1",
+        "",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-pr64-current-reference-build-v1/current-reader-runtime-v4/cases/run-3meekz95/sw-snow-positive.sidecar"
+      ],
+      "output_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-pr64-current-reference-build-v1/current-reader-runtime-v4/cases/run-3meekz95/sw-snow-positive.result",
+      "output_path_created": true,
+      "returncode": 0,
+      "role": "reference_column",
+      "timed_out": false,
+      "timeout_seconds": 180
+    },
+    {
+      "argv": [
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-pr64-current-reference-build-v1/reference_column",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-cu-optics-design-work/WRF/run",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-pr64-current-reference-build-v1/current-reader-runtime-v4/cases/run-3meekz95/sw-cf-positive.input",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-pr64-current-reference-build-v1/current-reader-runtime-v4/cases/run-3meekz95/reject-positive-cf.result",
+        "1",
+        "",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-pr64-current-reference-build-v1/current-reader-runtime-v4/cases/run-3meekz95/sw-cf-positive.sidecar"
+      ],
+      "output_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-pr64-current-reference-build-v1/current-reader-runtime-v4/cases/run-3meekz95/reject-positive-cf.result",
+      "output_path_created": false,
+      "returncode": 1,
+      "role": "reference_column",
+      "timed_out": false,
+      "timeout_seconds": 180
+    },
+    {
+      "argv": [
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-pr64-current-reference-build-v1/reference_column",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-cu-optics-design-work/WRF/run",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-pr64-current-reference-build-v1/current-reader-runtime-v4/cases/run-3meekz95/sw-cf-nan.input",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-pr64-current-reference-build-v1/current-reader-runtime-v4/cases/run-3meekz95/reject-nan-cf.result",
+        "1",
+        "",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-pr64-current-reference-build-v1/current-reader-runtime-v4/cases/run-3meekz95/sw-cf-positive.sidecar"
+      ],
+      "output_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-pr64-current-reference-build-v1/current-reader-runtime-v4/cases/run-3meekz95/reject-nan-cf.result",
+      "output_path_created": false,
+      "returncode": 1,
+      "role": "reference_column",
+      "timed_out": false,
+      "timeout_seconds": 180
+    },
+    {
+      "argv": [
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-pr64-current-reference-build-v1/reference_column",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-cu-optics-design-work/WRF/run",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-pr64-current-reference-build-v1/current-reader-runtime-v4/cases/run-3meekz95/sw-clear-column-v9.input",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-pr64-current-reference-build-v1/current-reader-runtime-v4/cases/run-3meekz95/reject-units.result",
+        "1",
+        "",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-pr64-current-reference-build-v1/current-reader-runtime-v4/cases/run-3meekz95/sw-bad-units.sidecar"
+      ],
+      "output_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-pr64-current-reference-build-v1/current-reader-runtime-v4/cases/run-3meekz95/reject-units.result",
+      "output_path_created": false,
+      "returncode": 1,
+      "role": "reference_column",
+      "timed_out": false,
+      "timeout_seconds": 180
+    },
+    {
+      "argv": [
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-pr64-current-reference-build-v1/reference_column",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-cu-optics-design-work/WRF/run",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-pr64-current-reference-build-v1/current-reader-runtime-v4/cases/run-3meekz95/sw-clear-column-v9.input",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-pr64-current-reference-build-v1/current-reader-runtime-v4/cases/run-3meekz95/reject-native-count.result",
+        "1",
+        "",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-pr64-current-reference-build-v1/current-reader-runtime-v4/cases/run-3meekz95/sw-bad-native-count.sidecar"
+      ],
+      "output_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-pr64-current-reference-build-v1/current-reader-runtime-v4/cases/run-3meekz95/reject-native-count.result",
+      "output_path_created": false,
+      "returncode": 1,
+      "role": "reference_column",
+      "timed_out": false,
+      "timeout_seconds": 180
+    }
+  ],
+  "reject_controls": {
+    "nan_cf": "PASS_REJECTED_BEFORE_OUTPUT",
+    "native_count_out_of_bounds": "PASS_REJECTED_BEFORE_OUTPUT",
+    "positive_path_where_cf_positive": "PASS_REJECTED_BEFORE_OUTPUT",
+    "wrong_units": "PASS_REJECTED_BEFORE_OUTPUT"
+  },
+  "scope": "compiled current reference_column sidecar reader; synthetic fixture/projection only",
+  "status": "PASS_COMPILED_FORTRAN_CF0_SIDECAR_CONTRACT"
+}

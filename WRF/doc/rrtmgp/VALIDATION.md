@@ -1,5 +1,9 @@
 # WRF RRTMGP 37 실행 검증
 
+## Native dry-mass 분모 수정
+
+[건조질량 계약](NATIVE_DRY_MASS.md)은 production 37 수분 경로를 native hybrid 건조층 질량으로 구성한다. GNU 직렬 WRF 재빌드, standalone 66/66, paired UDM SCM·실제 LW/SW replay 및 초기 NetCDF 좌표의 독립 재계산이 통과했다. 수정 전 frozen 실행파일 대비 4/4는 control/mixed 각각 208개 배열이 bitwise 동일했다. 이는 이번 분모 수정의 직렬 회귀 근거이며 새 병렬·restart·장시간·관측 검증을 뜻하지 않는다. [실행·해시 기록](../../../validation/rrtmgp37/native-dry-mass/README.md)을 참고한다. 아래는 각 이전 단계의 역사적 검증 기록이다.
+
 2026년 10월 1일, 이 저장소의 실제 연결 코드로 GNU Fortran 13.3.0, NetCDF C 4.9.2와 Fortran 4.5.4에서 검증했다. 결과는 CPU 계산과 WRF 출력 계약을 확인한다. 예보 정확도, 다른 컴파일러, MPI/OpenMP 및 GPU는 검증하지 않았다.
 
 ## 이 저장소에서 완료한 확인
@@ -90,3 +94,13 @@ MP95 제어 사례는 초기 과냉각 QC/QS의 양의 질량·구름 τ·cloudy
 ## UDM 동일 상태 물리 감사 (2026-10-02)
 
 새 감사는 현재 타일의 UDM 내부 CF와 source step을 보존하고, live WRF 입력을 실제 4/37 wrapper에 다시 넣는다. 1,024개 결정론적 시드 집합, 모든 LW/SW 호출의 독립 재생, audit ON/OFF history 비트 비교 및 기존 4/37 저장본과의 공통 배열 회귀를 실행했다. 현재 standalone CTest는 48개이며 모두 통과했다. 반경 입력 경로·CF·graupel·delta 정책별 숫자와 해석은 [UDM 물리 감사 보고서](../../../validation/rrtmgp37/udm-physics-audit/REPORT_ko.md)를 참조한다. 저장본 4/4 회귀는 이전 포팅 실행파일과의 비교이며 pristine 공식 WRF와의 직접 실행 비교가 아니다.
+
+## 독립 upstream RFMIP 기준 비교 (2026-10-03 공개 기록)
+
+공식 RFMIP 1,800 profiles의 네 플럭스 배열에서 pinned upstream과 vendored CPU library가 bitwise 일치했다. 공개 reference에 대한 LW는 PASS지만 SW는 양쪽 모두 동일하게 원래 `1e-5 W/m²` 허용오차를 초과한다. 공개 SW residual을 성공으로 처리하지 않았다. 공개 reference는 g256/g224 청천이며 별도 production gas g128/g112에서도 같은 upstream/vendor 일치를 확인했다. 실제 UDM cloud/precipitation 또는 g128/g112의 독립적인 물리 정확도 시험은 아니다. [독립 검증 범위와 미지원 광학](INDEPENDENT_REFERENCE.md)에 판단과 재현 경로를 구분한다.
+
+## 독립 제조 구름 backend 비교
+
+PR #13의 고정 upstream·자료와 fresh vendored CPU archive로 공식 all-sky driver를 24기둥·72층, gas g128/g112·band cloud LUT, roughness 2에서 비교했다. 원본 loader의 필드명 불일치 실패는 보존하고 정확히 8개 dataset 문자열만 적응했다. vendor link에서 upstream 구름·에어로졸 frontend 객체를 제외하고 linker map으로 archive 객체의 사용을 검사한다.
+
+최종 로컬 실행의 SW 13개·LW 12개 저장 배열과 5개 플럭스가 모두 finite·bitwise 동일하다. 양의 액체·빙정 path가 실제 존재한다. 출력 단위 속성은 없으며, 입력 LUT 단위만 명시 검사한다. 에어로졸 수치 계산은 수행하지 않는다. 실제 출력 복사본의 6개 오류/청천 퇴화 사례를 모두 거부했다. 이 검사는 제조 구름 계산 구현의 일치이고, UDM 반경 의미·mass/path 변환·precipitation·McICA·WRF 상수·관측 정확도 검증은 아니다. [재현·원본 실패·결과](../../../validation/rrtmgp37/upstream-reference/ALLSKY.md)를 별도 범위로 읽는다.

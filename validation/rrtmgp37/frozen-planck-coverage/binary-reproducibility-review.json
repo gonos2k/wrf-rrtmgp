@@ -1,0 +1,51 @@
+{
+  "status": "READ_ONLY_BINARY_ATTRIBUTION",
+  "scope": "Explain why the recorded old kernel hash differs from the two newly generated kernels; no rebuild, generation, or numerical/model run.",
+  "old_kernel_record": {
+    "result_path": "build/udm-cu-fresh-gnu/source/validation/rrtmgp37/frozen-optics-lookup/nine-grid-o128-s50/result.json",
+    "recorded_sha256": "443a194ca4d7f530e7c38e717c33cd39c71c4d3215b27b4f0ea219c02f3cb858",
+    "recorded_compiler": "GNU Fortran 13.3.0 (Ubuntu 13.3.0-6ubuntu2~24.04)",
+    "recorded_flags": ["-O3", "-fPIC", "-shared", "-ffree-line-length-none"],
+    "old_original_binary_path_currently_present": false,
+    "same_hash_retained_kernel": {
+      "path": "build/pr-wrf-rrtmgp/build/udm-frozen-optics-next/nine-grid-o128-s50/kernel/libmie_dynamic.so",
+      "sha256": "443a194ca4d7f530e7c38e717c33cd39c71c4d3215b27b4f0ea219c02f3cb858",
+      "size_bytes": 20264
+    }
+  },
+  "new_kernels": [
+    {
+      "path": "build/udm37-frozen-planck-coverage-v1/runs/frozen-planck-150-330-step5-plus233-v1/kernel/libmie_dynamic.so",
+      "sha256": "6a0a5276ebcca55f1111aadb863c6c2706f4c413117dd16d2a604433340e6001",
+      "build_id": "be2e99c62a1089a9e04517275ce77c8a7dd4e3a9",
+      "size_bytes": 20264
+    },
+    {
+      "path": "build/udm37-frozen-planck-coverage-v1/runs/frozen-direct-179.996-v1/kernel/libmie_dynamic.so",
+      "sha256": "3f5f56acf920d07732d90ad403138756c4286ce623d436e4efaa8237c69bf7ca",
+      "build_id": "ca4c91e41fac0ef799c2b55033d917a318ca51eb",
+      "size_bytes": 20264
+    }
+  ],
+  "attribution": {
+    "classification": "build-path-dependent binary difference; not evidence of different numerical kernel source or flags",
+    "embedded_source_filename": "gfortran embeds the generated absolute path to mie_scatter_realK.f in the Fortran runtime diagnostic string in .rodata.",
+    "path_length_effect": "The expanded-run source path is 8 bytes longer than the retained old artifact path. The .rodata string changes accordingly; 26 differing bytes in .text are all RIP-relative displacement bytes increased by 8 to address data shifted by the longer string. Normalized disassembly showed no other instruction differences.",
+    "build_id": "GNU build-id differs as expected because the linked ELF bytes differ.",
+    "other_observations": [
+      "All compared libraries are 20,264 bytes and have identical section sizes/layout, GNU Fortran .comment, dynamic dependencies, and .eh_frame/.eh_frame_hdr contents.",
+      "The expanded and direct generated libraries each embed their own run-specific absolute source path and therefore have distinct build IDs and hashes."
+    ],
+    "limits": [
+      "The original old binary at the original build path is no longer present; attribution used the old recorded SHA and a retained library whose SHA matches it exactly.",
+      "This is a static binary-difference diagnosis, not a fresh functional equivalence test. The differing relative operands point to the shifted diagnostic string, but binary hashes are not identical and should not be reported as bitwise reproducible."
+    ]
+  },
+  "pinned_kernel_sources_and_build": {
+    "original_mie_sha256": "1bcf8fce448ffebb1b75bbbfd5ba156efe984f10fa72ae8aa5201f3eef6355f8",
+    "compiled_realK_mie_sha256": "e2ff5c81d4956bfcee2542a107d48dac33d7c7be8fd6d1c0a0b79f9f1a428973",
+    "adaptation": "Four CMPLX constructors explicitly preserve KIND=RealK; no other source changes",
+    "generator_flags": ["-O3", "-fPIC", "-shared", "-ffree-line-length-none"],
+    "compiler": "GNU Fortran 13.3.0 (Ubuntu 13.3.0-6ubuntu2~24.04)"
+  }
+}

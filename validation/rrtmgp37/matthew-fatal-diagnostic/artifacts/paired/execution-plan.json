@@ -1,0 +1,201 @@
+{
+  "case_dirs": {
+    "ra37": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-matthew-paired-48h-v1/ra37",
+    "ra4": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-matthew-paired-48h-v1/ra4"
+  },
+  "commands": {
+    "ra37": [
+      "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/mpich-sock/bin/mpiexec.hydra",
+      "-launcher",
+      "fork",
+      "-iface",
+      "lo",
+      "-n",
+      "4",
+      "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-matthew-paired-48h-v1/ra37/wrf.exe"
+    ],
+    "ra4": [
+      "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/mpich-sock/bin/mpiexec.hydra",
+      "-launcher",
+      "fork",
+      "-iface",
+      "lo",
+      "-n",
+      "4",
+      "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-matthew-paired-48h-v1/ra4/wrf.exe"
+    ]
+  },
+  "environment": {
+    "LD_LIBRARY_PATH": [
+      "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/netcdf/lib",
+      "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/root/usr/lib/x86_64-linux-gnu",
+      "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/mpich-sock/lib"
+    ],
+    "MPICH_INTERFACE_HOSTNAME": "127.0.0.1",
+    "OMP_NUM_THREADS": "2",
+    "OMP_STACKSIZE": "512M",
+    "stripped_names": [
+      "LD_PRELOAD",
+      "LD_AUDIT"
+    ],
+    "stripped_prefixes": [
+      "WRF_RRTMGP_",
+      "WRF_UDM_BOUNDARY_CAPTURE",
+      "OMP_",
+      "GOMP_",
+      "KMP_"
+    ]
+  },
+  "exact_configuration": {
+    "ra37": {
+      "WRF_RRTMGP_BATCH_SIZE": "32",
+      "frozen_optics_mode": 1,
+      "frozen_table_sha256": "8cb00850c3f885f5ec0306563c1ec0a55b512478a7395d626c1c99cebf280583",
+      "ice_roughness": 1,
+      "ra_lw_physics": 37,
+      "ra_sw_physics": 37
+    },
+    "ra4": {
+      "WRF_RRTMGP_BATCH_SIZE": "unset",
+      "frozen_optics_mode": 0,
+      "frozen_table": "",
+      "ra_lw_physics": 4,
+      "ra_sw_physics": 4
+    },
+    "shared": {
+      "bl_pbl_physics": 1,
+      "cu_physics": 1,
+      "cu_rad_feedback": true,
+      "cudt": 5,
+      "frames_per_outfile": 1000,
+      "history_interval_minutes": 60,
+      "map_proj": 3,
+      "map_proj_name": "Mercator",
+      "metgrid_levels": 32,
+      "mp_physics": 27,
+      "mpi_ranks": 4,
+      "num_land_cat": 21,
+      "numtiles": 2,
+      "omp_threads": 2,
+      "radt_minutes": 10,
+      "restart_interval_minutes": 720,
+      "sfclay_scheme": 1,
+      "soil_levels": 4,
+      "surface_scheme": 2,
+      "time_step_seconds": 150,
+      "use_mp_re": 1
+    }
+  },
+  "initial_condition_contract": {
+    "across_arm_files_bitwise_equal": true,
+    "common_wrfbdy_sha256": "2298ac9b6dfec71e434648f66160f6555f89ec351398a4abf76754d1f934d29b",
+    "common_wrfinput_sha256": "6adeb00d56b83ef7749502059e35d27adb5114ac0e03adb323e86aa68b946fe3",
+    "contains_identical_initialized_radii_and_hydrometeor_fields": true,
+    "source_real_postflight": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-matthew-real-v1/real-postflight-v2.json",
+      "sha256": "b58be9b07bcc7ded2559822eca7a0cfe984a85314b3bbb6f23ab70b9ded49f7d",
+      "status": "PASS"
+    }
+  },
+  "manifest_sha256": "63664835fac36101348761f5c4340da683789e0e11b60b3e8fffca20c6c83b6f",
+  "order": [
+    "ra4",
+    "ra37"
+  ],
+  "paired_differences": {
+    "fields": [
+      "SWDOWN",
+      "GLW",
+      "SWUPB",
+      "SWDNB",
+      "SWDDIR",
+      "SWDDIF",
+      "GSW",
+      "RTHRATLW",
+      "RTHRATSW",
+      "T",
+      "QVAPOR",
+      "QCLOUD",
+      "QICE",
+      "QRAIN",
+      "QSNOW",
+      "QGRAUP",
+      "QHAIL"
+    ],
+    "interpretation": "descriptive coupled-run difference metrics only; not observational accuracy or a winner claim"
+  },
+  "postflight": {
+    "RA37_flux_heating_closure": "checked by validator per its pinned thresholds",
+    "hydrometeor_negative_values": "count/report only; no invented clipping or rejection threshold",
+    "requires_49_hourly_times_including_endpoints": true,
+    "requires_finite_raw_decoded_fill_mask_checks": true,
+    "requires_four_MPI_rank_success_and_no_fatal": true,
+    "requires_restart_times": [
+      "2016-10-06_12:00:00",
+      "2016-10-07_00:00:00",
+      "2016-10-07_12:00:00",
+      "2016-10-08_00:00:00"
+    ],
+    "validator_cli": "python3 -B /NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-matthew-paired-48h-v1/validate_forecast_outputs.py --case-dir <arm-dir> --arm ra4|ra37 --receipt <new-json-path>",
+    "validator_sha256": "9f84a24a82e6c17bc36e2b5391c9b86bce4a80f7d543a7b197c96e0ec6cfc815"
+  },
+  "preflight": {
+    "clean_inherited_capture_audit_openmp_preload_environment": true,
+    "reject_any_preexisting_rsl_wrfo_wrfrst_or_receipt": true,
+    "require_exact_hash_bound_authorization_keys": [
+      "status=AUTHORIZED_TO_RUN_FORECAST",
+      "manifest_sha256",
+      "plan_sha256",
+      "runner_sha256"
+    ],
+    "verify_pinned_inputs_executable_libraries_coefficients_and_table_before_and_after_each_arm": true
+  },
+  "provenance": {
+    "corrected_real_postflight": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-matthew-real-v1/real-postflight-v2.json",
+      "sha256": "b58be9b07bcc7ded2559822eca7a0cfe984a85314b3bbb6f23ab70b9ded49f7d",
+      "status": "PASS"
+    },
+    "real_process_receipt": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-matthew-real-v1/execution-receipt.json",
+      "real_success_marker": true,
+      "recorded_status": "FAIL_PRESERVED",
+      "returncode": 0,
+      "sha256": "dfdbbdcc1bb4d1fb6197cdd79ae466dd9c37fc879d8a6eade9ab02bc5e8b9041"
+    },
+    "root_real_review": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-matthew-real-v1/root-combined-review-v1.json",
+      "sha256": "114fa9521d0a3d1eb6f7f5df60f2a9ff4c60dfcb1fc590b4cd17fa96f05b402b",
+      "status": "PASS_REAL_PROCESS_AND_REVALIDATED_OUTPUTS_SCOPED"
+    },
+    "source_build_receipt": "build/udm37-pr60-active-cu-current-build-v1/build-receipt.json",
+    "source_met_em_archive_sha256": "3542bd5db813b454258a6a67d4ebff95cbbc10252b8bffede0b9dacf1ccc5960",
+    "wrf_executable": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-pr60-active-cu-current-build-v1/source-v3/WRF/main/wrf.exe",
+      "sha256": "6378764a2119e3475a4ec8b80cce20f5434739c428dc7fb401c899bcdeb309ed",
+      "size_bytes": 59162832
+    }
+  },
+  "run_limits": {
+    "arms_sequential": true,
+    "do_not_start_ra37_if_ra4_fails": true,
+    "durable_receipt_writes": "before launch, immediately after PID, after process return before output validation, after each validator, final",
+    "expected_model_invocations_max": 2,
+    "per_arm_timeout_seconds": 3600,
+    "process_group_terminate_then_kill_on_timeout_or_exception": true,
+    "retry_in_staged_directory": false
+  },
+  "runner": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-matthew-paired-48h-v1/run_pair_once.py",
+    "sha256": "4288132f380c268f4efc66fcfe6afdf85c0976218c9ec1a2a9534ab9131883c6",
+    "size_bytes": 11280
+  },
+  "schema": "udm37-matthew-paired-48h-execution-plan-v1",
+  "stage_manifest": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-matthew-paired-48h-v1/stage-manifest.json",
+  "status": "PREPARED_NOT_RUN_REQUIRES_SEPARATE_ROOT_AUTHORIZATION",
+  "validator": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-matthew-paired-48h-v1/validate_forecast_outputs.py",
+    "sha256": "9f84a24a82e6c17bc36e2b5391c9b86bce4a80f7d543a7b197c96e0ec6cfc815",
+    "size_bytes": 20089
+  }
+}

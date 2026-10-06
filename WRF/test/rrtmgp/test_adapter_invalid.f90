@@ -20,6 +20,11 @@ PROGRAM test_rrtmgp_adapter_invalid
   CALL get_command_argument(2,case_name,status=arg_status)
   IF(arg_status/=0.OR.LEN_TRIM(case_name)==0) ERROR STOP 'usage: test_adapter_invalid DATA_PATH CASE'
   CALL initialize_inputs()
+  IF(TRIM(case_name)=='coefficient_load_missing') THEN
+    CALL rrtmgp_init(TRIM(data_path)//'/missing-coefficient-directory')
+    WRITE(*,'(A)') 'INVALID_ADAPTER_INPUT_ACCEPTED='//TRIM(case_name)
+    ERROR STOP 2
+  END IF
   CALL rrtmgp_init(TRIM(data_path))
 
   SELECT CASE(TRIM(case_name))
@@ -52,6 +57,8 @@ PROGRAM test_rrtmgp_adapter_invalid
     CALL rrtmgp_init(TRIM(data_path),2)
   CASE('changed_init_path')
     CALL rrtmgp_init(TRIM(data_path)//'/different-global-path')
+  CASE('changed_init_constants')
+    CALL rrtmgp_init(TRIM(data_path),gravity=9.81,cp_dry=1004.5,mol_weight_dry=28.966e-3)
   CASE DEFAULT
     WRITE(*,'(A)') 'UNKNOWN_ADAPTER_INVALID_CASE='//TRIM(case_name)
     ERROR STOP 2

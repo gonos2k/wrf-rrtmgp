@@ -1,0 +1,220 @@
+{
+  "actual_execution": {
+    "Python_PID": 322414,
+    "Python_returncode": 0,
+    "Python_transport_evaluation": true,
+    "new_RTE_executable_calls": 0,
+    "new_WRF_calls": 0,
+    "new_builds": 0
+  },
+  "created_utc": "2026-10-05T06:26:54.670616+00:00",
+  "goal_complete": false,
+  "independent_saved_value_differences": {
+    "GP_integral_surface_DN_minus_original_legacy_REAL32_Wm2": 0.7233908915188181,
+    "GP_policy1_surface_DN_minus_original_legacy_REAL32_Wm2": 1.273892417973201,
+    "actual_legacy_REAL32_broadband_surface_DN_Wm2": 187.83763122558594,
+    "common_bands_3_13_surface_DN_integral_minus_legacy_Wm2": 0.5526951614322115,
+    "common_bands_3_13_surface_DN_policy1_minus_legacy_Wm2": 0.5958971463073368,
+    "legacy_converted_band_REAL64_sum_surface_DN_Wm2": 187.83762277529087,
+    "legacy_reporting_sum_minus_actual_broadband_TOA_UP_Wm2": -1.6092176053916774e-06,
+    "legacy_reporting_sum_minus_actual_broadband_surface_DN_Wm2": -8.450295069906133e-06
+  },
+  "limits": [
+    "One selected nighttime clear optical column; 45 solver layers = 32 native + 13 upper extension. Not domain accuracy or general port equivalence.",
+    "Matched45 dry-mass carrier and explicit N2=0.7808 are diagnostic; not 45 native WRF layers or inferred legacy N2 composition.",
+    "Only bands 3-13 share exact edges. Other bands are engine-native totals, never paired spectral claims; legacy band16 Planck includes the infinite high-wavenumber tail.",
+    "140 versus 128 engine-specific gpoints: never pair indices or swap sources/opacity; no unweighted gpoint means.",
+    "GP interior source uses geometric-mean adjacent fractions; compare to separate legacy layer-face source reductions. No source renormalization.",
+    "Source radiance conventions inferred from pinned source and same-engine recurrence. GP LUT lacks explicit units attribute; not an external Planck truth oracle.",
+    "Native REAL32 legacy values are promoted to float64 for band reporting; sum may differ by original float32 accumulation roundoff. Exact native recurrence reconstruction already passed separately.",
+    "Common-band residual combines source interpolation, angular closure, k-discretization and optical coefficients; no uniquely causal source/opacity split or physical accuracy conclusion.",
+    "No production modification, new compiled RTE calls, forecasts, or builds. Python band-wise transport is new numerical evidence.",
+    "Legacy converted per-band REAL64 sum differs from the original REAL32 accumulated broadband by disclosed roundoff; use the separately named denominator when reporting whole-column residuals.",
+    "Convergence assertion is the recorded successive band-flux criterion, not a separately rerun independent quadrature or band-heating calculation.",
+    "No independently known physical Planck/opacity oracle, exact gas-composition parity, unique residual attribution or normal-physics verdict is established."
+  ],
+  "material_issues": [],
+  "plan_input_pins_verified": {
+    "analysis": {
+      "bytes": 8056,
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-common-band-source-math-v1/analyze.py",
+      "sha256": "9120abd259c899885e0980e8dae1e15fce7ef30b3ebc1091174807ea935490ff"
+    },
+    "angular_helper": {
+      "bytes": 13139,
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-lw-angular-math-v1/angular_reference.py",
+      "sha256": "a64dfa9f3ff90cc788028c1cb0f5ab4d0be1316c49ef74e833b8dddc4eb5cb48"
+    },
+    "gp_result": {
+      "bytes": 763371,
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-n2-attribution-v1/run-preparation-v1/run-v1/n2-0p7808.result",
+      "sha256": "b578e9983b5817297db75baac026af98b84a3cbcd3653aadf2e4db5930ce5732"
+    },
+    "gp_source": {
+      "bytes": 308081,
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-n2-attribution-v1/run-preparation-v1/run-v1/n2-0p7808.result.lw_transport",
+      "sha256": "bb53daf55ea9b6f91c9d0dbc4f132eff11b3ab76fd278bacb327571a1642e792"
+    },
+    "input": {
+      "bytes": 39535,
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-dry-column-attribution-v1/matched-legacy-dry.input",
+      "sha256": "292f9569b059c373c9cb14f1574cb8835627331574592a19d641ef07c21ec918"
+    },
+    "legacy_actual_replay": {
+      "bytes": 2846,
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-legacy-lw-actual-math-v1/result.json",
+      "sha256": "fe33f4e670083ebdba0b501a5ef3a199f42bcb6487126a965ec5161142f57086"
+    },
+    "legacy_actual_review": {
+      "bytes": 7548,
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-legacy-lw-actual-math-review-v1/review.json",
+      "sha256": "c77dd45bf0ab9fb857f1fc3e6c234a35a9f1c135b55a4393566dc7ae00f99330"
+    },
+    "legacy_helper": {
+      "bytes": 16092,
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-legacy-lw-math-v2/legacy_lw_replay.py",
+      "sha256": "691497decf3992435ada71b6af84e25e88773f534f385c1a56050e370a1aea00"
+    },
+    "packet": {
+      "bytes": 2539937,
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-legacy-lw-source-export-bon-audit-v2/cases/SOURCE_ON/legacy-export/rrtmg4_d01_i13_j46_step721_lw.txt",
+      "sha256": "bd614b57362b48ab8e00b179fc3464925b9c49a8eef0a472489f87fd89e15c7f"
+    },
+    "prior_angular_result": {
+      "bytes": 19762,
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-combined-n2-angular-math-v1/result.json",
+      "sha256": "ab8f77eeddc5b91674e22279b197600f7418bfa69e8af8e9610f64a3c96d6ad6"
+    },
+    "prior_plan": {
+      "bytes": 12294,
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-source-attribution-plan-v1/plan.json",
+      "sha256": "821f2e9809c7460363afe70bc06e1678735d349f2cec8683159153095879f9b4"
+    },
+    "state_gate": {
+      "bytes": 12700,
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-legacy-state-comparison-v1/state-comparison-v1.json",
+      "sha256": "723f9213a0089eeef2b79d7f7bd4dd7620b7949671cb907adf2f9a4c046ae3bd"
+    },
+    "unit_review": {
+      "bytes": 12706,
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-source-units-review-v1/review.json",
+      "sha256": "c4c121c3e59be421f9a8beb5da792ff71434129bd935f6856475b1067b783035"
+    }
+  },
+  "recorded_quadrature_gate_review": {
+    "accepted_order": 1024,
+    "criterion_Wm2": 1e-09,
+    "final_successive_all_band_level_UP_DN_change_Wm2": 1.605895139089597e-10,
+    "method": "Read recorded convergence history and statically reviewed calculation; reviewer did not repeat quadrature.",
+    "orders": [
+      {
+        "max_abs_all_band_UP_DN_change_Wm2": null,
+        "order": 256,
+        "weights_sum": 1.0
+      },
+      {
+        "max_abs_all_band_UP_DN_change_Wm2": 2.957602328519139e-09,
+        "order": 512,
+        "weights_sum": 1.0000000000000002
+      },
+      {
+        "max_abs_all_band_UP_DN_change_Wm2": 1.605895139089597e-10,
+        "order": 1024,
+        "weights_sum": 1.0
+      }
+    ],
+    "previous_512_change_Wm2": 2.957602328519139e-09,
+    "weights_sum_unity_within_1e_minus14": true
+  },
+  "reviewer_actions": "Hash/size/receipt readback, existing parsers only, finite/shape/paired-band checks, reductions of saved profiles and comparison with archived GP/legacy output; no transfer or quadrature calls.",
+  "reviewer_new_calls": {
+    "Python_transport_or_quadrature": 0,
+    "REAL": 0,
+    "WRF": 0,
+    "compiled_RTE": 0,
+    "compiler": 0,
+    "tests": 0
+  },
+  "schema": "udm37-common-band-source-math-independent-terminal-review-v1",
+  "static_review": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-common-band-source-math-review-v1/review.json",
+    "sha256": "2ff5e5ddb87c80a96459e36c0c36e99b73445243893b6bc73b15da8742e675d3",
+    "size_bytes": 8131
+  },
+  "status": "PASS_SCOPED_TERMINAL_RECEIPT_SAVED_PROFILES_AND_BAND_REDUCTIONS",
+  "terminal_artifact_pins": [
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-common-band-source-math-v1/analyze.py",
+      "sha256": "9120abd259c899885e0980e8dae1e15fce7ef30b3ebc1091174807ea935490ff",
+      "size_bytes": 8056
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-common-band-source-math-v1/plan.json",
+      "sha256": "93e3b10e288fe458a059f71a9181b0395ee48b7393fd8303c8cd8cec3f450bb8",
+      "size_bytes": 5571
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-common-band-source-math-v1/launched.json",
+      "sha256": "c2599e9f69e3d03dd2e2190f907c4942a7f23f1ff62544fe4ebd8653872ed424",
+      "size_bytes": 293
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-common-band-source-math-v1/execution.json",
+      "sha256": "7a11c59ad11dd1af47d140c2b197779583f5290da3bb140d19714ae871f902b0",
+      "size_bytes": 745
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-common-band-source-math-v1/driver.log",
+      "sha256": "d5cb33b12ada304f49ce5c39fb46d11299eb0e21c107b57bcc7bea00fa1bac15",
+      "size_bytes": 720
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-common-band-source-math-v1/result.json",
+      "sha256": "e09857e32dfe021f84706ed4e6f0f5074458ef4b44cb3b13b3d6c43924cc2040",
+      "size_bytes": 302546
+    }
+  ],
+  "verified_saved_profile_contract": {
+    "GP_layer_source_profiles_per_band": 45,
+    "GP_level_source_profiles_per_band": 46,
+    "GP_policy1_sum16_vs_original_saved_DN_maxabs_Wm2": 4.198419389922492e-12,
+    "GP_policy1_sum16_vs_original_saved_UP_maxabs_Wm2": 2.8990143619012088e-12,
+    "GP_same_engine_gate_Wm2": 1e-10,
+    "all_common_unpaired_and_all_band_surface_TOA_totals_reduced_independently": true,
+    "band_roster": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16
+    ],
+    "finite_saved_flux_and_source_profiles": true,
+    "legacy_and_GP_band_flux_profiles_per_band": 46,
+    "legacy_layer_and_face_source_profiles_per_band": 45,
+    "max_allowed_total_reduction_roundoff_Wm2": 1e-12,
+    "paired_exact_physical_bands": [
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13
+    ]
+  }
+}

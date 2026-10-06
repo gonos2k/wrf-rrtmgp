@@ -226,6 +226,13 @@ def validate_capture(case: Path, phase: str, call: int, reference_exe: Path,
     nl_raw = len(raw.get("DP_HPA", []))
     if nl_raw == 0:
         fail(f"{case}: {phase} raw capture omitted DP_HPA")
+    dry_mass, dry_mass_source = test_column_replay.dry_layer_mass_kg_m2(
+        raw, nl_raw, require_native=True)
+    adapter_nl = inp["PLAY"].shape[1]
+    if adapter_nl > nl_raw:
+        for path_name in ("LWP", "IWP", "SWP", "RWP"):
+            if path_name in inp and np.any(inp[path_name][0, nl_raw:adapter_nl] != 0.0):
+                fail(f"{case}: {phase} above-top {path_name} must be zero")
     phase_checks: dict[str, Any] = {}
     for phase_key, (q_names, radiation_name) in PHASES.items():
         raw_phase_name = RAW_PHASE_NAMES[phase_key]
@@ -242,9 +249,9 @@ def validate_capture(case: Path, phase: str, call: int, reference_exe: Path,
         q_key = next((name for name in q_names if name in raw), None)
         mass_residual = None
         if q_key is not None and "GRAVITY" in raw:
-            q = raw[q_key][:nl_raw]
+            q = test_column_replay.corrected_hydrometeor(raw, q_key, raw_phase_name, nl_raw)
             cf = raw["CF"][:nl_raw]
-            expected_grid = q * raw["DP_HPA"][:nl_raw] * 100.0 / float(raw["GRAVITY"][0]) * 1000.0
+            expected_grid = q * dry_mass * 1000.0
             test_column_replay.assert_close(grid, expected_grid,
                 f"{case}: {phase} {phase_key} grid mass", rtol=3.e-6, atol=2.e-6)
             # Graupel is diagnosed in grid space and deliberately excluded from
@@ -309,6 +316,7 @@ def validate_capture(case: Path, phase: str, call: int, reference_exe: Path,
     if not replay.get("passed"):
         fail(f"{case}: independent {phase} replay mismatch {replay.get('failed_sections')}")
     return {"phase": phase, "call": call, "header": [nc, nl, overlap, seed, iceflag],
+            "dry_layer_mass_source": dry_mass_source,
             "udm_paths": phase_checks, "native_radius_second_call": radius_evidence,
             "reference_sections_compared": replay["sections_compared"],
             "raw_column": {"i": i, "j": j}}

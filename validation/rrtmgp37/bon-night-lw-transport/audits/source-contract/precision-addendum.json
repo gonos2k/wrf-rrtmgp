@@ -1,0 +1,39 @@
+{
+  "audit_json_precision_clarification": "audit.json reconstruction reports a binary64 reference formula comparison, not source-typed exact recurrence. The small differences there are fully explained by the verified operation-by-operation REAL32 calculation; they are not evidence of omitted CFC amounts. The reconstructed legacy diffusivity list in audit.json is likewise a binary64 formula reference, not a captured or source-exact REAL32 secdiff array.",
+  "new_model_build_solver_calls": 0,
+  "rows": [
+    {
+      "VMR": "CCl4_VMR",
+      "layers": 45,
+      "max_absolute_residual": 0.0,
+      "operation_by_operation_REAL32_exact": true
+    },
+    {
+      "VMR": "CFC11_VMR",
+      "layers": 45,
+      "max_absolute_residual": 0.0,
+      "operation_by_operation_REAL32_exact": true
+    },
+    {
+      "VMR": "CFC12_VMR",
+      "layers": 45,
+      "max_absolute_residual": 0.0,
+      "operation_by_operation_REAL32_exact": true
+    },
+    {
+      "VMR": "CFC22_VMR",
+      "layers": 45,
+      "max_absolute_residual": 0.0,
+      "operation_by_operation_REAL32_exact": true
+    }
+  ],
+  "schema": "bon-night-CFC-source-precision-addendum-v1",
+  "source": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-export-selection-serial-build-v1/source/WRF/phys/module_ra_rrtmg_lw.f90",
+    "sha256": "326f540c57c9c179153662236055ecc7cf2843a998f79e0c34b99b7163911f0d",
+    "size_bytes": 489413
+  },
+  "source_contract": "Executed parkind kind_rb=kind(1.0); native GNU default REAL is32. WX=COLDry*VMR*1.e-20_rb rounds after both multiplications; cross-section slot order CCl4,CFC11,CFC12,CFC22.",
+  "status": "PASS_EXACT_LEGACY_REAL32_CROSS_SECTION_COLUMNS",
+  "unjoined_CO_broadener_note": "Legacy WKL CO slot is zero, but setcoef replaces zero scaled colco with1e-32*COLDry (F:3851/3896). wbrodl is formed separately from COLDry and supplied gas mixture. GP removes unavailable gas names during coefficient load; its continuum/broadener treatment is not joined termwise by existing export. No magnitude or bug conclusion follows."
+}

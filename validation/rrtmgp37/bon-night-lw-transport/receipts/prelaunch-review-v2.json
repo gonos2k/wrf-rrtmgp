@@ -1,0 +1,68 @@
+{
+  "checks": {
+    "18_held_main_sections_bitwise": "PASS_IN_RUNNER",
+    "arguments_1_through_7_and_policy_dispatch": "PASS_SOURCE_REVIEW",
+    "authorized_call_budget_and_no_retry_gate": "PASS_IN_RUNNER",
+    "default_result_exact_retained_baseline": "PASS_IN_RUNNER",
+    "main_result_finite_and_roster_validation": "PASS_PINNED_COMPARE_HELPER",
+    "no_solver_build_or_forecast_invocation_by_reviewer": "PASS",
+    "same_input_for_all_three_modes": "PASS_PLAN_AND_RUNNER",
+    "sidecar_exact_section_roster": "PARTIAL_EXPECTED_FIELDS_REQUIRED_BUT_EXTRA_FIELDS_NOT_REJECTED",
+    "sidecar_generic_parser_finite_validation": "PASS_REPORTED_ZERO_ENGINE_FIXTURE_CHECK",
+    "source_and_build_identity": "PASS",
+    "transport_sidecar_dimensions_and_held_fields": "PASS_IN_RUNNER"
+  },
+  "conclusion": "Reviewed current runner after the sidecar-parser correction. The ordinary 24-section result remains on the strict radiation parser; transport sidecars use the separate finite generic trace parser. Root may authorize the three planned calls.",
+  "nonblocking_hardening_note": "The runner requires the five source/band trace sections and the policy-specific scalar, with finite values and dimensions via the generic trace parser, but checks subset inclusion rather than an exact per-policy section set. The pinned writer currently emits only the documented sections. An exact roster assertion would make the sidecar contract more fail-closed, but this does not block the bounded calls under the pinned source.",
+  "pins": {
+    "build_receipt": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-lw-transport-attribution-v1/build-v1/build-receipt.json",
+      "sha256": "56124893fb79620712876891f5d546421f0df367a222b68eb27732d51d98beb4",
+      "size_bytes": 92721
+    },
+    "executable": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-lw-transport-attribution-v1/build-v1/reference_transport",
+      "sha256": "013d7e795834b62a3bd65a2aa1c290b8046aa41d21852218c94ecba6cd92b23b",
+      "size_bytes": 1052672
+    },
+    "plan": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-lw-transport-attribution-v1/plan.json",
+      "sha256": "1887330a3d3e6b6d40a2331ba512c27610904fadec095e9e6720fbae935b0bae",
+      "size_bytes": 4301
+    },
+    "preflight": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-lw-transport-attribution-v1/root-preflight-v2.json",
+      "sha256": "8e05e3e8abd0ec676eeaa12d33496e0c01056fcbc506a0e8e6764eae0dde79b3",
+      "size_bytes": 1306
+    },
+    "runner": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-lw-transport-attribution-v1/run_once.py",
+      "sha256": "16eb685239e776c3738f1a9d7f00481494d9aa46b3fce27b0abd8a4f8de67754",
+      "size_bytes": 6729
+    },
+    "trace_parser": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-evidence-pr-work/validation/rrtmgp37/rrtmg4-same-call-attribution/reproduce.py",
+      "sha256": "28494cc1b719d1cdf1e585aab3a3ed14ff31ab27874beb2e8eebbd639e8dec5e",
+      "size_bytes": 14643
+    },
+    "trace_parser_import_index": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-evidence-pr-work/validation/rrtmgp37/rrtmg4-same-call-attribution/external-pins/pr74-export-index.json",
+      "sha256": "88d212ac8d99e0d2dedda08bd6972c6823bdce8329090a1d0524458416b14de2",
+      "size_bytes": 1499
+    }
+  },
+  "reviewed_utc": "2026-10-05T03:47:30.491632+00:00",
+  "schema": "bon-night-lw-transport-preflight-review-v2",
+  "scope": {
+    "interpretation": "diagnostic transport-policy sensitivity only; plan correctly disclaims exact legacy RRTMG parity and general accuracy",
+    "planned_calls": 3,
+    "policies": {
+      "1": "original RTE LW default call",
+      "2": "constant lw_Ds=1.66_wp",
+      "3": "four-angle Gauss-Jacobi"
+    },
+    "same_input": "one 45-layer BON matched-dry diagnostic"
+  },
+  "solver_calls_by_reviewer": 0,
+  "status": "PASS_SCOPED_PREEXECUTION"
+}

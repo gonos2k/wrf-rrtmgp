@@ -1,6 +1,7 @@
 PROGRAM test_rrtmgp_columns
   USE, INTRINSIC :: ieee_arithmetic, ONLY: ieee_is_finite
-  USE mo_gas_optics_constants, ONLY: cp_dry, grav
+  USE mo_rte_kind, ONLY: wp
+  USE mo_gas_optics_constants, ONLY: cp_dry, grav, m_dry
   USE module_ra_rrtmgp, ONLY: rrtmgp_init, rrtmgp_lw_column, rrtmgp_sw_column
   USE module_ra_rrtmgp_trace, ONLY: trace_start, trace_end
   IMPLICIT NONE
@@ -38,11 +39,13 @@ PROGRAM test_rrtmgp_columns
   solar=1361.; mu0=.65
 
   CALL rrtmgp_init(TRIM(data_path))
+  IF(grav/=9.80665_wp.OR.cp_dry/=1004.64_wp.OR.m_dry/=0.028964_wp) &
+    ERROR STOP 'no-argument init must preserve exact upstream wp constants'
   CALL trace_start('LW',1,1)
   CALL rrtmgp_lw_column(play,plev,tlay,tlev,tsfc,h2o,co2,o3,n2o,ch4,o2,emis, &
        cf,lwp,iwp,swp,rel,rei,res,4,2,173,lwup,lwdn,lwhr,lwupc,lwdnc,lwhrc)
   CALL trace_end('LW')
-  CALL check_finite('LW clear',lwup,lwdn,lwhr)
+  CALL check_lw_outputs('LW clear')
   CALL check_close('LW clear/all up',lwup,lwupc,1.e-5)
   CALL check_close('LW clear/all down',lwdn,lwdnc,1.e-5)
   CALL check_heating('LW',plev,lwup,lwdn,lwhr)
@@ -53,7 +56,7 @@ PROGRAM test_rrtmgp_columns
        cf,lwp,iwp,swp,rel,rei,res,4,2,173,swup,swdn,swhr,swupc,swdnc,swhrc, &
        direct,diffuse,directc,visdir,visdif,nirdir,nirdif)
   CALL trace_end('SW')
-  CALL check_finite('SW clear',swup,swdn,swhr)
+  CALL check_sw_outputs('SW clear')
   CALL check_close('SW clear/all up',swup,swupc,1.e-5)
   CALL check_close('SW clear/all down',swdn,swdnc,1.e-5)
   CALL check_heating('SW',plev,swup,swdn,swhr)
@@ -66,7 +69,7 @@ PROGRAM test_rrtmgp_columns
   cf(1,2)=1.; lwp(1,2)=100.
   CALL rrtmgp_lw_column(play,plev,tlay,tlev,tsfc,h2o,co2,o3,n2o,ch4,o2,emis, &
        cf,lwp,iwp,swp,rel,rei,res,4,2,991,lwup,lwdn,lwhr,lwupc,lwdnc,lwhrc)
-  CALL check_finite('LW cloudy',lwup,lwdn,lwhr)
+  CALL check_lw_outputs('LW cloudy')
   CALL check_close('LW cloudy clear-sky up',lwupc,clear_lwup,1.e-5)
   CALL check_close('LW cloudy clear-sky down',lwdnc,clear_lwdn,1.e-5)
   CALL check_heating('LW cloudy',plev,lwup,lwdn,lwhr)
@@ -80,7 +83,7 @@ PROGRAM test_rrtmgp_columns
   CALL rrtmgp_sw_column(play,plev,tlay,h2o,co2,o3,n2o,ch4,o2,avdir,avdif,andir,andif,mu0,solar, &
        cf,lwp,iwp,swp,rel,rei,res,4,2,991,swup,swdn,swhr,swupc,swdnc,swhrc, &
        direct,diffuse,directc,visdir,visdif,nirdir,nirdif)
-  CALL check_finite('SW cloudy',swup,swdn,swhr)
+  CALL check_sw_outputs('SW cloudy')
   CALL check_close('SW cloudy clear-sky up',swupc,clear_swup,1.e-5)
   CALL check_close('SW cloudy clear-sky down',swdnc,clear_swdn,1.e-5)
   IF(.NOT.(swdn(1,1)<swdnc(1,1))) CALL fail('cloud did not lower surface SW down flux')
@@ -93,6 +96,7 @@ PROGRAM test_rrtmgp_columns
   CALL rrtmgp_sw_column(play,plev,tlay,h2o,co2,o3,n2o,ch4,o2,avdir,avdif,andir,andif,mu0,solar, &
        cf,lwp,iwp,swp,rel,rei,res,4,2,991,swup,swdn,swhr,swupc,swdnc,swhrc, &
        direct,diffuse,directc,visdir,visdif,nirdir,nirdif)
+  CALL check_sw_outputs('SW cloudy repeat')
   CALL check_close('SW seed reproducibility up',swup,saved_up,0.)
   CALL check_close('SW seed reproducibility down',swdn,saved_dn,0.)
   CALL check_close('SW seed reproducibility heating',swhr,saved_hr,0.)
@@ -106,6 +110,7 @@ PROGRAM test_rrtmgp_columns
   CALL rrtmgp_sw_column(play,plev,tlay,h2o,co2,o3,n2o,ch4,o2,avdir,avdif,andir,andif,mu0,solar, &
        cf,lwp,iwp,swp,rel,rei,res,4,2,991,swup,swdn,swhr,swupc,swdnc,swhrc, &
        direct,diffuse,directc,visdir,visdif,nirdir,nirdif)
+  CALL check_sw_outputs('SW night')
   IF(ANY(swup/=0.).OR.ANY(swdn/=0.).OR.ANY(swhr/=0.).OR.ANY(swupc/=0.).OR.ANY(swdnc/=0.).OR. &
      ANY(swhrc/=0.).OR.ANY(direct/=0.).OR.ANY(diffuse/=0.).OR.ANY(directc/=0.).OR. &
      ANY(visdir/=0.).OR.ANY(visdif/=0.).OR.ANY(nirdir/=0.).OR.ANY(nirdif/=0.)) CALL fail('night fluxes are nonzero')
@@ -137,7 +142,7 @@ CONTAINS
 
     CALL rrtmgp_lw_column(play,plev,tlay,tlev,tsfc,h2o,co2,o3,n2o,ch4,o2,emis, &
          cf,lwp,iwp,swp,rel,rei,res,4,overlap_mode,619,lwup,lwdn,lwhr,lwupc,lwdnc,lwhrc)
-    CALL check_finite(TRIM(label)//' LW',lwup,lwdn,lwhr)
+    CALL check_lw_outputs(TRIM(label)//' LW')
     CALL check_close(TRIM(label)//' LW clear up',lwupc,clear_lwup,1.e-5)
     CALL check_close(TRIM(label)//' LW clear down',lwdnc,clear_lwdn,1.e-5)
     CALL check_heating(TRIM(label)//' LW all sky',plev,lwup,lwdn,lwhr)
@@ -149,6 +154,7 @@ CONTAINS
     saved_up=lwup; saved_dn=lwdn; saved_hr=lwhr
     CALL rrtmgp_lw_column(play,plev,tlay,tlev,tsfc,h2o,co2,o3,n2o,ch4,o2,emis, &
          cf,lwp,iwp,swp,rel,rei,res,4,overlap_mode,619,lwup,lwdn,lwhr,lwupc,lwdnc,lwhrc)
+    CALL check_lw_outputs(TRIM(label)//' LW repeat')
     CALL check_close(TRIM(label)//' LW repeatability',lwup,saved_up,0.)
     CALL check_close(TRIM(label)//' LW repeatability',lwdn,saved_dn,0.)
     CALL check_close(TRIM(label)//' LW repeatability',lwhr,saved_hr,0.)
@@ -156,7 +162,7 @@ CONTAINS
     CALL rrtmgp_sw_column(play,plev,tlay,h2o,co2,o3,n2o,ch4,o2,avdir,avdif,andir,andif,mu0,solar, &
          cf,lwp,iwp,swp,rel,rei,res,4,overlap_mode,619,swup,swdn,swhr,swupc,swdnc,swhrc, &
          direct,diffuse,directc,visdir,visdif,nirdir,nirdif)
-    CALL check_finite(TRIM(label)//' SW',swup,swdn,swhr)
+    CALL check_sw_outputs(TRIM(label)//' SW')
     CALL check_close(TRIM(label)//' SW clear up',swupc,clear_swup,1.e-5)
     CALL check_close(TRIM(label)//' SW clear down',swdnc,clear_swdn,1.e-5)
     CALL check_heating(TRIM(label)//' SW all sky',plev,swup,swdn,swhr)
@@ -174,6 +180,7 @@ CONTAINS
     CALL rrtmgp_sw_column(play,plev,tlay,h2o,co2,o3,n2o,ch4,o2,avdir,avdif,andir,andif,mu0,solar, &
          cf,lwp,iwp,swp,rel,rei,res,4,overlap_mode,619,swup,swdn,swhr,swupc,swdnc,swhrc, &
          direct,diffuse,directc,visdir,visdif,nirdir,nirdif)
+    CALL check_sw_outputs(TRIM(label)//' SW repeat')
     CALL check_close(TRIM(label)//' SW repeatability',swup,saved_up,0.)
     CALL check_close(TRIM(label)//' SW repeatability',swdn,saved_dn,0.)
     CALL check_close(TRIM(label)//' SW repeatability',swhr,saved_hr,0.)
@@ -202,8 +209,7 @@ CONTAINS
     CALL rrtmgp_sw_column(play,plev,tlay,h2o,co2,o3,n2o,ch4,o2,avdir,avdif,andir,andif,mu0,solar, &
          cf,lwp,iwp,swp,rel,rei,res,4,2,271,swup,swdn,swhr,swupc,swdnc,swhrc, &
          direct,diffuse,directc,visdir,visdif,nirdir,nirdif)
-    CALL check_finite(TRIM(label)//' daylight',swup,swdn,swhr)
-    CALL check_finite(TRIM(label)//' daylight clear sky',swupc,swdnc,swhrc)
+    CALL check_sw_outputs(TRIM(label)//' daylight')
     CALL check_close(TRIM(label)//' daylight down flux components',direct+diffuse,swdn,2.e-5)
     CALL check_close(TRIM(label)//' daylight visible/NIR direct components',visdir+nirdir,direct,2.e-5)
     CALL check_close(TRIM(label)//' daylight visible/NIR diffuse components',visdif+nirdif,diffuse,2.e-5)
@@ -218,7 +224,7 @@ CONTAINS
     CALL rrtmgp_sw_column(play,plev,tlay,h2o,co2,o3,n2o,ch4,o2,avdir,avdif,andir,andif,mu0,solar, &
          cf,lwp,iwp,swp,rel,rei,res,4,2,271,swup,swdn,swhr,swupc,swdnc,swhrc, &
          direct,diffuse,directc,visdir,visdif,nirdir,nirdif)
-    CALL check_finite(TRIM(label)//' nighttime',swup,swdn,swhr)
+    CALL check_sw_outputs(TRIM(label)//' nighttime')
     CALL check_close(TRIM(label)//' nighttime up',swup,0.*swup,0.)
     CALL check_close(TRIM(label)//' nighttime down',swdn,0.*swdn,0.)
     CALL check_close(TRIM(label)//' nighttime heating',swhr,0.*swhr,0.)
@@ -248,6 +254,21 @@ CONTAINS
       CALL fail(label)
     END IF
   END SUBROUTINE check_close
+
+  SUBROUTINE check_lw_outputs(label)
+    CHARACTER(LEN=*), INTENT(IN) :: label
+    CALL check_finite(TRIM(label)//' all-sky',lwup,lwdn,lwhr)
+    CALL check_finite(TRIM(label)//' clear-sky',lwupc,lwdnc,lwhrc)
+  END SUBROUTINE check_lw_outputs
+
+  SUBROUTINE check_sw_outputs(label)
+    CHARACTER(LEN=*), INTENT(IN) :: label
+    CALL check_finite(TRIM(label)//' all-sky',swup,swdn,swhr)
+    CALL check_finite(TRIM(label)//' clear-sky',swupc,swdnc,swhrc)
+    CALL check_finite(TRIM(label)//' broadband direct/diffuse',direct,diffuse,directc)
+    CALL check_finite(TRIM(label)//' band partitions',visdir,visdif,nirdir)
+    CALL check_finite(TRIM(label)//' band partitions',nirdif,swupc,swdnc)
+  END SUBROUTINE check_sw_outputs
 
   SUBROUTINE check_finite(label,a,b,c)
     CHARACTER(LEN=*), INTENT(IN) :: label

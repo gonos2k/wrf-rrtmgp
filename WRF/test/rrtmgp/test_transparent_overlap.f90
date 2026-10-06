@@ -8,12 +8,14 @@ PROGRAM test_rrtmgp_transparent_overlap
   REAL :: cf_a(m,nl),cf_b(m,nl),paths_a(m,nl),paths_b(m,nl)
   INTEGER :: seeds(m),hit1_a,hit3_a,joint_a,hit_mid_b,joint_b,joint_lw_a,joint_lw_b
   INTEGER(i8) :: stream_state
-  LOGICAL :: mask_a_lw(m,nl,ngpt_lw),mask_b_lw(m,nl,ngpt_lw)
-  LOGICAL :: mask_a_sw(m,nl,ngpt_sw),mask_b_sw(m,nl,ngpt_sw)
+  LOGICAL, ALLOCATABLE :: mask_a_lw(:,:,:),mask_b_lw(:,:,:)
+  LOGICAL, ALLOCATABLE :: mask_a_sw(:,:,:),mask_b_sw(:,:,:)
   INTEGER :: c
   REAL(real64) :: fraction_a,fraction_b,tolerance_lw_a,tolerance_lw_b,tolerance_sw_a,tolerance_sw_b
   REAL(real64) :: n_samples_lw,n_samples_sw
 
+  ALLOCATE(mask_a_lw(m,nl,ngpt_lw),mask_b_lw(m,nl,ngpt_lw))
+  ALLOCATE(mask_a_sw(m,nl,ngpt_sw),mask_b_sw(m,nl,ngpt_sw))
   stream_state=987654321_i8
   DO c=1,m
     ! Deterministic dispersed column seeds avoid highly correlated consecutive streams.

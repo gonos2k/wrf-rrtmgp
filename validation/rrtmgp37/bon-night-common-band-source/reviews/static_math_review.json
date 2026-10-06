@@ -1,0 +1,116 @@
+{
+  "code_level_checks": {
+    "GP_band_flux": "Own recorded inclusive band slices cover gpoints 1\u2013128 exactly once in ascending order. Reviewed angular.transfer sums each slice with pi conversion and correct bottom-first orientation.",
+    "emissivity": "Legacy plankbnd already includes emissivity and is not multiplied again. GP raw SOURCE_SURFACE is multiplied by matching per-band EMIS once; transfer helper also applies surface reflectivity consistent with its reviewed recurrence.",
+    "fractions_and_scalars": "Uses actual fraction sums per band/layer rather than assuming unity, reports their extrema; verifies WTDIFF=.5, relies on immutable actual source/packet shape and scalar applicability attested by prior reviews.",
+    "immutability": "Refuses existing result.json, verifies all pinned file hashes before and after calculation. No production or frozen input edits.",
+    "legacy_band_flux_units": "Saved band flux has WTDIFF already applied; conversion uses only DELWAVE*FLUXFAC. Float64 reporting reductions do not purport to reproduce original float32 accumulation bitwise.",
+    "legacy_source_units": "Planck times current-layer fraction sum times DELWAVE*WTDIFF*FLUXFAC/pi; uses captured default-real FLUXFAC, reports conversion-rounding departure from exact 10000.",
+    "physical_band_alignment": "Exact edge gate compares bands 3\u201313 (zero-based 2:13). Only these receive paired comparisons. Bands 1\u20132/14\u201316 are retained as separate engine-native totals. No cross-engine g-point pairing or opacity/source swapping.",
+    "quadrature": "Gauss-Jacobi alpha=0,beta=1, mu=(x+1)/2 and w/2 corresponds to 2*mu radiance measure; checks max successive change across all 16 bands, 46 interfaces and UP/DN <=1e-9 W/m2, orders256/512/1024/2048, fails if none converge. This is the declared band-flux criterion, not a new band-heating convergence claim.",
+    "same_engine_gate": "Discrete policy1 sum across all 16 computed bands must reproduce retained GP UP/DN at <=1e-10 W/m2 before new integral comparisons; retained legacy 12-field exact recurrence review is pinned, not repeated.",
+    "source_face_orientation": "Bottom-first legacy lower face uses oldlev[:-1] and upper face oldlev[1:], both weighted by the current layer fractions. GP adjacent SOURCE_LEVEL sums remain separately reported; no synthetic shared interface fraction.",
+    "state_and_policy": "Pressure, temperature, surface temperature and emissivity direct equality gates plus pinned state applicability review. Matched45 dry carrier and N2=.7808 remain diagnostic and do not assert exactly recovered legacy N2 composition."
+  },
+  "created_utc": "2026-10-05T06:24:36.792138+00:00",
+  "goal_complete": false,
+  "material_issues": [],
+  "plan_input_pins_checked": {
+    "analysis": {
+      "bytes": 8056,
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-common-band-source-math-v1/analyze.py",
+      "sha256": "9120abd259c899885e0980e8dae1e15fce7ef30b3ebc1091174807ea935490ff"
+    },
+    "angular_helper": {
+      "bytes": 13139,
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-lw-angular-math-v1/angular_reference.py",
+      "sha256": "a64dfa9f3ff90cc788028c1cb0f5ab4d0be1316c49ef74e833b8dddc4eb5cb48"
+    },
+    "gp_result": {
+      "bytes": 763371,
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-n2-attribution-v1/run-preparation-v1/run-v1/n2-0p7808.result",
+      "sha256": "b578e9983b5817297db75baac026af98b84a3cbcd3653aadf2e4db5930ce5732"
+    },
+    "gp_source": {
+      "bytes": 308081,
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-n2-attribution-v1/run-preparation-v1/run-v1/n2-0p7808.result.lw_transport",
+      "sha256": "bb53daf55ea9b6f91c9d0dbc4f132eff11b3ab76fd278bacb327571a1642e792"
+    },
+    "input": {
+      "bytes": 39535,
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-dry-column-attribution-v1/matched-legacy-dry.input",
+      "sha256": "292f9569b059c373c9cb14f1574cb8835627331574592a19d641ef07c21ec918"
+    },
+    "legacy_actual_replay": {
+      "bytes": 2846,
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-legacy-lw-actual-math-v1/result.json",
+      "sha256": "fe33f4e670083ebdba0b501a5ef3a199f42bcb6487126a965ec5161142f57086"
+    },
+    "legacy_actual_review": {
+      "bytes": 7548,
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-legacy-lw-actual-math-review-v1/review.json",
+      "sha256": "c77dd45bf0ab9fb857f1fc3e6c234a35a9f1c135b55a4393566dc7ae00f99330"
+    },
+    "legacy_helper": {
+      "bytes": 16092,
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-legacy-lw-math-v2/legacy_lw_replay.py",
+      "sha256": "691497decf3992435ada71b6af84e25e88773f534f385c1a56050e370a1aea00"
+    },
+    "packet": {
+      "bytes": 2539937,
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-legacy-lw-source-export-bon-audit-v2/cases/SOURCE_ON/legacy-export/rrtmg4_d01_i13_j46_step721_lw.txt",
+      "sha256": "bd614b57362b48ab8e00b179fc3464925b9c49a8eef0a472489f87fd89e15c7f"
+    },
+    "prior_angular_result": {
+      "bytes": 19762,
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-combined-n2-angular-math-v1/result.json",
+      "sha256": "ab8f77eeddc5b91674e22279b197600f7418bfa69e8af8e9610f64a3c96d6ad6"
+    },
+    "prior_plan": {
+      "bytes": 12294,
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-source-attribution-plan-v1/plan.json",
+      "sha256": "821f2e9809c7460363afe70bc06e1678735d349f2cec8683159153095879f9b4"
+    },
+    "state_gate": {
+      "bytes": 12700,
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-legacy-state-comparison-v1/state-comparison-v1.json",
+      "sha256": "723f9213a0089eeef2b79d7f7bd4dd7620b7949671cb907adf2f9a4c046ae3bd"
+    },
+    "unit_review": {
+      "bytes": 12706,
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-source-units-review-v1/review.json",
+      "sha256": "c4c121c3e59be421f9a8beb5da792ff71434129bd935f6856475b1067b783035"
+    }
+  },
+  "plan_pin_count": 13,
+  "reviewed_files": [
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-common-band-source-math-v1/analyze.py",
+      "sha256": "9120abd259c899885e0980e8dae1e15fce7ef30b3ebc1091174807ea935490ff",
+      "size_bytes": 8056
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-common-band-source-math-v1/plan.json",
+      "sha256": "93e3b10e288fe458a059f71a9181b0395ee48b7393fd8303c8cd8cec3f450bb8",
+      "size_bytes": 5571
+    }
+  ],
+  "reviewer_new_calls": {
+    "Python_transfer_or_recurrence": 0,
+    "REAL": 0,
+    "WRF": 0,
+    "compiled_RTE": 0,
+    "compiler": 0,
+    "tests": 0
+  },
+  "schema": "udm37-bon-night-common-band-source-math-static-review-v1",
+  "scope_limits": [
+    "Static review only; analysis.main, transfer, quadrature and any recurrence were not invoked. Numerical acceptance and actual convergence remain to be established by the root-authorized calculation.",
+    "The current numerical plan compares source/flux reductions. It cannot uniquely partition source interpolation, angular transport, correlated-k discretization or coefficient causes and is not an independent physical/optical truth oracle.",
+    "140 versus128 gpoints remain engine-specific. Fractions normalization is reported rather than renormalized; source face reductions preserve each engine closure.",
+    "Legacy REAL32 packet values are promoted to REAL64 for reporting; per-band reporting need not sum bitwise to the originally REAL32 accumulated broadband flux.",
+    "Diagnostic45=32 native+13 extensions; no native45 WRF-state or latest production-equivalence claim.",
+    "No source swap, new compiled RTE calculation, model, build, compiler or tests were executed by this review."
+  ],
+  "status": "PASS_SCOPED_STATIC_PRECALCULATION_REVIEW"
+}

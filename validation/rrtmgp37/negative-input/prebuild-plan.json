@@ -1,0 +1,107 @@
+{
+  "status": "PASS_BUILD_EXPECTED_STOP_AT_FIRST_UNSUPPORTED_HAIL",
+  "prepared_utc": "2026-10-02T14:24:20.777879+00:00",
+  "active_wrf_or_mpi_processes_at_check": [],
+  "frozen_executable": {
+    "source": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/mpi-wrf-udm-contracts/WRF/main/wrf.exe",
+    "source_sha256": "4bef94c0c511a50985b51b7b148fc463d2b31f656ab21cf135c9233914f2b1e2",
+    "source_inode": 144117436440904221,
+    "copy": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-negative-input-prebuild-20261002/wrf.exe",
+    "copy_sha256": "4bef94c0c511a50985b51b7b148fc463d2b31f656ab21cf135c9233914f2b1e2",
+    "copy_inode": 144117436440905925,
+    "byte_identical": true
+  },
+  "current_worktree": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/mpi-wrf-udm-contracts",
+    "commit": "1fef0f414285d2bbb1a1014dab7c94faf9b481b9",
+    "tracked_status": "M WRF/external/rte_rrtmgp/CMakeLists.txt\n M WRF/external/rte_rrtmgp/build/Makefile\n M WRF/external/rte_rrtmgp/extensions/mo_fluxes_byband.F90\n M WRF/external/rte_rrtmgp/extensions/mo_load_cloud_coefficients.F90\n M WRF/external/rte_rrtmgp/extensions/mo_load_coefficients.F90\n M WRF/external/rte_rrtmgp/extensions/mo_simple_netcdf.F90\n M WRF/external/rte_rrtmgp/gas-optics/mo_gas_concentrations.F90\n M WRF/external/rte_rrtmgp/rrtmgp-frontend/mo_aerosol_optics_rrtmgp_merra.F90\n M WRF/external/rte_rrtmgp/rrtmgp-frontend/mo_cloud_optics_rrtmgp.F90\n M WRF/external/rte_rrtmgp/rrtmgp-frontend/mo_gas_optics_rrtmgp.F90\n M WRF/external/rte_rrtmgp/rrtmgp-kernels/accel/mo_gas_optics_rrtmgp_kernels.F90\n M WRF/external/rte_rrtmgp/rte-frontend/mo_rte_lw.F90\n M WRF/external/rte_rrtmgp/rte-frontend/mo_rte_sw.F90\n M WRF/external/rte_rrtmgp/rte-frontend/mo_rte_util_array_validation.F90\n M WRF/external/rte_rrtmgp/rte-kernels/accel/mo_optical_props_kernels.F90\n M WRF/external/rte_rrtmgp/rte-kernels/accel/mo_rte_solver_kernels.F90\n M WRF/external/rte_rrtmgp/rte-kernels/mo_fluxes_broadband_kernels.F90\n M WRF/external/rte_rrtmgp/rte-kernels/mo_rte_util_array.F90\n M WRF/phys/module_physics_init.F\n M WRF/phys/module_ra_rrtmgp.F\n M WRF/phys/module_ra_rrtmgp_audit.F\n M WRF/phys/module_ra_rrtmgp_input.F\n M WRF/phys/module_ra_rrtmgp_trace.F\n M WRF/phys/module_radiation_driver.F"
+  },
+  "source_overlay_pending": [
+    "WRF/phys/module_mp_udm.F",
+    "both RRTMGP wrappers",
+    "WRF/phys/module_ra_rrtmgp_input.F",
+    "all previously curated 72 registered runtime files; await parent exact manifest/API"
+  ],
+  "official_case": {
+    "description": "NCAR WRF developer test 2010061100; 20-km Lambert grid, 289x189, 27 metgrid levels",
+    "base_case": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-realdata-smoke/hydrodiag20/ra37",
+    "inputs": {
+      "wrfinput_d01": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-realdata-smoke/hydrodiag20/ra37/wrfinput_d01",
+        "sha256": "5ef7abe34c516fba107f346bdbdb3777edacb5d48493df467ea2dd8bcf6a75ff"
+      },
+      "wrfbdy_d01": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-realdata-smoke/hydrodiag20/ra37/wrfbdy_d01",
+        "sha256": "e687b73730ab9a2cee4842e1a92b225a4edb074ba080b6053d96d81ec1731a2d"
+      }
+    },
+    "same_initialized_inputs_for_ra37": true,
+    "current_base_namelist_sha256": "2032068add6037588a49c112c18d267f6503520b4144c0013cb26e28600fae79",
+    "proposed_namelist": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-negative-input-prebuild-20261002/namelist.proposed-1h.input",
+    "proposed_namelist_sha256": "490a12ad3c6798928983adeb1230e0e15545db4a0f972c84d10f3799e4565bab",
+    "proposed_changes": {
+      "run_hours": "0 -> 1",
+      "run_minutes": "20 -> 0",
+      "end_hour": "00 -> 01",
+      "ra_lw_physics": [
+        37,
+        37,
+        37
+      ],
+      "ra_sw_physics": [
+        37,
+        37,
+        37
+      ],
+      "mp_physics": [
+        27,
+        27,
+        27
+      ],
+      "use_mp_re": 1,
+      "time_step_seconds": 60,
+      "radt_minutes": 10,
+      "history_interval_minutes": [
+        10,
+        10,
+        10
+      ],
+      "debug_level": 0,
+      "cldovrlp": 2,
+      "end_minute": [
+        "20",
+        "00"
+      ]
+    }
+  },
+  "diagnostic_setup": {
+    "directory_environment": "WRF_RRTMGP_HYDRO_DIAG_DIR",
+    "expected_snapshot_times_seconds": [
+      0,
+      600,
+      1200,
+      1800,
+      2400,
+      3000,
+      3600
+    ],
+    "strict_negative_validation": "enabled; do not weaken",
+    "stop_policy": "If a non-negative unsupported hail/graupel/fraction diagnostic or strict fatal occurs, preserve logs and exact state/time; do not continue by changing tolerances or physics."
+  },
+  "prior_evidence": {
+    "manifest": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-realdata-smoke/realdata-manifest.json",
+    "hydrodiag_receipt": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-realdata-smoke/diagnostic-only-realdata-receipt.json",
+    "prior_ra37_strict_failure": "step 11 / 600 s: LW i=217 j=1 QI=-2.887890293650070E-035 kg/kg, layer 22; old pre-correction binary only"
+  },
+  "outputs_expected": [
+    "build/udm-negative-input-prebuild-20261002/wrf.exe",
+    "wrfinput_d01",
+    "wrfbdy_d01",
+    "namelist.input",
+    "namelist.proposed-1h.input"
+  ],
+  "build_result": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-negative-input-prebuild-20261002/overlay-receipt.json",
+  "runtime_result": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-negative-input-prebuild-20261002/runtime-result.json",
+  "diagnostic_events_csv": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-negative-input-prebuild-20261002/radiation-diagnostic-events.csv",
+  "hydro_aggregate_csv": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-negative-input-prebuild-20261002/hydro-summary-0-600-1200.csv"
+}

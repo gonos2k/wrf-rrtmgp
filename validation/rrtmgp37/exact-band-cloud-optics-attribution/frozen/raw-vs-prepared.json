@@ -1,0 +1,833 @@
+{
+  "layer_ranges": {
+    "30": {
+      "gp_prepared_over_gp_raw": [
+        0.32284740090621467,
+        0.48703911463985744
+      ],
+      "legacy_prepared_over_gp_prepared": [
+        1.1820780047571855,
+        1.8098721153159982
+      ],
+      "legacy_prepared_over_legacy_raw": [
+        0.36362915729799195,
+        0.46842383297430873
+      ],
+      "legacy_raw_over_gp_raw": [
+        1.5371159819641738,
+        1.5832564944740972
+      ]
+    },
+    "31": {
+      "gp_prepared_over_gp_raw": [
+        0.3618809103102658,
+        0.4836675734390862
+      ],
+      "legacy_prepared_over_gp_prepared": [
+        1.2319519626157824,
+        1.7626773866742815
+      ],
+      "legacy_prepared_over_legacy_raw": [
+        0.3672841824144777,
+        0.4669097814657842
+      ],
+      "legacy_raw_over_gp_raw": [
+        1.560471737888229,
+        1.6223274643487826
+      ]
+    },
+    "32": {
+      "gp_prepared_over_gp_raw": [
+        0.3671357661318105,
+        0.48027862755634987
+      ],
+      "legacy_prepared_over_gp_prepared": [
+        1.3587416088959667,
+        1.969719561583807
+      ],
+      "legacy_prepared_over_legacy_raw": [
+        0.37051834130856176,
+        0.465113297894574
+      ],
+      "legacy_raw_over_gp_raw": [
+        1.674466975571255,
+        1.7612476424771855
+      ]
+    }
+  },
+  "limits": [
+    "36 band/layer tuples only; no flux attribution or physical accuracy",
+    "GP raw sum mixes native/CU wp values and captured REAL32 raw precipitation",
+    "GP and legacy use different ice/snow models, path/size conventions and transforms",
+    "TAUOR/prepared ratios are descriptive; they do not isolate a common delta transform",
+    "No spectral weighting, g-point averaging or first-two-band approximation"
+  ],
+  "pins": {
+    "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/cf0-cu-src-v1/WRF/test/rrtmgp/compare_column_replay.py": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/cf0-cu-src-v1/WRF/test/rrtmgp/compare_column_replay.py",
+      "sha256": "6099a3819268d3ee17bbcbaf0610c03822c09247da6ac5bdfdef66c9190533a7",
+      "size_bytes": 12800
+    },
+    "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-cu-optics-design-work/WRF/run/rrtmgp-gas-sw-g112.nc": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-cu-optics-design-work/WRF/run/rrtmgp-gas-sw-g112.nc",
+      "sha256": "361ed541324068ded28a275a4dd757bcaa0a845aebefa630f43a04678668fe62",
+      "size_bytes": 5949944
+    },
+    "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-cu-replay-pr-work/validation/rrtmgp37/rrtmg4-same-call-attribution/exports/rrtmg4_d01_i24_j55_step2161_sw.txt.gz": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-cu-replay-pr-work/validation/rrtmgp37/rrtmg4-same-call-attribution/exports/rrtmg4_d01_i24_j55_step2161_sw.txt.gz",
+      "sha256": "f2c29a53bf9d42f11f33ceeb72671f724c79163e530686c653639b36cfd5aa76",
+      "size_bytes": 140295
+    },
+    "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-cu-replay-pr-work/validation/rrtmgp37/rrtmg4-same-call-attribution/parser/read_export.py": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-cu-replay-pr-work/validation/rrtmgp37/rrtmg4-same-call-attribution/parser/read_export.py",
+      "sha256": "08519a5945e337d11cd2cb9b599c435aa76d13dfd21ec266ad291721e4cc5817",
+      "size_bytes": 7171
+    },
+    "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-cu-replay-pr-work/validation/rrtmgp37/rrtmg4-same-call-attribution/traces/NEW_ON/sw_000001.input": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-cu-replay-pr-work/validation/rrtmgp37/rrtmg4-same-call-attribution/traces/NEW_ON/sw_000001.input",
+      "sha256": "20986c50c59bc294fede10fc7fe7bdb1173ab3ba1a391a444ed8fd785cd55b1c",
+      "size_bytes": 399854
+    },
+    "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-retained-cu-runtime-v1/run-v1/outputs/baseline-sw.result": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-retained-cu-runtime-v1/run-v1/outputs/baseline-sw.result",
+      "sha256": "5afeb243d0d8e85a36d8c3dd5be7fe8c6c41a2034a142596d9e1d6d765dac53d",
+      "size_bytes": 1338695
+    },
+    "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-retained-cu-runtime-v1/run_eight.py": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-retained-cu-runtime-v1/run_eight.py",
+      "sha256": "cd8b5a9faf0a6161c798a7181d8fe392ede3b8debfda5bf555675b5c8ffcd522",
+      "size_bytes": 39418
+    },
+    "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-same-call-raw-vs-prepared-v1/analyse.py": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-same-call-raw-vs-prepared-v1/analyse.py",
+      "sha256": "d5a290d7cc67d1bde16141be08292759895d6158a1226eb9c67efb06a2697220",
+      "size_bytes": 6053
+    }
+  },
+  "rows": [
+    {
+      "bounds_cm-1": [
+        3250.0,
+        4000.0
+      ],
+      "gp_CU_raw_tau_wp": 0.3479932485040758,
+      "gp_band_1based": 3,
+      "gp_native_raw_tau_wp": 1.5602018030922757,
+      "gp_precip_raw_tau_promoted_real32": 0.7007956504821777,
+      "gp_prepared_over_gp_raw": 0.4338098743681719,
+      "gp_prepared_tau_wp": 1.1318059286964153,
+      "gp_raw_sum_mixed_precision": 2.608990702078529,
+      "legacy_TAUOR_real32": 4.06191349029541,
+      "legacy_band_code": 17,
+      "legacy_prepared_over_gp_prepared": 1.681116027131706,
+      "legacy_prepared_over_legacy_raw": 0.46842383297430873,
+      "legacy_prepared_tau_real32": 1.9026970863342285,
+      "legacy_raw_over_gp_raw": 1.5568907497674742,
+      "native_layer_1based": 30
+    },
+    {
+      "bounds_cm-1": [
+        3250.0,
+        4000.0
+      ],
+      "gp_CU_raw_tau_wp": 0.2599680833015869,
+      "gp_band_1based": 3,
+      "gp_native_raw_tau_wp": 1.2688734191970101,
+      "gp_precip_raw_tau_promoted_real32": 0.289546400308609,
+      "gp_prepared_over_gp_raw": 0.4220289063901903,
+      "gp_prepared_tau_wp": 0.7674122580148769,
+      "gp_raw_sum_mixed_precision": 1.818387902807206,
+      "legacy_TAUOR_real32": 2.8971340656280518,
+      "legacy_band_code": 17,
+      "legacy_prepared_over_gp_prepared": 1.7626773866742815,
+      "legacy_prepared_over_legacy_raw": 0.4669097814657842,
+      "legacy_prepared_tau_real32": 1.3527002334594727,
+      "legacy_raw_over_gp_raw": 1.5932431474909672,
+      "native_layer_1based": 31
+    },
+    {
+      "bounds_cm-1": [
+        3250.0,
+        4000.0
+      ],
+      "gp_CU_raw_tau_wp": 0.20264692598535194,
+      "gp_band_1based": 3,
+      "gp_native_raw_tau_wp": 0.4775698787109578,
+      "gp_precip_raw_tau_promoted_real32": 0.03502630814909935,
+      "gp_prepared_over_gp_raw": 0.4086324718084365,
+      "gp_prepared_tau_wp": 0.29227156114597996,
+      "gp_raw_sum_mixed_precision": 0.7152431128454091,
+      "legacy_TAUOR_real32": 1.2377479076385498,
+      "legacy_band_code": 17,
+      "legacy_prepared_over_gp_prepared": 1.969719561583807,
+      "legacy_prepared_over_legacy_raw": 0.465113297894574,
+      "legacy_prepared_tau_real32": 0.5756930112838745,
+      "legacy_raw_over_gp_raw": 1.7305275442841959,
+      "native_layer_1based": 32
+    },
+    {
+      "bounds_cm-1": [
+        4000.0,
+        4650.0
+      ],
+      "gp_CU_raw_tau_wp": 0.3566945261554839,
+      "gp_band_1based": 4,
+      "gp_native_raw_tau_wp": 1.5954876485323353,
+      "gp_precip_raw_tau_promoted_real32": 0.7007956504821777,
+      "gp_prepared_over_gp_raw": 0.3962889546099354,
+      "gp_prepared_tau_wp": 1.051345808939958,
+      "gp_raw_sum_mixed_precision": 2.652977825169997,
+      "legacy_TAUOR_real32": 4.1584320068359375,
+      "legacy_band_code": 18,
+      "legacy_prepared_over_gp_prepared": 1.5632669760288727,
+      "legacy_prepared_over_legacy_raw": 0.3952293029681463,
+      "legacy_prepared_tau_real32": 1.6435341835021973,
+      "legacy_raw_over_gp_raw": 1.5674582604434224,
+      "native_layer_1based": 30
+    },
+    {
+      "bounds_cm-1": [
+        4000.0,
+        4650.0
+      ],
+      "gp_CU_raw_tau_wp": 0.2668370222975476,
+      "gp_band_1based": 4,
+      "gp_native_raw_tau_wp": 1.3023596141241185,
+      "gp_precip_raw_tau_promoted_real32": 0.289546400308609,
+      "gp_prepared_over_gp_raw": 0.381446046915016,
+      "gp_prepared_tau_wp": 0.7090101835915757,
+      "gp_raw_sum_mixed_precision": 1.858743036730275,
+      "legacy_TAUOR_real32": 2.9727671146392822,
+      "legacy_band_code": 18,
+      "legacy_prepared_over_gp_prepared": 1.657639201210666,
+      "legacy_prepared_over_legacy_raw": 0.3953498639672543,
+      "legacy_prepared_tau_real32": 1.1752830743789673,
+      "legacy_raw_over_gp_raw": 1.5993427041258446,
+      "native_layer_1based": 31
+    },
+    {
+      "bounds_cm-1": [
+        4000.0,
+        4650.0
+      ],
+      "gp_CU_raw_tau_wp": 0.20861346504718475,
+      "gp_band_1based": 4,
+      "gp_native_raw_tau_wp": 0.4944196509737613,
+      "gp_precip_raw_tau_promoted_real32": 0.03502630814909935,
+      "gp_prepared_over_gp_raw": 0.3671357661318105,
+      "gp_prepared_tau_wp": 0.2709680121434725,
+      "gp_raw_sum_mixed_precision": 0.7380594241700453,
+      "legacy_TAUOR_real32": 1.2727161645889282,
+      "legacy_band_code": 18,
+      "legacy_prepared_over_gp_prepared": 1.856469427573586,
+      "legacy_prepared_over_legacy_raw": 0.3952521735725906,
+      "legacy_prepared_tau_real32": 0.5030438303947449,
+      "legacy_raw_over_gp_raw": 1.7244087981399456,
+      "native_layer_1based": 32
+    },
+    {
+      "bounds_cm-1": [
+        4650.0,
+        5150.0
+      ],
+      "gp_CU_raw_tau_wp": 0.35698859334439664,
+      "gp_band_1based": 5,
+      "gp_native_raw_tau_wp": 1.5965471341359065,
+      "gp_precip_raw_tau_promoted_real32": 0.7007956504821777,
+      "gp_prepared_over_gp_raw": 0.4226329046787553,
+      "gp_prepared_tau_wp": 1.1218077802482465,
+      "gp_raw_sum_mixed_precision": 2.654331377962481,
+      "legacy_TAUOR_real32": 4.080015182495117,
+      "legacy_band_code": 19,
+      "legacy_prepared_over_gp_prepared": 1.516586364591241,
+      "legacy_prepared_over_legacy_raw": 0.4169882481114748,
+      "legacy_prepared_tau_real32": 1.701318383216858,
+      "legacy_raw_over_gp_raw": 1.5371159819641738,
+      "native_layer_1based": 30
+    },
+    {
+      "bounds_cm-1": [
+        4650.0,
+        5150.0
+      ],
+      "gp_CU_raw_tau_wp": 0.26708329476327797,
+      "gp_band_1based": 5,
+      "gp_native_raw_tau_wp": 1.3035587354210614,
+      "gp_precip_raw_tau_promoted_real32": 0.289546400308609,
+      "gp_prepared_over_gp_raw": 0.40953927455113465,
+      "gp_prepared_tau_wp": 0.7618202203524959,
+      "gp_raw_sum_mixed_precision": 1.8601884304929484,
+      "legacy_TAUOR_real32": 2.902771472930908,
+      "legacy_band_code": 19,
+      "legacy_prepared_over_gp_prepared": 1.5702834507964747,
+      "legacy_prepared_over_legacy_raw": 0.4121143175262704,
+      "legacy_prepared_tau_real32": 1.196273684501648,
+      "legacy_raw_over_gp_raw": 1.560471737888229,
+      "native_layer_1based": 31
+    },
+    {
+      "bounds_cm-1": [
+        4650.0,
+        5150.0
+      ],
+      "gp_CU_raw_tau_wp": 0.208840275212961,
+      "gp_band_1based": 5,
+      "gp_native_raw_tau_wp": 0.4950626953717188,
+      "gp_precip_raw_tau_promoted_real32": 0.03502630814909935,
+      "gp_prepared_over_gp_raw": 0.3958799644045016,
+      "gp_prepared_tau_wp": 0.29252729656257254,
+      "gp_raw_sum_mixed_precision": 0.7389292787337791,
+      "legacy_TAUOR_real32": 1.2373126745224,
+      "legacy_band_code": 19,
+      "legacy_prepared_over_gp_prepared": 1.7206012760223766,
+      "legacy_prepared_over_legacy_raw": 0.4067871041014108,
+      "legacy_prepared_tau_real32": 0.5033228397369385,
+      "legacy_raw_over_gp_raw": 1.674466975571255,
+      "native_layer_1based": 32
+    },
+    {
+      "bounds_cm-1": [
+        5150.0,
+        6150.0
+      ],
+      "gp_CU_raw_tau_wp": 0.3588785137401998,
+      "gp_band_1based": 6,
+      "gp_native_raw_tau_wp": 1.6042691299137366,
+      "gp_precip_raw_tau_promoted_real32": 0.7007956504821777,
+      "gp_prepared_over_gp_raw": 0.4224678978669245,
+      "gp_prepared_tau_wp": 1.1254305235103743,
+      "gp_raw_sum_mixed_precision": 2.6639432941361143,
+      "legacy_TAUOR_real32": 4.169597148895264,
+      "legacy_band_code": 20,
+      "legacy_prepared_over_gp_prepared": 1.4340826480238016,
+      "legacy_prepared_over_legacy_raw": 0.3870782542505791,
+      "legacy_prepared_tau_real32": 1.6139603853225708,
+      "legacy_raw_over_gp_raw": 1.5651974116991914,
+      "native_layer_1based": 30
+    },
+    {
+      "bounds_cm-1": [
+        5150.0,
+        6150.0
+      ],
+      "gp_CU_raw_tau_wp": 0.26856944681018147,
+      "gp_band_1based": 6,
+      "gp_native_raw_tau_wp": 1.3108043501015263,
+      "gp_precip_raw_tau_promoted_real32": 0.289546400308609,
+      "gp_prepared_over_gp_raw": 0.4127057489300063,
+      "gp_prepared_tau_wp": 0.7713141096842259,
+      "gp_raw_sum_mixed_precision": 1.8689201972203167,
+      "legacy_TAUOR_real32": 2.986699342727661,
+      "legacy_band_code": 20,
+      "legacy_prepared_over_gp_prepared": 1.501970778580892,
+      "legacy_prepared_over_legacy_raw": 0.3878834529071914,
+      "legacy_prepared_tau_real32": 1.1584912538528442,
+      "legacy_raw_over_gp_raw": 1.5980882154143554,
+      "native_layer_1based": 31
+    },
+    {
+      "bounds_cm-1": [
+        5150.0,
+        6150.0
+      ],
+      "gp_CU_raw_tau_wp": 0.21012235321418973,
+      "gp_band_1based": 6,
+      "gp_native_raw_tau_wp": 0.4986145707923486,
+      "gp_precip_raw_tau_promoted_real32": 0.03502630814909935,
+      "gp_prepared_over_gp_raw": 0.4037620671536906,
+      "gp_prepared_tau_wp": 0.30030338008807056,
+      "gp_raw_sum_mixed_precision": 0.7437632321556377,
+      "legacy_TAUOR_real32": 1.2810027599334717,
+      "legacy_band_code": 20,
+      "legacy_prepared_over_gp_prepared": 1.6569333115083893,
+      "legacy_prepared_over_legacy_raw": 0.38843216391846885,
+      "legacy_prepared_tau_real32": 0.49758267402648926,
+      "legacy_raw_over_gp_raw": 1.7223260098791935,
+      "native_layer_1based": 32
+    },
+    {
+      "bounds_cm-1": [
+        6150.0,
+        7700.0
+      ],
+      "gp_CU_raw_tau_wp": 0.35812556618448843,
+      "gp_band_1based": 7,
+      "gp_native_raw_tau_wp": 1.6011796451103595,
+      "gp_precip_raw_tau_promoted_real32": 0.7007956504821777,
+      "gp_prepared_over_gp_raw": 0.43030565332205234,
+      "gp_prepared_tau_wp": 1.1446564392295175,
+      "gp_raw_sum_mixed_precision": 2.6601008617770256,
+      "legacy_TAUOR_real32": 4.13682746887207,
+      "legacy_band_code": 21,
+      "legacy_prepared_over_gp_prepared": 1.3952335476749673,
+      "legacy_prepared_over_legacy_raw": 0.3860598675174248,
+      "legacy_prepared_tau_real32": 1.5970630645751953,
+      "legacy_raw_over_gp_raw": 1.5551393288555788,
+      "native_layer_1based": 30
+    },
+    {
+      "bounds_cm-1": [
+        6150.0,
+        7700.0
+      ],
+      "gp_CU_raw_tau_wp": 0.26798003249256835,
+      "gp_band_1based": 7,
+      "gp_native_raw_tau_wp": 1.307930430747872,
+      "gp_precip_raw_tau_promoted_real32": 0.289546400308609,
+      "gp_prepared_over_gp_raw": 0.4215688587146336,
+      "gp_prepared_tau_wp": 0.7864185209477528,
+      "gp_raw_sum_mixed_precision": 1.8654568635490494,
+      "legacy_TAUOR_real32": 2.9575271606445312,
+      "legacy_band_code": 21,
+      "legacy_prepared_over_gp_prepared": 1.454739729543919,
+      "legacy_prepared_over_legacy_raw": 0.3868212206790163,
+      "legacy_prepared_tau_real32": 1.1440342664718628,
+      "legacy_raw_over_gp_raw": 1.5854170731226707,
+      "native_layer_1based": 31
+    },
+    {
+      "bounds_cm-1": [
+        6150.0,
+        7700.0
+      ],
+      "gp_CU_raw_tau_wp": 0.2096240167847873,
+      "gp_band_1based": 7,
+      "gp_native_raw_tau_wp": 0.4972926008461673,
+      "gp_precip_raw_tau_promoted_real32": 0.03502630814909935,
+      "gp_prepared_over_gp_raw": 0.41361481386338167,
+      "gp_prepared_tau_wp": 0.3068785851437698,
+      "gp_raw_sum_mixed_precision": 0.7419429257800539,
+      "legacy_TAUOR_real32": 1.266271948814392,
+      "legacy_band_code": 21,
+      "legacy_prepared_over_gp_prepared": 1.5980952386406846,
+      "legacy_prepared_over_legacy_raw": 0.3872953248456849,
+      "legacy_prepared_tau_real32": 0.49042120575904846,
+      "legacy_raw_over_gp_raw": 1.7066972469386055,
+      "native_layer_1based": 32
+    },
+    {
+      "bounds_cm-1": [
+        7700.0,
+        8050.0
+      ],
+      "gp_CU_raw_tau_wp": 0.3576394065839611,
+      "gp_band_1based": 8,
+      "gp_native_raw_tau_wp": 1.5989489188434356,
+      "gp_precip_raw_tau_promoted_real32": 0.7007956504821777,
+      "gp_prepared_over_gp_raw": 0.43286450568317,
+      "gp_prepared_tau_wp": 1.1502872011424747,
+      "gp_raw_sum_mixed_precision": 2.6573839759095743,
+      "legacy_TAUOR_real32": 4.108638286590576,
+      "legacy_band_code": 22,
+      "legacy_prepared_over_gp_prepared": 1.3392484145453927,
+      "legacy_prepared_over_legacy_raw": 0.3749466862122508,
+      "legacy_prepared_tau_real32": 1.5405203104019165,
+      "legacy_raw_over_gp_raw": 1.5461214201023636,
+      "native_layer_1based": 30
+    },
+    {
+      "bounds_cm-1": [
+        7700.0,
+        8050.0
+      ],
+      "gp_CU_raw_tau_wp": 0.26763240176865233,
+      "gp_band_1based": 8,
+      "gp_native_raw_tau_wp": 1.3062319867512917,
+      "gp_precip_raw_tau_promoted_real32": 0.289546400308609,
+      "gp_prepared_over_gp_raw": 0.4248010952184214,
+      "gp_prepared_tau_wp": 0.791578943936192,
+      "gp_raw_sum_mixed_precision": 1.8634107888285532,
+      "legacy_TAUOR_real32": 2.9290401935577393,
+      "legacy_band_code": 22,
+      "legacy_prepared_over_gp_prepared": 1.400035744698415,
+      "legacy_prepared_over_legacy_raw": 0.37836244743202946,
+      "legacy_prepared_tau_real32": 1.1082388162612915,
+      "legacy_raw_over_gp_raw": 1.5718703632703028,
+      "native_layer_1based": 31
+    },
+    {
+      "bounds_cm-1": [
+        7700.0,
+        8050.0
+      ],
+      "gp_CU_raw_tau_wp": 0.20939612019340623,
+      "gp_band_1based": 8,
+      "gp_native_raw_tau_wp": 0.4968936852835412,
+      "gp_precip_raw_tau_promoted_real32": 0.03502630814909935,
+      "gp_prepared_over_gp_raw": 0.41739425281494447,
+      "gp_prepared_tau_wp": 0.30942108534662227,
+      "gp_raw_sum_mixed_precision": 0.7413161136260468,
+      "legacy_TAUOR_real32": 1.2508244514465332,
+      "legacy_band_code": 22,
+      "legacy_prepared_over_gp_prepared": 1.541533732379236,
+      "legacy_prepared_over_legacy_raw": 0.3813349187566642,
+      "legacy_prepared_tau_real32": 0.47698304057121277,
+      "legacy_raw_over_gp_raw": 1.6873023915914842,
+      "native_layer_1based": 32
+    },
+    {
+      "bounds_cm-1": [
+        8050.0,
+        12850.0
+      ],
+      "gp_CU_raw_tau_wp": 0.356319650448476,
+      "gp_band_1based": 9,
+      "gp_native_raw_tau_wp": 1.5939013647208238,
+      "gp_precip_raw_tau_promoted_real32": 0.7007956504821777,
+      "gp_prepared_over_gp_raw": 0.32284740090621467,
+      "gp_prepared_tau_wp": 0.8558738402646389,
+      "gp_raw_sum_mixed_precision": 2.6510166656514773,
+      "legacy_TAUOR_real32": 4.148649215698242,
+      "legacy_band_code": 23,
+      "legacy_prepared_over_gp_prepared": 1.8098721153159982,
+      "legacy_prepared_over_legacy_raw": 0.3733798923905113,
+      "legacy_prepared_tau_real32": 1.5490221977233887,
+      "legacy_raw_over_gp_raw": 1.5649276254846656,
+      "native_layer_1based": 30
+    },
+    {
+      "bounds_cm-1": [
+        8050.0,
+        12850.0
+      ],
+      "gp_CU_raw_tau_wp": 0.2665481229888236,
+      "gp_band_1based": 9,
+      "gp_native_raw_tau_wp": 1.3009504977080517,
+      "gp_precip_raw_tau_promoted_real32": 0.289546400308609,
+      "gp_prepared_over_gp_raw": 0.3618809103102658,
+      "gp_prepared_tau_wp": 0.6720291426886114,
+      "gp_raw_sum_mixed_precision": 1.8570450210054843,
+      "legacy_TAUOR_real32": 2.9672579765319824,
+      "legacy_band_code": 23,
+      "legacy_prepared_over_gp_prepared": 1.6646960018368824,
+      "legacy_prepared_over_legacy_raw": 0.3770229066025197,
+      "legacy_prepared_tau_real32": 1.1187242269515991,
+      "legacy_raw_over_gp_raw": 1.5978384707794435,
+      "native_layer_1based": 31
+    },
+    {
+      "bounds_cm-1": [
+        8050.0,
+        12850.0
+      ],
+      "gp_CU_raw_tau_wp": 0.20837251993802303,
+      "gp_band_1based": 9,
+      "gp_native_raw_tau_wp": 0.49379517425811853,
+      "gp_precip_raw_tau_promoted_real32": 0.03502630814909935,
+      "gp_prepared_over_gp_raw": 0.4017051311096565,
+      "gp_prepared_tau_wp": 0.2961346133653474,
+      "gp_raw_sum_mixed_precision": 0.7371940023452409,
+      "legacy_TAUOR_real32": 1.2709366083145142,
+      "legacy_band_code": 23,
+      "legacy_prepared_over_gp_prepared": 1.6317065287230879,
+      "legacy_prepared_over_legacy_raw": 0.3801958168865239,
+      "legacy_prepared_tau_real32": 0.48320478200912476,
+      "legacy_raw_over_gp_raw": 1.7240191920597208,
+      "native_layer_1based": 32
+    },
+    {
+      "bounds_cm-1": [
+        12850.0,
+        16000.0
+      ],
+      "gp_CU_raw_tau_wp": 0.3549973529775587,
+      "gp_band_1based": 10,
+      "gp_native_raw_tau_wp": 1.5885614494818532,
+      "gp_precip_raw_tau_promoted_real32": 0.7007956504821777,
+      "gp_prepared_over_gp_raw": 0.3271997448671635,
+      "gp_prepared_tau_wp": 0.865232102340836,
+      "gp_raw_sum_mixed_precision": 2.64435445294159,
+      "legacy_TAUOR_real32": 4.14372444152832,
+      "legacy_band_code": 24,
+      "legacy_prepared_over_gp_prepared": 1.7837539578174755,
+      "legacy_prepared_over_legacy_raw": 0.3724574857134966,
+      "legacy_prepared_tau_real32": 1.5433611869812012,
+      "legacy_raw_over_gp_raw": 1.567007946653606,
+      "native_layer_1based": 30
+    },
+    {
+      "bounds_cm-1": [
+        12850.0,
+        16000.0
+      ],
+      "gp_CU_raw_tau_wp": 0.2655042094194,
+      "gp_band_1based": 10,
+      "gp_native_raw_tau_wp": 1.295861408370963,
+      "gp_precip_raw_tau_promoted_real32": 0.289546400308609,
+      "gp_prepared_over_gp_raw": 0.3668658845023818,
+      "gp_prepared_tau_wp": 0.6790364746559678,
+      "gp_raw_sum_mixed_precision": 1.850912018098972,
+      "legacy_TAUOR_real32": 2.962900400161743,
+      "legacy_band_code": 24,
+      "legacy_prepared_over_gp_prepared": 1.6412650396835826,
+      "legacy_prepared_over_legacy_raw": 0.3761445462230146,
+      "legacy_prepared_tau_real32": 1.1144788265228271,
+      "legacy_raw_over_gp_raw": 1.600778627611305,
+      "native_layer_1based": 31
+    },
+    {
+      "bounds_cm-1": [
+        12850.0,
+        16000.0
+      ],
+      "gp_CU_raw_tau_wp": 0.20746810119565706,
+      "gp_band_1based": 10,
+      "gp_native_raw_tau_wp": 0.49125208462310876,
+      "gp_precip_raw_tau_promoted_real32": 0.03502630814909935,
+      "gp_prepared_over_gp_raw": 0.4070875149851482,
+      "gp_prepared_tau_wp": 0.2986990368584433,
+      "gp_raw_sum_mixed_precision": 0.7337464939678652,
+      "legacy_TAUOR_real32": 1.2687453031539917,
+      "legacy_band_code": 24,
+      "legacy_prepared_over_gp_prepared": 1.6113573022728143,
+      "legacy_prepared_over_legacy_raw": 0.37935972888113295,
+      "legacy_prepared_tau_real32": 0.4813108742237091,
+      "legacy_raw_over_gp_raw": 1.7291330365246789,
+      "native_layer_1based": 32
+    },
+    {
+      "bounds_cm-1": [
+        16000.0,
+        22650.0
+      ],
+      "gp_CU_raw_tau_wp": 0.353427110809993,
+      "gp_band_1based": 11,
+      "gp_native_raw_tau_wp": 1.5822001417664866,
+      "gp_precip_raw_tau_promoted_real32": 0.7007956504821777,
+      "gp_prepared_over_gp_raw": 0.45148122602255897,
+      "gp_prepared_tau_wp": 1.1902954445868767,
+      "gp_raw_sum_mixed_precision": 2.6364229030586572,
+      "legacy_TAUOR_real32": 4.131979942321777,
+      "legacy_band_code": 25,
+      "legacy_prepared_over_gp_prepared": 1.2899780432349166,
+      "legacy_prepared_over_legacy_raw": 0.3716027207084736,
+      "legacy_prepared_tau_real32": 1.5354549884796143,
+      "legacy_raw_over_gp_raw": 1.5672675038318182,
+      "native_layer_1based": 30
+    },
+    {
+      "bounds_cm-1": [
+        16000.0,
+        22650.0
+      ],
+      "gp_CU_raw_tau_wp": 0.26426515626173863,
+      "gp_band_1based": 11,
+      "gp_native_raw_tau_wp": 1.2898209489678965,
+      "gp_precip_raw_tau_promoted_real32": 0.289546400308609,
+      "gp_prepared_over_gp_raw": 0.44284970206062274,
+      "gp_prepared_tau_wp": 0.8164521057868908,
+      "gp_raw_sum_mixed_precision": 1.843632505538244,
+      "legacy_TAUOR_real32": 2.9535770416259766,
+      "legacy_band_code": 25,
+      "legacy_prepared_over_gp_prepared": 1.357681018296193,
+      "legacy_prepared_over_legacy_raw": 0.3753013755024943,
+      "legacy_prepared_tau_real32": 1.108481526374817,
+      "legacy_raw_over_gp_raw": 1.602042181808726,
+      "native_layer_1based": 31
+    },
+    {
+      "bounds_cm-1": [
+        16000.0,
+        22650.0
+      ],
+      "gp_CU_raw_tau_wp": 0.20640035798110798,
+      "gp_band_1based": 11,
+      "gp_native_raw_tau_wp": 0.4883029419148374,
+      "gp_precip_raw_tau_promoted_real32": 0.03502630814909935,
+      "gp_prepared_over_gp_raw": 0.43442044016942283,
+      "gp_prepared_tau_wp": 0.3170094575315887,
+      "gp_raw_sum_mixed_precision": 0.7297296080450447,
+      "legacy_TAUOR_real32": 1.2643911838531494,
+      "legacy_band_code": 25,
+      "legacy_prepared_over_gp_prepared": 1.5097767099867336,
+      "legacy_prepared_over_legacy_raw": 0.37853276892375814,
+      "legacy_prepared_tau_real32": 0.4786134958267212,
+      "legacy_raw_over_gp_raw": 1.732684503840361,
+      "native_layer_1based": 32
+    },
+    {
+      "bounds_cm-1": [
+        22650.0,
+        29000.0
+      ],
+      "gp_CU_raw_tau_wp": 0.35270288838821995,
+      "gp_band_1based": 12,
+      "gp_native_raw_tau_wp": 1.5792996406916935,
+      "gp_precip_raw_tau_promoted_real32": 0.7007956504821777,
+      "gp_prepared_over_gp_raw": 0.45756353950802114,
+      "gp_prepared_tau_wp": 1.204672453850705,
+      "gp_raw_sum_mixed_precision": 2.632798179562091,
+      "legacy_TAUOR_real32": 4.153782367706299,
+      "legacy_band_code": 26,
+      "legacy_prepared_over_gp_prepared": 1.2769163423718983,
+      "legacy_prepared_over_legacy_raw": 0.3703289694439735,
+      "legacy_prepared_tau_real32": 1.5382659435272217,
+      "legacy_raw_over_gp_raw": 1.5777063353930116,
+      "native_layer_1based": 30
+    },
+    {
+      "bounds_cm-1": [
+        22650.0,
+        29000.0
+      ],
+      "gp_CU_raw_tau_wp": 0.26369141264547846,
+      "gp_band_1based": 12,
+      "gp_native_raw_tau_wp": 1.2870241489412344,
+      "gp_precip_raw_tau_promoted_real32": 0.289546400308609,
+      "gp_prepared_over_gp_raw": 0.44977810245252453,
+      "gp_prepared_tau_wp": 0.8277095332368379,
+      "gp_raw_sum_mixed_precision": 1.840261961895322,
+      "legacy_TAUOR_real32": 2.9725544452667236,
+      "legacy_band_code": 26,
+      "legacy_prepared_over_gp_prepared": 1.3432836850621699,
+      "legacy_prepared_over_legacy_raw": 0.3740381319971764,
+      "legacy_prepared_tau_real32": 1.1118487119674683,
+      "legacy_raw_over_gp_raw": 1.6152887506326716,
+      "native_layer_1based": 31
+    },
+    {
+      "bounds_cm-1": [
+        22650.0,
+        29000.0
+      ],
+      "gp_CU_raw_tau_wp": 0.20590185926713625,
+      "gp_band_1based": 12,
+      "gp_native_raw_tau_wp": 0.486909473660777,
+      "gp_precip_raw_tau_promoted_real32": 0.03502630814909935,
+      "gp_prepared_over_gp_raw": 0.44211738587585975,
+      "gp_prepared_tau_wp": 0.3217896752150211,
+      "gp_raw_sum_mixed_precision": 0.7278376410770127,
+      "legacy_TAUOR_real32": 1.2738391160964966,
+      "legacy_band_code": 26,
+      "legacy_prepared_over_gp_prepared": 1.4935502794260147,
+      "legacy_prepared_over_legacy_raw": 0.37729180495458575,
+      "legacy_prepared_tau_real32": 0.48060905933380127,
+      "legacy_raw_over_gp_raw": 1.7501693292635183,
+      "native_layer_1based": 32
+    },
+    {
+      "bounds_cm-1": [
+        29000.0,
+        38000.0
+      ],
+      "gp_CU_raw_tau_wp": 0.35254881904244156,
+      "gp_band_1based": 13,
+      "gp_native_raw_tau_wp": 1.5786627696174125,
+      "gp_precip_raw_tau_promoted_real32": 0.7007956504821777,
+      "gp_prepared_over_gp_raw": 0.46814704303929827,
+      "gp_prepared_tau_wp": 1.2321664062623694,
+      "gp_raw_sum_mixed_precision": 2.6320072391420317,
+      "legacy_TAUOR_real32": 4.159884452819824,
+      "legacy_band_code": 27,
+      "legacy_prepared_over_gp_prepared": 1.2429756109333014,
+      "legacy_prepared_over_legacy_raw": 0.3681719550064134,
+      "legacy_prepared_tau_real32": 1.531552791595459,
+      "legacy_raw_over_gp_raw": 1.580498864500024,
+      "native_layer_1based": 30
+    },
+    {
+      "bounds_cm-1": [
+        29000.0,
+        38000.0
+      ],
+      "gp_CU_raw_tau_wp": 0.26356602000425317,
+      "gp_band_1based": 13,
+      "gp_native_raw_tau_wp": 1.2864132472634005,
+      "gp_precip_raw_tau_promoted_real32": 0.289546400308609,
+      "gp_prepared_over_gp_raw": 0.46197072484875196,
+      "gp_prepared_tau_wp": 0.8498070060280903,
+      "gp_raw_sum_mixed_precision": 1.8395256675762626,
+      "legacy_TAUOR_real32": 2.9772629737854004,
+      "legacy_band_code": 27,
+      "legacy_prepared_over_gp_prepared": 1.3029195789259036,
+      "legacy_prepared_over_legacy_raw": 0.37189532675194953,
+      "legacy_prepared_tau_real32": 1.1072301864624023,
+      "legacy_raw_over_gp_raw": 1.618494933918594,
+      "native_layer_1based": 31
+    },
+    {
+      "bounds_cm-1": [
+        29000.0,
+        38000.0
+      ],
+      "gp_CU_raw_tau_wp": 0.20577741951593692,
+      "gp_band_1based": 13,
+      "gp_native_raw_tau_wp": 0.48650178326069515,
+      "gp_precip_raw_tau_promoted_real32": 0.03502630814909935,
+      "gp_prepared_over_gp_raw": 0.4558408744380731,
+      "gp_prepared_tau_wp": 0.3315355800840149,
+      "gp_raw_sum_mixed_precision": 0.7273055109257314,
+      "legacy_TAUOR_real32": 1.2759901285171509,
+      "legacy_band_code": 27,
+      "legacy_prepared_over_gp_prepared": 1.44398464792962,
+      "legacy_prepared_over_legacy_raw": 0.3751849463287786,
+      "legacy_prepared_tau_real32": 0.47873228788375854,
+      "legacy_raw_over_gp_raw": 1.7544073423739646,
+      "native_layer_1based": 32
+    },
+    {
+      "bounds_cm-1": [
+        38000.0,
+        50000.0
+      ],
+      "gp_CU_raw_tau_wp": 0.3508440687382562,
+      "gp_band_1based": 14,
+      "gp_native_raw_tau_wp": 1.5718245897588194,
+      "gp_precip_raw_tau_promoted_real32": 0.7007956504821777,
+      "gp_prepared_over_gp_raw": 0.48703911463985744,
+      "gp_prepared_tau_wp": 1.2777297343345209,
+      "gp_raw_sum_mixed_precision": 2.623464308979253,
+      "legacy_TAUOR_real32": 4.153616905212402,
+      "legacy_band_code": 28,
+      "legacy_prepared_over_gp_prepared": 1.1820780047571855,
+      "legacy_prepared_over_legacy_raw": 0.36362915729799195,
+      "legacy_prepared_tau_real32": 1.510376214981079,
+      "legacy_raw_over_gp_raw": 1.5832564944740972,
+      "native_layer_1based": 30
+    },
+    {
+      "bounds_cm-1": [
+        38000.0,
+        50000.0
+      ],
+      "gp_CU_raw_tau_wp": 0.26221224222991973,
+      "gp_band_1based": 14,
+      "gp_native_raw_tau_wp": 1.2798143866295892,
+      "gp_precip_raw_tau_promoted_real32": 0.289546400308609,
+      "gp_prepared_over_gp_raw": 0.4836675734390862,
+      "gp_prepared_tau_wp": 0.8858724825942202,
+      "gp_raw_sum_mixed_precision": 1.831573029168118,
+      "legacy_TAUOR_real32": 2.9714112281799316,
+      "legacy_band_code": 28,
+      "legacy_prepared_over_gp_prepared": 1.2319519626157824,
+      "legacy_prepared_over_legacy_raw": 0.3672841824144777,
+      "legacy_prepared_tau_real32": 1.0913523435592651,
+      "legacy_raw_over_gp_raw": 1.6223274643487826,
+      "native_layer_1based": 31
+    },
+    {
+      "bounds_cm-1": [
+        38000.0,
+        50000.0
+      ],
+      "gp_CU_raw_tau_wp": 0.20459042208291983,
+      "gp_band_1based": 14,
+      "gp_native_raw_tau_wp": 0.4831375873657566,
+      "gp_precip_raw_tau_promoted_real32": 0.03502630814909935,
+      "gp_prepared_over_gp_raw": 0.48027862755634987,
+      "gp_prepared_tau_wp": 0.34712345171628595,
+      "gp_raw_sum_mixed_precision": 0.7227543175977758,
+      "legacy_TAUOR_real32": 1.2729493379592896,
+      "legacy_band_code": 28,
+      "legacy_prepared_over_gp_prepared": 1.3587416088959667,
+      "legacy_prepared_over_legacy_raw": 0.37051834130856176,
+      "legacy_prepared_tau_real32": 0.4716510772705078,
+      "legacy_raw_over_gp_raw": 1.7612476424771855,
+      "native_layer_1based": 32
+    }
+  ],
+  "schema": "same-call-raw-prepared-descriptive-v1",
+  "solver_invocations": 0,
+  "status": "PASS_SCOPED_READ_ONLY",
+  "wrf_invocations": 0
+}

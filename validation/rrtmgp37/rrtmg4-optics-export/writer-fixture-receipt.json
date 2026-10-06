@@ -1,0 +1,32 @@
+{
+  "compile_commands": [
+    "gfortran -cpp -ffree-line-length-none -J <moddir> -c observer.f90 -o observer.o",
+    "gfortran -cpp -ffree-line-length-none -J <moddir> -I <moddir> writer_fixture.f90 wrf_error_fatal_stub.f90 observer.o -o writer",
+    "gfortran -cpp -fopenmp -ffree-line-length-none -J <omp-moddir> -c observer.f90 -o observer-omp.o",
+    "gfortran -cpp -fopenmp -ffree-line-length-none -J <omp-moddir> -I <omp-moddir> writer_fixture.f90 wrf_error_fatal_stub.f90 observer-omp.o -o writer-omp"
+  ],
+  "compiler": "GNU Fortran (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0",
+  "extracted_observer_sha256": "90a4059ac07368a7149b95d1a6065c9b7b641c89a71da6860ebe578f6379d2cd",
+  "fixture_files": {
+    "rrtmg4_d01_i24_j55_step2161_lw.txt": {
+      "bytes": 677,
+      "sha256": "d8b38e01aaba49a7c60ca556dcd4155c2f6a2abaf3f0e91e087cf0f5961f0df1"
+    },
+    "rrtmg4_d01_i24_j55_step2161_sw.txt": {
+      "bytes": 677,
+      "sha256": "6f2b6bb0bb7bc2ee4a6586a91bbef61b32ad44050757d9f6c0cb386181b437e4"
+    }
+  },
+  "fixture_sources": {
+    "read_export.py": "08519a5945e337d11cd2cb9b599c435aa76d13dfd21ec266ad291721e4cc5817",
+    "run_writer_fixture.py": "284e3c4a3d4f274f1264390bb2c551891847673869b22184ce53d5cf956818f0",
+    "test_read_export.py": "b0083485874433a546f3ce0265edb22920458907291e395266f15405e734090a",
+    "wrf_error_fatal_stub.f90": "279015b8c6f8c28a1e71a7f6b6035f1514b93efdb3695425b8610d7cf5bb3ab7",
+    "writer_fixture.f90": "1138ea9ca797e0b2c476c2eedcde57d23434418f515e35c8e666cd8044cf5c76"
+  },
+  "reader_tests": "python3 -B -m unittest validation/rrtmgp37/rrtmg4-optics-export/test_read_export.py: 12 passed.",
+  "runner_result": "python3 validation/rrtmgp37/rrtmg4-optics-export/run_writer_fixture.py exited 0; disabled no-output; enabled LW/SW text roundtrip; OpenMP build rejected OMP_NUM_THREADS=2 before creating output.",
+  "schema": "rrtmg4-standalone-writer-fixture-v1",
+  "scope": "Actual extracted observer module plus synthetic writer and fatal stub only. No WRF executable, radiation solver, REAL or forecast was run.",
+  "source_module_sha256": "c934c03c25cecd027e06dc6ac4d2e3aeab8031671daa229046441b71055698a7"
+}

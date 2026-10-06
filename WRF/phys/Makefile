@@ -134,6 +134,8 @@ MODULES = \
 	module_ra_rrtmgp_audit.o  \
 	module_ra_rrtmgp_trace.o  \
 	module_ra_rrtmgp_input.o  \
+	module_ra_rrtmgp_hash.o  \
+	module_ra_rrtmgp_frozen.o  \
 	module_ra_rrtmgp_precip.o  \
 	module_ra_rrtmgp.o  \
 	module_ra_rrtmg_lw.o  \

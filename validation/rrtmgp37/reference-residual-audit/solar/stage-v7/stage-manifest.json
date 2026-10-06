@@ -1,0 +1,97 @@
+{
+  "changed_variables_only": [
+    "solar_source_quiet",
+    "solar_source_facular",
+    "solar_source_sunspot"
+  ],
+  "counterfactual_coeff_path": "rrtmgp-gas-sw-g224-old-solar-counterfactual.nc",
+  "counterfactual_coeff_sha256": "02d4cd320696b9b8a3006a373855a3b4b95fdb6495251fe5f5692d6a9fddfaa4",
+  "counterfactual_method": "quiet=old solar_source promoted from float32 to current float64; facular and sunspot spectra set to exact zero; all gas/lookup variables, mg_default, sb_default, tsi_default, dimensions and attributes held unchanged",
+  "current_sw_coeff_path": "build/official-rrtmgp-reference/data/rrtmgp-gas-sw-g224.nc",
+  "current_sw_coeff_sha256": "584f1dd41ea9fc07d4ee3754eb1dafbd46ad3161cd6fd20fa06b6922b6f0702e",
+  "data": {
+    "commit": "ea788bb39876948fa8d2c235665ccff19b4686b5",
+    "repository": "https://github.com/earth-system-radiation/rrtmgp-data"
+  },
+  "exe_path": "build/official-rrtmgp-reference/source/examples/rfmip-clear-sky/rrtmgp_rfmip_sw",
+  "exe_sha256": "fcebb76288fec0fceba4d720f61001f495819489a975769eec7de57ca8daa74f",
+  "input_path": "build/official-rrtmgp-reference/data/examples/rfmip-clear-sky/inputs/multiple_input4MIPs_radiation_RFMIP_UColorado-RFMIP-1-2_none.nc",
+  "limitations": [
+    "This is a coefficient-only solar-spectrum counterfactual, not reconstruction of the exact historical CMIP6 code/data snapshot.",
+    "No LW run is proposed; this isolates the existing SW RFMIP residual candidate.",
+    "The existing current-coefficient control is expected to reproduce the pinned current upstream output exactly; that control check is a prerequisite before the second invocation.",
+    "Published RFMIP absolute tolerance remains 1e-5 with rtol=0; it will not be relaxed."
+  ],
+  "loader_check": {
+    "current_set_solar_variability_formula_reproduces_old_vector_exactly": true,
+    "formula": "quiet + (mg_default-0.1495954)*facular + (sb_default-0.00066696)*sunspot",
+    "mg_default": 0.1567651927471161,
+    "sb_default": 902.7125854492188
+  },
+  "old_sw_coeff_path": "build/udm37-rfmip-reference-provenance-v1/rrtmgp-data-sw-g224-2018-12-04.nc",
+  "old_sw_coeff_sha256": "b9f4b15796d132880fffb49ac45c29753c1ee70a8ee3fed733899cb315c75e9b",
+  "output_templates": {
+    "rsd_Efx_RTE-RRTMGP-181204_rad-irf_r1i1p1f1_gn.nc": {
+      "current_upstream_output_sha256": "81381b7e080540d70b122d484eff5799a1ea75e26ad82a7951898c1a1f46acc1",
+      "published_reference_sha256": "f9b0313fdf74598859a7caf27a5d1395b7fe1e445c9620a66856cc19eaf5e5b9",
+      "staged_template_sha256": "f9b0313fdf74598859a7caf27a5d1395b7fe1e445c9620a66856cc19eaf5e5b9"
+    },
+    "rsu_Efx_RTE-RRTMGP-181204_rad-irf_r1i1p1f1_gn.nc": {
+      "current_upstream_output_sha256": "c704f2568b8f7328d80854582043f56f6bfb84c0235f55b3ad42daa6a31f4a34",
+      "published_reference_sha256": "0ea3f4272d9ef088db6ffd07153587863a052e3cf8b3bf04bfb7c9288ed8b324",
+      "staged_template_sha256": "0ea3f4272d9ef088db6ffd07153587863a052e3cf8b3bf04bfb7c9288ed8b324"
+    }
+  },
+  "pinned_inputs_sha256_before_after": {
+    "build/official-rrtmgp-reference/data/examples/rfmip-clear-sky/inputs/multiple_input4MIPs_radiation_RFMIP_UColorado-RFMIP-1-2_none.nc": "b8dc05d7cd2e0e6354b4a6198771ddf3bc09f18d72b49f20a41e2024e2fd51f4",
+    "build/official-rrtmgp-reference/data/rrtmgp-gas-sw-g224.nc": "584f1dd41ea9fc07d4ee3754eb1dafbd46ad3161cd6fd20fa06b6922b6f0702e",
+    "build/official-rrtmgp-reference/source/examples/rfmip-clear-sky/rrtmgp_rfmip_sw": "fcebb76288fec0fceba4d720f61001f495819489a975769eec7de57ca8daa74f",
+    "build/udm37-rfmip-reference-provenance-v1/rrtmgp-data-sw-g224-2018-12-04.nc": "b9f4b15796d132880fffb49ac45c29753c1ee70a8ee3fed733899cb315c75e9b"
+  },
+  "prior_failure_preserved": {
+    "cause": "upstream kdist_file CHARACTER(LEN=132) silently truncates long absolute coefficient filename; counterfactual did not compute fluxes",
+    "path": "build/udm37-rfmip-solar-counterfactual-v1/stage-v6/execution.json",
+    "sha256": "a4d75605a851f8e648fa1c0e58e6b6829ac8e68fcfe7d58627a0702c60e1579a"
+  },
+  "run_plan": {
+    "control_first": {
+      "command": [
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/official-rrtmgp-reference/source/examples/rfmip-clear-sky/rrtmgp_rfmip_sw",
+        "8",
+        "../../../official-rrtmgp-reference/data/examples/rfmip-clear-sky/inputs/multiple_input4MIPs_radiation_RFMIP_UColorado-RFMIP-1-2_none.nc",
+        "../../../official-rrtmgp-reference/data/rrtmgp-gas-sw-g224.nc",
+        "1"
+      ],
+      "cwd": "control",
+      "must_match_pinned_current_upstream_rsd_rsu_arrays_bitwise": true
+    },
+    "counterfactual_second": {
+      "command": [
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/official-rrtmgp-reference/source/examples/rfmip-clear-sky/rrtmgp_rfmip_sw",
+        "8",
+        "../../../official-rrtmgp-reference/data/examples/rfmip-clear-sky/inputs/multiple_input4MIPs_radiation_RFMIP_UColorado-RFMIP-1-2_none.nc",
+        "../rrtmgp-gas-sw-g224-old-solar-counterfactual.nc",
+        "1"
+      ],
+      "compare_rsd_rsu_to_published_atol": 1e-05,
+      "cwd": "old-solar-counterfactual",
+      "rtol": 0
+    },
+    "do_not_run_until_root_reviews_staged_manifest": true,
+    "max_invocations": 2,
+    "relative_argument_buffer_preflight": {
+      "all_paths_resolve_to_pinned_files": true,
+      "coeff_limit_bytes": 132,
+      "input_limit_bytes": 256
+    },
+    "timeout_each_seconds": 120
+  },
+  "runner_sha256": "9c7f0cda466ac1bca532afd9e2557cc32cd4cd9555b29e156c310ed4be19f8b9",
+  "schema": "rfmip-sw-solar-counterfactual-stage-v1",
+  "scope": "one SW-only counterfactual; no exact RTE-RRTMGP-181204 source-SHA claim",
+  "source": {
+    "commit": "41c5fcd950fed09b8afe186dede266824eca7fd3",
+    "repository": "https://github.com/earth-system-radiation/rte-rrtmgp"
+  },
+  "status": "STAGED_NOT_RUN"
+}

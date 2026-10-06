@@ -1,0 +1,99 @@
+{
+  "actual_counts": {
+    "REAL": 0,
+    "WRF": 0,
+    "build": 0,
+    "calls_returned_zero": 2,
+    "not_started": 6,
+    "numerical_retries": 0,
+    "standalone_solver_calls": 2
+  },
+  "failure": "The first execution stopped during parsing of the second output because the older reader rejected AUDIT_EXTRA_PRECIP_TAU. Both launched solver children returned zero; the remaining six calls were not started. Preserve FAILED_STOPPED as the original execution status.",
+  "independent_partial_review": {
+    "package_path": "partial-run-v1/independent-partial-review.json",
+    "package_sha256": "e61137986ac9253d0004c866ec2c4ee867fd13102db9f238ddbd81849c481661",
+    "package_size_bytes": 14093,
+    "source_path": "build/udm37-cf0-material-anchor-independent-review-v1/partial-terminal-review-v1.json",
+    "source_sha256": "e61137986ac9253d0004c866ec2c4ee867fd13102db9f238ddbd81849c481661",
+    "source_size_bytes": 14093
+  },
+  "launched_calls": [
+    {
+      "call_id": "winter_native_cu-lw-baseline",
+      "compressed": {
+        "path": "partial-run-v1/results/winter_native_cu-lw-baseline.result.gz",
+        "sha256": "b3c2b4ff95be4c28ecc356c4ce696b842984f9d55f5ee301cfece3c7083b1040",
+        "size_bytes": 186213
+      },
+      "original": {
+        "path": "build/udm37-cf0-material-anchor-runtime-v1/run-v1/outputs/winter_native_cu-lw-baseline.result",
+        "sha256": "acbd12f0392a78ed08de5ebdd865761870c2588b27c1a48cf127904c6a86f87c",
+        "size_bytes": 763371
+      }
+    },
+    {
+      "call_id": "winter_native_cu-lw-rain-increment",
+      "compressed": {
+        "path": "partial-run-v1/results/winter_native_cu-lw-rain-increment.result.gz",
+        "sha256": "a22af6755e02fa6b7fdb9c061aa3b9e99c9603bb341d73e1756d4242a2f97450",
+        "size_bytes": 186410
+      },
+      "original": {
+        "path": "build/udm37-cf0-material-anchor-runtime-v1/run-v1/outputs/winter_native_cu-lw-rain-increment.result",
+        "sha256": "195319410510c9bd2dd9582debb202df7d15211da0c42eae7920083842111f43",
+        "size_bytes": 782122
+      }
+    }
+  ],
+  "logs": [
+    {
+      "package_path": "partial-run-v1/logs/winter_native_cu-lw-baseline.log",
+      "package_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "package_size_bytes": 0,
+      "source_path": "build/udm37-cf0-material-anchor-runtime-v1/run-v1/logs/winter_native_cu-lw-baseline.log",
+      "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_size_bytes": 0
+    },
+    {
+      "package_path": "partial-run-v1/logs/winter_native_cu-lw-rain-increment.log",
+      "package_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "package_size_bytes": 0,
+      "source_path": "build/udm37-cf0-material-anchor-runtime-v1/run-v1/logs/winter_native_cu-lw-rain-increment.log",
+      "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_size_bytes": 0
+    }
+  ],
+  "offline_bundle_verifier": {
+    "path": "partial-run-v1/verify_partial.py",
+    "scope": "Integrity verification of the copied two-call partial outputs, logs, and receipts only; it does not recompute physics or validate the six pending calls.",
+    "sha256": "8a7b20a8b5d829f7701d836e564cd5df42b3abc246a6857d2b7f6c54b5004609",
+    "size_bytes": 2821
+  },
+  "original_execution_receipt": {
+    "package_path": "partial-run-v1/execution.json",
+    "package_sha256": "c3ff9fdd66e2976554d39019871c6f627449ce140cd0ce1b2c48320da446315b",
+    "package_size_bytes": 133107,
+    "source_path": "build/udm37-cf0-material-anchor-runtime-v1/run-v1/execution.json",
+    "source_sha256": "c3ff9fdd66e2976554d39019871c6f627449ce140cd0ce1b2c48320da446315b",
+    "source_size_bytes": 133107
+  },
+  "partial_analysis": {
+    "package_path": "partial-run-v1/partial-analysis.json",
+    "package_sha256": "61a45921f65cd929e16e41ee11db75ddb72ab9d13956605883862c7f8c99e618",
+    "package_size_bytes": 1906,
+    "source_path": "build/udm37-cf0-material-anchor-runtime-v1/root-partial-analysis-v1.json",
+    "source_sha256": "61a45921f65cd929e16e41ee11db75ddb72ab9d13956605883862c7f8c99e618",
+    "source_size_bytes": 1906
+  },
+  "root_terminal_receipt": {
+    "package_path": "partial-run-v1/root-terminal-receipt.json",
+    "package_sha256": "506b2b0a4b87a25890f9b83623270f0289cd396a74d51743ef6f531cf9e76f5b",
+    "package_size_bytes": 1913,
+    "source_path": "build/udm37-cf0-material-anchor-runtime-v1/root-tool-terminal-receipt-v1.json",
+    "source_sha256": "506b2b0a4b87a25890f9b83623270f0289cd396a74d51743ef6f531cf9e76f5b",
+    "source_size_bytes": 1913
+  },
+  "schema": "CF0_MATERIAL_ANCHOR_PARTIAL_EVIDENCE_V1",
+  "scope": "Partial-call evidence only; no eight-call completion or aggregate material-anchor conclusion.",
+  "status": "PARTIAL_TWO_CALLS_ONLY_SIX_PENDING"
+}

@@ -30,7 +30,7 @@ python3 WRF/test/rrtmgp/test_column_replay.py build/replay-udm27 \
 
 광학 비교는 `2e-13 + 2e-12*abs(reference)`, 어댑터의 단정도 반환값은 `1e-6 + 4 float32 ULP`를 허용한다. 서로 다른 최적화와 반환 정밀도를 구분한다. 저장을 선택한 청천 또는 overlap=0 제어 사례는 비교를 위해 준비 광학까지 추가 계산하되, 구름을 대기에 더하는 조건은 원래대로 유지한다.
 
-`SWDDIR`와 `SWDDIF`는 delta-scaled RTE solver의 분해다. 합계 일치나 이번 재생 성공으로 관측 DNI 또는 비산란 direct beam과 같다고 주장하지 않는다. 이 정의에 대한 별도 광학 시험은 남아 있다.
+`SWDDIR`와 `SWDDIF`는 delta-scaled RTE solver의 분해다. 별도 optional WRF direct-diagnostic 출력은 raw, pre-delta extinction으로 broadband/VIS/NIR direct flux를 재구성하고, 그 replay 및 짧은 SCM 검사는 [SW direct 진단 계약](SW_DIRECT_DIAGNOSTIC.md)에 기록되어 있다. 이 검사는 관측 DNI 또는 보편적인 비산란 direct-beam 정확성을 증명하지 않는다.
 
 ## 작은 구름분율의 별도 시험
 
@@ -46,9 +46,19 @@ build/replay-reference/test_rrtmgp_small_cf_sampling WRF/run build/small-cf-samp
 
 ## 광학 설정 형식
 
-UDM production capture는 V4이며 precipitation policy 및 RWP를 추가한다. [UDM_ONLY.md](UDM_ONLY.md)를 참조한다. 강수 입력이 없는 standalone legacy fixture의 새 capture는 `RRTMGP_REPLAY_V3`를 쓰며 마지막 `RES` 기록 뒤에 `ICE_ROUGHNESS 1 1`과 정수 category를 기록한다. SW는 이어서 `SW_BAND_PARTITION 1 1`과 값 1을 기록한다. 값 1은 고정 CCPP의 12850–16000 cm⁻¹ 전이 밴드 50:50 알베도·진단 분할이다. LW에는 SW 설정이 없다. 독립 reference와 입력 검사기는 V3 SW 설정 누락 또는 1 이외의 값을 거부한다.
+Production capture 형식은 선택된 기능에 따라 버전이 다르다. 현재 CU-population 입력 묶음이 있는 LW는 `RRTMGP_REPLAY_V10`, SW는 `RRTMGP_REPLAY_V11`을 사용한다. V10/V11은 native/CU 준비 입력과 별도 광학 성분을 보존하며, V11에는 pre-delta native/CU 광학 분해도 포함된다. Host 상수는 V5 이상 형식에서 기록된다. V6은 native dry-mass record를 추가하고, 후속 형식은 해당 버전별 필수·선택 규칙을 유지한다. V1–V9 legacy capture는 각 버전의 기존 해석으로 유지되며, native dry mass가 없는 V1–V5는 pressure/VMR 기둥 경로를 사용한다. 결과의 `GAS_COL_DRY`는 native·확장층 모두의 molecules cm⁻²이다. [NATIVE_GAS_COLUMNS.md](NATIVE_GAS_COLUMNS.md)와 [CU population 계약](../../test/rrtmgp/UDM_CU_POPULATIONS.md)을 참조한다. 강수 입력이 없는 fixture는 두 강수 기록을 함께 생략한다. V5 이상에서 둘 중 하나만 존재하면 거부한다. V4 저장본은 강수 기록을 계속 필수로 요구한다. [UDM_ONLY.md](UDM_ONLY.md)를 참조한다.
 
-기존 V1/V2 저장본도 재생한다. V1은 당시 암묵적 ice category 1, V2는 저장된 1/2/3을 적용한다. 두 구형 형식의 SW는 당시 전이 밴드 전체 VIS 규약을 유지하며 새로운 정책으로 재해석하지 않는다. 결과 형식은 `RRTMGP_RESULT_V1`이다. 형식 회귀 시험은 실제 adapter의 V3 저장본을 독립 재생하고, V1/V2의 동일성과 SW 정책 차이 및 잘못된 V3 설정의 거부를 검사한다.
+CU-population capture가 없는 optional SW direct-diagnostic trace는 `RRTMGP_REPLAY_V9`; CU-population capture와 함께 기록되는 최신 SW 형식은 V11이다. 이들 형식은 raw extinction, MCICA mask와 band mapping을 저장해 해당 진단을 독립 재현한다. SW solver flux/heating과 진단 인자를 생략한 legacy adapter 호출은 유지된다. 자세한 식과 cloud/frozen mask 정책은 [SW_DIRECT_DIAGNOSTIC.md](SW_DIRECT_DIAGNOSTIC.md)에 정리되어 있다.
+
+`ICE_ROUGHNESS 1 1`은 정수 category를 기록한다. SW의 `SW_BAND_PARTITION 1 1` 값 1은 고정 CCPP의 12850–16000 cm⁻¹ 전이 밴드 50:50 알베도·진단 분할이다. LW에는 SW 설정이 없다. 독립 reference와 입력 검사기는 V3 이상 SW 설정 누락 또는 1 이외의 값을 거부한다.
+
+기존 V1–V4 저장본도 재생하며 당시의 upstream 기본 상수를 유지한다. V1은 당시 암묵적 ice category 1, V2는 저장된 1/2/3을 적용한다. 두 구형 형식의 SW는 당시 전이 밴드 전체 VIS 규약을 유지하며 새로운 정책으로 재해석하지 않는다. 결과 형식은 `RRTMGP_RESULT_V1`이다. 형식 회귀 시험은 V5 독립 재생, 비기본 host 상수의 저장·재생, 기본 상수의 정확한 보존, 구형 형식의 동일성과 SW 정책 차이 및 잘못된 설정 거부를 검사한다.
+
+## 구름 광학 교체 대조
+
+독립 `reference_column`의 선택적 다섯 번째 인자는 `WRF_SW_OPTICS_OVERRIDE_V1` 파일이다. 이미 delta-scaled 상태인 band별 총 구름 광학을 McICA 직전에 넣는다. 기체 광학·표면·난수·중첩·RTE는 바꾸지 않는다. 추가 delta 변환을 적용하지 않는다. 형식은 ncol/nlay/nband, BAND_LIMITS 및 Fortran 순서 TAU/SSA/ASYM 배열이며, 유한성·범위·shape·밴드 정합성을 검사한다.
+
+`rrtmg_sw_optics_bridge.f90`는 실제 빌드한 WRF의 `swcldpr`, `cldprmc_sw`, `reicalc`를 링크한다. RRTMG의 2600 cm⁻¹와 고정 RRTMGP의 2680 cm⁻¹ 경계 차이만 명시적으로 허용하고 경고한다. 이는 같은 순서의 밴드에 광학을 넣는 근사 대조 실험이며, 두 엔진의 완전한 분광 동등성이나 RRTMG RTE 재현을 뜻하지 않는다. 다른 경계 차이는 거부한다. 실행 방법과 판단 범위는 [RUNTIME_CONTRACTS.md](RUNTIME_CONTRACTS.md)에 있다.
 
 ## 초기 배경 반경의 입력 계약
 

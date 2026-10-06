@@ -1,0 +1,127 @@
+{
+  "schema": "udm37-bon-night-shared-source-independent-terminal-review-v1",
+  "created_utc": "2026-10-05T09:54:49.201219+00:00",
+  "status": "PASS_SCOPED_SAVED_RESULT_REVIEW",
+  "pins": {
+    "pre_run_review": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-shared-source-review-v1/review.json",
+      "sha256": "8e942a65df817d6f208a337cd9c6d9711f3db87c6ded8ce101df51bcded0e801",
+      "size_bytes": 7505
+    },
+    "plan": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-shared-source-attribution-v1/plan.json",
+      "sha256": "486eb3d290d72ca1337f47807bf8348df8d7daaba84b5ca008f49f5c347eaca0",
+      "size_bytes": 5871
+    },
+    "analyzer": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-shared-source-attribution-v1/analyze.py",
+      "sha256": "a149f6040cbc75c074bc2da980e192604ceb3def81afbf7bf4486a9206fad473",
+      "size_bytes": 10016
+    },
+    "result": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-shared-source-attribution-v1/result.json",
+      "sha256": "22658918f336ab362eaf5b0402318d7ae62b471eca9a5cc6e4ba860f47a02dca",
+      "size_bytes": 173474
+    },
+    "execution": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-shared-source-attribution-v1/execution.json",
+      "sha256": "5c2c39569c500c62841b87e32fe165a8ff6f4a054934017cabfc65cbc984d0f5",
+      "size_bytes": 655
+    },
+    "launch": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-shared-source-attribution-v1/launched.json",
+      "sha256": "aa4024d1be7744e3dd44d6df6bcf8d6c9c2490e98dd1196ec6d1171b82a71e60",
+      "size_bytes": 231
+    },
+    "driver_log": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-shared-source-attribution-v1/driver.log",
+      "sha256": "45dd1d6e2b3057113d39f9f7129758260070ff7b61c61468ed1138e36302fe9f",
+      "size_bytes": 425
+    }
+  },
+  "checks": {
+    "all12_input_pins_unchanged": true,
+    "actual_pid": 458802,
+    "actual_rc": 0,
+    "timeout": false,
+    "actual_Python_transport_calls": 1,
+    "common_bands": [
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13
+    ],
+    "policies": 4,
+    "per_engine_band_layer_shape": [
+      11,
+      45
+    ],
+    "saved_array_sum_max_abs_error_Wm2": 1.4210854715202004e-14,
+    "prior_saved_emitter_max_abs_error_Wm2": 5.329070518200751e-15,
+    "source_reconstruction_max_abs_radiance": 6.661338147750939e-16,
+    "prior_emitter_reported_max_abs_Wm2": 5.329070518200751e-15,
+    "convergence": [
+      {
+        "order": 256,
+        "weights_sum": 1.0,
+        "successive_max_abs_Wm2": null
+      },
+      {
+        "order": 512,
+        "weights_sum": 1.0000000000000002,
+        "successive_max_abs_Wm2": {
+          "emitters": 2.5556434052331767e-10,
+          "bands": 4.993969213856753e-12,
+          "common_total": 5.360859274053855e-12
+        }
+      }
+    ],
+    "legacy_policy1_vs2_emitters_exact": true,
+    "GP_bottom_layer_face_effect_exact_zero": true,
+    "three_term_closure_abs_Wm2": 0.0,
+    "independently_reduced_weight_bound_max_cell_error_Wm2": 5.649574232914623e-16
+  },
+  "metrics": {
+    "policy_GP_minus_legacy_Wm2": [
+      0.6807719536815808,
+      0.6806888527308713,
+      0.6806384666588787,
+      0.6825087832033787
+    ],
+    "three_term_shared_angle_attribution_Wm2": {
+      "native_envelope_minus_shared_SI": 8.310095070951373e-05,
+      "native_face_policy_minus_both_layer_local": 5.038607199259193e-05,
+      "shared_SI_layer_local_residual": 0.6806384666588787
+    },
+    "weight_sum_bound_Wm2": {
+      "legacy": 0.0003743592005462797,
+      "GP": 0.0019306256663199739,
+      "combined": 0.0023049848668662536
+    },
+    "bound_fraction_of_shared_SI_local_residual": 0.003386503966167199
+  },
+  "interpretation": [
+    "Own-source common-angle difference 0.6807719536815808 W/m2 splits into native-envelope effect 0.0000831009507095, face-policy effect 0.0000503860719926 and shared-SI/layer-local residual 0.6806384666588787 W/m2.",
+    "The hypothetical within-band unit-sum rescaling triangle bound is about 0.002304985 W/m2, 0.339% of the remaining shared-SI/local-face residual. Raw fraction-sum departure alone cannot dominate this residual under the fixed-tau, layer-local diagnostic assumptions; no fractions were actually normalized.",
+    "Isothermal policy has residual 0.6825087832033787 W/m2 and is a separate diagnostic counterfactual, not part of the three-term split.",
+    "Per-band and emitter contributions retain signs and own-engine g-point spectra. No cross-engine g-point pairing, optical-depth swap or spectrum normalization.",
+    "Residual remains combined across gas optics, correlated-k discretization and within-band fractional spectral structure. This does not establish pure optical-depth causality or a physical accuracy winner.",
+    "One BON nighttime diagnostic45 carrier (32 native plus 13 extension), physical bands 3\u201313 only; common-angle contrasts differ from captured native-angle/full-spectrum operational differences."
+  ],
+  "reviewer_invocations": {
+    "numerical_recurrence": 0,
+    "quadrature_integration": 0,
+    "SI_or_opacity_reconstruction": 0,
+    "models": 0,
+    "builds": 0,
+    "compiled_RTE": 0
+  },
+  "mutation_scope": "Only this additive terminal review; original plan, source, inputs, saved results and receipts unchanged."
+}

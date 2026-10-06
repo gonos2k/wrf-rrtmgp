@@ -14,18 +14,28 @@ import numpy as np
 
 MAGIC = "RRTMGP_RESULT_V1"
 OPTICAL_SECTIONS = {
-    "GAS_TAU", "GAS_SSA", "GAS_G", "CLOUD_TAU", "CLOUD_SSA", "CLOUD_G",
+    "GAS_TAU", "GAS_TAU_RAW", "GAS_SSA", "GAS_G", "GAS_COL_DRY", "CLOUD_TAU", "CLOUD_SSA", "CLOUD_G",
     "PREPARED_TAU", "PREPARED_SSA", "PREPARED_G", "TOTAL_TAU", "TOTAL_SSA",
     "TOTAL_G", "RL_USED", "DI_USED", "DS_USED", "PRECIP_TAU", "PRECIP_SSA", "PRECIP_G",
+    "GRAUPEL_TAU_ABS", "HAIL_TAU_ABS", "GRAUPEL_TAU_EXT", "GRAUPEL_TAU_SCA", "GRAUPEL_TAU_SCA_G",
+    "HAIL_TAU_EXT", "HAIL_TAU_SCA", "HAIL_TAU_SCA_G", "FROZEN_TAU", "FROZEN_SSA", "FROZEN_G",
+    "NATIVE_CLOUD_TAU", "CU_CLOUD_TAU", "NATIVE_CLOUD_SSA", "NATIVE_CLOUD_G",
+    "CU_CLOUD_SSA", "CU_CLOUD_G", "CU_RL_USED", "CU_DI_USED",
+    "AUDIT_EXTRA_PRECIP_TAU", "AUDIT_EXTRA_PRECIP_TAU_RAW",
+    "AUDIT_EXTRA_PRECIP_SSA", "AUDIT_EXTRA_PRECIP_G",
 }
 MASK_SECTION = "MASK"
 FLOAT_OUTPUT_SECTIONS = {
     "UP", "DN", "HR", "UPC", "DNC", "HRC", "DIRECT", "DIFFUSE", "DIRECTC",
     "VISDIR", "VISDIF", "NIRDIR", "NIRDIF",
+    "DIRECT_PREDELTA", "DIRECTC_PREDELTA", "VISDIR_PREDELTA", "NIRDIR_PREDELTA",
+    "AUDIT_DIRECT_PREDELTA",
 }
 INTERFACE_SECTIONS = {"UP", "DN", "UPC", "DNC", "DIRECT", "DIFFUSE", "DIRECTC",
-                      "VISDIR", "VISDIF", "NIRDIR", "NIRDIF"}
-LAYER_SCALAR_SECTIONS = {"RL_USED", "DI_USED", "DS_USED", "HR", "HRC"}
+                      "VISDIR", "VISDIF", "NIRDIR", "NIRDIF", "DIRECT_PREDELTA",
+                      "DIRECTC_PREDELTA", "VISDIR_PREDELTA", "NIRDIR_PREDELTA",
+                      "AUDIT_DIRECT_PREDELTA"}
+LAYER_SCALAR_SECTIONS = {"RL_USED", "DI_USED", "DS_USED", "HR", "HRC", "VMR_N2"}
 RADIATION_SECTIONS = (OPTICAL_SECTIONS | FLOAT_OUTPUT_SECTIONS | INTERFACE_SECTIONS |
                       LAYER_SCALAR_SECTIONS | {MASK_SECTION})
 WRF_SURFACE_SECTIONS = {"WRF_GLW", "WRF_OLR", "WRF_GSW", "WRF_SWDDIR", "WRF_SWDDIF"}
@@ -109,6 +119,8 @@ def read_result(path: Path) -> dict:
             raise ReplayFormatError(f"{path}:{section_line}: {name} must have shape {(nc, nl + 1, 1)}")
         if name in LAYER_SCALAR_SECTIONS and shape != (nc, nl, 1):
             raise ReplayFormatError(f"{path}:{section_line}: {name} must have shape {(nc, nl, 1)}")
+        if name == "VMR_N2" and (phase != "LW" or np.any(array < 0.0) or np.any(array > 1.0)):
+            raise ReplayFormatError(f"{path}:{section_line}: VMR_N2 requires LW and finite values in [0,1]")
         if name in RADIATION_SECTIONS - INTERFACE_SECTIONS - LAYER_SCALAR_SECTIONS:
             if shape[0:2] != (nc, nl):
                 raise ReplayFormatError(f"{path}:{section_line}: {name} must start with shape {(nc, nl)}")
@@ -139,6 +151,30 @@ def read_result(path: Path) -> dict:
     missing = sorted(required - set(sections))
     if missing:
         raise ReplayFormatError(f"{path}: missing required sections: {', '.join(missing)}")
+    predelta = {"DIRECT_PREDELTA", "DIRECTC_PREDELTA", "VISDIR_PREDELTA", "NIRDIR_PREDELTA"} & sections.keys()
+    if predelta and predelta != {"DIRECT_PREDELTA", "DIRECTC_PREDELTA", "VISDIR_PREDELTA", "NIRDIR_PREDELTA"}:
+        raise ReplayFormatError(f"{path}: V9 direct-diagnostic result sections must be all present or all absent")
+    if predelta and phase != "SW":
+        raise ReplayFormatError(f"{path}: pre-delta direct-diagnostic sections are SW-only")
+    audit_names = {"AUDIT_EXTRA_PRECIP_TAU", "AUDIT_EXTRA_PRECIP_TAU_RAW",
+                   "AUDIT_EXTRA_PRECIP_SSA", "AUDIT_EXTRA_PRECIP_G", "AUDIT_DIRECT_PREDELTA"}
+    audit = audit_names & sections.keys()
+    expected_audit = {"AUDIT_EXTRA_PRECIP_TAU"} if phase == "LW" else audit_names
+    if audit and audit != expected_audit:
+        raise ReplayFormatError(f"{path}: incomplete or wrong-phase CF0 audit sections")
+    if audit and phase == "SW" and not predelta:
+        raise ReplayFormatError(f"{path}: SW CF0 audit requires baseline pre-delta diagnostics")
+    cu_lw = {"NATIVE_CLOUD_TAU", "CU_CLOUD_TAU"} & sections.keys()
+    cu_sw_names = {"NATIVE_CLOUD_TAU", "CU_CLOUD_TAU", "NATIVE_CLOUD_SSA", "NATIVE_CLOUD_G",
+                   "CU_CLOUD_SSA", "CU_CLOUD_G"}
+    cu_sw = cu_sw_names & sections.keys()
+    cu_radii = {"CU_RL_USED", "CU_DI_USED"} & sections.keys()
+    if phase == "LW" and cu_lw and cu_lw != {"NATIVE_CLOUD_TAU", "CU_CLOUD_TAU"}:
+        raise ReplayFormatError(f"{path}: LW CU component optics must be present together")
+    if phase == "SW" and cu_sw and cu_sw != cu_sw_names:
+        raise ReplayFormatError(f"{path}: SW native/CU tau, SSA, and g components must be present together")
+    if bool(cu_lw or cu_sw) != (cu_radii == {"CU_RL_USED", "CU_DI_USED"}):
+        raise ReplayFormatError(f"{path}: CU component optics require both CU radius records")
     return {"phase": phase, "nc": nc, "nl": nl, "sections": sections}
 
 
@@ -176,7 +212,7 @@ def compare(production: dict, reference: dict) -> dict:
         difference = np.abs(actual - expected)
         max_abs = float(np.max(difference)) if difference.size else 0.0
         detail = {"max_abs": max_abs}
-        if name == MASK_SECTION:
+        if name in {MASK_SECTION, "VMR_N2"}:
             passed = np.array_equal(actual, expected)
             detail["tolerance"] = "exact"
         elif name in FLOAT_OUTPUT_SECTIONS:

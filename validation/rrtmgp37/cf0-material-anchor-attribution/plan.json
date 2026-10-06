@@ -1,0 +1,309 @@
+{
+  "analysis_scope": [
+    "Compare each increment only with its matching same-anchor, same-phase baseline.",
+    "Do not compare the winter-rain anchor against the low-cloud-snow anchor as a controlled intervention.",
+    "The occurrence-one sidecars are experimental diagnostic counterfactuals, not a production policy or recommendation.",
+    "The cases are captured single-column replays; no domain-scale or forecast impact is inferred.",
+    "The low-cloud snow path is retained exactly, including its very small positive values; no threshold or new radius is introduced."
+  ],
+  "captured_runtime_table": {
+    "path": "build/udm-alternate-jan2000-data/paired-forecast-v2/ra37/frozen-ice-psd-moments.nc",
+    "sha256": "8cb00850c3f885f5ec0306563c1ec0a55b512478a7395d626c1c99cebf280583",
+    "size_bytes": 58629
+  },
+  "execution_authorization": "Not included; this plan does not authorize solver calls.",
+  "execution_state": {
+    "build_invocations": 0,
+    "forecast_invocations": 0,
+    "outputs_created": false,
+    "solver_invocations": 0
+  },
+  "existing_executable": {
+    "path": "build/cf0-cu-build-v1/cmake-build/reference_column",
+    "sha256": "353333cc96bce44d26c02ca7585c0ddef8996fc74a05904220fba83db76cd97f",
+    "size_bytes": 1040232
+  },
+  "future_evidence_artifacts_pending": [
+    "eight fresh solver result files and logs with per-call PID, return code, and terminal receipt",
+    "portable offline verifier using package-relative inputs and explicit baseline/increment pairing",
+    "paired output-difference summary for fluxes, heating, and held input/diagnostic sections",
+    "independent read-only terminal review"
+  ],
+  "historical_baseline_receipt": {
+    "path": "build/udm37-occurrence-clipping-baseline-replay-v1/runs-v1/execution.json",
+    "sha256": "fd1264d843996eeaef44e28cd0ae393a95f3be08c0a8e3dc5fa36612ebc13603",
+    "size_bytes": 123324
+  },
+  "input_preparation_script": {
+    "path": "build/udm37-cf0-material-anchor-inputs-v1/prepare_material_anchor_inputs.py",
+    "sha256": "ab8a67ca745d5b62957fac7b3a40d166f543c7039c3182a5af5c0e8a8bbea236",
+    "size_bytes": 13279
+  },
+  "inventory_receipt": {
+    "path": "build/udm37-cf0-next-anchor-inventory-v1/inventory.json",
+    "sha256": "b55c92784953c98262f72211e946dc1098e338c75d9f8abe57efe1945f2e2f41",
+    "size_bytes": 66173
+  },
+  "planned_calls": [
+    {
+      "anchor": "winter_native_cu",
+      "call_id": "winter_native_cu-lw-baseline",
+      "capture_format": "RRTMGP_REPLAY_V10",
+      "cu_population_policy": 1,
+      "expected_sidecar_argument": "omit sidecar argument",
+      "input": {
+        "bytes": 39198,
+        "path": "build/udm37-occurrence-clipping-baseline-replay-v1/runs-v1/winter-native-cu-lw/capture/lw.input",
+        "sha256": "3971abcbac31dbb96428cae3e16b27e2da9de059c1c4e9d747fa3791cc0632a1"
+      },
+      "overlap": 2,
+      "phase": "LW",
+      "raw": {
+        "bytes": 72323,
+        "path": "build/udm37-occurrence-clipping-baseline-replay-v1/runs-v1/winter-native-cu-lw/capture/lw.raw",
+        "sha256": "4f91cc12e3ec11e6dcf229b71dc243eb81141cf1f651195877968fc9da11a7e9"
+      },
+      "role": "unchanged captured baseline",
+      "saved_result_context": {
+        "bytes": 764303,
+        "path": "build/udm37-occurrence-clipping-baseline-replay-v1/runs-v1/winter-native-cu-lw/capture/lw.result",
+        "sha256": "1de884860236ea61dbe9a378d1bc40a5c1e966b01470566e3553909b6acfaf29"
+      },
+      "seed": 1666809386,
+      "sidecar": null
+    },
+    {
+      "anchor": "winter_native_cu",
+      "call_id": "winter_native_cu-lw-rain-increment",
+      "capture_format": "RRTMGP_REPLAY_V10",
+      "cu_population_policy": 1,
+      "expected_sidecar_argument": "build/udm37-cf0-material-anchor-inputs-v1/winter-rain-lw.sidecar",
+      "input": {
+        "bytes": 39198,
+        "path": "build/udm37-occurrence-clipping-baseline-replay-v1/runs-v1/winter-native-cu-lw/capture/lw.input",
+        "sha256": "3971abcbac31dbb96428cae3e16b27e2da9de059c1c4e9d747fa3791cc0632a1"
+      },
+      "overlap": 2,
+      "phase": "LW",
+      "raw": {
+        "bytes": 72323,
+        "path": "build/udm37-occurrence-clipping-baseline-replay-v1/runs-v1/winter-native-cu-lw/capture/lw.raw",
+        "sha256": "4f91cc12e3ec11e6dcf229b71dc243eb81141cf1f651195877968fc9da11a7e9"
+      },
+      "role": "experimental occurrence-one single-species increment",
+      "saved_result_context": {
+        "bytes": 764303,
+        "path": "build/udm37-occurrence-clipping-baseline-replay-v1/runs-v1/winter-native-cu-lw/capture/lw.result",
+        "sha256": "1de884860236ea61dbe9a378d1bc40a5c1e966b01470566e3553909b6acfaf29"
+      },
+      "seed": 1666809386,
+      "sidecar": {
+        "bytes": 1633,
+        "path": "build/udm37-cf0-material-anchor-inputs-v1/winter-rain-lw.sidecar",
+        "sha256": "cd07692008bae940521445ff01740554599ba582d86deb76bbfa68b4e07aca70"
+      }
+    },
+    {
+      "anchor": "winter_native_cu",
+      "call_id": "winter_native_cu-sw-baseline",
+      "capture_format": "RRTMGP_REPLAY_V11",
+      "cu_population_policy": 1,
+      "expected_sidecar_argument": "omit sidecar argument",
+      "input": {
+        "bytes": 295334,
+        "path": "build/udm37-occurrence-clipping-baseline-replay-v1/runs-v1/winter-native-cu-sw/capture/sw.input",
+        "sha256": "94d9ff3de2ced305908484073373d9efe0326eaef817107006905ca6310456a1"
+      },
+      "overlap": 2,
+      "phase": "SW",
+      "raw": {
+        "bytes": 68944,
+        "path": "build/udm37-occurrence-clipping-baseline-replay-v1/runs-v1/winter-native-cu-sw/capture/sw.raw",
+        "sha256": "94beaa6bdece11d674936c0ebc3d002ece5e336006e2fb878a036b86a0549f48"
+      },
+      "role": "unchanged captured baseline",
+      "saved_result_context": {
+        "bytes": 983057,
+        "path": "build/udm37-occurrence-clipping-baseline-replay-v1/runs-v1/winter-native-cu-sw/capture/sw.result",
+        "sha256": "1b1e7353cef12150066454df543c41d7834e197dd8bc5d14ee2babd7c3082f14"
+      },
+      "seed": 1666809387,
+      "sidecar": null
+    },
+    {
+      "anchor": "winter_native_cu",
+      "call_id": "winter_native_cu-sw-rain-increment",
+      "capture_format": "RRTMGP_REPLAY_V11",
+      "cu_population_policy": 1,
+      "expected_sidecar_argument": "build/udm37-cf0-material-anchor-inputs-v1/winter-rain-sw.sidecar",
+      "input": {
+        "bytes": 295334,
+        "path": "build/udm37-occurrence-clipping-baseline-replay-v1/runs-v1/winter-native-cu-sw/capture/sw.input",
+        "sha256": "94d9ff3de2ced305908484073373d9efe0326eaef817107006905ca6310456a1"
+      },
+      "overlap": 2,
+      "phase": "SW",
+      "raw": {
+        "bytes": 68944,
+        "path": "build/udm37-occurrence-clipping-baseline-replay-v1/runs-v1/winter-native-cu-sw/capture/sw.raw",
+        "sha256": "94beaa6bdece11d674936c0ebc3d002ece5e336006e2fb878a036b86a0549f48"
+      },
+      "role": "experimental occurrence-one single-species increment",
+      "saved_result_context": {
+        "bytes": 983057,
+        "path": "build/udm37-occurrence-clipping-baseline-replay-v1/runs-v1/winter-native-cu-sw/capture/sw.result",
+        "sha256": "1b1e7353cef12150066454df543c41d7834e197dd8bc5d14ee2babd7c3082f14"
+      },
+      "seed": 1666809387,
+      "sidecar": {
+        "bytes": 1633,
+        "path": "build/udm37-cf0-material-anchor-inputs-v1/winter-rain-sw.sidecar",
+        "sha256": "02723b047c31eba2169993fbaa9e5cb10164d13e35320123f64597e206691df7"
+      }
+    },
+    {
+      "anchor": "material_cf0_snow_low_cloud",
+      "call_id": "material_cf0_snow_low_cloud-lw-baseline",
+      "capture_format": "RRTMGP_REPLAY_V8",
+      "cu_population_policy": 0,
+      "expected_sidecar_argument": "omit sidecar argument",
+      "input": {
+        "bytes": 35854,
+        "path": "build/udm37-occurrence-clipping-baseline-replay-v1/runs-v1/ice_clip_low_cloud_proxy-lw/capture/lw.input",
+        "sha256": "0b4f67479296e37aa0bd30ed38fc9b2f1d71b999b4e0bd0270fbd972ba2b4842"
+      },
+      "overlap": 2,
+      "phase": "LW",
+      "raw": {
+        "bytes": 70988,
+        "path": "build/udm37-occurrence-clipping-baseline-replay-v1/runs-v1/ice_clip_low_cloud_proxy-lw/capture/lw.raw",
+        "sha256": "165d38faca5931b10a3af0a43a718dee973277fc4435bdd473174f06ba074f27"
+      },
+      "role": "unchanged captured baseline",
+      "saved_result_context": {
+        "bytes": 756759,
+        "path": "build/udm37-occurrence-clipping-baseline-replay-v1/runs-v1/ice_clip_low_cloud_proxy-lw/capture/lw.result",
+        "sha256": "8b4a47e9b102c5de7dd5c3ee7b54e34a8dc01d9d99cdd31e122227f77015cf81"
+      },
+      "seed": 1550899616,
+      "sidecar": null
+    },
+    {
+      "anchor": "material_cf0_snow_low_cloud",
+      "call_id": "material_cf0_snow_low_cloud-lw-snow-increment",
+      "capture_format": "RRTMGP_REPLAY_V8",
+      "cu_population_policy": 0,
+      "expected_sidecar_argument": "build/udm37-cf0-material-anchor-inputs-v1/low-cloud-snow-lw.sidecar",
+      "input": {
+        "bytes": 35854,
+        "path": "build/udm37-occurrence-clipping-baseline-replay-v1/runs-v1/ice_clip_low_cloud_proxy-lw/capture/lw.input",
+        "sha256": "0b4f67479296e37aa0bd30ed38fc9b2f1d71b999b4e0bd0270fbd972ba2b4842"
+      },
+      "overlap": 2,
+      "phase": "LW",
+      "raw": {
+        "bytes": 70988,
+        "path": "build/udm37-occurrence-clipping-baseline-replay-v1/runs-v1/ice_clip_low_cloud_proxy-lw/capture/lw.raw",
+        "sha256": "165d38faca5931b10a3af0a43a718dee973277fc4435bdd473174f06ba074f27"
+      },
+      "role": "experimental occurrence-one single-species increment",
+      "saved_result_context": {
+        "bytes": 756759,
+        "path": "build/udm37-occurrence-clipping-baseline-replay-v1/runs-v1/ice_clip_low_cloud_proxy-lw/capture/lw.result",
+        "sha256": "8b4a47e9b102c5de7dd5c3ee7b54e34a8dc01d9d99cdd31e122227f77015cf81"
+      },
+      "seed": 1550899616,
+      "sidecar": {
+        "bytes": 1969,
+        "path": "build/udm37-cf0-material-anchor-inputs-v1/low-cloud-snow-lw.sidecar",
+        "sha256": "7d3e4542f95e6a75f7dcd249e7a461ba064c24a6c35c5ab1c29c8a713e18865e"
+      }
+    },
+    {
+      "anchor": "material_cf0_snow_low_cloud",
+      "call_id": "material_cf0_snow_low_cloud-sw-baseline",
+      "capture_format": "RRTMGP_REPLAY_V9",
+      "cu_population_policy": 0,
+      "expected_sidecar_argument": "omit sidecar argument",
+      "input": {
+        "bytes": 322772,
+        "path": "build/udm37-occurrence-clipping-baseline-replay-v1/runs-v1/ice_clip_low_cloud_proxy-sw/capture/sw.input",
+        "sha256": "44cb939a357bceef3779e9672a7ca6e0c25208a855603a8b3f72f3e06d80bf07"
+      },
+      "overlap": 2,
+      "phase": "SW",
+      "raw": {
+        "bytes": 66881,
+        "path": "build/udm37-occurrence-clipping-baseline-replay-v1/runs-v1/ice_clip_low_cloud_proxy-sw/capture/sw.raw",
+        "sha256": "ee77c6400d7fcc52f4252ce52c36fd74b0cc62f8abd7afdf113dad5d8738c4fd"
+      },
+      "role": "unchanged captured baseline",
+      "saved_result_context": {
+        "bytes": 1101655,
+        "path": "build/udm37-occurrence-clipping-baseline-replay-v1/runs-v1/ice_clip_low_cloud_proxy-sw/capture/sw.result",
+        "sha256": "683180390076ea5682922c683c6acd29bb452c6f41f06547745aac83c1f639f6"
+      },
+      "seed": 1550899617,
+      "sidecar": null
+    },
+    {
+      "anchor": "material_cf0_snow_low_cloud",
+      "call_id": "material_cf0_snow_low_cloud-sw-snow-increment",
+      "capture_format": "RRTMGP_REPLAY_V9",
+      "cu_population_policy": 0,
+      "expected_sidecar_argument": "build/udm37-cf0-material-anchor-inputs-v1/low-cloud-snow-sw.sidecar",
+      "input": {
+        "bytes": 322772,
+        "path": "build/udm37-occurrence-clipping-baseline-replay-v1/runs-v1/ice_clip_low_cloud_proxy-sw/capture/sw.input",
+        "sha256": "44cb939a357bceef3779e9672a7ca6e0c25208a855603a8b3f72f3e06d80bf07"
+      },
+      "overlap": 2,
+      "phase": "SW",
+      "raw": {
+        "bytes": 66881,
+        "path": "build/udm37-occurrence-clipping-baseline-replay-v1/runs-v1/ice_clip_low_cloud_proxy-sw/capture/sw.raw",
+        "sha256": "ee77c6400d7fcc52f4252ce52c36fd74b0cc62f8abd7afdf113dad5d8738c4fd"
+      },
+      "role": "experimental occurrence-one single-species increment",
+      "saved_result_context": {
+        "bytes": 1101655,
+        "path": "build/udm37-occurrence-clipping-baseline-replay-v1/runs-v1/ice_clip_low_cloud_proxy-sw/capture/sw.result",
+        "sha256": "683180390076ea5682922c683c6acd29bb452c6f41f06547745aac83c1f639f6"
+      },
+      "seed": 1550899617,
+      "sidecar": {
+        "bytes": 1969,
+        "path": "build/udm37-cf0-material-anchor-inputs-v1/low-cloud-snow-sw.sidecar",
+        "sha256": "ceec0959e6821a071e5f94bf9599bf039e98cae5829ebfc70b7b20fdfe0f0ebe"
+      }
+    }
+  ],
+  "published_base": {
+    "branch": "docs-udm37-exact-band-cloud-optics-attribution",
+    "commit": "1c1dde31a85f6c82484a7d9d2d74174a892d64af",
+    "pull_request": 80
+  },
+  "schema": "udm37-cf0-material-anchor-evidence-plan-v1",
+  "sidecar_validator": {
+    "path": "build/udm37-cf0-retained-cu-eight-inputs-v1/validate_sidecar.py",
+    "sha256": "cf044b21b3b0ff5966388203e6d7c4a04e7558ad979a0d1df9f05bb07f7d3d9e",
+    "size_bytes": 16440
+  },
+  "source_roster": {
+    "path": "build/udm37-cf0-material-anchor-inputs-v1/roster.json",
+    "sha256": "4f673a3414edd798f15ffc3bd2ebcbb45bee6a45637e51587f972cfc26b7d5b6",
+    "size_bytes": 59824
+  },
+  "status": "PLAN_ONLY_NOT_RUN",
+  "table_context_review": {
+    "path": "build/udm37-cf0-material-anchor-table-context-v1.json",
+    "sha256": "afb8d84860057a49f43a5399a6c3363b6cfd7e3d55741b9fbba24a63f572e1f0",
+    "size_bytes": 6668
+  },
+  "table_independent_review_addendum": {
+    "path": "build/udm37-cf0-material-anchor-independent-review-v1/frozen-table-addendum-v1.json",
+    "sha256": "c7e2f49a3368194dd98b3d211d3c5f2e46af2e0aaf4a629e666573934a31bce0",
+    "size_bytes": 5672
+  },
+  "table_provenance_note": "All four captured inputs record the original 8cb00850... table (58,629 bytes). This is the planned runtime table; the fresh executable build receipt has separate table provenance (expanded ebeafb...). Do not substitute the build donor table or rewrite input/raw pins. The table-context review checked active input query ranges against the original table; science conclusions remain pending the planned eight calls."
+}

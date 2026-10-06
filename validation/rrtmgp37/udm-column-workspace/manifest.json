@@ -1,0 +1,126 @@
+{
+  "scope": "allocation reuse only, WRF ncol=1, one owner per tile invocation",
+  "integrated_git_base": "fdafa534d5641fa2251ad5b02d294d57167b81fb",
+  "original_column_oracle_base": "792f36b6bbc442f0db37b5cb9fdf19dd33600082",
+  "source_sha256": {
+    "WRF/phys/module_ra_rrtmgp.F": "58d41e9376cf53cc04b9f004a2f66e5284b04b69ffb551a9130b914a2b3d2bd5",
+    "WRF/phys/module_ra_rrtmg_lw.F": "abaabcc79cc3df08f3b3d4760f37857c9e8ab6d0af9158d6e3be870b2d67346a",
+    "WRF/phys/module_ra_rrtmg_sw.F": "89b1869765124d8552901b58e6389ec2bd36ba342b4c8570c013040304e12070",
+    "WRF/test/rrtmgp/CMakeLists.txt": "41cb6914172974a3da0059fe37d371d10888c52fe3274fce62908ef267fd9059",
+    "WRF/test/rrtmgp/test_workspace.F90": "1bef95e000b73c70098f0ac403126b4eeb446b657600fc734cdbb6be6fa0cbd0",
+    "WRF/test/rrtmgp/test_workspace_modeflip.py": "5025fd1a5eedbbcb0c6ca95acdc62bff1da49e29129125399f7b09cefb52a335",
+    "WRF/doc/rrtmgp/COLUMN_WORKSPACE.md": "7b4189709f4228a8095b82c13eeed77fcf7b60f8554985aa9a13a0293a3bfbe7"
+  },
+  "configurations": {
+    "serial-candidate": {
+      "configure_sha256": "b5c234db6278ef88e2b03bc0329168163e3b1257188a3c55d5c1ebfb2b1224ac",
+      "build_receipt_sha256": "244057fccc7cc1ac8665505654533a3dda620213cb77760eeadf17c41c4929d0"
+    },
+    "serial-baseline": {
+      "configure_sha256": "b5c234db6278ef88e2b03bc0329168163e3b1257188a3c55d5c1ebfb2b1224ac",
+      "build_receipt_sha256": "80659541dce34804fe6687a3d08af0ce905aea901c5ec07366dae7544eebb485"
+    },
+    "dm-sm-candidate": {
+      "configure_sha256": "81c057673152d81b222d33787f8f03288ef9f8f2be118f07a19e499d297dad70",
+      "build_receipt_sha256": "5e3c14a9b99c4d2cb5e91768e2dcefd708ab2baff49f0347249ea5e1797537e0"
+    },
+    "dm-sm-baseline": {
+      "configure_sha256": "81c057673152d81b222d33787f8f03288ef9f8f2be118f07a19e499d297dad70",
+      "build_receipt_sha256": "08f75f64434d8dc4d4c50481c11c0f0d0313e2e788f833b01907add619d821d0"
+    }
+  },
+  "executables": {
+    "serial-candidate": {
+      "wrf.exe": {
+        "exists": true,
+        "sha256": "09cffd5cf5ebde4380f94efe0f85d4fcc44c41b613d5359effa4177477fd5078",
+        "bytes": 49896504
+      },
+      "real.exe": {
+        "exists": true,
+        "sha256": "b079765498a87a6f49e5a3869a283431e38200808d6f40d7e90a650ad4454786",
+        "bytes": 39993496
+      }
+    },
+    "serial-baseline": {
+      "wrf.exe": {
+        "exists": true,
+        "sha256": "ef315a64dac9e52315c414868caa9434e3b6e4b3adfbb353140f4895407c2c9e",
+        "bytes": 49858072
+      },
+      "real.exe": {
+        "exists": true,
+        "sha256": "c23fa2a37f0486b743f7acd8b083a5b6f51167acd7b8a5f873cabd33748caca8",
+        "bytes": 39959160
+      }
+    },
+    "dm-sm-candidate": {
+      "wrf.exe": {
+        "exists": true,
+        "sha256": "3bfdb1bff12630643c118c92a5ce434d3d78ccd78de3d59b6c459a8071c2babb",
+        "bytes": 58853592
+      },
+      "real.exe": {
+        "exists": true,
+        "sha256": "6c4bca130bf799442d25ba449174d035cad43f338ced8a74a71b368cf4f284e2",
+        "bytes": 43521360
+      }
+    },
+    "dm-sm-baseline": {
+      "wrf.exe": {
+        "sha256": "65fd5b210e1f4c4df43fa23b7be58b4753ce39fc9030777d9d2071c118430991",
+        "bytes": 58819264,
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-selected-dm-sm-baseline/WRF/main/wrf.exe"
+      },
+      "real.exe": {
+        "sha256": "b02d2977800cdce6f5f45710d4373a0067320ea369a319735d3390293f802ed4",
+        "bytes": 43487032,
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-selected-dm-sm-baseline/WRF/main/real.exe"
+      }
+    }
+  },
+  "full_source_manifests": {
+    "serial-candidate": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-workspace-real-wrf/source-manifest.json",
+      "sha256": "b4660ab85f5e4b05d686e3604be11bc10ce59aa8390cad5b71234ac764bb5aad"
+    },
+    "serial-baseline": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-selected-real-wrf/source-manifest.json",
+      "sha256": "3ebea7488f102853417339847d4b2d63f0573b686755ba2bc128f6e428203da7"
+    },
+    "dm-sm-candidate": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-workspace-dm-sm-evidence/source-manifest.json",
+      "sha256": "808ad59ebfe3751b788eefba86a4b6453cdf88dca39b2617f341e9232f7c03f3"
+    },
+    "dm-sm-baseline": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-selected-dm-sm-baseline/source-manifest.json",
+      "sha256": "1781e27db0e6118ae6ce685e834b1f4e7096f5ec3a46ef891e98744de282bc1b"
+    }
+  },
+  "compiler": "GNU Fortran13.3.0",
+  "serial_choice_and_nesting": [
+    32,
+    0
+  ],
+  "dm_sm_choice_and_nesting": [
+    35,
+    1
+  ],
+  "flags": "-O2 -ftree-vectorize -funroll-loops -w -ffree-form -ffree-line-length-none -fconvert=big-endian -frecord-marker=4 -fallow-argument-mismatch -fallow-invalid-boz; dm+sm adds -fopenmp",
+  "dependencies_observed_after_validation": {
+    "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/netcdf/lib/libnetcdff.so": "9e8fe96709d71af61b88ad88caff7db8899369162b96aee66ecd6a553a5370f9",
+    "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/netcdf/lib/libnetcdf.so": "04fc972259131718fd96f0ea876654fe0a410a4af1635349dc8ec1590764f0f5",
+    "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/mpich-sock/lib/libmpi.so": "76a5bf3c52b9143a05f67319fb82fa2cf8d31276df694c4a4e3c2d2aad491cf0",
+    "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/mpich-sock/lib/libmpifort.so": "eb479b245c600e206d10991dac5f459147c556c16cb74e22b851a27c58e15016",
+    "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/mpich-sock/bin/mpif90": "5355c30d6218cb8826b25c4d5dd891f0672d7c0b262ea89bc3e178a750c5a443",
+    "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/mpich-sock/bin/mpicc": "1e15e834e903d9de68c9d19c392c3ad46c2c7eb910e757afe5d77e8dd455cc70"
+  },
+  "runtime_checks": "source/exe/input/namelist/restart/assets hashes pre/post; every data/attribute byte; whole-file history SHA; allMPIranksSUCCESS; actualOMP2radiationworkers",
+  "total_history_files": 46,
+  "workspace_persistence_across_timesteps": false,
+  "wrf_column_batching": false,
+  "vendor_changes": false,
+  "physical_policy_changes": false,
+  "intel_validated": false,
+  "model_speedup_claim": false
+}

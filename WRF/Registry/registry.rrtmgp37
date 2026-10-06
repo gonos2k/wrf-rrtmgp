@@ -1,6 +1,7 @@
 # RRTMGP CPU backend; LW/SW option 37 must be selected together.
 # Allocation requirements mirror RRTMG. Aerosol feedback is unsupported.
-state real udm_cldfra ikj misc 1 - h "UDM_CLDFRA" "Last cloud fraction used by UDM microphysics" "fraction"
-state integer udm_cf_step ij misc 1 - h "UDM_CF_STEP" "Timestep of last UDM cloud-fraction diagnostic" "step"
-package rrtmgp_lwscheme ra_lw_physics==37 - ozmixm:mth01,mth02,mth03,mth04,mth05,mth06,mth07,mth08,mth09,mth10,mth11,mth12;state:aclwupt,aclwuptc,aclwdnt,aclwdntc,aclwupb,aclwupbc,aclwdnb,aclwdnbc,lwupt,lwuptc,lwdnt,lwdntc,lwupb,lwupbc,lwdnb,lwdnbc,o3rad,udm_cldfra,udm_cf_step
+state real udm_cldfra ikj misc 1 - hr "UDM_CLDFRA" "Last cloud fraction used by UDM microphysics" "fraction"
+state integer udm_cf_step ij misc 1 - hr "UDM_CF_STEP" "Timestep of last UDM cloud-fraction diagnostic" "step"
+state integer udm_cf_top ij misc 1 - hr "UDM_CF_TOP" "Native layer extent of last UDM cloud-fraction diagnostic" "layer"
+package rrtmgp_lwscheme ra_lw_physics==37 - ozmixm:mth01,mth02,mth03,mth04,mth05,mth06,mth07,mth08,mth09,mth10,mth11,mth12;state:aclwupt,aclwuptc,aclwdnt,aclwdntc,aclwupb,aclwupbc,aclwdnb,aclwdnbc,lwupt,lwuptc,lwdnt,lwdntc,lwupb,lwupbc,lwdnb,lwdnbc,o3rad,udm_cldfra,udm_cf_step,udm_cf_top
 package rrtmgp_swscheme ra_sw_physics==37 - ozmixm:mth01,mth02,mth03,mth04,mth05,mth06,mth07,mth08,mth09,mth10,mth11,mth12;state:acswupt,acswuptc,acswdnt,acswdntc,acswupb,acswupbc,acswdnb,acswdnbc,swupt,swuptc,swdnt,swdntc,swupb,swupbc,swdnb,swdnbc,o3rad;aerod:ocarbon,seasalt,dust,bcarbon,sulfate,upperaer

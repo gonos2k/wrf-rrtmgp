@@ -1,0 +1,274 @@
+{
+  "status": "PLAN_ONLY_NOT_EXECUTED",
+  "purpose": "Generate direct LW moment references at the 37 inter-knot temperatures of the planned 38-node Planck-weighting axis, then report lookup interpolation differences.",
+  "scope_limits": [
+    "Numerical interpolation sampling only, not a physical-accuracy threshold.",
+    "Static Warren-Brandt ice-Ih refractive index is unchanged; only LW Planck source weights vary with temperature.",
+    "No WRF/model invocation, material extrapolation, or runtime policy change."
+  ],
+  "workspace": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP",
+  "source_checkout": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-matthew-48h-pr-work",
+  "planck_coverage_plan": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-frozen-planck-coverage-v1/plan.json",
+    "sha256": "e069e49ce28cca69dc0864e2fa2fa783f3a019a41f700a47234a767e2cbad856"
+  },
+  "generator": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-matthew-48h-pr-work/tools/udm_frozen_optics/generate.py",
+    "sha256": "44e87a513632251c1d5b7c349742e1950a97c710b64a2c1e9f341b341a6c265e"
+  },
+  "source_pins": {
+    "generate.py": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-matthew-48h-pr-work/tools/udm_frozen_optics/generate.py",
+      "sha256": "44e87a513632251c1d5b7c349742e1950a97c710b64a2c1e9f341b341a6c265e"
+    },
+    "lookup.py": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-matthew-48h-pr-work/tools/udm_frozen_optics/lookup.py",
+      "sha256": "53c24a6dc6e8a4f0176855fbc264a428dff64a536f6067d934bb24092a72a18a"
+    },
+    "validate_lookup.py": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-matthew-48h-pr-work/tools/udm_frozen_optics/validate_lookup.py",
+      "sha256": "06005916d952494d783d7cab68eb1df5177e22b2837f59023a1b27bc4c5cc07c"
+    },
+    "compare.py": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-matthew-48h-pr-work/tools/udm_frozen_optics/compare.py",
+      "sha256": "bf6714e2e3fd773368295318bf95819e88b069f28a22576a86740a8a1d27925f"
+    },
+    "SOURCE.json": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-matthew-48h-pr-work/tools/udm_frozen_optics/SOURCE.json",
+      "sha256": "e8a96926d18ddec03ac2e490bf65b14d80fcfde6ec7d42a3e3a9926b8792d512"
+    },
+    "laguerre.py": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-matthew-48h-pr-work/tools/udm_frozen_optics/laguerre.py",
+      "sha256": "6f977679e2e0267ac3efcc9a9079cbee07ce1835e0d2eb67e105c6cab61b1c07"
+    },
+    "mie_dynamic_api.f90": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-matthew-48h-pr-work/tools/udm_frozen_optics/mie_dynamic_api.f90",
+      "sha256": "8c06cb8ed4035db8560a12ca6d73de8c0fe644cced6ab89902933bba0ee4b7ea"
+    },
+    "socrates/realtype_rd.f90": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-matthew-48h-pr-work/tools/udm_frozen_optics/socrates/realtype_rd.f90",
+      "sha256": "b307501f6de8f380b47a74df03268bfe1af14c03b7425ecd76ca0a211101419b"
+    },
+    "socrates/def_std_io_icf.f90": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-matthew-48h-pr-work/tools/udm_frozen_optics/socrates/def_std_io_icf.f90",
+      "sha256": "11ade5462f11d7866954a6be0e44d91945ebb7b81888f3f532a8fe84168e56ac"
+    },
+    "socrates/error_pcf.f90": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-matthew-48h-pr-work/tools/udm_frozen_optics/socrates/error_pcf.f90",
+      "sha256": "d7220382cf98ecf0bf81bcdc4d75aa943fcfdbedf168a0ffb2defd8db82131eb"
+    },
+    "socrates/mie_scatter.f": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-matthew-48h-pr-work/tools/udm_frozen_optics/socrates/mie_scatter.f",
+      "sha256": "1bcf8fce448ffebb1b75bbbfd5ba156efe984f10fa72ae8aa5201f3eef6355f8"
+    }
+  },
+  "fixed_inputs": {
+    "old_result": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-cu-fresh-gnu/source/validation/rrtmgp37/frozen-optics-lookup/nine-grid-o128-s50/result.json",
+      "sha256": "c5116f4a3bb4e77dc8bed481ce52c07b29ee5f8d65fa6a5657a324c51e9a619c"
+    },
+    "old_table": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-cu-fresh-gnu/source/validation/rrtmgp37/frozen-optics-lookup/nine-grid-o128-s50/frozen-ice-psd-moments.nc",
+      "sha256": "8cb00850c3f885f5ec0306563c1ec0a55b512478a7395d626c1c99cebf280583"
+    },
+    "gas_sw": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-cu-fresh-gnu/source/WRF/run/rrtmgp-gas-sw-g112.nc",
+      "sha256": "361ed541324068ded28a275a4dd757bcaa0a845aebefa630f43a04678668fe62"
+    },
+    "gas_lw": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-cu-fresh-gnu/source/WRF/run/rrtmgp-gas-lw-g128.nc",
+      "sha256": "70ad65d116531122660318e5da2a2af9db74b425916202860e9527ef2375b8f6"
+    },
+    "ice_index": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-hail-optics-source/IOP_2008_ASCIItable.dat",
+      "sha256": "891d0e0690cc6c6ed2dfe81291fa20a3af177fa85ef93127c58c5f86d3c370af"
+    },
+    "solar_spectrum": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-hail-optics-source/spectral-inputs/tsi-ssi_v03r00_reference-spectra_c20240830.txt",
+      "sha256": "4a38b3f2343a0271c49fa5678a4eb6d289ea840159cb84b30a6be5f44feacb85"
+    }
+  },
+  "gas_inputs": {
+    "SW": "361ed541324068ded28a275a4dd757bcaa0a845aebefa630f43a04678668fe62",
+    "LW": "70ad65d116531122660318e5da2a2af9db74b425916202860e9527ef2375b8f6"
+  },
+  "expanded_reference": {
+    "generation_dir": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-frozen-planck-coverage-v1/runs/frozen-planck-150-330-step5-plus233-v1",
+    "expected_temperatures_K": [
+      150.0,
+      155.0,
+      160.0,
+      165.0,
+      170.0,
+      175.0,
+      180.0,
+      185.0,
+      190.0,
+      195.0,
+      200.0,
+      205.0,
+      210.0,
+      215.0,
+      220.0,
+      225.0,
+      230.0,
+      233.0,
+      235.0,
+      240.0,
+      245.0,
+      250.0,
+      255.0,
+      260.0,
+      265.0,
+      270.0,
+      275.0,
+      280.0,
+      285.0,
+      290.0,
+      295.0,
+      300.0,
+      305.0,
+      310.0,
+      315.0,
+      320.0,
+      325.0,
+      330.0
+    ],
+    "expected_lambda_m_inv": [
+      300.0,
+      482.05705136679103,
+      774.5966692414834,
+      1244.6659545769567,
+      2000.0,
+      3556.5588200778457,
+      6324.555320336759,
+      11246.826503806982,
+      20000.0
+    ],
+    "table_hash": "resolved at runtime from the completed first-stage generation; never guessed or filled from the old 180\u2013300 K table",
+    "required_generation_status": "COMPLETE_NUMERICAL_GENERATION_NOT_MODEL_VALIDATION",
+    "required_controls": {
+      "order": 128,
+      "max_spectral_step_cm_inv": 50.0,
+      "workers": 12,
+      "spectral_chunk_size": 32,
+      "max_terms": 32000000
+    }
+  },
+  "midpoint_temperatures_K": [
+    152.5,
+    157.5,
+    162.5,
+    167.5,
+    172.5,
+    177.5,
+    182.5,
+    187.5,
+    192.5,
+    197.5,
+    202.5,
+    207.5,
+    212.5,
+    217.5,
+    222.5,
+    227.5,
+    231.5,
+    234.0,
+    237.5,
+    242.5,
+    247.5,
+    252.5,
+    257.5,
+    262.5,
+    267.5,
+    272.5,
+    277.5,
+    282.5,
+    287.5,
+    292.5,
+    297.5,
+    302.5,
+    307.5,
+    312.5,
+    317.5,
+    322.5,
+    327.5
+  ],
+  "expected_direct_values": {
+    "LW_cells": 5328,
+    "LW_moment_values": 21312,
+    "SW_values": "also generated by tool but not used for midpoint interpolation analysis"
+  },
+  "run": {
+    "output_dir": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-frozen-planck-interknots-v1/runs/frozen-direct-interknots-v1",
+    "parameters": {
+      "lambda_grid_m_inv": [
+        300.0,
+        482.05705136679103,
+        774.5966692414834,
+        1244.6659545769567,
+        2000.0,
+        3556.5588200778457,
+        6324.555320336759,
+        11246.826503806982,
+        20000.0
+      ],
+      "temperatures_K": [
+        152.5,
+        157.5,
+        162.5,
+        167.5,
+        172.5,
+        177.5,
+        182.5,
+        187.5,
+        192.5,
+        197.5,
+        202.5,
+        207.5,
+        212.5,
+        217.5,
+        222.5,
+        227.5,
+        231.5,
+        234.0,
+        237.5,
+        242.5,
+        247.5,
+        252.5,
+        257.5,
+        262.5,
+        267.5,
+        272.5,
+        277.5,
+        282.5,
+        287.5,
+        292.5,
+        297.5,
+        302.5,
+        307.5,
+        312.5,
+        317.5,
+        322.5,
+        327.5
+      ],
+      "order": 128,
+      "max_spectral_step_cm_inv": 50.0,
+      "workers": 12,
+      "spectral_chunk_size": 32,
+      "max_terms": 32000000,
+      "fetch_inputs": false
+    },
+    "input_dir": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-frozen-planck-interknots-v1/inputs",
+    "data_dir": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-cu-fresh-gnu/source/WRF/run",
+    "timeout_seconds": 7200
+  },
+  "verification": [
+    "Before launch, require the expanded generation to exist, be complete, pass the pinned artifact loader, and match its planned axes, status, source/input/gas/kernel provenance and controls. Record its exact result/table hashes.",
+    "Use the exact midpoint list as both plan and output receipt temperature axis; reject any mismatch.",
+    "For each of 37 temperatures, 9 lambda values, 16 LW bands, and four moments, compare direct values with FrozenTable interpolation from the expanded table.",
+    "Emit per-temperature/per-lambda/per-band absolute and extinction-normalized differences, plus maxima and data hashes. Do not assert an accuracy PASS or introduce an after-the-fact tolerance.",
+    "Rehash all pinned source, input, gas, expanded table and receipt files after the direct generation; preserve all failed outputs."
+  ],
+  "prepared_at": "2026-10-04"
+}

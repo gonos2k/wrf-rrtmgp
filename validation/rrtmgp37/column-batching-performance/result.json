@@ -1,0 +1,515 @@
+{
+  "schema": "udm37-cpu-column-batching-performance-evidence-v1",
+  "status": "PASS_SCOPED_12_ARM_TIMING_AND_NUMERICAL_GATE",
+  "scope": "one fixed GNU CPU build, fixed historical case/inputs, MPI4/OMP2; 3 interleaved blocks; descriptive measurements only",
+  "source_and_build": {
+    "build_result": {
+      "workspace_relative_path": "build/udm37-restart-cloud-diagnostics-gnu-v1/build-result-v2.json",
+      "sha256": "bc7804d997409c3797cb0bc734c157b3f98338b8d7b268570ecdaca16a3ec09a",
+      "size_bytes": 36379
+    },
+    "source_manifest": {
+      "workspace_relative_path": "build/udm37-restart-cloud-diagnostics-gnu-v1/source-manifest-v4.json",
+      "sha256": "03b2ddf6d45a37e95a1b07a4d37c2401704bb67569c0290391dea0397fcabe98",
+      "size_bytes": 1979449
+    },
+    "executable": {
+      "path": "build/udm37-restart-cloud-diagnostics-gnu-v1/source-v4/WRF/main/wrf.exe",
+      "sha256": "6088620a5a27020bba4454d8380ecc149bbbea78ef1c82b37df15e719163fca5",
+      "size_bytes": 59158736
+    },
+    "compiled_source_commit": "d05c97b4f26be0ca21867051b50d6fca00261d51",
+    "batching_source_ancestor": "677ad6f342806d7a2b57c4e72cdd1a6dfe2e21e1",
+    "validation_followup_commit": "dbf03a9171b86cfc2f825a5ff2d7189ba572d4fa (validation-only; no Fortran source change)"
+  },
+  "plan": {
+    "workspace_relative_path": "build/udm37-column-batching-performance-runtime-v1/execution-helper-v4/benchmark-plan-v5.json",
+    "sha256": "4f7becd313fdc126c582c672dfba9247b2dd4a9156b964ef3164995536036192",
+    "size_bytes": 118371,
+    "schema": "wrf-rrtmgp-fixed-source-v4-12arm-timing-plan-v1",
+    "status": "PLAN_ONLY_NOT_STAGED_NOT_RUN_NOT_BENCHMARKED"
+  },
+  "runner": {
+    "workspace_relative_path": "build/udm37-column-batching-performance-runtime-v1/execution-helper-v4/run_benchmark.py",
+    "sha256": "de873bce2e99ff0286af907f376b941a22d840f1374756ef5202053c8f10fe15",
+    "size_bytes": 50391
+  },
+  "runner_tests": {
+    "workspace_relative_path": "build/udm37-column-batching-performance-runtime-v1/execution-helper-v4/test_run_benchmark.py",
+    "sha256": "385b28f200500e3259414b53e53c245bb3f06c64f500c9b620e50a610a3dccf1",
+    "size_bytes": 22747
+  },
+  "terminal_execution_receipt": {
+    "workspace_relative_path": "build/udm37-column-batching-performance-runtime-v1/execution-helper-v4/runs-v5/execution.json",
+    "sha256": "756c24f349ecf63d02887ccc5c75106a9f08f99101ca27e03d33747397d69dd9",
+    "size_bytes": 60714243,
+    "status": "PASS_BENCHMARK_DATA_COMPLETE_NO_PERFORMANCE_CLAIM",
+    "started_utc": "2026-10-04T03:20:30.424117+00:00",
+    "finished_utc": "2026-10-04T03:49:03.621105+00:00",
+    "immutable_postflight": "PASS"
+  },
+  "accounting": {
+    "model_invocations": 12,
+    "validated_arm_records": 12,
+    "raw_receipt_benchmark_models_value": 0,
+    "note": "The receipt reports benchmark_models=0 despite 12 actual model_invocations and 12 arm records; use model_invocations/arm records as the count and retain this discrepancy."
+  },
+  "correctness_gate": {
+    "all_12_arms_case_validated": true,
+    "all_return_codes_zero": true,
+    "each_arm_has_six_outputs": "five 10-minute history files (209 variables each) plus a 40-minute restart checkpoint (653 variables)",
+    "comparisons": "each batch arm is exact to its current-executable B1 reference for six files; all compared variables have exact raw bytes and decoded values, and file metadata matches",
+    "same_batch_across_blocks": "exact",
+    "numeric_tolerances_or_exemptions": 0,
+    "benchmark_or_radiation_accuracy_claim": false,
+    "compared_variable_count_per_arm": "5×209 history variables and 653 checkpoint variables in each of the six outputs; all compared values and metadata exact"
+  },
+  "measurement_definition": {
+    "launcher_wall": "monotonic wall time from MPI launcher start through all-rank exit",
+    "wrf_main": "sum of 40 rank-zero Timing for main records in rsl.error.0000 per arm",
+    "not_measured": [
+      "RTE-only time",
+      "gas/cloud/optics time",
+      "allocation-only time"
+    ],
+    "host": {
+      "cpu_model": "AMD EPYC 9365 36-Core Processor",
+      "logical_cpu_count": 72,
+      "allowed_cpu_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        59,
+        60,
+        61,
+        62,
+        63,
+        64,
+        65,
+        66,
+        67,
+        68,
+        69,
+        70,
+        71
+      ]
+    },
+    "placement": "each of four ranks observed allowed on CPUs 0-71; no core binding subset was enforced",
+    "load_samples": "1-minute load average divided by 72 allowed CPUs, recorded before, at launch boundary, and after each arm"
+  },
+  "summary_means_seconds_by_batch_size": {
+    "1": {
+      "launcher_wall_mean_seconds": 66.99148571056624,
+      "rank0_main_mean_seconds": 53.68826333333334
+    },
+    "32": {
+      "launcher_wall_mean_seconds": 54.98745620623231,
+      "rank0_main_mean_seconds": 40.98052
+    },
+    "64": {
+      "launcher_wall_mean_seconds": 57.35761238696674,
+      "rank0_main_mean_seconds": 42.52233
+    },
+    "128": {
+      "launcher_wall_mean_seconds": 61.67141432749728,
+      "rank0_main_mean_seconds": 46.087113333333335
+    }
+  },
+  "block_raw_samples": [
+    {
+      "block": 1,
+      "arms_in_execution_order": [
+        {
+          "arm_id": "block1-b1",
+          "batch_size": 1,
+          "position": 1,
+          "status": "TIMED_ARM_VALIDATED",
+          "quality_status": "CASE_VALIDATED",
+          "returncode": 0,
+          "launcher_wall_seconds": 66.82159693911672,
+          "wrf_main_record_count": 40,
+          "rank0_main_sum_seconds": 53.63506,
+          "load_1m_per_allowed_cpu": {
+            "before": 0.15117051866319445,
+            "at_launch_boundary": 0.15350341796875,
+            "after": 0.17669677734375
+          },
+          "allowed_cpu_count": 72,
+          "all_rank_cpu_list_count": 4,
+          "observed_cpu_ids_per_rank_summary": "0-71 (all ranks; no binding subset)"
+        },
+        {
+          "arm_id": "block1-b32",
+          "batch_size": 32,
+          "position": 2,
+          "status": "TIMED_ARM_VALIDATED",
+          "quality_status": "CASE_VALIDATED",
+          "returncode": 0,
+          "launcher_wall_seconds": 55.90291829966009,
+          "wrf_main_record_count": 40,
+          "rank0_main_sum_seconds": 41.33773,
+          "load_1m_per_allowed_cpu": {
+            "before": 0.1692572699652778,
+            "at_launch_boundary": 0.1644015842013889,
+            "after": 0.1681247287326389
+          },
+          "allowed_cpu_count": 72,
+          "all_rank_cpu_list_count": 4,
+          "observed_cpu_ids_per_rank_summary": "0-71 (all ranks; no binding subset)"
+        },
+        {
+          "arm_id": "block1-b64",
+          "batch_size": 64,
+          "position": 3,
+          "status": "TIMED_ARM_VALIDATED",
+          "quality_status": "CASE_VALIDATED",
+          "returncode": 0,
+          "launcher_wall_seconds": 59.082690358161926,
+          "wrf_main_record_count": 40,
+          "rank0_main_sum_seconds": 42.38756,
+          "load_1m_per_allowed_cpu": {
+            "before": 0.16386583116319445,
+            "at_launch_boundary": 0.1583251953125,
+            "after": 0.21504041883680555
+          },
+          "allowed_cpu_count": 72,
+          "all_rank_cpu_list_count": 4,
+          "observed_cpu_ids_per_rank_summary": "0-71 (all ranks; no binding subset)"
+        },
+        {
+          "arm_id": "block1-b128",
+          "batch_size": 128,
+          "position": 4,
+          "status": "TIMED_ARM_VALIDATED",
+          "quality_status": "CASE_VALIDATED",
+          "returncode": 0,
+          "launcher_wall_seconds": 60.43307157792151,
+          "wrf_main_record_count": 40,
+          "rank0_main_sum_seconds": 46.18672,
+          "load_1m_per_allowed_cpu": {
+            "before": 0.20225016276041666,
+            "at_launch_boundary": 0.19127061631944445,
+            "after": 0.16887071397569445
+          },
+          "allowed_cpu_count": 72,
+          "all_rank_cpu_list_count": 4,
+          "observed_cpu_ids_per_rank_summary": "0-71 (all ranks; no binding subset)"
+        }
+      ]
+    },
+    {
+      "block": 2,
+      "arms_in_execution_order": [
+        {
+          "arm_id": "block2-b1",
+          "batch_size": 1,
+          "position": 1,
+          "status": "TIMED_ARM_VALIDATED",
+          "quality_status": "CASE_VALIDATED",
+          "returncode": 0,
+          "launcher_wall_seconds": 67.52476164139807,
+          "wrf_main_record_count": 40,
+          "rank0_main_sum_seconds": 53.81072,
+          "load_1m_per_allowed_cpu": {
+            "before": 0.16221788194444445,
+            "at_launch_boundary": 0.15987141927083334,
+            "after": 0.16782633463541666
+          },
+          "allowed_cpu_count": 72,
+          "all_rank_cpu_list_count": 4,
+          "observed_cpu_ids_per_rank_summary": "0-71 (all ranks; no binding subset)"
+        },
+        {
+          "arm_id": "block2-b64",
+          "batch_size": 64,
+          "position": 2,
+          "status": "TIMED_ARM_VALIDATED",
+          "quality_status": "CASE_VALIDATED",
+          "returncode": 0,
+          "launcher_wall_seconds": 56.356692757457495,
+          "wrf_main_record_count": 40,
+          "rank0_main_sum_seconds": 42.6021,
+          "load_1m_per_allowed_cpu": {
+            "before": 0.16242811414930555,
+            "at_launch_boundary": 0.1588066948784722,
+            "after": 0.1692165798611111
+          },
+          "allowed_cpu_count": 72,
+          "all_rank_cpu_list_count": 4,
+          "observed_cpu_ids_per_rank_summary": "0-71 (all ranks; no binding subset)"
+        },
+        {
+          "arm_id": "block2-b128",
+          "batch_size": 128,
+          "position": 3,
+          "status": "TIMED_ARM_VALIDATED",
+          "quality_status": "CASE_VALIDATED",
+          "returncode": 0,
+          "launcher_wall_seconds": 59.587001103907824,
+          "wrf_main_record_count": 40,
+          "rank0_main_sum_seconds": 45.92087,
+          "load_1m_per_allowed_cpu": {
+            "before": 0.16248914930555555,
+            "at_launch_boundary": 0.16032579210069445,
+            "after": 0.15568033854166666
+          },
+          "allowed_cpu_count": 72,
+          "all_rank_cpu_list_count": 4,
+          "observed_cpu_ids_per_rank_summary": "0-71 (all ranks; no binding subset)"
+        },
+        {
+          "arm_id": "block2-b32",
+          "batch_size": 32,
+          "position": 4,
+          "status": "TIMED_ARM_VALIDATED",
+          "quality_status": "CASE_VALIDATED",
+          "returncode": 0,
+          "launcher_wall_seconds": 54.00450177118182,
+          "wrf_main_record_count": 40,
+          "rank0_main_sum_seconds": 40.82263,
+          "load_1m_per_allowed_cpu": {
+            "before": 0.1519504123263889,
+            "at_launch_boundary": 0.1520453559027778,
+            "after": 0.1545071072048611
+          },
+          "allowed_cpu_count": 72,
+          "all_rank_cpu_list_count": 4,
+          "observed_cpu_ids_per_rank_summary": "0-71 (all ranks; no binding subset)"
+        }
+      ]
+    },
+    {
+      "block": 3,
+      "arms_in_execution_order": [
+        {
+          "arm_id": "block3-b1",
+          "batch_size": 1,
+          "position": 1,
+          "status": "TIMED_ARM_VALIDATED",
+          "quality_status": "CASE_VALIDATED",
+          "returncode": 0,
+          "launcher_wall_seconds": 66.62809855118394,
+          "wrf_main_record_count": 40,
+          "rank0_main_sum_seconds": 53.61901,
+          "load_1m_per_allowed_cpu": {
+            "before": 0.15104166666666666,
+            "at_launch_boundary": 0.14946153428819445,
+            "after": 0.1767917209201389
+          },
+          "allowed_cpu_count": 72,
+          "all_rank_cpu_list_count": 4,
+          "observed_cpu_ids_per_rank_summary": "0-71 (all ranks; no binding subset)"
+        },
+        {
+          "arm_id": "block3-b128",
+          "batch_size": 128,
+          "position": 2,
+          "status": "TIMED_ARM_VALIDATED",
+          "quality_status": "CASE_VALIDATED",
+          "returncode": 0,
+          "launcher_wall_seconds": 64.99417030066252,
+          "wrf_main_record_count": 40,
+          "rank0_main_sum_seconds": 46.15375,
+          "load_1m_per_allowed_cpu": {
+            "before": 0.1695014105902778,
+            "at_launch_boundary": 0.16365559895833334,
+            "after": 0.16949462890625
+          },
+          "allowed_cpu_count": 72,
+          "all_rank_cpu_list_count": 4,
+          "observed_cpu_ids_per_rank_summary": "0-71 (all ranks; no binding subset)"
+        },
+        {
+          "arm_id": "block3-b32",
+          "batch_size": 32,
+          "position": 3,
+          "status": "TIMED_ARM_VALIDATED",
+          "quality_status": "CASE_VALIDATED",
+          "returncode": 0,
+          "launcher_wall_seconds": 55.05494854785502,
+          "wrf_main_record_count": 40,
+          "rank0_main_sum_seconds": 40.7812,
+          "load_1m_per_allowed_cpu": {
+            "before": 0.16560872395833334,
+            "at_launch_boundary": 0.16566975911458334,
+            "after": 0.1623196072048611
+          },
+          "allowed_cpu_count": 72,
+          "all_rank_cpu_list_count": 4,
+          "observed_cpu_ids_per_rank_summary": "0-71 (all ranks; no binding subset)"
+        },
+        {
+          "arm_id": "block3-b64",
+          "batch_size": 64,
+          "position": 4,
+          "status": "TIMED_ARM_VALIDATED",
+          "quality_status": "CASE_VALIDATED",
+          "returncode": 0,
+          "launcher_wall_seconds": 56.633454045280814,
+          "wrf_main_record_count": 40,
+          "rank0_main_sum_seconds": 42.577329999999996,
+          "load_1m_per_allowed_cpu": {
+            "before": 0.1591729058159722,
+            "at_launch_boundary": 0.15372721354166666,
+            "after": 0.1669921875
+          },
+          "allowed_cpu_count": 72,
+          "all_rank_cpu_list_count": 4,
+          "observed_cpu_ids_per_rank_summary": "0-71 (all ranks; no binding subset)"
+        }
+      ]
+    }
+  ],
+  "limits": [
+    "Ratios and three-pair ranges describe only these three sequential blocks; they are not formal significance or confidence claims.",
+    "Timing applies to the pinned GNU CPU build, this 40-minute input and MPI4/OMP2 setup only.",
+    "No RTE-only, GPU/accelerator, general forecast-performance, or meteorological-accuracy claim."
+  ],
+  "paired_batch_over_b1_ratios": {
+    "32": {
+      "ratio_definition": "batch elapsed divided by paired B1 elapsed; <1 means lower observed elapsed for that batch in that paired block",
+      "n_pairs": 3,
+      "launcher_wall_b1_over_batch_samples": [
+        0.836599555538833,
+        0.7997733047616232,
+        0.8263022620338116
+      ],
+      "launcher_wall_median_and_range": [
+        0.8263022620338116,
+        0.7997733047616232,
+        0.836599555538833
+      ],
+      "rank0_main_b1_over_batch_samples": [
+        0.7707221731456999,
+        0.7586337815216,
+        0.7605735353935105
+      ],
+      "rank0_main_median_and_range": [
+        0.7605735353935105,
+        0.7586337815216,
+        0.7707221731456999
+      ]
+    },
+    "64": {
+      "ratio_definition": "batch elapsed divided by paired B1 elapsed; <1 means lower observed elapsed for that batch in that paired block",
+      "n_pairs": 3,
+      "launcher_wall_b1_over_batch_samples": [
+        0.8841855487529585,
+        0.8346077999763918,
+        0.849993550420395
+      ],
+      "launcher_wall_median_and_range": [
+        0.849993550420395,
+        0.8346077999763918,
+        0.8841855487529585
+      ],
+      "rank0_main_b1_over_batch_samples": [
+        0.7902957505780733,
+        0.7917028428536173,
+        0.7940715429098746
+      ],
+      "rank0_main_median_and_range": [
+        0.7917028428536173,
+        0.7902957505780733,
+        0.7940715429098746
+      ]
+    },
+    "128": {
+      "ratio_definition": "batch elapsed divided by paired B1 elapsed; <1 means lower observed elapsed for that batch in that paired block",
+      "n_pairs": 3,
+      "launcher_wall_b1_over_batch_samples": [
+        0.9043943028327205,
+        0.8824466707539806,
+        0.9754768890895748
+      ],
+      "launcher_wall_median_and_range": [
+        0.9043943028327205,
+        0.8824466707539806,
+        0.9754768890895748
+      ],
+      "rank0_main_b1_over_batch_samples": [
+        0.8611292688029062,
+        0.8533777284526206,
+        0.8607721403285887
+      ],
+      "rank0_main_median_and_range": [
+        0.8607721403285887,
+        0.8533777284526206,
+        0.8611292688029062
+      ]
+    }
+  },
+  "execution_authorization": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-column-batching-performance-runtime-v1/execution-helper-v4/root-authorization-v2.json",
+    "sha256": "65b89c43c479a20837505989488f161d31498dc04763d4ee5970e50090a9c62b",
+    "size_bytes": 3031
+  },
+  "external_gate_pins": {
+    "ci": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-column-batching-performance-runtime-v1/execution-helper-v4/pr52-ci-normalized-v1.json",
+      "sha256": "082aa6a38cb9b63cdc538d9bbccf23eab791d3ddd3bf91daf8ccd228289e2fbb",
+      "size_bytes": 2722
+    },
+    "long_run": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-restart-cloud-diagnostics-runtime-v2/runs-v2/execution.json",
+      "sha256": "6229e7d6964618fda7b93fd3c9d8788ce86cccabc0f3bb905ef2d5397e08d65e",
+      "size_bytes": 14848878
+    }
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "schema": "current-helper-pr64-failed-generations-v1",
+  "failures": [
+    {
+      "original_receipt": {
+        "path": "build/udm37-cf0-pr64-current-reference-build-v1/root-build-preflight-failure-v1.json",
+        "bytes": 468,
+        "sha256": "e3a408494c39ad62673a9a6c6ba54e3b5974f618efbf80ef46a71b9c825a443a"
+      },
+      "original_status": "PRE_COMPILE_LAUNCH_PATH_FAILURE",
+      "original_returncode": null,
+      "observed_process_counts": null,
+      "preserved": true,
+      "classification": "Wrong /usr/bin/cmake path before any child/build"
+    },
+    {
+      "original_receipt": {
+        "path": "build/udm37-cf0-pr64-current-reference-build-v1/root-test-receipt-v1.json",
+        "bytes": 2101,
+        "sha256": "12e83651f13824480c3cd0d89ecdc57eb25f10536afc34ef119873e66ae9a89c"
+      },
+      "original_status": "TEST_FAIL_PRESERVED",
+      "original_returncode": 8,
+      "observed_process_counts": {
+        "fixture_adapter_attempts": 1,
+        "model_forecasts": 0,
+        "reference_column_attempts": 0,
+        "reference_column_rejected_before_output": 0,
+        "reference_column_successes": 0
+      },
+      "preserved": true,
+      "classification": "Fixture loader failure, zero reference/RTE calls"
+    },
+    {
+      "original_receipt": {
+        "path": "build/udm37-cf0-pr64-current-reference-build-v1/current-reader-runtime-v2/root-test-receipt.json",
+        "bytes": 4134,
+        "sha256": "9490ae080652ca08bdaaf080ed38052b6e28cf0f8658b7132a2e9ddc13f7b820"
+      },
+      "original_status": "TEST_FAIL_PRESERVED",
+      "original_returncode": 1,
+      "observed_process_counts": {
+        "fixture_adapter_attempts": 1,
+        "model_forecasts": 0,
+        "reference_column_attempts": 3,
+        "reference_column_rejected_before_output": 0,
+        "reference_column_successes": 3
+      },
+      "preserved": true,
+      "classification": "LW fixture plus 3 successful reference children, then Python parser/optional PRECIP_TAU harness failure"
+    },
+    {
+      "original_receipt": {
+        "path": "build/udm37-cf0-pr64-current-reference-build-v1/current-reader-runtime-v3/root-test-receipt.json",
+        "bytes": 5781,
+        "sha256": "30ad419bb78b288c1b5496021f5fd4bd97a653ebedb668d70648fad0c0eae71a"
+      },
+      "original_status": "TEST_FAIL_PRESERVED",
+      "original_returncode": 1,
+      "observed_process_counts": {
+        "fixture_adapter_attempts": 1,
+        "model_forecasts": 0,
+        "reference_column_attempts": 3,
+        "reference_column_rejected_before_output": 0,
+        "reference_column_successes": 3
+      },
+      "preserved": true,
+      "classification": "LW fixture plus 3 successful reference children, then Python AUDIT_DIRECT shape harness failure"
+    }
+  ],
+  "later_pass_does_not_reclassify_originals": true
+}
