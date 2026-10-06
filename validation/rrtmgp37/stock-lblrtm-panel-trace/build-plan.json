@@ -1,0 +1,154 @@
+{
+  "build_command": [
+    "/usr/bin/make",
+    "-f",
+    "make_lblrtm",
+    "linuxGNUdbl"
+  ],
+  "build_cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-panel-trace-v1/source/LBLRTM/build",
+  "build_invocations_max": 1,
+  "cases": [
+    "original_coupling_SAMPLE4",
+    "NOCPL_SAMPLE4"
+  ],
+  "compiler": "GNU13.3 same linuxGNUdbl flags and same NetCDF include/link dependencies as stock build",
+  "copied_objects_before": [
+    {
+      "file": "contnm.o",
+      "sha256": "99eebd867841f70f9f9b2a5c140afaaae295439d0c52b181071fef6914949442",
+      "size_bytes": 305312
+    },
+    {
+      "file": "fftscn_dbl.o",
+      "sha256": "518cbf6e3d30eb03291125b14792dd1d930305898e222eb023e69134614dd936",
+      "size_bytes": 151632
+    },
+    {
+      "file": "lblatm.o",
+      "sha256": "46bcfc22f97c5091cc7112eea74b9dd3114338b26a1469089eb2842cf334b37a",
+      "size_bytes": 11676672
+    },
+    {
+      "file": "lbldum.o",
+      "sha256": "fb2313d03d1ca06fbf6889780d1ef41e0bd285cd77789e853476e51b512d8223",
+      "size_bytes": 4520
+    },
+    {
+      "file": "lbllow.o",
+      "sha256": "975c66242e929f261cb600ca1f3738316c65b8076a1797891b755954fbf72f80",
+      "size_bytes": 1269744
+    },
+    {
+      "file": "lblparams.o",
+      "sha256": "dbec2bec78b2546f2a9bf2444b8a04523cdd7133f649fd8b63ce70aa8ba80a37",
+      "size_bytes": 8960
+    },
+    {
+      "file": "lblrtm.o",
+      "sha256": "514dd2c0571eaa9ea1ca2cc1f6abb4b4c57bc0993c0069ea611c65b650b3ee81",
+      "size_bytes": 530312
+    },
+    {
+      "file": "mt_ckd_h2o_module.o",
+      "sha256": "92d7c1fa2d18424a7e6ac60e67ec035a9087c6abc5ea165a57bfecfbbd706af5",
+      "size_bytes": 17192
+    },
+    {
+      "file": "nonlte.o",
+      "sha256": "fc39ddcd056ad5bf1e01662675517a561d59563b1b2d988d1eaea9772d3f1d08",
+      "size_bytes": 162504
+    },
+    {
+      "file": "oprop.o",
+      "sha256": "9dd4645c452e4f576595e61c8a54e793bf2c733faa9d7d154bc269cdcb138b63",
+      "size_bytes": 457776
+    },
+    {
+      "file": "phys_consts.o",
+      "sha256": "d1fbcbe5ddd72196095f719664f09974439d0155f163914d125fa93fc8f4885a",
+      "size_bytes": 824
+    },
+    {
+      "file": "planet_earth.o",
+      "sha256": "984b4e363b4c5aef6c15590ac5f5e5a9e78b88c759f8579d2fe0e33bbeee8e64",
+      "size_bytes": 1640
+    },
+    {
+      "file": "pltlbl.o",
+      "sha256": "589b567082683d4ffcdb352d363e32e85836f9afab5141a78eaa718c939e5705",
+      "size_bytes": 157528
+    },
+    {
+      "file": "postsub.o",
+      "sha256": "df8248b8d6c63d9d6b8073268b8af4da5ceb91be1ac6f972126d5af75d87a4ca",
+      "size_bytes": 190448
+    },
+    {
+      "file": "read_module.o",
+      "sha256": "a1c880b3ba2a67e609564177ef78d299761445cc4b38e76185d9188598458339",
+      "size_bytes": 14352
+    },
+    {
+      "file": "solar.o",
+      "sha256": "6b23a7dd9c1b7b15713e92520fb852f9b3c2f9442d6abdae886a89a2419765b2",
+      "size_bytes": 53752
+    },
+    {
+      "file": "solar_cycle.o",
+      "sha256": "cebc3032e91463b53ca2f424c65c01512b07dedeeedc429d856d3add4524f29d",
+      "size_bytes": 3088
+    },
+    {
+      "file": "struct_types.o",
+      "sha256": "4f0a2224a1467ec95a6ed3d5f987e74ad943a30186fff62c35ff6c0cbf3523ad",
+      "size_bytes": 3112
+    },
+    {
+      "file": "testmm.o",
+      "sha256": "06277f94386c5edae7735dca49e710a2fd065acc4c29648f57bb2574447f51e5",
+      "size_bytes": 110552
+    },
+    {
+      "file": "util_gfortran.o",
+      "sha256": "99c3f30c59edee4dd184d17f401b24ae829bdba5f623c7d7b19d5f25c26d96bc",
+      "size_bytes": 7056
+    },
+    {
+      "file": "xmerge.o",
+      "sha256": "96e3029238712b36d137faffe2624e3a326024571b8c7e8f5de24ee734efdf07",
+      "size_bytes": 271144
+    }
+  ],
+  "input_decks": "byte identical existing full continuum/CIA held45layer decks",
+  "no_original_arithmetic_or_assignments_changed": true,
+  "only_source_edit": "oprop.f90; four calls inside PANEL plus appended intent-in diagnostic helper",
+  "original_source_and_binary_unchanged": true,
+  "output_equivalence_required": "all45layer headers except run timestamp and spectral panels/samples bitwise equal to existing saved baseline for each corresponding TAPE3; no physical acceptance inferred",
+  "patch_sha256": "8cd4bf253403c5f7c01135441d829f4c1318ff74ee5abcdedd783810e241e3b5",
+  "private_data": "trace spectra remain private; publish summaries, source-only patch and receipts, never AER datasets",
+  "restoration_to_original_exact": true,
+  "schema": "UDM37_LBLRTM_PANEL_TRACE_BUILD_PLAN_V1",
+  "solver_invocations_planned_max": 2,
+  "source_original_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-stock-build-v1/attempt-1/source/LBLRTM/src/oprop.f90",
+  "source_original_sha256": "7cf594968ec331da3df75429262c1023c21fc461cbbae208253b0fa870685ef8",
+  "source_trace_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-panel-trace-v1/source/LBLRTM/src/oprop.f90",
+  "source_trace_sha256": "3479ab50b9edebeb68d6faea77d6559134b2f778343a3bca53d9e73c3a87c37b",
+  "stages": {
+    "1": "before R3-to-R2 interpolation",
+    "2": "after R3-to-R2, before R2-to-R1",
+    "3": "after R2-to-R1, before RADFNI",
+    "4": "after RADFNI, before raw output"
+  },
+  "status": "PREPARED_NOT_COMPILED_NOT_RUN",
+  "trace_binary": "4byte GNU markers; header8char+19INTEGER8+9REAL8; three REAL8-array records per stage",
+  "trace_targets": [
+    {
+      "layer": 21,
+      "wavenumber": 666.3964444444449
+    },
+    {
+      "layer": 44,
+      "wavenumber": 677.5490446508708
+    }
+  ]
+}

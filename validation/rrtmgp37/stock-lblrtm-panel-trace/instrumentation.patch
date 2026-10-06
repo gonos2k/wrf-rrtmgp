@@ -1,0 +1,74 @@
+--- stock/src/oprop.f90
++++ diagnostic/src/oprop.f90
+@@ -1452,6 +1452,8 @@
+    NLIM = NHI-NLO+1
+    V1P = VFT+ REAL(NLO-1)*DV
+ !
++   CALL udm37_panel_trace(1,R1,R2,R3,JRAD)
++
+    LIMLO = N1R2
+    IF (N1R2.EQ.1) LIMLO = LIMLO+4
+    LIMHI = (NHI/4)+1
+@@ -1475,6 +1477,8 @@
+       R2(J+1) = R2(J+1)+X00*R3(J3-1)+X01*R3(J3)+X02*R3(J3+1)+X03*R3(J3+2)
+    endif
+ 
++   CALL udm37_panel_trace(2,R1,R2,R3,JRAD)
++
+    DO 20 J = NLO, NHI, 4
+       J2 = (J-1)/4+1
+       R1(J) = R1(J)+R2(J2)
+@@ -1485,6 +1489,7 @@
+       R1(J+3) = R1(J+3)+X03*R2(J2-1)+X02*R2(J2)+X01*R2(J2+1)+        &
+          X00*R2(J2+2)
+ 20 END DO
++   CALL udm37_panel_trace(3,R1,R2,R3,JRAD)
+ !
+ !     IN THE FOLLOWING SECTION THE ABSORPTION COEFFICIENT IS MULTIPIIED
+ !     BY THE RADIATION FIELD
+@@ -1521,6 +1526,8 @@
+ !     V1P IS FIRST FREQ OF PANEL
+ !     V2P IS LAST FREQ OF PANEL
+ !
++   CALL udm37_panel_trace(4,R1,R2,R3,JRAD)
++
+    IF (DVOUT.EQ.0.) THEN
+       CALL BUFOUT (KFILE,PNLHDR(1),NPHDRF)
+       CALL BUFOUT (KFILE,R1(NLO),NLIM)
+@@ -11796,3 +11803,36 @@
+ !
+    RETURN
+ end subroutine AtoB
++
++
++! Additive diagnostic only; does not assign to any model array or common.
++SUBROUTINE udm37_panel_trace(trace_stage,R1,R2,R3,JRAD)
++   IMPLICIT REAL*8 (V)
++   INTEGER, INTENT(IN) :: trace_stage,JRAD
++   REAL, INTENT(IN) :: R1(*),R2(*),R3(*)
++   CHARACTER*8 XID,HMOLID,YID
++   REAL*8 SECANT,XALTZ
++   COMMON /FILHDR/ XID(10),SECANT,PAVE,TAVE,HMOLID(60),XALTZ(4), &
++      WK(60),PZL,PZU,TZL,TZU,WBROAD,DV,V1,V2,TBOUND, &
++      EMISIV,FSCDID(17),NMOL,LAYER,YI1,YID(10),LSTWDF
++   COMMON /SUB1/ MAX1,MAX2,MAX3,NLIM1,NLIM2,NLIM3,NLO,NHI,DVR2,DVR3, &
++      N1R1,N2R1,N1R2,N2R2,N1R3,N2R3
++   COMMON /XPANEL/ V1P,V2P,DVP,NLIM,RMIN,RMAX,NPNLXP,NSHIFT,NPTS
++   INTEGER, SAVE :: trace_unit=0
++   REAL*8 trace_target
++   trace_target=-1._8
++   IF (LAYER==21) trace_target=666.3964444444449_8
++   IF (LAYER==44) trace_target=677.5490446508708_8
++   IF (trace_target<0._8 .OR. V1P>trace_target .OR. V2P<trace_target) RETURN
++   IF (trace_unit==0) THEN
++      OPEN(NEWUNIT=trace_unit,FILE='UDM37_PANEL_TRACE', &
++         FORM='UNFORMATTED',STATUS='NEW',ACTION='WRITE')
++   ENDIF
++   WRITE(trace_unit) 'UDMTRC1 ',trace_stage,LAYER,MAX1,MAX2,MAX3,NLO,NHI,JRAD, &
++      NLIM1,NLIM2,NLIM3,N1R1,N2R1,N1R2,N2R2,N1R3,N2R3,NSHIFT,NLIM, &
++      PAVE,TAVE,DV,V1P,V2P,DVP,DVR2,DVR3,trace_target
++   WRITE(trace_unit) R1(1:MAX1)
++   WRITE(trace_unit) R2(1:MAX2)
++   WRITE(trace_unit) R3(1:MAX3)
++   FLUSH(trace_unit)
++END SUBROUTINE udm37_panel_trace

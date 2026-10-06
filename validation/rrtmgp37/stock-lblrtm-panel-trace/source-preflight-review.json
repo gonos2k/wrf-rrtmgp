@@ -1,0 +1,63 @@
+{
+  "files": {
+    "build/udm37-lblrtm-panel-trace-v1/build-plan.json": {
+      "sha256": "2911151af66cc6c63ca3eb1a02720ec997274b75cee751a4115c57490d9b8c5d",
+      "size_bytes": 5456
+    },
+    "build/udm37-lblrtm-panel-trace-v1/instrumentation.patch": {
+      "sha256": "8cd4bf253403c5f7c01135441d829f4c1318ff74ee5abcdedd783810e241e3b5",
+      "size_bytes": 2501
+    },
+    "build/udm37-lblrtm-panel-trace-v1/source/LBLRTM/src/oprop.f90": {
+      "sha256": "3479ab50b9edebeb68d6faea77d6559134b2f778343a3bca53d9e73c3a87c37b",
+      "size_bytes": 483574
+    },
+    "build/udm37-lblrtm-stock-build-v1/attempt-1/lblrtm-build.log": {
+      "sha256": "7c1df01e26183d4c9a739879eef6489a06b45b10ee14012726794268c8b9fe51",
+      "size_bytes": 26386
+    },
+    "build/udm37-lblrtm-stock-build-v1/attempt-1/source/LBLRTM/src/oprop.f90": {
+      "sha256": "7cf594968ec331da3df75429262c1023c21fc461cbbae208253b0fa870685ef8",
+      "size_bytes": 481997
+    }
+  },
+  "findings": [
+    {
+      "result": "The supplied patch adds four calls inside PANEL and one appended helper. The existing arithmetic statements, interpolation constants, R1/R2/R3 assignments, radiation weighting, and output statements are unmodified in the patch.",
+      "scope": "source-diff"
+    },
+    {
+      "result": "Stage 1 is before R3\u2192R2; stage 2 follows R3\u2192R2 and precedes R2\u2192R1; stage 3 follows R2\u2192R1 and precedes the JRAD=0 RADFNI weighting; stage 4 follows that weighting and precedes BUFOUT/PNLINT.",
+      "scope": "stage-order"
+    },
+    {
+      "result": "The helper reproduces FILHDR, SUB1, and XPANEL common-block member order from HIRAC1/PANEL, and its R1/R2/R3 arguments are INTENT(IN). Under stock linuxGNUdbl flags in the pinned build log (-fdefault-integer-8 -fdefault-real-8 -fdefault-double-8 -frecord-marker=4), default INTEGER and REAL are 8 bytes. Header payload is 8-byte tag + 19 default INTEGER values + 9 REAL*8 values; each array is emitted as its own record.",
+      "scope": "array-types-and-layout"
+    },
+    {
+      "result": "The new helper only tests layer/panel range, opens a fresh unformatted file, serializes header/arrays, and flushes. No assignment targets the caller arrays or COMMON data. Existing arithmetic expressions were not changed. This is a static review; only the required all-layer output bitwise comparison can establish runtime preservation.",
+      "scope": "noninterference"
+    },
+    {
+      "result": "The record includes V1P, DVP, NLO and the target wavenumber, enough to map the R1 grid as V1P + (i-NLO)*DVP. DVR2/DVR3 and the N1R*/N2R* indexes are included for coarse-grid reconstruction. VFT itself is omitted but is derivable from V1P and NLO under V1P=VFT+(NLO-1)*DV.",
+      "scope": "spectral-mapping"
+    },
+    {
+      "result": "The helper uses inclusive V1P<=target<=V2P membership. A parser should group by case/layer/panel and verify exactly four ordered stage records for each intended panel; if the target lies on a shared panel boundary, duplicate panel captures must be reported rather than silently collapsed.",
+      "scope": "record-cardinality"
+    },
+    {
+      "result": "Retain the plan requirement to compare every layer output/header/panel sample against the corresponding existing baseline (only explicitly allowed timestamp metadata may differ), and verify the trace file separately. A successful trace build alone does not show noninterference.",
+      "scope": "runtime-equivalence-gate"
+    }
+  ],
+  "no_build_or_solver": true,
+  "no_material_source_arithmetic_blocker_found": true,
+  "open_runtime_checks": [
+    "verify four stage records and stage ordering for each target and case",
+    "decode sequential record markers and confirm payload sizes against stock GNU double flags",
+    "compare complete 45-layer output files/arrays bitwise to their paired baseline",
+    "confirm any timestamp-only header exception from actual source/output contract, not by broad masking"
+  ],
+  "status": "PASS_SCOPED_PREFLIGHT_NO_COMPILE_OR_MODEL"
+}

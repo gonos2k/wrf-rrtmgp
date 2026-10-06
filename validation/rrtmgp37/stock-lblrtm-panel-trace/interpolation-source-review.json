@@ -1,0 +1,60 @@
+{
+  "diagnostic_discriminator": {
+    "capture": "At one failing layer/wavenumber and neighboring stencil points, record R1 immediately before PANEL; R2 and R3 before PANEL; R2 immediately after its R3 interpolation; R1 immediately after its R2 interpolation; then R1 just before BUFOUT and whether radiation weighting was applied.",
+    "interpretation": "If pre-PANEL accumulators are nonnegative and the first negative value appears after either signed stencil, interpolation is directly implicated for that sample. If pre-PANEL R1 or coarse-grid inputs are already negative, report that antecedent separately. Preserve enough adjacent points to recompute both stencil stages from saved arrays.",
+    "required_context": [
+      "VFT,DV,DVR2,DVR3",
+      "NLO,NHI,N1R2,N1R3 and the affected indices",
+      "JRAD and DVOUT",
+      "whether SPPSP(I) is zero for contributing lines",
+      "spectral line/continuum accumulation mode and layer identifier"
+    ]
+  },
+  "limits": [
+    "No positivity theorem is asserted for all pre-PANEL profile contributions.",
+    "No claim that HIRAC1 interpolation caused the reported residual without the proposed same-run intermediate capture.",
+    "No code, binary, coefficients, or model outputs were changed or executed."
+  ],
+  "observed_case_context": {
+    "source_task_observation": "NOCPL SAMPLE4 residual minimum -0.0009924067 at layer 44, P=4 mbar, T=246.7607 K, 677.54904465 cm-1; SAMPLE8 -0.00005739148 at 677.54950818 cm-1.",
+    "status": "These are supplied case observations, not re-derived from source. Source structure makes cubic overshoot a plausible mechanism but does not establish it caused either value."
+  },
+  "question": "Can stock HIRAC1 produce a negative sampled optical-depth value through interpolation, and which intermediate arrays discriminate that from a negative pre-interpolation accumulator?",
+  "source_files": {
+    "build/udm37-lblrtm-stock-build-v1/attempt-1/source/LBLRTM/src/oprop.f90": {
+      "sha256": "7cf594968ec331da3df75429262c1023c21fc461cbbae208253b0fa870685ef8",
+      "size_bytes": 481997
+    },
+    "build/udm37-lblrtm-stock-build-v1/attempt-1/source/LBLRTM/src/oprop_voigt.f90": {
+      "sha256": "efc975723aa0054120cef69ce3cd963734989c9e7cec7f10323ddeb978aae721",
+      "size_bytes": 494550
+    }
+  },
+  "source_findings": [
+    {
+      "finding": "HIRAC1 initializes active R1, R2, and R3 accumulators to zero before accumulating line contributions.",
+      "location": "oprop.f90:308-314"
+    },
+    {
+      "finding": "For each accepted line, CNVFNV accumulates contributions on three grids: R3(J3)+=STRF3*F3(IZ3), R2(J2)+=STRF2*F2(IZ2), and R1(J1)+=STRF1*F1(IZ1)+STRD*FG(IZ1)+STRVER*XVER(IZ1). The optional SPPSP!=0 branch adds additional signed displacement-weighted contributions; an NOCPL case should be verified to have that input absent/zero before attributing signs.",
+      "location": "oprop.f90:1200-1351 (CNVFNV)"
+    },
+    {
+      "finding": "The R3-to-R2 and R2-to-R1 4-point interpolation uses X00=-7/128, X01=105/128, X02=35/128, X03=-5/128, X10=-1/16, X11=9/16. Since two outer coefficients are negative and no nonnegative limiter is applied here, a positive coarse-grid signal is not guaranteed to remain nonnegative after interpolation.",
+      "location": "oprop.f90:1429-1434,1460-1486 (PANEL)"
+    },
+    {
+      "finding": "At aligned indices PANEL adds the aligned coarse value directly; intervening points use the signed four-point stencil. The second interpolation stage operates on R2 after R3 has already been interpolated into it.",
+      "location": "oprop.f90:1460-1486"
+    },
+    {
+      "finding": "After PANEL, the resulting fine-grid R1 segment is written with BUFOUT (unless DVOUT selects PNLINT). For JRAD=0, the preceding code multiplies R1 by RADVI; therefore capture JRAD and the pre/post radiation-weighting state when tracing a particular reported residual.",
+      "location": "oprop.f90:1525-1526"
+    },
+    {
+      "finding": "The source constructs F1/F2/F3 as differences between Lorentzian expressions and approximating tail functions; the CNVFNV accumulation has no explicit MAX(0,...) guard. Thus a negative R1 before PANEL would be evidence against interpolation being the sole source, and should be measured rather than ruled out from intent.",
+      "location": "oprop.f90:1830-1908 (SHAPEL), 1316-1347"
+    }
+  ],
+  "status": "SOURCE_REVIEW_ONLY_NO_BUILD_OR_SOLVER"
+}

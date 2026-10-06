@@ -1,0 +1,48 @@
+{
+  "all_actual_build_solver_reader_child_returncodes": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "base_PR": 115,
+  "base_commit": "71781e1d1c57190e2c115e9289c6a68e7ad7b24f",
+  "independent_review": {
+    "new_build_or_solver_runs": 0,
+    "path": "independent-local-review.json",
+    "sha256": "0811ed0cd70a1117923eee4ca62e77cc287ee893ec24c8f00baab70b4667817a",
+    "status": "PASS_SCOPED_LOCAL_INTERPOLATION_CAUSAL_DIAGNOSIS"
+  },
+  "local_cause": "Layer 44 signed R3-to-R2 interpolation introduces negative entries from nonnegative input arrays at the captured panel; layer 21 coupled R3 already has negative entries before PANEL. Arrays may include previous-panel carry.",
+  "new_execution_counts": {
+    "LNFL_generations": 0,
+    "WRF_REAL_RTE_or_full_WRF_builds": 0,
+    "changed_compiler_objects": 1,
+    "full45layer_spectral_comparisons": 2,
+    "incremental_instrumented_build": 1,
+    "instrumented_OD_solves": 2,
+    "physical_gates_closed": 0,
+    "stock_LBLRTM_solves": 0,
+    "supplemental_small_trace_proof_readers": 1
+  },
+  "noninterference": "Both cases: all 45 layers, 63,838,065 samples and panel headers byte exact; only zero-based file-header word 168 (HTIME runtime clock) differs. Original metadata-pending reports retained and supplemented.",
+  "not_established": [
+    "Unique GI versus YI/SPPSP contribution",
+    "Species/line-level source of pre_PANEL coupling-dependent negatives",
+    "Independent physical-opacity/flux-reference acceptance",
+    "Attribution of held WRF4/37 +0.6806384666588787W/m2 residual",
+    "UDM PSD/radius/cloud-occurrence scientific accuracy",
+    "observational forecast skill"
+  ],
+  "physical_reference_acceptance": "FAIL_NEGATIVE_OD_RETAINED",
+  "prelaunch_CLI_rejection": {
+    "actual_parent_RC": 2,
+    "model_invocations": 0,
+    "retained": true
+  },
+  "schema": "UDM37_LBLRTM_LOCAL_STAGE_DIAGNOSIS_PACKAGE_V1",
+  "source_patch_not_production": "Private diagnostic copy only; original LBLRTM source/binary unchanged.",
+  "status": "PROGRESS_NONINTERFERENCE_AND_LOCAL_CAUSAL_PROOF_ONLY"
+}
