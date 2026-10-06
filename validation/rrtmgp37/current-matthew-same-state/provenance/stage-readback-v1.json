@@ -1,0 +1,105 @@
+{
+  "arms": [
+    {
+      "arm": "OFF",
+      "checkpoint_sha256": "2c631a135aa4f31dded06bcc9ed97f9a28bb5a9c1719ef93b2d2a0e762af9197",
+      "entry_count": 104,
+      "namelist_sha256": "0f0e8c6c9580b11741e5171b0c537ba1bd8dc91e1c6735f20b237375469b3517",
+      "outputs_absent": true,
+      "static_symlinks": 99,
+      "wrfbdy_sha256": "2298ac9b6dfec71e434648f66160f6555f89ec351398a4abf76754d1f934d29b",
+      "wrfinput_sha256": "6adeb00d56b83ef7749502059e35d27adb5114ac0e03adb323e86aa68b946fe3"
+    },
+    {
+      "arm": "ON_native4_0",
+      "checkpoint_sha256": "2c631a135aa4f31dded06bcc9ed97f9a28bb5a9c1719ef93b2d2a0e762af9197",
+      "entry_count": 104,
+      "namelist_sha256": "0f0e8c6c9580b11741e5171b0c537ba1bd8dc91e1c6735f20b237375469b3517",
+      "outputs_absent": true,
+      "static_symlinks": 99,
+      "wrfbdy_sha256": "2298ac9b6dfec71e434648f66160f6555f89ec351398a4abf76754d1f934d29b",
+      "wrfinput_sha256": "6adeb00d56b83ef7749502059e35d27adb5114ac0e03adb323e86aa68b946fe3"
+    },
+    {
+      "arm": "ON_native4_1",
+      "checkpoint_sha256": "2c631a135aa4f31dded06bcc9ed97f9a28bb5a9c1719ef93b2d2a0e762af9197",
+      "entry_count": 104,
+      "namelist_sha256": "0f0e8c6c9580b11741e5171b0c537ba1bd8dc91e1c6735f20b237375469b3517",
+      "outputs_absent": true,
+      "static_symlinks": 99,
+      "wrfbdy_sha256": "2298ac9b6dfec71e434648f66160f6555f89ec351398a4abf76754d1f934d29b",
+      "wrfinput_sha256": "6adeb00d56b83ef7749502059e35d27adb5114ac0e03adb323e86aa68b946fe3"
+    }
+  ],
+  "checks": [
+    "99 pinned symlinks/arm exact",
+    "4 copied input and IO files exact",
+    "namelist paths intact and singular",
+    "all output/executable patterns absent except approved restart input"
+  ],
+  "counts": {
+    "REAL_invocations": 0,
+    "builds": 0,
+    "forecast_launches": 0
+  },
+  "donor_checkpoint": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-matthew-dt60-paired-48h-v1/ra37/wrfrst_d01_2016-10-07_12:00:00",
+    "sha256": "2c631a135aa4f31dded06bcc9ed97f9a28bb5a9c1719ef93b2d2a0e762af9197"
+  },
+  "executable": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-current-serial-audit-build-v1/source/WRF/main/wrf.exe",
+    "sha256": "d2c4c772ff8b3b3900b91de385a9bf9a0ab3ea5739d8deff89ec5efdc97555e6",
+    "size_bytes": 50230560,
+    "status": "BUILD_PASS_PINNED_WAITING_ROOT_AUTHORIZATION"
+  },
+  "execution_runner": {
+    "one_use_root_authorization_required": true,
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-current-matthew-serial-audit-v1/run_serial_audit_once.py",
+    "sha256": "5ad294fa88f19ab1d7800f97d5f761d60f9611fe01834be768d0124c4dbfabc2",
+    "size_bytes": 42773
+  },
+  "failed_namelist_copy": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-current-matthew-serial-audit-v1/namelist-failed-001-OFF.input",
+    "sha256": "a2e4e4470a7e82a7081bd3c09ea8587d8018082ef27792f56c627921cba79644",
+    "size_bytes": 4427
+  },
+  "output_guard_correction": {
+    "changed_namelist_values": {
+      "time_control.frames_per_outfile": {
+        "new": 1,
+        "old": 1000
+      },
+      "time_control.restart_interval": {
+        "new_minutes": 60,
+        "old_minutes": 720
+      }
+    },
+    "compile_invocations": 0,
+    "interpretation": "IO cadence only; physical settings, restart state, forcing, executable, table, and runtime links are unchanged. The one-hour run now emits individually named start/end histories and a 13:00 restart for the strict output comparison.",
+    "model_invocations": 0,
+    "previous_manifest": {
+      "path": "stage-manifest-before-output-guard.json",
+      "sha256": "791afdfcf585f8812941ea16688818dfd373e15b98a2c093973cf5708f29cf49"
+    },
+    "previous_namelist": {
+      "bytes": 4104,
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-current-matthew-serial-audit-v1/namelist-before-output-guard.input",
+      "sha256": "0f0e8c6c9580b11741e5171b0c537ba1bd8dc91e1c6735f20b237375469b3517"
+    },
+    "previous_plan": {
+      "path": "plan-before-output-guard.json",
+      "sha256": "8cec598954cd6cac831fd04d59fed80e01a9d7b93d2a436f051fcdb042b309d4"
+    },
+    "status": "STAGE_ONLY_IO_CADENCE_UPDATED"
+  },
+  "runtime_build_identity": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-current-matthew-serial-audit-v1/runtime-build-identity-v1.json",
+    "sha256": "f9f81a1ca9af431eb38df37d1e5b106420fe3a2a4fd7e11f00ff7784cd1563ec",
+    "size_bytes": 20176
+  },
+  "schema": "udm37-current-matthew-serial-stage-readback-v1",
+  "stage_manifest_sha256": "6112c60820f57352095d15cbf7088fae38c592b003c65d984db9c332bca08722",
+  "stage_plan_sha256": "3585c4c0f3a9c18c06d873bb15dbbd6db5b298a070a338c27e3fa2da49aa0959",
+  "staging_script_sha256": "3373c51290fda21dbdf5cb83b8c99fea75a02b5d9dba38ca69f48d20af130e33",
+  "status": "PASS_BUILD_AND_STAGE_PINNED_WAITING_ROOT_AUTHORIZATION"
+}

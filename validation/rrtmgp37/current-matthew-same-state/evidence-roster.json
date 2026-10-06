@@ -1,0 +1,82 @@
+{
+  "analysis": {
+    "comparison": "analysis/radius-arm-comparison.json",
+    "csv_rows_per_on_arm_including_duplicate_aggregate": 1128,
+    "duplicate_aggregate_rows_are_not_independent_samples": true,
+    "numerical_review": "analysis/numerical.json",
+    "paired_metric_records_per_on_arm": 564,
+    "same_state_csvs": [
+      "analysis/ON_native4_0-same_state.csv",
+      "analysis/ON_native4_1-same_state.csv"
+    ]
+  },
+  "base_source_commit": "1cb6920a43d8ba10ecfa179487839f9df7022cb4",
+  "campaign": {
+    "actual_radiation_calls_per_arm": 12,
+    "all_returncode_0": true,
+    "all_sky_only": true,
+    "arms": [
+      "OFF",
+      "ON_native4_0",
+      "ON_native4_1"
+    ],
+    "deterministic_samples_per_call": 128,
+    "forecast_invocations": 3,
+    "phases_per_arm": {
+      "LW": 6,
+      "SW": 6
+    },
+    "preselected_global_column": [
+      24,
+      55
+    ],
+    "timeouts": 0,
+    "window_utc": [
+      "2016-10-07_12:00:00",
+      "2016-10-07_13:00:00"
+    ]
+  },
+  "capture_evidence": {
+    "canonical_off_groups": 12,
+    "files_per_group": 3,
+    "off_files_in_package": 36,
+    "on_groups_each_arm": 12,
+    "on_hash_triplets_equal_off": true
+  },
+  "interpretation_limits": [
+    "RRTMG4 counterfactual changes effective radii, ice/path mapping, and optics as a bundle.",
+    "128 deterministic seeds are descriptive samples, not IID confidence evidence.",
+    "One all-sky column for one hour is not domain-wide or multi-regime evidence.",
+    "No clear-sky comparison, observational accuracy, or forecast-readiness claim.",
+    "Experimental frozen optics mode/table is not physically validated by this campaign."
+  ],
+  "key_receipts": {
+    "execution_receipt_sha256": "460176c97e884af463bb8374714260edad0038e5a306f85251a751a96945b198",
+    "independent_terminal_review_sha256": "e7f13c2e79692389755a50f958ed359d21f564fc4e8c9bcc69fe7261b431df93",
+    "numerical_review_sha256": "593cc65ace35a868f9ee0348b265ddc48b0adc70dbda42be69e4d83cb5cdbe4f",
+    "same_state_comparison_sha256": "9a5f2787902ba42ca59e63fd1a447c94141ad2787c369361c19643c1548be07e"
+  },
+  "no_feedback_gate": {
+    "comparisons": 6,
+    "final_restart_variables": 667,
+    "histories_per_comparison": 2,
+    "history_variables": 231,
+    "whole_file_schema_attributes_byte_equal": true
+  },
+  "runtime_configuration": {
+    "OMP_NUM_THREADS": 1,
+    "checkpoint_origin": "2016-10-07_12:00:00 (elapsed hour 36 of parent forecast)",
+    "cudt_minutes": 5,
+    "dt_seconds": 60,
+    "frozen_optics_mode": 1,
+    "frozen_table_sha256": "ebeafb9746164d5414a45eab4061c5c855f0f91e92be77003b3829722514fe6a",
+    "ice_roughness": 1,
+    "production_mp_physics": 27,
+    "production_ra_lw_physics": 37,
+    "production_ra_sw_physics": 37,
+    "radt_minutes": 10,
+    "use_mp_re": 1
+  },
+  "schema": "udm37-current-same-state-audit-evidence-roster-v1",
+  "status": "PASS_SCOPED_SERIAL_SAME_STATE_AUDIT"
+}

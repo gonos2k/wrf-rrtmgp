@@ -1,0 +1,58 @@
+{
+  "conclusion": "native4=0 vs 1 is a scratch RRTMG4 wrapper counterfactual changing three has_req flags and legacy radius/category transformations; production forecasts and RRTMGP37 scratch call remain unchanged. Not engine-only or matched-optics parity.",
+  "files": {
+    "audit_module": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-current-serial-audit-build-v1/source/WRF/phys/module_ra_rrtmgp_audit.F",
+      "sha256": "42642b1f1dc9e55e8d502acc7367db2ec80c1dc8e8f7d1df30927d70a0575b55"
+    },
+    "interpretation_doc": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-current-serial-audit-build-v1/source/WRF/doc/rrtmgp/PHYSICS_AUDIT.md",
+      "sha256": "65f1a870caa1f9bc65c6c63c3e9c3558e73839c90f23288dab69c0305428c839"
+    },
+    "radiation_driver": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-current-serial-audit-build-v1/source/WRF/phys/module_radiation_driver.F",
+      "sha256": "6790dc884c53fff201f15713d60197f54b43dc53b545ed44eb2397e9d2d3687f"
+    },
+    "rrtmg_lw": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-current-serial-audit-build-v1/source/WRF/phys/module_ra_rrtmg_lw.F",
+      "sha256": "a1f36ea81f9ecb26a9dbdd5ec99bf6f15bbad072bad59ca56e46f3001448ccaf"
+    },
+    "rrtmg_sw": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-current-serial-audit-build-v1/source/WRF/phys/module_ra_rrtmg_sw.F",
+      "sha256": "0df9691c5ed479be29d50d7cf54fdd2f251e5ae8d1775f517ab2b89402c2a768"
+    }
+  },
+  "git_head": "1cb6920a43d8ba10ecfa179487839f9df7022cb4",
+  "locators": {
+    "documented_scope": {
+      "file": "interpretation_doc",
+      "lines": "20-26"
+    },
+    "generic_and_explicit_radius_inputs": {
+      "file": "rrtmg_sw",
+      "lw_file": "rrtmg_lw",
+      "lw_lines": "12400-12473",
+      "sw_lines": "11015-11068"
+    },
+    "generic_fu_radius_multiplier_cap": {
+      "file": "rrtmg_sw",
+      "lw_file": "rrtmg_lw",
+      "lw_lines": "12833-12837",
+      "sw_lines": "11398-11402"
+    },
+    "generic_snow_in_ice_path_and_explicit_ice_snow_partition": {
+      "file": "rrtmg_sw",
+      "lw_file": "rrtmg_lw",
+      "lw_lines": "12676-12756",
+      "sw_lines": "11268-11309"
+    },
+    "scratch_modes": {
+      "file": "radiation_driver",
+      "lw_lines": "2305-2357",
+      "sw_lines": "3170-3222"
+    }
+  },
+  "schema": "UDM37_CURRENT_SAME_STATE_RADIUS_SOURCE_CONTRACT_V1",
+  "source_root": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-current-serial-audit-build-v1/source",
+  "status": "SOURCE_REVIEW_ONLY_NO_CAMPAIGN_RESULTS"
+}

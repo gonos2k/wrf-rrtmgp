@@ -1,0 +1,41 @@
+{
+  "schema": "current-serial-audit-independent-review-v1",
+  "created_utc": "2026-10-04T15:06:13.198608+00:00",
+  "status": "PASS_SCOPED_PRECOMPILE_CONTRACT_RUNTIME_ELIGIBILITY_PENDING",
+  "build_scaffold": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-current-serial-audit-build-v1",
+  "pins": {
+    "run_build_once.py": "5d99525f172d078967746f36dea8fbe711002352fa61cf6f212219577f9c13a9",
+    "source-manifest.json": "cd3e7ce595cde9d2c149bf0a9eb57ad5eafb45c327006265e6de8b8f87550ee2",
+    "toolchain-dependency-inventory.json": "a2894cc301564574a649f14bc47f544c3ecf61a6296736868b0862dcf68cf813",
+    "prepare_scaffold.py": "fb5fc589a14843815ff35370c31b2c97b79c87fce037bb5408df46654f363d47"
+  },
+  "pure_check": {
+    "method": "runpy.run_path(run_name=review_read_only); verify() only",
+    "status": "PASS",
+    "source_head": "1cb6920a43d8ba10ecfa179487839f9df7022cb4",
+    "tracked_sources": 7034,
+    "configure_sha256": "6a2fcd322bbff92ff61a141671d492eb8d74e3d56af28582306c024775b89c68",
+    "runtime_libraries": 48,
+    "stale_objects_or_exes": false,
+    "DM_PARALLEL": false,
+    "OpenMP": false
+  },
+  "fixed_draft_issues": [
+    "existing receipt is no longer rewritten on collision",
+    "actual compile RC atomically fsynced before log hashing",
+    "post verify permits generated objects/exes but retains source/config/dependency checks",
+    "exception cleanup sends TERM then KILL to child process group"
+  ],
+  "precompile_assessment": "No material blocker found in source/config/default preflight contract for one root-authorized isolated compile. Runtime requires successful post-build artifact acceptance.",
+  "postbuild_acceptance_items": [
+    "generated F90/object nonempty and linked RRTMGP finite guards/private scalar RTE symbols or equivalent actual-object proof",
+    "new executable ELF and normalized live loader closure; no stale executable existed before compile",
+    "shared NetCDF include .mod/header and symlink-binding closure beyond current donor library hash pins"
+  ],
+  "runtime_runner": "NOT_PRESENT_AT_REVIEW; owner preparing three arms; no runtime PASS claimed",
+  "build_calls": 0,
+  "model_calls": 0,
+  "REAL_calls": 0,
+  "solver_calls": 0,
+  "source_or_stage_mutations": 0
+}
