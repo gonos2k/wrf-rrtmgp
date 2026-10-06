@@ -1,0 +1,353 @@
+{
+  "interpretation": {
+    "classification": "Expected inactive band-12 source/absorption in the legacy taugb12 upper-atmosphere branch, also observed as zero GP gas optical depth in this retained packet; this does not indicate a source-port defect.",
+    "finding": "The legacy source code's upper-atmosphere loop (module_ra_rrtmg_lw.F taugb12, lines 7225-7231) makes band-12 Planck fractions and TAUGAS exactly zero from layer 29 upward. The retained GP band-12 GAS_TAU arrays are also exactly zero over those same upper layer indices; its own band limits are read from the saved transport sidecar.",
+    "not_claimed": [
+      "no individual legacy/GP gpoint correspondence",
+      "no radiative accuracy or causal flux conclusion",
+      "no claim about other bands or atmospheric states"
+    ]
+  },
+  "legacy_bands": {
+    "band": 12,
+    "band12_active_layer_fraction_sum_range_layers_1_28": [
+      0.9999967175535858,
+      1.0000024163164198
+    ],
+    "band12_active_layer_taugas_range_layers_1_28": [
+      2.8341295546852052e-05,
+      277.277099609375
+    ],
+    "band12_max_taugas_layer_1based": 14,
+    "gpoint_interval_1based_inclusive": [
+      123,
+      130
+    ],
+    "layer_order": "Fortran layer 1 is lower atmosphere; PLAY descends from ~990.29 hPa to 1 hPa at layer 45.",
+    "ngc_ngs_source": "WRF/phys/module_ra_rrtmg_lw.F:8308-8309",
+    "source_zeroing_location": {
+      "lines": "7225-7231",
+      "meaning": "The legacy band-12 routine explicitly sets both TAUGAS and Planck fractions to exact zero for lay > laytrop.",
+      "source_text": "! Upper atmosphere loop\n      do lay = laytrop+1, nlayers\n\n         do ig = 1, ng12\n            taug(lay,ngs11+ig) = 0.0_rb\n            fracs(lay,ngs11+ig) = 0.0_rb\n         enddo",
+      "subroutine": "taugb12"
+    },
+    "upper_fraction_sums_exact_zero": true,
+    "upper_fraction_zero_count": 136,
+    "upper_layer_details": [
+      {
+        "fortran_layer": 29,
+        "gp_gas_tau_max": 0.0,
+        "gp_gas_tau_min": 0.0,
+        "gp_gas_tau_sum_over_7_gpoints": 0.0,
+        "legacy_fraction_sum": 0.0,
+        "legacy_play_hpa": 92.7411117553711,
+        "legacy_taugas_max": 0.0,
+        "legacy_taugas_min": 0.0,
+        "legacy_taugas_sum_over_8_gpoints": 0.0
+      },
+      {
+        "fortran_layer": 30,
+        "gp_gas_tau_max": 0.0,
+        "gp_gas_tau_min": 0.0,
+        "gp_gas_tau_sum_over_7_gpoints": 0.0,
+        "legacy_fraction_sum": 0.0,
+        "legacy_play_hpa": 77.82003784179688,
+        "legacy_taugas_max": 0.0,
+        "legacy_taugas_min": 0.0,
+        "legacy_taugas_sum_over_8_gpoints": 0.0
+      },
+      {
+        "fortran_layer": 31,
+        "gp_gas_tau_max": 0.0,
+        "gp_gas_tau_min": 0.0,
+        "gp_gas_tau_sum_over_7_gpoints": 0.0,
+        "legacy_fraction_sum": 0.0,
+        "legacy_play_hpa": 65.2995834350586,
+        "legacy_taugas_max": 0.0,
+        "legacy_taugas_min": 0.0,
+        "legacy_taugas_sum_over_8_gpoints": 0.0
+      },
+      {
+        "fortran_layer": 32,
+        "gp_gas_tau_max": 0.0,
+        "gp_gas_tau_min": 0.0,
+        "gp_gas_tau_sum_over_7_gpoints": 0.0,
+        "legacy_fraction_sum": 0.0,
+        "legacy_play_hpa": 54.79350662231445,
+        "legacy_taugas_max": 0.0,
+        "legacy_taugas_min": 0.0,
+        "legacy_taugas_sum_over_8_gpoints": 0.0
+      },
+      {
+        "fortran_layer": 33,
+        "gp_gas_tau_max": 0.0,
+        "gp_gas_tau_min": 0.0,
+        "gp_gas_tau_sum_over_7_gpoints": 0.0,
+        "legacy_fraction_sum": 0.0,
+        "legacy_play_hpa": 48.0,
+        "legacy_taugas_max": 0.0,
+        "legacy_taugas_min": 0.0,
+        "legacy_taugas_sum_over_8_gpoints": 0.0
+      },
+      {
+        "fortran_layer": 34,
+        "gp_gas_tau_max": 0.0,
+        "gp_gas_tau_min": 0.0,
+        "gp_gas_tau_sum_over_7_gpoints": 0.0,
+        "legacy_fraction_sum": 0.0,
+        "legacy_play_hpa": 44.0,
+        "legacy_taugas_max": 0.0,
+        "legacy_taugas_min": 0.0,
+        "legacy_taugas_sum_over_8_gpoints": 0.0
+      },
+      {
+        "fortran_layer": 35,
+        "gp_gas_tau_max": 0.0,
+        "gp_gas_tau_min": 0.0,
+        "gp_gas_tau_sum_over_7_gpoints": 0.0,
+        "legacy_fraction_sum": 0.0,
+        "legacy_play_hpa": 40.0,
+        "legacy_taugas_max": 0.0,
+        "legacy_taugas_min": 0.0,
+        "legacy_taugas_sum_over_8_gpoints": 0.0
+      },
+      {
+        "fortran_layer": 36,
+        "gp_gas_tau_max": 0.0,
+        "gp_gas_tau_min": 0.0,
+        "gp_gas_tau_sum_over_7_gpoints": 0.0,
+        "legacy_fraction_sum": 0.0,
+        "legacy_play_hpa": 36.0,
+        "legacy_taugas_max": 0.0,
+        "legacy_taugas_min": 0.0,
+        "legacy_taugas_sum_over_8_gpoints": 0.0
+      },
+      {
+        "fortran_layer": 37,
+        "gp_gas_tau_max": 0.0,
+        "gp_gas_tau_min": 0.0,
+        "gp_gas_tau_sum_over_7_gpoints": 0.0,
+        "legacy_fraction_sum": 0.0,
+        "legacy_play_hpa": 32.0,
+        "legacy_taugas_max": 0.0,
+        "legacy_taugas_min": 0.0,
+        "legacy_taugas_sum_over_8_gpoints": 0.0
+      },
+      {
+        "fortran_layer": 38,
+        "gp_gas_tau_max": 0.0,
+        "gp_gas_tau_min": 0.0,
+        "gp_gas_tau_sum_over_7_gpoints": 0.0,
+        "legacy_fraction_sum": 0.0,
+        "legacy_play_hpa": 28.0,
+        "legacy_taugas_max": 0.0,
+        "legacy_taugas_min": 0.0,
+        "legacy_taugas_sum_over_8_gpoints": 0.0
+      },
+      {
+        "fortran_layer": 39,
+        "gp_gas_tau_max": 0.0,
+        "gp_gas_tau_min": 0.0,
+        "gp_gas_tau_sum_over_7_gpoints": 0.0,
+        "legacy_fraction_sum": 0.0,
+        "legacy_play_hpa": 24.0,
+        "legacy_taugas_max": 0.0,
+        "legacy_taugas_min": 0.0,
+        "legacy_taugas_sum_over_8_gpoints": 0.0
+      },
+      {
+        "fortran_layer": 40,
+        "gp_gas_tau_max": 0.0,
+        "gp_gas_tau_min": 0.0,
+        "gp_gas_tau_sum_over_7_gpoints": 0.0,
+        "legacy_fraction_sum": 0.0,
+        "legacy_play_hpa": 20.0,
+        "legacy_taugas_max": 0.0,
+        "legacy_taugas_min": 0.0,
+        "legacy_taugas_sum_over_8_gpoints": 0.0
+      },
+      {
+        "fortran_layer": 41,
+        "gp_gas_tau_max": 0.0,
+        "gp_gas_tau_min": 0.0,
+        "gp_gas_tau_sum_over_7_gpoints": 0.0,
+        "legacy_fraction_sum": 0.0,
+        "legacy_play_hpa": 16.0,
+        "legacy_taugas_max": 0.0,
+        "legacy_taugas_min": 0.0,
+        "legacy_taugas_sum_over_8_gpoints": 0.0
+      },
+      {
+        "fortran_layer": 42,
+        "gp_gas_tau_max": 0.0,
+        "gp_gas_tau_min": 0.0,
+        "gp_gas_tau_sum_over_7_gpoints": 0.0,
+        "legacy_fraction_sum": 0.0,
+        "legacy_play_hpa": 12.0,
+        "legacy_taugas_max": 0.0,
+        "legacy_taugas_min": 0.0,
+        "legacy_taugas_sum_over_8_gpoints": 0.0
+      },
+      {
+        "fortran_layer": 43,
+        "gp_gas_tau_max": 0.0,
+        "gp_gas_tau_min": 0.0,
+        "gp_gas_tau_sum_over_7_gpoints": 0.0,
+        "legacy_fraction_sum": 0.0,
+        "legacy_play_hpa": 8.0,
+        "legacy_taugas_max": 0.0,
+        "legacy_taugas_min": 0.0,
+        "legacy_taugas_sum_over_8_gpoints": 0.0
+      },
+      {
+        "fortran_layer": 44,
+        "gp_gas_tau_max": 0.0,
+        "gp_gas_tau_min": 0.0,
+        "gp_gas_tau_sum_over_7_gpoints": 0.0,
+        "legacy_fraction_sum": 0.0,
+        "legacy_play_hpa": 4.0,
+        "legacy_taugas_max": 0.0,
+        "legacy_taugas_min": 0.0,
+        "legacy_taugas_sum_over_8_gpoints": 0.0
+      },
+      {
+        "fortran_layer": 45,
+        "gp_gas_tau_max": 0.0,
+        "gp_gas_tau_min": 0.0,
+        "gp_gas_tau_sum_over_7_gpoints": 0.0,
+        "legacy_fraction_sum": 0.0,
+        "legacy_play_hpa": 1.0,
+        "legacy_taugas_max": 0.0,
+        "legacy_taugas_min": 0.0,
+        "legacy_taugas_sum_over_8_gpoints": 0.0
+      }
+    ],
+    "upper_taugas_exact_zero": true,
+    "upper_taugas_zero_count": 136,
+    "upper_zero_layer_interval_1based": [
+      29,
+      45
+    ],
+    "upper_zero_layer_play_hpa": [
+      92.7411117553711,
+      1.0
+    ],
+    "wavenumber_edges_cm-1": [
+      1800.0,
+      2080.0
+    ],
+    "wavenumber_source": "WRF/phys/module_ra_rrtmg_lw.F:8191-8196 and taugb12 comment at 7036"
+  },
+  "legacy_packet_context": {
+    "domain": 1,
+    "i": 13,
+    "j": 46,
+    "phase": "LW",
+    "source_seconds": 43200.0,
+    "step": 721
+  },
+  "pins": {
+    "analysis_script": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-source-units-review-v1/analyze_zero_fraction_v1.py",
+      "sha256": "5e3c5466edf8c89e4c551468b6a2245c8b53474a046ea87c55ee36085c7b8fb4",
+      "size_bytes": 11997
+    },
+    "gp_execution_receipt": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-n2-attribution-v1/run-preparation-v1/run-v1/execution.json",
+      "sha256": "cbb876791a9ff905356fa90abd65ede8d5f8dde882009d7be48684c74a7a600e",
+      "size_bytes": 70378
+    },
+    "gp_input": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-dry-column-attribution-v1/matched-legacy-dry.input",
+      "sha256": "292f9569b059c373c9cb14f1574cb8835627331574592a19d641ef07c21ec918",
+      "size_bytes": 39535
+    },
+    "gp_plan": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-n2-attribution-v1/run-preparation-v1/plan.json",
+      "sha256": "a96058bc38ff15b7ca5b0b822adda6d919ab70d5199160191c66fa37cf169ea9",
+      "size_bytes": 32933
+    },
+    "gp_result": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-n2-attribution-v1/run-preparation-v1/run-v1/n2-0p7808.result",
+      "sha256": "b578e9983b5817297db75baac026af98b84a3cbcd3653aadf2e4db5930ce5732",
+      "size_bytes": 763371
+    },
+    "gp_transport_sidecar": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-n2-attribution-v1/run-preparation-v1/run-v1/n2-0p7808.result.lw_transport",
+      "sha256": "bb53daf55ea9b6f91c9d0dbc4f132eff11b3ab76fd278bacb327571a1642e792",
+      "size_bytes": 308081
+    },
+    "legacy_execution_receipt": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-legacy-lw-source-export-bon-audit-v2/execution-receipt.json",
+      "sha256": "83fb045ddbf2b49793a086d4190057e0fcb2cd9148832afba97976552dce297b",
+      "size_bytes": 321982
+    },
+    "legacy_export": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-legacy-lw-source-export-bon-audit-v2/cases/SOURCE_ON/legacy-export/rrtmg4_d01_i13_j46_step721_lw.txt",
+      "sha256": "bd614b57362b48ab8e00b179fc3464925b9c49a8eef0a472489f87fd89e15c7f",
+      "size_bytes": 2539937
+    },
+    "legacy_reader": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-current-bon-night-serial-audit-v2/read_export_context.py",
+      "sha256": "39de9417e4ba2eb2d97d08e0260226397fa00eaa2d13b7b9480f54187ac6454c",
+      "size_bytes": 7261
+    },
+    "legacy_source": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-legacy-lw-source-export-pr-work/WRF/phys/module_ra_rrtmg_lw.F",
+      "sha256": "09164a1048f2be2001ac6e161da3c0c48f9e74e4ff57271f445032392d9153ef",
+      "size_bytes": 713929
+    }
+  },
+  "rrtmgp_native_band12": {
+    "active_layers_1_28_tau_range": [
+      2.6792155026437004e-05,
+      46.34600678809369
+    ],
+    "all_three_fields_bitwise_equal_over_full_profile": true,
+    "band": 12,
+    "band_edges_cm-1_from_saved_sidecar": [
+      1800.0,
+      2080.0
+    ],
+    "compared_fields": [
+      "GAS_TAU",
+      "GAS_TAU_RAW",
+      "TOTAL_TAU"
+    ],
+    "field": "GAS_TAU",
+    "gpoint_interval_1based_inclusive_from_saved_sidecar": [
+      108,
+      114
+    ],
+    "interpretation_limit": "This is an independent within-RRTMGP band-native tau range; gpoints are not index-paired with legacy RRTMG.",
+    "profile_all_layer_tau_range": [
+      0.0,
+      46.34600678809369
+    ],
+    "result_header": [
+      "LW",
+      "1",
+      "45"
+    ],
+    "shape": [
+      45,
+      7
+    ],
+    "upper_layer_interval_1based": [
+      29,
+      45
+    ],
+    "upper_layer_tau_element_count": 119,
+    "upper_layer_tau_exact_zero": true,
+    "upper_layer_tau_zero_count": 119
+  },
+  "schema": "UDM37_BON_NIGHT_SOURCE_UNITS_ZERO_FRACTION_ADDENDUM_V1",
+  "scope": {
+    "builds_or_forecasts": 0,
+    "gpoint_comparison": "Within-engine band reductions/ranges only; legacy and RRTMGP g-points are not paired.",
+    "method": "Parse retained legacy export and retained RRTMGP result/transport-sidecar arrays only; no spectral recurrence.",
+    "new_solver_or_radiation_recurrence_calls": 0,
+    "production_or_pinned_input_edits": 0
+  },
+  "status": "PASS_ARRAY_ONLY_ZERO_FRACTION_AND_OPTICAL_DEPTH_CHECK"
+}

@@ -1,0 +1,59 @@
+{
+  "all_engine_native_totals": {
+    "gp_integral_TOA_UP_Wm2": 205.46199837062676,
+    "gp_integral_surface_DN_Wm2": 188.56102211710476,
+    "gp_policy1_TOA_UP_Wm2": 205.67931744357566,
+    "gp_policy1_surface_DN_Wm2": 189.11152364355914,
+    "legacy_TOA_UP_Wm2": 205.56230002652458,
+    "legacy_surface_DN_Wm2": 187.83762277529087
+  },
+  "band_flux_quadrature": [
+    {
+      "max_abs_all_band_UP_DN_change_Wm2": null,
+      "order": 256,
+      "weights_sum": 1.0
+    },
+    {
+      "max_abs_all_band_UP_DN_change_Wm2": 2.957602328519139e-09,
+      "order": 512,
+      "weights_sum": 1.0000000000000002
+    },
+    {
+      "max_abs_all_band_UP_DN_change_Wm2": 1.605895139089597e-10,
+      "order": 1024,
+      "weights_sum": 1.0
+    }
+  ],
+  "common_bands_3_13": {
+    "gp_integral_TOA_UP_Wm2": 131.92423218474215,
+    "gp_integral_surface_DN_Wm2": 100.41571437967957,
+    "gp_policy1_TOA_UP_Wm2": 132.07368881895215,
+    "gp_policy1_surface_DN_Wm2": 100.4589163645547,
+    "legacy_TOA_UP_Wm2": 132.27738528160964,
+    "legacy_surface_DN_Wm2": 99.86301921824736
+  },
+  "limits": [
+    "One selected nighttime clear optical column; 45 solver layers = 32 native + 13 upper extension. Not domain accuracy or general port equivalence.",
+    "Matched45 dry-mass carrier and explicit N2=0.7808 are diagnostic; not 45 native WRF layers or inferred legacy N2 composition.",
+    "Only bands 3-13 share exact edges. Other bands are engine-native totals, never paired spectral claims; legacy band16 Planck includes the infinite high-wavenumber tail.",
+    "140 versus 128 engine-specific gpoints: never pair indices or swap sources/opacity; no unweighted gpoint means.",
+    "GP interior source uses geometric-mean adjacent fractions; compare to separate legacy layer-face source reductions. No source renormalization.",
+    "Source radiance conventions inferred from pinned source and same-engine recurrence. GP LUT lacks explicit units attribute; not an external Planck truth oracle.",
+    "Native REAL32 legacy values are promoted to float64 for band reporting; sum may differ by original float32 accumulation roundoff. Exact native recurrence reconstruction already passed separately.",
+    "Common-band residual combines source interpolation, angular closure, k-discretization and optical coefficients; no uniquely causal source/opacity split or physical accuracy conclusion.",
+    "No production modification, new compiled RTE calls, forecasts, or builds. Python band-wise transport is new numerical evidence."
+  ],
+  "same_engine_gp_reproduction_max_abs": {
+    "DN": 4.198419389922492e-12,
+    "UP": 2.8990143619012088e-12
+  },
+  "status": "PASS_SCOPED_COMMON_BAND_COMPARISON",
+  "unpaired_engine_native_totals": {
+    "gp_integral_TOA_UP_Wm2": 73.5377661858846,
+    "gp_integral_surface_DN_Wm2": 88.14530773742517,
+    "gp_policy1_TOA_UP_Wm2": 73.60562862462352,
+    "gp_policy1_surface_DN_Wm2": 88.65260727900444,
+    "legacy_TOA_UP_Wm2": 73.28491474491493,
+    "legacy_surface_DN_Wm2": 87.97460355704354
+  }
+}

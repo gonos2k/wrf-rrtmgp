@@ -1,0 +1,389 @@
+{
+  "N2_diagnostic": {
+    "explicit_N2_field_in_matched_dry_input": false,
+    "meaning": "N2=0.7808 is an explicit GP sensitivity override, not a recovered legacy N2 profile. Treat other matched fields as held, but do not claim the gas composition is exactly identical to legacy.",
+    "sidecar_N2_OVERRIDE": 0.7808,
+    "transport_policy": 1.0
+  },
+  "context_matches": true,
+  "dry_air_column_mapping": {
+    "Avogadro_molecules_mol": 6.02214076e+23,
+    "GP_diagnostic_field": "NATIVE_DRY_LAYER_MASS_KG_M2 (kg m-2)",
+    "M_dry_kg_mol": 0.02896600030362606,
+    "N2_result_GAS_COL_DRY_relative_error_metrics_vs_legacy_COLDry": {
+      "definitions": "The two formulas differ by floating-point operation order: abs(x-y)/abs(y) versus abs(x/y-1). Both quantify the same near-machine-precision discrepancy; neither is an uncertainty estimate.",
+      "max_abs_difference_over_abs_reference": 1.2358666188355262e-16,
+      "max_abs_ratio_minus_one": 2.220446049250313e-16
+    },
+    "conversion": "mass_kg_m2 * Avogadro_molecules_mol / (M_dry_kg_mol * 10000)",
+    "interpretation": "The molecular dry column is mapped by units and conversion; it is not a like-for-like raw-field equality.",
+    "legacy_field": "INPUT/COLDry (molecule_cm-2)",
+    "legacy_packet_COLDry_equals_dry_plan_expected_45_profile": true,
+    "mass_converted_to_COLDry_relative_error_metrics": {
+      "definitions": "The two formulas differ by floating-point operation order: abs(x-y)/abs(y) versus abs(x/y-1). Both quantify the same near-machine-precision discrepancy; neither is an uncertainty estimate.",
+      "max_abs_difference_over_abs_reference": 1.2358666188355262e-16,
+      "max_abs_ratio_minus_one": 2.220446049250313e-16
+    },
+    "original_to_counterfactual_input_change": "The diagnostic replaced the original 32-layer dry-mass carrier with a 45-layer carrier derived from the same-call legacy COLDry profile; the original bytes outside that one section were held identical per the pinned dry-attribution review."
+  },
+  "legacy_call_context": {
+    "domain": 1,
+    "i": 13,
+    "j": 46,
+    "phase": "LW",
+    "source_seconds": 43200.0,
+    "step": 721
+  },
+  "legacy_to_matched_dry_exact_state_fields": [
+    {
+      "exact_equal_text_parsed_values": true,
+      "field": "PLAY",
+      "gp_endpoints": [
+        990.2926635742188,
+        1.0
+      ],
+      "legacy_endpoints": [
+        990.2926635742188,
+        1.0
+      ],
+      "max_abs_difference": 0.0,
+      "mean_abs_difference": 0.0,
+      "same_shape": true,
+      "shape": [
+        45
+      ],
+      "units": "hPa"
+    },
+    {
+      "exact_equal_text_parsed_values": true,
+      "field": "PLEV",
+      "gp_endpoints": [
+        993.2114868164062,
+        0.0
+      ],
+      "legacy_endpoints": [
+        993.2114868164062,
+        0.0
+      ],
+      "max_abs_difference": 0.0,
+      "mean_abs_difference": 0.0,
+      "same_shape": true,
+      "shape": [
+        46
+      ],
+      "units": "hPa"
+    },
+    {
+      "exact_equal_text_parsed_values": true,
+      "field": "TLAY",
+      "gp_endpoints": [
+        260.8541564941406,
+        244.57928466796875
+      ],
+      "legacy_endpoints": [
+        260.8541564941406,
+        244.57928466796875
+      ],
+      "max_abs_difference": 0.0,
+      "mean_abs_difference": 0.0,
+      "same_shape": true,
+      "shape": [
+        45
+      ],
+      "units": "K"
+    },
+    {
+      "exact_equal_text_parsed_values": true,
+      "field": "TLEV",
+      "gp_endpoints": [
+        260.4202880859375,
+        232.1647491455078
+      ],
+      "legacy_endpoints": [
+        260.4202880859375,
+        232.1647491455078
+      ],
+      "max_abs_difference": 0.0,
+      "mean_abs_difference": 0.0,
+      "same_shape": true,
+      "shape": [
+        46
+      ],
+      "units": "K"
+    },
+    {
+      "exact_equal_text_parsed_values": true,
+      "field": "TSFC",
+      "gp_endpoints": [
+        258.0118408203125,
+        258.0118408203125
+      ],
+      "legacy_endpoints": [
+        258.0118408203125,
+        258.0118408203125
+      ],
+      "max_abs_difference": 0.0,
+      "mean_abs_difference": 0.0,
+      "same_shape": true,
+      "shape": [
+        1
+      ],
+      "units": "K"
+    },
+    {
+      "exact_equal_text_parsed_values": true,
+      "field": "H2O_VMR",
+      "gp_endpoints": [
+        0.0018855081871151924,
+        1.540269295219332e-05
+      ],
+      "legacy_endpoints": [
+        0.0018855081871151924,
+        1.540269295219332e-05
+      ],
+      "max_abs_difference": 0.0,
+      "mean_abs_difference": 0.0,
+      "same_shape": true,
+      "shape": [
+        45
+      ],
+      "units": "mol_mol-1"
+    },
+    {
+      "exact_equal_text_parsed_values": true,
+      "field": "O3_VMR",
+      "gp_endpoints": [
+        2.9145704516508886e-08,
+        3.9893111534183845e-06
+      ],
+      "legacy_endpoints": [
+        2.9145704516508886e-08,
+        3.9893111534183845e-06
+      ],
+      "max_abs_difference": 0.0,
+      "mean_abs_difference": 0.0,
+      "same_shape": true,
+      "shape": [
+        45
+      ],
+      "units": "mol_mol-1"
+    },
+    {
+      "exact_equal_text_parsed_values": true,
+      "field": "CO2_VMR",
+      "gp_endpoints": [
+        0.00036862838896922767,
+        0.00036862838896922767
+      ],
+      "legacy_endpoints": [
+        0.00036862838896922767,
+        0.00036862838896922767
+      ],
+      "max_abs_difference": 0.0,
+      "mean_abs_difference": 0.0,
+      "same_shape": true,
+      "shape": [
+        45
+      ],
+      "units": "mol_mol-1"
+    },
+    {
+      "exact_equal_text_parsed_values": true,
+      "field": "CH4_VMR",
+      "gp_endpoints": [
+        1.778083287717891e-06,
+        1.778083287717891e-06
+      ],
+      "legacy_endpoints": [
+        1.778083287717891e-06,
+        1.778083287717891e-06
+      ],
+      "max_abs_difference": 0.0,
+      "mean_abs_difference": 0.0,
+      "same_shape": true,
+      "shape": [
+        45
+      ],
+      "units": "mol_mol-1"
+    },
+    {
+      "exact_equal_text_parsed_values": true,
+      "field": "N2O_VMR",
+      "gp_endpoints": [
+        3.153516274778667e-07,
+        3.153516274778667e-07
+      ],
+      "legacy_endpoints": [
+        3.153516274778667e-07,
+        3.153516274778667e-07
+      ],
+      "max_abs_difference": 0.0,
+      "mean_abs_difference": 0.0,
+      "same_shape": true,
+      "shape": [
+        45
+      ],
+      "units": "mol_mol-1"
+    },
+    {
+      "exact_equal_text_parsed_values": true,
+      "field": "O2_VMR",
+      "gp_endpoints": [
+        0.20948800444602966,
+        0.20948800444602966
+      ],
+      "legacy_endpoints": [
+        0.20948800444602966,
+        0.20948800444602966
+      ],
+      "max_abs_difference": 0.0,
+      "mean_abs_difference": 0.0,
+      "same_shape": true,
+      "shape": [
+        45
+      ],
+      "units": "mol_mol-1"
+    },
+    {
+      "exact_equal_text_parsed_values": true,
+      "field": "SURFACE_EMISSIVITY",
+      "gp_endpoints": [
+        0.9436768293380737,
+        0.9436768293380737
+      ],
+      "legacy_endpoints": [
+        0.9436768293380737,
+        0.9436768293380737
+      ],
+      "max_abs_difference": 0.0,
+      "mean_abs_difference": 0.0,
+      "same_shape": true,
+      "shape": [
+        16
+      ],
+      "units": "1"
+    },
+    {
+      "exact_equal_text_parsed_values": true,
+      "field": "SOLVER_SEMISS",
+      "gp_endpoints": [
+        0.9436768293380737,
+        0.9436768293380737
+      ],
+      "legacy_endpoints": [
+        0.9436768293380737,
+        0.9436768293380737
+      ],
+      "max_abs_difference": 0.0,
+      "mean_abs_difference": 0.0,
+      "same_shape": true,
+      "shape": [
+        16
+      ],
+      "units": "1"
+    }
+  ],
+  "limits": [
+    "The GP dry input has no embedded time/location metadata; its linkage to the 12:00 selected call is through the pinned dry-column plan/execution. The direct 45-level pressure, temperature, surface-emissivity, and six VMR comparisons with the actual current legacy packet are exact.",
+    "The source-attribution plan's legacy-export pointer refers to an earlier 0884e7... packet; this comparison instead pins and directly reads the newer bd614b... SOURCE_ON packet. The dry profile/expected COLDry agrees exactly across them.",
+    "No optical-depth, flux, heating, spectrum, or accuracy values were recomputed in this state-applicability check."
+  ],
+  "matched_dry_plan_context": {
+    "domain": 1,
+    "i": 13,
+    "j": 46,
+    "source_seconds": 43200.0,
+    "step": 721
+  },
+  "pins": {
+    "current_legacy_execution": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-legacy-lw-source-export-bon-audit-v2/execution-receipt.json",
+      "sha256": "83fb045ddbf2b49793a086d4190057e0fcb2cd9148832afba97976552dce297b",
+      "size_bytes": 321982
+    },
+    "dry_attribution_execution": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-dry-column-attribution-v1/run-v1/execution.json",
+      "sha256": "3f449ad53f6b52f147e3907eb66bc4ae462d6727acaec064c6baf057b7e80b4c",
+      "size_bytes": 69211
+    },
+    "dry_attribution_independent_review": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-dry-column-attribution-v1/terminal-review-v1/terminal-review.json",
+      "sha256": "53fc07cc4cbd19733fc40d3c0480e2435ba3372d9c552250c882ef0829114c85",
+      "size_bytes": 4088
+    },
+    "dry_attribution_plan": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-dry-column-attribution-v1/plan.json",
+      "sha256": "fdf6a52b0d7efe499370daca8098820cef66636166b2c694588e55a3ee8c5853",
+      "size_bytes": 4228
+    },
+    "legacy_packet": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-legacy-lw-source-export-bon-audit-v2/cases/SOURCE_ON/legacy-export/rrtmg4_d01_i13_j46_step721_lw.txt",
+      "sha256": "bd614b57362b48ab8e00b179fc3464925b9c49a8eef0a472489f87fd89e15c7f",
+      "size_bytes": 2539937
+    },
+    "legacy_reader": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-legacy-lw-math-v2/legacy_lw_replay.py",
+      "sha256": "691497decf3992435ada71b6af84e25e88773f534f385c1a56050e370a1aea00",
+      "size_bytes": 16092
+    },
+    "matched_dry_input": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-dry-column-attribution-v1/matched-legacy-dry.input",
+      "sha256": "292f9569b059c373c9cb14f1574cb8835627331574592a19d641ef07c21ec918",
+      "size_bytes": 39535
+    },
+    "matched_dry_result": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-dry-column-attribution-v1/run-v1/matched-legacy-dry.result",
+      "sha256": "2e4e1257fe152f4e6e2d6036800f762605555a54ee0262951d211aa2af6c87ac",
+      "size_bytes": 763371
+    },
+    "n2_execution": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-n2-attribution-v1/run-preparation-v1/run-v1/execution.json",
+      "sha256": "cbb876791a9ff905356fa90abd65ede8d5f8dde882009d7be48684c74a7a600e",
+      "size_bytes": 70378
+    },
+    "n2_independent_review": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-n2-attribution-v1/run-preparation-v1/terminal-review-v1.json",
+      "sha256": "7463be583664a09d22d03bd0a694e48c510f4ee8cfc473ab31b3832bad2196aa",
+      "size_bytes": 6116
+    },
+    "n2_solver_result": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-n2-attribution-v1/run-preparation-v1/run-v1/n2-0p7808.result",
+      "sha256": "b578e9983b5817297db75baac026af98b84a3cbcd3653aadf2e4db5930ce5732",
+      "size_bytes": 763371
+    },
+    "n2_transport_sidecar": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-n2-attribution-v1/run-preparation-v1/run-v1/n2-0p7808.result.lw_transport",
+      "sha256": "bb53daf55ea9b6f91c9d0dbc4f132eff11b3ab76fd278bacb327571a1642e792",
+      "size_bytes": 308081
+    },
+    "section_reader": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-lw-angular-math-v1/angular_reference.py",
+      "sha256": "a64dfa9f3ff90cc788028c1cb0f5ab4d0be1316c49ef74e833b8dddc4eb5cb48",
+      "size_bytes": 13139
+    },
+    "source_attribution_plan": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-source-attribution-plan-v1/plan.json",
+      "sha256": "821f2e9809c7460363afe70bc06e1678735d349f2cec8683159153095879f9b4",
+      "size_bytes": 12294
+    }
+  },
+  "pressure_orientation": {
+    "legacy_PLAY_equals_GP_PLAY": true,
+    "legacy_PLEV_equals_GP_PLEV": true,
+    "legacy_SOLVER_PZ_equals_legacy_PLEV": true,
+    "orientation": "packet/solver slot 1 is the lower/surface-side interface; pressure decreases toward TOA",
+    "surface_to_TOA_level_endpoints_hPa": [
+      993.2114868164062,
+      0.0
+    ],
+    "units": "hPa in both records"
+  },
+  "related_review_status": {
+    "dry_column_review": "PASS_READONLY_ONE_CALL_REVIEW",
+    "n2_review": "PASS_SCOPED_THREE_N2_CALLS",
+    "source_export_execution": "PASS_SOURCE_EXPORT_NO_FEEDBACK"
+  },
+  "schema": "udm37-bon-night-legacy-state-comparison-v2",
+  "scope": "Read-only comparison of captured source/input state only; no RTE replay, transport recurrence, or flux recomputation.",
+  "status": "PASS_SCOPED_STATE_APPLICABILITY_WITH_DECLARED_DRY_AND_N2_DIAGNOSTICS"
+}
