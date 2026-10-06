@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Standard-library-only integrity and bounded result-contract verifier."""
+import argparse
 import hashlib
 import json
 import math
@@ -25,17 +26,36 @@ def require(ok, message):
         raise ValueError(message)
 
 
+def checked_path(root, rel):
+    require(isinstance(rel, str) and rel and not rel.startswith('/') and
+            '\\' not in rel and all(part not in ('', '.', '..') for part in rel.split('/')),
+            f'unsafe relative path: {rel!r}')
+    path = root / rel
+    require(path.resolve().is_relative_to(root.resolve()), f'path escapes root: {rel}')
+    return path
+
+
 def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--source-root', type=Path, default=REPO,
+                        help='Source root for frozen archive pins; defaults to the current checkout (strict)')
+    parser.add_argument('--current-source-root', type=Path, default=REPO,
+                        help='Checkout checked against the reviewed current-source contract')
+    args = parser.parse_args()
+    source_root = args.source_root.resolve()
+    current_root = args.current_source_root.resolve()
     manifest = json.loads(MANIFEST.read_text())
     require(manifest.get("schema") == "udm37-radius-moment-contract-package-v1", "manifest schema")
     rows = manifest.get("files")
     require(isinstance(rows, list) and rows, "manifest files list")
     paths = [r["path"] for r in rows]
+    for rel in paths:
+        checked_path(PACKAGE, rel)
     require(len(paths) == len(set(paths)), "duplicate manifest path")
     actual = {p.relative_to(PACKAGE).as_posix() for p in PACKAGE.rglob("*") if p.is_file() and p != MANIFEST}
     require(set(paths) == actual, f"closed roster mismatch: missing={sorted(set(paths)-actual)}, extra={sorted(actual-set(paths))}")
     for row in rows:
-        p = PACKAGE / row["path"]
+        p = checked_path(PACKAGE, row["path"])
         raw = p.read_bytes()
         require(len(raw) == row["bytes"] and hashlib.sha256(raw).hexdigest() == row["sha256"],
                 f"payload pin mismatch: {row['path']}")
@@ -58,9 +78,27 @@ def main():
     require("number_concentration_units" in review["findings"], "units issue documented")
     require("cloud_fraction" in review["findings"], "cloud-fraction issue documented")
     for file_row in review["source"]["files"]:
-        source = REPO / file_row["path"]
+        source = checked_path(source_root, file_row["path"])
         require(source.is_file(), f"missing source file {file_row['path']}")
         require(sha(source) == file_row["sha256"], f"source-review hash mismatch {file_row['path']}")
+
+    contract = json.loads((PACKAGE / 'current-source-contract.json').read_text())
+    require(contract.get('schema') == 'udm37-radius-current-source-contract-v1', 'current contract schema')
+    historical_paths = [row['path'] for row in review['source']['files']]
+    current_paths = [row['path'] for row in contract['files']]
+    require(len(current_paths) == len(set(current_paths)) and set(current_paths) == set(historical_paths),
+            'current contract source roster')
+    archived = {row['path']: row['sha256'] for row in review['source']['files']}
+    comparisons = []
+    for row in contract['files']:
+        source = checked_path(current_root, row['path'])
+        require(source.is_file(), f"missing current source file {row['path']}")
+        digest = sha(source)
+        require(digest == row['sha256'], f"current-source contract hash mismatch {row['path']}")
+        differs = digest != archived[row['path']]
+        require(differs == row['differs_from_archive'], f"current/archive difference mismatch {row['path']}")
+        comparisons.append({'path': row['path'], 'matches_archived_pin': not differs,
+                            'matches_reviewed_current_pin': True})
 
     provenance = json.loads((PACKAGE / "evidence/ice-lut-provenance-summary.json").read_text())
     require(provenance["pinned_tables"]["data_commit"] == "ea788bb39876948fa8d2c235665ccff19b4686b5", "LUT data commit")
@@ -85,7 +123,13 @@ def main():
     print(json.dumps({"status": "PASS_SCOPED_RADIUS_MOMENT_EVIDENCE_ARCHIVE",
                       "payload_files_checked": len(rows), "shape_rows": len(qrows),
                       "illustrative_samples": len(samples), "max_quadrature_relative_error": maxerr,
-                      "source_checkout": str(REPO), "physical_accuracy_claim": False}, sort_keys=True))
+                      "archive_source_checkout": str(source_root),
+                      "archive_source_commit_reference": contract['historical_source_commit'],
+                      "current_source_checkout": str(current_root),
+                      "current_source_reference": contract['reviewed_current_commit'],
+                      "current_source_contract_status": "PASS_REVIEWED_SOURCE_IDENTITY_ONLY",
+                      "current_vs_archive": comparisons,
+                      "physical_accuracy_claim": False}, sort_keys=True))
 
 
 if __name__ == "__main__":

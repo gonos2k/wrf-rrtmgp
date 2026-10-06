@@ -4,11 +4,19 @@ on:
     paths:
       - 'validation/rrtmgp37/radius-moment-contract/**'
       - '.github/workflows/validate-radius-moment-contract.yml'
+      - 'WRF/phys/module_mp_udm.F'
+      - 'WRF/phys/module_microphysics_driver.F'
+      - 'WRF/Registry/Registry.EM_COMMON'
+      - 'WRF/dyn_em/module_initialize_real.F'
   push:
     branches: [main]
     paths:
       - 'validation/rrtmgp37/radius-moment-contract/**'
       - '.github/workflows/validate-radius-moment-contract.yml'
+      - 'WRF/phys/module_mp_udm.F'
+      - 'WRF/phys/module_microphysics_driver.F'
+      - 'WRF/Registry/Registry.EM_COMMON'
+      - 'WRF/dyn_em/module_initialize_real.F'
 permissions:
   contents: read
 jobs:
@@ -17,5 +25,16 @@ jobs:
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
-      - name: Verify radius-moment evidence archive
-        run: python3 -I -S validation/rrtmgp37/radius-moment-contract/verify.py
+      - name: Checkout frozen source independently
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: 85c1c0a19e64fa190c18fe32d2a11c5f9b3ea1e1
+          path: .radius-moment-historical-source
+      - name: Verify historical archive and reviewed current source separately
+        run: >-
+          python3 -I -S validation/rrtmgp37/radius-moment-contract/verify.py
+          --source-root .radius-moment-historical-source
+      - name: Exercise source, payload and workflow coverage regression controls
+        run: >-
+          python3 -I -S validation/rrtmgp37/radius-moment-contract/test_verify.py
+          --historical-source-root .radius-moment-historical-source
