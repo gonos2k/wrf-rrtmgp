@@ -1,0 +1,120 @@
+{
+  "title": "Public NOAA/NWS RRTMGP application evidence relevant to UDM27",
+  "research_date": "2026-10-06",
+  "scope": "Read-only review of official NWS notices and pinned public HAFS v2.2 source chain. No model, solver, or build run.",
+  "summary": {
+    "scheduled_transition": "NWS SCN 26-76 announces HAFS v2.2 effective 2026-10-13 and explicitly lists transition from RRTMG to RRTMGP. On 2026-10-06 this is scheduled, not yet effective. The release bundles many other changes; its system-level skill comparison does not isolate radiation.",
+    "gfs_v17": "The April 2026 NWS proposal describes RRTMG improvements. The EMC MEG page updated 2026-06-05 describes GFS v17 field evaluation and Q1 FY27 planned implementation. A GFS v17 RRTMGP development suite is not proof of operational deployment.",
+    "udm27": "No UDM27-specific adapter or UDM-named suite mapping was found in the inspected pinned HAFS/CCPP source. This bounded search is not proof UDM27 is unused elsewhere. HAFS scheme contracts do not validate or prescribe UDM27 policies."
+  },
+  "source_chain": {
+    "hafs_repo": "https://github.com/hafs-community/HAFS",
+    "branch": "production/hafs.v2.2",
+    "commit": "6ac5af973faf2d9bb72208c4292bb8362f1308d4",
+    "gitmodules_sha256": "9b80698101b4013b5430e62d9f6b56bd6fcc878b15891c503bde6acd86c9d01a",
+    "submodule": {
+      "path": "sorc/hafs_forecast.fd",
+      "repo": "https://github.com/hafs-community/ufs-weather-model.git",
+      "branch": "production/hafs.v2.2",
+      "commit": "9ad9fab316e87dbb547a924f073f8a2221717fda"
+    },
+    "ufsatm": {
+      "repo": "https://github.com/NOAA-EMC/ufsatm",
+      "commit": "8f3a2ecd5b0b6ecaf6331356fb6fa3aed917b229"
+    },
+    "ccpp_physics_gitlink": "9c64d49ba93e06ba2e7e0e6f63d8edd707ac1c51",
+    "rte_rrtmgp_gitlink": "763cc15f7a6d2d4f4893f83460cdd81209b6fce7",
+    "identity_limit": "Pinned public branch/submodule source chain; not authenticated as a v2.2 release tag or deployed executable. SCN provides the scheduled effective date."
+  },
+  "source_files": [
+    {
+      "repo": "NOAA-EMC/ufsatm",
+      "commit": "8f3a2ecd5b0b6ecaf6331356fb6fa3aed917b229",
+      "path": "ccpp/suites/suite_FV3_HAFS_v2.xml",
+      "blob": "40bdc9f5a236e6ed2948bc51f6757f22b16e9a5f",
+      "sha256": "7e97ec616abf1e5555fd2fba395b73dd87bb1f2c84e396aa1e250c8f41541439",
+      "lines": "399-420, 523-530",
+      "finding": "HAFS v2 suite invokes GFS_rrtmgp_pre/cloud_mp/cloud_overlap, aerosol optics and SW/LW main; physics group invokes Thompson MP pre/main/post.",
+      "url": "https://github.com/NOAA-EMC/ufsatm/blob/8f3a2ecd5b0b6ecaf6331356fb6fa3aed917b229/ccpp/suites/suite_FV3_HAFS_v2.xml"
+    },
+    {
+      "repo": "ufs-community/ccpp-physics",
+      "commit": "9c64d49ba93e06ba2e7e0e6f63d8edd707ac1c51",
+      "path": "physics/Interstitials/UFS_SCM_NEPTUNE/GFS_rrtmgp_cloud_mp.F90",
+      "blob": "a335f56a44aaee241269901308ad7f4286f591ef",
+      "sha256": "2d44b2f0eadd5c4f35e6a82085549699701bf9e87cb38744f60d55b1f412c5f0",
+      "lines": "37-49, 119-123, 251-257, 272-300, 575-612, 710-744",
+      "finding": "GFDL/unified path puts snow+graupel in slot 4 (581-584); paths are mixing ratio \u00d7 1e5/g \u00d7 deltaP in hPa and cloud-fraction-gated (587-599). Thompson uses liquid/ice/rain/snow only (714-717), optionally smears convective condensate (728-732), derives RH-conditioned Xu-Randall cloud fraction from those species (740-744). Thompson effective radii are passed from effrin fields; stratiform ice radius is documented in microns and assigned directly at 251-257. Outer code clamps liquid/ice radii to LUT bounds (272-289). At line 300 the optional precipitation fraction is assigned from cld_frac.",
+      "url": "https://github.com/ufs-community/ccpp-physics/blob/9c64d49ba93e06ba2e7e0e6f63d8edd707ac1c51/physics/Interstitials/UFS_SCM_NEPTUNE/GFS_rrtmgp_cloud_mp.F90"
+    },
+    {
+      "repo": "ufs-community/rte-rrtmgp",
+      "commit": "763cc15f7a6d2d4f4893f83460cdd81209b6fce7",
+      "path": "rrtmgp-frontend/mo_cloud_optics_rrtmgp.F90",
+      "blob": "582fe36e0a6820b56179c8a370fe1cd03cefd550",
+      "sha256": "8dc8184d8ef338af08270c618b0a966552373e23b553d018e856371d2d197845",
+      "lines": "37-48, 171-179, 571-593",
+      "finding": "Type source documents ice roughness category 1=none, 2=medium, 3=high; setter accepts a category bounded by table category count. Class initialization defaults category 1; CCPP calls setter. Effective HAFS runtime selector not established.",
+      "url": "https://github.com/ufs-community/rte-rrtmgp/blob/763cc15f7a6d2d4f4893f83460cdd81209b6fce7/rrtmgp-frontend/mo_cloud_optics_rrtmgp.F90"
+    },
+    {
+      "repo": "ufs-community/ccpp-physics",
+      "commit": "9c64d49ba93e06ba2e7e0e6f63d8edd707ac1c51",
+      "path": "physics/Radiation/RRTMGP/rrtmgp_lw_cloud_optics.F90",
+      "blob": "ea4d28d0e0ab4a34db4199d239077ff269739551",
+      "sha256": "21145a549eafc55851c1505fe87866dfb6eb6ce1c82e88d14f273c95b3c03123",
+      "lines": "50-60, 137-140, 239-245",
+      "finding": "Loads LUT limits/optics and calls set_ice_roughness; wrapper comments/name speak of number of categories, while the underlying setter expects a category selector. Runtime input not resolved.",
+      "url": "https://github.com/ufs-community/ccpp-physics/blob/9c64d49ba93e06ba2e7e0e6f63d8edd707ac1c51/physics/Radiation/RRTMGP/rrtmgp_lw_cloud_optics.F90"
+    },
+    {
+      "repo": "ufs-community/ccpp-physics",
+      "commit": "9c64d49ba93e06ba2e7e0e6f63d8edd707ac1c51",
+      "path": "physics/Radiation/RRTMGP/rrtmgp_sw_cloud_optics.F90",
+      "blob": "122478831c2eb0464ff63ad0b76643ae6f0e35a7",
+      "sha256": "373620357e6c7d80a9e7c0d67c73e18a0503ff7c99dcdc21c83f3f5370b4bf1f",
+      "lines": "47-59, 133-135, 234-240",
+      "finding": "Loads LUT roughness dimension, permits a nonzero configured override, then calls set_ice_roughness. This is API evidence, not proof of HAFS runtime selection.",
+      "url": "https://github.com/ufs-community/ccpp-physics/blob/9c64d49ba93e06ba2e7e0e6f63d8edd707ac1c51/physics/Radiation/RRTMGP/rrtmgp_sw_cloud_optics.F90"
+    },
+    {
+      "repo": "NOAA-EMC/ufsatm",
+      "commit": "8f3a2ecd5b0b6ecaf6331356fb6fa3aed917b229",
+      "path": "ccpp/suites/suite_FV3_GFS_v17_p8_rrtmgp.xml",
+      "blob": "8dfef69ec80746b8ca8a472a8c24de5c1629d728",
+      "sha256": "e4bcbd4a325e2800471ca88538f74acec2de26d8ca7a0839428571c27f26afdf",
+      "finding": "A separately named v17 RRTMGP development suite exists; it does not prove operational deployment.",
+      "url": "https://github.com/NOAA-EMC/ufsatm/blob/8f3a2ecd5b0b6ecaf6331356fb6fa3aed917b229/ccpp/suites/suite_FV3_GFS_v17_p8_rrtmgp.xml"
+    }
+  ],
+  "status_sources": [
+    {
+      "url": "https://www.weather.gov/media/notification/pdf_2026/scn26-76_HAFSv2.2.pdf",
+      "title": "NWS SCN 26-76, HAFS v2.2",
+      "date": "2026-09-09",
+      "lines": "12-27, 46-49, 57-64",
+      "supports": "HAFS v2.2 effective Oct 13; RRTMG-to-RRTMGP transition listed among multiple changes; full-system skill comparison."
+    },
+    {
+      "url": "https://www.weather.gov/media/notification/pdf_2026/pns26-29_Science_for_GFSv17.pdf",
+      "title": "NWS PNS 26-29, proposed GFS v17",
+      "date": "2026-04-15",
+      "lines": "16-23, 47-57, 111-114",
+      "supports": "Proposed GFSv17; RRTMG improvements; proposal and notice process."
+    },
+    {
+      "url": "https://www.emc.ncep.noaa.gov/users/meg/gfsv17/",
+      "title": "NCEP/EMC MEG GFS v17 field evaluation",
+      "date": "updated 2026-06-05",
+      "lines": "6-22, 39-42",
+      "supports": "Evaluation status, planned Q1 FY27 implementation, evaluation forecasts are not 24/7 supported."
+    }
+  ],
+  "limits": [
+    "A development-suite name is not an operational status record.",
+    "HAFS v2.2 is a multi-change system upgrade; no radiation-only skill attribution is supported.",
+    "CCPP HAFS Thompson/GFDL mappings do not establish UDM27 hydrometeor, fraction, or radius policy.",
+    "No factor-of-two radius conclusion follows from HAFS direct assignment; UDM size metric must be compared with its pinned LUT metric.",
+    "The effective HAFS runtime ice roughness category was not established."
+  ]
+}
