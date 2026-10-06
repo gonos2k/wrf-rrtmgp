@@ -1,0 +1,87 @@
+{
+  "candidate": {
+    "build_input_inventory": "candidate-copy-build-input-inventory.json",
+    "build_input_inventory_sha256": "33b9336c40359d1c7b9c33e3358762384e1085446476612449488a1689d83787",
+    "build_toolchain_inventory": "toolchain-inventory.json",
+    "build_toolchain_inventory_sha256": "c81cfbf427788957c6c86acbff092c3ee49866b88d7eca6ec120d74b549d240e",
+    "head": "89b66c0d85cc3a0a68c894157264e686dcfe99e9",
+    "overlays": {
+      "WRF/phys/module_ra_rrtmgp.F": "b3932fa4e88202d5fe0fb660764bec9a07d031c03b501c20ee6ef259828ffa69",
+      "WRF/phys/module_ra_rrtmgp_input.F": "767e5ab3ef9f30325bff87258221fcc50c97b4559fd47535eb98b93d52b46cd5"
+    },
+    "production_fortran_inventory": "candidate-production-fortran-inventory.json",
+    "production_fortran_inventory_sha256": "bc12edd05e49c3373d14dc77c86ddae7d1d5eb91ec0957e92ff050fa058188be",
+    "required_clean": true,
+    "source_comparison_report": "candidate-vs-donor-tracked-wrf-diff-v1.json",
+    "source_comparison_report_sha256": "9f045d654ef77d2165f055a6a31222e81cdab88ec237a5ef6d694e5274c4a49c",
+    "source_comparison_scope": "All git-tracked WRF/phys files against PR65 donor; exactly the two overlay files may differ. Non-production test/documentation differences are recorded but not overlaid.",
+    "tracked_wrf_inventory": "candidate-tracked-wrf-inventory.json",
+    "tracked_wrf_inventory_sha256": "206b67ce71501a45e786fb7233173263072ca7fd52efbdaf5bf636e7046ec864",
+    "worktree": "build/udm37-output-finite-pr-work"
+  },
+  "copy": {
+    "cached_objects_removed_in_destination_only": [
+      "phys/module_ra_rrtmgp_input.o",
+      "phys/module_ra_rrtmgp_input.mod",
+      "phys/module_ra_rrtmgp.o",
+      "phys/module_ra_rrtmgp.mod",
+      "phys/module_ra_rrtmg_lw.o",
+      "phys/module_ra_rrtmg_sw.o"
+    ],
+    "destination": "build/udm37-pr68-output-finite-wrf-build-v2/source-copy/WRF",
+    "method": "shutil.copytree with copy2, symlinks preserved, hardlinks forbidden and checked by device/inode pairs",
+    "tree_diff_report": "source-copy-tree-diff-v1.json",
+    "tree_diff_report_sha256": "438f1cb0429f236be0657123e3ef1595d6f5f8e9b224f624eee6d5ee784908ba"
+  },
+  "donor": {
+    "build_environment_snapshot": "build-environment.json",
+    "build_environment_snapshot_sha256": "e264ebaa9befa35a56f06a74c31d3208f03f36834b963882fe817582ba1e6f18",
+    "build_plan_sha256": "4f030a8db1ebd74abb6eed0dface8ed9b6fb1b379439de451a22463fe1082f93",
+    "classification": "copied_incremental_build_not_pristine_clean_build",
+    "configuration_path": "configure.wrf",
+    "configuration_sha256": "44f85b7fc9b6994cb3784567e69d310580740a021b5f1ab1efb0586f25cfcba2",
+    "corrected_postflight": "build/udm37-pr65-fatal-reporter-wrf-build-v1/build-postflight-v2.json",
+    "corrected_postflight_sha256": "ce67d283f3fe9dbaf8943d3760eb92c7701f0dd4163d35486a1dcb16b643c340",
+    "executables": {
+      "real.exe": {
+        "sha256": "cd43712e136e07166748417c6f0c191c8a8a51aa7a354dbd5b675ca7d6208298",
+        "size_bytes": 43822544
+      },
+      "wrf.exe": {
+        "sha256": "17e37d7461d90bf4eac4110879ecf4716e515fd155aca9754ff74d573ca01725",
+        "size_bytes": 59162968
+      }
+    },
+    "original_build_receipt": "build/udm37-pr65-fatal-reporter-wrf-build-v1/build-receipt.json",
+    "original_build_receipt_sha256": "9dc829bc7333d0c5f8f0cf7d1937628fdd2c6c25d039b4644f7227cc65a2758f",
+    "required_status": "BUILD_PASS_SCOPED",
+    "shared_dependencies": "build/udm37-ccn-tile-init-gnu-v1/shared-dependencies-before-v1.json",
+    "shared_dependencies_sha256": "e49061863c79e836747d21559950b90e2f6d40b798dbbc8d08895d1cf4a87290",
+    "worktree": "build/udm37-pr65-fatal-reporter-wrf-build-v1/source-copy/WRF"
+  },
+  "future_build": {
+    "authorization": "The runner requires a separate authorization JSON binding the finalized plan SHA256 and runner SHA256. No authorization is present and no build was invoked by preparation.",
+    "command": [
+      "csh",
+      "-f",
+      "./compile",
+      "-j",
+      "12",
+      "em_real"
+    ],
+    "cwd": "source-copy/WRF",
+    "model_invocations": 0,
+    "required_forced_rebuild_outputs": [
+      "phys/module_ra_rrtmgp_input.o",
+      "phys/module_ra_rrtmgp_input.mod",
+      "phys/module_ra_rrtmgp.o",
+      "phys/module_ra_rrtmgp.mod",
+      "phys/module_ra_rrtmg_lw.o",
+      "phys/module_ra_rrtmg_sw.o"
+    ],
+    "required_linked_marker": "RRTMGP_OUTPUT_NOT_FINITE",
+    "timeout_seconds": 1800
+  },
+  "schema": "udm37-pr68-output-finite-wrf-build-plan-v2",
+  "status": "PREPARE_COPY_ONLY_BUILD_REQUIRES_SEPARATE_ROOT_AUTHORIZATION"
+}

@@ -1,0 +1,169 @@
+{
+  "build": {
+    "candidate_executable": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-pr68-guard-success-runtime-v1/pr68/wrf.exe",
+      "sha256": "2b774cedb1b424252f0b5cd4f0d11635018c348911532b3451558a06e4299fe6",
+      "size_bytes": 59183616
+    },
+    "candidate_source_files": {
+      "WRF/phys/module_ra_rrtmgp.F": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-output-finite-pr-work/WRF/phys/module_ra_rrtmgp.F",
+        "sha256": "b3932fa4e88202d5fe0fb660764bec9a07d031c03b501c20ee6ef259828ffa69",
+        "size_bytes": 73930
+      },
+      "WRF/phys/module_ra_rrtmgp_input.F": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-output-finite-pr-work/WRF/phys/module_ra_rrtmgp_input.F",
+        "sha256": "767e5ab3ef9f30325bff87258221fcc50c97b4559fd47535eb98b93d52b46cd5",
+        "size_bytes": 41152
+      }
+    },
+    "configure_sha256": "44f85b7fc9b6994cb3784567e69d310580740a021b5f1ab1efb0586f25cfcba2",
+    "note": "Original runner rejected its strict footer predicate; independent postflight reconciled the exact compiler log/footer, RC 0, rebuilt objects, source/dependency/configuration pins and executables. The original BUILD_FAIL receipt remains included.",
+    "original_process_returncode": 0,
+    "original_status": "BUILD_FAIL (preserved)",
+    "original_timed_out": false,
+    "reconciled_status": "BUILD_PASS_SCOPED_POSTFLIGHT_RECONCILED",
+    "resolved_library_count_each": 50,
+    "runtime_libraries_identical": true
+  },
+  "experimental_scope": "RRTMGP frozen-optics mode 1 with table hash pinned in plan-v3; this run tests guard-build/runtime parity only, not optics accuracy.",
+  "independent_output_postflight": {
+    "counts": {
+      "history_and_checkpoint_files_per_arm": 3,
+      "independent_numeric_values_per_checkpoint": 48270190,
+      "independent_numeric_values_per_history": 14373066,
+      "variables_per_checkpoint": 667,
+      "variables_per_history": 231
+    },
+    "failed_checks": [],
+    "receipt": "evidence/independent-output-postflight-v2.json",
+    "sha256": "200853d2d5e536ecab57e5cc1637d2e24ac873b797f727b8c98851287a56bd88",
+    "status": "PASS_GUARD_PAIR_EXACT_INDEPENDENT_READBACK"
+  },
+  "plan_metadata_note": "Frozen plan-v3 says PR68 stage_entries=104, but stage manifest/readback and runtime preflight validate 105 entries for each arm. This stale count is disclosed; every actual manifest entry was checked.",
+  "runtime": {
+    "arms": {
+      "pr65": {
+        "checkpoint_times": [
+          "2016-10-07_13:00:00"
+        ],
+        "history_times": [
+          [
+            "2016-10-07_12:00:00"
+          ],
+          [
+            "2016-10-07_13:00:00"
+          ]
+        ],
+        "returncode": 0,
+        "status": "PASS_OUTPUTS_VALID",
+        "timed_out": false,
+        "unique_success_ranks": [
+          0,
+          1,
+          2,
+          3
+        ]
+      },
+      "pr68": {
+        "checkpoint_times": [
+          "2016-10-07_13:00:00"
+        ],
+        "history_times": [
+          [
+            "2016-10-07_12:00:00"
+          ],
+          [
+            "2016-10-07_13:00:00"
+          ]
+        ],
+        "returncode": 0,
+        "status": "PASS_OUTPUTS_VALID",
+        "timed_out": false,
+        "unique_success_ranks": [
+          0,
+          1,
+          2,
+          3
+        ]
+      }
+    },
+    "authorization_sha256": "254bd156084ed9650427d6799cea94beb5c16c2fdef2db01247f6034d26b723e",
+    "exact_comparisons": {
+      "wrfout_d01_2016-10-07_12:00:00": {
+        "array_mismatches": 0,
+        "global_attribute_differences": {},
+        "schema_mismatches": 0,
+        "status": "PASS_EXACT_DATA",
+        "variable_attribute_differences": 0
+      },
+      "wrfout_d01_2016-10-07_13:00:00": {
+        "array_mismatches": 0,
+        "global_attribute_differences": {},
+        "schema_mismatches": 0,
+        "status": "PASS_EXACT_DATA",
+        "variable_attribute_differences": 0
+      },
+      "wrfrst_d01_2016-10-07_13:00:00": {
+        "array_mismatches": 0,
+        "global_attribute_differences": {},
+        "schema_mismatches": 0,
+        "status": "PASS_EXACT_DATA",
+        "variable_attribute_differences": 0
+      }
+    },
+    "manifest_sha256": "f044601e8346be443704d40e0fc4a3eb141c9bd1f60feb0a5691410c4c987b1f",
+    "parent_context": {
+      "pr65": {
+        "array_or_schema_differences": 0,
+        "global_attribute_differences": {
+          "START_DATE": {
+            "continuous": "'2016-10-06_00:00:00'",
+            "restart": "'2016-10-07_12:00:00'"
+          }
+        },
+        "status": "DIAGNOSTIC_ONLY",
+        "variable_set_differences": {
+          "parent_only": [],
+          "restart_only": []
+        }
+      },
+      "pr68": {
+        "array_or_schema_differences": 0,
+        "global_attribute_differences": {
+          "START_DATE": {
+            "continuous": "'2016-10-06_00:00:00'",
+            "restart": "'2016-10-07_12:00:00'"
+          }
+        },
+        "status": "DIAGNOSTIC_ONLY",
+        "variable_set_differences": {
+          "parent_only": [],
+          "restart_only": []
+        }
+      }
+    },
+    "plan_sha256": "b227fec741560ea3f44893aa13afe9158c0b75a74eecf74309a0b241eba3b3cb",
+    "readback_sha256": "ddce2b30665ab7f854ecab9796caf7042413d8db3b7a599a02de529669d9115c",
+    "runner_sha256": "85ffd8ccebbbe6afe5183aac1bf75f7e93aba158704fb55b8b412706a80269e8"
+  },
+  "schema": "udm37-pr68-guard-restart-runtime-summary-v1",
+  "scope": {
+    "batch_size": 32,
+    "build_invocations_in_runtime": 0,
+    "end": "2016-10-07_13:00:00 (hour 37)",
+    "exclusions": [
+      "No radiative-accuracy or observational validation claim.",
+      "This binary predates the later PR70 radius-input-context diagnostics; this runtime does not validate that patch.",
+      "The parent-continuous comparison is diagnostic and not an assumed restart-continuity bitwise contract."
+    ],
+    "frozen_optics_mode": 1,
+    "model_invocations": 2,
+    "omp_threads": 2,
+    "purpose": "A successful-path restart comparison of the PR65 executable and a separately copied, reconciled PR68 guard executable from the same daylight checkpoint.",
+    "ranks": 4,
+    "source_commit": "89b66c0d85cc3a0a68c894157264e686dcfe99e9",
+    "start": "2016-10-07_12:00:00 (36 elapsed hours in the 48-hour parent run)"
+  },
+  "status": "PASS_GUARD_PAIR_EXACT"
+}
