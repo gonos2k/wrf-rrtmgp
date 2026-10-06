@@ -3,19 +3,56 @@ on:
   pull_request:
     paths:
       - 'validation/rrtmgp37/ice-radius-fit-contract/**'
+      - 'validation/rrtmgp37/current-source-contracts/**'
+      - 'WRF/phys/module_mp_udm.F'
       - '.github/workflows/validate-ice-radius-fit-contract.yml'
   push:
     branches: [main]
     paths:
       - 'validation/rrtmgp37/ice-radius-fit-contract/**'
+      - 'validation/rrtmgp37/current-source-contracts/**'
+      - 'WRF/phys/module_mp_udm.F'
       - '.github/workflows/validate-ice-radius-fit-contract.yml'
 permissions:
   contents: read
 jobs:
-  independent-recipe-and-moment:
+  historical-archive:
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: 092b901bf40b5334c5497fbf75f630b255262fb2
+          path: build/source-092b901
       - name: Verify recipe integrals, analytic oracle and native implemented fit
-        run: python3 -I -S validation/rrtmgp37/ice-radius-fit-contract/audit.py
+        run: |
+          mkdir -p build
+          set -o pipefail
+          python3 -I -S validation/rrtmgp37/ice-radius-fit-contract/audit.py \
+            --source build/source-092b901/WRF/phys/module_mp_udm.F \
+            2>&1 | tee build/ice-radius-historical-audit.log
+      - name: Preserve historical audit log
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: ice-radius-historical-${{ github.run_id }}
+          if-no-files-found: ignore
+          path: build/ice-radius-historical-audit.log
+  current-source-contract:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - name: Check current radius source semantics against the retained recipe
+        run: >-
+          python3 -I -S validation/rrtmgp37/current-source-contracts/ice_radius_current.py
+          --source-root "$GITHUB_WORKSPACE"
+          --output build/current-ice-radius-contract/result.json
+      - name: Preserve current-source radius receipt
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: ice-radius-current-source-${{ github.run_id }}
+          if-no-files-found: ignore
+          path: build/current-ice-radius-contract/result.json
