@@ -1301,9 +1301,15 @@
           config_flags%ra_lw_physics == RRTMGP_LWSCHEME .AND. &
           config_flags%ra_sw_physics == RRTMGP_SWSCHEME
       IF (udm37_restart_diagnostics) THEN
+#ifdef USE_ALLOCATABLES
+         IF (ALLOCATED(grid%udm_cldfra)) grid%udm_cldfra = -1.
+         IF (ALLOCATED(grid%udm_cf_step)) grid%udm_cf_step = -1
+         IF (ALLOCATED(grid%udm_cf_top)) grid%udm_cf_top = -1
+#else
          IF (ASSOCIATED(grid%udm_cldfra)) grid%udm_cldfra = -1.
          IF (ASSOCIATED(grid%udm_cf_step)) grid%udm_cf_step = -1
          IF (ASSOCIATED(grid%udm_cf_top)) grid%udm_cf_top = -1
+#endif
       ENDIF
 
       newswitch = switch
@@ -1833,11 +1839,23 @@
            CASE ('udm_cldfra', 'udm_cf_step', 'udm_cf_top')
               SELECT CASE (TRIM(p%VarName))
               CASE ('udm_cldfra')
+#ifdef USE_ALLOCATABLES
+                 IF (ALLOCATED(grid%udm_cldfra)) grid%udm_cldfra = -1.
+#else
                  IF (ASSOCIATED(grid%udm_cldfra)) grid%udm_cldfra = -1.
+#endif
               CASE ('udm_cf_step')
+#ifdef USE_ALLOCATABLES
+                 IF (ALLOCATED(grid%udm_cf_step)) grid%udm_cf_step = -1
+#else
                  IF (ASSOCIATED(grid%udm_cf_step)) grid%udm_cf_step = -1
+#endif
               CASE ('udm_cf_top')
+#ifdef USE_ALLOCATABLES
+                 IF (ALLOCATED(grid%udm_cf_top)) grid%udm_cf_top = -1
+#else
                  IF (ASSOCIATED(grid%udm_cf_top)) grid%udm_cf_top = -1
+#endif
               END SELECT
               IF (wrf_dm_on_monitor()) THEN
                  WRITE(wrf_err_message,'(A,A,A,I0)') &
