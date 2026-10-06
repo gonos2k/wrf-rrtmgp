@@ -32,6 +32,7 @@ from compare_column_replay import read_result
 SUCCESS = "SUCCESS COMPLETE WRF"
 HYDROMETEORS = ("QCLOUD", "QRAIN", "QICE", "QSNOW", "QGRAUP", "QHAIL")
 TIMEOUT_SECONDS = 180
+CHILD_CLEANUP_GRACE_SECONDS = 15
 SW_PRECIP_TAU_FLOOR = 1.0e-12
 
 
@@ -166,38 +167,90 @@ def run_once(exe: Path, case: Path, logname: str, capture: bool,
         record.update({"status": "RUNNING", "launched": True,
                        "pid": child.pid, "process_group": child.pid,
                        "started_unix": time.time()})
-        atomic_json(result_path, record)
+        lifecycle_stage = "RUNNING_RECORD"
         try:
+            # The RUNNING write is part of the child lifecycle. If persistence
+            # fails here, the process group must still be stopped and reaped.
+            atomic_json(result_path, record)
+            lifecycle_stage = "WAITING"
             returncode = child.wait()
         except BaseException as exc:
             cleanup_error = None
             try:
-                if child.poll() is None:
+                # The group can outlive its session leader (for example when
+                # the executable forks and exits during a receipt failure),
+                # so signal/check the whole group even if poll() has an RC.
+                try:
                     os.killpg(child.pid, signal.SIGTERM)
+                except ProcessLookupError:
+                    pass
+                deadline = time.monotonic() + CHILD_CLEANUP_GRACE_SECONDS
+                group_alive = True
+                while time.monotonic() < deadline:
                     try:
-                        child.wait(timeout=15)
-                    except subprocess.TimeoutExpired:
+                        os.killpg(child.pid, 0)
+                    except ProcessLookupError:
+                        group_alive = False
+                        break
+                    if child.poll() is None:
+                        try:
+                            child.wait(timeout=min(0.1, max(0.01, deadline - time.monotonic())))
+                        except subprocess.TimeoutExpired:
+                            pass
+                    else:
+                        time.sleep(0.02)
+                if group_alive:
+                    try:
                         os.killpg(child.pid, signal.SIGKILL)
-                        child.wait(timeout=15)
+                    except ProcessLookupError:
+                        pass
+                if child.poll() is None:
+                    child.wait(timeout=15)
             except BaseException as cleanup_exc:
                 cleanup_error = f"{type(cleanup_exc).__name__}: {cleanup_exc}"
             returncode = child.poll()
-            record.update({"status": "INTERRUPTED_CHILD_REAPED" if returncode is not None
-                           else "INTERRUPTED_REAP_PENDING",
-                           "interrupted_error": f"{type(exc).__name__}: {exc}",
+            running_write_failed = lifecycle_stage == "RUNNING_RECORD"
+            record.update({"status": ("RUNNING_RECORD_FAILED_CHILD_REAPED" if returncode is not None
+                                       else "RUNNING_RECORD_FAILED_REAP_PENDING")
+                           if running_write_failed else
+                           ("INTERRUPTED_CHILD_REAPED" if returncode is not None
+                            else "INTERRUPTED_REAP_PENDING"),
                            "ended_unix": time.time(), "reaped": returncode is not None,
                            "cleanup_error": cleanup_error})
+            record["running_record_error" if running_write_failed else "interrupted_error"] = \
+                f"{type(exc).__name__}: {exc}"
             if returncode is not None:
                 record.update({"returncode": returncode,
                                "timed_out": returncode == 124 or returncode == 137})
-            atomic_json(result_path, record)
+            try:
+                atomic_json(result_path, record)
+            except BaseException as receipt_exc:
+                # Keep the original lifecycle failure primary. When the store
+                # itself remains unavailable, the actual RC is still retained
+                # in this raised exception and the child has already been reaped.
+                if hasattr(exc, "add_note"):
+                    exc.add_note(f"terminal process receipt could not be persisted: "
+                                 f"{type(receipt_exc).__name__}: {receipt_exc}; "
+                                 f"child_returncode={returncode!r}")
             raise
         # Persist the actual child RC immediately after wait, before any file
         # hashing, NetCDF inspection, or other postflight operation can fail.
         record.update({"status": "CHILD_REAPED", "returncode": returncode,
                        "ended_unix": time.time(), "reaped": True,
                        "timed_out": returncode == 124 or returncode == 137})
-        atomic_json(result_path, record)
+        try:
+            atomic_json(result_path, record)
+        except BaseException as exc:
+            record.update({"status": "CHILD_REAPED_RECORD_FAILED",
+                           "record_write_error": f"{type(exc).__name__}: {exc}"})
+            try:
+                atomic_json(result_path, record)
+            except BaseException as receipt_exc:
+                if hasattr(exc, "add_note"):
+                    exc.add_note(f"terminal process receipt could not be persisted: "
+                                 f"{type(receipt_exc).__name__}: {receipt_exc}; "
+                                 f"child_returncode={returncode}")
+            raise
         log.flush()
         os.fsync(log.fileno())
     try:

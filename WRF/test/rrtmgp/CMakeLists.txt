@@ -367,6 +367,8 @@ add_test(NAME udm_startup_snow COMMAND "${Python3_EXECUTABLE}"
   --workdir "${CMAKE_CURRENT_BINARY_DIR}/udm-startup-snow")
 add_test(NAME udm_startup_snow_replay COMMAND "${Python3_EXECUTABLE}"
   "${CMAKE_CURRENT_SOURCE_DIR}/test_udm_startup_snow_replay.py")
+add_test(NAME udm_startup_snow_scm_process COMMAND "${Python3_EXECUTABLE}"
+  "${CMAKE_CURRENT_SOURCE_DIR}/test_udm_startup_snow_scm_process.py")
 add_test(NAME udm_ccn_tile_startup COMMAND "${Python3_EXECUTABLE}"
   "${CMAKE_CURRENT_SOURCE_DIR}/test_udm_ccn_startup.py")
 add_test(NAME udm_surface_rain_row COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/test_udm_sr_rows.py" "${WRF_ROOT}" --workdir "${CMAKE_CURRENT_BINARY_DIR}/udm-sr-row")
