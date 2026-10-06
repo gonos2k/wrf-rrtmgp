@@ -1,0 +1,43 @@
+{
+  "schema": "fractional-seaice-state-independent-review-v2",
+  "status": "REVIEWED_SOURCE_AND_OWNER_TEST_RECEIPT",
+  "scope": "Read-only review of final frozen test/source and owner-run focused CTest receipt. This agent did not build or run WRF.",
+  "corrects_review_v1": {
+    "prior_statement": "review-v1 incorrectly described baseline QZ0 reads as already inside MYJ guards.",
+    "verified_base": "git show 8ab95cf contains four qz0 blend reads without IF(myj) guards; they are inside the isisfc block.",
+    "current_source": "The final patch adds IF(myj) around all four reads. Only MYJ/QNSE wrapper paths produce QZ0_SEA (set from QZ0_HOLD), so the guards prevent nonproducer paths from consuming undefined local QZ0_SEA."
+  },
+  "source_pins": {
+    "base_commit": "8ab95cf",
+    "final_surface_driver_sha256": "fc99b8e6837573ed2335b6dd7bf62071c2da91348e4c5bf8668d780933f7c6cd",
+    "final_test_sha256": "79e04900f5c8537494f05fa77d63a3fd8422950d30fbf3d6b65b8f678c041812",
+    "expected_surface_driver_sha256": "fc99b8e6837573ed2335b6dd7bf62071c2da91348e4c5bf8668d780933f7c6cd",
+    "expected_test_sha256": "79e04900f5c8537494f05fa77d63a3fd8422950d30fbf3d6b65b8f678c041812",
+    "test_has_no_git_baseline_dependency": true,
+    "test_source_derived_negative_control": "It constructs a negative control from current source by removing only the added USTM snapshot/restore and MYJ guard lines; NaN sentinels verify those reads become visible."
+  },
+  "test_review": {
+    "USTM": "Test prints the two actual SFCLAY1D results (initial USTM 0.1 and 0.5) and repeated 0.5 result. Its pass criterion checks result difference equals 0.2 (half the 0.4 initial difference) and repeat equality. This corrects the invalid probe interpretation recorded in v1.",
+    "wrapper_extraction": "Extracts active SFCLAY wrapper snapshot/restore, incoming sea-ice blend guard, actual source USTM recurrence, and QZ0 guarded read into a tiny Fortran probe. The negative control strips those exact source additions and verifies NaN propagation.",
+    "QZ0": "Checks all four QZ0_SEA reads are guarded and extracts the actual outer sea-ice threshold condition; synthetic probe exercises false MYJ with NaN QZ0_SEA and fractional/full ice MYJ values.",
+    "limits": "Actual SFCLAY1D implementation is compiled/exercised. SFCLAYREV is checked by source-pattern contract only; neither full wrapper is executed in WRF, and no forecast/restart causality is established. Full EM_CORE absent-USTM support is explicitly not claimed."
+  },
+  "owner_focused_ctest_readback": {
+    "path": "build/udm-seaice-restart-v1/root-focused-test-readback-v2.json",
+    "sha256": "f5eef3d57baa6bbd7fd9c7c4b45f888cfb2b841125643124f9fabd97b5ba10ea",
+    "status": "PASS_FRACTIONAL_SEAICE_CTEST_FINAL_OWNER_FROZEN",
+    "rc": 0,
+    "log_sha256": "a0a6a952856662e2f97dfa376cc916b7be4410caf5b9660a5efe04938e62234a"
+  },
+  "owner_test_receipt": {
+    "path": "build/udm-seaice-focused-v1/fractional-seaice-state-runs/source-test-receipt.json",
+    "sha256": "93516183c379733e27776eb9114f89613dddd3c0e65680ee4046f4ba81a3ff63",
+    "status": "PASS",
+    "source_sha256": {
+      "WRF/phys/module_surface_driver.F": "fc99b8e6837573ed2335b6dd7bf62071c2da91348e4c5bf8668d780933f7c6cd",
+      "WRF/phys/module_sf_sfclay.F": "dfd7aae5ef1f0bd979246480af5276a1ee956bc216ec8dc6e82eb963ded761dc",
+      "WRF/phys/module_sf_sfclayrev.F": "64da720d495f6eb801bbd03c21ea69554ed3b9953a0cc2a6e1e9044111c9b691"
+    }
+  },
+  "no_model_run": true
+}
