@@ -53,7 +53,13 @@ python3 WRF/test/rrtmgp/test_udm_scm.py build/udm-scm --reference-executable bui
 
 수상별 질량/반경 계약, 실제 outer UDM 밀도 회귀, rain/snow 광학 및 actual-column replay를 검증한다. 수정 전 4/4 결과와 bitwise 비교하려면 동일 초기 입력을 가진 실제 baseline 실행 디렉터리를 제공해야 한다. 같은 새 실행 파일의 반복 실행만으로 수정 전 보존을 주장하지 않는다.
 
-짧은 직렬 SCM, 자체 energy/flux 계약 및 독립 replay 성공을 일반 예보 정확도나 NOAA 운영 동등성으로 확대하지 않는다. [후속 실행 근거](CPU_OPENMP.md)에서 실제 OMP1/2 SCM, 10분 MPI1/2·MPI2/OMP2, 계수 누락 MPI 종료 및 직렬 restart 계약을 확인했다. 37번의 24시간 시도는 음수 QI 입력으로 중단됐으며, [native 진단](NATIVE_HYDRO_DIAGNOSTICS.md)으로 크기와 위치를 측정한다. 장시간 예보·관측 검증·MPI restart·nest·UDM cloud fraction 장시간 평가·graupel/hail 광학 및 batching은 남은 조건이다.
+짧은 SCM, 자체 flux/energy 계약 및 독립 replay는 예보 정확도나 NOAA 운영 동등성 증거가 아니다. 이전 기본 mode-0 37번 장기 시도는 strict-negative QI 입력에서 중단된 기록으로 보존한다. 이후 #26은 UDM의 SR 행 전달 문제를 수정했고, #31은 그 소스 기준으로 RA4 legacy/RA37 mode-1 24시간 비교 및 자기 arm별 재시작 연속성을 통과했다. 이전 4/4 비교는 SR 행 전달 수정 전 결과이므로 corrected 비교와 구분한다. 두 기록을 같은 실패 원인의 설명으로 합치지 않는다.
+
+기본 `rrtmgp_udm_frozen_optics=0` 계약은 그대로다: qg는 복사에서 제외량을 계측하고 양의 qh는 거부한다. 명시 실험값 `=1`은 동질 얼음 구형 G/H 모델을 선택하며 기본 지원 정책이나 NOAA 물리 parity가 아니다. PR20은 MPI4 mode-1 24시간 실행을 기록한다. PR31의 corrected pair는 RA37만 mode 1이며 RA4는 legacy 4/4다. 두 결과는 해당 mode-1 runtime evidence이며 default mode-0 qh 지원을 검증하지 않는다. PR31 자기 arm 12시 체크포인트 재시작은 같은 arm 연속 13시 배열과 수치 단위로 일치했으며 `START_DATE` 메타데이터 차이는 남아 있다.
+
+현재 공개 후속 증거의 범위는 각 PR head와 artifact에 연결해 읽는다. PR30(`bb56ec0ad5a0fbd2ef2027a291554fc40d6c7291`)은 GNU workspace의 동일 MPI/OMP 배치 parity를 보였지만 MPI 분해 간 동등성을 뜻하지 않는다. PR27(`f7f0ad164b50684bb170b729f0836c0e8404a8e0`)은 pristine WRF의 bounded 한 스텝 분해 차이(63/202 변수, 원인 미확정)를 따로 기록한다. PR33(`0f1ae2967281df3cfa4d8ec5c0f6764fe025158d`)은 부모 보간 초기장을 사용한 제한적 nested smoke다. PR34(`958cf46b074b3927e9ca939ad9d7c371ac11e17b`)는 FPK/DRA 두 관측점의 하루 복사 비교로 지표별 결과가 섞여 있으며 cloud field나 예보 정확도를 평가하지 않는다. PR35(`7ea36677ae085e8edc61b9161c075bdeda8441d2`)는 Intel serial 1분 smoke로, 이 실행에서 512 MiB master stack은 실패하고 1 GiB는 통과했다; 보편 stack 요구량이 아니다. 이 인용은 각 검증 revision을 식별하며 현재 main의 병합 상태를 단정하지 않는다.
+
+남은 검증은 다중일 예보·예보 skill, cross-layout MPI 원인과 동등성, 고해상도 child/중첩 restart, 실험 G/H 광학의 관측 물리 타당성, 다중 기둥 production packing/batching 및 그 전체 CMake/CI 통합이다. UDM 내부 cloud-fraction 장기 통계도 제한된 진단 자료를 넘어 평가하지 않았다. [native 수상체 진단](NATIVE_HYDRO_DIAGNOSTICS.md), [OpenMP/MPI 근거](CPU_OPENMP.md), [실험 광학 설명](UDM_FROZEN_EXPERIMENT.md) 및 해당 PR의 범위를 함께 확인한다.
 
 ## Opt-in frozen precipitation experiment
 
@@ -66,10 +72,10 @@ for table identity, size reconstruction, optics and replay contracts.
 Default mode and RRTMG4 behavior are preserved and tested separately.
 
 PR20's explicit mode-1 executable completed a four-rank 24-hour real-data
-trial with positive graupel and hail. A separate 12-hour checkpoint and
-12-to-13-hour restart reproduced every numeric field of the continuous
-13-hour output exactly; global `START_DATE` differs and the strict overall
-metadata comparison therefore does not pass. These scoped runtime results
-supersede the earlier failed mode-0 long-run attempt for this experimental
-configuration only. They do not validate observation accuracy or the later
-PR21 trace-gas correction over 24 hours. See the [actual-domain receipts](../../../validation/rrtmgp37/realdata-parallel/README.md).
+trial with positive graupel and hail. PR31 later records a corrected paired
+24-hour run based on PR26's SR-row source and same-executable own-arm restart
+continuity. The earlier strict-negative mode-0 QI failure and the pre-SR-fix
+coupled comparison remain separate historical records; neither should be
+used as the current mode-1 result or as proof that the other failure caused
+it. These runs do not establish observational accuracy, default mode-0 hail
+support, or long-term G/H optical fidelity. See the [actual-domain receipts](../../../validation/rrtmgp37/realdata-parallel/README.md) and the open [PR31 evidence](https://github.com/gonos2k/wrf-rrtmgp/pull/31) at head `360cbf6668c84ef7d00c163fdce0d8dd54daca44`.
