@@ -39,3 +39,12 @@ receipts and fixture logs with `if: always()`, so a failed check still leaves
 its source identity and available diagnostics attached to the run. The Nc
 workflow is also triggered by changes to this verifier package; its RTE job
 uploads only the compact replay receipt and per-arm logs, not result arrays.
+
+The current activation and density runners append fsynced `STARTED` and
+terminal rows to `current-process-status.jsonl` for each subprocess. Nonzero
+exits retain their return code; launch failures and timeouts are distinct
+terminal states. A timeout has no numeric return code, and `subprocess.run`
+kills and reaps the child before the timeout row is recorded. The registered
+small-child self-test covers zero/nonzero exit, `check=True` failure, launch
+failure, and explicit/default timeout handling; it does not claim that a real
+compiler timeout or compiler failure was induced.
