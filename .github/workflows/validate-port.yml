@@ -118,6 +118,8 @@ jobs:
             build/${{ matrix.kind }}/run.log
             build/${{ matrix.kind }}/result.json
             build/registry-subgrid-metadata/receipt.json
+            build/registry-subgrid-metadata/*.log
+            build/registry-subgrid-metadata/*.f90
           retention-days: 30
           if-no-files-found: error
   standalone-columns:
