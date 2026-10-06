@@ -1,0 +1,11 @@
+# QNN boundary observer evidence
+
+This archive records a private, gated observer around the existing QNN boundary call. The OFF/ON pair used the same observer-enabled GNU REAL32 executable, 4 MPI ranks and 2 OpenMP threads, with a two-minute 90×99×44 WRF case. Capture covered four selected boundary columns, both model steps and all three RK passes. The executable, static inputs and NetCDF outputs are represented by external hashes and review receipts; model binaries and NetCDF history/restart files are not distributed here.
+
+The saved ON capture contains 24 packets and 1,056 rows: 756 inflow rows and 300 outflow rows. The parser checks finite promoted values, the REAL32 `1./(AL+ALB)` density operation, source/destination assignments, CCN exactly `1e8`, and unchanged QNC/QNR context. The paired OFF/ON three-time history file and two-minute restart were reported byte-identical, including their complete variable arrays, schemas and attributes. QNC and QNR were zero in these selected columns. The observed density range was 0.09103126–1.19857371 kg m⁻³.
+
+The first v2 parser run is retained with its failure. Its expected outflow source coordinates incorrectly used `spec_bdy_width=5`; `flow_dep_bdy_qnn` receives `spec_zone`, whose Registry default and runtime value are 1. Packet headers continue to identify the unchanged observer destination points. The additive erratum records the corrected adjacent source coordinates: `(23,2)`, `(89,26)`, `(2,74)`, and `(68,98)`. A saved-only recovery parsed the existing packets with that correction; it did not rerun WRF.
+
+This is a scoped observer and same-binary OFF/ON consistency check. It does not compare against an unmodified executable, establish a number-basis authority, cover all boundary columns or validate a production policy. In particular, zero QNC/QNR values here do not establish behavior for nonzero transported contexts. No production source defaults or runtime policy are activated by this archive.
+
+`verify_saved.py` is standard-library-only and checks the closed archive roster, payload hashes, source-pin/preservation joins, all 24 packet identities and rows, REAL32 density reconstruction, inflow/outflow assignment relations, and the saved receipt summaries. It checks archived evidence only; it does not need WRF, MPI, NumPy, NetCDF, a compiler or the external model outputs.
