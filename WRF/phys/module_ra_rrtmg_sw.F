@@ -10097,7 +10097,8 @@ CONTAINS
                        ,sw_zbbcddir                               & ! WRF-CMAQ twoway coupled model
                        ,sw_dirdflux                               & ! WRF-CMAQ twoway coupled model
                        ,sw_difdflux                               & ! WRF-CMAQ twoway coupled model
-                        ,use_rrtmgp,qh3d,f_qh,udm_cldfra,udm_cf_step,mcica_seed_override,audit_step,audit_time,udm_dry_layer_mass,rrtmgp_domain_id,rrtmgp_calendar_day )
+                       ,use_rrtmgp,qh3d,f_qh,udm_cldfra,udm_cf_step,udm_cf_top, &
+                        mcica_seed_override,audit_step,audit_time,udm_dry_layer_mass,rrtmgp_domain_id,rrtmgp_calendar_day )
 !------------------------------------------------------------------
    USE MODULE_RA_CLWRF_SUPPORT, ONLY : read_CAMgases
    USE module_mp_udm, ONLY: cldf_diag, udm_radiation_negative_limits
@@ -10111,7 +10112,7 @@ CONTAINS
    REAL, OPTIONAL, INTENT(IN) :: qh3d(ims:ime,kms:kme,jms:jme)
    REAL, OPTIONAL, INTENT(IN) :: udm_cldfra(ims:ime,kms:kme,jms:jme),audit_time
    REAL, OPTIONAL, INTENT(IN) :: udm_dry_layer_mass(ims:ime,kms:kme,jms:jme)
-   INTEGER, OPTIONAL, INTENT(IN) :: udm_cf_step(ims:ime,jms:jme),mcica_seed_override,audit_step
+   INTEGER, OPTIONAL, INTENT(IN) :: udm_cf_step(ims:ime,jms:jme),udm_cf_top(ims:ime,jms:jme),mcica_seed_override,audit_step
    INTEGER, OPTIONAL, INTENT(IN) :: rrtmgp_domain_id,rrtmgp_calendar_day
    INTEGER :: gp_seed,gp_g_count,gp_seed_overridden
    REAL(KIND=8) :: gp_g_sum,gp_g_max
@@ -11333,6 +11334,7 @@ CONTAINS
                   CALL trace_raw('SW','RAD_CF_SOURCE',cldfra3d(i,kts:kte,j))
                   IF(PRESENT(udm_cldfra)) CALL trace_raw('SW','UDM_CF_USED',udm_cldfra(i,kts:kte,j))
                   IF(PRESENT(udm_cf_step)) CALL trace_raw('SW','UDM_CF_SOURCE_STEP',[REAL(udm_cf_step(i,j))])
+                  IF(PRESENT(udm_cf_top)) CALL trace_raw('SW','UDM_CF_TOP',[REAL(udm_cf_top(i,j))])
                   IF(PRESENT(audit_step)) CALL trace_raw('SW','RADIATION_STEP',[REAL(audit_step)])
                   IF(PRESENT(audit_time)) CALL trace_raw('SW','SOURCE_TIME_SECONDS',[audit_time])
                   CALL cldf_diag(1,kte-kts+1,RESHAPE(t3d(i,kts:kte,j),[1,kte-kts+1]), &

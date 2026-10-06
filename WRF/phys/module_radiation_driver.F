@@ -98,7 +98,7 @@ CONTAINS
               , lradius,iradius                                           &
 #endif
               , cldfra_dp, cldfra_sh                                      &
-              , re_cloud, re_ice, re_snow, udm_cldfra, udm_cf_step           &
+              , re_cloud, re_ice, re_snow, udm_cldfra, udm_cf_step, udm_cf_top &
               , udm_dry_layer_mass                                         &
               , udm_seed_day                                               &
               , has_reqc, has_reqi, has_reqs                              &
@@ -855,6 +855,7 @@ CONTAINS
    REAL, OPTIONAL, INTENT(IN) :: udm_dry_layer_mass(ims:ime,kms:kme,jms:jme)
    INTEGER, OPTIONAL, INTENT(IN) :: udm_seed_day
    INTEGER, OPTIONAL, INTENT(IN) :: udm_cf_step(ims:ime,jms:jme)
+   INTEGER, OPTIONAL, INTENT(IN) :: udm_cf_top(ims:ime,jms:jme)
    REAL, DIMENSION(ims:ime,kms:kme,jms:jme), INTENT(INOUT):: re_cloud, re_ice, re_snow
    INTEGER, INTENT(INOUT):: has_reqc, has_reqi, has_reqs
 
@@ -2144,7 +2145,7 @@ CONTAINS
                   LWUPFLX=LWUPFLX,LWUPFLXC=LWUPFLXC,                &
                   LWDNFLX=LWDNFLX,LWDNFLXC=LWDNFLXC,                &
                   mp_physics=mp_physics                             ,USE_RRTMGP=(lw_physics==RRTMGP_LWSCHEME) , &
-                  udm_cldfra=udm_cldfra,udm_cf_step=udm_cf_step, &
+                  udm_cldfra=udm_cldfra,udm_cf_step=udm_cf_step,udm_cf_top=udm_cf_top, &
                   udm_dry_layer_mass=udm_dry_layer_mass, &
                     rrtmgp_domain_id=id,rrtmgp_calendar_day=udm_seed_day, &
                   audit_step=itimestep,audit_time=xtime*60. )
@@ -2874,7 +2875,7 @@ CONTAINS
                      sw_dirdflux=sw_dirdflux,                           & ! WRF-CMAQ coupled model
                      sw_difdflux=sw_difdflux                            & ! WRF-CMAQ coupled model
                                                                         ,USE_RRTMGP=(sw_physics==RRTMGP_SWSCHEME) , &
-                  udm_cldfra=udm_cldfra,udm_cf_step=udm_cf_step, &
+                  udm_cldfra=udm_cldfra,udm_cf_step=udm_cf_step,udm_cf_top=udm_cf_top, &
                   udm_dry_layer_mass=udm_dry_layer_mass, &
                     rrtmgp_domain_id=id,rrtmgp_calendar_day=udm_seed_day, &
                   audit_step=itimestep,audit_time=xtime*60. )

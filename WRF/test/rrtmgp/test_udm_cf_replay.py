@@ -23,7 +23,7 @@ import numpy as np
 
 from compare_column_replay import compare, read_result
 from test_column_replay import (assert_close, corrected_hydrometeor, dry_layer_mass_kg_m2,
-                                read_input, read_raw)
+                                read_input, read_raw, validate_udm_cf_extent)
 
 
 PATHS = {"LWP": "LWP", "IWP": "IWP", "RWP": "RWP", "SWP": "SWP"}
@@ -50,6 +50,28 @@ RECOMPUTED_CF_NAMES = ("UDM_CF_RECOMPUTED", "CF_RECOMPUTED")
 
 def fail(message: str) -> None:
     raise RuntimeError(message)
+
+
+def b_last_cf_mode(original_cf: np.ndarray, used_cf: np.ndarray | None,
+                   extent: int | None) -> np.ndarray | None:
+    """Use UDM CF only where its recorded diagnostic extent is defined."""
+    if used_cf is None:
+        return None
+    used = np.asarray(used_cf, dtype=np.float64).reshape(-1)
+    original = np.asarray(original_cf, dtype=np.float64).reshape(-1)
+    if used.size != original.size:
+        fail("UDM_CF_USED and original radiation CF lengths differ")
+    if extent is None:  # Legacy raw capture: preserve old replay, but caller labels it unknown.
+        return used.copy()
+    if extent == -1:
+        return None
+    if extent < 0 or extent > original.size:
+        fail("UDM_CF_TOP outside native radiation layers")
+    if not np.isfinite(used[:extent]).all() or np.any((used[:extent] < 0.0) | (used[:extent] > 1.0)):
+        fail("UDM_CF_USED invalid inside recorded diagnostic extent")
+    hybrid = original.copy()
+    hybrid[:extent] = used[:extent]
+    return hybrid
 
 
 def first_field(records: dict[str, np.ndarray], names: tuple[str, ...]) -> np.ndarray | None:
@@ -257,6 +279,7 @@ def main() -> int:
     if replay_version not in SUPPORTED_REPLAY_VERSIONS:
         fail(f"unsupported replay format {replay_version}")
     raw_nl = len(raw["DP_HPA"])
+    cf_top = validate_udm_cf_extent(raw, raw_nl, raw_path)
     if raw_i < 1 or raw_j < 1:
         fail("raw snapshot has invalid source indices")
     gravity = float(raw["GRAVITY"][0])
@@ -273,23 +296,45 @@ def main() -> int:
     used_cf = first_field(raw, USED_CF_NAMES)
     recomputed_cf = first_field(raw, RECOMPUTED_CF_NAMES)
 
-    def normalize_cf(field: np.ndarray | None, name: str) -> np.ndarray | None:
+    def normalize_cf(field: np.ndarray | None, name: str, extent: int | None = None) -> np.ndarray | None:
         if field is None:
             return None
         values = np.asarray(field, dtype=np.float64).reshape(-1)
         if values.size == 1:
             values = np.full(raw_nl, values.item())
-        if values.size != raw_nl or np.any(~np.isfinite(values)):
-            fail(f"{name} must be finite and have raw native-layer length")
-        if np.any((values < 0.0) & (values != -1.0)) or np.any(values > 1.0):
-            fail(f"{name} values must be in [0,1] or sentinel -1")
+        if values.size != raw_nl:
+            fail(f"{name} must have raw native-layer length")
+        checked = values if extent is None else values[:extent]
+        if np.any(~np.isfinite(checked)):
+            fail(f"{name} values within its declared extent must be finite")
+        if np.any((checked < 0.0) & (checked != -1.0)) or np.any(checked > 1.0):
+            fail(f"{name} values within its declared extent must be in [0,1] or sentinel -1")
+        if extent is not None and np.any(checked == -1.0):
+            fail(f"{name} contains not-called sentinels inside its declared diagnostic extent")
         return values
 
-    used_cf = normalize_cf(used_cf, "UDM_CF_USED")
+    used_cf = normalize_cf(used_cf, "UDM_CF_USED", cf_top if cf_top is not None and cf_top >= 0 else None)
     recomputed_cf = normalize_cf(recomputed_cf, "UDM_CF_RECOMPUTED")
     cf_values = {"A": original_cf, "C": original_cf}
-    if used_cf is not None:
-        cf_values["B"] = used_cf
+    b_extent_metadata: dict[str, Any]
+    if cf_top is None:
+        if used_cf is not None:
+            cf_values["B"] = b_last_cf_mode(original_cf, used_cf, None)
+            b_extent_metadata = {"extent_status": "LEGACY_UNKNOWN", "known_layers": None,
+                                 "unknown_layers": raw_nl,
+                                 "cf_semantics": "legacy whole working vector; extent unavailable"}
+        else:
+            b_extent_metadata = {"extent_status": "MISSING_CF_USED", "known_layers": None,
+                                 "unknown_layers": raw_nl}
+    elif cf_top == -1:
+        b_extent_metadata = {"extent_status": "NOT_CALLED", "known_layers": 0,
+                             "unknown_layers": raw_nl}
+    else:
+        b_extent_metadata = {"extent_status": "EXTENT_LIMITED_HYBRID", "known_layers": cf_top,
+                             "unknown_layers": raw_nl - cf_top,
+                             "cf_semantics": "UDM_CF_USED on 1:top; original radiation CF above top"}
+        if used_cf is not None:
+            cf_values["B"] = b_last_cf_mode(original_cf, used_cf, cf_top)
     if recomputed_cf is not None:
         cf_values["B_now"] = recomputed_cf
 
@@ -306,17 +351,24 @@ def main() -> int:
     diagnostics: dict[str, Any] = {}
     for mode in cf_modes:
         diagnostics[mode] = {}
+        if mode == "B":
+            diagnostics[mode].update(b_extent_metadata)
         if mode not in cf_values:
             missing_cf = "UDM_CF_USED" if mode == "B" else "UDM_CF_RECOMPUTED"
-            diagnostics[mode]["status"] = f"SKIPPED_MISSING_{missing_cf}"
+            diagnostics[mode]["status"] = ("SKIPPED_NOT_CALLED" if mode == "B" and cf_top == -1
+                                             else f"SKIPPED_MISSING_{missing_cf}")
             if args.cf_policy == mode:
-                fail(f"requested CF policy {mode} requires raw {missing_cf}")
+                fail(f"requested CF policy {mode} requires raw {missing_cf} and a called diagnostic")
             continue
         cf_mode = np.asarray(cf_values[mode], dtype=np.float64)
         if np.any(cf_mode == -1.0):
             diagnostics[mode]["status"] = "SKIPPED_SENTINEL_MINUS_ONE"
             diagnostics[mode]["sentinel_layers"] = int(np.count_nonzero(cf_mode == -1.0))
             continue
+        if mode == "B" and cf_top is None:
+            diagnostics[mode]["status"] = "READY_LEGACY_EXTENT_UNKNOWN"
+        elif mode == "B":
+            diagnostics[mode]["status"] = "READY_EXTENT_LIMITED_HYBRID"
         mode_inputs[mode] = {}
         for graupel_mode in graupel_modes:
             updates = {name: values.copy() for name, values in input_records.items()
@@ -497,7 +549,7 @@ def main() -> int:
         "seed_ensemble": {"count": args.seeds, "seeds": seed_values},
         "policy_labels": {
             "A": "original captured radiation CF and in-cloud paths",
-            "B": "last actual UDM_CF_USED; recompute in-cloud paths from preserved grid-box mass; zero-CF grid mass is omitted",
+            "B": "extent-limited hybrid: UDM_CF_USED on 1:UDM_CF_TOP, original radiation CF above top; legacy raw without top retains whole working vector but is explicitly extent-unknown; recompute paths with the selected CF",
             "B_now": "current-state UDM_CF_RECOMPUTED; recompute paths from preserved grid-box mass; zero-CF grid mass is omitted",
             "C": "original radiation CF with grid-mean paths passed as in-cloud paths; intentionally non-mass-preserving counterfactual",
         },

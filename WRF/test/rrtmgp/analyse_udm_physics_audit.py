@@ -89,14 +89,39 @@ def raw_cloud_summary(path: Path) -> dict[str, Any]:
     cf_source = _first(fields, ("RAD_CF_SOURCE", "SOURCE_CF", "CLDFRA_SOURCE"))
     cf_used = _first(fields, ("UDM_CF_USED", "CF_USED", "CF_LAST_USED"))
     cf_recomputed = _first(fields, ("UDM_CF_RECOMPUTED", "CF_RECOMPUTED"))
+    cf_top = _first(fields, ("UDM_CF_TOP",))
+    cf_step = _first(fields, ("UDM_CF_SOURCE_STEP",))
     if cf_rad is None:
         raise ValueError(f"{path}: missing builder CF field")
     n = len(cf_rad[1])
     if n != header["nlay"]:
         raise ValueError(f"{path}: CF has {n} entries, header has {header['nlay']} layers")
+    extent = None
+    if cf_top is not None:
+        if cf_step is None or len(cf_top[1]) != 1 or len(cf_step[1]) != 1:
+            raise ValueError(f"{path}: UDM_CF_TOP requires scalar UDM_CF_SOURCE_STEP")
+        top_value, step_value = cf_top[1][0], cf_step[1][0]
+        if (not math.isfinite(top_value) or top_value != int(top_value) or
+            not math.isfinite(step_value) or step_value != int(step_value)):
+            raise ValueError(f"{path}: UDM CF top/step must be finite integers")
+        extent = int(top_value)
+        source_step = int(step_value)
+        if (extent < -1 or extent > n or source_step < -1 or
+            ((extent == -1) != (source_step == -1))):
+            raise ValueError(f"{path}: invalid UDM CF top/step extent pair")
     for label, item in (("source", cf_source), ("used", cf_used), ("recomputed", cf_recomputed)):
         if item and len(item[1]) not in (1, n):
             raise ValueError(f"{path}: {label} CF length must be 1 or {n}")
+    cf_used_diagnostic = cf_used
+    if cf_used is not None and extent is None:
+        # Preserve the legacy vector as an explicitly raw working field only;
+        # without a top record it cannot be called a diagnosed full-level CF.
+        cf_used_diagnostic = None
+    if cf_used is not None and extent is not None:
+        used_values = cf_used[1] * n if len(cf_used[1]) == 1 else cf_used[1]
+        known = max(0, extent)
+        cf_used_diagnostic = ("UDM_CF_USED_WITHIN_DECLARED_EXTENT",
+                              used_values[:known] + [-2.0] * (n-known))
 
     paths: dict[str, list[float]] = {}
     for phase in ("LWP", "IWP", "RWP", "SWP", "GWP", "HWP"):
@@ -143,9 +168,11 @@ def raw_cloud_summary(path: Path) -> dict[str, Any]:
         ratios: list[float] = []
         positive_over_zero = 0
         for a, b in zip(num, den):
-            if b > 0:
+            # Extent-limited diagnostic vectors carry an out-of-range sentinel
+            # above UDM_CF_TOP. Never let either operand contribute a ratio.
+            if 0.0 <= a <= 1.0 and 0.0 <= b <= 1.0 and b > 0:
                 ratios.append(a / b)
-            elif b == 0 and a > 0:
+            elif 0.0 <= a <= 1.0 and b == 0 and a > 0:
                 positive_over_zero += 1
         valid_pairs = [(a, b) for a, b in zip(num, den) if 0 <= b <= 1 and 0 <= a <= 1]
         return {
@@ -164,12 +191,18 @@ def raw_cloud_summary(path: Path) -> dict[str, Any]:
         "cf": {
             "radiation_builder": cf_stats("radiation_builder", cf_rad),
             "original_radiation_input": cf_stats("original_radiation_input", cf_source),
-            "last_used": cf_stats("last_used", cf_used),
+            "last_used": cf_stats("last_used", cf_used_diagnostic),
+            "last_used_raw_working_vector": cf_stats("last_used_raw_working_vector", cf_used),
             "recomputed": cf_stats("recomputed", cf_recomputed),
             "layers_below_0p5": len(below), "layers_below_0p5_and_wet": len(wet_below),
             "fraction_below_0p5_and_wet_over_wet_layers": len(wet_below) / sum(wet) if any(wet) else None,
-            "builder_to_last_used": ratio_stats(cf_used),
-            "last_used_to_builder": ratio_stats(cf_rad, cf_used) if cf_used is not None else None,
+            "builder_to_last_used": ratio_stats(cf_used_diagnostic),
+            "last_used_to_builder": ratio_stats(cf_rad, cf_used_diagnostic) if cf_used_diagnostic is not None else None,
+            "last_used_extent_status": ("LEGACY_UNKNOWN" if cf_used is not None and extent is None else
+                                         ("NOT_CALLED" if extent == -1 else
+                                          ("EXTENT_LIMITED" if extent is not None else "MISSING"))),
+            "last_used_known_layers": max(0, extent) if extent is not None else None,
+            "last_used_unknown_layers": n-max(0, extent) if extent is not None else n,
             "builder_to_recomputed_current_state": ratio_stats(cf_recomputed),
             "recomputed_to_builder": ratio_stats(cf_rad, cf_recomputed) if cf_recomputed is not None else None,
         },
@@ -179,6 +212,7 @@ def raw_cloud_summary(path: Path) -> dict[str, Any]:
             "radiation_step": fields.get("RADIATION_STEP", []),
             "source_time_seconds": fields.get("SOURCE_TIME_SECONDS", []),
             "udm_cf_source_step": fields.get("UDM_CF_SOURCE_STEP", []),
+            "udm_cf_top": fields.get("UDM_CF_TOP", []),
             "udm_cf_dx_m": fields.get("UDM_CF_DX_M", []),
         },
     }
