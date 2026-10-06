@@ -1,0 +1,248 @@
+{
+  "schema": "udm37-fresh-restart-diagnostic-evidence-v1",
+  "scope": "local January 2000 real-data restart validation; no meteorological accuracy claim",
+  "local_campaign": {
+    "primary": {
+      "status": "PASS_SCOPED_RESTART_DIAGNOSTIC_ARRAYS_AND_INVOCATION_METADATA",
+      "receipt": {
+        "path": "build/udm37-restart-cloud-diagnostics-runtime-v2/runs-v2/execution.json",
+        "sha256": "6229e7d6964618fda7b93fd3c9d8788ce86cccabc0f3bb905ef2d5397e08d65e",
+        "size_bytes": 14848878
+      },
+      "plan": {
+        "path": "build/udm37-restart-cloud-diagnostics-runtime-v2/runs-v2/plan.json",
+        "sha256": "83ea4c66e1f266f9637138d3b6f56c685ad3d4c2eb9d083899d1bb6adac67e74",
+        "size_bytes": 5122648
+      },
+      "arm_statuses": {
+        "short-b1": "CASE_VALIDATED",
+        "short-b32": "CASE_VALIDATED",
+        "short-own-restart": "CASE_VALIDATED",
+        "long-b1": "CASE_VALIDATED",
+        "long-b32": "CASE_VALIDATED",
+        "long-own-restart": "CASE_VALIDATED"
+      },
+      "model_invocations": 6,
+      "benchmark_models": 0,
+      "array_contract": {
+        "short_reference": "All 225 old-source history fields and all 664 shared old-checkpoint fields exact; exactly three new checkpoint diagnostics additionally match the same-time new-source history.",
+        "continuous_batching": "225 history fields and 667 checkpoint fields exact between batch 1 and batch 32",
+        "own_restart": "225 history fields at all common times and 667 checkpoint fields exact as arrays",
+        "numeric_or_raw_array_exemptions": 0,
+        "immutable_postflight": "PASS"
+      },
+      "strict_metadata": {
+        "status": "FAIL_PRESERVED",
+        "different_attributes": [
+          "START_DATE",
+          "WRF_ALARM_SECS_TIL_NEXT_RING_55 on restart checkpoints"
+        ],
+        "numeric_or_raw_array_exemptions": 0,
+        "contract": {
+          "path": "build/udm37-restart-cloud-diagnostics-metadata-contract-v3/contract.json",
+          "sha256": "0353fb929e47ddc978addda4614b300eae0f8bf837aeadd4509909341383dead",
+          "size_bytes": 19874
+        },
+        "note": "Invocation metadata is source-attributed and scoped separately; it is not called whole-file identity."
+      }
+    },
+    "legacy_checkpoint": {
+      "status": "PASS_SCOPED_LEGACY_INPUT_SENTINELS_AND_RESTART_ARRAYS",
+      "receipt": {
+        "path": "build/udm37-restart-cloud-diagnostics-runtime-v2/legacy-runs-v1/execution.json",
+        "sha256": "17872721f85bccd6f9e2d80b96e3553c1c5e4f24cb1d19958c5f19eec4f9bf65",
+        "size_bytes": 1614869
+      },
+      "plan": {
+        "path": "build/udm37-restart-cloud-diagnostics-runtime-v2/legacy-runs-v1/plan.json",
+        "sha256": "8251dbf8341bad1d49d10aa0e5b5743ec5c9245041c63d53ea78a4840a1507da",
+        "size_bytes": 8185553
+      },
+      "model_invocations": 1,
+      "benchmark_models": 0,
+      "donor_checkpoint": {
+        "path": "build/udm37-column-batching-long-runtime-v1/runs-v1/cases/short-b1/wrfrst_d01_2000-01-24_13:00:00",
+        "sha256": "4426606e135a136de9e81ad4d5db7e27f41d3cb399a8ce6d965b0b6d2974174a",
+        "size_bytes": 29190904
+      },
+      "restart_arrays": {
+        "initial_record": "the three unavailable diagnostics are -1; the other 222 checked fields match",
+        "later_history": "all 225 checked fields exact at 13:10 through 14:00",
+        "final_checkpoint": "all 667 checkpoint fields exact under the scoped invocation-metadata policy",
+        "no_claim_initial_225_equal": true
+      },
+      "strict_metadata": "FAIL_PRESERVED",
+      "immutable_postflight": "PASS"
+    },
+    "source_and_build": {
+      "base_commit": "d05c97b4f26be0ca21867051b50d6fca00261d51",
+      "compiled_source_manifest": {
+        "path": "build/udm37-restart-cloud-diagnostics-gnu-v1/source-manifest-v4.json",
+        "sha256": "03b2ddf6d45a37e95a1b07a4d37c2401704bb67569c0290391dea0397fcabe98",
+        "entry_count": 6760
+      },
+      "build_result": {
+        "path": "build/udm37-restart-cloud-diagnostics-gnu-v1/build-result-v2.json",
+        "sha256": "bc7804d997409c3797cb0bc734c157b3f98338b8d7b268570ecdaca16a3ec09a",
+        "status": "BUILD_PASS",
+        "model_invocations": 0
+      },
+      "executable": {
+        "path": "build/udm37-restart-cloud-diagnostics-gnu-v1/source-v4/WRF/main/wrf.exe",
+        "sha256": "6088620a5a27020bba4454d8380ecc149bbbea78ef1c82b37df15e719163fca5",
+        "size_bytes": 59158736
+      },
+      "runtime_helpers": [
+        {
+          "path": "build/udm37-restart-cloud-diagnostics-runtime-v2/runtime.py",
+          "sha256": "548d322272b620a09d137e929edbd30b0afafaa34792774b13486bf69e4fa8d1"
+        },
+        {
+          "path": "build/udm37-restart-cloud-diagnostics-runtime-v2/legacy.py",
+          "sha256": "6065c2294f2f28e34e05c2d4a8167f1aea33598d7df17010a4dc97846f043f7b"
+        }
+      ],
+      "peer_review": {
+        "path": "build/udm37-restart-cloud-diagnostics-runtime-v2/peer-review-final-v1.json",
+        "sha256": "09f32cb1a73fe7077b12b79f5b585fa125066d2d984d72158e53fe585602544b"
+      }
+    }
+  },
+  "ci": {
+    "previous_run": {
+      "run_id": 37172036979,
+      "status": "FAILURE",
+      "receipt": {
+        "path": "build/pr54-ci-readback/ci-receipt.json",
+        "sha256": "3e70cc740e3eafe9bce772dd099c7bf9c178f32931eb1aff39fc9b573788ea78"
+      },
+      "failure": "serial-scm restart first history record was 1999-10-22_19:01:10; expected 1999-10-22_19:01:00"
+    },
+    "validation_only_fix": {
+      "commit": "dbf03a9171b86cfc2f825a5ff2d7189ba572d4fa",
+      "receipt": {
+        "path": "build/pr54-ci-readback/harness-fix-v1/receipt.json",
+        "sha256": "39f42ef3b402d174f5b6d10b556449700ef8b6843a105cff784c8bfd812f9b16"
+      },
+      "change": "sets write_hist_at_0h_rst=.true. for restart phases and adds validation controls; no Fortran source or model change",
+      "offline_tests": "8 PASS"
+    },
+    "rerun_status": "SUCCESS",
+    "note": "The updated-head CI passed all eight jobs; the failed prior run remains preserved. CI SCM invocations are separate from the seven local real-data model invocations.",
+    "updated_run": {
+      "run_id": 37173604961,
+      "head_sha": "dbf03a9171b86cfc2f825a5ff2d7189ba572d4fa",
+      "base_sha": "5ac698041d8075c2dae0a6d264922f45610ca1c2",
+      "receipt": {
+        "path": "build/pr54-ci-readback/ci-receipt-db-f03a917.json",
+        "sha256": "a1a9b5debb70286ccee3d2a31bfd588ac90725aac63b07cfcd987fc7d1c75c4e",
+        "size_bytes": 42310
+      },
+      "all_jobs": [
+        {
+          "conclusion": "success",
+          "name": "registration"
+        },
+        {
+          "conclusion": "success",
+          "name": "standalone-columns"
+        },
+        {
+          "conclusion": "success",
+          "name": "component-validation (registry)"
+        },
+        {
+          "conclusion": "success",
+          "name": "serial-scm"
+        },
+        {
+          "conclusion": "success",
+          "name": "component-validation (core)"
+        },
+        {
+          "conclusion": "success",
+          "name": "independent-rfmip"
+        },
+        {
+          "conclusion": "success",
+          "name": "frozen-optics-reference"
+        },
+        {
+          "conclusion": "success",
+          "name": "cpu-openmp"
+        }
+      ],
+      "serial_restart": {
+        "all_invocations_success": true,
+        "calendar_boundary_included": true,
+        "calendar_note": "The boundary case retimes Times, restart/history namelists, and available date metadata; it checks restart reproducibility only, not meteorological validity at the retimed date.",
+        "cases": {
+          "calendar": {
+            "checkpoint_differing_variables": [],
+            "checkpoint_time": "2000-01-01_00:00:00",
+            "checkpoint_variable_count": 204,
+            "common_time_count": 13,
+            "common_variable_count": 211,
+            "first_time": "1999-12-31_23:59:00",
+            "last_time": "2000-01-01_00:01:00",
+            "summary": {
+              "bitwise_equal_variables_all_times": 211,
+              "differing_variable_time_pairs": 0,
+              "exact_match_times": 13,
+              "matching_time_count": 13
+            }
+          },
+          "control": {
+            "checkpoint_differing_variables": [],
+            "checkpoint_time": "1999-10-22_19:01:00",
+            "checkpoint_variable_count": 204,
+            "common_time_count": 13,
+            "common_variable_count": 211,
+            "first_time": "1999-10-22_19:00:00",
+            "last_time": "1999-10-22_19:02:00",
+            "summary": {
+              "bitwise_equal_variables_all_times": 211,
+              "differing_variable_time_pairs": 0,
+              "exact_match_times": 13,
+              "matching_time_count": 13
+            }
+          },
+          "mixed": {
+            "checkpoint_differing_variables": [],
+            "checkpoint_time": "1999-10-22_19:01:00",
+            "checkpoint_variable_count": 204,
+            "common_time_count": 13,
+            "common_variable_count": 211,
+            "first_time": "1999-10-22_19:00:00",
+            "last_time": "1999-10-22_19:02:00",
+            "summary": {
+              "bitwise_equal_variables_all_times": 211,
+              "differing_variable_time_pairs": 0,
+              "exact_match_times": 13,
+              "matching_time_count": 13
+            }
+          }
+        },
+        "invocations": 9,
+        "physics_options": {
+          "mp_physics": 27,
+          "ra_lw_physics": 37,
+          "ra_sw_physics": 37,
+          "use_mp_re": 1
+        },
+        "radiation_timestep_minutes": 0.5,
+        "requested_run_seconds": 120,
+        "scope": "serial actual WRF UDM/RRTMGP 37/37 SCM restart determinism; not a long forecast claim",
+        "status": "PASS",
+        "timestep_seconds": 10
+      },
+      "artifact": {
+        "artifact_id": 11292528815,
+        "download_size_bytes": 84486210,
+        "name": "validation-serial-scm-37173604961",
+        "sha256": "7bf838c5ab504ef646f7309105a119cd12d7f2dc89d07af5aa659869837879be",
+        "tar_path": "build/pr54-ci-readback/serial-scm-artifact-updated/validation-serial-scm.tar.gz"
+      }
+    }
+  }
+}
