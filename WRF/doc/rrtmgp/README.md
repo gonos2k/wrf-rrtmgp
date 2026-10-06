@@ -90,6 +90,8 @@ LD_LIBRARY_PATH="$NETCDF/lib:${LD_LIBRARY_PATH:-}" \
 
 독립 upstream 실행 비교, 공개 SW reference 잔차 및 UDM graupel/hail 지원 근거는 [독립 기준 검증](INDEPENDENT_REFERENCE.md)에 정리했다.
 
+[최신 소스의 공식 RRTMG4 회귀 및 태양 스펙트럼 원인 시험](../../../validation/rrtmgp37/reference-residual-audit/README.md)은 별도의 비교다. `d05c97b` Fortran을 공식 WRF와 같은 GNU 직렬 설정으로 새로 빌드한 UDM27/RRTMG4의 60초 두 SCM 사례는 각 208개 변수와 NetCDF 파일 전체가 보존된 공식 출력과 동일했다. 필요한 RRTMGP module include 경로 한 줄만 configure에 추가했고 전체 compiler stdout 파일은 남지 않았음을 기록한다. 독립 upstream 단파 실험에서는 태양 스펙트럼 변경으로 공개 기준값과의 평균 절대차가 크게 감소했지만 고정 `1e-5 W/m²` 검사는 여전히 FAIL이다. 두 결과를 장시간 예보 회귀나 구름 광학 정확성으로 확대하지 않는다.
+
 NOAA 사례 및 직접 코드 근거는 [NOAA 적용 사례](NOAA.md)에 정리했다. 실행 검증 결과는 [검증 기록](VALIDATION.md)에 기록한다.
 
 ## WRF 단일 컬럼 실행
