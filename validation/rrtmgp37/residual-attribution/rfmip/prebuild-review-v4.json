@@ -1,0 +1,69 @@
+{
+  "schema": "rfmip-diagnostic-independent-unrun-review-v4",
+  "created_utc": "2026-10-04T13:47:22.602054+00:00",
+  "status": "PASS_SCOPED_PREBUILD_TWO_CALL_LAUNCHER_REVIEW_NO_CALLS",
+  "freeze": {
+    "run_diagnostic_once_v5.py": {
+      "path": "build/udm37-rfmip-residual-next-diagnostic-v5/run_diagnostic_once_v5.py",
+      "size_bytes": 37109,
+      "sha256": "aa2cfc668028c348abf3da3b7b9f64d50f8ee7b4e3241498b4fdd67912c5da10"
+    },
+    "plan-v5.json": {
+      "path": "build/udm37-rfmip-residual-next-diagnostic-v5/plan-v5.json",
+      "size_bytes": 6481,
+      "sha256": "14f1d2250db599f898463fbcf990bc32cd72b14a03c16e096e64868f33f16798"
+    },
+    "prebuild-manifest-v5.json": {
+      "path": "build/udm37-rfmip-residual-next-diagnostic-v5/prebuild-manifest-v5.json",
+      "size_bytes": 22337,
+      "sha256": "0e3b942f28f11a32017fd479f36692a82f832e4eae9d7722f5919d83edfd8e44"
+    },
+    "baseline-runtime-closure-v4.json": {
+      "path": "build/udm37-rfmip-residual-next-diagnostic-v5/baseline-runtime-closure-v4.json",
+      "size_bytes": 9831,
+      "sha256": "e1f0ca84f2c0da5e113b452d10e784edd4c0fcd1b52c31fcc0676c194f6912d5"
+    },
+    "selftest_v5.py": {
+      "path": "build/udm37-rfmip-residual-next-diagnostic-v5/selftest_v5.py",
+      "size_bytes": 3956,
+      "sha256": "8e9675051e2563b7f929749812b92d950956085e9ffec9c5bc4e99810a6b8ebc"
+    },
+    "source-snapshot/rrtmgp_rfmip_sw.F90": {
+      "path": "build/udm37-rfmip-residual-next-diagnostic-v5/source-snapshot/rrtmgp_rfmip_sw.F90",
+      "size_bytes": 19453,
+      "sha256": "8c55012d7b34722fce2d29a6c13d1cb55cf5f6e919340decad250a8c031f3354"
+    }
+  },
+  "inherits": {
+    "path": "build/udm37-rfmip-diagnostic-independent-review-v3/review.json",
+    "sha256": "c46a9c8ebbd0f53d6364376b10cb73048845d1e2dd6735e7c1706f18a4178310"
+  },
+  "review_scope": "Narrow v4-to-v5 diff plus exact frozen pins and new generated-executable identity fixture. Prior unchanged source/mapping/cast/ULP/normalization controls inherited, not rerun.",
+  "pure_checks": {
+    "input_pins_count": 62,
+    "runtime_libraries_count": 47,
+    "frozen_baseline_closure_matches": true,
+    "new_identity_fixture": "PASS_ORIGINAL_ACCEPT_MUTATED_REJECT"
+  },
+  "generated_executable_guards": [
+    "SHA compared immediately before each solver launch (before Popen).",
+    "Actual solver outcome fsynced before post-process SHA comparison.",
+    "SHA compared after both arms before completion/optical comparison."
+  ],
+  "all_prior_material_blockers_resolved": true,
+  "findings": [],
+  "bounded_future_scope": "One isolated driver compile/link and at most2SW calls only after root authorization: current coefficients first, then old-solar only after full baseline/cast/finite/normalization gates. Solar-only gas-optics equality mandatory; exact1800-profile ordinary output parity and135captureprofiles required.",
+  "scientific_limits": [
+    "Strict published result remains FAIL116RSD39RSU at1e-5/rtol0; this review changes no threshold.",
+    "No authenticated historical source/coefficient identity; old-solar is a targeted counterfactual.",
+    "Midpoint-interval inclusive labels do not encode tie-to-even; exact float32 conversion gate remains authoritative.",
+    "Failed cast-detail mismatch count can be capped; gate remains exact. Neither caution blocks the planned diagnostic.",
+    "No build/solver/parity/physical accuracy or WRF forecast PASS inferred from preparation."
+  ],
+  "new_invocations": {
+    "compile": 0,
+    "solver": 0,
+    "WRF": 0,
+    "REAL": 0
+  }
+}
