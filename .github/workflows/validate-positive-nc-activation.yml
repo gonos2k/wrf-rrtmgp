@@ -1,0 +1,31 @@
+name: Validate saved positive Nc activation
+
+on:
+  pull_request:
+    paths:
+      - 'validation/rrtmgp37/positive-nc-activation/**'
+      - 'validation/rrtmgp37/positive-nc-stage/**'
+      - '.github/workflows/validate-positive-nc-activation.yml'
+  push:
+    paths:
+      - 'validation/rrtmgp37/positive-nc-activation/**'
+      - 'validation/rrtmgp37/positive-nc-stage/**'
+      - '.github/workflows/validate-positive-nc-activation.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  saved-evidence:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Authenticate manifest and verify saved evidence
+        env:
+          PACKAGE: validation/rrtmgp37/positive-nc-activation
+          EXPECTED_MANIFEST: 4654a613cb91a0acafb41c74e646462df8457a6c1380156fef9470eeb652e305
+        run: |
+          printf '%s  %s\n' "$EXPECTED_MANIFEST" "$PACKAGE/manifest.json" | sha256sum -c -
+          python3 -I -S "$PACKAGE/verify_saved.py"

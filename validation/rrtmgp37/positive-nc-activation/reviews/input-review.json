@@ -1,0 +1,74 @@
+{
+  "status": "PASS_SCOPED_ONE_ELEMENT_INPUT_AND_SELECTED_LOOKUP",
+  "baseline_input": {
+    "path": "build/udm37-positive-nc-stage-runtime-2min-v2/stage/on/wrfinput_d01",
+    "sha256": "849f340d8d74b8e252b40d41c2d660126ae7a7b755d2e2b9eb24e988c97efc03",
+    "size_bytes": 10699727
+  },
+  "derived_input": {
+    "path": "build/udm37-activation-supersat-input-v1/derived/wrfinput_d01",
+    "sha256": "4be27d2dfbec0286a5dc7e8a73d0b2ee78de028e7cacf735fd8b393567e44380",
+    "size_bytes": 10975310
+  },
+  "input_join": {
+    "path": "build/udm37-activation-supersat-input-v1/input-variable-join.json",
+    "sha256": "f0ebbd4696c3bcc57ff4cc68ccb34fa3c2699f3bc5e55f5686c43b96c97aa087",
+    "size_bytes": 99294
+  },
+  "input_diff": {
+    "path": "build/udm37-activation-supersat-input-v1/input-diff.json",
+    "sha256": "f5a563aa69838fa543275ced8b57b0e09dd92f452d6ff3aa1cfb30ca8785d897",
+    "size_bytes": 2400
+  },
+  "preparation_source": {
+    "path": "build/udm37-activation-supersat-input-v1/prepare_input.py",
+    "sha256": "6839050d9677ba63e8588171d39c1104d8e66c251c24b7268d3aed1176dd5a41",
+    "size_bytes": 10093
+  },
+  "native_source": {
+    "path": "build/udm37-positive-nc-stage-observer-source-v2/WRF/phys/module_mp_udm.F",
+    "sha256": "9f25a1aaebd0d29ba3ecdf86c9fe65065cf920fc187bdfd904e8b8192bc7e3c8",
+    "size_bytes": 208324
+  },
+  "semantic_checks": {
+    "variable_count": 197,
+    "dimensions_and_unlimited_flags_equal": true,
+    "all_global_and_variable_attributes_order_type_and_values_equal": true,
+    "variable_roster_order_type_dimensions_equal": true,
+    "every_variable_raw_data_digest_matches_author_join": true,
+    "changed_variable": "QVAPOR",
+    "changed_element_count": 1,
+    "location": {
+      "index0": [
+        0,
+        6,
+        1,
+        22
+      ],
+      "before": 0.017006712034344673,
+      "after": 0.018149642273783684
+    }
+  },
+  "independent_selected_lookup": {
+    "algorithm": "Separately implemented source-order REAL32 constant/setup and relevant two table nodes with current host libm powf/expf; no author module import or whole-table generation",
+    "table_lower_index": 5754,
+    "table_fraction": 0.876953125,
+    "qsat": 0.01810630038380623,
+    "target_call_qv": 0.018160618841648102,
+    "offset": 0.0011429302394390106,
+    "derived_initial_qv": 0.018149642273783684,
+    "declared_rule_exact": true,
+    "compiled_Fortran_intrinsic_bit_identity_claimed": false
+  },
+  "limits": [
+    "Perturbed input is a call-informed offset, not guaranteed future RH or activation.",
+    "Existing numeric field labels ending m3 do not authenticate physical number-unit authority.",
+    "No model/compiler/RTE, no source/input edits, no future raw packet read."
+  ],
+  "invocations": {
+    "saved_input_comparison": 1,
+    "compiler": 0,
+    "model": 0,
+    "RTE": 0
+  }
+}

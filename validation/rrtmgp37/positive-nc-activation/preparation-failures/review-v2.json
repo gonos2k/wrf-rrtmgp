@@ -1,0 +1,54 @@
+{
+  "blocking_findings": [
+    {
+      "actual_layout": "Metadata at runtime-v2/; arms at runtime-v2/stage/off and stage/on.",
+      "behavior": "No --stage-root choice supplies both required root/stage-plan.json and root/{off,on}. Runner ignores declared case.directory when snapshotting, checking input/namelist and launching.",
+      "id": "ARM_DIRECTORY_MISMATCH",
+      "remedy": "Preserve v2; freeze additive runner using declared case directories consistently, then re-review exact successor pins.",
+      "runner_lines": [
+        58,
+        175,
+        212,
+        213,
+        254
+      ]
+    }
+  ],
+  "invocation_counts": {
+    "RTE": 0,
+    "compilers": 0,
+    "models": 0,
+    "scientific_readers": 0
+  },
+  "limits": [
+    "Read-only static source and metadata review; no full asset rehash or scientific process.",
+    "Input one-element proof is separately pinned by input-review.json; does not guarantee runtime discriminating activation.",
+    "Number field labels are process context, not physical units authority.",
+    "No Nc/PSD/population/physical accuracy or forecast relevance approval."
+  ],
+  "review_time_utc": "2026-10-06T17:05:56.313342+00:00",
+  "reviewed_plan": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-activation-supersat-runtime-v2/stage-plan.json",
+    "sha256": "833c690d10be03aca79616e374b1670990f4d5d8735ed47ba282842395f0ff4c",
+    "size_bytes": 125558
+  },
+  "reviewed_runner": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-activation-supersat-runtime-runner-v2.py",
+    "sha256": "f28ba3ceccc61b1c8af5d9cef2f65141470f4acee34c5b07c3c6a91316e4de91",
+    "size_bytes": 27771
+  },
+  "reviewed_validator": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-activation-supersat-runtime-v2/validate_activation.py",
+    "sha256": "2d916bb2d5f3aff68e00174efad93428fe62a79a30a189396b057dde945d7b7c",
+    "size_bytes": 10603
+  },
+  "scientific_accepted": false,
+  "scoped_findings": [
+    "Stage21 supplies cached CPM/XLV at this one-substep source case; host CP=1004.5, CPV=4*RV, XLV=2.5e6, SVPT0=273.15 and udminit CLIQ-CPV are used.",
+    "Qsaturation includes min(es,0.99*P); reported es_Pa is uncapped context, so do not generalize reported ES as actual capped value. At target current P cap is inactive.",
+    "Same-step RH>1 plus emitted positive NC_ACT and PC_ACT and source-ordered NN/NC/QV/QC/T updates replace prior all-zero oracle.",
+    "One-use, first failure stop, bounded cleanup, immediate terminal RC record before log-close/postflight are present.",
+    "Source-table replay is a Python binary32 expression model; no generic compiler intrinsic bit-identity assertion."
+  ],
+  "status": "BLOCKED_PRELAUNCH_PATH_WIRING"
+}
