@@ -1,0 +1,59 @@
+{
+  "processes": [
+    {
+      "name": "configure",
+      "argv": [
+        "./configure"
+      ],
+      "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-registry-storage-classic-v2/WRF",
+      "started_unix": 1791282059.3995142,
+      "pid": 3231445,
+      "actual_rc": 0,
+      "ended_unix": 1791282059.710849,
+      "log": {
+        "sha256": "242b7e8a0ee67bf783b899dc1cd3d766606a67092c942a5a6b06faddc02a8c58",
+        "size_bytes": 9321
+      }
+    },
+    {
+      "name": "compile",
+      "argv": [
+        "/home/korea_keun/.local/bin/csh",
+        "-f",
+        "./compile",
+        "-j",
+        "2",
+        "em_scm_xy"
+      ],
+      "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-registry-storage-classic-v2/WRF",
+      "started_unix": 1791282059.71194,
+      "pid": 3231577,
+      "actual_rc": 0,
+      "ended_unix": 1791282735.1568563,
+      "log": {
+        "sha256": "41e901552f7e2eaa9330897adc8a8dc09f0188324cd218aa1dfde57e9c37a619",
+        "size_bytes": 1700979
+      }
+    }
+  ],
+  "executables": {
+    "ideal.exe": {
+      "sha256": "55d1a7ca96a4612377abc6a7106ac4265f53c1e50d6fef55d73170ca3994b9f2",
+      "size_bytes": 38138536
+    },
+    "wrf.exe": {
+      "sha256": "41f770292a624dd1eacda3312571df3258f73023a613b3b294e580a846ec6a6f",
+      "size_bytes": 50324320
+    }
+  },
+  "input_wrf_object_exists": true,
+  "storage_header": "/* Registry-generated state storage; do not edit. */\n#define WRF_REGISTRY_STATE_ALLOCATABLE 0\n",
+  "state_declarations": [
+    "real      ,DIMENSION(:,:,:)   ,POINTER   :: udm_cldfra",
+    "integer   ,DIMENSION(:,:)     ,POINTER   :: udm_cf_step",
+    "integer   ,DIMENSION(:,:)     ,POINTER   :: udm_cf_top"
+  ],
+  "models": 0,
+  "ideal": 0,
+  "status": "PASS_CLASSIC_BUILD_SCOPED"
+}

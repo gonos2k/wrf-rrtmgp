@@ -28,3 +28,10 @@ classic WRF build is separate and still in progress. The existing Make
 module_state_description recipe masks some Registry failures and lacks direct
 header object dependencies; arbitrary incremental/cleanup behavior is not
 claimed. Physical reference and Nc/PSD acceptance remain open.
+
+Terminal local follow-up: [VALIDATION_COMPLETE.json](VALIDATION_COMPLETE.json)
+records fresh classic configure/build RC0, pointer fields plus storage header 0,
+and one ideal plus one 60-second candidate37 startup SCM RC0. This is additive
+to the earlier in-progress report. The three production correction files match
+PR134 code head 06b88ba; the test harness changed after the local source snapshot,
+so whole Git tree equality is not claimed. Remote correction CI remains separate.
