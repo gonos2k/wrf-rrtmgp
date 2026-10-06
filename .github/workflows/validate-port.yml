@@ -17,6 +17,7 @@ on:
       - 'tools/register37.py'
       - 'tools/compare_registry.py'
       - 'tools/validate.py'
+      - 'tools/udm_frozen_optics/**'
       - 'validation/rrtmgp37/upstream-reference/**'
       - '.github/workflows/validate-port.yml'
   push:
@@ -36,6 +37,7 @@ on:
       - 'tools/register37.py'
       - 'tools/compare_registry.py'
       - 'tools/validate.py'
+      - 'tools/udm_frozen_optics/**'
       - 'validation/rrtmgp37/upstream-reference/**'
       - '.github/workflows/validate-port.yml'
 permissions:
@@ -111,6 +113,63 @@ jobs:
             -DRRTMGP_TEST_OPENMP=ON -DRRTMGP_DATA_DIR="$GITHUB_WORKSPACE/WRF/run"
           cmake --build build/cpu-openmp-test --target test_rrtmgp_openmp --parallel 2
           ctest --test-dir build/cpu-openmp-test -R cpu_openmp_reentrancy --output-on-failure -V
+  frozen-optics-reference:
+    needs: registration
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    env:
+      OPENBLAS_NUM_THREADS: '1'
+      OMP_NUM_THREADS: '1'
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - name: Install offline frozen-particle numerical dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y gfortran python3-numpy python3-scipy python3-netcdf4 python3-venv
+      - name: Check published Mie benchmarks, precision counterfactual, PSD and source transforms
+        run: |
+          python3 tools/udm_frozen_optics/test_reference.py --output-dir build/frozen-reference/kernel-tests
+          python3 tools/udm_frozen_optics/test_controls.py --output-dir build/frozen-reference/control-tests
+          python3 tools/udm_frozen_optics/test_quadrature.py --output-dir build/frozen-reference/quadrature-tests
+      - name: Compare corrected SOCRATES against pinned independent Mie implementation
+        run: |
+          python3 -m venv --system-site-packages build/frozen-reference/venv
+          build/frozen-reference/venv/bin/pip install --require-hashes --no-deps \
+            -r tools/udm_frozen_optics/requirements-independent.txt
+          build/frozen-reference/venv/bin/python tools/udm_frozen_optics/independent_mie_check.py \
+            --output-dir build/frozen-reference/independent
+      - name: Generate a small complete table from pinned public inputs
+        run: |
+          python3 tools/udm_frozen_optics/generate.py \
+            --input-dir build/frozen-reference/input --fetch-inputs \
+            --output-dir build/frozen-reference/smoke \
+            --lambda-grid 20000 --temperatures 233 250 \
+            --order 32 --spectral-step 50 --workers 2
+      - name: Reject malformed tables and inconsistent task receipts
+        run: |
+          python3 tools/udm_frozen_optics/test_artifacts.py \
+            --generation build/frozen-reference/smoke --output-dir build/frozen-reference/rejections
+          python3 tools/udm_frozen_optics/compare.py \
+            --candidate build/frozen-reference/smoke --reference build/frozen-reference/smoke \
+            --output build/frozen-reference/self-comparison.json
+      - name: Save numerical artifacts without claiming live WRF G/H validation
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: validation-frozen-reference-${{ github.run_id }}
+          path: |
+            build/frozen-reference/kernel-tests/result.json
+            build/frozen-reference/control-tests/result.json
+            build/frozen-reference/quadrature-tests/result.json
+            build/frozen-reference/kernel-tests/kernel/*.diff
+            build/frozen-reference/kernel-tests/kernel/source-adaptation.json
+            build/frozen-reference/independent/independent_mie_check.json
+            build/frozen-reference/smoke/result.json
+            build/frozen-reference/smoke/frozen-ice-psd-moments.nc
+            build/frozen-reference/rejections/result.json
+            build/frozen-reference/self-comparison.json
+          retention-days: 30
+          if-no-files-found: warn
   independent-rfmip:
     needs: registration
     runs-on: ubuntu-24.04
