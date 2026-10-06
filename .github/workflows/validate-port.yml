@@ -11,6 +11,7 @@ on:
       - 'WRF/phys/**'
       - 'WRF/share/**'
       - 'WRF/test/rrtmgp/**'
+      - 'WRF/tools/**'
       - 'WRF/run/rrtmgp-*.nc'
       - 'config/**'
       - 'port/**'
@@ -37,6 +38,7 @@ on:
       - 'WRF/phys/**'
       - 'WRF/share/**'
       - 'WRF/test/rrtmgp/**'
+      - 'WRF/tools/**'
       - 'WRF/run/rrtmgp-*.nc'
       - 'config/**'
       - 'port/**'
@@ -101,6 +103,12 @@ jobs:
           sudo apt-get install -y gfortran gcc make libnetcdf-dev python3-numpy python3-scipy
       - name: Compile and execute component validation
         run: python3 tools/validate.py ${{ matrix.kind }}
+      - name: Verify generated subgrid flags and dimension controls
+        if: matrix.kind == 'registry'
+        run: >-
+          python3 WRF/test/rrtmgp/test_registry_subgrid_metadata.py WRF
+          --workdir build/registry-subgrid-metadata
+          --output build/registry-subgrid-metadata/receipt.json
       - name: Save logs and scope
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
@@ -109,6 +117,7 @@ jobs:
           path: |
             build/${{ matrix.kind }}/run.log
             build/${{ matrix.kind }}/result.json
+            build/registry-subgrid-metadata/receipt.json
           retention-days: 30
           if-no-files-found: error
   standalone-columns:
