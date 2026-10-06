@@ -11604,14 +11604,14 @@ CONTAINS
                        ims,ime, jms,jme, kms,kme,                 &
                        its,ite, jts,jte, kts,kte,                 &
                        lwupflx, lwupflxc, lwdnflx, lwdnflxc       &
-                                                                   ,use_rrtmgp,qh3d,f_qh,udm_cldfra,udm_cf_step,mcica_seed_override,audit_step,audit_time,udm_dry_layer_mass )
+                                                                   ,use_rrtmgp,qh3d,f_qh,udm_cldfra,udm_cf_step,mcica_seed_override,audit_step,audit_time,udm_dry_layer_mass,rrtmgp_domain_id,rrtmgp_calendar_day )
 !------------------------------------------------------------------
 !ccc To use clWRF time varying trace gases
    USE MODULE_RA_CLWRF_SUPPORT, ONLY : read_CAMgases
 
    USE module_mp_udm, ONLY: cldf_diag, udm_radiation_negative_limits
    USE module_ra_rrtmgp, ONLY: rrtmgp_lw_column
-   USE module_ra_rrtmgp_input, ONLY: rrtmgp_build_udm_inputs
+   USE module_ra_rrtmgp_input, ONLY: rrtmgp_build_udm_inputs, rrtmgp_column_seed
    USE module_ra_rrtmgp_trace, ONLY: trace_start, trace_active, trace_raw_start, trace_raw, &
         trace_raw_end, trace_result, trace_end
    IMPLICIT NONE
@@ -11621,7 +11621,8 @@ CONTAINS
    REAL, OPTIONAL, INTENT(IN) :: udm_cldfra(ims:ime,kms:kme,jms:jme),audit_time
    REAL, OPTIONAL, INTENT(IN) :: udm_dry_layer_mass(ims:ime,kms:kme,jms:jme)
    INTEGER, OPTIONAL, INTENT(IN) :: udm_cf_step(ims:ime,jms:jme),mcica_seed_override,audit_step
-   INTEGER :: gp_seed,gp_g_count
+   INTEGER, OPTIONAL, INTENT(IN) :: rrtmgp_domain_id,rrtmgp_calendar_day
+   INTEGER :: gp_seed,gp_g_count,gp_seed_overridden
    REAL(KIND=8) :: gp_g_sum,gp_g_max
    INTEGER :: gp_negative_count(6)
    REAL(KIND=8) :: gp_negative_sum(6),gp_negative_max_q(6)
@@ -11963,6 +11964,12 @@ CONTAINS
     run_rrtmgp=.FALSE.
     IF(PRESENT(use_rrtmgp)) run_rrtmgp=use_rrtmgp
     IF(run_rrtmgp) THEN
+      IF(.NOT.PRESENT(rrtmgp_domain_id).OR..NOT.PRESENT(rrtmgp_calendar_day)) &
+        CALL wrf_error_fatal('RRTMGP37 requires domain id and current calendar day for McICA')
+      gp_seed_overridden=0
+      IF(PRESENT(mcica_seed_override)) THEN
+        IF(mcica_seed_override>=0) gp_seed_overridden=1
+      END IF
       IF(.NOT.PRESENT(udm_dry_layer_mass)) &
         CALL wrf_error_fatal('RRTMGP37 UDM requires native dry-layer mass in kg/m2')
       IF(mp_physics/=27) CALL wrf_error_fatal('RRTMGP37 requires mp_physics=27 (UDM)')
@@ -12756,6 +12763,11 @@ CONTAINS
                   CALL trace_raw_start('LW',kte-kts+1)
                   CALL trace_raw('LW','DP_HPA',pdel(ncol,kts:kte))
                   CALL trace_raw('LW','DRY_LAYER_MASS_KG_M2',udm_dry_layer_mass(i,kts:kte,j))
+                  CALL trace_raw('LW','MCICA_DOMAIN_ID',[REAL(rrtmgp_domain_id)])
+                  CALL trace_raw('LW','MCICA_YEAR',[REAL(yr)])
+                  CALL trace_raw('LW','MCICA_DAY',[REAL(rrtmgp_calendar_day)])
+                  CALL trace_raw('LW','MCICA_POLICY_ID',[1.])
+                  CALL trace_raw('LW','MCICA_SEED_OVERRIDE',[REAL(gp_seed_overridden)])
                   CALL trace_raw('LW','CF',cldfrac(ncol,kts:kte))
                   CALL trace_raw('LW','RAD_CF_SOURCE',cldfra3d(i,kts:kte,j))
                   IF(PRESENT(udm_cldfra)) CALL trace_raw('LW','UDM_CF_USED',udm_cldfra(i,kts:kte,j))
@@ -12999,7 +13011,12 @@ CONTAINS
 #endif
 
 ! Call RRTMG longwave radiation model
-         gp_seed=i+104729*j+INT(julian)*1009
+         IF(run_rrtmgp) THEN
+           gp_seed=rrtmgp_column_seed(rrtmgp_domain_id,i,j,yr,rrtmgp_calendar_day,1)
+           IF(gp_seed<1) CALL wrf_error_fatal('RRTMGP37 invalid domain/calendar McICA seed key')
+         ELSE
+           gp_seed=i+104729*j+INT(julian)*1009
+         END IF
          IF(PRESENT(mcica_seed_override)) THEN
            IF(mcica_seed_override>=0) gp_seed=mcica_seed_override
          END IF

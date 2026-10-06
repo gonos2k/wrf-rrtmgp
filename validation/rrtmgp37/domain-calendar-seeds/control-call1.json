@@ -1,0 +1,61 @@
+{
+  "calendar_policy": "year plus fixed day-of-year; hour/minute do not alter seed",
+  "captures": [
+    {
+      "expected_time": "1999-10-22_19:00:00",
+      "header_seed": 679102813,
+      "i": 1,
+      "independent_expected_seed": 679102813,
+      "input_layers": 103,
+      "input_path": "build/pr-wrf-rrtmgp/build/udm-domain-seeds-pr16/scm/control/ra37-call1/capture/lw.input",
+      "input_sha256": "dc46948484b67db12670a64771734269dc740375f66a77a47424070098a0100b",
+      "j": 1,
+      "metadata": {
+        "day_of_year": 295,
+        "domain_id": 1,
+        "policy_id": 1,
+        "seed_override": 0,
+        "year": 1999
+      },
+      "native_layers": 59,
+      "phase": "LW",
+      "raw_path": "build/pr-wrf-rrtmgp/build/udm-domain-seeds-pr16/scm/control/ra37-call1/capture/lw.raw",
+      "raw_sha256": "51111f1c945e9ac10813150b772db2561046dab434c4293df45bf3179192a2e6",
+      "seed_kind": "computed-domain-calendar-phase-hash"
+    },
+    {
+      "expected_time": "1999-10-22_19:00:00",
+      "header_seed": 679102814,
+      "i": 1,
+      "independent_expected_seed": 679102814,
+      "input_layers": 60,
+      "input_path": "build/pr-wrf-rrtmgp/build/udm-domain-seeds-pr16/scm/control/ra37-call1/capture/sw.input",
+      "input_sha256": "3364c1d9dda9a7d0b24d2a94197488a0ffda828ad9d3ca500208d6248c1d881b",
+      "j": 1,
+      "metadata": {
+        "day_of_year": 295,
+        "domain_id": 1,
+        "policy_id": 1,
+        "seed_override": 0,
+        "year": 1999
+      },
+      "native_layers": 59,
+      "phase": "SW",
+      "raw_path": "build/pr-wrf-rrtmgp/build/udm-domain-seeds-pr16/scm/control/ra37-call1/capture/sw.raw",
+      "raw_sha256": "8cef2cb19f9fcca403b4dc3380b5e232412019b7222f6ad0a0a2a84e0211978c",
+      "seed_kind": "computed-domain-calendar-phase-hash"
+    }
+  ],
+  "expected_domain_id": 1,
+  "expected_time": "1999-10-22_19:00:00",
+  "monte_carlo_scope": "deterministic engineering hash / repeatability contract only; no stochastic independence or accuracy claim",
+  "oracle": "state=1; for [domain,i,j,year,day,phase], state=1+((state*48271+field)%2147483646); phase LW=1, SW=2",
+  "self_tests": {
+    "fixed_vectors_pass": true,
+    "gregorian_day_vectors_pass": true,
+    "invalid_keys_rejected": true,
+    "selected_phase_seeds_distinct": true
+  },
+  "status": "PASS",
+  "validator": "test_domain_seed_capture.py"
+}

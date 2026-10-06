@@ -1,0 +1,61 @@
+{
+  "calendar_policy": "year plus fixed day-of-year; hour/minute do not alter seed",
+  "captures": [
+    {
+      "expected_time": "1999-10-22_19:00:00",
+      "header_seed": 679102813,
+      "i": 1,
+      "independent_expected_seed": 679102813,
+      "input_layers": 103,
+      "input_path": "build/pr-wrf-rrtmgp/build/udm-domain-seeds-pr16/scm/mixed/ra37-call1/capture/lw.input",
+      "input_sha256": "d542dd9a201b96f388e9ef2c5ec24372e4e1d7920c2712e1585fd07d82466b66",
+      "j": 1,
+      "metadata": {
+        "day_of_year": 295,
+        "domain_id": 1,
+        "policy_id": 1,
+        "seed_override": 0,
+        "year": 1999
+      },
+      "native_layers": 59,
+      "phase": "LW",
+      "raw_path": "build/pr-wrf-rrtmgp/build/udm-domain-seeds-pr16/scm/mixed/ra37-call1/capture/lw.raw",
+      "raw_sha256": "047ffa8fd88ab1678d95a20e4d3d09ae36c2e36369ec58124286ad686d847558",
+      "seed_kind": "computed-domain-calendar-phase-hash"
+    },
+    {
+      "expected_time": "1999-10-22_19:00:00",
+      "header_seed": 679102814,
+      "i": 1,
+      "independent_expected_seed": 679102814,
+      "input_layers": 60,
+      "input_path": "build/pr-wrf-rrtmgp/build/udm-domain-seeds-pr16/scm/mixed/ra37-call1/capture/sw.input",
+      "input_sha256": "893c9860688ba0fdb52e41cbb3fa7b267a73489221dc226ea3f1448fcf2508f1",
+      "j": 1,
+      "metadata": {
+        "day_of_year": 295,
+        "domain_id": 1,
+        "policy_id": 1,
+        "seed_override": 0,
+        "year": 1999
+      },
+      "native_layers": 59,
+      "phase": "SW",
+      "raw_path": "build/pr-wrf-rrtmgp/build/udm-domain-seeds-pr16/scm/mixed/ra37-call1/capture/sw.raw",
+      "raw_sha256": "9c52ddb595a38cb6012fffb23d207b1e661afdbac32dbe332532d297a58681a9",
+      "seed_kind": "computed-domain-calendar-phase-hash"
+    }
+  ],
+  "expected_domain_id": 1,
+  "expected_time": "1999-10-22_19:00:00",
+  "monte_carlo_scope": "deterministic engineering hash / repeatability contract only; no stochastic independence or accuracy claim",
+  "oracle": "state=1; for [domain,i,j,year,day,phase], state=1+((state*48271+field)%2147483646); phase LW=1, SW=2",
+  "self_tests": {
+    "fixed_vectors_pass": true,
+    "gregorian_day_vectors_pass": true,
+    "invalid_keys_rejected": true,
+    "selected_phase_seeds_distinct": true
+  },
+  "status": "PASS",
+  "validator": "test_domain_seed_capture.py"
+}

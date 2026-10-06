@@ -1,0 +1,17 @@
+{
+  "status": "PASS_SCOPED",
+  "reviewer": "data_fetch subagent; root verified year call binding",
+  "scope": "read-only helper and host/driver/wrapper integration",
+  "findings": [
+    "current YR from WRFU_TimeGet is forwarded separately from legacy JULYR",
+    "domain/day are forwarded to both production and scratch audit calls",
+    "helper int64 maximum intermediate is approximately 1.04e14; output default integer bounded positive",
+    "only37 uses new hash; actual4 LW=150/SW=1 convention and audit override retained",
+    "no time-of-day/call/rank/tile/packing counter participates"
+  ],
+  "limitations": [
+    "source-level decomposition identity is not a runtime MPI/nest proof",
+    "daily-fixed samples do not decorrelate within a date",
+    "finite31bit engineering hash cannot guarantee unique keys or independent Monte Carlo samples"
+  ]
+}

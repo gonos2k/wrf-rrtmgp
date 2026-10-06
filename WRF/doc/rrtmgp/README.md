@@ -39,9 +39,9 @@ WRF 기준은 태그 v4.8.0, 커밋 `06d4240ae989cc3e50af412bb472df3d9048783c`�
 
 ## 구현 범위
 
-CPU double precision 내부 계산, H2O/CO2/O3/N2O/CH4/O2 여섯 기체, LW 128 및 SW 112 g점, 장파 흡수·방출과 단파 2 stream 해법을 사용한다. 장파 산란은 포함하지 않는다. 액체·빙정·눈의 밴드 광학을 구한 뒤 McICA로 g점에 표본화한다. `cldovrlp=0`은 맑은 하늘, 1은 random, 2는 maximum random, 3은 maximum이다. 표본은 수평 격자 위치와 날짜에 따른 재현 가능한 시드로 만든다.
+CPU double precision 내부 계산, H2O/CO2/O3/N2O/CH4/O2 여섯 기체, LW 128 및 SW 112 g점, 장파 흡수·방출과 단파 2 stream 해법을 사용한다. 장파 산란은 포함하지 않는다. 액체·빙정·눈의 밴드 광학을 구한 뒤 McICA로 g점에 표본화한다. `cldovrlp=0`은 맑은 하늘, 1은 random, 2는 maximum random, 3은 maximum이다. 표본은 도메인 ID, 전역 수평 격자 위치, 현재 연도·일자와 LW/SW 구분으로 만든 재현 가능한 시드를 사용한다. 같은 날짜의 복사 호출에서는 고정된 표본을 유지한다. [seed 계약](DOMAIN_CALENDAR_SEEDS.md)을 따른다.
 
-장파와 단파는 모두 37로 선택해야 한다. 기존 옵션 4는 원래 RRTMG 호출 경로를 사용한다. 37의 all sky 및 clear sky 플럭스, K/day 가열률, 단파 직달·산란과 가시광·근적외 분할을 기존 출력에 연결했다. WRF 래퍼가 K/day를 온위 경향으로 변환한다. 현재 WRF 호출은 기존 scalar seed 정책을 유지한다. 독립 backend API에는 선택적 `column_seeds(:)`가 있어 각 컬럼에 시드를 고정하면 컬럼 재배열에도 표본이 유지되지만, WRF의 실제 컬럼 packing 연동은 아직 구현되지 않았다.
+장파와 단파는 모두 37로 선택해야 한다. 기존 옵션 4는 원래 RRTMG 호출 경로를 사용한다. 37의 all sky 및 clear sky 플럭스, K/day 가열률, 단파 직달·산란과 가시광·근적외 분할을 기존 출력에 연결했다. WRF 래퍼가 K/day를 온위 경향으로 변환한다. 현재 WRF 호출은 컬럼별 scalar seed를 사용한다. 독립 backend API에는 선택적 `column_seeds(:)`가 있어 각 컬럼에 시드를 고정하면 컬럼 재배열에도 표본이 유지되지만, WRF의 실제 컬럼 packing 연동은 아직 구현되지 않았다.
 
 | WRF 입력 | RRTMGP 처리 |
 | --- | --- |
