@@ -1,0 +1,34 @@
+{
+  "schema": "UDM37_COUPLING_RECORD_ONE_USE_ROOT_AUTHORIZATION_V2",
+  "scope": "ONE_SAVED_DATA_COUPLING_RECORD_AUDIT_NO_MODELS",
+  "max_invocations": 1,
+  "timeout_seconds": 120,
+  "output_dir": "build/udm37-lblrtm-coupling-record-audit-run-v2",
+  "argv": [
+    "/usr/bin/python3",
+    "-I",
+    "-S",
+    "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-coupling-record-audit-preparation-v2/read_selected_records.py",
+    "--report",
+    "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-coupling-record-audit-run-v2/record-audit.json"
+  ],
+  "inputs_read_only": true,
+  "no_original_data_or_full_vectors_in_report": true,
+  "WRF_REAL_RTE_LNFL_LBLRTM_build_model_calls": 0,
+  "plan": {
+    "path": "build/udm37-lblrtm-coupling-record-audit-preparation-v2/plan.json",
+    "sha256": "df0ebcc78e09120617a68c08aacd75e60e5f86f28902b25e9f03b69666946c6b"
+  },
+  "reader": {
+    "path": "build/udm37-lblrtm-coupling-record-audit-preparation-v2/read_selected_records.py",
+    "sha256": "c040ebb6b82a2658cb4bf4e9b9944dfb4caa5f5ed0b0ca8d13dd6d8d9d2017fe"
+  },
+  "review": {
+    "path": "build/udm37-lblrtm-coupling-record-audit-preflight-review-v1/review-v2.json",
+    "sha256": "36afa73379200fd760309f9c3709064c1a30890646d52973551537ad88a28596"
+  },
+  "runner": {
+    "path": "build/run_coupling_record_audit_once.py",
+    "sha256": "01aff87c7cc9c3fb1e782a6e3847c4a5cff4c989c5d9af068669131740e13184"
+  }
+}

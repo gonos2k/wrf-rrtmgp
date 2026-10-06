@@ -1,0 +1,58 @@
+{
+  "blocking_findings": [],
+  "created_utc": "2026-10-06T02:45:58.010932+00:00",
+  "findings": [
+    "The final v2 supersedes the unexecuted v1 draft without modifying it. Wrong A/B mapping, inventory-only acceptance, contradictory companion flag, source association and runtime-status defects identified in drafts are corrected.",
+    "Executed blank-HOLIND LNFL F100 RDFIL1 READ920/925 is the source authority. The reader parses the first 100 columns and hashes complete records; the inherited 160-character descriptor is explicitly stale.",
+    "TAPE3 INPUT_BLOCK layout matches explicit source types: VNU REAL8; SP/ALFA/EPP/HWHMS/TMPALF/PSHIFT REAL4; MOL/IFLG INTEGER4. Offsets 0/2000/3000/4000/5000/6000/7000/8000/9000, fixed 9750 words and nlines-controlled 250 slots agree with struct_types and LNFL output framing.",
+    "Companion MOL bytes are reinterpreted as REAL4, not classified as species. A=(VNU,ALFA,AMOL,TMPALF), B=(SP,EPP,HWHMS,PSHIFT). GNUsgl Y/G locals round to REAL4 before Y1 promotion into VNU REAL8.",
+    "Selected flag1 main grouping collects all adjacent negative-IFLG companions until next nonnegative slot/EOF, including across block boundaries. Exact one-source/one-TAPE3 matching and complete group size1 are checked; source/TAPE3 companion flags must match and remain negative.",
+    "Listed main fields are compared using the declared source transformations. Main SP reconstruction preserves default-REAL constants and RADCN2/BETA0 rounding, then the double STRSV/VNU expression and final REAL4 assignment. TMPALF reproduces REAL4 one-minus-TDEP.",
+    "200/250 K interpolation preserves RECTLC, slope, then TMPDIF order. SP=(SUI*(1+GI*PAVP2)), SPPI=(SUI*YI)*PAVP0 and SPPSP=SPPI/SP match stock source association; the final contract requires exact binary64 shifted center and zero ULP YI/GI/SPPSP, not the earlier draft tolerance.",
+    "Pinned trace status/target constants, TAPE5 P/T row and TAPE6 IBRD0 are checked. IBRD0 excludes the additional broadener-specific center-shift term. Source and nonlarge input hashes are rechecked after scanning; each large stream is hashed during its single pass and checked against its expected identity with before/after stat closure.",
+    "Fresh output uses exclusive creation and fsync. External supervisor binds plan/reader/review/self hashes, python -I -S argv and fresh output directory, launches once without retries, and persists actual RC before output inventory. Spawn failures explicitly have no confirmed child/null RC; timeout/interruption uses bounded process-group termination/reaping and records terminal versus pending state. No output postflight is accepted unless actual RC0 without timeout/interruption.",
+    "A single redacted report is intentional. It contains hashes/offsets, match booleans and derived or already-traced scalars, not raw line/TAPE3 rows or full coefficient vectors. Runtime result status reflects the predicates."
+  ],
+  "preserved_draft_review": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-coupling-record-audit-preflight-review-v1/draft-v1-review.json",
+    "sha256": "dac5f17af4f0ae164f7d94cda9d00b936a472e563261f4eaf276f753352fdb4b",
+    "size_bytes": 2426
+  },
+  "reviewed_README": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-coupling-record-audit-preparation-v2/README.md",
+    "sha256": "8b5c00741eae83acd2ae7e518bd585789c6dabc7acef3a002e51f1bbde7b649b",
+    "size_bytes": 1934
+  },
+  "reviewed_plan": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-coupling-record-audit-preparation-v2/plan.json",
+    "sha256": "df0ebcc78e09120617a68c08aacd75e60e5f86f28902b25e9f03b69666946c6b",
+    "size_bytes": 11304
+  },
+  "reviewed_reader": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-coupling-record-audit-preparation-v2/read_selected_records.py",
+    "sha256": "c040ebb6b82a2658cb4bf4e9b9944dfb4caa5f5ed0b0ca8d13dd6d8d9d2017fe",
+    "size_bytes": 22872
+  },
+  "reviewed_supervisor": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/run_coupling_record_audit_once.py",
+    "sha256": "01aff87c7cc9c3fb1e782a6e3847c4a5cff4c989c5d9af068669131740e13184",
+    "size_bytes": 4111
+  },
+  "reviewer_invocations": {
+    "AER_or_TAPE3_parse": 0,
+    "compiler": 0,
+    "model": 0,
+    "numerical_reconstruction": 0,
+    "saved_data_reader": 0,
+    "solver": 0
+  },
+  "schema": "UDM37_COUPLING_RECORD_AUDIT_STATIC_REVIEW_V2",
+  "scope_limits": [
+    "This is source/control-flow readiness for one saved-data audit, not an actual data-match result or promise that the reader will return RC0.",
+    "Main source and companion representation checks do not independently validate original SUI population/temperature correction; SPPI/SPPSP use the authenticated traced SUI.",
+    "The reviewed equality/ULP contract is for these positive selected scalars and exact saved zeros, not a generic signed-float ULP-distance validation across the full IEEE domain.",
+    "No spectroscopic truth, all-negative explanation, clipping, optical-depth acceptance, WRF flux attribution or UDM physical accuracy follows. All negative-OD physical FAILs remain open.",
+    "Reviewer checked source/plan/script bytes and small metadata pins only. The 908 MB AER source and 122 MB TAPE3 were not opened or parsed; their numeric identities and matches remain for the single authorized audit."
+  ],
+  "status": "PASS_SCOPED_PLAN_READER_AND_SUPERVISOR_REVIEW"
+}

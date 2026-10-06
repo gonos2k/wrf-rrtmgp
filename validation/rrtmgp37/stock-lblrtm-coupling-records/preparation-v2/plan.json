@@ -1,0 +1,182 @@
+{
+  "schema": "UDM37_LBLRTM_COUPLING_RECORD_AUDIT_PLAN_V2",
+  "status": "PREPARED_AWAITING_INDEPENDENT_REVIEW_NOT_EXECUTED",
+  "purpose": "Resolve the three traced layer-21 CO2 isotope-1 flag-1 coupling records from the retained AER source rows through LNFL's TAPE3 representation and LBLRTM's YI/GI/SPPI/SPPSP arithmetic.",
+  "scope": {
+    "target_trace_i": [
+      32,
+      60,
+      99
+    ],
+    "target_R3_indices_1based": [
+      61,
+      62,
+      63,
+      64
+    ],
+    "one_layer_only": 21,
+    "one_species_isotope": "CO2 molecule 2, isotope 1",
+    "source_main_signed_flag": -1,
+    "output_main_flag": 1,
+    "expected_companion_role": "one foreign-coupling companion; verify its actual input/output flag and sequence",
+    "models_or_solver_calls": 0,
+    "build_or_line_generation_calls": 0,
+    "reader_executed": false,
+    "physical_validity_or_optical_depth_acceptance": false
+  },
+  "input_pins": {
+    "aer_line_file": {
+      "path": "build/udm37-lblrtm-reference-stage-v1/data/aer_v_3.8.1/line_file/aer_v_3.8.1",
+      "sha256": "d0ec800cfaeaaa7ab7af7b8168f45b205e383272e147373df6d0eed2677f2bd3",
+      "size_bytes": 908403720,
+      "handling": "Stream in place; never copy or emit raw source lines/coefficients."
+    },
+    "lnfl_TAPE3": {
+      "path": "build/udm37-lblrtm-held-state-r3terms-cpl-od-run-v1/runs/od-v1/TAPE3",
+      "sha256": "56bd55fa256ed3b3a672bd4bcd88034cd7086d4fbef2a1def9480199dab2b388",
+      "size_bytes": 122157832
+    },
+    "lnfl_run_TAPE5": {
+      "path": "build/udm37-lblrtm-common-band-line-generation-v1/run-v6/TAPE5",
+      "sha256": "697357190795f9451e83afe232675dcfd4dc1ddf1c036f1f347c261d973ba970",
+      "meaning": "Executed run-v6 control record has blank HOLIND; default F100 parsing selected."
+    },
+    "lnfl_run_postflight": {
+      "path": "build/udm37-lblrtm-common-band-line-generation-v1/run-v6/postflight.json",
+      "sha256": "7d7fc12accebe46b2e5a0d220cc82c8ba103d6b2d2f36953181f45e75534217e",
+      "actual_rc": 0
+    },
+    "lnfl_generation_plan": {
+      "path": "build/udm37-lblrtm-common-band-line-generation-v1/plan-v6.json",
+      "sha256": "7ee1eddd5d1c0970503d2dc7730c494f77bb2f919bf822795f6252d57248e6f6",
+      "caveat": "The inherited line_file_format text says 160-character records. That descriptor is stale for executed run-v6; its blank-HOLIND control selects LNFL's F100 RDFIL1 reader. The audit therefore decodes the first 100 columns consumed by READ920/READ925 and hashes the full source record."
+    },
+    "lbl_TAPE5": {
+      "path": "build/udm37-lblrtm-held-state-r3terms-cpl-od-run-v1/runs/od-v1/TAPE5",
+      "sha256": "a676bc7761e09ab42f212c3cca80ebfd1be27604cd332cc966205d1280ae62dd",
+      "size_bytes": 29428
+    },
+    "lbl_TAPE6": {
+      "path": "build/udm37-lblrtm-held-state-r3terms-cpl-od-run-v1/runs/od-v1/TAPE6",
+      "sha256": "4b88814de6c5fe95f1cea65e881fec0e1e6f2320894f1bdacde312be1a2102d2",
+      "IBRD": 0
+    },
+    "trace_report": {
+      "path": "build/udm37-lblrtm-r3-term-trace-v1/r3-accounting-report-v2.json",
+      "sha256": "e44d08ea068c0b5e242f263c3a2f70c2d5ff4b71b529c10604d8be5de1e438ce",
+      "raw_trace_sha256": "5167f1496f7c34577a755f8c5ebd71e59a20245ebf057f9bfc25a260f0e2ccec",
+      "status": "PASS_SCOPED_EXACT_UPDATE_ACCOUNTING_AND_NONINTERFERENCE"
+    },
+    "lnfl_source": {
+      "path": "build/udm37-lblrtm-reference-stage-v1/sources/LNFL/src/lnfl.f",
+      "sha256": "d47b7b296b747837bbec8df06a7c8ea1df2ec241546b1db4a15f6b02b98a4ad6",
+      "size_bytes": 542902
+    },
+    "lbl_oprop_source": {
+      "path": "build/udm37-lblrtm-stock-build-v1/attempt-1/source/LBLRTM/src/oprop.f90",
+      "sha256": "7cf594968ec331da3df75429262c1023c21fc461cbbae208253b0fa870685ef8",
+      "size_bytes": 481997
+    },
+    "lbl_struct_types": {
+      "path": "build/udm37-lblrtm-stock-build-v1/attempt-1/source/LBLRTM/src/struct_types.f90",
+      "sha256": "55b52495780ae564e66470f6ad3f32afd8b58e0c59a6b78ed82b3f606fb7b16c",
+      "size_bytes": 3110
+    },
+    "lnfl_instructions": {
+      "path": "build/udm37-lblrtm-reference-stage-v1/sources/LNFL/docs/lnfl_instructions",
+      "sha256": "e044ed5eb774a99d2dd1086ff98ec879cbd5440dc816bd305a37e66548682601",
+      "size_bytes": 9574
+    }
+  },
+  "saved_layer_state": {
+    "source": "Pinned LBL TAPE5 row 21 and the actual instrumented-term trace report; not reconstructed from rounded TAPE6 display fields.",
+    "pressure_TAPE5_mbar": 348.36124,
+    "temperature_TAPE5_K": 228.3152,
+    "temperature_nodes_K": [
+      200.0,
+      250.0,
+      296.0,
+      340.0
+    ],
+    "active_interpolation_segment_K": [
+      200.0,
+      250.0
+    ],
+    "trace_PAVP0": 0.34380581297804097,
+    "P0_mbar": 1013.25,
+    "TEMP0_K": 296.0,
+    "RHORAT_formula": "trace PAVP0 * (TEMP0/TAVE); do not recalculate PAVP0 from rounded TAPE6 pressure",
+    "TAPE6_IBRD": 0,
+    "targets": [
+      {
+        "i": 32,
+        "seq": 35613,
+        "batch": 474,
+        "vnu_work_cm-1": 667.385965634841,
+        "SUI": 0.05631378974057237,
+        "SP": 0.05631378974057237,
+        "PAVP2": 0.11820243703749168,
+        "YI": 3.034229991142273,
+        "GI": 0.0,
+        "SPPSP": 1.0431859088670232
+      },
+      {
+        "i": 60,
+        "seq": 35883,
+        "batch": 474,
+        "vnu_work_cm-1": 667.4004316856123,
+        "SUI": 0.09792171475469987,
+        "SP": 0.09792171475469987,
+        "PAVP2": 0.11820243703749168,
+        "YI": 0.6961040106391907,
+        "GI": 0.0,
+        "SPPSP": 0.23932460529508187
+      },
+      {
+        "i": 99,
+        "seq": 36163,
+        "batch": 474,
+        "vnu_work_cm-1": 667.423203639405,
+        "SUI": 0.1339798101145706,
+        "SP": 0.1339798101145706,
+        "PAVP2": 0.11820243703749168,
+        "YI": 0.2003582988820076,
+        "GI": 0.0,
+        "SPPSP": 0.06888434783402594
+      }
+    ]
+  },
+  "source_contract": {
+    "lnfl_input_main": "RDFIL1 F100 READ920: columns 1-2 molecule I2, col 3 isotope I1, col 4-15 VNU F12.6, col 16-25 STRSV D10.3, col 26-35 TRANS E10.3, followed by HWHMF,HWHMS,ENERGY,TDEP,SHIFT, quantum fields and signed I2 IFLAG in cols 99-100. LNFL READ920 is in lnfl.f near 11470; RDFIL1's 915/920/925 formats and state handling are around 11460-11480 / 10560-10730.",
+    "lnfl_input_companion": "For a negative main flag -1, the following source row is the one foreign companion. READ925 columns 3-98 contain Y1,G1,Y2,G2,Y3,G3,Y4,G4; columns 99-100 contain the companion IFLAG. For this executed single-precision GNU LNFL, Y/G locals are REAL(4); Y1 is promoted only after REAL(4) assignment into VNU1. Compare the eight source values after REAL(4) rounding. Hash complete input rows but parse only their first 100 character positions, matching the actual F100 read.",
+    "lnfl_sequence": "RDFIL1 carries IFLGM1 after a negative main IFLAG. Flag -1 consumes exactly one subsequent foreign-companion row; -5 consumes foreign and self rows. This audit admits only -1 target mains and verifies the companion's actual flag and next-record association. The stale 160-character descriptor in plan-v6 is not an input-format authority.",
+    "tape3_record_layout": "GNU little-endian sequential-unformatted; 4-byte markers, 1664-byte file header, 24-byte block headers, fixed data record of 9750 REAL(4)-sized words/250 slots. Read nlines only. Field offsets derive from existing NOCPL TAPE3 comparator and struct_types: VNU 0/REAL8; SP 2000/REAL4; ALFA 3000; EPP 4000; MOL 5000/INTEGER4 bits; HWHMS 6000; TMPALF 7000; PSHIFT 8000; IFLG 9000.",
+    "companion_tape3_map": "RDLNFL in oprop.f90 around 3130-3148 maps A=(VNU,ALFA,TRANSFER(MOL bytes as REAL4),TMPALF), B=(SP,EPP,HWHMS,PSHIFT). A/B are interpolated with RECTLC=1/(250-200), SLOPE=(next-current)*RECTLC, then value=current+SLOPE*TMPDIF. Preserve this operation order.",
+    "negative_mol_companion": "RDLIN/RDLNFL transfer the 4 MOL bytes of a negative-IFLG companion into REAL(4); they are not a species code. The record sequence determines companion role; require the traced source/TAPE3 flag and field mapping to agree.",
+    "main_strength": "LNFL computes RADCN2=PLANCK*CLIGHT/BOLTZ and BETA0=RADCN2/296 in REAL(4); STRSV and VNU are REAL(8); STR is assigned REAL(4) from STRSV/(VNU*(1-exp(-BETA0*VNU))). Check selected main SP after this source sequence, not by comparing raw STRSV bytes to SP.",
+    "lncor_formula": "OPROP computes SP=SUI*(1+GI*PAVP2), SPPI=SUI*YI*PAVP0, SPPSP=SPPI/SP (source lines ~1147-1149). Reconstruct from the saved trace SUI/PAVP0/PAVP2 and mapped YI/GI; report source-ordered values and absolute differences, not a physical-validity assertion.",
+    "line_center": "OPROP uses VNU_work=VNU_raw+RHORAT*PSHIFT. IBRD=0 makes the extra broadener-specific shift correction inactive. Match exact raw VNU and inspect the shifted center against trace; nearest-center alone is not association proof.",
+    "tape3_grouping": "For a selected main, collect every immediately following negative-IFLG slot until the next nonnegative slot, even across data-block boundaries; acceptance requires group cardinality exactly one. This explicitly tests for extra adjacent companions."
+  },
+  "reader": {
+    "path": "build/udm37-lblrtm-coupling-record-audit-preparation-v2/read_selected_records.py",
+    "mode": "one read-only pass over the pinned 908 MB AER file and one pass over pinned TAPE3; retains only candidate row hashes, offsets, selected fields and derived term summaries",
+    "private_report_policy": "One redacted report only: source record hashes/offsets, complete companion-group cardinalities, exact field-match booleans, and derived/pre-existing trace scalars. Never emit raw ASCII/TAPE3 rows, raw bytes, or complete coefficient vectors.",
+    "output": "Fresh nonexisting --report path, O_EXCL creation, fsynced after completion; actual child RC must be persisted by an external one-use wrapper before postprocessing.",
+    "candidate_contract": "For each target, require exactly one AER main, one TAPE3 exact-VNU main, exact selected source-to-TAPE3 fields, and exactly one adjacent negative-IFLG TAPE3 companion in the full group collected through the next nonnegative record (including across block boundaries). Require all eight REAL4-promoted source coefficient fields exact, source/TAPE3 companion flags equal and negative, and shifted center exact binary64.",
+    "derived_contract": "Compute 200\u2013250 K YI/GI using the source operation order RECTLC, slope, then TMPDIF multiplication; reconstruct SPPI/SP/SPPSP from pinned trace values. Require exact binary64 equality to saved YI/GI/SPPSP values as a strict arithmetic reproduction check; report differences and ULP counts.",
+    "run_limits": {
+      "invocations": 1,
+      "timeout_seconds": 120,
+      "retry": false,
+      "no_LBLRTM_or_LNFL_execution": true
+    },
+    "reader_sha256": "c040ebb6b82a2658cb4bf4e9b9944dfb4caa5f5ed0b0ca8d13dd6d8d9d2017fe"
+  },
+  "preservation": {
+    "v1_plan_sha256": "9c1a956b4c2d66aee5f2b21398c790f84c415b4fa15f9c82e76fd33ce5dfcc06",
+    "v1_reader_sha256": "6894fa5ff2d7c744fbad83803a6a06ac55ed35053b8f6b6aa37a42a7db4356fc",
+    "v1_status": "unexecuted draft preserved; wrong A/B slot map is superseded only by this v2 plan",
+    "data_use": "AER source and generated TAPE3 are restricted-use; this plan carries hashes only and redistributes no data."
+  }
+}

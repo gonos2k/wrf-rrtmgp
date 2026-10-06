@@ -1,0 +1,132 @@
+{
+  "current_evidence_readback": {
+    "negative_OD_status": "The original negative-OD acceptance remains failed; this source review does not change it.",
+    "scope": "The prior independent panel review states the layer-21 CPL trace contains negative values in R1/R2/R3 before PANEL. This rules out PANEL as the origin of those already-negative accumulator entries in that captured case. It does not identify the final OD sample\u2019s exact R3 ancestry or distinguish a current-line contribution from retained carry.",
+    "tape3_association_gate": "Do not start the line-resolved test until an original AER ASCII\u2192TAPE3 association for the specific candidate transitions is verified. The existing CPL/NOCPL comparator is not that association: its summary reports 5,702 ordinary-line additional-broadening-flag field mismatches and 128,015 coupling records removed. Treat each mismatch/companion explicitly; do not silently pair by ordinal or vnu alone."
+  },
+  "execution": {
+    "compiler": 0,
+    "lblrtm": 0,
+    "lnfl": 0,
+    "models": 0,
+    "parser": 0,
+    "raw_numerical_trace_reads": 0
+  },
+  "existing_trace_contract": {
+    "missing_for_requested_hypothesis": [
+      "there is no panel-post-shift snapshot, so pre-PANEL R3 cannot be split into prior-panel carry and current-panel increments",
+      "there is no per-line record/source identity or corrected VNU/SP/SPPSP/RECALF/ZETA/IZETA record at CNVFNV",
+      "there are no per-line JMIN1/JMAX1/J3SHFT/ZF3/IZ3 and R3 delta records",
+      "existing target reader selects a trace window and array extrema but does not map the selected final OD sample through both interpolation levels to its exact R3 source stencil"
+    ],
+    "patch_sites": "PANEL stages 1 (before R3\u2192R2), 2 (after R3\u2192R2), 3 (after R2\u2192R1), 4 (after output/RADFNI and before the carry-shift/clear loop).",
+    "saved_arrays": [
+      "full snapshots R1(1:MAX1)",
+      "R2(1:MAX2)",
+      "R3(1:MAX3)"
+    ],
+    "saved_header_fields": [
+      "stage",
+      "LAYER",
+      "MAX1/MAX2/MAX3",
+      "NLO/NHI",
+      "JRAD",
+      "NLIM1/NLIM2/NLIM3",
+      "N1R1/N2R1/N1R2/N2R2/N1R3/N2R3",
+      "NSHIFT",
+      "NLIM",
+      "PAVE",
+      "TAVE",
+      "DV",
+      "V1P/V2P/DVP",
+      "DVR2/DVR3",
+      "target"
+    ]
+  },
+  "interpretation": "Source and existing saved-review readback only. Proposed evidence could isolate one source-array lineage after coefficient association and a noninterference gate. It cannot establish physical validity or the cause of the original 21-layer negative-OD pattern by itself.",
+  "question": "For the existing layer-21 CPL case, can finite line-shape support or panel carry explain pre-PANEL negative R3? What is the smallest additional saved evidence that could distinguish those mechanisms after source-record association is validated?",
+  "schema": "UDM37_LBLRTM_FINITE_SUPPORT_PANEL_CARRY_SOURCE_PREFLIGHT_V1",
+  "smallest_discriminating_test_after_association": {
+    "case": "One stock, coupling-enabled held-state layer-21 rerun of the same saved deck/TAPE3/source/runtime, instrumented passively; preserve a bitwise output comparison with the original stock run before using trace results.",
+    "falsification_logic": [
+      "If the negative R3 value is already present at target-panel entry and equals the preceding panel\u2019s post-shift value, panel carry is a direct lineage candidate; if it becomes negative only after the current panel\u2019s recorded line deltas, carry is not required to explain that value.",
+      "Reconstruct the exact R3 value as prior carried state plus the source-order line deltas; exact reconstruction validates the recorded lineage for that one location, not the physical coefficients.",
+      "To test finite cutoff, enumerate every associated line whose source-defined HWF3*ALFV support intersects the target panel and account for source skip/JMAX-triggered panel flush decisions. Keep HWF3 support in normalized half-width coordinates and convert by ALFV to cm-1. A finite-support cutoff is implicated only if the saved source decision omits an otherwise relevant line contribution; array capacity or an index bound alone does not demonstrate truncation.",
+      "If the negative is already present before current line accumulation and is not inherited from preceding-panel carry, the proposed two mechanisms are insufficient; inspect earlier current-layer state/reset/line accumulation stages rather than assigning a cause."
+    ],
+    "minimum_additive_fields": "At each panel boundary, record R1/R2/R3 at entry and after the carry shift/clear with VFT,NLO/NHI,NSHIFT,NLIM1/2/3,MAX1/2/3. For the target stencil only, record each CNVFNV line identity (verified source ASCII key plus TAPE3 block/slot), corrected VNU, SP, SPPSP, RECALF, ZETAI/IZETA, IFLAG, JMIN1/JMAX1, ZINT, J2SHFT/J3SHFT, each target-relevant J1/J3, ZF3L/IZ3, STRF3, F3(IZ3), base/coupling R3 increments and before/after R3 values in execution order.",
+    "nonclaims": [
+      "not a test of whether HITRAN/AER coefficients or LBLRTM physical assumptions are correct",
+      "not a general proof that finite support is or is not adequate",
+      "not proof that an array-bound issue exists",
+      "not a UDM/WRF-vs-LBLRTM accuracy or flux-cause result"
+    ],
+    "required_gates": "Original ASCII\u2192TAPE3 association for all candidate lines; exact executable/source/runtime and input pins; passive instrumentation output bitwise-equal to the uninstrumented OD arrays and relevant headers; valid binary layout/finite checks; all logged R3 deltas reconstruct in source order.",
+    "target_mapping": "Select the exact negative OD file sample and panel header first. Use V1P,DV,NLO/NHI to map absolute wavenumber to its R1 sample; apply source PANEL phase/index formulas to derive the nested R2/R3 stencil. Save all indices and exact metadata. Do not use global R3 minimum as a proxy for this stencil."
+  },
+  "source_pins": {
+    "compiled_stock_lblrtm": {
+      "path": "build/udm37-lblrtm-stock-build-v1/attempt-1/source/LBLRTM/lblrtm_v12.17_linux_gnu_dbl",
+      "sha256": "a5c363c87a44b686e8bff1cf0e60fcfb7b0e167c8ec74d0201b6cc6b2b41473b",
+      "size_bytes": 14348016
+    },
+    "existing_derived_panel_proof": {
+      "path": "build/udm37-lblrtm-panel-trace-v1/local-diagnosis-proof.json",
+      "sha256": "00a5ece3d517416c37cdaf428cabf32ffc49ecffcebfe48ed74cc45cd16414f6",
+      "size_bytes": 15996
+    },
+    "independent_panel_review": {
+      "path": "build/udm37-lblrtm-panel-trace-independent-review-v1/review.json",
+      "sha256": "0811ed0cd70a1117923eee4ca62e77cc287ee893ec24c8f00baab70b4667817a",
+      "size_bytes": 5111
+    },
+    "lblrtm_f90": {
+      "path": "build/udm37-lblrtm-stock-build-v1/attempt-1/source/LBLRTM/src/lblrtm.f90",
+      "sha256": "9ae22638469c4b9e60187b53e47f0a80d5fb502ffd4052f63f88f442dac45aca",
+      "size_bytes": 387500
+    },
+    "oprop_f90": {
+      "path": "build/udm37-lblrtm-stock-build-v1/attempt-1/source/LBLRTM/src/oprop.f90",
+      "sha256": "7cf594968ec331da3df75429262c1023c21fc461cbbae208253b0fa870685ef8",
+      "size_bytes": 481997
+    },
+    "panel_trace_instrumentation_patch": {
+      "path": "build/udm37-lblrtm-panel-trace-v1/instrumentation.patch",
+      "sha256": "8cd4bf253403c5f7c01135441d829f4c1318ff74ee5abcdedd783810e241e3b5",
+      "size_bytes": 2501
+    },
+    "panel_trace_reader": {
+      "path": "build/udm37-lblrtm-panel-trace-v1/analyze_panel_trace.py",
+      "sha256": "c10aa943dd60afb5ac07b78c4cb89fa372b1ec7e8c11a18004694cd538ef2b9f",
+      "size_bytes": 6756
+    },
+    "panel_trace_supplement": {
+      "path": "build/udm37-lblrtm-panel-trace-v1/supplement_trace_diagnosis.py",
+      "sha256": "434a1a8af6a9f69b6c4ec371db43bd131af10e21978d9e842a618707dfb0f91b",
+      "size_bytes": 4850
+    },
+    "saved_tape3_comparator": {
+      "path": "build/udm37-lblrtm-nocpl-line-compare-v1/compare_tape3.py",
+      "sha256": "adb485b64e07820445010e5647b5560134be0b67714de7ad7a5154dc5fb1d254",
+      "size_bytes": 16413
+    },
+    "saved_tape3_comparison_summary": {
+      "path": "build/udm37-lblrtm-nocpl-line-compare-v1/results/comparison.json",
+      "sha256": "6a861af190fb642b4f9aa761f58b39926cba75a4553ca34dbfb5ce73d2b69f74",
+      "size_bytes": 436234
+    },
+    "stock_build_execution": {
+      "path": "build/udm37-lblrtm-stock-build-v1/attempt-1/execution.json",
+      "sha256": "1b108654625dee4a9114d7e2edcd580f8ec1f59bc5376c8933e6742d36377816",
+      "size_bytes": 5539
+    }
+  },
+  "source_readback": {
+    "CNVFNV_line_accumulation": "oprop.f90:1261-1365. HWF1/DXF1 set the J1 window. J2SHFT/J3SHFT use ZINT, CONF2/CONF3 and sign-dependent RSHFT; these are Fortran integer assignments (truncate toward zero), not a generic floor. The J3 mapping is J3=J1-J3SHFT. Base R3 increment is STRF3*F3(IZ3); if SPPSP is nonzero, an additional coupling increment STRF3*CLC3*DPTRAT*F3(IZ3)*ZF3L is accumulated.",
+    "LNCOR1_line_adjustment": "oprop.f90:977-1145; IOUT maps active records; VNU pressure shift and optional additional broadener shifts are applied, width/strength are adjusted, and SPPSP is produced. Source finite-panel skip is `HWF3*ALFV + VNU < VFT` at line 1121.",
+    "finite_support_vs_array_extent": "LNCOR1 line cutoff and CNVFNV J1 support are spectral/shape decisions. NBOUND and MAX1/2/3 size overlap workspace for the supported widths. The declared R1/R2/R3 array dimensions and the larger COMMON aliases are storage bounds, not evidence of the physical finite-support interval. A trace extremum over all storage slots alone cannot identify a physical target wavenumber or prove which line contributed.",
+    "panel_carry": "oprop.f90:1420-1555. PANEL applies signed R3\u2192R2 and R2\u2192R1 stencils, writes the panel and applies RADFNI, then advances VFT and shifts retained array tails (`NLIM3..MAX3` into the next R3 origin) and clears unused tails. `NSHIFT`, NLO/NHI, NLIM1/2/3 and the support window govern rolling-workspace geometry.",
+    "shape_and_coordinates": "oprop.f90:209-246, 282-297, 1822-1907. HWF1/HWF2/HWF3 are 4/16/64 normalized Lorentz half-width coordinates, with DXF1/DXF2/DXF3 0.002/0.008/0.032 steps. F3 is a sampled profile-residual kernel; ZF3 is the normalized line-offset coordinate (dimensionless ratio to Lorentz half-width), and IZ3 is its table index. CF3 is a zeta-interpolated source coefficient in STRF3, not a frequency coordinate or support limit. Physical support in wavenumber depends on the line ALFV and source support multiplier; report both the normalized coordinate and resulting cm-1 interval."
+  },
+  "status": "SOURCE_REVIEW_COMPLETE_TEST_PROPOSAL_ONLY"
+}

@@ -1,0 +1,171 @@
+{
+  "acceptance_for_future_review": [
+    "Exact input and source pins remain unchanged before and after.",
+    "Each target resolves to a unique CO2/isotope-1/flag-1 main by transformed center and line identity; if not unique, report ambiguous and stop.",
+    "Raw negative-IFLG companion bytes decode through the documented REAL(4) MOL transfer; compare the resulting A/B tuple and 200\u2013250 K interpolated YI/GI against trace values, preserving exact and ULP differences.",
+    "Associate each companion only from LNFL sequence/state and record ordering; do not infer self/foreign role from neighboring center alone.",
+    "Any discrepancy remains a representation/association finding only until source and calculation implications are separately established."
+  ],
+  "input_identity": {
+    "LBLRTM_executable_sha256": "a644596b7de51e3684b77e5a8ee0f72ecfb943b4464b7d857590c881650471b1",
+    "TAPE3_sha256": "56bd55fa256ed3b3a672bd4bcd88034cd7086d4fbef2a1def9480199dab2b388",
+    "TAPE3_source": "existing saved coupled LNFL output in the original preserved r3term case; run-v6 generated from the frozen AER v3.8.1 combined line file",
+    "TAPE5_sha256": "a676bc7761e09ab42f212c3cca80ebfd1be27604cd332cc966205d1280ae62dd",
+    "TAPE6_IBRD": 0,
+    "instrumented_source_sha256": "6b806117a32832371f8947bc54b5a5c3bf38389a7279ae48ae39afc141666300",
+    "layer21_PAVE_mbar": 348.36124,
+    "layer21_TAVE_K": 228.3152,
+    "trace_raw_sha256": "5167f1496f7c34577a755f8c5ebd71e59a20245ebf057f9bfc25a260f0e2ccec"
+  },
+  "limitations": [
+    "This preparation does not establish raw bytes or companion association for any target.",
+    "The copied TAPE3 is restricted-use AER-derived data; no bytes are copied into this package.",
+    "No line-support truncation behavior is changed or judged here.",
+    "No physical-validity conclusion is made from negative optical-depth operands."
+  ],
+  "pins": {
+    "TAPE3": {
+      "path": "build/udm37-lblrtm-held-state-r3terms-cpl-od-run-v1/runs/od-v1/TAPE3",
+      "sha256": "56bd55fa256ed3b3a672bd4bcd88034cd7086d4fbef2a1def9480199dab2b388",
+      "size_bytes": 122157832
+    },
+    "TAPE3_generation_postflight": {
+      "path": "build/udm37-lblrtm-common-band-line-generation-v1/run-v6/postflight.json",
+      "sha256": "7d7fc12accebe46b2e5a0d220cc82c8ba103d6b2d2f36953181f45e75534217e",
+      "size_bytes": 1036
+    },
+    "TAPE5": {
+      "path": "build/udm37-lblrtm-held-state-r3terms-cpl-od-run-v1/runs/od-v1/TAPE5",
+      "sha256": "a676bc7761e09ab42f212c3cca80ebfd1be27604cd332cc966205d1280ae62dd",
+      "size_bytes": 29428
+    },
+    "TAPE6": {
+      "path": "build/udm37-lblrtm-held-state-r3terms-cpl-od-run-v1/runs/od-v1/TAPE6",
+      "sha256": "4b88814de6c5fe95f1cea65e881fec0e1e6f2320894f1bdacde312be1a2102d2",
+      "size_bytes": 138266
+    },
+    "lnfl": {
+      "path": "build/udm37-lblrtm-reference-stage-v1/sources/LNFL/src/lnfl.f",
+      "sha256": "d47b7b296b747837bbec8df06a7c8ea1df2ec241546b1db4a15f6b02b98a4ad6",
+      "size_bytes": 542902
+    },
+    "lnfl_instructions": {
+      "path": "build/udm37-lblrtm-reference-stage-v1/sources/LNFL/docs/lnfl_instructions",
+      "sha256": "e044ed5eb774a99d2dd1086ff98ec879cbd5440dc816bd305a37e66548682601",
+      "size_bytes": 9574
+    },
+    "oprop_stock": {
+      "path": "build/udm37-lblrtm-stock-build-v1/attempt-1/source/LBLRTM/src/oprop.f90",
+      "sha256": "7cf594968ec331da3df75429262c1023c21fc461cbbae208253b0fa870685ef8",
+      "size_bytes": 481997
+    },
+    "reader": {
+      "path": "build/udm37-lblrtm-coupling-record-audit-preparation-v1/read_selected_tape3_groups.py",
+      "sha256": "6894fa5ff2d7c744fbad83803a6a06ac55ed35053b8f6b6aa37a42a7db4356fc",
+      "size_bytes": 9915
+    },
+    "struct_types": {
+      "path": "build/udm37-lblrtm-stock-build-v1/attempt-1/source/LBLRTM/src/struct_types.f90",
+      "sha256": "55b52495780ae564e66470f6ad3f32afd8b58e0c59a6b78ed82b3f606fb7b16c",
+      "size_bytes": 3110
+    },
+    "trace": {
+      "path": "build/udm37-lblrtm-r3-term-trace-v1/r3-accounting-report-v2.json",
+      "sha256": "e44d08ea068c0b5e242f263c3a2f70c2d5ff4b71b529c10604d8be5de1e438ce",
+      "size_bytes": 53711
+    }
+  },
+  "planned_reader": "read_selected_tape3_groups.py: one bounded streaming pass over only the saved 122 MB TAPE3 sequential records; retains only nearby CO2 main candidates and their immediately following companion rows, preserving all relevant source scalar bytes as hex. It does not read ODdeflt output arrays or execute LBLRTM.",
+  "planned_run_control": {
+    "child_rc_capture": "A future one-use wrapper should durably store actual child RC before reading the report, then record report hash and input post-pins. Do not launch until root reviews/authorizes.",
+    "command": [
+      "/usr/bin/python3",
+      "-I",
+      "-S",
+      "build/udm37-lblrtm-coupling-record-audit-preparation-v1/read_selected_tape3_groups.py",
+      "--report",
+      "<new nonexisting output path>"
+    ],
+    "invocations": 1,
+    "no_retry": true,
+    "timeout_seconds": 60
+  },
+  "schema": "UDM37_LBLRTM_COUPLING_RECORD_AUDIT_PREPARATION_V1",
+  "scope": {
+    "full_spectrum_OD_parsing": false,
+    "saved_data_reads_performed_on_TAPE3": false,
+    "solver_build_line_generation": false
+  },
+  "source_contract": {
+    "TAPE3_record_layout": "GNU sequential-unformatted little-endian; 4-byte record markers; 1664-byte file header; 24-byte block header; each fixed data record is 9750 four-byte words/250 slots. Read only nlines slots.",
+    "companion_interpolation": "LNCOR1 uses companion slot fields as A(1..4)=(VNU,S,ALFA,EPP), B(1..4)=(AMOL,HWHMS,TMPALF,PSHIFT). For IFLAG=1 at TAVE=228.3152 K, the source nodes are TEMPLC=(200,250,296,340) K and use the 200\u2013250 K segment: A/B first and second values linearly interpolate with RECTLC=1/50 and TMPDIF=TAVE-200. Do not round/decode MOL payload as integer species.",
+    "input_block_types": "VNU REAL(8); SP, ALFA, EPP, HWHM, TMPALF, PSHIFT REAL(4); MOL/IFLG INTEGER(4).",
+    "line_center": "OPROP adjusts main line center by RHORAT*PSHIFT before selecting/interpolating. With IBRD=0, the guarded broadener-specific shift term is inactive. The reader will emit raw and transformed centers and rank candidates; no candidate is accepted solely by nearest-center proximity.",
+    "negative_IFLG_path": "RDLIN and RDLNFL reinterpret exactly the 4 MOL bytes as REAL(4), promote to working precision and TRANSFER into AMOL storage. This is intentional companion encoding; preserve original hex and decoded REAL(4) bits.",
+    "role_semantics": "LNFL source states IFLGM1=1 or 3 means foreign line coupling; IFLGM1=5 carries both foreign and self coupling. These traced mains are expected flag 1, so inspect as foreign-coupling groups. Do not infer self-coupling companion merely from CO2 species; verify actual flag/group sequence."
+  },
+  "status": "PREPARED_NOT_EXECUTED_AWAITING_ROOT_REVIEW",
+  "target_records": {
+    "expected_relationship": "Source LNCOR1 applies VNU_work=VNU_raw+RHORAT*PSHIFT at layer state; with IBRD=0 the optional extra-broadener shift correction is inactive. Search candidates by (molecule,isotope,main flag) and transformed center; report nearest alternatives, do not use a broad match alone as association proof.",
+    "main_IFLG": 1,
+    "main_line_candidates": [
+      {
+        "actual_operand": -0.01115841512571552,
+        "after": -0.010124725405579845,
+        "batch": 474,
+        "before": 0.0010336897201356741,
+        "flag": 1,
+        "gi": 0.0,
+        "i": 32,
+        "seq": 35613,
+        "sppsp": 1.0431859088670232,
+        "vnu": 667.385965634841,
+        "yi": 3.034229991142273
+      },
+      {
+        "actual_operand": -0.004113375505829357,
+        "after": -0.013672150463255494,
+        "batch": 474,
+        "before": -0.009558774957426136,
+        "flag": 1,
+        "gi": 0.0,
+        "i": 60,
+        "seq": 35883,
+        "sppsp": 0.23932460529508187,
+        "vnu": 667.4004316856123,
+        "yi": 0.6961040106391907
+      },
+      {
+        "actual_operand": -0.0014773619622748672,
+        "after": -0.01448168450041784,
+        "batch": 474,
+        "before": -0.013004322538142973,
+        "flag": 1,
+        "gi": 0.0,
+        "i": 99,
+        "seq": 36163,
+        "sppsp": 0.06888434783402594,
+        "vnu": 667.423203639405,
+        "yi": 0.2003582988820076
+      }
+    ],
+    "target_CO2_species": 2,
+    "target_R3_indices_1based": [
+      61,
+      62,
+      63,
+      64
+    ],
+    "target_R3_wavenumbers_cm-1": [
+      666.3135288888894,
+      666.3738311111116,
+      666.4341333333339,
+      666.494435555556
+    ],
+    "target_isotope": 1,
+    "target_layers": [
+      21
+    ],
+    "trace_batch": 474
+  }
+}
