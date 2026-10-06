@@ -1,0 +1,5 @@
+cmake_minimum_required(VERSION 3.20)
+project(wrf_rrtmgp_consumer LANGUAGES Fortran)
+find_package(WRF CONFIG REQUIRED)
+add_executable(consumer main.F90)
+target_link_libraries(consumer PRIVATE WRF::wrf_rrtmgp)

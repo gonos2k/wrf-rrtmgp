@@ -1,0 +1,213 @@
+{
+  "cmake": {
+    "build_ninja_sha256": "a211a5bff72c45aee4df551ac2f984da9e8f96c3ab545fe8432acef99402cba1",
+    "build_type": "Release",
+    "cmake_cache_sha256": "d913f3abffcf71b06e702b98236367bb9dd1dd9d40735d43ddd56bc69363236c",
+    "exported_target_source_or_build_paths": false,
+    "generator": "Ninja",
+    "install_helpers_built": [
+      "diffwrf_int",
+      "diffwrf_nc"
+    ],
+    "install_log_sha256": "b7eef595d37ba4ffab9983059747043272ff9428c5b3c79c1253d777ab3dccaf",
+    "install_relative_module_include": true,
+    "installed_libwrf_rrtmgp_sha256": "7b4a230a8a3ff1cc8426075050126bf4ed9e5caad3ab1499573392c4713bc968",
+    "installed_rrtmgp_module_count": 26,
+    "installed_wrf_sha256": "721b112a0906a1d25d2eb26535fe50b644c4f71a38a4584128c945e4e7a4acd0",
+    "nesting": "NONE",
+    "receipt": {
+      "path": "build/udm-cmake-export-fix/receipts/full-build-install-receipt.json",
+      "sha256": "fc1789df4dce6ad7f925d749f9d1300e79163fd390d0d70fee4ae2302c6e08b1"
+    },
+    "requested_build_log_sha256": "b6b119696251a1cfefb35facab6824aa9f317362eaaec4c356fba0368f5a7488",
+    "status": "FULL_BUILD_INSTALL_PASS",
+    "toolchain_sha256": "8c00a7b004133cbbb1b566b6660b5fe1878ebc4aaeb18ecd0a1cd6afebdae6df",
+    "use_double": false,
+    "use_mpi": false,
+    "use_openmp": false,
+    "wrf_case": "EM_REAL",
+    "wrf_core": "ARW"
+  },
+  "cmake_serial_smokes": {
+    "actual_child_stack_bytes": 536870912,
+    "ra37_frozen_off_hail_rejection": {
+      "classification": "PASS_EXPECTED_FAIL_CLOSED",
+      "classification_receipt": "build/udm-cmake-export-fix/runtime-smokes-v2/ra37-frozen0-expected-rejection/classification-correction.json",
+      "classification_receipt_sha256": "185d846e91b30e4d926241e8f86ca8be205c7257945531d4d5865afa060bb533",
+      "fatal_marker": "RRTMGP_INPUT_UDM_HAIL_OPTICS_UNSUPPORTED",
+      "history_written": false,
+      "marker_occurrences": 2,
+      "raw_v2_validator_receipt_status": "FAIL due to incorrect requirement for nonzero serial STOP status; raw receipt preserved",
+      "returncode": 0,
+      "timeout": false,
+      "wrf_abort_stop_observed": true
+    },
+    "ra37_frozen_on": {
+      "history_sha256": "afd08c3a1b7b13dd3aabf5dbf5005797101eaf2d79957af56d24f8b6317a3845",
+      "numeric_values_finite_and_unmasked": 61252177,
+      "result_sha256": "d596a13f7dbbf9291eb2eb1e9ad72bd04c7b1efbc7a02b726ccdead9764556ae",
+      "status": "PASS",
+      "times": "2010-06-11_12:01:00"
+    },
+    "ra4_frozen_off": {
+      "history_sha256": "79e420dd4d52b777f11cd66726e060a5473943c9836cb736c9c4076a90657b8d",
+      "numeric_values_finite_and_unmasked": 59012716,
+      "result_sha256": "d8623adfee30d71db5ab1e44fcca3a176b4ccfe229eab3032e7c2bec9c353f6d",
+      "status": "PASS",
+      "times": "2010-06-11_12:01:00"
+    },
+    "root_history_recheck": {
+      "path": "build/udm-cmake-export-fix/runtime-smokes-v2/root-history-recheck.json",
+      "sha256": "b351c33c2fcfd885fcbd3d7e805c5c178259dfa5dbd4298de0d218121e45d3e5"
+    },
+    "setup_runner_sha256": "146733d6d328ac0b8e000b9dc663fd944e223877ef2a782f35d5fc5523010147",
+    "suite_result": {
+      "path": "build/udm-cmake-export-fix/runtime-smokes-v2/suite-result-corrected.json",
+      "sha256": "5bdeda10e2effbf569b7aeb82f928a2ebf9cbc66b8e12b8a58f5afcf5d24b105"
+    }
+  },
+  "downstream_consumer": {
+    "executable_sha256": "2803d5be02b2d67aed1573cf80f324bac59fae333ac6b749ba0c2b57162b2a9f",
+    "imports_mo_rte_kind_and_initializes_gases": true,
+    "output": "INSTALLED_WRF_RRTMGP_CONSUMER_PASS 8",
+    "status": "PASS",
+    "tests_WRF_Core_and_rrtmgp_targets": true,
+    "tests_rrtmgp_target_alone": true,
+    "uses_find_package_WRF": true
+  },
+  "generated_udm_field_declarations": {
+    "cmake": {
+      "path": "build/udm-cmake-export-fix/binary-final/inc/state_struct.inc",
+      "sha256": "7202ff2fe98b49dbbef96a85175ef5b0328c0c5a72b98b5c2152291b9a414720",
+      "types_at_udm_cldfra_cf_step_cf_top": "ALLOCATABLE"
+    },
+    "traditional_make": {
+      "configuration_note": "USE_ALLOCATABLES macro is present in compiler flags but generated UDM state fields are POINTER",
+      "path": "build/pr-wrf-rrtmgp/build/udm-cmake-export-fix/make-parity/source/WRF/inc/state_struct.inc",
+      "sha256": "54ac548342bd228952a2beef46a1805caf09fcf1323355cea893966c19209658",
+      "types_at_udm_cldfra_cf_step_cf_top": "POINTER"
+    }
+  },
+  "limitations": [
+    "These are one-minute restarts and build/interface checks, not forecast validation.",
+    "CMake smoke outputs are checked for successful bounded execution, exact time/schedule, shapes, masks and finite data, not against the Make outputs.",
+    "Exact parity evidence compares the fresh GNU Make build with the corresponding PR30 GNU Make serial histories.",
+    "The frozen-off RA37 case is intentionally rejected because the shared restart contains positive hail; serial WRF reports STOP through a zero return code.",
+    "No MPI, OpenMP, GPU, alternate compiler, different NetCDF, or physical-accuracy conclusion is included."
+  ],
+  "package_files": {
+    "PR_DESCRIPTION.md": "f54bc4ff4ec63ba4ade99bf4cba79ac2a3bfacbdf71130fe8cda1539793d81c6",
+    "README.md": "5d8dd0a22a8fc3197df9e22dec47eb440e676673c8771a61cdf61109cf8659ea",
+    "consumer/CMakeLists.txt": "8f197bd426d67e710cf5b7e36a2cc04200aea7396021405f726ca4aa9f54d8c1",
+    "consumer/core-plus/CMakeLists.txt": "8f197bd426d67e710cf5b7e36a2cc04200aea7396021405f726ca4aa9f54d8c1",
+    "consumer/core-plus/main.F90": "7558847606ebe057e8dd4a928630365509f0d1df7e4ab5e118c4be3403aa3053",
+    "consumer/main.F90": "7558847606ebe057e8dd4a928630365509f0d1df7e4ab5e118c4be3403aa3053",
+    "consumer/optional_array_probe.f90": "80305a1415a40770c6b6ea3d9e311eefc10447539d347997f93608d04133f2a0",
+    "consumer/rrtmgp-only/CMakeLists.txt": "16ee6a1812fef92ae4aed4d494e71337197eba75ce204c259e78d433d97e5043",
+    "consumer/rrtmgp-only/main.F90": "7558847606ebe057e8dd4a928630365509f0d1df7e4ab5e118c4be3403aa3053",
+    "receipts/cmake/full-build-install-receipt.json": "fc1789df4dce6ad7f925d749f9d1300e79163fd390d0d70fee4ae2302c6e08b1",
+    "receipts/cmake/ra37-frozen0-classification.json": "185d846e91b30e4d926241e8f86ca8be205c7257945531d4d5865afa060bb533",
+    "receipts/cmake/ra37-frozen0-preflight.json": "a91e8d8144d7142d7783c4ad44229ea43af0cf8dfe99776d0f00fd212c4447a8",
+    "receipts/cmake/ra37-frozen0-raw-result.json": "b58a892ab037e92ec53be07e507a99d8f8260e3f9e8c328da6e201896645e890",
+    "receipts/cmake/ra37-frozen1-preflight.json": "d747b40c9e3dac5b8bb0e9889291920f929b1da329512f17c33a4616d6e4f6b7",
+    "receipts/cmake/ra37-frozen1-result.json": "d596a13f7dbbf9291eb2eb1e9ad72bd04c7b1efbc7a02b726ccdead9764556ae",
+    "receipts/cmake/ra4-frozen0-preflight.json": "0debfa7e94b6ca87a1a1954b545c03f4677f14c917a36340a15a81d86edf9e05",
+    "receipts/cmake/ra4-frozen0-result.json": "d8623adfee30d71db5ab1e44fcca3a176b4ccfe229eab3032e7c2bec9c353f6d",
+    "receipts/cmake/root-history-recheck.json": "b351c33c2fcfd885fcbd3d7e805c5c178259dfa5dbd4298de0d218121e45d3e5",
+    "receipts/cmake/standalone-LastTest.log": "9f2bfa9fef68a721964853c9c323b9b42b10adc4d9b7e50dbcd4b91c3eb33395",
+    "receipts/cmake/suite-preflight.json": "ed9584309ed847109b727ce587a9f91c5479837e9b050fa0bf2102db8d27b132",
+    "receipts/cmake/suite-result-corrected.json": "5bdeda10e2effbf569b7aeb82f928a2ebf9cbc66b8e12b8a58f5afcf5d24b105",
+    "receipts/cmake/toolchain-repro.cmake": "8b8cbf1fdc1972784c2687d1988f6cdc1ec8a08689958058ac7b43a8a943a212",
+    "receipts/make/build-result.json": "17acdce9e833142cfee73772a513ee8ee7388d9262ff0ec32be376acb6021b81",
+    "receipts/make/ra37-frozen1-preflight.json": "7924a445b8d9b42096fa71c7a13baf4b7a087c649d48033ae635f728300a12b3",
+    "receipts/make/ra37-frozen1-result.json": "2df5c30543aba9c760d89078460a9ae9c404fcff93bd75421b8454520d34e580",
+    "receipts/make/ra4-frozen0-preflight.json": "83a2872cc395485cbb7ca9fb87ad911a888fe7ba6ed344d2fb3c88f12e647bbc",
+    "receipts/make/ra4-frozen0-result.json": "2e1bafe16903ba732396ebe81a887ba4295158c76ed8b21c08d23cc2b0a082f0",
+    "receipts/make/root-whole-file-recheck.json": "cd44f659bb861560d328940f919131d152ff2c6ad5d16dc9f0538d0b6ea85eda",
+    "receipts/make/source-before-build.json": "6d4874dc9890d6c17232e812b7d1b62e29f7a14516a529b1142e88157c1503a0",
+    "receipts/make/suite-preflight.json": "1ab739a9d30168cf468a22484c04a0cb9787092a595cdeb0ca6c60b296dcc4fb",
+    "receipts/make/suite-result.json": "f3b66e8b3c2a6bd01ebf3bd38810c2ba327c4fcb17219f3ffcbf9cac989adea4",
+    "scripts/prepare_make_parity_v5.py": "2459ce3dc7d3ddfefcaddf36bba65af93503edf174abc2b3847045b75aaffa73",
+    "scripts/reproduce_cmake.sh": "557ef7930a5020d63327829fea7078aacf5baecc579247767e1b69c203eccf3c",
+    "scripts/reproduce_standalone_columns.sh": "97dd33bb3c796ce4f403d096a5ebf6ae9a252e930d02416ec5c030105f2d1e0f",
+    "scripts/run_gnu_cmake_smokes_v2.py": "146733d6d328ac0b8e000b9dc663fd944e223877ef2a782f35d5fc5523010147",
+    "scripts/verify_artifacts.py": "cd59e372b93e37797f7c9de03eaf78925255e627f69594c5ab52ef3efe1c723a",
+    "source-overlay.patch.gz": "ad529944a0526753780cd8e2253c409ad343f7e45b2b1af19dc3c8e4b1cd20d8"
+  },
+  "schema": "WRF_RRTMGP_CMAKE_EXPORT_VALIDATION_V1",
+  "scope": "GNU serial ARW em_real build/install, installed-target consumer, standalone RRTMGP column test, bounded one-minute restart runs, and traditional Make bitwise parity. No MPI, OpenMP, GPU, alternate compiler, or forecast-duration claim.",
+  "source": {
+    "base_commit": "bb56ec0ad5a0fbd2ef2027a291554fc40d6c7291",
+    "overlay_diff_sha256": "81b21852f8092869b8ff015029d6ac44ce152de711ede7a764ab115c7494a39b",
+    "overlay_paths": [
+      "WRF/CMakeLists.txt",
+      "WRF/external/rte_rrtmgp/CMakeLists.txt",
+      "WRF/phys/module_physics_init.F",
+      "WRF/phys/module_microphysics_driver.F",
+      "config/registration37.json"
+    ],
+    "registration_check": "PASS",
+    "source_file_sha256": {
+      "WRF/CMakeLists.txt": "f2a9fad649e0d9dfc23d0f0719252b438c928e9fa4346ad08eb9dd460331fc99",
+      "WRF/external/rte_rrtmgp/CMakeLists.txt": "aa0c88f42a9a045c7098b8cc4064458208736e9ed742a0803139feade609deda",
+      "WRF/phys/module_microphysics_driver.F": "1c3b3ecd8c8f5f3fb4572f2837216faff33425b75898cfe5bcc92c06c78a8716",
+      "WRF/phys/module_physics_init.F": "a60589e0af8d8a4bb5984652fb08bf404e5c304ec2baf4c6285b25d442b6a0af",
+      "config/registration37.json": "2090b7ec32a3f0fc7e4c6eaa0632df4a2836665d92559285958f205cffe1d27c"
+    }
+  },
+  "standalone_column_ctest": {
+    "failed": 0,
+    "last_test_log_sha256": "9f2bfa9fef68a721964853c9c323b9b42b10adc4d9b7e0e1e25cdd9ec432863",
+    "passed": 1,
+    "status": "PASS",
+    "test": "wrf_rrtmgp_columns"
+  },
+  "toolchain": {
+    "cmake": "3.31.6",
+    "fortran_flags": "-w -fconvert=big-endian -frecord-marker=4 -O2 -ftree-vectorize -funroll-loops",
+    "gfortran": "GNU Fortran (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0",
+    "netcdf_c": "4.9.2",
+    "netcdf_fortran": "4.5.4",
+    "ninja": "1.13.0.git.kitware.jobserver-pipe-1",
+    "precision": "single"
+  },
+  "traditional_make_parity": {
+    "actual_child_stack_bytes": 536870912,
+    "build_receipt": {
+      "path": "build/pr-wrf-rrtmgp/build/udm-cmake-export-fix/make-parity/receipts/build-result.json",
+      "sha256": "17acdce9e833142cfee73772a513ee8ee7388d9262ff0ec32be376acb6021b81"
+    },
+    "configure_wrf_sha256": "b5c234db6278ef88e2b03bc0329168163e3b1257188a3c55d5c1ebfb2b1224ac",
+    "make_executable_sha256": "b210efd602c1885d83f331b7ce89972a64fe7144bdfa3f4bd3785291937e24f0",
+    "ra37_frozen_on": {
+      "attrs_different": 0,
+      "bytewise_arrays": 211,
+      "history_sha256": "7a76a430f1d37ba88ee2692c5cb076a271f3d525a1190b5cd824df3790225025",
+      "numeric_values": 61252177,
+      "result_sha256": "2df5c30543aba9c760d89078460a9ae9c404fcff93bd75421b8454520d34e580",
+      "status": "PASS",
+      "variables": 211
+    },
+    "ra4_frozen_off": {
+      "attrs_different": 0,
+      "bytewise_arrays": 208,
+      "history_sha256": "da4dfa46cf7439406a583a20d9aab0581836679af614ad8e6090df29a31db34e",
+      "numeric_values": 59012716,
+      "result_sha256": "2e1bafe16903ba732396ebe81a887ba4295158c76ed8b21c08d23cc2b0a082f0",
+      "status": "PASS",
+      "variables": 208
+    },
+    "root_independent_whole_file_recheck": {
+      "path": "build/pr-wrf-rrtmgp/build/udm-cmake-export-fix/make-parity/runtime-parity-v5/root-whole-file-recheck.json",
+      "sha256": "cd44f659bb861560d328940f919131d152ff2c6ad5d16dc9f0538d0b6ea85eda"
+    },
+    "runner_sha256": "2459ce3dc7d3ddfefcaddf36bba65af93503edf174abc2b3847045b75aaffa73",
+    "source_base": "bb56ec0ad5a0fbd2ef2027a291554fc40d6c7291",
+    "source_overlay_diff_sha256": "81b21852f8092869b8ff015029d6ac44ce152de711ede7a764ab115c7494a39b",
+    "suite_preflight_sha256": "1ab739a9d30168cf468a22484c04a0cb9787092a595cdeb0ca6c60b296dcc4fb",
+    "suite_result": {
+      "path": "build/pr-wrf-rrtmgp/build/udm-cmake-export-fix/make-parity/runtime-parity-v5/suite-result.json",
+      "sha256": "f3b66e8b3c2a6bd01ebf3bd38810c2ba327c4fcb17219f3ffcbf9cac989adea4"
+    }
+  }
+}
