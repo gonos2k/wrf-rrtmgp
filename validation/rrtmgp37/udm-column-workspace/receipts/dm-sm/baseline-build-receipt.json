@@ -1,0 +1,73 @@
+{
+  "status": "BUILD_PASS",
+  "base_commit": "fdafa534d5641fa2251ad5b02d294d57167b81fb",
+  "tracked_source_count": 6547,
+  "tracked_tree_manifest_sha256": "dc6c7da47aef07b73e088e18e9c319561f411f276ada38de23fc1b9894a8578f",
+  "source_manifest_sha256": "1781e27db0e6118ae6ce685e834b1f4e7096f5ec3a46ef891e98744de282bc1b",
+  "configure_sha256": "81c057673152d81b222d33787f8f03288ef9f8f2be118f07a19e499d297dad70",
+  "configure": {
+    "selection": 35,
+    "nesting": 1,
+    "DMPARALLEL": 1,
+    "OMP": "-fopenmp",
+    "SFC": "gfortran",
+    "DM_FC": "mpif90",
+    "DM_CC": "mpicc",
+    "NETCDF": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/netcdf",
+    "configure_sha256": "81c057673152d81b222d33787f8f03288ef9f8f2be118f07a19e499d297dad70"
+  },
+  "compiler": {
+    "gfortran": "GNU Fortran (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0",
+    "mpich": "gfortran -I/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/mpich-sock/include -I/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/mpich-sock/include -L/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/mpich-sock/lib -lmpifort -Wl,-rpath -Wl,/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/mpich-sock/lib -Wl,--enable-new-dtags -lmpi",
+    "netcdf": "netCDF-Fortran 4.5.4"
+  },
+  "compile": {
+    "command": "csh -f ./compile -j 12 em_real",
+    "cwd": "WRF",
+    "PATH_prefix": "build/deps/mpich-sock/bin:/home/korea_keun/.local/bin:/usr/bin:/bin",
+    "LD_LIBRARY_PATH": "build/deps/netcdf/lib:build/deps/mpich-sock/lib:/usr/lib/x86_64-linux-gnu",
+    "OMP_NUM_THREADS": "1",
+    "flags": "-O2 -ftree-vectorize -funroll-loops -w -ffree-form -ffree-line-length-none -fconvert=big-endian -frecord-marker=4 -fallow-argument-mismatch -fallow-invalid-boz -fopenmp",
+    "first_attempt": "failed before compilation at configcheck because MPICH bin was absent from PATH; preserved build-em_real.log",
+    "successful_retry_log_sha256": "110d7560302a3a534f539a5f56e19b47b0b8c87c169b4de4468cc69f6a2de05d"
+  },
+  "artifacts": [
+    {
+      "path": "WRF/configure.wrf",
+      "sha256": "81c057673152d81b222d33787f8f03288ef9f8f2be118f07a19e499d297dad70",
+      "bytes": 20929
+    },
+    {
+      "path": "configure-dm-sm.log",
+      "sha256": "8d1bcfcf01a98ac35789d551108b9023c0e3e93c1c538b6550641ee8ebc864f5",
+      "bytes": 9386
+    },
+    {
+      "path": "build-em_real.log",
+      "sha256": "f9ba5507b47aaf0315857db29b51fa1d9935446b8d1b2d5ee5e7f595c15aa5b4",
+      "bytes": 1367
+    },
+    {
+      "path": "build-em_real-retry.log",
+      "sha256": "110d7560302a3a534f539a5f56e19b47b0b8c87c169b4de4468cc69f6a2de05d",
+      "bytes": 1743279
+    },
+    {
+      "path": "source-manifest.json",
+      "sha256": "1781e27db0e6118ae6ce685e834b1f4e7096f5ec3a46ef891e98744de282bc1b",
+      "bytes": 1474301
+    }
+  ],
+  "executables": {
+    "wrf.exe": {
+      "sha256": "65fd5b210e1f4c4df43fa23b7be58b4753ce39fc9030777d9d2071c118430991",
+      "bytes": 58819264,
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-selected-dm-sm-baseline/WRF/main/wrf.exe"
+    },
+    "real.exe": {
+      "sha256": "b02d2977800cdce6f5f45710d4373a0067320ea369a319735d3390293f802ed4",
+      "bytes": 43487032,
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-selected-dm-sm-baseline/WRF/main/real.exe"
+    }
+  }
+}
