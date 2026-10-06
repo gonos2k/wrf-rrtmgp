@@ -1,0 +1,2519 @@
+{
+  "status": "FINAL_V3_POINTER_SHAPE_CHECKED_CAPTURE_PASS_HISTORY_BITWISE_TRANSPARENT",
+  "instrumentation_version": "v3; read-only diagnostics; extent checks; lower-bound-aware pointer access",
+  "source": {
+    "worktree": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/diag-udm-mpi-boundary",
+    "base_commit": "e73b353f2b76f323809f99bed19a29eaaf25af02",
+    "changed_file": "WRF/phys/module_microphysics_driver.F",
+    "source_sha256": "3a74f77aed0540b3a5bc2e6641a75517277dfe7ded3e0ed19bbe161dc5f937bd",
+    "patch": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/diag-udm-mpi-boundary/udm-boundary-instrumentation-v3.patch",
+    "patch_sha256": "039bf56ddf2df66a9864b6bfa6b7d45fb6bbcef01bcc2f549a39090776f35c3b",
+    "git_diff_check": "clean"
+  },
+  "binary": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/diag-udm-mpi-boundary/capture-on-v3/wrf.exe",
+    "sha256": "e95cdf69eae10955782815be9f06cc54861669fd6e0faf6864185296722bc7a9",
+    "build_command": "csh -f ./compile -j 12 em_real",
+    "build_log": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/diag-udm-mpi-boundary/build-udm-boundary-v3.log",
+    "build_log_sha256": "dd481175408e31e5a0ca9de6419434b9690cf4ed81f90e7f22e047a6e90183bf",
+    "compiler": "gfortran 13.3 / MPICH 4.2 dm+sm",
+    "flags": "-O2 -ftree-vectorize -funroll-loops -fopenmp; WRF big-endian record flags as in configure"
+  },
+  "pointer_bounds_behavior": "Verified with a GNU Fortran minimal program that a POINTER assumed-shape dummy retains actual pointer lower bounds. v3 indexes as LBOUND(dummy,dim)+(driver_logical_index-driver_memory_lower) and requires pointer extents to equal corresponding driver-memory extents before logging values. All 6\u00d72 targets, both pointer shapes, all owner PRE/POST records passed; no shape mismatch markers.",
+  "cases": {
+    "mpi1": {
+      "case_dir": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/diag-udm-mpi-boundary/capture-on-v3/mpi1",
+      "nproc": 1,
+      "namelist_sha256": "c35fb6a78410785fbe1922bd1fd96cb015414d4992bfd508877d1881ba1090c0",
+      "success_by_rank": {
+        "rsl.error.0000": true
+      },
+      "all_ranks_success": true,
+      "output": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/diag-udm-mpi-boundary/capture-on-v3/mpi1/wrfout_d01_2010-06-11_12:01:00",
+      "output_sha256": "b2fc7b10bb5eeb5d033a59b12dd673babe5e71f787fdf8bfa0ca4d94a2830d77",
+      "capture_count": 12,
+      "capture_hashes": {
+        "step000721.rank0000.tileI0002-0288.tileJ0002-0188.i0140.j0137.POST.txt": "02e79d19628fc7b15b321cdc272a224dd1dea1d5caaf8ced95092eaceb66b781",
+        "step000721.rank0000.tileI0002-0288.tileJ0002-0188.i0140.j0137.PRE.txt": "b31577be101a885e283a019cb3b4d910d78ce96f267e1c5c07ea555a77723826",
+        "step000721.rank0000.tileI0002-0288.tileJ0002-0188.i0142.j0167.POST.txt": "9a46a12c6d84ab33dfb4a3175dbc7baeca3e3abe2be62966609b0a75c5dd81ed",
+        "step000721.rank0000.tileI0002-0288.tileJ0002-0188.i0142.j0167.PRE.txt": "29420529da7df54fea6d6b9d775f93a6810e2e92ede262fd63990fada5b326a5",
+        "step000721.rank0000.tileI0002-0288.tileJ0002-0188.i0146.j0099.POST.txt": "03b2b37ce3b2c3d5c463ac64c6deaff691546a6269d19ae52a63c5c76ef6d253",
+        "step000721.rank0000.tileI0002-0288.tileJ0002-0188.i0146.j0099.PRE.txt": "1dd2e7be532ceacfa032ea2d3f72dcd1ae8c6a7fb3a6a3a7a844f2ebb2f6247b",
+        "step000721.rank0000.tileI0002-0288.tileJ0002-0188.i0146.j0171.POST.txt": "44719cd922261e7efdacb7718a7a34322adb62f28e1bf1d5e91dea02500ada6f",
+        "step000721.rank0000.tileI0002-0288.tileJ0002-0188.i0146.j0171.PRE.txt": "c48386114503eea74252770a7a45efccb241763dd83130336694abe1ff063f58",
+        "step000721.rank0000.tileI0002-0288.tileJ0002-0188.i0147.j0099.POST.txt": "d9847c920f7f2a331d3b247e0b0823a64e7fefda4d4f600d1b48b584d0f1cc87",
+        "step000721.rank0000.tileI0002-0288.tileJ0002-0188.i0147.j0099.PRE.txt": "e3aa441bfa4de5c4c8e7701c7d672aba74838037aa4cd61eb53c98f2d74ddc2e",
+        "step000721.rank0000.tileI0002-0288.tileJ0002-0188.i0151.j0108.POST.txt": "f31745b93a30206dfa668ffaf28220008ada6ed1f81fd8e31f78b919ce90f501",
+        "step000721.rank0000.tileI0002-0288.tileJ0002-0188.i0151.j0108.PRE.txt": "91afaab6b3eb0508680d958958627ce9beacd9f6d61cc43bb2dfdb2b25e03b36"
+      },
+      "history_comparison": {
+        "compared_numeric_values": 54643036,
+        "compared_variables": 204,
+        "comparison": {
+          "atol": 0.0,
+          "ignored_variables": [],
+          "mode": "exact",
+          "rtol": 0.0
+        },
+        "continuous_time": "2010-06-11_12:01:00",
+        "dynamics_passed": true,
+        "errors": [],
+        "expected_time": "2010-06-11_12:01:00",
+        "files": [
+          "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-lw-trace-gases-parallel/mpi1-omp1-v2/wrfout_d01_2010-06-11_12:01:00",
+          "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/diag-udm-mpi-boundary/capture-on-v3/mpi1/wrfout_d01_2010-06-11_12:01:00"
+        ],
+        "metadata_differences": [],
+        "metadata_match": true,
+        "passed": true,
+        "restarted_time": "2010-06-11_12:01:00",
+        "variable_differences": {}
+      }
+    },
+    "mpi4": {
+      "case_dir": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/diag-udm-mpi-boundary/capture-on-v3/mpi4",
+      "nproc": 4,
+      "namelist_sha256": "c35fb6a78410785fbe1922bd1fd96cb015414d4992bfd508877d1881ba1090c0",
+      "success_by_rank": {
+        "rsl.error.0000": true,
+        "rsl.error.0001": true,
+        "rsl.error.0002": true,
+        "rsl.error.0003": true
+      },
+      "all_ranks_success": true,
+      "output": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/diag-udm-mpi-boundary/capture-on-v3/mpi4/wrfout_d01_2010-06-11_12:01:00",
+      "output_sha256": "2130ddf52baf58a5ad4a0d77c2d586c11996fcce42a9e92621d530ecfaaab308",
+      "capture_count": 32,
+      "capture_hashes": {
+        "step000721.rank0000.tileI0002-0145.tileJ0002-0095.i0146.j0099.POST.txt": "17470d17140619c13afaf7b8c7a647b8a4ffd181f3259df0818e735968acb14e",
+        "step000721.rank0000.tileI0002-0145.tileJ0002-0095.i0146.j0099.PRE.txt": "a4c5ddf620944faac914b0ab84f9af2d9154c2a9830c40968cd0e7ddf6b81c2e",
+        "step000721.rank0000.tileI0002-0145.tileJ0002-0095.i0147.j0099.POST.txt": "e535d3191cd23e24b769dc1e6977d8dd066c8ba9666c72b1a095b0046ef320bd",
+        "step000721.rank0000.tileI0002-0145.tileJ0002-0095.i0147.j0099.PRE.txt": "e4fdc275abd4bb0038dbea68ffd2245d1a9b8f9229531ab9ba1d34ab255e3cb4",
+        "step000721.rank0001.tileI0146-0288.tileJ0002-0095.i0146.j0099.POST.txt": "bb71811c28c3a3b303fbc06562d783d2b16477c6d73c95ce03fab698d670770a",
+        "step000721.rank0001.tileI0146-0288.tileJ0002-0095.i0146.j0099.PRE.txt": "bbbbe193d78e4fe335537da1ef82be80191bc22f5972c8d1192f5fd203af95d1",
+        "step000721.rank0001.tileI0146-0288.tileJ0002-0095.i0147.j0099.POST.txt": "b4d71ebd1105cdbedcd62bf6a4e5a008c21218c8cc49badc4caeb92e3302fe1b",
+        "step000721.rank0001.tileI0146-0288.tileJ0002-0095.i0147.j0099.PRE.txt": "0e26505a5b169f9ede1b9d18f053e936cf7201e2f7ae5a25e93ed2449e110113",
+        "step000721.rank0002.tileI0002-0145.tileJ0096-0188.i0140.j0137.POST.txt": "ee22759ab80818a3ea5e4730e193d98a74a9b0a96ecbe7a0f0acf90a9c719781",
+        "step000721.rank0002.tileI0002-0145.tileJ0096-0188.i0140.j0137.PRE.txt": "7c9f21c7f915db5d411cb05dc80d4a4f656a3a9eb91d40625d718e49fac9057b",
+        "step000721.rank0002.tileI0002-0145.tileJ0096-0188.i0142.j0167.POST.txt": "664a9fc5bd321f8b851cc447831fd487ef19bc8da77d020871e05523008fade9",
+        "step000721.rank0002.tileI0002-0145.tileJ0096-0188.i0142.j0167.PRE.txt": "fe8e20ad3a0f30c36aaf1e870816a4a9851e2498e049648ae34782fcca155d28",
+        "step000721.rank0002.tileI0002-0145.tileJ0096-0188.i0146.j0099.POST.txt": "169a32e4dca214bbadf07b3cea0097b1829a0c59f67edeb17e4d42c79b621dce",
+        "step000721.rank0002.tileI0002-0145.tileJ0096-0188.i0146.j0099.PRE.txt": "1c6fe52b0c068663f5ac8688ca45a0cac34b6044d60beca1b72b2019cd3800f5",
+        "step000721.rank0002.tileI0002-0145.tileJ0096-0188.i0146.j0171.POST.txt": "7bdfd3207066efcf8552b6f5533542537c66054a08aac93fafd753e15cdca1a6",
+        "step000721.rank0002.tileI0002-0145.tileJ0096-0188.i0146.j0171.PRE.txt": "ec426a493b693d5159a677dd7bff5376116e2aad11624d0c99d66ef934f57e44",
+        "step000721.rank0002.tileI0002-0145.tileJ0096-0188.i0147.j0099.POST.txt": "a12731f9066582506cdb63227c5899beadd35b7d1304f8079cb98dc23444a89a",
+        "step000721.rank0002.tileI0002-0145.tileJ0096-0188.i0147.j0099.PRE.txt": "ed93af75cdef0af6637ba4cf2cc9b2f57b7382d3ed13ebb13364fa9593ce31b2",
+        "step000721.rank0002.tileI0002-0145.tileJ0096-0188.i0151.j0108.POST.txt": "3d812a4f05a2c02dc4546773784f139dfe0a6be70753957108ad19c488f9e910",
+        "step000721.rank0002.tileI0002-0145.tileJ0096-0188.i0151.j0108.PRE.txt": "77845de16df3877c42c9eead731c3f74eb3cc2aa2beb0976623509953079b060",
+        "step000721.rank0003.tileI0146-0288.tileJ0096-0188.i0140.j0137.POST.txt": "f02bde204500776a4af7716d27a3cd4374b21a55efa9d1a2547488e9603cce99",
+        "step000721.rank0003.tileI0146-0288.tileJ0096-0188.i0140.j0137.PRE.txt": "f751e80e5fc28109f074ac9024f501b5f584b27663ab99ceddaba482cfcd2e37",
+        "step000721.rank0003.tileI0146-0288.tileJ0096-0188.i0142.j0167.POST.txt": "c4f896d16bb5aa08e4dfac5873da3bb04b8c665cde789177dbec53be55a2c11c",
+        "step000721.rank0003.tileI0146-0288.tileJ0096-0188.i0142.j0167.PRE.txt": "d0c62e0805d8a9872f9d21013085dbdf5220084c314fd0aacd80f49c91f77f41",
+        "step000721.rank0003.tileI0146-0288.tileJ0096-0188.i0146.j0099.POST.txt": "911e99471775d65e17f714333beb7a6affed4e57d103821e04591a3ec5019976",
+        "step000721.rank0003.tileI0146-0288.tileJ0096-0188.i0146.j0099.PRE.txt": "75d0c6f9adab14812bc03d9302548c8ed595a6f3cfdbd3d988445a9f75b13eb4",
+        "step000721.rank0003.tileI0146-0288.tileJ0096-0188.i0146.j0171.POST.txt": "f7ed5f8dd147728e4836bdaf5d7ee16e6674252b2ff1aef0e73bf70a653f636d",
+        "step000721.rank0003.tileI0146-0288.tileJ0096-0188.i0146.j0171.PRE.txt": "a7a9b472eccd2054c3ec7efabafce186dcbc98209c2f22f6e870a4c853a59f9b",
+        "step000721.rank0003.tileI0146-0288.tileJ0096-0188.i0147.j0099.POST.txt": "59b598f981451c026ee924521a45fea838bc3c8419aeeb1ec903b3cda4313d1a",
+        "step000721.rank0003.tileI0146-0288.tileJ0096-0188.i0147.j0099.PRE.txt": "4c89538f72b5cf36d1655c8aa37984007e7ebcc3c40225f9def5c40b83489feb",
+        "step000721.rank0003.tileI0146-0288.tileJ0096-0188.i0151.j0108.POST.txt": "b3a7b7a91a314115d64d1618926fcd8826dda6c5e30fc593e66f4828c4bfb686",
+        "step000721.rank0003.tileI0146-0288.tileJ0096-0188.i0151.j0108.PRE.txt": "94e1683d93b1bee42ee469c6d0cbcab6f6a295b316d17f151c84179604e5ba2f"
+      },
+      "history_comparison": {
+        "compared_numeric_values": 54643036,
+        "compared_variables": 204,
+        "comparison": {
+          "atol": 0.0,
+          "ignored_variables": [],
+          "mode": "exact",
+          "rtol": 0.0
+        },
+        "continuous_time": "2010-06-11_12:01:00",
+        "dynamics_passed": true,
+        "errors": [],
+        "expected_time": "2010-06-11_12:01:00",
+        "files": [
+          "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-lw-trace-gases-parallel/mpi4-omp1-v2/wrfout_d01_2010-06-11_12:01:00",
+          "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/diag-udm-mpi-boundary/capture-on-v3/mpi4/wrfout_d01_2010-06-11_12:01:00"
+        ],
+        "metadata_differences": [],
+        "metadata_match": true,
+        "passed": true,
+        "restarted_time": "2010-06-11_12:01:00",
+        "variable_differences": {}
+      }
+    }
+  },
+  "owned_target_pre_post_mpi1_vs_mpi4": {
+    "146,171": {
+      "PRE": {
+        "mpi1_location": {
+          "owner": true,
+          "rank": 0,
+          "global_i_j": [
+            146,
+            171
+          ],
+          "local_1based_i_j": [
+            151,
+            176
+          ],
+          "logical_array_i_k_j_for_target": [
+            146,
+            1,
+            171
+          ],
+          "bounds": {
+            "ids_ide_jds_jde": [
+              1,
+              290,
+              1,
+              190
+            ],
+            "memory_ims_ime_jms_jme": [
+              -4,
+              295,
+              -4,
+              195
+            ],
+            "patch_ips_ipe_jps_jpe": [
+              1,
+              290,
+              1,
+              190
+            ],
+            "tile_its_ite_jts_jte": [
+              2,
+              288,
+              2,
+              188
+            ],
+            "kts_kte": [
+              1,
+              39
+            ]
+          },
+          "pointer_bounds": {
+            "cf": "POINTER_BOUNDS UDM_CLDFRA LBOUND=-4 1 -4  UBOUND=295 40 195",
+            "step": "POINTER_BOUNDS UDM_CF_STEP LBOUND=-4 -4  UBOUND=295 195"
+          },
+          "cf_step": "-1",
+          "shape_mismatch": []
+        },
+        "mpi4_location": {
+          "owner": true,
+          "rank": 3,
+          "global_i_j": [
+            146,
+            171
+          ],
+          "local_1based_i_j": [
+            8,
+            83
+          ],
+          "logical_array_i_k_j_for_target": [
+            146,
+            1,
+            171
+          ],
+          "bounds": {
+            "ids_ide_jds_jde": [
+              1,
+              290,
+              1,
+              190
+            ],
+            "memory_ims_ime_jms_jme": [
+              139,
+              295,
+              89,
+              195
+            ],
+            "patch_ips_ipe_jps_jpe": [
+              146,
+              290,
+              96,
+              190
+            ],
+            "tile_its_ite_jts_jte": [
+              146,
+              288,
+              96,
+              188
+            ],
+            "kts_kte": [
+              1,
+              39
+            ]
+          },
+          "pointer_bounds": {
+            "cf": "POINTER_BOUNDS UDM_CLDFRA LBOUND=139 1 89  UBOUND=295 40 195",
+            "step": "POINTER_BOUNDS UDM_CF_STEP LBOUND=139 89  UBOUND=295 195"
+          },
+          "cf_step": "-1",
+          "shape_mismatch": []
+        },
+        "field_differences": {
+          "TH": {
+            "unit": "K",
+            "different_levels": 10,
+            "max_abs_difference": 3.0517578125e-05,
+            "max_symmetric_relative_difference": 9.415217099841975e-08,
+            "fill_or_nonfinite_levels": 0
+          },
+          "T_K": {
+            "unit": "K",
+            "different_levels": 23,
+            "max_abs_difference": 0.00189208984375,
+            "max_symmetric_relative_difference": 6.773025747657379e-06,
+            "fill_or_nonfinite_levels": 0
+          },
+          "RHO": {
+            "unit": "kg m-3",
+            "different_levels": 21,
+            "max_abs_difference": 2.0623207092285156e-05,
+            "max_symmetric_relative_difference": 1.6888915355782574e-05,
+            "fill_or_nonfinite_levels": 0
+          },
+          "P": {
+            "unit": "Pa",
+            "different_levels": 27,
+            "max_abs_difference": 2.3359375,
+            "max_symmetric_relative_difference": 2.3630914515601423e-05,
+            "fill_or_nonfinite_levels": 0
+          },
+          "DELZ": {
+            "unit": "m",
+            "different_levels": 19,
+            "max_abs_difference": 0.001953125,
+            "max_symmetric_relative_difference": 2.152454012820016e-06,
+            "fill_or_nonfinite_levels": 0
+          },
+          "QV": {
+            "unit": "kg kg-1",
+            "different_levels": 29,
+            "max_abs_difference": 1.1641532182693481e-09,
+            "max_symmetric_relative_difference": 3.520821548857654e-05,
+            "fill_or_nonfinite_levels": 0
+          },
+          "QC": {
+            "unit": "kg kg-1",
+            "different_levels": 10,
+            "max_abs_difference": 1.7462298274040222e-10,
+            "max_symmetric_relative_difference": 0.0024118363559537067,
+            "fill_or_nonfinite_levels": 0
+          },
+          "QI": {
+            "unit": "kg kg-1",
+            "different_levels": 15,
+            "max_abs_difference": 2.4868995751603507e-14,
+            "max_symmetric_relative_difference": 1.2307692370334427,
+            "fill_or_nonfinite_levels": 0
+          },
+          "QR": {
+            "unit": "kg kg-1",
+            "different_levels": 9,
+            "max_abs_difference": 1.8189894035458565e-12,
+            "max_symmetric_relative_difference": 0.000107604340941375,
+            "fill_or_nonfinite_levels": 0
+          },
+          "QS": {
+            "unit": "kg kg-1",
+            "different_levels": 21,
+            "max_abs_difference": 6.948317145445432e-23,
+            "max_symmetric_relative_difference": 0.015841039225899134,
+            "fill_or_nonfinite_levels": 0
+          },
+          "QG": {
+            "unit": "kg kg-1",
+            "different_levels": 21,
+            "max_abs_difference": 7.754818242684634e-25,
+            "max_symmetric_relative_difference": 0.500000043725305,
+            "fill_or_nonfinite_levels": 0
+          },
+          "QH": {
+            "unit": "kg kg-1",
+            "different_levels": 22,
+            "max_abs_difference": 7.674038885990003e-27,
+            "max_symmetric_relative_difference": 0.05443835921770422,
+            "fill_or_nonfinite_levels": 0
+          },
+          "NN": {
+            "unit": "m-3",
+            "different_levels": 19,
+            "max_abs_difference": 56.0,
+            "max_symmetric_relative_difference": 4.4089666792973064e-07,
+            "fill_or_nonfinite_levels": 0
+          },
+          "NC": {
+            "unit": "m-3",
+            "different_levels": 6,
+            "max_abs_difference": 24.0,
+            "max_symmetric_relative_difference": 2.00000418119341e-05,
+            "fill_or_nonfinite_levels": 0
+          },
+          "NR": {
+            "unit": "m-3",
+            "different_levels": 9,
+            "max_abs_difference": 0.03125,
+            "max_symmetric_relative_difference": 1.5955201836191046e-05,
+            "fill_or_nonfinite_levels": 0
+          }
+        }
+      },
+      "POST": {
+        "mpi1_location": {
+          "owner": true,
+          "rank": 0,
+          "global_i_j": [
+            146,
+            171
+          ],
+          "local_1based_i_j": [
+            151,
+            176
+          ],
+          "logical_array_i_k_j_for_target": [
+            146,
+            1,
+            171
+          ],
+          "bounds": {
+            "ids_ide_jds_jde": [
+              1,
+              290,
+              1,
+              190
+            ],
+            "memory_ims_ime_jms_jme": [
+              -4,
+              295,
+              -4,
+              195
+            ],
+            "patch_ips_ipe_jps_jpe": [
+              1,
+              290,
+              1,
+              190
+            ],
+            "tile_its_ite_jts_jte": [
+              2,
+              288,
+              2,
+              188
+            ],
+            "kts_kte": [
+              1,
+              39
+            ]
+          },
+          "pointer_bounds": {
+            "cf": "POINTER_BOUNDS UDM_CLDFRA LBOUND=-4 1 -4  UBOUND=295 40 195",
+            "step": "POINTER_BOUNDS UDM_CF_STEP LBOUND=-4 -4  UBOUND=295 195"
+          },
+          "cf_step": "721",
+          "shape_mismatch": []
+        },
+        "mpi4_location": {
+          "owner": true,
+          "rank": 3,
+          "global_i_j": [
+            146,
+            171
+          ],
+          "local_1based_i_j": [
+            8,
+            83
+          ],
+          "logical_array_i_k_j_for_target": [
+            146,
+            1,
+            171
+          ],
+          "bounds": {
+            "ids_ide_jds_jde": [
+              1,
+              290,
+              1,
+              190
+            ],
+            "memory_ims_ime_jms_jme": [
+              139,
+              295,
+              89,
+              195
+            ],
+            "patch_ips_ipe_jps_jpe": [
+              146,
+              290,
+              96,
+              190
+            ],
+            "tile_its_ite_jts_jte": [
+              146,
+              288,
+              96,
+              188
+            ],
+            "kts_kte": [
+              1,
+              39
+            ]
+          },
+          "pointer_bounds": {
+            "cf": "POINTER_BOUNDS UDM_CLDFRA LBOUND=139 1 89  UBOUND=295 40 195",
+            "step": "POINTER_BOUNDS UDM_CF_STEP LBOUND=139 89  UBOUND=295 195"
+          },
+          "cf_step": "721",
+          "shape_mismatch": []
+        },
+        "field_differences": {
+          "TH": {
+            "unit": "K",
+            "different_levels": 12,
+            "max_abs_difference": 0.000762939453125,
+            "max_symmetric_relative_difference": 2.721984949818574e-06,
+            "fill_or_nonfinite_levels": 0
+          },
+          "T_K": {
+            "unit": "K",
+            "different_levels": 23,
+            "max_abs_difference": 0.001129150390625,
+            "max_symmetric_relative_difference": 4.041873371165997e-06,
+            "fill_or_nonfinite_levels": 0
+          },
+          "RHO": {
+            "unit": "kg m-3",
+            "different_levels": 21,
+            "max_abs_difference": 2.0623207092285156e-05,
+            "max_symmetric_relative_difference": 1.6888915355782574e-05,
+            "fill_or_nonfinite_levels": 0
+          },
+          "P": {
+            "unit": "Pa",
+            "different_levels": 27,
+            "max_abs_difference": 2.3359375,
+            "max_symmetric_relative_difference": 2.3630914515601423e-05,
+            "fill_or_nonfinite_levels": 0
+          },
+          "DELZ": {
+            "unit": "m",
+            "different_levels": 19,
+            "max_abs_difference": 0.001953125,
+            "max_symmetric_relative_difference": 2.152454012820016e-06,
+            "fill_or_nonfinite_levels": 0
+          },
+          "QV": {
+            "unit": "kg kg-1",
+            "different_levels": 30,
+            "max_abs_difference": 3.241002559661865e-07,
+            "max_symmetric_relative_difference": 5.385288367103966e-05,
+            "fill_or_nonfinite_levels": 0
+          },
+          "QC": {
+            "unit": "kg kg-1",
+            "different_levels": 3,
+            "max_abs_difference": 3.160384949296713e-07,
+            "max_symmetric_relative_difference": 0.001641074776277183,
+            "fill_or_nonfinite_levels": 0
+          },
+          "QI": {
+            "unit": "kg kg-1",
+            "different_levels": 2,
+            "max_abs_difference": 4.263256414560601e-14,
+            "max_symmetric_relative_difference": 2.8971588287656e-06,
+            "fill_or_nonfinite_levels": 0
+          },
+          "QR": {
+            "unit": "kg kg-1",
+            "different_levels": 6,
+            "max_abs_difference": 5.011315806768835e-09,
+            "max_symmetric_relative_difference": 0.0009899335792297203,
+            "fill_or_nonfinite_levels": 0
+          },
+          "QS": {
+            "unit": "kg kg-1",
+            "different_levels": 14,
+            "max_abs_difference": 1.664430991011031e-17,
+            "max_symmetric_relative_difference": 1.0,
+            "fill_or_nonfinite_levels": 0
+          },
+          "QG": {
+            "unit": "kg kg-1",
+            "different_levels": 14,
+            "max_abs_difference": 2.4706569809031948e-20,
+            "max_symmetric_relative_difference": 1.0,
+            "fill_or_nonfinite_levels": 0
+          },
+          "QH": {
+            "unit": "kg kg-1",
+            "different_levels": 14,
+            "max_abs_difference": 2.975601257413423e-22,
+            "max_symmetric_relative_difference": 1.0,
+            "fill_or_nonfinite_levels": 0
+          },
+          "NN": {
+            "unit": "m-3",
+            "different_levels": 19,
+            "max_abs_difference": 3237240.0,
+            "max_symmetric_relative_difference": 0.040347033041583304,
+            "fill_or_nonfinite_levels": 0
+          },
+          "NC": {
+            "unit": "m-3",
+            "different_levels": 3,
+            "max_abs_difference": 3237232.0,
+            "max_symmetric_relative_difference": 0.06804909307170721,
+            "fill_or_nonfinite_levels": 0
+          },
+          "NR": {
+            "unit": "m-3",
+            "different_levels": 7,
+            "max_abs_difference": 6.8828125,
+            "max_symmetric_relative_difference": 7.087661345789575e-05,
+            "fill_or_nonfinite_levels": 0
+          },
+          "RE_CLOUD": {
+            "unit": "m",
+            "different_levels": 3,
+            "max_abs_difference": 2.4532710085622966e-07,
+            "max_symmetric_relative_difference": 0.02268850069670368,
+            "fill_or_nonfinite_levels": 0
+          },
+          "RE_ICE": {
+            "unit": "m",
+            "different_levels": 1,
+            "max_abs_difference": 1.6370904631912708e-11,
+            "max_symmetric_relative_difference": 6.434661375945091e-07,
+            "fill_or_nonfinite_levels": 0
+          }
+        }
+      }
+    },
+    "146,99": {
+      "PRE": {
+        "mpi1_location": {
+          "owner": true,
+          "rank": 0,
+          "global_i_j": [
+            146,
+            99
+          ],
+          "local_1based_i_j": [
+            151,
+            104
+          ],
+          "logical_array_i_k_j_for_target": [
+            146,
+            1,
+            99
+          ],
+          "bounds": {
+            "ids_ide_jds_jde": [
+              1,
+              290,
+              1,
+              190
+            ],
+            "memory_ims_ime_jms_jme": [
+              -4,
+              295,
+              -4,
+              195
+            ],
+            "patch_ips_ipe_jps_jpe": [
+              1,
+              290,
+              1,
+              190
+            ],
+            "tile_its_ite_jts_jte": [
+              2,
+              288,
+              2,
+              188
+            ],
+            "kts_kte": [
+              1,
+              39
+            ]
+          },
+          "pointer_bounds": {
+            "cf": "POINTER_BOUNDS UDM_CLDFRA LBOUND=-4 1 -4  UBOUND=295 40 195",
+            "step": "POINTER_BOUNDS UDM_CF_STEP LBOUND=-4 -4  UBOUND=295 195"
+          },
+          "cf_step": "-1",
+          "shape_mismatch": []
+        },
+        "mpi4_location": {
+          "owner": true,
+          "rank": 3,
+          "global_i_j": [
+            146,
+            99
+          ],
+          "local_1based_i_j": [
+            8,
+            11
+          ],
+          "logical_array_i_k_j_for_target": [
+            146,
+            1,
+            99
+          ],
+          "bounds": {
+            "ids_ide_jds_jde": [
+              1,
+              290,
+              1,
+              190
+            ],
+            "memory_ims_ime_jms_jme": [
+              139,
+              295,
+              89,
+              195
+            ],
+            "patch_ips_ipe_jps_jpe": [
+              146,
+              290,
+              96,
+              190
+            ],
+            "tile_its_ite_jts_jte": [
+              146,
+              288,
+              96,
+              188
+            ],
+            "kts_kte": [
+              1,
+              39
+            ]
+          },
+          "pointer_bounds": {
+            "cf": "POINTER_BOUNDS UDM_CLDFRA LBOUND=139 1 89  UBOUND=295 40 195",
+            "step": "POINTER_BOUNDS UDM_CF_STEP LBOUND=139 89  UBOUND=295 195"
+          },
+          "cf_step": "-1",
+          "shape_mismatch": []
+        },
+        "field_differences": {
+          "TH": {
+            "unit": "K",
+            "different_levels": 3,
+            "max_abs_difference": 3.0517578125e-05,
+            "max_symmetric_relative_difference": 9.915377213174165e-08,
+            "fill_or_nonfinite_levels": 0
+          },
+          "T_K": {
+            "unit": "K",
+            "different_levels": 14,
+            "max_abs_difference": 0.000457763671875,
+            "max_symmetric_relative_difference": 1.5643609376988042e-06,
+            "fill_or_nonfinite_levels": 0
+          },
+          "RHO": {
+            "unit": "kg m-3",
+            "different_levels": 14,
+            "max_abs_difference": 4.172325134277344e-06,
+            "max_symmetric_relative_difference": 3.9956395015314144e-06,
+            "fill_or_nonfinite_levels": 0
+          },
+          "P": {
+            "unit": "Pa",
+            "different_levels": 15,
+            "max_abs_difference": 0.4921875,
+            "max_symmetric_relative_difference": 5.47117831030387e-06,
+            "fill_or_nonfinite_levels": 0
+          },
+          "DELZ": {
+            "unit": "m",
+            "different_levels": 13,
+            "max_abs_difference": 0.0009765625,
+            "max_symmetric_relative_difference": 4.118283979703724e-06,
+            "fill_or_nonfinite_levels": 0
+          },
+          "QV": {
+            "unit": "kg kg-1",
+            "different_levels": 26,
+            "max_abs_difference": 7.450580596923828e-09,
+            "max_symmetric_relative_difference": 1.9017795509867097e-05,
+            "fill_or_nonfinite_levels": 0
+          },
+          "QC": {
+            "unit": "kg kg-1",
+            "different_levels": 20,
+            "max_abs_difference": 1.3387762010097504e-09,
+            "max_symmetric_relative_difference": 0.002109182962980689,
+            "fill_or_nonfinite_levels": 0
+          },
+          "QI": {
+            "unit": "kg kg-1",
+            "different_levels": 20,
+            "max_abs_difference": 1.4210854715202004e-13,
+            "max_symmetric_relative_difference": 0.8,
+            "fill_or_nonfinite_levels": 0
+          },
+          "QR": {
+            "unit": "kg kg-1",
+            "different_levels": 15,
+            "max_abs_difference": 7.263079027097774e-12,
+            "max_symmetric_relative_difference": 0.0033370059782497808,
+            "fill_or_nonfinite_levels": 0
+          },
+          "QS": {
+            "unit": "kg kg-1",
+            "different_levels": 20,
+            "max_abs_difference": 1.235990476633475e-17,
+            "max_symmetric_relative_difference": 0.8234391498444893,
+            "fill_or_nonfinite_levels": 0
+          },
+          "QG": {
+            "unit": "kg kg-1",
+            "different_levels": 19,
+            "max_abs_difference": 8.673617379884035e-19,
+            "max_symmetric_relative_difference": 0.03252047116273181,
+            "fill_or_nonfinite_levels": 0
+          },
+          "QH": {
+            "unit": "kg kg-1",
+            "different_levels": 18,
+            "max_abs_difference": 5.082197683525802e-21,
+            "max_symmetric_relative_difference": 1.2034694383923894,
+            "fill_or_nonfinite_levels": 0
+          },
+          "NN": {
+            "unit": "m-3",
+            "different_levels": 16,
+            "max_abs_difference": 268.0,
+            "max_symmetric_relative_difference": 5.374546532663446e-06,
+            "fill_or_nonfinite_levels": 0
+          },
+          "NC": {
+            "unit": "m-3",
+            "different_levels": 12,
+            "max_abs_difference": 1408.0,
+            "max_symmetric_relative_difference": 1.1147540931421769,
+            "fill_or_nonfinite_levels": 0
+          },
+          "NR": {
+            "unit": "m-3",
+            "different_levels": 15,
+            "max_abs_difference": 0.029296875,
+            "max_symmetric_relative_difference": 0.00022613454559393357,
+            "fill_or_nonfinite_levels": 0
+          }
+        }
+      },
+      "POST": {
+        "mpi1_location": {
+          "owner": true,
+          "rank": 0,
+          "global_i_j": [
+            146,
+            99
+          ],
+          "local_1based_i_j": [
+            151,
+            104
+          ],
+          "logical_array_i_k_j_for_target": [
+            146,
+            1,
+            99
+          ],
+          "bounds": {
+            "ids_ide_jds_jde": [
+              1,
+              290,
+              1,
+              190
+            ],
+            "memory_ims_ime_jms_jme": [
+              -4,
+              295,
+              -4,
+              195
+            ],
+            "patch_ips_ipe_jps_jpe": [
+              1,
+              290,
+              1,
+              190
+            ],
+            "tile_its_ite_jts_jte": [
+              2,
+              288,
+              2,
+              188
+            ],
+            "kts_kte": [
+              1,
+              39
+            ]
+          },
+          "pointer_bounds": {
+            "cf": "POINTER_BOUNDS UDM_CLDFRA LBOUND=-4 1 -4  UBOUND=295 40 195",
+            "step": "POINTER_BOUNDS UDM_CF_STEP LBOUND=-4 -4  UBOUND=295 195"
+          },
+          "cf_step": "721",
+          "shape_mismatch": []
+        },
+        "mpi4_location": {
+          "owner": true,
+          "rank": 3,
+          "global_i_j": [
+            146,
+            99
+          ],
+          "local_1based_i_j": [
+            8,
+            11
+          ],
+          "logical_array_i_k_j_for_target": [
+            146,
+            1,
+            99
+          ],
+          "bounds": {
+            "ids_ide_jds_jde": [
+              1,
+              290,
+              1,
+              190
+            ],
+            "memory_ims_ime_jms_jme": [
+              139,
+              295,
+              89,
+              195
+            ],
+            "patch_ips_ipe_jps_jpe": [
+              146,
+              290,
+              96,
+              190
+            ],
+            "tile_its_ite_jts_jte": [
+              146,
+              288,
+              96,
+              188
+            ],
+            "kts_kte": [
+              1,
+              39
+            ]
+          },
+          "pointer_bounds": {
+            "cf": "POINTER_BOUNDS UDM_CLDFRA LBOUND=139 1 89  UBOUND=295 40 195",
+            "step": "POINTER_BOUNDS UDM_CF_STEP LBOUND=139 89  UBOUND=295 195"
+          },
+          "cf_step": "721",
+          "shape_mismatch": []
+        },
+        "field_differences": {
+          "TH": {
+            "unit": "K",
+            "different_levels": 7,
+            "max_abs_difference": 0.00030517578125,
+            "max_symmetric_relative_difference": 1.011746784871067e-06,
+            "fill_or_nonfinite_levels": 0
+          },
+          "T_K": {
+            "unit": "K",
+            "different_levels": 13,
+            "max_abs_difference": 0.00018310546875,
+            "max_symmetric_relative_difference": 6.256798402514232e-07,
+            "fill_or_nonfinite_levels": 0
+          },
+          "RHO": {
+            "unit": "kg m-3",
+            "different_levels": 14,
+            "max_abs_difference": 4.172325134277344e-06,
+            "max_symmetric_relative_difference": 3.9956395015314144e-06,
+            "fill_or_nonfinite_levels": 0
+          },
+          "P": {
+            "unit": "Pa",
+            "different_levels": 15,
+            "max_abs_difference": 0.4921875,
+            "max_symmetric_relative_difference": 5.47117831030387e-06,
+            "fill_or_nonfinite_levels": 0
+          },
+          "DELZ": {
+            "unit": "m",
+            "different_levels": 13,
+            "max_abs_difference": 0.0009765625,
+            "max_symmetric_relative_difference": 4.118283979703724e-06,
+            "fill_or_nonfinite_levels": 0
+          },
+          "QV": {
+            "unit": "kg kg-1",
+            "different_levels": 26,
+            "max_abs_difference": 1.0617077350616455e-07,
+            "max_symmetric_relative_difference": 1.9017795509867097e-05,
+            "fill_or_nonfinite_levels": 0
+          },
+          "QC": {
+            "unit": "kg kg-1",
+            "different_levels": 4,
+            "max_abs_difference": 1.0099029168486595e-07,
+            "max_symmetric_relative_difference": 0.05555555555555555,
+            "fill_or_nonfinite_levels": 0
+          },
+          "QI": {
+            "unit": "kg kg-1",
+            "different_levels": 2,
+            "max_abs_difference": 3.4283687000424834e-13,
+            "max_symmetric_relative_difference": 2.154125563421028e-05,
+            "fill_or_nonfinite_levels": 0
+          },
+          "QR": {
+            "unit": "kg kg-1",
+            "different_levels": 8,
+            "max_abs_difference": 1.1114025255665183e-09,
+            "max_symmetric_relative_difference": 5.804385884139273e-05,
+            "fill_or_nonfinite_levels": 0
+          },
+          "QS": {
+            "unit": "kg kg-1",
+            "different_levels": 6,
+            "max_abs_difference": 1.5881867761018131e-22,
+            "max_symmetric_relative_difference": 0.002449853481142926,
+            "fill_or_nonfinite_levels": 0
+          },
+          "QG": {
+            "unit": "kg kg-1",
+            "different_levels": 7,
+            "max_abs_difference": 3.236344146613721e-23,
+            "max_symmetric_relative_difference": 0.007864193243217205,
+            "fill_or_nonfinite_levels": 0
+          },
+          "QH": {
+            "unit": "kg kg-1",
+            "different_levels": 6,
+            "max_abs_difference": 3.7804738933087593e-25,
+            "max_symmetric_relative_difference": 1.0,
+            "fill_or_nonfinite_levels": 0
+          },
+          "NN": {
+            "unit": "m-3",
+            "different_levels": 15,
+            "max_abs_difference": 93632.0,
+            "max_symmetric_relative_difference": 0.0013527659753004627,
+            "fill_or_nonfinite_levels": 0
+          },
+          "NC": {
+            "unit": "m-3",
+            "different_levels": 3,
+            "max_abs_difference": 93642.0,
+            "max_symmetric_relative_difference": 0.0034730314703931503,
+            "fill_or_nonfinite_levels": 0
+          },
+          "NR": {
+            "unit": "m-3",
+            "different_levels": 9,
+            "max_abs_difference": 0.169921875,
+            "max_symmetric_relative_difference": 8.941819894685918e-06,
+            "fill_or_nonfinite_levels": 0
+          },
+          "RE_CLOUD": {
+            "unit": "m",
+            "different_levels": 3,
+            "max_abs_difference": 1.2084456102456897e-08,
+            "max_symmetric_relative_difference": 0.00111791020540033,
+            "fill_or_nonfinite_levels": 0
+          },
+          "RE_ICE": {
+            "unit": "m",
+            "different_levels": 2,
+            "max_abs_difference": 4.729372449219227e-10,
+            "max_symmetric_relative_difference": 8.954952250472494e-06,
+            "fill_or_nonfinite_levels": 0
+          },
+          "UDM_CLDFRA": {
+            "unit": "1",
+            "different_levels": 1,
+            "max_abs_difference": 2.980232238769531e-07,
+            "max_symmetric_relative_difference": 4.0912747020938325e-07,
+            "fill_or_nonfinite_levels": 0
+          }
+        }
+      }
+    },
+    "147,99": {
+      "PRE": {
+        "mpi1_location": {
+          "owner": true,
+          "rank": 0,
+          "global_i_j": [
+            147,
+            99
+          ],
+          "local_1based_i_j": [
+            152,
+            104
+          ],
+          "logical_array_i_k_j_for_target": [
+            147,
+            1,
+            99
+          ],
+          "bounds": {
+            "ids_ide_jds_jde": [
+              1,
+              290,
+              1,
+              190
+            ],
+            "memory_ims_ime_jms_jme": [
+              -4,
+              295,
+              -4,
+              195
+            ],
+            "patch_ips_ipe_jps_jpe": [
+              1,
+              290,
+              1,
+              190
+            ],
+            "tile_its_ite_jts_jte": [
+              2,
+              288,
+              2,
+              188
+            ],
+            "kts_kte": [
+              1,
+              39
+            ]
+          },
+          "pointer_bounds": {
+            "cf": "POINTER_BOUNDS UDM_CLDFRA LBOUND=-4 1 -4  UBOUND=295 40 195",
+            "step": "POINTER_BOUNDS UDM_CF_STEP LBOUND=-4 -4  UBOUND=295 195"
+          },
+          "cf_step": "-1",
+          "shape_mismatch": []
+        },
+        "mpi4_location": {
+          "owner": true,
+          "rank": 3,
+          "global_i_j": [
+            147,
+            99
+          ],
+          "local_1based_i_j": [
+            9,
+            11
+          ],
+          "logical_array_i_k_j_for_target": [
+            147,
+            1,
+            99
+          ],
+          "bounds": {
+            "ids_ide_jds_jde": [
+              1,
+              290,
+              1,
+              190
+            ],
+            "memory_ims_ime_jms_jme": [
+              139,
+              295,
+              89,
+              195
+            ],
+            "patch_ips_ipe_jps_jpe": [
+              146,
+              290,
+              96,
+              190
+            ],
+            "tile_its_ite_jts_jte": [
+              146,
+              288,
+              96,
+              188
+            ],
+            "kts_kte": [
+              1,
+              39
+            ]
+          },
+          "pointer_bounds": {
+            "cf": "POINTER_BOUNDS UDM_CLDFRA LBOUND=139 1 89  UBOUND=295 40 195",
+            "step": "POINTER_BOUNDS UDM_CF_STEP LBOUND=139 89  UBOUND=295 195"
+          },
+          "cf_step": "-1",
+          "shape_mismatch": []
+        },
+        "field_differences": {
+          "DELZ": {
+            "unit": "m",
+            "different_levels": 4,
+            "max_abs_difference": 0.0009765625,
+            "max_symmetric_relative_difference": 1.3967465582418872e-06,
+            "fill_or_nonfinite_levels": 0
+          },
+          "QV": {
+            "unit": "kg kg-1",
+            "different_levels": 9,
+            "max_abs_difference": 9.313225746154785e-10,
+            "max_symmetric_relative_difference": 2.939354857673257e-05,
+            "fill_or_nonfinite_levels": 0
+          },
+          "QC": {
+            "unit": "kg kg-1",
+            "different_levels": 13,
+            "max_abs_difference": 2.6193447411060333e-10,
+            "max_symmetric_relative_difference": 6.34378233327557e-05,
+            "fill_or_nonfinite_levels": 0
+          },
+          "QI": {
+            "unit": "kg kg-1",
+            "different_levels": 14,
+            "max_abs_difference": 2.1316282072803006e-14,
+            "max_symmetric_relative_difference": 0.030272021829965037,
+            "fill_or_nonfinite_levels": 0
+          },
+          "QR": {
+            "unit": "kg kg-1",
+            "different_levels": 15,
+            "max_abs_difference": 2.6147972675971687e-12,
+            "max_symmetric_relative_difference": 2.812185129576574e-05,
+            "fill_or_nonfinite_levels": 0
+          },
+          "QS": {
+            "unit": "kg kg-1",
+            "different_levels": 20,
+            "max_abs_difference": 6.606856988583543e-20,
+            "max_symmetric_relative_difference": 1.2162162074521154,
+            "fill_or_nonfinite_levels": 0
+          },
+          "QG": {
+            "unit": "kg kg-1",
+            "different_levels": 18,
+            "max_abs_difference": 1.3552527156068805e-20,
+            "max_symmetric_relative_difference": 0.00013573925189729196,
+            "fill_or_nonfinite_levels": 0
+          },
+          "QH": {
+            "unit": "kg kg-1",
+            "different_levels": 18,
+            "max_abs_difference": 2.117582368135751e-22,
+            "max_symmetric_relative_difference": 0.05785122347257594,
+            "fill_or_nonfinite_levels": 0
+          },
+          "NN": {
+            "unit": "m-3",
+            "different_levels": 2,
+            "max_abs_difference": 36.0,
+            "max_symmetric_relative_difference": 6.952256076619423e-07,
+            "fill_or_nonfinite_levels": 0
+          },
+          "NC": {
+            "unit": "m-3",
+            "different_levels": 10,
+            "max_abs_difference": 256.0,
+            "max_symmetric_relative_difference": 1.7410714934709741,
+            "fill_or_nonfinite_levels": 0
+          },
+          "NR": {
+            "unit": "m-3",
+            "different_levels": 15,
+            "max_abs_difference": 0.005126953125,
+            "max_symmetric_relative_difference": 0.0010767333495395235,
+            "fill_or_nonfinite_levels": 0
+          }
+        }
+      },
+      "POST": {
+        "mpi1_location": {
+          "owner": true,
+          "rank": 0,
+          "global_i_j": [
+            147,
+            99
+          ],
+          "local_1based_i_j": [
+            152,
+            104
+          ],
+          "logical_array_i_k_j_for_target": [
+            147,
+            1,
+            99
+          ],
+          "bounds": {
+            "ids_ide_jds_jde": [
+              1,
+              290,
+              1,
+              190
+            ],
+            "memory_ims_ime_jms_jme": [
+              -4,
+              295,
+              -4,
+              195
+            ],
+            "patch_ips_ipe_jps_jpe": [
+              1,
+              290,
+              1,
+              190
+            ],
+            "tile_its_ite_jts_jte": [
+              2,
+              288,
+              2,
+              188
+            ],
+            "kts_kte": [
+              1,
+              39
+            ]
+          },
+          "pointer_bounds": {
+            "cf": "POINTER_BOUNDS UDM_CLDFRA LBOUND=-4 1 -4  UBOUND=295 40 195",
+            "step": "POINTER_BOUNDS UDM_CF_STEP LBOUND=-4 -4  UBOUND=295 195"
+          },
+          "cf_step": "721",
+          "shape_mismatch": []
+        },
+        "mpi4_location": {
+          "owner": true,
+          "rank": 3,
+          "global_i_j": [
+            147,
+            99
+          ],
+          "local_1based_i_j": [
+            9,
+            11
+          ],
+          "logical_array_i_k_j_for_target": [
+            147,
+            1,
+            99
+          ],
+          "bounds": {
+            "ids_ide_jds_jde": [
+              1,
+              290,
+              1,
+              190
+            ],
+            "memory_ims_ime_jms_jme": [
+              139,
+              295,
+              89,
+              195
+            ],
+            "patch_ips_ipe_jps_jpe": [
+              146,
+              290,
+              96,
+              190
+            ],
+            "tile_its_ite_jts_jte": [
+              146,
+              288,
+              96,
+              188
+            ],
+            "kts_kte": [
+              1,
+              39
+            ]
+          },
+          "pointer_bounds": {
+            "cf": "POINTER_BOUNDS UDM_CLDFRA LBOUND=139 1 89  UBOUND=295 40 195",
+            "step": "POINTER_BOUNDS UDM_CF_STEP LBOUND=139 89  UBOUND=295 195"
+          },
+          "cf_step": "721",
+          "shape_mismatch": []
+        },
+        "field_differences": {
+          "TH": {
+            "unit": "K",
+            "different_levels": 1,
+            "max_abs_difference": 0.0006103515625,
+            "max_symmetric_relative_difference": 2.040323317794231e-06,
+            "fill_or_nonfinite_levels": 0
+          },
+          "T_K": {
+            "unit": "K",
+            "different_levels": 1,
+            "max_abs_difference": 0.0006103515625,
+            "max_symmetric_relative_difference": 2.0758621756218844e-06,
+            "fill_or_nonfinite_levels": 0
+          },
+          "DELZ": {
+            "unit": "m",
+            "different_levels": 4,
+            "max_abs_difference": 0.0009765625,
+            "max_symmetric_relative_difference": 1.3967465582418872e-06,
+            "fill_or_nonfinite_levels": 0
+          },
+          "QV": {
+            "unit": "kg kg-1",
+            "different_levels": 10,
+            "max_abs_difference": 2.514570951461792e-07,
+            "max_symmetric_relative_difference": 2.9393542129116838e-05,
+            "fill_or_nonfinite_levels": 0
+          },
+          "QC": {
+            "unit": "kg kg-1",
+            "different_levels": 2,
+            "max_abs_difference": 2.6193447411060333e-10,
+            "max_symmetric_relative_difference": 9.895768965021316e-07,
+            "fill_or_nonfinite_levels": 0
+          },
+          "QI": {
+            "unit": "kg kg-1",
+            "different_levels": 4,
+            "max_abs_difference": 5.684341886080802e-14,
+            "max_symmetric_relative_difference": 4.5601217856524884e-06,
+            "fill_or_nonfinite_levels": 0
+          },
+          "QR": {
+            "unit": "kg kg-1",
+            "different_levels": 5,
+            "max_abs_difference": 2.21113623410929e-07,
+            "max_symmetric_relative_difference": 0.023095489227719375,
+            "fill_or_nonfinite_levels": 0
+          },
+          "QS": {
+            "unit": "kg kg-1",
+            "different_levels": 5,
+            "max_abs_difference": 4.1359030627651384e-25,
+            "max_symmetric_relative_difference": 1.0,
+            "fill_or_nonfinite_levels": 0
+          },
+          "QG": {
+            "unit": "kg kg-1",
+            "different_levels": 3,
+            "max_abs_difference": 1.9387045606711586e-26,
+            "max_symmetric_relative_difference": 3.317485414252699e-05,
+            "fill_or_nonfinite_levels": 0
+          },
+          "QH": {
+            "unit": "kg kg-1",
+            "different_levels": 4,
+            "max_abs_difference": 1.5146129380243427e-28,
+            "max_symmetric_relative_difference": 0.05785122347257594,
+            "fill_or_nonfinite_levels": 0
+          },
+          "NN": {
+            "unit": "m-3",
+            "different_levels": 3,
+            "max_abs_difference": 8871200.0,
+            "max_symmetric_relative_difference": 0.04703775406495443,
+            "fill_or_nonfinite_levels": 0
+          },
+          "NC": {
+            "unit": "m-3",
+            "different_levels": 3,
+            "max_abs_difference": 256.0,
+            "max_symmetric_relative_difference": 7.421564729310487e-07,
+            "fill_or_nonfinite_levels": 0
+          },
+          "NR": {
+            "unit": "m-3",
+            "different_levels": 5,
+            "max_abs_difference": 149.08203125,
+            "max_symmetric_relative_difference": 0.008704024303799377,
+            "fill_or_nonfinite_levels": 0
+          },
+          "RE_CLOUD": {
+            "unit": "m",
+            "different_levels": 2,
+            "max_abs_difference": 9.094947017729282e-13,
+            "max_symmetric_relative_difference": 9.523099372684875e-08,
+            "fill_or_nonfinite_levels": 0
+          },
+          "RE_ICE": {
+            "unit": "m",
+            "different_levels": 2,
+            "max_abs_difference": 4.3655745685100555e-11,
+            "max_symmetric_relative_difference": 8.222163403301432e-07,
+            "fill_or_nonfinite_levels": 0
+          }
+        }
+      }
+    },
+    "140,137": {
+      "PRE": {
+        "mpi1_location": {
+          "owner": true,
+          "rank": 0,
+          "global_i_j": [
+            140,
+            137
+          ],
+          "local_1based_i_j": [
+            145,
+            142
+          ],
+          "logical_array_i_k_j_for_target": [
+            140,
+            1,
+            137
+          ],
+          "bounds": {
+            "ids_ide_jds_jde": [
+              1,
+              290,
+              1,
+              190
+            ],
+            "memory_ims_ime_jms_jme": [
+              -4,
+              295,
+              -4,
+              195
+            ],
+            "patch_ips_ipe_jps_jpe": [
+              1,
+              290,
+              1,
+              190
+            ],
+            "tile_its_ite_jts_jte": [
+              2,
+              288,
+              2,
+              188
+            ],
+            "kts_kte": [
+              1,
+              39
+            ]
+          },
+          "pointer_bounds": {
+            "cf": "POINTER_BOUNDS UDM_CLDFRA LBOUND=-4 1 -4  UBOUND=295 40 195",
+            "step": "POINTER_BOUNDS UDM_CF_STEP LBOUND=-4 -4  UBOUND=295 195"
+          },
+          "cf_step": "-1",
+          "shape_mismatch": []
+        },
+        "mpi4_location": {
+          "owner": true,
+          "rank": 2,
+          "global_i_j": [
+            140,
+            137
+          ],
+          "local_1based_i_j": [
+            145,
+            49
+          ],
+          "logical_array_i_k_j_for_target": [
+            140,
+            1,
+            137
+          ],
+          "bounds": {
+            "ids_ide_jds_jde": [
+              1,
+              290,
+              1,
+              190
+            ],
+            "memory_ims_ime_jms_jme": [
+              -4,
+              152,
+              89,
+              195
+            ],
+            "patch_ips_ipe_jps_jpe": [
+              1,
+              145,
+              96,
+              190
+            ],
+            "tile_its_ite_jts_jte": [
+              2,
+              145,
+              96,
+              188
+            ],
+            "kts_kte": [
+              1,
+              39
+            ]
+          },
+          "pointer_bounds": {
+            "cf": "POINTER_BOUNDS UDM_CLDFRA LBOUND=-4 1 89  UBOUND=152 40 195",
+            "step": "POINTER_BOUNDS UDM_CF_STEP LBOUND=-4 89  UBOUND=152 195"
+          },
+          "cf_step": "-1",
+          "shape_mismatch": []
+        },
+        "field_differences": {
+          "QV": {
+            "unit": "kg kg-1",
+            "different_levels": 1,
+            "max_abs_difference": 1.1368683772161603e-13,
+            "max_symmetric_relative_difference": 1.1368682508395203e-07,
+            "fill_or_nonfinite_levels": 0
+          },
+          "QC": {
+            "unit": "kg kg-1",
+            "different_levels": 3,
+            "max_abs_difference": 5.551115123125783e-17,
+            "max_symmetric_relative_difference": 1.5709272885308014e-07,
+            "fill_or_nonfinite_levels": 0
+          },
+          "QI": {
+            "unit": "kg kg-1",
+            "different_levels": 8,
+            "max_abs_difference": 4.553649124439119e-18,
+            "max_symmetric_relative_difference": 1.49873687856224,
+            "fill_or_nonfinite_levels": 0
+          },
+          "QR": {
+            "unit": "kg kg-1",
+            "different_levels": 1,
+            "max_abs_difference": 1.3145951341386741e-18,
+            "max_symmetric_relative_difference": 6.451302674304389e-06,
+            "fill_or_nonfinite_levels": 0
+          },
+          "QS": {
+            "unit": "kg kg-1",
+            "different_levels": 5,
+            "max_abs_difference": 5.169878828456423e-26,
+            "max_symmetric_relative_difference": 1.714315347451006e-06,
+            "fill_or_nonfinite_levels": 0
+          },
+          "QG": {
+            "unit": "kg kg-1",
+            "different_levels": 4,
+            "max_abs_difference": 1.6940658945086007e-21,
+            "max_symmetric_relative_difference": 1.2069221628045157e-06,
+            "fill_or_nonfinite_levels": 0
+          },
+          "QH": {
+            "unit": "kg kg-1",
+            "different_levels": 5,
+            "max_abs_difference": 5.428372769879244e-25,
+            "max_symmetric_relative_difference": 1.3996046769936342e-06,
+            "fill_or_nonfinite_levels": 0
+          },
+          "NR": {
+            "unit": "m-3",
+            "different_levels": 2,
+            "max_abs_difference": 2.3283064365386963e-10,
+            "max_symmetric_relative_difference": 3.306831831893897e-07,
+            "fill_or_nonfinite_levels": 0
+          }
+        }
+      },
+      "POST": {
+        "mpi1_location": {
+          "owner": true,
+          "rank": 0,
+          "global_i_j": [
+            140,
+            137
+          ],
+          "local_1based_i_j": [
+            145,
+            142
+          ],
+          "logical_array_i_k_j_for_target": [
+            140,
+            1,
+            137
+          ],
+          "bounds": {
+            "ids_ide_jds_jde": [
+              1,
+              290,
+              1,
+              190
+            ],
+            "memory_ims_ime_jms_jme": [
+              -4,
+              295,
+              -4,
+              195
+            ],
+            "patch_ips_ipe_jps_jpe": [
+              1,
+              290,
+              1,
+              190
+            ],
+            "tile_its_ite_jts_jte": [
+              2,
+              288,
+              2,
+              188
+            ],
+            "kts_kte": [
+              1,
+              39
+            ]
+          },
+          "pointer_bounds": {
+            "cf": "POINTER_BOUNDS UDM_CLDFRA LBOUND=-4 1 -4  UBOUND=295 40 195",
+            "step": "POINTER_BOUNDS UDM_CF_STEP LBOUND=-4 -4  UBOUND=295 195"
+          },
+          "cf_step": "721",
+          "shape_mismatch": []
+        },
+        "mpi4_location": {
+          "owner": true,
+          "rank": 2,
+          "global_i_j": [
+            140,
+            137
+          ],
+          "local_1based_i_j": [
+            145,
+            49
+          ],
+          "logical_array_i_k_j_for_target": [
+            140,
+            1,
+            137
+          ],
+          "bounds": {
+            "ids_ide_jds_jde": [
+              1,
+              290,
+              1,
+              190
+            ],
+            "memory_ims_ime_jms_jme": [
+              -4,
+              152,
+              89,
+              195
+            ],
+            "patch_ips_ipe_jps_jpe": [
+              1,
+              145,
+              96,
+              190
+            ],
+            "tile_its_ite_jts_jte": [
+              2,
+              145,
+              96,
+              188
+            ],
+            "kts_kte": [
+              1,
+              39
+            ]
+          },
+          "pointer_bounds": {
+            "cf": "POINTER_BOUNDS UDM_CLDFRA LBOUND=-4 1 89  UBOUND=152 40 195",
+            "step": "POINTER_BOUNDS UDM_CF_STEP LBOUND=-4 89  UBOUND=152 195"
+          },
+          "cf_step": "721",
+          "shape_mismatch": []
+        },
+        "field_differences": {
+          "QV": {
+            "unit": "kg kg-1",
+            "different_levels": 1,
+            "max_abs_difference": 1.1368683772161603e-13,
+            "max_symmetric_relative_difference": 1.1368682508395203e-07,
+            "fill_or_nonfinite_levels": 0
+          },
+          "QS": {
+            "unit": "kg kg-1",
+            "different_levels": 3,
+            "max_abs_difference": 7.754818242684634e-26,
+            "max_symmetric_relative_difference": 1.5690332641512726e-06,
+            "fill_or_nonfinite_levels": 0
+          },
+          "QG": {
+            "unit": "kg kg-1",
+            "different_levels": 1,
+            "max_abs_difference": 5.169878828456423e-26,
+            "max_symmetric_relative_difference": 9.120945192605175e-08,
+            "fill_or_nonfinite_levels": 0
+          },
+          "QH": {
+            "unit": "kg kg-1",
+            "different_levels": 2,
+            "max_abs_difference": 1.6155871338926322e-27,
+            "max_symmetric_relative_difference": 2.181258510543622e-07,
+            "fill_or_nonfinite_levels": 0
+          },
+          "NN": {
+            "unit": "m-3",
+            "different_levels": 1,
+            "max_abs_difference": 1000.0,
+            "max_symmetric_relative_difference": 8.984266178075917e-06,
+            "fill_or_nonfinite_levels": 0
+          }
+        }
+      }
+    },
+    "151,108": {
+      "PRE": {
+        "mpi1_location": {
+          "owner": true,
+          "rank": 0,
+          "global_i_j": [
+            151,
+            108
+          ],
+          "local_1based_i_j": [
+            156,
+            113
+          ],
+          "logical_array_i_k_j_for_target": [
+            151,
+            1,
+            108
+          ],
+          "bounds": {
+            "ids_ide_jds_jde": [
+              1,
+              290,
+              1,
+              190
+            ],
+            "memory_ims_ime_jms_jme": [
+              -4,
+              295,
+              -4,
+              195
+            ],
+            "patch_ips_ipe_jps_jpe": [
+              1,
+              290,
+              1,
+              190
+            ],
+            "tile_its_ite_jts_jte": [
+              2,
+              288,
+              2,
+              188
+            ],
+            "kts_kte": [
+              1,
+              39
+            ]
+          },
+          "pointer_bounds": {
+            "cf": "POINTER_BOUNDS UDM_CLDFRA LBOUND=-4 1 -4  UBOUND=295 40 195",
+            "step": "POINTER_BOUNDS UDM_CF_STEP LBOUND=-4 -4  UBOUND=295 195"
+          },
+          "cf_step": "-1",
+          "shape_mismatch": []
+        },
+        "mpi4_location": {
+          "owner": true,
+          "rank": 3,
+          "global_i_j": [
+            151,
+            108
+          ],
+          "local_1based_i_j": [
+            13,
+            20
+          ],
+          "logical_array_i_k_j_for_target": [
+            151,
+            1,
+            108
+          ],
+          "bounds": {
+            "ids_ide_jds_jde": [
+              1,
+              290,
+              1,
+              190
+            ],
+            "memory_ims_ime_jms_jme": [
+              139,
+              295,
+              89,
+              195
+            ],
+            "patch_ips_ipe_jps_jpe": [
+              146,
+              290,
+              96,
+              190
+            ],
+            "tile_its_ite_jts_jte": [
+              146,
+              288,
+              96,
+              188
+            ],
+            "kts_kte": [
+              1,
+              39
+            ]
+          },
+          "pointer_bounds": {
+            "cf": "POINTER_BOUNDS UDM_CLDFRA LBOUND=139 1 89  UBOUND=295 40 195",
+            "step": "POINTER_BOUNDS UDM_CF_STEP LBOUND=139 89  UBOUND=295 195"
+          },
+          "cf_step": "-1",
+          "shape_mismatch": []
+        },
+        "field_differences": {
+          "QC": {
+            "unit": "kg kg-1",
+            "different_levels": 1,
+            "max_abs_difference": 3.76158192263132e-37,
+            "max_symmetric_relative_difference": 2.2925363498832296e-07,
+            "fill_or_nonfinite_levels": 0
+          },
+          "NC": {
+            "unit": "m-3",
+            "different_levels": 1,
+            "max_abs_difference": 1.9073486328125e-06,
+            "max_symmetric_relative_difference": 6.941753550811067e-08,
+            "fill_or_nonfinite_levels": 0
+          }
+        }
+      },
+      "POST": {
+        "mpi1_location": {
+          "owner": true,
+          "rank": 0,
+          "global_i_j": [
+            151,
+            108
+          ],
+          "local_1based_i_j": [
+            156,
+            113
+          ],
+          "logical_array_i_k_j_for_target": [
+            151,
+            1,
+            108
+          ],
+          "bounds": {
+            "ids_ide_jds_jde": [
+              1,
+              290,
+              1,
+              190
+            ],
+            "memory_ims_ime_jms_jme": [
+              -4,
+              295,
+              -4,
+              195
+            ],
+            "patch_ips_ipe_jps_jpe": [
+              1,
+              290,
+              1,
+              190
+            ],
+            "tile_its_ite_jts_jte": [
+              2,
+              288,
+              2,
+              188
+            ],
+            "kts_kte": [
+              1,
+              39
+            ]
+          },
+          "pointer_bounds": {
+            "cf": "POINTER_BOUNDS UDM_CLDFRA LBOUND=-4 1 -4  UBOUND=295 40 195",
+            "step": "POINTER_BOUNDS UDM_CF_STEP LBOUND=-4 -4  UBOUND=295 195"
+          },
+          "cf_step": "721",
+          "shape_mismatch": []
+        },
+        "mpi4_location": {
+          "owner": true,
+          "rank": 3,
+          "global_i_j": [
+            151,
+            108
+          ],
+          "local_1based_i_j": [
+            13,
+            20
+          ],
+          "logical_array_i_k_j_for_target": [
+            151,
+            1,
+            108
+          ],
+          "bounds": {
+            "ids_ide_jds_jde": [
+              1,
+              290,
+              1,
+              190
+            ],
+            "memory_ims_ime_jms_jme": [
+              139,
+              295,
+              89,
+              195
+            ],
+            "patch_ips_ipe_jps_jpe": [
+              146,
+              290,
+              96,
+              190
+            ],
+            "tile_its_ite_jts_jte": [
+              146,
+              288,
+              96,
+              188
+            ],
+            "kts_kte": [
+              1,
+              39
+            ]
+          },
+          "pointer_bounds": {
+            "cf": "POINTER_BOUNDS UDM_CLDFRA LBOUND=139 1 89  UBOUND=295 40 195",
+            "step": "POINTER_BOUNDS UDM_CF_STEP LBOUND=139 89  UBOUND=295 195"
+          },
+          "cf_step": "721",
+          "shape_mismatch": []
+        },
+        "field_differences": {}
+      }
+    },
+    "142,167": {
+      "PRE": {
+        "mpi1_location": {
+          "owner": true,
+          "rank": 0,
+          "global_i_j": [
+            142,
+            167
+          ],
+          "local_1based_i_j": [
+            147,
+            172
+          ],
+          "logical_array_i_k_j_for_target": [
+            142,
+            1,
+            167
+          ],
+          "bounds": {
+            "ids_ide_jds_jde": [
+              1,
+              290,
+              1,
+              190
+            ],
+            "memory_ims_ime_jms_jme": [
+              -4,
+              295,
+              -4,
+              195
+            ],
+            "patch_ips_ipe_jps_jpe": [
+              1,
+              290,
+              1,
+              190
+            ],
+            "tile_its_ite_jts_jte": [
+              2,
+              288,
+              2,
+              188
+            ],
+            "kts_kte": [
+              1,
+              39
+            ]
+          },
+          "pointer_bounds": {
+            "cf": "POINTER_BOUNDS UDM_CLDFRA LBOUND=-4 1 -4  UBOUND=295 40 195",
+            "step": "POINTER_BOUNDS UDM_CF_STEP LBOUND=-4 -4  UBOUND=295 195"
+          },
+          "cf_step": "-1",
+          "shape_mismatch": []
+        },
+        "mpi4_location": {
+          "owner": true,
+          "rank": 2,
+          "global_i_j": [
+            142,
+            167
+          ],
+          "local_1based_i_j": [
+            147,
+            79
+          ],
+          "logical_array_i_k_j_for_target": [
+            142,
+            1,
+            167
+          ],
+          "bounds": {
+            "ids_ide_jds_jde": [
+              1,
+              290,
+              1,
+              190
+            ],
+            "memory_ims_ime_jms_jme": [
+              -4,
+              152,
+              89,
+              195
+            ],
+            "patch_ips_ipe_jps_jpe": [
+              1,
+              145,
+              96,
+              190
+            ],
+            "tile_its_ite_jts_jte": [
+              2,
+              145,
+              96,
+              188
+            ],
+            "kts_kte": [
+              1,
+              39
+            ]
+          },
+          "pointer_bounds": {
+            "cf": "POINTER_BOUNDS UDM_CLDFRA LBOUND=-4 1 89  UBOUND=152 40 195",
+            "step": "POINTER_BOUNDS UDM_CF_STEP LBOUND=-4 89  UBOUND=152 195"
+          },
+          "cf_step": "-1",
+          "shape_mismatch": []
+        },
+        "field_differences": {
+          "T_K": {
+            "unit": "K",
+            "different_levels": 15,
+            "max_abs_difference": 0.00042724609375,
+            "max_symmetric_relative_difference": 1.526427086666714e-06,
+            "fill_or_nonfinite_levels": 0
+          },
+          "RHO": {
+            "unit": "kg m-3",
+            "different_levels": 16,
+            "max_abs_difference": 4.172325134277344e-06,
+            "max_symmetric_relative_difference": 3.826256471566214e-06,
+            "fill_or_nonfinite_levels": 0
+          },
+          "P": {
+            "unit": "Pa",
+            "different_levels": 19,
+            "max_abs_difference": 0.4765625,
+            "max_symmetric_relative_difference": 5.387079311054375e-06,
+            "fill_or_nonfinite_levels": 0
+          },
+          "DELZ": {
+            "unit": "m",
+            "different_levels": 6,
+            "max_abs_difference": 0.0009765625,
+            "max_symmetric_relative_difference": 1.4068803483435742e-06,
+            "fill_or_nonfinite_levels": 0
+          },
+          "QV": {
+            "unit": "kg kg-1",
+            "different_levels": 8,
+            "max_abs_difference": 4.656612873077393e-10,
+            "max_symmetric_relative_difference": 1.932296952303955e-07,
+            "fill_or_nonfinite_levels": 0
+          },
+          "QC": {
+            "unit": "kg kg-1",
+            "different_levels": 9,
+            "max_abs_difference": 1.8189894035458565e-12,
+            "max_symmetric_relative_difference": 7.571330159812126e-05,
+            "fill_or_nonfinite_levels": 0
+          },
+          "QI": {
+            "unit": "kg kg-1",
+            "different_levels": 16,
+            "max_abs_difference": 2.2737367544323206e-13,
+            "max_symmetric_relative_difference": 1.0,
+            "fill_or_nonfinite_levels": 0
+          },
+          "QR": {
+            "unit": "kg kg-1",
+            "different_levels": 1,
+            "max_abs_difference": 4.8213115357714775e-18,
+            "max_symmetric_relative_difference": 0.00013588775575880467,
+            "fill_or_nonfinite_levels": 0
+          },
+          "QS": {
+            "unit": "kg kg-1",
+            "different_levels": 21,
+            "max_abs_difference": 1.3877787807814457e-16,
+            "max_symmetric_relative_difference": 0.08000002935994308,
+            "fill_or_nonfinite_levels": 0
+          },
+          "QG": {
+            "unit": "kg kg-1",
+            "different_levels": 18,
+            "max_abs_difference": 1.1102230246251565e-16,
+            "max_symmetric_relative_difference": 0.000142417741720848,
+            "fill_or_nonfinite_levels": 0
+          },
+          "QH": {
+            "unit": "kg kg-1",
+            "different_levels": 16,
+            "max_abs_difference": 1.734723475976807e-18,
+            "max_symmetric_relative_difference": 8.263812004657615e-05,
+            "fill_or_nonfinite_levels": 0
+          },
+          "NN": {
+            "unit": "m-3",
+            "different_levels": 3,
+            "max_abs_difference": 16.0,
+            "max_symmetric_relative_difference": 1.6413749929626046e-07,
+            "fill_or_nonfinite_levels": 0
+          },
+          "NC": {
+            "unit": "m-3",
+            "different_levels": 3,
+            "max_abs_difference": 4.0,
+            "max_symmetric_relative_difference": 1.0,
+            "fill_or_nonfinite_levels": 0
+          },
+          "NR": {
+            "unit": "m-3",
+            "different_levels": 2,
+            "max_abs_difference": 7.223570719361305e-08,
+            "max_symmetric_relative_difference": 0.00013437782040474685,
+            "fill_or_nonfinite_levels": 0
+          }
+        }
+      },
+      "POST": {
+        "mpi1_location": {
+          "owner": true,
+          "rank": 0,
+          "global_i_j": [
+            142,
+            167
+          ],
+          "local_1based_i_j": [
+            147,
+            172
+          ],
+          "logical_array_i_k_j_for_target": [
+            142,
+            1,
+            167
+          ],
+          "bounds": {
+            "ids_ide_jds_jde": [
+              1,
+              290,
+              1,
+              190
+            ],
+            "memory_ims_ime_jms_jme": [
+              -4,
+              295,
+              -4,
+              195
+            ],
+            "patch_ips_ipe_jps_jpe": [
+              1,
+              290,
+              1,
+              190
+            ],
+            "tile_its_ite_jts_jte": [
+              2,
+              288,
+              2,
+              188
+            ],
+            "kts_kte": [
+              1,
+              39
+            ]
+          },
+          "pointer_bounds": {
+            "cf": "POINTER_BOUNDS UDM_CLDFRA LBOUND=-4 1 -4  UBOUND=295 40 195",
+            "step": "POINTER_BOUNDS UDM_CF_STEP LBOUND=-4 -4  UBOUND=295 195"
+          },
+          "cf_step": "721",
+          "shape_mismatch": []
+        },
+        "mpi4_location": {
+          "owner": true,
+          "rank": 2,
+          "global_i_j": [
+            142,
+            167
+          ],
+          "local_1based_i_j": [
+            147,
+            79
+          ],
+          "logical_array_i_k_j_for_target": [
+            142,
+            1,
+            167
+          ],
+          "bounds": {
+            "ids_ide_jds_jde": [
+              1,
+              290,
+              1,
+              190
+            ],
+            "memory_ims_ime_jms_jme": [
+              -4,
+              152,
+              89,
+              195
+            ],
+            "patch_ips_ipe_jps_jpe": [
+              1,
+              145,
+              96,
+              190
+            ],
+            "tile_its_ite_jts_jte": [
+              2,
+              145,
+              96,
+              188
+            ],
+            "kts_kte": [
+              1,
+              39
+            ]
+          },
+          "pointer_bounds": {
+            "cf": "POINTER_BOUNDS UDM_CLDFRA LBOUND=-4 1 89  UBOUND=152 40 195",
+            "step": "POINTER_BOUNDS UDM_CF_STEP LBOUND=-4 89  UBOUND=152 195"
+          },
+          "cf_step": "721",
+          "shape_mismatch": []
+        },
+        "field_differences": {
+          "TH": {
+            "unit": "K",
+            "different_levels": 5,
+            "max_abs_difference": 3.0517578125e-05,
+            "max_symmetric_relative_difference": 1.0795084997800501e-07,
+            "fill_or_nonfinite_levels": 0
+          },
+          "T_K": {
+            "unit": "K",
+            "different_levels": 16,
+            "max_abs_difference": 0.00042724609375,
+            "max_symmetric_relative_difference": 1.526427086666714e-06,
+            "fill_or_nonfinite_levels": 0
+          },
+          "RHO": {
+            "unit": "kg m-3",
+            "different_levels": 16,
+            "max_abs_difference": 4.172325134277344e-06,
+            "max_symmetric_relative_difference": 3.826256471566214e-06,
+            "fill_or_nonfinite_levels": 0
+          },
+          "P": {
+            "unit": "Pa",
+            "different_levels": 19,
+            "max_abs_difference": 0.4765625,
+            "max_symmetric_relative_difference": 5.387079311054375e-06,
+            "fill_or_nonfinite_levels": 0
+          },
+          "DELZ": {
+            "unit": "m",
+            "different_levels": 6,
+            "max_abs_difference": 0.0009765625,
+            "max_symmetric_relative_difference": 1.4068803483435742e-06,
+            "fill_or_nonfinite_levels": 0
+          },
+          "QV": {
+            "unit": "kg kg-1",
+            "different_levels": 11,
+            "max_abs_difference": 1.0244548320770264e-08,
+            "max_symmetric_relative_difference": 1.5085458091534583e-06,
+            "fill_or_nonfinite_levels": 0
+          },
+          "QC": {
+            "unit": "kg kg-1",
+            "different_levels": 3,
+            "max_abs_difference": 3.064997144974768e-09,
+            "max_symmetric_relative_difference": 0.00015239964777140162,
+            "fill_or_nonfinite_levels": 0
+          },
+          "QI": {
+            "unit": "kg kg-1",
+            "different_levels": 5,
+            "max_abs_difference": 1.5575096767861396e-11,
+            "max_symmetric_relative_difference": 1.6658610951516756e-05,
+            "fill_or_nonfinite_levels": 0
+          },
+          "QR": {
+            "unit": "kg kg-1",
+            "different_levels": 4,
+            "max_abs_difference": 7.918060873635113e-09,
+            "max_symmetric_relative_difference": 0.0005778553945084356,
+            "fill_or_nonfinite_levels": 0
+          },
+          "QS": {
+            "unit": "kg kg-1",
+            "different_levels": 15,
+            "max_abs_difference": 2.824407374646398e-13,
+            "max_symmetric_relative_difference": 1.0,
+            "fill_or_nonfinite_levels": 0
+          },
+          "QG": {
+            "unit": "kg kg-1",
+            "different_levels": 15,
+            "max_abs_difference": 9.769962616701378e-14,
+            "max_symmetric_relative_difference": 1.0,
+            "fill_or_nonfinite_levels": 0
+          },
+          "QH": {
+            "unit": "kg kg-1",
+            "different_levels": 14,
+            "max_abs_difference": 1.0954778750793537e-15,
+            "max_symmetric_relative_difference": 1.0,
+            "fill_or_nonfinite_levels": 0
+          },
+          "NN": {
+            "unit": "m-3",
+            "different_levels": 3,
+            "max_abs_difference": 557824.0,
+            "max_symmetric_relative_difference": 0.004516671517277882,
+            "fill_or_nonfinite_levels": 0
+          },
+          "NC": {
+            "unit": "m-3",
+            "different_levels": 1,
+            "max_abs_difference": 4.0,
+            "max_symmetric_relative_difference": 8.436785193374491e-08,
+            "fill_or_nonfinite_levels": 0
+          },
+          "NR": {
+            "unit": "m-3",
+            "different_levels": 4,
+            "max_abs_difference": 766.4765625,
+            "max_symmetric_relative_difference": 0.008048938966581508,
+            "fill_or_nonfinite_levels": 0
+          },
+          "RE_CLOUD": {
+            "unit": "m",
+            "different_levels": 3,
+            "max_abs_difference": 2.5056579033844173e-10,
+            "max_symmetric_relative_difference": 5.065702436409805e-05,
+            "fill_or_nonfinite_levels": 0
+          },
+          "RE_ICE": {
+            "unit": "m",
+            "different_levels": 3,
+            "max_abs_difference": 2.3646862246096134e-10,
+            "max_symmetric_relative_difference": 5.314850083614857e-06,
+            "fill_or_nonfinite_levels": 0
+          }
+        }
+      }
+    }
+  },
+  "interpretation": "Before UDM executes, selected owner cells already have decomposition-dependent differences in physical inputs. PRE differences are reported fieldwise with units and symmetric relative/absolute maxima. Some POST differences remain. This narrows origin to prior model evolution/state, but does not rule out later UDM amplification. Halo/stale copies are separate in capture-on-v2/halo-target-only-summary-v2.json and are not included in this owner comparison.",
+  "invalid_v1_artifacts": "capture-on/invalid-offset-attempt/ records v1; CF/CF_STEP invalid due lower-bound bug. v1 physical fields can be inspected, but v3 is the numerical source of truth. The v1 binary bytes were not retained; hash and logs/captures retained.",
+  "amplification_hypothesis_unverified": {
+    "purpose": "possible sensitivity of existing UDM microphysics to decomposition-dependent pre-call state; this is a hypothesis only, not a root cause",
+    "source": {
+      "file": "WRF/phys/module_mp_udm.F",
+      "ncmin_line": 74,
+      "cloud_adjust_call_line": 1036,
+      "procedure_lines": "3559-3593",
+      "details": "adjust_number_concent branches when nn<=nnmin=1.e-3 m-3. For qq>qqmin it sets lamdar=drconst/di0 and recomputes nn; otherwise it computes lamdar from supplied nn, clips diameter against [dimin,dimax], recomputes nn, and applies nnmax. If qq<=qqmin, both qq and nn become zero."
+    },
+    "capture": "Exact final v3 owner records at step 721, PRE UDM, target global i=147,j=99,k=2; PRE UDM_CF_STEP=-1 in both. Fields are physical UDM inputs, pointer diagnostics separately use logged valid bounds.",
+    "mpi1": {
+      "header": "UDM_BOUNDARY_CAPTURE_V1 phase=PRE step=721 rank=0 target_i=147 target_j=99 target_owned=T",
+      "bounds": "BOUNDS ids ide jds jde=1 290 1 190  memory=-4 295 -4 195  patch=1 290 1 190  tile=2 288 2 188  levels=1 39",
+      "pointer_bounds": {
+        "udm_cldfra": "POINTER_BOUNDS UDM_CLDFRA LBOUND=-4 1 -4  UBOUND=295 40 195",
+        "udm_cf_step": "POINTER_BOUNDS UDM_CF_STEP LBOUND=-4 -4  UBOUND=295 195"
+      },
+      "cell_cf_step": "UDM_CF_STEP -1",
+      "level": 2,
+      "values": {
+        "TH": 299.1815185546875,
+        "T_K": 294.05950927734375,
+        "RHO": 1.0864946842193604,
+        "P": 94135.109375,
+        "DELZ": 83.9730224609375,
+        "QV": 0.016546929255127907,
+        "QC": 1.453394907002803e-05,
+        "QI": 0.0,
+        "QR": 1.0269699487253092e-05,
+        "QS": 0.0,
+        "QG": 0.0,
+        "QH": 0.0,
+        "NN": 179696528.0,
+        "NC": -0.013483073562383652,
+        "NR": 17340.15625,
+        "RE_CLOUD": 2.5100000584643567e-06,
+        "RE_ICE": 5.01000022268272e-06,
+        "RE_SNOW": 2.499999936844688e-05,
+        "UDM_CLDFRA": -1.0
+      }
+    },
+    "mpi4": {
+      "header": "UDM_BOUNDARY_CAPTURE_V1 phase=PRE step=721 rank=3 target_i=147 target_j=99 target_owned=T",
+      "bounds": "BOUNDS ids ide jds jde=1 290 1 190  memory=139 295 89 195  patch=146 290 96 190  tile=146 288 96 188  levels=1 39",
+      "pointer_bounds": {
+        "udm_cldfra": "POINTER_BOUNDS UDM_CLDFRA LBOUND=139 1 89  UBOUND=295 40 195",
+        "udm_cf_step": "POINTER_BOUNDS UDM_CF_STEP LBOUND=139 89  UBOUND=295 195"
+      },
+      "cell_cf_step": "UDM_CF_STEP -1",
+      "level": 2,
+      "values": {
+        "TH": 299.1815185546875,
+        "T_K": 294.05950927734375,
+        "RHO": 1.0864946842193604,
+        "P": 94135.109375,
+        "DELZ": 83.9730224609375,
+        "QV": 0.016546929255127907,
+        "QC": 1.4533951798512135e-05,
+        "QI": 0.0,
+        "QR": 1.0269699487253092e-05,
+        "QS": 0.0,
+        "QG": 0.0,
+        "QH": 0.0,
+        "NN": 179696528.0,
+        "NC": 0.01819402538239956,
+        "NR": 17340.15625,
+        "RE_CLOUD": 2.5100000584643567e-06,
+        "RE_ICE": 5.01000022268272e-06,
+        "RE_SNOW": 2.499999936844688e-05,
+        "UDM_CLDFRA": -1.0
+      }
+    },
+    "units": {
+      "QC": "kg kg-1",
+      "NC": "m-3",
+      "T_K": "K"
+    },
+    "interpretation": "Correct final v3 owner records show NC=-1.3483e-2 vs 1.8194e-2 m-3, which cross the 1e-3 m-3 threshold. QC is 1.4534e-5 vs 3.6720e-6 kg kg-1, also materially different. This is a possible branch-sensitive amplification of prior state differences, not an isolated cause."
+  }
+}

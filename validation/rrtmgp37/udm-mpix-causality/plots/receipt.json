@@ -1,0 +1,165 @@
+{
+  "color_scales": {
+    "3d_magnitude_panels": "PowerNorm gamma=0.18, full-grid max, zero-valued pixels retained",
+    "SWDOWN": "symmetric SymLogNorm, linthresh=1e-4 of full-grid maxabs, limit=full-grid maxabs"
+  },
+  "difference_convention": "MPI4 minus MPI1",
+  "domain": {
+    "dx_m": 20000.0,
+    "dy_m": 20000.0,
+    "grid_geometry_identical": true,
+    "map_projection_latlon_coordinates_identical": true,
+    "shape_j_i": [
+      189,
+      289
+    ]
+  },
+  "fields": {
+    "QNCCN": {
+      "dtype": "float64",
+      "field": "max_k_abs_delta_QNCCN_stored",
+      "full_grid_included": true,
+      "max": 8871200.0,
+      "max_abs": 8871200.0,
+      "max_abs_at_ij_1based": [
+        147,
+        99
+      ],
+      "mean": 705.5329635122023,
+      "min": 0.0,
+      "nonzero_cells": 2121,
+      "plot": "max absolute stored-field difference over 39 native mass levels; no density conversion",
+      "rms": 56679.24979313258,
+      "shape": [
+        189,
+        289
+      ],
+      "source_units": "  kg(-1)",
+      "unit_caveat": "Registry declares # kg(-1); UDM input/output number-concentration convention has not been independently resolved, so these are stored-field differences only",
+      "x_seam_145_146_max_abs": 3237240.0,
+      "y_seam_95_96_max_abs": 1000.0
+    },
+    "QNCLOUD": {
+      "dtype": "float64",
+      "field": "max_k_abs_delta_QNCLOUD_stored",
+      "full_grid_included": true,
+      "max": 3237232.0,
+      "max_abs": 3237232.0,
+      "max_abs_at_ij_1based": [
+        146,
+        171
+      ],
+      "mean": 560.5761018252304,
+      "min": 0.0,
+      "nonzero_cells": 551,
+      "plot": "max absolute stored-field difference over 39 native mass levels; no density conversion",
+      "rms": 29001.342246931425,
+      "shape": [
+        189,
+        289
+      ],
+      "source_units": "  kg(-1)",
+      "unit_caveat": "Registry declares # kg(-1); UDM input/output number-concentration convention has not been independently resolved, so these are stored-field differences only",
+      "x_seam_145_146_max_abs": 3237232.0,
+      "y_seam_95_96_max_abs": 1000.0
+    },
+    "SWDOWN": {
+      "dtype": "float64",
+      "field": "SWDOWN",
+      "full_grid_included": true,
+      "max": 0.0012054443359375,
+      "max_abs": 0.00531768798828125,
+      "max_abs_at_ij_1based": [
+        145,
+        96
+      ],
+      "mean": -2.9227784289267177e-08,
+      "min": -0.00531768798828125,
+      "nonzero_cells": 119,
+      "plot": "signed 2-D surface difference",
+      "rms": 2.3674469054656522e-05,
+      "shape": [
+        189,
+        289
+      ],
+      "source_units": "W m-2",
+      "x_seam_145_146_max_abs": 0.00531768798828125,
+      "y_seam_95_96_max_abs": 0.00531768798828125
+    },
+    "T": {
+      "dtype": "float64",
+      "field": "max_k_abs_delta_T",
+      "full_grid_included": true,
+      "max": 0.00115966796875,
+      "max_abs": 0.00115966796875,
+      "max_abs_at_ij_1based": [
+        145,
+        131
+      ],
+      "mean": 1.847670874926768e-06,
+      "min": 0.0,
+      "nonzero_cells": 1462,
+      "plot": "max absolute MPI4-MPI1 perturbation over 39 native mass levels",
+      "rms": 1.7931083878407006e-05,
+      "shape": [
+        189,
+        289
+      ],
+      "source_units": "K",
+      "x_seam_145_146_max_abs": 0.00115966796875,
+      "y_seam_95_96_max_abs": 0.0001220703125
+    }
+  },
+  "inputs": {
+    "matrix_run_receipt": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-lw-trace-gases-parallel/matrix-run-receipt.json",
+    "matrix_run_receipt_sha256": "051326e3734bf4e61804c9ea28d1563d94a16afba27cb406d385036bb89c2d7c",
+    "mpi1_history": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-lw-trace-gases-parallel/mpi1-omp1-v2/wrfout_d01_2010-06-11_12:01:00",
+    "mpi1_history_sha256": "b2fc7b10bb5eeb5d033a59b12dd673babe5e71f787fdf8bfa0ca4d94a2830d77",
+    "mpi1_namelist": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-lw-trace-gases-parallel/mpi1-omp1-v2/namelist.input",
+    "mpi1_namelist_sha256": "3d5162c4da198ebbd4ade053a81294497b779db0afa8f896a0497e3f0db56475",
+    "mpi4_history": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-lw-trace-gases-parallel/mpi4-omp1-v2/wrfout_d01_2010-06-11_12:01:00",
+    "mpi4_history_sha256": "2130ddf52baf58a5ad4a0d77c2d586c11996fcce42a9e92621d530ecfaaab308",
+    "mpi4_namelist": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-lw-trace-gases-parallel/mpi4-omp1-v2/namelist.input",
+    "mpi4_namelist_sha256": "3d5162c4da198ebbd4ade053a81294497b779db0afa8f896a0497e3f0db56475"
+  },
+  "interpretation": "Diagnostic spatial association only; not a bias estimate or established source attribution. QNCLOUD/QNCCN are stored-field differences in declared Registry units, with UDM concentration convention unresolved; no density conversion is applied.",
+  "plot_files": {
+    "pdf": "mpi4-minus-mpi1-first-step.pdf",
+    "pdf_sha256": "0865cdd5a626e5c4a7a968535c16fa28533e1be608ddb29813b243aa57036759",
+    "png": "mpi4-minus-mpi1-first-step.png",
+    "png_sha256": "241960ebac941917b328a6a5ff1ba2ddc372c20aefc06f4b9ad00c1f1a2d8c3f"
+  },
+  "schema": "UDM_MPI_DECOMPOSITION_PLOT_V1",
+  "script_sha256": "2c7c517766531f5dece9850880b1b709cd274b4ec1da456f03e41512da78e539",
+  "seams": {
+    "plotted_without_boundary_mask": true,
+    "x_between_1based_columns": [
+      145,
+      146
+    ],
+    "y_between_1based_rows": [
+      95,
+      96
+    ]
+  },
+  "source_attributes": {
+    "mpi1": {
+      "DX": 20000.0,
+      "DY": 20000.0,
+      "GRID_ID": 1,
+      "NTASKS_TOTAL": 1,
+      "NTASKS_X": 1,
+      "NTASKS_Y": 1
+    },
+    "mpi4": {
+      "DX": 20000.0,
+      "DY": 20000.0,
+      "GRID_ID": 1,
+      "NTASKS_TOTAL": 4,
+      "NTASKS_X": 2,
+      "NTASKS_Y": 2
+    }
+  },
+  "status": "PLOT_GENERATED",
+  "time": "2010-06-11_12:01:00"
+}
