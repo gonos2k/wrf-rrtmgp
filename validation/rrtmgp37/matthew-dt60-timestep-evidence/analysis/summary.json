@@ -1,0 +1,499 @@
+{
+  "build_scope": {
+    "executable_build": "PR65 fatal-reporter copied incremental em_real build",
+    "explicit_scope_limit": "This binary predates PR67/PR68 output-finite guard changes; do not attribute those later guards to these runs.",
+    "ra37_frozen_optics": "experimental mode 1 with separately pinned frozen table; no general accuracy claim."
+  },
+  "case": {
+    "date_end": "2016-10-08_00:00:00",
+    "date_start": "2016-10-06_00:00:00",
+    "duration_seconds": 172800,
+    "grid": {
+      "bottom_top": 44,
+      "soil_layers_stag": 4,
+      "south_north": 99,
+      "west_east": 90
+    },
+    "history_interval_seconds": 3600,
+    "mpi_ranks": 4,
+    "openmp_threads": 2,
+    "radiation_interval_minutes": 10,
+    "time_step_seconds": 60
+  },
+  "common_forcing_and_configuration": {
+    "arm_configuration_differences_only": {
+      "ra_lw_physics": [
+        4,
+        37
+      ],
+      "ra_sw_physics": [
+        4,
+        37
+      ],
+      "rrtmgp_udm_frozen_optics": [
+        0,
+        1
+      ],
+      "rrtmgp_udm_frozen_table": [
+        "",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-frozen-planck-coverage-v1/runs/frozen-planck-150-330-step5-plus233-v1/frozen-ice-psd-moments.nc"
+      ]
+    },
+    "boundary_times": [
+      "2016-10-06_00:00:00",
+      "2016-10-06_06:00:00",
+      "2016-10-06_12:00:00",
+      "2016-10-06_18:00:00",
+      "2016-10-07_00:00:00",
+      "2016-10-07_06:00:00",
+      "2016-10-07_12:00:00",
+      "2016-10-07_18:00:00"
+    ],
+    "next_boundary_coverage_endpoint": "2016-10-08_00:00:00",
+    "same_boundary_file_hash": "2298ac9b6dfec71e434648f66160f6555f89ec351398a4abf76754d1f934d29b",
+    "same_initial_file_hash": "6adeb00d56b83ef7749502059e35d27adb5114ac0e03adb323e86aa68b946fe3"
+  },
+  "dt150_failed_native_timestep_diagnostic": {
+    "00:50_endpoint_count": 383130,
+    "00:50_invalid_endpoint_count": 18103,
+    "Tphysical_formula": "Tphysical=(T+300)*((P+PB)/100000)^(Rd/Cp), because T is dry theta perturbation.",
+    "dt_seconds": 150,
+    "failure": "RRTMGP_INPUT_DP_HPA_NOT_FINITE at column=1 layer=1 after 2016-10-06_00:50:00 history write",
+    "finite_subset_max_not_valid_whole_record_max": 0.2438005338719237,
+    "returncode": 1,
+    "sampled_endpoint_formula": "abs(WW * dt / DNW / (C1F*(MU+MUB)+C2F))",
+    "sampled_only_caveat": "Interior WW interfaces only. Endpoint history metric, not internal RK/acoustic-stage maximum.",
+    "sampled_peak": {
+      "location_fortran_1_based": {
+        "i": 42,
+        "interface": 30,
+        "j": 30
+      },
+      "max_abs": 2.953312864684305,
+      "time": "2016-10-06_00:42:30"
+    },
+    "status": "FAIL_PRESERVED"
+  },
+  "evidence_manifest": "evidence-manifest.json",
+  "limitations": [
+    "The current 48-hour outcomes are consistent with the run configurations but cannot establish a cause or isolate an intrinsic radiation tendency difference.",
+    "Hourly WW-derived endpoint Courant summaries do not observe internal acoustic or Runge\u2013Kutta stage peaks.",
+    "The one-hour dt60 pair is nighttime and has zero shortwave fields; daytime descriptive separation is supplied only for the current 48-hour pair.",
+    "GLW/OLR differences are coupled-state contrasts; no observational verification or forecast accuracy claim is made.",
+    "Endpoint negative hydrometeor/number counts are diagnostic descriptions only; they are not an input-by-input positivity contract or new tolerance."
+  ],
+  "negative_species_and_numbers_report_only": {
+    "ra37": {
+      "QCLOUD": {
+        "min": -1.3510795066984893e-17,
+        "negative_count": 784,
+        "shape": [
+          49,
+          44,
+          99,
+          90
+        ]
+      },
+      "QGRAUP": {
+        "min": -7.566542670844705e-17,
+        "negative_count": 208,
+        "shape": [
+          49,
+          44,
+          99,
+          90
+        ]
+      },
+      "QHAIL": {
+        "min": -2.3301833355880427e-21,
+        "negative_count": 73,
+        "shape": [
+          49,
+          44,
+          99,
+          90
+        ]
+      },
+      "QICE": {
+        "min": -1.3060919500861763e-19,
+        "negative_count": 782,
+        "shape": [
+          49,
+          44,
+          99,
+          90
+        ]
+      },
+      "QNCCN": {
+        "min": 36196072.0,
+        "negative_count": 0,
+        "shape": [
+          49,
+          44,
+          99,
+          90
+        ]
+      },
+      "QNCLOUD": {
+        "min": -1.945194071595324e-06,
+        "negative_count": 1762,
+        "shape": [
+          49,
+          44,
+          99,
+          90
+        ]
+      },
+      "QNRAIN": {
+        "min": -9.87050163825387e-11,
+        "negative_count": 1490,
+        "shape": [
+          49,
+          44,
+          99,
+          90
+        ]
+      },
+      "QRAIN": {
+        "min": -2.7158798552640896e-15,
+        "negative_count": 923,
+        "shape": [
+          49,
+          44,
+          99,
+          90
+        ]
+      },
+      "QSNOW": {
+        "min": -7.479397471742593e-20,
+        "negative_count": 360,
+        "shape": [
+          49,
+          44,
+          99,
+          90
+        ]
+      }
+    },
+    "ra4": {
+      "QCLOUD": {
+        "min": -4.738832033404835e-17,
+        "negative_count": 821,
+        "shape": [
+          49,
+          44,
+          99,
+          90
+        ]
+      },
+      "QGRAUP": {
+        "min": -9.349246839678242e-21,
+        "negative_count": 189,
+        "shape": [
+          49,
+          44,
+          99,
+          90
+        ]
+      },
+      "QHAIL": {
+        "min": -2.1732211695430957e-22,
+        "negative_count": 74,
+        "shape": [
+          49,
+          44,
+          99,
+          90
+        ]
+      },
+      "QICE": {
+        "min": -7.342430564374544e-15,
+        "negative_count": 810,
+        "shape": [
+          49,
+          44,
+          99,
+          90
+        ]
+      },
+      "QNCCN": {
+        "min": 36189024.0,
+        "negative_count": 0,
+        "shape": [
+          49,
+          44,
+          99,
+          90
+        ]
+      },
+      "QNCLOUD": {
+        "min": -4.4856057002107264e-07,
+        "negative_count": 1674,
+        "shape": [
+          49,
+          44,
+          99,
+          90
+        ]
+      },
+      "QNRAIN": {
+        "min": -3.0851601273695906e-09,
+        "negative_count": 1390,
+        "shape": [
+          49,
+          44,
+          99,
+          90
+        ]
+      },
+      "QRAIN": {
+        "min": -1.756691573248868e-17,
+        "negative_count": 902,
+        "shape": [
+          49,
+          44,
+          99,
+          90
+        ]
+      },
+      "QSNOW": {
+        "min": -9.534580875834341e-18,
+        "negative_count": 343,
+        "shape": [
+          49,
+          44,
+          99,
+          90
+        ]
+      }
+    },
+    "scope": "Counts and minima across full saved history arrays (49 times \u00d7 44 mass levels \u00d7 99 \u00d7 90 for listed 3-D fields); raw signs are not new acceptance thresholds and are not proof of what any particular radiation call consumed.",
+    "temperature_note": "History T is dry perturbation potential temperature, T=theta_dry\u2212300 K; negative stored T values alone do not indicate negative physical temperature."
+  },
+  "prior_dt60_one_hour_pair": {
+    "GLW_RA37_minus_RA4": {
+      "max_abs_difference": 46.06585693359375,
+      "mean_difference": 1.2789722485578723,
+      "rmse_difference": 2.6351656433339583
+    },
+    "OLR_RA37_minus_RA4": {
+      "max_abs_difference": 83.27413940429688,
+      "mean_difference": 1.2628761025782986,
+      "rmse_difference": 5.595766262594186
+    },
+    "SW_fields_all_zero_both_arms": true,
+    "additive_postflight_status": "PASS_POSTFLIGHT_V2_ORIGINAL_RUNS_VALIDATED",
+    "history_interval_seconds": 120,
+    "history_records": 31,
+    "original_FAIL_reason": "The first runner counted duplicate rsl.out and rsl.error copies of rank success markers. Additive readback found four unique successful ranks in each arm; it did not rewrite the original FAIL receipt.",
+    "original_execution_status_preserved": "FAIL_PRESERVED",
+    "thresholds_applied": false
+  },
+  "ra37_minus_ra4_descriptive_surface_difference": {
+    "daynight_classification": "A time record is SW-active if any grid cell in either saved SWDOWN field is positive; otherwise both arms are SW-zero. This is not a solar-zenith classification.",
+    "groups": {
+      "both_arms_sw_zero_records": {
+        "GLW_W_m2": {
+          "max_abs": 84.08602905273438,
+          "mean_ra37_minus_ra4": 1.0637850108830988,
+          "rmse": 7.382898322614468,
+          "sample_count": 204930
+        },
+        "OLR_W_m2": {
+          "max_abs": 146.77938079833984,
+          "mean_ra37_minus_ra4": 1.014351160243682,
+          "rmse": 13.113793101800914,
+          "sample_count": 204930
+        },
+        "SWDOWN_W_m2": {
+          "max_abs": 0.0,
+          "mean_ra37_minus_ra4": 0.0,
+          "rmse": 0.0,
+          "sample_count": 204930
+        },
+        "record_count": 23,
+        "times": [
+          "2016-10-06_00:00:00",
+          "2016-10-06_01:00:00",
+          "2016-10-06_02:00:00",
+          "2016-10-06_03:00:00",
+          "2016-10-06_04:00:00",
+          "2016-10-06_05:00:00",
+          "2016-10-06_06:00:00",
+          "2016-10-06_07:00:00",
+          "2016-10-06_08:00:00",
+          "2016-10-06_09:00:00",
+          "2016-10-06_10:00:00",
+          "2016-10-07_00:00:00",
+          "2016-10-07_01:00:00",
+          "2016-10-07_02:00:00",
+          "2016-10-07_03:00:00",
+          "2016-10-07_04:00:00",
+          "2016-10-07_05:00:00",
+          "2016-10-07_06:00:00",
+          "2016-10-07_07:00:00",
+          "2016-10-07_08:00:00",
+          "2016-10-07_09:00:00",
+          "2016-10-07_10:00:00",
+          "2016-10-08_00:00:00"
+        ]
+      },
+      "sw_active_records": {
+        "GLW_W_m2": {
+          "max_abs": 88.30056762695312,
+          "mean_ra37_minus_ra4": 1.2459699760330964,
+          "rmse": 8.720673432129,
+          "sample_count": 231660
+        },
+        "OLR_W_m2": {
+          "max_abs": 150.42575073242188,
+          "mean_ra37_minus_ra4": 0.9444212674991687,
+          "rmse": 16.009594019916154,
+          "sample_count": 231660
+        },
+        "SWDOWN_W_m2": {
+          "max_abs": 762.8224945068359,
+          "mean_ra37_minus_ra4": -4.1429961003578315,
+          "rmse": 82.77669418640421,
+          "sample_count": 231660
+        },
+        "record_count": 26,
+        "times": [
+          "2016-10-06_11:00:00",
+          "2016-10-06_12:00:00",
+          "2016-10-06_13:00:00",
+          "2016-10-06_14:00:00",
+          "2016-10-06_15:00:00",
+          "2016-10-06_16:00:00",
+          "2016-10-06_17:00:00",
+          "2016-10-06_18:00:00",
+          "2016-10-06_19:00:00",
+          "2016-10-06_20:00:00",
+          "2016-10-06_21:00:00",
+          "2016-10-06_22:00:00",
+          "2016-10-06_23:00:00",
+          "2016-10-07_11:00:00",
+          "2016-10-07_12:00:00",
+          "2016-10-07_13:00:00",
+          "2016-10-07_14:00:00",
+          "2016-10-07_15:00:00",
+          "2016-10-07_16:00:00",
+          "2016-10-07_17:00:00",
+          "2016-10-07_18:00:00",
+          "2016-10-07_19:00:00",
+          "2016-10-07_20:00:00",
+          "2016-10-07_21:00:00",
+          "2016-10-07_22:00:00",
+          "2016-10-07_23:00:00"
+        ]
+      }
+    },
+    "interpretation": "Coupled trajectories with distinct radiation configurations; not a same-state operator error or observational score."
+  },
+  "schema": "matthew-dt60-timestep-evidence-summary-v1",
+  "status": "PASS_BOTH_VALIDATED_DESCRIPTIVE",
+  "terminal_execution": {
+    "arms": {
+      "ra37": {
+        "history": {
+          "dimensions": {
+            "bottom_top": 44,
+            "soil_layers_stag": 4,
+            "south_north": 99,
+            "west_east": 90
+          },
+          "first": "2016-10-06_00:00:00",
+          "last": "2016-10-08_00:00:00",
+          "records": 49,
+          "sha256": "5261710fe0b5ad7d72c23944fa364b4b8013ee042daae1641f9a4f53599f4f8f"
+        },
+        "native_courant_endpoint": {
+          "all_records_invalid_total": 0,
+          "formula": "abs(WW * dt / DNW / (C1F*(MU+MUB)+C2F))",
+          "invalid_operands": 0,
+          "max_abs": 0.6841616143058866,
+          "max_location_fortran_1_based": {
+            "interface": 32,
+            "south_north": 31,
+            "west_east": 42
+          },
+          "max_time": "2016-10-06_01:00:00",
+          "sample_count": 49
+        },
+        "numeric_quality": {
+          "files": 5,
+          "numeric_variables_by_file": [
+            230,
+            666,
+            666,
+            666,
+            666
+          ],
+          "raw_and_decoded_masks_fill_nonfinite": "zero errors; see full bundled scanner receipt",
+          "status": "PASS"
+        },
+        "restart_count": 4,
+        "restart_files": [
+          "wrfrst_d01_2016-10-06_12:00:00",
+          "wrfrst_d01_2016-10-07_00:00:00",
+          "wrfrst_d01_2016-10-07_12:00:00",
+          "wrfrst_d01_2016-10-08_00:00:00"
+        ],
+        "returncode": 0,
+        "status": "PASS_VALIDATED",
+        "timed_out": false
+      },
+      "ra4": {
+        "history": {
+          "dimensions": {
+            "bottom_top": 44,
+            "soil_layers_stag": 4,
+            "south_north": 99,
+            "west_east": 90
+          },
+          "first": "2016-10-06_00:00:00",
+          "last": "2016-10-08_00:00:00",
+          "records": 49,
+          "sha256": "65d41a5c1bea446caaeacec389a9242320c430335b110c3c68d268f3303c72ed"
+        },
+        "native_courant_endpoint": {
+          "all_records_invalid_total": 0,
+          "formula": "abs(WW * dt / DNW / (C1F*(MU+MUB)+C2F))",
+          "invalid_operands": 0,
+          "max_abs": 0.7753860288198867,
+          "max_location_fortran_1_based": {
+            "interface": 33,
+            "south_north": 30,
+            "west_east": 42
+          },
+          "max_time": "2016-10-06_01:00:00",
+          "sample_count": 49
+        },
+        "numeric_quality": {
+          "files": 5,
+          "numeric_variables_by_file": [
+            227,
+            663,
+            663,
+            663,
+            663
+          ],
+          "raw_and_decoded_masks_fill_nonfinite": "zero errors; see full bundled scanner receipt",
+          "status": "PASS"
+        },
+        "restart_count": 4,
+        "restart_files": [
+          "wrfrst_d01_2016-10-06_12:00:00",
+          "wrfrst_d01_2016-10-07_00:00:00",
+          "wrfrst_d01_2016-10-07_12:00:00",
+          "wrfrst_d01_2016-10-08_00:00:00"
+        ],
+        "returncode": 0,
+        "status": "PASS_VALIDATED",
+        "timed_out": false
+      }
+    },
+    "campaign_status": "PASS_BOTH_VALIDATED_DESCRIPTIVE",
+    "model_invocations": 2
+  }
+}
