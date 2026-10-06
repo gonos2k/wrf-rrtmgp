@@ -1,0 +1,48 @@
+{
+  "steps": [
+    {
+      "argv": [
+        "/NHNHOME/WORKSPACE/26weather002_A/Library/intel/oneapi/compiler/2025.3/bin/ifx",
+        "-O0",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-intel-feasibility/random_seed_size.f90",
+        "-o",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-intel-feasibility/random_seed_intel"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-intel-feasibility/random_seed_intel"
+      ],
+      "returncode": 0,
+      "stdout": "           2\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/usr/bin/gfortran",
+        "-O0",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-intel-feasibility/random_seed_size.f90",
+        "-o",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-intel-feasibility/random_seed_gnu"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-intel-feasibility/random_seed_gnu"
+      ],
+      "returncode": 0,
+      "stdout": "           8\n",
+      "stderr": ""
+    }
+  ],
+  "source_sha256": "4cc3792bf910ee6fcaf88ba4776379066695f998e8428259cf169c878e64b14b",
+  "registry_source": "WRF/Registry/registry.stoch:256",
+  "intel_seed_size": 2,
+  "gnu_seed_size": 8
+}

@@ -33,10 +33,40 @@ MODULE module_ra_rrtmgp_input
   PUBLIC :: rrtmgp_check_nonnegative
   PUBLIC :: rrtmgp_column_seed
   PUBLIC :: rrtmgp_udm_frozen_lambdas
+  PUBLIC :: rrtmgp_summarize_path_clipping
 
   EXTERNAL :: wrf_error_fatal3
 
 CONTAINS
+
+  ! Summarize LUT-clipped portions of a column without changing paths or
+  ! coordinates. The caller supplies grid-mean paths in g/m2 and coordinates
+  ! in the exact LUT coordinate used by the adapter. Only positive paths in
+  ! cloudy layers contribute; overlap/daylight gating remains the caller's.
+  PURE SUBROUTINE rrtmgp_summarize_path_clipping(grid_path,cf,coordinate,lower,upper, &
+                                                 n_low,sum_low,max_low,n_high,sum_high,max_high,total)
+    REAL, INTENT(IN) :: grid_path(:),cf(:)
+    REAL(real64), INTENT(IN) :: coordinate(:),lower,upper
+    INTEGER(int64), INTENT(OUT) :: n_low,n_high
+    REAL(real64), INTENT(OUT) :: sum_low,max_low,sum_high,max_high,total
+    INTEGER :: k
+    n_low=0_int64; n_high=0_int64
+    sum_low=0._real64; max_low=0._real64
+    sum_high=0._real64; max_high=0._real64; total=0._real64
+    DO k=1,SIZE(grid_path)
+      IF(grid_path(k)<=0. .OR. cf(k)<=0.) CYCLE
+      total=total+REAL(grid_path(k),real64)
+      IF(coordinate(k)<lower) THEN
+        n_low=n_low+1_int64
+        sum_low=sum_low+REAL(grid_path(k),real64)
+        max_low=MAX(max_low,REAL(grid_path(k),real64))
+      ELSE IF(coordinate(k)>upper) THEN
+        n_high=n_high+1_int64
+        sum_high=sum_high+REAL(grid_path(k),real64)
+        max_high=MAX(max_high,REAL(grid_path(k),real64))
+      END IF
+    END DO
+  END SUBROUTINE rrtmgp_summarize_path_clipping
 
   ! Stable engineering hash for a physical column and radiation phase.  The
   ! 31-bit modulus and multiplier are chosen for deterministic bounded

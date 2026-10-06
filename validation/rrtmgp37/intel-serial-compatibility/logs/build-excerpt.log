@@ -1,0 +1,117 @@
+Neither WRF_EM_CORE nor WRF_PLUS_CORE
+        are explicitly specified in shell environment.... 
+copying Registry/Registry.EM to Registry/Registry
+ 
+============================================================================================== 
+ 
+V4.8.0
+git commit 6f0f3ea3e73fbd43325fdad1050b000eecd70138
+ 
+Compiling: WRF_EM_CORE  
+ 
+Linux KIM-meso-gpu 6.8.0-100-generic #100-Ubuntu SMP PREEMPT_DYNAMIC Tue Jan 13 16:40:06 UTC 2026 x86_64 x86_64 x86_64 GNU/Linux
+ 
+Intel(R) Fortran Compiler for applications running on Intel(R) 64, Version 2025.3.3 Build 20260319
+Copyright (C) 1985-2026 Intel Corporation. All rights reserved.
+
+ 
+============================================================================================== 
+ 
+setting parallel make -j 12
+ 
+============================================================================================== 
+ 
+The following indicate the compilers selected to build the WRF system
+ 
+Serial Fortran compiler (mostly for tool generation):
+which SFC
+/NHNHOME/WORKSPACE/26weather002_A/Library/intel/oneapi/compiler/2025.3/bin/ifx
+ 
+Serial C compiler (mostly for tool generation):
+which SCC
+/NHNHOME/WORKSPACE/26weather002_A/Library/intel/oneapi/compiler/2025.3/bin/icx
+ 
+Fortran compiler for the model source code:
+which FC
+/NHNHOME/WORKSPACE/26weather002_A/Library/intel/oneapi/compiler/2025.3/bin/ifx
+Will use 'time' to report timing information
+ 
+C compiler for the model source code:
+which CC
+/NHNHOME/WORKSPACE/26weather002_A/Library/intel/oneapi/compiler/2025.3/bin/icx
+ 
+============================================================================================== 
+ 
+make -i -r MODULE_DIRS="-I../dyn_em  -I/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-workspace-intel-serial/source/WRF/external/esmf_time_f90  -I/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-workspace-intel-serial/source/WRF/main -I/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-workspace-intel-serial/source/WRF/external/io_netcdf -I/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-workspace-intel-serial/source/WRF/external/io_int -I/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-workspace-intel-serial/source/WRF/frame -I/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-workspace-intel-serial/source/WRF/share -I/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-workspace-intel-serial/source/WRF/phys -I/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-workspace-intel-serial/source/WRF/external/rte_rrtmgp/build -I/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-workspace-intel-serial/source/WRF/wrftladj -I/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-workspace-intel-serial/source/WRF/chem -I/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-workspace-intel-serial/source/WRF/inc -I/NHNHOME/WORKSPACE/26weather002_A/Library/WRF_LIBS/include " ext
+make[1]: Entering directory '/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-workspace-intel-serial/source/WRF'
+--------------------------------------
+if [ 0 -eq 0 ] ; then \
+  ( cd frame ; make -i -r externals ) ; \
+else \
+  ( cd frame ; make -i -r PLUSFLAG="-DWRFPLUS=1" externals ) ; \
+fi
+make[2]: Entering directory '/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-workspace-intel-serial/source/WRF/frame'
+( cd /NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-workspace-intel-serial/source/WRF/external/esmf_time_f90 ; \
+          make -j 12 FC="ifx -real-size `expr 8 \* 4` -i4  -ip -fp-model precise -w -ftz -align all -fno-alias -FR -convert big_endian  " RANLIB="ranlib" \
+          CPP="/lib/cpp -P -nostdinc -I/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-workspace-intel-serial/source/WRF/inc -I. -DEM_CORE=1 -DNMM_CORE=0 -DNMM_MAX_DIM=2600 -DDA_CORE=0 -DWRFPLUS=0 -DIWORDSIZE=4 -DDWORDSIZE=8 -DRWORDSIZE=4 -DLWORDSIZE=4 -DNONSTANDARD_SYSTEM_FUNC  -DWRF_USE_CLM -DUSE_NETCDF4_FEATURES -DWRFIO_NCD_LARGE_FILE_SUPPORT  -DNETCDF -DLANDREAD_STUB=1 -DUSE_ALLOCATABLES -Dwrfmodel -DGRIB1 -DINTIO -DKEEP_INT_AROUND -DLIMIT_ARGS -DBUILD_RRTMG_FAST=0 -DBUILD_RRTMK=0 -DBUILD_SBM_FAST=1 -DSHOW_ALL_VARS_USED=0 -DCONFIG_BUF_LEN=65536 -DMAX_DOMAINS_F=21 -DMAX_HISTORY=25 -DNMM_NEST=0 -traditional-cpp -DUSE_NETCDF4_FEATURES -DWRFIO_NCD_LARGE_FILE_SUPPORT" AR="ar" ARFLAGS="ru" )
+make[3]: Entering directory '/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-workspace-intel-serial/source/WRF/external/esmf_time_f90'
+/bin/rm -f ESMF_Base.o
+sed -e "/\!.*'/s/'//g" ESMF_Base.F90 > ESMF_Base.b
+/bin/rm -f ESMF_Fraction.o
+sed -e "/\!.*'/s/'//g" ESMF_Fraction.F90 > ESMF_Fraction.b
+/lib/cpp -P -nostdinc -I/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-workspace-intel-serial/source/WRF/inc -I. -DEM_CORE=1 -DNMM_CORE=0 -DNMM_MAX_DIM=2600 -DDA_CORE=0 -DWRFPLUS=0 -DIWORDSIZE=4 -DDWORDSIZE=8 -DRWORDSIZE=4 -DLWORDSIZE=4 -DNONSTANDARD_SYSTEM_FUNC  -DWRF_USE_CLM -DUSE_NETCDF4_FEATURES -DWRFIO_NCD_LARGE_FILE_SUPPORT  -DNETCDF -DLANDREAD_STUB=1 -DUSE_ALLOCATABLES -Dwrfmodel -DGRIB1 -DINTIO -DKEEP_INT_AROUND -DLIMIT_ARGS -DBUILD_RRTMG_FAST=0 -DBUILD_RRTMK=0 -DBUILD_SBM_FAST=1 -DSHOW_ALL_VARS_USED=0 -DCONFIG_BUF_LEN=65536 -DMAX_DOMAINS_F=21 -DMAX_HISTORY=25 -DNMM_NEST=0 -traditional-cpp -DUSE_NETCDF4_FEATURES -DWRFIO_NCD_LARGE_FILE_SUPPORT -I. ESMF_Base.b > ESMF_Base.f
+/lib/cpp -P -nostdinc -I/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-workspace-intel-serial/source/WRF/inc -I. -DEM_CORE=1 -DNMM_CORE=0 -DNMM_MAX_DIM=2600 -DDA_CORE=0 -DWRFPLUS=0 -DIWORDSIZE=4 -DDWORDSIZE=8 -DRWORDSIZE=4 -DLWORDSIZE=4 -DNONSTANDARD_SYSTEM_FUNC  -DWRF_USE_CLM -DUSE_NETCDF4_FEATURES -DWRFIO_NCD_LARGE_FILE_SUPPORT  -DNETCDF -DLANDREAD_STUB=1 -DUSE_ALLOCATABLES -Dwrfmodel -DGRIB1 -DINTIO -DKEEP_INT_AROUND -DLIMIT_ARGS -DBUILD_RRTMG_FAST=0 -DBUILD_RRTMK=0 -DBUILD_SBM_FAST=1 -DSHOW_ALL_VARS_USED=0 -DCONFIG_BUF_LEN=65536 -DMAX_DOMAINS_F=21 -DMAX_HISTORY=25 -DNMM_NEST=0 -traditional-cpp -DUSE_NETCDF4_FEATURES -DWRFIO_NCD_LARGE_FILE_SUPPORT -I. ESMF_Fraction.b > ESMF_Fraction.f
+/bin/rm -f ESMF_Base.b
+/bin/rm -f ESMF_Fraction.b
+ifx -real-size 32 -i4  -ip -fp-model precise -w -ftz -align all -fno-alias -FR -convert big_endian   -o ESMF_Fraction.o -c ESMF_Fraction.f
+ifx -real-size 32 -i4  -ip -fp-model precise -w -ftz -align all -fno-alias -FR -convert big_endian   -o ESMF_Base.o -c ESMF_Base.f
+/bin/rm -f ESMF_BaseTime.o
+sed -e "/\!.*'/s/'//g" ESMF_BaseTime.F90 > ESMF_BaseTime.b
+/lib/cpp -P -nostdinc -I/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-workspace-intel-serial/source/WRF/inc -I. -DEM_CORE=1 -DNMM_CORE=0 -DNMM_MAX_DIM=2600 -DDA_CORE=0 -DWRFPLUS=0 -DIWORDSIZE=4 -DDWORDSIZE=8 -DRWORDSIZE=4 -DLWORDSIZE=4 -DNONSTANDARD_SYSTEM_FUNC  -DWRF_USE_CLM -DUSE_NETCDF4_FEATURES -DWRFIO_NCD_LARGE_FILE_SUPPORT  -DNETCDF -DLANDREAD_STUB=1 -DUSE_ALLOCATABLES -Dwrfmodel -DGRIB1 -DINTIO -DKEEP_INT_AROUND -DLIMIT_ARGS -DBUILD_RRTMG_FAST=0 -DBUILD_RRTMK=0 -DBUILD_SBM_FAST=1 -DSHOW_ALL_VARS_USED=0 -DCONFIG_BUF_LEN=65536 -DMAX_DOMAINS_F=21 -DMAX_HISTORY=25 -DNMM_NEST=0 -traditional-cpp -DUSE_NETCDF4_FEATURES -DWRFIO_NCD_LARGE_FILE_SUPPORT -I. ESMF_BaseTime.b > ESMF_BaseTime.f
+/bin/rm -f ESMF_BaseTime.b
+ifx -real-size 32 -i4  -ip -fp-model precise -w -ftz -align all -fno-alias -FR -convert big_endian   -o ESMF_BaseTime.o -c ESMF_BaseTime.f
+/bin/rm -f ESMF_Calendar.o
+sed -e "/\!.*'/s/'//g" ESMF_Calendar.F90 > ESMF_Calendar.b
+/lib/cpp -P -nostdinc -I/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-workspace-intel-serial/source/WRF/inc -I. -DEM_CORE=1 -DNMM_CORE=0 -DNMM_MAX_DIM=2600 -DDA_CORE=0 -DWRFPLUS=0 -DIWORDSIZE=4 -DDWORDSIZE=8 -DRWORDSIZE=4 -DLWORDSIZE=4 -DNONSTANDARD_SYSTEM_FUNC  -DWRF_USE_CLM -DUSE_NETCDF4_FEATURES -DWRFIO_NCD_LARGE_FILE_SUPPORT  -DNETCDF -DLANDREAD_STUB=1 -DUSE_ALLOCATABLES -Dwrfmodel -DGRIB1 -DINTIO -DKEEP_INT_AROUND -DLIMIT_ARGS -DBUILD_RRTMG_FAST=0 -DBUILD_RRTMK=0 -DBUILD_SBM_FAST=1 -DSHOW_ALL_VARS_USED=0 -DCONFIG_BUF_LEN=65536 -DMAX_DOMAINS_F=21 -DMAX_HISTORY=25 -DNMM_NEST=0 -traditional-cpp -DUSE_NETCDF4_FEATURES -DWRFIO_NCD_LARGE_FILE_SUPPORT -I. ESMF_Calendar.b > ESMF_Calendar.f
+/bin/rm -f ESMF_Calendar.b
+ifx -real-size 32 -i4  -ip -fp-model precise -w -ftz -align all -fno-alias -FR -convert big_endian   -o ESMF_Calendar.o -c ESMF_Calendar.f
+/bin/rm -f ESMF_TimeInterval.o
+/bin/rm -f ESMF_Stubs.o
+sed -e "/\!.*'/s/'//g" ESMF_TimeInterval.F90 > ESMF_TimeInterval.b
+
+[Middle of full1778666-byte build log omitted; full SHA256 pinned in build receipt.]
+( cd test/em_real ; /bin/rm -f GENPARM.TBL ; ln -s ../../run/GENPARM.TBL . )
+( cd test/em_real ; /bin/rm -f LANDUSE.TBL ; ln -s ../../run/LANDUSE.TBL . )
+( cd test/em_real ; /bin/rm -f SOILPARM.TBL ; ln -s ../../run/SOILPARM.TBL . )
+( cd test/em_real ; /bin/rm -f URBPARM.TBL ; ln -s ../../run/URBPARM.TBL . )
+( cd test/em_real ; /bin/rm -f URBPARM_LCZ.TBL ; ln -s ../../run/URBPARM_LCZ.TBL . )
+( cd test/em_real ; /bin/rm -f VEGPARM.TBL ; ln -s ../../run/VEGPARM.TBL . )
+( cd test/em_real ; /bin/rm -f NoahmpTable.TBL ; ln -s ../../run/NoahmpTable.TBL . )
+( cd test/em_real ; /bin/rm -f snicar_drdt_bst_fit_60_c070416.nc ; ln -s ../../run/snicar_drdt_bst_fit_60_c070416.nc . )
+( cd test/em_real ; /bin/rm -f snicar_optics_480bnd_c012422.nc ; ln -s ../../run/snicar_optics_480bnd_c012422.nc . )
+( cd test/em_real ; /bin/rm -f snicar_optics_5bnd_c013122.nc ; ln -s ../../run/snicar_optics_5bnd_c013122.nc . )
+( cd test/em_real ; /bin/rm -f tr49t67 ; ln -s ../../run/tr49t67 . )
+( cd test/em_real ; /bin/rm -f tr49t85 ; ln -s ../../run/tr49t85 . )
+( cd test/em_real ; /bin/rm -f tr67t85 ; ln -s ../../run/tr67t85 . )
+( cd test/em_real ; /bin/rm -f gribmap.txt ; ln -s ../../run/gribmap.txt . )
+( cd test/em_real ; /bin/rm -f grib2map.tbl ; ln -s ../../run/grib2map.tbl . )
+( cd run ; /bin/rm -f real.exe ; ln -s ../main/real.exe . )
+( cd run ; /bin/rm -f tc.exe ; ln -s ../main/tc.exe . )
+( cd run ; /bin/rm -f ndown.exe ; ln -s ../main/ndown.exe . )
+( cd run ; if test -f namelist.input ; then \
+	/bin/cp -f namelist.input namelist.input.backup.`date +%Y-%m-%d_%H_%M_%S` ; fi ; \
+	/bin/rm -f namelist.input ; cp ../test/em_real/namelist.input . )
+ 
+==========================================================================
+build started:   Sat Oct  3 12:37:32 PM KST 2026
+build completed: Sat Oct 3 12:40:35 PM KST 2026
+ 
+--->                  Executables successfully built                  <---
+ 
+-rwxr-xr-x 1 korea_keun 26weather002_A 38981376 Oct  3 12:40 main/ndown.exe
+-rwxr-xr-x 1 korea_keun 26weather002_A 38880696 Oct  3 12:40 main/real.exe
+-rwxr-xr-x 1 korea_keun 26weather002_A 38310048 Oct  3 12:40 main/tc.exe
+-rwxr-xr-x 1 korea_keun 26weather002_A 44946352 Oct  3 12:40 main/wrf.exe
+ 
+==========================================================================
+ 
