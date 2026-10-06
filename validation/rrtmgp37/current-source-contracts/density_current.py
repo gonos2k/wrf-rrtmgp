@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import importlib.util
 import json
 import math
 import os
@@ -154,17 +155,28 @@ def main():
     a=ap.parse_args(); root=a.source_root.resolve(); out=a.output_dir.resolve()
     if out.exists(): raise SystemExit(f"refusing existing output: {out}")
     c=extract(root); out.mkdir(parents=True)
+    process_receipts_path = Path(__file__).with_name("process_receipts.py")
+    process_receipts_spec = importlib.util.spec_from_file_location(
+        "density_current_process_receipts", process_receipts_path)
+    if process_receipts_spec is None or process_receipts_spec.loader is None:
+        raise RuntimeError("could not load durable subprocess receipt helper")
+    process_receipts_module = importlib.util.module_from_spec(process_receipts_spec)
+    process_receipts_spec.loader.exec_module(process_receipts_module)
+    process_ledger = out / "current-process-status.jsonl"
+    process_runner = process_receipts_module.DurableProcessRunner(
+        process_ledger, default_timeout_seconds=300)
+    run_child = process_runner.run
     source=make_fixture(c); generated=out/"current_density_fixture.f90"; generated.write_text(source)
-    head=subprocess.run(["git","rev-parse","HEAD"],cwd=root,check=True,capture_output=True,text=True).stdout.strip()
+    head=run_child(["git","rev-parse","HEAD"],cwd=root,check=True,capture_output=True,text=True).stdout.strip()
     compiler=shlex.split(a.fc)
-    version=subprocess.run(compiler+["--version"],capture_output=True,text=True,timeout=30)
+    version=run_child(compiler+["--version"],capture_output=True,text=True,timeout=30)
     if version.returncode: raise RuntimeError("compiler version probe failed")
-    tree=subprocess.run(["git","rev-parse","HEAD^{tree}"],cwd=root,check=True,capture_output=True,text=True).stdout.strip()
+    tree=run_child(["git","rev-parse","HEAD^{tree}"],cwd=root,check=True,capture_output=True,text=True).stdout.strip()
     source_files={}
     for k,rel in REL.items():
-        blob=subprocess.run(["git","rev-parse",f"HEAD:{rel}"],cwd=root,check=True,capture_output=True,text=True).stdout.strip()
+        blob=run_child(["git","rev-parse",f"HEAD:{rel}"],cwd=root,check=True,capture_output=True,text=True).stdout.strip()
         raw=(root/rel).read_bytes(); git_blob=hashlib.sha1(b"blob "+str(len(raw)).encode()+b"\0"+raw).hexdigest()
-        dirty=subprocess.run(["git","status","--porcelain","--",rel],cwd=root,check=True,capture_output=True,text=True).stdout
+        dirty=run_child(["git","status","--porcelain","--",rel],cwd=root,check=True,capture_output=True,text=True).stdout
         source_files[k]={"path":rel,"working_file_sha256":c["hashes"][k],"head_blob":blob,
                          "working_file_git_blob":git_blob,"working_file_matches_head_blob":git_blob==blob,
                          "dirty_source_status":dirty}
@@ -175,6 +187,7 @@ def main():
                  "explicit_host_policy":True,"udm_call_count":c["driver_call_count"],
                  "udm_dry_policy_call_count":c["driver_dry_call_count"]},"generated_source_sha256":sha(generated.read_bytes()),
              "compiler":{"argv":compiler,"version":version.stdout.splitlines()[0]},
+             "durable_process_ledger":{"path":process_ledger.name},
              "execution":{"compile_count":0,"fixture_run_count":0,"WRF_builds":0,"models":0,"RTE_calls":0}}
     receipt_path=out/"receipt.json"; write_json(receipt_path,receipt)
     env=os.environ.copy(); env["OMP_NUM_THREADS"]="1"
@@ -184,7 +197,7 @@ def main():
         exe=out/f"fixture_{opt}"; clog=out/f"compile_{opt}.log"
         argv=compiler+[f"-{opt}","-std=f2008","-ffp-contract=off",str(generated),"-o",str(exe)]
         t0=time.time()
-        with clog.open("wb") as f: cp=subprocess.run(argv,cwd=out,env=env,stdout=f,stderr=subprocess.STDOUT)
+        with clog.open("wb") as f: cp=run_child(argv,cwd=out,env=env,stdout=f,stderr=subprocess.STDOUT)
         receipt["execution"]["compile_count"]+=1
         process={"kind":"compile","opt":opt,"argv":argv,"returncode":cp.returncode,"started":t0,"ended":time.time()}
         receipt["processes"].append(process)
@@ -194,7 +207,7 @@ def main():
         write_json(receipt_path,receipt)
         if cp.returncode: receipt["status"]="COMPILE_FAILED"; write_json(receipt_path,receipt); raise SystemExit(f"compile failed at {opt}")
         rlog=out/f"run_{opt}.log"; t0=time.time()
-        with rlog.open("wb") as f: rp=subprocess.run([str(exe)],cwd=out,env=env,stdout=f,stderr=subprocess.STDOUT,timeout=30)
+        with rlog.open("wb") as f: rp=run_child([str(exe)],cwd=out,env=env,stdout=f,stderr=subprocess.STDOUT,timeout=30)
         receipt["execution"]["fixture_run_count"]+=1
         process={"kind":"fixture","opt":opt,"argv":[str(exe)],"returncode":rp.returncode,"started":t0,"ended":time.time()}
         receipt["processes"].append(process)
@@ -233,6 +246,8 @@ def main():
         if x["case"]!=y["case"] or x["legacy_eos_dend"]!=y["legacy_eos_dend"] or x["explicit_dry_dend"]!=y["explicit_dry_dend"]:
             raise ValueError("O0/O2 output mismatch")
     receipt["status"]="PASS_CURRENT_DENSITY_SOURCE_FIXTURE_BOTH_O0_O2"
+    receipt["durable_process_ledger"]["sha256"] = sha(process_ledger.read_bytes())
+    receipt["durable_process_ledger"]["row_count"] = len(process_ledger.read_text().splitlines())
     receipt.pop("last_process",None); write_json(receipt_path,receipt)
     print(json.dumps({"status":receipt["status"],"source_head":head,"output_dir":str(out),"cases_per_opt":30},sort_keys=True))
 

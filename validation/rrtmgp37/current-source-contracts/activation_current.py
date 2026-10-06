@@ -11,7 +11,6 @@ import subprocess
 import sys
 import tempfile
 import re
-import time
 from types import SimpleNamespace
 
 
@@ -46,33 +45,16 @@ def main() -> None:
     except (ValueError, IndexError) as exc:
         raise SystemExit("--output-dir is required") from exc
     process_ledger = output_dir / "current-process-status.jsonl"
-
-    def durable_subprocess_run(*call_args, **kwargs):
-        started = time.time()
-        child_argv = call_args[0] if call_args else kwargs.get("args")
-        try:
-            child = subprocess.run(*call_args, **kwargs)
-        except subprocess.TimeoutExpired as exc:
-            _append_durable_jsonl(process_ledger, {
-                "argv": child_argv, "status": "TIMED_OUT", "returncode": None,
-                "timeout": exc.timeout, "started_epoch": started, "ended_epoch": time.time(),
-            })
-            raise
-        except Exception as exc:
-            _append_durable_jsonl(process_ledger, {
-                "argv": child_argv, "status": "LAUNCH_EXCEPTION", "returncode": None,
-                "exception": repr(exc), "started_epoch": started, "ended_epoch": time.time(),
-            })
-            raise
-        # This fsynced row is durable immediately after wait() returns and
-        # before the archived runner can hash or parse stdout.
-        _append_durable_jsonl(process_ledger, {
-            "argv": child_argv, "status": "PROCESS_COMPLETE", "returncode": child.returncode,
-            "started_epoch": started, "ended_epoch": time.time(),
-        })
-        return child
-
-    module.subprocess = SimpleNamespace(run=durable_subprocess_run, STDOUT=subprocess.STDOUT)
+    process_receipts_path = pathlib.Path(__file__).with_name("process_receipts.py")
+    process_receipts_spec = importlib.util.spec_from_file_location(
+        "activation_current_process_receipts", process_receipts_path)
+    if process_receipts_spec is None or process_receipts_spec.loader is None:
+        raise RuntimeError("could not load durable subprocess receipt helper")
+    process_receipts_module = importlib.util.module_from_spec(process_receipts_spec)
+    process_receipts_spec.loader.exec_module(process_receipts_module)
+    process_runner = process_receipts_module.DurableProcessRunner(
+        process_ledger, default_timeout_seconds=300)
+    module.subprocess = SimpleNamespace(run=process_runner.run, STDOUT=subprocess.STDOUT)
     # The current block is dynamically pinned in the receipt; fixed parameter
     # checks and the O0/O2 numerical fixture remain the semantic acceptance.
     sys.argv = [str(pathlib.Path(__file__).resolve().parents[1]
@@ -80,14 +62,14 @@ def main() -> None:
     module.main()
     result_path = output_dir / "result.json"
     result = json.loads(result_path.read_text())
-    head = subprocess.run(["git", "rev-parse", "HEAD"], cwd=source_root, check=True,
-                          capture_output=True, text=True).stdout.strip()
-    tree = subprocess.run(["git", "rev-parse", "HEAD^{tree}"], cwd=source_root, check=True,
-                          capture_output=True, text=True).stdout.strip()
-    blob = subprocess.run(["git", "rev-parse", f"HEAD:{ns_rel}"], cwd=source_root,
-                          check=True, capture_output=True, text=True).stdout.strip()
-    status = subprocess.run(["git", "status", "--porcelain", "--", ns_rel], cwd=source_root,
-                            check=True, capture_output=True, text=True).stdout
+    head = process_runner.run(["git", "rev-parse", "HEAD"], cwd=source_root, check=True,
+                              capture_output=True, text=True).stdout.strip()
+    tree = process_runner.run(["git", "rev-parse", "HEAD^{tree}"], cwd=source_root, check=True,
+                              capture_output=True, text=True).stdout.strip()
+    blob = process_runner.run(["git", "rev-parse", f"HEAD:{ns_rel}"], cwd=source_root,
+                              check=True, capture_output=True, text=True).stdout.strip()
+    status = process_runner.run(["git", "status", "--porcelain", "--", ns_rel], cwd=source_root,
+                                check=True, capture_output=True, text=True).stdout
     current = {"schema": "udm37-current-activation-source-binding-v1",
                "status": "PASS_CURRENT_SOURCE_ACTIVATION_CONTRACT",
                "checkout_head": head, "checkout_tree": tree,
@@ -191,20 +173,6 @@ def _atomic_json(path: pathlib.Path, value) -> None:
         finally: os.close(dfd)
     finally:
         if os.path.exists(temporary): os.unlink(temporary)
-
-
-def _append_durable_jsonl(path: pathlib.Path, row) -> None:
-    data = (json.dumps(row, sort_keys=True, allow_nan=False) + "\n").encode()
-    path.parent.mkdir(parents=True, exist_ok=True)
-    fd = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_APPEND, 0o600)
-    try:
-        os.write(fd, data)
-        os.fsync(fd)
-    finally:
-        os.close(fd)
-    dfd = os.open(path.parent, os.O_RDONLY)
-    try: os.fsync(dfd)
-    finally: os.close(dfd)
 
 
 if __name__ == "__main__":

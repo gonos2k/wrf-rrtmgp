@@ -39,3 +39,16 @@ receipts and fixture logs with `if: always()`, so a failed check still leaves
 its source identity and available diagnostics attached to the run. The Nc
 workflow is also triggered by changes to this verifier package; its RTE job
 uploads only the compact replay receipt and per-arm logs, not result arrays.
+
+The current activation and density runners append fsynced `STARTED` and
+terminal rows to `current-process-status.jsonl` while journal storage is
+available. Journal I/O failures propagate; a failed STARTED write prevents
+launch, but failed terminal persistence cannot guarantee a saved receipt.
+Nonzero exits retain their return code. An OS error records an unconfirmed
+phase and unknown child-start state rather than assuming it occurred before
+launch. A timeout has no numeric return code, and `subprocess.run`
+kills and reaps the child before the timeout row is recorded. The registered
+small-child self-test covers zero/nonzero exit, `check=True` failure, launch
+failure, explicit/default timeout handling, and mocked journal failure before
+launch. It does not claim that real storage failure, compiler timeout or
+compiler failure was induced.
