@@ -1,0 +1,9 @@
+# Matthew extended-table DP_HPA failure: source audit
+
+The preserved RA37 run exits with RC=1 at the 2016-10-06 00:50 timing marker. Rank 0 reports `RRTMGP_INPUT_DP_HPA_NOT_FINITE at column=1 layer=1`. The previous table-range failure at 00:40 was passed by the wider table; this later failure is a separate event.
+
+Source tracing places the check before the RRTMGP adapter and before frozen optics are queried. The LW wrapper constructs interface pressures from `p8w/100`, differences adjacent interfaces into `pdel` in bottom-to-top layer order, then calls the UDM builder. The builder's generic positive check catches nonfinite `dp_hpa` before the RTE/frozen lookup. Native UDM dry layer mass is separately constructed from `DNW`, `C1H`, `MUT`, `C2H`, and gravity; it is not the input named in this fatal. Frozen optics cannot directly mutate the current call's pressure before that check, although an earlier heating update could in principle affect the later atmospheric trajectory.
+
+The fatal’s `column=1 layer=1` is not a global WRF coordinate. The vector is reshaped as `(n,1)` and a generic checker reports those array indices with column/layer labels. The preserved log lacks rank-local/global i,j, WRF k, both interface values, and the first time at which pressure became nonfinite. Consequently this review finds no concrete pressure-construction defect and does not establish a root cause. The successful RA4 arm shares the initial and boundary files, but is a different coupled radiation trajectory and is not a same-state pressure control.
+
+The JSON records exact source, executable, table, input, and failure-log pins, source line references, conclusions, and a bounded diagnostic payload for any future authorized investigation. This review ran no build or model and made no source changes.

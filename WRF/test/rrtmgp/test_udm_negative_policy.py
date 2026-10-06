@@ -165,6 +165,17 @@ def main() -> int:
         run_fatal(executable, "clipped_shape", r"RRTMGP_INPUT_SHAPE_MISMATCH in UDM clipped_negative_q", root)
         run_fatal(executable, "correction_shape", r"RRTMGP_INPUT_SHAPE_MISMATCH in UDM negative_grid_correction", root)
         run_fatal(executable, "nonfinite_q", r"RRTMGP_INPUT_UDM_QI_NOT_FINITE.*layer=2", root)
+        context = r"column=d01:i=19:j=8 "
+        run_fatal(executable, "dp_nan_context", context +
+                  r"RRTMGP_INPUT_DP_HPA_NOT_FINITE layer=2", root)
+        run_fatal(executable, "dp_zero_context", context +
+                  r"RRTMGP_INPUT_DP_HPA_NOT_POSITIVE layer=2", root)
+        run_fatal(executable, "cf_nan_context", context +
+                  r"RRTMGP_INPUT_CF_NOT_FINITE layer=2", root)
+        run_fatal(executable, "cf_range_context", context +
+                  r"RRTMGP_INPUT_CF_OUT_OF_RANGE layer=2", root)
+        run_fatal(executable, "dp_nan_no_context",
+                  r"RRTMGP_INPUT_DP_HPA_NOT_FINITE at column=1 layer=2", root)
         check_raw_record_validation()
     print("PASS: strict/bounded negative-q policy, conservation outputs, bitwise inputs, "
           "underflow, atomic hail refusal, fatal diagnostics, and Python raw-capture evidence")

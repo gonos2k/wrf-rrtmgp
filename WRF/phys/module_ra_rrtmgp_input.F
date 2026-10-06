@@ -389,8 +389,38 @@ CONTAINS
       RETURN
     END IF
 
-    CALL rrtmgp_check_positive('dp_hpa',RESHAPE(dp_hpa,[n,1]))
-    CALL rrtmgp_check_unit_interval('cf',RESHAPE(cf,[n,1]))
+    ! Keep native one-dimensional layer indices and the caller's column context
+    ! in builder diagnostics. Passing RESHAPE(...,[n,1]) through the generic
+    ! column checker reported native k as column and layer 1, and discarded
+    ! column_context. Preserve the same finite/range labels and rejection policy.
+    DO k=1,n
+      IF(.NOT.ieee_is_finite(dp_hpa(k))) THEN
+        CALL fail_builder_layer(reason,RRTMGP_INPUT_INVALID, &
+             'RRTMGP_INPUT_DP_HPA_NOT_FINITE',k,column_context)
+        RETURN
+      END IF
+    END DO
+    DO k=1,n
+      IF(dp_hpa(k)<=0.0) THEN
+        CALL fail_builder_layer(reason,RRTMGP_INPUT_RANGE, &
+             'RRTMGP_INPUT_DP_HPA_NOT_POSITIVE',k,column_context)
+        RETURN
+      END IF
+    END DO
+    DO k=1,n
+      IF(.NOT.ieee_is_finite(cf(k))) THEN
+        CALL fail_builder_layer(reason,RRTMGP_INPUT_INVALID, &
+             'RRTMGP_INPUT_CF_NOT_FINITE',k,column_context)
+        RETURN
+      END IF
+    END DO
+    DO k=1,n
+      IF(cf(k)<0.0 .OR. cf(k)>1.0) THEN
+        CALL fail_builder_layer(reason,RRTMGP_INPUT_RANGE, &
+             'RRTMGP_INPUT_CF_OUT_OF_RANGE',k,column_context)
+        RETURN
+      END IF
+    END DO
     masses(:,1) = qc
     masses(:,2) = qi
     masses(:,3) = qr
