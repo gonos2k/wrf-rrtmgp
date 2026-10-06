@@ -1,0 +1,475 @@
+diff --git a/WRF/phys/module_microphysics_driver.F b/WRF/phys/module_microphysics_driver.F
+index f8a6004..1e5d563 100644
+--- a/WRF/phys/module_microphysics_driver.F
++++ b/WRF/phys/module_microphysics_driver.F
+@@ -805,6 +805,10 @@ REAL, DIMENSION( ims:ime, kms:kme, jms:jme ),                        &
+    INTEGER :: i,j,k,its,ite,jts,jte,ij,sz,n
+    LOGICAL :: channel
+    LOGICAL :: have_udm_cf
++! BEGIN UDM_NUMBER_STAGE_OBSERVER
++   TYPE(udm_number_observer_context) :: udm_number_context
++   INTEGER :: udm_number_domain,udm_number_owner_tile,udm_number_itile
++! END UDM_NUMBER_STAGE_OBSERVER
+    LOGICAL :: udm_radius_selected
+    INTEGER :: udm_radius_i,udm_radius_j,udm_radius_domain
+    LOGICAL :: nssl_progn = .false.
+@@ -920,6 +924,34 @@ REAL, DIMENSION( ims:ime, kms:kme, jms:jme ),                        &
+ ! The legacy UDM reset writes the full memory domain from every tile. For the
+ ! option-37 call, initialize once including halos/storage, then skip the tile
+ ! reset. Other radiation paths retain the legacy call below.
++! BEGIN UDM_NUMBER_STAGE_OBSERVER
++   udm_number_domain=0
++   IF(PRESENT(id)) udm_number_domain=id
++   CALL udm_number_configure(udm_number_context,udm_number_domain,xtime,dt,ccn_conc)
++   udm_number_owner_tile=0
++   IF(udm_number_context%enabled) THEN
++     IF(.NOT.have_udm_cf) CALL wrf_error_fatal('UDM_NUMBER_STAGE: requires option37 UDM diagnostics')
++     IF(.NOT.(PRESENT(QNN_CURR).AND.PRESENT(QNC_CURR).AND.PRESENT(QNR_CURR).AND. &
++              PRESENT(QC_CURR).AND.PRESENT(QR_CURR).AND.PRESENT(QV_CURR).AND.PRESENT(QI_CURR).AND. &
++              PRESENT(QS_CURR).AND.PRESENT(QG_CURR).AND.PRESENT(QH_CURR).AND.PRESENT(RAINNC).AND. &
++              PRESENT(RAINNCV))) CALL wrf_error_fatal('UDM_NUMBER_STAGE: missing actual number/mass state')
++     DO udm_number_itile=1,num_tiles
++       IF(23>=i_start(udm_number_itile).AND.23<=i_end(udm_number_itile).AND. &
++          2>=max(j_start(udm_number_itile),jds+sz).AND. &
++          2<=min(j_end(udm_number_itile),jde-1-sz)) THEN
++         IF(udm_number_owner_tile/=0) CALL wrf_error_fatal('UDM_NUMBER_STAGE: overlapping selected tiles')
++         udm_number_owner_tile=udm_number_itile
++       ENDIF
++     ENDDO
++     udm_number_context%initializer_active=itimestep==1.AND.num_tiles>0
++   ENDIF
++   IF(udm_number_context%enabled.AND.udm_number_owner_tile>0) THEN
++     CALL udm_number_write(udm_number_context,itimestep,10,0,udm_number_owner_tile,23,2,kts,kte, &
++       th(23,kts:kte,2)*pi_phy(23,kts:kte,2),p(23,kts:kte,2),qv_curr(23,kts:kte,2),qc_curr(23,kts:kte,2), &
++       qr_curr(23,kts:kte,2),qnn_curr(23,kts:kte,2),qnc_curr(23,kts:kte,2), &
++       qnr_curr(23,kts:kte,2),rho(23,kts:kte,2))
++   ENDIF
++! END UDM_NUMBER_STAGE_OBSERVER
+    IF (have_udm_cf .AND. itimestep == 1 .AND. num_tiles > 0) THEN
+      IF ( PRESENT( QV_CURR ) .AND. PRESENT ( QC_CURR ) .AND.  &
+           PRESENT( QR_CURR ) .AND. PRESENT ( QI_CURR ) .AND.  &
+@@ -932,6 +964,14 @@ REAL, DIMENSION( ims:ime, kms:kme, jms:jme ),                        &
+      ENDIF
+    ENDIF
+ 
++! BEGIN UDM_NUMBER_STAGE_OBSERVER
++   IF(udm_number_context%enabled.AND.udm_number_owner_tile>0) THEN
++     CALL udm_number_write(udm_number_context,itimestep,11,0,udm_number_owner_tile,23,2,kts,kte, &
++       th(23,kts:kte,2)*pi_phy(23,kts:kte,2),p(23,kts:kte,2),qv_curr(23,kts:kte,2),qc_curr(23,kts:kte,2), &
++       qr_curr(23,kts:kte,2),qnn_curr(23,kts:kte,2),qnc_curr(23,kts:kte,2), &
++       qnr_curr(23,kts:kte,2),rho(23,kts:kte,2))
++   ENDIF
++! END UDM_NUMBER_STAGE_OBSERVER
+    !$OMP PARALLEL DO   &
+    !$OMP PRIVATE ( ij, its, ite, jts, jte, i,j,k,n, udm_radius_selected, &
+    !$OMP           udm_radius_i,udm_radius_j,udm_radius_domain )
+@@ -2860,6 +2900,8 @@ REAL, DIMENSION( ims:ime, kms:kme, jms:jme ),                        &
+                    input_density_is_dry=.true.)
+                ENDIF
+              ENDIF
++! BEGIN UDM_NUMBER_STAGE_OBSERVER
++             IF(udm_number_context%enabled) THEN
+              CALL udm(                                              &
+                   TH=th                                             &
+                  ,Q=qv_curr                                         &
+@@ -2892,6 +2934,7 @@ REAL, DIMENSION( ims:ime, kms:kme, jms:jme ),                        &
+                  ,udm_cldfra=udm_cldfra, udm_cf_step=udm_cf_step     &
+                  ,udm_cf_top=udm_cf_top                             &
+                  ,ccn_preinitialized=.true.                        &
++                 ,number_observer=udm_number_context,number_observer_tile=ij &
+                  ,input_density_is_dry=.true.                       &
+                  ,has_reqc=has_reqc                                 &  ! for radiation +
+                  ,has_reqi=has_reqi                                 &
+@@ -2903,6 +2946,54 @@ REAL, DIMENSION( ims:ime, kms:kme, jms:jme ),                        &
+                  ,IMS=ims,IME=ime, JMS=jms,JME=jme, KMS=kms,KME=kme &
+                  ,ITS=its,ITE=ite, JTS=jts,JTE=jte, KTS=kts,KTE=kte &
+                                                                     )
++             ELSE
++! END UDM_NUMBER_STAGE_OBSERVER
++             CALL udm(                                              &
++                  TH=th                                             &
++                 ,Q=qv_curr                                         &
++                 ,QC=qc_curr                                        &
++                 ,QR=qr_curr                                        &
++                 ,QI=qi_curr                                        &
++                 ,QS=qs_curr                                        &
++                 ,QG=qg_curr                                        &
++                 ,QH=qh_curr                                        &
++                 ,NN=qnn_curr                                       &
++                 ,NC=qnc_curr                                       &
++                 ,NR=qnr_curr                                       &
++                 ,DEN=rho,PII=pi_phy,P=p,DELZ=dz8w                  &
++                 ,DELT=dt,G=g,CPD=cp,CPV=cpv,CCN0=ccn_conc          & ! RAS
++                 ,RD=r_d,RV=r_v,T0C=svpt0                           &
++                 ,EP1=ep_1, EP2=ep_2, QMIN=epsilon                  &
++                 ,XLS=xls, XLV0=xlv, XLF0=xlf                       &
++                 ,DEN0=rhoair0, DENR=rhowater                       &
++                 ,CLIQ=cliq,CICE=cice,PSAT=psat                     &
++                 ,xland=xland, xice=xice                            &  ! land mask, 1: land, 2: water
++                 ,RAIN=rainnc ,RAINNCV=rainncv                      &
++                 ,SNOW=snownc ,SNOWNCV=snowncv                      &
++                 ,SR=sr                                             &
++                 ,REFL_10CM=refl_10cm                               &  ! added for radar reflectivity
++                 ,diagflag=diagflag                                 &  ! added for radar reflectivity
++                 ,do_radar_ref=do_radar_ref                         &  ! added for radar reflectivity
++                 ,GRAUPEL=graupelnc ,GRAUPELNCV=graupelncv          &
++                 ,HAIL=hailnc ,HAILNCV=hailncv                      &
++                 ,ITIMESTEP=itimestep                               &
++                 ,udm_cldfra=udm_cldfra, udm_cf_step=udm_cf_step     &
++                 ,udm_cf_top=udm_cf_top                             &
++                 ,ccn_preinitialized=.true.                        &
++                 ,input_density_is_dry=.true.                       &
++                 ,has_reqc=has_reqc                                 &  ! for radiation +
++                 ,has_reqi=has_reqi                                 &
++                 ,has_reqs=has_reqs                                 &
++                 ,re_cloud=re_cloud                                 &
++                 ,re_ice=re_ice                                     &
++                 ,re_snow=re_snow                                   &  ! for radiation -
++                 ,IDS=ids,IDE=ide, JDS=jds,JDE=jde, KDS=kds,KDE=kde &
++                 ,IMS=ims,IME=ime, JMS=jms,JME=jme, KMS=kms,KME=kme &
++                 ,ITS=its,ITE=ite, JTS=jts,JTE=jte, KTS=kts,KTE=kte &
++                                                                    )
++! BEGIN UDM_NUMBER_STAGE_OBSERVER
++             ENDIF
++! END UDM_NUMBER_STAGE_OBSERVER
+              ! Capture the producer tuple before any later physics or dynamics
+              ! can change mass/number state. This is audit-only and uses the
+              ! same returned state that UDM used for its native RE_* write.
+diff --git a/WRF/phys/module_mp_udm.F b/WRF/phys/module_mp_udm.F
+index 9891f94..3d9fa06 100644
+--- a/WRF/phys/module_mp_udm.F
++++ b/WRF/phys/module_mp_udm.F
+@@ -7,6 +7,10 @@
+   module module_mp_udm
+    use module_mp_radar
+    use module_gfs_machine , only : kind_phys
++! BEGIN UDM_NUMBER_STAGE_OBSERVER
++   use, intrinsic :: iso_fortran_env, only: udm_num_real64=>real64
++   use, intrinsic :: ieee_arithmetic, only: udm_num_is_finite=>ieee_is_finite
++! END UDM_NUMBER_STAGE_OBSERVER
+ !
+ !-------------------------------------------------------------------------------
+ ! parameters for microphysical processes
+@@ -196,6 +200,16 @@
+    real, save :: mrmin
+ !
+ !-------------------------------------------------------------------------------
++! BEGIN UDM_NUMBER_STAGE_OBSERVER
++  ! Private experiment metadata only; no SAVE state and no number conversion.
++  type :: udm_number_observer_context
++    logical :: enabled=.false.
++    character(len=1024) :: directory=''
++    integer :: domain=0, selected_i=23, selected_j=2
++    logical :: initializer_active=.false.
++    real :: time_minutes=0., driver_dt=0., ccn_source=0.
++  end type udm_number_observer_context
++! END UDM_NUMBER_STAGE_OBSERVER
+ contains
+ !-------------------------------------------------------------------------------
+ ! Expose native process activation scales for an explicit radiation-input
+@@ -232,6 +246,9 @@ subroutine udm(th, q, qc, qr, qi, qs, qg, qh                                  &
+                  ,udm_cldfra, udm_cf_step, udm_cf_top                           &
+                  ,ccn_preinitialized                                          &
+                  ,input_density_is_dry                                        &
++! BEGIN UDM_NUMBER_STAGE_OBSERVER
++                 ,number_observer,number_observer_tile                         &
++! END UDM_NUMBER_STAGE_OBSERVER
+                                                                                )
+ !-------------------------------------------------------------------------------
+   implicit none
+@@ -246,6 +263,10 @@ subroutine udm(th, q, qc, qr, qi, qs, qg, qh                                  &
+   integer, dimension(ims:ime,jms:jme), optional, intent(inout) :: udm_cf_top
+   logical, optional, intent(in) :: ccn_preinitialized
+   logical, optional, intent(in) :: input_density_is_dry
++! BEGIN UDM_NUMBER_STAGE_OBSERVER
++  type(udm_number_observer_context), optional, intent(in) :: number_observer
++  integer, optional, intent(in) :: number_observer_tile
++! END UDM_NUMBER_STAGE_OBSERVER
+   real,              intent(in   ) :: delt, g, ccn0, rd, rv, t0c,     &
+                                       den0, cpd, cpv, ep1, ep2,       &
+                                       qmin, xls, xlv0, xlf0, cliq,    &
+@@ -367,6 +388,17 @@ subroutine udm(th, q, qc, qr, qi, qs, qg, qh                                  &
+           enddo
+         enddo
+ !
++! BEGIN UDM_NUMBER_STAGE_OBSERVER
++         if(udm_number_selected(number_observer,its,ite,j)) then
++           call udm_number_write(number_observer,itimestep,20,0,number_observer_tile, &
++             number_observer%selected_i,j,kts,kte, &
++             t(number_observer%selected_i,kts:kte),p(number_observer%selected_i,kts:kte,j), &
++             q(number_observer%selected_i,kts:kte,j), &
++             qci(number_observer%selected_i,kts:kte,1),qrs(number_observer%selected_i,kts:kte,1), &
++             ncr(number_observer%selected_i,kts:kte,1),ncr(number_observer%selected_i,kts:kte,2), &
++             ncr(number_observer%selected_i,kts:kte,3),den(number_observer%selected_i,kts:kte,j))
++         endif
++! END UDM_NUMBER_STAGE_OBSERVER
+          if (present(udm_cldfra) .and. present(udm_cf_step) .and. &
+              has_reqc==1 .and. has_reqi==1 .and. has_reqs==1) then
+          if (present(udm_cf_top)) then
+@@ -390,6 +422,9 @@ subroutine udm(th, q, qc, qr, qi, qs, qg, qh                                  &
+                     ,hail(ims,j),hailncv(ims,j),itimestep           &
+                     ,udm_cldfra(:,:,j),udm_cf_step(:,j),udm_cf_top(:,j) &
+                     ,input_density_is_dry=use_input_density_is_dry     &
++! BEGIN UDM_NUMBER_STAGE_OBSERVER
++                    ,number_observer=number_observer,number_observer_tile=number_observer_tile &
++! END UDM_NUMBER_STAGE_OBSERVER
+                                                                    )
+          else
+          call udm2d(t, q(ims,kms,j), qci, qrs                     &
+@@ -412,6 +447,9 @@ subroutine udm(th, q, qc, qr, qi, qs, qg, qh                                  &
+                     ,hail(ims,j),hailncv(ims,j),itimestep           &
+                     ,udm_cldfra(:,:,j),udm_cf_step(:,j)             &
+                     ,input_density_is_dry=use_input_density_is_dry   &
++! BEGIN UDM_NUMBER_STAGE_OBSERVER
++                    ,number_observer=number_observer,number_observer_tile=number_observer_tile &
++! END UDM_NUMBER_STAGE_OBSERVER
+                                                                    )
+          endif
+          else
+@@ -434,6 +472,9 @@ subroutine udm(th, q, qc, qr, qi, qs, qg, qh                                  &
+                     ,graupel(ims,j),graupelncv(ims,j)              &
+                     ,hail(ims,j),hailncv(ims,j),itimestep           &
+                     ,input_density_is_dry=use_input_density_is_dry &
++! BEGIN UDM_NUMBER_STAGE_OBSERVER
++                    ,number_observer=number_observer,number_observer_tile=number_observer_tile &
++! END UDM_NUMBER_STAGE_OBSERVER
+                                                                    )
+          endif
+         do k=kts,kte
+@@ -450,6 +491,18 @@ subroutine udm(th, q, qc, qr, qi, qs, qg, qh                                  &
+             nr(i,k,j) = ncr(i,k,3)
+           enddo
+         enddo
++! BEGIN UDM_NUMBER_STAGE_OBSERVER
++        if(udm_number_selected(number_observer,its,ite,j)) then
++          call udm_number_write(number_observer,itimestep,40,0,number_observer_tile, &
++            number_observer%selected_i,j,kts,kte, &
++            th(number_observer%selected_i,kts:kte,j)*pii(number_observer%selected_i,kts:kte,j), &
++            p(number_observer%selected_i,kts:kte,j), &
++            q(number_observer%selected_i,kts:kte,j),qc(number_observer%selected_i,kts:kte,j), &
++            qr(number_observer%selected_i,kts:kte,j),nn(number_observer%selected_i,kts:kte,j), &
++            nc(number_observer%selected_i,kts:kte,j),nr(number_observer%selected_i,kts:kte,j), &
++            den(number_observer%selected_i,kts:kte,j))
++        endif
++! END UDM_NUMBER_STAGE_OBSERVER
+ !-------------------------------------------------------------------------------
+         if ( present (diagflag) ) then
+           if (diagflag .and. do_radar_ref==1) then
+@@ -488,9 +541,23 @@ subroutine udm(th, q, qc, qr, qi, qs, qg, qh                                  &
+               qs1d(k) = qs(i,k,j)
+               nc1d(k) = nc(i,k,j)
+             enddo
++! BEGIN UDM_NUMBER_STAGE_OBSERVER
++            if(udm_number_selected(number_observer,i,i,j)) then
++              call udm_number_write(number_observer,itimestep,50,0,number_observer_tile,i,j,kts,kte, &
++                t1d(kts:kte),p(i,kts:kte,j),q(i,kts:kte,j),qc1d(kts:kte),qr(i,kts:kte,j), &
++                nn(i,kts:kte,j),nc1d(kts:kte),nr(i,kts:kte,j),den1d(kts:kte))
++            endif
++! END UDM_NUMBER_STAGE_OBSERVER
+             call udm_mp_effective_radius(t1d,qc1d,qi1d,qs1d,den1d,qmin, t0c    &
+                                ,nc1d                                           &
+                                ,re_qc, re_qi, re_qs, kts, kte, i, j)
++! BEGIN UDM_NUMBER_STAGE_OBSERVER
++            if(udm_number_selected(number_observer,i,i,j)) then
++              call udm_number_write(number_observer,itimestep,51,0,number_observer_tile,i,j,kts,kte, &
++                t1d(kts:kte),p(i,kts:kte,j),q(i,kts:kte,j),qc1d(kts:kte),qr(i,kts:kte,j), &
++                nn(i,kts:kte,j),nc1d(kts:kte),nr(i,kts:kte,j),den1d(kts:kte),re_cloud=re_qc(kts:kte))
++            endif
++! END UDM_NUMBER_STAGE_OBSERVER
+             do k=kts,kte
+               re_cloud(i,k,j) = max(recmin, min(re_qc(k), recmax))
+               re_ice(i,k,j)   = max(reimin, min(re_qi(k), reimax))
+@@ -525,6 +592,9 @@ subroutine udm2d(t1, q1                                          &
+                    ,hail,hailncv,itimestep                       &
+                    ,udm_cldfra,udm_cf_step,udm_cf_top            &
+                    ,input_density_is_dry                          &
++! BEGIN UDM_NUMBER_STAGE_OBSERVER
++                   ,number_observer,number_observer_tile &
++! END UDM_NUMBER_STAGE_OBSERVER
+                                                                   )
+ !
+ !-------------------------------------------------------------------------------
+@@ -630,6 +700,10 @@ subroutine udm2d(t1, q1                                          &
+                                                     its,ite, jts,jte, kts,kte
+    integer, intent(in) :: itimestep
+    logical, intent(in) :: input_density_is_dry
++! BEGIN UDM_NUMBER_STAGE_OBSERVER
++   type(udm_number_observer_context), optional, intent(in) :: number_observer
++   integer, optional, intent(in) :: number_observer_tile
++! END UDM_NUMBER_STAGE_OBSERVER
+    real, dimension(ims:ime,kms:kme), optional, intent(inout) :: udm_cldfra
+    integer, dimension(ims:ime), optional, intent(inout) :: udm_cf_step
+    integer, dimension(ims:ime), optional, intent(inout) :: udm_cf_top
+@@ -946,6 +1020,14 @@ subroutine udm2d(t1, q1                                          &
+ !-------------------------------------------------------------------------------
+ !
+  i_loop : do i = its, ite ! i-loop for one-dimensional code
++! BEGIN UDM_NUMBER_STAGE_OBSERVER
++   if(udm_number_selected(number_observer,i,i,lat)) then
++     call udm_number_write(number_observer,itimestep,21,loop,number_observer_tile,i,lat,kts,kte, &
++       t(kts:kte,i),p(kts:kte,i),q(kts:kte,i),qci(kts:kte,i,1),qrs(kts:kte,i,1), &
++       ncr(kts:kte,i,1),ncr(kts:kte,i,2),ncr(kts:kte,i,3),den(kts:kte,i), &
++       dend=dend(kts:kte,i),dt_substep=dtcld)
++   endif
++! END UDM_NUMBER_STAGE_OBSERVER
+ !
+ !-------------------------------------------------------------------------------
+ !
+@@ -1089,6 +1171,14 @@ subroutine udm2d(t1, q1                                          &
+         pidnr,drcoeff,qrmin,nrmin,nrmax,di1000,drmin,drmax)
+    call adjust_number_concent(ktopqc,kdim,qci(:,i,1),ncr(:,i,2),den(:,i),      &
+         pidnc,one_1,qcmin,ncmin,ncmax,di15,  dcmin, dcmax)
++! BEGIN UDM_NUMBER_STAGE_OBSERVER
++   if(udm_number_selected(number_observer,i,i,lat)) then
++     call udm_number_write(number_observer,itimestep,23,loop,number_observer_tile,i,lat,kts,kte, &
++       t(kts:kte,i),p(kts:kte,i),q(kts:kte,i),qci(kts:kte,i,1),qrs(kts:kte,i,1), &
++       ncr(kts:kte,i,1),ncr(kts:kte,i,2),ncr(kts:kte,i,3),den(kts:kte,i), &
++       dend=dend(kts:kte,i),dt_substep=dtcld)
++   endif
++! END UDM_NUMBER_STAGE_OBSERVER
+ !-------------------------------------------------------------------------------
+ ! obtain in-cloud properties
+ !
+@@ -2521,6 +2611,14 @@ subroutine udm2d(t1, q1                                          &
+    enddo
+ !
+    call find_cloud_top(1,kdim,ktopini,rh_mul(:), one_1,ktoprh)
++! BEGIN UDM_NUMBER_STAGE_OBSERVER
++   if(udm_number_selected(number_observer,i,i,lat)) then
++     call udm_number_write(number_observer,itimestep,30,loop,number_observer_tile,i,lat,kts,kte, &
++       t(kts:kte,i),p(kts:kte,i),q(kts:kte,i),qci(kts:kte,i,1),qrs(kts:kte,i,1), &
++       ncr(kts:kte,i,1),ncr(kts:kte,i,2),ncr(kts:kte,i,3),den(kts:kte,i), &
++       dend=dend(kts:kte,i),dt_substep=dtcld)
++   endif
++! END UDM_NUMBER_STAGE_OBSERVER
+ !
+    ktop = ktoprh
+    do k = ktop, kts, -1
+@@ -2539,6 +2637,14 @@ subroutine udm2d(t1, q1                                          &
+      endif
+    enddo
+ !-------------------------------------------------------------------------------
++! BEGIN UDM_NUMBER_STAGE_OBSERVER
++   if(udm_number_selected(number_observer,i,i,lat)) then
++     call udm_number_write(number_observer,itimestep,31,loop,number_observer_tile,i,lat,kts,kte, &
++       t(kts:kte,i),p(kts:kte,i),q(kts:kte,i),qci(kts:kte,i,1),qrs(kts:kte,i,1), &
++       ncr(kts:kte,i,1),ncr(kts:kte,i,2),ncr(kts:kte,i,3),den(kts:kte,i), &
++       dend=dend(kts:kte,i),dt_substep=dtcld,nc_act=ncact(kts:kte),pc_act=pcact(kts:kte))
++   endif
++! END UDM_NUMBER_STAGE_OBSERVER
+ ! pcond: condensational/evaporational rate of cloud water [hl a46]
+ ! (qv -> qc, qc->qv)
+    ktop = ktopini
+@@ -4655,6 +4761,112 @@ end subroutine udm_mp_reflectivity
+    end function fsvp_water
+ !-------------------------------------------------------------------------------
+ !
++! BEGIN UDM_NUMBER_STAGE_OBSERVER
++
++  subroutine udm_number_configure(context,domain,time_minutes,driver_dt,ccn_source)
++    type(udm_number_observer_context), intent(out) :: context
++    integer, intent(in) :: domain
++    real, optional, intent(in) :: time_minutes
++    real, intent(in) :: driver_dt,ccn_source
++    character(len=1024) :: value
++    integer :: ios,n
++    context%enabled=.false.
++    context%directory=''
++    context%domain=domain
++    context%time_minutes=0.
++    context%driver_dt=driver_dt
++    context%ccn_source=ccn_source
++    call get_environment_variable('WRF_UDM_NUMBER_STAGE_CAPTURE',value,length=n,status=ios)
++    if(ios==1.or.n==0) return
++    if(ios/=0.or.n/=1.or.value(1:1)/='1') error stop 'UDM_NUMBER_STAGE: gate must be empty or1'
++    if(.not.present(time_minutes)) error stop 'UDM_NUMBER_STAGE: enabled observer requires XTIME'
++    context%time_minutes=time_minutes
++    if(.not.udm_num_is_finite(time_minutes).or..not.udm_num_is_finite(driver_dt).or. &
++       .not.udm_num_is_finite(ccn_source)) error stop 'UDM_NUMBER_STAGE: nonfinite clock/seed'
++    if(driver_dt<=0..or.time_minutes<0.) error stop 'UDM_NUMBER_STAGE: invalid clock'
++    if(storage_size(1.)/=32.or.domain/=1) error stop 'UDM_NUMBER_STAGE: selected REAL32 domain1 only'
++    call get_environment_variable('WRF_UDM_NUMBER_STAGE_DIR',value,length=n,status=ios)
++    if(ios/=0.or.n<1.or.n>len(context%directory)) error stop 'UDM_NUMBER_STAGE: invalid directory'
++    context%directory=value
++    context%enabled=.true.
++  end subroutine udm_number_configure
++
++  logical function udm_number_selected(context,its,ite,j)
++    type(udm_number_observer_context), optional, intent(in) :: context
++    integer,intent(in) :: its,ite,j
++    udm_number_selected=.false.
++    if(.not.present(context)) return
++    if(.not.context%enabled) return
++    udm_number_selected=context%selected_i>=its.and.context%selected_i<=ite.and.j==context%selected_j
++  end function udm_number_selected
++
++  subroutine udm_number_write(context,step,stage,substep,tile,i,j,kts,kte,t,pressure,qv,qc,qr,nn,nc,nr,rho, &
++                               dend,re_cloud,nc_act,pc_act,dt_substep)
++    type(udm_number_observer_context),intent(in) :: context
++    integer,intent(in) :: step,stage,substep,i,j,kts,kte
++    integer,optional,intent(in) :: tile
++    real,intent(in) :: t(:),pressure(:),qv(:),qc(:),qr(:),nn(:),nc(:),nr(:),rho(:)
++    real,optional,intent(in) :: dend(:),re_cloud(:),nc_act(:),pc_act(:),dt_substep
++    integer :: unit,ios,n,k,available,initializer
++    real :: values(14)
++    character(len=1200) :: filename
++    if(.not.context%enabled) return
++    if(.not.present(tile)) error stop 'UDM_NUMBER_STAGE: missing tile'
++    n=kte-kts+1
++    if(n/=44.or.kts/=1.or.tile<1.or.step<1.or.i/=23.or.j/=2) &
++      error stop 'UDM_NUMBER_STAGE: invalid selected identity/shape'
++    if(size(t)/=n.or.size(pressure)/=n.or.size(qv)/=n.or.size(qc)/=n.or.size(qr)/=n.or. &
++       size(nn)/=n.or.size(nc)/=n.or.size(nr)/=n.or.size(rho)/=n) error stop 'UDM_NUMBER_STAGE: vector shape'
++    available=0
++    if(present(dend)) then
++      if(size(dend)/=n) error stop 'UDM_NUMBER_STAGE: DEND shape'
++      available=ibset(available,0)
++    endif
++    if(present(re_cloud)) then
++      if(size(re_cloud)/=n) error stop 'UDM_NUMBER_STAGE: radius shape'
++      available=ibset(available,1)
++    endif
++    if(present(nc_act)) then
++      if(size(nc_act)/=n) error stop 'UDM_NUMBER_STAGE: ncact shape'
++      available=ibset(available,2)
++    endif
++    if(present(pc_act)) then
++      if(size(pc_act)/=n) error stop 'UDM_NUMBER_STAGE: pcact shape'
++      available=ibset(available,3)
++    endif
++    if(present(dt_substep)) available=ibset(available,4)
++    initializer=0
++    if(context%initializer_active) initializer=1
++    write(filename,'(a,"/number_d",i0,"_tile",i0,"_i",i0,"_j",i0,"_step",i0,"_stage",i0,"_sub",i0,".raw")') &
++      trim(context%directory),context%domain,tile,i,j,step,stage,substep
++    open(newunit=unit,file=trim(filename),status='new',action='write',iostat=ios)
++    if(ios/=0) error stop 'UDM_NUMBER_STAGE: OPEN new packet failed'
++    write(unit,'(a)',iostat=ios) 'UDM37NUM1'
++    if(ios/=0) error stop 'UDM_NUMBER_STAGE: magic write failed'
++    write(unit,'(12(i0,1x))',iostat=ios) context%domain,step,stage,substep,tile,i,j,kts,kte, &
++      storage_size(1.),available,initializer
++    if(ios/=0) error stop 'UDM_NUMBER_STAGE: header write failed'
++    write(unit,'(3(es26.17e3,1x))',iostat=ios) real(context%time_minutes,udm_num_real64), &
++      real(context%driver_dt,udm_num_real64),real(context%ccn_source,udm_num_real64)
++    if(ios/=0) error stop 'UDM_NUMBER_STAGE: clock write failed'
++    do k=1,n
++      values=0.
++      values(1:9)=[t(k),pressure(k),qv(k),qc(k),qr(k),nn(k),nc(k),nr(k),rho(k)]
++      if(present(dend)) values(10)=dend(k)
++      if(present(re_cloud)) values(11)=re_cloud(k)
++      if(present(nc_act)) values(12)=nc_act(k)
++      if(present(pc_act)) values(13)=pc_act(k)
++      if(present(dt_substep)) values(14)=dt_substep
++      if(.not.all(udm_num_is_finite(values))) error stop 'UDM_NUMBER_STAGE: nonfinite selected row'
++      write(unit,'(i0,1x,14(es26.17e3,1x))',iostat=ios) kts+k-1,real(values,udm_num_real64)
++      if(ios/=0) error stop 'UDM_NUMBER_STAGE: row write failed'
++    enddo
++    flush(unit,iostat=ios)
++    if(ios/=0) error stop 'UDM_NUMBER_STAGE: FLUSH failed'
++    close(unit,iostat=ios)
++    if(ios/=0) error stop 'UDM_NUMBER_STAGE: CLOSE failed'
++  end subroutine udm_number_write
++! END UDM_NUMBER_STAGE_OBSERVER
+ end module module_mp_udm
+ !
+ !-------------------------------------------------------------------------------

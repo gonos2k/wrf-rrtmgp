@@ -1,0 +1,66 @@
+{
+  "schema": "UDM37_NUMBER_STAGE_TEXT_V1",
+  "magic": "UDM37NUM1",
+  "header_integer_fields": [
+    "domain",
+    "step",
+    "stage",
+    "substep",
+    "tile",
+    "i",
+    "j",
+    "kts",
+    "kte",
+    "host_real_bits",
+    "availability_bitmask",
+    "initializer_active"
+  ],
+  "clock_fields": [
+    "XTIME_minutes",
+    "driver_DT_seconds",
+    "CCN_CONC_source"
+  ],
+  "row_fields": [
+    "k",
+    "T",
+    "P",
+    "QV",
+    "QC",
+    "QR",
+    "NN",
+    "NC",
+    "NR",
+    "DEN_PASSED",
+    "DEND_INTERNAL_OBSERVED",
+    "RE_CLOUD_M",
+    "NC_ACT_RATE",
+    "PC_ACT_RATE",
+    "DT_SUBSTEP"
+  ],
+  "record_count": 44,
+  "native_kind_bits": 32,
+  "availability_bits": {
+    "0": "DEND_INTERNAL_OBSERVED",
+    "1": "RE_CLOUD_M",
+    "2": "NC_ACT_RATE",
+    "3": "PC_ACT_RATE",
+    "4": "DT_SUBSTEP"
+  },
+  "missing_optional_encoding": "Literal zero and unset availability bit; not a measured physical zero.",
+  "stages": {
+    "10": "HOST_INITIALIZER_BEFORE",
+    "11": "HOST_INITIALIZER_AFTER",
+    "20": "OUTER_COPY_BEFORE_UDM2D",
+    "21": "INTERNAL_SUBSTEP_ENTRY_AFTER_INITIAL_CLAMPS",
+    "23": "AFTER_FIRST_CLOUD_NUMBER_REPAIR",
+    "30": "BEFORE_ACTIVATION_LOOP",
+    "31": "AFTER_ACTIVATION_LOOP",
+    "40": "HOST_COPYBACK_COMPLETE",
+    "50": "NATIVE_RADIUS_HELPER_INPUT",
+    "51": "NATIVE_RADIUS_HELPER_OUTPUT"
+  },
+  "identity": "Fixed NUMBER(23,2) rank0/tile1 inside actual UDM crop. New QNN boundary destination(23,1) and source(23,2) are distinct; stage/step/clock/actualRK ancestry must remain explicit.",
+  "rk_semantics": "Only new QNN packets carry actual RK. NUMBER packets have actual microphysics step/XTIME/substep; no fabricated RK or old zero-Nc joins.",
+  "io": "Local NEWUNIT/status NEW/checked writes/flush/close. No Fortran fsync or persistence guarantee asserted.",
+  "finite_scope": "Every emitted row is checked finite; finite data alone does not certify physical units."
+}
