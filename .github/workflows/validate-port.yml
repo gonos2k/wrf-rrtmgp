@@ -324,6 +324,7 @@ jobs:
         run: |
           set -euo pipefail
           export LD_LIBRARY_PATH="$RUNNER_TEMP/netcdf/lib:/usr/lib/x86_64-linux-gnu:${LD_LIBRARY_PATH:-}"
+          python3 validation/rrtmgp37/domain-calendar-seeds/test_restart_diagnostics.py
           python3 validation/rrtmgp37/domain-calendar-seeds/run_restart_determinism.py \
             --repo . --baseline-root build/udm-scm \
             --output-root build/domain-seed-restart --calendar-boundary

@@ -70,6 +70,7 @@
             simulation_start_minute , &
             simulation_start_second
     LOGICAL reset_simulation_start
+    LOGICAL udm37_restart_diagnostics
     REAL dx_compare , dy_compare , dum
     INTEGER :: num_land_cat_compare
     CHARACTER (LEN=256) :: MMINLU
@@ -1292,6 +1293,19 @@
     IF ( (first_input   .LE. switch .AND. switch .LE. last_input) .OR. &
          (first_history .LE. switch .AND. switch .LE. last_history) .OR. &
          switch .EQ. restart_only    ) THEN
+      ! Older checkpoints have no last-call UDM37 diagnostics. Seed
+      ! unavailable values immediately before reading the registered fields.
+      ! Present checkpoint fields overwrite them; missing fields retain -1.
+      udm37_restart_diagnostics = switch == restart_only .AND. &
+          config_flags%mp_physics == UDMSCHEME .AND. &
+          config_flags%ra_lw_physics == RRTMGP_LWSCHEME .AND. &
+          config_flags%ra_sw_physics == RRTMGP_SWSCHEME
+      IF (udm37_restart_diagnostics) THEN
+         IF (ASSOCIATED(grid%udm_cldfra)) grid%udm_cldfra = -1.
+         IF (ASSOCIATED(grid%udm_cf_step)) grid%udm_cf_step = -1
+         IF (ASSOCIATED(grid%udm_cf_top)) grid%udm_cf_top = -1
+      ENDIF
+
       newswitch = switch
       p => grid%head_statevars%next
       DO WHILE ( ASSOCIATED( p ) ) 
@@ -1809,6 +1823,29 @@
               ENDIF
             ENDDO  ! loop over tracers
           ENDIF
+        ENDIF
+        ! A failed distributed read can still scatter a zero I/O buffer.
+        ! Restore unavailable values after that read for only these optional
+        ! diagnostics. Keep all other restart-field error handling unchanged.
+        IF (udm37_restart_diagnostics .AND. ierr /= WRF_NO_ERR .AND. &
+            p%Restart .AND. in_use_for_config(grid%id,TRIM(p%VarName))) THEN
+           SELECT CASE (TRIM(p%VarName))
+           CASE ('udm_cldfra', 'udm_cf_step', 'udm_cf_top')
+              SELECT CASE (TRIM(p%VarName))
+              CASE ('udm_cldfra')
+                 IF (ASSOCIATED(grid%udm_cldfra)) grid%udm_cldfra = -1.
+              CASE ('udm_cf_step')
+                 IF (ASSOCIATED(grid%udm_cf_step)) grid%udm_cf_step = -1
+              CASE ('udm_cf_top')
+                 IF (ASSOCIATED(grid%udm_cf_top)) grid%udm_cf_top = -1
+              END SELECT
+              IF (wrf_dm_on_monitor()) THEN
+                 WRITE(wrf_err_message,'(A,A,A,I0)') &
+                    'RRTMGP_UDM_DIAGNOSTIC_RESTART_UNAVAILABLE: ', &
+                    TRIM(p%VarName), ' read status=', ierr
+                 CALL wrf_message(TRIM(wrf_err_message))
+              ENDIF
+           END SELECT
         ENDIF
         p => p%next
       ENDDO

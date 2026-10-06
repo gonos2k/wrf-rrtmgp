@@ -1162,7 +1162,9 @@ CHARACTER(LEN=8) :: name
 
    ENDIF ! use_mp_re .EQ. 1
 
-   IF (config_flags%mp_physics == UDMSCHEME .AND. &
+   ! Restore these diagnostics from a new-format checkpoint on restart.
+   ! Only a cold start has no last microphysics call to report.
+   IF (.NOT. restart .AND. config_flags%mp_physics == UDMSCHEME .AND. &
        config_flags%ra_lw_physics == RRTMGP_LWSCHEME .AND. &
        config_flags%ra_sw_physics == RRTMGP_SWSCHEME) THEN
       IF (PRESENT(udm_cldfra)) THEN
