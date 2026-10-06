@@ -57,6 +57,8 @@ jobs:
             | tee build/cmake-package/configure.log
           cmake --build build/cmake-package/producer --parallel 2 | tee build/cmake-package/build.log
           cmake --install build/cmake-package/producer | tee build/cmake-package/install.log
+      - name: Check NetCDF-Fortran discovery with prefix and multiarch fixtures
+        run: python3 WRF/test/rrtmgp/test_cmake_netcdf_discovery.py --output-dir build/cmake-package/netcdf-discovery
       - name: Configure, link and run independent installed-package consumers
         run: |
           python3 WRF/test/rrtmgp/test_cmake_consumer_process.py
@@ -84,6 +86,7 @@ jobs:
             build/cmake-package/*.log
             build/cmake-package/wrf_gnu_serial.cmake
             build/cmake-package/consumers/**
+            build/cmake-package/netcdf-discovery/**
             build/cmake-package/scm/execution.json
             build/cmake-package/scm/*/process-result.json
             build/cmake-package/scm/*/*.log

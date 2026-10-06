@@ -12,6 +12,8 @@
     "fresh_configure": 1,
     "fresh_full_WRF_build": 1,
     "ideal": 1,
+    "inert_netcdf_compiles_or_links": 0,
+    "inert_netcdf_configures": 6,
     "install": 1
   },
   "first_consumer_runner_sha256": "c25c39717ce0befd65be3429ff529e7153b41cab659c899b6c5f8c147e7f6ef4",
@@ -24,6 +26,13 @@
     "Nc/PSD physical contract, RFMIP strict residual and LBLRTM negative optical-depth gates remain unresolved.",
     "Failures are retained and not relabeled as passes; original preparation head65 was superseded by build45 only in the explicit runtime binding."
   ],
+  "post_build_dependency_fix": {
+    "does_not_relabel_v3": "v3 compiled old finder against separate prefix/lib; remote failure exposed distro layout gap",
+    "parent_control_limit": "Initial parent control omitted the C companion finder and failed for that fixture preparation reason. Its receipt is retained; corrected control v2 uses both original finder files.",
+    "sha256": "6c4ca34dfbcf3c27acb74de4b63121de0d777709fbab8841107b5b2f14171ac2",
+    "source_path": "WRF/cmake/modules/FindnetCDF-Fortran.cmake",
+    "status": "3 inert path-selection fixtures PASS; original finder flat-prefix PASS then multiarch FAIL; remote real dependency/build pending"
+  },
   "process_lifecycle_unit_tests": {
     "actual_test_script_exit_code": 0,
     "compiler_calls": 0,
@@ -1290,6 +1299,369 @@
       },
       "sha256": "38b5e5526a06407a6743534b3265b44a3813a767c3ea54c069be125bdd18ee24"
     },
+    "netcdf_discovery_current": {
+      "bytes": 9521,
+      "local_path": "build/udm37-cmake-discovery-current-v1/execution.json",
+      "receipt": {
+        "cases": [
+          {
+            "argv": [
+              "/usr/local/bin/cmake",
+              "-S",
+              "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-current-v1/prefix-lib/src",
+              "-B",
+              "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-current-v1/prefix-lib/build",
+              "-DFIXTURE_MODULE_DIR=/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-integration-pr-work/WRF/cmake/modules",
+              "-DFIXTURE_ARCH=fixture-multiarch",
+              "-DFIXTURE_EXPECTED_LIBRARY=/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-current-v1/prefix-lib/prefix/lib/libnetcdff.a"
+            ],
+            "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-current-v1/prefix-lib",
+            "ended_unix": 1791279194.7563384,
+            "log": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-current-v1/prefix-lib/configure.log",
+            "log_sha256": "65aed490826322ab24b840c04b7ebceb45795002cae84dbc88c69bf6f5d24bba",
+            "log_size_bytes": 655,
+            "name": "prefix-lib-configure",
+            "nf_config_arguments": [
+              "--includedir",
+              "--prefix",
+              "--flibs",
+              "--version",
+              "--has-dap",
+              "--has-nc2",
+              "--has-nc4",
+              "--has-f90",
+              "--has-f03"
+            ],
+            "pid": 3059078,
+            "process_group": 3059078,
+            "reaped": true,
+            "returncode": 0,
+            "started_unix": 1791279194.5831566,
+            "status": "PASS_PATH_SELECTED",
+            "timed_out": false,
+            "timeout_seconds": 60
+          },
+          {
+            "argv": [
+              "/usr/local/bin/cmake",
+              "-S",
+              "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-current-v1/prefix-multiarch/src",
+              "-B",
+              "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-current-v1/prefix-multiarch/build",
+              "-DFIXTURE_MODULE_DIR=/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-integration-pr-work/WRF/cmake/modules",
+              "-DFIXTURE_ARCH=fixture-multiarch",
+              "-DFIXTURE_EXPECTED_LIBRARY=/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-current-v1/prefix-multiarch/prefix/lib/fixture-multiarch/libnetcdff.a"
+            ],
+            "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-current-v1/prefix-multiarch",
+            "ended_unix": 1791279194.9438813,
+            "log": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-current-v1/prefix-multiarch/configure.log",
+            "log_sha256": "222803fb9c4834e800ff7cac288ae408fd24e7a9ce4e30d69d56c5003b990dbf",
+            "log_size_bytes": 715,
+            "name": "prefix-multiarch-configure",
+            "nf_config_arguments": [
+              "--includedir",
+              "--prefix",
+              "--flibs",
+              "--version",
+              "--has-dap",
+              "--has-nc2",
+              "--has-nc4",
+              "--has-f90",
+              "--has-f03"
+            ],
+            "pid": 3059090,
+            "process_group": 3059090,
+            "reaped": true,
+            "returncode": 0,
+            "started_unix": 1791279194.7736852,
+            "status": "PASS_PATH_SELECTED",
+            "timed_out": false,
+            "timeout_seconds": 60
+          },
+          {
+            "argv": [
+              "/usr/local/bin/cmake",
+              "-S",
+              "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-current-v1/explicit-l-after-flags/src",
+              "-B",
+              "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-current-v1/explicit-l-after-flags/build",
+              "-DFIXTURE_MODULE_DIR=/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-integration-pr-work/WRF/cmake/modules",
+              "-DFIXTURE_ARCH=fixture-multiarch",
+              "-DFIXTURE_EXPECTED_LIBRARY=/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-current-v1/explicit-l-after-flags/external/lib/libnetcdff.a"
+            ],
+            "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-current-v1/explicit-l-after-flags",
+            "ended_unix": 1791279195.1319442,
+            "log": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-current-v1/explicit-l-after-flags/configure.log",
+            "log_sha256": "4516beb70c24bb8f90c71564b47f3de5ac29a057b38a61609e4383bdf55dacd7",
+            "log_size_bytes": 707,
+            "name": "explicit-l-after-flags-configure",
+            "nf_config_arguments": [
+              "--includedir",
+              "--prefix",
+              "--flibs",
+              "--version",
+              "--has-dap",
+              "--has-nc2",
+              "--has-nc4",
+              "--has-f90",
+              "--has-f03"
+            ],
+            "pid": 3059102,
+            "process_group": 3059102,
+            "reaped": true,
+            "returncode": 0,
+            "started_unix": 1791279194.9587011,
+            "status": "PASS_PATH_SELECTED",
+            "timed_out": false,
+            "timeout_seconds": 60
+          }
+        ],
+        "cmake": "/usr/local/bin/cmake",
+        "current_stage": "explicit-l-after-flags-configure",
+        "finder": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-integration-pr-work/WRF/cmake/modules/FindnetCDF-Fortran.cmake",
+        "finder_sha256": "6c4ca34dfbcf3c27acb74de4b63121de0d777709fbab8841107b5b2f14171ac2",
+        "finder_size_bytes": 7380,
+        "process_helper_sha256": "d6b5c09f0a860e4b8889cc48542590c45d1f0a6101004bace536de7f94600c0f",
+        "schema": "NETCDF_FORTRAN_DISCOVERY_FIXTURE_V1",
+        "scope": "CMake configure-time path selection; no linking",
+        "stages": [
+          {
+            "argv": [
+              "/usr/local/bin/cmake",
+              "-S",
+              "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-current-v1/prefix-lib/src",
+              "-B",
+              "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-current-v1/prefix-lib/build",
+              "-DFIXTURE_MODULE_DIR=/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-integration-pr-work/WRF/cmake/modules",
+              "-DFIXTURE_ARCH=fixture-multiarch",
+              "-DFIXTURE_EXPECTED_LIBRARY=/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-current-v1/prefix-lib/prefix/lib/libnetcdff.a"
+            ],
+            "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-current-v1/prefix-lib",
+            "ended_unix": 1791279194.7563384,
+            "log": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-current-v1/prefix-lib/configure.log",
+            "log_sha256": "65aed490826322ab24b840c04b7ebceb45795002cae84dbc88c69bf6f5d24bba",
+            "log_size_bytes": 655,
+            "name": "prefix-lib-configure",
+            "pid": 3059078,
+            "process_group": 3059078,
+            "reaped": true,
+            "returncode": 0,
+            "started_unix": 1791279194.5831566,
+            "status": "COMPLETE",
+            "timed_out": false,
+            "timeout_seconds": 60
+          },
+          {
+            "argv": [
+              "/usr/local/bin/cmake",
+              "-S",
+              "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-current-v1/prefix-multiarch/src",
+              "-B",
+              "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-current-v1/prefix-multiarch/build",
+              "-DFIXTURE_MODULE_DIR=/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-integration-pr-work/WRF/cmake/modules",
+              "-DFIXTURE_ARCH=fixture-multiarch",
+              "-DFIXTURE_EXPECTED_LIBRARY=/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-current-v1/prefix-multiarch/prefix/lib/fixture-multiarch/libnetcdff.a"
+            ],
+            "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-current-v1/prefix-multiarch",
+            "ended_unix": 1791279194.9438813,
+            "log": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-current-v1/prefix-multiarch/configure.log",
+            "log_sha256": "222803fb9c4834e800ff7cac288ae408fd24e7a9ce4e30d69d56c5003b990dbf",
+            "log_size_bytes": 715,
+            "name": "prefix-multiarch-configure",
+            "pid": 3059090,
+            "process_group": 3059090,
+            "reaped": true,
+            "returncode": 0,
+            "started_unix": 1791279194.7736852,
+            "status": "COMPLETE",
+            "timed_out": false,
+            "timeout_seconds": 60
+          },
+          {
+            "argv": [
+              "/usr/local/bin/cmake",
+              "-S",
+              "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-current-v1/explicit-l-after-flags/src",
+              "-B",
+              "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-current-v1/explicit-l-after-flags/build",
+              "-DFIXTURE_MODULE_DIR=/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-integration-pr-work/WRF/cmake/modules",
+              "-DFIXTURE_ARCH=fixture-multiarch",
+              "-DFIXTURE_EXPECTED_LIBRARY=/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-current-v1/explicit-l-after-flags/external/lib/libnetcdff.a"
+            ],
+            "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-current-v1/explicit-l-after-flags",
+            "ended_unix": 1791279195.1319442,
+            "log": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-current-v1/explicit-l-after-flags/configure.log",
+            "log_sha256": "4516beb70c24bb8f90c71564b47f3de5ac29a057b38a61609e4383bdf55dacd7",
+            "log_size_bytes": 707,
+            "name": "explicit-l-after-flags-configure",
+            "pid": 3059102,
+            "process_group": 3059102,
+            "reaped": true,
+            "returncode": 0,
+            "started_unix": 1791279194.9587011,
+            "status": "COMPLETE",
+            "timed_out": false,
+            "timeout_seconds": 60
+          }
+        ],
+        "status": "PASS_ALL_3_CONFIGURE_CASES"
+      },
+      "sha256": "f7aec827bc1b167465db3757feeaa3afb997fe89b15a3952a682baff7f3261c1"
+    },
+    "netcdf_discovery_incomplete_parent_control": {
+      "bytes": 1985,
+      "local_path": "build/udm37-cmake-discovery-parent-control-v1/execution.json",
+      "receipt": {
+        "cases": [],
+        "cmake": "/usr/local/bin/cmake",
+        "current_stage": "prefix-lib-configure",
+        "finder": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-parent-source-v1/WRF/cmake/modules/FindnetCDF-Fortran.cmake",
+        "finder_sha256": "7fe59f2b03eaf26b97e11a674c87b61e0c597f89db6e0af5ba6f7540c134e591",
+        "finder_size_bytes": 6774,
+        "process_helper_sha256": "d6b5c09f0a860e4b8889cc48542590c45d1f0a6101004bace536de7f94600c0f",
+        "schema": "NETCDF_FORTRAN_DISCOVERY_FIXTURE_V1",
+        "scope": "CMake configure-time path selection; no linking",
+        "stages": [
+          {
+            "argv": [
+              "/usr/local/bin/cmake",
+              "-S",
+              "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-parent-control-v1/prefix-lib/src",
+              "-B",
+              "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-parent-control-v1/prefix-lib/build",
+              "-DFIXTURE_MODULE_DIR=/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-parent-source-v1/WRF/cmake/modules",
+              "-DFIXTURE_ARCH=fixture-multiarch",
+              "-DFIXTURE_EXPECTED_LIBRARY=/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-parent-control-v1/prefix-lib/prefix/lib/libnetcdff.a"
+            ],
+            "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-parent-control-v1/prefix-lib",
+            "ended_unix": 1791279227.782163,
+            "log": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-parent-control-v1/prefix-lib/configure.log",
+            "log_sha256": "8e39cb3858bc76aaa95dd5b7534a74d96443a1a8851d1293e5c74da736a82333",
+            "log_size_bytes": 1178,
+            "name": "prefix-lib-configure",
+            "pid": 3061523,
+            "process_group": 3061523,
+            "reaped": true,
+            "returncode": 1,
+            "started_unix": 1791279227.6126695,
+            "status": "COMMAND_FAILED",
+            "timed_out": false,
+            "timeout_seconds": 60
+          }
+        ],
+        "status": "FAIL_PRESERVED"
+      },
+      "sha256": "b4fa66d00491122ff0c3f107877a60fb4d4f429f95abf5e102c81efd8804a5f7"
+    },
+    "netcdf_discovery_parent_control": {
+      "bytes": 5005,
+      "local_path": "build/udm37-cmake-discovery-parent-control-v2/execution.json",
+      "receipt": {
+        "cases": [
+          {
+            "argv": [
+              "/usr/local/bin/cmake",
+              "-S",
+              "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-parent-control-v2/prefix-lib/src",
+              "-B",
+              "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-parent-control-v2/prefix-lib/build",
+              "-DFIXTURE_MODULE_DIR=/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-parent-source-v1/WRF/cmake/modules",
+              "-DFIXTURE_ARCH=fixture-multiarch",
+              "-DFIXTURE_EXPECTED_LIBRARY=/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-parent-control-v2/prefix-lib/prefix/lib/libnetcdff.a"
+            ],
+            "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-parent-control-v2/prefix-lib",
+            "ended_unix": 1791279242.790637,
+            "log": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-parent-control-v2/prefix-lib/configure.log",
+            "log_sha256": "0ff610a21d1c37810286b939df4ad9c4056299be23a6c06d16bbe4958fa40651",
+            "log_size_bytes": 683,
+            "name": "prefix-lib-configure",
+            "nf_config_arguments": [
+              "--includedir",
+              "--prefix",
+              "--flibs",
+              "--version",
+              "--has-dap",
+              "--has-nc2",
+              "--has-nc4",
+              "--has-f90",
+              "--has-f03"
+            ],
+            "pid": 3062492,
+            "process_group": 3062492,
+            "reaped": true,
+            "returncode": 0,
+            "started_unix": 1791279242.6175652,
+            "status": "PASS_PATH_SELECTED",
+            "timed_out": false,
+            "timeout_seconds": 60
+          }
+        ],
+        "cmake": "/usr/local/bin/cmake",
+        "current_stage": "prefix-multiarch-configure",
+        "finder": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-parent-source-v1/WRF/cmake/modules/FindnetCDF-Fortran.cmake",
+        "finder_sha256": "7fe59f2b03eaf26b97e11a674c87b61e0c597f89db6e0af5ba6f7540c134e591",
+        "finder_size_bytes": 6774,
+        "process_helper_sha256": "d6b5c09f0a860e4b8889cc48542590c45d1f0a6101004bace536de7f94600c0f",
+        "schema": "NETCDF_FORTRAN_DISCOVERY_FIXTURE_V1",
+        "scope": "CMake configure-time path selection; no linking",
+        "stages": [
+          {
+            "argv": [
+              "/usr/local/bin/cmake",
+              "-S",
+              "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-parent-control-v2/prefix-lib/src",
+              "-B",
+              "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-parent-control-v2/prefix-lib/build",
+              "-DFIXTURE_MODULE_DIR=/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-parent-source-v1/WRF/cmake/modules",
+              "-DFIXTURE_ARCH=fixture-multiarch",
+              "-DFIXTURE_EXPECTED_LIBRARY=/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-parent-control-v2/prefix-lib/prefix/lib/libnetcdff.a"
+            ],
+            "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-parent-control-v2/prefix-lib",
+            "ended_unix": 1791279242.790637,
+            "log": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-parent-control-v2/prefix-lib/configure.log",
+            "log_sha256": "0ff610a21d1c37810286b939df4ad9c4056299be23a6c06d16bbe4958fa40651",
+            "log_size_bytes": 683,
+            "name": "prefix-lib-configure",
+            "pid": 3062492,
+            "process_group": 3062492,
+            "reaped": true,
+            "returncode": 0,
+            "started_unix": 1791279242.6175652,
+            "status": "COMPLETE",
+            "timed_out": false,
+            "timeout_seconds": 60
+          },
+          {
+            "argv": [
+              "/usr/local/bin/cmake",
+              "-S",
+              "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-parent-control-v2/prefix-multiarch/src",
+              "-B",
+              "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-parent-control-v2/prefix-multiarch/build",
+              "-DFIXTURE_MODULE_DIR=/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-parent-source-v1/WRF/cmake/modules",
+              "-DFIXTURE_ARCH=fixture-multiarch",
+              "-DFIXTURE_EXPECTED_LIBRARY=/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-parent-control-v2/prefix-multiarch/prefix/lib/fixture-multiarch/libnetcdff.a"
+            ],
+            "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-parent-control-v2/prefix-multiarch",
+            "ended_unix": 1791279242.9789655,
+            "log": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-parent-control-v2/prefix-multiarch/configure.log",
+            "log_sha256": "f81225a11c93240c065da1209892896cf7514700d761671ade82a1f32738f576",
+            "log_size_bytes": 829,
+            "name": "prefix-multiarch-configure",
+            "pid": 3062504,
+            "process_group": 3062504,
+            "reaped": true,
+            "returncode": 1,
+            "started_unix": 1791279242.8088105,
+            "status": "COMMAND_FAILED",
+            "timed_out": false,
+            "timeout_seconds": 60
+          }
+        ],
+        "status": "FAIL_PRESERVED"
+      },
+      "sha256": "9b092ec7eac4a469c7dbf9f87df5df51610d447528a608908fd2c9d3e06d7bcb"
+    },
     "runner_corrected": {
       "bytes": 594,
       "local_path": "build/udm37-cmake-scm-preparation-v1/root-runner-receipt-v2.json",
@@ -1467,11 +1839,21 @@
       "sha256": "e61c704e67189d71ac5fd803ee0e28f500110b54ae53b6e59a5ed45d94a316d5"
     }
   },
+  "remote_configure_failure": {
+    "actual_step_RC": 1,
+    "failure_phase": "configure before WRF build",
+    "log_sha256": "7d8de8f354c6d1002f37d1682d87c578bb814090d89b19db9e3fe315099eb1d3",
+    "log_size_bytes": 9787,
+    "message": "netCDF-Fortran_LIBRARY missing: generic /usr prefix with Ubuntu multiarch libdir not searched by original finder",
+    "observed_status": "FAILURE",
+    "run_id": 37442785026,
+    "url": "https://github.com/gonos2k/wrf-rrtmgp/actions/runs/37442785026"
+  },
   "schema": "UDM37_CURRENT_CMAKE_ENGINEERING_V1",
   "source_sha256": {
     ".github/workflows/validate-cmake-package.yml": {
-      "bytes": 4277,
-      "sha256": "c5cdc2488f3f3d060a14ccc6d88b237b55643128dd3b16442cf21e5f7dcbb621"
+      "bytes": 4527,
+      "sha256": "b796f1b0dd70b4bd5a833142b30d85b1ac9f8f9608d57c55433289f6f65b7f97"
     },
     ".github/workflows/validate-port.yml": {
       "bytes": 24964,
@@ -1480,6 +1862,10 @@
     "WRF/CMakeLists.txt": {
       "bytes": 53214,
       "sha256": "f2a9fad649e0d9dfc23d0f0719252b438c928e9fa4346ad08eb9dd460331fc99"
+    },
+    "WRF/cmake/modules/FindnetCDF-Fortran.cmake": {
+      "bytes": 7380,
+      "sha256": "6c4ca34dfbcf3c27acb74de4b63121de0d777709fbab8841107b5b2f14171ac2"
     },
     "WRF/external/rte_rrtmgp/CMakeLists.txt": {
       "bytes": 2123,
@@ -1505,13 +1891,17 @@
       "bytes": 14000,
       "sha256": "d6b5c09f0a860e4b8889cc48542590c45d1f0a6101004bace536de7f94600c0f"
     },
+    "WRF/test/rrtmgp/test_cmake_netcdf_discovery.py": {
+      "bytes": 6194,
+      "sha256": "0c46fd317cc24bfa4545f4820a853afabecf5248858ea5e941eb634cf160a9f6"
+    },
     "WRF/test/rrtmgp/test_input_wrf_udm_sentinel_kinds.py": {
       "bytes": 10804,
       "sha256": "ad4375ff97854f907dffc6bfb3847e16bd7ffd8833b7157e55963c6f5fdff95a"
     },
     "config/registration37.json": {
-      "bytes": 32663,
-      "sha256": "6f1d949f801bf415f9ba9cd4b63337a0a11f66d53bd589bb1bc6cc0e97cc5c92"
+      "bytes": 32753,
+      "sha256": "0fd1d14a8a63f08c01b5b7a13080690c005a171f008a1a915b048fcf64a653db"
     }
   },
   "status": "PASS_SCOPED_LOCAL_CMAKE_INTEGRATION",
