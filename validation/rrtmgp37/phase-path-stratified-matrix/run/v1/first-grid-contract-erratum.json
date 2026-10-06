@@ -1,0 +1,39 @@
+{
+  "classification": "ENGINE_SUCCEEDED_VALIDATOR_COMPOSITION_CONTRACT_INCORRECT",
+  "corrected_contract": "CF0_UNIFORM must preserve CLOUD_TAU and PRECIP_TAU exactly; GRID_UNIFORM must produce bitwise +0 PRECIP_TAU and baseline CLOUD_TAU == variant CLOUD_TAU + baseline PRECIP_TAU bitwise. The latter is the source-ordered forward reconstruction.",
+  "first_grid_job_key": "cf0_rain_136_48/LW/seed-0000100001/grid_uniform",
+  "first_grid_job_record_status_in_original_receipt": "RUNNING",
+  "independent_root_readback": {
+    "new_engine_calls": 0,
+    "path": "build/udm-stratified-final-manifest/diagnostic-exe-v1/root-matrix-v1-composition-readback.json",
+    "sha256": "cc924acde9bd7508dbc7cce1e0c66c88c7d53f2ce4ae5bc5dedff6c7137e5564",
+    "status": "PASS_OFFLINE_EXACT_COMPOSITION_READBACK"
+  },
+  "log_path": "build/udm-stratified-final-manifest/diagnostic-exe-v1/matrix32-execution-20261003-v1/jobs/cf0_rain_136_48/lw/seed-0000100001/variant-grid_uniform/attempt-01/stdout.log",
+  "log_sha256": "9126933df048f0a32551ac08fd67233b841365027bb673024e8989920d9eb93d",
+  "original_matrix_receipt_path": "build/udm-stratified-final-manifest/diagnostic-exe-v1/matrix32-execution-20261003-v1/receipt.json",
+  "original_receipt_preserved_unchanged": true,
+  "original_receipt_sha256": "b87c6f5a781e6f636d57709ab904b77b7721993858acc96cb0c5d8953256bda4",
+  "original_receipt_status": "FAIL_STOPPED_FIRST_ERROR",
+  "process_returncode": 0,
+  "readback_checks": {
+    "baseline_cloud_equals_grid_cloud_plus_baseline_precip_bitwise": true,
+    "baseline_vs_cf0_cloud_tau_bitwise_equal": true,
+    "baseline_vs_cf0_precip_tau_bitwise_equal": true,
+    "grid_cloud_tau_delta_max_abs": 0.002431724510192912,
+    "grid_di_used_bitwise_equal": true,
+    "grid_precip_tau_delta_max_abs": 0.002431724510192871,
+    "grid_precip_tau_positive_zero_bitwise": true
+  },
+  "result_path": "build/udm-stratified-final-manifest/diagnostic-exe-v1/matrix32-execution-20261003-v1/jobs/cf0_rain_136_48/lw/seed-0000100001/variant-grid_uniform/attempt-01/result.txt",
+  "result_sha256": "41074f1a88ef888adda508de4212d1bcd06b005affde825796e0d70974dcd466",
+  "schema": "UDM_MATRIX_FIRST_GRID_JOB_ERRATUM_V1",
+  "source_semantics": {
+    "consequence": "CLOUD_TAU is the combined object after sampled precipitation, not a cloud-only invariant.",
+    "file": "build/udm-stratified-final-manifest/diagnostic-exe-v1/reference_column.f90",
+    "lw_source_lines": "695-728: sampled precipitation is incremented into lw_cloud before CLOUD_TAU is captured",
+    "sha256": "c18a97a65c7d9168e09cad8ac989e0737b295a66dd7fb87704d90ec72f66654e",
+    "sw_source_lines": "876-939: sampled precipitation is incremented into sw_cloud before CLOUD_TAU is captured; matrix policy is 1"
+  },
+  "validator_failure": "precipitation variant changed non-target cloud tau"
+}

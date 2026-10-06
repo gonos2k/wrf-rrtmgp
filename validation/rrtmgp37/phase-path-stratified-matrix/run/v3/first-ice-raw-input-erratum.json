@@ -1,0 +1,46 @@
+{
+  "baseline_result_path": "build/udm-stratified-final-manifest/diagnostic-exe-v1/matrix32-execution-20261003-v3/jobs/ice_clip_low_132_35/lw/seed-0000100001/baseline-base/attempt-01/result.txt",
+  "baseline_result_sha256": "2592446c791c5c76cbb35fc652074389cbbd9ce5a8a43e00b4895ee7b112db90",
+  "classification": "ENGINE_SUCCEEDED_VALIDATOR_EXPECTED_FIELD_ABSENT_FROM_BASELINE",
+  "corrected_contract": "Baseline output omits ICE_DIAMETER_RAW by design; validate the sensitivity result against input-derived raw diameter, then validate active/inactive DI_USED separately.",
+  "failure": "raw ice diameter changed between paired calls",
+  "field_semantics": {
+    "baseline_has_ICE_DIAMETER_RAW": false,
+    "correct_check": "Compare ICE_DIAMETER_RAW emitted on the ice sensitivity call against 2*REI parsed from the pinned input; compare baseline raw to variant only if baseline emits that optional section.",
+    "source_file": "build/udm-stratified-final-manifest/diagnostic-exe-v1/reference_column.f90",
+    "source_rule": "ice_diameter(radius,flag) sets diameter=2*radius and divides only for flag==3; captured input metadata uses microphysics flag 4.",
+    "source_sha256": "c18a97a65c7d9168e09cad8ac989e0737b295a66dd7fb87704d90ec72f66654e",
+    "variant_has_ICE_DIAMETER_RAW": true
+  },
+  "job_key": "ice_clip_low_132_35/LW/seed-0000100001/ice160",
+  "log_path": "build/udm-stratified-final-manifest/diagnostic-exe-v1/matrix32-execution-20261003-v3/jobs/ice_clip_low_132_35/lw/seed-0000100001/variant-ice160/attempt-01/stdout.log",
+  "log_sha256": "9126933df048f0a32551ac08fd67233b841365027bb673024e8989920d9eb93d",
+  "new_engine_calls": 0,
+  "original_matrix_receipt_path": "build/udm-stratified-final-manifest/diagnostic-exe-v1/matrix32-execution-20261003-v3/receipt.json",
+  "original_receipt_preserved_unchanged": true,
+  "original_receipt_sha256": "56389d05258e1dd0ed4af41ec6076d8af6db962f78f86bcbc7b9ee85406e0622",
+  "original_receipt_status": "FAIL_STOPPED_FIRST_ERROR",
+  "process_returncode": 0,
+  "readback": {
+    "baseline_raw_field_absent_as_source_emits_only_for_ice_modes": true,
+    "expected_raw_equals_variant_bitwise": true,
+    "expected_raw_shape": [
+      1,
+      47,
+      1
+    ],
+    "gas_column_bitwise_equal": true,
+    "input_ice_size_flag": 4,
+    "lw_frozen_absorption_bitwise_equal": true,
+    "max_abs_difference": 0.0,
+    "paired_mask_bitwise_equal": true,
+    "variant_raw_shape": [
+      1,
+      47,
+      1
+    ]
+  },
+  "result_path": "build/udm-stratified-final-manifest/diagnostic-exe-v1/matrix32-execution-20261003-v3/jobs/ice_clip_low_132_35/lw/seed-0000100001/variant-ice160/attempt-01/result.txt",
+  "result_sha256": "f73e8b6deae3b68f983d78766ed3892e51eb61a6a783987e40c21b01afea60f7",
+  "schema": "UDM_MATRIX_V3_ICE_RAW_INPUT_ERRATUM_V1"
+}
