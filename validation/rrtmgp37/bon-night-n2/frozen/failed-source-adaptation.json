@@ -1,0 +1,56 @@
+{
+  "adapted_source": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-n2-attribution-v1/preparation/reference_column.f90",
+    "sha256": "c8ba5b0c44b3b0cab55c5ca3990f499df5790b8d1945f2c204e10a51d27321a3",
+    "size_bytes": 92912
+  },
+  "base_transport_source": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-lw-transport-attribution-v1/preparation/reference_column.f90",
+    "sha256": "bd83001cde913134cd7294cb6f697eb851eb8164beb4af08934a64a2bba2ed0e",
+    "size_bytes": 91116
+  },
+  "behavior": {
+    "SW": "reject supplied N2_OVERRIDE before gas/radiation processing",
+    "absent": "retain exact existing ten-gas init path",
+    "arg8": "optional N2_OVERRIDE dry VMR; COMMAND_ARGUMENT_COUNT gate; one-token grammar; finite and in [0,1]",
+    "present": "initialize LW gas set with N2 and set constant VMR for every column/layer",
+    "sidecar": "append N2_OVERRIDE to existing .lw_transport only when arg7 explicitly selected"
+  },
+  "cli_checks": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-n2-attribution-v1/preparation/cli-negative-checks.json",
+    "sha256": "428d2d262754a74d4a1dd3e459cbe44cad934d5b1f848e1c9066412f85d17795",
+    "size_bytes": 2159
+  },
+  "execution_counts": {
+    "REAL": 0,
+    "WRF": 0,
+    "compile": 0,
+    "solver": 0
+  },
+  "initial_v1_snapshot": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-n2-attribution-v1/preparation/initial-v1/snapshot.json",
+    "sha256": "80e677c0aaa808688d39ef92d78c96dd35cb79d82493689fd6075f4761229b1f",
+    "size_bytes": 1586
+  },
+  "limitations": [
+    "No scientific accuracy claim for N2_OVERRIDE=0.7808",
+    "Diagnostic reference-column source only; no production defaults changed"
+  ],
+  "patch": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-n2-attribution-v1/preparation/reference_column.patch",
+    "sha256": "6bd4e084af6940dacedec95b761701838a87570c3576424205442ed2b2b4dddd",
+    "size_bytes": 5594
+  },
+  "planned_sensitivity_calls": [
+    "policy 1, no arg8 baseline",
+    "policy 1, arg8=0.0 control",
+    "policy 1, arg8=0.7808 primary"
+  ],
+  "readme": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-n2-attribution-v1/preparation/README.md",
+    "sha256": "02132b16864037510ed796da034cc8c0ee27deb672eb75a70c450a5da30f5a0e",
+    "size_bytes": 1819
+  },
+  "schema": "bon-night-n2-attribution-adaptation-v2",
+  "status": "PRIVATE_SOURCE_ADAPTATION_READY_FOR_REVIEW_NO_BUILD_NO_SOLVER"
+}
