@@ -1,0 +1,73 @@
+{
+  "schema": "UDM37_ROOT_PARTIAL_OFFLINE_ANALYSIS_V1",
+  "status": "PASS_SCOPED_TWO_EXISTING_REFERENCE_OUTPUTS_NEW_READER",
+  "original_failed_runtime_unchanged": true,
+  "new_reference_calls_for_this_analysis": 0,
+  "experiment_actual_calls_so_far": 2,
+  "planned_remaining_unstarted_calls": 6,
+  "reader_pin": {
+    "path": "build/cf0-cu-src-v1/WRF/test/rrtmgp/compare_column_replay.py",
+    "sha256": "6099a3819268d3ee17bbcbaf0610c03822c09247da6ac5bdfdef66c9190533a7"
+  },
+  "numerical_child_returncodes": [
+    0,
+    0
+  ],
+  "positive_checks": {
+    "section_count": 25,
+    "audit_tau_max": 6.803762689232826e-06,
+    "audit_tau_sum": 0.0004997973302006721,
+    "active_native_levels": 5,
+    "held_components_exact": [
+      "CLOUD_TAU",
+      "CU_CLOUD_TAU",
+      "CU_DI_USED",
+      "CU_RL_USED",
+      "DI_USED",
+      "DNC",
+      "DS_USED",
+      "FROZEN_TAU",
+      "GAS_COL_DRY",
+      "GAS_TAU",
+      "GAS_TAU_RAW",
+      "GRAUPEL_TAU_ABS",
+      "HAIL_TAU_ABS",
+      "HRC",
+      "MASK",
+      "NATIVE_CLOUD_TAU",
+      "PRECIP_TAU",
+      "PREPARED_TAU",
+      "RL_USED",
+      "UPC"
+    ],
+    "clear_outputs_held_by_postclear_order": [
+      "UPC",
+      "DNC",
+      "HRC",
+      "DIRECTC"
+    ],
+    "combined_total_optical_moment_checks": {
+      "tau": {
+        "max_abs_residual": 0.0,
+        "tolerance": "512*binary64 epsilon*max(1,abs(expected))"
+      }
+    },
+    "heating": {
+      "HR": {
+        "max_abs_residual_K_day": 0.0,
+        "limit": 1e-09
+      },
+      "HRC": {
+        "max_abs_residual_K_day": 0.0,
+        "limit": 1e-09
+      }
+    }
+  },
+  "source_equation_tau_LW_rain": "0.33e-3 * RWP_grid_g_m2; all16bands; paddedenginelevelszero",
+  "source_equation_max_abs_residual": 0.0,
+  "metrics": {
+    "surface_DN_delta_W_m2": 0.004044215912387017,
+    "TOA_UP_delta_W_m2": 0.00016427529882889758,
+    "HR_max_abs_delta_K_day": 0.0010805597112281268
+  }
+}
