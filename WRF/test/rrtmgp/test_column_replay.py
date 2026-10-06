@@ -164,7 +164,7 @@ def read_raw(path: Path) -> tuple[str, int, int, dict[str, np.ndarray]]:
 
 def read_input(path: Path) -> tuple[str, int, int, int, int, int, dict[str, np.ndarray]]:
     lines = path.read_text(encoding="ascii").splitlines()
-    if len(lines) < 2 or lines[0].strip() not in {"RRTMGP_REPLAY_V1", "RRTMGP_REPLAY_V2", "RRTMGP_REPLAY_V3", "RRTMGP_REPLAY_V4", "RRTMGP_REPLAY_V5"}:
+    if len(lines) < 2 or lines[0].strip() not in {"RRTMGP_REPLAY_V1", "RRTMGP_REPLAY_V2", "RRTMGP_REPLAY_V3", "RRTMGP_REPLAY_V4", "RRTMGP_REPLAY_V5", "RRTMGP_REPLAY_V6"}:
         fail(f"{path}: unsupported replay format version")
     header = lines[1].split()
     if len(header) != 6:
@@ -188,7 +188,7 @@ def read_input(path: Path) -> tuple[str, int, int, int, int, int, dict[str, np.n
         roughness = records.get("ICE_ROUGHNESS")
         if roughness is None or roughness.shape != (1, 1) or roughness.item() not in (1, 2, 3):
             fail(f"{path}: V2/V3 requires scalar ICE_ROUGHNESS in {{1, 2, 3}}")
-    if lines[0].strip() in {"RRTMGP_REPLAY_V3", "RRTMGP_REPLAY_V4", "RRTMGP_REPLAY_V5"} and phase == "SW":
+    if lines[0].strip() in {"RRTMGP_REPLAY_V3", "RRTMGP_REPLAY_V4", "RRTMGP_REPLAY_V5", "RRTMGP_REPLAY_V6"} and phase == "SW":
         policy = records.get("SW_BAND_PARTITION")
         if policy is None or policy.shape != (1, 1) or policy.item() != 1:
             fail(f"{path}: V3 SW requires scalar SW_BAND_PARTITION=1 (CCPP transition)")
@@ -199,20 +199,26 @@ def read_input(path: Path) -> tuple[str, int, int, int, int, int, dict[str, np.n
         rain = records.get("RWP")
         if rain is None or rain.shape != (nc, nl) or np.any(rain < 0):
             fail(f"{path}: V4 requires nonnegative RWP matching column layers")
-    if lines[0].strip() == "RRTMGP_REPLAY_V5":
+    if lines[0].strip() in {"RRTMGP_REPLAY_V5", "RRTMGP_REPLAY_V6"}:
         policy = records.get("PRECIPITATION_OPTICS")
         rain = records.get("RWP")
         if (policy is None) != (rain is None):
-            fail(f"{path}: V5 precipitation policy and RWP must appear together")
+            fail(f"{path}: V5/V6 precipitation policy and RWP must appear together")
         if policy is not None and (policy.shape != (1, 1) or policy.item() != 1):
-            fail(f"{path}: V5 PRECIPITATION_OPTICS must be one when present")
+            fail(f"{path}: V5/V6 PRECIPITATION_OPTICS must be one when present")
         if rain is not None and (rain.shape != (nc, nl) or np.any(~np.isfinite(rain)) or np.any(rain < 0)):
-            fail(f"{path}: V5 RWP must be finite/nonnegative and match column layers")
-    if lines[0].strip() == "RRTMGP_REPLAY_V5":
+            fail(f"{path}: V5/V6 RWP must be finite/nonnegative and match column layers")
+    if lines[0].strip() == "RRTMGP_REPLAY_V6":
+        native = records.get("NATIVE_DRY_LAYER_MASS_KG_M2")
+        if native is None or native.shape[0] != nc or not 1 <= native.shape[1] <= nl:
+            fail(f"{path}: V6 requires NATIVE_DRY_LAYER_MASS_KG_M2 shape (nc, nnative), 1 <= nnative <= nl")
+        if not np.isfinite(native).all() or np.any(native <= 0):
+            fail(f"{path}: V6 native dry layer mass must be finite and positive")
+    if lines[0].strip() in {"RRTMGP_REPLAY_V5", "RRTMGP_REPLAY_V6"}:
         for name in ("GRAVITY", "CP_DRY", "MOL_WEIGHT_DRY"):
             value = records.get(name)
             if value is None or value.shape != (1, 1) or not np.isfinite(value).all() or value.item() <= 0:
-                fail(f"{path}: V5 requires positive finite scalar {name}")
+                fail(f"{path}: V5/V6 requires positive finite scalar {name}")
     for name, values in records.items():
         if name in {"ICE_ROUGHNESS", "SW_BAND_PARTITION", "PRECIPITATION_OPTICS",
                     "GRAVITY", "CP_DRY", "MOL_WEIGHT_DRY", "SOLAR"}:

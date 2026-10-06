@@ -1,0 +1,49 @@
+{
+  "parent_commit": "babe0afbe77c2dd28050e60acdbafefd56221151",
+  "source_sha256": {
+    "WRF/phys/module_ra_rrtmgp.F": "1acecdaf6d14a48708ac20f3bacf45509fc08ee45b6729e73576991a6f323c37",
+    "WRF/phys/module_ra_rrtmgp_trace.F": "d7bd13ce00d960715d49880f2122c4c649ea9add2a89a73c418ca567ba342606",
+    "WRF/phys/module_ra_rrtmg_lw.F": "7b9ae9a631e1397b4e0af50288ab1493eb8570ad26e5149f4a1309f09956c29a",
+    "WRF/phys/module_ra_rrtmg_sw.F": "707f4a12b8854ed46cc2e5181b429f6d0eec7961aec6fcb08fb05def73c97511",
+    "WRF/phys/module_ra_rrtmgp_input.F": "ab583191073e72243a669450b0f295ff4c5ec497b018fafbbc896d9d781783dd"
+  },
+  "parent_executables": {
+    "wrf.exe": "c52e08b0d88ab7bb267bbf9846b0654c27fc76607e5a44bf9132cc6029aa594a",
+    "ideal.exe": "88cb000a7e79d8e4880da6c40d73e7dcbf280b99e8384560757f3a8989d84877"
+  },
+  "reference_source_sha256": "35fa05b40adde5dabf2f3056281c744f96e2362241be586ecd014057c1c0b184",
+  "scope": "PR17 frozen source and executables for final serial SCM/audit/restart and 68-test suite",
+  "toolchain": {
+    "gfortran": "GNU Fortran (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0",
+    "standalone_flags": "-O0 -g -fcheck=all -ffpe-trap=invalid,zero,overflow -ffree-line-length-none",
+    "stack_kb": 65536,
+    "wrf_configuration": "GNU serial em_scm_xy",
+    "build_command": "csh -f ./compile -j 12 em_scm_xy"
+  },
+  "executables_sha256": {
+    "wrf.exe": "88193f03e431fc8c7f8e8f565d9f66240d66c882c6bbb403dd70560d9a501d55",
+    "ideal.exe": "9940acabd3072a90d90d562da5adf8b1d5eebd89010c72dd66ceffe0ef1277de",
+    "reference_column": "e72d5cfb60438f7d4d0e5ab675f2050584ab599371f4c5b23edf905ae4723480",
+    "test_rrtmgp_native_gas_columns": "e69eb61a9e0e970e82209afe1beeb1c14108beeec21ca206e9bcaf73ded5fc98"
+  },
+  "changed_source_sha256": {
+    "WRF/doc/rrtmgp/COLUMN_REPLAY.md": "1764bf7d3002807615a69f3df2194b3e33b78b29081aa83d012efd9ceb915fe2",
+    "WRF/doc/rrtmgp/NATIVE_DRY_MASS.md": "4891c5a33d9e43cb7f6c6a6d8bac94d3071eb4ebd132a6ac417a88bf284d5bf9",
+    "WRF/phys/module_ra_rrtmg_lw.F": "7b9ae9a631e1397b4e0af50288ab1493eb8570ad26e5149f4a1309f09956c29a",
+    "WRF/phys/module_ra_rrtmg_sw.F": "707f4a12b8854ed46cc2e5181b429f6d0eec7961aec6fcb08fb05def73c97511",
+    "WRF/phys/module_ra_rrtmgp.F": "1acecdaf6d14a48708ac20f3bacf45509fc08ee45b6729e73576991a6f323c37",
+    "WRF/phys/module_ra_rrtmgp_input.F": "ab583191073e72243a669450b0f295ff4c5ec497b018fafbbc896d9d781783dd",
+    "WRF/phys/module_ra_rrtmgp_trace.F": "d7bd13ce00d960715d49880f2122c4c649ea9add2a89a73c418ca567ba342606",
+    "WRF/test/rrtmgp/CMakeLists.txt": "4e61766e543be4cd9288257f55fad4ec981a64c5e05444b10ea241a9a87560fa",
+    "WRF/test/rrtmgp/compare_column_replay.py": "45838d5a6ed9a3bdc11c2e883187b8ccfca09daaa65f4bcf9c57cae24d8f4d74",
+    "WRF/test/rrtmgp/reference_column.f90": "35fa05b40adde5dabf2f3056281c744f96e2362241be586ecd014057c1c0b184",
+    "WRF/test/rrtmgp/test_column_replay.py": "20b20175d56cc987eb8a047a26f50c001e7e615a2f339279bd093e673cf668ee",
+    "WRF/test/rrtmgp/test_udm_cf_replay.py": "0af8b6fc813d24b57d493cc7623ba42c9984eed6d607b6c9472b417d590d7443",
+    "WRF/test/rrtmgp/test_udm_delta_policy.py": "c89cb14e60a405204d6480db837f4caed1008b8083ae323eb42926a56363f105",
+    "WRF/test/rrtmgp/test_udm_replay.py": "e28648944b6e76055fa6d3911778effed6d508f29289a1e47b7659801c2a926c",
+    "WRF/test/rrtmgp/test_native_gas_columns.py": "b62171bafa5c5284c4f10abdfa15df187189bddc5a2591270e90c264da41a154",
+    "WRF/test/rrtmgp/test_native_gas_columns.f90": "5e7a9d4fa579221eccffb5afbdc740858373e7bf081e45fbaec26b580e5e5f59",
+    "WRF/doc/rrtmgp/NATIVE_GAS_COLUMNS.md": "0bb6d2867a3d7bd88d922309cd92639d4d7a17428a1e96b1eb3bbe376ef5ba01"
+  },
+  "runtime_receipt_note": "Final WRF production binary did not change during reference/parser review. Reviewed SCM raw/input/result bytes match the scm-publish restart baseline exactly. Final reference warning guard and Python positivity checks were revalidated by all68 tests, reviewed SCM and reviewed physics audit."
+}

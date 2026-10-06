@@ -123,7 +123,14 @@ CONTAINS
         RETURN
       END IF
       DO k=1,n
-        IF(.NOT.ieee_is_finite(dry_layer_mass_kg_m2(k)) .OR. dry_layer_mass_kg_m2(k)<=0.) THEN
+        ! Fortran does not require short-circuit evaluation of .OR.; reject
+        ! NaN before ordered comparisons, including builds with FPE traps.
+        IF(.NOT.ieee_is_finite(dry_layer_mass_kg_m2(k))) THEN
+          CALL fail_builder_layer(reason,RRTMGP_INPUT_INVALID, &
+               'RRTMGP_INPUT_UDM_DRY_LAYER_MASS_NOT_POSITIVE_FINITE',k,column_context)
+          RETURN
+        END IF
+        IF(dry_layer_mass_kg_m2(k)<=0.) THEN
           CALL fail_builder_layer(reason,RRTMGP_INPUT_INVALID, &
                'RRTMGP_INPUT_UDM_DRY_LAYER_MASS_NOT_POSITIVE_FINITE',k,column_context)
           RETURN

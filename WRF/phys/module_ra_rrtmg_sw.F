@@ -11723,7 +11723,8 @@ CONTAINS
            CALL rrtmgp_sw_column(play,plev,tlay,h2ovmr,co2vmr,o3vmr,n2ovmr,ch4vmr,o2vmr, &
              asdir,asdif,aldir,aldif,coszen,scon,cldfrac,clwpth,ciwpth,cswpth,rel,rei,res,4,icld, &
              gp_seed,swuflx,swdflx,swhr,swuflxc,swdflxc,swhrc, &
-             swdkdir,swdkdif,swdkdirc,sibvisdir,sibvisdif,sibnirdir,sibnirdif,rwp=gp_rwp)
+             swdkdir,swdkdif,swdkdirc,sibvisdir,sibvisdif,sibnirdir,sibnirdif,rwp=gp_rwp, &
+             native_dry_layer_mass_kg_m2=RESHAPE(udm_dry_layer_mass(i,kts:kte,j),[1,kte-kts+1]))
            swuflxcln=swuflx; swdflxcln=swdflx
            loc_sw_zbbcddir=swdkdirc(1,1); loc_sw_dirdflux=swdkdir(1,1); loc_sw_difdflux=swdkdif(1,1)
          ELSE

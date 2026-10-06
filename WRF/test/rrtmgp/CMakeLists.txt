@@ -29,7 +29,7 @@ add_library(test_rrtmgp_adapter STATIC standalone_wrf_error.f90 "${trace}" "${in
 target_link_libraries(test_rrtmgp_adapter PUBLIC wrf_rrtmgp test_rrtmgp_precip)
 set_target_properties(test_rrtmgp_adapter PROPERTIES Fortran_MODULE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/modules")
 target_include_directories(test_rrtmgp_adapter PUBLIC "${CMAKE_CURRENT_BINARY_DIR}/modules")
-foreach(test IN ITEMS columns cloud_inputs multicolumn validation adapter_invalid small_cf_sampling ice_roughness transparent_overlap spectral_surface udm_inputs precip_optics udm_adapter udm_dry_mass domain_seed)
+foreach(test IN ITEMS columns cloud_inputs multicolumn validation adapter_invalid small_cf_sampling ice_roughness transparent_overlap spectral_surface udm_inputs precip_optics udm_adapter udm_dry_mass domain_seed native_gas_columns)
   add_executable(test_rrtmgp_${test} test_${test}.f90)
   target_link_libraries(test_rrtmgp_${test} PRIVATE test_rrtmgp_adapter)
   if(CMAKE_Fortran_COMPILER_ID STREQUAL "GNU")
@@ -187,3 +187,11 @@ if(RRTMGP_TEST_OPENMP)
   add_test(NAME cpu_openmp_reentrancy COMMAND test_rrtmgp_openmp "${RRTMGP_DATA_DIR}")
   set_tests_properties(cpu_openmp_reentrancy PROPERTIES ENVIRONMENT "OMP_NUM_THREADS=1;OMP_DYNAMIC=FALSE")
 endif()
+
+add_test(NAME native_gas_columns_v6 COMMAND "${Python3_EXECUTABLE}"
+  "${CMAKE_CURRENT_SOURCE_DIR}/test_native_gas_columns.py"
+  --executable "$<TARGET_FILE:test_rrtmgp_native_gas_columns>"
+  --reference "$<TARGET_FILE:reference_column>"
+  --data-dir "${RRTMGP_DATA_DIR}"
+  --output-dir "${CMAKE_CURRENT_BINARY_DIR}/native-gas-columns"
+  --output "${CMAKE_CURRENT_BINARY_DIR}/native-gas-columns.json")

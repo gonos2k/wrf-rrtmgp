@@ -2,7 +2,7 @@ PROGRAM rrtmgp_reference_column
   USE mo_rte_kind, ONLY: wp,i8
   USE, INTRINSIC :: ieee_arithmetic, ONLY: ieee_is_finite
   USE mo_gas_concentrations, ONLY: ty_gas_concs
-  USE mo_gas_optics_rrtmgp, ONLY: ty_gas_optics_rrtmgp
+  USE mo_gas_optics_rrtmgp, ONLY: ty_gas_optics_rrtmgp,get_col_dry
   USE mo_cloud_optics_rrtmgp, ONLY: ty_cloud_optics_rrtmgp
   USE mo_optical_props, ONLY: ty_optical_props_1scl,ty_optical_props_2str
   USE mo_source_functions, ONLY: ty_source_func_lw
@@ -11,7 +11,7 @@ PROGRAM rrtmgp_reference_column
   USE mo_rte_lw, ONLY: rte_lw
   USE mo_rte_sw, ONLY: rte_sw
   USE mo_heating_rates, ONLY: compute_heating_rate
-  USE mo_gas_optics_constants, ONLY: init_constants
+  USE mo_gas_optics_constants, ONLY: init_constants,avogad,m_dry
   USE mo_cloud_sampling, ONLY: draw_samples
   USE mo_load_coefficients, ONLY: load_and_init
   USE mo_load_cloud_coefficients, ONLY: load_cld_lutcoeff
@@ -20,7 +20,7 @@ PROGRAM rrtmgp_reference_column
   CHARACTER(LEN=512) :: data_dir,input_path,output_path,override_path
   CHARACTER(LEN=32) :: magic,phase,policy_arg,next_section
   INTEGER :: nc,nl,overlap,seed,iceflag,u_in,u_out,ios,nemis,sw_policy
-  INTEGER :: c,k,g,b,ngpt,nbnd
+  INTEGER :: c,k,g,b,ngpt,nbnd,n_native
   INTEGER :: override_ncol,override_nlay,override_nband,override_unit,override_ios
   REAL(wp) :: solar,roughness_value,partition_value,precip_mode,visible_weight
   REAL(wp) :: metadata_gravity,metadata_cp_dry,metadata_mol_weight_dry
@@ -28,6 +28,7 @@ PROGRAM rrtmgp_reference_column
   INTEGER :: ice_roughness
   REAL(wp), ALLOCATABLE :: play(:,:),plev(:,:),tlay(:,:),tlev(:,:),tsfc(:,:)
   REAL(wp), ALLOCATABLE :: h2o(:,:),co2(:,:),o3(:,:),n2o(:,:),ch4(:,:),o2(:,:)
+  REAL(wp), ALLOCATABLE :: col_dry(:,:),native_dry_mass(:,:)
   REAL(wp), ALLOCATABLE :: emis_in(:,:),cf(:,:),lwp(:,:),iwp(:,:),swp(:,:)
   REAL(wp), ALLOCATABLE :: rel(:,:),rei(:,:),res(:,:),avdir_in(:,:),avdif_in(:,:)
   REAL(wp), ALLOCATABLE :: andir_in(:,:),andif_in(:,:),mu0_in(:,:)
@@ -82,7 +83,7 @@ PROGRAM rrtmgp_reference_column
   IF(ios/=0) ERROR STOP 'invalid replay input magic'
   IF(TRIM(magic)/='RRTMGP_REPLAY_V1'.AND.TRIM(magic)/='RRTMGP_REPLAY_V2'.AND. &
      TRIM(magic)/='RRTMGP_REPLAY_V3'.AND.TRIM(magic)/='RRTMGP_REPLAY_V4'.AND. &
-     TRIM(magic)/='RRTMGP_REPLAY_V5') &
+     TRIM(magic)/='RRTMGP_REPLAY_V5'.AND.TRIM(magic)/='RRTMGP_REPLAY_V6') &
     ERROR STOP 'invalid replay input magic'
   READ(u_in,*,IOSTAT=ios) phase,nc,nl,overlap,seed,iceflag
   IF(ios/=0 .OR. (TRIM(phase)/='LW' .AND. TRIM(phase)/='SW')) ERROR STOP 'invalid replay header'
@@ -127,7 +128,7 @@ PROGRAM rrtmgp_reference_column
     IF(REAL(ice_roughness,wp)/=roughness_value) ERROR STOP 'ice roughness must be integer'
   END IF
   IF((TRIM(magic)=='RRTMGP_REPLAY_V3'.OR.TRIM(magic)=='RRTMGP_REPLAY_V4'.OR. &
-      TRIM(magic)=='RRTMGP_REPLAY_V5').AND. &
+      TRIM(magic)=='RRTMGP_REPLAY_V5'.OR.TRIM(magic)=='RRTMGP_REPLAY_V6').AND. &
      TRIM(phase)=='SW') THEN
     CALL read_scalar_section(u_in,'SW_BAND_PARTITION',partition_value)
     IF(.NOT.ieee_is_finite(partition_value)) ERROR STOP 'non-finite SW band partition'
@@ -140,14 +141,14 @@ PROGRAM rrtmgp_reference_column
   use_precip=.FALSE.
   IF(TRIM(magic)=='RRTMGP_REPLAY_V4') THEN
     CALL read_scalar_section(u_in,'PRECIPITATION_OPTICS',precip_mode)
-    IF(.NOT.ieee_is_finite(precip_mode).OR.precip_mode/=1._wp) &
-      ERROR STOP 'V4 requires PRECIPITATION_OPTICS=1'
+    IF(.NOT.ieee_is_finite(precip_mode)) ERROR STOP 'V4 PRECIPITATION_OPTICS must be finite'
+    IF(precip_mode/=1._wp) ERROR STOP 'V4 requires PRECIPITATION_OPTICS=1'
     ALLOCATE(rwp(nc,nl))
     CALL read_section(u_in,'RWP',rwp)
-    IF(ANY(.NOT.ieee_is_finite(rwp)).OR.ANY(rwp<0._wp)) &
-      ERROR STOP 'V4 RWP must be finite and nonnegative'
+    IF(ANY(.NOT.ieee_is_finite(rwp))) ERROR STOP 'V4 RWP must be finite'
+    IF(ANY(rwp<0._wp)) ERROR STOP 'V4 RWP must be nonnegative'
     use_precip=.TRUE.
-  ELSE IF(TRIM(magic)=='RRTMGP_REPLAY_V5') THEN
+  ELSE IF(TRIM(magic)=='RRTMGP_REPLAY_V5'.OR.TRIM(magic)=='RRTMGP_REPLAY_V6') THEN
     READ(u_in,'(A)',IOSTAT=ios) section_line
     IF(ios/=0) ERROR STOP 'V5 input ended before constants metadata'
     READ(section_line,*,IOSTAT=ios) next_section
@@ -155,27 +156,37 @@ PROGRAM rrtmgp_reference_column
     BACKSPACE(u_in)
     IF(TRIM(next_section)=='PRECIPITATION_OPTICS') THEN
       CALL read_scalar_section(u_in,'PRECIPITATION_OPTICS',precip_mode)
-      IF(.NOT.ieee_is_finite(precip_mode).OR.precip_mode/=1._wp) &
-        ERROR STOP 'V5 PRECIPITATION_OPTICS must equal one when present'
+      IF(.NOT.ieee_is_finite(precip_mode)) ERROR STOP 'V5/V6 PRECIPITATION_OPTICS must be finite'
+      IF(precip_mode/=1._wp) ERROR STOP 'V5/V6 PRECIPITATION_OPTICS must equal one when present'
       ALLOCATE(rwp(nc,nl))
       CALL read_section(u_in,'RWP',rwp)
-      IF(ANY(.NOT.ieee_is_finite(rwp)).OR.ANY(rwp<0._wp)) &
-        ERROR STOP 'V5 RWP must be finite and nonnegative'
+      IF(ANY(.NOT.ieee_is_finite(rwp))) ERROR STOP 'V5/V6 RWP must be finite'
+      IF(ANY(rwp<0._wp)) ERROR STOP 'V5/V6 RWP must be nonnegative'
       use_precip=.TRUE.
-    ELSE IF(TRIM(next_section)/='GRAVITY') THEN
-      ERROR STOP 'V5 expected optional precipitation or GRAVITY metadata'
+    ELSE IF(TRIM(next_section)/='GRAVITY'.AND. &
+            (TRIM(magic)/='RRTMGP_REPLAY_V6'.OR.TRIM(next_section)/='NATIVE_DRY_LAYER_MASS_KG_M2')) THEN
+      ERROR STOP 'V5/V6 expected optional precipitation or mass/constants metadata'
     END IF
   END IF
-  IF(TRIM(magic)=='RRTMGP_REPLAY_V5') THEN
+  IF(TRIM(magic)=='RRTMGP_REPLAY_V6') THEN
+    ALLOCATE(native_dry_mass(nc,nl))
+    CALL read_section_flexible(u_in,'NATIVE_DRY_LAYER_MASS_KG_M2',native_dry_mass,n_native)
+    IF(n_native<1.OR.n_native>nl) ERROR STOP 'V6 native dry mass layer count must be within 1:nl'
+    IF(ANY(.NOT.ieee_is_finite(native_dry_mass(:,1:n_native)))) &
+      ERROR STOP 'V6 native dry layer mass must be finite and positive'
+    IF(ANY(native_dry_mass(:,1:n_native)<=0._wp)) &
+      ERROR STOP 'V6 native dry layer mass must be finite and positive'
+  END IF
+  IF(TRIM(magic)=='RRTMGP_REPLAY_V5'.OR.TRIM(magic)=='RRTMGP_REPLAY_V6') THEN
     CALL read_scalar_section(u_in,'GRAVITY',metadata_gravity)
     CALL read_scalar_section(u_in,'CP_DRY',metadata_cp_dry)
     CALL read_scalar_section(u_in,'MOL_WEIGHT_DRY',metadata_mol_weight_dry)
-    IF(.NOT.ieee_is_finite(metadata_gravity).OR.metadata_gravity<=0._wp) &
-      ERROR STOP 'V5 GRAVITY must be finite and positive'
-    IF(.NOT.ieee_is_finite(metadata_cp_dry).OR.metadata_cp_dry<=0._wp) &
-      ERROR STOP 'V5 CP_DRY must be finite and positive'
-    IF(.NOT.ieee_is_finite(metadata_mol_weight_dry).OR.metadata_mol_weight_dry<=0._wp) &
-      ERROR STOP 'V5 MOL_WEIGHT_DRY must be finite and positive'
+    IF(.NOT.ieee_is_finite(metadata_gravity)) ERROR STOP 'V5/V6 GRAVITY must be finite'
+    IF(metadata_gravity<=0._wp) ERROR STOP 'V5/V6 GRAVITY must be positive'
+    IF(.NOT.ieee_is_finite(metadata_cp_dry)) ERROR STOP 'V5/V6 CP_DRY must be finite'
+    IF(metadata_cp_dry<=0._wp) ERROR STOP 'V5/V6 CP_DRY must be positive'
+    IF(.NOT.ieee_is_finite(metadata_mol_weight_dry)) ERROR STOP 'V5/V6 MOL_WEIGHT_DRY must be finite'
+    IF(metadata_mol_weight_dry<=0._wp) ERROR STOP 'V5/V6 MOL_WEIGHT_DRY must be positive'
     CALL init_constants(gravity=metadata_gravity, heat_capacity_dry_air=metadata_cp_dry, &
                         mol_weight_dry_air=metadata_mol_weight_dry)
   END IF
@@ -212,6 +223,13 @@ PROGRAM rrtmgp_reference_column
   CALL check_error(gases%set_vmr('ch4',ch4))
   CALL check_error(gases%set_vmr('o2',o2))
 
+  ! V1-V5 retain the reference's historical pressure-derived dry column.
+  ! V6 replaces only host-provided native layers with independent dry mass.
+  ALLOCATE(col_dry(nc,nl))
+  col_dry=get_col_dry(h2o,plev*100._wp)
+  IF(TRIM(magic)=='RRTMGP_REPLAY_V6') &
+    col_dry(:,1:n_native)=native_dry_mass(:,1:n_native)*avogad/(m_dry*10000._wp)
+
   ALLOCATE(up_all(nc,nl+1),dn_all(nc,nl+1),hr_all(nc,nl))
   ALLOCATE(up_clear(nc,nl+1),dn_clear(nc,nl+1),hr_clear(nc,nl))
   ALLOCATE(fu(nc,nl+1),fd(nc,nl+1),heat(nc,nl))
@@ -226,7 +244,7 @@ PROGRAM rrtmgp_reference_column
     CALL check_error(lw_sampled%alloc_1scl(nc,nl,gas_lw))
     CALL check_error(lw_source%alloc(nc,nl,gas_lw))
     CALL check_error(gas_lw%gas_optics(play*100._wp,plev*100._wp,tlay,tsfc(:,1),gases, &
-                                      lw_atmos,lw_source,tlev=tlev))
+                                      lw_atmos,lw_source,col_dry=col_dry,tlev=tlev))
     gas_tau=lw_atmos%tau
     emissivity=MAX(0._wp,MIN(1._wp,emissivity))
     lw_flux%flux_up=>fu; lw_flux%flux_dn=>fd
@@ -288,7 +306,7 @@ PROGRAM rrtmgp_reference_column
     CALL check_error(sw_cloud%alloc_2str(nc,nl,cloud_sw))
     CALL check_error(sw_snow%alloc_2str(nc,nl,cloud_sw))
     CALL check_error(sw_sampled%alloc_2str(nc,nl,gas_sw))
-    CALL check_error(gas_sw%gas_optics(play*100._wp,plev*100._wp,tlay,gases,sw_atmos,toa))
+    CALL check_error(gas_sw%gas_optics(play*100._wp,plev*100._wp,tlay,gases,sw_atmos,toa,col_dry=col_dry))
     gas_tau=sw_atmos%tau; gas_ssa=sw_atmos%ssa; gas_g=sw_atmos%g
     DO c=1,nc
       IF(SUM(toa(c,:))<=0._wp) ERROR STOP 'TOA solar spectrum integral must be positive'
@@ -297,7 +315,7 @@ PROGRAM rrtmgp_reference_column
     bands=gas_sw%get_band_lims_wavenumber()
     DO b=1,gas_sw%get_nband()
       IF((TRIM(magic)=='RRTMGP_REPLAY_V3'.OR.TRIM(magic)=='RRTMGP_REPLAY_V4'.OR. &
-          TRIM(magic)=='RRTMGP_REPLAY_V5').AND. &
+          TRIM(magic)=='RRTMGP_REPLAY_V5'.OR.TRIM(magic)=='RRTMGP_REPLAY_V6').AND. &
          bands(1,b)==12850._wp) THEN
         IF(bands(2,b)/=16000._wp) ERROR STOP 'unexpected transition-band upper limit'
         albdir(b,:)=0.5_wp*(andir+avdir); albdif(b,:)=0.5_wp*(andif+avdif)
@@ -360,7 +378,7 @@ PROGRAM rrtmgp_reference_column
     DO b=1,gas_sw%get_nband()
       visible_weight=MERGE(1._wp,0._wp,bands(1,b)>=12850._wp)
       IF((TRIM(magic)=='RRTMGP_REPLAY_V3'.OR.TRIM(magic)=='RRTMGP_REPLAY_V4'.OR. &
-          TRIM(magic)=='RRTMGP_REPLAY_V5').AND. &
+          TRIM(magic)=='RRTMGP_REPLAY_V5'.OR.TRIM(magic)=='RRTMGP_REPLAY_V6').AND. &
          bands(1,b)==12850._wp) visible_weight=0.5_wp
       visdir=visdir+visible_weight*flux_band_dir(:,:,b)
       visdif=visdif+visible_weight*(flux_band_dn(:,:,b)-flux_band_dir(:,:,b))
@@ -380,6 +398,7 @@ PROGRAM rrtmgp_reference_column
   IF(ios/=0) ERROR STOP 'could not open reference output file'
   WRITE(u_out,'(A)') 'RRTMGP_RESULT_V1'
   WRITE(u_out,'(A,1X,I0,1X,I0)') TRIM(phase),nc,nl
+  CALL write3(u_out,'GAS_COL_DRY',RESHAPE(col_dry,[nc,nl,1]))
   CALL write3(u_out,'GAS_TAU',gas_tau)
   IF(TRIM(phase)=='SW') THEN
     CALL write3(u_out,'GAS_SSA',gas_ssa); CALL write3(u_out,'GAS_G',gas_g)
@@ -466,8 +485,10 @@ CONTAINS
     END IF
     IF(ANY(ABS(file_bands-core_bands)>1.e-8_wp).AND..NOT.known_legacy_split) &
       ERROR STOP 'SW optics override bands differ from pinned RRTMGP gas bands'
-    IF(known_legacy_split) &
-      WRITE(error_unit,'(A)') 'WARNING: mapping the known RRTMG 2600 cm-1 split to RRTMGP 2680 cm-1 bands by index; not spectrally identical'
+    IF(known_legacy_split) THEN
+      WRITE(error_unit,'(A)') 'WARNING: mapping known RRTMG 2600 cm-1 split to RRTMGP 2680 cm-1 bands by index;'
+      WRITE(error_unit,'(A)') '         this index mapping is not spectrally identical'
+    END IF
 
     ALLOCATE(tau_band(ncol_file,nlay_file,nband_file), &
              ssa_band(ncol_file,nlay_file,nband_file), &
@@ -478,12 +499,12 @@ CONTAINS
     READ(unit,*,IOSTAT=stat) section_name
     IF(stat==0) ERROR STOP 'unexpected trailing SW optics override data'
     CLOSE(unit)
-    IF(ANY(.NOT.ieee_is_finite(tau_band)).OR.ANY(tau_band<0._wp)) &
-      ERROR STOP 'SW optics override TAU must be finite and nonnegative'
-    IF(ANY(.NOT.ieee_is_finite(ssa_band)).OR.ANY(ssa_band<0._wp).OR.ANY(ssa_band>1._wp)) &
-      ERROR STOP 'SW optics override SSA must be finite and in [0,1]'
-    IF(ANY(.NOT.ieee_is_finite(asym_band)).OR.ANY(asym_band< -1._wp).OR.ANY(asym_band>1._wp)) &
-      ERROR STOP 'SW optics override ASYM must be finite and in [-1,1]'
+    IF(ANY(.NOT.ieee_is_finite(tau_band))) ERROR STOP 'SW optics override TAU must be finite and nonnegative'
+    IF(ANY(tau_band<0._wp)) ERROR STOP 'SW optics override TAU must be finite and nonnegative'
+    IF(ANY(.NOT.ieee_is_finite(ssa_band))) ERROR STOP 'SW optics override SSA must be finite and in [0,1]'
+    IF(ANY(ssa_band<0._wp).OR.ANY(ssa_band>1._wp)) ERROR STOP 'SW optics override SSA must be finite and in [0,1]'
+    IF(ANY(.NOT.ieee_is_finite(asym_band))) ERROR STOP 'SW optics override ASYM must be finite and in [-1,1]'
+    IF(ANY(asym_band< -1._wp).OR.ANY(asym_band>1._wp)) ERROR STOP 'SW optics override ASYM must be finite and in [-1,1]'
 
     IF(optical_props%get_nband()/=nband_file) ERROR STOP 'SW override band count differs from cloud optical properties'
     gpt_bounds=optical_props%get_band_lims_gpoint()
@@ -604,9 +625,10 @@ CONTAINS
       ERROR STOP 'LW precipitation inputs have inconsistent shapes'
     IF(ANY(SHAPE(band_limits)/=SHAPE(expected)).OR.ANY(band_limits/=expected)) &
       ERROR STOP 'LW precipitation bands differ from pinned CCPP order'
-    IF(ANY(rain_path<0._wp).OR.ANY(snow_path<0._wp).OR. &
-       ANY(.NOT.ieee_is_finite(rain_path)).OR.ANY(.NOT.ieee_is_finite(snow_path)).OR. &
-       ANY(.NOT.ieee_is_finite(snow_radius))) ERROR STOP 'invalid LW precipitation input'
+    IF(ANY(.NOT.ieee_is_finite(rain_path)).OR.ANY(.NOT.ieee_is_finite(snow_path)).OR. &
+       ANY(.NOT.ieee_is_finite(snow_radius))) ERROR STOP 'LW precipitation inputs must be finite'
+    IF(ANY(rain_path<0._wp).OR.ANY(snow_path<0._wp)) &
+      ERROR STOP 'LW precipitation paths must be nonnegative'
     IF(ANY(snow_path>0._wp.AND.snow_radius<=0._wp)) ERROR STOP 'active snow radius must be positive'
     DO lev=1,SIZE(rain_path,2)
       DO col=1,SIZE(rain_path,1)
@@ -655,9 +677,10 @@ CONTAINS
       ERROR STOP 'SW precipitation inputs have inconsistent shapes'
     IF(ANY(SHAPE(band_limits)/=SHAPE(expected)).OR.ANY(band_limits/=expected)) &
       ERROR STOP 'SW precipitation bands differ from pinned CCPP coefficient order'
-    IF(ANY(rain_path<0._wp).OR.ANY(snow_path<0._wp).OR. &
-       ANY(.NOT.ieee_is_finite(rain_path)).OR.ANY(.NOT.ieee_is_finite(snow_path)).OR. &
-       ANY(.NOT.ieee_is_finite(snow_radius))) ERROR STOP 'invalid SW precipitation input'
+    IF(ANY(.NOT.ieee_is_finite(rain_path)).OR.ANY(.NOT.ieee_is_finite(snow_path)).OR. &
+       ANY(.NOT.ieee_is_finite(snow_radius))) ERROR STOP 'SW precipitation inputs must be finite'
+    IF(ANY(rain_path<0._wp).OR.ANY(snow_path<0._wp)) &
+      ERROR STOP 'SW precipitation paths must be nonnegative'
     IF(ANY(snow_path>0._wp.AND.snow_radius<=0._wp)) ERROR STOP 'active snow radius must be positive'
     DO lev=1,SIZE(rain_path,2)
       DO col=1,SIZE(rain_path,1)

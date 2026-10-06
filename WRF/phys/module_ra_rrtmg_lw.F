@@ -13023,7 +13023,8 @@ CONTAINS
          IF(run_rrtmgp) THEN
            CALL rrtmgp_lw_column(play,plev,tlay,tlev,tsfc,h2ovmr,co2vmr,o3vmr,n2ovmr,ch4vmr,o2vmr,emis, &
              cldfrac,clwpth,ciwpth,cswpth,rel,rei,res,4,icld, &
-             gp_seed,uflx,dflx,hr,uflxc,dflxc,hrc,rwp=gp_rwp)
+             gp_seed,uflx,dflx,hr,uflxc,dflxc,hrc,rwp=gp_rwp, &
+             native_dry_layer_mass_kg_m2=RESHAPE(udm_dry_layer_mass(i,kts:kte,j),[1,kte-kts+1]))
            uflxcln=uflx; dflxcln=dflx
          ELSE
          call rrtmg_lw &

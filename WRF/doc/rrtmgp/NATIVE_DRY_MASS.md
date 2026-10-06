@@ -38,3 +38,5 @@ python3 WRF/test/rrtmgp/test_udm_native_mass.py \
 GNU 직렬 WRF 재빌드 후 standalone 66/66과 paired UDM SCM·독립 replay·지원 gate가 통과했다. 수정 전 frozen 실행파일과 수정 후 4/4는 control/mixed 각각 208개 배열이 bitwise 동일했다. 해당 수정의 회귀 근거이며 새 공식 pristine 빌드 비교 또는 병렬·restart 검증을 대신하지 않는다. 실행 해시와 측정값은 [실행 기록](../../../validation/rrtmgp37/native-dry-mass/README.md)에 있다. CI는 fresh serial SCM 뒤 같은 독립 좌표 검사를 수행한다.
 
 UDM 반경과 RRTMGP ice LUT의 크기 metric 동등성, graupel/hail 광학, CF/seed 정책, 장시간 예보·관측 검증은 별도로 남아 있다.
+
+기체 광학의 건조 molecular column은 후속 [native gas-column 계약](NATIVE_GAS_COLUMNS.md)에서 같은 native 질량을 사용한다. 위의 PR15 실행 기록은 해당 수정 전 범위를 그대로 유지한다.
