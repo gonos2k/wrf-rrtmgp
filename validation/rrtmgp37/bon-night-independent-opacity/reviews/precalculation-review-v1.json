@@ -1,0 +1,111 @@
+{
+  "blocking_findings": [],
+  "created_utc": "2026-10-05T08:50:04.162849+00:00",
+  "limitations": [
+    "Translated source/state/table reconstruction of one diagnostic45 BON column (32 native plus13 upper extensions), not independent spectroscopy or physical optical truth.",
+    "Grouped major/minor and identifier component arrays have no retained independent component observer; total comparison does not establish independent component accuracy.",
+    "Python vector/scalar/libm operation details may differ from compiled Fortran; gates are numerical source consistency and make no compiled bitwise claim.",
+    "No transport/flux attribution, RRTMG spectral equivalence, gpoint pairing, normalization, tuning, observational or whole-port verdict.",
+    "Saved GAS_COL_DRY participates only as precheck; reconstruction itself uses held mass/VMR and pinned coefficients."
+  ],
+  "next_action": "No static blocker to one bounded root-owned calculation; terminal result/source mapping/gates require separate saved-output review.",
+  "predeclared_gates": {
+    "coefficient_masks": "reject masked values",
+    "dry_max_relative": 1e-14,
+    "reconstructed_tau": "finite, nonnegative and exact target zero mask",
+    "result": "JSON allow_nan=False; existing result refusal",
+    "tau": "abs(error)<=1e-11 + 1e-12*abs(saved target)"
+  },
+  "reviewed": {
+    "plan": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-independent-opacity-math-v1/plan.json",
+      "sha256": "e032c4df5292d8ab8df31f482d1b43cde5993812096d206617a7f183bf7c4655",
+      "size_bytes": 3766
+    },
+    "required_pins": {
+      "captured_n2_result": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-n2-attribution-v1/run-preparation-v1/run-v1/n2-0p7808.result",
+        "sha256": "b578e9983b5817297db75baac026af98b84a3cbcd3653aadf2e4db5930ce5732",
+        "size_bytes": 763371
+      },
+      "held_input": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-dry-column-attribution-v1/matched-legacy-dry.input",
+        "sha256": "292f9569b059c373c9cb14f1574cb8835627331574592a19d641ef07c21ec918",
+        "size_bytes": 39535
+      },
+      "n2_execution_record": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-n2-attribution-v1/run-preparation-v1/run-v1/execution.json",
+        "sha256": "cbb876791a9ff905356fa90abd65ede8d5f8dde882009d7be48684c74a7a600e",
+        "size_bytes": 70378
+      },
+      "parser": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-lw-angular-math-v1/angular_reference.py",
+        "sha256": "a64dfa9f3ff90cc788028c1cb0f5ab4d0be1316c49ef74e833b8dddc4eb5cb48",
+        "size_bytes": 13139
+      },
+      "production_adapter": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-common-band-source-pr-work/WRF/phys/module_ra_rrtmgp.F",
+        "sha256": "1852452555fbe667a0a95d59242bcd9c3833f2877fc51f882d5d3d929a058f58",
+        "size_bytes": 74962
+      },
+      "production_coefficients": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-common-band-source-pr-work/WRF/run/rrtmgp-gas-lw-g128.nc",
+        "sha256": "70ad65d116531122660318e5da2a2af9db74b425916202860e9527ef2375b8f6",
+        "size_bytes": 11679993
+      },
+      "production_constants": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-common-band-source-pr-work/WRF/external/rte_rrtmgp/gas-optics/mo_gas_optics_constants.F90",
+        "sha256": "255cdd77fa39892bdec92440ae4dbc35b79fb338fdfff6d6b28bdf62f01c94b8",
+        "size_bytes": 3047
+      },
+      "production_frontend": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-common-band-source-pr-work/WRF/external/rte_rrtmgp/rrtmgp-frontend/mo_gas_optics_rrtmgp.F90",
+        "sha256": "d5e0a7e56bc811575ec2c9655953a5be64c42a62e4100f65198e1e1b44239adc",
+        "size_bytes": 107884
+      },
+      "production_kernel": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-common-band-source-pr-work/WRF/external/rte_rrtmgp/rrtmgp-kernels/mo_gas_optics_rrtmgp_kernels.F90",
+        "sha256": "96be9c4379c4e49a7b13e9b1f8314e78908262f402e913a2a03232987706f6e1",
+        "size_bytes": 41856
+      },
+      "production_loader": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-independent-pfrac-pr-work/WRF/external/rte_rrtmgp/extensions/mo_load_coefficients.F90",
+        "sha256": "3abc021bf244560f4d7f247be167ad0ecafb6c451f88566a7ce2a0436caebb5b",
+        "size_bytes": 13301
+      }
+    },
+    "script": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-independent-opacity-math-v1/analyze.py",
+      "sha256": "23ce2ce520186e98571d40b2ce329862a98ee50b7282bbe40e0bf427fe7789b4",
+      "size_bytes": 12452
+    }
+  },
+  "reviewer_actions": {
+    "integration_transport_model_build_replay_calls": 0,
+    "numerical_calculations": 0,
+    "source_or_plan_mutations": 0,
+    "source_text_AST_and_pin_reads_only": true
+  },
+  "schema": "independent-opacity-precalculation-review-v1",
+  "secondary_expected_metadata_not_used_as_input": {
+    "expected_lower_contributors": 407,
+    "expected_lower_retained_intervals": 50,
+    "expected_upper_contributors": 235,
+    "expected_upper_retained_intervals": 25,
+    "inventory_path": "build/udm37-bon-night-independent-opacity-design-v1/minor-metadata-inventory-v1.json",
+    "purpose": "Root may compare completed saved result rows after authorized calculation; analyzer does not consume this independent inventory."
+  },
+  "source_correspondence": {
+    "axes": "Pinned loader162-164 and frontend/kernels map NetCDF major[temp,pressure,eta,gpt], vmr[temp,gas,atm], minor[temp,eta,contributor] to source internal axes; script explicitly indexes native NetCDF order, verifies recorded dimension names, uses only basic slices.",
+    "flavors": "Frontend create_flavor1765-1802 scans band then atmosphere, preserves first occurrence; rewrite only (0,0)->(2,2). Script name remap and first-unique ordering match.",
+    "gas_and_dry_columns": "Frontend 1300-1328 packs available gases in coefficient-table order and maps vmr_ref by original name, retaining dry at index0. Script does same, uses standalone grouping mass*avogad/(m_dry*10000), VMRelement*dry, explicit N2 .7808; saved GAS_COL_DRY is only an early control, not a reconstruction input. Frontend608-641 constructs the passed-dry col_gas likewise.",
+    "major": "Kernel gas_optical_depths_major385-395 passes jp+itropo to interpolate3D; its one-based k pressure index jpress-1 maps NumPy jp+atm-1 correctly. Four eta/pressure terms in each temperature plane and two col_mix-scaled planes preserve source order.",
+    "minor_reduction": "Frontend1971-2088 matches each identifier to gas_minor, filters unavailable gases, subtracts preceding removed contributor widths from start offsets and compacts contiguous slabs. Script asserts original contiguous starts, remapped cursor and final source extent before constructing reduced tables; preserved interval order.",
+    "minor_scaling": "Kernel466-498 begins with minor gas column, density scaling .01*Pa/T only when flag set; optional special-gas fraction uses inverse dry col and H2O dry_fact, with exact complement flag. Script conditional arithmetic/order match; coefficient sums four eta/temperature corners, applies scaling and accumulates original imnr order, lower before upper.",
+    "minor_windows": "Kernel278-290 uses top_at_1 and masked MINLOC/MAXLOC. Script uses same first-index extrema and lower/upper regime windows, rejects mixed regime range; source no-layer do-loop behavior preserved for this bounded input.",
+    "no_Rayleigh": "Pinned retained LW coefficient has no Rayleigh variables and frontend uses absorption branch; script rejects any rayleigh-named coefficient variable. GAS_TAU_RAW is a valid comparison target for this call.",
+    "state_interpolation": "Kernel110-169 jtemp/jpress truncation then clipping, residual interpolation fractions, log-pressure regime, eta tiny fallback .5, min(INT(loceta)+1,neta-1), MOD(loceta,1), fminor and fmajor weights match translation. No fraction normalization or opacity clipping.",
+    "target_independence": "Saved GAS_TAU_RAW shape checked early but values first used only after tau_major and all filtered minor increments are computed. No target values enter interpolation, contributor/scaling selection or optical-depth construction."
+  },
+  "status": "PASS_SCOPED_PRECALCULATION_SOURCE_MAPPING_INDEXING_AND_FROZEN_PINS"
+}

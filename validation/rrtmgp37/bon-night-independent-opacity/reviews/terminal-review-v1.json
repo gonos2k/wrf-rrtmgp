@@ -1,0 +1,152 @@
+{
+  "blockers": [],
+  "created_utc": "2026-10-05T08:55:05.199143+00:00",
+  "execution": {
+    "RC": 0,
+    "RTE_WRF_compiled_replays": 0,
+    "actual_python_calculations": 1,
+    "launch_terminal_join_exact": true,
+    "pid": 420422,
+    "timeout_seconds": 30
+  },
+  "independent_minor_inventory": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-independent-opacity-design-v1/minor-metadata-inventory-v1.json",
+    "sha256": "517b300eb2e89e2f0307c9f08e02d256e969266129dbc35d437b9495644bdef7",
+    "size_bytes": 60654
+  },
+  "minor_inventory_joins": [
+    {
+      "all_retained_row_metadata_equal": true,
+      "joined_fields": [
+        "original_interval",
+        "original_start_Fortran",
+        "reduced_start_Fortran",
+        "identifier",
+        "gas",
+        "scaling_gas",
+        "density",
+        "complement",
+        "gpoint_bounds",
+        "gas_index_Fortran",
+        "scaling_index_Fortran"
+      ],
+      "layer_limits_Fortran": [
+        1,
+        28
+      ],
+      "regime": "lower",
+      "retained_contributors": 407,
+      "retained_intervals": 50
+    },
+    {
+      "all_retained_row_metadata_equal": true,
+      "joined_fields": [
+        "original_interval",
+        "original_start_Fortran",
+        "reduced_start_Fortran",
+        "identifier",
+        "gas",
+        "scaling_gas",
+        "density",
+        "complement",
+        "gpoint_bounds",
+        "gas_index_Fortran",
+        "scaling_index_Fortran"
+      ],
+      "layer_limits_Fortran": [
+        29,
+        45
+      ],
+      "regime": "upper",
+      "retained_contributors": 235,
+      "retained_intervals": 25
+    }
+  ],
+  "protected_input_source_pins": {
+    "count": 10,
+    "current_sha_size_match": true,
+    "saved_result_pin_roster_identical_to_plan": true
+  },
+  "reviewed": {
+    "analyze.py": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-independent-opacity-math-v1/analyze.py",
+      "sha256": "23ce2ce520186e98571d40b2ce329862a98ee50b7282bbe40e0bf427fe7789b4",
+      "size_bytes": 12452
+    },
+    "driver.log": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-independent-opacity-math-v1/driver.log",
+      "sha256": "a2cfb4dbee1632c39962675e3ad4a91732d4d57b8e8c4327b325b4ff79e56926",
+      "size_bytes": 553
+    },
+    "execution.json": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-independent-opacity-math-v1/execution.json",
+      "sha256": "f02f3f577fdcdcdd9a09bd0c35f926c691aa160fb139ef95c9821da3ee4b2a8a",
+      "size_bytes": 895
+    },
+    "launched.json": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-independent-opacity-math-v1/launched.json",
+      "sha256": "404b444e8ec9e01195d8154f043b12464696fb17122965f14615e3166f432528",
+      "size_bytes": 669
+    },
+    "plan.json": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-independent-opacity-math-v1/plan.json",
+      "sha256": "e032c4df5292d8ab8df31f482d1b43cde5993812096d206617a7f183bf7c4655",
+      "size_bytes": 3766
+    },
+    "result.json": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-independent-opacity-math-v1/result.json",
+      "sha256": "0a95fefd5f230bac2fc94d8e9590cac8cd04a0d09cd3c9ebb869dee214fb6532",
+      "size_bytes": 2024449
+    }
+  },
+  "reviewer_actions": {
+    "integration_transport_model_build_replay_calls": 0,
+    "reconstruction_calls": 0,
+    "saved_array_arithmetic_and_metadata_checks_only": true,
+    "source_or_frozen_artifact_edits": 0
+  },
+  "saved_array_readback": {
+    "all16_band_metadata_present": true,
+    "all_major_minor_identifier_arrays_finite_nonnegative": true,
+    "component_sum_closure_max_abs": 3.637978807091713e-12,
+    "component_sum_comment": "Separately grouped component summation has roundoff relative to original per-interval accumulation; not a gold component observer.",
+    "dry_column_max_relative_saved": 0.0,
+    "max_abs_error": 2.000888343900442e-11,
+    "max_error_divided_by_predeclared_gate": 0.002441161108222878,
+    "max_relative_nonzero": 2.5575589802172747e-15,
+    "reconstructed_total_shape": [
+      45,
+      128
+    ],
+    "target": {
+      "Fortran_order_read_independently": true,
+      "section": "GAS_TAU_RAW",
+      "shape": [
+        1,
+        45,
+        128
+      ]
+    },
+    "zero_mask_differences": 0
+  },
+  "schema": "independent-opacity-terminal-review-v1",
+  "scope": {
+    "column": "One held BON night matched-dry diagnostic45 carrier =32 native+13 extension",
+    "gas_absorption_target": "Pinned LW no-Rayleigh branch, explicit N2 dry VMR .7808, source/table/input reconstructed total within predeclared tolerance",
+    "nonclaims": [
+      "independent spectroscopy or component accuracy",
+      "physical or observational accuracy",
+      "closure of RRTMG/GP flux residual",
+      "domain/native32 physical acceptance",
+      "exact Fortran bitwise reconstruction",
+      "cross-engine gpoint pairing or normalization"
+    ],
+    "tau_gate": "absolute1e-11 + relative1e-12*abs(target); max absolute alone may exceed1e-11 while combined normalized gate remains0.002441161108"
+  },
+  "static_review": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-independent-opacity-review-v1/review.json",
+    "sha256": "2330805644761b44ed577f54130e5674135b0e081d32c301acf7be6abb1e447d",
+    "size_bytes": 8680
+  },
+  "status": "PASS_SCOPED_TERMINAL_SAVED_ARRAYS_PINS_AND_INDEPENDENT_MINOR_METADATA_JOIN"
+}

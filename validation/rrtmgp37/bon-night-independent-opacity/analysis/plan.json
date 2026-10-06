@@ -1,0 +1,103 @@
+{
+  "schema": "udm37-bon-night-independent-opacity-plan-v1",
+  "pins": {
+    "held_input": {
+      "bytes": 39535,
+      "path": "build/udm37-bon-night-dry-column-attribution-v1/matched-legacy-dry.input",
+      "sha256": "292f9569b059c373c9cb14f1574cb8835627331574592a19d641ef07c21ec918"
+    },
+    "captured_n2_result": {
+      "bytes": 763371,
+      "path": "build/udm37-bon-night-n2-attribution-v1/run-preparation-v1/run-v1/n2-0p7808.result",
+      "sha256": "b578e9983b5817297db75baac026af98b84a3cbcd3653aadf2e4db5930ce5732"
+    },
+    "production_coefficients": {
+      "bytes": 11679993,
+      "path": "build/udm37-bon-common-band-source-pr-work/WRF/run/rrtmgp-gas-lw-g128.nc",
+      "sha256": "70ad65d116531122660318e5da2a2af9db74b425916202860e9527ef2375b8f6"
+    },
+    "production_frontend": {
+      "bytes": 107884,
+      "path": "build/udm37-bon-common-band-source-pr-work/WRF/external/rte_rrtmgp/rrtmgp-frontend/mo_gas_optics_rrtmgp.F90",
+      "sha256": "d5e0a7e56bc811575ec2c9655953a5be64c42a62e4100f65198e1e1b44239adc"
+    },
+    "production_kernel": {
+      "bytes": 41856,
+      "path": "build/udm37-bon-common-band-source-pr-work/WRF/external/rte_rrtmgp/rrtmgp-kernels/mo_gas_optics_rrtmgp_kernels.F90",
+      "sha256": "96be9c4379c4e49a7b13e9b1f8314e78908262f402e913a2a03232987706f6e1"
+    },
+    "production_adapter": {
+      "bytes": 74962,
+      "path": "build/udm37-bon-common-band-source-pr-work/WRF/phys/module_ra_rrtmgp.F",
+      "sha256": "1852452555fbe667a0a95d59242bcd9c3833f2877fc51f882d5d3d929a058f58"
+    },
+    "production_constants": {
+      "path": "build/udm37-bon-common-band-source-pr-work/WRF/external/rte_rrtmgp/gas-optics/mo_gas_optics_constants.F90",
+      "bytes": 3047,
+      "sha256": "255cdd77fa39892bdec92440ae4dbc35b79fb338fdfff6d6b28bdf62f01c94b8"
+    },
+    "parser": {
+      "path": "build/udm37-bon-night-lw-angular-math-v1/angular_reference.py",
+      "bytes": 13139,
+      "sha256": "a64dfa9f3ff90cc788028c1cb0f5ab4d0be1316c49ef74e833b8dddc4eb5cb48"
+    },
+    "n2_execution_record": {
+      "bytes": 70378,
+      "path": "build/udm37-bon-night-n2-attribution-v1/run-preparation-v1/run-v1/execution.json",
+      "sha256": "cbb876791a9ff905356fa90abd65ede8d5f8dde882009d7be48684c74a7a600e"
+    },
+    "production_loader": {
+      "path": "build/udm37-bon-independent-pfrac-pr-work/WRF/external/rte_rrtmgp/extensions/mo_load_coefficients.F90",
+      "bytes": 13301,
+      "sha256": "3abc021bf244560f4d7f247be167ad0ecafb6c451f88566a7ce2a0436caebb5b"
+    }
+  },
+  "available_gases": [
+    "h2o",
+    "co2",
+    "o3",
+    "n2o",
+    "ch4",
+    "o2",
+    "cfc11",
+    "cfc12",
+    "cfc22",
+    "ccl4",
+    "n2"
+  ],
+  "input_gas_sections": {
+    "h2o": "H2O",
+    "co2": "CO2",
+    "o3": "O3",
+    "n2o": "N2O",
+    "ch4": "CH4",
+    "o2": "O2",
+    "cfc11": "VMR_CFC11",
+    "cfc12": "VMR_CFC12",
+    "cfc22": "VMR_CFC22",
+    "ccl4": "VMR_CCL4"
+  },
+  "n2_override": 0.7808,
+  "avogadro": 6.02214076e+23,
+  "tau_atol": 1e-11,
+  "tau_rtol": 1e-12,
+  "dry_column_max_relative": 1e-14,
+  "scope": {
+    "ncol": 1,
+    "diagnostic_layers": 45,
+    "native_WRF_layers": 32,
+    "upper_extension_layers": 13,
+    "gpoints": 128,
+    "bands": 16,
+    "no_Rayleigh_table_required": true,
+    "RTE_calls": 0,
+    "WRF_forecasts": 0,
+    "major_minor_absorption_reconstruction": true
+  },
+  "nonclaims": [
+    "No spectroscopy accuracy, RRTMG equivalence or whole-port physical-accuracy claim.",
+    "Component arrays are translated-formula results; no independent retained major/minor component observer exists.",
+    "No source fraction normalization, opacity clipping, tuning or cross-engine correlated-k point pairing.",
+    "Only one BON nighttime diagnostic45 column; native32/domain comparison remains separate."
+  ]
+}
