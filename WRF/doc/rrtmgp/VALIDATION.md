@@ -86,3 +86,7 @@ MP2/4/5의 기본 5분 SCM, MP4/5의 약 248.865 K 수상체 제어 사례(5분)
 MP95 제어 사례는 초기 과냉각 QC/QS의 양의 질량·구름 τ·cloudy mask와 독립 재생을 통과했으나 최종 후속 적분은 `RRTMGP_INPUT_PATH_OVERFLOW layer=1`로 종료됐다. 별도 반복에서는 압력 범위와 압력두께 오류도 관측했다. `--capture-only` 결과의 `PASS_COLUMN_REPLAY`는 예보 성공을 의미하지 않으며 `wrf.forecast.status=FAILED_AFTER_CAPTURE`를 함께 저장한다. 같은 SCM 설정의 baseline 4/4 탐색 실행도 segfault로 종료됐다. 이 오류들의 원인을 확정하거나 입력을 clip하지 않았다. Thompson/P3 runtime 시험은 완료된 범위에 포함하지 않는다.
 
 [재생 방법](COLUMN_REPLAY.md), [현재 후속 항목](REVIEW_FOLLOWUP.md), [측정 JSON](../../../validation/rrtmgp37/sampling-replay.json), [표본 CSV](../../../validation/rrtmgp37/small-cf-sampling.csv), [표본 그림](../../../validation/rrtmgp37/small-cf-sampling.svg)에 코드·결과·한계를 구분했다. 로컬 표준 빌드는 기존 checkout에서 의존성을 따라 재빌드했으며 fresh checkout 전체 빌드는 PR CI에서 별도로 확인한다.
+
+## UDM 동일 상태 물리 감사 (2026-10-02)
+
+새 감사는 현재 타일의 UDM 내부 CF와 source step을 보존하고, live WRF 입력을 실제 4/37 wrapper에 다시 넣는다. 1,024개 결정론적 시드 집합, 모든 LW/SW 호출의 독립 재생, audit ON/OFF history 비트 비교 및 기존 4/37 저장본과의 공통 배열 회귀를 실행했다. 현재 standalone CTest는 48개이며 모두 통과했다. 반경 입력 경로·CF·graupel·delta 정책별 숫자와 해석은 [UDM 물리 감사 보고서](../../../validation/rrtmgp37/udm-physics-audit/REPORT_ko.md)를 참조한다. 저장본 4/4 회귀는 이전 포팅 실행파일과의 비교이며 pristine 공식 WRF와의 직접 실행 비교가 아니다.

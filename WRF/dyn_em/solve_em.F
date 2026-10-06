@@ -4147,6 +4147,7 @@ BENCH_START(micro_driver_tim)
       &        ,light_neu_curr=scalar(ims,kms,jms,P_light_neu), F_light_neu=F_light_neu   &
       &        ,lpos=grid%lpos,lneg=grid%lneg,lneu=grid%lneu             &
       &        ,lpi2d=grid%lpi2d,lpi3d=grid%lpi3d                        &
+      &        ,udm_cldfra=grid%udm_cldfra, udm_cf_step=grid%udm_cf_step &
 	)
 
                                                                           

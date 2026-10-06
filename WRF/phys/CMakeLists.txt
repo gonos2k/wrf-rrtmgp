@@ -185,6 +185,7 @@ target_sources(
                   module_ra_hs.F
                   module_ra_rrtm.F
                   module_ra_rrtmg_aero_optical_util_cmaq.F
+                  module_ra_rrtmgp_audit.F
                   module_ra_rrtmgp_trace.F
                   module_ra_rrtmgp_input.F
                   module_ra_rrtmgp_precip.F

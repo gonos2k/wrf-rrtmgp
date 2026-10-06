@@ -219,6 +219,7 @@ subroutine udm(th, q, qc, qr, qi, qs, qg, qh                                  &
                  ,ids,ide, jds,jde, kds,kde                                    &
                  ,ims,ime, jms,jme, kms,kme                                    &
                  ,its,ite, jts,jte, kts,kte                                    &
+                 ,udm_cldfra, udm_cf_step                                      &
                                                                                )
 !-------------------------------------------------------------------------------
   implicit none
@@ -228,6 +229,8 @@ subroutine udm(th, q, qc, qr, qi, qs, qg, qh                                  &
   integer,           intent(in   ) :: ids,ide, jds,jde, kds,kde ,     &
                                       ims,ime, jms,jme, kms,kme ,     &
                                       its,ite, jts,jte, kts,kte
+  real, dimension(ims:ime,kms:kme,jms:jme), optional, intent(inout) :: udm_cldfra
+  integer, dimension(ims:ime,jms:jme), optional, intent(inout) :: udm_cf_step
   real,              intent(in   ) :: delt, g, ccn0, rd, rv, t0c,     &
                                       den0, cpd, cpv, ep1, ep2,       &
                                       qmin, xls, xlv0, xlf0, cliq,    &
@@ -301,6 +304,8 @@ subroutine udm(th, q, qc, qr, qi, qs, qg, qh                                  &
 !
 !-------------------------------------------------------------------------------
 !
+  if (present(udm_cldfra)) udm_cldfra(its:ite,kts:kte,jts:jte)=-1.
+  if (present(udm_cf_step)) udm_cf_step(its:ite,jts:jte)=-1
       if (itimestep==1) then
         do j = jms,jme
           do k = kms,kme
@@ -338,6 +343,8 @@ subroutine udm(th, q, qc, qr, qi, qs, qg, qh                                  &
           enddo
         enddo
 !
+         if (present(udm_cldfra) .and. present(udm_cf_step) .and. &
+             has_reqc==1 .and. has_reqi==1 .and. has_reqs==1) then
          call udm2d(t, q(ims,kms,j), qci, qrs                     &
                     ,ncr                                           &
                     ,den(ims,kms,j)                                &
@@ -355,8 +362,30 @@ subroutine udm(th, q, qc, qr, qi, qs, qg, qh                                  &
                     ,its,ite, jts,jte, kts,kte                     &
                     ,snow(ims,j),snowncv(ims,j)                    &
                     ,graupel(ims,j),graupelncv(ims,j)              &
-                    ,hail(ims,j),hailncv(ims,j)                    &
+                    ,hail(ims,j),hailncv(ims,j),itimestep           &
+                    ,udm_cldfra(:,:,j),udm_cf_step(:,j)             &
                                                                    )
+         else
+         call udm2d(t, q(ims,kms,j), qci, qrs                     &
+                    ,ncr                                           &
+                    ,den(ims,kms,j)                                &
+                    ,p(ims,kms,j), delz(ims,kms,j)                 &
+                    ,delt,g, cpd, cpv, rd, rv, t0c                 &
+                    ,ep1, ep2, qmin                                &
+                    ,xls, xlv0, xlf0, den0, denr                   &
+                    ,cliq,cice,psat                                &
+                    ,j                                             &
+                    ,slimsk(its,j)                                 &
+                    ,rain(ims,j),rainncv(ims,j)                    &
+                    ,sr                                            &
+                    ,ids,ide, jds,jde, kds,kde                     &
+                    ,ims,ime, jms,jme, kms,kme                     &
+                    ,its,ite, jts,jte, kts,kte                     &
+                    ,snow(ims,j),snowncv(ims,j)                    &
+                    ,graupel(ims,j),graupelncv(ims,j)              &
+                    ,hail(ims,j),hailncv(ims,j),itimestep           &
+                                                                   )
+         endif
         do k=kts,kte
           do i=its,ite
             th(i,k,j)=t(i,k)/pii(i,k,j)
@@ -443,7 +472,8 @@ subroutine udm2d(t1, q1                                          &
                    ,its,ite, jts,jte, kts,kte                     &
                    ,snow,snowncv                                  &
                    ,graupel,graupelncv                            &
-                   ,hail,hailncv                                  &
+                   ,hail,hailncv,itimestep                       &
+                   ,udm_cldfra,udm_cf_step                       &
                                                                   )
 !
 !-------------------------------------------------------------------------------
@@ -547,6 +577,9 @@ subroutine udm2d(t1, q1                                          &
                                                     ids,ide, jds,jde, kds,kde, &
                                                     ims,ime, jms,jme, kms,kme, &
                                                     its,ite, jts,jte, kts,kte
+   integer, intent(in) :: itimestep
+   real, dimension(ims:ime,kms:kme), optional, intent(inout) :: udm_cldfra
+   integer, dimension(ims:ime), optional, intent(inout) :: udm_cf_step
    real                        , intent(in   ) :: delt
    real                        , intent(in   ) :: g, cpd, cpv, t0c,&
                                                              rd, rv, ep1, ep2
@@ -848,6 +881,8 @@ subroutine udm2d(t1, q1                                          &
 !
 !-------------------------------------------------------------------------------
 !
+ if (present(udm_cldfra)) udm_cldfra(its:ite,kts:kte)=-1.
+ if (present(udm_cf_step)) udm_cf_step(its:ite)=-1
  inner_loop : do loop = 1, loops ! sub-stepping with cld timestep = 180s
 !
 !-------------------------------------------------------------------------------
@@ -997,6 +1032,8 @@ subroutine udm2d(t1, q1                                          &
    ktop = max(ktopqc,ktopqi)
    call cldf_diag(1,kdim,t(:,i),p(:,i),q(:,i),qci(:,i,1),qci(:,i,2),           &
         dxmeter(i),cldf(:),ktop)
+   if (present(udm_cldfra)) udm_cldfra(i,kts:kte)=cldf(:)
+   if (present(udm_cf_step)) udm_cf_step(i)=itimestep
 !
    do k = ktop, kts, -1
 ! change condensate variables to in-cloud variables

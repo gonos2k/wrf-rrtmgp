@@ -10097,9 +10097,10 @@ CONTAINS
                        ,sw_zbbcddir                               & ! WRF-CMAQ twoway coupled model
                        ,sw_dirdflux                               & ! WRF-CMAQ twoway coupled model
                        ,sw_difdflux                               & ! WRF-CMAQ twoway coupled model
-                        ,use_rrtmgp,qh3d,f_qh )
+                        ,use_rrtmgp,qh3d,f_qh,udm_cldfra,udm_cf_step,mcica_seed_override,audit_step,audit_time )
 !------------------------------------------------------------------
    USE MODULE_RA_CLWRF_SUPPORT, ONLY : read_CAMgases
+   USE module_mp_udm, ONLY: cldf_diag
    USE module_ra_rrtmgp, ONLY: rrtmgp_sw_column
    USE module_ra_rrtmgp_input, ONLY: rrtmgp_build_udm_inputs
    USE module_ra_rrtmgp_trace, ONLY: trace_start, trace_active, trace_raw_start, trace_raw, &
@@ -10108,6 +10109,11 @@ CONTAINS
    LOGICAL, OPTIONAL, INTENT(IN) :: use_rrtmgp
    LOGICAL, OPTIONAL, INTENT(IN) :: f_qh
    REAL, OPTIONAL, INTENT(IN) :: qh3d(ims:ime,kms:kme,jms:jme)
+   REAL, OPTIONAL, INTENT(IN) :: udm_cldfra(ims:ime,kms:kme,jms:jme),audit_time
+   INTEGER, OPTIONAL, INTENT(IN) :: udm_cf_step(ims:ime,jms:jme),mcica_seed_override,audit_step
+   INTEGER :: gp_seed,gp_g_count
+   REAL(KIND=8) :: gp_g_sum,gp_g_max
+   REAL :: gp_cf_now(1,kte-kts+1)
    LOGICAL :: run_rrtmgp
    CHARACTER(LEN=96) :: gp_context
 !------------------------------------------------------------------
@@ -10611,6 +10617,7 @@ CONTAINS
 ! Pressures are in mb
 
 ! latitude loop
+  gp_g_count=0;gp_g_sum=0.d0;gp_g_max=0.d0
   j_loop: do j = jts,jte
 
 ! longitude loop
@@ -11291,6 +11298,17 @@ CONTAINS
                   CALL trace_raw_start('SW',kte-kts+1)
                   CALL trace_raw('SW','DP_HPA',pdel(ncol,kts:kte))
                   CALL trace_raw('SW','CF',cldfrac(ncol,kts:kte))
+                  CALL trace_raw('SW','RAD_CF_SOURCE',cldfra3d(i,kts:kte,j))
+                  IF(PRESENT(udm_cldfra)) CALL trace_raw('SW','UDM_CF_USED',udm_cldfra(i,kts:kte,j))
+                  IF(PRESENT(udm_cf_step)) CALL trace_raw('SW','UDM_CF_SOURCE_STEP',[REAL(udm_cf_step(i,j))])
+                  IF(PRESENT(audit_step)) CALL trace_raw('SW','RADIATION_STEP',[REAL(audit_step)])
+                  IF(PRESENT(audit_time)) CALL trace_raw('SW','SOURCE_TIME_SECONDS',[audit_time])
+                  CALL cldf_diag(1,kte-kts+1,RESHAPE(t3d(i,kts:kte,j),[1,kte-kts+1]), &
+                       RESHAPE(p3d(i,kts:kte,j),[1,kte-kts+1]),RESHAPE(qv1d(kts:kte),[1,kte-kts+1]), &
+                       RESHAPE(qc3d(i,kts:kte,j),[1,kte-kts+1]),RESHAPE(qi3d(i,kts:kte,j),[1,kte-kts+1]), &
+                       [10000.],gp_cf_now,kte-kts+1)
+                  CALL trace_raw('SW','UDM_CF_RECOMPUTED',gp_cf_now(1,:))
+                  CALL trace_raw('SW','UDM_CF_DX_M',[10000.])
                   CALL trace_raw('SW','QC',qc1d(kts:kte))
                   CALL trace_raw('SW','QI',qi1d(kts:kte))
                   CALL trace_raw('SW','QS',qs1d(kts:kte))
@@ -11355,10 +11373,9 @@ CONTAINS
                ! Graupel is measured, never silently mapped to snow or hail.
                DO k=kts,kte
                   IF(gp_grid(k-kts+1,5)>0.) THEN
-                     WRITE(message,'(A,A,I0,A,ES14.6)') TRIM(gp_context), &
-                       ' RRTMGP_UDM_GRAUPEL_OPTICS_OMITTED layer=',k, &
-                       ' grid_path_g_m2=',gp_grid(k-kts+1,5)
-                     CALL wrf_debug(0,message)
+                     gp_g_count=gp_g_count+1
+                     gp_g_sum=gp_g_sum+REAL(gp_grid(k-kts+1,5),8)
+                     gp_g_max=MAX(gp_g_max,REAL(gp_grid(k-kts+1,5),8))
                   END IF
                   IF(gp_omitted(k-kts+1)>0.) THEN
                      WRITE(message,'(A,A,I0,A,I0,A,ES14.6)') TRIM(gp_context), &
@@ -11409,6 +11426,9 @@ CONTAINS
          iplon = 1
          irng = 0
          permuteseed = 1
+         IF(PRESENT(mcica_seed_override)) THEN
+           IF(mcica_seed_override>=0) permuteseed=mcica_seed_override
+         END IF
 
 ! Sub-column generator for McICA
          lat = XLAT(i,j) !retrieve scalar latitude for column calculation
@@ -11652,10 +11672,14 @@ CONTAINS
 
 ! Call RRTMG shortwave radiation model
 
+         gp_seed=i+104729*j+INT(julian)*1009+7919
+         IF(PRESENT(mcica_seed_override)) THEN
+           IF(mcica_seed_override>=0) gp_seed=mcica_seed_override
+         END IF
          IF(run_rrtmgp) THEN
            CALL rrtmgp_sw_column(play,plev,tlay,h2ovmr,co2vmr,o3vmr,n2ovmr,ch4vmr,o2vmr, &
              asdir,asdif,aldir,aldif,coszen,scon,cldfrac,clwpth,ciwpth,cswpth,rel,rei,res,4,icld, &
-             i+104729*j+INT(julian)*1009+7919,swuflx,swdflx,swhr,swuflxc,swdflxc,swhrc, &
+             gp_seed,swuflx,swdflx,swhr,swuflxc,swdflxc,swhrc, &
              swdkdir,swdkdif,swdkdirc,sibvisdir,sibvisdif,sibnirdir,sibnirdif,rwp=gp_rwp)
            swuflxcln=swuflx; swdflxcln=swdflx
            loc_sw_zbbcddir=swdkdirc(1,1); loc_sw_dirdflux=swdkdir(1,1); loc_sw_difdflux=swdkdif(1,1)
@@ -11809,6 +11833,19 @@ CONTAINS
 
 
 !-------------------------------------------------------------------
+
+   IF(run_rrtmgp.AND.gp_g_count>0) THEN
+    BLOCK
+     LOGICAL :: report_graupel
+     report_graupel=.TRUE.
+     IF(PRESENT(mcica_seed_override)) report_graupel=mcica_seed_override<0
+     IF(report_graupel) THEN
+      WRITE(message,'(A,I0,A,ES14.6,A,ES14.6)') 'SW RRTMGP_UDM_GRAUPEL_OPTICS_OMITTED layers=', &
+         gp_g_count,' sum_grid_path_g_m2=',gp_g_sum,' max_grid_path_g_m2=',gp_g_max
+      CALL wrf_debug(0,message)
+     END IF
+    END BLOCK
+   END IF
 
    END SUBROUTINE RRTMG_SWRAD
 

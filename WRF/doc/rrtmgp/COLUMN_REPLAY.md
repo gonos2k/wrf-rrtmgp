@@ -53,3 +53,7 @@ UDM production capture는 V4이며 precipitation policy 및 RWP를 추가한다.
 ## 초기 배경 반경의 입력 계약
 
 새 `.raw`는 `ICLOUD`와 기존 WRF의 `FALLBACK_REL/REI/RES`를 함께 기록한다. 반경 제공 플래그만 참이고 원래 반경이 `RE_*_BG`인 wet/cloudy 층에서는 해당 host 진단 반경을 사용한다. 그 외 정상 반경은 원래 값을 전달한다. A→B 검사기는 두 경우를 분리하여 검사하며 기존 저장본의 직접 전달 계약도 재생한다. 첫 cloudy 호출과 미세물리 진단 이후 호출을 따로 저장해 확인한다. 이번 수정의 인과 분해와 실행 증거는 저장소의 `validation/rrtmgp37/port-audit/REPORT_ko.md`에 기록한다.
+
+## 모든 호출과 UDM 대조 실험
+
+`WRF_RRTMGP_CAPTURE_ALL=1`은 선택한 기둥의 모든 LW/SW 호출을 `lw_000001` 등의 이름으로 저장한다. `test_udm_cf_replay.py`는 같은 raw/V4 묶음에서 A/B/B_now/C 구름분율, graupel 제외/가정적 snow 합산, 세 SW delta 정책을 재생한다. A·graupel 제외·policy 1은 원래 생산 결과와 독립 재생의 일치를 먼저 검사한다. 상단 확장층은 보존한다. B의 실제 미진단 sentinel은 유효한 zero CF로 바꾸지 않는다. 자세한 입력·시점·대조 실험 정의는 [PHYSICS_AUDIT.md](PHYSICS_AUDIT.md)를 따른다.
