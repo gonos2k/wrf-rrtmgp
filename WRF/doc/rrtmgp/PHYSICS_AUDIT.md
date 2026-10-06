@@ -38,7 +38,7 @@ UDM 구름 진단의 길이 척도는 현재 소스에서 `dxmeter=10000.` m로 
 - `UDM_CF_USED` 및 `UDM_CF_SOURCE_STEP`: 마지막 실제 UDM 진단 배열과 그 시점. 실행되지 않은 열은 sentinel로 남는다.
 - `UDM_CF_RECOMPUTED`: 호출 시점의 현재 열역학·응결물 상태에서 UDM `cldf_diag`를 다시 계산한 값. 이는 직전 microphysics subcycle에서 실제 사용된 값과 시점이 다르고, 모든 native 물리 레이어에 대해 계산하므로 `UDM_CF_USED`와 대체 가능한 동의어가 아니다.
 
-기존 운영 방사 경로의 `CLDFRA`는 이 진단 기능으로 변경하지 않는다. 이 감사는 보존된 grid-box 응결물과 경로 변환을 비교하기 위한 부가 자료를 기록한다. 양의 cloud fraction이 있는 레이어에서는 응결물 질량을 보존하도록 경로를 구성한다. 실제 진단이 생략된 UDM 레이어는 B 분석에서 유효성 마스크로 구별한다. cloud fraction이 0인 상태에서 경로로 표현할 수 없는 질량의 생략도 별도 수량으로 보고한다. `qg`는 방사 경로에 포함하지 않으며, 양의 `qh`는 지원되지 않는 응결물 입력으로 거부한다.
+기존 운영 방사 경로의 `CLDFRA`는 이 진단 기능으로 변경하지 않는다. 이 감사는 보존된 grid-box 응결물과 경로 변환을 비교하기 위한 부가 자료를 기록한다. 양의 cloud fraction이 있는 레이어에서는 응결물 질량을 보존하도록 경로를 구성한다. 실제 진단이 생략된 UDM 레이어는 B 분석에서 유효성 마스크로 구별한다. cloud fraction이 0인 상태에서 경로로 표현할 수 없는 질량의 생략도 별도 수량으로 보고한다. 기본 비-frozen UDM27 경로에서는 `qg`를 방사 경로에서 제외하고, 양의 `qh`를 거부한다. 별도 opt-in frozen mode 1은 실험용 G/H 조회표·occurrence=1 경로를 추가하며, [실험 계약](UDM_FROZEN_EXPERIMENT.md)에 정의된 가정을 따른다. 이 선택은 default 물리 정책을 바꾸거나 frozen 광학을 관측 검증된 것으로 승인하지 않는다.
 
 분석기는 CF와 경로 조합을 구분해 보여준다. A는 기존 생산 경로의 현재 CF와 경로, B는 실제 마지막 UDM CF와 유효한 양의-CF 응결물 질량을 보존하는 재구성 경로, C는 기존 CF를 유지하면서 grid-mean 경로를 사용하는 비보존 counterfactual이다. C는 질량 보존 정책으로 제안되거나 선택된 구성이 아니다. 현재 상태에서 재계산한 CF는 `B_now` 대조 실험으로 별도 취급한다. 모든 A/B/B_now/C 재생은 모델 상단에 추가된 대기층의 입력을 보존한다. `--graupel-policy as-snow`는 같은 CF에서 grid graupel 경로를 snow 경로에 더하고 UDM snow 반경을 유지하는 별도 실험이다. 실제 캡처에 graupel이 없으면 이것으로 활성 graupel 검증을 했다고 주장하지 않는다.
 
@@ -54,4 +54,4 @@ UDM 구름 진단의 길이 척도는 현재 소스에서 `dxmeter=10000.` m로 
 
 ## 범위와 미검증 항목
 
-이 감사 결과만으로 24–48시간 예보 성능, MPI 실행, restart 재현성 또는 우박(`qh`)을 포함한 물리 구성을 검증했다고 볼 수 없다. 위 조건은 별도 검증이 필요하다. 본 문서는 감사 설계만 기술하며, 구체적인 실행 결과와 수치는 별도 검증 보고서에서 추가한다.
+이 감사 도구 자체는 MPI 및 OpenMP 2개 이상 스레드에서 실행을 거부하며 scratch 결과를 예보 상태에 쓰지 않는다. 따라서 이 도구 자체로 24–48시간 예보, MPI 감사 실행 또는 frozen `qh` 정확도를 검증하지 않는다. 별도의 후속 실행 자료로는 [MPI/OpenMP 런타임 기록](CPU_OPENMP.md), [24시간 own-restart](../../../validation/rrtmgp37/domain-calendar-seeds/fresh-restart/README.md), [1시간 nested MPI4/OMP2 pilot](../../../validation/rrtmgp37/nested-batching-restart/README.md), [누적량 recurrence](../../../validation/rrtmgp37/runtime-contracts/accumulation-final.json)가 있다. 그 별도 실행들은 감사 기능을 MPI에서 구동한 결과가 아니며 48시간 예보나 물리 정확도 증명이 아니다. 본문은 계속 감사 설계와 해석 범위를 설명하고, 실행별 결과는 연결된 검증 보고서에 둔다.
