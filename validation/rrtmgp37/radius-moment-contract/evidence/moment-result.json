@@ -1,0 +1,371 @@
+{
+  "assumptions_and_limits": [
+    "The native routine formula equals a volume-mean radius before clipping if its number argument is volumetric Nc. Source constants and slope_cloud support that convention; generic Registry labels alone do not.",
+    "The Gamma PSD is directly used in the autoconversion closure. This calculation does not prove it is the prescribed radiation PSD.",
+    "The core divides condensate by its cloud fraction without dividing Nc in that block; post-step native radius uses restored grid condensate. No same-occurrence moment identity is asserted.",
+    "Clipped or placeholder radii are excluded from the analytic radius identity; sample clipping is explicitly marked.",
+    "No optical coefficient table, atmospheric column, model tendency, forecast or observation is evaluated. No flux error percentage or production correction is inferred."
+  ],
+  "bounds": {
+    "max_gamma_to_volume_radius_ratio": 1.2771823873225885,
+    "min_gamma_to_volume_radius_ratio": 1.0600476039461897,
+    "nu_range_in_autoconversion": [
+      2,
+      15
+    ]
+  },
+  "definitions": {
+    "Gamma_re_over_r_volume": "((nu+3)**2/((nu+1)*(nu+2)))**(1/3)",
+    "M_k": "integral(r**k*n(r),r=0..infinity)",
+    "native_unclipped_radius": "0.5*(L/(pidnc*Nc))**(1/3); pidnc=pi*rho_water/6",
+    "radius_PSD": "n(r)=n0*r**nu*exp(-lambda*r)",
+    "spherical_optical_effective_radius": "M3/M2",
+    "volume_mean_radius": "(M3/M0)**(1/3)"
+  },
+  "new_WRF_REAL_RTE_solver_build_calls": 0,
+  "production_changes": 0,
+  "quadrature": {
+    "method": "64-node Gauss-Laguerre; x=lambda*r",
+    "shape_rows": [
+      {
+        "gamma_moments_x_k0_to_k3": [
+          2.000000000000159,
+          6.000000000000429,
+          24.00000000000149,
+          120.00000000000679
+        ],
+        "independent_quadrature_radius_ratio": 1.2771823873225914,
+        "max_relative_quadrature_error": 7.949196856316121e-14,
+        "nu": 2,
+        "re_M3_M2_over_volume_mean_radius": 1.2771823873225885
+      },
+      {
+        "gamma_moments_x_k0_to_k3": [
+          6.000000000000429,
+          24.00000000000149,
+          120.00000000000679,
+          720.0000000000393
+        ],
+        "independent_quadrature_radius_ratio": 1.2164403991146846,
+        "max_relative_quadrature_error": 7.149836278586008e-14,
+        "nu": 3,
+        "re_M3_M2_over_volume_mean_radius": 1.2164403991146802
+      },
+      {
+        "gamma_moments_x_k0_to_k3": [
+          24.00000000000149,
+          120.00000000000679,
+          720.0000000000393,
+          5040.000000000275
+        ],
+        "independent_quadrature_radius_ratio": 1.1776736060179849,
+        "max_relative_quadrature_error": 6.202445964239207e-14,
+        "nu": 4,
+        "re_M3_M2_over_volume_mean_radius": 1.177673606017982
+      },
+      {
+        "gamma_moments_x_k0_to_k3": [
+          120.00000000000679,
+          720.0000000000393,
+          5040.000000000275,
+          40320.00000000223
+        ],
+        "independent_quadrature_radius_ratio": 1.1507391653295775,
+        "max_relative_quadrature_error": 5.6606571282221316e-14,
+        "nu": 5,
+        "re_M3_M2_over_volume_mean_radius": 1.1507391653295762
+      },
+      {
+        "gamma_moments_x_k0_to_k3": [
+          720.0000000000393,
+          5040.000000000275,
+          40320.00000000223,
+          362880.0000000205
+        ],
+        "independent_quadrature_radius_ratio": 1.1309211616937314,
+        "max_relative_quadrature_error": 5.646245767620295e-14,
+        "nu": 6,
+        "re_M3_M2_over_volume_mean_radius": 1.130921161693731
+      },
+      {
+        "gamma_moments_x_k0_to_k3": [
+          5040.000000000275,
+          40320.00000000223,
+          362880.0000000205,
+          3628800.000000209
+        ],
+        "independent_quadrature_radius_ratio": 1.115721583470283,
+        "max_relative_quadrature_error": 5.76173715832162e-14,
+        "nu": 7,
+        "re_M3_M2_over_volume_mean_radius": 1.1157215834702827
+      },
+      {
+        "gamma_moments_x_k0_to_k3": [
+          40320.00000000223,
+          362880.0000000205,
+          3628800.000000209,
+          39916800.00000235
+        ],
+        "independent_quadrature_radius_ratio": 1.1036913028327846,
+        "max_relative_quadrature_error": 5.879561708431051e-14,
+        "nu": 8,
+        "re_M3_M2_over_volume_mean_radius": 1.1036913028327844
+      },
+      {
+        "gamma_moments_x_k0_to_k3": [
+          362880.0000000205,
+          3628800.000000209,
+          39916800.00000235,
+          479001600.00002855
+        ],
+        "independent_quadrature_radius_ratio": 1.0939310151857375,
+        "max_relative_quadrature_error": 5.960444567912113e-14,
+        "nu": 9,
+        "re_M3_M2_over_volume_mean_radius": 1.0939310151857378
+      },
+      {
+        "gamma_moments_x_k0_to_k3": [
+          3628800.000000209,
+          39916800.00000235,
+          479001600.00002855,
+          6227020800.000376
+        ],
+        "independent_quadrature_radius_ratio": 1.085852722251562,
+        "max_relative_quadrature_error": 6.034148475368229e-14,
+        "nu": 10,
+        "re_M3_M2_over_volume_mean_radius": 1.0858527222515622
+      },
+      {
+        "gamma_moments_x_k0_to_k3": [
+          39916800.00000235,
+          479001600.00002855,
+          6227020800.000376,
+          87178291200.00531
+        ],
+        "independent_quadrature_radius_ratio": 1.0790556034366638,
+        "max_relative_quadrature_error": 6.091033123794471e-14,
+        "nu": 11,
+        "re_M3_M2_over_volume_mean_radius": 1.079055603436664
+      },
+      {
+        "gamma_moments_x_k0_to_k3": [
+          479001600.00002855,
+          6227020800.000376,
+          87178291200.00531,
+          1307674368000.08
+        ],
+        "independent_quadrature_radius_ratio": 1.073256951376911,
+        "max_relative_quadrature_error": 6.123705332121338e-14,
+        "nu": 12,
+        "re_M3_M2_over_volume_mean_radius": 1.0732569513769112
+      },
+      {
+        "gamma_moments_x_k0_to_k3": [
+          6227020800.000376,
+          87178291200.00531,
+          1307674368000.08,
+          20922789888001.29
+        ],
+        "independent_quadrature_radius_ratio": 1.06825161203893,
+        "max_relative_quadrature_error": 6.161044998780614e-14,
+        "nu": 13,
+        "re_M3_M2_over_volume_mean_radius": 1.06825161203893
+      },
+      {
+        "gamma_moments_x_k0_to_k3": [
+          87178291200.00531,
+          1307674368000.08,
+          20922789888001.29,
+          355687428096022.0
+        ],
+        "independent_quadrature_radius_ratio": 1.0638870772929734,
+        "max_relative_quadrature_error": 6.185205959560145e-14,
+        "nu": 14,
+        "re_M3_M2_over_volume_mean_radius": 1.0638870772929736
+      },
+      {
+        "gamma_moments_x_k0_to_k3": [
+          1307674368000.08,
+          20922789888001.29,
+          355687428096022.0,
+          6402373705728398.0
+        ],
+        "independent_quadrature_radius_ratio": 1.06004760394619,
+        "max_relative_quadrature_error": 6.216444373497318e-14,
+        "nu": 15,
+        "re_M3_M2_over_volume_mean_radius": 1.0600476039461897
+      }
+    ]
+  },
+  "samples": [
+    {
+      "Gamma_effective_M3_M2_radius_m": 3.8456742427458166e-06,
+      "L_kg_m_minus3": 1e-05,
+      "native_after_stated_radius_bounds_m": 3.6278316449466083e-06,
+      "native_unclipped_formula_m": 3.6278316449466083e-06,
+      "native_would_clip": false,
+      "nu_from_autoconversion_rule": 15,
+      "number_concentration_m_minus3": 50000000.0,
+      "unclipped_re_gamma_over_native": 1.06004760394619
+    },
+    {
+      "Gamma_effective_M3_M2_radius_m": 8.285253995133681e-06,
+      "L_kg_m_minus3": 0.0001,
+      "native_after_stated_radius_bounds_m": 7.815926345468405e-06,
+      "native_unclipped_formula_m": 7.815926345468405e-06,
+      "native_would_clip": false,
+      "nu_from_autoconversion_rule": 15,
+      "number_concentration_m_minus3": 50000000.0,
+      "unclipped_re_gamma_over_native": 1.0600476039461897
+    },
+    {
+      "Gamma_effective_M3_M2_radius_m": 1.785003862284126e-05,
+      "L_kg_m_minus3": 0.001,
+      "native_after_stated_radius_bounds_m": 1.6838902853411256e-05,
+      "native_unclipped_formula_m": 1.6838902853411256e-05,
+      "native_would_clip": false,
+      "nu_from_autoconversion_rule": 15,
+      "number_concentration_m_minus3": 50000000.0,
+      "unclipped_re_gamma_over_native": 1.06004760394619
+    },
+    {
+      "Gamma_effective_M3_M2_radius_m": 3.0903488212130117e-06,
+      "L_kg_m_minus3": 1e-05,
+      "native_after_stated_radius_bounds_m": 2.879411884775885e-06,
+      "native_unclipped_formula_m": 2.879411884775885e-06,
+      "native_would_clip": false,
+      "nu_from_autoconversion_rule": 12,
+      "number_concentration_m_minus3": 100000000.0,
+      "unclipped_re_gamma_over_native": 1.073256951376911
+    },
+    {
+      "Gamma_effective_M3_M2_radius_m": 6.657954704720453e-06,
+      "L_kg_m_minus3": 0.0001,
+      "native_after_stated_radius_bounds_m": 6.203504851451255e-06,
+      "native_unclipped_formula_m": 6.203504851451255e-06,
+      "native_would_clip": false,
+      "nu_from_autoconversion_rule": 12,
+      "number_concentration_m_minus3": 100000000.0,
+      "unclipped_re_gamma_over_native": 1.0732569513769112
+    },
+    {
+      "Gamma_effective_M3_M2_radius_m": 1.4344128580510729e-05,
+      "L_kg_m_minus3": 0.001,
+      "native_after_stated_radius_bounds_m": 1.336504605174767e-05,
+      "native_unclipped_formula_m": 1.336504605174767e-05,
+      "native_would_clip": false,
+      "nu_from_autoconversion_rule": 12,
+      "number_concentration_m_minus3": 100000000.0,
+      "unclipped_re_gamma_over_native": 1.0732569513769112
+    },
+    {
+      "Gamma_effective_M3_M2_radius_m": 2.297419321276565e-06,
+      "L_kg_m_minus3": 1e-05,
+      "native_after_stated_radius_bounds_m": 2.51e-06,
+      "native_unclipped_formula_m": 1.9964726938085703e-06,
+      "native_would_clip": true,
+      "nu_from_autoconversion_rule": 5,
+      "number_concentration_m_minus3": 300000000.0,
+      "unclipped_re_gamma_over_native": 1.1507391653295764
+    },
+    {
+      "Gamma_effective_M3_M2_radius_m": 4.949639883307736e-06,
+      "L_kg_m_minus3": 0.0001,
+      "native_after_stated_radius_bounds_m": 4.301270029242587e-06,
+      "native_unclipped_formula_m": 4.301270029242587e-06,
+      "native_would_clip": false,
+      "nu_from_autoconversion_rule": 5,
+      "number_concentration_m_minus3": 300000000.0,
+      "unclipped_re_gamma_over_native": 1.1507391653295762
+    },
+    {
+      "Gamma_effective_M3_M2_radius_m": 1.0663675867763553e-05,
+      "L_kg_m_minus3": 0.001,
+      "native_after_stated_radius_bounds_m": 9.266805362194684e-06,
+      "native_unclipped_formula_m": 9.266805362194684e-06,
+      "native_would_clip": false,
+      "nu_from_autoconversion_rule": 5,
+      "number_concentration_m_minus3": 300000000.0,
+      "unclipped_re_gamma_over_native": 1.1507391653295762
+    },
+    {
+      "Gamma_effective_M3_M2_radius_m": 1.625778195337402e-06,
+      "L_kg_m_minus3": 1e-05,
+      "native_after_stated_radius_bounds_m": 2.51e-06,
+      "native_unclipped_formula_m": 1.3365046051747674e-06,
+      "native_would_clip": true,
+      "nu_from_autoconversion_rule": 3,
+      "number_concentration_m_minus3": 1000000000.0,
+      "unclipped_re_gamma_over_native": 1.2164403991146802
+    },
+    {
+      "Gamma_effective_M3_M2_radius_m": 3.502632942332331e-06,
+      "L_kg_m_minus3": 0.0001,
+      "native_after_stated_radius_bounds_m": 2.879411884775885e-06,
+      "native_unclipped_formula_m": 2.879411884775885e-06,
+      "native_would_clip": false,
+      "nu_from_autoconversion_rule": 3,
+      "number_concentration_m_minus3": 1000000000.0,
+      "unclipped_re_gamma_over_native": 1.2164403991146802
+    },
+    {
+      "Gamma_effective_M3_M2_radius_m": 7.54619391740922e-06,
+      "L_kg_m_minus3": 0.001,
+      "native_after_stated_radius_bounds_m": 6.203504851451255e-06,
+      "native_unclipped_formula_m": 6.203504851451255e-06,
+      "native_would_clip": false,
+      "nu_from_autoconversion_rule": 3,
+      "number_concentration_m_minus3": 1000000000.0,
+      "unclipped_re_gamma_over_native": 1.2164403991146802
+    },
+    {
+      "Gamma_effective_M3_M2_radius_m": 1.332959483470444e-06,
+      "L_kg_m_minus3": 1e-05,
+      "native_after_stated_radius_bounds_m": 2.51e-06,
+      "native_unclipped_formula_m": 1.0436719897655208e-06,
+      "native_would_clip": true,
+      "nu_from_autoconversion_rule": 2,
+      "number_concentration_m_minus3": 2100000000.0,
+      "unclipped_re_gamma_over_native": 1.2771823873225885
+    },
+    {
+      "Gamma_effective_M3_M2_radius_m": 2.871774151595706e-06,
+      "L_kg_m_minus3": 0.0001,
+      "native_after_stated_radius_bounds_m": 2.51e-06,
+      "native_unclipped_formula_m": 2.248523139765439e-06,
+      "native_would_clip": true,
+      "nu_from_autoconversion_rule": 2,
+      "number_concentration_m_minus3": 2100000000.0,
+      "unclipped_re_gamma_over_native": 1.2771823873225887
+    },
+    {
+      "Gamma_effective_M3_M2_radius_m": 6.187049854134671e-06,
+      "L_kg_m_minus3": 0.001,
+      "native_after_stated_radius_bounds_m": 4.844296253650071e-06,
+      "native_unclipped_formula_m": 4.844296253650071e-06,
+      "native_would_clip": false,
+      "nu_from_autoconversion_rule": 2,
+      "number_concentration_m_minus3": 2100000000.0,
+      "unclipped_re_gamma_over_native": 1.2771823873225887
+    }
+  ],
+  "schema": "udm37-liquid-radius-moment-audit-v1",
+  "source_pins": {
+    "UDM": {
+      "bytes": 192801,
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-historical-source-pr-work/WRF/phys/module_mp_udm.F",
+      "sha256": "872737fe3a0cebf941d3ee45056fb60aadf465f0f72d72d1a2c7abac6709351d"
+    },
+    "adapter": {
+      "bytes": 74962,
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-historical-source-pr-work/WRF/phys/module_ra_rrtmgp.F",
+      "sha256": "1852452555fbe667a0a95d59242bcd9c3833f2877fc51f882d5d3d929a058f58"
+    },
+    "calculator": {
+      "bytes": 5750,
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-liquid-radius-moment-audit-v1/derive_moments.py",
+      "sha256": "fe9b5173b3d9da4e68ccebe60e87b807aa3589dd7248f58f54e6e33bb8a73f0b"
+    }
+  },
+  "status": "PASS_SCOPED_SPHERICAL_GAMMA_MOMENT_DERIVATION_NO_POLICY_CHANGE"
+}

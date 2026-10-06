@@ -2202,6 +2202,7 @@ CONTAINS
                   udm_dry_layer_mass=udm_dry_layer_mass, &
                     rrtmgp_domain_id=id,rrtmgp_calendar_day=udm_seed_day, &
                   audit_step=itimestep,audit_time=xtime*60. , &
+                  qnc3d=qnc_curr, &
                   native_qc3d=qc_save,native_qi3d=qi_save, &
                   cu_qc3d=qc_cu,cu_qi3d=qi_cu,cu_cf3d=cldfra_cu, &
                   cu_dp3d=cldfra_dp,cu_sh3d=cldfra_sh,cu_population_policy=cu_population_policy )
@@ -2262,7 +2263,8 @@ CONTAINS
                   udm_cldfra=udm_cldfra,udm_cf_step=udm_cf_step,udm_cf_top=udm_cf_top, &
                   udm_dry_layer_mass=udm_dry_layer_mass, &
                     rrtmgp_domain_id=id,rrtmgp_calendar_day=udm_seed_day, &
-                  audit_step=itimestep,audit_time=xtime*60. )
+                  audit_step=itimestep,audit_time=xtime*60. , &
+                  qnc3d=qnc_curr )
              END IF
              ! Serialized opt-in diagnostic: scratch outputs never feed the forecast.
              IF (lw_physics==RRTMGP_LWSCHEME) THEN
@@ -3014,6 +3016,7 @@ CONTAINS
                   udm_dry_layer_mass=udm_dry_layer_mass, &
                     rrtmgp_domain_id=id,rrtmgp_calendar_day=udm_seed_day, &
                   audit_step=itimestep,audit_time=xtime*60. , &
+                  qnc3d=qnc_curr, &
                      native_qc3d=qc_save,native_qi3d=qi_save, &
                      cu_qc3d=qc_cu,cu_qi3d=qi_cu,cu_cf3d=cldfra_cu, &
                      cu_dp3d=cldfra_dp,cu_sh3d=cldfra_sh,cu_population_policy=cu_population_policy )
@@ -3126,7 +3129,8 @@ CONTAINS
                   udm_cldfra=udm_cldfra,udm_cf_step=udm_cf_step,udm_cf_top=udm_cf_top, &
                   udm_dry_layer_mass=udm_dry_layer_mass, &
                     rrtmgp_domain_id=id,rrtmgp_calendar_day=udm_seed_day, &
-                  audit_step=itimestep,audit_time=xtime*60. )
+                  audit_step=itimestep,audit_time=xtime*60. , &
+                  qnc3d=qnc_curr )
              END IF
              ! Serialized opt-in diagnostic: scratch outputs never feed the forecast.
              IF (sw_physics==RRTMGP_SWSCHEME) THEN

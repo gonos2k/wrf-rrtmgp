@@ -230,6 +230,7 @@ subroutine udm(th, q, qc, qr, qi, qs, qg, qh                                  &
                  ,its,ite, jts,jte, kts,kte                                    &
                  ,udm_cldfra, udm_cf_step, udm_cf_top                           &
                  ,ccn_preinitialized                                          &
+                 ,input_density_is_dry                                        &
                                                                                )
 !-------------------------------------------------------------------------------
   implicit none
@@ -243,6 +244,7 @@ subroutine udm(th, q, qc, qr, qi, qs, qg, qh                                  &
   integer, dimension(ims:ime,jms:jme), optional, intent(inout) :: udm_cf_step
   integer, dimension(ims:ime,jms:jme), optional, intent(inout) :: udm_cf_top
   logical, optional, intent(in) :: ccn_preinitialized
+  logical, optional, intent(in) :: input_density_is_dry
   real,              intent(in   ) :: delt, g, ccn0, rd, rv, t0c,     &
                                       den0, cpd, cpv, ep1, ep2,       &
                                       qmin, xls, xlv0, xlf0, cliq,    &
@@ -302,7 +304,7 @@ subroutine udm(th, q, qc, qr, qi, qs, qg, qh                                  &
   real, dimension( its:ite , kts:kte, 2 ) ::   qci
   real, dimension( its:ite , kts:kte, 4 ) ::   qrs, ncr
   integer                                 ::   i,j,k
-  logical :: initialize_ccn
+  logical :: initialize_ccn, use_input_density_is_dry
 !
 ! for reflectivlity
 !
@@ -325,6 +327,8 @@ subroutine udm(th, q, qc, qr, qi, qs, qg, qh                                  &
 ! Omitting the argument preserves the legacy call and its timestep rule.
   initialize_ccn = .true.
   if (present(ccn_preinitialized)) initialize_ccn = .not. ccn_preinitialized
+  use_input_density_is_dry = .false.
+  if (present(input_density_is_dry)) use_input_density_is_dry = input_density_is_dry
       if (itimestep==1 .and. initialize_ccn) then
         do j = jms,jme
           do k = kms,kme
@@ -384,6 +388,7 @@ subroutine udm(th, q, qc, qr, qi, qs, qg, qh                                  &
                     ,graupel(ims,j),graupelncv(ims,j)              &
                     ,hail(ims,j),hailncv(ims,j),itimestep           &
                     ,udm_cldfra(:,:,j),udm_cf_step(:,j),udm_cf_top(:,j) &
+                    ,input_density_is_dry=use_input_density_is_dry     &
                                                                    )
          else
          call udm2d(t, q(ims,kms,j), qci, qrs                     &
@@ -405,6 +410,7 @@ subroutine udm(th, q, qc, qr, qi, qs, qg, qh                                  &
                     ,graupel(ims,j),graupelncv(ims,j)              &
                     ,hail(ims,j),hailncv(ims,j),itimestep           &
                     ,udm_cldfra(:,:,j),udm_cf_step(:,j)             &
+                    ,input_density_is_dry=use_input_density_is_dry   &
                                                                    )
          endif
          else
@@ -426,6 +432,7 @@ subroutine udm(th, q, qc, qr, qi, qs, qg, qh                                  &
                     ,snow(ims,j),snowncv(ims,j)                    &
                     ,graupel(ims,j),graupelncv(ims,j)              &
                     ,hail(ims,j),hailncv(ims,j),itimestep           &
+                    ,input_density_is_dry=use_input_density_is_dry &
                                                                    )
          endif
         do k=kts,kte
@@ -516,6 +523,7 @@ subroutine udm2d(t1, q1                                          &
                    ,graupel,graupelncv                            &
                    ,hail,hailncv,itimestep                       &
                    ,udm_cldfra,udm_cf_step,udm_cf_top            &
+                   ,input_density_is_dry                          &
                                                                   )
 !
 !-------------------------------------------------------------------------------
@@ -620,6 +628,7 @@ subroutine udm2d(t1, q1                                          &
                                                     ims,ime, jms,jme, kms,kme, &
                                                     its,ite, jts,jte, kts,kte
    integer, intent(in) :: itimestep
+   logical, intent(in) :: input_density_is_dry
    real, dimension(ims:ime,kms:kme), optional, intent(inout) :: udm_cldfra
    integer, dimension(ims:ime), optional, intent(inout) :: udm_cf_step
    integer, dimension(ims:ime), optional, intent(inout) :: udm_cf_top
@@ -853,7 +862,11 @@ subroutine udm2d(t1, q1                                          &
        p(k,i) = p1(i,k)
        delz(k,i) = delz1(i,k)
        den(k,i) = den1(i,k)
-       dend(k,i) = (p(k,i)/t(k,i)-den(k,i)*rv)/(rd-rv)  ! dry density
+       if (input_density_is_dry) then
+         dend(k,i) = den(k,i)
+       else
+         dend(k,i) = (p(k,i)/t(k,i)-den(k,i)*rv)/(rd-rv)  ! dry density
+       endif
        denfac(k,i) = sqrt(den0/den(k,i))
      enddo
    enddo
@@ -1043,6 +1056,11 @@ subroutine udm2d(t1, q1                                          &
    ncact(:) = 0.     ; nraut(:) = 0.     ;  ncevp(:) = 0.  ; denqn(:) = 0.
    vtn(:)   = 0.     ; dc(:)  = 0.       ;  dr(:) = 0.     ; di(:)  = 0.
    qrcon(:)= 0.      ; qrconcr(:) = 0.   ;  taucon(:) = 0. ; tmp1d(:) = 0.
+! Rain can consume cloud slopes above the liquid-cloud top. Initialize once
+! per column/substep; keep first-pass values if the later cloud top shrinks.
+   rslopec(:)  = rslopecmax
+   rslopec2(:) = rslopec2max
+   rslopec3(:) = rslopec3max
    qnpath = 0.       ; sfac = 0.         ;  gfac = 0.
    nfrzdtc = 0.      ; nfrzdtr = 0.
    phdep(:)= 0.      ; phaut(:) = 0.   ; pracg(:) = 0. ; phacw(:) = 0.
@@ -3743,7 +3761,10 @@ subroutine udm_mp_effective_radius (t, qc, qi, qs, rho, qmin, t0c,             &
   if (has_qi) then
      do k=kts,kte
        if (rqi(k)<=r1 .or. rni(k)<=r2) cycle
-       temp = t0c - t(k)
+! The subfreezing fit contains sqrt(T0C-T). Transient ice can survive
+! above freezing; use the finite freezing-point endpoint there instead
+! of letting an invalid square root become a compiler-dependent clamp.
+       temp = max(0., t0c - t(k))
        bfactor = -2.0 + 1.0e-3*temp*sqrt(temp)*log10(rqi(k)/rqi0)
        bfactor2 = bfactor*bfactor
        bfactor3 = bfactor2*bfactor

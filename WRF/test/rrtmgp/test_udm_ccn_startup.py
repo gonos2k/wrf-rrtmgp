@@ -40,19 +40,15 @@ def extract_udm_initializer(source: str) -> str:
     start = next((i for i, line in enumerate(lines) if re.search(r"^\s*initialize_ccn\s*=\s*\.true\.\s*$", line, re.I)), None)
     if start is None:
         raise AssertionError("production initialize_ccn default not found")
-    # Include the following logical expression and full-domain reset IF/loop.
-    depth = 0
-    entered = False
-    for end in range(start, len(lines)):
-        line = lines[end].split("!", 1)[0]
-        if re.search(r"\bthen\s*$", line, re.I):
-            depth += 1
-            entered = True
-        if re.search(r"\bendif\b", line, re.I):
-            depth -= 1
-            if entered and depth == 0:
-                return "\n".join(lines[start:end + 1])
-    raise AssertionError("production UDM initializer IF block unterminated")
+    # Copy the CCN policy statements and its reset block verbatim. Other
+    # optional-argument policies can occur between them and do not belong to
+    # this CCN-only fixture's argument/declaration contract.
+    guard = next((line for line in lines[start + 1:]
+                  if re.search(r"^\s*if\s*\(\s*present\s*\(\s*ccn_preinitialized\s*\)\s*\)\s*initialize_ccn\s*=", line, re.I)), None)
+    if guard is None:
+        raise AssertionError("production ccn_preinitialized guard not found")
+    reset = extract_if_block(source, r"^\s*if\s*\(\s*itimestep\s*==\s*1\s*\.and\.\s*initialize_ccn\s*\)\s*then")
+    return "\n".join((lines[start], guard, reset))
 
 class StartupFixture(unittest.TestCase):
     @classmethod
@@ -75,6 +71,7 @@ class StartupFixture(unittest.TestCase):
         self.assertIn("PRESENT( RAINNCV )", self.driver_block)
         self.assertIn("if (present(ccn_preinitialized)) initialize_ccn = .not. ccn_preinitialized", self.udm_block)
         self.assertIn("nn(i,k,j) = ccn0", self.udm_block)
+        self.assertNotIn("input_density_is_dry", self.udm_block)
         # The actual option-37 call passes the explicit skip flag; the legacy call does not.
         self.assertIn(",ccn_preinitialized=.true.", self.driver_text.lower().replace(" ", ""))
         print("SOURCE_SHA256", sha(DRIVER), sha(UDM), "GENERATED_FIXTURE_SHA256", hashlib.sha256(self.generated.encode()).hexdigest())

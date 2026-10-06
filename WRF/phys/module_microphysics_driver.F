@@ -254,6 +254,8 @@ SUBROUTINE microphysics_driver(                                          &
    USE module_mp_wdm6
    USE module_mp_wdm7
    USE module_mp_udm
+   USE module_ra_rrtmgp_trace, ONLY: trace_udm_radius_state, trace_udm_radius_enabled, trace_column_selection, &
+                                   trace_udm_entry_density_state, trace_udm_entry_density_enabled
    USE module_mp_milbrandt2mom
 # if (EM_CORE == 1)
    USE module_mp_cammgmp_driver, ONLY: CAMMGMP ! CAM5's microphysics driver
@@ -804,6 +806,8 @@ REAL, DIMENSION( ims:ime, kms:kme, jms:jme ),                        &
    INTEGER :: i,j,k,its,ite,jts,jte,ij,sz,n
    LOGICAL :: channel
    LOGICAL :: have_udm_cf
+   LOGICAL :: udm_radius_selected
+   INTEGER :: udm_radius_i,udm_radius_j,udm_radius_domain
    LOGICAL :: nssl_progn = .false.
    REAL    :: z0, z1, z2, w1, w2
 
@@ -936,7 +940,8 @@ REAL, DIMENSION( ims:ime, kms:kme, jms:jme ),                        &
    ENDIF
 
    !$OMP PARALLEL DO   &
-   !$OMP PRIVATE ( ij, its, ite, jts, jte, i,j,k,n )
+   !$OMP PRIVATE ( ij, its, ite, jts, jte, i,j,k,n, udm_radius_selected, &
+   !$OMP           udm_radius_i,udm_radius_j,udm_radius_domain )
 
    DO ij = 1 , num_tiles
        IF (channel) THEN
@@ -2839,6 +2844,29 @@ REAL, DIMENSION( ims:ime, kms:kme, jms:jme ),                        &
                   PRESENT( QNR_CURR ).AND.                            &
                   PRESENT( RAINNC  ) .AND. PRESENT ( RAINNCV )  ) THEN
              IF (have_udm_cf) THEN
+             ! Capture the actual UDM call inputs before it can update TH/Q.
+             ! This observer re-evaluates the selected DEND policy; it does
+             ! not claim to observe the private local DEND inside UDM.
+             ! The disabled path constructs no diagnostic array temporaries.
+             IF (trace_udm_entry_density_enabled()) THEN
+               CALL trace_column_selection(ids,ide,jds,jde,udm_radius_selected,udm_radius_i,udm_radius_j)
+               IF (udm_radius_i>=its .AND. udm_radius_i<=ite .AND. &
+                   udm_radius_j>=jts .AND. udm_radius_j<=jte) THEN
+                 udm_radius_domain=0
+                 IF(PRESENT(id)) udm_radius_domain=id
+                 CALL trace_udm_entry_density_state(udm_radius_domain,itimestep,udm_radius_i,udm_radius_j,kts,kte, &
+                   th(udm_radius_i,kts:kte,udm_radius_j),pi_phy(udm_radius_i,kts:kte,udm_radius_j), &
+                   p(udm_radius_i,kts:kte,udm_radius_j),qv_curr(udm_radius_i,kts:kte,udm_radius_j), &
+                   rho(udm_radius_i,kts:kte,udm_radius_j), &
+                   qc_curr(udm_radius_i,kts:kte,udm_radius_j),qi_curr(udm_radius_i,kts:kte,udm_radius_j), &
+                   qr_curr(udm_radius_i,kts:kte,udm_radius_j),qs_curr(udm_radius_i,kts:kte,udm_radius_j), &
+                   qg_curr(udm_radius_i,kts:kte,udm_radius_j),qh_curr(udm_radius_i,kts:kte,udm_radius_j), &
+                   qnn_curr(udm_radius_i,kts:kte,udm_radius_j),qnc_curr(udm_radius_i,kts:kte,udm_radius_j), &
+                   qnr_curr(udm_radius_i,kts:kte,udm_radius_j), &
+                   r_d,r_v,cp,cpv,g,dt,epsilon,svpt0,rhoair0,rhowater,time_minutes=xtime, &
+                   input_density_is_dry=.true.)
+               ENDIF
+             ENDIF
              CALL udm(                                              &
                   TH=th                                             &
                  ,Q=qv_curr                                         &
@@ -2871,6 +2899,7 @@ REAL, DIMENSION( ims:ime, kms:kme, jms:jme ),                        &
                  ,udm_cldfra=udm_cldfra, udm_cf_step=udm_cf_step     &
                  ,udm_cf_top=udm_cf_top                             &
                  ,ccn_preinitialized=.true.                        &
+                 ,input_density_is_dry=.true.                       &
                  ,has_reqc=has_reqc                                 &  ! for radiation +
                  ,has_reqi=has_reqi                                 &
                  ,has_reqs=has_reqs                                 &
@@ -2881,6 +2910,26 @@ REAL, DIMENSION( ims:ime, kms:kme, jms:jme ),                        &
                  ,IMS=ims,IME=ime, JMS=jms,JME=jme, KMS=kms,KME=kme &
                  ,ITS=its,ITE=ite, JTS=jts,JTE=jte, KTS=kts,KTE=kte &
                                                                     )
+             ! Capture the producer tuple before any later physics or dynamics
+             ! can change mass/number state. This is audit-only and uses the
+             ! same returned state that UDM used for its native RE_* write.
+             IF (trace_udm_radius_enabled()) THEN
+               CALL trace_column_selection(ids,ide,jds,jde,udm_radius_selected,udm_radius_i,udm_radius_j)
+               IF (udm_radius_i>=its .AND. udm_radius_i<=ite .AND. &
+                   udm_radius_j>=jts .AND. udm_radius_j<=jte) THEN
+                 udm_radius_domain=0
+                 IF(PRESENT(id)) udm_radius_domain=id
+                 CALL trace_udm_radius_state(udm_radius_domain,itimestep,udm_radius_i,udm_radius_j,kts,kte, &
+                   th(udm_radius_i,kts:kte,udm_radius_j)*pi_phy(udm_radius_i,kts:kte,udm_radius_j), &
+                   qc_curr(udm_radius_i,kts:kte,udm_radius_j),qi_curr(udm_radius_i,kts:kte,udm_radius_j), &
+                   qs_curr(udm_radius_i,kts:kte,udm_radius_j),qnc_curr(udm_radius_i,kts:kte,udm_radius_j), &
+                   rho(udm_radius_i,kts:kte,udm_radius_j), &
+                   re_cloud(udm_radius_i,kts:kte,udm_radius_j),re_ice(udm_radius_i,kts:kte,udm_radius_j), &
+                   re_snow(udm_radius_i,kts:kte,udm_radius_j),udm_cldfra(udm_radius_i,kts:kte,udm_radius_j), &
+                   udm_cf_step(udm_radius_i,udm_radius_j),udm_cf_top(udm_radius_i,udm_radius_j), &
+                   epsilon,svpt0,rhowater,rhosnow,time_minutes=xtime)
+               ENDIF
+             ENDIF
              ELSE
              CALL udm(                                              &
                   TH=th                                             &

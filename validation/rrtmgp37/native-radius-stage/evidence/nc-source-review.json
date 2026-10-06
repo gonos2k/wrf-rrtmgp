@@ -1,0 +1,109 @@
+{
+  "actual_wrf_wiring": {
+    "density_argument": "UDM receives den and initializes pidnc from denr. These identify density terms but do not determine stored qnc units.",
+    "driver_to_udm": "module_microphysics_driver.F:2836-2857 passes NC=qnc_curr directly to UDM; there is no rho multiplication/division at this call.",
+    "registry": "Registry.EM_COMMON:544-545 declares qnc / QNCLOUD units # kg(-1), and marks it as a transported/input/restart/boundary state variable.",
+    "solver_to_driver": "solve_em.F:3997-4004 forwards scalar(P_QNC) directly as QNC_CURR.",
+    "udm_entry_and_return": "module_mp_udm.F copies nc into local ncr (350-361), copies/pads values into ncr (863-890), and writes ncr back (431-442). No systematic density conversion is applied at these boundaries."
+  },
+  "assessment": {
+    "declared_and_some_producer_behavior": "WRF Registry labels QNCLOUD # kg^-1, and the real.exe fallback explicitly produces that mass-specific representation.",
+    "mathematically_required_for_native_udm_size_equations": "Volume number concentration (# m^-3) at the unconverted inputs to slope_cloud, autoconversion, and the direct effective-radius lambda expression.",
+    "native_radius_implication": "The native radius routine is dimensionally inconsistent: rnc=nc*rho is consistent with mass-specific input, while lambda uses nc directly and requires volume input. The sources do not establish which value represents intended cloud number for every initial, boundary, restart, and microphysics-generated state.",
+    "port_implication": "Preserve the native expression and record the exact source tuple. Do not introduce an unverified density factor in the port or use the Registry label alone to reinterpret equations. Reconcile the convention as a separate native-physics/data-contract change after producer-specific evidence and same-state validation.",
+    "resolved_contract": false
+  },
+  "dimensional_basis": {
+    "equation_checks": [
+      {
+        "conclusion": "The expression uses nc directly as a volume number concentration; it does not multiply nc by rho.",
+        "equation": "lambda_c^3 = pidnc * nc / (q_c * rho)",
+        "required_unit": "nc must be # m^-3 for lambda_c to be m^-1: (kg m^-3)*(# m^-3)/(kg m^-3) = # m^-3; particle count is dimensionless, leaving inverse-volume dimensions.",
+        "source": "module_mp_udm.F:3027-3040 slope_cloud; 3436-3449 udminit"
+      },
+      {
+        "conclusion": "The 1e12 cap and nu relation 1e9/n_c are consistent with a volume concentration; no mass-specific-to-volume conversion appears here.",
+        "equation": "lambda_c^3 = n_c * pidnc * constant / L_c; L_c=q_c*rho",
+        "required_unit": "n_c must be # m^-3: n_c*pidnc/L_c has units m^-3.",
+        "source": "module_mp_udm.F:1402-1426 autoconversion"
+      },
+      {
+        "conclusion": "The routine can replace nn below a threshold or outside diameter bounds with a volume concentration. For an already in-range positive input it does not convert nn; it evaluates lambda on that input. It does not establish one consistent storage convention.",
+        "equation": "lambda^3 = pidnc*nn/(rho*q); replacement nn = rho*q*lambda^3/pidnc",
+        "required_unit": "The replacement expression yields # m^-3 when rho and pidnc are kg m^-3.",
+        "source": "module_mp_udm.F:3597-3625 adjust_number_concent"
+      },
+      {
+        "conclusion": "The guard and radius equation encode conflicting dimensional readings of nc.",
+        "equation": "rnc=max(R2,nc*rho); lambda_c=(pidnc*nc/(qc*rho))^(1/3)",
+        "required_unit": "The guard product nc*rho has units # m^-3 if nc is # kg^-1. The lambda expression instead requires its unmultiplied nc argument to be # m^-3.",
+        "source": "module_mp_udm.F:3719-3740 udm_mp_effective_radius"
+      }
+    ],
+    "symbols": {
+      "N_c": "number concentration per volume, # m^-3",
+      "lambda": "exponential/gamma size-distribution slope, m^-1",
+      "n_c": "number concentration per mass, # kg^-1",
+      "pidnc": "pi*rho_w/6, kg m^-3",
+      "q_c": "cloud liquid mass mixing ratio, kg condensate per kg dry air (dimensionless mass ratio)",
+      "rho": "air density supplied to UDM, kg m^-3",
+      "rho_w": "liquid-water material density, kg m^-3"
+    }
+  },
+  "producer_evidence_and_limits": {
+    "fallback_scope": "The enclosing block at 4809-4812 runs only for THOMPSON, THOMPSONAERO, or RCON_MP_SCHEME. It does not establish the UDM path input convention or provenance of every positive QNC input.",
+    "interpolated_input": "module_initialize_real.F:2028 interpolates qnc_gc to scalar QNC without an evident density conversion in that call; the source producer convention is not established there.",
+    "other_consumers": "module_shcu_camuwshcu_driver.F:336-337 passes qnc/(1+qv) as NUMLIQ to CAMUW, changing mixing-ratio basis but not proving the source number basis. module_shallowcu_driver.F:523-533 forwards QNC to CAM UW shallow convection. These show additional consumers, not a universal unit contract.",
+    "real_fallback": "module_initialize_real.F:4837-4845 synthesizes QNC only when QC>0 and stored QNC<=0, then divides make_DropletNumber output by temp_rho. make_DropletNumber (9127-9163) computes from Q_cloud=QC*temp_rho and returns a volume concentration (# m^-3); division by rho yields # kg^-1. This fallback explicitly creates mass-specific stored QNC.",
+    "runtime_capture_limit": "Same-stage source-tuple traces record NC and rho passed to the radius routine but do not independently establish NC physical units. History values and Registry metadata are not an independent measurement."
+  },
+  "scope": {
+    "kind": "read-only source audit",
+    "not_claimed": [
+      "A validated cloud-number unit for every external input",
+      "A justified density conversion",
+      "A model result proving either convention",
+      "A proposed change to native UDM or the RRTMGP port"
+    ],
+    "question": "What units are required by UDM cloud-number equations, and what units does WRF declare/pass?",
+    "source_tree": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-radius-stage-pr-work/WRF"
+  },
+  "source_pins": [
+    {
+      "lines": "72-75, 93-95, 210-272, 328-336, 350-361, 863-890, 1069-1072, 1402-1426, 3027-3040, 3597-3628, 3436-3449, 3719-3740",
+      "path": "WRF/phys/module_mp_udm.F",
+      "sha256": "872737fe3a0cebf941d3ee45056fb60aadf465f0f72d72d1a2c7abac6709351d"
+    },
+    {
+      "lines": "2836-2883",
+      "path": "WRF/phys/module_microphysics_driver.F",
+      "sha256": "5f365f23e540a7ef3a37153426517aedf9c79b7802d37d8240ac880a0ed46f25"
+    },
+    {
+      "lines": "4800-4812, 4827-4845, 9127-9163",
+      "path": "WRF/dyn_em/module_initialize_real.F",
+      "sha256": "81b40b4ae6891d522b2e30d8cee2036c20e139ef9e780c9a17b0d895ca13d87f"
+    },
+    {
+      "lines": "3997-4004",
+      "path": "WRF/dyn_em/solve_em.F",
+      "sha256": "ed03953a8b7b999fc0a5a281893f4808bbed28697ea9032fde9b9b605e0d9ecb"
+    },
+    {
+      "lines": "542-545",
+      "path": "WRF/Registry/Registry.EM_COMMON",
+      "sha256": "87e21a476a06b7e0c926b2d939eaf1028810cba8a7d1e6fc585b50b599f99729"
+    },
+    {
+      "lines": "328-340",
+      "path": "WRF/phys/module_shcu_camuwshcu_driver.F",
+      "sha256": "8754b99cd940feec32ad85a3a24f38d0a20e98b0a3d557e47d93cd2c8e42d97e"
+    },
+    {
+      "lines": "523-533",
+      "path": "WRF/phys/module_shallowcu_driver.F",
+      "sha256": "068cf22b8c93cfac74a6223a72d61f4a2f890bc44e212da5d2c2a131c5ae271a"
+    }
+  ],
+  "title": "UDM cloud-number dimensional contract audit"
+}

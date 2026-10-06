@@ -117,6 +117,7 @@ def run_logged(exe: Path, case: Path, logfile: str,
         env = os.environ.copy()
         env.pop("WRF_RRTMGP_CAPTURE_DIR", None)
         env.pop("WRF_RRTMGP_CAPTURE_CALL", None)
+        env.pop("WRF_RRTMGP_CAPTURE_UDM_RADII", None)
     with (case / logfile).open("w", encoding="utf-8") as stream:
         return subprocess.run([str(exe)], cwd=case, env=env, stdout=stream,
                               stderr=subprocess.STDOUT, text=True, check=False)
@@ -324,19 +325,40 @@ def validate_capture(case: Path, phase: str, call: int, reference_exe: Path,
 
 def run_capture_case(seed: dict[str, Any], case: Path, lw: int, sw: int,
                      run_minutes: int, call: int, reference_exe: Path,
-                     expect_native_radius: bool) -> dict[str, Any]:
+                     expect_native_radius: bool, capture_radius_stage: bool = False) -> dict[str, Any]:
     create_run_case(seed, case, lw, sw, run_minutes, call)
     env = os.environ.copy()
     env["WRF_RRTMGP_CAPTURE_DIR"] = str(case / "capture")
     env["WRF_RRTMGP_CAPTURE_CALL"] = str(call)
+    env.pop("WRF_RRTMGP_CAPTURE_UDM_RADII", None)
+    if capture_radius_stage:
+        env["WRF_RRTMGP_CAPTURE_UDM_RADII"] = "1"
     run = run_logged(WRF_ROOT / "main/wrf.exe", case, "wrf.log", env)
     if run.returncode != 0:
         fail(f"{case}: wrf.exe returned {run.returncode}; inspect wrf.log")
     history = validate_history(case, 37)
     capture = {phase: validate_capture(case, phase, call, reference_exe, expect_native_radius)
                for phase in ("LW", "SW")}
+    radius_stage = {"status": "NOT_RUN_CAPTURE_DISABLED"}
+    if capture_radius_stage:
+        output = case / "radius-stage.json"
+        command = [sys.executable, str(Path(__file__).with_name("test_udm_radius_stage.py")),
+                   "--capture-dir", str(case / "capture"), "--output", str(output)]
+        if call > 1:
+            command.append("--require-matched")
+        checked = subprocess.run(command, text=True, stdout=subprocess.PIPE,
+                                 stderr=subprocess.STDOUT, check=False)
+        if checked.returncode:
+            fail(f"{case}: radius generation/consumption check failed: {checked.stdout}")
+        radius_stage = json.loads(output.read_text())
+        if call > 1:
+            matched_phases = {join["phase"] for join in radius_stage["joins"]
+                              if join["status"] == "MATCHED_RADIUS_TRANSFER"}
+            if matched_phases != {"LW", "SW"}:
+                fail(f"{case}: later-call producer transfer must match both LW and SW")
     return {"case": str(case), "history": history["report"], "history_arrays": history["arrays"],
             "history_path": history["path"], "capture": capture,
+            "radius_stage": radius_stage,
             "wrfinput_sha256": sha256(case / "wrfinput_d01")}
 
 
@@ -494,6 +516,8 @@ def main() -> int:
                         help="optional pre-change 4/4 control SCM directory")
     parser.add_argument("--baseline-mixed", type=Path,
                         help="optional pre-change 4/4 mixed UDM SCM directory")
+    parser.add_argument("--capture-radius-stage", action="store_true",
+                        help="capture native UDM radius producers and check earlier-step transfer")
     parser.add_argument("--run-minutes", type=int, default=1)
     args = parser.parse_args()
     root = args.output_directory.expanduser().resolve()
@@ -543,9 +567,11 @@ def main() -> int:
         ra4_repeat = run_plain_case(seed, pair_root / "ra4-repeat", 4, args.run_minutes)
         deterministic = assert_history_bytes_equal(ra4, ra4_repeat, f"{tag} option4 repeat determinism")
         ra37_first = run_capture_case(seed, pair_root / "ra37-call1", 37, 37,
-                                      args.run_minutes, 1, reference_exe, tag == "mixed")
+                                      args.run_minutes, 1, reference_exe, tag == "mixed",
+                                      capture_radius_stage=args.capture_radius_stage)
         ra37_second = run_capture_case(seed, pair_root / "ra37-call2", 37, 37,
-                                       args.run_minutes, 2, reference_exe, tag == "mixed")
+                                       args.run_minutes, 2, reference_exe, tag == "mixed",
+                                       capture_radius_stage=args.capture_radius_stage)
         if ra4["wrfinput_sha256"] != ra37_first["wrfinput_sha256"] or \
            ra4["wrfinput_sha256"] != ra37_second["wrfinput_sha256"]:
             fail(f"{tag}: paired 4/37 runs did not use byte-identical initial states")

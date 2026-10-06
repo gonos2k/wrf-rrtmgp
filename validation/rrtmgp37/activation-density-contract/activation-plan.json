@@ -1,0 +1,122 @@
+{
+  "authoritative_source": {
+    "activation_block_lines_inclusive": [
+      2508,
+      2520
+    ],
+    "activation_block_sha256": "c26d239d86b964e84e47834a9ce65e4642930f1ac0d67ac9936ca0be823115e2",
+    "git_head": "246e6f74f3b4fdb0727ea6beeb51edafae435173",
+    "path": "build/udm37-nc-radiative-evidence-pr-work/WRF/phys/module_mp_udm.F",
+    "sha256": "9b7b878b263f6b0111edba4cfb1c6c30e53b3f7534035cda2c0411a573b81c2c",
+    "supporting_source_ranges": {
+      "activation_parameters_lines": [
+        76,
+        95
+      ],
+      "cloud_substep_selection_lines": [
+        915,
+        924
+      ],
+      "initial_ccn_cloud_number_clamps_lines": [
+        863,
+        889
+      ],
+      "relative_humidity_and_cloud_top_selection_lines": [
+        2496,
+        2506
+      ]
+    }
+  },
+  "conditional_oracles": {
+    "definitions": "Let dm=pcact*dtcld be the source-produced cloud mixing-ratio increment and dN=ncact*dtcld be the activation number increment before species floors.",
+    "mass_specific_number_hypothesis": "If dN denotes number per dry-air mass (kg^-1), compare dm with m_emb*dN.",
+    "scope_limit": "This fixture tests algebraic closure implied by the source formula under two declared interpretations. It does not establish the producer's or consumer's QNC unit, validate the coupling contract, or authorize a conversion.",
+    "volumetric_number_hypothesis": "If dN denotes number per volume (m^-3), compare dm with m_emb*dN/rho_air."
+  },
+  "execution_boundary": {
+    "compile_authorized": false,
+    "model_calls": 0,
+    "next_step": "Root review of this source-derived plan before any fixture implementation or compilation.",
+    "production_edits": 0,
+    "run_authorized": false,
+    "solver_calls": 0
+  },
+  "planned_fixture": {
+    "cases_per_density": [
+      {
+        "case": "saturation_inactive",
+        "number_min": "not_applicable; IF skipped",
+        "rh_mul": 1.0,
+        "water_cap": "not_applicable; IF skipped"
+      },
+      {
+        "case": "active_uncapped_number_floor_inactive",
+        "number_min": "inactive",
+        "rh_mul": ">1; choose q large enough that water min is inactive and ncr_cloud initial comfortably above ncmin",
+        "water_cap": "inactive"
+      },
+      {
+        "case": "active_water_cap",
+        "number_min": "inactive",
+        "rh_mul": ">1; same activation state as uncapped case and small positive vapor q",
+        "water_cap": "active, demonstrate selected pcact equals max(q,0)/dtcld"
+      },
+      {
+        "case": "active_number_min_branch",
+        "number_min": "active; branch-isolation only, explicitly outside ordinary initialized nccn range",
+        "rh_mul": ">1 with tiny synthetic nccn reservoir and ncr_cloud below ncmin",
+        "water_cap": "inactive"
+      }
+    ],
+    "compiler_matrix": [
+      "GNU Fortran default REAL, -O0",
+      "GNU Fortran default REAL, -O2"
+    ],
+    "controls": [
+      "Both compilers/optimization modes must show zero state changes when RH<=1.",
+      "For the uncapped, number-floor-inactive case, compare source \u0394qc and \u0394qv with independently calculated embryo mass times activated-number increment under the two explicitly conditional number interpretations.",
+      "The water-cap case must demonstrate the residual caused by q availability separately; do not count it as evidence for either number-unit interpretation.",
+      "The number-min branch case must report activation increment ncact*dt separately from observed ncr_cloud change after max(...,ncmin); do not conflate the floor with conservation error.",
+      "Record temperature increment from the source's latent-heating statement separately; mass closure is evaluated from water/cloud state updates, not inferred from temperature."
+    ],
+    "cross_product_count": 12,
+    "density_kg_m3": [
+      0.5,
+      1.0,
+      1.5
+    ],
+    "extraction": "Extract source lines 2508-2520 verbatim into a small default-REAL Fortran subroutine; adapt only array indexing/loop shell required for the fixture and bind source variables to explicit dummy arrays/scalars. Keep the IF body statements byte-identical and record extracted-block hash. Set RH and ktop directly to avoid stubbing unrelated routines.",
+    "substep_seconds": 60
+  },
+  "schema": "UDM_ACTIVATION_CONTRACT_FIXTURE_PLAN_V1",
+  "scope": "Source-extracted test of the native CCN-activation process block and conditional number-to-water closure; not a global QNC unit ruling, radiation result, forecast, or production correction.",
+  "source_contract": {
+    "activation_condition": "rh_mul(k) > 1.",
+    "constants_from_source": {
+      "actk": 0.6,
+      "actr_m": 1.5e-06,
+      "ccnmin_per_m3": 50000000.0,
+      "dtcldcr_s": 180.0,
+      "ncmin_per_m3": 0.001,
+      "particle_embryo_mass_kg": "4*pi*denr*actr^3/3; denr is passed into mp_udm, not hard-coded by activation block",
+      "satmax": 0.0048,
+      "time_step_rule": "loops=max(ceiling(delt/dtcldcr),1); dtcld=delt/loops (or delt if <=dtcldcr); rdtcld=1/dtcld"
+    },
+    "input_initialization_caveat": "The production initialization clamps ncr species 1 to [ccnmin,ccnmax] and ncr species 2 to nonnegative values (lines 877-879 / 887-889). A synthetic number-min-active test must explicitly label any initial nccn below ccnmin as a branch-isolation fixture, not a demonstrated reachable production state.",
+    "rate_equations": [
+      "temp = min(1., exp(log((rh_mul-1.)/satmax)*actk))",
+      "ncact = max(0., ((ncr_ccn+ncr_cloud)*temp-ncr_cloud))*rdtcld",
+      "ncact = min(ncact, max(ncr_ccn,0.)*rdtcld)",
+      "pcact = min((4*pi*denr*exp(log(actr)*3)*ncact)/(3*den_air), max(qv,0.)*rdtcld)"
+    ],
+    "state_updates": [
+      "qv_new=max(qv-pcact*dtcld,0.)",
+      "qc_new=max(qc+pcact*dtcld,0.)",
+      "nccn_new=max(nccn-ncact*dtcld,ccnmin)",
+      "nccloud_new=max(nccloud+ncact*dtcld,ncmin)",
+      "T_new=T+pcact*xlv/cpm*dtcld"
+    ],
+    "unextracted_upstream_logic": "Fixture will pass fixed rh_mul and ktop, so it tests the exact activation IF block but does not test fsvp_water, saturation construction, find_cloud_top, or the source of transported QNC."
+  },
+  "status": "PLAN_ONLY_NOT_COMPILED_OR_EXECUTED"
+}

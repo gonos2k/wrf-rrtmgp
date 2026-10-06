@@ -1,0 +1,184 @@
+{
+  "additional_density_source_pin": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-ice-radius-fit-evidence-pr-work/WRF/dyn_em/module_big_step_utilities_em.F",
+    "sha256": "b8c46ba091d017f70e2d75b9a87e198a0242f6c80341cd402d65677ba339a532",
+    "size_bytes": 233868
+  },
+  "confirmed_source_findings": [
+    {
+      "finding": "QNN/QNC/QNR are UDM scalar package members labelled #kg(-1), advanced by common scalar tendencies and RK mass-coordinate update.",
+      "source": [
+        "WRF/Registry/Registry.EM_COMMON:536",
+        "WRF/Registry/Registry.EM_COMMON:543",
+        "WRF/Registry/Registry.EM_COMMON:545",
+        "WRF/Registry/Registry.EM_COMMON:3095",
+        "WRF/dyn_em/solve_em.F:2927",
+        "WRF/dyn_em/solve_em.F:3010"
+      ],
+      "topic": "Registry/scalar advance"
+    },
+    {
+      "finding": "For zero assembled tendency, W_new*q_new=W_old*q_old, W=C1H*(MU+MUB)+C2H. MU/MUB labels are dry air mass in column in Pa. This is exact update algebra, not a parcel compression simulation.",
+      "source": [
+        "WRF/dyn_em/module_em.F:1712",
+        "WRF/dyn_em/module_em.F:1724",
+        "WRF/dyn_em/module_em.F:1767",
+        "WRF/Registry/Registry.EM_COMMON:289",
+        "WRF/Registry/Registry.EM_COMMON:290"
+      ],
+      "topic": "Exact RK invariant"
+    },
+    {
+      "finding": "With vapor cap, bounds and floors inactive, cloud water increment is embryo_mass*ncact*dt/DEN and raw cloud number increment ncact*dt. Interpreting ncact as #m^-3 s^-1 gives dimensional closure. Internal ncmin/ncmax are explicitly commented m^-3. This does not establish external field units.",
+      "source": [
+        "WRF/phys/module_mp_udm.F:2513",
+        "WRF/phys/module_mp_udm.F:2518",
+        "WRF/phys/module_mp_udm.F:74"
+      ],
+      "topic": "Volume-style activation"
+    },
+    {
+      "finding": "QNC/QNN/QNR copied directly into/out of ncr; default CCN ccn_conc #m^-3 assigned directly to QNN if incoming max<1. Current driver ccn_preinitialized=true suppresses first-step UDM reset. This concrete default CCN path is not every QNC incoming or restart provenance.",
+      "source": [
+        "WRF/phys/module_microphysics_driver.F:2855",
+        "WRF/phys/module_microphysics_driver.F:2875",
+        "WRF/phys/module_mp_udm.F:328",
+        "WRF/phys/module_mp_udm.F:359",
+        "WRF/phys/module_mp_udm.F:440",
+        "WRF/dyn_em/start_em.F:1803",
+        "WRF/dyn_em/start_em.F:1815",
+        "WRF/Registry/Registry.EM_COMMON:2701"
+      ],
+      "topic": "Direct boundary and CCN initialization"
+    },
+    {
+      "finding": "Slope/radius uses raw nc/(qc*DEN), dimensionally volume-style number under stated mass-volume interpretation. Small-number eligibility uses nc*DEN, a distinct density-weighted guard; do not infer all branches have one uniform number convention.",
+      "source": [
+        "WRF/phys/module_mp_udm.F:3028",
+        "WRF/phys/module_mp_udm.F:3722",
+        "WRF/phys/module_mp_udm.F:3739"
+      ],
+      "topic": "Native cloud slope/radius"
+    },
+    {
+      "finding": "dend=(p/T-DEN*Rv)/(Rd-Rv) is labeled dry density; rain number is multiplied by dend before semi-Lagrangian fallout and divided by dend afterward. This is another mass-specific-style arithmetic path; it concerns rain ncr3, not direct evidence that cloud Nc must be globally rescaled.",
+      "source": [
+        "WRF/phys/module_mp_udm.F:856",
+        "WRF/phys/module_mp_udm.F:2621",
+        "WRF/phys/module_mp_udm.F:2637"
+      ],
+      "topic": "Rain number sedimentation"
+    },
+    {
+      "finding": "make_DropletNumber plus density division is gated on Thompson/ThompsonAero/RCON; it does not normalize arbitrary UDM QNC by evidence of this code path.",
+      "source": [
+        "WRF/dyn_em/module_initialize_real.F:4810",
+        "WRF/dyn_em/module_initialize_real.F:4834"
+      ],
+      "topic": "Generic initializer exclusion"
+    }
+  ],
+  "created_utc": "2026-10-05T15:40:27.249140+00:00",
+  "goal_physical_units_closed": false,
+  "head": "092b901bf40b5334c5497fbf75f630b255262fb2",
+  "input_report": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-nc-transport-invariant-v1/report.json",
+    "sha256": "69026668e3451f21f99a0aa6080603c6c8bc731f44bd60f3c65e204e3d6ab30c",
+    "size_bytes": 10624
+  },
+  "interpretation_qualifications": {
+    "compression": "A conserved material parcel number per selected air mass implies N_volume scales with that basis density under physical compression, but no parcel compression was executed or established by a zero-flux RK-cell test.",
+    "correction": "No globally safe density multiplier, Registry relabel, activation correction, or producer/consumer normalization is recommended from this audit alone. Coupled transport, bounds, source/sink and sedimentation conventions must be resolved consistently.",
+    "dry_vs_moist_density": "WRF physics prep rho=1/alt*(1+qv) (module_big_step_utilities_em.F:4856) distinguishes total moist-air density from dry-air coordinate weighting. For a hypothetical dry-mass-specific number, N_volume=rho_dry*q; N_volume=rho_air*q presumes matching air-mass definition. The report air-mass wording must remain conditional.",
+    "future_conditional_RTE": "Held-state radius alternatives or six-call flux changes are conditional optical sensitivities, not a physical compression model or evidence choosing the true Nc units.",
+    "input_provenance": "Registry text, initializer and internal equations establish inherited dimensional tension, not actual units of every imported, restart, boundary, or positive retained QNC.",
+    "pressure_coordinate": "W is a dry-pressure-coordinate weight (Pa), not local physical volume or full layer mass in kg; vertical thickness/Jacobian/gravity and horizontal parcel motion are not supplied by the algebra alone. Zero tendency with changed W changes q inversely, rather than proving q stays fixed under all density changes."
+  },
+  "material_source_claim_blockers": [],
+  "report_precision_caveats": [
+    "Exact pressure-coordinate storage invariant is supported; statements of local physical compression and rho_air-based volume conversion need the preceding qualifications."
+  ],
+  "reviewer_invocation_counts": {
+    "WRF_REAL_models": 0,
+    "compiler_builds": 0,
+    "network_downloads": 0,
+    "numerical_formula_or_quad_calculations": 0,
+    "solver_RTE": 0,
+    "static_source_hash_and_saved_report_checks": 1
+  },
+  "schema": "UDM_NC_TRANSPORT_INDEPENDENT_REVIEW_V1",
+  "source_pins_checked": [
+    {
+      "matches_HEAD_git_bytes": true,
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-ice-radius-fit-evidence-pr-work/WRF/phys/module_microphysics_driver.F",
+      "role": "driver",
+      "sha256": "5f365f23e540a7ef3a37153426517aedf9c79b7802d37d8240ac880a0ed46f25",
+      "size_bytes": 196503
+    },
+    {
+      "matches_HEAD_git_bytes": true,
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-ice-radius-fit-evidence-pr-work/WRF/dyn_em/module_first_rk_step_part1.F",
+      "role": "first_rk_step",
+      "sha256": "bb1384a82aad375f9f8392da2a16046571919556a2deacf1523992dacc49891f",
+      "size_bytes": 142390
+    },
+    {
+      "matches_HEAD_git_bytes": true,
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-ice-radius-fit-evidence-pr-work/WRF/phys/module_physics_init.F",
+      "role": "microphysics_init",
+      "sha256": "bc9cd3a7e3d908678b52d53aa8ef7d7ad760a8e57958e044e35dc560b1bc1375",
+      "size_bytes": 316145
+    },
+    {
+      "matches_HEAD_git_bytes": true,
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-ice-radius-fit-evidence-pr-work/WRF/dyn_em/module_initialize_real.F",
+      "role": "real_init",
+      "sha256": "81b40b4ae6891d522b2e30d8cee2036c20e139ef9e780c9a17b0d895ca13d87f",
+      "size_bytes": 422027
+    },
+    {
+      "matches_HEAD_git_bytes": true,
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-ice-radius-fit-evidence-pr-work/WRF/Registry/Registry.EM_COMMON",
+      "role": "registry",
+      "sha256": "87e21a476a06b7e0c926b2d939eaf1028810cba8a7d1e6fc585b50b599f99729",
+      "size_bytes": 448359
+    },
+    {
+      "matches_HEAD_git_bytes": true,
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-ice-radius-fit-evidence-pr-work/WRF/dyn_em/module_em.F",
+      "role": "rk_scalar_update",
+      "sha256": "67c5842c1c5d407a26139f26bd317f3016c610aeaf60207dfd21394ddb81482c",
+      "size_bytes": 132827
+    },
+    {
+      "matches_HEAD_git_bytes": true,
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-ice-radius-fit-evidence-pr-work/WRF/dyn_em/module_advect_em.F",
+      "role": "scalar_advection",
+      "sha256": "58253bdbeb188dd47ed0579fcd2891086be1889b75c0c7d3696c9ad1d213559d",
+      "size_bytes": 427881
+    },
+    {
+      "matches_HEAD_git_bytes": true,
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-ice-radius-fit-evidence-pr-work/WRF/dyn_em/solve_em.F",
+      "role": "solve_em",
+      "sha256": "ed03953a8b7b999fc0a5a281893f4808bbed28697ea9032fde9b9b605e0d9ecb",
+      "size_bytes": 283280
+    },
+    {
+      "matches_HEAD_git_bytes": true,
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-ice-radius-fit-evidence-pr-work/WRF/dyn_em/start_em.F",
+      "role": "start_em",
+      "sha256": "bce1b0656d73d76f74f4db7f1b71d254cc1e11f16ecfc82e54fe153a84e6c17e",
+      "size_bytes": 130683
+    },
+    {
+      "matches_HEAD_git_bytes": true,
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-ice-radius-fit-evidence-pr-work/WRF/phys/module_mp_udm.F",
+      "role": "udm",
+      "sha256": "9b7b878b263f6b0111edba4cfb1c6c30e53b3f7534035cda2c0411a573b81c2c",
+      "size_bytes": 193022
+    }
+  ],
+  "status": "PASS_SCOPED_INHERITED_DIMENSIONAL_CONVENTION_TENSION_WITH_DRY_COORDINATE_QUALIFICATION",
+  "worktree": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-ice-radius-fit-evidence-pr-work"
+}

@@ -1,0 +1,56 @@
+{
+  "schema": "udm37-ice-radius-fit-primary-recipe-v1",
+  "primary_source": {
+    "citation": "Wyser, K. (1998), The Effective Radius in Ice Clouds, Journal of Climate 11(7), 1793\u20131802, DOI 10.1175/1520-0442(1998)011<1793:TERIIC>2.0.CO;2.",
+    "url": "https://journals.ametsoc.org/view/journals/clim/11/7/1520-0442_1998_011_1793_teriic_2.0.co_2.xml",
+    "saved_article_sha256": "d6438841158b70354f0f0386100bcf19d5b1a3c3f2a20f4116324e4760362120",
+    "saved_text_sha256": "a86864d03accb5f0ea126de4a24cd98f34049681f584c8ff36eeaee64b2f7f3c"
+  },
+  "recipe": {
+    "integration_bounds_um": {
+      "lower": 10,
+      "upper": 1000,
+      "qualification": "Section 5 says these are the integration limits for all calculations in the paper unless otherwise stated. Section 6 gives no alternate limits for the Eq. (20) values used to fit Eq. (35); applying the stated default to the Eq. (35) derivation is therefore supported by the paper, with that cross-section inference kept explicit."
+    },
+    "distribution": {
+      "equation": "Section 6 states n(L) is calculated according to Eq. (15), then Eq. (20) is evaluated.",
+      "kind": "mixed small-particle gamma plus large-particle power law",
+      "threshold_um": 20,
+      "small_size_component": "n(L)=A_M L^nu exp(-lambda L), L <= 20 um; nu=3 and lambda=0.3 um^-1.",
+      "large_size_component": "n(L)=alpha A_M L^B, L > 20 um; alpha is selected to make n(L) continuous at 20 um.",
+      "B_fit_domain": {
+        "minimum": -6,
+        "maximum": -2
+      },
+      "B_inputs": "B is Eq. (14), a function of temperature and IWC; the article says the mixed distribution Eq. (15) is evaluated across B=-6..-2 for the fit.",
+      "parameter_note": "The article also notes that the small-particle distribution is assumed independent of T and IWC; changing that component changes re and requires refitting even when B is unchanged."
+    },
+    "geometry_context": "The article assumes hexagonal columns with size-dependent aspect ratio (abstract and Section 2).",
+    "primary_text_evidence": [
+      {
+        "location": "Section 5, Integration limits",
+        "finding": "All calculations use Lmin=10 um and Lmax=1000 um unless stated otherwise."
+      },
+      {
+        "location": "Section 3(d), Mixed distribution, Eqs. (14)-(15)",
+        "finding": "Mixed gamma/power-law spectrum; join at 20 um; nu=3, lambda=0.3 um^-1; alpha gives continuity; B depends on T and IWC."
+      },
+      {
+        "location": "Section 6, Parameterizations for re",
+        "finding": "For Eq. (35), calculate n(L) using Eq. (15) over B from -6 to -2; calculate re using Eq. (20); fit a third-order polynomial in B."
+      }
+    ]
+  },
+  "coefficient_authority": "Implemented UDM coefficients are authenticated from pinned production source. Literal numerical Eq35 coefficients have not been recovered from the retained primary equation resource; do not call that a primary coefficient verification.",
+  "literal_coefficients_status": "NOT_RECOVERED_FROM_RETAINED_PRIMARY_HTML_OR_TRIED_EQUATION_IMAGE",
+  "same_population_geometry": {
+    "habit": "hexagonal column",
+    "aspect_ratio": "x=L/D=1 for L<=30 um; x=1+0.003*(L-30) otherwise",
+    "volume": "V=(3*sqrt(3)/8)*D^2*L",
+    "surface_area": "A=3*(sqrt(3)*D^2/4+D*L)",
+    "orientation_average_projected_area": "C=A/4",
+    "Wyser_proxy_radius": "rW=0.5*integral(D^2*L*n)/integral((D^2*L)^(2/3)*n)",
+    "volume_projected_area_radius": "rVA=3*integral(V*n)/(4*integral(C*n))"
+  },
+  "scope": "Recovered paper recipe only; pinned RRTMGP LUT PSD/habit generation remains unverified. No production correction, source-unit conversion or observational validation."
+}

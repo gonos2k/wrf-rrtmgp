@@ -1,0 +1,33 @@
+{
+  "schema": "udm37-radius-moment-contract-ice-lut-summary-v1",
+  "source_record": {
+    "path": "build/udm37-ice-lut-generation-provenance-v4/provenance-v4.json",
+    "sha256": "6e634508d7361e265abff571d17ef06ba807d073be2f73d78ed9e933ed32615e"
+  },
+  "pinned_tables": {
+    "data_repository": "earth-system-radiation/rrtmgp-data",
+    "data_commit": "ea788bb39876948fa8d2c235665ccff19b4686b5",
+    "files": [
+      {"path": "WRF/run/rrtmgp-clouds-lw-bnd.nc", "sha256": "09d6704c5b863b4c3ceb417d20bb3076ec492e6bf2dfbcc9f3c5996a3706f0b0", "bytes": 49919, "git_blob": "7a11d1e168f4870e65f3a481aa62bb7e6076679d"},
+      {"path": "WRF/run/rrtmgp-clouds-sw-bnd.nc", "sha256": "7671835992a45afe66244b591a02c0b3df73d7d59ecb746bbffd9763497651cd", "bytes": 47659, "git_blob": "9e9a053d0ea5668c44b799095b1d9de03c43e7c5"}
+    ],
+    "metadata": {"ice_size_levels": 18, "roughness_entries": 3, "size_coordinate": "diamice_lwr/diamice_upr in microns", "no_psd_or_habit_weights_in_header": true}
+  },
+  "documented_lineage": {
+    "initial_cloud_optics_commit": "https://github.com/earth-system-radiation/rte-rrtmgp/commit/39fb66b80fc69c70a15f6f15fb9b2c68d14f24b3",
+    "pinned_rte_source_commit": "https://github.com/earth-system-radiation/rte-rrtmgp/commit/74a0e098b2163425e4b5466c2dfcf8ae26d560a5",
+    "data_pr10": "https://github.com/earth-system-radiation/rrtmgp-data/pull/10",
+    "data_pr9": "https://github.com/earth-system-radiation/rrtmgp-data/pull/9",
+    "data_issue8": "https://github.com/earth-system-radiation/rrtmgp-data/issues/8",
+    "code_issue309": "https://github.com/earth-system-radiation/rte-rrtmgp/issues/309",
+    "official_report_record": "https://www.osti.gov/biblio/1663146",
+    "official_report_doi": "10.2172/1663146",
+    "official_report_pdf_sha256_not_redistributed": "216201db6cdac13be3f29bd56f1181377155e5f61440c95b25114015a2c379bf"
+  },
+  "limits": {
+    "exact_pinned_table_psd_or_habit_recipe_identified": false,
+    "report_binds_exact_current_table_bytes": false,
+    "radius_mapping_to_native_udm_resolved": false,
+    "claim": "Public lineage documents table processing and diameter relabeling, but not the exact pinned-table PSD, habit mixture, or population effective-size equation. No radius mapping or correction is inferred."
+  }
+}

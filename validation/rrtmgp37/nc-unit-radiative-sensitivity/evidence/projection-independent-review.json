@@ -1,0 +1,246 @@
+{
+  "LW_v1_metrics": {
+    "B_volume": {
+      "max_abs_full_hr_delta_K_day": 5.460622283237626e-07,
+      "max_abs_native59_hr_delta_K_day": 5.460622283237626e-07,
+      "surface_down_W_m2": -8.275225127363228e-08,
+      "surface_net_down_W_m2": -8.15111320662254e-08,
+      "toa_up_W_m2": 1.915338998514926e-10
+    },
+    "C_mass": {
+      "max_abs_full_hr_delta_K_day": 0.05354512745586071,
+      "max_abs_native59_hr_delta_K_day": 0.05354512745586071,
+      "surface_down_W_m2": 0.012350686359013707,
+      "surface_net_down_W_m2": 0.012165426239903354,
+      "toa_up_W_m2": 2.9332093333778175e-05
+    }
+  },
+  "blockers": [],
+  "checked_immutable_pin_records": 52,
+  "ledger": {
+    "current_output_files": 6,
+    "current_total_attempts": 7,
+    "final_if_one_C_call_completes": {
+      "attempts": 8,
+      "original_rejections": 1,
+      "output_files": 7
+    },
+    "remaining_expected_call": "SW C only in additive V3; no A/B reruns",
+    "v1_SW_C": "NOT_ATTEMPTED",
+    "v1_attempts": 5,
+    "v1_numeric_RC": "UNAVAILABLE",
+    "v1_outputs": 4,
+    "v1_rejection": "SW B captured V9 raw-cloud oracle; no result",
+    "v2_attempts": 2,
+    "v2_outputs": 2,
+    "v2_recorded_RC": [
+      0,
+      0
+    ],
+    "v2_status": "FAIL_PRESERVED_PYTHON_SHAPE_CHECK"
+  },
+  "limits": [
+    "Native producer state and later radiation consumer state differ; do not impose instantaneous radius identity.",
+    "Conditional Nc conventions represent alternative populations; neither establishes physical units or authorizes a density correction.",
+    "V1 child numeric RCs were not saved; output existence cannot retroactively establish RC0.",
+    "V2 RCs are stored in the terminal JSON, without pre-analysis durable PID/RC records.",
+    "One warm column, one seed per phase; no forecast/accuracy/global radius or normal-physics conclusion."
+  ],
+  "producer_header": [
+    "RRTMGP_UDM_RADIUS_V1",
+    "1 1 1 1 1 59"
+  ],
+  "projection": {
+    "REL_interventions": {
+      "B_volume": {
+        "REL_only_changed_native_k": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24,
+          25,
+          26,
+          27,
+          28,
+          29,
+          30,
+          31,
+          32,
+          33
+        ],
+        "independent_formula_max_abs_um": 7.105427357601002e-15
+      },
+      "C_mass": {
+        "REL_only_changed_native_k": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24,
+          25,
+          26,
+          27,
+          28,
+          29,
+          30,
+          31,
+          32,
+          33
+        ],
+        "independent_formula_max_abs_um": 7.105427357601002e-15
+      }
+    },
+    "SW_adapter_layers": 60,
+    "baseline_common_sections_byte_exact": 33,
+    "native_dry_mass_layers": 59,
+    "physical_prefix_byte_exact": true,
+    "physical_sections": 33,
+    "removed_input_records": [
+      "BAND_LIMS_GPOINT",
+      "BAND_LIMS_WAVENUMBER",
+      "MCICA_MASK",
+      "RAW_CLOUD_TAU",
+      "RAW_GAS_TAU",
+      "RAW_GRAUPEL_TAU_EXT",
+      "RAW_HAIL_TAU_EXT",
+      "RAW_PRECIP_TAU",
+      "SW_DIRECT_PREDELTA_POLICY",
+      "TOA_GPOINT",
+      "VISIBLE_WEIGHT"
+    ],
+    "unavailable_output_records": [
+      "DIRECTC_PREDELTA",
+      "DIRECT_PREDELTA",
+      "NIRDIR_PREDELTA",
+      "VISDIR_PREDELTA"
+    ]
+  },
+  "receipts": [
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-nc-unit-radiative-sensitivity-v1/result.json",
+      "sha256": "991de98b6d33c9a9c3238982c959149d8d58fb11842df6492e59245bbc4d6398",
+      "size_bytes": 40643
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-nc-unit-radiative-sensitivity-v2/result.json",
+      "sha256": "5106835d0dee64b2b1242f0716154b9f26a24d86361b1c08f3c3be732b84cd9e",
+      "size_bytes": 27166
+    }
+  ],
+  "reviewer_invocations": {
+    "RTE_reference_calls": 0,
+    "builds": 0,
+    "models": 0,
+    "saved_data_python_passes": 1
+  },
+  "saved_B_offline_validation": {
+    "RL_USED_input_flat_binary64_exact": true,
+    "held_sections_binary64_exact": [
+      "DIRECTC",
+      "DI_USED",
+      "DNC",
+      "DS_USED",
+      "GAS_COL_DRY",
+      "GAS_G",
+      "GAS_SSA",
+      "GAS_TAU",
+      "HRC",
+      "MASK",
+      "PRECIP_G",
+      "PRECIP_SSA",
+      "PRECIP_TAU",
+      "UPC"
+    ],
+    "metrics": {
+      "max_abs_full_hr_delta_K_day": 5.955054929174253e-07,
+      "max_abs_native59_hr_delta_K_day": 5.955054929174253e-07,
+      "surface_down_W_m2": 5.9781115169244e-06,
+      "surface_net_down_W_m2": 4.961832548389111e-06,
+      "toa_up_W_m2": -8.567982490603754e-06
+    },
+    "shape_failure_is_checker_only": true
+  },
+  "schema": "INDEPENDENT_NC_V1_AND_SW_V6_PROJECTION_REVIEW_V1",
+  "source": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-radius-stage-pr-work/WRF/test/rrtmgp/reference_column.f90",
+    "sha256": "c74177e73e9963f6c47aeebb936c6dbacca600db08a64ea9257c6db4f9d866c4",
+    "size_bytes": 90350
+  },
+  "source_contract": {
+    "locations": {
+      "V6_constants": [
+        593,
+        605
+      ],
+      "V6_precip_native": [
+        269,
+        298
+      ],
+      "V9_precip_native_constants": [
+        397,
+        454
+      ],
+      "V9_raw_assertions": [
+        965,
+        969
+      ],
+      "diagnostic_only_post_RTE": [
+        1043,
+        1092
+      ],
+      "same_SW_TOA_albedo": [
+        820,
+        881
+      ],
+      "shared_RTE_heating": [
+        1026,
+        1042
+      ],
+      "shared_dry_mass": [
+        687,
+        692
+      ]
+    },
+    "meaning": "For this no-CU/no-frozen SW prefix, V6 preserves physical state and shared solver math; V9 recorded oracle and four diagnostic outputs removed. Exact A common-output gate empirically confirms retained baseline computation. Not universal V9-to-V6 compatibility."
+  },
+  "status": "PASS_SCOPED_SAVED_V1_V2_EVIDENCE"
+}

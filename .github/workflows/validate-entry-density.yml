@@ -1,0 +1,37 @@
+name: Verify UDM call-entry density diagnostics
+on:
+  pull_request:
+    paths:
+      - 'WRF/phys/module_microphysics_driver.F'
+      - 'WRF/phys/module_ra_rrtmgp_trace.F'
+      - 'WRF/test/rrtmgp/test_udm_entry_density*'
+      - 'validation/rrtmgp37/entry-density/**'
+      - '.github/workflows/validate-entry-density.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'validation/rrtmgp37/entry-density/**'
+      - '.github/workflows/validate-entry-density.yml'
+permissions:
+  contents: read
+jobs:
+  saved-packets-and-fresh-writer:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - name: Checkout frozen V1 diagnostic sources
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: 16fb5415cc30ec124f9d9871a236009f1a472c07
+          path: build/entry-density-historical-source
+      - name: Recompute saved actual-call diagnostics and same-call joins
+        run: >-
+          python3 -I -S validation/rrtmgp37/entry-density/verify.py
+          --source-root build/entry-density-historical-source
+      - name: Check packet and join failure controls
+        run: python3 -I -S WRF/test/rrtmgp/test_udm_entry_density.py --self-test
+      - name: Compile actual trace writer and exercise opt-in and failure guards
+        run: >-
+          python3 -I -S WRF/test/rrtmgp/test_udm_entry_density_trace.py
+          --wrf-root WRF --compiler gfortran --receipt-dir build/entry-density-trace
