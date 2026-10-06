@@ -1,0 +1,128 @@
+{
+  "schema": "UDM37_NOAA_APPLICATION_MAIN_READBACK_V2",
+  "observed_at_utc": "2026-10-06T02:30:23.490949+00:00",
+  "scope": "Read-only remote metadata/source follow-up. Original fixed-candidate comparison is retained unchanged; this is not a new numerical comparison.",
+  "repository": "gonos2k/wrf-rrtmgp",
+  "main": {
+    "sha": "3b4b2d8aa949cb342615f72bbd2ec0feed14a50a",
+    "message": "Merge pull request #8 from gonos2k/feat-udm-physics-audit\n\nAudit UDM27 cloud fraction and same-state radiation differences",
+    "committer_date": "2026-10-06T02:02:52Z",
+    "parents": [
+      "1a2cd8d11993a5fb829a5103c0775ff69f820244",
+      "73de99392547353ec126450ceee8270fa083a7a8"
+    ]
+  },
+  "pr8": {
+    "headRefOid": "73de99392547353ec126450ceee8270fa083a7a8",
+    "mergeCommit": {
+      "oid": "3b4b2d8aa949cb342615f72bbd2ec0feed14a50a"
+    },
+    "state": "MERGED",
+    "statusCheckRollup": [
+      {
+        "__typename": "CheckRun",
+        "completedAt": "2026-10-02T12:42:48Z",
+        "conclusion": "SUCCESS",
+        "detailsUrl": "https://github.com/gonos2k/wrf-rrtmgp/actions/runs/37008309838/job/110841721339",
+        "name": "registration",
+        "startedAt": "2026-10-02T12:42:32Z",
+        "status": "COMPLETED",
+        "workflowName": "Validate WRF 37 and RRTMGP"
+      },
+      {
+        "__typename": "CheckRun",
+        "completedAt": "2026-10-02T12:43:29Z",
+        "conclusion": "SUCCESS",
+        "detailsUrl": "https://github.com/gonos2k/wrf-rrtmgp/actions/runs/37008309838/job/110841824962",
+        "name": "component-validation (registry)",
+        "startedAt": "2026-10-02T12:42:50Z",
+        "status": "COMPLETED",
+        "workflowName": "Validate WRF 37 and RRTMGP"
+      },
+      {
+        "__typename": "CheckRun",
+        "completedAt": "2026-10-02T12:43:33Z",
+        "conclusion": "SUCCESS",
+        "detailsUrl": "https://github.com/gonos2k/wrf-rrtmgp/actions/runs/37008309838/job/110841825041",
+        "name": "component-validation (core)",
+        "startedAt": "2026-10-02T12:42:51Z",
+        "status": "COMPLETED",
+        "workflowName": "Validate WRF 37 and RRTMGP"
+      },
+      {
+        "__typename": "CheckRun",
+        "completedAt": "2026-10-02T12:44:18Z",
+        "conclusion": "SUCCESS",
+        "detailsUrl": "https://github.com/gonos2k/wrf-rrtmgp/actions/runs/37008309838/job/110841824942",
+        "name": "standalone-columns",
+        "startedAt": "2026-10-02T12:42:50Z",
+        "status": "COMPLETED",
+        "workflowName": "Validate WRF 37 and RRTMGP"
+      },
+      {
+        "__typename": "CheckRun",
+        "completedAt": "2026-10-02T13:07:01Z",
+        "conclusion": "SUCCESS",
+        "detailsUrl": "https://github.com/gonos2k/wrf-rrtmgp/actions/runs/37008309838/job/110841824850",
+        "name": "serial-scm",
+        "startedAt": "2026-10-02T12:42:50Z",
+        "status": "COMPLETED",
+        "workflowName": "Validate WRF 37 and RRTMGP"
+      }
+    ]
+  },
+  "comparison_candidate_pr112": {
+    "headRefOid": "79a58e27cddb8d737d81c925c299a868a86596d6",
+    "mergedAt": null,
+    "state": "OPEN"
+  },
+  "comparison_pr113_before_followup": {
+    "baseRefName": "evidence-udm37-positive-n2-normal-opacity",
+    "headRefOid": "ca860dcd936268ffcf7897d7e780e50fbfcca8a8",
+    "mergedAt": null,
+    "state": "OPEN",
+    "url": "https://github.com/gonos2k/wrf-rrtmgp/pull/113"
+  },
+  "main_adapter": {
+    "path": "WRF/phys/module_ra_rrtmgp.F",
+    "git_blob_sha": "bca996735bc1f84e514c79c9212713d5d027d658",
+    "bytes": 25734,
+    "sha256": "8bc355812ce08b221a6cee36b484285aa4350445237f4b537e42b72242f6a72e",
+    "matches_original_comparison_main_adapter": true
+  },
+  "original_payloads_retained_unchanged": {
+    "README.md": {
+      "sha256": "5b727bd09b52f3e0078bf9926c08d07daaa09caca32677c73ff18c3f1ed6b070",
+      "bytes": 4695
+    },
+    "noaa-public-source-report.json": {
+      "sha256": "6faa901ff0ca1a9c0e005e3df55f96bc6ced95947f177214e620ba5418da880d",
+      "bytes": 8168
+    },
+    "source-contract-comparison.json": {
+      "sha256": "c5258dcdfaa1f600fc4aced536796c5dd279bd5d36d89a9bb2fd8050d5ad210c",
+      "bytes": 11524
+    },
+    "status.json": {
+      "sha256": "99949440deb95615e109dbfbc1063bd35933be82885f5c53017395595e19196a",
+      "bytes": 1437
+    }
+  },
+  "official_application_evidence": {
+    "checked_on": "2026-10-06",
+    "hafs_notice": "https://www.weather.gov/media/notification/pdf_2026/scn26-76_HAFSv2.2.pdf",
+    "hafs_effective_date": "2026-10-13",
+    "hafs_status_on_check_date": "SCHEDULED_NOT_YET_EFFECTIVE",
+    "gfs_notice": "https://www.weather.gov/media/notification/pdf_2026/pns26-29_Science_for_GFSv17.pdf",
+    "gfs_notice_scope": "April proposal explicitly describes RRTMG improvements; no operational RRTMGP transition established by that notice"
+  },
+  "model_build_solver_runs": 0,
+  "numerical_accuracy": "NOT_EVALUATED_BY_THIS_FOLLOWUP",
+  "residual_cause": "NOT_ESTABLISHED_BY_SOURCE_POLICY_COMPARISON",
+  "udm_noaa_runtime_parity": "NOT_ESTABLISHED",
+  "limits": [
+    "PR8 check successes concern its recorded head; they are not validation of the later unmerged PR112 candidate or NOAA equivalence.",
+    "Adapter equality does not mean all wrappers or cloud-fraction policies are unchanged by PR8.",
+    "Pinned public HAFS source is not an authenticated deployed binary."
+  ]
+}
