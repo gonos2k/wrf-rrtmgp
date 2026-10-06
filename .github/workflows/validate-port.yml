@@ -305,7 +305,7 @@ jobs:
           export LD_LIBRARY_PATH="$NETCDF/lib:/usr/lib/x86_64-linux-gnu:${LD_LIBRARY_PATH:-}"
           python3 WRF/test/rrtmgp/test_udm_startup_snow_scm.py \
             build/udm-startup-snow-runtime-only \
-            --candidate-wrf-root "$GITHUB_WORKSPACE/WRF" --runtime-only \
+            --candidate-wrf-root "$GITHUB_WORKSPACE/WRF" --runtime-only --capture-pair \
             | tee build/udm-startup-snow-runtime-only.log
       - name: Check RRTMGP compiler/flags/object inventory rebuilds
         shell: bash
