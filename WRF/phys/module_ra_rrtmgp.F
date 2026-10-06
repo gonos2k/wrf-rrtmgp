@@ -41,7 +41,9 @@ MODULE module_ra_rrtmgp
   INTEGER, SAVE :: initialized_frozen_mode = 0
   CHARACTER(LEN=:), ALLOCATABLE, SAVE :: initialized_frozen_path
   CHARACTER(LEN=:), ALLOCATABLE, SAVE :: initialized_path
-  CHARACTER(LEN=3), PARAMETER :: names(6) = ['h2o','co2','o3 ','n2o','ch4','o2 ']
+  CHARACTER(LEN=32), PARAMETER :: names_sw(6) = [CHARACTER(LEN=32) :: 'h2o','co2','o3','n2o','ch4','o2']
+  CHARACTER(LEN=32), PARAMETER :: names_lw(10) = [CHARACTER(LEN=32) :: &
+      'h2o','co2','o3','n2o','ch4','o2','cfc11','cfc12','cfc22','ccl4']
 CONTAINS
   SUBROUTINE require(msg)
     CHARACTER(LEN=*), INTENT(IN) :: msg
@@ -97,8 +99,9 @@ CONTAINS
     END IF
     CALL init_constants(selected_gravity,selected_mol_weight,selected_cp)
     CALL set_fatal_handler(rrtmgp_coeff_fatal)
-    CALL require(gases%init(names))
+    CALL require(gases%init(names_lw))
     CALL load_and_init(gas_lw,TRIM(data_path)//'/rrtmgp-gas-lw-g128.nc',gases)
+    CALL require(gases%init(names_sw))
     CALL load_and_init(gas_sw,TRIM(data_path)//'/rrtmgp-gas-sw-g112.nc',gases)
     CALL load_cld_lutcoeff(cloud_lw,TRIM(data_path)//'/rrtmgp-clouds-lw-bnd.nc')
     CALL load_cld_lutcoeff(cloud_sw,TRIM(data_path)//'/rrtmgp-clouds-sw-bnd.nc')
@@ -214,7 +217,7 @@ CONTAINS
     CALL require(frozen%increment(atmos))
   END SUBROUTINE
 
-  SUBROUTINE set_gases(gases,h2o,co2,o3,n2o,ch4,o2)
+  SUBROUTINE set_gases_sw(gases,h2o,co2,o3,n2o,ch4,o2)
     TYPE(ty_gas_concs), INTENT(INOUT) :: gases
     REAL, INTENT(IN) :: h2o(:,:),co2(:,:),o3(:,:),n2o(:,:),ch4(:,:),o2(:,:)
     IF(ANY(SHAPE(co2)/=SHAPE(h2o)).OR.ANY(SHAPE(o3)/=SHAPE(h2o)).OR. &
@@ -226,13 +229,67 @@ CONTAINS
     CALL rrtmgp_check_nonnegative('n2o',n2o)
     CALL rrtmgp_check_nonnegative('ch4',ch4)
     CALL rrtmgp_check_nonnegative('o2',o2)
-    CALL require(gases%init(names))
+    CALL require(gases%init(names_sw))
     CALL require(gases%set_vmr('h2o',REAL(h2o,wp)))
     CALL require(gases%set_vmr('co2',REAL(co2,wp)))
     CALL require(gases%set_vmr('o3',REAL(o3,wp)))
     CALL require(gases%set_vmr('n2o',REAL(n2o,wp)))
     CALL require(gases%set_vmr('ch4',REAL(ch4,wp)))
     CALL require(gases%set_vmr('o2',REAL(o2,wp)))
+  END SUBROUTINE
+
+  SUBROUTINE set_gases_lw(gases,h2o,co2,o3,n2o,ch4,o2,cfc11,cfc12,cfc22,ccl4)
+    TYPE(ty_gas_concs), INTENT(INOUT) :: gases
+    REAL, INTENT(IN) :: h2o(:,:),co2(:,:),o3(:,:),n2o(:,:),ch4(:,:),o2(:,:)
+    REAL, OPTIONAL, INTENT(IN) :: cfc11(:,:),cfc12(:,:),cfc22(:,:),ccl4(:,:)
+    REAL(wp) :: zero_vmr(SIZE(h2o,1),SIZE(h2o,2))
+    LOGICAL :: any_cfc,all_cfc
+    zero_vmr=0._wp
+    any_cfc=PRESENT(cfc11).OR.PRESENT(cfc12).OR.PRESENT(cfc22).OR.PRESENT(ccl4)
+    all_cfc=PRESENT(cfc11).AND.PRESENT(cfc12).AND.PRESENT(cfc22).AND.PRESENT(ccl4)
+    IF(any_cfc.AND..NOT.all_cfc) THEN
+      CALL require('RRTMGP_LW_TRACE_GAS_PARTIAL_INPUTS')
+      RETURN
+    END IF
+    IF(ANY(SHAPE(co2)/=SHAPE(h2o)).OR.ANY(SHAPE(o3)/=SHAPE(h2o)).OR. &
+       ANY(SHAPE(n2o)/=SHAPE(h2o)).OR.ANY(SHAPE(ch4)/=SHAPE(h2o)).OR. &
+       ANY(SHAPE(o2)/=SHAPE(h2o))) CALL require('gas shapes must match column layers')
+    CALL rrtmgp_check_nonnegative('h2o',h2o)
+    CALL rrtmgp_check_nonnegative('co2',co2)
+    CALL rrtmgp_check_nonnegative('o3',o3)
+    CALL rrtmgp_check_nonnegative('n2o',n2o)
+    CALL rrtmgp_check_nonnegative('ch4',ch4)
+    CALL rrtmgp_check_nonnegative('o2',o2)
+    CALL require(gases%init(names_lw))
+    CALL require(gases%set_vmr('h2o',REAL(h2o,wp)))
+    CALL require(gases%set_vmr('co2',REAL(co2,wp)))
+    CALL require(gases%set_vmr('o3',REAL(o3,wp)))
+    CALL require(gases%set_vmr('n2o',REAL(n2o,wp)))
+    CALL require(gases%set_vmr('ch4',REAL(ch4,wp)))
+    CALL require(gases%set_vmr('o2',REAL(o2,wp)))
+    IF(all_cfc) THEN
+      IF(ANY(SHAPE(cfc11)/=SHAPE(h2o)).OR.ANY(SHAPE(cfc12)/=SHAPE(h2o)).OR. &
+         ANY(SHAPE(cfc22)/=SHAPE(h2o)).OR.ANY(SHAPE(ccl4)/=SHAPE(h2o))) THEN
+        CALL require('RRTMGP_LW_TRACE_GAS_SHAPE_MISMATCH')
+        RETURN
+      END IF
+      IF(.NOT.ALL(ieee_is_finite(cfc11)).OR..NOT.ALL(ieee_is_finite(cfc12)).OR. &
+         .NOT.ALL(ieee_is_finite(cfc22)).OR..NOT.ALL(ieee_is_finite(ccl4))) THEN
+        CALL require('RRTMGP_LW_TRACE_GAS_NOT_FINITE_NONNEGATIVE')
+        RETURN
+      END IF
+      IF(ANY(cfc11<0.).OR.ANY(cfc12<0.).OR.ANY(cfc22<0.).OR.ANY(ccl4<0.)) &
+        CALL require('RRTMGP_LW_TRACE_GAS_NOT_FINITE_NONNEGATIVE')
+      CALL require(gases%set_vmr('cfc11',REAL(cfc11,wp)))
+      CALL require(gases%set_vmr('cfc12',REAL(cfc12,wp)))
+      CALL require(gases%set_vmr('cfc22',REAL(cfc22,wp)))
+      CALL require(gases%set_vmr('ccl4',REAL(ccl4,wp)))
+    ELSE
+      CALL require(gases%set_vmr('cfc11',zero_vmr))
+      CALL require(gases%set_vmr('cfc12',zero_vmr))
+      CALL require(gases%set_vmr('cfc22',zero_vmr))
+      CALL require(gases%set_vmr('ccl4',zero_vmr))
+    END IF
   END SUBROUTINE
 
   SUBROUTINE cloud_mask(cf,ngpt,overlap,seed,mask,column_seeds)
@@ -303,7 +360,8 @@ CONTAINS
 
   SUBROUTINE rrtmgp_lw_column(play,plev,tlay,tlev,tsfc,h2o,co2,o3,n2o,ch4,o2,emis, &
                              cf,lwp,iwp,swp,rel,rei,res,iceflag,overlap,seed, &
-                             up,dn,hr,upc,dnc,hrc,column_seeds,rwp,native_dry_layer_mass_kg_m2,gwp,hwp,lambda_g,lambda_h,frozen_context)
+                             up,dn,hr,upc,dnc,hrc,column_seeds,rwp,native_dry_layer_mass_kg_m2,gwp,hwp,lambda_g,lambda_h, &
+                             frozen_context,cfc11vmr,cfc12vmr,cfc22vmr,ccl4vmr)
     REAL, INTENT(IN) :: play(:,:),plev(:,:),tlay(:,:),tlev(:,:),tsfc(:),emis(:,:)
     REAL, INTENT(IN) :: h2o(:,:),co2(:,:),o3(:,:),n2o(:,:),ch4(:,:),o2(:,:)
     REAL, INTENT(IN) :: cf(:,:),lwp(:,:),iwp(:,:),swp(:,:),rel(:,:),rei(:,:),res(:,:)
@@ -312,6 +370,7 @@ CONTAINS
     REAL, OPTIONAL, INTENT(IN) :: rwp(:,:),native_dry_layer_mass_kg_m2(:,:)
     REAL, OPTIONAL, INTENT(IN) :: gwp(:,:),hwp(:,:),lambda_g(:,:),lambda_h(:,:)
     CHARACTER(LEN=*), OPTIONAL, INTENT(IN) :: frozen_context
+    REAL, OPTIONAL, INTENT(IN) :: cfc11vmr(:,:),cfc12vmr(:,:),cfc22vmr(:,:),ccl4vmr(:,:)
     REAL, INTENT(OUT) :: up(:,:),dn(:,:),hr(:,:),upc(:,:),dnc(:,:),hrc(:,:)
     TYPE(ty_gas_concs) :: gases
     TYPE(ty_optical_props_1scl) :: atmos,clouds,snow,sampled
@@ -324,6 +383,7 @@ CONTAINS
     REAL(wp) :: rl(SIZE(play,1),SIZE(play,2)),di(SIZE(play,1),SIZE(play,2)),ds(SIZE(play,1),SIZE(play,2))
     LOGICAL :: mask(SIZE(play,1),SIZE(play,2),gas_lw%get_ngpt())
     INTEGER :: nc,nl,precip_status
+    LOGICAL :: trace_gases
     IF(.NOT.ready) CALL require('initialization must precede parallel column calls')
     CALL validate_frozen_inputs(SHAPE(play),gwp,hwp,lambda_g,lambda_h,frozen_context)
     CALL rrtmgp_validate_column_inputs(play,plev,tlay,cf,lwp,iwp,swp,rel,rei,res)
@@ -351,6 +411,27 @@ CONTAINS
        ANY(SHAPE(hr)/=SHAPE(play)).OR.ANY(SHAPE(hrc)/=SHAPE(play))) &
        CALL require('output shapes must match columns and interfaces/layers')
     nc=SIZE(play,1); nl=SIZE(play,2); zero=0._wp
+    trace_gases=PRESENT(cfc11vmr).AND.PRESENT(cfc12vmr).AND.PRESENT(cfc22vmr).AND.PRESENT(ccl4vmr)
+    IF((PRESENT(cfc11vmr).OR.PRESENT(cfc12vmr).OR.PRESENT(cfc22vmr).OR.PRESENT(ccl4vmr)).AND..NOT.trace_gases) THEN
+      CALL require('RRTMGP_LW_TRACE_GAS_PARTIAL_INPUTS')
+      RETURN
+    END IF
+    IF(trace_gases) THEN
+      IF(ANY(SHAPE(cfc11vmr)/=SHAPE(play)).OR.ANY(SHAPE(cfc12vmr)/=SHAPE(play)).OR. &
+         ANY(SHAPE(cfc22vmr)/=SHAPE(play)).OR.ANY(SHAPE(ccl4vmr)/=SHAPE(play))) THEN
+        CALL require('RRTMGP_LW_TRACE_GAS_SHAPE_MISMATCH')
+        RETURN
+      END IF
+      IF(.NOT.ALL(ieee_is_finite(cfc11vmr)).OR..NOT.ALL(ieee_is_finite(cfc12vmr)).OR. &
+         .NOT.ALL(ieee_is_finite(cfc22vmr)).OR..NOT.ALL(ieee_is_finite(ccl4vmr))) THEN
+        CALL require('RRTMGP_LW_TRACE_GAS_NOT_FINITE_NONNEGATIVE')
+        RETURN
+      END IF
+      IF(ANY(cfc11vmr<0.).OR.ANY(cfc12vmr<0.).OR.ANY(cfc22vmr<0.).OR.ANY(ccl4vmr<0.)) THEN
+        CALL require('RRTMGP_LW_TRACE_GAS_NOT_FINITE_NONNEGATIVE')
+        RETURN
+      END IF
+    END IF
     IF(SIZE(tsfc)/=nc.OR.ANY(SHAPE(tlev)/=SHAPE(plev)).OR.SIZE(emis,1)/=nc) &
       CALL require('LW surface/interface shapes must match columns')
     CALL rrtmgp_check_positive('tsfc',RESHAPE(tsfc,[nc,1]))
@@ -368,7 +449,8 @@ CONTAINS
            gravity=REAL(initialized_gravity,real64),cp_dry=REAL(initialized_cp_dry,real64), &
            mol_weight_dry=REAL(initialized_mol_weight_dry,real64), &
            native_dry_mass=PRESENT(native_dry_layer_mass_kg_m2), &
-           frozen_mode=initialized_frozen_mode,frozen_table_sha256=frozen_table_sha256())
+           frozen_mode=initialized_frozen_mode,frozen_table_sha256=frozen_table_sha256(), &
+           trace_gases_present=trace_gases)
       CALL trace_input('LW','SOLAR',RESHAPE([0.],[1,1]))
       CALL trace_input('LW','PLAY',play)
       CALL trace_input('LW','PLEV',plev)
@@ -381,6 +463,12 @@ CONTAINS
       CALL trace_input('LW','N2O',n2o)
       CALL trace_input('LW','CH4',ch4)
       CALL trace_input('LW','O2',o2)
+      IF(trace_gases) THEN
+        CALL trace_input('LW','VMR_CFC11',cfc11vmr)
+        CALL trace_input('LW','VMR_CFC12',cfc12vmr)
+        CALL trace_input('LW','VMR_CFC22',cfc22vmr)
+        CALL trace_input('LW','VMR_CCL4',ccl4vmr)
+      END IF
       CALL trace_input('LW','EMIS',emis)
       CALL trace_input('LW','AVDIR',RESHAPE(0.*tsfc,[nc,1]))
       CALL trace_input('LW','AVDIF',RESHAPE(0.*tsfc,[nc,1]))
@@ -410,7 +498,7 @@ CONTAINS
       CALL trace_input_end('LW')
       CALL trace_result_start('LW',nc,nl)
     END IF
-    CALL set_gases(gases,h2o,co2,o3,n2o,ch4,o2)
+    CALL set_gases_lw(gases,h2o,co2,o3,n2o,ch4,o2,cfc11vmr,cfc12vmr,cfc22vmr,ccl4vmr)
     col_dry=gas_dry_column(h2o,plev,native_dry_layer_mass_kg_m2)
     CALL require(atmos%alloc_1scl(nc,nl,gas_lw))
     CALL require(source%alloc(nc,nl,gas_lw))
@@ -419,6 +507,7 @@ CONTAINS
     IF(trace_active('LW')) THEN
       CALL trace_result('LW','GAS_COL_DRY',col_dry)
       CALL trace_result('LW','GAS_TAU',atmos%tau)
+      IF(trace_gases) CALL trace_result('LW','GAS_TAU_RAW',atmos%tau)
     END IF
     flux%flux_up=>fu; flux%flux_dn=>fd
     CALL require(rte_lw(atmos,.FALSE.,source,emissivity,flux))
@@ -551,7 +640,7 @@ CONTAINS
        ANY(SHAPE(directc)/=SHAPE(plev)).OR.ANY(SHAPE(visdir)/=SHAPE(plev)).OR. &
        ANY(SHAPE(visdif)/=SHAPE(plev)).OR.ANY(SHAPE(nirdir)/=SHAPE(plev)).OR. &
        ANY(SHAPE(nirdif)/=SHAPE(plev))) CALL require('SW diagnostic shapes must match interfaces')
-    CALL set_gases(gases,h2o,co2,o3,n2o,ch4,o2)
+    CALL set_gases_sw(gases,h2o,co2,o3,n2o,ch4,o2)
     col_dry=gas_dry_column(h2o,plev,native_dry_layer_mass_kg_m2)
     IF(ALL(mu0<=0.)) RETURN
     IF(ANY(mu0<=0.)) CALL require('daylight columns must be packed separately')

@@ -1,0 +1,13 @@
+{
+  "scm_missing_shared_library": {
+    "status": "FAILED_BEFORE_SIMULATION",
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-lw-trace-gases-scm-corrected",
+    "cause": "launch environment lacked libnetcdff.so.7; rerun with explicit NetCDF and root dependency library paths passed"
+  },
+  "real_cam_initial_log_oracle": {
+    "status": "WRF_COMPLETED_VALIDATOR_FAILED",
+    "path": "build/udm-lw-trace-gases-realcase",
+    "cause": "validator compared adapter fractional-Julian-date CAM profile against physics_init integer-Julian-day initialization log; actual CFC11 2.4047400182247713e-10 vs initialization log 2.4046851024771327e-10",
+    "action": "compare the first LW wrapper interpolation log at the actual radiation date; enable diagnostic logging only, retain exact native-prefix checks and fixed tolerance"
+  }
+}

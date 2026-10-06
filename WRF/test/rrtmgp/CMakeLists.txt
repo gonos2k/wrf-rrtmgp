@@ -59,7 +59,7 @@ add_library(test_rrtmgp_adapter STATIC standalone_wrf_error.f90 "${trace}" "${in
 target_link_libraries(test_rrtmgp_adapter PUBLIC wrf_rrtmgp test_rrtmgp_precip test_rrtmgp_frozen)
 set_target_properties(test_rrtmgp_adapter PROPERTIES Fortran_MODULE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/modules")
 target_include_directories(test_rrtmgp_adapter PUBLIC "${CMAKE_CURRENT_BINARY_DIR}/modules")
-foreach(test IN ITEMS columns cloud_inputs multicolumn validation adapter_invalid small_cf_sampling ice_roughness transparent_overlap spectral_surface udm_inputs precip_optics udm_adapter udm_dry_mass domain_seed native_gas_columns frozen_adapter udm_frozen_inputs)
+foreach(test IN ITEMS columns cloud_inputs multicolumn validation adapter_invalid small_cf_sampling ice_roughness transparent_overlap spectral_surface udm_inputs precip_optics udm_adapter udm_dry_mass domain_seed native_gas_columns frozen_adapter udm_frozen_inputs lw_trace_gases)
   add_executable(test_rrtmgp_${test} test_${test}.f90)
   target_link_libraries(test_rrtmgp_${test} PRIVATE test_rrtmgp_adapter)
   if(CMAKE_Fortran_COMPILER_ID STREQUAL "GNU")
@@ -136,6 +136,10 @@ add_test(NAME small_cf_sampling COMMAND test_rrtmgp_small_cf_sampling "${RRTMGP_
 # Independent executable shares the pinned library and data, not the WRF adapter.
 add_executable(reference_column reference_column.f90)
 target_link_libraries(reference_column PRIVATE wrf_rrtmgp test_rrtmgp_frozen)
+add_test(NAME lw_trace_gases_replay COMMAND "${Python3_EXECUTABLE}"
+  "${CMAKE_CURRENT_SOURCE_DIR}/test_lw_trace_gases_replay.py"
+  "$<TARGET_FILE:test_rrtmgp_lw_trace_gases>" "$<TARGET_FILE:reference_column>"
+  "${RRTMGP_DATA_DIR}" "${CMAKE_CURRENT_BINARY_DIR}/lw-trace-gases-replay.json")
 if(CMAKE_Fortran_COMPILER_ID STREQUAL "GNU")
   target_compile_options(reference_column PRIVATE -ffree-line-length-none -fcheck=bounds)
 endif()
