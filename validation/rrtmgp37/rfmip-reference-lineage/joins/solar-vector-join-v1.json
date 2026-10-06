@@ -1,0 +1,95 @@
+{
+  "status": "READ_ONLY_OFFICIAL_RELEASE_SOLAR_VECTOR_JOIN",
+  "files": {
+    "authentic_v1_0": {
+      "path": "build/udm37-rfmip-historical-provenance-v1/authentic-v1.0-sw-g224.nc",
+      "file_sha256": "b9f4b15796d132880fffb49ac45c29753c1ee70a8ee3fed733899cb315c75e9b",
+      "solar_variables": {
+        "solar_source": {
+          "shape": [
+            224
+          ],
+          "dtype": "float32",
+          "sum": 1360.8585174371256,
+          "array_sha256": "450a56c21ab58e0268f86190e4d2ab859073fb5848a6c7ba9ca00894ae01d8c1",
+          "nonzero_count": 224
+        }
+      }
+    },
+    "targeted_counterfactual": {
+      "path": "build/udm37-rfmip-solar-counterfactual-v1/stage-v7/rrtmgp-gas-sw-g224-old-solar-counterfactual.nc",
+      "file_sha256": "02d4cd320696b9b8a3006a373855a3b4b95fdb6495251fe5f5692d6a9fddfaa4",
+      "solar_variables": {
+        "solar_source_facular": {
+          "shape": [
+            224
+          ],
+          "dtype": "float64",
+          "sum": 0.0,
+          "array_sha256": "7b4fc1a8dbe6b6121f16ada516e2ac27e02964716bacea5fb7d07cf30595948e",
+          "nonzero_count": 0
+        },
+        "solar_source_sunspot": {
+          "shape": [
+            224
+          ],
+          "dtype": "float64",
+          "sum": 0.0,
+          "array_sha256": "7b4fc1a8dbe6b6121f16ada516e2ac27e02964716bacea5fb7d07cf30595948e",
+          "nonzero_count": 0
+        },
+        "solar_source_quiet": {
+          "shape": [
+            224
+          ],
+          "dtype": "float64",
+          "sum": 1360.8585174371256,
+          "array_sha256": "6dab613a09b7e1bab9cafe15704eb3437e40d532b9635764899581ee1be47344",
+          "nonzero_count": 224
+        }
+      }
+    },
+    "current": {
+      "path": "build/official-rrtmgp-reference/data/rrtmgp-gas-sw-g224.nc",
+      "file_sha256": "584f1dd41ea9fc07d4ee3754eb1dafbd46ad3161cd6fd20fa06b6922b6f0702e",
+      "solar_variables": {
+        "solar_source_facular": {
+          "shape": [
+            224
+          ],
+          "dtype": "float64",
+          "sum": 138.08181963641468,
+          "array_sha256": "4369e4dcd110c85a7cda86b8df6b24ba84b6cf044fafe986dee941c113664a7c",
+          "nonzero_count": 224
+        },
+        "solar_source_sunspot": {
+          "shape": [
+            224
+          ],
+          "dtype": "float64",
+          "sum": -0.0005627373420176014,
+          "array_sha256": "21deac7059e7fb06ddd1ed89ce3310e93d433d06da235593af4508df62f807a1",
+          "nonzero_count": 224
+        },
+        "solar_source_quiet": {
+          "shape": [
+            224
+          ],
+          "dtype": "float64",
+          "sum": 1360.3756488789927,
+          "array_sha256": "741534fb411c17ba6758515b4afe10ec63195dd7cffa0460f452f352a21a231e",
+          "nonzero_count": 224
+        }
+      }
+    }
+  },
+  "checks": {
+    "original_solar_vs_counterfactual_quiet_exact_values": true,
+    "max_abs_original_vs_counterfactual_quiet": 0.0,
+    "original_solar_vs_current_quiet_exact_values": false,
+    "max_abs_original_vs_current_quiet": 0.030788167988827553,
+    "band_gpoint_bounds_exact_all_three": true,
+    "physical_band_limits_exact_all_three": true
+  },
+  "qualification": "This identifies numerical provenance of the counterfactual solar vector if exact. It does not authenticate the full constructed coefficient file, RFMIP output generator, historical compiler, or strict accuracy."
+}
