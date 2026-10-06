@@ -2326,7 +2326,7 @@ module_sf_sfclayrev.o: \
 	physics_mmm/sf_sfclayrev.o
 
 
-module_ra_rrtmg_sw.o: module_ra_rrtmgp.o \
+module_ra_rrtmg_sw.o: module_ra_rrtmgp.o module_ra_rrtmgp_audit.o \
 	../share/module_model_constants.o \
 	module_ra_clWRF_support.o \
 	../frame/module_wrf_error.o \
@@ -2347,7 +2347,7 @@ module_ra_rrtmg_swk.o: \
 	module_ra_effective_radius.o 
 
 
-module_ra_rrtmg_lw.o: module_ra_rrtmgp.o \
+module_ra_rrtmg_lw.o: module_ra_rrtmgp.o module_ra_rrtmgp_audit.o \
 	../frame/module_wrf_error.o \
 	../share/module_model_constants.o \
 	module_ra_clWRF_support.o 

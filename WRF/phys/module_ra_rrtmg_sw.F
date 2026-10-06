@@ -8184,6 +8184,8 @@
       use rrsw_tbl, only : tblint, bpade, od_lo, exp_tbl
       use rrsw_vsn, only : hvrspc, hnamspc
       use rrsw_wvn, only : ngc, ngs
+      use module_rrtmg4_optics_export, only: rrtmg4_export_active, rrtmg4_export_stage, &
+           rrtmg4_export_real1, rrtmg4_export_real2
       use rrtmg_sw_reftra, only: reftra_sw
       use rrtmg_sw_taumol, only: taumol_sw
       use rrtmg_sw_vrtqdr, only: vrtqdr_sw
@@ -8450,6 +8452,21 @@
                      fac00, fac01, fac10, fac11, &
                      selffac, selffrac, indself, forfac, forfrac, indfor, &
                      zsflxzen, ztaug, ztaur)
+
+      IF(rrtmg4_export_active()) THEN
+         CALL rrtmg4_export_stage('GAS')
+         CALL rrtmg4_export_real1('SOLAR_FLUX_GPOINT_ZENITH','W_m-2',zsflxzen(1:ngptsw))
+         CALL rrtmg4_export_real2('TAUGAS','optical_depth_gpoint_layer',TRANSPOSE(ztaug(1:klev,1:ngptsw)))
+         CALL rrtmg4_export_real2('TAURAYLEIGH','optical_depth_gpoint_layer',TRANSPOSE(ztaur(1:klev,1:ngptsw)))
+         CALL rrtmg4_export_real2('SOLVER_CLOUD_MASK','cloud_fraction_or_mask',TRANSPOSE(pcldfmc(1:klev,1:ngptsw)))
+         CALL rrtmg4_export_real2('SOLVER_CLOUD_TAU','optical_depth',TRANSPOSE(ptaucmc(1:klev,1:ngptsw)))
+         CALL rrtmg4_export_real2('SOLVER_CLOUD_SSA','1',TRANSPOSE(pomgcmc(1:klev,1:ngptsw)))
+         CALL rrtmg4_export_real2('SOLVER_CLOUD_ASM','1',TRANSPOSE(pasycmc(1:klev,1:ngptsw)))
+         CALL rrtmg4_export_real2('SOLVER_CLOUD_UNSCALED_TAU','optical_depth',TRANSPOSE(ptaormc(1:klev,1:ngptsw)))
+         CALL rrtmg4_export_real2('SOLVER_AEROSOL_TAU','optical_depth_band_layer',TRANSPOSE(ptaua(1:klev,1:nbndsw)))
+         CALL rrtmg4_export_real2('SOLVER_AEROSOL_SSA','1',TRANSPOSE(pomga(1:klev,1:nbndsw)))
+         CALL rrtmg4_export_real2('SOLVER_AEROSOL_ASM','1',TRANSPOSE(pasya(1:klev,1:nbndsw)))
+      END IF
 
 ! Top of shortwave spectral band loop, jb = 16 -> 29; ibm = 1 -> 14
 
@@ -8839,6 +8856,9 @@
 !      use rrtmg_sw_init, only: rrtmg_sw_ini
       use rrtmg_sw_setcoef, only: setcoef_sw
       use rrtmg_sw_spcvmc, only: spcvmc_sw
+      use module_rrtmg4_optics_export, only: rrtmg4_export_active, rrtmg4_export_stage, &
+           rrtmg4_export_real1, rrtmg4_export_real2, rrtmg4_export_int1
+      use rrsw_wvn, only: ngb
 
       implicit none
 
@@ -9356,6 +9376,41 @@
               ssacmc, asmcmc, fsfcmc, ciwpmc, clwpmc, cswpmc, reicmc, relqmc, resnmc, &
               taua, ssaa, asma)
 
+         IF(rrtmg4_export_active().AND.iplon==1) THEN
+            CALL rrtmg4_export_stage('INPUT')
+            CALL rrtmg4_export_real1('PLAY','hPa',play(iplon,1:nlayers))
+            CALL rrtmg4_export_real1('PLEV','hPa',plev(iplon,1:nlayers+1))
+            CALL rrtmg4_export_real1('TLAY','K',tlay(iplon,1:nlayers))
+            CALL rrtmg4_export_real1('TLEV','K',tlev(iplon,1:nlayers+1))
+            CALL rrtmg4_export_real1('TSFC','K',[tsfc(iplon)])
+            CALL rrtmg4_export_real1('SOLVER_PAVEL','hPa',pavel(1:nlayers))
+            CALL rrtmg4_export_real1('SOLVER_PZ','hPa',pz(0:nlayers))
+            CALL rrtmg4_export_real1('SOLVER_TAVEL','K',tavel(1:nlayers))
+            CALL rrtmg4_export_real1('SOLVER_TZ','K',tz(0:nlayers))
+            CALL rrtmg4_export_real1('SOLVER_TBOUND','K',[tbound])
+            CALL rrtmg4_export_real1('H2O_VMR','mol_mol-1',h2ovmr(iplon,1:nlayers))
+            CALL rrtmg4_export_real1('O3_VMR','mol_mol-1',o3vmr(iplon,1:nlayers))
+            CALL rrtmg4_export_real1('CO2_VMR','mol_mol-1',co2vmr(iplon,1:nlayers))
+            CALL rrtmg4_export_real1('CH4_VMR','mol_mol-1',ch4vmr(iplon,1:nlayers))
+            CALL rrtmg4_export_real1('N2O_VMR','mol_mol-1',n2ovmr(iplon,1:nlayers))
+            CALL rrtmg4_export_real1('O2_VMR','mol_mol-1',o2vmr(iplon,1:nlayers))
+            CALL rrtmg4_export_real1('ALBEDO_VIS_DIRECT','1',[asdir(iplon)])
+            CALL rrtmg4_export_real1('ALBEDO_VIS_DIFFUSE','1',[asdif(iplon)])
+            CALL rrtmg4_export_real1('ALBEDO_NIR_DIRECT','1',[aldir(iplon)])
+            CALL rrtmg4_export_real1('ALBEDO_NIR_DIFFUSE','1',[aldif(iplon)])
+            CALL rrtmg4_export_real1('COSZEN','1',[coszen(iplon)])
+            CALL rrtmg4_export_real1('SOLAR_CONSTANT','W_m-2',[scon])
+            CALL rrtmg4_export_real1('EARTH_SUN_ADJUSTMENT','1',[adjes])
+            CALL rrtmg4_export_real1('SOLAR_CONSTANT_SCALE','1',solvar(jpb1:jpb2))
+            CALL rrtmg4_export_real1('BAND_FLUX_ADJUSTMENT','1',adjflux(jpb1:jpb2))
+            CALL rrtmg4_export_real1('COLDRY','molecule_cm-2',coldry(1:nlayers))
+            CALL rrtmg4_export_real2('WKL_MOLECULE_COLUMNS','molecule_cm-2',wkl(:,1:nlayers))
+            CALL rrtmg4_export_real1('PDP','hPa_layer_difference',pdp(1:nlayers))
+            CALL rrtmg4_export_int1('DAY_OF_YEAR',[dyofyr])
+            CALL rrtmg4_export_int1('AEROSOL_OPTION',[iaer])
+            CALL rrtmg4_export_int1('CLOUD_OVERLAP_OPTION',[icld])
+         END IF
+
 !  For cloudy atmosphere, use cldprop to set cloud optical properties based on
 !  input cloud physical properties.  Select method based on choices described
 !  in cldprop.  Cloud fraction, water path, liquid droplet and ice particle
@@ -9365,6 +9420,28 @@
          call cldprmc_sw(nlayers, inflag, iceflag, liqflag, cldfmc, &
                          ciwpmc, clwpmc, cswpmc, reicmc, relqmc, resnmc, &
                          taormc, taucmc, ssacmc, asmcmc, fsfcmc)
+
+         IF(rrtmg4_export_active().AND.iplon==1) THEN
+            CALL rrtmg4_export_stage('CLOUD')
+            CALL rrtmg4_export_int1('BAND_INDEX',[16,17,18,19,20,21,22,23,24,25,26,27,28,29])
+            CALL rrtmg4_export_int1('GPOINT_TO_BAND',ngb(1:ngptsw))
+            CALL rrtmg4_export_real1('BAND_WAVENUM_LO','cm-1',wavenum1)
+            CALL rrtmg4_export_real1('BAND_WAVENUM_HI','cm-1',wavenum2)
+            CALL rrtmg4_export_real2('MCICA_MASK','fraction_or_mask_as_returned',cldfmc(1:ngptsw,1:nlayers))
+            CALL rrtmg4_export_real2('CLDPRMC_TAU','optical_depth',taucmc(1:ngptsw,1:nlayers))
+            CALL rrtmg4_export_real2('CLDPRMC_SSA','1',ssacmc(1:ngptsw,1:nlayers))
+            CALL rrtmg4_export_real2('CLDPRMC_ASM','1',asmcmc(1:ngptsw,1:nlayers))
+            CALL rrtmg4_export_real2('CLDPRMC_FSF','1',fsfcmc(1:ngptsw,1:nlayers))
+            CALL rrtmg4_export_real2('CLDPRMC_TAUOR','optical_depth',taormc(1:ngptsw,1:nlayers))
+            CALL rrtmg4_export_real2('CLDPRMC_LWP','g_m-2',clwpmc(1:ngptsw,1:nlayers))
+            CALL rrtmg4_export_real2('CLDPRMC_IWP','g_m-2',ciwpmc(1:ngptsw,1:nlayers))
+            CALL rrtmg4_export_real2('CLDPRMC_SWP','g_m-2',cswpmc(1:ngptsw,1:nlayers))
+            CALL rrtmg4_export_real1('CLDPRMC_RELIQ','micron',relqmc(1:nlayers))
+            CALL rrtmg4_export_real1('CLDPRMC_REICE','micron',reicmc(1:nlayers))
+            CALL rrtmg4_export_real1('CLDPRMC_RESNOW','micron',resnmc(1:nlayers))
+            CALL rrtmg4_export_int1('INFLAG',[inflag]); CALL rrtmg4_export_int1('ICEFLAG',[iceflag])
+            CALL rrtmg4_export_int1('LIQFLAG',[liqflag]); CALL rrtmg4_export_int1('ICLD',[icld])
+         END IF
          icpr = 1
 
 ! Calculate coefficients for the temperature and pressure dependence of the 
@@ -9558,6 +9635,17 @@
          enddo
          swhrc(iplon,nlayers) = 0._rb
          swhr(iplon,nlayers) = 0._rb
+
+         IF(rrtmg4_export_active().AND.iplon==1) THEN
+            CALL rrtmg4_export_stage('RESULT')
+            CALL rrtmg4_export_real1('UP_FLUX','W_m-2',swuflx(iplon,1:nlayers+1))
+            CALL rrtmg4_export_real1('DOWN_FLUX','W_m-2',swdflx(iplon,1:nlayers+1))
+            CALL rrtmg4_export_real1('UP_CLEAR_FLUX','W_m-2',swuflxc(iplon,1:nlayers+1))
+            CALL rrtmg4_export_real1('DOWN_CLEAR_FLUX','W_m-2',swdflxc(iplon,1:nlayers+1))
+            CALL rrtmg4_export_real1('DOWN_DIRECT','W_m-2',swdkdir(iplon,1:nlayers+1))
+            CALL rrtmg4_export_real1('DOWN_DIFFUSE','W_m-2',swdkdif(iplon,1:nlayers+1))
+            CALL rrtmg4_export_real1('HEATING','K_day-1',swhr(iplon,1:nlayers))
+         END IF
 
 #if (WRF_CHEM == 1)
          !  Repeat call to 2-stream radiation model using "clean sky" 

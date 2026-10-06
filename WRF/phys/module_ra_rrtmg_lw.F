@@ -10677,6 +10677,8 @@ contains
       use rrtmg_lw_rtrnmc, only: rtrnmc
       use rrtmg_lw_setcoef, only: setcoef
       use rrtmg_lw_taumol, only: taumol
+      use module_rrtmg4_optics_export, only: rrtmg4_export_active, rrtmg4_export_stage, &
+           rrtmg4_export_real1, rrtmg4_export_real2, rrtmg4_export_int1
 
       implicit none
 
@@ -11072,6 +11074,36 @@ contains
               wkl, wbrodl, wx, pwvcm, inflag, iceflag, liqflag, &
               cldfmc, taucmc, ciwpmc, clwpmc, cswpmc, reicmc, relqmc, resnmc, taua)
 
+         IF(rrtmg4_export_active().AND.iplon==1) THEN
+            CALL rrtmg4_export_stage('INPUT')
+            CALL rrtmg4_export_real1('PLAY','hPa',play(iplon,1:nlayers))
+            CALL rrtmg4_export_real1('PLEV','hPa',plev(iplon,1:nlayers+1))
+            CALL rrtmg4_export_real1('TLAY','K',tlay(iplon,1:nlayers))
+            CALL rrtmg4_export_real1('TLEV','K',tlev(iplon,1:nlayers+1))
+            CALL rrtmg4_export_real1('TSFC','K',[tsfc(iplon)])
+            CALL rrtmg4_export_real1('SOLVER_PAVEL','hPa',pavel(1:nlayers))
+            CALL rrtmg4_export_real1('SOLVER_PZ','hPa',pz(0:nlayers))
+            CALL rrtmg4_export_real1('SOLVER_TAVEL','K',tavel(1:nlayers))
+            CALL rrtmg4_export_real1('SOLVER_TZ','K',tz(0:nlayers))
+            CALL rrtmg4_export_real1('SOLVER_TBOUND','K',[tbound])
+            CALL rrtmg4_export_real1('H2O_VMR','mol_mol-1',h2ovmr(iplon,1:nlayers))
+            CALL rrtmg4_export_real1('O3_VMR','mol_mol-1',o3vmr(iplon,1:nlayers))
+            CALL rrtmg4_export_real1('CO2_VMR','mol_mol-1',co2vmr(iplon,1:nlayers))
+            CALL rrtmg4_export_real1('CH4_VMR','mol_mol-1',ch4vmr(iplon,1:nlayers))
+            CALL rrtmg4_export_real1('N2O_VMR','mol_mol-1',n2ovmr(iplon,1:nlayers))
+            CALL rrtmg4_export_real1('O2_VMR','mol_mol-1',o2vmr(iplon,1:nlayers))
+            CALL rrtmg4_export_real1('CFC11_VMR','mol_mol-1',cfc11vmr(iplon,1:nlayers))
+            CALL rrtmg4_export_real1('CFC12_VMR','mol_mol-1',cfc12vmr(iplon,1:nlayers))
+            CALL rrtmg4_export_real1('CFC22_VMR','mol_mol-1',cfc22vmr(iplon,1:nlayers))
+            CALL rrtmg4_export_real1('CCl4_VMR','mol_mol-1',ccl4vmr(iplon,1:nlayers))
+            CALL rrtmg4_export_real1('SURFACE_EMISSIVITY','1',emis(iplon,1:nbndlw))
+            CALL rrtmg4_export_real1('SOLVER_SEMISS','1',semiss(1:nbndlw))
+            CALL rrtmg4_export_real1('COLDry','molecule_cm-2',coldry(1:nlayers))
+            CALL rrtmg4_export_real2('WKL_MOLECULE_COLUMNS','molecule_cm-2',wkl(:,1:nlayers))
+            CALL rrtmg4_export_real2('WX_CROSS_SECTION_COLUMNS_SCALED','molecule_cm-2_times_1e-20',wx(:,1:nlayers))
+            CALL rrtmg4_export_real1('PWVCM','cm',[pwvcm])
+         END IF
+
 !  For cloudy atmosphere, use cldprop to set cloud optical properties based on
 !  input cloud physical properties.  Select method based on choices described
 !  in cldprop.  Cloud fraction, water path, liquid droplet and ice particle
@@ -11080,6 +11112,26 @@ contains
 
          call cldprmc(nlayers, inflag, iceflag, liqflag, cldfmc, ciwpmc, &
                       clwpmc, cswpmc, reicmc, relqmc, resnmc, ncbands, taucmc)
+
+         IF(rrtmg4_export_active().AND.iplon==1) THEN
+            CALL rrtmg4_export_stage('CLOUD')
+            CALL rrtmg4_export_int1('BAND_INDEX',[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16])
+            CALL rrtmg4_export_int1('GPOINT_TO_BAND',ngb(1:ngptlw))
+            CALL rrtmg4_export_real1('BAND_WAVENUM_LO','cm-1',wavenum1(1:nbndlw))
+            CALL rrtmg4_export_real1('BAND_WAVENUM_HI','cm-1',wavenum2(1:nbndlw))
+            CALL rrtmg4_export_real2('MCICA_MASK','fraction_or_mask_as_returned',cldfmc(1:ngptlw,1:nlayers))
+            CALL rrtmg4_export_real2('CLDPRMC_TAU','optical_depth',taucmc(1:ngptlw,1:nlayers))
+            CALL rrtmg4_export_real2('CLDPRMC_LWP','g_m-2',clwpmc(1:ngptlw,1:nlayers))
+            CALL rrtmg4_export_real2('CLDPRMC_IWP','g_m-2',ciwpmc(1:ngptlw,1:nlayers))
+            CALL rrtmg4_export_real2('CLDPRMC_SWP','g_m-2',cswpmc(1:ngptlw,1:nlayers))
+            CALL rrtmg4_export_real1('CLDPRMC_RELIQ','micron',relqmc(1:nlayers))
+            CALL rrtmg4_export_real1('CLDPRMC_REICE','micron',reicmc(1:nlayers))
+            CALL rrtmg4_export_real1('CLDPRMC_RESNOW','micron',resnmc(1:nlayers))
+            CALL rrtmg4_export_int1('INFLAG',[inflag]); CALL rrtmg4_export_int1('ICEFLAG',[iceflag])
+            CALL rrtmg4_export_int1('LIQFLAG',[liqflag]); CALL rrtmg4_export_int1('ICLD',[icld])
+            CALL rrtmg4_export_real2('RRTMG_INPUT_CLOUD_MASK','cloud_fraction_or_mask',cldfmc(1:ngptlw,1:nlayers))
+            CALL rrtmg4_export_real2('RRTMG_INPUT_CLOUD_TAU','optical_depth',taucmc(1:ngptlw,1:nlayers))
+         END IF
 
 ! Calculate information needed by the radiative transfer routine
 ! that is specific to this atmosphere, especially some of the 
@@ -11127,6 +11179,14 @@ contains
             enddo
          endif
 
+         IF(rrtmg4_export_active().AND.iplon==1) THEN
+            CALL rrtmg4_export_stage('GAS')
+            CALL rrtmg4_export_real2('TAUGAS','optical_depth_gpoint_layer',TRANSPOSE(taug(1:nlayers,1:ngptlw)))
+            CALL rrtmg4_export_real2('TAUAER','optical_depth_band_layer',TRANSPOSE(taua(1:nlayers,1:nbndlw)))
+            CALL rrtmg4_export_real2('TAUTOTAL_GAS_PLUS_AEROSOL_CLOUD_EXCLUDED','optical_depth_gpoint_layer', &
+                                     TRANSPOSE(taut(1:nlayers,1:ngptlw)))
+         END IF
+
 ! Call the radiative transfer routine.
 ! Either routine can be called to do clear sky calculation.  If clouds
 ! are present, then select routine based on cloud overlap assumption
@@ -11161,6 +11221,18 @@ contains
                      pwvcm, fracs, taut, &
                      totuflux, totdflux, fnet, htr, &
                      totuclfl, totdclfl, fnetc, htrc )
+
+         IF(rrtmg4_export_active().AND.iplon==1) THEN
+            CALL rrtmg4_export_stage('RESULT')
+            CALL rrtmg4_export_real1('UP_FLUX','W_m-2',totuflux(0:nlayers))
+            CALL rrtmg4_export_real1('DOWN_FLUX','W_m-2',totdflux(0:nlayers))
+            CALL rrtmg4_export_real1('NET_FLUX','W_m-2',fnet(0:nlayers))
+            CALL rrtmg4_export_real1('HEATING','K_day-1',htr(0:nlayers))
+            CALL rrtmg4_export_real1('UP_CLEAR_FLUX','W_m-2',totuclfl(0:nlayers))
+            CALL rrtmg4_export_real1('DOWN_CLEAR_FLUX','W_m-2',totdclfl(0:nlayers))
+            CALL rrtmg4_export_real1('NET_CLEAR_FLUX','W_m-2',fnetc(0:nlayers))
+            CALL rrtmg4_export_real1('HEATING_CLEAR','K_day-1',htrc(0:nlayers))
+         END IF
 
 !  Transfer up and down fluxes and heating rate to output arrays.
 !  Vertical indexing goes from bottom to top; reverse here for GCM if necessary.
