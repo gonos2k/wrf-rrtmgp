@@ -2,6 +2,10 @@ cmake_minimum_required(VERSION 3.20)
 project(WRF_RRTMGP_COLUMN_TEST LANGUAGES Fortran)
 enable_testing()
 find_package(Python3 REQUIRED COMPONENTS Interpreter)
+if(CMAKE_Fortran_COMPILER_ID STREQUAL "GNU")
+  add_test(NAME native_hydro_snapshot COMMAND "${Python3_EXECUTABLE}"
+    "${CMAKE_CURRENT_SOURCE_DIR}/test_hydro_snapshot.py")
+endif()
 get_filename_component(WRF_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/../.." ABSOLUTE)
 add_subdirectory("${WRF_ROOT}/external/rte_rrtmgp" rte_rrtmgp)
 # Compile isolated copies so traditional WRF .mod files beside source cannot

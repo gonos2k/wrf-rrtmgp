@@ -47,3 +47,9 @@ UDM의 CF 정의, precipitation occurrence, graupel 광학과 양의 hail 미지
 누적량 검사는 DT=10초, 복사 주기 30초, 적분 120초에서 13개 history 시각의 12개 증분을 모두 검사한다. 초기 오프셋은 차분으로 상쇄하고 첫 구간도 포함한다. 매 구간 `ACC[n]-ACC[n-1]=F[n]*DT`를 확인하며 실제 flux 유지 8구간과 갱신 4구간을 포함했다. SW/LW 최대 오차는 각각 0.001526/0.000305 W·s/m²였고 첫 증분만 훼손한 음성 대조를 거부했다. restart 누적 규약은 후속 검증이다.
 
 검증 결과와 원본 빌드 manifest는 `validation/rrtmgp37/runtime-contracts/`에 보존한다. 독립 54개 시험, fresh serial WRF 빌드, UDM37 실제 capture/replay 및 같은 상태 4/37 audit를 통과했다. MPI/OpenMP 실행 판정은 별도 PR의 검증으로 남긴다.
+
+## 후속 실행 상태
+
+[CPU OpenMP와 실제 실행](CPU_OPENMP.md)에 GNU smpar의 OMP1/2 SCM, 10분 real-data MPI1/2·MPI2/OMP2, 실제 MPI 계수 누락 종료 및 직렬 SCM restart 근거를 추가했다. 두 SCM의 checkpoint와 모든 후속 누적량 증분도 연속 적분과 일치했다. 이 범위의 계약은 통과했으며, MPI restart·둥지·장시간 적분·관측 정확도는 별도 조건이다.
+
+24시간 실제 자료의 첫 37/37 시도는 음수 QI를 거부하여 종료됐다. [native 수상체 진단](NATIVE_HYDRO_DIAGNOSTICS.md)은 4번과 37번 양쪽의 복사 호출 입력을 읽기만 하며, 값과 위치를 기록한다. 현재의 엄격한 음수/hail 계약을 아직 완화하지 않았고, 작은 음수·graupel·hail·CF=0 제외량의 실제 분포를 다음 정책의 근거로 사용한다.

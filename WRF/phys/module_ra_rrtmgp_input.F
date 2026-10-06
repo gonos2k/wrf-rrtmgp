@@ -59,6 +59,7 @@ CONTAINS
     INTEGER :: n,k,p
     LOGICAL :: allow_clear,clear_column,omitted_any
     CHARACTER(LEN=8), PARAMETER :: qnames(6)=[CHARACTER(LEN=8) :: 'QC','QI','QR','QS','QG','QH']
+    CHARACTER(LEN=160) :: input_label
     INTEGER, PARAMETER :: q_to_path(6)=[RRTMGP_UDM_LIQUID,RRTMGP_UDM_ICE, &
                                         RRTMGP_UDM_RAIN,RRTMGP_UDM_SNOW, &
                                         RRTMGP_UDM_GRAUPEL,RRTMGP_UDM_HAIL]
@@ -111,7 +112,19 @@ CONTAINS
     masses(:,5) = qg
     masses(:,6) = qh
     DO p=1,6
-      CALL rrtmgp_check_nonnegative('UDM_'//TRIM(qnames(p)),RESHAPE(masses(:,p),[n,1]))
+      DO k=1,n
+        IF(.NOT.ieee_is_finite(masses(k,p))) THEN
+          CALL fail_builder_layer(reason,RRTMGP_INPUT_INVALID, &
+               'RRTMGP_INPUT_UDM_'//TRIM(qnames(p))//'_NOT_FINITE',k,column_context)
+          RETURN
+        END IF
+        IF(masses(k,p)<0.) THEN
+          WRITE(input_label,'(A,A,A,ES23.15E3)') 'RRTMGP_INPUT_UDM_',TRIM(qnames(p)), &
+                                               '_NEGATIVE value_kgkg=',REAL(masses(k,p),real64)
+          CALL fail_builder_layer(reason,RRTMGP_INPUT_RANGE,TRIM(input_label),k,column_context)
+          RETURN
+        END IF
+      END DO
     END DO
     CALL check_finite('UDM_RE_CLOUD',RESHAPE(re_cloud_um,[n,1]))
     CALL check_finite('UDM_RE_ICE',RESHAPE(re_ice_um,[n,1]))

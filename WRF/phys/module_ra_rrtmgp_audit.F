@@ -1,12 +1,17 @@
-! Opt-in serial same-host-state radiation experiment. No results feed back to WRF.
+! Opt-in observations; no results feed back to WRF. Same-state engine replay
+! remains serial-only. Native hydrometeor snapshots also support MPI/OpenMP.
 MODULE module_ra_rrtmgp_audit
   USE, INTRINSIC :: iso_fortran_env, ONLY: real64
+  USE, INTRINSIC :: ieee_arithmetic, ONLY: ieee_is_finite
 #ifdef _OPENMP
   USE omp_lib, ONLY: omp_get_max_threads
 #endif
   IMPLICIT NONE
   PRIVATE
   PUBLIC :: audit_enabled, audit_samples, audit_native4, audit_moments
+  PUBLIC :: hydro_snapshot
+  LOGICAL, SAVE :: hydro_checked=.FALSE., hydro_enabled=.FALSE.
+  CHARACTER(LEN=1024), SAVE :: hydro_directory=''
   LOGICAL, SAVE :: checked=.FALSE., enabled=.FALSE.
   INTEGER, SAVE :: nsamples=128, csv_unit=0, native4=0
   TYPE :: audit_moments
@@ -18,6 +23,115 @@ MODULE module_ra_rrtmgp_audit
     PROCEDURE :: write=>moments_write
   END TYPE
 CONTAINS
+  ! Native UDM input observation only, before either radiation wrapper can
+  ! reject or clip it. A separate file for each physical tile avoids MPI file
+  ! collisions. Critical regions protect configuration and local OpenMP I/O.
+  ! Values are never written back, and no numerical tolerance is imposed.
+  SUBROUTINE hydro_snapshot(domain,step,seconds,lw,sw,gravity, &
+                            ims,ime,kms,kme,jms,jme,its,ite,kts,kte,jts,jte, &
+                            plev,cf,qc,qi,qr,qs,qg,qh)
+    INTEGER, INTENT(IN) :: domain,step,lw,sw,ims,ime,kms,kme,jms,jme,its,ite,kts,kte,jts,jte
+    REAL, INTENT(IN) :: seconds,gravity
+    REAL, INTENT(IN) :: plev(ims:ime,kms:kme,jms:jme),cf(ims:ime,kms:kme,jms:jme)
+    REAL, INTENT(IN) :: qc(ims:ime,kms:kme,jms:jme),qi(ims:ime,kms:kme,jms:jme)
+    REAL, INTENT(IN) :: qr(ims:ime,kms:kme,jms:jme),qs(ims:ime,kms:kme,jms:jme)
+    REAL, INTENT(IN) :: qg(ims:ime,kms:kme,jms:jme),qh(ims:ime,kms:kme,jms:jme)
+    CHARACTER(LEN=8), PARAMETER :: names(6)=[CHARACTER(LEN=8)::'QC','QI','QR','QS','QG','QH']
+    CHARACTER(LEN=1400) :: filename
+    CHARACTER(LEN=160) :: tile
+    INTEGER :: stat,ios,unit,p,i,j,k,imin,jmin,kmin,nnegative,npositive,ninvalid,npathinvalid
+    REAL(real64) :: values(6),q,qmin,qmax,wp,dp,sumpositive,maxpositive,clearpath,negativepath
+    LOGICAL :: exists
+    !$OMP CRITICAL(rrtmgp_hydro_configuration)
+    IF(.NOT.hydro_checked) THEN
+      CALL get_environment_variable('WRF_RRTMGP_HYDRO_DIAG_DIR',hydro_directory,STATUS=stat)
+      hydro_enabled=stat==0.AND.LEN_TRIM(hydro_directory)>0
+      IF(hydro_enabled) THEN
+        INQUIRE(FILE=TRIM(hydro_directory)//'/.',EXIST=exists)
+        IF(.NOT.exists) CALL wrf_error_fatal('RRTMGP_HYDRO_DIAG_DIRECTORY_NOT_FOUND')
+      END IF
+      hydro_checked=.TRUE.
+    END IF
+    !$OMP END CRITICAL(rrtmgp_hydro_configuration)
+    IF(.NOT.hydro_enabled) RETURN
+    IF(its>ite.OR.jts>jte.OR.kts>kte) RETURN
+    IF(its<ims.OR.ite>ime.OR.jts<jms.OR.jte>jme.OR.kts<kms.OR.kte+1>kme) &
+      CALL wrf_error_fatal('RRTMGP_HYDRO_DIAG_INVALID_BOUNDS')
+    IF(.NOT.ieee_is_finite(gravity).OR.gravity<=0.) &
+      CALL wrf_error_fatal('RRTMGP_HYDRO_DIAG_INVALID_GRAVITY')
+    WRITE(tile,'(A,I0,A,I0,A,I0,A,I0,A,I0)') 'd',domain,'_i',its,'-',ite,'_j',jts,'-',jte
+    filename=TRIM(hydro_directory)//'/hydro_'//TRIM(tile)//'.csv'
+    !$OMP CRITICAL(rrtmgp_hydro_output)
+    INQUIRE(FILE=TRIM(filename),EXIST=exists)
+    OPEN(NEWUNIT=unit,FILE=TRIM(filename),STATUS='unknown',POSITION='append',ACTION='write',IOSTAT=ios)
+    IF(ios/=0) CALL wrf_error_fatal('RRTMGP_HYDRO_DIAG_OPEN_FAILED')
+    IF(.NOT.exists) THEN
+      WRITE(unit,'(A)',IOSTAT=ios) &
+        'kind,domain,step,seconds,lw,sw,species,negative_count,positive_count,nonfinite_count,path_invalid_count,min_q_kgkg,max_q_kgkg,min_i,min_j,min_k,sum_positive_path_gm2,max_positive_path_gm2,cf0_positive_path_gm2,sum_negative_path_gm2'
+      IF(ios/=0) CALL wrf_error_fatal('RRTMGP_HYDRO_DIAG_WRITE_FAILED')
+    END IF
+    DO p=1,6
+      nnegative=0; npositive=0; ninvalid=0; npathinvalid=0
+      qmin=HUGE(0._real64); qmax=-HUGE(0._real64)
+      imin=0; jmin=0; kmin=0
+      sumpositive=0; maxpositive=0; clearpath=0; negativepath=0
+      DO j=jts,jte
+        DO k=kts,kte
+          DO i=its,ite
+            values=REAL([qc(i,k,j),qi(i,k,j),qr(i,k,j),qs(i,k,j),qg(i,k,j),qh(i,k,j)],real64)
+            q=values(p)
+            IF(.NOT.ieee_is_finite(q)) THEN
+              ninvalid=ninvalid+1
+              CYCLE
+            END IF
+            IF(q<qmin) THEN
+              qmin=q; imin=i; jmin=j; kmin=k
+            END IF
+            qmax=MAX(qmax,q)
+            IF(q<0._real64) nnegative=nnegative+1
+            IF(q>0._real64) npositive=npositive+1
+            dp=REAL(plev(i,k,j),real64)-REAL(plev(i,k+1,j),real64)
+            wp=0._real64
+            IF(.NOT.ieee_is_finite(dp).OR.dp<=0._real64) THEN
+              npathinvalid=npathinvalid+1
+            ELSE
+              wp=q*dp/REAL(gravity,real64)*1000._real64
+              IF(q>0._real64) THEN
+                sumpositive=sumpositive+wp; maxpositive=MAX(maxpositive,wp)
+                IF(cf(i,k,j)==0.) clearpath=clearpath+wp
+              ELSE IF(q<0._real64) THEN
+                negativepath=negativepath+wp
+              END IF
+            END IF
+            ! Every negative, including its actual WRF indices, is preserved.
+            IF(q<0._real64) THEN
+              CALL write_row('negative',1,0,0,0,q,q,i,j,k,0._real64,0._real64,0._real64,wp)
+            END IF
+          END DO
+        END DO
+      END DO
+      IF(ninvalid==(ite-its+1)*(jte-jts+1)*(kte-kts+1)) THEN
+        qmin=0._real64; qmax=0._real64 ! Counts identify the absence of finite extrema.
+      END IF
+      CALL write_row('summary',nnegative,npositive,ninvalid,npathinvalid,qmin,qmax,imin,jmin,kmin, &
+                     sumpositive,maxpositive,clearpath,negativepath)
+    END DO
+    FLUSH(unit,IOSTAT=ios)
+    IF(ios/=0) CALL wrf_error_fatal('RRTMGP_HYDRO_DIAG_FLUSH_FAILED')
+    CLOSE(unit,IOSTAT=ios)
+    IF(ios/=0) CALL wrf_error_fatal('RRTMGP_HYDRO_DIAG_CLOSE_FAILED')
+    !$OMP END CRITICAL(rrtmgp_hydro_output)
+  CONTAINS
+    SUBROUTINE write_row(kind,nn,np,nf,nd,lo,hi,ii,jj,kk,total,peak,clear,neg)
+      CHARACTER(LEN=*), INTENT(IN) :: kind
+      INTEGER, INTENT(IN) :: nn,np,nf,nd,ii,jj,kk
+      REAL(real64), INTENT(IN) :: lo,hi,total,peak,clear,neg
+      WRITE(unit,'(A,2(",",I0),",",ES23.15E3,2(",",I0),",",A,4(",",I0),2(",",ES23.15E3),3(",",I0),4(",",ES23.15E3))',IOSTAT=ios) &
+        kind,domain,step,REAL(seconds,real64),lw,sw,TRIM(names(p)),nn,np,nf,nd,lo,hi,ii,jj,kk,total,peak,clear,neg
+      IF(ios/=0) CALL wrf_error_fatal('RRTMGP_HYDRO_DIAG_WRITE_FAILED')
+    END SUBROUTINE write_row
+  END SUBROUTINE hydro_snapshot
+
   LOGICAL FUNCTION audit_enabled()
     CHARACTER(LEN=1024) :: path,value
     INTEGER :: stat,ios

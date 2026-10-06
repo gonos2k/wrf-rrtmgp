@@ -1,0 +1,832 @@
+{
+  "case": "NCAR WRF developer test 2010061100 (official test dataset; 20-km Lambert grid; 289x189 unstaggered, 27 metgrid levels)",
+  "purpose": "24-hour RRTMG4 vs RRTMGP37 UDM27 real-data comparison attempt; no observational-accuracy claim",
+  "comparison_status": "INCOMPLETE: RRTMGP37 terminated at its first 10-minute radiation call due to strict negative-QI validation; only common initialization output can be compared",
+  "source": {
+    "isolated_wrf_base_commit": "1fef0f414285d2bbb1a1014dab7c94faf9b481b9",
+    "authoritative_pr_checkout_commit": "ca33525ad69af58302608d93362a83e698f37698",
+    "built_binary_sha256": "ab2d648284d54ff2b0ff3c90e738e3f91f31169b9677190096c7fc9231c08424",
+    "build_log": "build/mpi-wrf-udm-contracts/build-em_real-final.log",
+    "executable_freeze_receipt": "build/udm-realdata-24h/executable-freeze-receipt.json"
+  },
+  "setup": {
+    "start": "2010-06-11_00:00:00 UTC",
+    "end": "2010-06-12_00:00:00 UTC",
+    "requested_run_hours": 24,
+    "time_step_seconds": 60,
+    "radiation_timestep_minutes": 10,
+    "history_interval_minutes": 60,
+    "microphysics": {
+      "mp_physics": 27,
+      "use_mp_re": 1
+    },
+    "common_options": {
+      "num_land_cat": 24,
+      "aer_opt": 0,
+      "cldovrlp": 2,
+      "swint_opt": 0
+    },
+    "radiation_options": {
+      "ra4": [
+        4,
+        4
+      ],
+      "ra37": [
+        37,
+        37
+      ]
+    },
+    "mpi_ranks": 4,
+    "omp_threads": 1,
+    "namelist_diff": "Only ra_lw_physics and ra_sw_physics differ between the two 24-hour case namelists; run duration/history settings are identical."
+  },
+  "input_hashes": {
+    "wrfinput_d01_sha256": "5ef7abe34c516fba107f346bdbdb3777edacb5d48493df467ea2dd8bcf6a75ff",
+    "wrfbdy_d01_sha256": "e687b73730ab9a2cee4842e1a92b225a4edb074ba080b6053d96d81ec1731a2d",
+    "same_byte_identical_inputs_for_both_cases": true
+  },
+  "ra4": {
+    "status": "SUCCESS COMPLETE WRF",
+    "exit_code": 0,
+    "mpi_ranks_completed": 4,
+    "success_marker_count_in_rank_logs": 8,
+    "final_time": "2010-06-12_00:00:00",
+    "expected_and_observed_hourly_history_records": 25,
+    "all_201_numeric_variables_finite_for_all_25_records": true,
+    "nonfinite_variables": [],
+    "hydrometeor_hourly_output_statistics_only": {
+      "QCLOUD": {
+        "min": {
+          "value": -2.2350822491832754e-16,
+          "time": "2010-06-11_16:00:00",
+          "wrf_indices_1based": {
+            "time": 1,
+            "bottom_top_k": 8,
+            "south_north_j": 1,
+            "west_east_i": 27
+          }
+        },
+        "max": {
+          "value": 0.0022773207165300846,
+          "time": "2010-06-11_12:00:00",
+          "wrf_indices_1based": {
+            "time": 1,
+            "bottom_top_k": 13,
+            "south_north_j": 83,
+            "west_east_i": 168
+          }
+        },
+        "negative_count": 725,
+        "positive_count": 942771,
+        "zero_count": 52311979
+      },
+      "QRAIN": {
+        "min": {
+          "value": -2.599493928421323e-15,
+          "time": "2010-06-11_06:00:00",
+          "wrf_indices_1based": {
+            "time": 1,
+            "bottom_top_k": 1,
+            "south_north_j": 1,
+            "west_east_i": 138
+          }
+        },
+        "max": {
+          "value": 0.004191657528281212,
+          "time": "2010-06-11_14:00:00",
+          "wrf_indices_1based": {
+            "time": 1,
+            "bottom_top_k": 13,
+            "south_north_j": 129,
+            "west_east_i": 144
+          }
+        },
+        "negative_count": 1018,
+        "positive_count": 3328554,
+        "zero_count": 49925903
+      },
+      "QICE": {
+        "min": {
+          "value": -5.35468208402029e-14,
+          "time": "2010-06-11_18:00:00",
+          "wrf_indices_1based": {
+            "time": 1,
+            "bottom_top_k": 10,
+            "south_north_j": 189,
+            "west_east_i": 105
+          }
+        },
+        "max": {
+          "value": 0.0003527756780385971,
+          "time": "2010-06-11_20:00:00",
+          "wrf_indices_1based": {
+            "time": 1,
+            "bottom_top_k": 22,
+            "south_north_j": 20,
+            "west_east_i": 132
+          }
+        },
+        "negative_count": 1138,
+        "positive_count": 3941785,
+        "zero_count": 49312552
+      },
+      "QSNOW": {
+        "min": {
+          "value": -3.1831640188301202e-12,
+          "time": "2010-06-11_10:00:00",
+          "wrf_indices_1based": {
+            "time": 1,
+            "bottom_top_k": 9,
+            "south_north_j": 189,
+            "west_east_i": 89
+          }
+        },
+        "max": {
+          "value": 0.0038495894987136126,
+          "time": "2010-06-11_17:00:00",
+          "wrf_indices_1based": {
+            "time": 1,
+            "bottom_top_k": 21,
+            "south_north_j": 137,
+            "west_east_i": 154
+          }
+        },
+        "negative_count": 521,
+        "positive_count": 12703995,
+        "zero_count": 40550959
+      },
+      "QGRAUP": {
+        "min": {
+          "value": -1.7713996885227795e-20,
+          "time": "2010-06-11_19:00:00",
+          "wrf_indices_1based": {
+            "time": 1,
+            "bottom_top_k": 16,
+            "south_north_j": 189,
+            "west_east_i": 249
+          }
+        },
+        "max": {
+          "value": 0.0019911357667297125,
+          "time": "2010-06-11_16:00:00",
+          "wrf_indices_1based": {
+            "time": 1,
+            "bottom_top_k": 18,
+            "south_north_j": 133,
+            "west_east_i": 169
+          }
+        },
+        "negative_count": 208,
+        "positive_count": 12379835,
+        "zero_count": 40875432
+      },
+      "QHAIL": {
+        "min": {
+          "value": -8.920796470229267e-24,
+          "time": "2010-06-11_01:00:00",
+          "wrf_indices_1based": {
+            "time": 1,
+            "bottom_top_k": 10,
+            "south_north_j": 189,
+            "west_east_i": 81
+          }
+        },
+        "max": {
+          "value": 0.0030278516933321953,
+          "time": "2010-06-11_12:00:00",
+          "wrf_indices_1based": {
+            "time": 1,
+            "bottom_top_k": 14,
+            "south_north_j": 127,
+            "west_east_i": 139
+          }
+        },
+        "negative_count": 90,
+        "positive_count": 12486346,
+        "zero_count": 40769039
+      }
+    },
+    "radiative_flux_ranges_W_m2": {
+      "SWDOWN": {
+        "min": {
+          "value": 0.0,
+          "time": "2010-06-11_00:00:00"
+        },
+        "max": {
+          "value": 1145.0504150390625,
+          "time": "2010-06-11_20:00:00"
+        }
+      },
+      "GLW": {
+        "min": {
+          "value": 0.0,
+          "time": "2010-06-11_00:00:00"
+        },
+        "max": {
+          "value": 471.7196960449219,
+          "time": "2010-06-11_20:00:00"
+        }
+      },
+      "SWUPT": {
+        "min": {
+          "value": 0.0,
+          "time": "2010-06-11_00:00:00"
+        },
+        "max": {
+          "value": 992.1586303710938,
+          "time": "2010-06-11_18:00:00"
+        }
+      },
+      "SWDNT": {
+        "min": {
+          "value": 0.0,
+          "time": "2010-06-11_00:00:00"
+        },
+        "max": {
+          "value": 1327.531005859375,
+          "time": "2010-06-11_17:00:00"
+        }
+      },
+      "SWUPB": {
+        "min": {
+          "value": 0.0,
+          "time": "2010-06-11_00:00:00"
+        },
+        "max": {
+          "value": 765.6765747070312,
+          "time": "2010-06-11_20:00:00"
+        }
+      },
+      "SWDNB": {
+        "min": {
+          "value": 0.0,
+          "time": "2010-06-11_00:00:00"
+        },
+        "max": {
+          "value": 1145.05029296875,
+          "time": "2010-06-11_20:00:00"
+        }
+      },
+      "LWUPT": {
+        "min": {
+          "value": 0.0,
+          "time": "2010-06-11_00:00:00"
+        },
+        "max": {
+          "value": 355.9012756347656,
+          "time": "2010-06-11_20:00:00"
+        }
+      },
+      "LWDNT": {
+        "min": {
+          "value": 0.0,
+          "time": "2010-06-11_00:00:00"
+        },
+        "max": {
+          "value": 0.0,
+          "time": "2010-06-11_00:00:00"
+        }
+      },
+      "LWDNB": {
+        "min": {
+          "value": 0.0,
+          "time": "2010-06-11_00:00:00"
+        },
+        "max": {
+          "value": 471.7196960449219,
+          "time": "2010-06-11_20:00:00"
+        }
+      },
+      "OLR": {
+        "min": {
+          "value": 0.0,
+          "time": "2010-06-11_00:00:00"
+        },
+        "max": {
+          "value": 355.9012756347656,
+          "time": "2010-06-11_20:00:00"
+        }
+      }
+    },
+    "files": {
+      "build/udm-realdata-24h/ra4/wrfout_d01_2010-06-11_00:00:00": {
+        "sha256": "c8e0d9c463462b416dd171cb9c0e1b5e307e74510cb13eb36714f7c67f654932",
+        "bytes": 55368657
+      },
+      "build/udm-realdata-24h/ra4/wrfout_d01_2010-06-11_01:00:00": {
+        "sha256": "d7b519afd99efb6fbc8ffb8aca14f643ab64f16be779ae5a3e048cd2eec7073b",
+        "bytes": 75607558
+      },
+      "build/udm-realdata-24h/ra4/wrfout_d01_2010-06-11_02:00:00": {
+        "sha256": "02ebe956edb0ab6f1a60e52500c9f306308fe625ac58e582c1bb13d54ae51153",
+        "bytes": 77660776
+      },
+      "build/udm-realdata-24h/ra4/wrfout_d01_2010-06-11_03:00:00": {
+        "sha256": "358e8906b36652c1dc3b1ca93e4f88edfb191f8bbadfe45fcc2eb28cf1f0967b",
+        "bytes": 78171742
+      },
+      "build/udm-realdata-24h/ra4/wrfout_d01_2010-06-11_04:00:00": {
+        "sha256": "b9e7c96f7e33869a13f0abc8aebd994436b4746ce2502c91ab765bb4f9cd18db",
+        "bytes": 78671844
+      },
+      "build/udm-realdata-24h/ra4/wrfout_d01_2010-06-11_05:00:00": {
+        "sha256": "870261c9690a190f0f95c63fcc3b5260ecab5a44df8aadbb2e54f9d9d0a277e3",
+        "bytes": 78881621
+      },
+      "build/udm-realdata-24h/ra4/wrfout_d01_2010-06-11_06:00:00": {
+        "sha256": "8de10cf7e1fd7003edfc9c4eb97175f79d78fc4aa6fce16929d9af11484c8a88",
+        "bytes": 79078571
+      },
+      "build/udm-realdata-24h/ra4/wrfout_d01_2010-06-11_07:00:00": {
+        "sha256": "6d9b813f7f37e59a66d30bfd0b67c12c17a770b140df19824a02fa964aed2ed5",
+        "bytes": 79617220
+      },
+      "build/udm-realdata-24h/ra4/wrfout_d01_2010-06-11_08:00:00": {
+        "sha256": "affce602f0211c88efad0fae797f5698867e9f9dbfe89e72f8a6ffa8a471b854",
+        "bytes": 79844201
+      },
+      "build/udm-realdata-24h/ra4/wrfout_d01_2010-06-11_09:00:00": {
+        "sha256": "0873b3b0e4a8b9d66868ff0045cd7c5536e8f97a3dbe4ef4fe083a8a627e946c",
+        "bytes": 80111266
+      },
+      "build/udm-realdata-24h/ra4/wrfout_d01_2010-06-11_10:00:00": {
+        "sha256": "0f5429282f0d4e803eaa862b2500b0cef10e950f5867da1a48cd5122b9837a41",
+        "bytes": 80729778
+      },
+      "build/udm-realdata-24h/ra4/wrfout_d01_2010-06-11_11:00:00": {
+        "sha256": "c1f10db8c837c5dc00d5591e2ea86d49a174dc864765ea845a91b0a3122bcd9a",
+        "bytes": 81364541
+      },
+      "build/udm-realdata-24h/ra4/wrfout_d01_2010-06-11_12:00:00": {
+        "sha256": "d5d20a6aa9403bdfcfad9a89c3b944947494b848d365dd370f2cbc7632a14e55",
+        "bytes": 81807695
+      },
+      "build/udm-realdata-24h/ra4/wrfout_d01_2010-06-11_13:00:00": {
+        "sha256": "01960f788f90438ed044c0b34326b8909ffebe00b5e6f4f71143beec9a23aeae",
+        "bytes": 82241054
+      },
+      "build/udm-realdata-24h/ra4/wrfout_d01_2010-06-11_14:00:00": {
+        "sha256": "42a1fe129ca9732808f204f278844a4264d73f0cff8420fbf3c70b097e915752",
+        "bytes": 82343562
+      },
+      "build/udm-realdata-24h/ra4/wrfout_d01_2010-06-11_15:00:00": {
+        "sha256": "c2bd9ccc98ac2c3c3af80c91fbba8ca2843cd42381cfcf187f95cc92e12d1207",
+        "bytes": 82236338
+      },
+      "build/udm-realdata-24h/ra4/wrfout_d01_2010-06-11_16:00:00": {
+        "sha256": "387eb7d62dd0d9b7531c68cf6cf32b57291ded775b83027d33d85135cdf111b8",
+        "bytes": 82297617
+      },
+      "build/udm-realdata-24h/ra4/wrfout_d01_2010-06-11_17:00:00": {
+        "sha256": "947c54dad117e0e42ee8d4019c03ce81ca06462ac62efcbe97c65d816ce12ece",
+        "bytes": 82418887
+      },
+      "build/udm-realdata-24h/ra4/wrfout_d01_2010-06-11_18:00:00": {
+        "sha256": "47b0267811f2bba7954f7594e2511649f1e4bc9ee2ce7b0ad649e1d8a0e2ff7c",
+        "bytes": 82629341
+      },
+      "build/udm-realdata-24h/ra4/wrfout_d01_2010-06-11_19:00:00": {
+        "sha256": "90b5486513512a5cf1d12a7dc642ccc92e992eee42c5370ffd8c429e2ba5370a",
+        "bytes": 82746988
+      },
+      "build/udm-realdata-24h/ra4/wrfout_d01_2010-06-11_20:00:00": {
+        "sha256": "8793bbd9057c271d0a716f8abd9ade2cf2d7244983b180ff0998c5bf730bf1f1",
+        "bytes": 82820501
+      },
+      "build/udm-realdata-24h/ra4/wrfout_d01_2010-06-11_21:00:00": {
+        "sha256": "af5eb6eb558f4e9a3909eb391f50d9cb66707f4f2047346970cb278b4dfcff88",
+        "bytes": 82772606
+      },
+      "build/udm-realdata-24h/ra4/wrfout_d01_2010-06-11_22:00:00": {
+        "sha256": "e4746312787bed2a1096c5485fce6e1ab9f220bf251a6a892b0151255fe8eda1",
+        "bytes": 82696769
+      },
+      "build/udm-realdata-24h/ra4/wrfout_d01_2010-06-11_23:00:00": {
+        "sha256": "2fca86b42c2edced40dfa4e115a74aaaa783a1da917d3a864b95a9dbc337ca11",
+        "bytes": 82752709
+      },
+      "build/udm-realdata-24h/ra4/wrfout_d01_2010-06-12_00:00:00": {
+        "sha256": "c90b71526475349a4eaf49b075db34f4feffc35d3bf7e733782a41b63358e23c",
+        "bytes": 82509680
+      },
+      "build/udm-realdata-24h/ra4/rsl.out.0000": {
+        "sha256": "36a0e5776615051547097b88321b4a6dced7490b85e2018d5717bf6501121a97",
+        "bytes": 126964
+      },
+      "build/udm-realdata-24h/ra4/rsl.out.0001": {
+        "sha256": "f0fb84122d1d564865bb207ec950a34c718b2f0e5ef19f127d19d8f7efbc5a2d",
+        "bytes": 2386
+      },
+      "build/udm-realdata-24h/ra4/rsl.out.0002": {
+        "sha256": "b0a1107c88db867d2c7130aaea049f8e218c6c1fa334b43191353d9f7c117258",
+        "bytes": 2386
+      },
+      "build/udm-realdata-24h/ra4/rsl.out.0003": {
+        "sha256": "5abd754e7d090c267e530e3a9437b0860eaaa1dc663bac4a91e7aef0a825045c",
+        "bytes": 2386
+      },
+      "build/udm-realdata-24h/ra4/rsl.error.0000": {
+        "sha256": "e09442a7c10e0a34e210cc1dc84a3515eaeef688857dd8c428375ccd34f23ef1",
+        "bytes": 130276
+      },
+      "build/udm-realdata-24h/ra4/rsl.error.0001": {
+        "sha256": "8486764004963f56e6182f33c1152a3f1e5ff0ff4a7113da07590cef0eb35ab8",
+        "bytes": 5698
+      },
+      "build/udm-realdata-24h/ra4/rsl.error.0002": {
+        "sha256": "b28df7177af837ccdd37a651616d59124184338e63bd4aefb2c0f19aef59f7ba",
+        "bytes": 5698
+      },
+      "build/udm-realdata-24h/ra4/rsl.error.0003": {
+        "sha256": "c313792b0f5dde86b3a52e1a36609eb4d5ced68218f63a8eef238d35fc993042",
+        "bytes": 5698
+      },
+      "build/udm-realdata-24h/ra4/wrf-mpi4-omp1.log": {
+        "sha256": "4c465e4d62650b7b95cabd344a738f68f57e81f61df907bfe3d40c770ce12460",
+        "bytes": 196
+      },
+      "build/udm-realdata-24h/ra4/namelist.input": {
+        "sha256": "f2ddee8a19bbfa842ee67baa94c8b06f27e4776147fd8f97d21e40493cd11554",
+        "bytes": 5489
+      },
+      "build/udm-realdata-24h/ra4/wrfinput_d01": {
+        "sha256": "5ef7abe34c516fba107f346bdbdb3777edacb5d48493df467ea2dd8bcf6a75ff",
+        "bytes": 59605892
+      },
+      "build/udm-realdata-24h/ra4/wrfbdy_d01": {
+        "sha256": "e687b73730ab9a2cee4842e1a92b225a4edb074ba080b6053d96d81ec1731a2d",
+        "bytes": 23384921
+      },
+      "build/udm-realdata-24h/ra4/wrf.exe": {
+        "sha256": "ab2d648284d54ff2b0ff3c90e738e3f91f31169b9677190096c7fc9231c08424",
+        "bytes": 58522096
+      }
+    }
+  },
+  "ra37": {
+    "status": "FATAL at first radiation call after 2010-06-11_00:10:00 UTC integration step",
+    "exit_code": 1,
+    "mpi_ranks": 4,
+    "fatal": "RRTMGP_INPUT_UDM_QI_NEGATIVE at column=22 layer=1; rank 1 called MPI_Abort",
+    "numeric_q_value_in_original_run_log": null,
+    "followup_opt_in_diagnostic": "Separate diagnostic run reported QI=-2.88789e-35 kg/kg at model grid i=217,j=1,k=22; this value was not emitted by the original run logging path.",
+    "files": {
+      "build/udm-realdata-24h/ra37/wrfout_d01_2010-06-11_00:00:00": {
+        "sha256": "7d14db3fdbbb752160fa459ef711965af91ceaf8e70b8e3977b4ba7c6e1496d1",
+        "bytes": 55427518
+      },
+      "build/udm-realdata-24h/ra37/rsl.out.0000": {
+        "sha256": "4a247b77931cc586182787b7750845b18efe73a511083dcfeff5eb0fc551eecd",
+        "bytes": 4097
+      },
+      "build/udm-realdata-24h/ra37/rsl.out.0001": {
+        "sha256": "ffd46a690987c2088177c6b48ea9bdeeecceb3897b7e58f1f4ab872ef48d8261",
+        "bytes": 2498
+      },
+      "build/udm-realdata-24h/ra37/rsl.out.0002": {
+        "sha256": "290e16bffa8887873a800d4a4a8b35c033a10deb33d90f61c4a86ed6cff123c4",
+        "bytes": 2360
+      },
+      "build/udm-realdata-24h/ra37/rsl.out.0003": {
+        "sha256": "b2dfef6ccd26bbc451a7088a993b51647bc34030aa5885423aefc0756527e427",
+        "bytes": 2360
+      },
+      "build/udm-realdata-24h/ra37/rsl.error.0000": {
+        "sha256": "0c918caee7a8c920724a4998fb011f4435245b729effed2bf749d59b74e805bb",
+        "bytes": 4265
+      },
+      "build/udm-realdata-24h/ra37/rsl.error.0001": {
+        "sha256": "c9a07f0fce923cd0311e690aa7c8b75afb5de227dcd73442d5912c2c5bcdcca5",
+        "bytes": 2726
+      },
+      "build/udm-realdata-24h/ra37/rsl.error.0002": {
+        "sha256": "a95da2e7f07e5f940cb97151080745135e2484b97c7d20be18341d3d4f55941a",
+        "bytes": 2528
+      },
+      "build/udm-realdata-24h/ra37/rsl.error.0003": {
+        "sha256": "efe6f70cbb375856d7259d1555fab858290abb8c6cd3559bbcdcd65be474ae5f",
+        "bytes": 2528
+      },
+      "build/udm-realdata-24h/ra37/wrf-mpi4-omp1.log": {
+        "sha256": "4c465e4d62650b7b95cabd344a738f68f57e81f61df907bfe3d40c770ce12460",
+        "bytes": 196
+      },
+      "build/udm-realdata-24h/ra37/namelist.input": {
+        "sha256": "10a422416067275f2d61ef091fc865a38ffd97ffbbc096afb7cd50dc872965d4",
+        "bytes": 5495
+      },
+      "build/udm-realdata-24h/ra37/wrfinput_d01": {
+        "sha256": "5ef7abe34c516fba107f346bdbdb3777edacb5d48493df467ea2dd8bcf6a75ff",
+        "bytes": 59605892
+      },
+      "build/udm-realdata-24h/ra37/wrfbdy_d01": {
+        "sha256": "e687b73730ab9a2cee4842e1a92b225a4edb074ba080b6053d96d81ec1731a2d",
+        "bytes": 23384921
+      },
+      "build/udm-realdata-24h/ra37/wrf.exe": {
+        "sha256": "ab2d648284d54ff2b0ff3c90e738e3f91f31169b9677190096c7fc9231c08424",
+        "bytes": 58522096
+      }
+    }
+  },
+  "shared_initial_output_comparison": {
+    "time": "2010-06-11_00:00:00 UTC",
+    "result": "identical",
+    "numeric_arrays": 201,
+    "bitwise_equal_arrays": 201,
+    "different_arrays": 0,
+    "interpretation": "Initialization snapshot only; not a radiation comparison after integration."
+  },
+  "limits": [
+    "No 24-hour RRTMGP37 trajectory exists because the production validator correctly stopped on negative QI; no post-failure restart or threshold bypass was attempted.",
+    "Hydrometeor negative counts and extrema describe hourly RRTMG4 history outputs only, not sub-hourly inputs to the failing RRTMGP call.",
+    "Hourly sampling is not sufficient to infer sign or extrema at every microphysics/radiation call.",
+    "This official developer case is a reproducibility/stability run, not an independent observational validation."
+  ],
+  "ra4_history_manifest": {
+    "times": [
+      "2010-06-11_00:00:00",
+      "2010-06-11_01:00:00",
+      "2010-06-11_02:00:00",
+      "2010-06-11_03:00:00",
+      "2010-06-11_04:00:00",
+      "2010-06-11_05:00:00",
+      "2010-06-11_06:00:00",
+      "2010-06-11_07:00:00",
+      "2010-06-11_08:00:00",
+      "2010-06-11_09:00:00",
+      "2010-06-11_10:00:00",
+      "2010-06-11_11:00:00",
+      "2010-06-11_12:00:00",
+      "2010-06-11_13:00:00",
+      "2010-06-11_14:00:00",
+      "2010-06-11_15:00:00",
+      "2010-06-11_16:00:00",
+      "2010-06-11_17:00:00",
+      "2010-06-11_18:00:00",
+      "2010-06-11_19:00:00",
+      "2010-06-11_20:00:00",
+      "2010-06-11_21:00:00",
+      "2010-06-11_22:00:00",
+      "2010-06-11_23:00:00",
+      "2010-06-12_00:00:00"
+    ],
+    "numeric_variable_count": 201,
+    "all_numeric_finite": true,
+    "nonfinite": [],
+    "hydrometeors": {
+      "QCLOUD": {
+        "min": {
+          "value": -2.2350822491832754e-16,
+          "time": "2010-06-11_16:00:00",
+          "wrf_indices_1based": {
+            "time": 1,
+            "bottom_top_k": 8,
+            "south_north_j": 1,
+            "west_east_i": 27
+          }
+        },
+        "max": {
+          "value": 0.0022773207165300846,
+          "time": "2010-06-11_12:00:00",
+          "wrf_indices_1based": {
+            "time": 1,
+            "bottom_top_k": 13,
+            "south_north_j": 83,
+            "west_east_i": 168
+          }
+        },
+        "negative_count": 725,
+        "positive_count": 942771,
+        "zero_count": 52311979
+      },
+      "QRAIN": {
+        "min": {
+          "value": -2.599493928421323e-15,
+          "time": "2010-06-11_06:00:00",
+          "wrf_indices_1based": {
+            "time": 1,
+            "bottom_top_k": 1,
+            "south_north_j": 1,
+            "west_east_i": 138
+          }
+        },
+        "max": {
+          "value": 0.004191657528281212,
+          "time": "2010-06-11_14:00:00",
+          "wrf_indices_1based": {
+            "time": 1,
+            "bottom_top_k": 13,
+            "south_north_j": 129,
+            "west_east_i": 144
+          }
+        },
+        "negative_count": 1018,
+        "positive_count": 3328554,
+        "zero_count": 49925903
+      },
+      "QICE": {
+        "min": {
+          "value": -5.35468208402029e-14,
+          "time": "2010-06-11_18:00:00",
+          "wrf_indices_1based": {
+            "time": 1,
+            "bottom_top_k": 10,
+            "south_north_j": 189,
+            "west_east_i": 105
+          }
+        },
+        "max": {
+          "value": 0.0003527756780385971,
+          "time": "2010-06-11_20:00:00",
+          "wrf_indices_1based": {
+            "time": 1,
+            "bottom_top_k": 22,
+            "south_north_j": 20,
+            "west_east_i": 132
+          }
+        },
+        "negative_count": 1138,
+        "positive_count": 3941785,
+        "zero_count": 49312552
+      },
+      "QSNOW": {
+        "min": {
+          "value": -3.1831640188301202e-12,
+          "time": "2010-06-11_10:00:00",
+          "wrf_indices_1based": {
+            "time": 1,
+            "bottom_top_k": 9,
+            "south_north_j": 189,
+            "west_east_i": 89
+          }
+        },
+        "max": {
+          "value": 0.0038495894987136126,
+          "time": "2010-06-11_17:00:00",
+          "wrf_indices_1based": {
+            "time": 1,
+            "bottom_top_k": 21,
+            "south_north_j": 137,
+            "west_east_i": 154
+          }
+        },
+        "negative_count": 521,
+        "positive_count": 12703995,
+        "zero_count": 40550959
+      },
+      "QGRAUP": {
+        "min": {
+          "value": -1.7713996885227795e-20,
+          "time": "2010-06-11_19:00:00",
+          "wrf_indices_1based": {
+            "time": 1,
+            "bottom_top_k": 16,
+            "south_north_j": 189,
+            "west_east_i": 249
+          }
+        },
+        "max": {
+          "value": 0.0019911357667297125,
+          "time": "2010-06-11_16:00:00",
+          "wrf_indices_1based": {
+            "time": 1,
+            "bottom_top_k": 18,
+            "south_north_j": 133,
+            "west_east_i": 169
+          }
+        },
+        "negative_count": 208,
+        "positive_count": 12379835,
+        "zero_count": 40875432
+      },
+      "QHAIL": {
+        "min": {
+          "value": -8.920796470229267e-24,
+          "time": "2010-06-11_01:00:00",
+          "wrf_indices_1based": {
+            "time": 1,
+            "bottom_top_k": 10,
+            "south_north_j": 189,
+            "west_east_i": 81
+          }
+        },
+        "max": {
+          "value": 0.0030278516933321953,
+          "time": "2010-06-11_12:00:00",
+          "wrf_indices_1based": {
+            "time": 1,
+            "bottom_top_k": 14,
+            "south_north_j": 127,
+            "west_east_i": 139
+          }
+        },
+        "negative_count": 90,
+        "positive_count": 12486346,
+        "zero_count": 40769039
+      }
+    },
+    "fields": {
+      "SWDOWN": {
+        "min": {
+          "value": 0.0,
+          "time": "2010-06-11_00:00:00"
+        },
+        "max": {
+          "value": 1145.0504150390625,
+          "time": "2010-06-11_20:00:00"
+        }
+      },
+      "GLW": {
+        "min": {
+          "value": 0.0,
+          "time": "2010-06-11_00:00:00"
+        },
+        "max": {
+          "value": 471.7196960449219,
+          "time": "2010-06-11_20:00:00"
+        }
+      },
+      "SWUPT": {
+        "min": {
+          "value": 0.0,
+          "time": "2010-06-11_00:00:00"
+        },
+        "max": {
+          "value": 992.1586303710938,
+          "time": "2010-06-11_18:00:00"
+        }
+      },
+      "SWDNT": {
+        "min": {
+          "value": 0.0,
+          "time": "2010-06-11_00:00:00"
+        },
+        "max": {
+          "value": 1327.531005859375,
+          "time": "2010-06-11_17:00:00"
+        }
+      },
+      "SWUPB": {
+        "min": {
+          "value": 0.0,
+          "time": "2010-06-11_00:00:00"
+        },
+        "max": {
+          "value": 765.6765747070312,
+          "time": "2010-06-11_20:00:00"
+        }
+      },
+      "SWDNB": {
+        "min": {
+          "value": 0.0,
+          "time": "2010-06-11_00:00:00"
+        },
+        "max": {
+          "value": 1145.05029296875,
+          "time": "2010-06-11_20:00:00"
+        }
+      },
+      "LWUPT": {
+        "min": {
+          "value": 0.0,
+          "time": "2010-06-11_00:00:00"
+        },
+        "max": {
+          "value": 355.9012756347656,
+          "time": "2010-06-11_20:00:00"
+        }
+      },
+      "LWDNT": {
+        "min": {
+          "value": 0.0,
+          "time": "2010-06-11_00:00:00"
+        },
+        "max": {
+          "value": 0.0,
+          "time": "2010-06-11_00:00:00"
+        }
+      },
+      "LWDNB": {
+        "min": {
+          "value": 0.0,
+          "time": "2010-06-11_00:00:00"
+        },
+        "max": {
+          "value": 471.7196960449219,
+          "time": "2010-06-11_20:00:00"
+        }
+      },
+      "OLR": {
+        "min": {
+          "value": 0.0,
+          "time": "2010-06-11_00:00:00"
+        },
+        "max": {
+          "value": 355.9012756347656,
+          "time": "2010-06-11_20:00:00"
+        }
+      }
+    }
+  }
+}

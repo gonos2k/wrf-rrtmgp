@@ -1,0 +1,779 @@
+{
+  "schema": "pr10-runtime-evidence-v1",
+  "generated_utc_date": "2026-10-02",
+  "scope_limit": "Real-data WRF integration evidence is limited to 2010-06-11 00:00\u201300:10 UTC after a successful 24-hour real.exe initialization. No completed long WRF37 forecast is covered by this receipt; these checks do not establish long-forecast readiness.",
+  "source_receipts": [
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp/build/udm-restart-contract/restart-comparison.json",
+      "sha256": "6a9aa59113c051ae247f4f4a564a647703089a27eaad57a650d199730a61d16e"
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/omp-udm-runtime/final/omp-runtime-result.json",
+      "sha256": "de38765c3c3d7a4cd6fef1502e6779bdd4f0d40abb10dab3579da745e7f3b2b8"
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-realdata-smoke/realdata-manifest.json",
+      "sha256": "5c8c7294092f8cae3d83362c0e4eda7670671131e11e2a2d3df8e59f0b4ac246"
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-realdata-smoke/hybrid-mpi2-omp2-receipt.json",
+      "sha256": "88f1d40ae704f60bf7ce125e79a9b9a7543fcd7431e1b35f0c81ad56851fb60d"
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp/validation/rrtmgp37/cpu-openmp/serial-physics-preservation.json",
+      "sha256": "70ee0e87a6902a74e2eb568a25978beba287070868cf364f9f21c19c90e6d57e",
+      "role": "same-checkout serial before/after pairwise physics preservation receipt; supports deterministic repeated-run evidence but is not invocation-level provenance for the restart run"
+    }
+  ],
+  "binaries": {
+    "serial_restart": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp/WRF/main/wrf.exe",
+      "sha256": "5f616b6e0bb39e7a097bb0ce68200d5260b04532e92f85f2451f37f22f7bbb66"
+    },
+    "openmp_scm": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/omp-wrf-udm-contracts/WRF/main/wrf.exe",
+      "sha256": "4b706c7dcb8ee52d83173224cc4bfcfef558b166ab279b0ec0e1471a8f9ba6f1"
+    },
+    "real_mpi_wrf": {
+      "path": "build/mpi-wrf-udm-contracts/WRF/main/wrf.exe",
+      "sha256": "ab2d648284d54ff2b0ff3c90e738e3f91f31169b9677190096c7fc9231c08424"
+    },
+    "real_mpi_real": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/mpi-wrf-udm-contracts/WRF/main/real.exe",
+      "sha256": "3c22fe14634c528063d9d6f001726381f6ba891ca5efb0684b5f443dc8e50f61"
+    }
+  },
+  "serial_restart": {
+    "case_settings": {
+      "physics": "mp_physics=27, ra_lw_physics=37, ra_sw_physics=37, use_mp_re=1",
+      "dt_seconds": 10,
+      "continuous_seconds": 120,
+      "restart_seconds": 60,
+      "history_seconds": 10,
+      "radt_minutes": 0.5,
+      "restart_interval_minutes": 1
+    },
+    "environment": {
+      "NETCDF": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/netcdf",
+      "LD_LIBRARY_PATH": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/netcdf/lib:/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/root/usr/lib/x86_64-linux-gnu",
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "WRF_RRTMGP*": "all unset"
+    },
+    "cases": {
+      "control": {
+        "input_wrfinput_sha256": "3fb1d9ae78bc0e93d072e646f052e3a39dd83d5215f864bbc89ff030f9cb6d4e",
+        "continuous": {
+          "log": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp/build/udm-restart-contract/continuous/control/wrf.log",
+          "log_sha256": "d33e1de0cfd4f69ed685766374c37ed3d6179eb2ace230f78fa1c7d9beca6b0b",
+          "success": true,
+          "namelist_sha256": "d8cd314c79ba6cb7c7ddf23f2ffdeed40c8a931ef21e14fdedc159c7242b81c3",
+          "history_sha256": "ec6af3e6155c3ac9c957998dfa921e0a3d83a90cfeb66de03eea31b1c738c882"
+        },
+        "restart": {
+          "log": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp/build/udm-restart-contract/restart/control/wrf.log",
+          "log_sha256": "5c5841a0b20ca3562585c0dea369589f058142f1b9b8d8d8c73e24b45f108720",
+          "success": true,
+          "namelist_sha256": "795d1d4531db41474e653090a828e476ff355663c7bb2e6827addaf0686b0d5a",
+          "checkpoint": {
+            "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp/build/udm-restart-contract/continuous/control/wrfrst_d01_1999-10-22_19:01:00",
+            "sha256": "8957084e1030299db1df0424a5fa34fddb6eaf96b6fe4496fb99c825c428ee70",
+            "bytes": 389868
+          },
+          "history_sha256": "4b3b860cd5f373cadd51af25e85868db9c405ac47528315ec0b18aaf2f01c935"
+        },
+        "checkpoint_state": {
+          "common_variables": 201,
+          "differing_variables": 0
+        },
+        "postrestart_comparison": {
+          "times": [
+            "1999-10-22_19:01:10",
+            "1999-10-22_19:01:20",
+            "1999-10-22_19:01:30",
+            "1999-10-22_19:01:40",
+            "1999-10-22_19:01:50",
+            "1999-10-22_19:02:00"
+          ],
+          "variables_per_time": 210,
+          "timestamp_count": 6,
+          "exact_match_timestamps": 6,
+          "differing_timestamps": 0,
+          "total_variable_timestamp_mismatches": 0,
+          "max_l_inf": 0
+        },
+        "accumulation_contract": {
+          "ACSWDNB": {
+            "checkpoint_minmax": [
+              31546.8828125,
+              31546.8828125
+            ],
+            "first_restart_interval": [
+              "1999-10-22_19:01:00",
+              "1999-10-22_19:01:10"
+            ],
+            "first_interval_recurrence_exact": true,
+            "restart_history_values_exact": true,
+            "later_recurrences_exact": true,
+            "first_interval_linf": 0.0
+          },
+          "ACLWDNB": {
+            "checkpoint_minmax": [
+              16177.25,
+              16177.25
+            ],
+            "first_restart_interval": [
+              "1999-10-22_19:01:00",
+              "1999-10-22_19:01:10"
+            ],
+            "first_interval_recurrence_exact": true,
+            "restart_history_values_exact": true,
+            "later_recurrences_exact": true,
+            "first_interval_linf": 0.0
+          }
+        },
+        "selected_bitwise_fields": {
+          "T": true,
+          "THM": true,
+          "QVAPOR": true,
+          "QCLOUD": true,
+          "QRAIN": true,
+          "QICE": true,
+          "QSNOW": true,
+          "QGRAUP": true,
+          "QHAIL": true,
+          "QNCCN": true,
+          "QNCLOUD": true,
+          "QNRAIN": true,
+          "RTHRATEN": true,
+          "RTHRATLW": true,
+          "RTHRATSW": true,
+          "SWDOWN": true,
+          "GSW": true,
+          "GLW": true,
+          "ACSWDNB": true,
+          "ACLWDNB": true,
+          "ACSWDNBC": true,
+          "ACLWDNBC": true,
+          "UDM_CLDFRA": true,
+          "UDM_CF_STEP": true
+        },
+        "call_paths": {
+          "radiation_lw": {
+            "continuous": [
+              "1999-10-22_19:00:00",
+              "1999-10-22_19:00:30",
+              "1999-10-22_19:01:00",
+              "1999-10-22_19:01:30"
+            ],
+            "restart": [
+              "1999-10-22_19:01:00",
+              "1999-10-22_19:01:30"
+            ],
+            "resume_matches": true
+          },
+          "radiation_sw": {
+            "continuous": [
+              "1999-10-22_19:00:00",
+              "1999-10-22_19:00:30",
+              "1999-10-22_19:01:00",
+              "1999-10-22_19:01:30"
+            ],
+            "restart": [
+              "1999-10-22_19:01:00",
+              "1999-10-22_19:01:30"
+            ],
+            "resume_matches": true
+          },
+          "udm_microphysics": {
+            "continuous": [
+              "1999-10-22_19:00:00",
+              "1999-10-22_19:00:10",
+              "1999-10-22_19:00:20",
+              "1999-10-22_19:00:30",
+              "1999-10-22_19:00:40",
+              "1999-10-22_19:00:50",
+              "1999-10-22_19:01:00",
+              "1999-10-22_19:01:10",
+              "1999-10-22_19:01:20",
+              "1999-10-22_19:01:30",
+              "1999-10-22_19:01:40",
+              "1999-10-22_19:01:50"
+            ],
+            "restart": [
+              "1999-10-22_19:01:00",
+              "1999-10-22_19:01:10",
+              "1999-10-22_19:01:20",
+              "1999-10-22_19:01:30",
+              "1999-10-22_19:01:40",
+              "1999-10-22_19:01:50"
+            ],
+            "resume_matches": true
+          }
+        },
+        "restart_metadata_differences": {
+          "ISLAKE": {
+            "continuous": "0",
+            "restart": "-1"
+          },
+          "START_DATE": {
+            "continuous": "1999-10-22_19:00:00",
+            "restart": "1999-10-22_19:01:00"
+          }
+        }
+      },
+      "mixed": {
+        "input_wrfinput_sha256": "9e167c8b99d9a2cacba70c18fe111e0c6785a5cdca5a858aaf372474a5ffc36f",
+        "continuous": {
+          "log": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp/build/udm-restart-contract/continuous/mixed/wrf.log",
+          "log_sha256": "bd8c73a9dee726b5daf0591287316324309c7064b77bf55aac88d0ef65a53a9b",
+          "success": true,
+          "namelist_sha256": "d8cd314c79ba6cb7c7ddf23f2ffdeed40c8a931ef21e14fdedc159c7242b81c3",
+          "history_sha256": "375d2dee54c7d902a0264b024d536621fbb98974aeb66b9ebc98c3c9b3322649"
+        },
+        "restart": {
+          "log": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp/build/udm-restart-contract/restart/mixed/wrf.log",
+          "log_sha256": "6efa0d47cdf2962a387ad538e74b4a0223081ff5a8f0f7f7d957e290ebf07855",
+          "success": true,
+          "namelist_sha256": "795d1d4531db41474e653090a828e476ff355663c7bb2e6827addaf0686b0d5a",
+          "checkpoint": {
+            "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp/build/udm-restart-contract/continuous/mixed/wrfrst_d01_1999-10-22_19:01:00",
+            "sha256": "71893c7964eff70dc54ff4883f4c927d6bbf4324a4d0e750b069e4fdf215d25c",
+            "bytes": 389868
+          },
+          "history_sha256": "6c33ab396d8bea6167c5e13d0e473a72a84814bf48cce48e71084b350d5b5e25"
+        },
+        "checkpoint_state": {
+          "common_variables": 201,
+          "differing_variables": 0
+        },
+        "postrestart_comparison": {
+          "times": [
+            "1999-10-22_19:01:10",
+            "1999-10-22_19:01:20",
+            "1999-10-22_19:01:30",
+            "1999-10-22_19:01:40",
+            "1999-10-22_19:01:50",
+            "1999-10-22_19:02:00"
+          ],
+          "variables_per_time": 210,
+          "timestamp_count": 6,
+          "exact_match_timestamps": 6,
+          "differing_timestamps": 0,
+          "total_variable_timestamp_mismatches": 0,
+          "max_l_inf": 0
+        },
+        "accumulation_contract": {
+          "ACSWDNB": {
+            "checkpoint_minmax": [
+              30751.693359375,
+              31508.32421875
+            ],
+            "first_restart_interval": [
+              "1999-10-22_19:01:00",
+              "1999-10-22_19:01:10"
+            ],
+            "first_interval_recurrence_exact": true,
+            "restart_history_values_exact": true,
+            "later_recurrences_exact": true,
+            "first_interval_linf": 0.0
+          },
+          "ACLWDNB": {
+            "checkpoint_minmax": [
+              16176.990234375,
+              17305.29296875
+            ],
+            "first_restart_interval": [
+              "1999-10-22_19:01:00",
+              "1999-10-22_19:01:10"
+            ],
+            "first_interval_recurrence_exact": true,
+            "restart_history_values_exact": true,
+            "later_recurrences_exact": true,
+            "first_interval_linf": 0.0
+          }
+        },
+        "selected_bitwise_fields": {
+          "T": true,
+          "THM": true,
+          "QVAPOR": true,
+          "QCLOUD": true,
+          "QRAIN": true,
+          "QICE": true,
+          "QSNOW": true,
+          "QGRAUP": true,
+          "QHAIL": true,
+          "QNCCN": true,
+          "QNCLOUD": true,
+          "QNRAIN": true,
+          "RTHRATEN": true,
+          "RTHRATLW": true,
+          "RTHRATSW": true,
+          "SWDOWN": true,
+          "GSW": true,
+          "GLW": true,
+          "ACSWDNB": true,
+          "ACLWDNB": true,
+          "ACSWDNBC": true,
+          "ACLWDNBC": true,
+          "UDM_CLDFRA": true,
+          "UDM_CF_STEP": true
+        },
+        "call_paths": {
+          "radiation_lw": {
+            "continuous": [
+              "1999-10-22_19:00:00",
+              "1999-10-22_19:00:30",
+              "1999-10-22_19:01:00",
+              "1999-10-22_19:01:30"
+            ],
+            "restart": [
+              "1999-10-22_19:01:00",
+              "1999-10-22_19:01:30"
+            ],
+            "resume_matches": true
+          },
+          "radiation_sw": {
+            "continuous": [
+              "1999-10-22_19:00:00",
+              "1999-10-22_19:00:30",
+              "1999-10-22_19:01:00",
+              "1999-10-22_19:01:30"
+            ],
+            "restart": [
+              "1999-10-22_19:01:00",
+              "1999-10-22_19:01:30"
+            ],
+            "resume_matches": true
+          },
+          "udm_microphysics": {
+            "continuous": [
+              "1999-10-22_19:00:00",
+              "1999-10-22_19:00:10",
+              "1999-10-22_19:00:20",
+              "1999-10-22_19:00:30",
+              "1999-10-22_19:00:40",
+              "1999-10-22_19:00:50",
+              "1999-10-22_19:01:00",
+              "1999-10-22_19:01:10",
+              "1999-10-22_19:01:20",
+              "1999-10-22_19:01:30",
+              "1999-10-22_19:01:40",
+              "1999-10-22_19:01:50"
+            ],
+            "restart": [
+              "1999-10-22_19:01:00",
+              "1999-10-22_19:01:10",
+              "1999-10-22_19:01:20",
+              "1999-10-22_19:01:30",
+              "1999-10-22_19:01:40",
+              "1999-10-22_19:01:50"
+            ],
+            "resume_matches": true
+          }
+        },
+        "restart_metadata_differences": {
+          "ISLAKE": {
+            "continuous": "0",
+            "restart": "-1"
+          },
+          "START_DATE": {
+            "continuous": "1999-10-22_19:00:00",
+            "restart": "1999-10-22_19:01:00"
+          }
+        }
+      }
+    },
+    "summary": "Control/mixed: all 201 checkpoint variables exact; 210 history variables exact at six shared postrestart times; first ACSWDNB/ACLWDNB recurrence interval was retained and exact.",
+    "executable_provenance": {
+      "provenance_status": "resolved path/hash evidence is available; process-level executable hash was not captured during execution",
+      "path_symlink_evidence": [
+        {
+          "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp/build/udm-restart-contract/continuous/control/wrf.exe",
+          "link_target": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp/WRF/main/wrf.exe",
+          "resolved_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp/WRF/main/wrf.exe",
+          "target_sha256": "5f616b6e0bb39e7a097bb0ce68200d5260b04532e92f85f2451f37f22f7bbb66",
+          "matches_executable": true
+        },
+        {
+          "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp/build/udm-restart-contract/continuous/mixed/wrf.exe",
+          "link_target": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp/WRF/main/wrf.exe",
+          "resolved_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp/WRF/main/wrf.exe",
+          "target_sha256": "5f616b6e0bb39e7a097bb0ce68200d5260b04532e92f85f2451f37f22f7bbb66",
+          "matches_executable": true
+        },
+        {
+          "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp/build/udm-restart-contract/restart/control/wrf.exe",
+          "link_target": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp/WRF/main/wrf.exe",
+          "resolved_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp/WRF/main/wrf.exe",
+          "target_sha256": "5f616b6e0bb39e7a097bb0ce68200d5260b04532e92f85f2451f37f22f7bbb66",
+          "matches_executable": true
+        },
+        {
+          "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp/build/udm-restart-contract/restart/mixed/wrf.exe",
+          "link_target": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp/WRF/main/wrf.exe",
+          "resolved_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp/WRF/main/wrf.exe",
+          "target_sha256": "5f616b6e0bb39e7a097bb0ce68200d5260b04532e92f85f2451f37f22f7bbb66",
+          "matches_executable": true
+        }
+      ],
+      "source_worktree": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp",
+        "head": "ca33525ad69af58302608d93362a83e698f37698",
+        "tracked_modified_files": [
+          "WRF/phys/module_ra_rrtmgp_audit.F",
+          "WRF/phys/module_ra_rrtmgp_input.F",
+          "WRF/phys/module_radiation_driver.F"
+        ],
+        "status_porcelain_sha256": "06ba4b9e3986de53d8864d6f7c9aaeefe696eafe1e25a9954c42c1af406869ea",
+        "build_tree_was_dirty": true,
+        "note": "This is the isolated build/pr-wrf-rrtmgp checkout used by the restart run. The three tracked diagnostic source edits were timestamped after the executable and after the restart run; they therefore do not describe source edits incorporated into this binary based on available file timestamps. Process-level executable hashing was not captured, so invocation identity remains supported by the case symlinks, the run receipt path/hash, and unchanged executable timestamp rather than a process audit.",
+        "tracked_modified_file_mtimes_local": {
+          "WRF/phys/module_ra_rrtmgp_audit.F": "2026-10-02T22:32:08+09:00",
+          "WRF/phys/module_ra_rrtmgp_input.F": "2026-10-02T22:32:08+09:00",
+          "WRF/phys/module_radiation_driver.F": "2026-10-02T22:32:08+09:00"
+        }
+      },
+      "binary_file_observation": {
+        "sha256_at_receipt_generation": "5f616b6e0bb39e7a097bb0ce68200d5260b04532e92f85f2451f37f22f7bbb66",
+        "size_bytes": 49564896,
+        "mtime_local_iso": "2026-10-02T21:58:11+09:00",
+        "mtime_ns": 1790945891000000000
+      },
+      "source_snapshot": {
+        "head_commit": "ca33525ad69af58302608d93362a83e698f37698",
+        "basis": "Best-available reconstruction: git HEAD tracked source blobs are hashed below; the only tracked source edits now present have mtimes after the executable and restart run. The exact source tree was not hashed at compile or launch time, so HEAD as compile source is supported by timestamps but not independently captured.",
+        "tracked_modified_source_files": [
+          {
+            "path": "WRF/phys/module_ra_rrtmgp_audit.F",
+            "head_blob_sha256": "1af75d310c404faaa892a88f90e12a8677073db3e9bb153813a8e685f3fa0e8e",
+            "current_worktree_sha256": "335b85558d977446218ea8554479e107f9bb15e359eb3a95023efd484f05c929",
+            "current_mtime_local": "2026-10-02T22:32:08+09:00",
+            "current_differs_from_head": true
+          },
+          {
+            "path": "WRF/phys/module_ra_rrtmgp_input.F",
+            "head_blob_sha256": "d11da593f46a1fda7507b32c01bfc364938fbb9d787f573e751f6942af95e665",
+            "current_worktree_sha256": "f02e4b0c5e0e10d3892742e177c3ad4671744de677e09cd95a78f76178e80dbe",
+            "current_mtime_local": "2026-10-02T22:32:08+09:00",
+            "current_differs_from_head": true
+          },
+          {
+            "path": "WRF/phys/module_radiation_driver.F",
+            "head_blob_sha256": "5fce520856595212a56c7528b96fe9e994b1687dc84e8398cf409a9b52de5e26",
+            "current_worktree_sha256": "b14874361bf62f07edc5b4b905287adeccd0491a820ffd97feedc5c7497d4674",
+            "current_mtime_local": "2026-10-02T22:32:08+09:00",
+            "current_differs_from_head": true
+          }
+        ],
+        "git_diff_sha256": "27715bd3c7e638894c9e0b21e335c51662540cdf45790b9510ff144d9e3a0e71"
+      }
+    }
+  },
+  "openmp_scm": {
+    "build_status": "PASS_GNU_SMPAR_OPENMP_SCM",
+    "binary": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/omp-wrf-udm-contracts/WRF/main/wrf.exe",
+      "sha256": "4b706c7dcb8ee52d83173224cc4bfcfef558b166ab279b0ec0e1471a8f9ba6f1"
+    },
+    "compiler": "GNU Fortran (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0",
+    "source_commit": "1fef0f414285d2bbb1a1014dab7c94faf9b481b9",
+    "configure_option": 33,
+    "flags": [
+      "-D_OPENMP",
+      "-fopenmp"
+    ],
+    "capture_audit_unset": true,
+    "cases": {
+      "control": {
+        "runs": {
+          "omp1": {
+            "case": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/omp-udm-runtime/final/control/omp1",
+            "threads": 1,
+            "history": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/omp-udm-runtime/final/control/omp1/wrfout_d01_1999-10-22_19:00:00",
+            "history_sha256": "72716c3a133b0983f76cfa380a0b68846c4e694d7d0aaf161f71ed47bc30f6a5",
+            "history_records": 7,
+            "success": true,
+            "wrfinput_sha256": "3fb1d9ae78bc0e93d072e646f052e3a39dd83d5215f864bbc89ff030f9cb6d4e",
+            "namelist_sha256": "8a18d32eed72388059e08dce2a618ed4a8170c8ae95583bf477b145537e19c91",
+            "log_sha256": "4ce190b7382a0f9e53c51cbab8fe835d8ffd3b9374560ddb26f0eb13139971eb",
+            "source_input_matches_seed": true,
+            "namelist_matches_seed": true
+          },
+          "omp2": {
+            "case": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/omp-udm-runtime/final/control/omp2",
+            "threads": 2,
+            "history": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/omp-udm-runtime/final/control/omp2/wrfout_d01_1999-10-22_19:00:00",
+            "history_sha256": "72716c3a133b0983f76cfa380a0b68846c4e694d7d0aaf161f71ed47bc30f6a5",
+            "history_records": 7,
+            "success": true,
+            "wrfinput_sha256": "3fb1d9ae78bc0e93d072e646f052e3a39dd83d5215f864bbc89ff030f9cb6d4e",
+            "namelist_sha256": "8a18d32eed72388059e08dce2a618ed4a8170c8ae95583bf477b145537e19c91",
+            "log_sha256": "4b109c4aacf45d4cf64444a3f6098642301c077e91bf29fc7b982194951f78bb",
+            "source_input_matches_seed": true,
+            "namelist_matches_seed": true
+          }
+        },
+        "comparison": {
+          "bitwise_equal": 210,
+          "changed_variables": [],
+          "common_history_variables": 210,
+          "global_l2": 0.0,
+          "global_max_abs": 0.0,
+          "global_rms": 0.0,
+          "status": "PASS_BITWISE"
+        }
+      },
+      "mixed": {
+        "runs": {
+          "omp1": {
+            "case": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/omp-udm-runtime/final/mixed/omp1",
+            "threads": 1,
+            "history": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/omp-udm-runtime/final/mixed/omp1/wrfout_d01_1999-10-22_19:00:00",
+            "history_sha256": "762a6916553af558e1d64eb3f9f15b1185ff3cc99fb0a30579ac3ce226ff7c40",
+            "history_records": 7,
+            "success": true,
+            "wrfinput_sha256": "9e167c8b99d9a2cacba70c18fe111e0c6785a5cdca5a858aaf372474a5ffc36f",
+            "namelist_sha256": "8a18d32eed72388059e08dce2a618ed4a8170c8ae95583bf477b145537e19c91",
+            "log_sha256": "3737c07166b7530e85021354a9fc8f65eb98fd77489ac33d14505519caef8644",
+            "source_input_matches_seed": true,
+            "namelist_matches_seed": true
+          },
+          "omp2": {
+            "case": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/omp-udm-runtime/final/mixed/omp2",
+            "threads": 2,
+            "history": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/omp-udm-runtime/final/mixed/omp2/wrfout_d01_1999-10-22_19:00:00",
+            "history_sha256": "762a6916553af558e1d64eb3f9f15b1185ff3cc99fb0a30579ac3ce226ff7c40",
+            "history_records": 7,
+            "success": true,
+            "wrfinput_sha256": "9e167c8b99d9a2cacba70c18fe111e0c6785a5cdca5a858aaf372474a5ffc36f",
+            "namelist_sha256": "8a18d32eed72388059e08dce2a618ed4a8170c8ae95583bf477b145537e19c91",
+            "log_sha256": "ba3b157bbe9c10f89ea4350ca97a6ba98ee69205b37398741a2c27b468c87ae2",
+            "source_input_matches_seed": true,
+            "namelist_matches_seed": true
+          }
+        },
+        "comparison": {
+          "bitwise_equal": 210,
+          "changed_variables": [],
+          "common_history_variables": 210,
+          "global_l2": 0.0,
+          "global_max_abs": 0.0,
+          "global_rms": 0.0,
+          "status": "PASS_BITWISE"
+        }
+      }
+    },
+    "summary": "Control/mixed histories with OMP1 and OMP2 are bitwise identical across 210 common history variables and seven history records."
+  },
+  "real_data": {
+    "case": "NCAR WRF developer test 2010061100",
+    "configuration": {
+      "start": "2010-06-11_00:00:00 UTC",
+      "end_real": "2010-06-12_00:00:00 UTC",
+      "smoke_end": "2010-06-11_00:10:00 UTC",
+      "time_step_seconds": 60,
+      "radt_minutes": 10,
+      "mp_physics": 27,
+      "ra_lw_physics": 37,
+      "ra_sw_physics": 37,
+      "use_mp_re": 1,
+      "num_land_cat": 24,
+      "aer_opt": 0,
+      "cldovrlp": 2,
+      "swint_opt": 0
+    },
+    "met_em_sha256": {
+      "met_em.d01.2010-06-11_00:00:00.nc": "f5ab772fbc4f469f121123fdcac8dfca13ad46e78a8ede2914be4f277ebfa6d3",
+      "met_em.d01.2010-06-11_06:00:00.nc": "c95517bf0137f7bea95d085c1607566a1d3b4449a24a2ff855301a76b25d16b6",
+      "met_em.d01.2010-06-11_12:00:00.nc": "6172d2ab8236a66ffaed148facadefb7ead829776e6ff4dfdf928c8a750b027a",
+      "met_em.d01.2010-06-11_18:00:00.nc": "ea1bf301fe1bba7342760622acda844ba9b17d45ac4fdce4b31ca0f32a0f85bd",
+      "met_em.d01.2010-06-12_00:00:00.nc": "23295b810543834c5344b742006cd6d1d0dc15d956bbf614050483566140ee71"
+    },
+    "initialization": {
+      "status": "SUCCESS COMPLETE REAL_EM INIT",
+      "ranks": 1,
+      "threads": 1,
+      "wrfinput_sha256": "5ef7abe34c516fba107f346bdbdb3777edacb5d48493df467ea2dd8bcf6a75ff",
+      "wrfbdy_sha256": "e687b73730ab9a2cee4842e1a92b225a4edb074ba080b6053d96d81ec1731a2d",
+      "log": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-realdata-smoke/real_init/real-final.log"
+    },
+    "run_modes": {
+      "mpi1_omp1": {
+        "directory": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-realdata-smoke/mpi1_omp1",
+        "inputs": {
+          "wrfinput_d01": {
+            "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-realdata-smoke/mpi1_omp1/wrfinput_d01",
+            "sha256": "5ef7abe34c516fba107f346bdbdb3777edacb5d48493df467ea2dd8bcf6a75ff"
+          },
+          "wrfbdy_d01": {
+            "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-realdata-smoke/mpi1_omp1/wrfbdy_d01",
+            "sha256": "e687b73730ab9a2cee4842e1a92b225a4edb074ba080b6053d96d81ec1731a2d"
+          },
+          "namelist.input": {
+            "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-realdata-smoke/mpi1_omp1/namelist.input",
+            "sha256": "a792c69c23cf8b6cb156da2f0afa4e2b784b60159f40e427ad789d464aec903f"
+          }
+        },
+        "history": {
+          "wrfout_d01_2010-06-11_00:00:00": {
+            "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-realdata-smoke/mpi1_omp1/wrfout_d01_2010-06-11_00:00:00",
+            "sha256": "f8f4959ec4da1acc99eaff52702e784249d82019161ad3ba0d1c1377591451a2"
+          },
+          "wrfout_d01_2010-06-11_00:10:00": {
+            "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-realdata-smoke/mpi1_omp1/wrfout_d01_2010-06-11_00:10:00",
+            "sha256": "cca35e0d2d6e6414169cc3e47a315612a8bc10ff6ac0167e142f108de9028cb9"
+          }
+        },
+        "ranks": 1,
+        "threads": 1,
+        "status": "SUCCESS COMPLETE WRF",
+        "exit_code": 0,
+        "run_log": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-realdata-smoke/mpi1_omp1/rsl.out.0000"
+      },
+      "mpi2_omp1": {
+        "directory": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-realdata-smoke/mpi2_omp1",
+        "inputs": {
+          "wrfinput_d01": {
+            "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-realdata-smoke/mpi2_omp1/wrfinput_d01",
+            "sha256": "5ef7abe34c516fba107f346bdbdb3777edacb5d48493df467ea2dd8bcf6a75ff"
+          },
+          "wrfbdy_d01": {
+            "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-realdata-smoke/mpi2_omp1/wrfbdy_d01",
+            "sha256": "e687b73730ab9a2cee4842e1a92b225a4edb074ba080b6053d96d81ec1731a2d"
+          },
+          "namelist.input": {
+            "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-realdata-smoke/mpi2_omp1/namelist.input",
+            "sha256": "a792c69c23cf8b6cb156da2f0afa4e2b784b60159f40e427ad789d464aec903f"
+          }
+        },
+        "history": {
+          "wrfout_d01_2010-06-11_00:00:00": {
+            "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-realdata-smoke/mpi2_omp1/wrfout_d01_2010-06-11_00:00:00",
+            "sha256": "6db2b7a9a2f0b7b28b97f76b510aef9d2dc9c66815f4560e7ff957a529034271"
+          },
+          "wrfout_d01_2010-06-11_00:10:00": {
+            "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-realdata-smoke/mpi2_omp1/wrfout_d01_2010-06-11_00:10:00",
+            "sha256": "335f58a1b2b00b127a7241044ebe312738b7521f36c817e9b1ddaef468565876"
+          }
+        },
+        "ranks": 2,
+        "threads": 1,
+        "status": "SUCCESS COMPLETE WRF",
+        "exit_code": 0,
+        "rank_logs": [
+          "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-realdata-smoke/mpi2_omp1/rsl.out.0000",
+          "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-realdata-smoke/mpi2_omp1/rsl.out.0001"
+        ]
+      },
+      "mpi2_omp2": {
+        "directory": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-realdata-smoke/mpi2-omp2",
+        "inputs": {
+          "wrfinput_d01": {
+            "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-realdata-smoke/mpi2-omp2/wrfinput_d01",
+            "sha256": "5ef7abe34c516fba107f346bdbdb3777edacb5d48493df467ea2dd8bcf6a75ff"
+          },
+          "wrfbdy_d01": {
+            "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-realdata-smoke/mpi2-omp2/wrfbdy_d01",
+            "sha256": "e687b73730ab9a2cee4842e1a92b225a4edb074ba080b6053d96d81ec1731a2d"
+          },
+          "namelist.input": {
+            "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-realdata-smoke/mpi2-omp2/namelist.input",
+            "sha256": "a792c69c23cf8b6cb156da2f0afa4e2b784b60159f40e427ad789d464aec903f"
+          }
+        },
+        "history": {
+          "wrfout_d01_2010-06-11_00:00:00": {
+            "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-realdata-smoke/mpi2-omp2/wrfout_d01_2010-06-11_00:00:00",
+            "sha256": "6db2b7a9a2f0b7b28b97f76b510aef9d2dc9c66815f4560e7ff957a529034271"
+          },
+          "wrfout_d01_2010-06-11_00:10:00": {
+            "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-realdata-smoke/mpi2-omp2/wrfout_d01_2010-06-11_00:10:00",
+            "sha256": "335f58a1b2b00b127a7241044ebe312738b7521f36c817e9b1ddaef468565876"
+          }
+        },
+        "ranks": 2,
+        "threads": 2,
+        "status": "PASS_MPI2_OMP2_MATCHES_MPI2_OMP1",
+        "exit_code": 0,
+        "rank_logs": [
+          "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-realdata-smoke/mpi2-omp2/rsl.out.0000",
+          "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-realdata-smoke/mpi2-omp2/rsl.out.0001"
+        ],
+        "rank_log_sha256": [
+          "0ac8a1d60907f97f37f2036df5b8f0f7d74ca828de5a0de9031fa94735a62091",
+          "aa0861148536119691ad64579d5f726d24653f63106a6b662a2277935dd1bf7a"
+        ]
+      }
+    },
+    "mpi1_vs_mpi2_omp1_00_10": {
+      "matching_numeric_variables": 203,
+      "nonfinite_variables": 0,
+      "max_absolute_difference": 0.0,
+      "rmse_all_common_values": 0.0,
+      "interpretation": "bitwise-equal outputs for this 10-minute case; does not establish long-run stability"
+    },
+    "mpi2_omp2_vs_mpi2_omp1": {
+      "status": "PASS_MPI2_OMP2_MATCHES_MPI2_OMP1",
+      "inputs_match": {
+        "namelist.input": {
+          "baseline": "a792c69c23cf8b6cb156da2f0afa4e2b784b60159f40e427ad789d464aec903f",
+          "equal": true,
+          "hybrid": "a792c69c23cf8b6cb156da2f0afa4e2b784b60159f40e427ad789d464aec903f"
+        },
+        "wrfbdy_d01": {
+          "baseline": "e687b73730ab9a2cee4842e1a92b225a4edb074ba080b6053d96d81ec1731a2d",
+          "equal": true,
+          "hybrid": "e687b73730ab9a2cee4842e1a92b225a4edb074ba080b6053d96d81ec1731a2d"
+        },
+        "wrfinput_d01": {
+          "baseline": "5ef7abe34c516fba107f346bdbdb3777edacb5d48493df467ea2dd8bcf6a75ff",
+          "equal": true,
+          "hybrid": "5ef7abe34c516fba107f346bdbdb3777edacb5d48493df467ea2dd8bcf6a75ff"
+        }
+      },
+      "outputs_by_timestamp": {
+        "wrfout_d01_2010-06-11_00:00:00": {
+          "bitwise_equal": true,
+          "variables": 203,
+          "all_values_finite": true,
+          "l_inf": 0.0,
+          "l2": 0.0,
+          "history_sha256": "6db2b7a9a2f0b7b28b97f76b510aef9d2dc9c66815f4560e7ff957a529034271"
+        },
+        "wrfout_d01_2010-06-11_00:10:00": {
+          "bitwise_equal": true,
+          "variables": 203,
+          "all_values_finite": true,
+          "l_inf": 0.0,
+          "l2": 0.0,
+          "history_sha256": "335f58a1b2b00b127a7241044ebe312738b7521f36c817e9b1ddaef468565876"
+        }
+      },
+      "mpiexec_sha256": "7cbfc90b3903375252de00c92fd0ec8d51274da76365028de5c6edd645416946"
+    },
+    "missing_coefficient_collective_fatal": {
+      "ranks": 2,
+      "threads": 1,
+      "exit_code": 1,
+      "timed_out": false,
+      "fatal": "RRTMGP load_and_init cannot open rrtmgp-gas-lw-g128.nc under intentionally nonexistent rrtmgp_data_path",
+      "mpi_abort_observed": true,
+      "logs": {
+        "rsl.error.0000": "1aac7936c93e333bf7275dd91c9d991dfd1ba9f1d1bf04cd2c540396cd8cf3af",
+        "rsl.error.0001": "339ce4f96e073757f4204f635df6d85f2d0a83e9e0476d7d1880a31bb25ab2b7",
+        "rsl.out.0000": "6db5b03f2ffbe75862b7ee9cf54c05cc003ec1f3dff82fcf8ba6dfd702063b49",
+        "rsl.out.0001": "afad8fdcf6e09c4d7de19c293a85b115ec8be2d4d4b5e1eb58df461c2c0e5804"
+      },
+      "namelist_sha256": "337fda043b3a39a453634bc3118ecd3f3dcb40d02d3b4e5ae077bb50c306fac4"
+    },
+    "summary": "MPI1/OMP1, MPI2/OMP1, and MPI2/OMP2 all completed the 10-minute run. MPI1-vs-MPI2/OMP1 matched all 203 numeric history variables at 00:10; MPI2/OMP2 matched MPI2/OMP1 at both output times. Missing coefficient caused timely collective MPI abort, with no hang.",
+    "scope_note": "Ten-minute smoke only; not forecast readiness."
+  },
+  "reproducibility_script": "compare_restart.py compares history by common physical Times and optionally compares restart-file fields at the boundary.",
+  "published_restart_comparator": {
+    "path": "validation/rrtmgp37/cpu-openmp/runtime/compare_restart.py",
+    "sha256": "f6cccee860993874b66e73b1376b36dcd6e46cbb64deb6c677bb916b90f30c6f",
+    "hardening": "Rejects empty/duplicate common times, unequal history variable sets, and missing checkpoint timestamps; no fallback to arbitrary checkpoint record."
+  }
+}

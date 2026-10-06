@@ -1,0 +1,1077 @@
+{
+  "build": {
+    "authoritative_checkout_commit": "ca33525ad69af58302608d93362a83e698f37698",
+    "build_command": "PATH=<build/deps/mpich-sock/bin>:$PATH NETCDF=<build/deps/netcdf> NETCDF_classic=1 OMP_NUM_THREADS=1 csh -f ./compile -j 12 em_real",
+    "compile_flags": {
+      "DM_FC": "mpif90",
+      "FC": "time $(DM_FC)",
+      "OMP": "-fopenmp",
+      "OMPCPP": "-D_OPENMP"
+    },
+    "compile_log": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/mpi-wrf-udm-contracts/build-em_real-hydrodiag.log",
+    "compile_log_sha256": "8647bdc91ea9c5831086e358a43861acd9f342d9d0263d41e85421d662082db8",
+    "compile_success_marker": true,
+    "compiler": "GNU Fortran 13.3.0; MPICH 4.2.0 ch3:sock",
+    "diagnostic_sources": {
+      "phys/module_ra_rrtmgp_audit.F": {
+        "authoritative_sha256": "335b85558d977446218ea8554479e107f9bb15e359eb3a95023efd484f05c929",
+        "compiled_sha256": "9b34b45d8cab3ce1d42a7679e44cf92ce939428166cbf09844a4f8a7e30ab25b",
+        "compiled_to_current_difference_comment_only": true,
+        "current_matches_authoritative": true,
+        "current_sha256": "335b85558d977446218ea8554479e107f9bb15e359eb3a95023efd484f05c929",
+        "postcompile_change_only_initial_comments": true,
+        "pre_overlay_destination_sha256": "1af75d310c404faaa892a88f90e12a8677073db3e9bb153813a8e685f3fa0e8e"
+      },
+      "phys/module_ra_rrtmgp_input.F": {
+        "authoritative_sha256": "f02e4b0c5e0e10d3892742e177c3ad4671744de677e09cd95a78f76178e80dbe",
+        "compiled_sha256": "f02e4b0c5e0e10d3892742e177c3ad4671744de677e09cd95a78f76178e80dbe",
+        "current_matches_authoritative": true,
+        "current_sha256": "f02e4b0c5e0e10d3892742e177c3ad4671744de677e09cd95a78f76178e80dbe",
+        "pre_overlay_destination_sha256": "d11da593f46a1fda7507b32c01bfc364938fbb9d787f573e751f6942af95e665"
+      },
+      "phys/module_radiation_driver.F": {
+        "authoritative_sha256": "b14874361bf62f07edc5b4b905287adeccd0491a820ffd97feedc5c7497d4674",
+        "compiled_sha256": "b14874361bf62f07edc5b4b905287adeccd0491a820ffd97feedc5c7497d4674",
+        "current_matches_authoritative": true,
+        "current_sha256": "b14874361bf62f07edc5b4b905287adeccd0491a820ffd97feedc5c7497d4674",
+        "pre_overlay_destination_sha256": "5fce520856595212a56c7528b96fe9e994b1687dc84e8398cf409a9b52de5e26"
+      }
+    },
+    "executable": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/mpi-wrf-udm-contracts/WRF/main/wrf.exe",
+    "executable_sha256": "4bef94c0c511a50985b51b7b148fc463d2b31f656ab21cf135c9233914f2b1e2",
+    "initial_missing_PATH_failure_log": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/mpi-wrf-udm-contracts/build-em_real-hydrodiag-configcheck-failure.log",
+    "prebuild_executable_backup": {
+      "frozen_case_copy_receipt": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-realdata-24h/executable-freeze-receipt.json",
+      "frozen_original_symlink_target": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/mpi-wrf-udm-contracts/WRF/main/wrf.exe",
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/mpi-wrf-udm-contracts/WRF/main/wrf.exe.pre-hydrodiag-20261002",
+      "sha256": "ab2d648284d54ff2b0ff3c90e738e3f91f31169b9677190096c7fc9231c08424"
+    },
+    "worktree": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/mpi-wrf-udm-contracts",
+    "worktree_commit": "1fef0f414285d2bbb1a1014dab7c94faf9b481b9"
+  },
+  "case_root": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-realdata-smoke/hydrodiag20",
+  "hydrometeor_summary_csv": {
+    "includes_ra4_ra37_0_600_1200_and_fatal_row": true,
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-realdata-smoke/hydrodiag20/diagnostic-summary.csv",
+    "rows": 36,
+    "sha256": "646571f283f1d0b90ecf62a56cd04f56bee81065f00e275159485e686c3dc4f4"
+  },
+  "hydrometeor_summary_csvs": {
+    "1200s_status": "NOT_OBSERVED: 20-minute model completed after the time-1200 step without another radiation-driver diagnostic call; only 0 and 600 s snapshots exist.",
+    "ra37": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-realdata-smoke/hydrodiag20/diagnostic-summary.csv",
+    "ra37_diagnostic_summary": {
+      "csv_sha256": {
+        "hydro_d1_i1-145_j1-95.csv": "e8d10a5a65202bbaedaf0fdf0a8d7fec009311e8786118bd6046df35366385c6",
+        "hydro_d1_i1-145_j96-189.csv": "79223180518aea287644a04dce67d888d3cb2a9b9f08f6ba2307d5b95d01d37d",
+        "hydro_d1_i146-289_j1-95.csv": "18e11a77eec8857108e30f8b753dfda412e1dcd3f55d489ff601cfa41ca63d23",
+        "hydro_d1_i146-289_j96-189.csv": "b19a596b2804fb36bb72a57061edff9d7683976bde40443bef3b59e088319851"
+      },
+      "negative_detail_row_count_at_600s": 84,
+      "summary_by_seconds": {
+        "0": {
+          "complete_four_tile_summaries": true,
+          "seconds": 0.0,
+          "species": {
+            "QC": {
+              "cf0_positive_path_gm2": 0.0,
+              "max_q_kgkg": 0.0,
+              "min_location": {
+                "file": "hydro_d1_i1-145_j1-95.csv",
+                "i": 1,
+                "j": 1,
+                "k": 1
+              },
+              "min_q_kgkg": 0.0,
+              "negative_count": 0,
+              "nonfinite_count": 0,
+              "path_invalid_count": 0,
+              "positive_count": 0,
+              "sum_negative_path_gm2": 0.0,
+              "sum_positive_path_gm2": 0.0,
+              "tile_rows": 4
+            },
+            "QG": {
+              "cf0_positive_path_gm2": 0.0,
+              "max_q_kgkg": 0.0,
+              "min_location": {
+                "file": "hydro_d1_i1-145_j1-95.csv",
+                "i": 1,
+                "j": 1,
+                "k": 1
+              },
+              "min_q_kgkg": 0.0,
+              "negative_count": 0,
+              "nonfinite_count": 0,
+              "path_invalid_count": 0,
+              "positive_count": 0,
+              "sum_negative_path_gm2": 0.0,
+              "sum_positive_path_gm2": 0.0,
+              "tile_rows": 4
+            },
+            "QH": {
+              "cf0_positive_path_gm2": 0.0,
+              "max_q_kgkg": 0.0,
+              "min_location": {
+                "file": "hydro_d1_i1-145_j1-95.csv",
+                "i": 1,
+                "j": 1,
+                "k": 1
+              },
+              "min_q_kgkg": 0.0,
+              "negative_count": 0,
+              "nonfinite_count": 0,
+              "path_invalid_count": 0,
+              "positive_count": 0,
+              "sum_negative_path_gm2": 0.0,
+              "sum_positive_path_gm2": 0.0,
+              "tile_rows": 4
+            },
+            "QI": {
+              "cf0_positive_path_gm2": 0.0,
+              "max_q_kgkg": 0.0,
+              "min_location": {
+                "file": "hydro_d1_i1-145_j1-95.csv",
+                "i": 1,
+                "j": 1,
+                "k": 1
+              },
+              "min_q_kgkg": 0.0,
+              "negative_count": 0,
+              "nonfinite_count": 0,
+              "path_invalid_count": 0,
+              "positive_count": 0,
+              "sum_negative_path_gm2": 0.0,
+              "sum_positive_path_gm2": 0.0,
+              "tile_rows": 4
+            },
+            "QR": {
+              "cf0_positive_path_gm2": 0.0,
+              "max_q_kgkg": 0.0,
+              "min_location": {
+                "file": "hydro_d1_i1-145_j1-95.csv",
+                "i": 1,
+                "j": 1,
+                "k": 1
+              },
+              "min_q_kgkg": 0.0,
+              "negative_count": 0,
+              "nonfinite_count": 0,
+              "path_invalid_count": 0,
+              "positive_count": 0,
+              "sum_negative_path_gm2": 0.0,
+              "sum_positive_path_gm2": 0.0,
+              "tile_rows": 4
+            },
+            "QS": {
+              "cf0_positive_path_gm2": 0.0,
+              "max_q_kgkg": 0.0,
+              "min_location": {
+                "file": "hydro_d1_i1-145_j1-95.csv",
+                "i": 1,
+                "j": 1,
+                "k": 1
+              },
+              "min_q_kgkg": 0.0,
+              "negative_count": 0,
+              "nonfinite_count": 0,
+              "path_invalid_count": 0,
+              "positive_count": 0,
+              "sum_negative_path_gm2": 0.0,
+              "sum_positive_path_gm2": 0.0,
+              "tile_rows": 4
+            }
+          },
+          "step": 1,
+          "tile_species_summary_count": 24
+        },
+        "600": {
+          "complete_four_tile_summaries": true,
+          "seconds": 600.0,
+          "species": {
+            "QC": {
+              "cf0_positive_path_gm2": 16.545627547769264,
+              "max_q_kgkg": 0.0005079943803139031,
+              "min_location": {
+                "file": "hydro_d1_i1-145_j1-95.csv",
+                "i": 119,
+                "j": 1,
+                "k": 13
+              },
+              "min_q_kgkg": -9.111152248788244e-16,
+              "negative_count": 17,
+              "nonfinite_count": 0,
+              "path_invalid_count": 0,
+              "positive_count": 23468,
+              "sum_negative_path_gm2": -2.8052048761564133e-10,
+              "sum_positive_path_gm2": 149349.42801131422,
+              "tile_rows": 4
+            },
+            "QG": {
+              "cf0_positive_path_gm2": 0.9173317710593444,
+              "max_q_kgkg": 4.876503112427599e-07,
+              "min_location": {
+                "file": "hydro_d1_i1-145_j96-189.csv",
+                "i": 56,
+                "j": 189,
+                "k": 14
+              },
+              "min_q_kgkg": -1.711670638667584e-25,
+              "negative_count": 3,
+              "nonfinite_count": 0,
+              "path_invalid_count": 0,
+              "positive_count": 94716,
+              "sum_negative_path_gm2": -6.438503689197577e-20,
+              "sum_positive_path_gm2": 177.9849790658443,
+              "tile_rows": 4
+            },
+            "QH": {
+              "cf0_positive_path_gm2": 0.0,
+              "max_q_kgkg": 0.0,
+              "min_location": {
+                "file": "hydro_d1_i1-145_j1-95.csv",
+                "i": 1,
+                "j": 1,
+                "k": 1
+              },
+              "min_q_kgkg": 0.0,
+              "negative_count": 0,
+              "nonfinite_count": 0,
+              "path_invalid_count": 0,
+              "positive_count": 0,
+              "sum_negative_path_gm2": 0.0,
+              "sum_positive_path_gm2": 0.0,
+              "tile_rows": 4
+            },
+            "QI": {
+              "cf0_positive_path_gm2": 550.8949640521004,
+              "max_q_kgkg": 0.0001909980201162398,
+              "min_location": {
+                "file": "hydro_d1_i1-145_j96-189.csv",
+                "i": 120,
+                "j": 189,
+                "k": 23
+              },
+              "min_q_kgkg": -2.204057275322529e-21,
+              "negative_count": 42,
+              "nonfinite_count": 0,
+              "path_invalid_count": 0,
+              "positive_count": 109544,
+              "sum_negative_path_gm2": -6.369095334508264e-16,
+              "sum_positive_path_gm2": 80450.29385524915,
+              "tile_rows": 4
+            },
+            "QR": {
+              "cf0_positive_path_gm2": 12016.687886872169,
+              "max_q_kgkg": 4.892037031822838e-05,
+              "min_location": {
+                "file": "hydro_d1_i146-289_j96-189.csv",
+                "i": 228,
+                "j": 189,
+                "k": 18
+              },
+              "min_q_kgkg": -6.735263836143764e-31,
+              "negative_count": 17,
+              "nonfinite_count": 0,
+              "path_invalid_count": 0,
+              "positive_count": 24372,
+              "sum_negative_path_gm2": -2.90159723075312e-25,
+              "sum_positive_path_gm2": 15680.519156491417,
+              "tile_rows": 4
+            },
+            "QS": {
+              "cf0_positive_path_gm2": 77.26315400480485,
+              "max_q_kgkg": 1.632163366593886e-05,
+              "min_location": {
+                "file": "hydro_d1_i1-145_j96-189.csv",
+                "i": 56,
+                "j": 189,
+                "k": 14
+              },
+              "min_q_kgkg": -5.348970745836201e-27,
+              "negative_count": 5,
+              "nonfinite_count": 0,
+              "path_invalid_count": 0,
+              "positive_count": 102614,
+              "sum_negative_path_gm2": -2.0120215163301544e-21,
+              "sum_positive_path_gm2": 789.6443598370269,
+              "tile_rows": 4
+            }
+          },
+          "step": 11,
+          "tile_species_summary_count": 24
+        }
+      },
+      "tile_csv_count": 4
+    },
+    "ra4": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-realdata-smoke/hydrodiag20/diagnostic-summary.csv",
+    "ra4_diagnostic_summary": {
+      "csv_sha256": {
+        "hydro_d1_i1-145_j1-95.csv": "fa6f4426395578c73b29a8aa797549e4fb493faf55f04d7274463d658026c304",
+        "hydro_d1_i1-145_j96-189.csv": "fbee3ae7f11e4fbc92592f24067edcbbe40b7d781805ac3838162d4cd0267c8c",
+        "hydro_d1_i146-289_j1-95.csv": "8bd8717e1a8592f40fe3837913c5c590a0a78dde0b7a485581ca70a71b42cb9f",
+        "hydro_d1_i146-289_j96-189.csv": "ac6df287e796872b98ac916513f2a1c6ac67452d3715932a232f58e531df363a"
+      },
+      "negative_detail_row_count_at_600s": 55,
+      "summary_by_seconds": {
+        "0": {
+          "complete_four_tile_summaries": true,
+          "seconds": 0.0,
+          "species": {
+            "QC": {
+              "cf0_positive_path_gm2": 0.0,
+              "max_q_kgkg": 0.0,
+              "min_location": {
+                "file": "hydro_d1_i1-145_j1-95.csv",
+                "i": 1,
+                "j": 1,
+                "k": 1
+              },
+              "min_q_kgkg": 0.0,
+              "negative_count": 0,
+              "nonfinite_count": 0,
+              "path_invalid_count": 0,
+              "positive_count": 0,
+              "sum_negative_path_gm2": 0.0,
+              "sum_positive_path_gm2": 0.0,
+              "tile_rows": 4
+            },
+            "QG": {
+              "cf0_positive_path_gm2": 0.0,
+              "max_q_kgkg": 0.0,
+              "min_location": {
+                "file": "hydro_d1_i1-145_j1-95.csv",
+                "i": 1,
+                "j": 1,
+                "k": 1
+              },
+              "min_q_kgkg": 0.0,
+              "negative_count": 0,
+              "nonfinite_count": 0,
+              "path_invalid_count": 0,
+              "positive_count": 0,
+              "sum_negative_path_gm2": 0.0,
+              "sum_positive_path_gm2": 0.0,
+              "tile_rows": 4
+            },
+            "QH": {
+              "cf0_positive_path_gm2": 0.0,
+              "max_q_kgkg": 0.0,
+              "min_location": {
+                "file": "hydro_d1_i1-145_j1-95.csv",
+                "i": 1,
+                "j": 1,
+                "k": 1
+              },
+              "min_q_kgkg": 0.0,
+              "negative_count": 0,
+              "nonfinite_count": 0,
+              "path_invalid_count": 0,
+              "positive_count": 0,
+              "sum_negative_path_gm2": 0.0,
+              "sum_positive_path_gm2": 0.0,
+              "tile_rows": 4
+            },
+            "QI": {
+              "cf0_positive_path_gm2": 0.0,
+              "max_q_kgkg": 0.0,
+              "min_location": {
+                "file": "hydro_d1_i1-145_j1-95.csv",
+                "i": 1,
+                "j": 1,
+                "k": 1
+              },
+              "min_q_kgkg": 0.0,
+              "negative_count": 0,
+              "nonfinite_count": 0,
+              "path_invalid_count": 0,
+              "positive_count": 0,
+              "sum_negative_path_gm2": 0.0,
+              "sum_positive_path_gm2": 0.0,
+              "tile_rows": 4
+            },
+            "QR": {
+              "cf0_positive_path_gm2": 0.0,
+              "max_q_kgkg": 0.0,
+              "min_location": {
+                "file": "hydro_d1_i1-145_j1-95.csv",
+                "i": 1,
+                "j": 1,
+                "k": 1
+              },
+              "min_q_kgkg": 0.0,
+              "negative_count": 0,
+              "nonfinite_count": 0,
+              "path_invalid_count": 0,
+              "positive_count": 0,
+              "sum_negative_path_gm2": 0.0,
+              "sum_positive_path_gm2": 0.0,
+              "tile_rows": 4
+            },
+            "QS": {
+              "cf0_positive_path_gm2": 0.0,
+              "max_q_kgkg": 0.0,
+              "min_location": {
+                "file": "hydro_d1_i1-145_j1-95.csv",
+                "i": 1,
+                "j": 1,
+                "k": 1
+              },
+              "min_q_kgkg": 0.0,
+              "negative_count": 0,
+              "nonfinite_count": 0,
+              "path_invalid_count": 0,
+              "positive_count": 0,
+              "sum_negative_path_gm2": 0.0,
+              "sum_positive_path_gm2": 0.0,
+              "tile_rows": 4
+            }
+          },
+          "step": 1,
+          "tile_species_summary_count": 24
+        },
+        "600": {
+          "complete_four_tile_summaries": true,
+          "seconds": 600.0,
+          "species": {
+            "QC": {
+              "cf0_positive_path_gm2": 16.04541220182502,
+              "max_q_kgkg": 0.0005080836708657444,
+              "min_location": {
+                "file": "hydro_d1_i1-145_j96-189.csv",
+                "i": 75,
+                "j": 189,
+                "k": 11
+              },
+              "min_q_kgkg": -4.53401648890854e-17,
+              "negative_count": 8,
+              "nonfinite_count": 0,
+              "path_invalid_count": 0,
+              "positive_count": 23531,
+              "sum_negative_path_gm2": -1.5176865611315052e-11,
+              "sum_positive_path_gm2": 149946.0442048746,
+              "tile_rows": 4
+            },
+            "QG": {
+              "cf0_positive_path_gm2": 0.9360858643208798,
+              "max_q_kgkg": 4.977500225322729e-07,
+              "min_location": {
+                "file": "hydro_d1_i1-145_j96-189.csv",
+                "i": 83,
+                "j": 189,
+                "k": 9
+              },
+              "min_q_kgkg": -5.269226128080883e-21,
+              "negative_count": 2,
+              "nonfinite_count": 0,
+              "path_invalid_count": 0,
+              "positive_count": 96922,
+              "sum_negative_path_gm2": -1.663748475801215e-15,
+              "sum_positive_path_gm2": 182.68232247223187,
+              "tile_rows": 4
+            },
+            "QH": {
+              "cf0_positive_path_gm2": 0.0,
+              "max_q_kgkg": 0.0,
+              "min_location": {
+                "file": "hydro_d1_i1-145_j1-95.csv",
+                "i": 1,
+                "j": 1,
+                "k": 1
+              },
+              "min_q_kgkg": 0.0,
+              "negative_count": 0,
+              "nonfinite_count": 0,
+              "path_invalid_count": 0,
+              "positive_count": 0,
+              "sum_negative_path_gm2": 0.0,
+              "sum_positive_path_gm2": 0.0,
+              "tile_rows": 4
+            },
+            "QI": {
+              "cf0_positive_path_gm2": 551.9260926054682,
+              "max_q_kgkg": 0.0001909375714603812,
+              "min_location": {
+                "file": "hydro_d1_i1-145_j96-189.csv",
+                "i": 50,
+                "j": 189,
+                "k": 12
+              },
+              "min_q_kgkg": -1.722995405521649e-20,
+              "negative_count": 27,
+              "nonfinite_count": 0,
+              "path_invalid_count": 0,
+              "positive_count": 109554,
+              "sum_negative_path_gm2": -6.680897409651013e-15,
+              "sum_positive_path_gm2": 80399.67228385224,
+              "tile_rows": 4
+            },
+            "QR": {
+              "cf0_positive_path_gm2": 12070.349545973948,
+              "max_q_kgkg": 4.312319651944563e-05,
+              "min_location": {
+                "file": "hydro_d1_i146-289_j96-189.csv",
+                "i": 226,
+                "j": 189,
+                "k": 15
+              },
+              "min_q_kgkg": -2.186464547253091e-27,
+              "negative_count": 13,
+              "nonfinite_count": 0,
+              "path_invalid_count": 0,
+              "positive_count": 24519,
+              "sum_negative_path_gm2": -9.788227346618083e-22,
+              "sum_positive_path_gm2": 15826.034304166766,
+              "tile_rows": 4
+            },
+            "QS": {
+              "cf0_positive_path_gm2": 77.74644163765687,
+              "max_q_kgkg": 1.632254861760885e-05,
+              "min_location": {
+                "file": "hydro_d1_i1-145_j96-189.csv",
+                "i": 79,
+                "j": 189,
+                "k": 7
+              },
+              "min_q_kgkg": -6.066954096624298e-34,
+              "negative_count": 5,
+              "nonfinite_count": 0,
+              "path_invalid_count": 0,
+              "positive_count": 105207,
+              "sum_negative_path_gm2": -1.5304855570495882e-28,
+              "sum_positive_path_gm2": 798.6712200966161,
+              "tile_rows": 4
+            }
+          },
+          "step": 11,
+          "tile_species_summary_count": 24
+        }
+      },
+      "tile_csv_count": 4
+    }
+  },
+  "inputs": {
+    "RA37_namelist_sha256": "2032068add6037588a49c112c18d267f6503520b4144c0013cb26e28600fae79",
+    "RA4_namelist_sha256": "5826d0405f4e7ec2f528a0fee8847ab445069d622c6819340440d33305179a7f",
+    "RA4_off_and_on_namelists_identical": true,
+    "RA4_vs_RA37_only_radiation_selector_differs": true,
+    "RRTMGP_coefficient_tables": {
+      "rrtmgp-clouds-lw-bnd.nc": {
+        "ra4_on_off_equal": true,
+        "resolved_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/mpi-wrf-udm-contracts/WRF/run/rrtmgp-clouds-lw-bnd.nc",
+        "sha256": "09d6704c5b863b4c3ceb417d20bb3076ec492e6bf2dfbcc9f3c5996a3706f0b0"
+      },
+      "rrtmgp-clouds-sw-bnd.nc": {
+        "ra4_on_off_equal": true,
+        "resolved_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/mpi-wrf-udm-contracts/WRF/run/rrtmgp-clouds-sw-bnd.nc",
+        "sha256": "7671835992a45afe66244b591a02c0b3df73d7d59ecb746bbffd9763497651cd"
+      },
+      "rrtmgp-gas-lw-g128.nc": {
+        "ra4_on_off_equal": true,
+        "resolved_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/mpi-wrf-udm-contracts/WRF/run/rrtmgp-gas-lw-g128.nc",
+        "sha256": "70ad65d116531122660318e5da2a2af9db74b425916202860e9527ef2375b8f6"
+      },
+      "rrtmgp-gas-sw-g112.nc": {
+        "ra4_on_off_equal": true,
+        "resolved_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/mpi-wrf-udm-contracts/WRF/run/rrtmgp-gas-sw-g112.nc",
+        "sha256": "361ed541324068ded28a275a4dd757bcaa0a845aebefa630f43a04678668fe62"
+      }
+    },
+    "wrfinput_wrfbdy_sha256_and_equality": {
+      "wrfbdy_d01": {
+        "by_case": {
+          "ra37": "e687b73730ab9a2cee4842e1a92b225a4edb074ba080b6053d96d81ec1731a2d",
+          "ra4": "e687b73730ab9a2cee4842e1a92b225a4edb074ba080b6053d96d81ec1731a2d",
+          "ra4-off": "e687b73730ab9a2cee4842e1a92b225a4edb074ba080b6053d96d81ec1731a2d"
+        },
+        "identical_all_cases": true,
+        "sha256": "e687b73730ab9a2cee4842e1a92b225a4edb074ba080b6053d96d81ec1731a2d"
+      },
+      "wrfinput_d01": {
+        "by_case": {
+          "ra37": "5ef7abe34c516fba107f346bdbdb3777edacb5d48493df467ea2dd8bcf6a75ff",
+          "ra4": "5ef7abe34c516fba107f346bdbdb3777edacb5d48493df467ea2dd8bcf6a75ff",
+          "ra4-off": "5ef7abe34c516fba107f346bdbdb3777edacb5d48493df467ea2dd8bcf6a75ff"
+        },
+        "identical_all_cases": true,
+        "sha256": "5ef7abe34c516fba107f346bdbdb3777edacb5d48493df467ea2dd8bcf6a75ff"
+      }
+    }
+  },
+  "ra37_strict_negative_case": {
+    "all_four_tile_snapshots_present_before_fatal": true,
+    "case": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-realdata-smoke/hydrodiag20/ra37",
+    "fatal_matching_csv": [
+      "hydro_d1_i146-289_j1-95.csv"
+    ],
+    "fatal_message": "LW i=217 j=1: RRTMGP_INPUT_UDM_QI_NEGATIVE value_kgkg=-2.887890293650070E-035 layer=22",
+    "fatal_value_matches_same_tile_csv": true,
+    "global_i": 217,
+    "global_j": 1,
+    "hydrodiag_all_four_tile_files": {
+      "hydro_d1_i1-145_j1-95.csv": "e8d10a5a65202bbaedaf0fdf0a8d7fec009311e8786118bd6046df35366385c6",
+      "hydro_d1_i1-145_j96-189.csv": "79223180518aea287644a04dce67d888d3cb2a9b9f08f6ba2307d5b95d01d37d",
+      "hydro_d1_i146-289_j1-95.csv": "18e11a77eec8857108e30f8b753dfda412e1dcd3f55d489ff601cfa41ca63d23",
+      "hydro_d1_i146-289_j96-189.csv": "b19a596b2804fb36bb72a57061edff9d7683976bde40443bef3b59e088319851"
+    },
+    "hydrodiag_at_600s": {
+      "QC": {
+        "cf0_positive_path_gm2": 16.545627547769264,
+        "max_q_kgkg": 0.0005079943803139031,
+        "min_location": {
+          "file": "hydro_d1_i1-145_j1-95.csv",
+          "i": 119,
+          "j": 1,
+          "k": 13
+        },
+        "min_q_kgkg": -9.111152248788244e-16,
+        "negative_count": 17,
+        "nonfinite_count": 0,
+        "path_invalid_count": 0,
+        "positive_count": 23468,
+        "sum_negative_path_gm2": -2.8052048761564133e-10,
+        "sum_positive_path_gm2": 149349.42801131422,
+        "tile_rows": 4
+      },
+      "QG": {
+        "cf0_positive_path_gm2": 0.9173317710593444,
+        "max_q_kgkg": 4.876503112427599e-07,
+        "min_location": {
+          "file": "hydro_d1_i1-145_j96-189.csv",
+          "i": 56,
+          "j": 189,
+          "k": 14
+        },
+        "min_q_kgkg": -1.711670638667584e-25,
+        "negative_count": 3,
+        "nonfinite_count": 0,
+        "path_invalid_count": 0,
+        "positive_count": 94716,
+        "sum_negative_path_gm2": -6.438503689197577e-20,
+        "sum_positive_path_gm2": 177.9849790658443,
+        "tile_rows": 4
+      },
+      "QH": {
+        "cf0_positive_path_gm2": 0.0,
+        "max_q_kgkg": 0.0,
+        "min_location": {
+          "file": "hydro_d1_i1-145_j1-95.csv",
+          "i": 1,
+          "j": 1,
+          "k": 1
+        },
+        "min_q_kgkg": 0.0,
+        "negative_count": 0,
+        "nonfinite_count": 0,
+        "path_invalid_count": 0,
+        "positive_count": 0,
+        "sum_negative_path_gm2": 0.0,
+        "sum_positive_path_gm2": 0.0,
+        "tile_rows": 4
+      },
+      "QI": {
+        "cf0_positive_path_gm2": 550.8949640521004,
+        "max_q_kgkg": 0.0001909980201162398,
+        "min_location": {
+          "file": "hydro_d1_i1-145_j96-189.csv",
+          "i": 120,
+          "j": 189,
+          "k": 23
+        },
+        "min_q_kgkg": -2.204057275322529e-21,
+        "negative_count": 42,
+        "nonfinite_count": 0,
+        "path_invalid_count": 0,
+        "positive_count": 109544,
+        "sum_negative_path_gm2": -6.369095334508264e-16,
+        "sum_positive_path_gm2": 80450.29385524915,
+        "tile_rows": 4
+      },
+      "QR": {
+        "cf0_positive_path_gm2": 12016.687886872169,
+        "max_q_kgkg": 4.892037031822838e-05,
+        "min_location": {
+          "file": "hydro_d1_i146-289_j96-189.csv",
+          "i": 228,
+          "j": 189,
+          "k": 18
+        },
+        "min_q_kgkg": -6.735263836143764e-31,
+        "negative_count": 17,
+        "nonfinite_count": 0,
+        "path_invalid_count": 0,
+        "positive_count": 24372,
+        "sum_negative_path_gm2": -2.90159723075312e-25,
+        "sum_positive_path_gm2": 15680.519156491417,
+        "tile_rows": 4
+      },
+      "QS": {
+        "cf0_positive_path_gm2": 77.26315400480485,
+        "max_q_kgkg": 1.632163366593886e-05,
+        "min_location": {
+          "file": "hydro_d1_i1-145_j96-189.csv",
+          "i": 56,
+          "j": 189,
+          "k": 14
+        },
+        "min_q_kgkg": -5.348970745836201e-27,
+        "negative_count": 5,
+        "nonfinite_count": 0,
+        "path_invalid_count": 0,
+        "positive_count": 102614,
+        "sum_negative_path_gm2": -2.0120215163301544e-21,
+        "sum_positive_path_gm2": 789.6443598370269,
+        "tile_rows": 4
+      }
+    },
+    "layer": 22,
+    "mpiexec_exit_code": 1,
+    "rank_evidence": {
+      "0": {
+        "fatal": false,
+        "mpi_layout": [
+          "Ntasks in X            2 , ntasks in Y            2"
+        ],
+        "omp_tiles": [
+          "WRF NUMBER OF TILES FROM OMP_GET_MAX_THREADS =   1",
+          "WRF NUMBER OF TILES =   1"
+        ],
+        "rsl_error_sha256": "7cbee36a23ade53867bd031a77b3d3bd829c07be26bd3a766bca763e1ddea34a",
+        "rsl_out_sha256": "8a829517ef396c6246a0fe00cbf762443d83a01ebe117db346541baf36e26c73",
+        "success": false
+      },
+      "1": {
+        "fatal": true,
+        "mpi_layout": [
+          "Ntasks in X            2 , ntasks in Y            2"
+        ],
+        "omp_tiles": [
+          "WRF NUMBER OF TILES FROM OMP_GET_MAX_THREADS =   1",
+          "WRF NUMBER OF TILES =   1"
+        ],
+        "rsl_error_sha256": "2c128efb31e17cf1e65ca5a31e10a344331b6201bfaf9831e48c2a1bf46c2477",
+        "rsl_out_sha256": "ec3db2a6aacb97bc39c45956daf37045b5bc433c075ac7ec6e6edcd2735b168e",
+        "success": false
+      },
+      "2": {
+        "fatal": false,
+        "mpi_layout": [
+          "Ntasks in X            2 , ntasks in Y            2"
+        ],
+        "omp_tiles": [
+          "WRF NUMBER OF TILES FROM OMP_GET_MAX_THREADS =   1",
+          "WRF NUMBER OF TILES =   1"
+        ],
+        "rsl_error_sha256": "a060688b8507e837f7f7dc8766497dee9bf2467fc369a66aa84cd4ae53a02228",
+        "rsl_out_sha256": "290e16bffa8887873a800d4a4a8b35c033a10deb33d90f61c4a86ed6cff123c4",
+        "success": false
+      },
+      "3": {
+        "fatal": false,
+        "mpi_layout": [
+          "Ntasks in X            2 , ntasks in Y            2"
+        ],
+        "omp_tiles": [
+          "WRF NUMBER OF TILES FROM OMP_GET_MAX_THREADS =   1",
+          "WRF NUMBER OF TILES =   1"
+        ],
+        "rsl_error_sha256": "b6feacb203ec5f5dc6a8b7542cdeb7500e6077e5873cc82188abf42bc3ba949e",
+        "rsl_out_sha256": "b2dfef6ccd26bbc451a7088a993b51647bc34030aa5885423aefc0756527e427",
+        "success": false
+      }
+    },
+    "timed_out": false
+  },
+  "ra4_diagnostic_off_on_comparison": {
+    "both_runs_all_four_ranks_success": true,
+    "hydrodiag_all_four_tile_files": {
+      "hydro_d1_i1-145_j1-95.csv": "fa6f4426395578c73b29a8aa797549e4fb493faf55f04d7274463d658026c304",
+      "hydro_d1_i1-145_j96-189.csv": "fbee3ae7f11e4fbc92592f24067edcbbe40b7d781805ac3838162d4cd0267c8c",
+      "hydro_d1_i146-289_j1-95.csv": "8bd8717e1a8592f40fe3837913c5c590a0a78dde0b7a485581ca70a71b42cb9f",
+      "hydro_d1_i146-289_j96-189.csv": "ac6df287e796872b98ac916513f2a1c6ac67452d3715932a232f58e531df363a"
+    },
+    "hydrodiag_at_600s": {
+      "QC": {
+        "cf0_positive_path_gm2": 16.04541220182502,
+        "max_q_kgkg": 0.0005080836708657444,
+        "min_location": {
+          "file": "hydro_d1_i1-145_j96-189.csv",
+          "i": 75,
+          "j": 189,
+          "k": 11
+        },
+        "min_q_kgkg": -4.53401648890854e-17,
+        "negative_count": 8,
+        "nonfinite_count": 0,
+        "path_invalid_count": 0,
+        "positive_count": 23531,
+        "sum_negative_path_gm2": -1.5176865611315052e-11,
+        "sum_positive_path_gm2": 149946.0442048746,
+        "tile_rows": 4
+      },
+      "QG": {
+        "cf0_positive_path_gm2": 0.9360858643208798,
+        "max_q_kgkg": 4.977500225322729e-07,
+        "min_location": {
+          "file": "hydro_d1_i1-145_j96-189.csv",
+          "i": 83,
+          "j": 189,
+          "k": 9
+        },
+        "min_q_kgkg": -5.269226128080883e-21,
+        "negative_count": 2,
+        "nonfinite_count": 0,
+        "path_invalid_count": 0,
+        "positive_count": 96922,
+        "sum_negative_path_gm2": -1.663748475801215e-15,
+        "sum_positive_path_gm2": 182.68232247223187,
+        "tile_rows": 4
+      },
+      "QH": {
+        "cf0_positive_path_gm2": 0.0,
+        "max_q_kgkg": 0.0,
+        "min_location": {
+          "file": "hydro_d1_i1-145_j1-95.csv",
+          "i": 1,
+          "j": 1,
+          "k": 1
+        },
+        "min_q_kgkg": 0.0,
+        "negative_count": 0,
+        "nonfinite_count": 0,
+        "path_invalid_count": 0,
+        "positive_count": 0,
+        "sum_negative_path_gm2": 0.0,
+        "sum_positive_path_gm2": 0.0,
+        "tile_rows": 4
+      },
+      "QI": {
+        "cf0_positive_path_gm2": 551.9260926054682,
+        "max_q_kgkg": 0.0001909375714603812,
+        "min_location": {
+          "file": "hydro_d1_i1-145_j96-189.csv",
+          "i": 50,
+          "j": 189,
+          "k": 12
+        },
+        "min_q_kgkg": -1.722995405521649e-20,
+        "negative_count": 27,
+        "nonfinite_count": 0,
+        "path_invalid_count": 0,
+        "positive_count": 109554,
+        "sum_negative_path_gm2": -6.680897409651013e-15,
+        "sum_positive_path_gm2": 80399.67228385224,
+        "tile_rows": 4
+      },
+      "QR": {
+        "cf0_positive_path_gm2": 12070.349545973948,
+        "max_q_kgkg": 4.312319651944563e-05,
+        "min_location": {
+          "file": "hydro_d1_i146-289_j96-189.csv",
+          "i": 226,
+          "j": 189,
+          "k": 15
+        },
+        "min_q_kgkg": -2.186464547253091e-27,
+        "negative_count": 13,
+        "nonfinite_count": 0,
+        "path_invalid_count": 0,
+        "positive_count": 24519,
+        "sum_negative_path_gm2": -9.788227346618083e-22,
+        "sum_positive_path_gm2": 15826.034304166766,
+        "tile_rows": 4
+      },
+      "QS": {
+        "cf0_positive_path_gm2": 77.74644163765687,
+        "max_q_kgkg": 1.632254861760885e-05,
+        "min_location": {
+          "file": "hydro_d1_i1-145_j96-189.csv",
+          "i": 79,
+          "j": 189,
+          "k": 7
+        },
+        "min_q_kgkg": -6.066954096624298e-34,
+        "negative_count": 5,
+        "nonfinite_count": 0,
+        "path_invalid_count": 0,
+        "positive_count": 105207,
+        "sum_negative_path_gm2": -1.5304855570495882e-28,
+        "sum_positive_path_gm2": 798.6712200966161,
+        "tile_rows": 4
+      }
+    },
+    "off_case": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-realdata-smoke/hydrodiag20/ra4-off",
+    "on_case": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-realdata-smoke/hydrodiag20/ra4",
+    "outputs_by_timestamp": {
+      "wrfout_d01_2010-06-11_00:00:00": {
+        "all_values_finite_and_unmasked": true,
+        "bitwise_equal_fields": 201,
+        "changed_fields": [],
+        "history_files_byte_identical": true,
+        "l2": 0.0,
+        "linf": 0.0,
+        "numeric_common_fields": 201,
+        "numeric_values_compared": 52458196,
+        "off_history_sha256": "c8e0d9c463462b416dd171cb9c0e1b5e307e74510cb13eb36714f7c67f654932",
+        "on_history_sha256": "c8e0d9c463462b416dd171cb9c0e1b5e307e74510cb13eb36714f7c67f654932",
+        "rmse": 0.0
+      },
+      "wrfout_d01_2010-06-11_00:10:00": {
+        "all_values_finite_and_unmasked": true,
+        "bitwise_equal_fields": 201,
+        "changed_fields": [],
+        "history_files_byte_identical": true,
+        "l2": 0.0,
+        "linf": 0.0,
+        "numeric_common_fields": 201,
+        "numeric_values_compared": 52458196,
+        "off_history_sha256": "085019f13d31fdbf08f2467d8a018c68ad4cbf437c63541aee9e943b8dedccb4",
+        "on_history_sha256": "085019f13d31fdbf08f2467d8a018c68ad4cbf437c63541aee9e943b8dedccb4",
+        "rmse": 0.0
+      },
+      "wrfout_d01_2010-06-11_00:20:00": {
+        "all_values_finite_and_unmasked": true,
+        "bitwise_equal_fields": 201,
+        "changed_fields": [],
+        "history_files_byte_identical": true,
+        "l2": 0.0,
+        "linf": 0.0,
+        "numeric_common_fields": 201,
+        "numeric_values_compared": 52458196,
+        "off_history_sha256": "825e51f978be38673fc754c33ba33c07d52e5c0085ae64594afe3e77c183261f",
+        "on_history_sha256": "825e51f978be38673fc754c33ba33c07d52e5c0085ae64594afe3e77c183261f",
+        "rmse": 0.0
+      }
+    },
+    "rank_evidence": {
+      "off": {
+        "0": {
+          "fatal": false,
+          "mpi_layout": [
+            "Ntasks in X            2 , ntasks in Y            2"
+          ],
+          "omp_tiles": [
+            "WRF NUMBER OF TILES FROM OMP_GET_MAX_THREADS =   1",
+            "WRF NUMBER OF TILES =   1"
+          ],
+          "rsl_error_sha256": "46b49535dce303469293cb9ca249ee26213e6b87dec32d9533dd627550f7bf05",
+          "rsl_out_sha256": "c264043875abf1dd23de4dc372ac342f4ca959a1acce10b493cac4b2f67098bd",
+          "success": true
+        },
+        "1": {
+          "fatal": false,
+          "mpi_layout": [
+            "Ntasks in X            2 , ntasks in Y            2"
+          ],
+          "omp_tiles": [
+            "WRF NUMBER OF TILES FROM OMP_GET_MAX_THREADS =   1",
+            "WRF NUMBER OF TILES =   1"
+          ],
+          "rsl_error_sha256": "6fc00d6072251fa907787fe1ce30376af68d2f1dbf3c6deb6aa0d72bba8653cf",
+          "rsl_out_sha256": "a278f99e177d774a2f8d753df1f151bd4f410c1bee9f08a4d47ab1b2c066b1a6",
+          "success": true
+        },
+        "2": {
+          "fatal": false,
+          "mpi_layout": [
+            "Ntasks in X            2 , ntasks in Y            2"
+          ],
+          "omp_tiles": [
+            "WRF NUMBER OF TILES FROM OMP_GET_MAX_THREADS =   1",
+            "WRF NUMBER OF TILES =   1"
+          ],
+          "rsl_error_sha256": "8db278db66e97efde6d16582b1973ce9a24afc81f4f4f80b53398b4edca1df4f",
+          "rsl_out_sha256": "a59b0ee279bbe11c4af8421d6f078dae8400e765f219833ce11e375e12b325d7",
+          "success": true
+        },
+        "3": {
+          "fatal": false,
+          "mpi_layout": [
+            "Ntasks in X            2 , ntasks in Y            2"
+          ],
+          "omp_tiles": [
+            "WRF NUMBER OF TILES FROM OMP_GET_MAX_THREADS =   1",
+            "WRF NUMBER OF TILES =   1"
+          ],
+          "rsl_error_sha256": "8d625fdcd40956363c698f128f751fedcea56a390adf55706b86fae78f1c6b39",
+          "rsl_out_sha256": "ddf75c0dd833e97cd5c95521e23d796850cd1cabebaedf7f99a38ed3ccaed980",
+          "success": true
+        }
+      },
+      "on": {
+        "0": {
+          "fatal": false,
+          "mpi_layout": [
+            "Ntasks in X            2 , ntasks in Y            2"
+          ],
+          "omp_tiles": [
+            "WRF NUMBER OF TILES FROM OMP_GET_MAX_THREADS =   1",
+            "WRF NUMBER OF TILES =   1"
+          ],
+          "rsl_error_sha256": "dc944e5a820195c093952e462f3b0eec417a418a17a3e6965bdd1f64160d8440",
+          "rsl_out_sha256": "b14f30cff46e39ecc28dcb9b90737e7dd8085856225d899073932c106a926654",
+          "success": true
+        },
+        "1": {
+          "fatal": false,
+          "mpi_layout": [
+            "Ntasks in X            2 , ntasks in Y            2"
+          ],
+          "omp_tiles": [
+            "WRF NUMBER OF TILES FROM OMP_GET_MAX_THREADS =   1",
+            "WRF NUMBER OF TILES =   1"
+          ],
+          "rsl_error_sha256": "6fc00d6072251fa907787fe1ce30376af68d2f1dbf3c6deb6aa0d72bba8653cf",
+          "rsl_out_sha256": "a278f99e177d774a2f8d753df1f151bd4f410c1bee9f08a4d47ab1b2c066b1a6",
+          "success": true
+        },
+        "2": {
+          "fatal": false,
+          "mpi_layout": [
+            "Ntasks in X            2 , ntasks in Y            2"
+          ],
+          "omp_tiles": [
+            "WRF NUMBER OF TILES FROM OMP_GET_MAX_THREADS =   1",
+            "WRF NUMBER OF TILES =   1"
+          ],
+          "rsl_error_sha256": "8db278db66e97efde6d16582b1973ce9a24afc81f4f4f80b53398b4edca1df4f",
+          "rsl_out_sha256": "a59b0ee279bbe11c4af8421d6f078dae8400e765f219833ce11e375e12b325d7",
+          "success": true
+        },
+        "3": {
+          "fatal": false,
+          "mpi_layout": [
+            "Ntasks in X            2 , ntasks in Y            2"
+          ],
+          "omp_tiles": [
+            "WRF NUMBER OF TILES FROM OMP_GET_MAX_THREADS =   1",
+            "WRF NUMBER OF TILES =   1"
+          ],
+          "rsl_error_sha256": "8d625fdcd40956363c698f128f751fedcea56a390adf55706b86fae78f1c6b39",
+          "rsl_out_sha256": "ddf75c0dd833e97cd5c95521e23d796850cd1cabebaedf7f99a38ed3ccaed980",
+          "success": true
+        }
+      }
+    }
+  },
+  "runtime_environment": {
+    "MPICH_INTERFACE_HOSTNAME": "127.0.0.1",
+    "OMP_DYNAMIC": "FALSE",
+    "OMP_NUM_THREADS": "1",
+    "WRF_RRTMGP_AUDIT_*": "unset",
+    "WRF_RRTMGP_CAPTURE_*": "unset",
+    "WRF_RRTMGP_HYDRO_DIAG_DIR": "set only for diagnostic ON cases",
+    "launcher": [
+      "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/mpich-sock/bin/mpiexec",
+      "-launcher",
+      "fork",
+      "-iface",
+      "lo",
+      "-n",
+      "4",
+      "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/mpi-wrf-udm-contracts/WRF/main/wrf.exe"
+    ]
+  },
+  "scope_note": "The fatal confirms strict validation of an extremely small negative native QI value at the first post-initial radiation call; no clipping/tolerance or physics modification was applied.",
+  "simulation_scope": "20-minute real-data integration smoke; 4 MPI ranks x 1 OpenMP thread; dt=60 s; radiation/history intervals=10 min",
+  "status": "PASS_RA4_DIAGNOSTIC_NONINTERFERENCE; PASS_RA37_EXPECTED_STRICT_NEGATIVE_FATAL"
+}
