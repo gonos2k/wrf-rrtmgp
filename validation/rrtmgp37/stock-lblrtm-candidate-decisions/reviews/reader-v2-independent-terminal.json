@@ -1,0 +1,69 @@
+{
+  "schema": "UDM37_LBLRTM_CANDIDATE_DECISION_READER_V2_INDEPENDENT_REVIEW_V1",
+  "status": "SCOPED_RESULT_CONFIRMED_WITH_ONE_AGGREGATE_FIELD_DEFECT",
+  "scope": "Read-only review of the terminal outer receipt, compact report, reader source, and source pins. No raw OD/event artifacts were opened or rescanned; no reader rerun, build, compile, model, or solver call was made.",
+  "pins": {
+    "outer_execution_receipt": {
+      "path": "build/udm37-lblrtm-candidate-decision-reader-outer-execution-v2.json",
+      "sha256": "c1bb531d7671ba4f66ff6607a477c7e5a2b420e5253cec81a0fbd6fe8b9dd067",
+      "status": "TERMINAL",
+      "pid": 1781213,
+      "returncode": 0,
+      "timed_out": false,
+      "exception": null,
+      "reaped": true
+    },
+    "report": {
+      "path": "build/udm37-lblrtm-candidate-decision-reader-run-v2/report.json",
+      "sha256": "3244591f8545ba8f91f9c0f9ce3a8e8717ba7ec21487b13a0360e9d60ef83c51",
+      "bytes": 1370214
+    },
+    "reader": {
+      "path": "build/udm37-lblrtm-candidate-decision-reader-preparation-v2/read_saved_candidate.py",
+      "sha256": "2423ceb08af8f45a9f6e5bbd7a9dfa56571a596a9d84d5bf8eb3381888348b3e"
+    },
+    "plan": {
+      "path": "build/udm37-lblrtm-candidate-decision-reader-preparation-v2/plan.json",
+      "sha256": "7594e33b8152edc21a6964f04241894a21338d62447adeb751b52e305ffe7803"
+    }
+  },
+  "independently_checked_report_facts": {
+    "report_status": "PASS_SCOPED_SAVED_ROUTING_AND_NONINTERFERENCE",
+    "solver_pid": 1752919,
+    "solver_actual_returncode": 0,
+    "new_model_build_or_solver_invocations_for_reader": 0,
+    "phase_reason_counts": {
+      "1:1": 7431,
+      "2:6": 3260,
+      "2:9": 7431,
+      "3:10": 3284,
+      "3:11": 1,
+      "3:12": 837,
+      "3:13": 3386
+    },
+    "target_term_updates_joined": 6072,
+    "target_full_invocation_identities": 837,
+    "left_censored_prefix_nonzero_entry_records": 69,
+    "left_censored_prefix_unique_identities": 69,
+    "left_censored_ancestry_validated": false,
+    "observed_reason9_to_nonzero_phase3_entries_bitwise_checked": 4155,
+    "od_layers": 45,
+    "od_samples_bitwise_equal": 63838065,
+    "od_negative_acceptance": "FAIL_RETAINED_NO_CLIPPING"
+  },
+  "aggregate_field_defect": {
+    "field": "join.computed_reason9_invocations",
+    "reported_value": 7500,
+    "source": "build/udm37-lblrtm-candidate-decision-reader-preparation-v2/read_saved_candidate.py",
+    "cause": "The left-censor branch evaluates computed[key] for a missing-prefix phase-3 entry. Since computed is a defaultdict(list), this creates an empty key. The report then uses len(computed), counting those 69 empty keys as reason-9 invocations.",
+    "authoritative_nonempty_event_count": 7431,
+    "basis": "phase_reason_counts['2:9'] is counted directly from phase-2 reason-9 records; reader code appends to computed only for those records.",
+    "safe_correction": "If reporting invocation/event count, use sum(len(events) for events in computed.values()) or the direct phase_reason_counts['2:9'] count. If reporting unique nonempty identities, use sum(bool(events) for events in computed.values()) and label it as identities. Do not claim 7431 unique identities without a separate uniqueness check.",
+    "other_impacted_fields": "reason9_without_phase3 uses set difference against phase-3 entries; the 69 inserted empty keys are phase-3 keys and therefore do not inflate that count. The 4155 observed bitwise joins and 69 censored-prefix summaries are separately counted and remain supported by the report logic."
+  },
+  "interpretation_limits": [
+    "The 69 missing observed reason-9 entries are left-censored under the source-permitted PANEL-to-label-70 path; their unrecorded LNCOR ancestry is not validated.",
+    "The reader retains the negative-OD failure without clipping; this receipt does not establish physical normality or an expected cancellation partner.",
+    "The compact report claims all OD samples finite; the reader source contains an explicit math.isfinite check over each decoded sample and exact pairwise sample-byte comparison. This review did not independently open the raw spectra."
+  ]
+}

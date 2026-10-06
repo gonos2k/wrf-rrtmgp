@@ -1,0 +1,57 @@
+{
+  "basis": "Review of the v6-to-v7 diff found only the paired plan path update in the runner. The plan supplies size_bytes for both records passed to digest_matches, and the files match the declared sizes and SHA-256 values. The preceding v6 review covered remaining runner gates and the baseline receipt integrity correction.",
+  "checks": {
+    "baseline_receipt_sha_verified_before_json_parse": true,
+    "build_solver_auth_paths_and_scopes_updated_to_v7": true,
+    "case_stage_receipt_sha_and_size_match": true,
+    "execution_performed": false,
+    "root_staging_preflight_pin_unchanged": true,
+    "runner_plan_path_and_sha_match": true,
+    "stage_receipt_sha_and_size_match": true,
+    "v6_prelaunch_keyerror_resolved": true
+  },
+  "limitations": [
+    "Static review only; no build or solver result is asserted.",
+    "Scientific acceptance criteria and source behavior are unchanged."
+  ],
+  "pins": {
+    "baseline_output_receipt": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-held-state-r3terms-cpl-od-run-v1/runs/od-v1/postflight.json",
+      "sha256": "42765da8279bbf631c773673036d2ad92118e94d10b091a91ddb00749d90d6ea",
+      "size_bytes": 9680
+    },
+    "case_stage_receipt": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-candidate-decision-run-v3/runs/od-v3/case-stage.json",
+      "sha256": "685196e151bdf7d3bc062fd027dbc9ffe5e9a9861ae884b0bb6be9b36cf92485",
+      "size_bytes": 14781
+    },
+    "plan_v7": {
+      "path": "build/udm37-lblrtm-candidate-decision-run-v3/plan-v7.json",
+      "sha256": "d91cf4e2369fdd5ba34db41fe7e6ef925b7d38def1b6f9822125d73d2ba19208",
+      "size_bytes": 37703
+    },
+    "root_source_preflight_v5": {
+      "path": "build/udm37-lblrtm-candidate-decision-run-v3/root-source-preflight-v5.json",
+      "sha256": "adb0be04aebff4651d4816f7add6bd50672caeb4a7ce8841e23c852e210e82a1",
+      "size_bytes": 678
+    },
+    "runner_v7": {
+      "path": "build/udm37-lblrtm-candidate-decision-run-v3/execute_once_v7.py",
+      "sha256": "c9d46648411735481e47b925f954b7f84ecccdb5f78d4f6c3ea77d1dcb48ab47",
+      "size_bytes": 17034
+    },
+    "stage_receipt": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-candidate-decision-run-v3/staging/stage-receipt.json",
+      "sha256": "5f7ec9ed11d823f58bc0cb81ae677946b8af27f6b883c848557af6df27843081",
+      "size_bytes": 18921
+    }
+  },
+  "prior_v6_review": {
+    "path": "build/udm37-lblrtm-candidate-decision-run-v6-peer-review/review-v1.json",
+    "sha256": "e5f686114684d8ab7aeff9e860e86f03e06613c5584a7c0fb3c38ccc07a3248b"
+  },
+  "schema": "UDM37_LBLRTM_CANDIDATE_DECISION_RUN_V7_STATIC_REVIEW_V1",
+  "scope": "Read-only review of exact frozen plan/runner correction. No build, solver, model, or raw-output execution.",
+  "status": "PASS_SCOPED_STATIC_REVIEW_READY_FOR_SEPARATELY_AUTHORIZED_BUILD",
+  "v7_delta": "The runner filename/plan/auth pins advance to v7. The stage-receipt and case-stage-receipt plan records now include exact byte sizes required by digest_matches; paths and SHA-256 values remain unchanged. No source, case, or executable pin changed."
+}

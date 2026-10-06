@@ -1,0 +1,56 @@
+{
+  "checks": {
+    "baseline_receipt_declared_sha_matches_bytes": true,
+    "case_stage_receipt_declared_sha_matches_bytes": true,
+    "execution_performed": false,
+    "paired_plan_runner_path_and_hash_match": true,
+    "previous_v5_blocker_resolved": true,
+    "root_preflight_pin_unchanged": true,
+    "stage_receipt_declared_sha_matches_bytes": true
+  },
+  "limitations": [
+    "This is static runner/preflight review only; it does not assert the build or solver outcome.",
+    "No numerical or physical acceptance criteria are changed."
+  ],
+  "pins": {
+    "baseline_output_receipt": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-held-state-r3terms-cpl-od-run-v1/runs/od-v1/postflight.json",
+      "sha256": "42765da8279bbf631c773673036d2ad92118e94d10b091a91ddb00749d90d6ea",
+      "size_bytes": 9680
+    },
+    "case_stage_receipt": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-candidate-decision-run-v3/runs/od-v3/case-stage.json",
+      "sha256": "685196e151bdf7d3bc062fd027dbc9ffe5e9a9861ae884b0bb6be9b36cf92485",
+      "size_bytes": 14781
+    },
+    "plan_v6": {
+      "path": "build/udm37-lblrtm-candidate-decision-run-v3/plan-v6.json",
+      "sha256": "e18acc68c50117112480cfdd580be52b56254a271b47838d4fe51b547ddec978",
+      "size_bytes": 37030
+    },
+    "root_source_preflight_v5": {
+      "path": "build/udm37-lblrtm-candidate-decision-run-v3/root-source-preflight-v5.json",
+      "sha256": "adb0be04aebff4651d4816f7add6bd50672caeb4a7ce8841e23c852e210e82a1",
+      "size_bytes": 678
+    },
+    "runner_v6": {
+      "path": "build/udm37-lblrtm-candidate-decision-run-v3/execute_once_v6.py",
+      "sha256": "940cbd9a8b91f99fe2d48053b6610cfe8e927bd3f317c6ea9bb94b6e2f7a504b",
+      "size_bytes": 17034
+    },
+    "stage_receipt": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-candidate-decision-run-v3/staging/stage-receipt.json",
+      "sha256": "5f7ec9ed11d823f58bc0cb81ae677946b8af27f6b883c848557af6df27843081",
+      "size_bytes": 18921
+    }
+  },
+  "prior_v5_review": {
+    "path": "build/udm37-lblrtm-candidate-decision-run-v5-peer-review/review-v1.json",
+    "sha256": "d3d56339ede0540528843673537d900fd6bf2724d823fb9ad2636949279c08c7"
+  },
+  "review_basis": "The v5 review covered build and solver gating, complete staged source/input identity checks, durable child RC-before-output inspection, timeout/reap and retry protections, and the isolated candidate source/build-object scope. The v6 change addresses the only identified integrity blocker by authenticating the baseline output-name receipt before parsing it.",
+  "schema": "UDM37_LBLRTM_CANDIDATE_DECISION_RUN_V6_STATIC_REVIEW_V1",
+  "scope": "Read-only exact-plan/runner review and artifact pin check. No build, solver, model, or raw-output execution.",
+  "status": "PASS_SCOPED_STATIC_REVIEW_READY_FOR_SEPARATELY_AUTHORIZED_BUILD",
+  "v6_delta": "Only the paired plan path/version and a SHA-256 verification of baseline_output_receipt immediately before the runner parses its outputs inventory; authorization paths and plan history are correspondingly updated."
+}

@@ -1,0 +1,1 @@
+Prospective unexecuted counter fix. Use non-mutating lookup for missing computed ancestors. V2 executed report is preserved with separate counter-correction receipt. No raw reader, compiler or solver run for v3. No claim of executed v3 validation.

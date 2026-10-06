@@ -1,0 +1,57 @@
+{
+  "schema": "UDM37_LBLRTM_CANDIDATE_DECISION_STATIC_REVIEW_V1",
+  "status": "BLOCKED_STATIC_IDENTITY_FIELDS_INVALID",
+  "review_scope": "Read-only source comparison of the proposed 16 observational hooks and their 37-argument writer against the frozen R3-term source. No raw TAPE3/trace reads, compilation, model/solver invocation, or edits were made.",
+  "pins": {
+    "base_source": {
+      "path": "build/udm37-lblrtm-r3-term-trace-v1/source/LBLRTM/src/oprop.f90",
+      "sha256": "6b806117a32832371f8947bc54b5a5c3bf38389a7279ae48ae39afc141666300"
+    },
+    "candidate_source": {
+      "path": "build/udm37-lblrtm-candidate-decision-source-v1/oprop.candidate.f90",
+      "sha256": "f76f0c5d87c62339bb845fea0aafd2d4591700dd16a78b9c0bbda5985d25a517"
+    },
+    "patch": {
+      "path": "build/udm37-lblrtm-candidate-decision-source-v1/candidate-decision.patch",
+      "sha256": "a7598b277614cc6d2b915681b3753c5f242a979ff35955a09e4c66717c1eea70"
+    },
+    "plan": {
+      "path": "build/udm37-lblrtm-candidate-decision-source-v1/plan.json",
+      "sha256": "a9e4cc94185e2e1f1ab7e448eb80d08d07e49434b66e6358fbd289c21eaf6502"
+    },
+    "source_path_in_candidate": "build/udm37-lblrtm-candidate-decision-source-v1/oprop.candidate.f90"
+  },
+  "static_checks": {
+    "candidate_event_call_count": 16,
+    "argument_count_per_call": 37,
+    "writer_dummy_argument_count": 37,
+    "common_block_shape_and_declared_type": "The six-element-by-250 INTEGER identity COMMON declaration is consistent at its RDLIN, LNCOR1, and CNVFNV uses; IDs are assigned for the loaded line-buffer records before IOUT selection.",
+    "source_assignments_and_decisions": "Diff review found hooks adjacent to the intended RDLIN/LNCOR1/CNVFNV decisions; R3 arithmetic assignments, source branch predicates, support expression, and panel handoff statements remain textually present and unchanged. The one-line GOTO wrappers preserve the same jump after logging. This is static review only, not compiled equivalence evidence.",
+    "no_other_material_static_blocker_found": true
+  },
+  "blocking_findings": [
+    {
+      "locations": [
+        "candidate oprop.f90:893-899 (RDLIN reason 3)",
+        "candidate oprop.f90:920-926 (RDLIN reason 4)",
+        "candidate oprop.f90:934-941 (RDLIN reason 1)",
+        "candidate oprop.f90:1435-1439 and 1461-1465 and 1482-1498 (CNVFNV reasons 10-13)"
+      ],
+      "issue": "The ISO value supplied by RDLIN/CNVFNV metadata uses MOD(MOD(encoded_MOL,1000),100)/100. MOL is integer here, so the final integer division by 100 yields zero for every encoded isotope. The source decoding is MOD(encoded_MOL,1000)/100. Consequently these events do not preserve isotope identity, and their identity metadata is invalid.",
+      "impact": "Rows cannot reliably join candidate decisions to isotope-specific source lines or distinguish isotope partners. This defeats a central purpose of the candidate inventory even if the diagnostic hooks leave physics execution unchanged.",
+      "required_correction": "Use the source-consistent integer decode MOD(encoded_MOL,1000)/100 in all affected event calls, with explicit preservation of the unmodified encoded MOL as a separate identity field."
+    },
+    {
+      "locations": ["candidate oprop.f90:934-937 (RDLIN reason 1)"],
+      "issue": "The offered-line event passes MOD(encoded_MOL,100) in the helper's `mol` field, while the plan says that field preserves original encoded MOL. Other RDLIN/LNCOR1/CNVFNV events pass the full encoded MOL in that field, so event identity is inconsistent across phases; the offered event loses isotope encoding before the already-zero ISO decode.",
+      "impact": "An RDLIN offered row cannot be joined to later decisions by the promised original encoded MOL value, especially when multiple isotope records share a molecule.",
+      "required_correction": "Pass the full original encoded MOL to the existing field for consistent identity, or revise the schema with separate `encoded_mol` and decoded molecule fields and update every call consistently."
+    }
+  ],
+  "non_blocking_scope_notes": {
+    "finite_support": "The proposed hooks can record selected RDLIN/LNCOR1 rejection reasons and CNVFNV target-stencil overlap for admitted rows. RDLIN headers skipped before a block is read still have no per-line identities; retain the plan's limitation. JMAX1>MAX1 records a panel handoff, not a permanent omission.",
+    "physical_interpretation": "Even after identity repair, event rows can classify source-declared routing and actual stencil participation. They cannot prove that a cancellation partner ought to exist or that a negative optical depth is physically valid.",
+    "execution_state": "Candidate remains uncompiled and unrun. The source plan's zero compile/model/raw-scan counts are consistent with this review."
+  },
+  "disposition": "Keep candidate v1 and this review immutable. The identity corrections should be made in a new additive candidate version and independently re-reviewed before any build or execution."
+}

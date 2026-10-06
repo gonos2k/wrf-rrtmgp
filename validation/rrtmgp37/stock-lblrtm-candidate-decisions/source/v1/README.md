@@ -1,0 +1,11 @@
+# Candidate-decision diagnostics — private, uncompiled patch
+
+This folder contains an additive diagnostic patch against the pinned instrumented `oprop.f90` used for the existing layer-21 R3 term trace. The original pinned source remains unchanged. The patch has not been compiled or run, and it does not authorize a model execution.
+
+The instrumentation is restricted to layer 21 and the saved target panel selected by `abs(VFT - 662.695395555556) < 1e-10`. It records RDLIN block skips and rows below/inside/above the active ILO:IHI range; LNCOR1 identity, zero-strength, lower-support, flag-0 SPEAK/FREJ, and accepted outcomes; and CNVFNV zero-SP rows, MAX1 handoffs, and stencil overlap/no-overlap for R3 indices 61–64. Existing R3 write instrumentation remains the source of actual-update rows.
+
+A row's stable buffer identity is `(TAPE3 SHA-256 from the external run receipt, layer, RDLIN rewind-pass ordinal, panel-header ordinal, buffer slot)`, with LNCOR1 invocation ordinal added for decision/CNVFNV rows. The header ordinal increments for every panel header read, including a block rejected by the RDLIN `VMAX < VBOT` gate. The slot is assigned from the actual `rdlnbuf` slot, not inferred from wavenumber. This identity is unique for the pinned TAPE3 and instrumented run; it is not a physical line number independent of those pins.
+
+`UDM37_CANDIDATE_DECISIONS` is private diagnostic output. It contains scalar decision operands and source identities, not complete source rows or coefficient vectors. Do not publish it. The code only prepares hooks: it does not change line-strength, support, panel, or R3 update equations. Three existing single-line `GO TO 25` conditions are expressed as equivalent `THEN` blocks so the diagnostic event can be emitted immediately before the same branch.
+
+See `plan.json` for exact source pin, event reason codes, limitations, and the distinction between a panel handoff and a discarded line. Static checks performed: patch diff is limited to diagnostics/metadata and equivalent branch wrapping, every event call has the declared argument count, and no source line exceeds the ordinary free-form 132-column limit. No Fortran compiler or solver was invoked.
