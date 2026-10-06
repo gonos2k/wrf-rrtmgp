@@ -1,0 +1,130 @@
+{
+  "scope": "Official RTE+RRTMGP upstream reference inventory; no WRF production changes",
+  "source": {
+    "repository": "https://github.com/NCAR/rte-rrtmgp",
+    "official_repository": "https://github.com/earth-system-radiation/rte-rrtmgp",
+    "commit": "41c5fcd950fed09b8afe186dede266824eca7fd3",
+    "url": "https://github.com/earth-system-radiation/rte-rrtmgp/tree/41c5fcd950fed09b8afe186dede266824eca7fd3",
+    "scratch_checkout": "source",
+    "build": "gfortran 13.3; serial compiler flags; libraries and all-sky executable compiled"
+  },
+  "data": {
+    "repository": "https://github.com/earth-system-radiation/rrtmgp-data",
+    "commit": "ea788bb39876948fa8d2c235665ccff19b4686b5",
+    "url": "https://github.com/earth-system-radiation/rrtmgp-data/tree/ea788bb39876948fa8d2c235665ccff19b4686b5",
+    "scratch_checkout": "data"
+  },
+  "findings": [
+    "All four WRF DATA.json coefficient files are byte-identical (SHA-256) to the files in rrtmgp-data@ea788bb.",
+    "The pinned upstream source compiles, but its unmodified all-sky example loader cannot read the pinned cloud files: it asks for radice_lwr and later LUT names, while the current data files expose diamice_lwr/diamice_upr and extliq/ssaliq/asyliq (and corresponding ice fields). The run stops with read_field: cannot find variable radice_lwr. WRF SOURCE.json records local reader adaptations for these renamed fields and diameter coordinates.",
+    "The published all-sky reference outputs are Garand-example cases with 24 columns and 72 layers. The upstream example driver uses g256/g224 gas distributions and g-point cloud files; its reference files therefore do not match WRF g128/g112 gas coefficients or the band-cloud inputs/actual WRF columns.",
+    "Official RFMIP example inputs/reference outputs are also available in the pinned data repo; upstream driver uses g256/g224. They are a valid upstream code/data regression set at that resolution, not a direct comparison target for WRF g128/g112."
+  ],
+  "references_and_coefficients": [
+    {
+      "path": "data/examples/all-sky/reference/rrtmgp-allsky-lw-no-aerosols-gpt-clouds.nc",
+      "url": "https://raw.githubusercontent.com/earth-system-radiation/rrtmgp-data/ea788bb39876948fa8d2c235665ccff19b4686b5/examples/all-sky/reference/rrtmgp-allsky-lw-no-aerosols-gpt-clouds.nc",
+      "sha256": "07eec19839574595e0fb5fbcdd11a2590121a380be5dd8ad8851bb9b304c9cb8"
+    },
+    {
+      "path": "data/examples/all-sky/reference/rrtmgp-allsky-lw-no-aerosols.nc",
+      "url": "https://raw.githubusercontent.com/earth-system-radiation/rrtmgp-data/ea788bb39876948fa8d2c235665ccff19b4686b5/examples/all-sky/reference/rrtmgp-allsky-lw-no-aerosols.nc",
+      "sha256": "2aadb1674a94e31627b4884a28a59ae5caedad65a0fed7d27632a650deb8056a"
+    },
+    {
+      "path": "data/examples/all-sky/reference/rrtmgp-allsky-lw.nc",
+      "url": "https://raw.githubusercontent.com/earth-system-radiation/rrtmgp-data/ea788bb39876948fa8d2c235665ccff19b4686b5/examples/all-sky/reference/rrtmgp-allsky-lw.nc",
+      "sha256": "be4d44b2045b8b819e02caded867f77599d3a18c37f4381a36a055e0d9f3648e"
+    },
+    {
+      "path": "data/examples/all-sky/reference/rrtmgp-allsky-sw-no-aerosols-gpt-clouds.nc",
+      "url": "https://raw.githubusercontent.com/earth-system-radiation/rrtmgp-data/ea788bb39876948fa8d2c235665ccff19b4686b5/examples/all-sky/reference/rrtmgp-allsky-sw-no-aerosols-gpt-clouds.nc",
+      "sha256": "a62bf5de44a1a28a31542daab414e1d4fdf4c60f952fda5e77d9b4fa204a357b"
+    },
+    {
+      "path": "data/examples/all-sky/reference/rrtmgp-allsky-sw-no-aerosols.nc",
+      "url": "https://raw.githubusercontent.com/earth-system-radiation/rrtmgp-data/ea788bb39876948fa8d2c235665ccff19b4686b5/examples/all-sky/reference/rrtmgp-allsky-sw-no-aerosols.nc",
+      "sha256": "69cf6a5afd617cdff8fb0ca513521f10e3123611c621d7d94b329b804f1e4700"
+    },
+    {
+      "path": "data/examples/all-sky/reference/rrtmgp-allsky-sw.nc",
+      "url": "https://raw.githubusercontent.com/earth-system-radiation/rrtmgp-data/ea788bb39876948fa8d2c235665ccff19b4686b5/examples/all-sky/reference/rrtmgp-allsky-sw.nc",
+      "sha256": "a6bdf24dd701abd2d13a08f0161ad32ef8e94f5414514ab8b85d92d4d131d92b"
+    },
+    {
+      "path": "data/rrtmgp-gas-lw-g128.nc",
+      "url": "https://raw.githubusercontent.com/earth-system-radiation/rrtmgp-data/ea788bb39876948fa8d2c235665ccff19b4686b5/rrtmgp-gas-lw-g128.nc",
+      "sha256": "70ad65d116531122660318e5da2a2af9db74b425916202860e9527ef2375b8f6",
+      "sha256_matches_WRF_run": true
+    },
+    {
+      "path": "data/rrtmgp-gas-sw-g112.nc",
+      "url": "https://raw.githubusercontent.com/earth-system-radiation/rrtmgp-data/ea788bb39876948fa8d2c235665ccff19b4686b5/rrtmgp-gas-sw-g112.nc",
+      "sha256": "361ed541324068ded28a275a4dd757bcaa0a845aebefa630f43a04678668fe62",
+      "sha256_matches_WRF_run": true
+    },
+    {
+      "path": "data/rrtmgp-clouds-lw-bnd.nc",
+      "url": "https://raw.githubusercontent.com/earth-system-radiation/rrtmgp-data/ea788bb39876948fa8d2c235665ccff19b4686b5/rrtmgp-clouds-lw-bnd.nc",
+      "sha256": "09d6704c5b863b4c3ceb417d20bb3076ec492e6bf2dfbcc9f3c5996a3706f0b0",
+      "sha256_matches_WRF_run": true
+    },
+    {
+      "path": "data/rrtmgp-clouds-sw-bnd.nc",
+      "url": "https://raw.githubusercontent.com/earth-system-radiation/rrtmgp-data/ea788bb39876948fa8d2c235665ccff19b4686b5/rrtmgp-clouds-sw-bnd.nc",
+      "sha256": "7671835992a45afe66244b591a02c0b3df73d7d59ecb746bbffd9763497651cd",
+      "sha256_matches_WRF_run": true
+    },
+    {
+      "path": "data/examples/rfmip-clear-sky/reference/rld_Efx_RTE-RRTMGP-181204_rad-irf_r1i1p1f1_gn.nc",
+      "url": "https://raw.githubusercontent.com/earth-system-radiation/rrtmgp-data/ea788bb39876948fa8d2c235665ccff19b4686b5/examples/rfmip-clear-sky/reference/rld_Efx_RTE-RRTMGP-181204_rad-irf_r1i1p1f1_gn.nc",
+      "sha256": "8629ec4b1caaea5a5c1756f25b432637369725ee684c61af0dad5c9ca37556b5"
+    },
+    {
+      "path": "data/examples/rfmip-clear-sky/reference/rlu_Efx_RTE-RRTMGP-181204_rad-irf_r1i1p1f1_gn.nc",
+      "url": "https://raw.githubusercontent.com/earth-system-radiation/rrtmgp-data/ea788bb39876948fa8d2c235665ccff19b4686b5/examples/rfmip-clear-sky/reference/rlu_Efx_RTE-RRTMGP-181204_rad-irf_r1i1p1f1_gn.nc",
+      "sha256": "254569d9bb0934fb510306c3e22e13ea826bd918727b477fc20600213923493c"
+    },
+    {
+      "path": "data/examples/rfmip-clear-sky/reference/rsd_Efx_RTE-RRTMGP-181204_rad-irf_r1i1p1f1_gn.nc",
+      "url": "https://raw.githubusercontent.com/earth-system-radiation/rrtmgp-data/ea788bb39876948fa8d2c235665ccff19b4686b5/examples/rfmip-clear-sky/reference/rsd_Efx_RTE-RRTMGP-181204_rad-irf_r1i1p1f1_gn.nc",
+      "sha256": "f9b0313fdf74598859a7caf27a5d1395b7fe1e445c9620a66856cc19eaf5e5b9"
+    },
+    {
+      "path": "data/examples/rfmip-clear-sky/reference/rsu_Efx_RTE-RRTMGP-181204_rad-irf_r1i1p1f1_gn.nc",
+      "url": "https://raw.githubusercontent.com/earth-system-radiation/rrtmgp-data/ea788bb39876948fa8d2c235665ccff19b4686b5/examples/rfmip-clear-sky/reference/rsu_Efx_RTE-RRTMGP-181204_rad-irf_r1i1p1f1_gn.nc",
+      "sha256": "0ea3f4272d9ef088db6ffd07153587863a052e3cf8b3bf04bfb7c9288ed8b324"
+    },
+    {
+      "path": "data/examples/rte-examples/reference/rrtmgp-lw-ckdmip.nc",
+      "url": "https://raw.githubusercontent.com/earth-system-radiation/rrtmgp-data/ea788bb39876948fa8d2c235665ccff19b4686b5/examples/rte-examples/reference/rrtmgp-lw-ckdmip.nc",
+      "sha256": "4fce5471966b55ec9818cfb344851bb5ed8dddc445d8c84267d340c50e2aaa1d"
+    },
+    {
+      "path": "data/examples/rte-examples/reference/rrtmgp-lw-rce.nc",
+      "url": "https://raw.githubusercontent.com/earth-system-radiation/rrtmgp-data/ea788bb39876948fa8d2c235665ccff19b4686b5/examples/rte-examples/reference/rrtmgp-lw-rce.nc",
+      "sha256": "39fdf4de93ec922c3e7c8905a77c95b8cda5c0bc42980ed00308a194971ea9ff"
+    },
+    {
+      "path": "data/examples/rte-examples/reference/rrtmgp-lw-rfmip.nc",
+      "url": "https://raw.githubusercontent.com/earth-system-radiation/rrtmgp-data/ea788bb39876948fa8d2c235665ccff19b4686b5/examples/rte-examples/reference/rrtmgp-lw-rfmip.nc",
+      "sha256": "fedc163297e1f116bf663581a1dd064240b618a084576ab519160a9726bbea78"
+    },
+    {
+      "path": "data/examples/rte-examples/reference/rrtmgp-sw-ckdmip.nc",
+      "url": "https://raw.githubusercontent.com/earth-system-radiation/rrtmgp-data/ea788bb39876948fa8d2c235665ccff19b4686b5/examples/rte-examples/reference/rrtmgp-sw-ckdmip.nc",
+      "sha256": "1efef2c748e8aa614463ae1e500bce73fdc3ea704478f80f6bf3f97b83289984"
+    },
+    {
+      "path": "data/examples/rte-examples/reference/rrtmgp-sw-rce.nc",
+      "url": "https://raw.githubusercontent.com/earth-system-radiation/rrtmgp-data/ea788bb39876948fa8d2c235665ccff19b4686b5/examples/rte-examples/reference/rrtmgp-sw-rce.nc",
+      "sha256": "82f2b2de1089707aed663dc41773b6f4f49f62ddf1d117d8a735d96e7fc7792b"
+    },
+    {
+      "path": "data/examples/rte-examples/reference/rrtmgp-sw-rfmip.nc",
+      "url": "https://raw.githubusercontent.com/earth-system-radiation/rrtmgp-data/ea788bb39876948fa8d2c235665ccff19b4686b5/examples/rte-examples/reference/rrtmgp-sw-rfmip.nc",
+      "sha256": "d21c77d1ef45b111bf54a9a398a2d0d730cb22cc0209bd2f3ce4371bba24273f"
+    }
+  ],
+  "assessment": "No published upstream output found that is directly comparable to the WRF adapter at the same g128/g112 basis, band-cloud representation, captured atmosphere, host constants, and cloud preparation. Use an upstream executable only after aligning those inputs/schema; do not treat high-resolution RFMIP/all-sky differences as an accuracy failure."
+}

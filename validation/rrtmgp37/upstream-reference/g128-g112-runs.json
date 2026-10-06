@@ -1,0 +1,117 @@
+{
+  "started_utc": "2026-10-02T15:15:34.561517+00:00",
+  "runtime_env": {
+    "LD_LIBRARY_PATH": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/root/usr/lib/x86_64-linux-gnu"
+  },
+  "input": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/official-rrtmgp-reference/data/examples/rfmip-clear-sky/inputs/multiple_input4MIPs_radiation_RFMIP_UColorado-RFMIP-1-2_none.nc",
+    "sha256": "b8dc05d7cd2e0e6354b4a6198771ddf3bc09f18d72b49f20a41e2024e2fd51f4"
+  },
+  "coefficients": {
+    "lw": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/official-rrtmgp-reference/data/rrtmgp-gas-lw-g128.nc",
+      "sha256": "70ad65d116531122660318e5da2a2af9db74b425916202860e9527ef2375b8f6"
+    },
+    "sw": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/official-rrtmgp-reference/data/rrtmgp-gas-sw-g112.nc",
+      "sha256": "361ed541324068ded28a275a4dd757bcaa0a845aebefa630f43a04678668fe62"
+    }
+  },
+  "runs": [
+    {
+      "engine": "upstream",
+      "phase": "LW",
+      "command": [
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/official-rrtmgp-reference/source/examples/rfmip-clear-sky/rrtmgp_rfmip_lw",
+        "8",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/official-rrtmgp-reference/data/examples/rfmip-clear-sky/inputs/multiple_input4MIPs_radiation_RFMIP_UColorado-RFMIP-1-2_none.nc",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/official-rrtmgp-reference/data/rrtmgp-gas-lw-g128.nc",
+        "1",
+        "1"
+      ],
+      "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/official-rrtmgp-reference/run-upstream-g128-g112",
+      "log": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/official-rrtmgp-reference/run-upstream-g128-g112/lw-run.log",
+      "log_sha256": "13e7a361c83a75561cdf55610918b9bf0201804ed67478189a253d76565f596f",
+      "exit_code": 0,
+      "start_utc": "2026-10-02T15:15:34.588106+00:00",
+      "elapsed_seconds_wall": 1.3652714267373085,
+      "outputs": {
+        "rld_Efx_RTE-RRTMGP-181204_rad-irf_r1i1p1f1_gn.nc": "c696c63115e73b8c3bfe9a631357f5e5b63116e20dd996091fb26ad57697cc4c",
+        "rlu_Efx_RTE-RRTMGP-181204_rad-irf_r1i1p1f1_gn.nc": "fbb55ad1171e7a5ea4114667c783162c4b3abae19853b36f88d1ba6be9f95495",
+        "rsd_Efx_RTE-RRTMGP-181204_rad-irf_r1i1p1f1_gn.nc": "f9b0313fdf74598859a7caf27a5d1395b7fe1e445c9620a66856cc19eaf5e5b9",
+        "rsu_Efx_RTE-RRTMGP-181204_rad-irf_r1i1p1f1_gn.nc": "0ea3f4272d9ef088db6ffd07153587863a052e3cf8b3bf04bfb7c9288ed8b324"
+      }
+    },
+    {
+      "engine": "upstream",
+      "phase": "SW",
+      "command": [
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/official-rrtmgp-reference/source/examples/rfmip-clear-sky/rrtmgp_rfmip_sw",
+        "8",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/official-rrtmgp-reference/data/examples/rfmip-clear-sky/inputs/multiple_input4MIPs_radiation_RFMIP_UColorado-RFMIP-1-2_none.nc",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/official-rrtmgp-reference/data/rrtmgp-gas-sw-g112.nc",
+        "1"
+      ],
+      "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/official-rrtmgp-reference/run-upstream-g128-g112",
+      "log": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/official-rrtmgp-reference/run-upstream-g128-g112/sw-run.log",
+      "log_sha256": "2eab4adc787b770fdf34727dfede34ce61457eeaf5c66fc31a562ce7076df939",
+      "exit_code": 0,
+      "start_utc": "2026-10-02T15:15:35.956845+00:00",
+      "elapsed_seconds_wall": 1.4593532849103212,
+      "outputs": {
+        "rld_Efx_RTE-RRTMGP-181204_rad-irf_r1i1p1f1_gn.nc": "c696c63115e73b8c3bfe9a631357f5e5b63116e20dd996091fb26ad57697cc4c",
+        "rlu_Efx_RTE-RRTMGP-181204_rad-irf_r1i1p1f1_gn.nc": "fbb55ad1171e7a5ea4114667c783162c4b3abae19853b36f88d1ba6be9f95495",
+        "rsd_Efx_RTE-RRTMGP-181204_rad-irf_r1i1p1f1_gn.nc": "2e1bf671f335615ddec853e04d7db6b3d541ab48dcfc3b8ce30e5f94ac03bd0e",
+        "rsu_Efx_RTE-RRTMGP-181204_rad-irf_r1i1p1f1_gn.nc": "6830f933eb53ad62f19d4db2f6cec4d61729814e3861970ec70152648df984d4"
+      }
+    },
+    {
+      "engine": "wrf_cpu",
+      "phase": "LW",
+      "command": [
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/official-rrtmgp-reference/rrtmgp_rfmip_lw_wrf_cpu",
+        "8",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/official-rrtmgp-reference/data/examples/rfmip-clear-sky/inputs/multiple_input4MIPs_radiation_RFMIP_UColorado-RFMIP-1-2_none.nc",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/official-rrtmgp-reference/data/rrtmgp-gas-lw-g128.nc",
+        "1",
+        "1"
+      ],
+      "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/official-rrtmgp-reference/run-wrf-cpu-g128-g112",
+      "log": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/official-rrtmgp-reference/run-wrf-cpu-g128-g112/lw-run.log",
+      "log_sha256": "13e7a361c83a75561cdf55610918b9bf0201804ed67478189a253d76565f596f",
+      "exit_code": 0,
+      "start_utc": "2026-10-02T15:15:37.418519+00:00",
+      "elapsed_seconds_wall": 1.3537770416587591,
+      "outputs": {
+        "rld_Efx_RTE-RRTMGP-181204_rad-irf_r1i1p1f1_gn.nc": "c696c63115e73b8c3bfe9a631357f5e5b63116e20dd996091fb26ad57697cc4c",
+        "rlu_Efx_RTE-RRTMGP-181204_rad-irf_r1i1p1f1_gn.nc": "fbb55ad1171e7a5ea4114667c783162c4b3abae19853b36f88d1ba6be9f95495",
+        "rsd_Efx_RTE-RRTMGP-181204_rad-irf_r1i1p1f1_gn.nc": "f9b0313fdf74598859a7caf27a5d1395b7fe1e445c9620a66856cc19eaf5e5b9",
+        "rsu_Efx_RTE-RRTMGP-181204_rad-irf_r1i1p1f1_gn.nc": "0ea3f4272d9ef088db6ffd07153587863a052e3cf8b3bf04bfb7c9288ed8b324"
+      }
+    },
+    {
+      "engine": "wrf_cpu",
+      "phase": "SW",
+      "command": [
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/official-rrtmgp-reference/rrtmgp_rfmip_sw_wrf_cpu",
+        "8",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/official-rrtmgp-reference/data/examples/rfmip-clear-sky/inputs/multiple_input4MIPs_radiation_RFMIP_UColorado-RFMIP-1-2_none.nc",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/official-rrtmgp-reference/data/rrtmgp-gas-sw-g112.nc",
+        "1"
+      ],
+      "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/official-rrtmgp-reference/run-wrf-cpu-g128-g112",
+      "log": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/official-rrtmgp-reference/run-wrf-cpu-g128-g112/sw-run.log",
+      "log_sha256": "2eab4adc787b770fdf34727dfede34ce61457eeaf5c66fc31a562ce7076df939",
+      "exit_code": 0,
+      "start_utc": "2026-10-02T15:15:38.775021+00:00",
+      "elapsed_seconds_wall": 1.4778220169246197,
+      "outputs": {
+        "rld_Efx_RTE-RRTMGP-181204_rad-irf_r1i1p1f1_gn.nc": "c696c63115e73b8c3bfe9a631357f5e5b63116e20dd996091fb26ad57697cc4c",
+        "rlu_Efx_RTE-RRTMGP-181204_rad-irf_r1i1p1f1_gn.nc": "fbb55ad1171e7a5ea4114667c783162c4b3abae19853b36f88d1ba6be9f95495",
+        "rsd_Efx_RTE-RRTMGP-181204_rad-irf_r1i1p1f1_gn.nc": "2e1bf671f335615ddec853e04d7db6b3d541ab48dcfc3b8ce30e5f94ac03bd0e",
+        "rsu_Efx_RTE-RRTMGP-181204_rad-irf_r1i1p1f1_gn.nc": "6830f933eb53ad62f19d4db2f6cec4d61729814e3861970ec70152648df984d4"
+      }
+    }
+  ],
+  "finished_utc": "2026-10-02T15:15:40.255164+00:00"
+}

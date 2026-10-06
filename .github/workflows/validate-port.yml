@@ -17,6 +17,7 @@ on:
       - 'tools/register37.py'
       - 'tools/compare_registry.py'
       - 'tools/validate.py'
+      - 'validation/rrtmgp37/upstream-reference/**'
       - '.github/workflows/validate-port.yml'
   push:
     branches: [main]
@@ -35,6 +36,7 @@ on:
       - 'tools/register37.py'
       - 'tools/compare_registry.py'
       - 'tools/validate.py'
+      - 'validation/rrtmgp37/upstream-reference/**'
       - '.github/workflows/validate-port.yml'
 permissions:
   contents: read
@@ -109,6 +111,32 @@ jobs:
             -DRRTMGP_TEST_OPENMP=ON -DRRTMGP_DATA_DIR="$GITHUB_WORKSPACE/WRF/run"
           cmake --build build/cpu-openmp-test --target test_rrtmgp_openmp --parallel 2
           ctest --test-dir build/cpu-openmp-test -R cpu_openmp_reentrancy --output-on-failure -V
+  independent-rfmip:
+    needs: registration
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - name: Install independent upstream build dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y git make cmake gfortran libnetcdf-dev libnetcdff-dev python3-numpy python3-netcdf4 ripgrep
+      - name: Compare pinned upstream and current vendored CPU RFMIP at g128/g112
+        run: bash validation/rrtmgp37/upstream-reference/run_rfmip.sh build/independent-rfmip
+      - name: Save independent fluxes, source pins, hashes and comparison status
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: validation-independent-rfmip-${{ github.run_id }}
+          path: |
+            build/independent-rfmip/run.log
+            build/independent-rfmip/backend-comparison.json
+            build/independent-rfmip/*SHA256SUMS.txt
+            build/independent-rfmip/compiler.txt
+            build/independent-rfmip/vendor-checkout-head.txt
+            build/independent-rfmip/run-*/*.nc
+          retention-days: 30
+          if-no-files-found: warn
   serial-scm:
     needs: registration
     runs-on: ubuntu-24.04

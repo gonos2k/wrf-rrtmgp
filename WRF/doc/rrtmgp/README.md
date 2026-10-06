@@ -86,6 +86,8 @@ LD_LIBRARY_PATH="$NETCDF/lib:${LD_LIBRARY_PATH:-}" \
 
 이 명령은 상위 작업 디렉터리에서 실행한다. 시험은 맑은 하늘 all/clear 일치, 흐린 하늘의 clear sky 보존, 구름에 의한 지면 단파 감소, 플럭스와 가열률의 에너지 일관성, 직달·산란 및 가시광·근적외 합계, 시드 재현성 및 야간 영값을 확인한다. 구름 builder는 작은 양의 구름분율과 큰 눈 입자 사례를 포함하며, 64컬럼 batch와 단일 컬럼·역순 실행을 비교하고 전체 야간 batch 및 잘못된 입력 거부도 확인한다. 비교 허용치는 `1e-3 + 1e-5 × max(1, |reference|)`이며 bitwise 일치 주장은 아니다. 최종 standalone suite는 28/28 통과했고 64컬럼 batch aggregate max difference는 0이었다. full GNU serial build 후 수정된 4개 backend 모듈을 incremental relink했으며, 37/4 SCM과 6-time cloud diagnostics SCM이 통과했다. 회색 표면 4개 및 `swint_opt=1,2` 거부 시험도 통과했다. 기존 SWDOWN 수정본의 4/4 출력과 최종 4/4 출력의 공통 변수 204개는 bitwise identical였다. `test/rrtmgp/standalone_wrf_error.f90`는 독립 시험에만 쓰는 오류 처리 대체 함수다.
 
+독립 upstream 실행 비교, 공개 SW reference 잔차 및 UDM graupel/hail 지원 근거는 [독립 기준 검증](INDEPENDENT_REFERENCE.md)에 정리했다.
+
 NOAA 사례 및 직접 코드 근거는 [NOAA 적용 사례](NOAA.md)에 정리했다. 실행 검증 결과는 [검증 기록](VALIDATION.md)에 기록한다.
 
 ## WRF 단일 컬럼 실행
