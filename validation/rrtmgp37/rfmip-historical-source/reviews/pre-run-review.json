@@ -1,0 +1,68 @@
+{
+  "blockers_in_observer_source": [],
+  "created_at": "2026-10-05T11:09:47.123379+00:00",
+  "findings": [
+    "Every original driver line is preserved in order; original historical gas loader, gas-optics call, pressure floor, solar geometry, TSI normalization, RTE call, night masking and NetCDF writing remain unchanged. Added observer assignments touch diagnostic state only.",
+    "Capture order is gas-optics output before TSI normalization; source after normalization; broadband solver flux before night masking; written working-precision flux after masking and before NetCDF conversion.",
+    "Site-fast flattened (experiment,site) mapping matches historical read_and_block reshape. Each selected record contains two int32 identifiers followed by native real(wp)=real64 Fortran-order values; optics are layer-fast after fixing the column. No USE_TIMING macro is present in the staged driver compiler command, preventing repeated timing captures.",
+    "Default four-argument execution neither allocates diagnostic selector storage nor opens/writes diagnostic streams. Diagnostic writes use status=new and do not modify original numerical arrays.",
+    "The 135 selector pairs are unique and valid for the retained 100-site/18-experiment context. Block size 8 covers all 1800 profiles with 225 complete blocks."
+  ],
+  "historical_source_commit": "ed5b0113109fcd23a010a90c61f21bad551146ef",
+  "reviewed": {
+    "observer.patch": {
+      "bytes": 7657,
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-historical-source-experiment-v1/observer.patch",
+      "sha256": "b27ff0e8837c2f3bdbd73ab3b132e805472604854837bb6d762a750ef4449f1c"
+    },
+    "plan.json": {
+      "bytes": 22246,
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-historical-source-experiment-v1/plan.json",
+      "sha256": "79e4d462348239feb6081bdb163952be1cc266c909891752abfc7168bfbc1e2a"
+    },
+    "prepare.py": {
+      "bytes": 7630,
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-historical-source-experiment-v1/prepare.py",
+      "sha256": "9801fab7ff006e46ee87972bde5c97fe1f49c029f054994a824cafe58c9a7a81"
+    },
+    "rrtmgp_rfmip_sw_diag.F90": {
+      "bytes": 19475,
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-historical-source-experiment-v1/rrtmgp_rfmip_sw_diag.F90",
+      "sha256": "e6b00c7c8a8fed04454e51778952ecc5dc88b3698f2541f622ed5242e6234878"
+    }
+  },
+  "reviewer_execution_counts": {
+    "WRF_REAL_forecast": 0,
+    "compiler": 0,
+    "numerical_reconstruction_integration": 0,
+    "solver": 0
+  },
+  "runtime_staging_caution": {
+    "communicated_to_root": true,
+    "driver_anchor": "rrtmgp_rfmip_sw_diag.F90:97,148,155",
+    "issue": "Historical driver reads dimensions from its default input basename before processing argv[2]. The initially reviewed run.py linked only input.nc. Runtime staging must also link the identical pinned input under multiple_input4MIPs_radiation_RFMIP_UColorado-RFMIP-1-2_none.nc; original driver ordering must remain unchanged.",
+    "kind": "PRELAUNCH_RUNNER_FIX_REQUIRED_WHEN_FIRST_READ",
+    "launch_authorization": "This receipt reviews source/observer and the staged scientific plan. Root separately controls runtime staging and the single invocation."
+  },
+  "schema": "udm37-historical-source-pre-run-independent-review-v1",
+  "scope_limits": [
+    "Reuse of retained V5 current-code old-solar arm is justified for the exact 224 old-source vector and 29 common nonsolar coefficient arrays, including identically zero variable-source contributions. It is not proof of gas-optics or solver identity across historical/current implementations.",
+    "Historical gas descriptor construction and absent-NO2 representation differ from current explicit-zero API; compare captured tau/ssa/g and source records after the single historical call before attributing any numerical change.",
+    "This ed5b011 historical source plus authenticated coefficient is a candidate, not an authenticated CMIP6 generator. Generator compiler flags/exact source provenance remain unidentified.",
+    "Strict published-reference thresholds stay absolute 1e-5, relative 0; existing strict failures are not closed by source preservation or lineage."
+  ],
+  "status": "PASS_SCOPED_SOURCE_OBSERVER_STATIC",
+  "verification": {
+    "added_lines": 117,
+    "all_56_original_non_netcdf_source_sha256_sizes_and_git_blobs_exact": true,
+    "all_8_plan_payload_pins_exact": true,
+    "block_size": 8,
+    "blocks": 225,
+    "diff_insert_only": true,
+    "insertions": 8,
+    "observer_patch_exactly_rederived_from_original_and_diagnostic_driver": true,
+    "partial_last_block": false,
+    "profiles": 1800,
+    "selector_unique_pairs": 135
+  }
+}

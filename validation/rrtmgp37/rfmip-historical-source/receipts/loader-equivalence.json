@@ -1,0 +1,357 @@
+{
+  "schema": "udm37-rfmip-historical-loader-equivalence-v1",
+  "scope": "Read-only consumed-field/API equivalence audit. No builds, solver runs, model runs, or edits to retained source/data artifacts.",
+  "historical_source": {
+    "commit": "ed5b0113109fcd23a010a90c61f21bad551146ef",
+    "tree_metadata": "build/udm37-rfmip-reference-provenance-v1/tagged-source-tree.json",
+    "sw_loader": "examples/mo_load_coefficients.F90",
+    "sw_driver": "examples/rfmip-clear-sky/rrtmgp_rfmip_sw.F90",
+    "io_reader": "examples/rfmip-clear-sky/mo_rfmip_io.F90"
+  },
+  "historical_coefficients": {
+    "path": "build/udm37-rfmip-historical-provenance-v1/authentic-v1.0-sw-g224.nc",
+    "sha256": "b9f4b15796d132880fffb49ac45c29753c1ee70a8ee3fed733899cb315c75e9b",
+    "size_bytes": 14954928
+  },
+  "reusable_current_source_old_solar_arm": {
+    "run_directory": "build/udm37-rfmip-residual-next-diagnostic-v5/execution-v5/old_solar",
+    "execution_receipt": "build/udm37-rfmip-residual-next-diagnostic-v5/execution-v5/execution.json",
+    "execution_receipt_sha256": "88d2975310338bbec6b72280592dd9c1fc70742fc389842c7d04385fb68bbe3d",
+    "counterfactual_coefficients": {
+      "path": "build/udm37-rfmip-solar-counterfactual-v1/stage-v7/rrtmgp-gas-sw-g224-old-solar-counterfactual.nc",
+      "sha256": "02d4cd320696b9b8a3006a373855a3b4b95fdb6495251fe5f5692d6a9fddfaa4",
+      "size_bytes": 11079648
+    },
+    "diagnostic_source": "build/udm37-rfmip-residual-next-diagnostic-v5/source-snapshot/rrtmgp_rfmip_sw.F90",
+    "diagnostic_source_sha256": "8c55012d7b34722fce2d29a6c13d1cb55cf5f6e919340decad250a8c031f3354",
+    "executable_sha256": "4883cdf468bf3a386a71d66d4c4af8f7fd7c8ce94b3a991831a1e7be146d29c3",
+    "returncode": 0,
+    "status": "COMPLETE_DIAGNOSTIC_NOT_STRICT_PASS",
+    "gas_optics_capture_bitwise_equal_to_v5_current_arm": true
+  },
+  "coefficient_consumption": {
+    "historical_vs_v5_counterfactual_common_non_solar_variable_count": 29,
+    "common_non_solar_all_names_exact_dtype_shape_and_values": true,
+    "common_non_solar_variables": [
+      {
+        "name": "absorption_coefficient_ref_P",
+        "shape": [],
+        "dtype": "<f8",
+        "exact_dtype_shape_and_values": true
+      },
+      {
+        "name": "absorption_coefficient_ref_T",
+        "shape": [],
+        "dtype": "<f8",
+        "exact_dtype_shape_and_values": true
+      },
+      {
+        "name": "bnd_limits_gpt",
+        "shape": [
+          14,
+          2
+        ],
+        "dtype": "<i4",
+        "exact_dtype_shape_and_values": true
+      },
+      {
+        "name": "bnd_limits_wavenumber",
+        "shape": [
+          14,
+          2
+        ],
+        "dtype": "<f8",
+        "exact_dtype_shape_and_values": true
+      },
+      {
+        "name": "gas_minor",
+        "shape": [
+          21,
+          32
+        ],
+        "dtype": "|S1",
+        "exact_dtype_shape_and_values": true
+      },
+      {
+        "name": "gas_names",
+        "shape": [
+          19,
+          32
+        ],
+        "dtype": "|S1",
+        "exact_dtype_shape_and_values": true
+      },
+      {
+        "name": "identifier_minor",
+        "shape": [
+          21,
+          32
+        ],
+        "dtype": "|S1",
+        "exact_dtype_shape_and_values": true
+      },
+      {
+        "name": "key_species",
+        "shape": [
+          14,
+          2,
+          2
+        ],
+        "dtype": "<i4",
+        "exact_dtype_shape_and_values": true
+      },
+      {
+        "name": "kmajor",
+        "shape": [
+          14,
+          60,
+          9,
+          224
+        ],
+        "dtype": "<f8",
+        "exact_dtype_shape_and_values": true
+      },
+      {
+        "name": "kminor_lower",
+        "shape": [
+          14,
+          9,
+          544
+        ],
+        "dtype": "<f8",
+        "exact_dtype_shape_and_values": true
+      },
+      {
+        "name": "kminor_start_lower",
+        "shape": [
+          34
+        ],
+        "dtype": "<i4",
+        "exact_dtype_shape_and_values": true
+      },
+      {
+        "name": "kminor_start_upper",
+        "shape": [
+          24
+        ],
+        "dtype": "<i4",
+        "exact_dtype_shape_and_values": true
+      },
+      {
+        "name": "kminor_upper",
+        "shape": [
+          14,
+          9,
+          384
+        ],
+        "dtype": "<f8",
+        "exact_dtype_shape_and_values": true
+      },
+      {
+        "name": "minor_gases_lower",
+        "shape": [
+          34,
+          32
+        ],
+        "dtype": "|S1",
+        "exact_dtype_shape_and_values": true
+      },
+      {
+        "name": "minor_gases_upper",
+        "shape": [
+          24,
+          32
+        ],
+        "dtype": "|S1",
+        "exact_dtype_shape_and_values": true
+      },
+      {
+        "name": "minor_limits_gpt_lower",
+        "shape": [
+          34,
+          2
+        ],
+        "dtype": "<i4",
+        "exact_dtype_shape_and_values": true
+      },
+      {
+        "name": "minor_limits_gpt_upper",
+        "shape": [
+          24,
+          2
+        ],
+        "dtype": "<i4",
+        "exact_dtype_shape_and_values": true
+      },
+      {
+        "name": "minor_scales_with_density_lower",
+        "shape": [
+          34
+        ],
+        "dtype": "<i4",
+        "exact_dtype_shape_and_values": true
+      },
+      {
+        "name": "minor_scales_with_density_upper",
+        "shape": [
+          24
+        ],
+        "dtype": "<i4",
+        "exact_dtype_shape_and_values": true
+      },
+      {
+        "name": "press_ref",
+        "shape": [
+          59
+        ],
+        "dtype": "<f8",
+        "exact_dtype_shape_and_values": true
+      },
+      {
+        "name": "press_ref_trop",
+        "shape": [],
+        "dtype": "<f8",
+        "exact_dtype_shape_and_values": true
+      },
+      {
+        "name": "rayl_lower",
+        "shape": [
+          14,
+          9,
+          224
+        ],
+        "dtype": "<f8",
+        "exact_dtype_shape_and_values": true
+      },
+      {
+        "name": "rayl_upper",
+        "shape": [
+          14,
+          9,
+          224
+        ],
+        "dtype": "<f8",
+        "exact_dtype_shape_and_values": true
+      },
+      {
+        "name": "scale_by_complement_lower",
+        "shape": [
+          34
+        ],
+        "dtype": "<i4",
+        "exact_dtype_shape_and_values": true
+      },
+      {
+        "name": "scale_by_complement_upper",
+        "shape": [
+          24
+        ],
+        "dtype": "<i4",
+        "exact_dtype_shape_and_values": true
+      },
+      {
+        "name": "scaling_gas_lower",
+        "shape": [
+          34,
+          32
+        ],
+        "dtype": "|S1",
+        "exact_dtype_shape_and_values": true
+      },
+      {
+        "name": "scaling_gas_upper",
+        "shape": [
+          24,
+          32
+        ],
+        "dtype": "|S1",
+        "exact_dtype_shape_and_values": true
+      },
+      {
+        "name": "temp_ref",
+        "shape": [
+          14
+        ],
+        "dtype": "<f8",
+        "exact_dtype_shape_and_values": true
+      },
+      {
+        "name": "vmr_ref",
+        "shape": [
+          14,
+          20,
+          2
+        ],
+        "dtype": "<f8",
+        "exact_dtype_shape_and_values": true
+      }
+    ],
+    "dimension_lengths_same": true,
+    "dimension_length_checks": {
+      "bnd": true,
+      "atmos_layer": true,
+      "pair": true,
+      "temperature": true,
+      "pressure_interp": true,
+      "mixing_fraction": true,
+      "gpt": true,
+      "minor_absorber": true,
+      "string_len": true,
+      "absorber": true,
+      "minor_absorber_intervals_lower": true,
+      "minor_absorber_intervals_upper": true,
+      "pressure": true,
+      "absorber_ext": true,
+      "contributors_lower": true,
+      "contributors_upper": true
+    },
+    "historical_solar_source_dtype": "<f4",
+    "counterfactual_quiet_dtype": "<f8",
+    "old_solar_equals_float64_promotion_of_quiet_values": true,
+    "counterfactual_facular_and_sunspot_are_exact_zero": true,
+    "counterfactual_scalars": {
+      "tsi_default": {
+        "value": 1360.8576738172571,
+        "dtype": "<f8"
+      },
+      "mg_default": {
+        "value": 0.1567651927471161,
+        "dtype": "<f4"
+      },
+      "sb_default": {
+        "value": 902.7125854492188,
+        "dtype": "<f4"
+      }
+    },
+    "current_loader_effective_source_expression": "solar_quiet + (mg_index - 0.1495954)*solar_facular + (sb_index - 0.00066696)*solar_sunspot",
+    "source_mapping_effective_raw_source_equals_old_vector": true,
+    "scalar_effects": "Current loader calls set_solar_variability(mg_default,sb_default); with both variability arrays zero, these values do not alter the raw source. tsi_default is not passed to set_tsi by current load_ext; the RFMIP driver normalizes returned toa_flux to each input TSI."
+  },
+  "rfmip_input_and_boundaries": {
+    "input_path": "build/official-rrtmgp-reference/data/examples/rfmip-clear-sky/inputs/multiple_input4MIPs_radiation_RFMIP_UColorado-RFMIP-1-2_none.nc",
+    "input_sha256": "b8dc05d7cd2e0e6354b4a6198771ddf3bc09f18d72b49f20a41e2024e2fd51f4",
+    "selected_profiles": 135,
+    "forcing_index": 1,
+    "existing_v5_arm_uses_same_input_for_both_current_code_arms": true,
+    "shared_rfmip_driver_inputs": "pressure/temperature, gas profiles, surface_albedo, total_solar_irradiance, solar_zenith_angle",
+    "both_driver_paths_apply_same_top_pressure_floor_and_solar_zenith_mask_and_normalize_to_input_TSI": "Source inspection shows the v1.0 and current SW driver perform the same operations; the old driver normalizes sum(toa_flux) to profile TSI and zeros nighttime output after solve.",
+    "old_driver_argument_caveat": "v1.0 calls read_size on its default filename before parsing the optional input-file argument. For reproduction, stage the hash-pinned input under the default basename in the run working directory, or invoke with the default path; verify hash before run."
+  },
+  "gas_concentration_api_caveat": {
+    "historical_v1_behavior": "The old reader autogrows ty_gas_concs as gases are set, skips NO2 because RFMIP provides no NO2 field; v1.0 get_vmr returns zero for an absent gas.",
+    "current_behavior": "Current reader initializes the coefficient gas list and explicitly sets NO2 to zero.",
+    "assessment": "RFMIP fields, scaling, pressure/temperature and SW boundary reads are the same in the inspected v1.0/current reader routines except formatting. For gas concentrations, missing NO2 is semantically zero in both APIs. Gas descriptor insertion/order differs, so require the legacy-source arm to report gas-optics captures; do not assume exact gas-optics bitwise equivalence across source revisions."
+  },
+  "reuse_decision": {
+    "current_code_old_effective_coefficients_arm": "REUSE_V5_OLD_SOLAR_ARM_NO_RERUN",
+    "basis": "All 29 common non-solar variables, dimension lengths, dtypes and values match the authenticated v1.0 file. V5 counterfactual quiet equals float64 promotion of v1 solar_source; facular and sunspot vectors are exact zero, so current effective unscaled solar source is the old vector. V5 retained the current old-solar arm\u2019s gas optics, sources, fluxes, and output arrays.",
+    "literal_file_identity": "The V5 coefficient artifact is not byte-identical to the authentic v1.0 file because it has current schema/metadata and a transformed solar representation; equivalence is over all loader-consumed effective values documented above, not whole-file equality.",
+    "new_minimum_arm": "Run one fresh v1.0-source SW RFMIP standalone against the exact authenticated v1.0 coefficient file and hash-pinned RFMIP input. Compare it to the reusable V5 current-source old_solar output over all profiles and the preselected 155 cells. Preserve strict published-reference threshold and contextual-only provenance wording."
+  },
+  "nonclaims": [
+    "The old v1.0 source plus 2018-12-04 SW coefficient file is not proven to have generated the CMIP6 RTE-RRTMGP-181204 published arrays.",
+    "This audit did not run v1.0 or current code.",
+    "The v1.0-versus-current comparison is a source-tree/version effect including source/API handling differences; it is not a pure RTE-kernel-only attribution.",
+    "No strict RFMIP accuracy pass is claimed."
+  ]
+}
