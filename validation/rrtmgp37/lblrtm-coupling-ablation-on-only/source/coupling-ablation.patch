@@ -1,0 +1,94 @@
+--- candidate-v3/src/oprop.f90
++++ ablation-v2/src/oprop.f90
+@@ -147,7 +147,11 @@
+    CHARACTER*10 HFMODL
+    CHARACTER CFORM*11,KODLYR*57,PTHODE*55,PTHODD*55
+    CHARACTER*18 HNAMOPR,HVROPR
+-   LOGICAL OP
++   LOGICAL OP, UDM37_COUPLING_ABLATION
++   CHARACTER*32 UDM37_COUPLING_MODE
++   INTEGER UDM37_ENV_STATUS
++   INTEGER UDM37_RDLIN_ID(6,250)
++   COMMON /UDM37_RDLIN_ID/ UDM37_RDLIN_ID
+ !
+    DIMENSION MEFDP(64),FILHDR(2),IWD(2)
+    DIMENSION R1(4050),R2(1050),R3(300)
+@@ -178,6 +182,25 @@
+    DATA KODLYR /                                                     &
+    &     '                                                         '/
+    DATA HFMODL /'         '/
++!
++   UDM37_COUPLING_ABLATION = .FALSE.
++   UDM37_COUPLING_MODE = ' '
++   CALL GET_ENVIRONMENT_VARIABLE('LBLRTM_CO2_COUPLING_ABLATION', &
++   & UDM37_COUPLING_MODE, STATUS=UDM37_ENV_STATUS)
++   IF (UDM37_ENV_STATUS.EQ.0) THEN
++      SELECT CASE (TRIM(ADJUSTL(UDM37_COUPLING_MODE)))
++      CASE ('OFF')
++         UDM37_COUPLING_ABLATION = .FALSE.
++      CASE ('ON')
++         UDM37_COUPLING_ABLATION = .TRUE.
++      CASE DEFAULT
++         WRITE(IPR,*) 'INVALID LBLRTM_CO2_COUPLING_ABLATION MODE'
++         STOP 92
++      END SELECT
++   ELSE IF (UDM37_ENV_STATUS.NE.1) THEN
++      WRITE(IPR,*) 'INVALID LBLRTM_CO2_COUPLING_ABLATION VALUE LENGTH'
++      STOP 93
++   ENDIF
+ !
+    CALL CPUTIM (TIMEH0)
+ !
+@@ -470,7 +493,7 @@
+ !
+    CALL udm37_r3_snapshot(110,R3,ICNTNM,ILBLF4,IXSECT,IR4)
+    CALL CNVFNV (VNU,SP,SPPSP,RECALF,R1,R2,R3,F1,F2,F3,FG,XVER,ZETAI, &
+-   &             IZETA)
++   &             IZETA,UDM37_RDLIN_ID,UDM37_COUPLING_ABLATION)
+    CALL udm37_r3_snapshot(111,R3,ICNTNM,ILBLF4,IXSECT,IR4)
+ !
+    IF (IPANEL.EQ.0) GO TO 60
+@@ -1357,7 +1380,7 @@
+ !-----------------------------------------------------------------------
+ !
+ SUBROUTINE CNVFNV (VNU,SP,SPPSP,RECALF,R1,R2,R3,F1,F2,F3,FG,      &
+-&                   XVER,ZETAI,IZETA)
++&                   XVER,ZETAI,IZETA,UDM37_RDLIN_ID,UDM37_COUPLING_ABLATION)
+ !
+    IMPLICIT REAL*8           (V)
+ !
+@@ -1408,8 +1431,8 @@
+    COMMON /VOICOM/ AVRAT(102),CGAUSS(102),CF1(102),CF2(102),         &
+    &                CF3(102),CER(102)
+    COMMON /IOU/ IOUT(250)
+-   INTEGER udm37_rdlin_id(6,250)
+-   COMMON /UDM37_RDLIN_ID/ udm37_rdlin_id
++   INTEGER UDM37_RDLIN_ID(6,250)
++   LOGICAL UDM37_COUPLING_ABLATION, UDM37_ABLATE_RECORD
+ !
+    DIMENSION VNU(*),SP(*),SPPSP(*),RECALF(*)
+    DIMENSION R1(*),R2(*),R3(*)
+@@ -1532,6 +1555,15 @@
+             IF (SPPSP(I).NE.0.) THEN
+ !
+ !                 THE FOLLOWING DOES LINE COUPLING
++!                 Private diagnostic ablation: preserve baseline above; for
++!                 exactly three fixed CO2 isotope-1 records in layer 21,
++!                 omit only their coupling updates in R3/R2/R1.
++               UDM37_ABLATE_RECORD = UDM37_COUPLING_ABLATION .AND. &
++               & LAYER.EQ.21 .AND. MOD(UDM37_RDLIN_ID(4,I),100).EQ.2 .AND. &
++               & MOD(UDM37_RDLIN_ID(4,I),1000)/100.EQ.1 .AND. &
++               & (ABS(VNU(I)-667.385965634841D0).LT.5.D-10 .OR. &
++               &  ABS(VNU(I)-667.4004316856123D0).LT.5.D-10 .OR. &
++               &  ABS(VNU(I)-667.423203639405D0).LT.5.D-10)
+ !
+ !                 SPPSP(I) = SPP(I)/SP(I)
+ !
+@@ -1543,6 +1575,7 @@
+                STRVER = STRVER*CLC1*DPTRAT
+ !
+                DO 20 J1 = JMIN1, JMAX1
++                  IF (UDM37_ABLATE_RECORD) GO TO 20
+ !
+                   J2 = J1-J2SHFT
+                   J3 = J1-J3SHFT

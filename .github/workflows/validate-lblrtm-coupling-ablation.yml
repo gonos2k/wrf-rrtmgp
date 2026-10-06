@@ -1,0 +1,26 @@
+name: Validate saved LBLRTM coupling-ablation evidence
+
+on:
+  pull_request:
+    paths:
+      - "validation/rrtmgp37/lblrtm-coupling-ablation-on-only/**"
+      - ".github/workflows/validate-lblrtm-coupling-ablation.yml"
+  push:
+    paths:
+      - "validation/rrtmgp37/lblrtm-coupling-ablation-on-only/**"
+      - ".github/workflows/validate-lblrtm-coupling-ablation.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  saved-evidence:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify closed saved-evidence package
+        run: >-
+          python3 -I -S validation/rrtmgp37/lblrtm-coupling-ablation-on-only/verify_saved.py
+          --expected-manifest-sha256 e70d699f7f4ae55ecccec73319d112e4d6e30d63128cf099ee28f83ff7a79b99
+          --report "$RUNNER_TEMP/lblrtm-coupling-ablation-verification.json"

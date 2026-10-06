@@ -1,0 +1,64 @@
+{
+  "actual_work_counts": {
+    "compile": 0,
+    "raw_TAPE3_scan": 0,
+    "solver": 0
+  },
+  "code_path_findings": [
+    {
+      "finding": "HIRAC1 is the sole call site to this oprop.f90 CNVFNV; it can pass a private mode and existing line-identity metadata.",
+      "source": "source/oprop.f90:471"
+    },
+    {
+      "finding": "Candidate-v3 RDLIN instrumentation populates UDM37_RDLIN_ID(4,I) from raw MOL(I) for each line block; this supports matching decoded molecule/isotope without repeating a TAPE3 census.",
+      "source": "source/oprop.f90:737-739, 869"
+    },
+    {
+      "finding": "Ordinary baseline R3 term is added before the coupling branch. Patch leaves this block byte-identical.",
+      "source": "source/oprop.f90:1522-1524"
+    },
+    {
+      "finding": "Coupling is a separate SPPSP nonzero block; its loop contributes to R3, R2 and R1. The patch skips only the selected record\u2019s coupling DO 20, before accumulation. SPPSP, line/profile/acceptance/order, other records, and panel/interpolation remain untouched.",
+      "source": "source/oprop.f90:1532-1558"
+    },
+    {
+      "finding": "R3-to-R2 interpolation and R3 overlap carry remain untouched; analysis must map physical frequency across panel VFT/DVR3.",
+      "source": "source/oprop.f90:1660-1685, 1760-1775"
+    }
+  ],
+  "known_unresolved": [
+    "Patch has not been compiled or run; no claim it compiles or selects exactly three runtime records.",
+    "Baseline trace must show all three target records/coupling events; ON trace must show baseline event retention and targeted stage-2 update absence.",
+    "OFF full-spectrum mismatch stops and preserves; ON is descriptive only.",
+    "This intervention does not test finite-support adequacy, reference validity, all CO2 coupling, or physical accuracy."
+  ],
+  "noninterference_reasoning": "With OFF, the selector is false and original accumulation statements execute in original order. This is only a source argument; only a fresh OFF run with all 45 ODdeflt files byte-identical to the saved baseline establishes the required gate.",
+  "patch": {
+    "patched_source": "oprop.coupling-ablation.f90",
+    "path": "coupling-ablation.patch",
+    "sha256": "72c04d4b18d7679fb9a06e7e88099afa32df93d80b1a7ee48d24052e15a9e5c0",
+    "sha256_patched_source": "3fea98adeb9f7f8e5dc9e27838d12eea1d581e6d7654688ce70840cdff99c434"
+  },
+  "schema": "private-lblrtm-coupling-ablation-source-review-v1",
+  "selection": {
+    "fixed_r3_probe_cm-1": [
+      666.3135288888894,
+      666.3738311111116,
+      666.4341333333339
+    ],
+    "historical_indices_are_not_selectors": true,
+    "line_centers_cm-1": [
+      667.385965634841,
+      667.4004316856123,
+      667.423203639405
+    ],
+    "line_match_tolerance_cm-1": 5e-10,
+    "raw_species_decode_from_existing_id": "MOD(UDM37_RDLIN_ID(4,I),100)==2; isotope code MOD(UDM37_RDLIN_ID(4,I),1000)/100==1",
+    "test_layer": 21
+  },
+  "source": {
+    "path": "build/udm37-lblrtm-candidate-decision-run-v3/staging/source/LBLRTM/src/oprop.f90",
+    "sha256": "a3b5732eca771b74fd373b2f8f67f515c9c05d09dc4c86c1fe77bd7d9bb1bd3c"
+  },
+  "status": "PREPARED_PATCH_REVIEW_REQUIRED_NO_BUILD_OR_SOLVER"
+}
