@@ -310,9 +310,8 @@ CONTAINS
    IMPLICIT NONE
 !-----------------------------------------------------------------
    TYPE (grid_config_rec_type)              :: config_flags
-   REAL, DIMENSION(:,:,:), OPTIONAL, POINTER, INTENT(INOUT) :: udm_cldfra
-   INTEGER, DIMENSION(:,:), OPTIONAL, POINTER, INTENT(INOUT) :: udm_cf_step
-   INTEGER, DIMENSION(:,:), OPTIONAL, POINTER, INTENT(INOUT) :: udm_cf_top
+   REAL, DIMENSION(ims:,kms:,jms:), OPTIONAL, INTENT(INOUT) :: udm_cldfra
+   INTEGER, DIMENSION(ims:,jms:), OPTIONAL, INTENT(INOUT) :: udm_cf_step, udm_cf_top
 
    INTEGER , INTENT(IN)        :: id
    INTEGER , INTENT(IN) ,OPTIONAL       :: tmn_update
@@ -1168,13 +1167,13 @@ CHARACTER(LEN=8) :: name
        config_flags%ra_lw_physics == RRTMGP_LWSCHEME .AND. &
        config_flags%ra_sw_physics == RRTMGP_SWSCHEME) THEN
       IF (PRESENT(udm_cldfra)) THEN
-         IF (ASSOCIATED(udm_cldfra)) udm_cldfra = -1.
+         udm_cldfra = -1.
       ENDIF
       IF (PRESENT(udm_cf_step)) THEN
-         IF (ASSOCIATED(udm_cf_step)) udm_cf_step = -1
+         udm_cf_step = -1
       ENDIF
       IF (PRESENT(udm_cf_top)) THEN
-         IF (ASSOCIATED(udm_cf_top)) udm_cf_top = -1
+         udm_cf_top = -1
       ENDIF
    ENDIF
 
