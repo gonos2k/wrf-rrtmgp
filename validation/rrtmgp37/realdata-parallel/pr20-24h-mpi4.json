@@ -1,0 +1,299 @@
+{
+  "status": "SUCCESS_COMPLETE_WRF",
+  "scope": "24-hour actual WRF em_real run using frozen-optics mode 1; runtime coverage only, not an accuracy validation",
+  "run": {
+    "start": "2010-06-11_00:00:00",
+    "end": "2010-06-12_00:00:00",
+    "mpiexec": "mpiexec -launcher fork -iface lo -n 4 /NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-frozen-runtime-mpi/WRF/main/wrf.exe",
+    "exit_status": 0,
+    "mpi_ranks": 4,
+    "omp_threads": 1,
+    "omp_enabled": false,
+    "stdout_log": "wrf-mode1-mpi4.stdout.log",
+    "stdout_sha256": "9500367e0d5ff6f2be217c996c4abb2609a784ee4f122beab80dfcf50d6061e4"
+  },
+  "executable": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-frozen-runtime-mpi/WRF/main/wrf.exe",
+    "sha256": "4c979fb248b26d8ce61f05fd602f55e0492e173a312e3532021fecda508e2503"
+  },
+  "frozen_table": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-frozen-runtime-wrf/source/validation/rrtmgp37/frozen-optics-lookup/nine-grid-o128-s50/frozen-ice-psd-moments.nc",
+    "sha256": "8cb00850c3f885f5ec0306563c1ec0a55b512478a7395d626c1c99cebf280583"
+  },
+  "inputs": {
+    "wrfinput_d01": {
+      "case_sha256": "5ef7abe34c516fba107f346bdbdb3777edacb5d48493df467ea2dd8bcf6a75ff",
+      "baseline_sha256": "5ef7abe34c516fba107f346bdbdb3777edacb5d48493df467ea2dd8bcf6a75ff",
+      "byte_identical_to_baseline": true
+    },
+    "wrfbdy_d01": {
+      "case_sha256": "e687b73730ab9a2cee4842e1a92b225a4edb074ba080b6053d96d81ec1731a2d",
+      "baseline_sha256": "e687b73730ab9a2cee4842e1a92b225a4edb074ba080b6053d96d81ec1731a2d",
+      "byte_identical_to_baseline": true
+    }
+  },
+  "physics_options": {
+    "ra_lw_physics": 37,
+    "ra_sw_physics": 37,
+    "mp_physics": 27,
+    "use_mp_re": 1,
+    "rrtmgp_udm_frozen_optics": 1,
+    "restart_interval_minutes": 1440
+  },
+  "boundary_times": [
+    "2010-06-11_00:00:00",
+    "2010-06-11_06:00:00",
+    "2010-06-11_12:00:00",
+    "2010-06-11_18:00:00"
+  ],
+  "history_outputs": {
+    "count": 25,
+    "times": [
+      "2010-06-11_00:00:00",
+      "2010-06-11_01:00:00",
+      "2010-06-11_02:00:00",
+      "2010-06-11_03:00:00",
+      "2010-06-11_04:00:00",
+      "2010-06-11_05:00:00",
+      "2010-06-11_06:00:00",
+      "2010-06-11_07:00:00",
+      "2010-06-11_08:00:00",
+      "2010-06-11_09:00:00",
+      "2010-06-11_10:00:00",
+      "2010-06-11_11:00:00",
+      "2010-06-11_12:00:00",
+      "2010-06-11_13:00:00",
+      "2010-06-11_14:00:00",
+      "2010-06-11_15:00:00",
+      "2010-06-11_16:00:00",
+      "2010-06-11_17:00:00",
+      "2010-06-11_18:00:00",
+      "2010-06-11_19:00:00",
+      "2010-06-11_20:00:00",
+      "2010-06-11_21:00:00",
+      "2010-06-11_22:00:00",
+      "2010-06-11_23:00:00",
+      "2010-06-12_00:00:00"
+    ],
+    "all_float_variables_finite": true,
+    "files": [
+      {
+        "path": "wrfout_d01_2010-06-11_00:00:00",
+        "time": "2010-06-11_00:00:00",
+        "bytes": 55427518,
+        "finite_float_variables": 189,
+        "nonfinite_variables": []
+      },
+      {
+        "path": "wrfout_d01_2010-06-11_01:00:00",
+        "time": "2010-06-11_01:00:00",
+        "bytes": 76124572,
+        "finite_float_variables": 189,
+        "nonfinite_variables": []
+      },
+      {
+        "path": "wrfout_d01_2010-06-11_02:00:00",
+        "time": "2010-06-11_02:00:00",
+        "bytes": 78143144,
+        "finite_float_variables": 189,
+        "nonfinite_variables": []
+      },
+      {
+        "path": "wrfout_d01_2010-06-11_03:00:00",
+        "time": "2010-06-11_03:00:00",
+        "bytes": 78663851,
+        "finite_float_variables": 189,
+        "nonfinite_variables": []
+      },
+      {
+        "path": "wrfout_d01_2010-06-11_04:00:00",
+        "time": "2010-06-11_04:00:00",
+        "bytes": 79147015,
+        "finite_float_variables": 189,
+        "nonfinite_variables": []
+      },
+      {
+        "path": "wrfout_d01_2010-06-11_05:00:00",
+        "time": "2010-06-11_05:00:00",
+        "bytes": 79314897,
+        "finite_float_variables": 189,
+        "nonfinite_variables": []
+      },
+      {
+        "path": "wrfout_d01_2010-06-11_06:00:00",
+        "time": "2010-06-11_06:00:00",
+        "bytes": 79530681,
+        "finite_float_variables": 189,
+        "nonfinite_variables": []
+      },
+      {
+        "path": "wrfout_d01_2010-06-11_07:00:00",
+        "time": "2010-06-11_07:00:00",
+        "bytes": 80069168,
+        "finite_float_variables": 189,
+        "nonfinite_variables": []
+      },
+      {
+        "path": "wrfout_d01_2010-06-11_08:00:00",
+        "time": "2010-06-11_08:00:00",
+        "bytes": 80318231,
+        "finite_float_variables": 189,
+        "nonfinite_variables": []
+      },
+      {
+        "path": "wrfout_d01_2010-06-11_09:00:00",
+        "time": "2010-06-11_09:00:00",
+        "bytes": 80638518,
+        "finite_float_variables": 189,
+        "nonfinite_variables": []
+      },
+      {
+        "path": "wrfout_d01_2010-06-11_10:00:00",
+        "time": "2010-06-11_10:00:00",
+        "bytes": 81201497,
+        "finite_float_variables": 189,
+        "nonfinite_variables": []
+      },
+      {
+        "path": "wrfout_d01_2010-06-11_11:00:00",
+        "time": "2010-06-11_11:00:00",
+        "bytes": 81798143,
+        "finite_float_variables": 189,
+        "nonfinite_variables": []
+      },
+      {
+        "path": "wrfout_d01_2010-06-11_12:00:00",
+        "time": "2010-06-11_12:00:00",
+        "bytes": 82284259,
+        "finite_float_variables": 189,
+        "nonfinite_variables": []
+      },
+      {
+        "path": "wrfout_d01_2010-06-11_13:00:00",
+        "time": "2010-06-11_13:00:00",
+        "bytes": 82728971,
+        "finite_float_variables": 189,
+        "nonfinite_variables": []
+      },
+      {
+        "path": "wrfout_d01_2010-06-11_14:00:00",
+        "time": "2010-06-11_14:00:00",
+        "bytes": 82810452,
+        "finite_float_variables": 189,
+        "nonfinite_variables": []
+      },
+      {
+        "path": "wrfout_d01_2010-06-11_15:00:00",
+        "time": "2010-06-11_15:00:00",
+        "bytes": 82730027,
+        "finite_float_variables": 189,
+        "nonfinite_variables": []
+      },
+      {
+        "path": "wrfout_d01_2010-06-11_16:00:00",
+        "time": "2010-06-11_16:00:00",
+        "bytes": 82756912,
+        "finite_float_variables": 189,
+        "nonfinite_variables": []
+      },
+      {
+        "path": "wrfout_d01_2010-06-11_17:00:00",
+        "time": "2010-06-11_17:00:00",
+        "bytes": 82868583,
+        "finite_float_variables": 189,
+        "nonfinite_variables": []
+      },
+      {
+        "path": "wrfout_d01_2010-06-11_18:00:00",
+        "time": "2010-06-11_18:00:00",
+        "bytes": 83119525,
+        "finite_float_variables": 189,
+        "nonfinite_variables": []
+      },
+      {
+        "path": "wrfout_d01_2010-06-11_19:00:00",
+        "time": "2010-06-11_19:00:00",
+        "bytes": 83219131,
+        "finite_float_variables": 189,
+        "nonfinite_variables": []
+      },
+      {
+        "path": "wrfout_d01_2010-06-11_20:00:00",
+        "time": "2010-06-11_20:00:00",
+        "bytes": 83292354,
+        "finite_float_variables": 189,
+        "nonfinite_variables": []
+      },
+      {
+        "path": "wrfout_d01_2010-06-11_21:00:00",
+        "time": "2010-06-11_21:00:00",
+        "bytes": 83323183,
+        "finite_float_variables": 189,
+        "nonfinite_variables": []
+      },
+      {
+        "path": "wrfout_d01_2010-06-11_22:00:00",
+        "time": "2010-06-11_22:00:00",
+        "bytes": 83245824,
+        "finite_float_variables": 189,
+        "nonfinite_variables": []
+      },
+      {
+        "path": "wrfout_d01_2010-06-11_23:00:00",
+        "time": "2010-06-11_23:00:00",
+        "bytes": 83277286,
+        "finite_float_variables": 189,
+        "nonfinite_variables": []
+      },
+      {
+        "path": "wrfout_d01_2010-06-12_00:00:00",
+        "time": "2010-06-12_00:00:00",
+        "bytes": 83068157,
+        "finite_float_variables": 189,
+        "nonfinite_variables": []
+      }
+    ],
+    "variable_count": 204,
+    "float_variable_count_per_file": 189
+  },
+  "restart": {
+    "path": "wrfrst_d01_2010-06-12_00:00:00",
+    "time": "2010-06-12_00:00:00",
+    "bytes": 355205699,
+    "float_variable_count": 593,
+    "float_value_count": 260559466,
+    "nonfinite_variables": [],
+    "physics_attributes": {
+      "MP_PHYSICS": 27,
+      "RA_LW_PHYSICS": 37,
+      "RA_SW_PHYSICS": 37
+    }
+  },
+  "rank_logs": [
+    {
+      "path": "rsl.out.0000",
+      "success_marker": true,
+      "fatal_marker": false
+    },
+    {
+      "path": "rsl.out.0001",
+      "success_marker": true,
+      "fatal_marker": false
+    },
+    {
+      "path": "rsl.out.0002",
+      "success_marker": true,
+      "fatal_marker": false
+    },
+    {
+      "path": "rsl.out.0003",
+      "success_marker": true,
+      "fatal_marker": false
+    }
+  ],
+  "runtime_diagnostics": {
+    "fatal_or_table_range_error_search": "none found in stdout/rsl logs",
+    "negative_correction_policy": "bounded UDM process-scale correction diagnostics were emitted; no positive-hail fatal occurred"
+  },
+  "build_receipt": "../build-receipt.json"
+}

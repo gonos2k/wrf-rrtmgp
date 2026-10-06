@@ -2,7 +2,7 @@
 
 현재 37번 개발·평가 범위는 **UDM(`mp_physics=27`) 전용**입니다. 장·단파 `37/37`, `use_mp_re=1`을 요구합니다. UDM native radii, qc/qi cloud optics, qr/qs precipitation optics를 연결하며 qg는 제외량 계측, qh는 명시적 미지원으로 처리합니다. [현재 UDM 입력 계약과 검증 한계](WRF/doc/rrtmgp/UDM_ONLY.md) · [UDM 실행·비교 검증 기록](validation/rrtmgp37/udm-only/REPORT_ko.md)를 먼저 확인하십시오. 아래 다른 미세물리 결과는 이전 버전의 검증 기록입니다.
 
-싸락눈·우박 후속 광학에는 [동질 얼음 PSD 수치 기준](validation/rrtmgp37/frozen-optics-reference/README.md)과 [재현 도구](tools/udm_frozen_optics/README.md)를 추가했습니다. 독립 Mie 비교와 질량 정규화를 검사한 실험적 기준이며, 실제 WRF 연결과 전체 적분 수렴은 후속 검증 대상입니다.
+싸락눈·우박에는 [동질 얼음 PSD 수치 기준](validation/rrtmgp37/frozen-optics-reference/README.md)과 [명시적 실험 모드](WRF/doc/rrtmgp/UDM_FROZEN_EXPERIMENT.md)를 연결했습니다. 기본 모드의 qg 제외·양의 qh 거부는 유지합니다. 실험 모드 1의 PR20 실행파일은 실제 자료로 MPI 4개 rank에서 24시간을 완료했으며, 12시간 체크포인트에서 재시작한 13시간 출력의 모든 수치 배열이 연속 적분과 일치했습니다. 메타데이터 `START_DATE` 차이는 별도로 기록합니다. [실행·비교 근거](validation/rrtmgp37/realdata-parallel/README.md)는 수치 실행 검증이며, 젖은 얼음 입자·관측 정확도 또는 PR21 코드의 24시간 검증을 뜻하지 않습니다.
 
 [오프라인 조회·보간 검사](validation/rrtmgp37/frozen-optics-lookup/README.md)는 외삽 거부, 단위·질량 계약과 크기 격자 세밀화 결과를 기록합니다. 9개 크기 노드의 시험 중간점에서 최대 차이는 소광 정규화 기준 약 0.440%이며, 전체 오차 상한이나 예보 정확도를 의미하지 않습니다.
 기체 광학의 건조공기량도 WRF native 층 질량에서 변환하도록 보완했습니다. [native gas-column 계약](WRF/doc/rrtmgp/NATIVE_GAS_COLUMNS.md)과 실행 근거에서 적용 범위를 확인하십시오.
@@ -15,7 +15,9 @@
 
 37번을 실제 WRF 복사 초기화와 LW/SW 호출 경로에 연결했습니다. 압력·온도·기체의 기존 전처리를 재사용하고, 구름·빙정·눈은 RRTMGP 전용 입력 함수에서 준비합니다. 양의 구름분율에서는 수상별 질량을 보존합니다. WRF가 분율을 0으로 진단한 층은 명시적으로 청천 처리하며 제외 질량을 진단합니다. 장파와 단파는 함께 37로 선택하고 에어로졸·화학 피드백은 거부합니다.
 
-로컬 CTest 29개, 2,048개 시드의 작은 구름분율 시험, 실제 WRF 기둥의 독립 재생, GNU serial SCM과 알베도·청천 처리 시험이 통과했습니다. WSM5(4)와 Ferrier(5)의 구름 사례는 5분 SCM까지 통과했습니다. ETAMPNEW(95)는 초기 기둥의 분류·재생만 통과했고 후속 SCM 적분 실패를 별도로 기록합니다. 기존 포팅본과의 4/4 공통 변수 204개가 비트 단위로 일치했습니다. WRF 호출은 계속 `ncol=1`이며 실제 예보·성능·MPI/OpenMP·restart는 후속 검증 대상입니다. 설정과 근거는 [WRF 이식 안내](WRF/doc/rrtmgp/README.md), [검증 기록](WRF/doc/rrtmgp/VALIDATION.md), [NOAA 적용 사례](WRF/doc/rrtmgp/NOAA.md)에 있습니다.
+WRF 호출은 계속 `ncol=1`입니다. 실제 예보 정확도, 둥지 및 WRF column packing은 후속 검증 대상입니다. 설정과 근거는 [WRF 이식 안내](WRF/doc/rrtmgp/README.md), [검증 기록](WRF/doc/rrtmgp/VALIDATION.md), [NOAA 적용 사례](WRF/doc/rrtmgp/NOAA.md)에 있습니다.
+
+초기 범용 포팅 단계에서는 로컬 CTest 29개, 2,048개 시드의 작은 구름분율 시험, 실제 WRF 기둥의 독립 재생과 GNU serial SCM을 검사했습니다. WSM5(4)·Ferrier(5)의 5분 SCM 성공, ETAMPNEW(95)의 후속 적분 실패 및 이전 4/4 공통 변수 204개 일치는 그 단계의 기록입니다. 현재 UDM27 지원 범위나 최신 실험 모드의 검증으로 확대하지 않습니다.
 
 동일 실행 파일과 초기 상태로 기존 RRTMG 4/4와 37/37의 7개 조건을 새로 비교했습니다. 14개 5분 SCM이 통과했으며, 청천 지표 하향 단파 차이는 −0.80 W/m², 구름 조건의 차이는 +30.67~53.48 W/m²였습니다. 층별 경향과 10초 누적량 계약도 검사했습니다. 관측 정확도 우열을 뜻하지 않으며 큰 격자 SCM 탐색의 양쪽 NaN 실패는 유효 통계에서 제외했습니다. [비교 보고서·그림·수치](validation/rrtmgp37/rrtmg-comparison/REPORT_ko.md)에 조건과 한계를 기록했습니다.
 

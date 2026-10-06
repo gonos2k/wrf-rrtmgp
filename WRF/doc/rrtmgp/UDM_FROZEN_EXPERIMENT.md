@@ -104,3 +104,11 @@ parallel read reproducibility address implementation correctness. Actual UDM
 hail-producing long runs, restart/decomposition equivalence and independent
 optical/observation comparisons are separate gates. Enabling this mode to finish
 a hail-producing run does not by itself validate the chosen optical model.
+
+The [actual-domain runtime record](../../../validation/rrtmgp37/realdata-parallel/README.md)
+contains the completed PR20 four-rank 24-hour mode-1 trial and its separate
+12-to-13-hour restart comparison. All numeric history fields agree exactly
+at 13 hours, while global `START_DATE` differs. Hourly positive G/H paths
+confirm that this was not a zero-particle bypass; substantial warm-air
+positive-path shares also keep melting-particle fidelity outside the validated
+scope. These receipts identify the older PR20 executable explicitly.
