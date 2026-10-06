@@ -1,0 +1,29 @@
+--- build/udm-nested-domain-plan/v2/run_nested-v2-reviewed-64m.py	2026-10-03 12:40:55.000000000 +0900
++++ build/udm-nested-domain-plan/v2/run_nested.py	2026-10-03 12:45:31.000000000 +0900
+@@ -324,7 +324,7 @@
+ 
+ def child_stack_limit() -> None:
+     soft, hard = resource.getrlimit(resource.RLIMIT_STACK)
+-    target = 64 * 1024 * 1024
++    target = 512 * 1024 * 1024
+     if hard != resource.RLIM_INFINITY and hard < target:
+         raise RuntimeError(f"hard stack limit too small for WRF: {hard}")
+     resource.setrlimit(resource.RLIMIT_STACK, (target, hard))
+@@ -332,7 +332,7 @@
+ 
+ def check_stack_limit_available() -> dict:
+     soft, hard = resource.getrlimit(resource.RLIMIT_STACK)
+-    target = 64 * 1024 * 1024
++    target = 512 * 1024 * 1024
+     if hard != resource.RLIM_INFINITY and hard < target:
+         raise RuntimeError(f"hard stack limit too small for WRF: {hard} < {target}")
+     return {"current_soft_bytes": soft, "hard_bytes": hard, "planned_child_soft_bytes": target}
+@@ -424,7 +424,7 @@
+     receipt["command"] = command
+     receipt["environment"] = {k: env[k] for k in ("MPICH_INTERFACE_HOSTNAME", "OMP_NUM_THREADS", "OMP_DYNAMIC", "OMP_STACKSIZE", "OPENBLAS_NUM_THREADS", "LD_LIBRARY_PATH")}
+     receipt["runtime_loader"] = loader
+-    receipt["main_stack_limit_bytes"] = 64 * 1024 * 1024
++    receipt["main_stack_limit_bytes"] = 512 * 1024 * 1024
+     receipt["removed_inherited_environment_keys"] = removed
+     receipt_path.write_text(json.dumps(receipt, indent=2, sort_keys=True) + "\n")
+ 

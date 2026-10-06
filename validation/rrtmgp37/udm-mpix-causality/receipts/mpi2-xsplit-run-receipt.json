@@ -1,0 +1,152 @@
+{
+  "status": "MPI2_XSPLIT_SUCCESS_COMPLETE_DIAGNOSTIC",
+  "case_dir": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-mpix-diagnosis/mpi2-x-split-prepared",
+  "run_command": "mpiexec -launcher fork -iface lo -n 2 ./wrf.exe",
+  "environment": {
+    "MPICH_INTERFACE_HOSTNAME": "127.0.0.1",
+    "OMP_NUM_THREADS": "1",
+    "OMP_STACKSIZE": "512M",
+    "capture_audit_environment": "unset"
+  },
+  "binary": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-mpix-diagnosis/mpi2-x-split-prepared/wrf.exe",
+    "sha256": "6c0c1e3efc948a68b1579137d58dd972890b6e338a8cfa1c5c96e539c1c0daeb",
+    "source_commit": "e73b353f2b76f323809f99bed19a29eaaf25af02",
+    "instrumentation": "none, uninstrumented PR21 em_real"
+  },
+  "namelist": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-mpix-diagnosis/mpi2-x-split-prepared/namelist.input",
+    "sha256": "4b88b907d87ff708ecee8e66ac22557970a6bc98ecd19744a65730f62a473d1c",
+    "baseline_mpi4_namelist_sha256": "3d5162c4da198ebbd4ade053a81294497b779db0afa8f896a0497e3f0db56475",
+    "only_non-whitespace-config-delta": "&domains: nproc_x=2, nproc_y=1",
+    "diff_file": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-mpix-diagnosis/mpi2-x-split-prepared/namelist-decomposition-only.diff",
+    "validated_non_decomposition_content_identical": true
+  },
+  "input_hashes": {
+    "wrfrst_d01_2010-06-11_12:00:00": "943a53db058f2d9560c6f0d571f3ff9bb8efb407010c5eea2026922a6eeee7b8",
+    "wrfinput_d01": "5ef7abe34c516fba107f346bdbdb3777edacb5d48493df467ea2dd8bcf6a75ff",
+    "wrfbdy_d01": "e687b73730ab9a2cee4842e1a92b225a4edb074ba080b6053d96d81ec1731a2d"
+  },
+  "status_logs": {
+    "rsl.error.0000": {
+      "success": true,
+      "hash": "760608891dacb16f55612572116bd54556643fa929725b586860a1e1405f1f5f"
+    },
+    "rsl.error.0001": {
+      "success": true,
+      "hash": "7fd9f91c8c31a23974cc000ac62915f1c63660699658e710304978a57a0af134"
+    }
+  },
+  "all_ranks_success": true,
+  "rank_layout": {
+    "rsl.out.0000": {
+      "tile": [
+        1,
+        145,
+        1,
+        190
+      ],
+      "success": true
+    },
+    "rsl.out.0001": {
+      "tile": [
+        146,
+        290,
+        1,
+        190
+      ],
+      "success": true
+    }
+  },
+  "output": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-mpix-diagnosis/mpi2-x-split-prepared/wrfout_d01_2010-06-11_12:01:00",
+    "sha256": "f8135da9550e12089563bb6b2da4fdadcd7e0b81aeaa945abd085c88bb799079",
+    "time": "2010-06-11_12:01:00"
+  },
+  "comparisons": {
+    "xsplit-vs-mpi1.json": {
+      "report": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-mpix-diagnosis/xsplit-vs-mpi1.json",
+      "dynamics_passed": false,
+      "metadata_differences": [
+        {
+          "continuous": 1,
+          "global_attribute_mismatch": "NTASKS_TOTAL",
+          "restarted": 2
+        },
+        {
+          "continuous": 1,
+          "global_attribute_mismatch": "NTASKS_X",
+          "restarted": 2
+        }
+      ],
+      "different_variables": 62,
+      "different_numeric_values": 459268,
+      "max_absolute_differences": {
+        "GLW": 0.003387451171875,
+        "P": 2.3515625,
+        "QCLOUD": 4.6732384362258017e-07,
+        "QGRAUP": 4.659789912689084e-09,
+        "QHAIL": 6.161542387417285e-10,
+        "QICE": 4.1264138417318463e-07,
+        "QRAIN": 2.21113623410929e-07,
+        "QSNOW": 3.640161594375968e-08,
+        "QVAPOR": 4.842877388000488e-07,
+        "SWDOWN": 0.00531768798828125,
+        "T": 0.00115966796875,
+        "UDM_CLDFRA": 1.0
+      }
+    },
+    "xsplit-vs-mpi2-ysplit.json": {
+      "report": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-mpix-diagnosis/xsplit-vs-mpi2-ysplit.json",
+      "dynamics_passed": false,
+      "metadata_differences": [
+        {
+          "continuous": 1,
+          "global_attribute_mismatch": "NTASKS_X",
+          "restarted": 2
+        },
+        {
+          "continuous": 2,
+          "global_attribute_mismatch": "NTASKS_Y",
+          "restarted": 1
+        }
+      ],
+      "different_variables": 62,
+      "different_numeric_values": 459268,
+      "max_absolute_differences": {
+        "GLW": 0.003387451171875,
+        "P": 2.3515625,
+        "QCLOUD": 4.6732384362258017e-07,
+        "QGRAUP": 4.659789912689084e-09,
+        "QHAIL": 6.161542387417285e-10,
+        "QICE": 4.1264138417318463e-07,
+        "QRAIN": 2.21113623410929e-07,
+        "QSNOW": 3.640161594375968e-08,
+        "QVAPOR": 4.842877388000488e-07,
+        "SWDOWN": 0.00531768798828125,
+        "T": 0.00115966796875,
+        "UDM_CLDFRA": 1.0
+      }
+    },
+    "xsplit-vs-mpi4.json": {
+      "report": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-mpix-diagnosis/xsplit-vs-mpi4.json",
+      "dynamics_passed": true,
+      "metadata_differences": [
+        {
+          "continuous": 4,
+          "global_attribute_mismatch": "NTASKS_TOTAL",
+          "restarted": 2
+        },
+        {
+          "continuous": 2,
+          "global_attribute_mismatch": "NTASKS_Y",
+          "restarted": 1
+        }
+      ],
+      "different_variables": 0,
+      "different_numeric_values": 0,
+      "max_absolute_differences": {}
+    }
+  },
+  "interpretation": "The 2-rank x-split output is numerically identical to 4-rank 2x2 and differs from both 1x1 and 2-rank 1x2. In this bounded run, differences track the nproc_x=2 decomposition setting (or a correlated layout effect), not rank count alone and not the y-split. This is an association from a single restarted timestep, not a source-level root cause."
+}

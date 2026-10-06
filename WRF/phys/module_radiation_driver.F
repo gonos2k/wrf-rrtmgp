@@ -298,7 +298,7 @@ CONTAINS
    USE module_ra_rrtm       , ONLY : rrtmlwrad
    USE module_ra_rrtmg_lw   , ONLY : rrtmg_lwrad, rrtmg_lwinit
    USE module_ra_rrtmgp_audit, ONLY: audit_enabled, audit_samples, audit_native4, audit_moments, hydro_snapshot
-   USE module_ra_rrtmgp_trace, ONLY: trace_suspend
+   USE module_ra_rrtmgp_trace, ONLY: trace_suspend, trace_column_selection, trace_column_in_tile
    USE module_ra_rrtmg_sw   , ONLY : rrtmg_swrad
 #if( BUILD_RRTMG_FAST == 1)
    USE module_ra_rrtmg_lwf  , ONLY : rrtmg_lwrad_fast
@@ -2152,6 +2152,7 @@ CONTAINS
              ! Serialized opt-in diagnostic: scratch outputs never feed the forecast.
              IF (lw_physics==RRTMGP_LWSCHEME) THEN
               IF (audit_enabled()) THEN
+               IF (trace_column_in_tile(ids,ide,jds,jde,its,ite,jts,jte)) THEN
                BLOCK
                 USE, INTRINSIC :: iso_fortran_env, ONLY: real64
                 TYPE(audit_moments) :: grid_stats, domain_stats
@@ -2159,22 +2160,32 @@ CONTAINS
                 REAL(real64), ALLOCATABLE :: x37(:,:,:),x4(:,:,:),op37(:,:,:),op4(:,:,:)
                 REAL(real64), ALLOCATABLE :: d37(:,:,:),d4(:,:,:),dop37(:,:,:),dop4(:,:,:)
                 CHARACTER(LEN=24), ALLOCATABLE :: labels(:)
+                CHARACTER(LEN=24) :: cell_scope,mean_scope
                 INTEGER :: nmetrics,m,engine,seed,native,ak,ai,aj,slot
+                INTEGER :: a_its,a_ite,a_jts,a_jte,target_i,target_j
+                LOGICAL :: selected_column
+                CALL trace_column_selection(ids,ide,jds,jde,selected_column,target_i,target_j)
+                a_its=its;a_ite=ite;a_jts=jts;a_jte=jte
+                cell_scope='full_tile_cell';mean_scope='full_tile_mean'
+                IF(selected_column) THEN
+                  a_its=target_i;a_ite=target_i;a_jts=target_j;a_jte=target_j
+                  cell_scope='selected_column';mean_scope='selected_column'
+                END IF
                 nmetrics=2+kte-kts+1
                 ALLOCATE(ah(ims:ime,kms:kme,jms:jme,2),af(ims:ime,jms:jme,3),ao3(ims:ime,kms:kme,jms:jme))
-                ALLOCATE(x37(its:ite,jts:jte,nmetrics),x4(its:ite,jts:jte,nmetrics), &
-                  op37(its:ite,jts:jte,nmetrics),op4(its:ite,jts:jte,nmetrics),labels(nmetrics))
+                ALLOCATE(x37(a_its:a_ite,a_jts:a_jte,nmetrics),x4(a_its:a_ite,a_jts:a_jte,nmetrics), &
+                  op37(a_its:a_ite,a_jts:a_jte,nmetrics),op4(a_its:a_ite,a_jts:a_jte,nmetrics),labels(nmetrics))
                 ALLOCATE(d37(1,1,nmetrics),d4(1,1,nmetrics),dop37(1,1,nmetrics),dop4(1,1,nmetrics))
-                CALL grid_stats%init(ite-its+1,jte-jts+1,nmetrics,its,jts)
+                CALL grid_stats%init(a_ite-a_its+1,a_jte-a_jts+1,nmetrics,a_its,a_jts)
                 CALL domain_stats%init(1,1,nmetrics,0,0)
                 labels(1)='SURFACE_DOWN'
-                op37(:,:,1)=REAL(GLW(its:ite,jts:jte),real64)
+                op37(:,:,1)=REAL(GLW(a_its:a_ite,a_jts:a_jte),real64)
                 labels(2)='TOA_UP'
-                op37(:,:,2)=REAL(RLWTOA(its:ite,jts:jte),real64)
+                op37(:,:,2)=REAL(RLWTOA(a_its:a_ite,a_jts:a_jte),real64)
                 DO ak=kts,kte
                  slot=2+ak-kts+1
                  WRITE(labels(slot),'("HEAT_",I0)') ak
-                 op37(:,:,slot)=REAL(RTHRATEN(its:ite,ak,jts:jte)*pi(its:ite,ak,jts:jte)*86400.,real64)
+                 op37(:,:,slot)=REAL(RTHRATEN(a_its:a_ite,ak,a_jts:a_jte)*pi(a_its:a_ite,ak,a_jts:a_jte)*86400.,real64)
                 END DO
                 CALL trace_suspend(.TRUE.)
                 DO m=0,audit_samples()
@@ -2246,10 +2257,10 @@ CONTAINS
                     jme=jme, &
                     kms=kms, &
                     kme=kme, &
-                    its=its, &
-                    ite=ite, &
-                    jts=jts, &
-                    jte=jte, &
+                    its=a_its, &
+                    ite=a_ite, &
+                    jts=a_jts, &
+                    jte=a_jte, &
                     kts=kts, &
                     kte=kte, &
                     mp_physics=mp_physics, &
@@ -2264,36 +2275,37 @@ CONTAINS
                     rthratenlw=ah(:,:,:,1), &
                     rthratenlwc=ah(:,:,:,2) )
                   IF(engine==4) THEN
-                   x4(:,:,1)=REAL(af(its:ite,jts:jte,1),real64)
-                   x4(:,:,2)=REAL(af(its:ite,jts:jte,2),real64)
+                   x4(:,:,1)=REAL(af(a_its:a_ite,a_jts:a_jte,1),real64)
+                   x4(:,:,2)=REAL(af(a_its:a_ite,a_jts:a_jte,2),real64)
                    DO ak=kts,kte
-                    x4(:,:,2+ak-kts+1)=REAL(ah(its:ite,ak,jts:jte,1)*pi(its:ite,ak,jts:jte)*86400.,real64)
+                    x4(:,:,2+ak-kts+1)=REAL(ah(a_its:a_ite,ak,a_jts:a_jte,1)*pi(a_its:a_ite,ak,a_jts:a_jte)*86400.,real64)
                    END DO
                    IF(m==0) op4=x4
                   ELSE
-                   x37(:,:,1)=REAL(af(its:ite,jts:jte,1),real64)
-                   x37(:,:,2)=REAL(af(its:ite,jts:jte,2),real64)
+                   x37(:,:,1)=REAL(af(a_its:a_ite,a_jts:a_jte,1),real64)
+                   x37(:,:,2)=REAL(af(a_its:a_ite,a_jts:a_jte,2),real64)
                    DO ak=kts,kte
-                    x37(:,:,2+ak-kts+1)=REAL(ah(its:ite,ak,jts:jte,1)*pi(its:ite,ak,jts:jte)*86400.,real64)
+                    x37(:,:,2+ak-kts+1)=REAL(ah(a_its:a_ite,ak,a_jts:a_jte,1)*pi(a_its:a_ite,ak,a_jts:a_jte)*86400.,real64)
                    END DO
                   END IF
                  END DO
                  IF(m==0) CYCLE
                  CALL grid_stats%add(x37,x4)
                  DO slot=1,nmetrics
-                  d37(1,1,slot)=SUM(x37(:,:,slot))/((ite-its+1)*(jte-jts+1))
-                  d4(1,1,slot)=SUM(x4(:,:,slot))/((ite-its+1)*(jte-jts+1))
+                  d37(1,1,slot)=SUM(x37(:,:,slot))/((a_ite-a_its+1)*(a_jte-a_jts+1))
+                  d4(1,1,slot)=SUM(x4(:,:,slot))/((a_ite-a_its+1)*(a_jte-a_jts+1))
                  END DO
                  CALL domain_stats%add(d37,d4)
                 END DO
                 CALL trace_suspend(.FALSE.)
                 DO slot=1,nmetrics
-                 dop37(1,1,slot)=SUM(op37(:,:,slot))/((ite-its+1)*(jte-jts+1))
-                 dop4(1,1,slot)=SUM(op4(:,:,slot))/((ite-its+1)*(jte-jts+1))
+                 dop37(1,1,slot)=SUM(op37(:,:,slot))/((a_ite-a_its+1)*(a_jte-a_jts+1))
+                 dop4(1,1,slot)=SUM(op4(:,:,slot))/((a_ite-a_its+1)*(a_jte-a_jts+1))
                 END DO
-                CALL grid_stats%write('lw',id,itimestep,xtime*60.,op37,op4,labels)
-                CALL domain_stats%write('lw',id,itimestep,xtime*60.,dop37,dop4,labels)
+                CALL grid_stats%write('lw',id,itimestep,xtime*60.,op37,op4,labels,cell_scope)
+                CALL domain_stats%write('lw',id,itimestep,xtime*60.,dop37,dop4,labels,mean_scope)
                END BLOCK
+               END IF
               END IF
              END IF
 
@@ -2882,6 +2894,7 @@ CONTAINS
              ! Serialized opt-in diagnostic: scratch outputs never feed the forecast.
              IF (sw_physics==RRTMGP_SWSCHEME) THEN
               IF (audit_enabled()) THEN
+               IF (trace_column_in_tile(ids,ide,jds,jde,its,ite,jts,jte)) THEN
                BLOCK
                 USE, INTRINSIC :: iso_fortran_env, ONLY: real64
                 TYPE(audit_moments) :: grid_stats, domain_stats
@@ -2889,26 +2902,36 @@ CONTAINS
                 REAL(real64), ALLOCATABLE :: x37(:,:,:),x4(:,:,:),op37(:,:,:),op4(:,:,:)
                 REAL(real64), ALLOCATABLE :: d37(:,:,:),d4(:,:,:),dop37(:,:,:),dop4(:,:,:)
                 CHARACTER(LEN=24), ALLOCATABLE :: labels(:)
+                CHARACTER(LEN=24) :: cell_scope,mean_scope
                 INTEGER :: nmetrics,m,engine,seed,native,ak,ai,aj,slot
+                INTEGER :: a_its,a_ite,a_jts,a_jte,target_i,target_j
+                LOGICAL :: selected_column
+                CALL trace_column_selection(ids,ide,jds,jde,selected_column,target_i,target_j)
+                a_its=its;a_ite=ite;a_jts=jts;a_jte=jte
+                cell_scope='full_tile_cell';mean_scope='full_tile_mean'
+                IF(selected_column) THEN
+                  a_its=target_i;a_ite=target_i;a_jts=target_j;a_jte=target_j
+                  cell_scope='selected_column';mean_scope='selected_column'
+                END IF
                 nmetrics=4+kte-kts+1
                 ALLOCATE(ah(ims:ime,kms:kme,jms:jme,2),af(ims:ime,jms:jme,21),ao3(ims:ime,kms:kme,jms:jme))
-                ALLOCATE(x37(its:ite,jts:jte,nmetrics),x4(its:ite,jts:jte,nmetrics), &
-                  op37(its:ite,jts:jte,nmetrics),op4(its:ite,jts:jte,nmetrics),labels(nmetrics))
+                ALLOCATE(x37(a_its:a_ite,a_jts:a_jte,nmetrics),x4(a_its:a_ite,a_jts:a_jte,nmetrics), &
+                  op37(a_its:a_ite,a_jts:a_jte,nmetrics),op4(a_its:a_ite,a_jts:a_jte,nmetrics),labels(nmetrics))
                 ALLOCATE(d37(1,1,nmetrics),d4(1,1,nmetrics),dop37(1,1,nmetrics),dop4(1,1,nmetrics))
-                CALL grid_stats%init(ite-its+1,jte-jts+1,nmetrics,its,jts)
+                CALL grid_stats%init(a_ite-a_its+1,a_jte-a_jts+1,nmetrics,a_its,a_jts)
                 CALL domain_stats%init(1,1,nmetrics,0,0)
                 labels(1)='SURFACE_DOWN'
-                op37(:,:,1)=REAL(SWDNB(its:ite,jts:jte),real64)
+                op37(:,:,1)=REAL(SWDNB(a_its:a_ite,a_jts:a_jte),real64)
                 labels(2)='TOA_UP'
-                op37(:,:,2)=REAL(SWUPT(its:ite,jts:jte),real64)
+                op37(:,:,2)=REAL(SWUPT(a_its:a_ite,a_jts:a_jte),real64)
                 labels(3)='SW_NET'
-                op37(:,:,3)=REAL(GSW(its:ite,jts:jte),real64)
+                op37(:,:,3)=REAL(GSW(a_its:a_ite,a_jts:a_jte),real64)
                 labels(4)='SW_DIRECT'
-                op37(:,:,4)=REAL(SWDDIR(its:ite,jts:jte),real64)
+                op37(:,:,4)=REAL(SWDDIR(a_its:a_ite,a_jts:a_jte),real64)
                 DO ak=kts,kte
                  slot=4+ak-kts+1
                  WRITE(labels(slot),'("HEAT_",I0)') ak
-                 op37(:,:,slot)=REAL(RTHRATENSW(its:ite,ak,jts:jte)*pi(its:ite,ak,jts:jte)*86400.,real64)
+                 op37(:,:,slot)=REAL(RTHRATENSW(a_its:a_ite,ak,a_jts:a_jte)*pi(a_its:a_ite,ak,a_jts:a_jte)*86400.,real64)
                 END DO
                 CALL trace_suspend(.TRUE.)
                 DO m=0,audit_samples()
@@ -2980,10 +3003,10 @@ CONTAINS
                     jme=jme, &
                     kms=kms, &
                     kme=kme, &
-                    its=its, &
-                    ite=ite, &
-                    jts=jts, &
-                    jte=jte, &
+                    its=a_its, &
+                    ite=a_ite, &
+                    jts=a_jts, &
+                    jte=a_jte, &
                     kts=kts, &
                     kte=kte, &
                     mp_physics=mp_physics, &
@@ -3036,40 +3059,41 @@ CONTAINS
                     rthratensw=ah(:,:,:,1), &
                     rthratenswc=ah(:,:,:,2) )
                   IF(engine==4) THEN
-                   x4(:,:,1)=REAL(af(its:ite,jts:jte,1),real64)
-                   x4(:,:,2)=REAL(af(its:ite,jts:jte,2),real64)
-                   x4(:,:,3)=REAL(af(its:ite,jts:jte,3),real64)
-                   x4(:,:,4)=REAL(af(its:ite,jts:jte,4),real64)
+                   x4(:,:,1)=REAL(af(a_its:a_ite,a_jts:a_jte,1),real64)
+                   x4(:,:,2)=REAL(af(a_its:a_ite,a_jts:a_jte,2),real64)
+                   x4(:,:,3)=REAL(af(a_its:a_ite,a_jts:a_jte,3),real64)
+                   x4(:,:,4)=REAL(af(a_its:a_ite,a_jts:a_jte,4),real64)
                    DO ak=kts,kte
-                    x4(:,:,4+ak-kts+1)=REAL(ah(its:ite,ak,jts:jte,1)*pi(its:ite,ak,jts:jte)*86400.,real64)
+                    x4(:,:,4+ak-kts+1)=REAL(ah(a_its:a_ite,ak,a_jts:a_jte,1)*pi(a_its:a_ite,ak,a_jts:a_jte)*86400.,real64)
                    END DO
                    IF(m==0) op4=x4
                   ELSE
-                   x37(:,:,1)=REAL(af(its:ite,jts:jte,1),real64)
-                   x37(:,:,2)=REAL(af(its:ite,jts:jte,2),real64)
-                   x37(:,:,3)=REAL(af(its:ite,jts:jte,3),real64)
-                   x37(:,:,4)=REAL(af(its:ite,jts:jte,4),real64)
+                   x37(:,:,1)=REAL(af(a_its:a_ite,a_jts:a_jte,1),real64)
+                   x37(:,:,2)=REAL(af(a_its:a_ite,a_jts:a_jte,2),real64)
+                   x37(:,:,3)=REAL(af(a_its:a_ite,a_jts:a_jte,3),real64)
+                   x37(:,:,4)=REAL(af(a_its:a_ite,a_jts:a_jte,4),real64)
                    DO ak=kts,kte
-                    x37(:,:,4+ak-kts+1)=REAL(ah(its:ite,ak,jts:jte,1)*pi(its:ite,ak,jts:jte)*86400.,real64)
+                    x37(:,:,4+ak-kts+1)=REAL(ah(a_its:a_ite,ak,a_jts:a_jte,1)*pi(a_its:a_ite,ak,a_jts:a_jte)*86400.,real64)
                    END DO
                   END IF
                  END DO
                  IF(m==0) CYCLE
                  CALL grid_stats%add(x37,x4)
                  DO slot=1,nmetrics
-                  d37(1,1,slot)=SUM(x37(:,:,slot))/((ite-its+1)*(jte-jts+1))
-                  d4(1,1,slot)=SUM(x4(:,:,slot))/((ite-its+1)*(jte-jts+1))
+                  d37(1,1,slot)=SUM(x37(:,:,slot))/((a_ite-a_its+1)*(a_jte-a_jts+1))
+                  d4(1,1,slot)=SUM(x4(:,:,slot))/((a_ite-a_its+1)*(a_jte-a_jts+1))
                  END DO
                  CALL domain_stats%add(d37,d4)
                 END DO
                 CALL trace_suspend(.FALSE.)
                 DO slot=1,nmetrics
-                 dop37(1,1,slot)=SUM(op37(:,:,slot))/((ite-its+1)*(jte-jts+1))
-                 dop4(1,1,slot)=SUM(op4(:,:,slot))/((ite-its+1)*(jte-jts+1))
+                 dop37(1,1,slot)=SUM(op37(:,:,slot))/((a_ite-a_its+1)*(a_jte-a_jts+1))
+                 dop4(1,1,slot)=SUM(op4(:,:,slot))/((a_ite-a_its+1)*(a_jte-a_jts+1))
                 END DO
-                CALL grid_stats%write('sw',id,itimestep,xtime*60.,op37,op4,labels)
-                CALL domain_stats%write('sw',id,itimestep,xtime*60.,dop37,dop4,labels)
+                CALL grid_stats%write('sw',id,itimestep,xtime*60.,op37,op4,labels,cell_scope)
+                CALL domain_stats%write('sw',id,itimestep,xtime*60.,dop37,dop4,labels,mean_scope)
                END BLOCK
+               END IF
               END IF
              END IF
 
