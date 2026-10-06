@@ -1,0 +1,36 @@
+{
+  "stage_integrated_source.py": {
+    "sha256": "667dd0946c095e103801cff99588b0e95e0527cbd00acf6dcf9809524b2b1846",
+    "original_path": "/tmp/stage_phase_workspace.py",
+    "original_sha256": "667dd0946c095e103801cff99588b0e95e0527cbd00acf6dcf9809524b2b1846",
+    "executed_command": "python3 /tmp/stage_phase_workspace.py",
+    "note": "The script refuses an existing fresh staging directory; the successful source tree and receipts are retained."
+  },
+  "build_serial_em_real.sh": {
+    "sha256": "145853fe3f010a2c1aabab911b1c97a617bc074b17f2aa3cc20df3d772d52766",
+    "executed_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-phase-path-statistics-real-wrf/build_serial_em_real.sh",
+    "executed_sha256": "145853fe3f010a2c1aabab911b1c97a617bc074b17f2aa3cc20df3d772d52766",
+    "executed_command": "./build_serial_em_real.sh"
+  },
+  "run_integrated_candidate.py": {
+    "sha256": "bddad4229ebdeab3f84193e15627419b8052e6b303009037aebb566b8650de61",
+    "executed_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-phase-path-statistics-real-wrf/run_integrated_candidate.py",
+    "executed_sha256": "bddad4229ebdeab3f84193e15627419b8052e6b303009037aebb566b8650de61",
+    "executed_commands": [
+      "python3 run_integrated_candidate.py --phase ra37 --timeout 3600",
+      "python3 run_integrated_candidate.py --phase ra4 --timeout 3600"
+    ]
+  },
+  "summarize_phase_path.py": {
+    "sha256": "15f3827e896a126ce4cb54ca7fbea24f8ceb6b3a3bb7b57846f2ff72ab16069e",
+    "command_file": "summary-parser-command.txt"
+  },
+  "standalone_cmake_ctest": {
+    "configure_command": "cmake -S WRF/test/rrtmgp -B build/phase-path-statistics-ctest -DNETCDF_INCLUDE_DIR=/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/netcdf/include -DNETCDF_LIBRARY_DIR=/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/netcdf/lib -DFROZEN_TABLE=/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp/validation/rrtmgp37/frozen-optics-lookup/nine-grid-o128-s50/frozen-ice-psd-moments.nc",
+    "build_command": "cmake --build build/phase-path-statistics-ctest --target test_rrtmgp_phase_path_stats -j 4",
+    "test_command": "LD_LIBRARY_PATH=/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/netcdf/lib ctest --test-dir build/phase-path-statistics-ctest -R ^udm_phase_path_statistics$ --output-on-failure",
+    "configure_log_sha256": "e1beb9dbffb174d97120bbe66d7224cf5cd539a042f31ea499729764ee565798",
+    "build_log_sha256": "ee238315c645ebc5eec6077676552d7c7bb3a7e48eeb9d477026295a97e2cd2b",
+    "ctest_log_sha256": "d76b64ecf6665f5f21730fadfb53baccc7123cae5db2562fd3640d85f222de06"
+  }
+}

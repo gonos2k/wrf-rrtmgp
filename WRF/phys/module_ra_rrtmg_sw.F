@@ -10102,9 +10102,11 @@ CONTAINS
 !------------------------------------------------------------------
    USE MODULE_RA_CLWRF_SUPPORT, ONLY : read_CAMgases
    USE module_mp_udm, ONLY: cldf_diag, udm_radiation_negative_limits
+   USE mo_rte_kind, ONLY: wp
    USE module_ra_rrtmgp, ONLY: rrtmgp_sw_column, rrtmgp_frozen_enabled, &
-        ty_rrtmgp_sw_workspace,rrtmgp_release_workspace
-   USE module_ra_rrtmgp_input, ONLY: rrtmgp_build_udm_inputs, rrtmgp_column_seed, rrtmgp_udm_frozen_lambdas
+        ty_rrtmgp_sw_workspace,rrtmgp_release_workspace, rrtmgp_cloud_lut_bounds, rrtmgp_ice_lut_coordinate
+   USE module_ra_rrtmgp_input, ONLY: rrtmgp_build_udm_inputs, rrtmgp_column_seed, &
+        rrtmgp_udm_frozen_lambdas, rrtmgp_summarize_path_clipping
    USE module_ra_rrtmgp_trace, ONLY: trace_start, trace_active, trace_raw_start, trace_raw, &
         trace_raw_end, trace_result, trace_end
    IMPLICIT NONE
@@ -10118,6 +10120,13 @@ CONTAINS
    INTEGER, OPTIONAL, INTENT(IN) :: rrtmgp_domain_id,rrtmgp_calendar_day
    INTEGER :: gp_seed,gp_g_count,gp_seed_overridden
    REAL(KIND=8) :: gp_g_sum,gp_g_max
+   INTEGER(KIND=8) :: gp_cf0_count(4),gp_clip_low_count(2),gp_clip_high_count(2)
+   REAL(KIND=8) :: gp_cf0_sum(4),gp_cf0_max(4),gp_clip_low_sum(2),gp_clip_low_max(2), &
+                   gp_clip_high_sum(2),gp_clip_high_max(2),gp_clip_total(2)
+   INTEGER(KIND=8) :: gp_nlow_tmp,gp_nhigh_tmp
+   REAL(KIND=8) :: gp_slow_tmp,gp_mlow_tmp,gp_shigh_tmp,gp_mhigh_tmp,gp_total_tmp
+   REAL(wp) :: gp_liq_min,gp_liq_max,gp_ice_min,gp_ice_max
+   REAL(wp) :: gp_lut_ice(kte-kts+1)
    INTEGER :: gp_negative_count(6)
    REAL(KIND=8) :: gp_negative_sum(6),gp_negative_max_q(6)
    REAL :: gp_negative_limits(6),gp_clipped_q(kte-kts+1,6),gp_negative_correction(kte-kts+1,6)
@@ -10561,7 +10570,7 @@ CONTAINS
     character (len = 50) :: mystr         ! temporary character string
 ! end WRF-CMAQ twoway coupled model block
 
-    CHARACTER(LEN=256) :: message
+    CHARACTER(LEN=512) :: message
     LOGICAL, EXTERNAL :: wrf_dm_on_monitor
 
 !------------------------------------------------------------------
@@ -10644,6 +10653,10 @@ CONTAINS
 
 ! latitude loop
   gp_g_count=0;gp_g_sum=0.d0;gp_g_max=0.d0
+  gp_cf0_count=0;gp_cf0_sum=0.d0;gp_cf0_max=0.d0
+  gp_clip_low_count=0;gp_clip_high_count=0
+  gp_clip_low_sum=0.d0;gp_clip_low_max=0.d0;gp_clip_high_sum=0.d0;gp_clip_high_max=0.d0;gp_clip_total=0.d0
+  IF(run_rrtmgp) CALL rrtmgp_cloud_lut_bounds('SW',gp_liq_min,gp_liq_max,gp_ice_min,gp_ice_max)
   gp_negative_count=0;gp_negative_sum=0.d0;gp_negative_max_q=0.d0
   gp_negative_limits=0.
   IF(run_rrtmgp) gp_negative_limits=udm_radiation_negative_limits()
@@ -11391,6 +11404,35 @@ CONTAINS
                     negative_q_limits=gp_negative_limits,clipped_negative_q=gp_clipped_q, &
                     negative_grid_correction=gp_negative_correction, &
                     dry_layer_mass_kg_m2=udm_dry_layer_mass(i,kts:kte,j),frozen_uniform=gp_frozen)
+               DO gp_phase=1,4
+                  gp_cf0_count(gp_phase)=gp_cf0_count(gp_phase)+COUNT(gp_omitted_phase(:,gp_phase)>0.)
+                  gp_cf0_sum(gp_phase)=gp_cf0_sum(gp_phase)+SUM(REAL(gp_omitted_phase(:,gp_phase),8))
+                  IF(ANY(gp_omitted_phase(:,gp_phase)>0.)) &
+                    gp_cf0_max(gp_phase)=MAX(gp_cf0_max(gp_phase),MAXVAL(REAL(gp_omitted_phase(:,gp_phase),8)))
+               END DO
+               IF(icld/=0) THEN
+                  gp_lut_ice=rrtmgp_ice_lut_coordinate(gp_sizes(:,2),4)
+                  CALL rrtmgp_summarize_path_clipping(gp_grid(:,1),cldfrac(ncol,kts:kte), &
+                       REAL(gp_sizes(:,1),8),REAL(gp_liq_min,8),REAL(gp_liq_max,8), &
+                       gp_nlow_tmp,gp_slow_tmp,gp_mlow_tmp,gp_nhigh_tmp,gp_shigh_tmp,gp_mhigh_tmp,gp_total_tmp)
+                  gp_clip_low_count(1)=gp_clip_low_count(1)+gp_nlow_tmp
+                  gp_clip_low_sum(1)=gp_clip_low_sum(1)+gp_slow_tmp
+                  gp_clip_low_max(1)=MAX(gp_clip_low_max(1),gp_mlow_tmp)
+                  gp_clip_high_count(1)=gp_clip_high_count(1)+gp_nhigh_tmp
+                  gp_clip_high_sum(1)=gp_clip_high_sum(1)+gp_shigh_tmp
+                  gp_clip_high_max(1)=MAX(gp_clip_high_max(1),gp_mhigh_tmp)
+                  gp_clip_total(1)=gp_clip_total(1)+gp_total_tmp
+                  CALL rrtmgp_summarize_path_clipping(gp_grid(:,2),cldfrac(ncol,kts:kte), &
+                       REAL(gp_lut_ice,8),REAL(gp_ice_min,8),REAL(gp_ice_max,8), &
+                       gp_nlow_tmp,gp_slow_tmp,gp_mlow_tmp,gp_nhigh_tmp,gp_shigh_tmp,gp_mhigh_tmp,gp_total_tmp)
+                  gp_clip_low_count(2)=gp_clip_low_count(2)+gp_nlow_tmp
+                  gp_clip_low_sum(2)=gp_clip_low_sum(2)+gp_slow_tmp
+                  gp_clip_low_max(2)=MAX(gp_clip_low_max(2),gp_mlow_tmp)
+                  gp_clip_high_count(2)=gp_clip_high_count(2)+gp_nhigh_tmp
+                  gp_clip_high_sum(2)=gp_clip_high_sum(2)+gp_shigh_tmp
+                  gp_clip_high_max(2)=MAX(gp_clip_high_max(2),gp_mhigh_tmp)
+                  gp_clip_total(2)=gp_clip_total(2)+gp_total_tmp
+               END IF
                IF(gp_reason==7) THEN
                   DO k=kts,kte
                      IF(gp_qh(k-kts+1)>0.) THEN
@@ -11938,6 +11980,39 @@ CONTAINS
       WRITE(message,'(A,I0,A,ES14.6,A,ES14.6)') 'SW RRTMGP_UDM_GRAUPEL_OPTICS_OMITTED layers=', &
          gp_g_count,' sum_grid_path_g_m2=',gp_g_sum,' max_grid_path_g_m2=',gp_g_max
       CALL wrf_debug(0,message)
+     END IF
+    END BLOCK
+   END IF
+
+   IF(run_rrtmgp) THEN
+    BLOCK
+     LOGICAL :: report_phase_paths
+     CHARACTER(LEN=4), PARAMETER :: phase_labels(4)=[CHARACTER(LEN=4) :: 'LIQ','ICE','RAIN','SNOW']
+     CHARACTER(LEN=4), PARAMETER :: size_labels(2)=[CHARACTER(LEN=4) :: 'LIQ','ICE']
+     report_phase_paths=.TRUE.
+     IF(PRESENT(mcica_seed_override)) report_phase_paths=mcica_seed_override<0
+     IF(report_phase_paths) THEN
+      DO gp_phase=1,4
+       IF(gp_cf0_count(gp_phase)>0) THEN
+        WRITE(message,'(A,A,A,I0,A,I0,A,I0,A,I0,A,I0,A,ES14.6,A,ES14.6)') &
+          'SW RRTMGP_UDM_CF0_OMITTED phase=',TRIM(phase_labels(gp_phase)),' tile_i=',its,':',ite, &
+          ' tile_j=',jts,':',jte,' layers=',gp_cf0_count(gp_phase), &
+          ' sum_layer_grid_wp_g_m2=',gp_cf0_sum(gp_phase),' max_layer_grid_wp_g_m2=',gp_cf0_max(gp_phase)
+        CALL wrf_debug(0,message)
+       END IF
+      END DO
+      DO gp_phase=1,2
+       IF(gp_clip_total(gp_phase)>0.d0) THEN
+        WRITE(message,'(A,A,A,I0,A,I0,A,I0,A,I0,A,I0,A,I0,A,ES14.6,A,ES14.6,A,ES14.6,A,ES14.6,A,ES14.6,A,ES14.6)') &
+          'SW RRTMGP_UDM_LUT_CLIP phase=',TRIM(size_labels(gp_phase)),' tile_i=',its,':',ite, &
+          ' tile_j=',jts,':',jte,' low_layers=',gp_clip_low_count(gp_phase), &
+          ' high_layers=',gp_clip_high_count(gp_phase),' low_clipped_layer_wp_sum_g_m2=',gp_clip_low_sum(gp_phase), &
+          ' high_clipped_layer_wp_sum_g_m2=',gp_clip_high_sum(gp_phase),' eligible_layer_wp_sum_g_m2=',gp_clip_total(gp_phase), &
+          ' clip_grid_wp_fraction=',(gp_clip_low_sum(gp_phase)+gp_clip_high_sum(gp_phase))/gp_clip_total(gp_phase), &
+          ' max_low_g_m2=',gp_clip_low_max(gp_phase),' max_high_g_m2=',gp_clip_high_max(gp_phase)
+        CALL wrf_debug(0,message)
+       END IF
+      END DO
      END IF
     END BLOCK
    END IF
