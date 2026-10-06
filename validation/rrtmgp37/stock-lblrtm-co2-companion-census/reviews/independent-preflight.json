@@ -1,0 +1,26 @@
+{
+  "no_blocking_defect_found": true,
+  "not_executed": true,
+  "pins": {
+    "audit": {
+      "path": "build/udm37-lblrtm-co2-target-companion-census-v1/audit.py",
+      "sha256": "2f7fee7188e013bdacfc30ff2c135392c98263e5277b7f6e6dd93c9c2bf3bcda"
+    },
+    "plan": {
+      "path": "build/udm37-lblrtm-co2-target-companion-census-v1/plan.json",
+      "sha256": "a509998be2235f8e764d8b3f5d2af0f5735665ff75437de0e99c2b16a6638abe"
+    },
+    "readme": {
+      "path": "build/udm37-lblrtm-co2-target-companion-census-v1/README.md",
+      "sha256": "b9c779e53d699e7188a847e90c43d15e269cd7ffff27a4bdb92e43070e1b7d7e"
+    }
+  },
+  "review": {
+    "association": "The selected direct-seek records are decoded from the pinned TAPE3 layout. For each expected main, script requires one exact block/slot/full encoded MOL/flag match, then counts all consecutive immediately following negative-IFLG records through the next nonnegative slot, including across the flattened selected-panel boundary. It rejects missing/duplicate/mismatched mains, cardinality other than one, and an open group at range end.",
+    "coverage_scope": "Structural main/adjacent-negative-record association for the already-observed contributor roster only. No coefficient fields or YI/GI/SPPSP are decoded; no complete candidate/rejection denominator or physical group closure is claimed.",
+    "file_identity": "The prior whole-file SHA is inherited without recalculation as planned. This pass will check size, stat stability before/after, and hash only the header and 13 selected panel byte ranges.",
+    "target_roster": "801 derived observed target identities filtered to encoded species 2 and original IFLAG 1; duplicate keys rejected; all expected panel blocks constrained to 484-496."
+  },
+  "schema": "lblrtm-co2-target-companion-census-independent-review-v1",
+  "status": "PASS_SCOPED_READY_FOR_AUTHORIZED_RUN"
+}
