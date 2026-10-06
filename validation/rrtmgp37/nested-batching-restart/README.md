@@ -1,0 +1,15 @@
+# Nested UDM37 batching and restart pilot
+
+This evidence records a single bounded nested-domain pilot using the GNU MPI4/OMP2 WRF build pinned in [receipt.json](receipt.json). One `real.exe` preprocessing action produced both domains from the pinned January 2000 `met_em` sequence; three WRF actions then ran B1 continuous, B32 continuous, and B32 resumed from its own 12:30 checkpoint. The parent used CU physics with CU radiation feedback enabled; the child CU scheme was disabled. Both domains used MP27, `use_mp_re=1`, and RA37. The experimental frozen-optics option was enabled with the pinned table.
+
+The 24-hour forcing interval was covered through 2000-01-25 12:00. The forecasts themselves ran only from 12:00 to 13:00 on 2000-01-24. They produced 10-minute histories and 30-minute checkpoints. The restart arm resumed from the actual 12:30 checkpoint in both domains.
+
+B1 and B32 histories/checkpoints were byte-identical for every compared numeric array, variable schema, and attribute. Across 28 comparisons, all 18 B1-versus-B32 continuous-run comparisons passed strict file comparison. The other 10 remain recorded as `FAIL_PRESERVED`: eight resumed history files differ only in global `START_DATE`; the two resumed 13:00 checkpoint files differ in `START_DATE` and `WRF_ALARM_SECS_TIL_NEXT_RING_55`. All 28 comparisons passed the narrower, source-backed restart metadata scope; there were no array, variable-attribute, or dimension differences. The alarm values and source contract are detailed in the receipt. This scoped result does not erase the strict failures.
+
+All three WRF executions exited successfully on four MPI ranks, with no fatal termination or timeout. The parent comparison covers 225 history variables and 667 checkpoint variables; the child covers 219 and 666 respectively. Each domain retained the `UDM_CLDFRA`, `UDM_CF_STEP`, and `UDM_CF_TOP` diagnostics on all records. The fields show active cloud diagnostics in the produced histories; they were not dropped from the restart comparisons.
+
+A previous v3 attempt is preserved separately: `real.exe` was invoked once and failed its namelist time check because the requested end was less than the configured 10,800-second boundary interval. It launched no WRF forecasts. The corrected v4 preprocessing used the full met_em period and generated 24-hour boundary coverage. This was a harness setup failure, not evidence of a model-source failure.
+
+This is a one-hour nested consistency/restart pilot. It does not establish long-forecast readiness, scientific accuracy, observational skill, or direct per-call batch/seed telemetry. Internal batch execution counters and seed headers were not captured in this MPI4/OMP2 run. The frozen homogeneous-ice optics remain experimental.
+
+The package contains only this README, the compact result receipt, and the artifact hash manifest. Large model outputs, executable files, and rank logs remain in the scratch build tree; their hashes and paths are recorded in the manifest and receipt.
