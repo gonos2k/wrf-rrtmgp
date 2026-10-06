@@ -1,0 +1,210 @@
+{
+  "actual_clear_masks": {
+    "MCICA_MASK": [
+      140,
+      45
+    ],
+    "RRTMG_INPUT_CLOUD_MASK": [
+      140,
+      45
+    ],
+    "all_values_zero": true
+  },
+  "actual_export_metadata": {
+    "domain": 1,
+    "i": 13,
+    "j": 46,
+    "phase": "LW",
+    "source_seconds": 43200.0,
+    "step": 721
+  },
+  "author_artifacts": {
+    "driver.log": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-legacy-lw-actual-math-v1/driver.log",
+      "sha256": "607277810e3e0c343df5b8154721fe034ec71ce86f00c5a6e56eb6cb6d33bd21",
+      "size_bytes": 205
+    },
+    "execution.json": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-legacy-lw-actual-math-v1/execution.json",
+      "sha256": "b2b189482765de50bbf59c3c9309fded2ee72cc4bb123735783f331bfc9af74c",
+      "size_bytes": 473
+    },
+    "plan.json": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-legacy-lw-actual-math-v1/plan.json",
+      "sha256": "d0c5461aebb8ff4430dede4273619e7c9898d8f207e26b732d7d2cec679f24b0",
+      "size_bytes": 2255
+    },
+    "result.json": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-legacy-lw-actual-math-v1/result.json",
+      "sha256": "fe33f4e670083ebdba0b501a5ef3a199f42bcb6487126a965ec5161142f57086",
+      "size_bytes": 2846
+    }
+  },
+  "author_reported_comparisons": [
+    {
+      "bitwise_equal_float32": true,
+      "field": "RTE_BAND_UP_NATIVE",
+      "max_abs_difference_native_units": 0.0,
+      "mismatch_count": 0,
+      "quantity": "band_up"
+    },
+    {
+      "bitwise_equal_float32": true,
+      "field": "RTE_BAND_DN_NATIVE",
+      "max_abs_difference_native_units": 0.0,
+      "mismatch_count": 0,
+      "quantity": "band_dn"
+    },
+    {
+      "bitwise_equal_float32": true,
+      "field": "RTE_BAND_UP_CLEAR_NATIVE",
+      "max_abs_difference_native_units": 0.0,
+      "mismatch_count": 0,
+      "quantity": "band_up_clear"
+    },
+    {
+      "bitwise_equal_float32": true,
+      "field": "RTE_BAND_DN_CLEAR_NATIVE",
+      "max_abs_difference_native_units": 0.0,
+      "mismatch_count": 0,
+      "quantity": "band_dn_clear"
+    },
+    {
+      "bitwise_equal_float32": true,
+      "field": "UP_FLUX",
+      "max_abs_difference_native_units": 0.0,
+      "mismatch_count": 0,
+      "quantity": "up"
+    },
+    {
+      "bitwise_equal_float32": true,
+      "field": "DOWN_FLUX",
+      "max_abs_difference_native_units": 0.0,
+      "mismatch_count": 0,
+      "quantity": "down"
+    },
+    {
+      "bitwise_equal_float32": true,
+      "field": "NET_FLUX",
+      "max_abs_difference_native_units": 0.0,
+      "mismatch_count": 0,
+      "quantity": "net"
+    },
+    {
+      "bitwise_equal_float32": true,
+      "field": "HEATING",
+      "max_abs_difference_native_units": 0.0,
+      "mismatch_count": 0,
+      "quantity": "heating"
+    },
+    {
+      "bitwise_equal_float32": true,
+      "field": "UP_CLEAR_FLUX",
+      "max_abs_difference_native_units": 0.0,
+      "mismatch_count": 0,
+      "quantity": "up_clear"
+    },
+    {
+      "bitwise_equal_float32": true,
+      "field": "DOWN_CLEAR_FLUX",
+      "max_abs_difference_native_units": 0.0,
+      "mismatch_count": 0,
+      "quantity": "down_clear"
+    },
+    {
+      "bitwise_equal_float32": true,
+      "field": "NET_CLEAR_FLUX",
+      "max_abs_difference_native_units": 0.0,
+      "mismatch_count": 0,
+      "quantity": "net_clear"
+    },
+    {
+      "bitwise_equal_float32": true,
+      "field": "HEATING_CLEAR",
+      "max_abs_difference_native_units": 0.0,
+      "mismatch_count": 0,
+      "quantity": "heating_clear"
+    }
+  ],
+  "created_unix": 1791180257.1078959,
+  "inherited_static_review": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-legacy-lw-math-review-v2/review.json",
+    "sha256": "afd350b11652032b4a26bb422448e8fe2afaa6761be77e867db9d20ab5e39d2e",
+    "size_bytes": 4273
+  },
+  "interpretation": "The source-reviewed v2 utility consumed the actual new source-enabled packet and reported all four native per-band and eight broadband/heating fields bitwise equal in REAL32, with zero differences. This additive review validates original result/plan/command/output hashes, clear-mask applicability and source/config identity without rerunning the full recurrence.",
+  "limits": [
+    "Same-code/source-table clear recurrence consistency, not independent optical truth or observational accuracy.",
+    "Legacy solver45 layers comprise32 native WRF plus13 extensions; host/RRTMGP source, spectrum, gas and angular policies remain distinct.",
+    "A future common-band attribution must use exact shared physical bands and disclose unmatched bands and source/policy precision differences.",
+    "Original plan/result/execution and prior runtime review preserved."
+  ],
+  "native_precision_configuration": {
+    "lines": {
+      "NATIVE_RWORDSIZE": "NATIVE_RWORDSIZE = 4",
+      "PROMOTION": "PROMOTION       =       #-fdefault-real-8",
+      "RWORDSIZE": "RWORDSIZE       =       4"
+    },
+    "pin": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-legacy-lw-source-export-serial-build-v1/source/WRF/configure.wrf",
+      "sha256": "6a2fcd322bbff92ff61a141671d492eb8d74e3d56af28582306c024775b89c68",
+      "size_bytes": 21072
+    }
+  },
+  "plan_source_input_build_joins_checked": [
+    {
+      "bytes": 27812,
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-legacy-lw-source-export-serial-build-v1/build-receipt.json",
+      "sha256": "3cfa2cfa0c56b143b60a833f968171c4efba98c285842df2c0c704bee26cf59f"
+    },
+    {
+      "bytes": 16092,
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-legacy-lw-math-v2/legacy_lw_replay.py",
+      "sha256": "691497decf3992435ada71b6af84e25e88773f534f385c1a56050e370a1aea00"
+    },
+    {
+      "bytes": 321982,
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-legacy-lw-source-export-bon-audit-v2/execution-receipt.json",
+      "sha256": "83fb045ddbf2b49793a086d4190057e0fcb2cd9148832afba97976552dce297b"
+    },
+    {
+      "bytes": 2539937,
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-legacy-lw-source-export-bon-audit-v2/cases/SOURCE_ON/legacy-export/rrtmg4_d01_i13_j46_step721_lw.txt",
+      "sha256": "bd614b57362b48ab8e00b179fc3464925b9c49a8eef0a472489f87fd89e15c7f"
+    },
+    {
+      "bytes": 4273,
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-bon-night-legacy-lw-math-review-v2/review.json",
+      "sha256": "afd350b11652032b4a26bb422448e8fe2afaa6761be77e867db9d20ab5e39d2e"
+    }
+  ],
+  "python_CLI_RC": 0,
+  "reported_exact_field_roster": [
+    "DOWN_CLEAR_FLUX",
+    "DOWN_FLUX",
+    "HEATING",
+    "HEATING_CLEAR",
+    "NET_CLEAR_FLUX",
+    "NET_FLUX",
+    "RTE_BAND_DN_CLEAR_NATIVE",
+    "RTE_BAND_DN_NATIVE",
+    "RTE_BAND_UP_CLEAR_NATIVE",
+    "RTE_BAND_UP_NATIVE",
+    "UP_CLEAR_FLUX",
+    "UP_FLUX"
+  ],
+  "reviewer_invocations": {
+    "REAL": 0,
+    "WRF": 0,
+    "compiled_RTE": 0,
+    "compiler": 0,
+    "full_python_recurrence_replays": 0
+  },
+  "runtime_independent_review": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-legacy-lw-source-export-runtime-review-v1/review.json",
+    "sha256": "83c6b904debd5d900c198b513ba8057bd4a8aa99461f2f5a9b9e8bcb743375b3",
+    "size_bytes": 23832
+  },
+  "schema": "BON_actual_legacy_LW_clear_python_math_receipt_review_v1",
+  "status": "PASS_SCOPED_ACTUAL_PACKET_AND_EXACT_RESULT_RECEIPT_READBACK"
+}

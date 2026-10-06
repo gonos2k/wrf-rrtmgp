@@ -1,0 +1,99 @@
+{
+  "schema": "udm37-bon-night-shared-source-attribution-plan-v1",
+  "status": "PREPARED_BEFORE_NUMERICAL_EVALUATION",
+  "pins": {
+    "packet": {
+      "path": "build/udm37-legacy-lw-source-export-bon-audit-v2/cases/SOURCE_ON/legacy-export/rrtmg4_d01_i13_j46_step721_lw.txt",
+      "sha256": "bd614b57362b48ab8e00b179fc3464925b9c49a8eef0a472489f87fd89e15c7f",
+      "bytes": 2539937
+    },
+    "input": {
+      "path": "build/udm37-bon-night-dry-column-attribution-v1/matched-legacy-dry.input",
+      "sha256": "292f9569b059c373c9cb14f1574cb8835627331574592a19d641ef07c21ec918",
+      "bytes": 39535
+    },
+    "gp_result": {
+      "path": "build/udm37-bon-night-n2-attribution-v1/run-preparation-v1/run-v1/n2-0p7808.result",
+      "sha256": "b578e9983b5817297db75baac026af98b84a3cbcd3653aadf2e4db5930ce5732",
+      "bytes": 763371
+    },
+    "gp_source": {
+      "path": "build/udm37-bon-night-n2-attribution-v1/run-preparation-v1/run-v1/n2-0p7808.result.lw_transport",
+      "sha256": "bb53daf55ea9b6f91c9d0dbc4f132eff11b3ab76fd278bacb327571a1642e792",
+      "bytes": 308081
+    },
+    "legacy_helper": {
+      "path": "build/udm37-bon-night-legacy-lw-math-v2/legacy_lw_replay.py",
+      "sha256": "691497decf3992435ada71b6af84e25e88773f534f385c1a56050e370a1aea00",
+      "bytes": 16092
+    },
+    "angular_helper": {
+      "path": "build/udm37-bon-night-lw-angular-math-v1/angular_reference.py",
+      "sha256": "a64dfa9f3ff90cc788028c1cb0f5ab4d0be1316c49ef74e833b8dddc4eb5cb48",
+      "bytes": 13139
+    },
+    "legacy_source": {
+      "path": "build/udm37-bon-independent-opacity-pr-work/WRF/phys/module_ra_rrtmg_lw.F",
+      "sha256": "09164a1048f2be2001ac6e161da3c0c48f9e74e4ff57271f445032392d9153ef",
+      "bytes": 713929
+    },
+    "common_angle_helper": {
+      "path": "build/udm37-bon-night-common-angle-attribution-v1/analyze.py",
+      "sha256": "05bb1bcac5d3a03f79c2df3dffff4bb0acf42c92e4e7369d2c094c2a22fe3ea2",
+      "bytes": 8961
+    },
+    "common_angle_result": {
+      "path": "build/udm37-bon-night-common-angle-attribution-v1/result.json",
+      "sha256": "bd6495bfde4848306f176a759e74106dbd3a30a2ac01ab665207b75fcc9219c5",
+      "bytes": 86920
+    },
+    "independent_pfrac": {
+      "path": "build/udm37-bon-night-independent-pfrac-math-v1/result.json",
+      "sha256": "67d000a0582de7de935e64951e2e7c6a609b793187646b7162bca1e7cb9a2862",
+      "bytes": 729346
+    },
+    "independent_Planck": {
+      "path": "build/udm37-bon-night-independent-planck-math-v1/result.json",
+      "sha256": "53e9513bf41a5e5054906bc7ee4ebbc9b9e9c83890d61ac18f9cbdd6634d44df",
+      "bytes": 332501
+    },
+    "GP_kernel": {
+      "path": "build/udm37-bon-independent-opacity-pr-work/WRF/external/rte_rrtmgp/rrtmgp-kernels/mo_gas_optics_rrtmgp_kernels.F90",
+      "sha256": "96be9c4379c4e49a7b13e9b1f8314e78908262f402e913a2a03232987706f6e1",
+      "bytes": 41856
+    }
+  },
+  "quadrature_orders": [
+    256,
+    512,
+    1024,
+    2048
+  ],
+  "quadrature_tolerance_Wm2": 1e-09,
+  "closure_tolerance_Wm2": 1e-09,
+  "source_reconstruction_tolerance": 1e-12,
+  "policies": [
+    "own_native_Planck_and_faces",
+    "shared_SI_Planck_native_faces",
+    "shared_SI_Planck_both_layer_local_faces",
+    "shared_SI_Planck_layer_local_isothermal_emission"
+  ],
+  "scope": "One held BON clear-transport LW diagnostic45 (32 native +13 upper extensions), physical bands3-13 only. Own 140/128 gpoints, tau and subband fractions stay with their engine. Source-envelope counterfactuals are not production modifications.",
+  "formulas": {
+    "native_faces": "Legacy layer-local fraction at both faces; GP firstface layer1 fraction then geometric sqrt(pfrac[k-1]*pfrac[k]) at each interior lowerface.",
+    "shared_SI": "Use retained independent SI-direct band radiance at exact concat(TLAY45,TLEV46,TSFC1). No new SI integration or interpolation is evaluated.",
+    "layer_local_faces": "Only GP boundary fraction changes to its own layer fraction; legacy unchanged. Bottom layer must have exactly zero face-policy effect.",
+    "isothermal": "Layer source radiance replaces lowerface source radiance, with own layer fractions and tau unchanged. This is an extra diagnostic counterfactual, not a forecast/state change.",
+    "closure": "baseline shared-angle residual=(baseline-sharedSI)+(sharedSI-bothlocal)+(bothlocal residual). This is an ordered path of linear-source counterfactuals, not a unique order-independent decomposition.",
+    "weight_sum_bound": "For sharedSI/layerlocal emitter c, bound hypothetical unit-sum weight rescaling by sum(abs(c)*abs((sum_weights-1)/sum_weights)); sum=0 allowed only when c=0. No fraction/source/tau normalization actually performed."
+  },
+  "limitations": [
+    "No source-fraction normalization, gpoint pairing, tau/source swapping across engines, coefficient edits, production policy changes or hidden clipping.",
+    "The sharedSI/localface residual combines own optical coefficients, correlated-k discretization and within-band Planck fractions. It is not an exclusive tau difference or spectroscopic accuracy verdict.",
+    "The SI-direct Planck law is a thermal-emission envelope reference, not an independent oracle for gas absorption or source-fraction spectral correlation.",
+    "Boundary face fraction policy is an intended algorithm choice; sensitivity does not prove either host/engine implementation incorrect.",
+    "Incoming TOA downwelling must be zero and assembled GP opacity must exactly equal gas opacity. This specific call has no transported cloud contribution, not a generic hydrometeor-free model guarantee.",
+    "Per-emitter, per-band and total convergence is checked against1e-9; no scientific difference tolerance is invented.",
+    "No new WRF/REAL/build/compiledRTE/replay/SIintegration; one Python source-emission/angle evaluation planned. No domain/native32 accuracy or physical accuracy winner."
+  ]
+}
