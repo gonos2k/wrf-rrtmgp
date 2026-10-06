@@ -3,11 +3,13 @@ on:
   pull_request:
     paths:
       - 'validation/rrtmgp37/nc-unit-radiative-sensitivity/**'
+      - 'validation/rrtmgp37/current-source-contracts/**'
       - '.github/workflows/validate-nc-radiative-sensitivity.yml'
   push:
     branches: [main]
     paths:
       - 'validation/rrtmgp37/nc-unit-radiative-sensitivity/**'
+      - 'validation/rrtmgp37/current-source-contracts/**'
       - '.github/workflows/validate-nc-radiative-sensitivity.yml'
 permissions:
   contents: read
@@ -17,8 +19,25 @@ jobs:
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: 092b901bf40b5334c5497fbf75f630b255262fb2
+          path: build/source-092b901
       - name: Authenticate source, coefficients, inputs and saved outputs
-        run: python3 -I -S validation/rrtmgp37/nc-unit-radiative-sensitivity/verify.py
+        run: |
+          mkdir -p build
+          python3 -I -S validation/rrtmgp37/current-source-contracts/verify_split_source.py \
+            --package validation/rrtmgp37/nc-unit-radiative-sensitivity \
+            --historical-source-root "$GITHUB_WORKSPACE/build/source-092b901" \
+            --current-repo-root "$GITHUB_WORKSPACE" \
+            --output build/nc-saved-source-auth.json
+      - name: Preserve source-authentication receipt
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: nc-saved-source-auth-${{ github.run_id }}
+          if-no-files-found: ignore
+          path: build/nc-saved-source-auth.json
   fresh-six-arm-reference:
     needs: saved-evidence
     runs-on: ubuntu-24.04
@@ -33,7 +52,7 @@ jobs:
         run: |
           cmake -S WRF/test/rrtmgp -B build/nc-unit-reference -DRRTMGP_DATA_DIR="$GITHUB_WORKSPACE/WRF/run"
           cmake --build build/nc-unit-reference --target reference_column --parallel 2
-      - name: Reproduce held-state radius alternatives with fixed controls
+      - name: Replay retained historical WRF captures with a fresh RTE build
         run: |
           python3 -B validation/rrtmgp37/nc-unit-radiative-sensitivity/replay.py \
             --capture-dir validation/rrtmgp37/nc-unit-radiative-sensitivity/capture \
@@ -42,3 +61,12 @@ jobs:
             --expected-result-dir validation/rrtmgp37/nc-unit-radiative-sensitivity/expected \
             --baseline-mode numeric \
             --output-dir build/nc-unit-replay
+      - name: Preserve compact fresh replay receipts and logs
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: nc-current-rte-replay-${{ github.run_id }}
+          if-no-files-found: ignore
+          path: |
+            build/nc-unit-replay/result.json
+            build/nc-unit-replay/*.log

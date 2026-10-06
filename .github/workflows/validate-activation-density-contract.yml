@@ -3,11 +3,21 @@ on:
   pull_request:
     paths:
       - 'validation/rrtmgp37/activation-density-contract/**'
+      - 'validation/rrtmgp37/current-source-contracts/**'
+      - 'WRF/phys/module_mp_udm.F'
+      - 'WRF/phys/module_microphysics_driver.F'
+      - 'WRF/dyn_em/module_big_step_utilities_em.F'
+      - 'WRF/share/module_model_constants.F'
       - '.github/workflows/validate-activation-density-contract.yml'
   push:
     branches: [main]
     paths:
       - 'validation/rrtmgp37/activation-density-contract/**'
+      - 'validation/rrtmgp37/current-source-contracts/**'
+      - 'WRF/phys/module_mp_udm.F'
+      - 'WRF/phys/module_microphysics_driver.F'
+      - 'WRF/dyn_em/module_big_step_utilities_em.F'
+      - 'WRF/share/module_model_constants.F'
       - '.github/workflows/validate-activation-density-contract.yml'
 permissions:
   contents: read
@@ -17,13 +27,47 @@ jobs:
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: 092b901bf40b5334c5497fbf75f630b255262fb2
+          path: build/source-092b901
       - name: Authenticate saved source and fixture evidence
-        run: python3 -I -S validation/rrtmgp37/activation-density-contract/verify.py
-      - name: Fresh default-REAL activation block at O0 and O2
+        run: |
+          mkdir -p build
+          python3 -I -S validation/rrtmgp37/current-source-contracts/verify_split_source.py \
+            --package validation/rrtmgp37/activation-density-contract \
+            --historical-source-root "$GITHUB_WORKSPACE/build/source-092b901" \
+            --current-repo-root "$GITHUB_WORKSPACE" \
+            --output build/activation-density-saved-source-auth.json
+      - name: Fresh default-REAL activation block at O0 and O2 against current source
         run: >-
-          python3 -I -S validation/rrtmgp37/activation-density-contract/activation.py
+          python3 -I -S validation/rrtmgp37/current-source-contracts/activation_current.py
           --source-root "$PWD" --output-dir build/activation-contract-fresh
-      - name: Fresh default-REAL density compatibility at O0 and O2
+      - name: Fresh density policies at O0 and O2 against current source
+        run: >-
+          python3 -I -S validation/rrtmgp37/current-source-contracts/density_current.py
+          --source-root "$PWD" --output-dir build/density-contract-fresh
+      - name: Retain historical density compatibility replay under its archived source
         run: >-
           python3 -I -S validation/rrtmgp37/activation-density-contract/density.py
-          --source-root "$PWD" --output-dir build/density-contract-fresh
+          --source-root "$GITHUB_WORKSPACE/build/source-092b901"
+          --output-dir build/density-contract-historical
+      - name: Preserve source receipts and compact fixture results
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: activation-density-source-contracts-${{ github.run_id }}
+          if-no-files-found: ignore
+          path: |
+            build/activation-density-saved-source-auth.json
+            build/activation-contract-fresh/*.json
+            build/activation-contract-fresh/*.log
+            build/activation-contract-fresh/*.stdout
+            build/activation-contract-fresh/*.jsonl
+            build/activation-contract-fresh/*.f90
+            build/density-contract-fresh/*.json
+            build/density-contract-fresh/*.log
+            build/density-contract-fresh/*.stdout
+            build/density-contract-fresh/*.f90
+            build/density-contract-historical/*.json
+            build/density-contract-historical/*.log

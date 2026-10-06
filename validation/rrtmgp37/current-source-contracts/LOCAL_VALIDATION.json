@@ -1,0 +1,77 @@
+{
+  "schema": "UDM37_EVIDENCE_SPLIT_LOCAL_VALIDATION_V1",
+  "status": "PASS_SCOPED_LOCAL_AUTHENTICATION_AND_SOURCE_FIXTURES",
+  "historical_source_commit": "092b901bf40b5334c5497fbf75f630b255262fb2",
+  "base_commit": "38fbc63c7264b9e73231f17c858247d7232bdce2",
+  "tested_current_udm_working_file_sha256": "7bd96141eefc6ae2cb66cea0ce022fcc2ee64afce5c616aa65f26711c8790947",
+  "tested_current_checkout_head": "38fbc63c7264b9e73231f17c858247d7232bdce2",
+  "working_file_matches_head_blob": false,
+  "interpretation": "Current fixtures bind the recorded working-file hash including the startup-snow helper; checkout commit is ancestry. Archived numerical outputs keep original pins.",
+  "local_receipt_pins": {
+    "nc_historical_original_auth": {
+      "artifact": "udm37-evidence-source-pin-execution-v1/nc-historical.json",
+      "sha256": "e174c97a2311def8465e93b8000bde7df4520232e2203b5927f62972da8af937"
+    },
+    "ice_historical": {
+      "artifact": "udm37-evidence-source-pin-execution-v1/ice-historical.json",
+      "sha256": "631174c0f37bafc6956a813967e7dc9b2b3af3caab2383258039db419933d1c7"
+    },
+    "ice_current": {
+      "artifact": "udm37-evidence-source-pin-execution-v1/current-ice.json",
+      "sha256": "45f12c82fefe3009773c59f47bb21aa1c7af8a2f8beb1e3c400867053f52210a"
+    },
+    "activation_historical_split": {
+      "artifact": "udm37-evidence-source-pin-execution-v2/historical-auth.json",
+      "sha256": "78ec0149f97934a250e1f940d7c47455f04d5960c78160e43abedac0efe06b9c"
+    },
+    "nc_historical_split": {
+      "artifact": "udm37-evidence-source-pin-execution-v4/nc-historical-split-auth.json",
+      "sha256": "961b03e31ca8fdc92a90d7967d82c10390b477e922de18677d8aad48a94f5c2b"
+    },
+    "activation_current": {
+      "artifact": "udm37-evidence-source-pin-execution-v4/current-activation/result.json",
+      "sha256": "7dae001871eaa07aa7999d4baa10af8f1b252e624beeab302376b00abab7d16f"
+    },
+    "density_current": {
+      "artifact": "udm37-evidence-source-pin-execution-v4/current-density/receipt.json",
+      "sha256": "b4e70126380ed4e41384bc15c1f9b9904990332e57a55e1df7bf57206b23cb8a"
+    }
+  },
+  "fixture_results": {
+    "activation": "PASS_CURRENT_SOURCE_ACTIVATION_CONTRACT",
+    "activation_cases_per_optimization": 12,
+    "density": "PASS_CURRENT_DENSITY_SOURCE_FIXTURE_BOTH_O0_O2",
+    "density_cases_per_optimization": 30,
+    "final_compilers_RC": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "final_fixture_RC": [
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  "preserved_failures": [
+    "v1 original historical auth used an incorrect single root for later validation sidecars; current source extractors/regex failed before compile",
+    "v2 current activation checked optional/default semantics in the wrong routine; density generated an invalid line terminator and compiler RC1",
+    "v3 activation subprocess shim lacked STDOUT before compile; density generated a rank mismatch and compiler RC1"
+  ],
+  "execution_counts": {
+    "new_WRF_models": 0,
+    "new_RTE_runs": 0,
+    "final_current_fixture_compiles": 4,
+    "final_current_fixture_runs": 4,
+    "failed_density_compile_attempts": 2
+  },
+  "limits": [
+    "Exact PR-head CI pending; historical density replay CI step not reexecuted locally in this campaign",
+    "Nc fresh six-arm CI is retained historical WRF input replay with fresh RTE, not current WRF producer evidence",
+    "Current WRF Nc producer capture remains NOT_RUN",
+    "Nc units, PSD/moment/LUT compatibility and independent physical accuracy remain open",
+    "Version-probe/timeout failure paths are not asserted as fully tested"
+  ]
+}
