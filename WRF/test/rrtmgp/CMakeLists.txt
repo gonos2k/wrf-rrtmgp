@@ -5,6 +5,8 @@ find_package(Python3 REQUIRED COMPONENTS Interpreter)
 if(CMAKE_Fortran_COMPILER_ID STREQUAL "GNU")
   add_test(NAME native_hydro_snapshot COMMAND "${Python3_EXECUTABLE}"
     "${CMAKE_CURRENT_SOURCE_DIR}/test_hydro_snapshot.py")
+  add_test(NAME udm_negative_input_contract COMMAND "${Python3_EXECUTABLE}"
+    "${CMAKE_CURRENT_SOURCE_DIR}/test_udm_negative_policy.py")
 endif()
 get_filename_component(WRF_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/../.." ABSOLUTE)
 add_subdirectory("${WRF_ROOT}/external/rte_rrtmgp" rte_rrtmgp)

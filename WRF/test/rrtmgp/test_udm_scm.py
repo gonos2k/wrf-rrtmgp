@@ -242,7 +242,7 @@ def validate_capture(case: Path, phase: str, call: int, reference_exe: Path,
         q_key = next((name for name in q_names if name in raw), None)
         mass_residual = None
         if q_key is not None and "GRAVITY" in raw:
-            q = raw[q_key][:nl_raw]
+            q = test_column_replay.corrected_hydrometeor(raw, q_key, raw_phase_name, nl_raw)
             cf = raw["CF"][:nl_raw]
             expected_grid = q * raw["DP_HPA"][:nl_raw] * 100.0 / float(raw["GRAVITY"][0]) * 1000.0
             test_column_replay.assert_close(grid, expected_grid,

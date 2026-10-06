@@ -52,4 +52,4 @@ UDM의 CF 정의, precipitation occurrence, graupel 광학과 양의 hail 미지
 
 [CPU OpenMP와 실제 실행](CPU_OPENMP.md)에 GNU smpar의 OMP1/2 SCM, 10분 real-data MPI1/2·MPI2/OMP2, 실제 MPI 계수 누락 종료 및 직렬 SCM restart 근거를 추가했다. 두 SCM의 checkpoint와 모든 후속 누적량 증분도 연속 적분과 일치했다. 이 범위의 계약은 통과했으며, MPI restart·둥지·장시간 적분·관측 정확도는 별도 조건이다.
 
-24시간 실제 자료의 첫 37/37 시도는 음수 QI를 거부하여 종료됐다. [native 수상체 진단](NATIVE_HYDRO_DIAGNOSTICS.md)은 4번과 37번 양쪽의 복사 호출 입력을 읽기만 하며, 값과 위치를 기록한다. 현재의 엄격한 음수/hail 계약을 아직 완화하지 않았고, 작은 음수·graupel·hail·CF=0 제외량의 실제 분포를 다음 정책의 근거로 사용한다.
+24시간 실제 자료의 첫 37/37 시도는 음수 QI를 거부하여 종료됐다. [native 수상체 진단](NATIVE_HYDRO_DIAGNOSTICS.md)은 4번과 37번 양쪽의 복사 호출 입력을 읽기만 하며, 값과 위치를 기록한다. 그 진단 변경에서는 엄격한 음수/hail 계약을 유지했다. 후속 [음수 입력 계약](NEGATIVE_INPUT_CONTRACT.md)은 UDM 처리 문턱을 제한적인 보정 상한으로 사용하고 원자료와 보정량을 보존한다. graupel·hail·CF=0 제외량의 물리 정책은 별도 검증 대상이다.

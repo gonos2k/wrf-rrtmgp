@@ -1,0 +1,93 @@
+{
+  "status": "PASS_SCOPED",
+  "ctest": {
+    "configured_tests": 57,
+    "first_run_passed": 56,
+    "first_run_failed": [
+      "transparent_overlap (SIGSEGV with default 8192 KiB stack in OpenMP build)"
+    ],
+    "corrected_environment": "unchanged executable; ulimit -s 65536",
+    "failed_test_recheck": "transparent_overlap PASS",
+    "combined_coverage": "all 57 configured tests passed; initial environment failure retained, not hidden"
+  },
+  "scm": {
+    "run_minutes": 1,
+    "historical_RRTMG4_bitwise": {
+      "control": {
+        "arrays_compared": 208,
+        "history_file": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp/build/udm-before-ra4/wrfout_d01_1999-10-22_19:00:00",
+        "status": "PASS_BITWISE",
+        "wrfinput_sha256": "3fb1d9ae78bc0e93d072e646f052e3a39dd83d5215f864bbc89ff030f9cb6d4e"
+      },
+      "mixed": {
+        "arrays_compared": 208,
+        "history_file": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp/build/udm-before-mixed-ra4/wrfout_d01_1999-10-22_19:00:00",
+        "status": "PASS_BITWISE",
+        "wrfinput_sha256": "9e167c8b99d9a2cacba70c18fe111e0c6785a5cdca5a858aaf372474a5ffc36f"
+      }
+    },
+    "gates": {
+      "mixed_radiation": {
+        "case": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp/build/negative-input-contract/scm-valid-baselines/gate-mixed-radiation-rejected",
+        "diagnostic": "RRTMGP37 requires paired ra_lw_physics=37 and ra_sw_physics=37",
+        "rejected": true,
+        "returncode": 0
+      },
+      "native_radii_disabled": {
+        "case": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp/build/negative-input-contract/scm-valid-baselines/gate-use-mp-re0-rejected",
+        "diagnostic": "RRTMGP37 UDM requires use_mp_re=1 for native effective radii",
+        "rejected": true,
+        "returncode": 0
+      },
+      "wrong_microphysics": {
+        "case": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp/build/negative-input-contract/scm-valid-baselines/gate-mp4-rejected",
+        "diagnostic": "RRTMGP37 requires mp_physics=27 (UDM)",
+        "rejected": true,
+        "returncode": 0
+      }
+    },
+    "positive_hail": {
+      "case": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp/build/negative-input-contract/scm-valid-baselines/hail-positive-rejected",
+      "diagnostic": "RRTMGP_INPUT_UDM_HAIL_OPTICS_UNSUPPORTED",
+      "fixture": {
+        "i": 0,
+        "j": 0,
+        "k_zero_based": 46,
+        "q_hail_kg_kg": 1e-08
+      },
+      "rejected": true
+    },
+    "material_negative_graupel": {
+      "case": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pr-wrf-rrtmgp/build/negative-input-contract/scm-valid-baselines/negative-graupel-rejected",
+      "diagnostic": "RRTMGP_INPUT_UDM_QG_NEGATIVE",
+      "fatal_seen": true,
+      "fixture": {
+        "i": 0,
+        "j": 0,
+        "k_zero_based": 46,
+        "q_graupel_kg_kg": -1e-08
+      },
+      "returncode": 0,
+      "success_marker": false
+    }
+  },
+  "before_RRTMGP37_positive_comparison": "positive-scm-comparison.json",
+  "hourly_limit_coverage": "hourly-limit-coverage.json",
+  "compiler": "GNU Fortran 13.3.0",
+  "serial_binary_sha256": "5950b3ce055741c6d37deb03e3ffdf54804ae596022c053d75523a8be054900a",
+  "sources_sha256": {
+    "WRF/phys/module_mp_udm.F": "bb14d9467a738706834c006af41730096d03273399f359163d8845d3caf84bb7",
+    "WRF/phys/module_ra_rrtmgp_input.F": "177fa304642385b56baf30b94d828cd10988d7bdc33946e18455f377b64b66a3",
+    "WRF/phys/module_ra_rrtmg_lw.F": "dd4a1e4434b104b7380ab731efb44f75d2e9ecedeb520894643b6dbca312b65f",
+    "WRF/phys/module_ra_rrtmg_sw.F": "2302edc021b1ab7686820cb4cf0b153de0eab74614962a860f87f652ca7c8f92",
+    "WRF/test/rrtmgp/test_column_replay.py": "e554afaac4ffe83ceb8ce28b53188c5021b30f6d2e9235018c87950b5001fd3c",
+    "WRF/test/rrtmgp/test_udm_negative_policy.py": "11e4d30975450a94021b44050ec1e878b716499c7cc42c0183b06154fe0bd871",
+    "WRF/test/rrtmgp/test_udm_negative_policy.f90": "60946c59b52ac5e8c3f75cbb4576c3dbde26c086fcdaa0ab5be7b522360132c7"
+  },
+  "limits": [
+    "native ceilings are operational process-scale bounds, not floating-point error bounds",
+    "positive hail remains fatal; graupel omitted explicitly",
+    "hourly RRTMG4 samples do not guarantee every radiation input or evolving RRTMGP37 state",
+    "no claim of 24h RRTMGP37 forecast accuracy"
+  ]
+}

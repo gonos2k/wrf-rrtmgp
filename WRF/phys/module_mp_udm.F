@@ -197,6 +197,15 @@
 !-------------------------------------------------------------------------------
 contains
 !-------------------------------------------------------------------------------
+! Expose native process activation scales for an explicit radiation-input
+! contract. These are not floating-point error bounds. The radiation host may
+! use them to bound negative-only corrections; no positive mass is discarded.
+! Order: cloud liquid, cloud ice, rain, snow, graupel, hail (kg/kg).
+pure function udm_radiation_negative_limits() result(limits)
+  real :: limits(6)
+  limits = [qcmin,qcmin,qrmin,qrmin,qrmin,qrmin]
+end function udm_radiation_negative_limits
+!-------------------------------------------------------------------------------
 !
 subroutine udm(th, q, qc, qr, qi, qs, qg, qh                                  &
                  ,nn, nc, nr                                                   &

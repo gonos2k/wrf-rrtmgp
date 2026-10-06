@@ -44,7 +44,8 @@ CONTAINS
                                     re_cloud_um,re_ice_um,re_snow_um,gravity, &
                                     grid_path,incloud_path,radius_um,reason,errmsg, &
                                     column_context,allow_clear_condensate, &
-                                    omitted_grid_path,layer_reason)
+                                    omitted_grid_path,layer_reason,negative_q_limits, &
+                                    clipped_negative_q,negative_grid_correction)
     REAL, INTENT(IN) :: dp_hpa(:),cf(:),qc(:),qr(:),qi(:),qs(:),qg(:),qh(:)
     REAL, INTENT(IN) :: re_cloud_um(:),re_ice_um(:),re_snow_um(:),gravity
     REAL, INTENT(OUT) :: grid_path(:,:),incloud_path(:,:),radius_um(:,:)
@@ -54,8 +55,14 @@ CONTAINS
     LOGICAL, OPTIONAL, INTENT(IN) :: allow_clear_condensate
     REAL, OPTIONAL, INTENT(OUT) :: omitted_grid_path(:,:)
     INTEGER, OPTIONAL, INTENT(OUT) :: layer_reason(:)
-    REAL(real64) :: q(6),path64,radius64,dp64,g64
-    REAL :: masses(SIZE(dp_hpa),6)
+    ! Default remains strict.  A host may explicitly supply six nonnegative
+    ! bounds in L/I/R/S/G/H order (kg/kg); only -bound < q < 0 is corrected.
+    ! The raw mixing ratios are never modified.  Outputs retain the raw
+    ! corrected negatives and the positive addition to signed grid water path.
+    REAL, OPTIONAL, INTENT(IN) :: negative_q_limits(:)
+    REAL, OPTIONAL, INTENT(OUT) :: clipped_negative_q(:,:),negative_grid_correction(:,:)
+    REAL(real64) :: q(6),path64,radius64,dp64,g64,correction64
+    REAL :: masses(SIZE(dp_hpa),6),clipped(SIZE(dp_hpa),6),limits(6)
     INTEGER :: n,k,p
     LOGICAL :: allow_clear,clear_column,omitted_any
     CHARACTER(LEN=8), PARAMETER :: qnames(6)=[CHARACTER(LEN=8) :: 'QC','QI','QR','QS','QG','QH']
@@ -94,6 +101,39 @@ CONTAINS
       END IF
     END IF
 
+    IF(PRESENT(negative_q_limits)) THEN
+      IF(SIZE(negative_q_limits)/=6) THEN
+        reason=RRTMGP_INPUT_SHAPE
+        CALL fatal_builder_message('RRTMGP_INPUT_SHAPE_MISMATCH in UDM negative_q_limits',column_context)
+        RETURN
+      END IF
+    END IF
+    IF(PRESENT(clipped_negative_q)) THEN
+      IF(SIZE(clipped_negative_q,1)/=n .OR. SIZE(clipped_negative_q,2)/=6) THEN
+        reason=RRTMGP_INPUT_SHAPE
+        CALL fatal_builder_message('RRTMGP_INPUT_SHAPE_MISMATCH in UDM clipped_negative_q',column_context)
+        RETURN
+      END IF
+    END IF
+    IF(PRESENT(negative_grid_correction)) THEN
+      IF(SIZE(negative_grid_correction,1)/=n .OR. SIZE(negative_grid_correction,2)/=6) THEN
+        reason=RRTMGP_INPUT_SHAPE
+        CALL fatal_builder_message('RRTMGP_INPUT_SHAPE_MISMATCH in UDM negative_grid_correction',column_context)
+        RETURN
+      END IF
+    END IF
+    limits=0.0
+    IF(PRESENT(negative_q_limits)) limits=negative_q_limits
+    DO p=1,6
+      IF(.NOT.ieee_is_finite(limits(p)) .OR. limits(p)<0.0) THEN
+        reason=RRTMGP_INPUT_RANGE
+        CALL fatal_builder_message('RRTMGP_INPUT_UDM_NEGATIVE_LIMIT_INVALID',column_context)
+        RETURN
+      END IF
+    END DO
+    clipped=0.0
+    IF(PRESENT(clipped_negative_q)) clipped_negative_q=0.0
+    IF(PRESENT(negative_grid_correction)) negative_grid_correction=0.0
     grid_path=0.0; incloud_path=0.0; radius_um=0.0
     IF(PRESENT(omitted_grid_path)) omitted_grid_path=0.0
     IF(PRESENT(layer_reason)) layer_reason=RRTMGP_INPUT_OK
@@ -119,10 +159,20 @@ CONTAINS
           RETURN
         END IF
         IF(masses(k,p)<0.) THEN
-          WRITE(input_label,'(A,A,A,ES23.15E3)') 'RRTMGP_INPUT_UDM_',TRIM(qnames(p)), &
-                                               '_NEGATIVE value_kgkg=',REAL(masses(k,p),real64)
-          CALL fail_builder_layer(reason,RRTMGP_INPUT_RANGE,TRIM(input_label),k,column_context)
-          RETURN
+          IF(-masses(k,p)<limits(p)) THEN
+            clipped(k,p)=masses(k,p)
+            masses(k,p)=0.0
+          ELSE
+            IF(PRESENT(negative_q_limits)) THEN
+              WRITE(input_label,'(A,A,A,ES23.15E3,A,ES23.15E3)') 'RRTMGP_INPUT_UDM_',TRIM(qnames(p)), &
+                   '_NEGATIVE value_kgkg=',REAL(masses(k,p),real64),' limit_kgkg=',REAL(limits(p),real64)
+            ELSE
+              WRITE(input_label,'(A,A,A,ES23.15E3)') 'RRTMGP_INPUT_UDM_',TRIM(qnames(p)), &
+                   '_NEGATIVE value_kgkg=',REAL(masses(k,p),real64)
+            END IF
+            CALL fail_builder_layer(reason,RRTMGP_INPUT_RANGE,TRIM(input_label),k,column_context)
+            RETURN
+          END IF
         END IF
       END DO
     END DO
@@ -155,8 +205,7 @@ CONTAINS
     g64=REAL(gravity,real64)
     clear_column=.TRUE.; omitted_any=.FALSE.
     DO k=1,n
-      q=[REAL(qc(k),real64),REAL(qi(k),real64),REAL(qr(k),real64), &
-         REAL(qs(k),real64),REAL(qg(k),real64),REAL(qh(k),real64)]
+      q=REAL(masses(k,:),real64)
       IF(cf(k)>0.0 .OR. ANY(q>0.0_real64)) clear_column=.FALSE.
       IF(cf(k)==0.0 .AND. ANY(q>0.0_real64)) THEN
         IF(.NOT.allow_clear) THEN
@@ -176,6 +225,12 @@ CONTAINS
           CALL fail_builder_layer(reason,RRTMGP_INPUT_OVERFLOW,'RRTMGP_INPUT_PATH_OVERFLOW',k,column_context)
           RETURN
         END IF
+        correction64=-REAL(clipped(k,p),real64)*dp64
+        IF(.NOT.ieee_is_finite(correction64) .OR. correction64>REAL(HUGE(0.0),real64)) THEN
+          CALL fail_builder_layer(reason,RRTMGP_INPUT_OVERFLOW,'RRTMGP_INPUT_PATH_OVERFLOW',k,column_context)
+          RETURN
+        END IF
+        IF(PRESENT(negative_grid_correction)) negative_grid_correction(k,q_to_path(p))=REAL(correction64)
         grid_path(k,q_to_path(p))=REAL(path64)
         IF(cf(k)>0.0) THEN
           radius64=path64/REAL(cf(k),real64)
@@ -207,6 +262,7 @@ CONTAINS
       END IF
       radius_um(k,RRTMGP_UDM_SNOW_RADIUS)=REAL(radius64)
     END DO
+    IF(PRESENT(clipped_negative_q)) clipped_negative_q=clipped
     IF(clear_column) reason=RRTMGP_INPUT_CLEAR
     IF(omitted_any) reason=RRTMGP_INPUT_CLEAR_CONDENSATE
   END SUBROUTINE rrtmgp_build_udm_inputs
