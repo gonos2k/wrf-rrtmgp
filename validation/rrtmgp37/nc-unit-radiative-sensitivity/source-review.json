@@ -1,0 +1,225 @@
+{
+  "compression_invariant": {
+    "dry_pressure_coordinate_weight": "W=C1H(k)*(MU+MUB)+C2H(k), in pressure units (Pa); converting to layer dry mass also requires vertical layer factors and gravity.",
+    "zero_tendency_RK_identity": "W_new*q_scalar,new=W_old*q_scalar,old",
+    "interpretation": "The RK identity establishes mass-weighted scalar storage. It does not simulate an arbitrary material-parcel compression and does not prove that every imported number field follows the declared #/kg contract.",
+    "conditional_volume_number_relationship": "For a specific-number variable relative to a given mass basis, N_volume=rho_basis*n_specific. The appropriate dry/moist density basis must be defined; no universal rho conversion is established here."
+  },
+  "derivation": {
+    "embryo_mass_kg_per_particle": "(4*pi/3)*rho_water*actr^3",
+    "mass_specific_number_alternative": "If delta_N were # kg-1, delta_qc=embryo_mass*delta_N; the extra 1/DEN in source distinguishes the volume-based activation rate.",
+    "water_increment_specific": "delta_qc=(embryo_mass/DEN)*delta_N_volume"
+  },
+  "execution_counts": {
+    "builds": 0,
+    "models": 0,
+    "solver_runs": 0
+  },
+  "proven_facts": [
+    {
+      "evidence": "UDM27 registers qnn/qnc/qnr as scalar fields; Registry units for QNCCN, QNCLOUD, QNRAIN are # kg(-1). solve_em advances all scalar indices is=PARAM_FIRST_SCALAR..num_3d_s through rk_scalar_tend then rk_update_scalar.",
+      "source": [
+        {
+          "file": "WRF/Registry/Registry.EM_COMMON",
+          "lines": [
+            536,
+            545,
+            3095
+          ]
+        },
+        {
+          "file": "WRF/dyn_em/solve_em.F",
+          "lines": [
+            2927,
+            2962,
+            3010,
+            3029
+          ]
+        }
+      ],
+      "topic": "Registry and solver package"
+    },
+    {
+      "evidence": "The RK update is scalar_new=(W_old*scalar_old+dt*tendency)/W_new, W=C1H*(MU+MUB)+C2H. With zero tendency W*scalar is invariant. W is a dry-pressure-coordinate weight in Pa, not a local volume. Registry labels number fields #/kg and the solver advances them as mass-weighted scalars. A physical parcel compression requires consistent flux and mass changes and is not simulated by independently changing W.",
+      "source": [
+        {
+          "file": "WRF/dyn_em/module_em.F",
+          "lines": [
+            1712,
+            1724
+          ]
+        },
+        {
+          "file": "WRF/dyn_em/module_advect_em.F",
+          "lines": [
+            3383,
+            3389,
+            4187,
+            4231
+          ]
+        }
+      ],
+      "topic": "Mass-weighted scalar invariant"
+    },
+    {
+      "evidence": "Let m_emb=(4*pi/3)*rho_water*actr^3 kg per activated droplet. With the vapor cap inactive, pcact=m_emb*ncact/DEN and the updates are delta(qc)=pcact*dtcld, delta(ncr_cloud)=ncact*dtcld. Thus delta(qc)/delta(ncr_cloud)=m_emb/DEN. This dimensional relation treats ncact as a number rate per volume (# m^-3 s^-1): multiplying by embryo mass gives kg water m^-3 s^-1, then dividing by DEN yields a mixing-ratio rate. If ncr_cloud were # kg^-1, the corresponding relation would instead omit division by DEN. The same source declares ncmin/ncmax as # m-3 (module_mp_udm.F:74-80), corroborating the volumetric concentration convention within UDM.",
+      "source": [
+        {
+          "file": "WRF/phys/module_mp_udm.F",
+          "lines": [
+            2507,
+            2518
+          ]
+        },
+        {
+          "file": "WRF/phys/module_mp_udm.F",
+          "lines": [
+            74,
+            80
+          ]
+        }
+      ],
+      "topic": "Activation increments are volume-based by their water-mass equation"
+    },
+    {
+      "evidence": "The driver passes NC=qnc_curr, NN=qnn_curr, DEN=rho and CCN0=ccn_conc directly. UDM copies nn/nc/nr directly into ncr slots and later copies ncr back without a density factor. Its activation update adds ncact*dtcld to ncr(:,2) directly while qc receives the DEN-divided water increment.",
+      "source": [
+        {
+          "file": "WRF/phys/module_microphysics_driver.F",
+          "lines": [
+            2855,
+            2863
+          ]
+        },
+        {
+          "file": "WRF/phys/module_mp_udm.F",
+          "lines": [
+            328,
+            336,
+            349,
+            361,
+            2513,
+            2518
+          ]
+        }
+      ],
+      "topic": "No density conversion at the UDM activation boundary"
+    },
+    {
+      "evidence": "Namelist `ccn_conc` is declared # m-3. start_em assigns it directly into scalar(P_QNN) when the incoming maximum is below one, with no density scaling. The current driver marks CCN preinitialized, so UDM\u2019s own first-step reset is disabled; if not preinitialized, UDM also directly assigns ccn0 into nn. This establishes a volume-style origin for this initialization path, not for every possible incoming qnc/qnn field.",
+      "source": [
+        {
+          "file": "WRF/Registry/Registry.EM_COMMON",
+          "lines": [
+            2701,
+            542,
+            543
+          ]
+        },
+        {
+          "file": "WRF/dyn_em/start_em.F",
+          "lines": [
+            1803,
+            1815
+          ]
+        },
+        {
+          "file": "WRF/phys/module_microphysics_driver.F",
+          "lines": [
+            2875,
+            2877
+          ]
+        },
+        {
+          "file": "WRF/phys/module_mp_udm.F",
+          "lines": [
+            326,
+            335
+          ]
+        }
+      ],
+      "topic": "A concrete volumetric initializer exists for CCN"
+    },
+    {
+      "evidence": "The known make_DropletNumber density conversion belongs to initialization code under Thompson/ThompsonAero/RCON scheme gates; it does not establish how arbitrary UDM wrfinput/boundary QNC values are unit-normalized. No universal incoming-QNC density conversion is evidenced by this audit.",
+      "source": [
+        {
+          "file": "WRF/dyn_em/module_initialize_real.F",
+          "lines": [
+            4810,
+            4864,
+            9137,
+            9164
+          ]
+        }
+      ],
+      "topic": "Generic real.exe number producer is not UDM authority"
+    }
+  ],
+  "schema": "udm37-number-unit-transport-invariant-audit-v1",
+  "scope": "Static source review only: UDM CCN activation arithmetic, Registry labels/initialization, and WRF scalar transport/mass coupling. No source changes, builds, models, or solver runs.",
+  "source_identity": {
+    "head": "092b901bf40b5334c5497fbf75f630b255262fb2",
+    "source_pins": {
+      "driver": {
+        "path": "WRF/phys/module_microphysics_driver.F",
+        "sha256": "5f365f23e540a7ef3a37153426517aedf9c79b7802d37d8240ac880a0ed46f25",
+        "size_bytes": 196503
+      },
+      "first_rk_step": {
+        "path": "WRF/dyn_em/module_first_rk_step_part1.F",
+        "sha256": "bb1384a82aad375f9f8392da2a16046571919556a2deacf1523992dacc49891f",
+        "size_bytes": 142390
+      },
+      "microphysics_init": {
+        "path": "WRF/phys/module_physics_init.F",
+        "sha256": "bc9cd3a7e3d908678b52d53aa8ef7d7ad760a8e57958e044e35dc560b1bc1375",
+        "size_bytes": 316145
+      },
+      "real_init": {
+        "path": "WRF/dyn_em/module_initialize_real.F",
+        "sha256": "81b40b4ae6891d522b2e30d8cee2036c20e139ef9e780c9a17b0d895ca13d87f",
+        "size_bytes": 422027
+      },
+      "registry": {
+        "path": "WRF/Registry/Registry.EM_COMMON",
+        "sha256": "87e21a476a06b7e0c926b2d939eaf1028810cba8a7d1e6fc585b50b599f99729",
+        "size_bytes": 448359
+      },
+      "rk_scalar_update": {
+        "path": "WRF/dyn_em/module_em.F",
+        "sha256": "67c5842c1c5d407a26139f26bd317f3016c610aeaf60207dfd21394ddb81482c",
+        "size_bytes": 132827
+      },
+      "scalar_advection": {
+        "path": "WRF/dyn_em/module_advect_em.F",
+        "sha256": "58253bdbeb188dd47ed0579fcd2891086be1889b75c0c7d3696c9ad1d213559d",
+        "size_bytes": 427881
+      },
+      "solve_em": {
+        "path": "WRF/dyn_em/solve_em.F",
+        "sha256": "ed03953a8b7b999fc0a5a281893f4808bbed28697ea9032fde9b9b605e0d9ecb",
+        "size_bytes": 283280
+      },
+      "start_em": {
+        "path": "WRF/dyn_em/start_em.F",
+        "sha256": "bce1b0656d73d76f74f4db7f1b71d254cc1e11f16ecfc82e54fe153a84e6c17e",
+        "size_bytes": 130683
+      },
+      "udm": {
+        "path": "WRF/phys/module_mp_udm.F",
+        "sha256": "9b7b878b263f6b0111edba4cfb1c6c30e53b3f7534035cda2c0411a573b81c2c",
+        "size_bytes": 193022
+      }
+    },
+    "worktree": "not portable; original local report is pinned in provenance"
+  },
+  "status": "SOURCE_DERIVED_MIXED_UNIT_CONVENTION_IDENTIFIED; NO_PHYSICS_CHANGE_RECOMMENDED",
+  "where_conventions_meet": {
+    "native_number_variable_bounds": "UDM ncmin/ncmax are commented # m-3, so the volumetric interpretation is explicit for internal number limits; it does not by itself declare the units of every incoming scalar value.",
+    "registry_transport_contract": "qnn/qnc/qnr scalar fields are labeled number per kg and advanced as air-mass-specific scalars.",
+    "scope_caution": "The source demonstrates a dimensional convention tension at activation and the CCN default initializer, but does not prove the units of every externally supplied or restart/boundary QNC/QNN value, nor all legacy unit conversions. No density multiplier, initializer, Registry-unit, or microphysics formula change is recommended from metadata/source inspection alone.",
+    "udm_activation_contract": "The activation water-mass calculation requires volumetric ncact because it divides embryo mass production by DEN; UDM then writes the unscaled number increment back to a scalar field.",
+    "additional_mixed_convention": "Rain sedimentation transports dend*ncr and divides by dend (dend is labeled dry-air density), while native liquid slope uses qc*DEN/raw nc and its small-number guard uses nc*DEN. These inherited mixed conventions preclude a uniform density correction from this evidence alone."
+  }
+}
