@@ -16,7 +16,13 @@ add_test(NAME cu_population_replay_contract COMMAND "${Python3_EXECUTABLE}"
   "${CMAKE_CURRENT_SOURCE_DIR}/test_cu_population_replay.py")
 add_test(NAME udm_radius_stage_join COMMAND "${Python3_EXECUTABLE}" -B
   "${CMAKE_CURRENT_SOURCE_DIR}/test_udm_radius_stage.py" --self-test)
+add_test(NAME udm_entry_density_packet COMMAND "${Python3_EXECUTABLE}" -I -S
+  "${CMAKE_CURRENT_SOURCE_DIR}/test_udm_entry_density.py" --self-test)
 if(CMAKE_Fortran_COMPILER_ID STREQUAL "GNU")
+  add_test(NAME udm_entry_density_trace COMMAND "${Python3_EXECUTABLE}" -I -S
+    "${CMAKE_CURRENT_SOURCE_DIR}/test_udm_entry_density_trace.py"
+    --wrf-root "${WRF_ROOT}" --compiler "${CMAKE_Fortran_COMPILER}"
+    --receipt-dir "${CMAKE_CURRENT_BINARY_DIR}/udm-entry-density-trace")
   add_test(NAME udm_radius_trace COMMAND "${Python3_EXECUTABLE}" -B
     "${CMAKE_CURRENT_SOURCE_DIR}/test_udm_radius_trace.py"
     --wrf-root "${WRF_ROOT}" --compiler "${CMAKE_Fortran_COMPILER}")
