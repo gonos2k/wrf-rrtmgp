@@ -1,0 +1,15 @@
+{
+  "schema": "UDM37_LBLRTM_CO2_TRANSFER_BROADENER_MARKER_CLARIFICATION_V1",
+  "status": "SOURCE_CONFIRMED_STORAGE_LENGTH_MARKER",
+  "supersedes_only": "The earlier terminal-review wording that the semantic meaning of -654321 was not established. The original review remains unchanged as a record of what had been checked at that point.",
+  "source": {
+    "path": "build/udm37-lblrtm-reference-stage-v1/sources/LNFL/src/lnfl.f",
+    "sha256": "d47b7b296b747837bbec8df06a7c8ea1df2ec241546b1db4a15f6b02b98a4ad6",
+    "locations": [
+      "Lines 244-256 declare ADDFLAG(7,250) and equivalence (ADDFLAG(1,1), LSTW2); comments state LSTW2 determines storage length through the end of IFLG, while LSTW3 covers the end of ADDDATA.",
+      "Lines 377-387 initialize LSTW2=-654321 and pass it to NWDL to compute ILNGTH, before the later data-layout processing."
+    ]
+  },
+  "interpretation": "The observed -654321 value is a storage-length marker carried through an equivalenced LNFL layout field, not a physical broadening coefficient. The six observed flag vectors containing it have all other entries zero. In the audited LBLRTM path, the extra pressure-shift branch requires sum(BRD_MOL_FLG)>0 and IBRD>0; the negative marker does not satisfy the positive-sum condition. This clarifies provenance of the marker but does not change the saved reader result or extend its physics scope.",
+  "review_scope": "Source-only follow-up; no raw TAPE3 reread, model, solver, compile, or reader rerun."
+}

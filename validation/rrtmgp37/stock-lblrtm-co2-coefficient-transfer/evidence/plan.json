@@ -1,0 +1,61 @@
+{
+  "schema": "UDM37_OBSERVED801_CO2_COEFFICIENT_TRANSFER_PLAN_V1",
+  "status": "PREPARED_NOT_EXECUTED",
+  "created_epoch": 1791268220.8787835,
+  "script": {
+    "path": "build/udm37-lblrtm-co2-coefficient-transfer-v1/audit.py",
+    "sha256": "a739a7b555488f4d013881481498a52d890018c9130b46dd6ae031d4349030ea",
+    "size_bytes": 18313
+  },
+  "source_pins": [
+    {
+      "path": "build/udm37-lblrtm-candidate-decision-run-v3/staging/source/LBLRTM/src/oprop.f90",
+      "sha256": "a3b5732eca771b74fd373b2f8f67f515c9c05d09dc4c86c1fe77bd7d9bb1bd3c",
+      "size_bytes": 498873
+    },
+    {
+      "path": "build/udm37-lblrtm-candidate-decision-run-v3/staging/source/LBLRTM/src/struct_types.f90",
+      "sha256": "55b52495780ae564e66470f6ad3f32afd8b58e0c59a6b78ed82b3f606fb7b16c",
+      "size_bytes": 3110
+    }
+  ],
+  "scope": "Single saved-only reader; raw72ANCESTRY72144B + PANEL307584B headers (skip numeric arrays) + R3 term trace14753208B + TAPE3header13panels509192B. Pinned derived1.37MBtargetroster/108576Bcensus; no AERASCII/TAPE5/TAPE6/CAND/OD or solver/build/model.",
+  "raw_input_paths": [
+    "build/udm37-lblrtm-left-censored-ancestry-run-v2/runs/od-v1/UDM37_ANCESTRY",
+    "build/udm37-lblrtm-left-censored-ancestry-run-v2/runs/od-v1/UDM37_PANEL_TRACE",
+    "build/udm37-lblrtm-left-censored-ancestry-run-v2/runs/od-v1/UDM37_R3_TERM_TRACE",
+    "build/udm37-lblrtm-held-state-r3terms-cpl-od-run-v1/runs/od-v1/TAPE3"
+  ],
+  "target": {
+    "layer": 21,
+    "VFT_cm1": 662.695395555556,
+    "bins": [
+      61,
+      62,
+      63,
+      64
+    ],
+    "observed_CO2_identities": 801,
+    "expected_CO2_target_terms": 5930,
+    "all_target_terms": 6072
+  },
+  "expectations": [
+    "actual72 ancestry records have one identicalP/T/P0/TEMP0/PAVP0/PAVP2 state; all layer21 PANELheaders agree exactly in PAVE/TAVE",
+    "each801 TAPE3main+companion range matches previous13panel exactSHA; additionalshiftbranch sum(broadenerflags)>0 provedfalse for everyCO2main, otherwise stop with actualFAIL",
+    "reconstruct sourceordered YI,GI,normalizedP/P0,squaredP/P0,SP_from_savedcorrectedSUI,SPPSP_from_savedcorrectedSUI,pressureShiftVNU; no FMA/tolerance",
+    "match all5930 observedCO2target writes to801 unique(batch,slot) and isotope/flag; exactbinary64gate all8 fields; finitecomputed values required; anydiscrepancyretained"
+  ],
+  "limits": [
+    "CorrectedSUI is explicit per-event input; its WK/WKI/SCOR/temperature correction is not independently recomputed here.",
+    "Stored original line/companion values from13TAPE3panels; no all801 originalASCII/LNFL truth verification.",
+    "All801 observedtargetcontributors only; no allcandidate/rejection denominator, finite-support adequacy, physicalgroup closure or normality/accuracy proof.",
+    "Private TAPE3wholefilehistoricalpin isnotfreshlyrecomputed; everyreadrange must match prioractualcensusSHA.",
+    "ExistingnegativeODFAIL and unassigned+.6806384666588787Wm2 residual remain unchanged."
+  ],
+  "current_executions": {
+    "reader": 0,
+    "solver_build_model": 0
+  },
+  "requires_root_and_peer_source_review": true,
+  "runner_contract": "One subprocess with30secondtimeout; durableactualchildRC/PID/reaped receipt beforeopeningresult; freshoutputonly."
+}

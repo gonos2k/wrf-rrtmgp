@@ -1,0 +1,30 @@
+{
+  "schema": "UDM37_LBLRTM_CO2_TRANSFER_SOURCE_REVIEW_V1",
+  "status": "PASS_SCOPED_SOURCE_REVIEW",
+  "review_scope": "Static review only of the frozen reader's source equations and input gates; no reader execution or raw TAPE3/R3/ancestry reread performed by reviewer.",
+  "reader": {
+    "path": "build/udm37-lblrtm-co2-coefficient-transfer-v1/audit.py",
+    "sha256": "a739a7b555488f4d013881481498a52d890018c9130b46dd6ae031d4349030ea"
+  },
+  "plan": {
+    "path": "build/udm37-lblrtm-co2-coefficient-transfer-v1/plan.json",
+    "sha256": "073f9e9e4602d95bf81c6650d0346d86271a73ba26a10ac195243ba1aced55f6"
+  },
+  "source": {
+    "path": "build/udm37-lblrtm-candidate-decision-run-v3/staging/source/LBLRTM/src/oprop.f90",
+    "sha256": "a3b5732eca771b74fd373b2f8f67f515c9c05d09dc4c86c1fe77bd7d9bb1bd3c",
+    "relevant_lines": "LNCOR1 around 1050-1175 and diagnostic line-store/term writer around 12056-12115"
+  },
+  "findings": [
+    "The A and B companion arrays in LNCOR1 are (VNU, ALFA0, AMOL, TMPALF) and (S, EPP, HWHMS, PSHIFT). The reader selects the temperature interval, computes slope as coefficient difference times RECTLC, then applies TMPDIF in source order.",
+    "The compiled source uses -fdefault-real-8 and -fdefault-double-8. Its implicit-real interpolation and pressure arithmetic therefore correspond to the reader's binary64 operations.",
+    "The reader reproduces PAVP0=PAVE/P0, PAVP2=PAVP0*PAVP0, RHORAT=(PAVE/P0)*(TEMP0/TAVE), SP=SUI*(1+GI*PAVP2), SPPSP=((SUI*YI)*PAVP0)/SP, and VNU=VNU+RHORAT*PSHIFT in source order.",
+    "The saved line-store records corrected SUI and post-shift VNU. The R3 term writer checks stored metadata VNU equals its VNU argument before writing it, so checking both term vnu and term metadata VNU against the reconstructed center is supported by the source.",
+    "The actual source's extra center-shift condition requires sum(BRD_MOL_FLG)>0 and IBRD>0. The reader proves the first condition false for every selected CO2 main, so the branch is disabled without assuming IBRD."
+  ],
+  "limitations": [
+    "Corrected SUI is observed from the saved LBLRTM diagnostic. This does not independently validate its WK/WKI/SCOR or thermal-strength construction.",
+    "The check covers observed selected CO2 contributors only. It does not establish all-candidate completeness, coupling-group physical closure, or negative-OD validity.",
+    "Six source input records carry broadener flags (-654321,0,0,0,0,0,0); the pinned reader path copies these values into BRD_MOL_FLG_IN and later code tests only positive sum or equality to -1. The audit's false-branch conclusion is direct; the semantic meaning of -654321 is not independently established here."
+  ]
+}
