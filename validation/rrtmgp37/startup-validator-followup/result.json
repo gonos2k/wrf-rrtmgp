@@ -1,0 +1,61 @@
+{
+  "status": "PASS_SCOPED_STARTUP_VALIDATOR_FOLLOWUP",
+  "parent_head": "75abbc5cf035503343caf9bc2b37667f648168ac",
+  "harness_tested_head": "e531042a747d0996a4a07a91de103740de1255d6",
+  "dummy_runner_tests": 4,
+  "manufactured_contract_tests": 19,
+  "ideal": 1,
+  "forecasts": 2,
+  "actual_wrapper_rc": 0,
+  "capture_off_on": {
+    "whole_history_identical": true,
+    "arrays": 211,
+    "sha256": "3d5d40986aab99d97e55cbbffe7e9e9b2f214f9e6879a6c880429712aa56e79f"
+  },
+  "optical_checks": {
+    "LW": {
+      "binary64_roundoff_bound": 8.013190866307261e-16,
+      "checked_bands": 16,
+      "expected_snow_tau": 0.22555127124718777,
+      "independent_check": "1.5*1.05756*SWP/RES, g/m2 and micrometers",
+      "max_abs_error": 0.0
+    },
+    "SW": {
+      "binary64_roundoff_bound": 3.205267120365105e-15,
+      "checked_bands": 14,
+      "coefficient_literal_default_real_bits": 32,
+      "expected_absorption_by_band": [
+        0.10375328800860399,
+        0.10375328800860399,
+        0.10375328800860399,
+        0.10375328800860399,
+        0.10375328800860399,
+        0.10375328800860399,
+        0.10375328800860399,
+        0.10375328800860399,
+        0.0005079810598925196,
+        0.0005079810598925196,
+        2.2555062201404985e-07,
+        2.2555062201404985e-07,
+        2.2555062201404985e-07,
+        2.2555062201404985e-07
+      ],
+      "independent_check": "tau_delta*(1-ssa_delta) = tau_unscaled*max(1e-6,B0S+B1S*1.0315*RES)",
+      "max_abs_error": 2.2831773093239666e-17,
+      "native_ssa_cap": "1-1e-6",
+      "unscaled_snow_extinction": 0.22555062201404985
+    }
+  },
+  "production_fortran_changes": 0,
+  "physical_accepted": false,
+  "engine4_comparison_in_this_run": false,
+  "prior_reference_oracle_failure_preserved": {
+    "path": "build/udm37-startup-optics-validation-v1/execution.json",
+    "actual_rc": 1,
+    "reason": "default REAL coefficient literal rounding not reflected in initial SW analytic test; fixed without tolerance change"
+  },
+  "files": {
+    "root-execution.json": "c2a41dd71ae0f728dfab7a42cf086db9af0e17ac1fffd6de3e7760c3d2949876",
+    "runtime.json": "c899682541d43defa17f31d4191ee4fd63ee7be593d20db9b522822ab0c092fe"
+  }
+}
