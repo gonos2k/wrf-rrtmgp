@@ -1,0 +1,40 @@
+{
+  "schema": "nocpl-control-runner-review-v1",
+  "created_utc": "2026-10-06T00:58:26.633008+00:00",
+  "status": "BLOCKED_SCOPED_POSTFLIGHT_STAGED_INPUT_GAP",
+  "reviewed_plan": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-nocpl-control-v1/plan.json",
+    "sha256": "bbe68fd3125538d2b90463a90cf710ad69c42da3b4cb6cc9e18947e30da3086f",
+    "size_bytes": 14837
+  },
+  "reviewed_runner": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-nocpl-control-v1/runner.py",
+    "sha256": "28750f11395d50c8714623e17f4e89c24980e26341c9cecd71a00a9f274ac512",
+    "size_bytes": 11960
+  },
+  "prepared": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-nocpl-control-v1/run-v1/prepared.json",
+    "sha256": "6f647ab859ca9f37fa777b5461d08e5e752a8e34a39fcf28d42d26cf745ad9b9",
+    "size_bytes": 1156
+  },
+  "verified_pin_count": 25,
+  "all_25_pins_match": true,
+  "deck_control": "Only offsets145..149 blank\u2192NOCPL. F100 default, original475\u20132275/7species remain exact.",
+  "source_semantics": "LNFL lnfl.f:470 HOLRT NOCPL; MOVE:1068 clears IFG2 before storing main record and suppresses IFG2>=1 coupling-companion branch.",
+  "blocker": "Postflight rehashes external25pins but does not recheck staged copiedTAPE5/TAPE1. TAPE5 staged copy is not in25 externalpins. Add verify_staged(plan)==before/prepared before generated-success.",
+  "passed_static_checks": [
+    "Correct workspace ROOT=HERE.parents[1]; HOME inheritedunchanged.",
+    "External auth binds exact plan/runner/preparedSHA; max1; shortargvTAPE1.",
+    "Exclusive stdout/stderr logs created before Popen prevent duplicate concurrent calls/retries.",
+    "Actual childRC persisted before output inspection; timeout/exception processgroup termination and reap.",
+    "No existing original deck/output path overwrite; newprivate run-v1."
+  ],
+  "invocations_by_reviewer": {
+    "LNFL": 0,
+    "LBLRTM": 0,
+    "compiler": 0,
+    "model": 0,
+    "integration": 0
+  },
+  "required_followup": "Review separately frozen successor and bind changed runner/prepared pins; preserve this draft."
+}

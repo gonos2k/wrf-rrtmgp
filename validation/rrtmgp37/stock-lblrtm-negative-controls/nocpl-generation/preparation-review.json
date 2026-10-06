@@ -1,0 +1,52 @@
+{
+  "schema": "nocpl-control-plan-runner-independent-review-v2",
+  "created_utc": "2026-10-06T01:01:04.665035+00:00",
+  "status": "PASS_SCOPED_PLAN_AND_RUNNER_REVIEW_V2",
+  "reviewed_plan": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-nocpl-control-v2/plan.json",
+    "sha256": "2bc461ba52d6ffab7b5be9f4cba08ee330723e4fec67ae45875b813847dff98b",
+    "size_bytes": 14837
+  },
+  "reviewed_runner": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-nocpl-control-v2/runner.py",
+    "sha256": "fe29cad0873cec286b45b8354d3067887814cfe7e4967c8d03db51abdd7ab9b6",
+    "size_bytes": 12549
+  },
+  "prepared": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-nocpl-control-v2/run-v2/prepared.json",
+    "sha256": "2381a988cacc4b8a90a09a86a3aa007f9f59732bc7717661be4bb96bf548a8d9",
+    "size_bytes": 1156
+  },
+  "draft_review": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-nocpl-control-review-v1/review-draft-v1.json",
+    "sha256": "7f002939873f46f541c1215e2da970f4f252a2d4dab57be055d6aacb3a261ffb",
+    "size_bytes": 2141
+  },
+  "blocking_findings": [],
+  "delta_checks": [
+    "V1 staged-postflight gap fixed: verify_staged after durable executionRC, before output inspection, staged_after==before==prepared required for generated-success.",
+    "Separate v2 schema/auth/RUN_DIR run-v2 coherently bound; fresh preparation pins exactfinal plan/runner. Old v1 prepared artifacts are not used by v2.",
+    "24 scientific/source/runtime pins unchanged from independently rehashed v1;25th is coherent relocated control-diff pin. No scientificdata/source change.",
+    "NOCPL deck bytes remain exact previous5-character-only change; stagedTAPE5 exact and TAPE1 resolves pinned original publisher line file.",
+    "No launch/log/output receipts exist in fresh run-v2."
+  ],
+  "retained_safeguards": [
+    "One external auth binds exact planSHA,runnerSHA,preparedSHA/max1/outputdir; disabled unless --launch and --authorization provided.",
+    "Workspace ROOT correct; shortTAPE1 argv avoids publisher100char truncation; HOME inherited unmodified.",
+    "Exclusive stdout/stderr open before Popen prohibits concurrentduplicate/retry. Timeout and BaseException cleanup terminate/reap processgroup.",
+    "Actual childRC atomicfsynced before staged/output inspection; all externalpins rechecked before andafter.",
+    "No frozen original overwrite; private v2 separate from preserved v1."
+  ],
+  "scientific_scope": "One LNFL3.2 NOCPL-only line-file generation475\u20132275; removes inlinecoupling flags/companionrecords through native MOVE implementation. No optical-depth solve or reference accuracy acceptance by this runner/review.",
+  "reviewer_invocations": {
+    "LNFL": 0,
+    "LBLRTM": 0,
+    "compiler": 0,
+    "model": 0,
+    "integration": 0
+  },
+  "limits": [
+    "Generated-file existence/hash inventory is a generation completion contract; scientific line-file content and downstream controlled spectra remain separate actualpostflight evidence.",
+    "Physical negative-OD anomaly remains open. No clipping/tolerance/source policychange implied."
+  ]
+}

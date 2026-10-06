@@ -1,0 +1,125 @@
+{
+  "comparator_sha256": "adb485b64e07820445010e5647b5560134be0b67714de7ad7a5154dc5fb1d254",
+  "executed_flags": {
+    "continuum": {
+      "flags": {
+        "AERSL": 0,
+        "CNTNM": 1,
+        "EMISS": 0,
+        "FILTR": 0,
+        "FRGNX": 0,
+        "HIRAC": 1,
+        "IATM": 0,
+        "IBRD": 0,
+        "ILAS": 0,
+        "IMRG": 1,
+        "ISOTPL": 0,
+        "LBLF4": 0,
+        "OPDEP": 0,
+        "PLOT": 0,
+        "SCNFN": 0,
+        "TEST": 0,
+        "XSECT": 1
+      },
+      "sha256": "30260e028af1a07581007d16959b2d94ee941eb030509370418dc6048986837d"
+    },
+    "nocpl": {
+      "flags": {
+        "AERSL": 0,
+        "CNTNM": 1,
+        "EMISS": 0,
+        "FILTR": 0,
+        "FRGNX": 0,
+        "HIRAC": 1,
+        "IATM": 0,
+        "IBRD": 0,
+        "ILAS": 0,
+        "IMRG": 1,
+        "ISOTPL": 0,
+        "LBLF4": 0,
+        "OPDEP": 0,
+        "PLOT": 0,
+        "SCNFN": 0,
+        "TEST": 0,
+        "XSECT": 1
+      },
+      "sha256": "cd73c97ccc9a3532da4b49340630fe3f0a1cba18439b5247f08d85870174e3f2"
+    },
+    "nocpl-sample8": {
+      "flags": {
+        "AERSL": 0,
+        "CNTNM": 1,
+        "EMISS": 0,
+        "FILTR": 0,
+        "FRGNX": 0,
+        "HIRAC": 1,
+        "IATM": 0,
+        "IBRD": 0,
+        "ILAS": 0,
+        "IMRG": 1,
+        "ISOTPL": 0,
+        "LBLF4": 0,
+        "OPDEP": 0,
+        "PLOT": 0,
+        "SCNFN": 0,
+        "TEST": 0,
+        "XSECT": 1
+      },
+      "sha256": "b02826f1361c85078dfe0302e1e1eaa6be66fef4eb3011eaa070814291320766"
+    },
+    "sample8": {
+      "flags": {
+        "AERSL": 0,
+        "CNTNM": 1,
+        "EMISS": 0,
+        "FILTR": 0,
+        "FRGNX": 0,
+        "HIRAC": 1,
+        "IATM": 0,
+        "IBRD": 0,
+        "ILAS": 0,
+        "IMRG": 1,
+        "ISOTPL": 0,
+        "LBLF4": 0,
+        "OPDEP": 0,
+        "PLOT": 0,
+        "SCNFN": 0,
+        "TEST": 0,
+        "XSECT": 1
+      },
+      "sha256": "c6e82f4ff3fb55d4f5a1bdcc37139529a5a7a7e51bf502da68b5ba2db5c82155"
+    }
+  },
+  "explanation": "The 5702 differences are the LNFL length sentinel -654321 in ADDFLAG(1,1), versus zero at the corresponding ordinary record after coupling removal changes block boundaries. All six other flag components and every other non-IFLG field are byte exact. LNFL stores its length sentinel via EQUIVALENCE and has no EXBRD token in either executed control. LBLRTM executes with IBRD=0; guarded broadening terms are inactive. The unguarded O2 self-shift test reads component 7, which is zero in both files. This supplements rather than replaces the strict raw-field FAIL.",
+  "limitations": [
+    "No TAPE3 bytes changed or ignored by the original comparison.",
+    "No opacity sign or flux accuracy acceptance.",
+    "Does not certify controls at IBRD>0 or EXBRD active.",
+    "The molecular code follows LNFL MOD(MOL,100); no isotope/species relabeling."
+  ],
+  "mismatch_locations": {
+    "cpl_first_slot": 3108,
+    "nocpl_first_slot": 2594
+  },
+  "mismatch_value_patterns": {
+    "(-654321, 0, 0, 0, 0, 0, 0)->(0, 0, 0, 0, 0, 0, 0)": 3108,
+    "(0, 0, 0, 0, 0, 0, 0)->(-654321, 0, 0, 0, 0, 0, 0)": 2594
+  },
+  "model_invocations": 0,
+  "paired_ordinary_lines": 648464,
+  "prior_report_sha256": "6a861af190fb642b4f9aa761f58b39926cba75a4553ca34dbfb5ce73d2b69f74",
+  "raw_mismatch_counts": {
+    "additional_broadening_flags": 5702
+  },
+  "record_inputs": {
+    "coupled_sha256": "56bd55fa256ed3b3a672bd4bcd88034cd7086d4fbef2a1def9480199dab2b388",
+    "nocpl_sha256": "4b8c696c40ed1b80c03ee3b697422f37d95c832bcf3f7cdd3106930bb84da459"
+  },
+  "schema": "UDM37_LNFL_NOCPL_CONSUMED_FIELD_REVIEW_V1",
+  "source_pins": {
+    "lnfl": "d47b7b296b747837bbec8df06a7c8ea1df2ec241546b1db4a15f6b02b98a4ad6",
+    "oprop": "7cf594968ec331da3df75429262c1023c21fc461cbbae208253b0fa870685ef8"
+  },
+  "status": "PASS_SCOPED_IBRD0_CONSUMED_LINE_FIELDS_WITH_RAW_FAILURE_RETAINED",
+  "strict_byte_comparison_status": "FAIL_SCOPED_TAPE3_LINE_COMPARISON"
+}
