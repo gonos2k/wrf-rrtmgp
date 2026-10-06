@@ -5,7 +5,8 @@ The default mode consumes already-built baseline and candidate SCM executables
 and checks three arms. ``--runtime-only`` consumes one already-built candidate
 tree for a seed plus the candidate37 first-call path only. Neither mode builds
 WRF. Each mode records its own scope explicitly; runtime-only does not claim
-engine4 preservation.
+engine4 preservation. ``--capture-pair`` adds one candidate37 OFF forecast to
+the ON forecast and checks complete history bytes for observer passivity.
 """
 from __future__ import annotations
 
@@ -34,6 +35,69 @@ HYDROMETEORS = ("QCLOUD", "QRAIN", "QICE", "QSNOW", "QGRAUP", "QHAIL")
 TIMEOUT_SECONDS = 180
 CHILD_CLEANUP_GRACE_SECONDS = 15
 SW_PRECIP_TAU_FLOOR = 1.0e-12
+
+
+def validate_precipitation_optics(phase: str, records: dict[str, np.ndarray],
+                                  k: int, host_real_bits: int = 32) -> dict[str, Any]:
+    """Check the selected snow-only layer independently of returned tau.
+
+    These are the pinned module_ra_rrtmgp_precip source equations, with paths
+    in g/m2 and radius in micrometers. They test integration of that contract,
+    not the physical validity of its coefficients or the snow population.
+    The error budgets below count binary64 arithmetic, not an adjustable
+    physical tolerance. SW subtraction near unit SSA uses extinction as scale.
+    """
+    swp = float(records["SWP"][0, k])
+    rwp = float(records["RWP"][0, k])
+    radius = float(records["RES"][0, k])
+    if phase not in ("LW", "SW") or not np.isfinite([swp, rwp, radius]).all():
+        fail("invalid phase or non-finite snow optics inputs")
+    bands = 16 if phase == "LW" else 14
+    tau = np.asarray(records["RESULT_PRECIP_TAU"])
+    if (tau.shape != (*np.asarray(records["SWP"]).shape, bands)
+            or not np.isfinite(tau).all() or np.any(tau < 0.0)):
+        fail(f"{phase}: invalid precipitation optical depth shape/values")
+    if not (rwp == 0.0 and swp > 0.0 and radius > 10.0):
+        fail(f"{phase}: analytic check requires positive snow and zero rain")
+    selected = tau[0, k, :]
+    threshold = 0.0 if phase == "LW" else SW_PRECIP_TAU_FLOOR
+    if not np.all(selected > threshold):
+        fail(f"{phase}: every fixture-layer precipitation band must exceed {threshold:g}")
+    eps = np.finfo(np.float64).eps
+    if phase == "LW":
+        expected = 1.5 * 1.05756 * swp / radius
+        error = np.abs(selected - expected)
+        bound = 16.0 * eps * expected
+        if np.any(error > bound):
+            fail("LW: snow optical depth disagrees with independent analytic path/radius check")
+        return {"independent_check": "1.5*1.05756*SWP/RES, g/m2 and micrometers",
+                "expected_snow_tau": expected, "max_abs_error": float(error.max()),
+                "binary64_roundoff_bound": bound, "checked_bands": bands}
+    ssa = np.asarray(records.get("RESULT_PRECIP_SSA", []))
+    if ssa.shape != tau.shape or not np.isfinite(ssa).all() or np.any((ssa < 0.) | (ssa > 1.)):
+        fail("SW: missing or invalid PRECIP_SSA for absorption invariant")
+    # Delta scaling preserves tau*(1-ssa). Account for the native module's
+    # min(1-1e-6,ssa) cap: even its four conservative bands have that absorption.
+    extinction = swp * 1.09087 * (1.5 / (1.0315 * radius))
+    if host_real_bits not in (32, 64):
+        fail("SW: host REAL storage must be32 or64 bits for coefficient literals")
+    # B0S/B1S array literals have no _wp suffix in the source. They round to
+    # the compiler's default REAL kind before assignment to REAL(wp) tables.
+    literal_kind = np.float32 if host_real_bits == 32 else np.float64
+    b0 = np.array([.460] * 8 + [0.] * 6, dtype=literal_kind).astype(np.float64)
+    b1 = np.array([0.] * 8 + [1.62e-5] * 2 + [0.] * 4, dtype=literal_kind).astype(np.float64)
+    expected_absorption = extinction * np.maximum(1.e-6, b0 + b1 * 1.0315 * radius)
+    absorption = selected * (1.0 - ssa[0, k, :])
+    error = np.abs(absorption - expected_absorption)
+    bound = 64.0 * eps * extinction
+    if np.any(error > bound):
+        fail("SW: delta-scaled precipitation absorption disagrees with independent snow invariant")
+    return {"independent_check": "tau_delta*(1-ssa_delta) = tau_unscaled*max(1e-6,B0S+B1S*1.0315*RES)",
+            "unscaled_snow_extinction": extinction,
+            "expected_absorption_by_band": expected_absorption.tolist(),
+            "max_abs_error": float(error.max()), "binary64_roundoff_bound": bound,
+            "checked_bands": bands, "native_ssa_cap": "1-1e-6",
+            "coefficient_literal_default_real_bits": host_real_bits}
 
 
 def fail(message: str) -> None:
@@ -408,8 +472,7 @@ def validate_startup_capture(case: Path, seed: dict[str, Any]) -> dict[str, Any]
         else:
             threshold = 0.0
             floor_source = None
-        if not np.any(tau[0, k, :] > threshold):
-            fail(f"{phase}: fixture-layer RRTMGP precipitation optical depth did not exceed {threshold:g}")
+        optics = validate_precipitation_optics(phase, combined, k, int(raw["HOST_REAL_BITS"][0]))
         evidence[phase] = {"native_layers": int(len(cf)), "adapter_layers": int(len(adapter_cf)),
                            "fixture_level_native_and_adapter_zero_based": k,
                            "optical_dimension_label": "spectral bands",
@@ -421,7 +484,8 @@ def validate_startup_capture(case: Path, seed: dict[str, Any]) -> dict[str, Any]
                            "rwp_grid": float(rwp[k]), "swp_grid": float(swp[k]),
                            "precip_tau_threshold": threshold,
                            "precip_tau_floor_source": floor_source,
-                           "precip_tau_above_threshold_count": int(np.count_nonzero(tau[0, k, :] > threshold))}
+                           "precip_tau_above_threshold_count": int(np.count_nonzero(tau[0, k, :] > threshold)),
+                           "independent_optics": optics}
     return evidence
 
 
@@ -498,10 +562,34 @@ def forecast(seed: dict[str, Any], root: Path, arm: str, wrf_root: Path,
         if got != expected:
             fail(f"{arm}: history physics {got}, expected {expected}")
     return {"arm": arm, "case": str(case), "process": process,
+            "radiation_option": option, "capture_enabled": capture,
+            "namelist_sha256": sha256(case / "namelist.input"),
             "wrfinput_sha256": sha256(case / "wrfinput_d01"),
             "history_path": str(path), "history_sha256": sha256(path),
             "history_arrays": arrays,
             "startup_capture": validate_startup_capture(case, seed) if capture else None}
+
+
+def compare_capture_pair(off: dict[str, Any], on: dict[str, Any]) -> dict[str, Any]:
+    """Require entire same-input candidate37 OFF/ON history files to agree."""
+    if (off["radiation_option"] != 37 or on["radiation_option"] != 37
+            or off["capture_enabled"] or not on["capture_enabled"]
+            or off["wrfinput_sha256"] != on["wrfinput_sha256"]
+            or off["namelist_sha256"] != on["namelist_sha256"]
+            or off["process"]["executable_sha256"] != on["process"]["executable_sha256"]):
+        fail("capture pair must be same-input candidate37 OFF then ON")
+    left, right = Path(off["history_path"]), Path(on["history_path"])
+    if sha256(left) != off["history_sha256"] or sha256(right) != on["history_sha256"]:
+        fail("capture-pair history changed after its forecast receipt")
+    if off["history_sha256"] != on["history_sha256"]:
+        fail("candidate37 capture OFF/ON complete NetCDF history bytes differ")
+    a, b = _read_history_arrays(left), _read_history_arrays(right)
+    if set(a) != set(b):
+        fail("candidate37 capture OFF/ON history variable rosters differ")
+    comparison = compare_shared_history(a, b)
+    return {"status": "PASS_SCOPED_CAPTURE_PASSIVITY", "complete_history_bytes_identical": True,
+            "history_sha256": off["history_sha256"], "common_arrays": comparison,
+            "scope": "Same candidate37 input and executable; capture OFF/ON passivity only"}
 
 
 def main() -> int:
@@ -513,6 +601,8 @@ def main() -> int:
                         help="candidate WRF tree with main/wrf.exe")
     parser.add_argument("--runtime-only", action="store_true",
                         help="run one candidate37 first-call capture using candidate ideal.exe; no engine4 preservation claim")
+    parser.add_argument("--capture-pair", action="store_true",
+                        help="add same-input candidate37 capture OFF arm and require complete OFF/ON history byte identity")
     args = parser.parse_args()
     output = args.output.resolve()
     candidate = args.candidate_wrf_root.resolve()
@@ -557,7 +647,7 @@ def main() -> int:
     executable_pins = {str(p): {"sha256": sha256(p), "size_bytes": p.stat().st_size}
                        for p in required_exes}
     mode = "candidate37-runtime-only" if args.runtime_only else "three-arm-engine4-and-startup-snow"
-    forecast_limit = 1 if args.runtime_only else 3
+    forecast_limit = (1 if args.runtime_only else 3) + int(args.capture_pair)
     state: dict[str, Any] = {"schema": "udm37-startup-snow-scm-v2", "status": "RUNNING",
                              "scope": mode, "models_invoked": 0, "forecast_limit": forecast_limit,
                              "ideal_invocations": 0,
@@ -571,6 +661,9 @@ def main() -> int:
     else:
         state["claims"] = ["candidate37 first-call startup-snow capture and selected-layer precipitation optics",
                            "baseline38/candidate38 engine4 common-history bitwise identity"]
+    state["capture_pair_requested"] = args.capture_pair
+    if args.capture_pair:
+        state["claims"].append("candidate37 capture OFF/ON complete-history byte identity")
     atomic_json(output / "execution.json", state)
     try:
         # Record the planned ideal invocation durably before entering it; the
@@ -591,6 +684,11 @@ def main() -> int:
             run_arms = (("baseline38-rttmg4", baseline, 4, False),
                         ("candidate38-rttmg4", candidate, 4, False),
                         ("candidate38-udm37", candidate, 37, True))
+        if args.capture_pair:
+            # Add the observational control immediately before the candidate37
+            # ON arm. The original engine4 arms and run_once remain unchanged.
+            run_arms = (*run_arms[:-1], ("candidate38-udm37-capture-off", candidate, 37, False),
+                        run_arms[-1])
         for arm, wrf_root, option, capture in run_arms:
             state["forecast_attempts"] = len(arms) + 1
             state["arm_in_progress"] = arm
@@ -602,6 +700,8 @@ def main() -> int:
             state["arms_completed"] = arms
             state.pop("arm_in_progress", None)
             atomic_json(output / "execution.json", state)
+        if args.capture_pair:
+            state["candidate37_capture_pair"] = compare_capture_pair(arms[-2], arms[-1])
         if args.runtime_only:
             state["status"] = "PASS_SCOPED_STARTUP_SNOW_RUNTIME_ONLY"
             state["engine4_common_history_comparison"] = None
