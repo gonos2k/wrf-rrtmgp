@@ -1,0 +1,1940 @@
+{
+  "build_source_head": "45c640ec33b0d8818eb19f83f14e13eb9aacd8e8",
+  "build_source_tree": "85bfdc59c8821b89a0d62857e35409dae0375860",
+  "consumer_count_explanation": "Two projects and three consumer executables per attempt; both v1 and v2 executed. v2 reran after journal/cleanup fix. No repeat WRF build/model for this harness fix.",
+  "execution_counts": {
+    "WRF_forecasts": 1,
+    "consumer_builds": 4,
+    "consumer_configures": 4,
+    "consumer_executable_runs": 6,
+    "focused_fixture_compiles": 2,
+    "focused_fixture_runs": 2,
+    "fresh_configure": 1,
+    "fresh_full_WRF_build": 1,
+    "ideal": 1,
+    "inert_netcdf_compiles_or_links": 0,
+    "inert_netcdf_configures": 6,
+    "install": 1
+  },
+  "first_consumer_runner_sha256": "c25c39717ce0befd65be3429ff529e7153b41cab659c899b6c5f8c147e7f6ef4",
+  "installed_rte_module_count": 27,
+  "limitations": [
+    "GNU13.3 serial REAL32, USE_ALLOCATABLES; no MPI/OpenMP/Intel/double package validation in this attempt.",
+    "Installed core consumer references the actual microphysics_driver interface/symbol but does not invoke the driver; the optional-array probe is an explicit mirror.",
+    "Runtime is one-minute UDM37 startup-snow fixture; no RRTMG4 or pristine comparison in this CMake run.",
+    "No general relocated-prefix claim: preexisting WRFConfig stores an absolute prefix.",
+    "Nc/PSD physical contract, RFMIP strict residual and LBLRTM negative optical-depth gates remain unresolved.",
+    "Failures are retained and not relabeled as passes; original preparation head65 was superseded by build45 only in the explicit runtime binding."
+  ],
+  "post_build_dependency_fix": {
+    "does_not_relabel_v3": "v3 compiled old finder against separate prefix/lib; remote failure exposed distro layout gap",
+    "parent_control_limit": "Initial parent control omitted the C companion finder and failed for that fixture preparation reason. Its receipt is retained; corrected control v2 uses both original finder files.",
+    "sha256": "6c4ca34dfbcf3c27acb74de4b63121de0d777709fbab8841107b5b2f14171ac2",
+    "source_path": "WRF/cmake/modules/FindnetCDF-Fortran.cmake",
+    "status": "3 inert path-selection fixtures PASS; original finder flat-prefix PASS then multiarch FAIL; remote real dependency/build pending"
+  },
+  "process_lifecycle_unit_tests": {
+    "actual_test_script_exit_code": 0,
+    "compiler_calls": 0,
+    "expected_python_child_RC": -9,
+    "model_calls": 0,
+    "scope": "One mocked Popen for RUNNING journal write failure; one actual Python child timeout escalated to SIGKILL; no compiler or model.",
+    "test_cases": 2
+  },
+  "production_accepted": false,
+  "receipts": {
+    "actual_source_storage_fixture": {
+      "bytes": 4062,
+      "local_path": "build/udm37-cmake-sentinel-root-v1/receipt.json",
+      "receipt": {
+        "execution_counts": {
+          "RTE": 0,
+          "WRF_builds": 0,
+          "fixture_compiles": 2,
+          "fixture_runs": 2,
+          "models": 0
+        },
+        "modes": [
+          {
+            "compile": {
+              "argv": [
+                "/usr/bin/gfortran",
+                "-cpp",
+                "-std=f2008",
+                "-ffree-line-length-none",
+                "-O0",
+                "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-sentinel-root-v1/pointer/test_input_wrf_udm_sentinels.F90",
+                "-o",
+                "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-sentinel-root-v1/pointer/fixture.exe"
+              ],
+              "ended_epoch": 1791278000.2891114,
+              "log": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-sentinel-root-v1/pointer/compile.log",
+              "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "log_size_bytes": 0,
+              "returncode": 0,
+              "started_epoch": 1791278000.2247477,
+              "status": "EXITED_ZERO"
+            },
+            "execution": {
+              "argv": [
+                "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-sentinel-root-v1/pointer/fixture.exe"
+              ],
+              "ended_epoch": 1791278000.2914553,
+              "log": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-sentinel-root-v1/pointer/run.log",
+              "log_sha256": "2376b4df604dde8b0ae5c4f9968a1c72643a94e6d37979adb9358a64703eb47c",
+              "log_size_bytes": 40,
+              "returncode": 0,
+              "started_epoch": 1791278000.289152,
+              "status": "EXITED_ZERO"
+            },
+            "fixture_sha256": "98f4fbb1a3bea003aad4e458d04692c485237b3c3a576bd894872d0c4f431f19",
+            "mode": "pointer",
+            "pass_marker_present": true
+          },
+          {
+            "compile": {
+              "argv": [
+                "/usr/bin/gfortran",
+                "-DUSE_ALLOCATABLES",
+                "-cpp",
+                "-std=f2008",
+                "-ffree-line-length-none",
+                "-O0",
+                "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-sentinel-root-v1/allocatable/test_input_wrf_udm_sentinels.F90",
+                "-o",
+                "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-sentinel-root-v1/allocatable/fixture.exe"
+              ],
+              "ended_epoch": 1791278000.3574212,
+              "log": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-sentinel-root-v1/allocatable/compile.log",
+              "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "log_size_bytes": 0,
+              "returncode": 0,
+              "started_epoch": 1791278000.2929459,
+              "status": "EXITED_ZERO"
+            },
+            "execution": {
+              "argv": [
+                "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-sentinel-root-v1/allocatable/fixture.exe"
+              ],
+              "ended_epoch": 1791278000.3596034,
+              "log": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-sentinel-root-v1/allocatable/run.log",
+              "log_sha256": "2376b4df604dde8b0ae5c4f9968a1c72643a94e6d37979adb9358a64703eb47c",
+              "log_size_bytes": 40,
+              "returncode": 0,
+              "started_epoch": 1791278000.3574688,
+              "status": "EXITED_ZERO"
+            },
+            "fixture_sha256": "98f4fbb1a3bea003aad4e458d04692c485237b3c3a576bd894872d0c4f431f19",
+            "mode": "allocatable",
+            "pass_marker_present": true
+          }
+        ],
+        "schema": "UDM_INPUT_WRESTART_SENTINEL_STORAGE_FIXTURE_V1",
+        "scope": "Actual source-selected sentinel guards compiled and run in small pointer/allocatable fixtures; this is not a full input_wrf or WRF build.",
+        "source": {
+          "guard_group_count": 4,
+          "guard_group_sha256": [
+            "ed4f4ad55e39b74a2ea04a7eff0d4de31a9df4185ba15a953452fc29f75aef85",
+            "b0cfa0b2b489965b0daf29a28ef2dcb827606d0f4fd173db79a60465e3dd342c",
+            "6e6a0d502b1ec6331e5d9eaee57718a4313232ba796829e2e39bb3708fa20d65",
+            "9f4afeb3ea23bee79308e8b82e0700f6d0def7ca4655e908d795e353bdb292a9"
+          ],
+          "path": "WRF/share/input_wrf.F",
+          "sha256": "36db2f1b1a33681d8480491f47a956a1a6c1882a77d74a5528b704bb5c161190"
+        },
+        "status": "PASS_POINTER_AND_ALLOCATABLE"
+      },
+      "sha256": "3d6479c219781a708b7db9ae67d9d66a026cbb8254e33db0cdfb705511f79208"
+    },
+    "build": {
+      "bytes": 655,
+      "local_path": "build/udm37-cmake-full-current-v3/build-receipt.json",
+      "receipt": {
+        "actual_child_RC": 0,
+        "argv": [
+          "/usr/bin/timeout",
+          "--signal=TERM",
+          "--kill-after=30s",
+          "1800s",
+          "/usr/local/bin/cmake",
+          "--build",
+          "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-full-current-v3/cmake",
+          "--parallel",
+          "8"
+        ],
+        "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-integration-pr-work",
+        "ended_unix": 1791278204.0667014,
+        "forecast_calls": 0,
+        "head": "45c640ec33b0d8818eb19f83f14e13eb9aacd8e8",
+        "ideal_calls": 0,
+        "pid": 3002460,
+        "started_unix": 1791278035.7981615,
+        "status": "PASS_BUILD",
+        "tree": "85bfdc59c8821b89a0d62857e35409dae0375860"
+      },
+      "sha256": "76c3fc507b8142c1b9fda34531a2a08cec1e35937777f31b5439ac0c2fe53b31"
+    },
+    "configure": {
+      "bytes": 1080,
+      "local_path": "build/udm37-cmake-full-current-v3/configure-receipt.json",
+      "receipt": {
+        "actual_child_RC": 0,
+        "argv": [
+          "/usr/local/bin/cmake",
+          "-S",
+          "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-integration-pr-work/WRF",
+          "-B",
+          "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-full-current-v3/cmake",
+          "-DCMAKE_INSTALL_PREFIX=/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-full-current-v3/install",
+          "-DCMAKE_TOOLCHAIN_FILE=/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-full-current-v3/wrf_gnu_serial.cmake",
+          "-DWRF_CORE=ARW",
+          "-DWRF_CASE=EM_SCM_XY",
+          "-DUSE_ALLOCATABLES=ON",
+          "-DUSE_MPI=OFF",
+          "-DUSE_OPENMP=OFF",
+          "-DUSE_IPO=OFF",
+          "-DFORCE_NETCDF_CLASSIC=ON"
+        ],
+        "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-integration-pr-work",
+        "ended_unix": 1791278035.7965689,
+        "forecast_calls": 0,
+        "head": "45c640ec33b0d8818eb19f83f14e13eb9aacd8e8",
+        "ideal_calls": 0,
+        "pid": 3001923,
+        "started_unix": 1791278032.7524548,
+        "status": "PASS_CONFIGURE",
+        "tree": "85bfdc59c8821b89a0d62857e35409dae0375860"
+      },
+      "sha256": "e35405f82095d3d3e1f6825d8dfff88231c4e72b2a725c39553a14aa8a91a02a"
+    },
+    "consumer_review_before_lifecycle_fix": {
+      "bytes": 4808,
+      "local_path": "build/udm37-cmake-independent-review-v1/consumer-workflow-addendum-v1.json",
+      "receipt": {
+        "counts": {
+          "reviewer_RTE": 0,
+          "reviewer_builds": 0,
+          "reviewer_compilers": 0,
+          "reviewer_fixture_runs": 0,
+          "reviewer_models": 0,
+          "reviewer_tests": 0
+        },
+        "created_utc": "2026-10-06T09:21:28.836236+00:00",
+        "findings": [
+          "Installed consumer project sources are self-contained; find_package(WRF CONFIG REQUIRED) and exported WRF::wrf_rrtmgp / WRF::WRF_Core targets are used. Compiler include-path checks require installed module directories and reject producer source/build roots. The optional mirror explicitly does not invoke the actual microphysics_driver; API use and link success are narrower than a full driver execution.",
+          "Dedicated workflow uses an explicit serial GNU toolchain, allocatable build, fresh producer/install/consumer paths, and installed ideal/wrf runtime executables. set -euo pipefail preserves failing pipeline status; artifacts capture selected engineering receipts/logs. No physical acceptance is asserted."
+        ],
+        "limits": [
+          "Read-only source and existing small receipt review; no installed consumer, SCM, or test rerun. Main source-interface verdict is unchanged. New workflow execution is not claimed from source inspection."
+        ],
+        "parent_review": {
+          "path": "build/udm37-cmake-independent-review-v1/review.json",
+          "sha256": "096fdf76c4b271bf604b253dc615f24df4c48b4c769f1b3720a1196e076e8bb4",
+          "size_bytes": 8030
+        },
+        "pins": [
+          {
+            "path": "build/udm37-cmake-integration-pr-work/WRF/test/rrtmgp/test_cmake_installed_consumers.py",
+            "sha256": "c25c39717ce0befd65be3429ff529e7153b41cab659c899b6c5f8c147e7f6ef4",
+            "size_bytes": 13520
+          },
+          {
+            "path": "build/udm37-cmake-integration-pr-work/.github/workflows/validate-cmake-package.yml",
+            "sha256": "7f9c0eae41b82556271a37286c8d185a690c3dac9ff5764478e47bb40f030072",
+            "size_bytes": 4212
+          }
+        ],
+        "process_management_limits": [
+          "After successful Popen, RUNNING journal atomic write is outside the wait cleanup try. A failure there can leave a launched child without cleanup/terminal reporting. Current successful execution receipts are not evidence of this failure path being exercised.",
+          "SIGKILL cleanup branches use child.wait() without a timeout. Do not describe this harness as bounded under every cleanup/storage failure."
+        ],
+        "saved_receipt_readback": [
+          {
+            "pin": {
+              "path": "build/udm37-cmake-consumer-execution-v1/execution.json",
+              "sha256": "3933d1897fc0f7d35f13f3844518fe19e617eab66bbe0be6af0dd0c822b65f26",
+              "size_bytes": 16110
+            },
+            "stage_counts": {
+              "build": 2,
+              "commands": 9,
+              "configure": 2,
+              "consumer_runs": 3
+            },
+            "stages": [
+              {
+                "name": "cmake-version",
+                "pid": 3031879,
+                "returncode": 0,
+                "status": "COMPLETE",
+                "timed_out": false
+              },
+              {
+                "name": "compiler-version",
+                "pid": 3031882,
+                "returncode": 0,
+                "status": "COMPLETE",
+                "timed_out": false
+              },
+              {
+                "name": "external-configure",
+                "pid": 3031883,
+                "returncode": 0,
+                "status": "COMPLETE",
+                "timed_out": false
+              },
+              {
+                "name": "external-build",
+                "pid": 3032078,
+                "returncode": 0,
+                "status": "COMPLETE",
+                "timed_out": false
+              },
+              {
+                "name": "external-external_consumer-run",
+                "pid": 3032098,
+                "returncode": 0,
+                "status": "COMPLETE",
+                "timed_out": false
+              },
+              {
+                "name": "core-configure",
+                "pid": 3032099,
+                "returncode": 0,
+                "status": "COMPLETE",
+                "timed_out": false
+              },
+              {
+                "name": "core-build",
+                "pid": 3032152,
+                "returncode": 0,
+                "status": "COMPLETE",
+                "timed_out": false
+              },
+              {
+                "name": "core-core_consumer-run",
+                "pid": 3032187,
+                "returncode": 0,
+                "status": "COMPLETE",
+                "timed_out": false
+              },
+              {
+                "name": "core-optional_api_mirror-run",
+                "pid": 3032188,
+                "returncode": 0,
+                "status": "COMPLETE",
+                "timed_out": false
+              }
+            ],
+            "status": "PASS_INSTALLED_PACKAGE_CONSUMERS"
+          },
+          {
+            "pin": {
+              "path": "build/udm37-cmake-scm-preparation-v1/runtime-only-output/execution.json",
+              "sha256": "e61c704e67189d71ac5fd803ee0e28f500110b54ae53b6e59a5ed45d94a316d5",
+              "size_bytes": 5765
+            },
+            "status": "PASS_SCOPED_STARTUP_SNOW_RUNTIME_ONLY"
+          }
+        ],
+        "schema": "UDM37_CMAKE_CONSUMER_WORKFLOW_STATIC_ADDENDUM_V1",
+        "status": "PASS_SCOPED_EXPORT_CONSUMER_WORKFLOW_STATIC_REVIEW_WITH_PROCESS_LIMITATIONS"
+      },
+      "sha256": "aa05f78f0d343877603268b1a38798caa8ae8f7bc52b06750f3df310cdc0297d"
+    },
+    "failed_allocatable_build": {
+      "bytes": 600,
+      "local_path": "build/udm37-cmake-full-current-v2/build-receipt.json",
+      "receipt": {
+        "actual_child_RC": 2,
+        "argv": [
+          "/usr/bin/timeout",
+          "--signal=TERM",
+          "--kill-after=30s",
+          "1800s",
+          "/usr/local/bin/cmake",
+          "--build",
+          "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-full-current-v2/cmake",
+          "--parallel",
+          "8"
+        ],
+        "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-integration-pr-work",
+        "ended_unix": 1791277410.6332088,
+        "forecast_calls": 0,
+        "head": "65e4a917fc60d675e5755549d643f3b64d320961",
+        "ideal_calls": 0,
+        "pid": 2948428,
+        "started_unix": 1791277253.864113,
+        "status": "FAIL_BUILD"
+      },
+      "sha256": "63431e4c87d9fb151f117ab9fba72203cee8e7906d6d5f2a494286e67c357db9"
+    },
+    "failed_toolchain_build": {
+      "bytes": 703,
+      "local_path": "build/udm37-cmake-full-current-v1/build-receipt.json",
+      "receipt": {
+        "actual_child_RC": 2,
+        "argv": [
+          "/usr/bin/timeout",
+          "--signal=TERM",
+          "--kill-after=30s",
+          "1800s",
+          "/usr/local/bin/cmake",
+          "--build",
+          "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-full-current-v1/cmake",
+          "--parallel",
+          "8"
+        ],
+        "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-integration-pr-work",
+        "ended_unix": 1791277079.4137926,
+        "forecast_calls": 0,
+        "head": "65e4a917fc60d675e5755549d643f3b64d320961",
+        "ideal_calls": 0,
+        "pid": 2935672,
+        "scope": "fresh full CMake serial EM_SCM_XY build; source snapshot held fixed, no model execution",
+        "started_unix": 1791277078.0825467,
+        "status": "FAIL_BUILD"
+      },
+      "sha256": "59165e126880e356fdad02d6a5aef3b5846dc9430528ac1ae1938d7e5c52dd43"
+    },
+    "independent_static_review": {
+      "bytes": 8030,
+      "local_path": "build/udm37-cmake-independent-review-v1/review.json",
+      "receipt": {
+        "blocking_findings": [],
+        "created_utc": "2026-10-06T09:20:29.046971+00:00",
+        "findings": [
+          {
+            "conclusion": "Core PRIVATE static wrf_rrtmgp dependency is now included in the same WRF exported target set; PUBLIC module include paths are separated into BUILD_INTERFACE and relative INSTALL_INTERFACE. Installed Fortran modules are copied without changing backend source arithmetic. WRFConfig finds netCDF and netCDF-Fortran before loading target exports; the latter defines the required netCDF::netcdff target.",
+            "topic": "export dependency"
+          },
+          {
+            "conclusion": "Both host interfaces now accept optional ordinary assumed-shape arrays with explicit ims/kms/jms lower bounds. solve_em passes whole grid fields plus the same memory bounds; start_em obtains bounds from get_ijk_from_grid and passes whole fields. Removing ASSOCIATED is appropriate: an unallocated allocatable or disassociated pointer actual is absent for an OPTIONAL nonallocatable nonpointer dummy. Nested PRESENT gates do not dereference absent arguments. No pointer reassociation is requested.",
+            "topic": "optional argument semantics and bounds"
+          },
+          {
+            "conclusion": "UDM has_reqc/has_reqi/has_reqs remain enabled only under the existing 37/37 coupling. The ordinary RA4 UDM branch is excluded from the general use_mp_re list and dedicated 37 flags. Cold-init and restart sentinel assignment conditions are unchanged. This establishes source isolation, not a new bitwise forecast comparison.",
+            "topic": "RA4 isolation"
+          },
+          {
+            "conclusion": "The three startup and three failed-restart-read sentinel assignment sites select ALLOCATED with USE_ALLOCATABLES and retain ASSOCIATED otherwise. Field names, -1 sentinels, restart predicates, and error policy are unchanged.",
+            "topic": "six sentinel guards"
+          },
+          {
+            "conclusion": "The new fixture extracts four exact preprocessor groups covering six assignment sites, compiles pointer and allocatable forms, and checks enabled/disabled, successful/failed read and absent-storage cases. It is a small guard fixture, not a full input_wrf or host-interface/bounds integration test. It was read only in this review.",
+            "topic": "source-selected fixture"
+          }
+        ],
+        "limitations": [
+          "No compilation, build, install, consumer execution, fixture execution, model forecast, RTE, or raw scientific capture read was performed by this reviewer. Root owns fresh v3 execution; this report does not assert its outcome.",
+          "Changing Fortran dummy pointer attributes changes the module interface contract; all affected callers and modules need rebuilding. Compatibility with previously compiled callers or mixed compiler .mod files is not claimed.",
+          "Unchanged WRFConfig embeds the install prefix in its module search path and existing Core configuration also contains absolute properties. General relocation of an installed WRF prefix is not established by this patch; an actual installed consumer check is needed for its advertised supported layout.",
+          "Direct standalone backend installation is outside the reviewed full-WRF export scope. Optional arrays retain the existing expectation of properly sized active whole-grid storage; this patch does not introduce shape validation.",
+          "The worktree acquired root-owned uncommitted workflow/installed-consumer preparation during review. They are outside the seven-path HEAD45c640e review and are not certified here.",
+          "Prior v1 omitted-toolchain failure and v2 allocatable ASSOCIATED failure remain historical failures; this source verdict does not rewrite them."
+        ],
+        "pins": [
+          {
+            "git_blob": "544d339e9373eff8edcc724e5f9922298cfaf9c3",
+            "path": "WRF/CMakeLists.txt",
+            "sha256": "f2a9fad649e0d9dfc23d0f0719252b438c928e9fa4346ad08eb9dd460331fc99",
+            "size_bytes": 53214
+          },
+          {
+            "git_blob": "9d90e4474f074a671b929027b37d8b052f2abbbe",
+            "path": "WRF/external/rte_rrtmgp/CMakeLists.txt",
+            "sha256": "a6d6e9164b8292709a0ccf57d1c36588cb4515ba4adc55c1f54831b18cb7d711",
+            "size_bytes": 2123
+          },
+          {
+            "git_blob": "f8a600470e9342025863d4787dc19f1470c01768",
+            "path": "WRF/phys/module_microphysics_driver.F",
+            "sha256": "c02f227d0fc1bf633fa53e54361e7117093b2c7bb02cedc2b71441c5bd638bd9",
+            "size_bytes": 198159
+          },
+          {
+            "git_blob": "f003a3176df583e5eb52ca79ad36cc256eba87db",
+            "path": "WRF/phys/module_physics_init.F",
+            "sha256": "8c5e933467cc316f172d1193e4f130e96b89580da7f28aec3edc3b7c517e59b5",
+            "size_bytes": 315994
+          },
+          {
+            "git_blob": "cae6a459f83a01a733c4f7e0e17a8d906830680e",
+            "path": "WRF/share/input_wrf.F",
+            "sha256": "36db2f1b1a33681d8480491f47a956a1a6c1882a77d74a5528b704bb5c161190",
+            "size_bytes": 102709
+          },
+          {
+            "git_blob": "3d202604c355e6892361613c2274cd73ab4dd284",
+            "path": "WRF/test/rrtmgp/test_input_wrf_udm_sentinel_kinds.py",
+            "sha256": "ad4375ff97854f907dffc6bfb3847e16bd7ffd8833b7157e55963c6f5fdff95a",
+            "size_bytes": 10804
+          },
+          {
+            "git_blob": "8d8a73448178d42ece8f0c94a80ed37b7f6442ea",
+            "path": "config/registration37.json",
+            "sha256": "6f1d949f801bf415f9ba9cd4b63337a0a11f66d53bd589bb1bc6cc0e97cc5c92",
+            "size_bytes": 32663
+          },
+          {
+            "git_blob": "68b93fccf879c010c1c0991588653eb7419b8473",
+            "path": "WRF/dyn_em/solve_em.F",
+            "sha256": "ed03953a8b7b999fc0a5a281893f4808bbed28697ea9032fde9b9b605e0d9ecb",
+            "size_bytes": 283280
+          },
+          {
+            "git_blob": "11d109ef487310952f3a31d3d330b69ca4053121",
+            "path": "WRF/dyn_em/start_em.F",
+            "sha256": "bce1b0656d73d76f74f4db7f1b71d254cc1e11f16ecfc82e54fe153a84e6c17e",
+            "size_bytes": 130683
+          },
+          {
+            "git_blob": "9891f949c6db49115139d5ae202c2aeb55edb27f",
+            "path": "WRF/phys/module_mp_udm.F",
+            "sha256": "7bd96141eefc6ae2cb66cea0ce022fcc2ee64afce5c616aa65f26711c8790947",
+            "size_bytes": 196865
+          },
+          {
+            "git_blob": "fc5b0ec7bc518db76edd8c881fe203dc4098a848",
+            "path": "WRF/phys/CMakeLists.txt",
+            "sha256": "45a9eb2511a5a1d4dd26df9f4852dcc5e007871fa53ee9ec117086b6c79313b7",
+            "size_bytes": 21685
+          },
+          {
+            "git_blob": "7bd1e402237960b518c0e863fb30a28a221131a1",
+            "path": "WRF/cmake/template/WRFConfig.cmake.in",
+            "sha256": "63f98abd38acf16aa4db1dfe0445496c20bfba2e49f11c3528c5203cfe5a9ec6",
+            "size_bytes": 2824
+          },
+          {
+            "git_blob": "c05d2c0191db59003694dd08e8e7aa1c555cc305",
+            "path": "WRF/cmake/modules/FindnetCDF-Fortran.cmake",
+            "sha256": "7fe59f2b03eaf26b97e11a674c87b61e0c597f89db6e0af5ba6f7540c134e591",
+            "size_bytes": 6774
+          },
+          {
+            "git_blob": "c9ed160f84f495bf60febc9dbba298a78b692fc7",
+            "path": "WRF/Registry/registry.rrtmgp37",
+            "sha256": "afe0b9387afba9c303e3476187d4fd638e52358a4a5f6d0ceb13e99de51adfa1",
+            "size_bytes": 1075
+          },
+          {
+            "git_blob": "0ab8cd5f64304e51c98e80f7b35b165acccc1e4b",
+            "path": "WRF/tools/gen_allocs.c",
+            "sha256": "5d269cee5ce6956db4a4ff7e94ed0a5b15b9e2e30932b449cdd9463ceaf0db51",
+            "size_bytes": 45170
+          }
+        ],
+        "review_execution_counts": {
+          "RTE": 0,
+          "builds": 0,
+          "compilers": 0,
+          "fixtures": 0,
+          "models": 0,
+          "source_metadata_reads_only": true
+        },
+        "reviewed_source": {
+          "base": "a29be085b34975c52bc97f6567b328a9a790d900",
+          "changed_paths": [
+            "WRF/CMakeLists.txt",
+            "WRF/external/rte_rrtmgp/CMakeLists.txt",
+            "WRF/phys/module_microphysics_driver.F",
+            "WRF/phys/module_physics_init.F",
+            "WRF/share/input_wrf.F",
+            "WRF/test/rrtmgp/test_input_wrf_udm_sentinel_kinds.py",
+            "config/registration37.json"
+          ],
+          "head": "45c640ec33b0d8818eb19f83f14e13eb9aacd8e8",
+          "tree": "85bfdc59c8821b89a0d62857e35409dae0375860",
+          "worktree": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-integration-pr-work"
+        },
+        "schema": "UDM37_CMAKE_STATIC_INDEPENDENT_REVIEW_V1",
+        "status": "PASS_SCOPED_STATIC_CMAKE_HOST_INTERFACE_REVIEW"
+      },
+      "sha256": "096fdf76c4b271bf604b253dc615f24df4c48b4c769f1b3720a1196e076e8bb4"
+    },
+    "install": {
+      "bytes": 549,
+      "local_path": "build/udm37-cmake-full-current-v3/install-receipt.json",
+      "receipt": {
+        "actual_child_RC": 0,
+        "argv": [
+          "/usr/local/bin/cmake",
+          "--install",
+          "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-full-current-v3/cmake"
+        ],
+        "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-integration-pr-work",
+        "ended_unix": 1791278205.0346894,
+        "forecast_calls": 0,
+        "head": "45c640ec33b0d8818eb19f83f14e13eb9aacd8e8",
+        "ideal_calls": 0,
+        "pid": 3019199,
+        "started_unix": 1791278204.068976,
+        "status": "PASS_INSTALL",
+        "tree": "85bfdc59c8821b89a0d62857e35409dae0375860"
+      },
+      "sha256": "c1df2a44fd8a53b98bffce4bc6f692ff34de0ed40d5b91bcf663ce86023b6e58"
+    },
+    "installed_consumers": {
+      "bytes": 16110,
+      "local_path": "build/udm37-cmake-consumer-execution-v1/execution.json",
+      "receipt": {
+        "claims": [
+          "installed RRTMGP-only consumer",
+          "installed WRF Core plus RRTMGP consumer",
+          "optional-array mirror only; no full microphysics_driver invocation"
+        ],
+        "cmake": "/usr/local/bin/cmake",
+        "cmake_sha256": "fa986304cce94ee93eda37f206512509cd2f6707c6c6f1ceca39f9783e136bc6",
+        "cmake_version": "cmake version 3.31.6",
+        "compiler_include_paths": {
+          "core": [
+            "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/root/usr/include",
+            "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-full-current-v3/install/esmf_time_f90",
+            "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-full-current-v3/install/fftpack5",
+            "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-full-current-v3/install/include/external/ioapi_share",
+            "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-full-current-v3/install/include/frame",
+            "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-full-current-v3/install/include/inc",
+            "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-full-current-v3/install/include/rte_rrtmgp",
+            "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-full-current-v3/install/io_grib1",
+            "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-full-current-v3/install/io_grib_share",
+            "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-full-current-v3/install/io_int",
+            "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-full-current-v3/install/io_netcdf",
+            "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-full-current-v3/install/modules",
+            "/usr/include"
+          ],
+          "external": [
+            "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/root/usr/include",
+            "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-full-current-v3/install/include/rte_rrtmgp"
+          ]
+        },
+        "compiler_path": "/usr/bin/gfortran",
+        "compiler_sha256": "7e292e9d5da17a37bb1c17a06afb6463db786c70827fd6893ed31a86715b03c3",
+        "compiler_version": "GNU Fortran (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0",
+        "consumer_source_pins": {
+          "core-plus-rte/CMakeLists.txt": {
+            "sha256": "a65939f4b47b7a6994fb71bd1759ed6949f842163236d2290f3d67c6809ddb53",
+            "size_bytes": 362
+          },
+          "core-plus-rte/main.F90": {
+            "sha256": "3f6a111b87f9af83d2ad15d86188b82d1c163e87ae4fba1cbf82d7a2bbd49f59",
+            "size_bytes": 427
+          },
+          "external-only/CMakeLists.txt": {
+            "sha256": "deb9f9d3e6a843bbf89ca42f14075839ffa578f2c87df71c112c8ea9de3a8db7",
+            "size_bytes": 235
+          },
+          "external-only/main.F90": {
+            "sha256": "ce975ed15c6156d4af3cfd629338223f0f1251959850d76db697cbc3b2272349",
+            "size_bytes": 303
+          },
+          "optional_api_mirror.F90": {
+            "sha256": "c44293820de104902a7b7ddfda88e1be3352752dfe83776f4021c9ca8ab7e909",
+            "size_bytes": 1532
+          }
+        },
+        "current_stage": "core-optional_api_mirror-run",
+        "ended_unix": 1791278397.938082,
+        "environment": {
+          "CMAKE_PREFIX_PATH": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-full-current-v3/install",
+          "LD_LIBRARY_PATH": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/netcdf/lib:/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/root/usr/lib/x86_64-linux-gnu",
+          "PATH": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/netcdf/bin:/home/korea_keun/.local/bin:/usr/local/bin:/usr/bin:/bin"
+        },
+        "executables": {
+          "core/core_consumer": {
+            "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-consumer-execution-v1/core-build/core_consumer",
+            "sha256": "468a79ee92dcac58ad454f2b8e94d04537f91e7a16c5997992f1f070e8b48bcd",
+            "size_bytes": 37550584
+          },
+          "core/optional_api_mirror": {
+            "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-consumer-execution-v1/core-build/optional_api_mirror",
+            "sha256": "09a4902210437e4b483d2572a6b86cd0d20d42f452d20cdc4e84429764bdca70",
+            "size_bytes": 20520
+          },
+          "external/external_consumer": {
+            "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-consumer-execution-v1/external-build/external_consumer",
+            "sha256": "c275983c4d9dcf15a48cbb386c871b6cfb3a138ef9017c4a881ea979de9464b3",
+            "size_bytes": 16328
+          }
+        },
+        "forbidden_roots": [
+          "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-integration-pr-work/WRF",
+          "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-full-current-v3/cmake"
+        ],
+        "install_prefix": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-full-current-v3/install",
+        "modules": {
+          "core/mo_rte_kind": {
+            "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-full-current-v3/install/include/rte_rrtmgp/mo_rte_kind.mod",
+            "sha256": "ddec64aca7bb6b77f16f4c823dfe6e1df699403033c5fa864c5b3d395d13e211",
+            "size_bytes": 608
+          },
+          "core/module_microphysics_driver": {
+            "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-full-current-v3/install/modules/module_microphysics_driver.mod",
+            "sha256": "47c482894c986046c37ef3a8d2b5130fa371284011bb76a64157166886215181",
+            "size_bytes": 28214
+          },
+          "external/mo_rte_kind": {
+            "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-full-current-v3/install/include/rte_rrtmgp/mo_rte_kind.mod",
+            "sha256": "ddec64aca7bb6b77f16f4c823dfe6e1df699403033c5fa864c5b3d395d13e211",
+            "size_bytes": 608
+          },
+          "external/mo_rte_util_array": {
+            "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-full-current-v3/install/include/rte_rrtmgp/mo_rte_util_array.mod",
+            "sha256": "e6ce4a11f0bfc5439dc83103b87b9a0c1a531a8959c0e2c257c4f836b40cf5a5",
+            "size_bytes": 747
+          }
+        },
+        "modules_preflight": {
+          "core/mo_rte_kind": {
+            "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-full-current-v3/install/include/rte_rrtmgp/mo_rte_kind.mod",
+            "sha256": "ddec64aca7bb6b77f16f4c823dfe6e1df699403033c5fa864c5b3d395d13e211",
+            "size_bytes": 608
+          },
+          "core/module_microphysics_driver": {
+            "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-full-current-v3/install/modules/module_microphysics_driver.mod",
+            "sha256": "47c482894c986046c37ef3a8d2b5130fa371284011bb76a64157166886215181",
+            "size_bytes": 28214
+          },
+          "external/mo_rte_kind": {
+            "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-full-current-v3/install/include/rte_rrtmgp/mo_rte_kind.mod",
+            "sha256": "ddec64aca7bb6b77f16f4c823dfe6e1df699403033c5fa864c5b3d395d13e211",
+            "size_bytes": 608
+          },
+          "external/mo_rte_util_array": {
+            "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-full-current-v3/install/include/rte_rrtmgp/mo_rte_util_array.mod",
+            "sha256": "e6ce4a11f0bfc5439dc83103b87b9a0c1a531a8959c0e2c257c4f836b40cf5a5",
+            "size_bytes": 747
+          }
+        },
+        "nonclaims": [
+          "No WRF model/physics execution.",
+          "Optional API mirror does not call microphysics_driver."
+        ],
+        "package_files": {
+          "lib/cmake/WRF/WRFConfig.cmake": {
+            "sha256": "d8ef59154f662205ee8ab270e8bc762a21606a8eb0da8eeb171c718e426aa3f6",
+            "size_bytes": 3401
+          },
+          "lib/cmake/WRF/WRFConfigVersion.cmake": {
+            "sha256": "2fce045710d8fdc27be2d64d5e016c6a0ff607e685957ca76b7a03a475c5815c",
+            "size_bytes": 3675
+          },
+          "lib/cmake/WRF/WRFTargets-release.cmake": {
+            "sha256": "99d491f3a7b6a1a9afee8cdbbf3a04d47c072da8c3f0ffffa0b559ec61b6fe9d",
+            "size_bytes": 6436
+          },
+          "lib/cmake/WRF/WRFTargets.cmake": {
+            "sha256": "21d54d5e41938cc48d0ebdc5b439585af81d5c4b19a99cdf4acba1128314016f",
+            "size_bytes": 10451
+          }
+        },
+        "schema": "wrf-installed-cmake-consumers-v1",
+        "stage_counts": {
+          "build": 2,
+          "commands": 9,
+          "configure": 2,
+          "consumer_runs": 3
+        },
+        "stages": [
+          {
+            "argv": [
+              "/usr/local/bin/cmake",
+              "--version"
+            ],
+            "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-consumer-execution-v1",
+            "ended_unix": 1791278396.2039967,
+            "log": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-consumer-execution-v1/cmake-version.log",
+            "log_sha256": "f6e81c2559f3ce00c5fdad01d7b226c301f5d6b07ee04f65db6dbfdc1cc5970b",
+            "log_size_bytes": 91,
+            "name": "cmake-version",
+            "pid": 3031879,
+            "process_group": 3031879,
+            "reaped": true,
+            "returncode": 0,
+            "started_unix": 1791278396.082971,
+            "status": "COMPLETE",
+            "timed_out": false,
+            "timeout_seconds": 300
+          },
+          {
+            "argv": [
+              "/usr/bin/gfortran",
+              "--version"
+            ],
+            "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-consumer-execution-v1",
+            "ended_unix": 1791278396.2268856,
+            "log": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-consumer-execution-v1/compiler-version.log",
+            "log_sha256": "164c77399862886648a0d9c6bbf3893b553ab1e090d03b760cd6daaa0ee9bbf1",
+            "log_size_bytes": 252,
+            "name": "compiler-version",
+            "pid": 3031882,
+            "process_group": 3031882,
+            "reaped": true,
+            "returncode": 0,
+            "started_unix": 1791278396.2179096,
+            "status": "COMPLETE",
+            "timed_out": false,
+            "timeout_seconds": 300
+          },
+          {
+            "argv": [
+              "/usr/local/bin/cmake",
+              "-S",
+              "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-consumer-execution-v1/consumer-sources/external-only",
+              "-B",
+              "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-consumer-execution-v1/external-build",
+              "-DCMAKE_PREFIX_PATH=/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-full-current-v3/install",
+              "-DCMAKE_Fortran_COMPILER=/usr/bin/gfortran"
+            ],
+            "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-consumer-execution-v1",
+            "ended_unix": 1791278396.663194,
+            "log": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-consumer-execution-v1/external-configure.log",
+            "log_sha256": "d6dba1a781aa4db6159c2ca3ec6d574d4728d92c538d72f3eddda52b16920025",
+            "log_size_bytes": 932,
+            "name": "external-configure",
+            "pid": 3031883,
+            "process_group": 3031883,
+            "reaped": true,
+            "returncode": 0,
+            "started_unix": 1791278396.2401805,
+            "status": "COMPLETE",
+            "timed_out": false,
+            "timeout_seconds": 300
+          },
+          {
+            "argv": [
+              "/usr/local/bin/cmake",
+              "--build",
+              "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-consumer-execution-v1/external-build",
+              "--verbose",
+              "--parallel",
+              "2"
+            ],
+            "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-consumer-execution-v1",
+            "ended_unix": 1791278396.8500018,
+            "log": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-consumer-execution-v1/external-build.log",
+            "log_sha256": "e43e05364189cb1e85c923b240bb1cdcd45c92ab316a9abb5a7b6b128ef58f50",
+            "log_size_bytes": 4866,
+            "name": "external-build",
+            "pid": 3032078,
+            "process_group": 3032078,
+            "reaped": true,
+            "returncode": 0,
+            "started_unix": 1791278396.6782992,
+            "status": "COMPLETE",
+            "timed_out": false,
+            "timeout_seconds": 300
+          },
+          {
+            "argv": [
+              "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-consumer-execution-v1/external-build/external_consumer"
+            ],
+            "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-consumer-execution-v1",
+            "ended_unix": 1791278396.8735082,
+            "log": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-consumer-execution-v1/external-external_consumer.log",
+            "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "log_size_bytes": 0,
+            "name": "external-external_consumer-run",
+            "pid": 3032098,
+            "process_group": 3032098,
+            "reaped": true,
+            "returncode": 0,
+            "started_unix": 1791278396.8630123,
+            "status": "COMPLETE",
+            "timed_out": false,
+            "timeout_seconds": 300
+          },
+          {
+            "argv": [
+              "/usr/local/bin/cmake",
+              "-S",
+              "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-consumer-execution-v1/consumer-sources/core-plus-rte",
+              "-B",
+              "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-consumer-execution-v1/core-build",
+              "-DCMAKE_PREFIX_PATH=/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-full-current-v3/install",
+              "-DCMAKE_Fortran_COMPILER=/usr/bin/gfortran"
+            ],
+            "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-consumer-execution-v1",
+            "ended_unix": 1791278397.3054216,
+            "log": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-consumer-execution-v1/core-configure.log",
+            "log_sha256": "fe7fb34e8aa74d8b485463de7e654c4eca512791067f4ae937383a639e0eeab7",
+            "log_size_bytes": 928,
+            "name": "core-configure",
+            "pid": 3032099,
+            "process_group": 3032099,
+            "reaped": true,
+            "returncode": 0,
+            "started_unix": 1791278396.882458,
+            "status": "COMPLETE",
+            "timed_out": false,
+            "timeout_seconds": 300
+          },
+          {
+            "argv": [
+              "/usr/local/bin/cmake",
+              "--build",
+              "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-consumer-execution-v1/core-build",
+              "--verbose",
+              "--parallel",
+              "2"
+            ],
+            "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-consumer-execution-v1",
+            "ended_unix": 1791278397.8424356,
+            "log": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-consumer-execution-v1/core-build.log",
+            "log_sha256": "3e49e84eec67fdedf1eb7834f986310a8395740750cb257b6902077470a0204e",
+            "log_size_bytes": 13155,
+            "name": "core-build",
+            "pid": 3032152,
+            "process_group": 3032152,
+            "reaped": true,
+            "returncode": 0,
+            "started_unix": 1791278397.3201902,
+            "status": "COMPLETE",
+            "timed_out": false,
+            "timeout_seconds": 300
+          },
+          {
+            "argv": [
+              "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-consumer-execution-v1/core-build/core_consumer"
+            ],
+            "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-consumer-execution-v1",
+            "ended_unix": 1791278397.8798797,
+            "log": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-consumer-execution-v1/core-core_consumer.log",
+            "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "log_size_bytes": 0,
+            "name": "core-core_consumer-run",
+            "pid": 3032187,
+            "process_group": 3032187,
+            "reaped": true,
+            "returncode": 0,
+            "started_unix": 1791278397.8671267,
+            "status": "COMPLETE",
+            "timed_out": false,
+            "timeout_seconds": 300
+          },
+          {
+            "argv": [
+              "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-consumer-execution-v1/core-build/optional_api_mirror"
+            ],
+            "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-consumer-execution-v1",
+            "ended_unix": 1791278397.8981662,
+            "log": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-consumer-execution-v1/core-optional_api_mirror.log",
+            "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "log_size_bytes": 0,
+            "name": "core-optional_api_mirror-run",
+            "pid": 3032188,
+            "process_group": 3032188,
+            "reaped": true,
+            "returncode": 0,
+            "started_unix": 1791278397.8886662,
+            "status": "COMPLETE",
+            "timed_out": false,
+            "timeout_seconds": 300
+          }
+        ],
+        "status": "PASS_INSTALLED_PACKAGE_CONSUMERS",
+        "timeout_seconds": 300
+      },
+      "sha256": "3933d1897fc0f7d35f13f3844518fe19e617eab66bbe0be6af0dd0c822b65f26"
+    },
+    "installed_consumers_after_lifecycle_fix": {
+      "bytes": 16110,
+      "local_path": "build/udm37-cmake-consumer-execution-v2/execution.json",
+      "receipt": {
+        "claims": [
+          "installed RRTMGP-only consumer",
+          "installed WRF Core plus RRTMGP consumer",
+          "optional-array mirror only; no full microphysics_driver invocation"
+        ],
+        "cmake": "/usr/local/bin/cmake",
+        "cmake_sha256": "fa986304cce94ee93eda37f206512509cd2f6707c6c6f1ceca39f9783e136bc6",
+        "cmake_version": "cmake version 3.31.6",
+        "compiler_include_paths": {
+          "core": [
+            "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/root/usr/include",
+            "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-full-current-v3/install/esmf_time_f90",
+            "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-full-current-v3/install/fftpack5",
+            "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-full-current-v3/install/include/external/ioapi_share",
+            "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-full-current-v3/install/include/frame",
+            "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-full-current-v3/install/include/inc",
+            "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-full-current-v3/install/include/rte_rrtmgp",
+            "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-full-current-v3/install/io_grib1",
+            "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-full-current-v3/install/io_grib_share",
+            "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-full-current-v3/install/io_int",
+            "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-full-current-v3/install/io_netcdf",
+            "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-full-current-v3/install/modules",
+            "/usr/include"
+          ],
+          "external": [
+            "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/root/usr/include",
+            "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-full-current-v3/install/include/rte_rrtmgp"
+          ]
+        },
+        "compiler_path": "/usr/bin/gfortran",
+        "compiler_sha256": "7e292e9d5da17a37bb1c17a06afb6463db786c70827fd6893ed31a86715b03c3",
+        "compiler_version": "GNU Fortran (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0",
+        "consumer_source_pins": {
+          "core-plus-rte/CMakeLists.txt": {
+            "sha256": "a65939f4b47b7a6994fb71bd1759ed6949f842163236d2290f3d67c6809ddb53",
+            "size_bytes": 362
+          },
+          "core-plus-rte/main.F90": {
+            "sha256": "3f6a111b87f9af83d2ad15d86188b82d1c163e87ae4fba1cbf82d7a2bbd49f59",
+            "size_bytes": 427
+          },
+          "external-only/CMakeLists.txt": {
+            "sha256": "deb9f9d3e6a843bbf89ca42f14075839ffa578f2c87df71c112c8ea9de3a8db7",
+            "size_bytes": 235
+          },
+          "external-only/main.F90": {
+            "sha256": "ce975ed15c6156d4af3cfd629338223f0f1251959850d76db697cbc3b2272349",
+            "size_bytes": 303
+          },
+          "optional_api_mirror.F90": {
+            "sha256": "c44293820de104902a7b7ddfda88e1be3352752dfe83776f4021c9ca8ab7e909",
+            "size_bytes": 1532
+          }
+        },
+        "current_stage": "core-optional_api_mirror-run",
+        "ended_unix": 1791278532.3026724,
+        "environment": {
+          "CMAKE_PREFIX_PATH": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-full-current-v3/install",
+          "LD_LIBRARY_PATH": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/netcdf/lib:/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/root/usr/lib/x86_64-linux-gnu",
+          "PATH": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/netcdf/bin:/home/korea_keun/.local/bin:/usr/local/bin:/usr/bin:/bin"
+        },
+        "executables": {
+          "core/core_consumer": {
+            "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-consumer-execution-v2/core-build/core_consumer",
+            "sha256": "468a79ee92dcac58ad454f2b8e94d04537f91e7a16c5997992f1f070e8b48bcd",
+            "size_bytes": 37550584
+          },
+          "core/optional_api_mirror": {
+            "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-consumer-execution-v2/core-build/optional_api_mirror",
+            "sha256": "deaa9b226a67a59e6fc7b28c89f3b3008ee49dc0e4b05ecf9d34727410f3ccff",
+            "size_bytes": 20520
+          },
+          "external/external_consumer": {
+            "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-consumer-execution-v2/external-build/external_consumer",
+            "sha256": "c275983c4d9dcf15a48cbb386c871b6cfb3a138ef9017c4a881ea979de9464b3",
+            "size_bytes": 16328
+          }
+        },
+        "forbidden_roots": [
+          "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-integration-pr-work/WRF",
+          "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-full-current-v3/cmake"
+        ],
+        "install_prefix": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-full-current-v3/install",
+        "modules": {
+          "core/mo_rte_kind": {
+            "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-full-current-v3/install/include/rte_rrtmgp/mo_rte_kind.mod",
+            "sha256": "ddec64aca7bb6b77f16f4c823dfe6e1df699403033c5fa864c5b3d395d13e211",
+            "size_bytes": 608
+          },
+          "core/module_microphysics_driver": {
+            "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-full-current-v3/install/modules/module_microphysics_driver.mod",
+            "sha256": "47c482894c986046c37ef3a8d2b5130fa371284011bb76a64157166886215181",
+            "size_bytes": 28214
+          },
+          "external/mo_rte_kind": {
+            "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-full-current-v3/install/include/rte_rrtmgp/mo_rte_kind.mod",
+            "sha256": "ddec64aca7bb6b77f16f4c823dfe6e1df699403033c5fa864c5b3d395d13e211",
+            "size_bytes": 608
+          },
+          "external/mo_rte_util_array": {
+            "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-full-current-v3/install/include/rte_rrtmgp/mo_rte_util_array.mod",
+            "sha256": "e6ce4a11f0bfc5439dc83103b87b9a0c1a531a8959c0e2c257c4f836b40cf5a5",
+            "size_bytes": 747
+          }
+        },
+        "modules_preflight": {
+          "core/mo_rte_kind": {
+            "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-full-current-v3/install/include/rte_rrtmgp/mo_rte_kind.mod",
+            "sha256": "ddec64aca7bb6b77f16f4c823dfe6e1df699403033c5fa864c5b3d395d13e211",
+            "size_bytes": 608
+          },
+          "core/module_microphysics_driver": {
+            "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-full-current-v3/install/modules/module_microphysics_driver.mod",
+            "sha256": "47c482894c986046c37ef3a8d2b5130fa371284011bb76a64157166886215181",
+            "size_bytes": 28214
+          },
+          "external/mo_rte_kind": {
+            "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-full-current-v3/install/include/rte_rrtmgp/mo_rte_kind.mod",
+            "sha256": "ddec64aca7bb6b77f16f4c823dfe6e1df699403033c5fa864c5b3d395d13e211",
+            "size_bytes": 608
+          },
+          "external/mo_rte_util_array": {
+            "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-full-current-v3/install/include/rte_rrtmgp/mo_rte_util_array.mod",
+            "sha256": "e6ce4a11f0bfc5439dc83103b87b9a0c1a531a8959c0e2c257c4f836b40cf5a5",
+            "size_bytes": 747
+          }
+        },
+        "nonclaims": [
+          "No WRF model/physics execution.",
+          "Optional API mirror does not call microphysics_driver."
+        ],
+        "package_files": {
+          "lib/cmake/WRF/WRFConfig.cmake": {
+            "sha256": "d8ef59154f662205ee8ab270e8bc762a21606a8eb0da8eeb171c718e426aa3f6",
+            "size_bytes": 3401
+          },
+          "lib/cmake/WRF/WRFConfigVersion.cmake": {
+            "sha256": "2fce045710d8fdc27be2d64d5e016c6a0ff607e685957ca76b7a03a475c5815c",
+            "size_bytes": 3675
+          },
+          "lib/cmake/WRF/WRFTargets-release.cmake": {
+            "sha256": "99d491f3a7b6a1a9afee8cdbbf3a04d47c072da8c3f0ffffa0b559ec61b6fe9d",
+            "size_bytes": 6436
+          },
+          "lib/cmake/WRF/WRFTargets.cmake": {
+            "sha256": "21d54d5e41938cc48d0ebdc5b439585af81d5c4b19a99cdf4acba1128314016f",
+            "size_bytes": 10451
+          }
+        },
+        "schema": "wrf-installed-cmake-consumers-v1",
+        "stage_counts": {
+          "build": 2,
+          "commands": 9,
+          "configure": 2,
+          "consumer_runs": 3
+        },
+        "stages": [
+          {
+            "argv": [
+              "/usr/local/bin/cmake",
+              "--version"
+            ],
+            "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-consumer-execution-v2",
+            "ended_unix": 1791278530.5285094,
+            "log": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-consumer-execution-v2/cmake-version.log",
+            "log_sha256": "f6e81c2559f3ce00c5fdad01d7b226c301f5d6b07ee04f65db6dbfdc1cc5970b",
+            "log_size_bytes": 91,
+            "name": "cmake-version",
+            "pid": 3035997,
+            "process_group": 3035997,
+            "reaped": true,
+            "returncode": 0,
+            "started_unix": 1791278530.4056716,
+            "status": "COMPLETE",
+            "timed_out": false,
+            "timeout_seconds": 300
+          },
+          {
+            "argv": [
+              "/usr/bin/gfortran",
+              "--version"
+            ],
+            "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-consumer-execution-v2",
+            "ended_unix": 1791278530.557355,
+            "log": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-consumer-execution-v2/compiler-version.log",
+            "log_sha256": "164c77399862886648a0d9c6bbf3893b553ab1e090d03b760cd6daaa0ee9bbf1",
+            "log_size_bytes": 252,
+            "name": "compiler-version",
+            "pid": 3035998,
+            "process_group": 3035998,
+            "reaped": true,
+            "returncode": 0,
+            "started_unix": 1791278530.5477087,
+            "status": "COMPLETE",
+            "timed_out": false,
+            "timeout_seconds": 300
+          },
+          {
+            "argv": [
+              "/usr/local/bin/cmake",
+              "-S",
+              "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-consumer-execution-v2/consumer-sources/external-only",
+              "-B",
+              "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-consumer-execution-v2/external-build",
+              "-DCMAKE_PREFIX_PATH=/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-full-current-v3/install",
+              "-DCMAKE_Fortran_COMPILER=/usr/bin/gfortran"
+            ],
+            "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-consumer-execution-v2",
+            "ended_unix": 1791278530.9899337,
+            "log": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-consumer-execution-v2/external-configure.log",
+            "log_sha256": "8743f3b0304bf661cb60501dc4abaca94d570985c8eb3e3252e55ef53937dba7",
+            "log_size_bytes": 932,
+            "name": "external-configure",
+            "pid": 3035999,
+            "process_group": 3035999,
+            "reaped": true,
+            "returncode": 0,
+            "started_unix": 1791278530.568016,
+            "status": "COMPLETE",
+            "timed_out": false,
+            "timeout_seconds": 300
+          },
+          {
+            "argv": [
+              "/usr/local/bin/cmake",
+              "--build",
+              "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-consumer-execution-v2/external-build",
+              "--verbose",
+              "--parallel",
+              "2"
+            ],
+            "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-consumer-execution-v2",
+            "ended_unix": 1791278531.226288,
+            "log": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-consumer-execution-v2/external-build.log",
+            "log_sha256": "518ae0631bc47d9cec811ffaacdad63b13f6527fe7a6221dcecce79a3dc77abe",
+            "log_size_bytes": 4866,
+            "name": "external-build",
+            "pid": 3036052,
+            "process_group": 3036052,
+            "reaped": true,
+            "returncode": 0,
+            "started_unix": 1791278531.0047305,
+            "status": "COMPLETE",
+            "timed_out": false,
+            "timeout_seconds": 300
+          },
+          {
+            "argv": [
+              "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-consumer-execution-v2/external-build/external_consumer"
+            ],
+            "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-consumer-execution-v2",
+            "ended_unix": 1791278531.2480927,
+            "log": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-consumer-execution-v2/external-external_consumer.log",
+            "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "log_size_bytes": 0,
+            "name": "external-external_consumer-run",
+            "pid": 3036120,
+            "process_group": 3036120,
+            "reaped": true,
+            "returncode": 0,
+            "started_unix": 1791278531.2387831,
+            "status": "COMPLETE",
+            "timed_out": false,
+            "timeout_seconds": 300
+          },
+          {
+            "argv": [
+              "/usr/local/bin/cmake",
+              "-S",
+              "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-consumer-execution-v2/consumer-sources/core-plus-rte",
+              "-B",
+              "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-consumer-execution-v2/core-build",
+              "-DCMAKE_PREFIX_PATH=/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-full-current-v3/install",
+              "-DCMAKE_Fortran_COMPILER=/usr/bin/gfortran"
+            ],
+            "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-consumer-execution-v2",
+            "ended_unix": 1791278531.6796303,
+            "log": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-consumer-execution-v2/core-configure.log",
+            "log_sha256": "97fda6986b97b2cadd83b1d034123c92cf4a216572cc0cb375389e96ce52b339",
+            "log_size_bytes": 928,
+            "name": "core-configure",
+            "pid": 3036132,
+            "process_group": 3036132,
+            "reaped": true,
+            "returncode": 0,
+            "started_unix": 1791278531.2565844,
+            "status": "COMPLETE",
+            "timed_out": false,
+            "timeout_seconds": 300
+          },
+          {
+            "argv": [
+              "/usr/local/bin/cmake",
+              "--build",
+              "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-consumer-execution-v2/core-build",
+              "--verbose",
+              "--parallel",
+              "2"
+            ],
+            "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-consumer-execution-v2",
+            "ended_unix": 1791278532.2243726,
+            "log": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-consumer-execution-v2/core-build.log",
+            "log_sha256": "3190238927fdfc7e119c1e7bcfdac1c1e2cb242073a55618e9a36d2a555e7103",
+            "log_size_bytes": 13155,
+            "name": "core-build",
+            "pid": 3036187,
+            "process_group": 3036187,
+            "reaped": true,
+            "returncode": 0,
+            "started_unix": 1791278531.6999874,
+            "status": "COMPLETE",
+            "timed_out": false,
+            "timeout_seconds": 300
+          },
+          {
+            "argv": [
+              "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-consumer-execution-v2/core-build/core_consumer"
+            ],
+            "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-consumer-execution-v2",
+            "ended_unix": 1791278532.2503443,
+            "log": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-consumer-execution-v2/core-core_consumer.log",
+            "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "log_size_bytes": 0,
+            "name": "core-core_consumer-run",
+            "pid": 3036222,
+            "process_group": 3036222,
+            "reaped": true,
+            "returncode": 0,
+            "started_unix": 1791278532.237277,
+            "status": "COMPLETE",
+            "timed_out": false,
+            "timeout_seconds": 300
+          },
+          {
+            "argv": [
+              "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-consumer-execution-v2/core-build/optional_api_mirror"
+            ],
+            "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-consumer-execution-v2",
+            "ended_unix": 1791278532.2681534,
+            "log": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-consumer-execution-v2/core-optional_api_mirror.log",
+            "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "log_size_bytes": 0,
+            "name": "core-optional_api_mirror-run",
+            "pid": 3036223,
+            "process_group": 3036223,
+            "reaped": true,
+            "returncode": 0,
+            "started_unix": 1791278532.2591734,
+            "status": "COMPLETE",
+            "timed_out": false,
+            "timeout_seconds": 300
+          }
+        ],
+        "status": "PASS_INSTALLED_PACKAGE_CONSUMERS",
+        "timeout_seconds": 300
+      },
+      "sha256": "38b5e5526a06407a6743534b3265b44a3813a767c3ea54c069be125bdd18ee24"
+    },
+    "netcdf_discovery_current": {
+      "bytes": 9521,
+      "local_path": "build/udm37-cmake-discovery-current-v1/execution.json",
+      "receipt": {
+        "cases": [
+          {
+            "argv": [
+              "/usr/local/bin/cmake",
+              "-S",
+              "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-current-v1/prefix-lib/src",
+              "-B",
+              "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-current-v1/prefix-lib/build",
+              "-DFIXTURE_MODULE_DIR=/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-integration-pr-work/WRF/cmake/modules",
+              "-DFIXTURE_ARCH=fixture-multiarch",
+              "-DFIXTURE_EXPECTED_LIBRARY=/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-current-v1/prefix-lib/prefix/lib/libnetcdff.a"
+            ],
+            "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-current-v1/prefix-lib",
+            "ended_unix": 1791279194.7563384,
+            "log": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-current-v1/prefix-lib/configure.log",
+            "log_sha256": "65aed490826322ab24b840c04b7ebceb45795002cae84dbc88c69bf6f5d24bba",
+            "log_size_bytes": 655,
+            "name": "prefix-lib-configure",
+            "nf_config_arguments": [
+              "--includedir",
+              "--prefix",
+              "--flibs",
+              "--version",
+              "--has-dap",
+              "--has-nc2",
+              "--has-nc4",
+              "--has-f90",
+              "--has-f03"
+            ],
+            "pid": 3059078,
+            "process_group": 3059078,
+            "reaped": true,
+            "returncode": 0,
+            "started_unix": 1791279194.5831566,
+            "status": "PASS_PATH_SELECTED",
+            "timed_out": false,
+            "timeout_seconds": 60
+          },
+          {
+            "argv": [
+              "/usr/local/bin/cmake",
+              "-S",
+              "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-current-v1/prefix-multiarch/src",
+              "-B",
+              "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-current-v1/prefix-multiarch/build",
+              "-DFIXTURE_MODULE_DIR=/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-integration-pr-work/WRF/cmake/modules",
+              "-DFIXTURE_ARCH=fixture-multiarch",
+              "-DFIXTURE_EXPECTED_LIBRARY=/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-current-v1/prefix-multiarch/prefix/lib/fixture-multiarch/libnetcdff.a"
+            ],
+            "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-current-v1/prefix-multiarch",
+            "ended_unix": 1791279194.9438813,
+            "log": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-current-v1/prefix-multiarch/configure.log",
+            "log_sha256": "222803fb9c4834e800ff7cac288ae408fd24e7a9ce4e30d69d56c5003b990dbf",
+            "log_size_bytes": 715,
+            "name": "prefix-multiarch-configure",
+            "nf_config_arguments": [
+              "--includedir",
+              "--prefix",
+              "--flibs",
+              "--version",
+              "--has-dap",
+              "--has-nc2",
+              "--has-nc4",
+              "--has-f90",
+              "--has-f03"
+            ],
+            "pid": 3059090,
+            "process_group": 3059090,
+            "reaped": true,
+            "returncode": 0,
+            "started_unix": 1791279194.7736852,
+            "status": "PASS_PATH_SELECTED",
+            "timed_out": false,
+            "timeout_seconds": 60
+          },
+          {
+            "argv": [
+              "/usr/local/bin/cmake",
+              "-S",
+              "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-current-v1/explicit-l-after-flags/src",
+              "-B",
+              "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-current-v1/explicit-l-after-flags/build",
+              "-DFIXTURE_MODULE_DIR=/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-integration-pr-work/WRF/cmake/modules",
+              "-DFIXTURE_ARCH=fixture-multiarch",
+              "-DFIXTURE_EXPECTED_LIBRARY=/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-current-v1/explicit-l-after-flags/external/lib/libnetcdff.a"
+            ],
+            "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-current-v1/explicit-l-after-flags",
+            "ended_unix": 1791279195.1319442,
+            "log": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-current-v1/explicit-l-after-flags/configure.log",
+            "log_sha256": "4516beb70c24bb8f90c71564b47f3de5ac29a057b38a61609e4383bdf55dacd7",
+            "log_size_bytes": 707,
+            "name": "explicit-l-after-flags-configure",
+            "nf_config_arguments": [
+              "--includedir",
+              "--prefix",
+              "--flibs",
+              "--version",
+              "--has-dap",
+              "--has-nc2",
+              "--has-nc4",
+              "--has-f90",
+              "--has-f03"
+            ],
+            "pid": 3059102,
+            "process_group": 3059102,
+            "reaped": true,
+            "returncode": 0,
+            "started_unix": 1791279194.9587011,
+            "status": "PASS_PATH_SELECTED",
+            "timed_out": false,
+            "timeout_seconds": 60
+          }
+        ],
+        "cmake": "/usr/local/bin/cmake",
+        "current_stage": "explicit-l-after-flags-configure",
+        "finder": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-integration-pr-work/WRF/cmake/modules/FindnetCDF-Fortran.cmake",
+        "finder_sha256": "6c4ca34dfbcf3c27acb74de4b63121de0d777709fbab8841107b5b2f14171ac2",
+        "finder_size_bytes": 7380,
+        "process_helper_sha256": "d6b5c09f0a860e4b8889cc48542590c45d1f0a6101004bace536de7f94600c0f",
+        "schema": "NETCDF_FORTRAN_DISCOVERY_FIXTURE_V1",
+        "scope": "CMake configure-time path selection; no linking",
+        "stages": [
+          {
+            "argv": [
+              "/usr/local/bin/cmake",
+              "-S",
+              "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-current-v1/prefix-lib/src",
+              "-B",
+              "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-current-v1/prefix-lib/build",
+              "-DFIXTURE_MODULE_DIR=/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-integration-pr-work/WRF/cmake/modules",
+              "-DFIXTURE_ARCH=fixture-multiarch",
+              "-DFIXTURE_EXPECTED_LIBRARY=/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-current-v1/prefix-lib/prefix/lib/libnetcdff.a"
+            ],
+            "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-current-v1/prefix-lib",
+            "ended_unix": 1791279194.7563384,
+            "log": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-current-v1/prefix-lib/configure.log",
+            "log_sha256": "65aed490826322ab24b840c04b7ebceb45795002cae84dbc88c69bf6f5d24bba",
+            "log_size_bytes": 655,
+            "name": "prefix-lib-configure",
+            "pid": 3059078,
+            "process_group": 3059078,
+            "reaped": true,
+            "returncode": 0,
+            "started_unix": 1791279194.5831566,
+            "status": "COMPLETE",
+            "timed_out": false,
+            "timeout_seconds": 60
+          },
+          {
+            "argv": [
+              "/usr/local/bin/cmake",
+              "-S",
+              "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-current-v1/prefix-multiarch/src",
+              "-B",
+              "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-current-v1/prefix-multiarch/build",
+              "-DFIXTURE_MODULE_DIR=/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-integration-pr-work/WRF/cmake/modules",
+              "-DFIXTURE_ARCH=fixture-multiarch",
+              "-DFIXTURE_EXPECTED_LIBRARY=/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-current-v1/prefix-multiarch/prefix/lib/fixture-multiarch/libnetcdff.a"
+            ],
+            "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-current-v1/prefix-multiarch",
+            "ended_unix": 1791279194.9438813,
+            "log": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-current-v1/prefix-multiarch/configure.log",
+            "log_sha256": "222803fb9c4834e800ff7cac288ae408fd24e7a9ce4e30d69d56c5003b990dbf",
+            "log_size_bytes": 715,
+            "name": "prefix-multiarch-configure",
+            "pid": 3059090,
+            "process_group": 3059090,
+            "reaped": true,
+            "returncode": 0,
+            "started_unix": 1791279194.7736852,
+            "status": "COMPLETE",
+            "timed_out": false,
+            "timeout_seconds": 60
+          },
+          {
+            "argv": [
+              "/usr/local/bin/cmake",
+              "-S",
+              "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-current-v1/explicit-l-after-flags/src",
+              "-B",
+              "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-current-v1/explicit-l-after-flags/build",
+              "-DFIXTURE_MODULE_DIR=/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-integration-pr-work/WRF/cmake/modules",
+              "-DFIXTURE_ARCH=fixture-multiarch",
+              "-DFIXTURE_EXPECTED_LIBRARY=/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-current-v1/explicit-l-after-flags/external/lib/libnetcdff.a"
+            ],
+            "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-current-v1/explicit-l-after-flags",
+            "ended_unix": 1791279195.1319442,
+            "log": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-current-v1/explicit-l-after-flags/configure.log",
+            "log_sha256": "4516beb70c24bb8f90c71564b47f3de5ac29a057b38a61609e4383bdf55dacd7",
+            "log_size_bytes": 707,
+            "name": "explicit-l-after-flags-configure",
+            "pid": 3059102,
+            "process_group": 3059102,
+            "reaped": true,
+            "returncode": 0,
+            "started_unix": 1791279194.9587011,
+            "status": "COMPLETE",
+            "timed_out": false,
+            "timeout_seconds": 60
+          }
+        ],
+        "status": "PASS_ALL_3_CONFIGURE_CASES"
+      },
+      "sha256": "f7aec827bc1b167465db3757feeaa3afb997fe89b15a3952a682baff7f3261c1"
+    },
+    "netcdf_discovery_incomplete_parent_control": {
+      "bytes": 1985,
+      "local_path": "build/udm37-cmake-discovery-parent-control-v1/execution.json",
+      "receipt": {
+        "cases": [],
+        "cmake": "/usr/local/bin/cmake",
+        "current_stage": "prefix-lib-configure",
+        "finder": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-parent-source-v1/WRF/cmake/modules/FindnetCDF-Fortran.cmake",
+        "finder_sha256": "7fe59f2b03eaf26b97e11a674c87b61e0c597f89db6e0af5ba6f7540c134e591",
+        "finder_size_bytes": 6774,
+        "process_helper_sha256": "d6b5c09f0a860e4b8889cc48542590c45d1f0a6101004bace536de7f94600c0f",
+        "schema": "NETCDF_FORTRAN_DISCOVERY_FIXTURE_V1",
+        "scope": "CMake configure-time path selection; no linking",
+        "stages": [
+          {
+            "argv": [
+              "/usr/local/bin/cmake",
+              "-S",
+              "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-parent-control-v1/prefix-lib/src",
+              "-B",
+              "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-parent-control-v1/prefix-lib/build",
+              "-DFIXTURE_MODULE_DIR=/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-parent-source-v1/WRF/cmake/modules",
+              "-DFIXTURE_ARCH=fixture-multiarch",
+              "-DFIXTURE_EXPECTED_LIBRARY=/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-parent-control-v1/prefix-lib/prefix/lib/libnetcdff.a"
+            ],
+            "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-parent-control-v1/prefix-lib",
+            "ended_unix": 1791279227.782163,
+            "log": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-parent-control-v1/prefix-lib/configure.log",
+            "log_sha256": "8e39cb3858bc76aaa95dd5b7534a74d96443a1a8851d1293e5c74da736a82333",
+            "log_size_bytes": 1178,
+            "name": "prefix-lib-configure",
+            "pid": 3061523,
+            "process_group": 3061523,
+            "reaped": true,
+            "returncode": 1,
+            "started_unix": 1791279227.6126695,
+            "status": "COMMAND_FAILED",
+            "timed_out": false,
+            "timeout_seconds": 60
+          }
+        ],
+        "status": "FAIL_PRESERVED"
+      },
+      "sha256": "b4fa66d00491122ff0c3f107877a60fb4d4f429f95abf5e102c81efd8804a5f7"
+    },
+    "netcdf_discovery_parent_control": {
+      "bytes": 5005,
+      "local_path": "build/udm37-cmake-discovery-parent-control-v2/execution.json",
+      "receipt": {
+        "cases": [
+          {
+            "argv": [
+              "/usr/local/bin/cmake",
+              "-S",
+              "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-parent-control-v2/prefix-lib/src",
+              "-B",
+              "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-parent-control-v2/prefix-lib/build",
+              "-DFIXTURE_MODULE_DIR=/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-parent-source-v1/WRF/cmake/modules",
+              "-DFIXTURE_ARCH=fixture-multiarch",
+              "-DFIXTURE_EXPECTED_LIBRARY=/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-parent-control-v2/prefix-lib/prefix/lib/libnetcdff.a"
+            ],
+            "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-parent-control-v2/prefix-lib",
+            "ended_unix": 1791279242.790637,
+            "log": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-parent-control-v2/prefix-lib/configure.log",
+            "log_sha256": "0ff610a21d1c37810286b939df4ad9c4056299be23a6c06d16bbe4958fa40651",
+            "log_size_bytes": 683,
+            "name": "prefix-lib-configure",
+            "nf_config_arguments": [
+              "--includedir",
+              "--prefix",
+              "--flibs",
+              "--version",
+              "--has-dap",
+              "--has-nc2",
+              "--has-nc4",
+              "--has-f90",
+              "--has-f03"
+            ],
+            "pid": 3062492,
+            "process_group": 3062492,
+            "reaped": true,
+            "returncode": 0,
+            "started_unix": 1791279242.6175652,
+            "status": "PASS_PATH_SELECTED",
+            "timed_out": false,
+            "timeout_seconds": 60
+          }
+        ],
+        "cmake": "/usr/local/bin/cmake",
+        "current_stage": "prefix-multiarch-configure",
+        "finder": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-parent-source-v1/WRF/cmake/modules/FindnetCDF-Fortran.cmake",
+        "finder_sha256": "7fe59f2b03eaf26b97e11a674c87b61e0c597f89db6e0af5ba6f7540c134e591",
+        "finder_size_bytes": 6774,
+        "process_helper_sha256": "d6b5c09f0a860e4b8889cc48542590c45d1f0a6101004bace536de7f94600c0f",
+        "schema": "NETCDF_FORTRAN_DISCOVERY_FIXTURE_V1",
+        "scope": "CMake configure-time path selection; no linking",
+        "stages": [
+          {
+            "argv": [
+              "/usr/local/bin/cmake",
+              "-S",
+              "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-parent-control-v2/prefix-lib/src",
+              "-B",
+              "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-parent-control-v2/prefix-lib/build",
+              "-DFIXTURE_MODULE_DIR=/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-parent-source-v1/WRF/cmake/modules",
+              "-DFIXTURE_ARCH=fixture-multiarch",
+              "-DFIXTURE_EXPECTED_LIBRARY=/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-parent-control-v2/prefix-lib/prefix/lib/libnetcdff.a"
+            ],
+            "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-parent-control-v2/prefix-lib",
+            "ended_unix": 1791279242.790637,
+            "log": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-parent-control-v2/prefix-lib/configure.log",
+            "log_sha256": "0ff610a21d1c37810286b939df4ad9c4056299be23a6c06d16bbe4958fa40651",
+            "log_size_bytes": 683,
+            "name": "prefix-lib-configure",
+            "pid": 3062492,
+            "process_group": 3062492,
+            "reaped": true,
+            "returncode": 0,
+            "started_unix": 1791279242.6175652,
+            "status": "COMPLETE",
+            "timed_out": false,
+            "timeout_seconds": 60
+          },
+          {
+            "argv": [
+              "/usr/local/bin/cmake",
+              "-S",
+              "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-parent-control-v2/prefix-multiarch/src",
+              "-B",
+              "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-parent-control-v2/prefix-multiarch/build",
+              "-DFIXTURE_MODULE_DIR=/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-parent-source-v1/WRF/cmake/modules",
+              "-DFIXTURE_ARCH=fixture-multiarch",
+              "-DFIXTURE_EXPECTED_LIBRARY=/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-parent-control-v2/prefix-multiarch/prefix/lib/fixture-multiarch/libnetcdff.a"
+            ],
+            "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-parent-control-v2/prefix-multiarch",
+            "ended_unix": 1791279242.9789655,
+            "log": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-discovery-parent-control-v2/prefix-multiarch/configure.log",
+            "log_sha256": "f81225a11c93240c065da1209892896cf7514700d761671ade82a1f32738f576",
+            "log_size_bytes": 829,
+            "name": "prefix-multiarch-configure",
+            "pid": 3062504,
+            "process_group": 3062504,
+            "reaped": true,
+            "returncode": 1,
+            "started_unix": 1791279242.8088105,
+            "status": "COMMAND_FAILED",
+            "timed_out": false,
+            "timeout_seconds": 60
+          }
+        ],
+        "status": "FAIL_PRESERVED"
+      },
+      "sha256": "9b092ec7eac4a469c7dbf9f87df5df51610d447528a608908fd2c9d3e06d7bcb"
+    },
+    "runner_corrected": {
+      "bytes": 594,
+      "local_path": "build/udm37-cmake-scm-preparation-v1/root-runner-receipt-v2.json",
+      "receipt": {
+        "actual_child_RC": 0,
+        "argv": [
+          "/usr/bin/python3",
+          "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-integration-pr-work/WRF/test/rrtmgp/test_udm_startup_snow_scm.py",
+          "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-scm-preparation-v1/runtime-only-output",
+          "--candidate-wrf-root",
+          "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-scm-preparation-v1/assembled-wrf-root",
+          "--runtime-only"
+        ],
+        "ended_unix": 1791278267.9621131,
+        "pid": 3022692,
+        "started_unix": 1791278265.1202595,
+        "status": "EXITED_ZERO"
+      },
+      "sha256": "28c7db1543789f81148774a345a63bd8aab1e7e4f936c55f7dd3ebdf06e2262a"
+    },
+    "runner_spawn_failed": {
+      "bytes": 735,
+      "local_path": "build/udm37-cmake-scm-preparation-v1/root-runner-receipt-v1.json",
+      "receipt": {
+        "actual_child_RC": null,
+        "argv": [
+          "/usr/local/bin/python3",
+          "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-integration-pr-work/WRF/test/rrtmgp/test_udm_startup_snow_scm.py",
+          "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-scm-preparation-v1/runtime-only-output",
+          "--candidate-wrf-root",
+          "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-scm-preparation-v1/assembled-wrf-root",
+          "--runtime-only"
+        ],
+        "ended_unix": 1791278264.9950602,
+        "error": "FileNotFoundError errno2 for /usr/local/bin/python3; path absent verified",
+        "ideal_calls": 0,
+        "model_calls": 0,
+        "started_unix": 1791278244.5127184,
+        "status": "SPAWN_FAILED_EXECUTABLE_NOT_FOUND"
+      },
+      "sha256": "7f7b41f97db65b3dbbe5aea2d06a7bc3853a18b31b57a747a8af6e637ddd6b2c"
+    },
+    "runtime_only": {
+      "bytes": 5765,
+      "local_path": "build/udm37-cmake-scm-preparation-v1/runtime-only-output/execution.json",
+      "receipt": {
+        "arms_completed": [
+          {
+            "arm": "candidate38-udm37-runtime-only",
+            "case": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-scm-preparation-v1/runtime-only-output/candidate38-udm37-runtime-only",
+            "history_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-scm-preparation-v1/runtime-only-output/candidate38-udm37-runtime-only/wrfout_d01_1999-10-22_19:00:00",
+            "history_sha256": "3d5d40986aab99d97e55cbbffe7e9e9b2f214f9e6879a6c880429712aa56e79f",
+            "process": {
+              "command": [
+                "/usr/bin/timeout",
+                "--signal=TERM",
+                "--kill-after=15s",
+                "180s",
+                "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-scm-preparation-v1/assembled-wrf-root/main/wrf.exe"
+              ],
+              "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-scm-preparation-v1/runtime-only-output/candidate38-udm37-runtime-only",
+              "ended_unix": 1791278267.7615223,
+              "environment": {
+                "OMP_DYNAMIC": "FALSE",
+                "OMP_MAX_ACTIVE_LEVELS": "1",
+                "OMP_NUM_THREADS": "1",
+                "capture_enabled": true,
+                "column_selection": "default (1,1)"
+              },
+              "executable": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-scm-preparation-v1/assembled-wrf-root/main/wrf.exe",
+              "executable_sha256": "11163f50e66e2cbbc958cd6a2a674a69639c760ffb413314ba373d8c60bd2f29",
+              "executable_sha256_after": "11163f50e66e2cbbc958cd6a2a674a69639c760ffb413314ba373d8c60bd2f29",
+              "executable_size_bytes": 44800072,
+              "executable_size_bytes_after": 44800072,
+              "kind": "forecast",
+              "launched": true,
+              "log": "wrf.log",
+              "log_sha256": "f230a8014de80e970fc9a1e07f647ae8fa4e1fc9a0caae1a73f14bc1d0594faf",
+              "pid": 3022758,
+              "process_group": 3022758,
+              "reaped": true,
+              "returncode": 0,
+              "started_unix": 1791278265.7102008,
+              "status": "COMPLETE",
+              "timed_out": false,
+              "timeout_seconds": 180
+            },
+            "startup_capture": {
+              "LW": {
+                "adapter_layers": 103,
+                "cf": 1.0,
+                "fixture_level_native_and_adapter_zero_based": 46,
+                "native_layers": 59,
+                "optical_band_count": 16,
+                "optical_dimension_label": "spectral bands",
+                "precip_tau_above_threshold_count": 16,
+                "precip_tau_floor_source": null,
+                "precip_tau_threshold": 0.0,
+                "prepared_res_um": 134.778076171875,
+                "qs": 9.999999747378752e-05,
+                "rwp_grid": 0.0,
+                "source_re_snow_m": 9.989999853132758e-06,
+                "startup_radius_m": 0.00013477807806339115,
+                "swp_grid": 19.163209915161133
+              },
+              "SW": {
+                "adapter_layers": 60,
+                "cf": 1.0,
+                "fixture_level_native_and_adapter_zero_based": 46,
+                "native_layers": 59,
+                "optical_band_count": 14,
+                "optical_dimension_label": "spectral bands",
+                "precip_tau_above_threshold_count": 14,
+                "precip_tau_floor_source": "WRF/phys/module_ra_rrtmgp_precip.F:194, pre-delta tau_prec floor",
+                "precip_tau_threshold": 1e-12,
+                "prepared_res_um": 134.778076171875,
+                "qs": 9.999999747378752e-05,
+                "rwp_grid": 0.0,
+                "source_re_snow_m": 9.989999853132758e-06,
+                "startup_radius_m": 0.00013477807806339115,
+                "swp_grid": 19.163209915161133
+              }
+            },
+            "wrfinput_sha256": "00c2c90b60232e31e28d75faca6cb15659d18452ae9fdbe87d20eb896569d183"
+          }
+        ],
+        "baseline_root": null,
+        "candidate_root": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-scm-preparation-v1/assembled-wrf-root",
+        "claims": [
+          "candidate37 first-call startup-snow capture and selected-layer precipitation optics"
+        ],
+        "coefficient_sha256": {
+          "rrtmgp-clouds-lw-bnd.nc": "09d6704c5b863b4c3ceb417d20bb3076ec492e6bf2dfbcc9f3c5996a3706f0b0",
+          "rrtmgp-clouds-sw-bnd.nc": "7671835992a45afe66244b591a02c0b3df73d7d59ecb746bbffd9763497651cd",
+          "rrtmgp-gas-lw-g128.nc": "70ad65d116531122660318e5da2a2af9db74b425916202860e9527ef2375b8f6",
+          "rrtmgp-gas-sw-g112.nc": "361ed541324068ded28a275a4dd757bcaa0a845aebefa630f43a04678668fe62"
+        },
+        "engine4_common_history_comparison": null,
+        "executable_pins": {
+          "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-scm-preparation-v1/assembled-wrf-root/main/ideal.exe": {
+            "sha256": "1056f34d315dac3e5a875077eaacc0a5114858ac14b66ee2f58237424ac1da00",
+            "size_bytes": 37558888
+          },
+          "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-scm-preparation-v1/assembled-wrf-root/main/wrf.exe": {
+            "sha256": "11163f50e66e2cbbc958cd6a2a674a69639c760ffb413314ba373d8c60bd2f29",
+            "size_bytes": 44800072
+          }
+        },
+        "forecast_attempts": 1,
+        "forecast_limit": 1,
+        "ideal_invocation_state": "COMPLETE",
+        "ideal_invocations": 1,
+        "ideal_invocations_planned": 1,
+        "ideal_invocations_started": 1,
+        "models_invoked": 1,
+        "nonclaims": [
+          "no baseline or engine4 preservation comparison"
+        ],
+        "schema": "udm37-startup-snow-scm-v2",
+        "scope": "candidate37-runtime-only",
+        "seed": {
+          "background_re_snow_m": 9.99e-06,
+          "fixture_qv": 0.0009457520316760359,
+          "ideal_invocations": 1,
+          "level_zero_based": 46,
+          "pressure_pa": 45342.47471618652,
+          "snow_kg_kg": 0.0001,
+          "source_cal_cldfra1_qvsi": 0.000927207874192192,
+          "temperature_k": 248.86530405157768,
+          "wrfinput_sha256": "00c2c90b60232e31e28d75faca6cb15659d18452ae9fdbe87d20eb896569d183"
+        },
+        "seed_root": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-scm-preparation-v1/assembled-wrf-root",
+        "status": "PASS_SCOPED_STARTUP_SNOW_RUNTIME_ONLY"
+      },
+      "sha256": "e61c704e67189d71ac5fd803ee0e28f500110b54ae53b6e59a5ed45d94a316d5"
+    }
+  },
+  "remote_configure_failure": {
+    "actual_step_RC": 1,
+    "failure_phase": "configure before WRF build",
+    "log_sha256": "7d8de8f354c6d1002f37d1682d87c578bb814090d89b19db9e3fe315099eb1d3",
+    "log_size_bytes": 9787,
+    "message": "netCDF-Fortran_LIBRARY missing: generic /usr prefix with Ubuntu multiarch libdir not searched by original finder",
+    "observed_status": "FAILURE",
+    "run_id": 37442785026,
+    "url": "https://github.com/gonos2k/wrf-rrtmgp/actions/runs/37442785026"
+  },
+  "schema": "UDM37_CURRENT_CMAKE_ENGINEERING_V1",
+  "source_sha256": {
+    ".github/workflows/validate-cmake-package.yml": {
+      "bytes": 4527,
+      "sha256": "b796f1b0dd70b4bd5a833142b30d85b1ac9f8f9608d57c55433289f6f65b7f97"
+    },
+    ".github/workflows/validate-port.yml": {
+      "bytes": 24964,
+      "sha256": "7ae2d071b8aab97beb5b39fb8fa0d1ccb9fdc62f6ad73c7063c200a612d2b08d"
+    },
+    "WRF/CMakeLists.txt": {
+      "bytes": 53214,
+      "sha256": "f2a9fad649e0d9dfc23d0f0719252b438c928e9fa4346ad08eb9dd460331fc99"
+    },
+    "WRF/cmake/modules/FindnetCDF-Fortran.cmake": {
+      "bytes": 7380,
+      "sha256": "6c4ca34dfbcf3c27acb74de4b63121de0d777709fbab8841107b5b2f14171ac2"
+    },
+    "WRF/external/rte_rrtmgp/CMakeLists.txt": {
+      "bytes": 2123,
+      "sha256": "a6d6e9164b8292709a0ccf57d1c36588cb4515ba4adc55c1f54831b18cb7d711"
+    },
+    "WRF/phys/module_microphysics_driver.F": {
+      "bytes": 198159,
+      "sha256": "c02f227d0fc1bf633fa53e54361e7117093b2c7bb02cedc2b71441c5bd638bd9"
+    },
+    "WRF/phys/module_physics_init.F": {
+      "bytes": 315994,
+      "sha256": "8c5e933467cc316f172d1193e4f130e96b89580da7f28aec3edc3b7c517e59b5"
+    },
+    "WRF/share/input_wrf.F": {
+      "bytes": 102709,
+      "sha256": "36db2f1b1a33681d8480491f47a956a1a6c1882a77d74a5528b704bb5c161190"
+    },
+    "WRF/test/rrtmgp/test_cmake_consumer_process.py": {
+      "bytes": 3322,
+      "sha256": "62fce935cb5b757bdd56af972582c0f1e5db6cb3a3b2fc1f4ada27ba23aad17a"
+    },
+    "WRF/test/rrtmgp/test_cmake_installed_consumers.py": {
+      "bytes": 14000,
+      "sha256": "d6b5c09f0a860e4b8889cc48542590c45d1f0a6101004bace536de7f94600c0f"
+    },
+    "WRF/test/rrtmgp/test_cmake_netcdf_discovery.py": {
+      "bytes": 6194,
+      "sha256": "0c46fd317cc24bfa4545f4820a853afabecf5248858ea5e941eb634cf160a9f6"
+    },
+    "WRF/test/rrtmgp/test_input_wrf_udm_sentinel_kinds.py": {
+      "bytes": 10804,
+      "sha256": "ad4375ff97854f907dffc6bfb3847e16bd7ffd8833b7157e55963c6f5fdff95a"
+    },
+    "config/registration37.json": {
+      "bytes": 32753,
+      "sha256": "0fd1d14a8a63f08c01b5b7a13080690c005a171f008a1a915b048fcf64a653db"
+    }
+  },
+  "status": "PASS_SCOPED_LOCAL_CMAKE_INTEGRATION",
+  "toolchain": {
+    "argv": [
+      "/usr/local/bin/cmake",
+      "-S",
+      "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-integration-pr-work/WRF",
+      "-B",
+      "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-full-current-v3/cmake",
+      "-DCMAKE_INSTALL_PREFIX=/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-full-current-v3/install",
+      "-DCMAKE_TOOLCHAIN_FILE=/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cmake-full-current-v3/wrf_gnu_serial.cmake",
+      "-DWRF_CORE=ARW",
+      "-DWRF_CASE=EM_SCM_XY",
+      "-DUSE_ALLOCATABLES=ON",
+      "-DUSE_MPI=OFF",
+      "-DUSE_OPENMP=OFF",
+      "-DUSE_IPO=OFF",
+      "-DFORCE_NETCDF_CLASSIC=ON"
+    ],
+    "environment": {
+      "LC_ALL": "C",
+      "LD_LIBRARY_PATH": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/netcdf/lib:/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/root/usr/lib/x86_64-linux-gnu",
+      "OMP_NUM_THREADS": "1",
+      "PATH": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/netcdf/bin:/home/korea_keun/.local/bin:/usr/local/bin:/usr/bin:/bin"
+    },
+    "head": "45c640ec33b0d8818eb19f83f14e13eb9aacd8e8",
+    "predecessor_failed_attempts": [
+      "v1: missing standard toolchain",
+      "v2: six ASSOCIATED on allocatable errors"
+    ],
+    "scope": "fresh GNU serial allocatable CMake build/install; no model execution",
+    "toolchain_sha256": "8c00a7b004133cbbb1b566b6660b5fe1878ebc4aaeb18ecd0a1cd6afebdae6df",
+    "tree": "85bfdc59c8821b89a0d62857e35409dae0375860"
+  }
+}

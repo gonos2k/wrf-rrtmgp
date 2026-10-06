@@ -1,0 +1,94 @@
+name: Validate installed WRF RRTMGP CMake package
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'WRF/CMakeLists.txt'
+      - 'WRF/cmake/**'
+      - 'WRF/external/**'
+      - 'WRF/phys/**'
+      - 'WRF/share/**'
+      - 'WRF/test/rrtmgp/**'
+      - '.github/workflows/validate-cmake-package.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'WRF/CMakeLists.txt'
+      - 'WRF/cmake/**'
+      - 'WRF/external/**'
+      - 'WRF/phys/**'
+      - 'WRF/share/**'
+      - 'WRF/test/rrtmgp/**'
+      - '.github/workflows/validate-cmake-package.yml'
+permissions:
+  contents: read
+jobs:
+  installed-package-and-scm:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - name: Install GNU, CMake and NetCDF dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y cmake gfortran gcc make m4 libnetcdf-dev libnetcdff-dev python3-numpy python3-netcdf4
+      - name: Fresh serial allocatable WRF build and install
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p build/cmake-package
+          cat > build/cmake-package/wrf_gnu_serial.cmake <<'EOF'
+          set(CMAKE_Fortran_COMPILER gfortran CACHE STRING "" FORCE)
+          set(CMAKE_C_COMPILER gcc CACHE STRING "" FORCE)
+          set(CMAKE_C_PREPROCESSOR /lib/cpp CACHE STRING "" FORCE)
+          set(CMAKE_C_PREPROCESSOR_FLAGS "" CACHE STRING "" FORCE)
+          set(CMAKE_Fortran_FLAGS_INIT "-w -fconvert=big-endian -frecord-marker=4")
+          set(CMAKE_C_FLAGS_INIT "-w -O3")
+          set(WRF_ARCH_LOCAL NONSTANDARD_SYSTEM_SUBR CACHE STRING "" FORCE)
+          set(WRF_M4_FLAGS -G CACHE STRING "" FORCE)
+          set(WRF_FCOPTIM "-O2 -ftree-vectorize -funroll-loops" CACHE STRING "" FORCE)
+          set(WRF_FCNOOPT -O0 CACHE STRING "" FORCE)
+          EOF
+          cmake -S WRF -B build/cmake-package/producer \
+            -DCMAKE_TOOLCHAIN_FILE="$PWD/build/cmake-package/wrf_gnu_serial.cmake" \
+            -DCMAKE_INSTALL_PREFIX="$PWD/build/cmake-package/install" \
+            -DWRF_CORE=ARW -DWRF_CASE=EM_SCM_XY -DUSE_ALLOCATABLES=ON \
+            -DUSE_MPI=OFF -DUSE_OPENMP=OFF -DUSE_IPO=OFF -DFORCE_NETCDF_CLASSIC=ON \
+            | tee build/cmake-package/configure.log
+          cmake --build build/cmake-package/producer --parallel 2 | tee build/cmake-package/build.log
+          cmake --install build/cmake-package/producer | tee build/cmake-package/install.log
+      - name: Check NetCDF-Fortran discovery with prefix and multiarch fixtures
+        run: python3 WRF/test/rrtmgp/test_cmake_netcdf_discovery.py --output-dir build/cmake-package/netcdf-discovery
+      - name: Configure, link and run independent installed-package consumers
+        run: |
+          python3 WRF/test/rrtmgp/test_cmake_consumer_process.py
+          python3 WRF/test/rrtmgp/test_cmake_installed_consumers.py \
+            --install-prefix "$PWD/build/cmake-package/install" \
+            --output-dir "$PWD/build/cmake-package/consumers" \
+            --forbidden-root "$PWD/WRF" --forbidden-root "$PWD/build/cmake-package/producer"
+      - name: Run one UDM37 SCM with the installed executables
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p build/cmake-package/runtime-root/main
+          ln -s "$PWD/WRF/test" build/cmake-package/runtime-root/test
+          ln -s "$PWD/build/cmake-package/install/run" build/cmake-package/runtime-root/run
+          ln -s "$PWD/build/cmake-package/install/bin/ideal" build/cmake-package/runtime-root/main/ideal.exe
+          ln -s "$PWD/build/cmake-package/install/bin/wrf" build/cmake-package/runtime-root/main/wrf.exe
+          python3 WRF/test/rrtmgp/test_udm_startup_snow_scm.py \
+            build/cmake-package/scm --candidate-wrf-root "$PWD/build/cmake-package/runtime-root" --runtime-only
+      - name: Save engineering receipts and failure logs
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: cmake-package-${{ github.run_id }}
+          path: |
+            build/cmake-package/*.log
+            build/cmake-package/wrf_gnu_serial.cmake
+            build/cmake-package/consumers/**
+            build/cmake-package/netcdf-discovery/**
+            build/cmake-package/scm/execution.json
+            build/cmake-package/scm/*/process-result.json
+            build/cmake-package/scm/*/*.log
+          retention-days: 30
+          if-no-files-found: error

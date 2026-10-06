@@ -17,10 +17,18 @@ elseif(CMAKE_Fortran_COMPILER_ID MATCHES "Intel")
 endif()
 set_target_properties(wrf_rrtmgp PROPERTIES Fortran_MODULE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/modules")
 file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/modules")
-target_include_directories(wrf_rrtmgp PUBLIC "${CMAKE_CURRENT_BINARY_DIR}/modules")
+target_include_directories(wrf_rrtmgp PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/modules>
+  $<INSTALL_INTERFACE:include/rte_rrtmgp>
+)
 if(CMAKE_Fortran_COMPILER_ID STREQUAL "GNU")
   target_compile_options(wrf_rrtmgp PRIVATE -ffree-line-length-none)
 endif()
+
+install(DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/modules/"
+  DESTINATION include/rte_rrtmgp
+  FILES_MATCHING PATTERN "*.mod"
+)
 if(TARGET netCDF::netcdff)
   target_link_libraries(wrf_rrtmgp PUBLIC netCDF::netcdff)
 else()

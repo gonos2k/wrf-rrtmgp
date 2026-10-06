@@ -104,14 +104,26 @@ else()
   set( netCDF-Fortran_INCLUDE_DIRS ${netCDF-Fortran_INCLUDE_DIR} )
 
   # Find the actual name of the library
+  # nf-config may use a multiarch libdir below a generic prefix such as /usr.
+  # Preserve its explicit -L search directories, including flags that follow
+  # other link options, instead of assuming prefix/lib or prefix/lib64.
+  separate_arguments( _NF_LINK_FLAGS UNIX_COMMAND "${netCDF-Fortran_FLIBS}" )
+  set( _NF_LIBRARY_HINTS )
+  foreach( _NF_LINK_FLAG IN LISTS _NF_LINK_FLAGS )
+    if( _NF_LINK_FLAG MATCHES "^-L(.+)" )
+      list( APPEND _NF_LIBRARY_HINTS "${CMAKE_MATCH_1}" )
+    endif()
+  endforeach()
   find_library(
                 netCDF-Fortran_LIBRARY
                 netcdff
+                HINTS ${_NF_LIBRARY_HINTS}
                 PATHS ${netCDF-Fortran_LIBRARY_DIR}
                 NO_DEFAULT_PATH
                 PATH_SUFFIXES
                   lib/
                   lib64/
+                  lib/${CMAKE_LIBRARY_ARCHITECTURE}/
                 )
 endif()
 
