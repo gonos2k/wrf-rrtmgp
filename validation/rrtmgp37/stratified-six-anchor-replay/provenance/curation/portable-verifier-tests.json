@@ -1,0 +1,58 @@
+{
+  "model_calls": 0,
+  "original_manifest_sha256": "f94d1ec9f3ee32dee2442f0aabc40ef2b02b0a03f2640cca5722df82beda45ff",
+  "original_verifier_sha256": "9e811d0ce0827332af66215596bca9848bd6b8d61ee656f6242f896688304f81",
+  "reference_calls": 0,
+  "results": [
+    {
+      "case": "baseline_detached_cwd",
+      "command": [
+        "python3",
+        "-I",
+        "-S",
+        "temporary-copy/verify_artifacts.py"
+      ],
+      "output": "PASS: 73 retained artifacts; six canonical two-phase + two historical audit sites; 8 LW/7 SW receipts. Zero engines; original outputs/executables/data not read.\n",
+      "returncode": 0,
+      "semantic_check_beyond_manifest_hash": false
+    },
+    {
+      "case": "changed_CF0_corrected_snow",
+      "command": [
+        "python3",
+        "-I",
+        "-S",
+        "temporary-copy/verify_artifacts.py"
+      ],
+      "output": "Traceback (most recent call last):\n  File \"/tmp/canonical-evidence-verify-p00rs6xi/evidence/verify_artifacts.py\", line 94, in <module>\n    if __name__=='__main__':main()\n                            ^^^^^^\n  File \"/tmp/canonical-evidence-verify-p00rs6xi/evidence/verify_artifacts.py\", line 66, in main\n    close([stats['actual_cf0_grid_phase_mass_g_m2'][species]],[sum(x for x,c in zip(grid,cf) if c==0)],5.e-7,1.e-12,species+' CF0 grid mass')\n  File \"/tmp/canonical-evidence-verify-p00rs6xi/evidence/verify_artifacts.py\", line 13, in close\n    assert abs(x-y)<=atol+rtol*abs(y),(label,x,y)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: ('QS CF0 grid mass', 5.622483570506456, 5.648895396517622)\n",
+      "returncode": 1,
+      "semantic_check_beyond_manifest_hash": true
+    },
+    {
+      "case": "illegal_frozen_padding",
+      "command": [
+        "python3",
+        "-I",
+        "-S",
+        "temporary-copy/verify_artifacts.py"
+      ],
+      "output": "Traceback (most recent call last):\n  File \"/tmp/canonical-evidence-verify-4baou76s/evidence/verify_artifacts.py\", line 94, in <module>\n    if __name__=='__main__':main()\n                            ^^^^^^\n  File \"/tmp/canonical-evidence-verify-4baou76s/evidence/verify_artifacts.py\", line 78, in main\n    assert all(x==0 for x in raw[path+'_OMITTED']) and all(x==0 for x in a[path][39:])\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+      "returncode": 1,
+      "semantic_check_beyond_manifest_hash": true
+    },
+    {
+      "case": "malformed_frozen_mode",
+      "command": [
+        "python3",
+        "-I",
+        "-S",
+        "temporary-copy/verify_artifacts.py"
+      ],
+      "output": "Traceback (most recent call last):\n  File \"/tmp/canonical-evidence-verify-2046vr8o/evidence/verify_artifacts.py\", line 94, in <module>\n    if __name__=='__main__':main()\n                            ^^^^^^\n  File \"/tmp/canonical-evidence-verify-2046vr8o/evidence/verify_artifacts.py\", line 59, in main\n    assert p['frozen_mode']==p['frozen_occurrence']==1 and p['table_sha256']=='8cb00850c3f885f5ec0306563c1ec0a55b512478a7395d626c1c99cebf280583'\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+      "returncode": 1,
+      "semantic_check_beyond_manifest_hash": true
+    }
+  ],
+  "status": "DETACHED_PORTABLE_PASS_AND_THREE_SEMANTIC_TAMPERS_REJECTED",
+  "test_sha256": "226490980932895ca56705cf4807fe6a60ebb9aba0373c597955458b0a599bdd"
+}
