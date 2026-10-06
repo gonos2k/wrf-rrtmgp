@@ -11652,6 +11652,10 @@ CONTAINS
    TYPE(ty_rrtmgp_lw_batch_buffers) :: gp_batch
    REAL(KIND=8) :: gp_g_sum,gp_g_max
    INTEGER(KIND=8) :: gp_cf0_count(4),gp_clip_low_count(2),gp_clip_high_count(2)
+   REAL(KIND=8) :: gp_native_grid_sum(4)
+   CHARACTER(LEN=1024) :: gp_diag_message
+   CHARACTER(LEN=256) :: gp_diag_context
+   CHARACTER(LEN=32) :: gp_diag_domain,gp_diag_step,gp_diag_time
    REAL(KIND=8) :: gp_cf0_sum(4),gp_cf0_max(4),gp_clip_low_sum(2),gp_clip_low_max(2), &
                    gp_clip_high_sum(2),gp_clip_high_max(2),gp_clip_total(2)
    INTEGER(KIND=8) :: gp_nlow_tmp,gp_nhigh_tmp
@@ -12174,7 +12178,10 @@ CONTAINS
 
 ! latitude loop
   gp_g_count=0;gp_g_sum=0.d0;gp_g_max=0.d0
+  ! RRTMGP_PHASE_TOTAL_RESET_BEGIN
   gp_cf0_count=0;gp_cf0_sum=0.d0;gp_cf0_max=0.d0
+  gp_native_grid_sum=0.d0
+  ! RRTMGP_PHASE_TOTAL_RESET_END
   gp_clip_low_count=0;gp_clip_high_count=0
   gp_clip_low_sum=0.d0;gp_clip_low_max=0.d0;gp_clip_high_sum=0.d0;gp_clip_high_max=0.d0;gp_clip_total=0.d0
   IF(run_rrtmgp) CALL rrtmgp_cloud_lut_bounds('LW',gp_liq_min,gp_liq_max,gp_ice_min,gp_ice_max)
@@ -13022,26 +13029,30 @@ CONTAINS
                   gp_cu_rejected_sum=gp_cu_rejected_sum+gp_cu_rejected_sum_tmp
                   gp_cu_rejected_max=MAX(gp_cu_rejected_max,gp_cu_rejected_max_tmp)
                   gp_cu_accepted_sum=gp_cu_accepted_sum+gp_cu_accepted_sum_tmp
-                  CALL rrtmgp_summarize_path_clipping(gp_cu_grid(:,1),cu_cf3d(i,kts:kte,j), &
-                    REAL(gp_cu_reliq(ncol,kts:kte),8),REAL(gp_liq_min,8),REAL(gp_liq_max,8), &
-                    gp_nlow_tmp,gp_slow_tmp,gp_mlow_tmp,gp_nhigh_tmp,gp_shigh_tmp,gp_mhigh_tmp,gp_total_tmp)
-                  gp_cu_clip_low_count(1)=gp_cu_clip_low_count(1)+gp_nlow_tmp
-                  gp_cu_clip_low_sum(1)=gp_cu_clip_low_sum(1)+gp_slow_tmp
-                  gp_cu_clip_low_max(1)=MAX(gp_cu_clip_low_max(1),gp_mlow_tmp)
-                  gp_cu_clip_high_count(1)=gp_cu_clip_high_count(1)+gp_nhigh_tmp
-                  gp_cu_clip_high_sum(1)=gp_cu_clip_high_sum(1)+gp_shigh_tmp
-                  gp_cu_clip_high_max(1)=MAX(gp_cu_clip_high_max(1),gp_mhigh_tmp)
-                  gp_cu_clip_total(1)=gp_cu_clip_total(1)+gp_total_tmp
-                  CALL rrtmgp_summarize_path_clipping(gp_cu_grid(:,2),cu_cf3d(i,kts:kte,j), &
-                    2.d0*REAL(gp_cu_reice(ncol,kts:kte),8),REAL(gp_ice_min,8),REAL(gp_ice_max,8), &
-                    gp_nlow_tmp,gp_slow_tmp,gp_mlow_tmp,gp_nhigh_tmp,gp_shigh_tmp,gp_mhigh_tmp,gp_total_tmp)
-                  gp_cu_clip_low_count(2)=gp_cu_clip_low_count(2)+gp_nlow_tmp
-                  gp_cu_clip_low_sum(2)=gp_cu_clip_low_sum(2)+gp_slow_tmp
-                  gp_cu_clip_low_max(2)=MAX(gp_cu_clip_low_max(2),gp_mlow_tmp)
-                  gp_cu_clip_high_count(2)=gp_cu_clip_high_count(2)+gp_nhigh_tmp
-                  gp_cu_clip_high_sum(2)=gp_cu_clip_high_sum(2)+gp_shigh_tmp
-                  gp_cu_clip_high_max(2)=MAX(gp_cu_clip_high_max(2),gp_mhigh_tmp)
-                  gp_cu_clip_total(2)=gp_cu_clip_total(2)+gp_total_tmp
+                  ! RRTMGP_CU_CLIP_GATE_BEGIN
+                  IF(icld/=0) THEN
+                    CALL rrtmgp_summarize_path_clipping(gp_cu_grid(:,1),cu_cf3d(i,kts:kte,j), &
+                      REAL(gp_cu_reliq(ncol,kts:kte),8),REAL(gp_liq_min,8),REAL(gp_liq_max,8), &
+                      gp_nlow_tmp,gp_slow_tmp,gp_mlow_tmp,gp_nhigh_tmp,gp_shigh_tmp,gp_mhigh_tmp,gp_total_tmp)
+                    gp_cu_clip_low_count(1)=gp_cu_clip_low_count(1)+gp_nlow_tmp
+                    gp_cu_clip_low_sum(1)=gp_cu_clip_low_sum(1)+gp_slow_tmp
+                    gp_cu_clip_low_max(1)=MAX(gp_cu_clip_low_max(1),gp_mlow_tmp)
+                    gp_cu_clip_high_count(1)=gp_cu_clip_high_count(1)+gp_nhigh_tmp
+                    gp_cu_clip_high_sum(1)=gp_cu_clip_high_sum(1)+gp_shigh_tmp
+                    gp_cu_clip_high_max(1)=MAX(gp_cu_clip_high_max(1),gp_mhigh_tmp)
+                    gp_cu_clip_total(1)=gp_cu_clip_total(1)+gp_total_tmp
+                    CALL rrtmgp_summarize_path_clipping(gp_cu_grid(:,2),cu_cf3d(i,kts:kte,j), &
+                      2.d0*REAL(gp_cu_reice(ncol,kts:kte),8),REAL(gp_ice_min,8),REAL(gp_ice_max,8), &
+                      gp_nlow_tmp,gp_slow_tmp,gp_mlow_tmp,gp_nhigh_tmp,gp_shigh_tmp,gp_mhigh_tmp,gp_total_tmp)
+                    gp_cu_clip_low_count(2)=gp_cu_clip_low_count(2)+gp_nlow_tmp
+                    gp_cu_clip_low_sum(2)=gp_cu_clip_low_sum(2)+gp_slow_tmp
+                    gp_cu_clip_low_max(2)=MAX(gp_cu_clip_low_max(2),gp_mlow_tmp)
+                    gp_cu_clip_high_count(2)=gp_cu_clip_high_count(2)+gp_nhigh_tmp
+                    gp_cu_clip_high_sum(2)=gp_cu_clip_high_sum(2)+gp_shigh_tmp
+                    gp_cu_clip_high_max(2)=MAX(gp_cu_clip_high_max(2),gp_mhigh_tmp)
+                    gp_cu_clip_total(2)=gp_cu_clip_total(2)+gp_total_tmp
+                  END IF
+                  ! RRTMGP_CU_CLIP_GATE_END
                   DO gp_phase=1,2
                      gp_cu_omitted_count(gp_phase)=gp_cu_omitted_count(gp_phase)+COUNT(gp_cu_omitted(:,gp_phase)>0.)
                      gp_cu_omitted_sum(gp_phase)=gp_cu_omitted_sum(gp_phase)+SUM(REAL(gp_cu_omitted(:,gp_phase),8))
@@ -13064,12 +13075,15 @@ CONTAINS
                      CALL trace_raw('LW','CU_REI_RAW',gp_cu_reice(ncol,kts:kte))
                   END IF
                END IF
+               ! RRTMGP_NATIVE_PHASE_SUM_BEGIN
                DO gp_phase=1,4
+                  gp_native_grid_sum(gp_phase)=gp_native_grid_sum(gp_phase)+SUM(REAL(gp_grid(:,gp_phase),8))
                   gp_cf0_count(gp_phase)=gp_cf0_count(gp_phase)+COUNT(gp_omitted_phase(:,gp_phase)>0.)
                   gp_cf0_sum(gp_phase)=gp_cf0_sum(gp_phase)+SUM(REAL(gp_omitted_phase(:,gp_phase),8))
                   IF(ANY(gp_omitted_phase(:,gp_phase)>0.)) &
                     gp_cf0_max(gp_phase)=MAX(gp_cf0_max(gp_phase),MAXVAL(REAL(gp_omitted_phase(:,gp_phase),8)))
                END DO
+               ! RRTMGP_NATIVE_PHASE_SUM_END
                IF(icld/=0) THEN
                   gp_lut_ice=rrtmgp_ice_lut_coordinate(gp_sizes(:,2),4)
                   CALL rrtmgp_summarize_path_clipping(gp_grid(:,1),cldfrac(ncol,kts:kte), &
@@ -13419,6 +13433,18 @@ CONTAINS
     END BLOCK
    END IF
 
+   ! RRTMGP_PHASE_CONTEXT_BEGIN
+   IF(run_rrtmgp) THEN
+      gp_diag_domain='UNAVAILABLE'; gp_diag_step='UNAVAILABLE'; gp_diag_time='UNAVAILABLE'
+      IF(PRESENT(rrtmgp_domain_id)) WRITE(gp_diag_domain,'(I0)') rrtmgp_domain_id
+      IF(PRESENT(audit_step)) WRITE(gp_diag_step,'(I0)') audit_step
+      IF(PRESENT(audit_time)) WRITE(gp_diag_time,'(ES24.16E3)') REAL(audit_time,8)
+      WRITE(gp_diag_context,'(6A,A,I0)') ' domain=',TRIM(gp_diag_domain), &
+        ' radiation_step=',TRIM(gp_diag_step),' source_time_seconds=',TRIM(ADJUSTL(gp_diag_time)), &
+        ' overlap=',icld
+   END IF
+   ! RRTMGP_PHASE_CONTEXT_END
+
    IF(run_rrtmgp) THEN
     BLOCK
      LOGICAL :: report_phase_paths
@@ -13427,6 +13453,20 @@ CONTAINS
      report_phase_paths=.TRUE.
      IF(PRESENT(mcica_seed_override)) report_phase_paths=mcica_seed_override<0
      IF(report_phase_paths) THEN
+      ! RRTMGP_NATIVE_PHASE_ROW_BEGIN
+      DO gp_phase=1,4
+       IF(gp_native_grid_sum(gp_phase)>0.d0) THEN
+        WRITE(gp_diag_message,'(A,A,A,I0,A,I0,A,I0,A,I0,2A,ES24.16E3,A,ES24.16E3,A,I0,A,ES24.16E3)') &
+          'LW RRTMGP_UDM_PHASE_PATH phase=',TRIM(phase_labels(gp_phase)), &
+          ' tile_i=',its,':',ite,' tile_j=',jts,':',jte,TRIM(gp_diag_context), &
+          ' native_grid_path_sum_g_m2=',gp_native_grid_sum(gp_phase), &
+          ' cf0_omitted_grid_path_sum_g_m2=',gp_cf0_sum(gp_phase), &
+          ' cf0_omitted_layer_count=',gp_cf0_count(gp_phase), &
+          ' cf0_grid_path_fraction=',gp_cf0_sum(gp_phase)/gp_native_grid_sum(gp_phase)
+        CALL wrf_debug(0,gp_diag_message)
+       END IF
+      END DO
+      ! RRTMGP_NATIVE_PHASE_ROW_END
       DO gp_phase=1,4
        IF(gp_cf0_count(gp_phase)>0) THEN
         WRITE(message,'(A,A,A,I0,A,I0,A,I0,A,I0,A,I0,A,ES14.6,A,ES14.6)') &
@@ -13452,6 +13492,7 @@ CONTAINS
    END BLOCK
    END IF
 
+   ! RRTMGP_CU_ROWS_BEGIN
    IF(use_cu_population) THEN
     BLOCK
      LOGICAL :: report_cu
@@ -13462,7 +13503,7 @@ CONTAINS
       DO gp_phase=1,2
        IF(gp_cu_accepted_sum(gp_phase)>0.d0.OR.gp_cu_rejected_sum(gp_phase)>0.d0.OR. &
           gp_cu_omitted_sum(gp_phase)>0.d0.OR.gp_cu_negative_source(gp_phase)>0) THEN
-        WRITE(message,*) 'LW RRTMGP_CU_POPULATION phase=',TRIM(cu_phase_labels(gp_phase)), &
+        WRITE(gp_diag_message,*) 'LW RRTMGP_CU_POPULATION phase=',TRIM(cu_phase_labels(gp_phase)), &
           ' tile_i=',its,':',ite,' tile_j=',jts,':',jte, &
           ' accepted_grid_sum_g_m2=',gp_cu_accepted_sum(gp_phase), &
           ' rejected_grid_sum_g_m2=',gp_cu_rejected_sum(gp_phase), &
@@ -13471,25 +13512,27 @@ CONTAINS
           ' omitted_cf0_sum_g_m2=',gp_cu_omitted_sum(gp_phase), &
           ' omitted_cf0_max_g_m2=',gp_cu_omitted_max(gp_phase), &
           ' negative_source_count=',gp_cu_negative_source(gp_phase), &
-          ' negative_active_count=',gp_cu_negative_active(gp_phase)
-        CALL wrf_debug(0,message)
+          ' negative_active_count=',gp_cu_negative_active(gp_phase),TRIM(gp_diag_context)
+        CALL wrf_debug(0,gp_diag_message)
        END IF
        IF(gp_cu_clip_total(gp_phase)>0.d0.AND. &
           (gp_cu_clip_low_sum(gp_phase)>0.d0.OR.gp_cu_clip_high_sum(gp_phase)>0.d0)) THEN
-        WRITE(message,*) 'LW RRTMGP_CU_LUT_CLIP phase=',TRIM(cu_phase_labels(gp_phase)), &
+        WRITE(gp_diag_message,*) 'LW RRTMGP_CU_LUT_CLIP phase=',TRIM(cu_phase_labels(gp_phase)), &
+          ' tile_i=',its,':',ite,' tile_j=',jts,':',jte, &
           ' low_layers=',gp_cu_clip_low_count(gp_phase),' low_grid_path_g_m2=',gp_cu_clip_low_sum(gp_phase), &
           ' high_layers=',gp_cu_clip_high_count(gp_phase),' high_grid_path_g_m2=',gp_cu_clip_high_sum(gp_phase), &
           ' eligible_grid_path_g_m2=',gp_cu_clip_total(gp_phase), &
           ' clipped_grid_path_fraction=',(gp_cu_clip_low_sum(gp_phase)+gp_cu_clip_high_sum(gp_phase))/ &
                                           gp_cu_clip_total(gp_phase), &
-          ' max_low_g_m2=',gp_cu_clip_low_max(gp_phase),' max_high_g_m2=',gp_cu_clip_high_max(gp_phase)
-        CALL wrf_debug(0,message)
+          ' max_low_g_m2=',gp_cu_clip_low_max(gp_phase),' max_high_g_m2=',gp_cu_clip_high_max(gp_phase),TRIM(gp_diag_context)
+        CALL wrf_debug(0,gp_diag_message)
        END IF
       END DO
      END IF
     END BLOCK
    END IF
 
+   ! RRTMGP_CU_ROWS_END
    IF(run_rrtmgp.AND.ANY(gp_negative_count>0)) THEN
     BLOCK
      LOGICAL :: report_negative
