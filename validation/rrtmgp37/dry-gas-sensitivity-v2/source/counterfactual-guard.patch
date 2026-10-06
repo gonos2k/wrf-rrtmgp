@@ -1,0 +1,48 @@
+--- /NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-precip-audit-pr-work/WRF/test/rrtmgp/reference_column.f90
++++ scratch/reference_column.f90
+@@ -94,6 +94,8 @@
+   TYPE(ty_fluxes_byband) :: sw_flux
+   CHARACTER(LEN=128) :: err
+   CHARACTER(LEN=256) :: section_line
++  CHARACTER(LEN=64) :: drymass_cf_arg
++  LOGICAL :: allow_changed_v11_gas_tau=.FALSE.
+   CHARACTER(LEN=3), PARAMETER :: gas_names_sw(6)=['h2o','co2','o3 ','n2o','ch4','o2 ']
+   CHARACTER(LEN=5), PARAMETER :: gas_names_lw(10)=['h2o  ','co2  ','o3   ','n2o  ','ch4  ', &
+                                                     'o2   ','cfc11','cfc12','cfc22','ccl4 ']
+@@ -107,6 +109,13 @@
+   CALL get_command_argument(5,override_path)
+   audit_sidecar_path=''
+   CALL get_command_argument(6,audit_sidecar_path)
++  drymass_cf_arg=''
++  CALL get_command_argument(7,drymass_cf_arg)
++  IF(LEN_TRIM(drymass_cf_arg)>0) THEN
++    IF(TRIM(drymass_cf_arg)/='ALLOW_CHANGED_V11_GAS_TAU') &
++      ERROR STOP 'argument 7 must be ALLOW_CHANGED_V11_GAS_TAU'
++    allow_changed_v11_gas_tau=.TRUE.
++  END IF
+   IF(LEN_TRIM(data_dir)==0 .OR. LEN_TRIM(input_path)==0 .OR. LEN_TRIM(output_path)==0) &
+     ERROR STOP 'usage: reference_column DATA_DIR INPUT_FILE OUTPUT_FILE [SW_POLICY 1|2|3] [SW_OPTICS_OVERRIDE_FILE] [CF0_AUDIT_SIDECAR]'
+   sw_policy=1
+@@ -134,6 +143,10 @@
+   IF((TRIM(magic)=='RRTMGP_REPLAY_V9'.OR.TRIM(magic)=='RRTMGP_REPLAY_V11').AND.TRIM(phase)/='SW') &
+     ERROR STOP 'V9/V11 are only valid for SW'
+   IF(nc<1 .OR. nl<1) ERROR STOP 'replay dimensions must be positive'
++  IF(allow_changed_v11_gas_tau) THEN
++    IF(TRIM(magic)/='RRTMGP_REPLAY_V11'.OR.TRIM(phase)/='SW') &
++      ERROR STOP 'ALLOW_CHANGED_V11_GAS_TAU is restricted to V11 SW counterfactual replay'
++  END IF
+ 
+   ALLOCATE(play(nc,nl),plev(nc,nl+1),tlay(nc,nl),tlev(nc,nl+1),tsfc(nc,1))
+   ALLOCATE(h2o(nc,nl),co2(nc,nl),o3(nc,nl),n2o(nc,nl),ch4(nc,nl),o2(nc,nl))
+@@ -804,7 +817,10 @@
+       IF(ANY(SHAPE(v9_wavenumbers)/=SHAPE(bands))) ERROR STOP 'V9 BAND_LIMS_WAVENUMBER shape mismatch'
+       IF(ANY(SHAPE(v9_visible)/=[gas_sw%get_nband(),1])) ERROR STOP 'V9 VISIBLE_WEIGHT shape mismatch'
+       IF(ANY(v9_toa/=REAL(toa))) ERROR STOP 'V9 recorded TOA spectrum differs from independent gas optics'
+-      IF(ANY(v9_gas_tau/=REAL(gas_tau))) ERROR STOP 'V9 recorded gas optical depth differs from independent gas optics'
++      IF(.NOT.allow_changed_v11_gas_tau) THEN
++        IF(ANY(v9_gas_tau/=REAL(gas_tau))) &
++          ERROR STOP 'V9 recorded gas optical depth differs from independent gas optics'
++      END IF
+       band_limits_gpt=gas_sw%get_band_lims_gpoint(); gpoint_bands=gas_sw%get_gpoint_bands()
+       IF(ANY(v9_band_limits/=REAL(band_limits_gpt,wp))) ERROR STOP 'V9 g-point band mapping mismatch'
+       IF(ANY(v9_wavenumbers/=bands)) ERROR STOP 'V9 wavenumber bands mismatch'

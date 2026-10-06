@@ -1,0 +1,61 @@
+{
+  "dependency_manifest_sha256": "2bb591a2ef8da0276f09cd8210a2b7e8e2efbbe97805d8d9feb57d9a2d35c195",
+  "design_sha256": "67bed19062a815df8ebfb00cd79b563161aeef7648ea2cf892c66895a6540067",
+  "exact_base_commit": "245b1a83be6ed07582dafabb8c9e50dfa537ed66",
+  "exact_diff_matches_saved_patch": true,
+  "four_call_contract": "Same new scratch executable for baselineLW/SW and changed-dryLW/SW. Arg7 onlyfourth; arg5/6 empty. Only44 native mass values may change; other constants/records/cloudpaths/seeds/masks and extension inputs fixed.",
+  "native_prefix_checks": [
+    {
+      "MDry": 0.02896600030362606,
+      "actual_legacy_export_field": "COLDry",
+      "export_units": "molecule_cm-2",
+      "input_version": "RRTMGP_REPLAY_V10",
+      "inverse_forward_double_roundoff_max_ULP": 1,
+      "native_mass_conversion_finite_positive": true,
+      "native_mass_shape": [
+        1,
+        44
+      ],
+      "phase": "LW",
+      "required_frozen_sha256": "ebeafb9746164d5414a45eab4061c5c855f0f91e92be77003b3829722514fe6a",
+      "solver_layers": 57,
+      "upper_extensions_retained": 13
+    },
+    {
+      "MDry": 0.02896600030362606,
+      "actual_legacy_export_field": "COLDRY",
+      "export_units": "molecule_cm-2",
+      "input_version": "RRTMGP_REPLAY_V11",
+      "inverse_forward_double_roundoff_max_ULP": 1,
+      "native_mass_conversion_finite_positive": true,
+      "native_mass_shape": [
+        1,
+        44
+      ],
+      "phase": "SW",
+      "required_frozen_sha256": "ebeafb9746164d5414a45eab4061c5c855f0f91e92be77003b3829722514fe6a",
+      "solver_layers": 45,
+      "upper_extensions_retained": 1
+    }
+  ],
+  "new_build_calls": 0,
+  "new_model_calls": 0,
+  "new_solver_calls": 0,
+  "original_source_sha256": "93214328388a1a7e242be1a298d34ae61e76f81d201ed9cf039e7f07ac580e6f",
+  "output_effect": "Fresh gas_optics tau/ssa/g feeds clear/allsky RTE. Source1033 uses recomputed gas_tau for pre-delta; captured RAW_GAS_TAU remains diagnostic, not active solver input. No further captured gas_tau equality consumers found.",
+  "patch_sha256": "a4403b425acb6ccb3ec2e6bb84835dedb17495b7cd87f70dd40255f6c08638fa",
+  "reviewer_erratum": "First read-only git-show used the enclosing workspace repository, where this commit has different path structure, and stopped. Correct worktree git-show confirms exact245 source932; no build or numerical call.",
+  "roundoff_note": "REAL64 inverse mass conversion must be serialized with sufficient precision; forward reconstruction has the recorded small double rounding. Do not infer exact legacy molecular bit patterns solely from algebraic inverse. No numerical acceptance tolerance introduced.",
+  "runtime_dependency_erratum": {
+    "binding_evidence": "Retained runtime-v4 planf19e7e61/execution31c5eac actual_loader records and both captured frozen SHA sections. CMake FROZEN_TABLE is fixture configuration; launches must independently pin expanded table, otherwise baseline authentication fails before RTE.",
+    "design_table_sha256": "8cb00850c3f885f5ec0306563c1ec0a55b512478a7395d626c1c99cebf280583",
+    "required_runtime_table_bytes": 163599,
+    "required_runtime_table_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-frozen-planck-coverage-v1/runs/frozen-planck-150-330-step5-plus233-v1/frozen-ice-psd-moments.nc",
+    "required_runtime_table_sha256": "ebeafb9746164d5414a45eab4061c5c855f0f91e92be77003b3829722514fe6a"
+  },
+  "schema": "independent-dry-gas-sensitivity-source-design-review-v2",
+  "scope": "Static source/control-plan and bounded input arithmetic only. No compiled error-path, solver identity/response, physical preference or coupled forecast claim; future launcher still requires root-reviewed pins and strict baselines.",
+  "scratch_source_sha256": "dcd6756345b38f5aaa03e4b2b6e879edd886786e2e41aacfc71c0c15e16ff4d9",
+  "source_effect": "Arg7 exact token requiresV11SW and gates only gas_tau equality; omitted arg retains original assertion. Shape/TOA/band/visible mappings/masks/cloud/CU/precip/frozen closures and numerical operations unchanged.",
+  "status": "PASS_SCOPED_SOURCE_PATCH_RUNTIME_TABLE_BINDING_REQUIRED"
+}

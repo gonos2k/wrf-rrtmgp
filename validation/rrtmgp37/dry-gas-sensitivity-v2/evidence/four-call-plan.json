@@ -1,0 +1,182 @@
+{
+  "authorization_contract": "Execution requires a separate reviewed JSON with schema udm37-dry-gas-cf0-four-call-authorization-v1, approved=true, exact plan SHA256 and executable SHA256. This package contains no approval.",
+  "calls": [
+    {
+      "bypass_arg7": false,
+      "id": "baseline_lw",
+      "input": "original V10 input",
+      "phase": "LW"
+    },
+    {
+      "bypass_arg7": false,
+      "id": "baseline_sw",
+      "input": "original V11 input",
+      "phase": "SW"
+    },
+    {
+      "bypass_arg7": false,
+      "id": "legacy_dry_lw",
+      "input": "generated V10 with native mass 1:44 transformed only",
+      "phase": "LW"
+    },
+    {
+      "bypass_arg7": "ALLOW_CHANGED_V11_GAS_TAU",
+      "id": "legacy_dry_sw",
+      "input": "generated V11 with native mass 1:44 transformed only",
+      "phase": "SW"
+    }
+  ],
+  "capture_context": {
+    "LW_levels": 57,
+    "SW_levels": 45,
+    "domain": 1,
+    "i": 24,
+    "j": 55,
+    "native_levels": 44,
+    "source_seconds": 129600,
+    "step": 2161,
+    "upper_extension_levels": {
+      "LW": 13,
+      "SW": 1
+    }
+  },
+  "capture_pins": {
+    "lw_000001.input": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rrtmg4-export-runtime-v1/NEW_ON/trace/lw_000001.input",
+      "sha256": "e444fa7b505ba091de6deb1bfb342ad3b79fc6db9123e8e1358de846dd7b811e",
+      "size_bytes": 48870
+    },
+    "lw_000001.raw": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rrtmg4-export-runtime-v1/NEW_ON/trace/lw_000001.raw",
+      "sha256": "60347e0253f4a28c3532d11839366a54b9ba59a3437c56507d04f442208fa784",
+      "size_bytes": 98531
+    },
+    "lw_000001.result": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rrtmg4-export-runtime-v1/NEW_ON/trace/lw_000001.result",
+      "sha256": "569aa91ae7ae4fa154ce6804bd3297a974f80b908ab408abe52a812c2a723836",
+      "size_bytes": 968039
+    },
+    "rrtmg4_d01_i24_j55_step2161_lw.txt": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rrtmg4-export-runtime-v1/NEW_ON/export/rrtmg4_d01_i24_j55_step2161_lw.txt",
+      "sha256": "44ad6a5d0e2bb9cee48fe0ec821341dde61a240e53dc0c6bce28f26b7044a303",
+      "size_bytes": 1924790
+    },
+    "rrtmg4_d01_i24_j55_step2161_sw.txt": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rrtmg4-export-runtime-v1/NEW_ON/export/rrtmg4_d01_i24_j55_step2161_sw.txt",
+      "sha256": "6afbe0cf7d5c83d0589a77b44afd27396f7e63ea566610c4a22925b4c1b110b6",
+      "size_bytes": 2142190
+    },
+    "sw_000001.input": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rrtmg4-export-runtime-v1/NEW_ON/trace/sw_000001.input",
+      "sha256": "20986c50c59bc294fede10fc7fe7bdb1173ab3ba1a391a444ed8fd785cd55b1c",
+      "size_bytes": 399854
+    },
+    "sw_000001.raw": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rrtmg4-export-runtime-v1/NEW_ON/trace/sw_000001.raw",
+      "sha256": "559a706f9eed53831088594197f52a362b41045ff31293b982e4a98716f45127",
+      "size_bytes": 93904
+    },
+    "sw_000001.result": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rrtmg4-export-runtime-v1/NEW_ON/trace/sw_000001.result",
+      "sha256": "1ee4db8b53bfad0518b205c7b52bf78e66632dd3a5be9cf4be4da72f15c3e22b",
+      "size_bytes": 1339985
+    }
+  },
+  "comparison_policy": "Require complete matching phase/dimensions/section rosters and finite values; compare every baseline/counterfactual section and record exact changed-value counts, max absolute differences and signed means. Do not apply an acceptance tolerance to sensitivity deltas.",
+  "failure_policy": "Stop at first failure. Preserve partial outputs and terminal receipts. No automatic retry. Save PID and returncode durably before hashing logs or parsing outputs.",
+  "input_source_contract": {
+    "LW_export_field": "COLDry",
+    "SW_export_field": "COLDRY",
+    "conversion": "legacy exported column * captured MOL_WEIGHT_DRY * 10000 / 6.02214076e23; replace only first 44 NATIVE_DRY_LAYER_MASS_KG_M2 values",
+    "forbidden_substitutes": [
+      "result-side GAS_COL_DRY",
+      "get_col_dry helper"
+    ],
+    "keep_unchanged": "All other input tokens/records, including upper extensions, raw gas tau, native/CU/precip/frozen inputs, masks, seeds and radii.",
+    "units": "molecule_cm-2"
+  },
+  "model_calls_authorized": false,
+  "parsers": {
+    "export_reader": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-current-rrtmg4-optics-export-work/validation/rrtmgp37/rrtmg4-optics-export/read_export.py",
+      "sha256": "08519a5945e337d11cd2cb9b599c435aa76d13dfd21ec266ad291721e4cc5817",
+      "size_bytes": 7171
+    },
+    "result_reader": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-precip-audit-pr-work/WRF/test/rrtmgp/compare_column_replay.py",
+      "sha256": "6099a3819268d3ee17bbcbaf0610c03822c09247da6ac5bdfdef66c9190533a7",
+      "size_bytes": 12800
+    }
+  },
+  "purpose": "Same captured GP replay, changing only native 44-layer dry mass from actual RRTMG4 observer exports.",
+  "reviewed_build": {
+    "build_readback": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/dgcf-build-v3/postbuild-readback.json",
+      "sha256": "f7c74b55b45c7849c1251030f122cbafd988a044ceae1c5ed7fd4585a5093923",
+      "size_bytes": 13299
+    },
+    "build_receipt": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/dgcf-build-v3/build-receipt.json",
+      "sha256": "7f0fe7c3eb3c08bccd3fc6c64d334391e7e2229ea5bd5a4d71f2b2482d96366b",
+      "size_bytes": 23270
+    },
+    "data_directory": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-cu-optics-design-work/WRF/run",
+    "dependencies": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-dry-gas-sensitivity-design-v3/build-dependencies.json",
+      "sha256": "2bb591a2ef8da0276f09cd8210a2b7e8e2efbbe97805d8d9feb57d9a2d35c195",
+      "size_bytes": 47064
+    },
+    "executable": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/dgcf-build-v3/cmake-build/reference_column",
+      "sha256": "6e271346cfa7115d3e5c2c170a5881065ed7a1739d716cad4ed894187977aeb2",
+      "size_bytes": 1040280
+    },
+    "patch": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-dry-gas-sensitivity-design-v3/scratch/counterfactual-guard.patch",
+      "sha256": "a4403b425acb6ccb3ec2e6bb84835dedb17495b7cd87f70dd40255f6c08638fa",
+      "size_bytes": 2841
+    },
+    "runtime_frozen_table": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-frozen-planck-coverage-v1/runs/frozen-planck-150-330-step5-plus233-v1/frozen-ice-psd-moments.nc",
+      "sha256": "ebeafb9746164d5414a45eab4061c5c855f0f91e92be77003b3829722514fe6a",
+      "size_bytes": 163599
+    },
+    "scratch_driver": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/dgcf-src-v1/WRF/test/rrtmgp/reference_column.f90",
+      "sha256": "dcd6756345b38f5aaa03e4b2b6e879edd886786e2e41aacfc71c0c15e16ff4d9",
+      "size_bytes": 88409
+    }
+  },
+  "runner": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/dgcf-runtime-v2/run_four_calls.py",
+    "sha256": "668a5152227d6a1d1890b59383bc27ad3777419d342526699e7b43754683be8f",
+    "size_bytes": 22998
+  },
+  "runtime": {
+    "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/dgcf-runtime-v2/run-v1",
+    "environment": {
+      "LD_LIBRARY_PATH": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/netcdf/lib:/usr/lib/x86_64-linux-gnu",
+      "NETCDF": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/netcdf",
+      "OPENBLAS_NUM_THREADS": "1",
+      "PATH": "/usr/bin:/bin",
+      "WRF_RRTMGP_FROZEN_TABLE": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-frozen-planck-coverage-v1/runs/frozen-planck-150-330-step5-plus233-v1/frozen-ice-psd-moments.nc"
+    },
+    "forbidden_inherited_vars": [
+      "LD_PRELOAD",
+      "LD_AUDIT",
+      "WRF_RRTMGP_CAPTURE_DIR",
+      "WRF_RRTMGP_CAPTURE_CALL",
+      "WRF_RRTMGP_SEED_OVERRIDE"
+    ],
+    "invocation_counters": {
+      "standalone_reference_invocations": "number of launched reference_column children",
+      "wrf_model_invocations": 0
+    },
+    "ldd_identity_policy": "Recheck normalized resolved library path/SHA/size set per call; raw ldd stdout hash is provenance only and excluded from stable equality because loader addresses vary.",
+    "output_root": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/dgcf-runtime-v2/run-v1",
+    "single_use_lock": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/dgcf-runtime-v2/execute.lock",
+    "timeout_seconds_per_call": 300
+  },
+  "schema": "udm37-dry-gas-four-call-plan-v1",
+  "status": "PREPARED_NOT_EXECUTED"
+}
