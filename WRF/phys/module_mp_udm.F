@@ -229,6 +229,7 @@ subroutine udm(th, q, qc, qr, qi, qs, qg, qh                                  &
                  ,ims,ime, jms,jme, kms,kme                                    &
                  ,its,ite, jts,jte, kts,kte                                    &
                  ,udm_cldfra, udm_cf_step, udm_cf_top                           &
+                 ,ccn_preinitialized                                          &
                                                                                )
 !-------------------------------------------------------------------------------
   implicit none
@@ -241,6 +242,7 @@ subroutine udm(th, q, qc, qr, qi, qs, qg, qh                                  &
   real, dimension(ims:ime,kms:kme,jms:jme), optional, intent(inout) :: udm_cldfra
   integer, dimension(ims:ime,jms:jme), optional, intent(inout) :: udm_cf_step
   integer, dimension(ims:ime,jms:jme), optional, intent(inout) :: udm_cf_top
+  logical, optional, intent(in) :: ccn_preinitialized
   real,              intent(in   ) :: delt, g, ccn0, rd, rv, t0c,     &
                                       den0, cpd, cpv, ep1, ep2,       &
                                       qmin, xls, xlv0, xlf0, cliq,    &
@@ -300,6 +302,7 @@ subroutine udm(th, q, qc, qr, qi, qs, qg, qh                                  &
   real, dimension( its:ite , kts:kte, 2 ) ::   qci
   real, dimension( its:ite , kts:kte, 4 ) ::   qrs, ncr
   integer                                 ::   i,j,k
+  logical :: initialize_ccn
 !
 ! for reflectivlity
 !
@@ -317,7 +320,12 @@ subroutine udm(th, q, qc, qr, qi, qs, qg, qh                                  &
   if (present(udm_cldfra)) udm_cldfra(its:ite,kts:kte,jts:jte)=-1.
   if (present(udm_cf_step)) udm_cf_step(its:ite,jts:jte)=-1
   if (present(udm_cf_top)) udm_cf_top(its:ite,jts:jte)=-1
-      if (itimestep==1) then
+! A caller that initialized the full memory domain before parallel tiles must
+! not let this tile reset another tile's already advanced CCN state.
+! Omitting the argument preserves the legacy call and its timestep rule.
+  initialize_ccn = .true.
+  if (present(ccn_preinitialized)) initialize_ccn = .not. ccn_preinitialized
+      if (itimestep==1 .and. initialize_ccn) then
         do j = jms,jme
           do k = kms,kme
             do i = ims,ime
