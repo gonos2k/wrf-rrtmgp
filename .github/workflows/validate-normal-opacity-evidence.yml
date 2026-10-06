@@ -1,0 +1,23 @@
+name: Validate saved normal-opacity evidence
+
+on:
+  pull_request:
+    paths:
+      - 'validation/rrtmgp37/bon-night-normal-opacity-reconstruction/**'
+      - '.github/workflows/validate-normal-opacity-evidence.yml'
+  push:
+    paths:
+      - 'validation/rrtmgp37/bon-night-normal-opacity-reconstruction/**'
+      - '.github/workflows/validate-normal-opacity-evidence.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  verify-saved-evidence:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - name: Verify the closed saved-evidence package
+        run: python3 -I -S validation/rrtmgp37/bon-night-normal-opacity-reconstruction/verify.py

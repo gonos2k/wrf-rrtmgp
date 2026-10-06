@@ -1,0 +1,46 @@
+{
+  "schema": "udm37-bon-night-normal-opacity-pfrac-runner-audit-v1",
+  "status": "CONTEXT_SCOPE_VALID_BUT_CURRENT_DRAFT_HELPER_PLAN_KEYS_UNBOUND",
+  "reviewed_pins": {
+    "normal_plan": {
+      "path": "build/udm37-bon-night-normal-opacity-plan-v1/plan.json",
+      "sha256": "19e31b576393fae619c07f8a09f4bba81396e73a46686ddf7ff302a8b6cbaabc"
+    },
+    "normal_runner": {
+      "path": "build/udm37-bon-night-normal-opacity-draft-v1/run_normal_locked_v1.py",
+      "sha256": "481be816d2649c45e8bcbbb8e8fda82210303351af3b319122f2a8a1d5ff23dd"
+    },
+    "pfrac_result": {
+      "path": "build/udm37-bon-night-independent-pfrac-math-v1/result.json",
+      "sha256": "67d000a0582de7de935e64951e2e7c6a609b793187646b7162bca1e7cb9a2862"
+    }
+  },
+  "applicable_context_contract": {
+    "directly_comparable_exactly": [
+      "PLAY, PLEV, TLAY and the ten named gas VMR input arrays, after exact identity is authenticated",
+      "GRAVITY and MOL_WEIGHT_DRY metadata, for the normal dry-column reconstruction"
+    ],
+    "required_state_coordinate_checks_if_using_pfrac": [
+      "jtemp_fortran and jpress_fortran per layer",
+      "atmosphere/tropopause selector per layer"
+    ],
+    "descriptive_floating_state_coordinates": [
+      "ftemp and fpress per layer; the inputs and formulas are shared, but current helper intentionally does not impose a numerical verdict"
+    ],
+    "semantic_key_mapping": "Comparing key/flavor identities is valid only after mapping reduced integer IDs to gas names. The current pinned positive-N2 pfrac result has N2 at reduced id 7 and its key_species_reduced entries contain ids only in 0..5, so its keyed pairs exclude N2. Semantic pair identity can therefore be checked without comparing raw reduced ids. Eta scale invariance for these pairs follows because each participating gas column and dry slot share a positive layerwise dry multiplier; any floating eta/weight agreement remains descriptive absent a predeclared arithmetic bound.",
+    "not_comparable": [
+      "positive-N2 available/reduced roster equality",
+      "raw integer key/flavor IDs across differently reduced rosters",
+      "N2 columns/minor intervals or any N2-dependent opacity/fraction quantities",
+      "matched-45 dry-column values against normal 32-native-plus-13-pressure-extension carrier",
+      "GAS_TAU or other opacity values as inputs to reconstruction"
+    ]
+  },
+  "runner_key_gap": {
+    "finding": "The currently inspected run_normal_locked_v1.py pfrac_context_crosscheck() requests plan['pinned_artifacts']['pfrac_result'] and plan['pinned_artifacts']['pfrac_input']; neither key exists in the prepared normal plan. Pfrac result/input metadata are nested under plan['pfrac_context_only']['pins']; the current function will fail with KeyError if reached.",
+    "source_check": "Prepared normal plan top-level pinned_artifacts has no pfrac_result or pfrac_input entry; pfrac_context_only.pins has plan, portable_manifest, portable_verifier, result, terminal_review. The pinned pfrac plan itself contains its held_input record, and the authenticated pfrac result JSON records pins.held_input with path/bytes/SHA; the proposed helper should join these records explicitly.",
+    "current_logic_assessment": "The helper's intended scope is correct: it cross-checks exact shared physical input sections, compares gas rosters after removing N2, translates reduced IDs to gas names, requires exact jtemp/jpress/atmosphere, and records ftemp/fpress differences without a tolerance. It does not equate dry columns or opacity.",
+    "minimal_resolution": "Use the result record at plan['pfrac_context_only']['pins']['result']; pin/parse that context only after durable construction. Pin the pfrac plan at plan['pfrac_context_only']['pins']['plan'], require result.plan_sha256 to equal that plan pin, and require result.pins.held_input to match the pfrac plan's own pinned held_input path/bytes/SHA before opening that input for shared-section identity. Then compare exact shared state sections and only the allowed contexts. Refresh runner and plan pins before any future authorization. Do not bypass the comparison or broaden it to roster/dry/tau equality.",
+    "execution_status": "No runner or reconstruction was invoked; no opacity target values were opened."
+  }
+}

@@ -1,0 +1,138 @@
+{
+  "artifact_pins": [
+    {
+      "path": "build/udm37-bon-night-normal-production-join-v1/plan.json",
+      "sha256": "81b64b14eb6aa648e33b6f9e7e17262c1e8422f0a2aebdec7da34060d22d24f5",
+      "size_bytes": 3651
+    },
+    {
+      "path": "build/udm37-bon-night-normal-production-join-v1/result.json",
+      "sha256": "d35018978dc08b27f7c6d55938d1c5243015db79311d3008693ccef03ae3f0b2",
+      "size_bytes": 1624422
+    },
+    {
+      "path": "build/udm37-export-selection-serial-build-v1/source/WRF/phys/module_ra_rrtmgp.F",
+      "sha256": "b3932fa4e88202d5fe0fb660764bec9a07d031c03b501c20ee6ef259828ffa69",
+      "size_bytes": 73930
+    },
+    {
+      "path": "build/udm37-export-selection-serial-build-v1/source-manifest.json",
+      "sha256": "abe0b2bf762efc7d3fd8ef91b9117d0b81d710642138e3aa2d31e94fcd7f6f3c",
+      "size_bytes": 2055910
+    },
+    {
+      "path": "build/udm37-current-bon-night-serial-audit-v2/cases/OFF/trace/lw_000001.input",
+      "sha256": "9fa15b3644da43a65b86d6f3dd930022b29812eefda4a2b0efa162aecfe56305",
+      "size_bytes": 39197
+    },
+    {
+      "path": "build/udm37-current-bon-night-serial-audit-v2/cases/OFF/trace/lw_000001.result",
+      "sha256": "eabf3ecc8132ca96fe6936efccf77a4140412ffb9ea85df387af7b81d34bbe5a",
+      "size_bytes": 764303
+    },
+    {
+      "path": "build/udm37-bon-night-normal-opacity-math-v1/execution-v1/output/construction.json",
+      "sha256": "35e177c63e3339c82d9c612e8d320d1543f7d5f52b49607ceb0d12090468244a",
+      "size_bytes": 46376207
+    },
+    {
+      "path": "build/udm37-bon-night-normal-opacity-math-v1/execution-v1/authorization.json",
+      "sha256": "0198353c0a586bed272dc420eb460f1a194750a4e40ac7b60b983822a1823534",
+      "size_bytes": 41074
+    }
+  ],
+  "counts": {
+    "new_WRF_models": 0,
+    "new_compiles": 0,
+    "new_opacity_reconstructions": 0,
+    "new_reference_RTE_calls": 0
+  },
+  "interpretation": "The production adapter source groups the native-mass conversion as mass*(Avogadro/(Mdry*10000)); the direct reference path uses mass*Avogadro/(Mdry*10000). Saved-result statistics reproduce the already-recorded join. Neither observation identifies the cause of the small native-layer tau differences or establishes a physical-accuracy verdict.",
+  "join_result_pin": {
+    "path": "build/udm37-bon-night-normal-production-join-v1/result.json",
+    "sha256": "d35018978dc08b27f7c6d55938d1c5243015db79311d3008693ccef03ae3f0b2",
+    "size_bytes": 1624422
+  },
+  "production_dry_expression_audit": {
+    "direct_left_associated_binary64_vs_saved": {
+      "exact_equal_cells": 23,
+      "max_abs": 134217728.0,
+      "max_ordered_ulp": 1,
+      "max_relative_to_saved": 2.174905586287653e-16
+    },
+    "expression_from_source": "REAL(native_mass,wp) * (avogad / (initialized_mol_weight_dry * 10000._wp))",
+    "interpretation_limit": "Python binary64 arithmetic is not a bit-exact model of the production Fortran wp evaluation. These comparisons verify the source grouping against saved values descriptively; they do not establish causality for opacity residuals.",
+    "native_layers": 32,
+    "parenthesized_factored_binary64_vs_saved": {
+      "exact_equal_cells": 32,
+      "max_abs": 0.0,
+      "max_ordered_ulp": 0,
+      "max_relative_to_saved": 0.0
+    },
+    "source_file_sha256": "b3932fa4e88202d5fe0fb660764bec9a07d031c03b501c20ee6ef259828ffa69",
+    "source_line_1based": 583
+  },
+  "saved_tau_statistics_recomputed": {
+    "GAS_TAU": {
+      "all45": {
+        "cells": 5760,
+        "exact_cells": 4929,
+        "max_abs": 5.4569682106375694e-12,
+        "max_ordered_ulp": 6,
+        "max_rel_nonzero": 7.22352819133366e-16,
+        "rms": 1.3099461936571961e-13
+      },
+      "extension13": {
+        "cells": 1664,
+        "exact_cells": 1664,
+        "max_abs": 0.0,
+        "max_ordered_ulp": 0,
+        "max_rel_nonzero": 0.0,
+        "rms": 0.0
+      },
+      "native32": {
+        "cells": 4096,
+        "exact_cells": 3265,
+        "max_abs": 5.4569682106375694e-12,
+        "max_ordered_ulp": 6,
+        "max_rel_nonzero": 7.22352819133366e-16,
+        "rms": 1.5534050940842825e-13
+      }
+    },
+    "GAS_TAU_RAW": {
+      "all45": {
+        "cells": 5760,
+        "exact_cells": 4929,
+        "max_abs": 5.4569682106375694e-12,
+        "max_ordered_ulp": 6,
+        "max_rel_nonzero": 7.22352819133366e-16,
+        "rms": 1.3099461936571961e-13
+      },
+      "extension13": {
+        "cells": 1664,
+        "exact_cells": 1664,
+        "max_abs": 0.0,
+        "max_ordered_ulp": 0,
+        "max_rel_nonzero": 0.0,
+        "rms": 0.0
+      },
+      "native32": {
+        "cells": 4096,
+        "exact_cells": 3265,
+        "max_abs": 5.4569682106375694e-12,
+        "max_ordered_ulp": 6,
+        "max_rel_nonzero": 7.22352819133366e-16,
+        "rms": 1.5534050940842825e-13
+      }
+    }
+  },
+  "schema": "UDM37_NORMAL_PRODUCTION_JOIN_SOURCE_AND_SAVED_ARRAY_REVIEW_V1",
+  "source_manifest_entry": {
+    "git_blob": "1f4e6a0ac9e34ef26dd66425dafd2c48baffc2bc",
+    "git_mode": "100644",
+    "path": "WRF/phys/module_ra_rrtmgp.F",
+    "sha256": "b3932fa4e88202d5fe0fb660764bec9a07d031c03b501c20ee6ef259828ffa69",
+    "size_bytes": 73930
+  },
+  "status": "PASS_SCOPED_SOURCE_GROUPING_AND_SAVED_STATISTICS_NO_NUMERICAL_VERDICT"
+}

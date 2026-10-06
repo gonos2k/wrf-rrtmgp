@@ -1,0 +1,37 @@
+{
+  "schema": "udm37-bon-night-normal-opacity-source-review-v1",
+  "status": "PASS_SCOPED_LOCKED_SOURCE_REVIEW",
+  "reviewed_files": {
+    "draft": {
+      "path": "build/udm37-bon-night-normal-opacity-draft-v1/reconstruct_normal_locked_v1.py",
+      "sha256": "fe8723a44e3bf0a5af45ba09b15acc47dafdd2a1f29fcc9509175a72c1a39660"
+    },
+    "historical_reference_driver": {
+      "path": "build/cf0-cu-src-v1/WRF/test/rrtmgp/reference_column.f90",
+      "sha256": "6e82effd7d25242656858a8242c7e6941fced6aec0ec4d906762ef3ccb1b4ff0"
+    },
+    "gas_optics_frontend": {
+      "path": "build/cf0-cu-src-v1/WRF/external/rte_rrtmgp/rrtmgp-frontend/mo_gas_optics_rrtmgp.F90",
+      "sha256": "d5e0a7e56bc811575ec2c9655953a5be64c42a62e4100f65198e1e1b44239adc"
+    },
+    "gas_constants": {
+      "path": "build/cf0-cu-src-v1/WRF/external/rte_rrtmgp/gas-optics/mo_gas_optics_constants.F90",
+      "sha256": "255cdd77fa39892bdec92440ae4dbc35b79fb338fdfff6d6b28bdf62f01c94b8"
+    }
+  },
+  "findings": {
+    "normal_carrier_scope": "Draft requires one column with 45 layers and exactly 32 positive native dry-mass values; it fills layers 1:32 from those host masses and derives layers 33:45 from the interface-pressure method.",
+    "historical_driver_match": "The pinned historical reference driver at lines 651-654 first assigns get_col_dry(h2o,plev*100) to all layers, then conditionally replaces only 1:n_native by native_dry_mass*avogad/(m_dry*10000). The draft uses exactly this split when the normal input has 32 native masses; it retains pressure-derived provenance for the replaced rows in its ledger.",
+    "pressure_extension_match": "The draft pressure expression follows the pinned frontend get_col_dry implementation at lines 1656-1661: absolute interface-pressure difference; fact=1/(1+H2O); m_air=(m_dry+m_h2o*H2O)*fact; then 10*deltaP*avogad*fact/(1000*m_air*100*g). Units follow the target driver convention of input PLEV in hPa and multiplying by 100 before get_col_dry.",
+    "constants": "The reference driver reads GRAVITY, CP_DRY, and MOL_WEIGHT_DRY and calls init_constants before get_col_dry (reference lines 317-325 for V8/V10; constants module lines 58-67). The draft reads GRAVITY and MOL_WEIGHT_DRY from the held packet and extracts the fixed m_h2o literal from the pinned constants source. The gas conversion is consistent with these initialized values.",
+    "optics_path": "Apart from the dry-column construction and single N2-absent normal case, the point calculation retains the reviewed v5 gas mapping, table order, interpolation state, major/minor indexing and term-ledger implementation. No optical-depth target is read by the locked function.",
+    "required_execution_gate": "Before any target opacity file is opened, the future runner must authenticate the normal V10 input and source pins and apply the already-required discrete pfrac context comparison. Pfrac is only a context cross-check; it must not supply opacity values. The draft itself remains locked and no such work was performed here.",
+    "scope_limit": "This establishes source-path consistency for the normal carrier only. It does not establish numerical agreement, coefficient-generation provenance, strict floating-point bounds, or physical accuracy."
+  },
+  "review_scope": {
+    "executed": false,
+    "target_opacity_read": false,
+    "solver_or_model_run": false,
+    "production_or_source_edit": false
+  }
+}
