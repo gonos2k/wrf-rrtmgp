@@ -1,0 +1,48 @@
+{
+  "purpose": "Official pristine WRF v4.8.0 UDM / RRTMG4 GNU serial SCM reference",
+  "source": {
+    "head": "06d4240ae989cc3e50af412bb472df3d9048783c",
+    "description": "Merge remote-tracking branch 'origin/release-v4.8.0'",
+    "tracked_files_clean": true,
+    "submodules": {
+      "phys/noahmp": "5da0b241e48ecfd9a2a1bd667ed554765856d589",
+      "phys/physics_mmm": "550b5b494758ad2756394e93cb08b5709b8feb83"
+    }
+  },
+  "build": {
+    "configure_answers": [
+      "32",
+      "0"
+    ],
+    "meaning": "GNU serial, default WRF real precision, zero nesting",
+    "compiler": "GNU Fortran (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0",
+    "netcdf": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/netcdf",
+    "ld_library_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/netcdf/lib:/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/root/usr/lib/x86_64-linux-gnu",
+    "parallel_attempt": "NETCDF=... LD_LIBRARY_PATH=... csh -f ./compile -j 12 em_scm_xy",
+    "parallel_attempt_result": "No executable was linked; start_em.F90 failed because module_physics_init.mod was unavailable and subsequent links reported unresolved symbols.",
+    "serial_retry": "NETCDF=... LD_LIBRARY_PATH=... csh -f ./compile -j 1 em_scm_xy",
+    "serial_retry_log": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pristine-build-j1.log",
+    "serial_retry_result": "Executables successfully built (confirmed in build log)."
+  },
+  "executables": {
+    "wrf": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pristine-wrf-v4.8/main/wrf.exe",
+      "sha256": "cbd07fbc9458aca0861e1ed08976501ab6ae02931a05234596996869d7b12b02",
+      "bytes": 48391696
+    },
+    "ideal": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pristine-wrf-v4.8/main/ideal.exe",
+      "sha256": "c2f7fa112f900095c3c21ec8a6a0f6a970c5de59bfd5f8371b144536385097ff",
+      "bytes": 36230640
+    }
+  },
+  "runtime": {
+    "directory": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pristine-udm4-runtime",
+    "environment": "all WRF_RRTMGP* removed; OMP_NUM_THREADS=1; netCDF LD_LIBRARY_PATH set",
+    "cases": {
+      "control": "SUCCESS COMPLETE WRF",
+      "mixed": "SUCCESS COMPLETE WRF"
+    },
+    "comparison": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/pristine-udm4-runtime/pristine-comparison.json"
+  }
+}

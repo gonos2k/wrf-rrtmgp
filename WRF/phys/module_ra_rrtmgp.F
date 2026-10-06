@@ -3,6 +3,7 @@
 ! Results deliberately use the legacy K/day contract; WRF converts to theta/s.
 MODULE module_ra_rrtmgp
   USE mo_rte_kind, ONLY: wp, i8
+  USE, INTRINSIC :: iso_fortran_env, ONLY: real64
   USE mo_gas_optics_rrtmgp, ONLY: ty_gas_optics_rrtmgp
   USE mo_gas_concentrations, ONLY: ty_gas_concs
   USE mo_optical_props, ONLY: ty_optical_props_1scl, ty_optical_props_2str
@@ -12,10 +13,12 @@ MODULE module_ra_rrtmgp
   USE mo_rte_lw, ONLY: rte_lw
   USE mo_rte_sw, ONLY: rte_sw
   USE mo_heating_rates, ONLY: compute_heating_rate
+  USE mo_gas_optics_constants, ONLY: init_constants, rte_grav=>grav, rte_cp_dry=>cp_dry, rte_m_dry=>m_dry
   USE mo_cloud_optics_rrtmgp, ONLY: ty_cloud_optics_rrtmgp
   USE mo_cloud_sampling, ONLY: sampled_mask_max_ran, draw_samples
   USE mo_load_coefficients, ONLY: load_and_init
   USE mo_load_cloud_coefficients, ONLY: load_cld_lutcoeff
+  USE mo_simple_netcdf, ONLY: set_fatal_handler
   USE module_ra_rrtmgp_precip, ONLY: rrtmgp_precip_lw_optics, rrtmgp_precip_sw_optics
   USE module_ra_rrtmgp_input, ONLY: rrtmgp_validate_column_inputs, &
       rrtmgp_check_unit_interval, rrtmgp_check_positive, rrtmgp_check_nonnegative
@@ -30,6 +33,9 @@ MODULE module_ra_rrtmgp
   TYPE(ty_cloud_optics_rrtmgp), SAVE :: cloud_lw, cloud_sw
   LOGICAL, SAVE :: ready = .FALSE.
   INTEGER, SAVE :: initialized_ice_roughness = 1
+  REAL(wp), SAVE :: initialized_gravity = 9.80665_wp
+  REAL(wp), SAVE :: initialized_cp_dry = 1004.64_wp
+  REAL(wp), SAVE :: initialized_mol_weight_dry = 0.028964_wp
   CHARACTER(LEN=:), ALLOCATABLE, SAVE :: initialized_path
   CHARACTER(LEN=3), PARAMETER :: names(6) = ['h2o','co2','o3 ','n2o','ch4','o2 ']
 CONTAINS
@@ -38,22 +44,42 @@ CONTAINS
     IF (LEN_TRIM(msg)>0) CALL wrf_error_fatal3('module_ra_rrtmgp.F',0,'RRTMGP: '//TRIM(msg))
   END SUBROUTINE
 
-  SUBROUTINE rrtmgp_init(data_path,ice_roughness)
+  SUBROUTINE rrtmgp_coeff_fatal(message)
+    CHARACTER(LEN=*), INTENT(IN) :: message
+    CALL wrf_error_fatal3('module_ra_rrtmgp.F',0,'RRTMGP: '//TRIM(message))
+  END SUBROUTINE
+
+  SUBROUTINE rrtmgp_init(data_path,ice_roughness,gravity,cp_dry,mol_weight_dry)
     CHARACTER(LEN=*), INTENT(IN) :: data_path
     INTEGER, OPTIONAL, INTENT(IN) :: ice_roughness
+    REAL, OPTIONAL, INTENT(IN) :: gravity,cp_dry,mol_weight_dry
     INTEGER :: selected_roughness
+    REAL(wp) :: selected_gravity,selected_cp,selected_mol_weight
     TYPE(ty_gas_concs) :: gases
     selected_roughness=1
     IF(PRESENT(ice_roughness)) selected_roughness=ice_roughness
+    selected_gravity=rte_grav; selected_cp=rte_cp_dry; selected_mol_weight=rte_m_dry
+    IF(PRESENT(gravity)) selected_gravity=REAL(gravity,wp)
+    IF(PRESENT(cp_dry)) selected_cp=REAL(cp_dry,wp)
+    IF(PRESENT(mol_weight_dry)) selected_mol_weight=REAL(mol_weight_dry,wp)
     IF(selected_roughness<1.OR.selected_roughness>3) &
       CALL require('rrtmgp_ice_roughness must be 1 (smooth), 2 (medium), or 3 (high)')
+    IF(.NOT.ieee_is_finite(selected_gravity).OR.selected_gravity<=0.) CALL require('RRTMGP gravity must be finite and positive')
+    IF(.NOT.ieee_is_finite(selected_cp).OR.selected_cp<=0.) CALL require('RRTMGP cp_dry must be finite and positive')
+    IF(.NOT.ieee_is_finite(selected_mol_weight).OR.selected_mol_weight<=0.) &
+      CALL require('RRTMGP mol_weight_dry must be finite and positive in kg/mol')
     CALL trace_configure()
     IF (ready) THEN
       IF(TRIM(data_path)/=initialized_path) CALL require('rrtmgp_data_path must be global and unchanged after initialization')
       IF(selected_roughness/=initialized_ice_roughness) &
         CALL require('rrtmgp_ice_roughness must be global and unchanged after initialization')
+      IF(selected_gravity/=initialized_gravity.OR.selected_cp/=initialized_cp_dry.OR. &
+         selected_mol_weight/=initialized_mol_weight_dry) &
+        CALL require('RRTMGP gravity, cp_dry, and mol_weight_dry must be global and unchanged after initialization')
       RETURN
     END IF
+    CALL init_constants(selected_gravity,selected_mol_weight,selected_cp)
+    CALL set_fatal_handler(rrtmgp_coeff_fatal)
     CALL require(gases%init(names))
     CALL load_and_init(gas_lw,TRIM(data_path)//'/rrtmgp-gas-lw-g128.nc',gases)
     CALL load_and_init(gas_sw,TRIM(data_path)//'/rrtmgp-gas-sw-g112.nc',gases)
@@ -64,6 +90,9 @@ CONTAINS
     IF (.NOT.cloud_lw%bands_are_equal(gas_lw)) CALL require('LW cloud/gas spectral bands differ')
     IF (.NOT.cloud_sw%bands_are_equal(gas_sw)) CALL require('SW cloud/gas spectral bands differ')
     initialized_ice_roughness=selected_roughness
+    initialized_gravity=selected_gravity
+    initialized_cp_dry=selected_cp
+    initialized_mol_weight_dry=selected_mol_weight
     initialized_path=TRIM(data_path)
     ready = .TRUE.
   END SUBROUTINE
@@ -191,7 +220,9 @@ CONTAINS
       CALL require('surface emissivity must be grey or match LW bands')
     END IF
     IF(trace_active('LW')) THEN
-      CALL trace_input_start('LW',nc,nl,overlap,seed,iceflag,udm_precip=PRESENT(rwp))
+      CALL trace_input_start('LW',nc,nl,overlap,seed,iceflag,udm_precip=PRESENT(rwp), &
+           gravity=REAL(initialized_gravity,real64),cp_dry=REAL(initialized_cp_dry,real64), &
+           mol_weight_dry=REAL(initialized_mol_weight_dry,real64))
       CALL trace_input('LW','SOLAR',RESHAPE([0.],[1,1]))
       CALL trace_input('LW','PLAY',play)
       CALL trace_input('LW','PLEV',plev)
@@ -354,7 +385,9 @@ CONTAINS
     IF(ALL(mu0<=0.)) RETURN
     IF(ANY(mu0<=0.)) CALL require('daylight columns must be packed separately')
     IF(trace_active('SW')) THEN
-      CALL trace_input_start('SW',nc,nl,overlap,seed,iceflag,udm_precip=PRESENT(rwp))
+      CALL trace_input_start('SW',nc,nl,overlap,seed,iceflag,udm_precip=PRESENT(rwp), &
+           gravity=REAL(initialized_gravity,real64),cp_dry=REAL(initialized_cp_dry,real64), &
+           mol_weight_dry=REAL(initialized_mol_weight_dry,real64))
       CALL trace_input('SW','SOLAR',RESHAPE([solar],[1,1]))
       CALL trace_input('SW','PLAY',play)
       CALL trace_input('SW','PLEV',plev)

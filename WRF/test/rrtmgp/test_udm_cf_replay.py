@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""Compare independent V4 LW/SW replays under diagnostic cloud-fraction policies.
+"""Compare independent V4/V5 LW/SW replays under diagnostic cloud-fraction policies.
 
 The B and C variants are controlled counterfactuals, not production choices.
-Use a V4 input and the sibling RRTMGP_RAW_V1 snapshot from the same call.
+Use a V4/V5 input and the sibling RRTMGP_RAW_V1 snapshot from the same call.
 """
 from __future__ import annotations
 
@@ -193,8 +193,8 @@ def main() -> int:
     phase_in, nc, nl, overlap, base_seed, iceflag, input_records = read_input(input_path)
     if phase != phase_in or nc != 1 or nl < len(raw["DP_HPA"]):
         fail("expected paired one-column LW/SW raw/V4 input covering the native raw layers")
-    if input_path.read_text(encoding="ascii").splitlines()[0].strip() != "RRTMGP_REPLAY_V4":
-        fail("input must be RRTMGP_REPLAY_V4")
+    if input_path.read_text(encoding="ascii").splitlines()[0].strip() not in {"RRTMGP_REPLAY_V4", "RRTMGP_REPLAY_V5"}:
+        fail("input must be RRTMGP_REPLAY_V4 or V5")
     raw_nl = len(raw["DP_HPA"])
     if raw_i < 1 or raw_j < 1:
         fail("raw snapshot has invalid source indices")

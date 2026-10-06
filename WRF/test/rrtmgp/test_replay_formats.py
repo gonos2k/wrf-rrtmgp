@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Exercise replay V1/V2 compatibility and the strict V3 SW band contract."""
+"""Exercise V5 capture, V4 default replay, legacy V1/V2, and strict V3 SW contract."""
 from __future__ import annotations
 
 import argparse
@@ -64,6 +64,43 @@ def rewrite_input(source: Path, destination: Path, magic: str,
     destination.write_text("\n".join(output) + "\n", encoding="ascii")
 
 
+def rewrite_default_v5_as_v4(source: Path, destination: Path) -> None:
+    """Drop V5 constants and add a zero-rain V4 section to test legacy defaults."""
+    lines = source.read_text(encoding="ascii").splitlines()
+    header = lines[1].split()
+    if len(header) != 6:
+        fail(f"{source}: invalid replay header")
+    nc, nl = int(header[1]), int(header[2])
+    records: list[list[str]] = []
+    pos = 2
+    while pos < len(lines):
+        fields = lines[pos].split()
+        if len(fields) != 3:
+            fail(f"{source}:{pos+1}: invalid input record header")
+        name = fields[0].upper()
+        count = int(fields[1]) * int(fields[2])
+        record = [lines[pos]]
+        pos += 1
+        values = 0
+        while values < count and pos < len(lines):
+            row = lines[pos]
+            record.append(row)
+            values += len(row.split())
+            pos += 1
+        if values != count:
+            fail(f"{source}: truncated values for {name}")
+        if name not in {"GRAVITY", "CP_DRY", "MOL_WEIGHT_DRY"}:
+            records.append(record)
+    records.extend([
+        ["PRECIPITATION_OPTICS 1 1", "1.0000000000000000E+000"],
+        [f"RWP {nc} {nl}", *("0.0000000000000000E+000" for _ in range(nc * nl))],
+    ])
+    output = ["RRTMGP_REPLAY_V4", lines[1]]
+    for record in records:
+        output.extend(record)
+    destination.write_text("\n".join(output) + "\n", encoding="ascii")
+
+
 def run_reference(executable: Path, data_dir: Path, input_path: Path,
                   output_path: Path) -> subprocess.CompletedProcess[str]:
     return subprocess.run([str(executable), str(data_dir), str(input_path), str(output_path)],
@@ -74,6 +111,33 @@ def assert_result_match(actual: Path, expected: Path, label: str) -> dict[str, A
     report = compare(read_result(actual), read_result(expected))
     if not report.get("passed"):
         fail(f"{label}: replay mismatch in {report.get('failed_sections')}")
+    return report
+
+
+def assert_default_v4_match(actual: Path, expected: Path, phase: str) -> dict[str, Any]:
+    """Compare physical/common V5 outputs against V4's exact default constants."""
+    production = read_result(actual)
+    reference = read_result(expected)
+    prod_names,ref_names=set(production["sections"]),set(reference["sections"])
+    asymmetric=prod_names ^ ref_names
+    precip_sections={"PRECIP_TAU", "PRECIP_SSA", "PRECIP_G"}
+    if not asymmetric <= precip_sections:
+        fail(f"V5/V4 {phase}: unexpected section-set difference {sorted(asymmetric)}")
+    excluded={"DS_USED"} | asymmetric
+    common = prod_names & ref_names
+    required = {"GAS_TAU", "CLOUD_TAU", "PREPARED_TAU", "UP", "DN", "HR", "UPC", "DNC", "HRC"}
+    if phase == "SW":
+        required.update({"GAS_SSA", "GAS_G", "DIRECT", "DIFFUSE", "DIRECTC", "VISDIR",
+                         "VISDIF", "NIRDIR", "NIRDIF"})
+    if not required <= common:
+        fail(f"V5/V4 {phase}: required common physical sections missing: {sorted(required-common)}")
+    keep = common - excluded
+    production["sections"] = {name: production["sections"][name] for name in keep}
+    reference["sections"] = {name: reference["sections"][name] for name in keep}
+    report = compare(production, reference)
+    report["excluded_v4_protocol_sections"] = sorted(excluded)
+    if not report.get("passed"):
+        fail(f"V5 exact defaults versus V4 {phase}: mismatch in {report.get('failed_sections')}")
     return report
 
 
@@ -145,24 +209,35 @@ def main() -> int:
             v3_input = capture / f"{phase.lower()}.input"
             v3_output = capture / f"{phase.lower()}.result"
             if not v3_input.is_file() or not v3_output.is_file():
-                fail(f"column driver did not capture V3 {phase} input and result")
+                fail(f"column driver did not capture V5 {phase} input and result")
             parsed_phase, nc, nl, overlap, seed, iceflag, records = read_input(v3_input)
             if (parsed_phase, nc, nl) != (phase, 1, 3):
-                fail(f"unexpected V3 {phase} header {(parsed_phase, nc, nl)}")
+                fail(f"unexpected V5 {phase} header {(parsed_phase, nc, nl)}")
             if phase == "SW":
                 policy = records.get("SW_BAND_PARTITION")
                 if policy is None or policy.shape != (1, 1) or policy.item() != 1.0:
-                    fail("captured V3 SW must carry scalar SW_BAND_PARTITION=1")
+                    fail("captured SW must carry scalar SW_BAND_PARTITION=1")
             elif "SW_BAND_PARTITION" in records:
-                fail("V3 LW input must not carry SW_BAND_PARTITION")
+                fail("LW input must not carry SW_BAND_PARTITION")
 
-            v3_reference = root / f"{phase.lower()}.v3.reference.result"
+            v3_reference = root / f"{phase.lower()}.v5.reference.result"
             ref_run = run_reference(reference_exe, data_dir, v3_input, v3_reference)
             if ref_run.returncode != 0:
-                fail(f"reference rejected captured V3 {phase}: {ref_run.stdout[-1600:]}")
-            report = assert_result_match(v3_output, v3_reference, f"captured V3 {phase}")
+                fail(f"reference rejected captured V5 {phase}: {ref_run.stdout[-1600:]}")
+            report = assert_result_match(v3_output, v3_reference, f"captured V5 {phase}")
             summary["phases"][phase] = {"header": [phase, nc, nl, overlap, seed, iceflag],
-                                         "v3_sections_compared": report["sections_compared"]}
+                                         "v5_sections_compared": report["sections_compared"]}
+
+            # Legacy V4 has no constants metadata. Its independent solver must
+            # retain the same exact upstream defaults as no-argument adapter init.
+            v4_input = root / f"{phase.lower()}.v4.default.input"
+            v4_output = root / f"{phase.lower()}.v4.default.result"
+            rewrite_default_v5_as_v4(v3_input, v4_input)
+            v4_run = run_reference(reference_exe, data_dir, v4_input, v4_output)
+            if v4_run.returncode != 0:
+                fail(f"reference rejected default-constant V4 {phase}: {v4_run.stdout[-1600:]}")
+            v4_report = assert_default_v4_match(v3_output, v4_output, phase)
+            summary["phases"][phase]["default_v5_vs_v4_sections_compared"] = v4_report["sections_compared"]
 
             v2_input = root / f"{phase.lower()}.v2.input"
             v1_input = root / f"{phase.lower()}.v1.input"
