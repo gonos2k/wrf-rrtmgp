@@ -32,7 +32,7 @@ python3 WRF/test/rrtmgp/test_rrtmg_optics_attribution.py \
 
 현재 시험 범위는 cf=1인 얼음만의 기둥이다. 같은 대기·기체 광학·McICA mask·표면·RTE에서 준비된 구름 τ/ω/g만 RRTMG의 실제 cloud optics로 바꾼다. 기체·mask·청천 출력은 정확히 유지되어야 한다. 세 대조는 RRTMG native-wrapper 수치 반경, native 반경을 Fu generalized size로 변환한 경우, 기존 `reicalc(T)*1.0315` 경우다. 이를 생산 광학 선택으로 자동 채택하지 않는다.
 
-WRF 상수 반영 후 같은 상태 자료에 적용한 5개 cloudy 호출에서 native-wrapper 교체는 하향 단파를 64.98–65.02 W/m² 줄였다. 같은 상태의 실제 native-radius RRTMG4와 RRTMGP37 차이는 약 61.86–61.88 W/m²였다. 구름 광학을 교체한 RRTMGP와 실제 RRTMG4 사이의 잔차는 약 −3.16~−3.12 W/m²였다. 기본 반경 대조의 교체 효과는 −58.06~−57.32 W/m²였다. 이는 입력 연결·seed 차이만으로 큰 차이를 설명하기보다 Fu/Yang 계열 광학 선택과 변환을 분리해야 함을 보여준다.
+WRF 상수 반영 후 같은 상태 자료에 적용한 5개 cloudy 호출에서 native-wrapper 교체는 하향 단파를 64.98–65.02 W/m² 줄였다. 같은 상태의 실제 native-radius RRTMG4와 RRTMGP37 차이는 약 61.86–61.88 W/m²였다. 저장된 [5개 수치 기록](../../../validation/rrtmgp37/runtime-contracts/ice-optics-attribution.json)에서 다시 계산한 구름 광학 교체 결과와 실제 RRTMG4 사이의 잔차는 −3.1493~−3.1094 W/m²다. 이는 이전 본문의 근사 범위 −3.16~−3.12를 정정한 것이며 모델을 새로 실행한 결과가 아니다. 기본 반경 대조의 교체 효과는 −58.06~−57.32 W/m²였다. 이는 입력 연결·seed 차이만으로 큰 차이를 설명하기보다 Fu/Yang 계열 광학 선택과 변환을 분리해야 함을 보여준다.
 
 RRTMG와 고정 RRTMGP 첫 두 밴드의 공통 경계는 2600/2680 cm⁻¹로 다르다. 그 알려진 경계 차이에만 ordered-band 근사 대응을 사용하므로 위 수치는 정확한 분광 동등성 증명도, 관측 정확도 판정도 아니다. 남은 잔차에 기체·경계·RTE 차이가 섞이며 이 실험만으로 각 기여를 확정하지 않는다. 약 65 W/m²가 모든 구름과 실제 예보에 적용되는 오차율이라는 해석도 하지 않는다.
 
