@@ -1,0 +1,44 @@
+name: Verify UDM37 acceptance checklist integrity
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'validation/rrtmgp37/acceptance/**'
+      - 'validation/rrtmgp37/startup-snow-native/LOCAL_VALIDATION.json'
+      - 'validation/rrtmgp37/native-radius-stage/manifest.json'
+      - 'validation/rrtmgp37/native-radius-stage/evidence/nc-source-supplement.json'
+      - 'validation/rrtmgp37/rfmip-reference-lineage/manifest.json'
+      - 'validation/rrtmgp37/current-policy-audit/publication-manifest.json'
+      - 'validation/rrtmgp37/solrad-boundary-site-48h/manifest.json'
+      - 'validation/rrtmgp37/current-source-contracts/README.md'
+      - '.github/workflows/validate-acceptance-index.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'validation/rrtmgp37/acceptance/**'
+      - 'validation/rrtmgp37/startup-snow-native/LOCAL_VALIDATION.json'
+      - 'validation/rrtmgp37/native-radius-stage/manifest.json'
+      - 'validation/rrtmgp37/native-radius-stage/evidence/nc-source-supplement.json'
+      - 'validation/rrtmgp37/rfmip-reference-lineage/manifest.json'
+      - 'validation/rrtmgp37/current-policy-audit/publication-manifest.json'
+      - 'validation/rrtmgp37/solrad-boundary-site-48h/manifest.json'
+      - 'validation/rrtmgp37/current-source-contracts/README.md'
+      - '.github/workflows/validate-acceptance-index.yml'
+permissions:
+  contents: read
+jobs:
+  documentary-integrity:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - name: Check evidence links without declaring physical acceptance
+        run: |
+          python3 validation/rrtmgp37/acceptance/verify.py --output build/acceptance-index.json
+          python3 validation/rrtmgp37/acceptance/test_verify.py
+      - name: Preserve the scoped integrity result
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: acceptance-index-${{ github.run_id }}
+          path: build/acceptance-index.json
