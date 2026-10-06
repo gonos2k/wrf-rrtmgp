@@ -1,0 +1,28 @@
+{
+  "status": "APPROVED_V2_PHYSICAL_MAP_AREA_ANALYSIS",
+  "script_sha256": "f8acfb06b899533a67044ad4632254242caef41c57e6056d87fa3994112bb015",
+  "self_test": {
+    "status": "PASS",
+    "area_mean": 3.5,
+    "area_rmse": 3.605551275463989,
+    "bucket_endpoint_delta": 310.0,
+    "physical_map_factor_weighting": "PASS",
+    "rounding_contract_pass": "PASS",
+    "corruption_contract_fail_detected": "FAIL",
+    "unmasked_nonfinite_fail_detected": "FAIL",
+    "shared_mask_two_term_identity": "PASS",
+    "invalid_area_rejection": "PASS",
+    "energy_orchestration_bucket_and_ac_only": "PASS",
+    "timestamps": 25
+  },
+  "area_min_max_m2": [
+    363804003.7599982,
+    406941005.4224014
+  ],
+  "source_rule": "active WRF AREA2D=DX*DY; physical-map area uses DX*DY/(MAPFAC_MX*MAPFAC_MY)",
+  "limits": [
+    "Cell-center map-factor area estimate.",
+    "Nominal AREA2D metrics retained separately.",
+    "Coupled radiative differences do not establish observation accuracy or solver error."
+  ]
+}

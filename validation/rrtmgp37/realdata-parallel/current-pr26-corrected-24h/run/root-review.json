@@ -1,0 +1,19 @@
+{
+  "schema": "UDM_CORRECTED_24H_ROOT_REVIEW_V1",
+  "reviewed_at_utc": "2026-10-03T01:26:05.670162+00:00",
+  "approved_scope": "Corrected UDM27 RA4/4 versus RA37/37 frozen-mode1 coupled 24h pair, four MPI ranks and one OpenMP thread, common initial/boundary inputs, no observational or normal-difference conclusion implied",
+  "source_head_pr26": "792f36b6bbc442f0db37b5cb9fdf19dd33600082",
+  "source_build_local_commit": "e7c97ed661403b3922fcf752300c052611ef89cd",
+  "executable_sha256": "176f589d657ca87df670cef3429d7474e674f3e44445eb7886aed871e36bef8f",
+  "runner_sha256": "ba5f6a790da31a5c4b7a3bfa5aaf40311be7149e2cc9eaf99b0c0b6cf1f07f43",
+  "preflight_sha256": "0403bb5f94375a2eb5e888867e67a197c65bbc8916453ba8d16b41e6d5d0490c",
+  "namelist_comparison": "Only ra_lw/sw_physics and RA37 frozen-optics mode/table assignments differ",
+  "time_window": "2010-06-11_00:00:00 through 2010-06-12_00:00:00; dt60s; radt10min; hourly history; restart12/24h",
+  "known_limits": [
+    "MPI1/4 decomposition differences reproduce in official WRF; comparison uses a common four-rank layout",
+    "cldf_diag intent(inout) defines previous undefined working values; pristine equivalence shown only in bounded GNU one-step cases",
+    "Frozen precipitation table remains an experimental optical model",
+    "Coupled trajectories mix intrinsic radiation and state feedback; same-state ensemble replay evaluated separately",
+    "Archived pre-SR-fix coupled metrics remain superseded evidence and are not overwritten"
+  ]
+}
