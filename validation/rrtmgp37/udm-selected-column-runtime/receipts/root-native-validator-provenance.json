@@ -1,0 +1,46 @@
+{
+  "schema": "ROOT_NATIVE_CAPTURE_VALIDATION_V1",
+  "status": "PASS",
+  "commands": [
+    [
+      "python3",
+      "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-selected-real-wrf/source/WRF/test/rrtmgp/test_native_gas_columns.py",
+      "--capture-dir",
+      "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-selected-real-audit/on-only-20261003-v1/audit-on/run/capture",
+      "--output",
+      "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-selected-real-audit/root-native-gas-columns.json"
+    ],
+    [
+      "python3",
+      "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-selected-real-wrf/source/WRF/test/rrtmgp/test_udm_native_mass.py",
+      "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-selected-real-audit/on-only-20261003-v1/audit-on/run/capture",
+      "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-selected-real-audit/on-only-20261003-v1/audit-on/run/wrfinput_d01",
+      "--history",
+      "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-selected-real-audit/on-only-20261003-v1/audit-on/run/wrfout_d01_2010-06-11_12:10:00",
+      "--history-state-may-differ-from-wrfinput",
+      "--executable",
+      "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-selected-real-wrf/source/WRF/main/wrf.exe",
+      "--output",
+      "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-selected-real-audit/root-native-mass-history.json"
+    ]
+  ],
+  "source_and_receipt_sha256": {
+    "build/udm-selected-real-wrf/source/WRF/test/rrtmgp/test_native_gas_columns.py": "46e38590a8a757113eca0f976c57b7a49ab85dcc386391a8795b0119a993bb45",
+    "build/udm-selected-real-wrf/source/WRF/test/rrtmgp/test_udm_native_mass.py": "dd74ff6d2f17bd81a02d7856a700099d9471f2531715eedc9252a2f118a98674",
+    "build/udm-selected-real-wrf/source/WRF/test/rrtmgp/test_column_replay.py": "4b42cc8abe8fc2f7aa8bfb5765107c71d19b4ab7328c30326bf1141efdbb22d0",
+    "build/udm-selected-real-wrf/source/WRF/test/rrtmgp/compare_column_replay.py": "300c25de26330c0ac413c6e3d82434374457b10fbae1da77680d2d9db3601454",
+    "build/udm-selected-real-audit/root-native-gas-columns.json": "d24db98255bfed4c97e27125bbed5f41f7ada9bc4a684967393ec8ac024b0b38",
+    "build/udm-selected-real-audit/root-native-mass-history.json": "34258ff00db9cc00725caa1eb823a96f374a4486d582ce89cb9a0fb501be12f3"
+  },
+  "source_manifest_sha256": "3ebea7488f102853417339847d4b2d63f0573b686755ba2bc128f6e428203da7",
+  "validation_scope": [
+    "LW V8 and SW V9 gas column formulas including native prefix, pressure upper extension and CFC missing-input negative probe",
+    "Raw hydrometeor/water vapor profiles match source-time12:10 history exactly; native dry mass reconstructed from WRF coordinates",
+    "Native six-species paths, clear-layer omission, negative correction, radius mappings and zero above-top hydrometeor extension",
+    "Corrupted mass and mismatched-source-q negative controls rejected"
+  ],
+  "limits": [
+    "Both phases share one selected WRF state and one capture time. This validates mapping, not experimental frozen optical model realism or forecast accuracy.",
+    "Earlier subagent attempts used an outdated validator source; those receipts remain superseded and are not current feature support failures."
+  ]
+}

@@ -2,13 +2,15 @@ cmake_minimum_required(VERSION 3.20)
 project(WRF_RRTMGP_COLUMN_TEST LANGUAGES Fortran)
 enable_testing()
 find_package(Python3 REQUIRED COMPONENTS Interpreter)
+get_filename_component(WRF_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/../.." ABSOLUTE)
 if(CMAKE_Fortran_COMPILER_ID STREQUAL "GNU")
+  add_test(NAME rrtmgp_column_selection_contract COMMAND "${Python3_EXECUTABLE}"
+    "${CMAKE_CURRENT_SOURCE_DIR}/test_column_selection.py" "${WRF_ROOT}")
   add_test(NAME native_hydro_snapshot COMMAND "${Python3_EXECUTABLE}"
     "${CMAKE_CURRENT_SOURCE_DIR}/test_hydro_snapshot.py")
   add_test(NAME udm_negative_input_contract COMMAND "${Python3_EXECUTABLE}"
     "${CMAKE_CURRENT_SOURCE_DIR}/test_udm_negative_policy.py")
 endif()
-get_filename_component(WRF_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/../.." ABSOLUTE)
 add_subdirectory("${WRF_ROOT}/external/rte_rrtmgp" rte_rrtmgp)
 # Compile isolated copies so traditional WRF .mod files beside source cannot
 # shadow the standalone interface. configure_file tracks source changes.
