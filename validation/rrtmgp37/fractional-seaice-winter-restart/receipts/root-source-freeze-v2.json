@@ -1,0 +1,27 @@
+{
+  "status": "SOURCE_FREEZE_AFTER_ROOT_REVIEW_AND_CTEST",
+  "utc": "2026-10-03T12:23:16.870364+00:00",
+  "base": "8ab95cfa984235622687bf708f94385c2774ceac",
+  "worktree": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-seaice-restart-work",
+  "overlay": {
+    "WRF/phys/module_surface_driver.F": "fc99b8e6837573ed2335b6dd7bf62071c2da91348e4c5bf8668d780933f7c6cd",
+    "WRF/test/rrtmgp/CMakeLists.txt": "631b9b83042be0496fe1b83451d90a1514ac72ae5d814297d8e4dfd578de4479",
+    "WRF/test/rrtmgp/test_fractional_seaice_state.py": "79e04900f5c8537494f05fa77d63a3fd8422950d30fbf3d6b65b8f678c041812",
+    "config/registration37.json": "3ebf074d02ee7802cdaade9429c0ce2147ccbb08d5fd12195b2f0892bc8a2bcf"
+  },
+  "production": {
+    "WRF/phys/module_ra_rrtmgp.F": "07d9de67948bcaa6aae1c1da44c945974850397715564055e73548aa5aa022ac",
+    "WRF/phys/module_ra_rrtmgp_input.F": "47dcd1fbe84ec2f5bc21598e05024f38b9f4a4a7decb51cb7e51f7e21d01357f",
+    "WRF/phys/module_ra_rrtmgp_trace.F": "f9d7f16566881b3b4a9351290e6750e87f8212647db7479a45be53659facc53a",
+    "WRF/phys/module_ra_rrtmg_lw.F": "64dddfeecf7eff123aa6eadc776999584f6aa4822eb24cb46f3774213d8ba090",
+    "WRF/phys/module_ra_rrtmg_sw.F": "6710853e098b2dbbd8c613c728ab949102a76665442fae419498be48cbbf6f59",
+    "WRF/phys/module_radiation_driver.F": "6790dc884c53fff201f15713d60197f54b43dc53b545ed44eb2397e9d2d3687f",
+    "WRF/phys/module_surface_driver.F": "fc99b8e6837573ed2335b6dd7bf62071c2da91348e4c5bf8668d780933f7c6cd"
+  },
+  "ctest_proof": "build/udm-seaice-restart-v1/root-focused-test-readback-v2.json",
+  "ctest_proof_sha256": "f5eef3d57baa6bbd7fd9c7c4b45f888cfb2b841125643124f9fabd97b5ba10ea",
+  "review": "Core assignment guards/caller snapshot policy reviewed; actual SFCLAY producer and source-extracted controlled NaN regression PASS. Full WRF build, winter histories/checkpoints and own restarts pending.",
+  "original_fail_retained": true,
+  "compile_or_model_started": false,
+  "supersedes_invalidated_freeze_v1": true
+}
