@@ -111,8 +111,8 @@ jobs:
         run: |
           cmake -S WRF/test/rrtmgp -B build/cpu-openmp-test \
             -DRRTMGP_TEST_OPENMP=ON -DRRTMGP_DATA_DIR="$GITHUB_WORKSPACE/WRF/run"
-          cmake --build build/cpu-openmp-test --target test_rrtmgp_openmp test_rrtmgp_frozen_openmp --parallel 2
-          ctest --test-dir build/cpu-openmp-test -R "cpu_openmp_reentrancy|frozen_openmp_queries" --output-on-failure -V
+          cmake --build build/cpu-openmp-test --target test_rrtmgp_openmp test_rrtmgp_frozen_openmp test_rrtmgp_omp_fatal_reason --parallel 2
+          ctest --test-dir build/cpu-openmp-test -R "cpu_openmp_reentrancy|frozen_openmp_queries|omp_fatal_reason_visible_from_worker" --output-on-failure -V
   frozen-optics-reference:
     needs: registration
     runs-on: ubuntu-24.04

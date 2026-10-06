@@ -11613,7 +11613,7 @@ CONTAINS
 
    USE module_mp_udm, ONLY: cldf_diag, udm_radiation_negative_limits
    USE mo_rte_kind, ONLY: wp
-   USE module_ra_rrtmgp, ONLY: rrtmgp_lw_column, rrtmgp_frozen_enabled, &
+   USE module_ra_rrtmgp, ONLY: rrtmgp_lw_column, rrtmgp_frozen_enabled, rrtmgp_fatal, &
         ty_rrtmgp_lw_workspace,rrtmgp_release_workspace, rrtmgp_cloud_lut_bounds, rrtmgp_ice_lut_coordinate
    USE module_ra_rrtmgp_input, ONLY: rrtmgp_build_udm_inputs, rrtmgp_build_cu_inputs, &
         rrtmgp_summarize_cu_filter, &
@@ -12025,14 +12025,14 @@ CONTAINS
       gp_batch_env=''
       CALL GET_ENVIRONMENT_VARIABLE('WRF_RRTMGP_BATCH_SIZE',gp_batch_env,STATUS=gp_batch_env_status)
       IF(gp_batch_env_status==-1.OR.gp_batch_env_status>1) &
-        CALL wrf_error_fatal('RRTMGP_BATCH_SIZE_INVALID')
+        CALL rrtmgp_fatal('RRTMGP_BATCH_SIZE_INVALID','module_ra_rrtmg_lw.F')
       IF(gp_batch_env_status==0.AND.LEN_TRIM(gp_batch_env)>0) THEN
         SELECT CASE(TRIM(gp_batch_env))
         CASE('1'); gp_batch_requested=1
         CASE('32'); gp_batch_requested=32
         CASE('64'); gp_batch_requested=64
         CASE('128'); gp_batch_requested=128
-        CASE DEFAULT; CALL wrf_error_fatal('RRTMGP_BATCH_SIZE_INVALID')
+        CASE DEFAULT; CALL rrtmgp_fatal('RRTMGP_BATCH_SIZE_INVALID','module_ra_rrtmg_lw.F')
         END SELECT
       END IF
     END IF
@@ -12084,43 +12084,43 @@ CONTAINS
       IF(.NOT.PRESENT(native_qc3d).OR..NOT.PRESENT(native_qi3d).OR..NOT.PRESENT(cu_qc3d).OR. &
          .NOT.PRESENT(cu_qi3d).OR..NOT.PRESENT(cu_cf3d).OR..NOT.PRESENT(cu_dp3d).OR. &
          .NOT.PRESENT(cu_sh3d).OR..NOT.PRESENT(cu_population_policy)) &
-        CALL wrf_error_fatal('RRTMGP_INPUT_CU_PARTIAL_BUNDLE')
+        CALL rrtmgp_fatal('RRTMGP_INPUT_CU_PARTIAL_BUNDLE','module_ra_rrtmg_lw.F')
       IF(cu_population_policy==1) THEN
         IF(.NOT.run_rrtmgp.OR.mp_physics/=27) &
-          CALL wrf_error_fatal('RRTMGP_INPUT_CU_REQUIRES_ACTIVE_UDM_RRTMGP')
+          CALL rrtmgp_fatal('RRTMGP_INPUT_CU_REQUIRES_ACTIVE_UDM_RRTMGP','module_ra_rrtmg_lw.F')
         IF(.NOT.PRESENT(f_qc).OR..NOT.PRESENT(f_qi)) &
-          CALL wrf_error_fatal('RRTMGP_INPUT_CU_REQUIRES_NATIVE_QC_QI_FLAGS')
-        IF(.NOT.f_qc.OR..NOT.f_qi) CALL wrf_error_fatal('RRTMGP_INPUT_CU_REQUIRES_NATIVE_QC_QI')
+          CALL rrtmgp_fatal('RRTMGP_INPUT_CU_REQUIRES_NATIVE_QC_QI_FLAGS','module_ra_rrtmg_lw.F')
+        IF(.NOT.f_qc.OR..NOT.f_qi) CALL rrtmgp_fatal('RRTMGP_INPUT_CU_REQUIRES_NATIVE_QC_QI','module_ra_rrtmg_lw.F')
         IF(.NOT.PRESENT(udm_dry_layer_mass)) &
-          CALL wrf_error_fatal('RRTMGP_INPUT_CU_REQUIRES_NATIVE_DRY_MASS')
+          CALL rrtmgp_fatal('RRTMGP_INPUT_CU_REQUIRES_NATIVE_DRY_MASS','module_ra_rrtmg_lw.F')
         use_cu_population=.TRUE.
       ELSE IF(cu_population_policy/=0) THEN
-        CALL wrf_error_fatal('RRTMGP_INPUT_CU_POPULATION_POLICY_UNSUPPORTED')
+        CALL rrtmgp_fatal('RRTMGP_INPUT_CU_POPULATION_POLICY_UNSUPPORTED','module_ra_rrtmg_lw.F')
       END IF
     END IF
     IF(run_rrtmgp) THEN
       IF(.NOT.PRESENT(rrtmgp_domain_id).OR..NOT.PRESENT(rrtmgp_calendar_day)) &
-        CALL wrf_error_fatal('RRTMGP37 requires domain id and current calendar day for McICA')
+        CALL rrtmgp_fatal('RRTMGP37 requires domain id and current calendar day for McICA','module_ra_rrtmg_lw.F')
       gp_seed_overridden=0
       IF(PRESENT(mcica_seed_override)) THEN
         IF(mcica_seed_override>=0) gp_seed_overridden=1
       END IF
       IF(.NOT.PRESENT(udm_dry_layer_mass)) &
-        CALL wrf_error_fatal('RRTMGP37 UDM requires native dry-layer mass in kg/m2')
-      IF(mp_physics/=27) CALL wrf_error_fatal('RRTMGP37 requires mp_physics=27 (UDM)')
+        CALL rrtmgp_fatal('RRTMGP37 UDM requires native dry-layer mass in kg/m2','module_ra_rrtmg_lw.F')
+      IF(mp_physics/=27) CALL rrtmgp_fatal('RRTMGP37 requires mp_physics=27 (UDM)','module_ra_rrtmg_lw.F')
       IF(has_reqc/=1.OR.has_reqi/=1.OR.has_reqs/=1) &
-        CALL wrf_error_fatal('RRTMGP37 UDM requires native effective radii')
+        CALL rrtmgp_fatal('RRTMGP37 UDM requires native effective radii','module_ra_rrtmg_lw.F')
       IF(.NOT.PRESENT(qh3d).OR..NOT.PRESENT(f_qh)) &
-        CALL wrf_error_fatal('RRTMGP37 UDM requires explicit hail input')
+        CALL rrtmgp_fatal('RRTMGP37 UDM requires explicit hail input','module_ra_rrtmg_lw.F')
       IF(PRESENT(f_qh)) THEN
-        IF(.NOT.f_qh) CALL wrf_error_fatal('RRTMGP37 UDM requires a registered hail field')
+        IF(.NOT.f_qh) CALL rrtmgp_fatal('RRTMGP37 UDM requires a registered hail field','module_ra_rrtmg_lw.F')
       END IF
       gp_rwp=0.
       gp_gwp=0.; gp_hwp=0.; gp_lambda_g=20000.; gp_lambda_h=20000.
 
-      IF(cldovrlp<0.OR.cldovrlp>3) CALL wrf_error_fatal('RRTMGP supports cldovrlp=0,1,2,3')
+      IF(cldovrlp<0.OR.cldovrlp>3) CALL rrtmgp_fatal('RRTMGP supports cldovrlp=0,1,2,3','module_ra_rrtmg_lw.F')
       IF(PRESENT(aer_ra_feedback)) THEN
-        IF(aer_ra_feedback/=0) CALL wrf_error_fatal('RRTMGP aerosol feedback is not yet supported')
+        IF(aer_ra_feedback/=0) CALL rrtmgp_fatal('RRTMGP aerosol feedback is not yet supported','module_ra_rrtmg_lw.F')
       END IF
     END IF
 #if ( WRF_CHEM == 1 )
@@ -13113,7 +13113,7 @@ CONTAINS
                         WRITE(message,'(A,A,I0,A,ES14.6)') TRIM(gp_context), &
                           ' RRTMGP_INPUT_UDM_HAIL_OPTICS_UNSUPPORTED layer=',k, &
                           ' grid_path_g_m2=',gp_qh(k-kts+1)*udm_dry_layer_mass(i,k,j)*1000.
-                        CALL wrf_error_fatal(TRIM(message))
+                        CALL rrtmgp_fatal(TRIM(message),'module_ra_rrtmg_lw.F')
                      END IF
                   END DO
                END IF
@@ -13132,7 +13132,7 @@ CONTAINS
                   gp_qh=gp_qh-gp_clipped_q(:,6)
                   CALL rrtmgp_udm_frozen_lambdas(gp_qg,gp_qh,rho3d(i,kts:kte,j), &
                        gp_lambda_g(1,kts:kte),gp_lambda_h(1,kts:kte),gp_reason,gp_errmsg)
-                  IF(gp_reason/=0) CALL wrf_error_fatal(TRIM(gp_context)//' '//TRIM(gp_errmsg))
+                  IF(gp_reason/=0) CALL rrtmgp_fatal(TRIM(gp_context)//' '//TRIM(gp_errmsg),'module_ra_rrtmg_lw.F')
                   gp_gwp(1,kts:kte)=gp_grid(:,5); gp_hwp(1,kts:kte)=gp_grid(:,6)
                   gp_rad(:,5)=gp_grid(:,5); gp_rad(:,6)=gp_grid(:,6)
                   IF(trace_active('LW')) THEN
@@ -13310,7 +13310,7 @@ CONTAINS
 ! Call RRTMG longwave radiation model
          IF(run_rrtmgp) THEN
            gp_seed=rrtmgp_column_seed(rrtmgp_domain_id,i,j,yr,rrtmgp_calendar_day,1)
-           IF(gp_seed<1) CALL wrf_error_fatal('RRTMGP37 invalid domain/calendar McICA seed key')
+           IF(gp_seed<1) CALL rrtmgp_fatal('RRTMGP37 invalid domain/calendar McICA seed key','module_ra_rrtmg_lw.F')
          ELSE
            gp_seed=i+104729*j+INT(julian)*1009
          END IF

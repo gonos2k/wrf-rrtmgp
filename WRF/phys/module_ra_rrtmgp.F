@@ -22,15 +22,15 @@ MODULE module_ra_rrtmgp
   USE module_ra_rrtmgp_frozen, ONLY: initialize_frozen=>initialize, query_sw, query_lw, &
       frozen_table_sha256, FROZEN_GRAUPEL, FROZEN_HAIL
   USE module_ra_rrtmgp_precip, ONLY: rrtmgp_precip_lw_optics, rrtmgp_precip_sw_optics
-  USE module_ra_rrtmgp_input, ONLY: rrtmgp_validate_column_inputs, &
-      rrtmgp_check_unit_interval, rrtmgp_check_positive, rrtmgp_check_nonnegative
+  USE module_ra_rrtmgp_input, ONLY: rrtmgp_validate_column_inputs, rrtmgp_check_unit_interval, &
+      rrtmgp_check_positive, rrtmgp_check_nonnegative, rrtmgp_fatal
   USE module_ra_rrtmgp_trace, ONLY: trace_configure, trace_active, trace_input_start, trace_input, trace_input_end, &
       trace_result_start, trace_result
   USE, INTRINSIC :: ieee_arithmetic, ONLY: ieee_is_finite
   IMPLICIT NONE
   PRIVATE
-  EXTERNAL :: wrf_error_fatal3
   PUBLIC :: rrtmgp_init, rrtmgp_lw_column, rrtmgp_sw_column, cloud_mask, rrtmgp_frozen_enabled
+  PUBLIC :: rrtmgp_fatal
   ! Caller-owned scratch: one live workspace per concurrent column/tile call.
   ! Do not copy a live workspace: ty_gas_concs owns pointer targets.
   TYPE, PUBLIC :: ty_rrtmgp_lw_workspace
@@ -72,7 +72,7 @@ MODULE module_ra_rrtmgp
 CONTAINS
   SUBROUTINE require(msg)
     CHARACTER(LEN=*), INTENT(IN) :: msg
-    IF (LEN_TRIM(msg)>0) CALL wrf_error_fatal3('module_ra_rrtmgp.F',0,'RRTMGP: '//TRIM(msg))
+    IF (LEN_TRIM(msg)>0) CALL rrtmgp_fatal('RRTMGP: '//TRIM(msg),'module_ra_rrtmgp.F')
   END SUBROUTINE
 
   SUBROUTINE ensure_1scl(optics,nc,nl,descriptor)
@@ -211,7 +211,7 @@ CONTAINS
 
   SUBROUTINE rrtmgp_coeff_fatal(message)
     CHARACTER(LEN=*), INTENT(IN) :: message
-    CALL wrf_error_fatal3('module_ra_rrtmgp.F',0,'RRTMGP: '//TRIM(message))
+    CALL rrtmgp_fatal('RRTMGP: '//TRIM(message),'module_ra_rrtmgp.F')
   END SUBROUTINE
 
   SUBROUTINE rrtmgp_init(data_path,ice_roughness,gravity,cp_dry,mol_weight_dry,frozen_optics,frozen_table)
