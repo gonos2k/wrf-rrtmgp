@@ -2910,6 +2910,24 @@
 
 !-----------------------------------------------------------------------
 ! RRTMGP baseline supports clear sky and McICA overlap 0--3, with aerosol feedback disabled.
+      IF(model_config_rec%rrtmgp_udm_frozen_optics<0.OR. &
+         model_config_rec%rrtmgp_udm_frozen_optics>1) &
+        CALL wrf_error_fatal('rrtmgp_udm_frozen_optics must be 0 or 1')
+      IF(model_config_rec%rrtmgp_udm_frozen_optics==1) THEN
+        IF(LEN_TRIM(model_config_rec%rrtmgp_udm_frozen_table)==0) &
+          CALL wrf_error_fatal('rrtmgp_udm_frozen_table is required when frozen optics mode is enabled')
+        IF(LEN_TRIM(model_config_rec%rrtmgp_data_path)==0) &
+          CALL wrf_error_fatal('rrtmgp_data_path must be nonempty when RRTMGP is enabled')
+        DO i=1,model_config_rec%max_dom
+          IF(model_config_rec%ra_lw_physics(i)/=RRTMGP_LWSCHEME.OR. &
+             model_config_rec%ra_sw_physics(i)/=RRTMGP_SWSCHEME) &
+            CALL wrf_error_fatal('UDM frozen optics requires every domain to use paired ra_lw_physics=37 and ra_sw_physics=37')
+          IF(model_config_rec%mp_physics(i)/=UDMSCHEME) &
+            CALL wrf_error_fatal('UDM frozen optics requires mp_physics=27 (UDM) on every domain')
+          IF(model_config_rec%use_mp_re/=1) &
+            CALL wrf_error_fatal('UDM frozen optics requires use_mp_re=1')
+        ENDDO
+      ENDIF
       DO i=1,model_config_rec%max_dom
         IF(model_config_rec%ra_lw_physics(i)==RRTMGP_LWSCHEME.OR. &
            model_config_rec%ra_sw_physics(i)==RRTMGP_SWSCHEME) THEN
@@ -2920,7 +2938,11 @@
             CALL wrf_error_fatal('RRTMGP37 requires mp_physics=27 (UDM)')
           IF(model_config_rec%use_mp_re/=1) &
             CALL wrf_error_fatal('RRTMGP37 UDM requires use_mp_re=1 for native effective radii')
-          CALL wrf_message('--- WARNING: RRTMGP37 UDM: graupel optics are diagnostic-only; any positive hail path is unsupported.')
+          IF(model_config_rec%rrtmgp_udm_frozen_optics==0) THEN
+            CALL wrf_message('--- WARNING: RRTMGP37 UDM: graupel optics are diagnostic-only; any positive hail path is unsupported.')
+          ELSE
+            CALL wrf_message('--- WARNING: RRTMGP37 UDM frozen graupel/hail optics are experimental homogeneous-ice sphere PSD diagnostics; no NOAA/RRTMGP parity is claimed.')
+          ENDIF
           IF(model_config_rec%sf_surface_physics(i)==8) &
             CALL wrf_message('--- WARNING: SSiB+RRTMGP37 is experimental; full coupled forecast validation is incomplete.')
           IF(model_config_rec%aer_opt/=0.OR.model_config_rec%cldovrlp<0.OR.model_config_rec%cldovrlp>3) &

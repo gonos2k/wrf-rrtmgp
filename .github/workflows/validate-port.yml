@@ -90,7 +90,7 @@ jobs:
       - name: Install compiler, CMake, and NetCDF C/Fortran
         run: |
           sudo apt-get update -qq
-          sudo apt-get install -y cmake gfortran gcc libnetcdf-dev libnetcdff-dev python3-numpy python3-netcdf4
+          sudo apt-get install -y cmake gfortran gcc libnetcdf-dev libnetcdff-dev python3-numpy python3-netcdf4 python3-scipy
       - name: Build and run standalone WRF column tests
         run: |
           cmake -S WRF/test/rrtmgp -B build/rrtmgp-column-test \
@@ -106,13 +106,13 @@ jobs:
       - name: Install CPU OpenMP and NetCDF dependencies
         run: |
           sudo apt-get update -qq
-          sudo apt-get install -y cmake gfortran gcc libnetcdf-dev libnetcdff-dev python3-numpy python3-netcdf4
+          sudo apt-get install -y cmake gfortran gcc libnetcdf-dev libnetcdff-dev python3-numpy python3-netcdf4 python3-scipy
       - name: Build the library and adapter with host OpenMP and compare actual thread teams
         run: |
           cmake -S WRF/test/rrtmgp -B build/cpu-openmp-test \
             -DRRTMGP_TEST_OPENMP=ON -DRRTMGP_DATA_DIR="$GITHUB_WORKSPACE/WRF/run"
-          cmake --build build/cpu-openmp-test --target test_rrtmgp_openmp --parallel 2
-          ctest --test-dir build/cpu-openmp-test -R cpu_openmp_reentrancy --output-on-failure -V
+          cmake --build build/cpu-openmp-test --target test_rrtmgp_openmp test_rrtmgp_frozen_openmp --parallel 2
+          ctest --test-dir build/cpu-openmp-test -R "cpu_openmp_reentrancy|frozen_openmp_queries" --output-on-failure -V
   frozen-optics-reference:
     needs: registration
     runs-on: ubuntu-24.04
@@ -199,7 +199,7 @@ jobs:
       - name: Install independent upstream build dependencies
         run: |
           sudo apt-get update -qq
-          sudo apt-get install -y git make cmake gfortran libnetcdf-dev libnetcdff-dev python3-numpy python3-netcdf4 ripgrep
+          sudo apt-get install -y git make cmake gfortran libnetcdf-dev libnetcdff-dev python3-numpy python3-netcdf4 python3-scipy ripgrep
       - name: Compare pinned upstream and current vendored CPU RFMIP at g128/g112
         run: bash validation/rrtmgp37/upstream-reference/run_rfmip.sh build/independent-rfmip
       - name: Compare fully vendored cloud optics with the pinned all-sky driver
@@ -236,7 +236,7 @@ jobs:
       - name: Install GNU serial WRF and SCM dependencies
         run: |
           sudo apt-get update -qq
-          sudo apt-get install -y gfortran gcc g++ make cmake csh libnetcdf-dev libnetcdff-dev libhdf5-dev python3-numpy python3-netcdf4 python3-matplotlib ripgrep
+          sudo apt-get install -y gfortran gcc g++ make cmake csh libnetcdf-dev libnetcdff-dev libhdf5-dev python3-numpy python3-netcdf4 python3-scipy python3-matplotlib ripgrep
       - name: Configure and build em_scm_xy
         shell: bash
         run: |
@@ -380,6 +380,17 @@ jobs:
             --audit-csv build/udm-native4-audit/control/audit-on/audit/same_state.csv \
             --output-dir build/rrtmg-cloud-bridge/attribution-control \
             > build/rrtmg-cloud-bridge/attribution-control.log
+      - name: Replay opt-in UDM graupel/hail optics through fresh WRF SCM
+        shell: bash
+        run: |
+          set -euo pipefail
+          export LD_LIBRARY_PATH="$RUNNER_TEMP/netcdf/lib:/usr/lib/x86_64-linux-gnu:${LD_LIBRARY_PATH:-}"
+          export OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1
+          python3 WRF/test/rrtmgp/test_frozen_scm.py \
+            --wrf WRF/main/wrf.exe --ideal WRF/main/ideal.exe \
+            --reference build/replay-reference/reference_column \
+            --table validation/rrtmgp37/frozen-optics-lookup/nine-grid-o128-s50 \
+            --output-dir build/frozen-runtime-scm > build/frozen-runtime-scm.log
       - name: Package SCM evidence with original WRF filenames
         if: always()
         shell: bash

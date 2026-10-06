@@ -119,3 +119,7 @@ GNU serial 메뉴 번호는 이 플랫폼의 v4.8.0 configure 기준이다. 다�
 [PHYSICS_AUDIT.md](PHYSICS_AUDIT.md)는 실제 UDM 내부 CF와 호출 시점 재계산 CF를 구별하고, 같은 상태의 4/37 paired-seed 계산과 CF·graupel·SW delta 정책의 독립 재생을 설명한다. 새 진단은 운영 CLDFRA 및 수상체 처리 정책을 변경하지 않는다. 실제 결과는 [UDM 물리 감사 보고서](../../../validation/rrtmgp37/udm-physics-audit/REPORT_ko.md)에 기록한다.
 
 [RUNTIME_CONTRACTS.md](RUNTIME_CONTRACTS.md)는 WRF 상수 연결, V5 상수 재생, 계수 로더의 WRF fatal callback 및 실제 RRTMG cloud optics를 교체하는 원인 분리 시험을 설명한다. 새 독립 시험 54개가 통과했으며, 앞 절의 28개 기록은 이전 구름 입력 분리 단계의 검증이다. 실제 병렬·원본 회귀·장시간 실행 상태는 해당 실행 근거로 별도 확인한다.
+
+An explicit research-only G/H table path is described in
+[UDM_FROZEN_EXPERIMENT.md](UDM_FROZEN_EXPERIMENT.md). It extends the opt-in UDM37
+state space without asserting forecast accuracy or changing default mode.
