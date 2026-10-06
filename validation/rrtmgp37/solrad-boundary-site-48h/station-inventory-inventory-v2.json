@@ -1,0 +1,241 @@
+{
+  "forecast": {
+    "case_root": "build/udm37-matthew-dt60-paired-48h-v1",
+    "execution_receipt": {
+      "arm_results": {
+        "ra37": "RC0, four unique MPI ranks succeeded, numeric validation PASS",
+        "ra4": "RC0, four unique MPI ranks succeeded, numeric validation PASS"
+      },
+      "forecast_invocations": 2,
+      "path": "build/udm37-matthew-dt60-paired-48h-v1/execution-receipt.json",
+      "sha256": "e1df2908c2e4733527ba095f3e9999849ad318fa1e47dc7ce394e39a3d5d1bea",
+      "status": "PASS_BOTH_VALIDATED_DESCRIPTIVE"
+    },
+    "grid": {
+      "dimensions": {
+        "bottom_top": 44,
+        "south_north": 99,
+        "west_east": 90
+      },
+      "dx_dy_m": [
+        27000,
+        27000
+      ],
+      "lat_bounds": [
+        15.261474609375,
+        39.39625549316406
+      ],
+      "lon_bounds": [
+        -87.47889709472656,
+        -62.52109909057617
+      ],
+      "projection": "WRF MAP_PROJ=3 Mercator"
+    },
+    "history_hashes": {
+      "ra37": {
+        "path": "build/udm37-matthew-dt60-paired-48h-v1/ra37/wrfout_d01_2016-10-06_00:00:00",
+        "sha256": "5261710fe0b5ad7d72c23944fa364b4b8013ee042daae1641f9a4f53599f4f8f",
+        "size_bytes": 974361930
+      },
+      "ra4": {
+        "path": "build/udm37-matthew-dt60-paired-48h-v1/ra4/wrfout_d01_2016-10-06_00:00:00",
+        "sha256": "65d41a5c1bea446caaeacec389a9242320c430335b110c3c68d268f3303c72ed",
+        "size_bytes": 969573608
+      }
+    },
+    "hourly_history_records": 49,
+    "hours": 48,
+    "interpretation": "The forecast pair is a coupled trajectory contrast with two configurations, not a causal isolated-radiation test or observational skill validation.",
+    "manifest": {
+      "path": "build/udm37-matthew-dt60-paired-48h-v1/manifest.json",
+      "sha256": "4f624663e544036d990b1f679e3b480dd99e45b9852cdb5a04551b7d77f0a0be"
+    },
+    "physics": {
+      "MPI_ranks": 4,
+      "OMP_threads": 2,
+      "RA37_controls": "RA37/37, frozen optics mode 1, expanded table SHA ebeafb9746164d5414a45eab4061c5c855f0f91e92be77003b3829722514fe6a, batch size 32",
+      "RA4_controls": "RA4/4, frozen optics mode 0, empty table",
+      "cu_physics": 1,
+      "cu_rad_feedback": true,
+      "cudt_min": 5,
+      "dt_s": 60,
+      "mp_physics": 27,
+      "numtiles": 2,
+      "radt_min": 10,
+      "same_executable_both_arms_sha256": "17e37d7461d90bf4eac4110879ecf4716e515fd155aca9754ff74d573ca01725",
+      "use_mp_re": 1
+    },
+    "plan": {
+      "path": "build/udm37-matthew-dt60-paired-48h-v1/plan.json",
+      "sha256": "93e019e93df07ea11afe6c48a77b15cb6c5c79d7ad728af0786608a8eb7e8870"
+    },
+    "runtime_assets": {
+      "common_wrfbdy_d01": {
+        "sha256": "2298ac9b6dfec71e434648f66160f6555f89ec351398a4abf76754d1f934d29b",
+        "size_bytes": 22126192
+      },
+      "common_wrfin_d01": {
+        "sha256": "6adeb00d56b83ef7749502059e35d27adb5114ac0e03adb323e86aa68b946fe3",
+        "size_bytes": 10693939
+      }
+    },
+    "window_utc": [
+      "2016-10-06T00:00:00Z",
+      "2016-10-08T00:00:00Z"
+    ]
+  },
+  "noaa_solrad": {
+    "STE_raw_files": [
+      {
+        "bytes": 181491,
+        "http_status": 200,
+        "path": "build/udm37-matthew-solrad-48h-v1/raw/ste16280.dat",
+        "period": "2016-10-06 UTC, DOY 280",
+        "rows": 1440,
+        "sha256": "b903d35a7ebaa943b05aec0f0227206a61db5c6bd081d54de4ed013ac70de89e"
+      },
+      {
+        "bytes": 181491,
+        "http_status": 200,
+        "path": "build/udm37-matthew-solrad-48h-v1/raw/ste16281.dat",
+        "period": "2016-10-07 UTC, DOY 281",
+        "rows": 1440,
+        "sha256": "1c91e409d76f81f825f9d48419bf43e37160ded92832edcbf7f0bcdf34266366"
+      },
+      {
+        "bytes": 181491,
+        "http_status": 200,
+        "path": "build/udm37-matthew-solrad-48h-v1/raw/ste16282.dat",
+        "period": "2016-10-08 UTC, DOY 282",
+        "rows": 1440,
+        "sha256": "8d65c8b582706cbd191eab64e93eea968f224cc031e18eb4fddd466d41c51d38"
+      }
+    ],
+    "attempt_manifest": {
+      "path": "build/udm37-matthew-solrad-48h-v1/download-manifest.json",
+      "scope": "one attempt per station/day for DOY 280-282 at each named station; STE files returned HTTP 200; ORT and TLH files returned HTTP 403; no retries.",
+      "sha256": "52339f63f399860df9d296b39d153575351eaa164e451f22b4177d5d4f9da66b"
+    },
+    "candidate_station_inventory": [
+      {
+        "2016_coverage": "NOAA GML data finder has a 2016 minute-average dataset page. Three already-present daily files cover DOY 280-282 (2016-10-06 through 2016-10-08), 1440 rows each, first 00:00 and last 23:59 UTC. These were downloaded by the separately recorded bounded fetch; this task did not download them.",
+        "code": "STE",
+        "coordinates": [
+          38.97203,
+          -77.4869
+        ],
+        "elevation_m": 85,
+        "location_note": "This is the post-2014 site; official network page distinguishes the former site (pre 2014-10-28). Each downloaded 2016 file header independently gives these exact coordinates, elevation, and local-standard-time offset -5.",
+        "nearest_grid_cell": {
+          "HGT_m": 100.99893188476562,
+          "LANDMASK": 1,
+          "XLAND": 1,
+          "edge_distance_method": "Great-circle distance to the nearest perimeter grid point; this is a discrete perimeter proxy, not an interpolated continuous boundary distance.",
+          "i_1based": 37,
+          "j_1based": 97,
+          "lat": 38.96150207519531,
+          "lon": -77.38361358642578,
+          "nearest_outer_grid_cell_km": 48.00430042203516,
+          "station_to_cell_km": 9.006098601152189
+        },
+        "role": "Only current SOLRAD station with confirmed 2016 coverage among the three named in-scope stations; shortwave observations only.",
+        "site": "Sterling, Virginia"
+      },
+      {
+        "2016_coverage": "Not available for this period: NOAA Summary Report 28 says station operations ended 2007-06-08; the attempted three daily 2016 URLs returned HTTP 403. A 200 response was not obtained.",
+        "code": "ORT",
+        "coordinates": [
+          35.96101,
+          -84.28838
+        ],
+        "elevation_m": 334,
+        "nearest_grid_cell": {
+          "HGT_m": 425.49908447265625,
+          "LANDMASK": 1,
+          "XLAND": 1,
+          "i_1based": 12,
+          "j_1based": 84,
+          "lat": 36.07061767578125,
+          "lon": -84.39422607421875,
+          "nearest_outer_grid_cell_km": 287.2022981569171,
+          "station_to_cell_km": 15.46494520502165
+        },
+        "role": "Geographically inside, but no 2016 observation candidate based on official operational history.",
+        "site": "Oak Ridge, Tennessee"
+      },
+      {
+        "2016_coverage": "Not available for this period: NOAA Summary Report 28 says station operations ended 2002-10-30; the attempted three daily 2016 URLs returned HTTP 403. A 200 response was not obtained.",
+        "code": "TLH",
+        "coordinates": [
+          30.39675,
+          -84.32955
+        ],
+        "elevation_m": 18,
+        "nearest_grid_cell": {
+          "HGT_m": 46.622711181640625,
+          "LANDMASK": 1,
+          "XLAND": 1,
+          "i_1based": 12,
+          "j_1based": 60,
+          "lat": 30.447021484375,
+          "lon": -84.39422607421875,
+          "nearest_outer_grid_cell_km": 302.0189925134182,
+          "station_to_cell_km": 8.348931251442991
+        },
+        "role": "Geographically inside, but no 2016 observation candidate based on official operational history.",
+        "site": "Tallahassee, Florida"
+      }
+    ],
+    "official_format_readme": "https://gml.noaa.gov/aftp/data/radiation/solrad/README_SOLRAD.txt",
+    "official_network_page": "https://gml.noaa.gov/grad/solrad/",
+    "official_summary": "NOAA GMD Summary Report 28, Table 7-3 lists historical ISIS/SOLRAD operating dates: ORT ended 2007-06-08; TLH ended 2002-10-30. Thus the current network site table alone does not establish data availability for October 2016.",
+    "reported_frequency": "NOAA states that since 2015-01-01 SOLRAD reports one-minute averages of one-second samples.",
+    "scope": "SOLRAD is a surface shortwave dataset for this comparison. No longwave score is available from these files. No observation/model metrics have been computed here.",
+    "summary_report_url": "https://gml.noaa.gov/publications/summary_reports/summary_report_28.pdf",
+    "surfrad_exclusion": {
+      "note": "Do not score or describe as collocated; the nearest boundary cell is not a valid station match. A separate prior January case already has a scoped SURFRAD comparison.",
+      "sites": [
+        {
+          "code": "BON/BND",
+          "nearest_km": 105.66
+        },
+        {
+          "code": "PSU",
+          "nearest_km": 147.21
+        },
+        {
+          "code": "GWN",
+          "nearest_km": 220.06
+        }
+      ],
+      "status": "EXCLUDED_ALL_OUTSIDE_DOMAIN"
+    }
+  },
+  "observation_status": {
+    "metrics_computed": false,
+    "model_or_solver_calls": 0,
+    "new_downloads_by_this_inventory_task": 0,
+    "only_candidate_for_2016_SOLRAD_among_ORT_STE_TLH": "STE; the three raw STE dayfiles were already staged by the separately logged bounded fetch."
+  },
+  "official_sources": [
+    {
+      "title": "NOAA GML SOLRAD network page (station coordinates, move note, one-minute frequency)",
+      "url": "https://gml.noaa.gov/grad/solrad/"
+    },
+    {
+      "title": "NOAA GML Summary Report 28 (Table 7-3 historical operating dates)",
+      "url": "https://gml.noaa.gov/publications/summary_reports/summary_report_28.pdf"
+    },
+    {
+      "title": "NOAA GML Data Finder: STE 2016 dataset",
+      "url": "https://gml.noaa.gov/data/dataset.php?item=ste-solrad-2016"
+    },
+    {
+      "title": "NOAA GML SOLRAD daily file format/QC/time convention README",
+      "url": "https://gml.noaa.gov/aftp/data/radiation/solrad/README_SOLRAD.txt"
+    }
+  ],
+  "schema": "MATTHEW_48H_NOAA_SOLRAD_COVERAGE_AND_GRID_MATCH_V2",
+  "status": "READ_ONLY_INVENTORY_COMPLETE_NO_NEW_DOWNLOAD_NO_MODEL_CALL_NO_SCORE",
+  "supersedes": "inventory.json is retained unchanged as v1; this additive v2 corrects station-availability interpretation."
+}
