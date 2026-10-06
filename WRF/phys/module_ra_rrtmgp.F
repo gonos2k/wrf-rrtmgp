@@ -75,6 +75,48 @@ CONTAINS
     IF (LEN_TRIM(msg)>0) CALL rrtmgp_fatal('RRTMGP: '//TRIM(msg),'module_ra_rrtmgp.F')
   END SUBROUTINE
 
+  SUBROUTINE check_finite_wp_output(phase,stage,field,values,index_kind,band_index)
+    CHARACTER(LEN=*), INTENT(IN) :: phase,stage,field,index_kind
+    REAL(wp), INTENT(IN) :: values(:,:)
+    INTEGER, OPTIONAL, INTENT(IN) :: band_index
+    CHARACTER(LEN=256) :: message
+    CHARACTER(LEN=64) :: field_name
+    INTEGER :: c,k
+    field_name=TRIM(field)
+    IF(PRESENT(band_index)) WRITE(field_name,'(A,A,I0)') TRIM(field),' band=',band_index
+    DO c=1,SIZE(values,1)
+      DO k=1,SIZE(values,2)
+        IF(.NOT.ieee_is_finite(values(c,k))) THEN
+          WRITE(message,'(A,A,A,A,A,A,A,I0,A,A,A,I0,A)') &
+            'RRTMGP_OUTPUT_NOT_FINITE phase=',TRIM(phase),' stage=',TRIM(stage), &
+            ' field=',TRIM(field_name),' column=',c,' ',TRIM(index_kind),'=',k,' precision=wp'
+          CALL require(TRIM(message))
+        END IF
+      END DO
+    END DO
+  END SUBROUTINE check_finite_wp_output
+
+  SUBROUTINE check_finite_real_output(phase,stage,field,values,index_kind,band_index)
+    CHARACTER(LEN=*), INTENT(IN) :: phase,stage,field,index_kind
+    REAL, INTENT(IN) :: values(:,:)
+    INTEGER, OPTIONAL, INTENT(IN) :: band_index
+    CHARACTER(LEN=256) :: message
+    CHARACTER(LEN=64) :: field_name
+    INTEGER :: c,k
+    field_name=TRIM(field)
+    IF(PRESENT(band_index)) WRITE(field_name,'(A,A,I0)') TRIM(field),' band=',band_index
+    DO c=1,SIZE(values,1)
+      DO k=1,SIZE(values,2)
+        IF(.NOT.ieee_is_finite(values(c,k))) THEN
+          WRITE(message,'(A,A,A,A,A,A,A,I0,A,A,A,I0,A)') &
+            'RRTMGP_OUTPUT_NOT_FINITE phase=',TRIM(phase),' stage=',TRIM(stage), &
+            ' field=',TRIM(field_name),' column=',c,' ',TRIM(index_kind),'=',k,' precision=default-real'
+          CALL require(TRIM(message))
+        END IF
+      END DO
+    END DO
+  END SUBROUTINE check_finite_real_output
+
   SUBROUTINE ensure_1scl(optics,nc,nl,descriptor)
     TYPE(ty_optical_props_1scl), INTENT(INOUT) :: optics
     INTEGER, INTENT(IN) :: nc,nl
@@ -756,9 +798,16 @@ CONTAINS
     END IF
     flux%flux_up=>fu; flux%flux_dn=>fd
     CALL require(rte_lw(atmos,.FALSE.,source,emissivity,flux))
+    CALL check_finite_wp_output('LW','clear','UP',fu,'interface')
+    CALL check_finite_wp_output('LW','clear','DN',fd,'interface')
     upc=REAL(fu); dnc=REAL(fd)
     CALL require(compute_heating_rate(fu,fd,REAL(plev,wp)*100._wp,heat))
+    CALL check_finite_wp_output('LW','clear','HEAT',heat,'layer')
+    CALL check_finite_wp_output('LW','clear','HEAT_K_PER_DAY',heat*86400._wp,'layer')
     hrc=REAL(heat*86400._wp)
+    CALL check_finite_real_output('LW','clear','UP',upc,'interface')
+    CALL check_finite_real_output('LW','clear','DN',dnc,'interface')
+    CALL check_finite_real_output('LW','clear','HEAT_K_PER_DAY',hrc,'layer')
     ! A selected replay also records prepared optics for clear/overlap-zero controls.
     IF((ANY(cf>0.).AND.overlap/=0).OR.trace_active('LW')) THEN
       CALL ensure_1scl(clouds,nc,nl,cloud_lw)
@@ -834,9 +883,16 @@ CONTAINS
       CALL trace_result('LW','TOTAL_TAU',atmos%tau)
     END IF
     CALL require(rte_lw(atmos,.FALSE.,source,emissivity,flux))
+    CALL check_finite_wp_output('LW','allsky','UP',fu,'interface')
+    CALL check_finite_wp_output('LW','allsky','DN',fd,'interface')
     up=REAL(fu); dn=REAL(fd)
     CALL require(compute_heating_rate(fu,fd,REAL(plev,wp)*100._wp,heat))
+    CALL check_finite_wp_output('LW','allsky','HEAT',heat,'layer')
+    CALL check_finite_wp_output('LW','allsky','HEAT_K_PER_DAY',heat*86400._wp,'layer')
     hr=REAL(heat*86400._wp)
+    CALL check_finite_real_output('LW','allsky','UP',up,'interface')
+    CALL check_finite_real_output('LW','allsky','DN',dn,'interface')
+    CALL check_finite_real_output('LW','allsky','HEAT_K_PER_DAY',hr,'layer')
     IF(trace_active('LW')) THEN
       CALL trace_result('LW','UP',up)
       CALL trace_result('LW','DN',dn)
@@ -962,6 +1018,25 @@ CONTAINS
     CALL set_gases_sw(gases,h2o,co2,o3,n2o,ch4,o2)
     col_dry=gas_dry_column(h2o,plev,native_dry_layer_mass_kg_m2)
     IF(ALL(mu0<=0.)) THEN
+      CALL check_finite_real_output('SW','night','UP',up,'interface')
+      CALL check_finite_real_output('SW','night','DN',dn,'interface')
+      CALL check_finite_real_output('SW','night','HEAT',hr,'layer')
+      CALL check_finite_real_output('SW','night','UP_CLEAR',upc,'interface')
+      CALL check_finite_real_output('SW','night','DN_CLEAR',dnc,'interface')
+      CALL check_finite_real_output('SW','night','HEAT_CLEAR',hrc,'layer')
+      CALL check_finite_real_output('SW','night','DIRECT',direct,'interface')
+      CALL check_finite_real_output('SW','night','DIFFUSE',diffuse,'interface')
+      CALL check_finite_real_output('SW','night','DIRECT_CLEAR',directc,'interface')
+      CALL check_finite_real_output('SW','night','VIS_DIRECT',visdir,'interface')
+      CALL check_finite_real_output('SW','night','VIS_DIFFUSE',visdif,'interface')
+      CALL check_finite_real_output('SW','night','NIR_DIRECT',nirdir,'interface')
+      CALL check_finite_real_output('SW','night','NIR_DIFFUSE',nirdif,'interface')
+      IF(need_unscaled) THEN
+        CALL check_finite_real_output('SW','night','DIRECT_PREDELTA',direct_unscaled,'interface')
+        CALL check_finite_real_output('SW','night','DIRECT_CLEAR_PREDELTA',directc_unscaled,'interface')
+        CALL check_finite_real_output('SW','night','VIS_DIRECT_PREDELTA',visdir_unscaled,'interface')
+        CALL check_finite_real_output('SW','night','NIR_DIRECT_PREDELTA',nirdir_unscaled,'interface')
+      END IF
       IF(.NOT.PRESENT(workspace)) CALL release_sw_workspace(local_workspace)
       RETURN
     END IF
@@ -1057,8 +1132,22 @@ CONTAINS
     flux%flux_up=>fu; flux%flux_dn=>fd; flux%flux_dn_dir=>fdir
     flux%bnd_flux_dn=>bd; flux%bnd_flux_dn_dir=>bdir
     CALL require(rte_sw(atmos,.FALSE.,REAL(mu0,wp),toa,albdir,albdif,flux))
+    CALL check_finite_wp_output('SW','clear','UP',fu,'interface')
+    CALL check_finite_wp_output('SW','clear','DN',fd,'interface')
+    CALL check_finite_wp_output('SW','clear','DIRECT',fdir,'interface')
+    DO b=1,gas_sw%get_nband()
+      CALL check_finite_wp_output('SW','clear','BAND_DN',bd(:,:,b),'interface',band_index=b)
+      CALL check_finite_wp_output('SW','clear','BAND_DIRECT',bdir(:,:,b),'interface',band_index=b)
+    END DO
     upc=REAL(fu); dnc=REAL(fd); directc=REAL(fdir)
-    CALL require(compute_heating_rate(fu,fd,REAL(plev,wp)*100._wp,heat)); hrc=REAL(heat*86400._wp)
+    CALL require(compute_heating_rate(fu,fd,REAL(plev,wp)*100._wp,heat))
+    CALL check_finite_wp_output('SW','clear','HEAT',heat,'layer')
+    CALL check_finite_wp_output('SW','clear','HEAT_K_PER_DAY',heat*86400._wp,'layer')
+    hrc=REAL(heat*86400._wp)
+    CALL check_finite_real_output('SW','clear','UP',upc,'interface')
+    CALL check_finite_real_output('SW','clear','DN',dnc,'interface')
+    CALL check_finite_real_output('SW','clear','DIRECT',directc,'interface')
+    CALL check_finite_real_output('SW','clear','HEAT_K_PER_DAY',hrc,'layer')
     ! A selected replay also records prepared optics for clear/overlap-zero controls.
     IF((ANY(cf>0.).AND.overlap/=0).OR.trace_active('SW')) THEN
       CALL ensure_2str(clouds,nc,nl,cloud_sw)
@@ -1206,6 +1295,12 @@ CONTAINS
           END DO
         END DO
       END DO
+      DO g=1,ngpt
+        CALL check_finite_wp_output('SW','predelta','DIRECT_GPOINT',work%direct_gpt(:,:,g),'interface')
+      END DO
+      DO b=1,nb
+        CALL check_finite_wp_output('SW','predelta','DIRECT_BAND',work%direct_band(:,:,b),'interface')
+      END DO
       DO k=1,nl+1
         direct_unscaled(:,k)=SUM(work%direct_gpt(:,k,:),DIM=2)
         DO b=1,nb
@@ -1242,14 +1337,42 @@ CONTAINS
       CALL trace_result('SW','TOTAL_G',atmos%g)
     END IF
     CALL require(rte_sw(atmos,.FALSE.,REAL(mu0,wp),toa,albdir,albdif,flux))
-    up=REAL(fu); dn=REAL(fd); direct=REAL(fdir); diffuse=REAL(fd-fdir)
-    CALL require(compute_heating_rate(fu,fd,REAL(plev,wp)*100._wp,heat)); hr=REAL(heat*86400._wp)
+    CALL check_finite_wp_output('SW','allsky','UP',fu,'interface')
+    CALL check_finite_wp_output('SW','allsky','DN',fd,'interface')
+    CALL check_finite_wp_output('SW','allsky','DIRECT',fdir,'interface')
+    CALL check_finite_wp_output('SW','allsky','DIFFUSE',fd-fdir,'interface')
     DO b=1,gas_sw%get_nband()
+      CALL check_finite_wp_output('SW','allsky','BAND_DN',bd(:,:,b),'interface',band_index=b)
+      CALL check_finite_wp_output('SW','allsky','BAND_DIRECT',bdir(:,:,b),'interface',band_index=b)
+    END DO
+    up=REAL(fu); dn=REAL(fd); direct=REAL(fdir); diffuse=REAL(fd-fdir)
+    CALL require(compute_heating_rate(fu,fd,REAL(plev,wp)*100._wp,heat))
+    CALL check_finite_wp_output('SW','allsky','HEAT',heat,'layer')
+    CALL check_finite_wp_output('SW','allsky','HEAT_K_PER_DAY',heat*86400._wp,'layer')
+    hr=REAL(heat*86400._wp)
+    DO b=1,gas_sw%get_nband()
+      CALL check_finite_wp_output('SW','allsky','BAND_DIFFUSE',bd(:,:,b)-bdir(:,:,b),'interface',band_index=b)
       visdir=visdir+REAL(work%visible_weight(b)*bdir(:,:,b))
       visdif=visdif+REAL(work%visible_weight(b)*(bd(:,:,b)-bdir(:,:,b)))
       nirdir=nirdir+REAL((1._wp-work%visible_weight(b))*bdir(:,:,b))
       nirdif=nirdif+REAL((1._wp-work%visible_weight(b))*(bd(:,:,b)-bdir(:,:,b)))
     END DO
+    CALL check_finite_real_output('SW','allsky','UP',up,'interface')
+    CALL check_finite_real_output('SW','allsky','DN',dn,'interface')
+    CALL check_finite_real_output('SW','allsky','HEAT_K_PER_DAY',hr,'layer')
+    CALL check_finite_real_output('SW','allsky','DIRECT',direct,'interface')
+    CALL check_finite_real_output('SW','allsky','DIFFUSE',diffuse,'interface')
+    CALL check_finite_real_output('SW','allsky','DIRECT_CLEAR',directc,'interface')
+    CALL check_finite_real_output('SW','allsky','VIS_DIRECT',visdir,'interface')
+    CALL check_finite_real_output('SW','allsky','VIS_DIFFUSE',visdif,'interface')
+    CALL check_finite_real_output('SW','allsky','NIR_DIRECT',nirdir,'interface')
+    CALL check_finite_real_output('SW','allsky','NIR_DIFFUSE',nirdif,'interface')
+    IF(need_unscaled) THEN
+      CALL check_finite_real_output('SW','allsky','DIRECT_PREDELTA',direct_unscaled,'interface')
+      CALL check_finite_real_output('SW','allsky','DIRECT_CLEAR_PREDELTA',directc_unscaled,'interface')
+      CALL check_finite_real_output('SW','allsky','VIS_DIRECT_PREDELTA',visdir_unscaled,'interface')
+      CALL check_finite_real_output('SW','allsky','NIR_DIRECT_PREDELTA',nirdir_unscaled,'interface')
+    END IF
     IF(trace_active('SW')) THEN
       CALL trace_result('SW','UP',up)
       CALL trace_result('SW','DN',dn)

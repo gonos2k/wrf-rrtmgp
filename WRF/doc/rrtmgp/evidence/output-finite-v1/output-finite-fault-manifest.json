@@ -1,0 +1,31 @@
+{
+  "generated_sources": {
+    "lw_allsky_default_overflow": {
+      "anchor": "CALL require(rte_lw(atmos,.FALSE.,source,emissivity,flux))",
+      "anchor_count_in_base": 2,
+      "anchor_occurrence_1based": 2,
+      "generated_sha256": "b9ae25c6c28dc3d12eaa8f0017a0cfa6fe926178ced7df7d07ef764ccc4f3bb5",
+      "generated_source": "module_ra_rrtmgp_lw_allsky_default_overflow.F",
+      "injection": "inject finite wp fu(2,1)=2*HUGE(default REAL) after all-sky LW RTE"
+    },
+    "lw_clear_flux_nan": {
+      "anchor": "CALL require(rte_lw(atmos,.FALSE.,source,emissivity,flux))",
+      "anchor_count_in_base": 2,
+      "anchor_occurrence_1based": 1,
+      "generated_sha256": "9765306c83957a482c81b31c20f19be91b98f8218fdb8d25b5ea3c3eba74b9dc",
+      "generated_source": "module_ra_rrtmgp_lw_clear_flux_nan.F",
+      "injection": "inject_wp_quiet_nan fu(2,1) after clear LW RTE"
+    },
+    "sw_allsky_heat_nan": {
+      "anchor": "CALL require(compute_heating_rate(fu,fd,REAL(plev,wp)*100._wp,heat))",
+      "anchor_count_in_base": 4,
+      "anchor_occurrence_1based": 4,
+      "generated_sha256": "80b60f777e4ef1efc292a46385aad68b3767baf2a1290e1e37e56964fd3cee5e",
+      "generated_source": "module_ra_rrtmgp_sw_allsky_heat_nan.F",
+      "injection": "inject_wp_quiet_nan heat(2,2) after all-sky SW heating"
+    }
+  },
+  "original_source": "module_ra_rrtmgp.F",
+  "original_source_sha256": "b3932fa4e88202d5fe0fb660764bec9a07d031c03b501c20ee6ef259828ffa69",
+  "schema": "RRTMGP_OUTPUT_FINITE_FAULT_SOURCES_V1"
+}
