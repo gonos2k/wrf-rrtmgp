@@ -15,6 +15,7 @@ MODULE module_ra_rrtmgp_trace
   PUBLIC :: trace_result_start, trace_result, trace_raw_start, trace_raw
   PUBLIC :: trace_raw_end, trace_end
   PUBLIC :: trace_column_selection, trace_column_in_tile
+  PUBLIC :: trace_udm_radius_state, trace_udm_radius_enabled
 
   INTERFACE trace_result
     MODULE PROCEDURE trace_result_real2, trace_result_real64_2, trace_result_real64_3
@@ -39,6 +40,7 @@ MODULE module_ra_rrtmgp_trace
   LOGICAL, SAVE :: frozen_pending(2)=.FALSE.
   INTEGER, SAVE :: replay_frozen_mode(2)=0
   CHARACTER(len=64), SAVE :: replay_frozen_sha256(2)=''
+  LOGICAL, SAVE :: udm_radius_capture_enabled=.FALSE.
 
 CONTAINS
 
@@ -544,6 +546,99 @@ CONTAINS
     raw_unit(p) = 0
   END SUBROUTINE trace_raw_end
 
+  LOGICAL FUNCTION trace_udm_radius_enabled()
+    ! Read-only gate for wrappers to avoid constructing diagnostic temporaries
+    ! on the disabled path. Configuration is performed by trace_configure.
+    trace_udm_radius_enabled=enabled.AND.udm_radius_capture_enabled
+  END FUNCTION trace_udm_radius_enabled
+
+  ! Optional diagnostic packet written immediately after UDM updates native
+  ! radii. This is intentionally separate from LW/SW phase captures: one
+  ! selected physical column and timestep produces one status='new' file.
+  SUBROUTINE trace_udm_radius_state(domain_id,step,i,j,kts,kte,t,qc,qi,qs,nc,rho, &
+                                    re_cloud,re_ice,re_snow,cf_used,cf_step,cf_top, &
+                                    qmin,t0c,rho_water,rho_snow,time_minutes)
+    INTEGER,INTENT(IN) :: domain_id,step,i,j,kts,kte
+    REAL,INTENT(IN) :: t(:),qc(:),qi(:),qs(:),nc(:),rho(:),re_cloud(:),re_ice(:),re_snow(:),cf_used(:)
+    INTEGER,INTENT(IN) :: cf_step,cf_top
+    REAL,INTENT(IN) :: qmin,t0c,rho_water,rho_snow
+    REAL,OPTIONAL,INTENT(IN) :: time_minutes
+    INTEGER :: expected,unit,ios
+    CHARACTER(len=1200) :: filename,path
+
+    IF(.NOT.trace_udm_radius_enabled()) RETURN
+    IF(column_select_set) THEN
+      IF(i/=column_i.OR.j/=column_j) RETURN
+    ELSE
+      IF(i/=1.OR.j/=1) RETURN
+    END IF
+
+    IF(domain_id<1.OR.step<0.OR.i<1.OR.j<1.OR.kts<1.OR.kte<kts) &
+      CALL trace_fatal('RRTMGP_TRACE_UDM_RADIUS_INVALID_INDEX_OR_LEVEL_BOUNDS')
+    expected=kte-kts+1
+    IF(SIZE(t)/=expected.OR.SIZE(qc)/=expected.OR.SIZE(qi)/=expected.OR.SIZE(qs)/=expected.OR. &
+       SIZE(nc)/=expected.OR.SIZE(rho)/=expected.OR.SIZE(re_cloud)/=expected.OR.SIZE(re_ice)/=expected.OR. &
+       SIZE(re_snow)/=expected.OR.SIZE(cf_used)/=expected) &
+      CALL trace_fatal('RRTMGP_TRACE_UDM_RADIUS_SHAPE: all vectors must match kte-kts+1')
+
+    WRITE(filename,'("udm_radius_d",i0,"_i",i0,"_j",i0,"_step",i0,".raw")') domain_id,i,j,step
+    path=TRIM(capture_dir)//'/'//TRIM(filename)
+    OPEN(NEWUNIT=unit,FILE=TRIM(path),STATUS='new',ACTION='write',IOSTAT=ios)
+    IF(ios/=0) CALL trace_fatal('RRTMGP_TRACE_UDM_RADIUS_IO_ERROR: opening new radius packet')
+    WRITE(unit,'(a)',IOSTAT=ios) 'RRTMGP_UDM_RADIUS_V1'
+    CALL check_io(ios,'writing UDM radius magic')
+    WRITE(unit,'(6(i0,1x))',IOSTAT=ios) domain_id,step,i,j,kts,kte
+    CALL check_io(ios,'writing UDM radius header')
+    CALL write_radius_vector(unit,'SOURCE_T',t)
+    CALL write_radius_vector(unit,'SOURCE_QC',qc)
+    CALL write_radius_vector(unit,'SOURCE_QI',qi)
+    CALL write_radius_vector(unit,'SOURCE_QS',qs)
+    CALL write_radius_vector(unit,'SOURCE_QNC',nc)
+    CALL write_radius_vector(unit,'SOURCE_RHO',rho)
+    CALL write_radius_vector(unit,'SOURCE_RE_CLOUD',re_cloud)
+    CALL write_radius_vector(unit,'SOURCE_RE_ICE',re_ice)
+    CALL write_radius_vector(unit,'SOURCE_RE_SNOW',re_snow)
+    CALL write_radius_vector(unit,'UDM_CF_USED',cf_used)
+    CALL write_radius_scalar(unit,'UDM_CF_STEP',REAL(cf_step))
+    CALL write_radius_scalar(unit,'UDM_CF_TOP',REAL(cf_top))
+    CALL write_radius_scalar(unit,'QMIN',qmin)
+    CALL write_radius_scalar(unit,'T0C',t0c)
+    CALL write_radius_scalar(unit,'RHO_WATER',rho_water)
+    CALL write_radius_scalar(unit,'RHO_SNOW',rho_snow)
+    IF(PRESENT(time_minutes)) THEN
+      CALL write_radius_scalar(unit,'SOURCE_TIME_PRESENT',1.)
+      CALL write_radius_scalar(unit,'SOURCE_TIME_SECONDS',time_minutes*60.)
+    ELSE
+      CALL write_radius_scalar(unit,'SOURCE_TIME_PRESENT',0.)
+    END IF
+    CLOSE(unit,IOSTAT=ios)
+    CALL check_io(ios,'closing UDM radius packet')
+  END SUBROUTINE trace_udm_radius_state
+
+  SUBROUTINE write_radius_vector(unit,name,values)
+    INTEGER,INTENT(IN) :: unit
+    CHARACTER(len=*),INTENT(IN) :: name
+    REAL,INTENT(IN) :: values(:)
+    INTEGER :: k,ios
+    WRITE(unit,'(a,1x,i0)',IOSTAT=ios) TRIM(name),SIZE(values)
+    CALL check_io(ios,'writing UDM radius vector header')
+    DO k=1,SIZE(values)
+      WRITE(unit,'(es25.16e3)',IOSTAT=ios) REAL(values(k),real64)
+      CALL check_io(ios,'writing UDM radius vector value')
+    END DO
+  END SUBROUTINE write_radius_vector
+
+  SUBROUTINE write_radius_scalar(unit,name,value)
+    INTEGER,INTENT(IN) :: unit
+    CHARACTER(len=*),INTENT(IN) :: name
+    REAL,INTENT(IN) :: value
+    INTEGER :: ios
+    WRITE(unit,'(a,1x,i0)',IOSTAT=ios) TRIM(name),1
+    CALL check_io(ios,'writing UDM radius scalar header')
+    WRITE(unit,'(es25.16e3)',IOSTAT=ios) REAL(value,real64)
+    CALL check_io(ios,'writing UDM radius scalar value')
+  END SUBROUTINE write_radius_scalar
+
   SUBROUTINE trace_end(phase)
     CHARACTER(len=*), INTENT(IN) :: phase
     INTEGER :: p, ios
@@ -560,12 +655,24 @@ CONTAINS
   END SUBROUTINE trace_end
 
   SUBROUTINE trace_initialize()
-    INTEGER :: ios, env_status, n
+    INTEGER :: ios, env_status, n, radius_status, radius_length
     CHARACTER(len=128) :: value
+    CHARACTER(len=32) :: radius_value
     IF (env_checked) RETURN
     env_checked = .TRUE.
+    CALL GET_ENVIRONMENT_VARIABLE('WRF_RRTMGP_CAPTURE_UDM_RADII',radius_value, &
+                                  LENGTH=radius_length,STATUS=radius_status)
+    IF(radius_status==0.AND.radius_length>0) THEN
+      IF(radius_length/=1.OR.radius_value(1:1)/='1') &
+        CALL trace_fatal('RRTMGP_TRACE_UDM_RADIUS_INVALID: WRF_RRTMGP_CAPTURE_UDM_RADII must be empty or exactly 1')
+      udm_radius_capture_enabled=.TRUE.
+    ELSE IF(radius_status/=1.AND.radius_status/=0) THEN
+      CALL trace_fatal('RRTMGP_TRACE_UDM_RADIUS_INVALID: WRF_RRTMGP_CAPTURE_UDM_RADII is too long')
+    END IF
     CALL GET_ENVIRONMENT_VARIABLE('WRF_RRTMGP_CAPTURE_DIR', capture_dir, STATUS=env_status)
     enabled = env_status == 0 .AND. LEN_TRIM(capture_dir) > 0
+    IF(udm_radius_capture_enabled.AND..NOT.enabled) &
+      CALL trace_fatal('RRTMGP_TRACE_UDM_RADIUS_REQUIRES_CAPTURE_DIR')
     IF (.NOT.enabled) RETURN
 #if defined(DM_PARALLEL)
     CALL trace_fatal('RRTMGP_TRACE_SERIAL_ONLY: MPI capture is unsupported')
@@ -586,6 +693,7 @@ CONTAINS
     END IF
     INQUIRE(FILE=trim(capture_dir)//'/.', EXIST=enabled)
     IF (.NOT.enabled) CALL trace_fatal('RRTMGP_TRACE_DIRECTORY_NOT_FOUND: capture directory must already exist')
+    IF(udm_radius_capture_enabled) CALL column_selection_configure()
   END SUBROUTINE trace_initialize
 
   INTEGER FUNCTION phase_index(phase)

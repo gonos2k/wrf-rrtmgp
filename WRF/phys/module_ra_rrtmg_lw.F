@@ -11727,7 +11727,7 @@ CONTAINS
                        lwupflx, lwupflxc, lwdnflx, lwdnflxc       &
                        ,use_rrtmgp,qh3d,f_qh,udm_cldfra,udm_cf_step,udm_cf_top, &
                         mcica_seed_override,audit_step,audit_time,udm_dry_layer_mass,rrtmgp_domain_id,rrtmgp_calendar_day, &
-                        native_qc3d,native_qi3d,cu_qc3d,cu_qi3d,cu_cf3d,cu_dp3d,cu_sh3d,cu_population_policy )
+                        native_qc3d,native_qi3d,cu_qc3d,cu_qi3d,cu_cf3d,cu_dp3d,cu_sh3d,cu_population_policy,qnc3d )
 !------------------------------------------------------------------
 !ccc To use clWRF time varying trace gases
    USE MODULE_RA_CLWRF_SUPPORT, ONLY : read_CAMgases
@@ -11756,6 +11756,8 @@ CONTAINS
    LOGICAL, OPTIONAL, INTENT(IN) :: f_qh
    REAL, OPTIONAL, INTENT(IN) :: qh3d(ims:ime,kms:kme,jms:jme)
    REAL, OPTIONAL, INTENT(IN) :: udm_cldfra(ims:ime,kms:kme,jms:jme),audit_time
+   ! Diagnostic-only host number state; no size conversion is inferred here.
+   REAL, OPTIONAL, INTENT(IN) :: qnc3d(ims:ime,kms:kme,jms:jme)
    REAL, OPTIONAL, INTENT(IN) :: udm_dry_layer_mass(ims:ime,kms:kme,jms:jme)
    REAL, OPTIONAL, INTENT(IN) :: native_qc3d(ims:ime,kms:kme,jms:jme),native_qi3d(ims:ime,kms:kme,jms:jme)
    REAL, OPTIONAL, INTENT(IN) :: cu_qc3d(ims:ime,kms:kme,jms:jme),cu_qi3d(ims:ime,kms:kme,jms:jme)
@@ -13070,6 +13072,8 @@ CONTAINS
                   CALL trace_raw('LW','QG',qg1d(kts:kte))
                   CALL trace_raw('LW','QH',gp_qh)
                   CALL trace_raw('LW','RHO',rho3d(i,kts:kte,j))
+                  CALL trace_raw('LW','SOURCE_QNC_PRESENT',[MERGE(1.,0.,PRESENT(qnc3d))])
+                  IF(PRESENT(qnc3d)) CALL trace_raw('LW','SOURCE_QNC',qnc3d(i,kts:kte,j))
                   CALL trace_raw('LW','T',t1d(kts:kte))
                   CALL trace_raw('LW','P_HPA',p1d(kts:kte))
                   CALL trace_raw('LW','AMD_W', [REAL(amdw)])

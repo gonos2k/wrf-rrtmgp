@@ -14,7 +14,12 @@ add_test(NAME frozen_raw_replay_contract COMMAND "${Python3_EXECUTABLE}"
   "${CMAKE_CURRENT_SOURCE_DIR}/test_frozen_raw_replay_contract.py")
 add_test(NAME cu_population_replay_contract COMMAND "${Python3_EXECUTABLE}"
   "${CMAKE_CURRENT_SOURCE_DIR}/test_cu_population_replay.py")
+add_test(NAME udm_radius_stage_join COMMAND "${Python3_EXECUTABLE}" -B
+  "${CMAKE_CURRENT_SOURCE_DIR}/test_udm_radius_stage.py" --self-test)
 if(CMAKE_Fortran_COMPILER_ID STREQUAL "GNU")
+  add_test(NAME udm_radius_trace COMMAND "${Python3_EXECUTABLE}" -B
+    "${CMAKE_CURRENT_SOURCE_DIR}/test_udm_radius_trace.py"
+    --wrf-root "${WRF_ROOT}" --compiler "${CMAKE_Fortran_COMPILER}")
   add_test(NAME phase_diagnostic_wrapper_contract COMMAND "${Python3_EXECUTABLE}"
     "${CMAKE_CURRENT_SOURCE_DIR}/test_phase_diagnostic_contract.py"
     --compiler "${CMAKE_Fortran_COMPILER}"
