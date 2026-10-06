@@ -1,0 +1,75 @@
+{
+  "schema": "UDM37_LBLRTM_CANDIDATE_DECISION_SOURCE_CONTEXT_REVIEW_V1",
+  "status": "SOURCE_MECHANISM_CONFIRMED_ANCESTRY_NOT_PROVEN",
+  "scope": "Read-only control-flow review of the candidate-v3 opROP source and the bounded reader failure context. No raw-output scan, compilation, or model/solver execution was performed for this review.",
+  "source": {
+    "path": "build/udm37-lblrtm-candidate-decision-run-v3/staging/source/LBLRTM/src/oprop.f90",
+    "sha256": "a3b5732eca771b74fd373b2f8f67f515c9c05d09dc4c86c1fe77bd7d9bb1bd3c",
+    "control_flow": [
+      {
+        "lines": "460-472",
+        "finding": "HIRAC1 label 60 reads a line batch, calls LNCOR1, then falls through label 70 to CNVFNV. This is the path where line parameters are corrected before convolution."
+      },
+      {
+        "lines": "472-477",
+        "finding": "At label 70 CNVFNV runs; if IPANEL is zero, control returns to label 60 to read/correct another batch."
+      },
+      {
+        "lines": "527-551",
+        "finding": "At panel completion HIRAC1 calls PANEL. When ISTOP is not 1, it jumps directly back to label 70, so CNVFNV can process the retained line arrays at a subsequent VFT without another RDLIN/LNCOR1 pass."
+      },
+      {
+        "lines": "954-961, 1077-1105, 1262-1276",
+        "finding": "LNCOR1 computes corrected line strength and SPPSP; the candidate event recording those values is restricted to layer 21 and VFT approximately 662.695395555556. Earlier corrections at other VFT values are not captured by that target-only event."
+      },
+      {
+        "lines": "1359-1360, 1457-1473, 1482-1500",
+        "finding": "CNVFNV consumes the retained SP/SPPSP arrays, derives line support indices, and records phase-3 candidate events at the selected target VFT."
+      }
+    ]
+  },
+  "failure_context": {
+    "path": "build/udm37-lblrtm-candidate-decision-reader-run-v1/bounded-failure-context-v1.json",
+    "sha256": "bfdcc6be0fbbfccd25373eebceeed671da013d4e6bdcfee1ed99dcfa34a77eac",
+    "status": "BOUNDED_FAILED_JOIN_CONTEXT_OBSERVATION_NOT_FULL_READER",
+    "observed": {
+      "record": 1,
+      "phase": 3,
+      "reason": 12,
+      "layer": 21,
+      "batch": 484,
+      "buffer_i": 79,
+      "sequence": 471,
+      "vnu_cm-1": 666.916542330497,
+      "vft_cm-1": 662.695395555556,
+      "ilo": 47,
+      "ihi": 149
+    },
+    "interpretation": "The absent prior target-VFT reason-9 row does not prove there was no earlier LNCOR1 correction. The control-flow route PANEL -> label 70 -> CNVFNV allows a retained line correction from a previous VFT to contribute to this target-VFT phase-3 event."
+  },
+  "completed_candidate_run_receipts": {
+    "build_postflight": {
+      "path": "build/udm37-lblrtm-candidate-decision-run-v3/build-postflight.json",
+      "sha256": "68aab32740ff72398c60648efff00bf53cc2d4fdd3db7f87cd858b17d1788c75",
+      "status": "BUILD_RC0_INCREMENTAL_OPROP_ONLY",
+      "actual_child_returncode": 0
+    },
+    "solver_postflight": {
+      "path": "build/udm37-lblrtm-candidate-decision-run-v3/solver-postflight.json",
+      "sha256": "cfb96a1dcc02df85e598e86f81c9dc087790676b81f58ddb63b484851e337169",
+      "actual_child_returncode": 0,
+      "status": "RC0_OUTPUTS_INVENTORIED_COMPARISON_PENDING"
+    }
+  },
+  "limitations": [
+    "This confirms a source-permitted mechanism, not the ancestry of the particular buffered line at the phase-3 observation.",
+    "The bounded reader receipt read one line and did not reconstruct the complete event history, RDLIN batches, or PANEL transitions.",
+    "A missing target-filtered phase-2 reason-9 event cannot be interpreted as evidence that the candidate line never passed LNCOR1; its correction may have occurred at another VFT.",
+    "This finding does not establish that the negative optical-depth contribution is valid or invalid, and does not change the preserved numerical failure."
+  ],
+  "execution_scope": {
+    "new_raw_scans": 0,
+    "new_compiles": 0,
+    "new_model_or_solver_runs": 0
+  }
+}

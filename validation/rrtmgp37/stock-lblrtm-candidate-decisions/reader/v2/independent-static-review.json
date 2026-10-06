@@ -1,0 +1,49 @@
+{
+  "checks": {
+    "45_layer_spectral_panels_are_read_and_compared_bitwise": true,
+    "aggregate_spectral_sample_count_exact": true,
+    "candidate_and_baseline_terminal_gates_retained": true,
+    "equal_or_later_batch_missing_reason9_rejected": true,
+    "fresh_single_use_authorization_and_exact_saved_artifact_roster_retained": true,
+    "left_censor_is_strict_same_pass_batch_prefix": true,
+    "no_prior_phase2_in_pass_rejected": true,
+    "observed_reason9_entry_identity_and_operands_bitwise_checked": true,
+    "only_permitted_OD_header_difference_is_HTIME_and_must_match_TAPE6": true,
+    "original_v1_preserved": true,
+    "prefix_ancestry_explicitly_unvalidated": true,
+    "prefix_requires_observed_phase2_cutoff": true,
+    "reader_v2_execution_performed": false,
+    "target_term_identity_join_remains_mandatory_for_all_target_rows_including_censored_prefix": true,
+    "term_full_invocation_identity_unique": true,
+    "term_overlap_molecule_isotope_flag_and_operand_bits_checked": true
+  },
+  "limits": [
+    "Static logic review only; no spectrum was read or validated in this review.",
+    "The left-censored prefix is not ancestry-proven; this does not claim complete source-term attribution.",
+    "Reader-v2 is prepared but unexecuted; the preserved reader-v1 ancestry failure remains historical evidence."
+  ],
+  "pins": {
+    "plan": {
+      "path": "build/udm37-lblrtm-candidate-decision-reader-preparation-v2/plan.json",
+      "sha256": "7594e33b8152edc21a6964f04241894a21338d62447adeb751b52e305ffe7803",
+      "size_bytes": 9440
+    },
+    "preparation_status": {
+      "path": "build/udm37-lblrtm-candidate-decision-reader-preparation-v2/preparation-status.json",
+      "sha256": "0a982ea92ebd0bdcc285dfcb16be07c8c054ebe4f369f91216c07cd26839f387",
+      "size_bytes": 1922
+    },
+    "reader": {
+      "path": "build/udm37-lblrtm-candidate-decision-reader-preparation-v2/read_saved_candidate.py",
+      "sha256": "2423ceb08af8f45a9f6e5bbd7a9dfa56571a596a9d84d5bf8eb3381888348b3e",
+      "size_bytes": 17004
+    }
+  },
+  "prefix_semantics": "Only a missing prior reason9 in a phase3 nonzero entry can be classified as left-censored, and only for a batch strictly earlier than the earliest observed phase2 batch in the same pass. Censored ancestry remains explicitly unvalidated. The later target-term join still independently requires a unique full invocation identity plus molecule/isotope/flag, overlap, and bitwise SP/SPPSP/RECALF operand matches against phase3 and term records.",
+  "schema": "UDM37_LBLRTM_CANDIDATE_DECISION_READER_V2_STATIC_REVIEW_V1",
+  "scope": "Static review of saved-data reader-v2 and frozen plan only; no raw reads, reader execution, solver, compiler, or model.",
+  "spectral_gate": "The reader traverses all 45 OD layer files, requires matching headers and panel records, permits only header word 168 (HTIME) to differ and verifies it against each side TAPE6, compares each panel/sample record byte-for-byte, requires finite samples, and checks the exact total sample count 63,838,065. No clipping or tolerance is introduced.",
+  "status": "PASS_SCOPED_STATIC_REVIEW_PREPARED_UNEXECUTED",
+  "terminal_gate": "Both candidate and baseline execution receipts require status CHILD_RC0 or TERMINAL, actual child RC exactly 0, explicit false timeout, no exception, positive PID, and exact run cwd before candidate raw artifacts are hashed or parsed.",
+  "verified_source_prior_pins": 11
+}

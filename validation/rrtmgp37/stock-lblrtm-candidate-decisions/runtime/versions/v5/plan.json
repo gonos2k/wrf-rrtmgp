@@ -1,0 +1,692 @@
+{
+  "authorization": {
+    "binds": [
+      "action",
+      "plan_sha256",
+      "runner_sha256",
+      "stage_receipt_sha256",
+      "max_build_invocations=1",
+      "max_solver_invocations=1",
+      "scope"
+    ],
+    "external_build_file": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-candidate-decision-build-auth-v5.json",
+    "external_solver_file": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-candidate-decision-solver-auth-v5.json",
+    "not_created": true,
+    "schema": "UDM37_CANDIDATE_DECISION_ACTION_AUTH_V1"
+  },
+  "authorization_files": {
+    "build": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-candidate-decision-build-auth-v5.json",
+    "solver": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-candidate-decision-solver-auth-v5.json"
+  },
+  "authorization_scopes": {
+    "build": "Build only the isolated candidate-v3 GNU-double LBLRTM diagnostic; one make invocation, timeout 600 seconds.",
+    "solver": "Run one isolated candidate-v3 held-state SAMPLE4 diagnostic only after durable build RC0 and oprop-only postflight; timeout 7200 seconds."
+  },
+  "baseline_build": {
+    "build_postflight_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-r3-term-trace-v1/build-postflight.json",
+    "build_postflight_sha256": "c86a0e5b170ffd208fe755c0d93c1a48f2dc1fa47339deafe9cdb9e7eb14388d",
+    "build_status": "R3_TERM_TRACE_BINARY_COMPILED_INCREMENTAL_OPROP_ONLY",
+    "candidate_source_newer_than_oprop_object": true,
+    "executable_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-r3-term-trace-v1/source/LBLRTM/lblrtm_v12.17_linux_gnu_dbl",
+    "executable_sha256": "a644596b7de51e3684b77e5a8ee0f72ecfb943b4464b7d857590c881650471b1",
+    "isolated_copy_receipt_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-candidate-decision-run-v3/staging/stage-receipt.json",
+    "isolated_copy_receipt_sha256": "5f7ec9ed11d823f58bc0cb81ae677946b8af27f6b883c848557af6df27843081",
+    "isolated_copy_status": "ISOLATED_BUILD_SOURCE_STAGED_NOT_COMPILED",
+    "isolated_regular_files": 446,
+    "isolated_symlinks": 16,
+    "objects_before_build": [
+      {
+        "path": "build/lblrtm_v12.17_linux_gnu_dbl.obj/contnm.o",
+        "sha256": "99eebd867841f70f9f9b2a5c140afaaae295439d0c52b181071fef6914949442",
+        "size_bytes": 305312
+      },
+      {
+        "path": "build/lblrtm_v12.17_linux_gnu_dbl.obj/fftscn_dbl.o",
+        "sha256": "518cbf6e3d30eb03291125b14792dd1d930305898e222eb023e69134614dd936",
+        "size_bytes": 151632
+      },
+      {
+        "path": "build/lblrtm_v12.17_linux_gnu_dbl.obj/lblatm.o",
+        "sha256": "46bcfc22f97c5091cc7112eea74b9dd3114338b26a1469089eb2842cf334b37a",
+        "size_bytes": 11676672
+      },
+      {
+        "path": "build/lblrtm_v12.17_linux_gnu_dbl.obj/lbldum.o",
+        "sha256": "fb2313d03d1ca06fbf6889780d1ef41e0bd285cd77789e853476e51b512d8223",
+        "size_bytes": 4520
+      },
+      {
+        "path": "build/lblrtm_v12.17_linux_gnu_dbl.obj/lbllow.o",
+        "sha256": "975c66242e929f261cb600ca1f3738316c65b8076a1797891b755954fbf72f80",
+        "size_bytes": 1269744
+      },
+      {
+        "path": "build/lblrtm_v12.17_linux_gnu_dbl.obj/lblparams.o",
+        "sha256": "dbec2bec78b2546f2a9bf2444b8a04523cdd7133f649fd8b63ce70aa8ba80a37",
+        "size_bytes": 8960
+      },
+      {
+        "path": "build/lblrtm_v12.17_linux_gnu_dbl.obj/lblrtm.o",
+        "sha256": "514dd2c0571eaa9ea1ca2cc1f6abb4b4c57bc0993c0069ea611c65b650b3ee81",
+        "size_bytes": 530312
+      },
+      {
+        "path": "build/lblrtm_v12.17_linux_gnu_dbl.obj/mt_ckd_h2o_module.o",
+        "sha256": "92d7c1fa2d18424a7e6ac60e67ec035a9087c6abc5ea165a57bfecfbbd706af5",
+        "size_bytes": 17192
+      },
+      {
+        "path": "build/lblrtm_v12.17_linux_gnu_dbl.obj/nonlte.o",
+        "sha256": "fc39ddcd056ad5bf1e01662675517a561d59563b1b2d988d1eaea9772d3f1d08",
+        "size_bytes": 162504
+      },
+      {
+        "path": "build/lblrtm_v12.17_linux_gnu_dbl.obj/oprop.o",
+        "sha256": "069bffa11062d9fbe672b17a07e62feb19f0100be5c95e3f5c89afc57ca30a06",
+        "size_bytes": 475304
+      },
+      {
+        "path": "build/lblrtm_v12.17_linux_gnu_dbl.obj/phys_consts.o",
+        "sha256": "d1fbcbe5ddd72196095f719664f09974439d0155f163914d125fa93fc8f4885a",
+        "size_bytes": 824
+      },
+      {
+        "path": "build/lblrtm_v12.17_linux_gnu_dbl.obj/planet_earth.o",
+        "sha256": "984b4e363b4c5aef6c15590ac5f5e5a9e78b88c759f8579d2fe0e33bbeee8e64",
+        "size_bytes": 1640
+      },
+      {
+        "path": "build/lblrtm_v12.17_linux_gnu_dbl.obj/pltlbl.o",
+        "sha256": "589b567082683d4ffcdb352d363e32e85836f9afab5141a78eaa718c939e5705",
+        "size_bytes": 157528
+      },
+      {
+        "path": "build/lblrtm_v12.17_linux_gnu_dbl.obj/postsub.o",
+        "sha256": "df8248b8d6c63d9d6b8073268b8af4da5ceb91be1ac6f972126d5af75d87a4ca",
+        "size_bytes": 190448
+      },
+      {
+        "path": "build/lblrtm_v12.17_linux_gnu_dbl.obj/read_module.o",
+        "sha256": "a1c880b3ba2a67e609564177ef78d299761445cc4b38e76185d9188598458339",
+        "size_bytes": 14352
+      },
+      {
+        "path": "build/lblrtm_v12.17_linux_gnu_dbl.obj/solar.o",
+        "sha256": "6b23a7dd9c1b7b15713e92520fb852f9b3c2f9442d6abdae886a89a2419765b2",
+        "size_bytes": 53752
+      },
+      {
+        "path": "build/lblrtm_v12.17_linux_gnu_dbl.obj/solar_cycle.o",
+        "sha256": "cebc3032e91463b53ca2f424c65c01512b07dedeeedc429d856d3add4524f29d",
+        "size_bytes": 3088
+      },
+      {
+        "path": "build/lblrtm_v12.17_linux_gnu_dbl.obj/struct_types.o",
+        "sha256": "4f0a2224a1467ec95a6ed3d5f987e74ad943a30186fff62c35ff6c0cbf3523ad",
+        "size_bytes": 3112
+      },
+      {
+        "path": "build/lblrtm_v12.17_linux_gnu_dbl.obj/testmm.o",
+        "sha256": "06277f94386c5edae7735dca49e710a2fd065acc4c29648f57bb2574447f51e5",
+        "size_bytes": 110552
+      },
+      {
+        "path": "build/lblrtm_v12.17_linux_gnu_dbl.obj/util_gfortran.o",
+        "sha256": "99c3f30c59edee4dd184d17f401b24ae829bdba5f623c7d7b19d5f25c26d96bc",
+        "size_bytes": 7056
+      },
+      {
+        "path": "build/lblrtm_v12.17_linux_gnu_dbl.obj/xmerge.o",
+        "sha256": "96e3029238712b36d137faffe2624e3a326024571b8c7e8f5de24ee734efdf07",
+        "size_bytes": 271144
+      }
+    ],
+    "source_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-r3-term-trace-v1/source/LBLRTM/src/oprop.f90",
+    "source_sha256": "6b806117a32832371f8947bc54b5a5c3bf38389a7279ae48ae39afc141666300"
+  },
+  "baseline_output_receipt": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-held-state-r3terms-cpl-od-run-v1/runs/od-v1/postflight.json",
+    "sha256": "42765da8279bbf631c773673036d2ad92118e94d10b091a91ddb00749d90d6ea"
+  },
+  "candidate": {
+    "candidate_source_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-candidate-decision-source-v3/oprop.candidate.f90",
+    "candidate_source_sha256": "a3b5732eca771b74fd373b2f8f67f515c9c05d09dc4c86c1fe77bd7d9bb1bd3c",
+    "original_candidate_v1_and_v2_preserved": true,
+    "patch_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-candidate-decision-source-v3/candidate-decision.patch",
+    "patch_sha256": "0ff5738d5246464c72351e35782da66b89566c656bbbc95433f88e12c229fbe6",
+    "plan_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-candidate-decision-source-v3/plan.json",
+    "plan_sha256": "3a6f020dfdc38ff37a553bd4289273b1e45b60423e76ce91b3bb0f0ea6e36473",
+    "semantic_review_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-candidate-decision-source-review-v3/semantic-review-v3.json",
+    "semantic_review_sha256": "f16140672a95a576b2b21ff7f3b2e8cf442d2273b1230459bf540690359c5154"
+  },
+  "candidate_source": {
+    "sha256": "a3b5732eca771b74fd373b2f8f67f515c9c05d09dc4c86c1fe77bd7d9bb1bd3c",
+    "size_bytes": 498873
+  },
+  "case_stage_pin": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-candidate-decision-run-v3/runs/od-v3/case-stage.json",
+    "sha256": "685196e151bdf7d3bc062fd027dbc9ffe5e9a9861ae884b0bb6be9b36cf92485"
+  },
+  "durability_and_cleanup": {
+    "actual_rc": "Actual child return code is atomically written and fsynced with the parent directory immediately after wait/timeout reap, before stdout/stderr hashes, object/executable hashes, output inventory, or comparison.",
+    "exception": "If launch fails or runner errors after launch, terminate/reap any live process and atomically preserve failure/RC receipt; never infer success from a marker.",
+    "inputs": "All 38 staged inputs are byte-hash/size checked before launch and checked again after the process is terminal/reaped. Symlink target identity is also checked. A failed post-pin blocks output inventory/comparison.",
+    "lock": "O_EXCL one-use build/solver lock, retained for every outcome; no retry or overwrite",
+    "outputs": "On solver nonzero/timeout, preserve logs and skip output parsing/comparison. On RC0, inventory and compare only after durable execution.json.",
+    "successful_status_contract": "Accept solver only when receipt status TERMINAL, child_status CHILDRC0, actual_child_returncode 0, timed_out false, exception null, and reaped true; any timeout/exception/reap uncertainty/input mismatch blocks output comparison.",
+    "timeout": "Start a new process group; at 600/7200 seconds send SIGTERM, wait 10 seconds, then SIGKILL and reap; record timeout and actual return code.",
+    "timeout_reap_gate": "A timed-out child is never accepted even if its eventual actual RC is zero. TERM/KILL+wait is bounded; if reaping cannot be proven, receipt status is REAP_PENDING, RC may be null, and no output inventory/comparison follows."
+  },
+  "environment": {
+    "HOME": "inherit exact value and verify unchanged",
+    "LANG": "C",
+    "LC_ALL": "C",
+    "LD_LIBRARY_PATH": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/netcdf/lib",
+    "MPI": null,
+    "OMP_NUM_THREADS": null,
+    "PATH": "/usr/bin:/bin"
+  },
+  "executable_relative_path": "lblrtm_v12.17_linux_gnu_dbl",
+  "execution_limits": {
+    "builds_performed_during_preparation": 0,
+    "compile_build_invocations_max": 1,
+    "incremental_build_invocations_max": 1,
+    "raw_TAPE3_or_OD_scans_during_preparation": 0,
+    "solver_invocations_during_preparation": 0,
+    "solver_invocations_max": 1
+  },
+  "held_case": {
+    "controls": {
+      "IAERSL": 0,
+      "IATM": 0,
+      "ICNTNM": 1,
+      "IEMIT": 0,
+      "IFRGNX": "0",
+      "IHIRAC": 1,
+      "ILBLF4": 0,
+      "IMRG": 1,
+      "IOD": 0,
+      "IPTHRK": 0,
+      "ISOTPL": 0,
+      "IXSECT": 1,
+      "SECNT0": 1.0,
+      "continuum_policy": "ICNTNM=0 disables all LBLRTM continua, including its continuum/CIA options; not asserted equivalent to RRTMGP continuum treatment",
+      "v1_3": {
+        "DVOUT_cm-1": 0.0,
+        "DVSET_cm-1": 0.0,
+        "LNFL_planned_range_cm-1": [
+          475.0,
+          2275.0
+        ],
+        "V1_cm-1": 500.0,
+        "V2_cm-1": 2250.0
+      }
+    },
+    "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-candidate-decision-run-v3/runs/od-v3",
+    "donor_child_rc": 0,
+    "donor_execution_receipt": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-held-state-r3terms-cpl-od-run-v1/runs/od-v1/execution.json",
+    "donor_execution_sha256": "db8d7eec76ae7de89f8ec0c3d7bd098de7190ecfdafd180b6ef004ac37980f49",
+    "donor_postflight_receipt": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-held-state-r3terms-cpl-od-run-v1/runs/od-v1/postflight.json",
+    "donor_postflight_sha256": "42765da8279bbf631c773673036d2ad92118e94d10b091a91ddb00749d90d6ea",
+    "donor_prepared_receipt": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-held-state-r3terms-cpl-od-run-v1/runs/od-v1/prepared.json",
+    "donor_prepared_sha256": "208b52919145c9d1f5c5c0962e8b152d9233114a3d82d657f4dab1cd02fa8a37",
+    "input_count": 38,
+    "inputs": [
+      {
+        "kind": "copied_input",
+        "path": "TAPE5",
+        "sha256": "a676bc7761e09ab42f212c3cca80ebfd1be27604cd332cc966205d1280ae62dd",
+        "size_bytes": 29428
+      },
+      {
+        "kind": "readonly_symlink_input",
+        "path": "TAPE3",
+        "resolved_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-common-band-line-generation-v1/run-v6/TAPE3",
+        "source_sha256_receipt": "56bd55fa256ed3b3a672bd4bcd88034cd7086d4fbef2a1def9480199dab2b388",
+        "source_size_bytes_receipt": 122157832
+      },
+      {
+        "kind": "readonly_symlink_input",
+        "path": "FSCDXS",
+        "resolved_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-stock-build-v1/attempt-1/source/LBLRTM/cross-sections/FSCDXS",
+        "source_sha256_receipt": "1a5cebba2d3787c2e48c9cc0f2e4d1593720e4655b6ae4e7e4bc1a31c4b426f6",
+        "source_size_bytes_receipt": 10382
+      },
+      {
+        "kind": "readonly_symlink_input",
+        "path": "absco-ref_wv-mt-ckd.nc",
+        "resolved_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-reference-stage-v1/sources/MT_CKD_H2O/data/absco-ref_wv-mt-ckd.nc",
+        "source_sha256_receipt": "69944eb8b045c268e2daeb2cddf536b99f9e9efe7e91c425067b46a5b287ddb3",
+        "source_size_bytes_receipt": 83576
+      },
+      {
+        "kind": "readonly_symlink_input",
+        "path": "xs/CCL4",
+        "resolved_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-stock-build-v1/attempt-1/source/LBLRTM/cross-sections/xs/CCL4",
+        "source_sha256_receipt": "2e50c888c75a19f1d7c2b3a0e563644f9e2e4fcd36065648cb37003ac5c915bb",
+        "source_size_bytes_receipt": 18584
+      },
+      {
+        "kind": "readonly_symlink_input",
+        "path": "xs/F11AT1",
+        "resolved_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-stock-build-v1/attempt-1/source/LBLRTM/cross-sections/xs/F11AT1",
+        "source_sha256_receipt": "c3c741a84f06b5e3d5d32c4e1aebb80921f0bf208a605fdb01afedbe6a56aa04",
+        "source_size_bytes_receipt": 20604
+      },
+      {
+        "kind": "readonly_symlink_input",
+        "path": "xs/F11AT2",
+        "resolved_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-stock-build-v1/attempt-1/source/LBLRTM/cross-sections/xs/F11AT2",
+        "source_sha256_receipt": "1292ca88931ae102b5c56432a270d67ecde910adade9f48554c52949e223d2dc",
+        "source_size_bytes_receipt": 20604
+      },
+      {
+        "kind": "readonly_symlink_input",
+        "path": "xs/F11AT3",
+        "resolved_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-stock-build-v1/attempt-1/source/LBLRTM/cross-sections/xs/F11AT3",
+        "source_sha256_receipt": "83525a02a7785c06d26ef8fe03d3c6d0e394b346e2959b19bbb09780d36f6e28",
+        "source_size_bytes_receipt": 20604
+      },
+      {
+        "kind": "readonly_symlink_input",
+        "path": "xs/F11AT4",
+        "resolved_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-stock-build-v1/attempt-1/source/LBLRTM/cross-sections/xs/F11AT4",
+        "source_sha256_receipt": "162c4a7b4d8581966b9a3a255155e14ca9338d7e4ba995797d93dd1193fd58db",
+        "source_size_bytes_receipt": 20604
+      },
+      {
+        "kind": "readonly_symlink_input",
+        "path": "xs/F11AT5",
+        "resolved_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-stock-build-v1/attempt-1/source/LBLRTM/cross-sections/xs/F11AT5",
+        "source_sha256_receipt": "50483d639842ecb2df7613417ea292b6d117bc9365ca50acfb85c7a2665ba313",
+        "source_size_bytes_receipt": 20604
+      },
+      {
+        "kind": "readonly_symlink_input",
+        "path": "xs/F11AT6",
+        "resolved_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-stock-build-v1/attempt-1/source/LBLRTM/cross-sections/xs/F11AT6",
+        "source_sha256_receipt": "8cdb9ebb13b7ceeab9294d2989bf86ecff9793fc6e755831dcb6e525b626a33a",
+        "source_size_bytes_receipt": 20604
+      },
+      {
+        "kind": "readonly_symlink_input",
+        "path": "xs/F11BT1",
+        "resolved_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-stock-build-v1/attempt-1/source/LBLRTM/cross-sections/xs/F11BT1",
+        "source_sha256_receipt": "42a8782721cf9c97efc3ed3607045817aee218cace9ef97b72865fbc5be125cc",
+        "source_size_bytes_receipt": 32118
+      },
+      {
+        "kind": "readonly_symlink_input",
+        "path": "xs/F11BT2",
+        "resolved_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-stock-build-v1/attempt-1/source/LBLRTM/cross-sections/xs/F11BT2",
+        "source_sha256_receipt": "70ce2c26e2dce70d22cd8e9ff2e777e803085c77aa3d7420e5d2f14ec9007bce",
+        "source_size_bytes_receipt": 32118
+      },
+      {
+        "kind": "readonly_symlink_input",
+        "path": "xs/F11BT3",
+        "resolved_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-stock-build-v1/attempt-1/source/LBLRTM/cross-sections/xs/F11BT3",
+        "source_sha256_receipt": "ec38b98f3e16356db657c875c72c5dfb59f139b15e731edebf96fa5bd56474ff",
+        "source_size_bytes_receipt": 32118
+      },
+      {
+        "kind": "readonly_symlink_input",
+        "path": "xs/F11BT4",
+        "resolved_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-stock-build-v1/attempt-1/source/LBLRTM/cross-sections/xs/F11BT4",
+        "source_sha256_receipt": "b5d172d83e82c3b3e97e3b34221e964e8424f7ddf33a8e84720cde88010704bb",
+        "source_size_bytes_receipt": 32118
+      },
+      {
+        "kind": "readonly_symlink_input",
+        "path": "xs/F11BT5",
+        "resolved_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-stock-build-v1/attempt-1/source/LBLRTM/cross-sections/xs/F11BT5",
+        "source_sha256_receipt": "aad952d01a63761aa73520b6e44fd57efbd6e598cafaf5485ed08e18a58fe953",
+        "source_size_bytes_receipt": 32118
+      },
+      {
+        "kind": "readonly_symlink_input",
+        "path": "xs/F11BT6",
+        "resolved_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-stock-build-v1/attempt-1/source/LBLRTM/cross-sections/xs/F11BT6",
+        "source_sha256_receipt": "f278a8009361b058a4746beeba9ee4eb02088f1ceb8e5952bf17e4672601fed0",
+        "source_size_bytes_receipt": 32118
+      },
+      {
+        "kind": "readonly_symlink_input",
+        "path": "xs/F12AT1",
+        "resolved_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-stock-build-v1/attempt-1/source/LBLRTM/cross-sections/xs/F12AT1",
+        "source_sha256_receipt": "c29d0dffeb4dad6ed086e557dd963950d6d1228a2b28ff8b2728f7e8e516c7e2",
+        "source_size_bytes_receipt": 47773
+      },
+      {
+        "kind": "readonly_symlink_input",
+        "path": "xs/F12AT2",
+        "resolved_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-stock-build-v1/attempt-1/source/LBLRTM/cross-sections/xs/F12AT2",
+        "source_sha256_receipt": "215f480f19cb5cac643318253e50fb9a7918f97c268d00b262241f01021686b4",
+        "source_size_bytes_receipt": 47773
+      },
+      {
+        "kind": "readonly_symlink_input",
+        "path": "xs/F12AT3",
+        "resolved_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-stock-build-v1/attempt-1/source/LBLRTM/cross-sections/xs/F12AT3",
+        "source_sha256_receipt": "f148a7fde6f995b22ca7cd969f8bee048c216c974c3dbc5ccbe71a2e247657a6",
+        "source_size_bytes_receipt": 47773
+      },
+      {
+        "kind": "readonly_symlink_input",
+        "path": "xs/F12AT4",
+        "resolved_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-stock-build-v1/attempt-1/source/LBLRTM/cross-sections/xs/F12AT4",
+        "source_sha256_receipt": "0200c0f228ac9e8b8f4d2361563e6500e132a9488698a5c9a281da7ba850ef57",
+        "source_size_bytes_receipt": 47773
+      },
+      {
+        "kind": "readonly_symlink_input",
+        "path": "xs/F12AT5",
+        "resolved_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-stock-build-v1/attempt-1/source/LBLRTM/cross-sections/xs/F12AT5",
+        "source_sha256_receipt": "d907050bce812262c3577dfbf26bae556038c35788c0086739f35cfc45d76907",
+        "source_size_bytes_receipt": 47773
+      },
+      {
+        "kind": "readonly_symlink_input",
+        "path": "xs/F12AT6",
+        "resolved_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-stock-build-v1/attempt-1/source/LBLRTM/cross-sections/xs/F12AT6",
+        "source_sha256_receipt": "c0b93ef0797a9ee805d303f69ea18e977a06351543168d0d37ad30d74a9a0a40",
+        "source_size_bytes_receipt": 47773
+      },
+      {
+        "kind": "readonly_symlink_input",
+        "path": "xs/F12BT1",
+        "resolved_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-stock-build-v1/attempt-1/source/LBLRTM/cross-sections/xs/F12BT1",
+        "source_sha256_receipt": "e5d6faf2d7b1f1283abccb8670bee6ee60108232db94467ad40023593a6cacd7",
+        "source_size_bytes_receipt": 66155
+      },
+      {
+        "kind": "readonly_symlink_input",
+        "path": "xs/F12BT2",
+        "resolved_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-stock-build-v1/attempt-1/source/LBLRTM/cross-sections/xs/F12BT2",
+        "source_sha256_receipt": "ca3d511077e3feb3689237cfc5d06d023678f71ec1291e878a3eb058bb5841b3",
+        "source_size_bytes_receipt": 66155
+      },
+      {
+        "kind": "readonly_symlink_input",
+        "path": "xs/F12BT3",
+        "resolved_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-stock-build-v1/attempt-1/source/LBLRTM/cross-sections/xs/F12BT3",
+        "source_sha256_receipt": "fa05052fb97afb00701bb90f13c71f170ef80ed45280d1861db2345e3c655e3f",
+        "source_size_bytes_receipt": 66155
+      },
+      {
+        "kind": "readonly_symlink_input",
+        "path": "xs/F12BT4",
+        "resolved_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-stock-build-v1/attempt-1/source/LBLRTM/cross-sections/xs/F12BT4",
+        "source_sha256_receipt": "b22eec92fc8584a5a5210c544f706a11c519f9a743cab7268fe6ecdffdcddf78",
+        "source_size_bytes_receipt": 66155
+      },
+      {
+        "kind": "readonly_symlink_input",
+        "path": "xs/F12BT5",
+        "resolved_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-stock-build-v1/attempt-1/source/LBLRTM/cross-sections/xs/F12BT5",
+        "source_sha256_receipt": "9e990c29234f2b06988739b1f52307cc181679a820afe4e8be62eba812969c09",
+        "source_size_bytes_receipt": 66155
+      },
+      {
+        "kind": "readonly_symlink_input",
+        "path": "xs/F12BT6",
+        "resolved_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-stock-build-v1/attempt-1/source/LBLRTM/cross-sections/xs/F12BT6",
+        "source_sha256_receipt": "455978d333d402576206cdc8ced8c3174f8a6f96b16030af9d54177e112f96d5",
+        "source_size_bytes_receipt": 66155
+      },
+      {
+        "kind": "readonly_symlink_input",
+        "path": "xs/HCF3AT1",
+        "resolved_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-stock-build-v1/attempt-1/source/LBLRTM/cross-sections/xs/HCF3AT1",
+        "source_sha256_receipt": "a7294b3899adee33b1faf187ea4b0109edb23a83d8f67a023fe1308c41ba184f",
+        "source_size_bytes_receipt": 105747
+      },
+      {
+        "kind": "readonly_symlink_input",
+        "path": "xs/HCF3AT2",
+        "resolved_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-stock-build-v1/attempt-1/source/LBLRTM/cross-sections/xs/HCF3AT2",
+        "source_sha256_receipt": "4973a523af7d202ac940fade0ed9719536ed9a62c0b45cc3745895a44bb69cea",
+        "source_size_bytes_receipt": 105747
+      },
+      {
+        "kind": "readonly_symlink_input",
+        "path": "xs/HCF3AT3",
+        "resolved_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-stock-build-v1/attempt-1/source/LBLRTM/cross-sections/xs/HCF3AT3",
+        "source_sha256_receipt": "bd5760a47b7f4cbb805713fe07d7697890f3475b20344e3d63acee97b214ba98",
+        "source_size_bytes_receipt": 105747
+      },
+      {
+        "kind": "readonly_symlink_input",
+        "path": "xs/HCF3BT1",
+        "resolved_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-stock-build-v1/attempt-1/source/LBLRTM/cross-sections/xs/HCF3BT1",
+        "source_sha256_receipt": "9995af7f47d39d7eadcbdd4683ba6e871c53b87c9c38e0999eaa2ae5d330860f",
+        "source_size_bytes_receipt": 164408
+      },
+      {
+        "kind": "readonly_symlink_input",
+        "path": "xs/HCF3BT2",
+        "resolved_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-stock-build-v1/attempt-1/source/LBLRTM/cross-sections/xs/HCF3BT2",
+        "source_sha256_receipt": "f6d2aadf397246334f471c0656757f206fb40ab798d174f74fbe080f391f113f",
+        "source_size_bytes_receipt": 164409
+      },
+      {
+        "kind": "readonly_symlink_input",
+        "path": "xs/HCF3BT3",
+        "resolved_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-stock-build-v1/attempt-1/source/LBLRTM/cross-sections/xs/HCF3BT3",
+        "source_sha256_receipt": "eb4c011d8cc3bef13af632dd5c595662b12ea55ce6ed6c215a3dc01cfddddc2f",
+        "source_size_bytes_receipt": 164408
+      },
+      {
+        "kind": "readonly_symlink_input",
+        "path": "xs/HCF3CT1",
+        "resolved_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-stock-build-v1/attempt-1/source/LBLRTM/cross-sections/xs/HCF3CT1",
+        "source_sha256_receipt": "a24e2ebabe18d767822f0ae558ab2d0bceb02999d35934d40651e034e12799b4",
+        "source_size_bytes_receipt": 123321
+      },
+      {
+        "kind": "readonly_symlink_input",
+        "path": "xs/HCF3CT2",
+        "resolved_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-stock-build-v1/attempt-1/source/LBLRTM/cross-sections/xs/HCF3CT2",
+        "source_sha256_receipt": "360b20c0c521f79c7e47f6e9da0a7037d9323d7ef3c72ad9c31197a1c8069121",
+        "source_size_bytes_receipt": 123321
+      },
+      {
+        "kind": "readonly_symlink_input",
+        "path": "xs/HCF3CT3",
+        "resolved_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-stock-build-v1/attempt-1/source/LBLRTM/cross-sections/xs/HCF3CT3",
+        "source_sha256_receipt": "774670f388a3f0ee32c2f603b5da3f80940f5a10c02239656e9b7ce52d93c068",
+        "source_size_bytes_receipt": 123321
+      }
+    ],
+    "max_solver_invocations": 1,
+    "output_comparison": "Only after durable solver RC0. First inventory all regular output hashes against the pinned R3 run; then run the existing exact R3/PANEL reader adapted to this new run directory. Preserve any mismatch. The expected new UDM37_CANDIDATE_DECISIONS file is diagnostic-only. No tolerance changes.",
+    "staged_case_receipt": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-candidate-decision-run-v3/runs/od-v3/case-stage.json",
+    "staged_case_receipt_sha256": "685196e151bdf7d3bc062fd027dbc9ffe5e9a9861ae884b0bb6be9b36cf92485",
+    "timeout_seconds": 7200
+  },
+  "incremental_build": {
+    "command": [
+      "/usr/bin/make",
+      "-f",
+      "make_lblrtm",
+      "linuxGNUdbl"
+    ],
+    "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-candidate-decision-run-v3/staging/source/LBLRTM/build",
+    "expected_nonphysics_scope": "Rebuild/link using copied GNU-double objects; refuse retry. Report scope mismatch if any object besides oprop.o changes.",
+    "flags": "-fdefault-integer-8 -fdefault-real-8 -fdefault-double-8 -frecord-marker=4 -std=legacy",
+    "make_common_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-r3-term-trace-v1/source/LBLRTM/build/makefile.common",
+    "make_common_pin": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-candidate-decision-run-v3/staging/source/LBLRTM/build/makefile.common",
+      "sha256": "c7f91b5660102d409d2785a1be501171aa261b6056579b6fca0ed9b5ff0fff78",
+      "size_bytes": 13126
+    },
+    "make_common_sha256": "c7f91b5660102d409d2785a1be501171aa261b6056579b6fca0ed9b5ff0fff78",
+    "make_stdout_reference": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-r3-term-trace-v1/build-stdout.log",
+      "sha256": "5cf77255e893daef416413f87f988c0cffd357327710ad6088a412d2eabbcb90"
+    },
+    "makefile_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-r3-term-trace-v1/source/LBLRTM/build/make_lblrtm",
+    "makefile_sha256": "76fbc2ed792696fa2a5a3aab9c0bd56517d7df117922c4a868889c17f11de8bd",
+    "max_invocations": 1,
+    "only_expected_changed_object": "build/lblrtm_v12.17_linux_gnu_dbl.obj/oprop.o",
+    "timeout_seconds": 600
+  },
+  "make_common_pin": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-candidate-decision-run-v3/staging/source/LBLRTM/build/makefile.common",
+    "sha256": "c7f91b5660102d409d2785a1be501171aa261b6056579b6fca0ed9b5ff0fff78",
+    "size_bytes": 13126
+  },
+  "makefile_pin": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-candidate-decision-run-v3/staging/source/LBLRTM/build/make_lblrtm",
+    "sha256": "76fbc2ed792696fa2a5a3aab9c0bd56517d7df117922c4a868889c17f11de8bd",
+    "size_bytes": 6212
+  },
+  "max_invocations": {
+    "incremental_build": 1,
+    "solver": 1
+  },
+  "object_directory": "build/lblrtm_v12.17_linux_gnu_dbl.obj",
+  "oprop_object_relative_path": "build/lblrtm_v12.17_linux_gnu_dbl.obj/oprop.o",
+  "paths": {
+    "baseline_output_receipt": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-held-state-r3terms-cpl-od-run-v1/runs/od-v1/postflight.json",
+    "baseline_r3_case": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-held-state-r3terms-cpl-od-run-v1/runs/od-v1",
+    "baseline_r3_source_root": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-r3-term-trace-v1/source/LBLRTM",
+    "build_cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-candidate-decision-run-v3/staging/source/LBLRTM/build",
+    "candidate_oprop": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-candidate-decision-run-v3/staging/source/LBLRTM/src/oprop.f90",
+    "run_cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-candidate-decision-run-v3/runs/od-v3",
+    "stage_root": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-candidate-decision-run-v3",
+    "staging_source_root": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-candidate-decision-run-v3/staging/source/LBLRTM"
+  },
+  "physics": {
+    "negative_OD_reference": "FAIL remains preserved",
+    "new_tolerance_or_physics_verdict": false,
+    "physical_acceptance": "NOT_EVALUATED"
+  },
+  "plan_version_history": {
+    "preserved_v3_plan_sha256": "bff1f541bceed442bde408e1198130d496c087190f92e17e10056a5aee94666d",
+    "preserved_v3_runner_sha256": "0b3f3a204d11612e7c3825befb386752f72f54aff2d37e7697dccda02428f8d7",
+    "v4_purpose": "Fix solver prelaunch regular-file allowlist, hash/size-check all 38 inputs before and after a terminal child, require a strict terminal/reaped RC0 status, reject timeout even if eventual RC is 0, and persist bounded cleanup/reap failure receipts.",
+    "v5_purpose": "Correct the runner-plan schema check to accept the paired V2 plan; no build or solver execution."
+  },
+  "prebuild_executable": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-candidate-decision-run-v3/staging/source/LBLRTM/lblrtm_v12.17_linux_gnu_dbl",
+    "sha256": "a644596b7de51e3684b77e5a8ee0f72ecfb943b4464b7d857590c881650471b1",
+    "size_bytes": 14356688
+  },
+  "prebuild_objects": [
+    {
+      "path": "build/lblrtm_v12.17_linux_gnu_dbl.obj/contnm.o",
+      "sha256": "99eebd867841f70f9f9b2a5c140afaaae295439d0c52b181071fef6914949442",
+      "size_bytes": 305312
+    },
+    {
+      "path": "build/lblrtm_v12.17_linux_gnu_dbl.obj/fftscn_dbl.o",
+      "sha256": "518cbf6e3d30eb03291125b14792dd1d930305898e222eb023e69134614dd936",
+      "size_bytes": 151632
+    },
+    {
+      "path": "build/lblrtm_v12.17_linux_gnu_dbl.obj/lblatm.o",
+      "sha256": "46bcfc22f97c5091cc7112eea74b9dd3114338b26a1469089eb2842cf334b37a",
+      "size_bytes": 11676672
+    },
+    {
+      "path": "build/lblrtm_v12.17_linux_gnu_dbl.obj/lbldum.o",
+      "sha256": "fb2313d03d1ca06fbf6889780d1ef41e0bd285cd77789e853476e51b512d8223",
+      "size_bytes": 4520
+    },
+    {
+      "path": "build/lblrtm_v12.17_linux_gnu_dbl.obj/lbllow.o",
+      "sha256": "975c66242e929f261cb600ca1f3738316c65b8076a1797891b755954fbf72f80",
+      "size_bytes": 1269744
+    },
+    {
+      "path": "build/lblrtm_v12.17_linux_gnu_dbl.obj/lblparams.o",
+      "sha256": "dbec2bec78b2546f2a9bf2444b8a04523cdd7133f649fd8b63ce70aa8ba80a37",
+      "size_bytes": 8960
+    },
+    {
+      "path": "build/lblrtm_v12.17_linux_gnu_dbl.obj/lblrtm.o",
+      "sha256": "514dd2c0571eaa9ea1ca2cc1f6abb4b4c57bc0993c0069ea611c65b650b3ee81",
+      "size_bytes": 530312
+    },
+    {
+      "path": "build/lblrtm_v12.17_linux_gnu_dbl.obj/mt_ckd_h2o_module.o",
+      "sha256": "92d7c1fa2d18424a7e6ac60e67ec035a9087c6abc5ea165a57bfecfbbd706af5",
+      "size_bytes": 17192
+    },
+    {
+      "path": "build/lblrtm_v12.17_linux_gnu_dbl.obj/nonlte.o",
+      "sha256": "fc39ddcd056ad5bf1e01662675517a561d59563b1b2d988d1eaea9772d3f1d08",
+      "size_bytes": 162504
+    },
+    {
+      "path": "build/lblrtm_v12.17_linux_gnu_dbl.obj/oprop.o",
+      "sha256": "069bffa11062d9fbe672b17a07e62feb19f0100be5c95e3f5c89afc57ca30a06",
+      "size_bytes": 475304
+    },
+    {
+      "path": "build/lblrtm_v12.17_linux_gnu_dbl.obj/phys_consts.o",
+      "sha256": "d1fbcbe5ddd72196095f719664f09974439d0155f163914d125fa93fc8f4885a",
+      "size_bytes": 824
+    },
+    {
+      "path": "build/lblrtm_v12.17_linux_gnu_dbl.obj/planet_earth.o",
+      "sha256": "984b4e363b4c5aef6c15590ac5f5e5a9e78b88c759f8579d2fe0e33bbeee8e64",
+      "size_bytes": 1640
+    },
+    {
+      "path": "build/lblrtm_v12.17_linux_gnu_dbl.obj/pltlbl.o",
+      "sha256": "589b567082683d4ffcdb352d363e32e85836f9afab5141a78eaa718c939e5705",
+      "size_bytes": 157528
+    },
+    {
+      "path": "build/lblrtm_v12.17_linux_gnu_dbl.obj/postsub.o",
+      "sha256": "df8248b8d6c63d9d6b8073268b8af4da5ceb91be1ac6f972126d5af75d87a4ca",
+      "size_bytes": 190448
+    },
+    {
+      "path": "build/lblrtm_v12.17_linux_gnu_dbl.obj/read_module.o",
+      "sha256": "a1c880b3ba2a67e609564177ef78d299761445cc4b38e76185d9188598458339",
+      "size_bytes": 14352
+    },
+    {
+      "path": "build/lblrtm_v12.17_linux_gnu_dbl.obj/solar.o",
+      "sha256": "6b23a7dd9c1b7b15713e92520fb852f9b3c2f9442d6abdae886a89a2419765b2",
+      "size_bytes": 53752
+    },
+    {
+      "path": "build/lblrtm_v12.17_linux_gnu_dbl.obj/solar_cycle.o",
+      "sha256": "cebc3032e91463b53ca2f424c65c01512b07dedeeedc429d856d3add4524f29d",
+      "size_bytes": 3088
+    },
+    {
+      "path": "build/lblrtm_v12.17_linux_gnu_dbl.obj/struct_types.o",
+      "sha256": "4f0a2224a1467ec95a6ed3d5f987e74ad943a30186fff62c35ff6c0cbf3523ad",
+      "size_bytes": 3112
+    },
+    {
+      "path": "build/lblrtm_v12.17_linux_gnu_dbl.obj/testmm.o",
+      "sha256": "06277f94386c5edae7735dca49e710a2fd065acc4c29648f57bb2574447f51e5",
+      "size_bytes": 110552
+    },
+    {
+      "path": "build/lblrtm_v12.17_linux_gnu_dbl.obj/util_gfortran.o",
+      "sha256": "99c3f30c59edee4dd184d17f401b24ae829bdba5f623c7d7b19d5f25c26d96bc",
+      "size_bytes": 7056
+    },
+    {
+      "path": "build/lblrtm_v12.17_linux_gnu_dbl.obj/xmerge.o",
+      "sha256": "96e3029238712b36d137faffe2624e3a326024571b8c7e8f5de24ee734efdf07",
+      "size_bytes": 271144
+    }
+  ],
+  "runner_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-candidate-decision-run-v3/execute_once_v5.py",
+  "runner_sha256": "f3b6b511a72b52b630433cb1adc3d197b6e06ad4c5de9e6a1bc75d4d98c8d6f6",
+  "schema": "UDM37_LBLRTM_CANDIDATE_DECISION_RUN_V2",
+  "scope": "One incremental GNU-double compile of candidate opROP only, then at most one held-case diagnostic solver run after separate authorization. Diagnostic instrumentation only; no physical tolerance or verdict.",
+  "stage_receipt_pin": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-candidate-decision-run-v3/staging/stage-receipt.json",
+    "sha256": "5f7ec9ed11d823f58bc0cb81ae677946b8af27f6b883c848557af6df27843081"
+  },
+  "status": "PREPARED_ISOLATED_STAGING_NOT_COMPILED_NOT_RUN"
+}

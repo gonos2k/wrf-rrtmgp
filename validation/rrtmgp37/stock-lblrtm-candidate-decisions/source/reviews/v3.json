@@ -1,0 +1,56 @@
+{
+  "schema": "UDM37_LBLRTM_CANDIDATE_DECISION_SEMANTIC_REVIEW_V3",
+  "status": "PASS_SCOPED_REASON9_SEMANTICS_CORRECTED",
+  "scope": "Read-only verification that candidate-decision source v3 corrects the v2 event-label interpretation while preserving the reviewed source and patch. No compile, solver, model, raw TAPE3 scan, or raw trace read was performed.",
+  "pins": {
+    "v2_review": {
+      "path": "build/udm37-lblrtm-candidate-decision-source-review-v2/review-v2.json",
+      "sha256": "05da324257425d34816c59113ca8fcced0728c8abc8bd28631ce87a10f2b885a"
+    },
+    "base_source": {
+      "path": "build/udm37-lblrtm-r3-term-trace-v1/source/LBLRTM/src/oprop.f90",
+      "sha256": "6b806117a32832371f8947bc54b5a5c3bf38389a7279ae48ae39afc141666300"
+    },
+    "v2_candidate": {
+      "path": "build/udm37-lblrtm-candidate-decision-source-v2/oprop.candidate.f90",
+      "sha256": "a3b5732eca771b74fd373b2f8f67f515c9c05d09dc4c86c1fe77bd7d9bb1bd3c"
+    },
+    "v2_patch": {
+      "path": "build/udm37-lblrtm-candidate-decision-source-v2/candidate-decision.patch",
+      "sha256": "0ff5738d5246464c72351e35782da66b89566c656bbbc95433f88e12c229fbe6"
+    },
+    "v3_plan": {
+      "path": "build/udm37-lblrtm-candidate-decision-source-v3/plan.json",
+      "sha256": "3a6f020dfdc38ff37a553bd4289273b1e45b60423e76ce91b3bb0f0ea6e36473"
+    },
+    "v3_readme": {
+      "path": "build/udm37-lblrtm-candidate-decision-source-v3/README.md",
+      "sha256": "307ede8882f72d51876e1b560be8aa5d1d90e009a190655c5ee788d3a9058a8d"
+    },
+    "v3_candidate": {
+      "path": "build/udm37-lblrtm-candidate-decision-source-v3/oprop.candidate.f90",
+      "sha256": "a3b5732eca771b74fd373b2f8f67f515c9c05d09dc4c86c1fe77bd7d9bb1bd3c"
+    },
+    "v3_patch": {
+      "path": "build/udm37-lblrtm-candidate-decision-source-v3/candidate-decision.patch",
+      "sha256": "0ff5738d5246464c72351e35782da66b89566c656bbbc95433f88e12c229fbe6"
+    }
+  },
+  "semantic_finding": {
+    "v2_description": "LNCOR1_9 was labeled as having survived LNCOR1 filters and reached CNVFNV.",
+    "source_location": "In v3 candidate oprop.f90, SP and SPPSP are calculated at lines 1262-1264; the reason-9 event is emitted immediately at lines 1265-1274. The later IFLAG=0 SPEAK/FREJ tests begin at lines 1280 onward and can reject the row with a jump to label 25. CNVFNV is a separate routine and has phase-3 hooks.",
+    "v3_interpretation": "LNCOR1_9 reports that corrected SP/SPPSP strength was computed before downstream SPEAK/FREJ filtering. It does not report that those later filters passed or that CNVFNV was entered. A same-identity phase-3 CNVFNV event is the evidence for CNVFNV entry.",
+    "assessment": "The plan and README now describe the exact hook position and do not overstate acceptance. The candidate source hook itself is unchanged from v2."
+  },
+  "change_scope": {
+    "v2_to_v3_candidate_source": "Byte-identical; SHA-256 a3b5732eca771b74fd373b2f8f67f515c9c05d09dc4c86c1fe77bd7d9bb1bd3c.",
+    "v2_to_v3_patch": "Byte-identical; SHA-256 0ff5738d5246464c72351e35782da66b89566c656bbbc95433f88e12c229fbe6.",
+    "metadata_only_correction": "The reason-9 semantics are corrected in plan and README; isotope decoding and encoded-MOL fixes from v2 are retained. No source hook was moved or added."
+  },
+  "limitations": [
+    "The candidate remains uncompiled and unrun; this review does not establish compiler/ABI behavior or runtime ledger completeness.",
+    "Even a complete source-decision ledger cannot establish that a physical cancellation partner ought to exist or that negative optical depth is physically valid."
+  ],
+  "additional_material_blockers": [],
+  "disposition": "The v2 reason-9 wording blocker is corrected in v3 without changing the candidate source or patch. Preserve all earlier v1/v2 plans and reviews unchanged."
+}

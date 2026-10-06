@@ -1,0 +1,21 @@
+{
+  "status": "EXECUTED_REPORT_AGGREGATE_CORRECTION_NO_RAW_RERUN",
+  "created_epoch": 1791260696.5278683,
+  "literal_report_sha256": "3244591f8545ba8f91f9c0f9ce3a8e8717ba7ec21487b13a0360e9d60ef83c51",
+  "literal_report_preserved": true,
+  "invalid_field": "join.computed_reason9_invocations",
+  "invalid_value": 7500,
+  "cause": "computed[key] lookup inserts69 empty defaultdict lists for missing observed prefix ancestors; len(computed) counts them as computed invocations.",
+  "supported_reason9_event_count": 7431,
+  "reason9_unique_identity_claim": "NOT_USED_FROM_DEFECTIVE_AGGREGATE",
+  "left_censored_prefix_records": 69,
+  "left_censored_ancestry_validated": false,
+  "checks_unchanged": [
+    "Target term joins identity/bitwise operands",
+    "45 layer finite exact sample equality",
+    "Negative optical-depth FAIL retained"
+  ],
+  "new_raw_reader_model_build_solver_invocations": 0,
+  "independent_review_sha256": "b681979961d9f53119d122533bd147c3bdff4471fba02e7822b9fdf4086dff79",
+  "prospective_source_fix": "Use computed.get(key, ()) for lookup so missing ancestry does not mutate aggregate keys; no retroactive executed-report rewrite."
+}

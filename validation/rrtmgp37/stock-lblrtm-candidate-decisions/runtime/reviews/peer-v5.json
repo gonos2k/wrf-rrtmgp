@@ -1,0 +1,38 @@
+{
+  "blockers": [
+    {
+      "detail": "The runner reads baseline_output_receipt.path to derive the expected output-name set, but does not verify that file against baseline_output_receipt.sha256 before parsing it. The plan carries the digest, but the runner never checks it; root-source-preflight-v5 does not bind this separate baseline output receipt. Thus the postflight output-name inventory can use a modified receipt despite the pinned digest.",
+      "id": "BASELINE_OUTPUT_RECEIPT_NOT_HASH_VERIFIED",
+      "impact": "Integrity gap in postflight output inventory only; this does not alter solver inputs or numerical acceptance, but the inventory is not authenticated as planned.",
+      "location": "execute_once_v5.py:265-274 (solver_once)"
+    }
+  ],
+  "disposition": "Do not treat this v5 runner as fully reviewed for execution until the baseline receipt is digest-checked before JSON parsing, or the same receipt is explicitly authenticated by another prelaunch gate.",
+  "pins": {
+    "plan": {
+      "path": "build/udm37-lblrtm-candidate-decision-run-v3/plan-v5.json",
+      "sha256": "6cae9c8d8dc51a5347c5c3ae2e26de58fbf2f71a5cbb4e41ca8adb5d8167e639",
+      "size_bytes": 36871
+    },
+    "root_source_preflight": {
+      "path": "build/udm37-lblrtm-candidate-decision-run-v3/root-source-preflight-v5.json",
+      "sha256": "adb0be04aebff4651d4816f7add6bd50672caeb4a7ce8841e23c852e210e82a1",
+      "size_bytes": 678
+    },
+    "runner": {
+      "path": "build/udm37-lblrtm-candidate-decision-run-v3/execute_once_v5.py",
+      "sha256": "f3b6b511a72b52b630433cb1adc3d197b6e06ad4c5de9e6a1bc75d4d98c8d6f6",
+      "size_bytes": 16859
+    }
+  },
+  "review_scope": "Exact frozen v5 plan/runner and root source-preflight artifacts; no build, solver, model, or raw-output execution.",
+  "schema": "UDM37_LBLRTM_CANDIDATE_DECISION_RUN_V5_STATIC_REVIEW_V1",
+  "status": "STATIC_REVIEW_WITH_ONE_REMAINING_INTEGRITY_BLOCKER",
+  "verified": [
+    "v5 runner and plan pins match their declared frozen SHA-256 values.",
+    "Root source preflight verifies 446 staged regular files and 16 symlink texts; only src/oprop.f90 is the intended source overlay.",
+    "Build gate binds stage receipts, source, Makefiles, donor executable and complete object roster; it requires a terminal RC0 and only the oprop object/executable to change before solver eligibility.",
+    "Solver gate requires the completed incremental-build receipt, checks executable and staged case/input identities, durably records child PID/return code before inspecting outputs, rejects timeout as success, and checks post-run input immutability.",
+    "Launch/retry guards and bounded terminate/kill/reap cleanup cover the previously identified repeat-launch and child-cleanup paths."
+  ]
+}

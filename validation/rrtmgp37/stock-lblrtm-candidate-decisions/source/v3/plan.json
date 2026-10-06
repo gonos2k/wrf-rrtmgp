@@ -1,0 +1,122 @@
+{
+  "schema": "UDM37_LBLRTM_CANDIDATE_DECISION_PATCH_V3",
+  "status": "STATIC_DIAGNOSTIC_PATCH_PREPARED_NOT_COMPILED_OR_RUN",
+  "base": {
+    "path": "build/udm37-lblrtm-r3-term-trace-v1/source/LBLRTM/src/oprop.f90",
+    "sha256": "6b806117a32832371f8947bc54b5a5c3bf38389a7279ae48ae39afc141666300",
+    "preserved_unchanged": true
+  },
+  "candidate": {
+    "path": "build/udm37-lblrtm-candidate-decision-source-v3/oprop.candidate.f90",
+    "patch": "build/udm37-lblrtm-candidate-decision-source-v3/candidate-decision.patch",
+    "scope": "V1 observational hooks plus corrected source-encoded MOL/isotope identity fields; no radiation or line-processing behavior changes.",
+    "patch_sha256": "0ff5738d5246464c72351e35782da66b89566c656bbbc95433f88e12c229fbe6",
+    "private_modified_source_copy_sha256": "a3b5732eca771b74fd373b2f8f67f515c9c05d09dc4c86c1fe77bd7d9bb1bd3c"
+  },
+  "run_status": {
+    "compiler_invocations": 0,
+    "solver_or_model_invocations": 0,
+    "raw_TAPE3_scans": 0,
+    "raw_trace_reads": 0,
+    "publication": false
+  },
+  "selection": {
+    "layer": 21,
+    "target_VFT_cm_minus_1": 662.695395555556,
+    "VFT_match_rule": "abs(VFT - 662.695395555556) < 1e-10",
+    "target_R3_indices_1based": [
+      61,
+      62,
+      63,
+      64
+    ],
+    "identity": [
+      "external run receipt's exact TAPE3 SHA-256",
+      "layer number",
+      "RDLIN rewind-pass ordinal",
+      "panel-header ordinal within that pass",
+      "actual input_block buffer slot"
+    ],
+    "decision_join": "LNCOR1 invocation ordinal is stored for each active buffer slot and repeated in CNVFNV rows; the source-encoded MOL and original IFLAG are retained before LNCOR1 reduces MOL to molecule number."
+  },
+  "event_schema": {
+    "private_file": "UDM37_CANDIDATE_DECISIONS",
+    "record_tag": "UDM37CAND1",
+    "phase_codes": {
+      "1": "RDLIN",
+      "2": "LNCOR1",
+      "3": "CNVFNV"
+    },
+    "reason_codes": {
+      "RDLIN_1": "main row offered to LNCOR1",
+      "RDLIN_2": "panel header VMAX<VBOT; data block skipped by existing RDLIN gate",
+      "RDLIN_3": "main row lies below VBOT while RDLIN selects ILO",
+      "RDLIN_4": "main row lies after the active IHI range and is deferred by the current RDLIN selection",
+      "LNCOR1_2": "invalid molecule code path",
+      "LNCOR1_3": "isotope exceeds the configured isotope maximum",
+      "LNCOR1_4": "SUI is exactly zero",
+      "LNCOR1_5": "HWF3*ALFV+VNU<VFT support rejection",
+      "LNCOR1_6": "IFLAG=0 rejected by SPEAK<=DPTMN",
+      "LNCOR1_7": "IFLAG=0 rejected by SPEAK<=DPTMN+DPTFC*R4(JJ) with zero SPP/SP",
+      "LNCOR1_8": "IFLAG=0 rejected by previously read FREJ state",
+      "LNCOR1_9": "SP/SPPSP corrected strength was computed; subsequent SPEAK/FREJ filters have not necessarily passed. A phase-3 CNVFNV event proves entry to CNVFNV.",
+      "CNVFNV_10": "SP equals zero at CNVFNV entry",
+      "CNVFNV_11": "JMAX1>MAX1; this call hands the line to later panel processing before writes",
+      "CNVFNV_12": "computed J3 stencil overlaps target R3 indices 61-64",
+      "CNVFNV_13": "computed J3 stencil does not overlap target R3 indices 61-64"
+    },
+    "fields": [
+      "phase/reason, layer, pass/block/slot identity, LNCOR1 batch ordinal, outer IOUT index, buffer slot, original IFLAG/MOL/isotope",
+      "KPANEL/IPANEL/IDATA, ILO/IHI, MAX1, JMIN1/JMAX1/J3SHFT, target overlap bounds",
+      "VNU, VFT, VBOT/VTOP, support operand, SUI, SP, SPPSP, ALFL, ALFV, RECALF and two branch-specific auxiliary scalars"
+    ],
+    "unknown_numeric_sentinel": "Negative HUGE of the declared real kind marks values not yet computed or not used by that decision; it is not a physical value."
+  },
+  "source_behavior_preserved": {
+    "assignments_or_coefficients_changed": false,
+    "R3_baseline_or_coupling_updates_changed": false,
+    "line_support_predicate_changed": false,
+    "line_strength_or_SPP_calculation_changed": false,
+    "panel_handoff_changed": false,
+    "control_flow": "Original one-line zero-SUI, support, and FREJ jumps are wrapped in equivalent IF/THEN blocks; each still executes the same label-25 jump after the observational hook. No condition operand or evaluation order is changed. Diagnostic identity now mirrors the pinned source ISO decoding; no source isotope or IFLAG value is rewritten."
+  },
+  "remaining_limits": [
+    "The patch needs independent static review and a fresh diagnostic build before any future run; neither is included here.",
+    "The RDLIN block identity is an ordinal within a rewind pass and is only stable when joined to the exact external TAPE3 hash and candidate source/build pins.",
+    "Block headers rejected by VMAX<VBOT have no per-line buffer slots because RDLIN deliberately does not load their data record; the ledger records the block ordinal, VMAX and gate operands, not each un-read line identity.",
+    "This ledger can show candidate routing and source-declared decisions, not whether a physical cancellation partner ought to exist or whether negative optical depth is physically valid."
+  ],
+  "static_checks": {
+    "diagnostic_event_calls": 16,
+    "event_argument_count_all_calls": 37,
+    "free_form_lines_over_132_columns": 0,
+    "wrong_nested_mod_isotope_expressions": 0,
+    "correct_encoded_isotope_expressions": 7,
+    "RDLIN_reason1_passes_encoded_MOL_verbatim": true,
+    "compiler_or_parser_validation": "Not performed; no Fortran compile/parser was invoked.",
+    "diff_check": "No whitespace errors; --no-index returned the expected differences status 1 with empty diagnostics."
+  },
+  "supersedes": {
+    "path": "build/udm37-lblrtm-candidate-decision-source-v2/plan.json",
+    "plan_sha256": "4060b640003db3702f347f43b02619f3f28c54ed688607c4f23757c28eb9b162",
+    "v1_patch_sha256": "a7598b277614cc6d2b915681b3753c5f242a979ff35955a09e4c66717c1eea70",
+    "v1_candidate_sha256": "f76f0c5d87c62339bb845fea0aafd2d4591700dd16a78b9c0bbda5985d25a517",
+    "preserved_unchanged": true,
+    "v2_patch_sha256": "0ff5738d5246464c72351e35782da66b89566c656bbbc95433f88e12c229fbe6",
+    "v2_candidate_sha256": "a3b5732eca771b74fd373b2f8f67f515c9c05d09dc4c86c1fe77bd7d9bb1bd3c"
+  },
+  "identity_correction": {
+    "encoded_mol_field": "Pass udm37_rdlin_id(4,I) unchanged in RDLIN reason 1 and retain the same encoded value in other diagnostic events.",
+    "isotope_expression": "MOD(udm37_rdlin_id(4,I),1000)/100",
+    "source_reference": "Pinned base LNCOR1 computes ISO = MOD(MOL(I),I_1000)/100 at build/udm37-lblrtm-r3-term-trace-v1/source/LBLRTM/src/oprop.f90:1016.",
+    "source_identity_preserved": "The original IFLAG and encoded MOL are copied from the RDLIN identity buffer; only the diagnostic isotope derivation is computed. This mirrors source encoding and avoids replacing encoded MOL with a reduced molecule-only value.",
+    "v1_issue": "The nested MOD(MOD(encoded_MOL,1000),100)/100 expression returned zero for every encoded integer; the RDLIN reason-1 MOL field also reduced the encoded value with MOD(...,100).",
+    "applied_to": "All seven diagnostic isotope expressions in RDLIN/LNCOR1/CNVFNV event records; source LNCOR1 expression itself is unmodified."
+  },
+  "stage_semantics_correction": {
+    "reason": "LNCOR1 reason 9 is emitted immediately after SPPSP calculation and before downstream SPEAK/FREJ filtering.",
+    "correct_interpretation": "Reason 9 records computed corrected strength and progress to the next source location only. Do not describe it as having survived all LNCOR1 filters or as CNVFNV acceptance.",
+    "entry_evidence": "A phase-3 CNVFNV event for the same LNCOR invocation ordinal is the diagnostic evidence that CNVFNV was reached.",
+    "source_hooks_unchanged": true
+  }
+}

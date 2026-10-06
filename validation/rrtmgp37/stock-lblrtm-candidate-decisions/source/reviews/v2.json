@@ -1,0 +1,66 @@
+{
+  "schema": "UDM37_LBLRTM_CANDIDATE_DECISION_STATIC_REVIEW_V2",
+  "status": "PASS_SCOPED_STATIC_IDENTITY_CORRECTIONS",
+  "scope": "Independent read-only static comparison of candidate-decision source v2 to v1 and the pinned R3-term base. No compiler, parser, solver, model, or raw data/trace read was performed.",
+  "pins": {
+    "base_source": {
+      "path": "build/udm37-lblrtm-r3-term-trace-v1/source/LBLRTM/src/oprop.f90",
+      "sha256": "6b806117a32832371f8947bc54b5a5c3bf38389a7279ae48ae39afc141666300"
+    },
+    "v1_plan": {
+      "path": "build/udm37-lblrtm-candidate-decision-source-v1/plan.json",
+      "sha256": "a9e4cc94185e2e1f1ab7e448eb80d08d07e49434b66e6358fbd289c21eaf6502"
+    },
+    "v1_candidate": {
+      "path": "build/udm37-lblrtm-candidate-decision-source-v1/oprop.candidate.f90",
+      "sha256": "f76f0c5d87c62339bb845fea0aafd2d4591700dd16a78b9c0bbda5985d25a517"
+    },
+    "v2_plan": {
+      "path": "build/udm37-lblrtm-candidate-decision-source-v2/plan.json",
+      "sha256": "4060b640003db3702f347f43b02619f3f28c54ed688607c4f23757c28eb9b162"
+    },
+    "v2_candidate": {
+      "path": "build/udm37-lblrtm-candidate-decision-source-v2/oprop.candidate.f90",
+      "sha256": "a3b5732eca771b74fd373b2f8f67f515c9c05d09dc4c86c1fe77bd7d9bb1bd3c"
+    },
+    "v2_patch": {
+      "path": "build/udm37-lblrtm-candidate-decision-source-v2/candidate-decision.patch",
+      "sha256": "0ff5738d5246464c72351e35782da66b89566c656bbbc95433f88e12c229fbe6"
+    },
+    "v1_review": {
+      "path": "build/udm37-lblrtm-candidate-decision-source-review-v1/review.json",
+      "sha256": "052330280c05afc1e92868588c19bbb5d2b242481cc048f53de741c6b629dead"
+    }
+  },
+  "verified_v1_fixes": {
+    "isotope_decode": {
+      "base_source_expression": "MOD(MOL(I),I_1000)/100",
+      "v2_expression": "MOD(udm37_rdlin_id(4,I),1000)/100",
+      "v2_occurrences": 7,
+      "v1_invalid_nested_expression_occurrences": 0,
+      "finding": "The v2 expression follows the base source's integer isotope decode; unlike v1, it does not apply a second MOD that leaves a remainder below 100 before integer division by 100."
+    },
+    "RDLIN_reason_1_encoded_mol": {
+      "v2_call_arguments": "flag=udm37_rdlin_id(5,I), mol=udm37_rdlin_id(4,I), iso=MOD(udm37_rdlin_id(4,I),1000)/100",
+      "finding": "The offered-row event now passes the saved encoded MOL verbatim, consistent with RDLIN reasons 3/4 and LNCOR1/CNVFNV records. Molecule/isotope decoding is diagnostic-only and does not rewrite the source buffer."
+    }
+  },
+  "change_scope": {
+    "v1_to_v2_candidate_diff": "Exactly seven event-call lines were corrected: the three RDLIN ISO arguments, RDLIN reason-1 MOL argument, and four CNVFNV ISO arguments. No other candidate-source lines changed between v1 and v2.",
+    "base_to_candidate_behavior": "The existing RDLIN/LNCOR1/CNVFNV diagnostic hooks remain observational. Reviewed additions do not alter physical assignments, R3 update formulas, support predicates, SPEAK/FREJ branch conditions, or panel handoff. Wrapped original jumps still jump to the same label after the log call.",
+    "identity_buffer": "The INTEGER COMMON /UDM37_RDLIN_ID/ udm37_rdlin_id(6,250) declaration/use remains shape- and type-consistent across RDLIN, LNCOR1, and CNVFNV; loaded slots receive pass/block/slot/MOL/IFLG before line selection, and LNCOR1 stores its invocation ordinal in slot 6.",
+    "event_calls": {
+      "count": 16,
+      "argument_count_each": 37,
+      "helper_dummy_count": 37,
+      "integer_identity_arguments": "Compatible with the helper's INTEGER dummies; real sentinels and values remain passed to REAL or REAL*8 dummies as declared."
+    }
+  },
+  "remaining_scope_limits": [
+    "No compilation validates compiler-specific COMMON or argument association; this is static source review only.",
+    "RDLIN header skips have block-level records, not identities for line records it deliberately does not read.",
+    "A complete candidate-decision ledger can establish routing and the source-declared decisions, but not that a physical cancellation partner ought to exist or that negative optical depth is physically valid."
+  ],
+  "additional_material_blockers": [],
+  "disposition": "The two v1 identity blockers are corrected in v2 within the declared diagnostic-only scope. Keep v1 and its review immutable; any compile/run still requires its separately frozen authorization and validation process."
+}
