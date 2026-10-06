@@ -1,0 +1,29 @@
+{
+  "schema": "UDM37_LBLRTM_PANEL_R2_R1_SOURCE_CONTRACT_V1",
+  "source": {
+    "path": "build/udm37-lblrtm-negative-pocket-observer-v7-source-v1/oprop.negative-pocket-observer-v7.UNCOMPILED.f90",
+    "sha256": "18f631c523f7a012e257ce41d103d77460520d04f636d93f51b22173b414304d",
+    "source_context": "private local observer build based on pinned LBLRTM 12.17 source; this SHA identifies the copied source, not an upstream commit"
+  },
+  "source_locations": {
+    "PANEL_signature": "line 1609: PANEL(R1,R2,R3,KFILE,JRAD,IENTER)",
+    "stage2_snapshot": "line 1720, before the R1 update loop",
+    "R1_loop_and_stencil": "lines 1722-1730: DO 20 J=NLO,NHI,4; J2=(J-1)/4+1; four residue-specific assignments",
+    "stage3_snapshot": "line 1733, after the R1 update loop"
+  },
+  "build_flags": "-fdefault-integer-8 -fdefault-real-8 -fdefault-double-8 -frecord-marker=4 -std=legacy",
+  "arithmetic": {
+    "X00": "-7/128",
+    "X01": "105/128",
+    "X02": "35/128",
+    "X03": "-5/128",
+    "X10": "-1/16",
+    "X11": "9/16",
+    "residue0": "R1(J) = R1(J) + R2(J2)",
+    "residue1": "R1(J+1) = (((R1old + X00*R2(J2-1)) + X01*R2(J2)) + X02*R2(J2+1)) + X03*R2(J2+2)",
+    "residue2": "R1(J+2) = R1old + X10*(R2(J2-1)+R2(J2+2)) + X11*(R2(J2)+R2(J2+1))",
+    "residue3": "R1(J+3) = (((R1old + X03*R2(J2-1)) + X02*R2(J2)) + X01*R2(J2+1)) + X00*R2(J2+2)"
+  },
+  "coordinate_contract": "Frozen OD panel headers identify local sample ownership. Global R1 index is j1=NLO+sample-1. The reader validates target frequency, panel owner header, full saved frame identity, and active/backing R1/R2 limits before reconstructing the deposit.",
+  "scope_limit": "This is only the saved PANEL stage-2 R2 to stage-3 R1 update for eight samples; it makes no claim about CNVFNV, RADFNI, continuum, spectral line completeness, or physical acceptance."
+}

@@ -1,0 +1,399 @@
+{
+  "all_eight_exact_samples_have_unique_owner_and_operands": true,
+  "build_kind_contract": "Pinned build flags are -fdefault-integer-8 -fdefault-real-8 -fdefault-double-8; source PANEL arrays and interpolation coefficients therefore execute in binary64/default integer8. X00..X11 are exact dyadic constants.",
+  "event_counts": {
+    "radfni": 0,
+    "snapshots": 2040,
+    "terms": 125381
+  },
+  "exact_matches": 8,
+  "interpretation_limits": [
+    "The descriptive summary's strict parser rejection for missing RADFNI remains in force; this check does not waive it.",
+    "Stage-1-to-4 snapshot configuration flags remain non-authoritative because PANEL has no such arguments/state; only array samples and frame coordinates are used here.",
+    "No line-to-R3/CNVFNV deposit reconstruction, partner completeness claim, continuum attribution, or physical validity conclusion is made."
+  ],
+  "max_ulp_distance": 0,
+  "pins": {
+    "OD21": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-negative-pocket-observer-v7-solver-continuation-v1/case/ODdeflt_021",
+      "sha256": "b5b097fdb7df17dcd09d141a796cea4ce5b60ff0d5a5f9c7cfdde2863ffd6619",
+      "size_bytes": 3725424
+    },
+    "parser": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-negative-pocket-observer-v8-parser-v1/parse_observer_trace_v8.py",
+      "sha256": "07d0991582698eaea8ba57912ae0b8317d01a37020737db712763a44af8a57c0",
+      "size_bytes": 35470
+    },
+    "plan": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-pocket-deposit-v2/plan-v4.json",
+      "sha256": "656972d2d75fedad38d01e7431bb21c19fe288eb0c706ff9855a9562e71488df"
+    },
+    "source": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-negative-pocket-observer-v7-source-v1/oprop.negative-pocket-observer-v7.UNCOMPILED.f90",
+      "sha256": "18f631c523f7a012e257ce41d103d77460520d04f636d93f51b22173b414304d",
+      "size_bytes": 509758
+    },
+    "successful_continuation_receipts": {
+      "all45_od_comparison": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-negative-pocket-observer-v7-solver-continuation-v1/root-all45-od-byte-comparison.json",
+        "sha256": "24721d81b6e7d0fa1c667a05913d132c13b827b360bb00f53854d0f493138648"
+      },
+      "execution": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-negative-pocket-observer-v7-solver-continuation-v1/solver-execution.json",
+        "sha256": "7bc2c4cb61bac8aa6f515afbf5677314dbeeec72d0164e79073fa660d047c226"
+      },
+      "od21_physics_summary": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-negative-pocket-observer-v7-solver-continuation-v1/root-original-physics-OD21-summary.json",
+        "sha256": "0a7c14084ae6afeef922c0e270be6c797349aacdba9a68579630368798c79f1b"
+      },
+      "output_inventory": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-negative-pocket-observer-v7-solver-continuation-v1/solver-output-inventory.json",
+        "sha256": "a9d17ce2e30702e1057817abe42c0cd58c09ee777339a5907a206a0b46a7cb09"
+      },
+      "postflight": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-negative-pocket-observer-v7-solver-continuation-v1/solver-postflight.json",
+        "sha256": "dac06aa4b7c9556ffe3a4875323cbb9ecbba94bf4ee8d8ebb83f86e5ecf0f4db"
+      }
+    },
+    "trace": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-negative-pocket-observer-v7-solver-continuation-v1/case/UDM37_NEGATIVE_POCKET_TRACE",
+      "sha256": "a28cb2e7d1487ac22287202606b69e3edc893329468f642831dd7cf3c12a6a33",
+      "size_bytes": 70941232
+    }
+  },
+  "schema": "UDM37_LBLRTM_SAVED_R2_TO_R1_DEPOSIT_CHECK_V4",
+  "scope": "Only PANEL stage-2 saved R2 to stage-3 R1 interpolation deposit at 8 exact selected output samples; this is not a full CNVFNV deposit, RADFNI, continuum, full-spectrum, or physical acceptance check.",
+  "status": "PASS_DEPOSIT_EXACT",
+  "targets": [
+    {
+      "after_ulp_distance": 0,
+      "exact_after_match": true,
+      "fortran_expression": "((((before+X00*R2[J2-1])+X01*R2[J2])+X02*R2[J2+1])+X03*R2[J2+2])",
+      "frame": {
+        "dv": 0.0037688888888888906,
+        "dvr2": 0.015075555555555563,
+        "idata": 0,
+        "ipanel": 1,
+        "nhi": 2432,
+        "nlo": 33,
+        "nshift": 32,
+        "vft": 617.4687288888892
+      },
+      "mapping": {
+        "j2": 74,
+        "jbase": 293,
+        "r2_indices": [
+          73,
+          74,
+          75,
+          76
+        ],
+        "residue": 1
+      },
+      "owner_header_1based": 14,
+      "predicted_after": -6.172584639114227e-07,
+      "r1_index_1based": 294,
+      "r1_observed_increment": -7.849447923558252e-07,
+      "r1_predicted_increment": -7.849447923558252e-07,
+      "r1_stage2_before": 1.6768632844440244e-07,
+      "r1_stage3_after": -6.172584639114227e-07,
+      "r2_stage2_values": {
+        "73": 6.610538259308831e-06,
+        "74": 6.610102354863831e-07,
+        "75": -5.022461410021302e-06,
+        "76": -1.0436181803658304e-05
+      },
+      "sample_index_1based": 262,
+      "target_frequency_cm-1": 618.5730133333337,
+      "target_id": 1
+    },
+    {
+      "after_ulp_distance": 0,
+      "exact_after_match": true,
+      "fortran_expression": "before + X10*(R2[J2-1]+R2[J2+2]) + X11*(R2[J2]+R2[J2+1])",
+      "frame": {
+        "dv": 0.0037688888888888906,
+        "dvr2": 0.015075555555555563,
+        "idata": 0,
+        "ipanel": 1,
+        "nhi": 2432,
+        "nlo": 33,
+        "nshift": 32,
+        "vft": 617.4687288888892
+      },
+      "mapping": {
+        "j2": 93,
+        "jbase": 369,
+        "r2_indices": [
+          92,
+          93,
+          94,
+          95
+        ],
+        "residue": 2
+      },
+      "owner_header_1based": 14,
+      "predicted_after": -4.858705174359572e-05,
+      "r1_index_1based": 371,
+      "r1_observed_increment": -5.3924076365713714e-05,
+      "r1_predicted_increment": -5.3924076365713714e-05,
+      "r1_stage2_before": 5.337024622117997e-06,
+      "r1_stage3_after": -4.858705174359572e-05,
+      "r2_stage2_values": {
+        "92": -5.2633658796786854e-05,
+        "93": -5.352464143411091e-05,
+        "94": -5.428438428584338e-05,
+        "95": -5.486235083138241e-05
+      },
+      "sample_index_1based": 339,
+      "target_frequency_cm-1": 618.8632177777781,
+      "target_id": 2
+    },
+    {
+      "after_ulp_distance": 0,
+      "exact_after_match": true,
+      "fortran_expression": "before + R2[J2]",
+      "frame": {
+        "dv": 0.0037688888888888906,
+        "dvr2": 0.015075555555555563,
+        "idata": 0,
+        "ipanel": 1,
+        "nhi": 2432,
+        "nlo": 33,
+        "nshift": 32,
+        "vft": 617.4687288888892
+      },
+      "mapping": {
+        "j2": 101,
+        "jbase": 401,
+        "r2_indices": [
+          101
+        ],
+        "residue": 0
+      },
+      "owner_header_1based": 14,
+      "predicted_after": -5.065404393102684e-05,
+      "r1_index_1based": 401,
+      "r1_observed_increment": -5.3945678720124475e-05,
+      "r1_predicted_increment": -5.3945678720124475e-05,
+      "r1_stage2_before": 3.2916347890976335e-06,
+      "r1_stage3_after": -5.065404393102684e-05,
+      "r2_stage2_values": {
+        "101": -5.3945678720124475e-05
+      },
+      "sample_index_1based": 369,
+      "target_frequency_cm-1": 618.9762844444448,
+      "target_id": 3
+    },
+    {
+      "after_ulp_distance": 0,
+      "exact_after_match": true,
+      "fortran_expression": "((((before+X03*R2[J2-1])+X02*R2[J2])+X01*R2[J2+1])+X00*R2[J2+2])",
+      "frame": {
+        "dv": 0.0037688888888888906,
+        "dvr2": 0.015075555555555563,
+        "idata": 0,
+        "ipanel": 1,
+        "nhi": 2432,
+        "nlo": 33,
+        "nshift": 32,
+        "vft": 617.4687288888892
+      },
+      "mapping": {
+        "j2": 112,
+        "jbase": 445,
+        "r2_indices": [
+          111,
+          112,
+          113,
+          114
+        ],
+        "residue": 3
+      },
+      "owner_header_1based": 14,
+      "predicted_after": -7.998398424575614e-07,
+      "r1_index_1based": 448,
+      "r1_observed_increment": -9.880016191211388e-06,
+      "r1_predicted_increment": -9.880016191211388e-06,
+      "r1_stage2_before": 9.080176348753826e-06,
+      "r1_stage3_after": -7.998398424575614e-07,
+      "r2_stage2_values": {
+        "111": -2.488026774550351e-05,
+        "112": -1.6375471548255472e-05,
+        "113": -7.70215604794065e-06,
+        "114": 1.0250745685521857e-06
+      },
+      "sample_index_1based": 416,
+      "target_frequency_cm-1": 619.1534222222226,
+      "target_id": 4
+    },
+    {
+      "after_ulp_distance": 0,
+      "exact_after_match": true,
+      "fortran_expression": "((((before+X03*R2[J2-1])+X02*R2[J2])+X01*R2[J2+1])+X00*R2[J2+2])",
+      "frame": {
+        "dv": 0.0037688888888888906,
+        "dvr2": 0.015075555555555563,
+        "idata": 0,
+        "ipanel": 1,
+        "nhi": 2432,
+        "nlo": 33,
+        "nshift": 32,
+        "vft": 716.9673955555562
+      },
+      "mapping": {
+        "j2": 308,
+        "jbase": 1229,
+        "r2_indices": [
+          307,
+          308,
+          309,
+          310
+        ],
+        "residue": 3
+      },
+      "owner_header_1based": 25,
+      "predicted_after": -2.14608047039249e-06,
+      "r1_index_1based": 1232,
+      "r1_observed_increment": -1.6895988639436003e-05,
+      "r1_predicted_increment": -1.6895988639436003e-05,
+      "r1_stage2_before": 1.4749908169043515e-05,
+      "r1_stage3_after": -2.14608047039249e-06,
+      "r2_stage2_values": {
+        "307": -8.22757592491145e-06,
+        "308": -1.3260224649735075e-05,
+        "309": -1.8064519659713293e-05,
+        "310": -2.2436857362608202e-05
+      },
+      "sample_index_1based": 1200,
+      "target_frequency_cm-1": 721.6068977777784,
+      "target_id": 5
+    },
+    {
+      "after_ulp_distance": 0,
+      "exact_after_match": true,
+      "fortran_expression": "before + X10*(R2[J2-1]+R2[J2+2]) + X11*(R2[J2]+R2[J2+1])",
+      "frame": {
+        "dv": 0.0037688888888888906,
+        "dvr2": 0.015075555555555563,
+        "idata": 0,
+        "ipanel": 1,
+        "nhi": 2432,
+        "nlo": 33,
+        "nshift": 32,
+        "vft": 716.9673955555562
+      },
+      "mapping": {
+        "j2": 327,
+        "jbase": 1305,
+        "r2_indices": [
+          326,
+          327,
+          328,
+          329
+        ],
+        "residue": 2
+      },
+      "owner_header_1based": 25,
+      "predicted_after": -2.8201957523038062e-05,
+      "r1_index_1based": 1307,
+      "r1_observed_increment": -3.507229173813357e-05,
+      "r1_predicted_increment": -3.507229173813357e-05,
+      "r1_stage2_before": 6.870334215095505e-06,
+      "r1_stage3_after": -2.8201957523038062e-05,
+      "r2_stage2_values": {
+        "326": -3.6016358262189394e-05,
+        "327": -3.537915692291607e-05,
+        "328": -3.477147295023827e-05,
+        "329": -3.418264278606256e-05
+      },
+      "sample_index_1based": 1275,
+      "target_frequency_cm-1": 721.8895644444451,
+      "target_id": 6
+    },
+    {
+      "after_ulp_distance": 0,
+      "exact_after_match": true,
+      "fortran_expression": "((((before+X03*R2[J2-1])+X02*R2[J2])+X01*R2[J2+1])+X00*R2[J2+2])",
+      "frame": {
+        "dv": 0.0037688888888888906,
+        "dvr2": 0.015075555555555563,
+        "idata": 0,
+        "ipanel": 1,
+        "nhi": 2432,
+        "nlo": 33,
+        "nshift": 32,
+        "vft": 716.9673955555562
+      },
+      "mapping": {
+        "j2": 316,
+        "jbase": 1261,
+        "r2_indices": [
+          315,
+          316,
+          317,
+          318
+        ],
+        "residue": 3
+      },
+      "owner_header_1based": 25,
+      "predicted_after": -3.7914987479790574e-05,
+      "r1_index_1based": 1264,
+      "r1_observed_increment": -3.842902565723844e-05,
+      "r1_predicted_increment": -3.842902565723844e-05,
+      "r1_stage2_before": 5.140381774478633e-07,
+      "r1_stage3_after": -3.7914987479790574e-05,
+      "r2_stage2_values": {
+        "315": -3.68178237123912e-05,
+        "316": -3.797083250375629e-05,
+        "317": -3.852753139463734e-05,
+        "318": -3.876650448284487e-05
+      },
+      "sample_index_1based": 1232,
+      "target_frequency_cm-1": 721.7275022222228,
+      "target_id": 7
+    },
+    {
+      "after_ulp_distance": 0,
+      "exact_after_match": true,
+      "fortran_expression": "((((before+X00*R2[J2-1])+X01*R2[J2])+X02*R2[J2+1])+X03*R2[J2+2])",
+      "frame": {
+        "dv": 0.0037688888888888906,
+        "dvr2": 0.015075555555555563,
+        "idata": 0,
+        "ipanel": 1,
+        "nhi": 2432,
+        "nlo": 33,
+        "nshift": 32,
+        "vft": 716.9673955555562
+      },
+      "mapping": {
+        "j2": 346,
+        "jbase": 1381,
+        "r2_indices": [
+          345,
+          346,
+          347,
+          348
+        ],
+        "residue": 1
+      },
+      "owner_header_1based": 25,
+      "predicted_after": -6.784572502182192e-08,
+      "r1_index_1based": 1382,
+      "r1_observed_increment": -2.274999534354286e-06,
+      "r1_predicted_increment": -2.274999534354286e-06,
+      "r1_stage2_before": 2.207153809332464e-06,
+      "r1_stage3_after": -6.784572502182192e-08,
+      "r2_stage2_values": {
+        "345": -8.143800491359603e-06,
+        "346": -3.5344192926432263e-06,
+        "347": 1.8664015036609581e-06,
+        "348": 8.483314147492118e-06
+      },
+      "sample_index_1based": 1350,
+      "target_frequency_cm-1": 722.1722311111117,
+      "target_id": 8
+    }
+  ]
+}
