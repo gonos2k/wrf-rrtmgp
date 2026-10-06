@@ -1,0 +1,641 @@
+{
+  "schema": "udm37-jan2000-interior-observational-preflight-v1",
+  "status": "READ_ONLY_INVENTORY_COMPLETE",
+  "created_date": "2026-10-05",
+  "scope": {
+    "model_runs": 0,
+    "builds": 0,
+    "downloads": 0,
+    "source_edits": 0
+  },
+  "decision_summary": "Jan 2000 is an interior three-site SURFRAD observation case. The completed matched 24 h RA4/RA37 pair on the common forcing already exists (4 MPI ranks, OMP=1), and a full 24 h offline observational analysis was also already generated from those histories. A later current-source MPI4/OMP2 RA37 batch-32 24 h case passed on the same forcing with experimental frozen mode active; there is no same-build RA4 OMP2 counterpart here.",
+  "latest_completed_pair": {
+    "window": [
+      "2000-01-24_12:00:00",
+      "2000-01-25_12:00:00"
+    ],
+    "duration_hours": 24,
+    "history_cadence_minutes": 60,
+    "history_records": 25,
+    "mpi_ranks": 4,
+    "omp_threads": 1,
+    "common_wrfinput_sha256": "0cc7e188ef585a93ab52550816c6af236932254820fb1bc6937f464bfed38637",
+    "common_wrfbdy_sha256": "ba4241de4f4661a77733cf157f0c87f90668f107df86f8c92d092b56d7bd7bd4",
+    "arms": {
+      "ra4": {
+        "status": "PASS_RA4_24H",
+        "model_rc": 0,
+        "model_completed": true,
+        "timeout": false,
+        "started_utc": "2026-10-03T13:15:45.262172+00:00",
+        "ended_utc": "2026-10-03T13:18:12.691663+00:00",
+        "elapsed_seconds": 147.4286347012967,
+        "rank_success": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "rank_fatal": [
+          false,
+          false,
+          false,
+          false
+        ],
+        "receipt": {
+          "path": "build/udm-seaice-winter-validation-v3/ra4-24h-v1/execution-receipt-v1.json",
+          "size_bytes": 1978422,
+          "sha256": "4073ad6101c06b0f81ac9e2dd4f2dd94b095dac642a79e1e1fab49133bfa8647"
+        },
+        "stage_receipt": {
+          "path": "build/udm-seaice-winter-validation-v3/ra4-24h-v1/stage-receipt-v1.json",
+          "size_bytes": 132474,
+          "sha256": "7f321871064b8dc518b4c6125e526cd494242f80e7900f63d8cdeb9407c857fd"
+        },
+        "history": {
+          "path": "build/udm-seaice-winter-validation-v3/ra4-24h-v1/case/wrfout_d01_2000-01-24_12:00:00",
+          "size_bytes": 192549864,
+          "sha256": "edf0cfbf4efeecbbf69e979c8f4fc21a19a436f4329a3e11330a2c569ea0bcc4",
+          "records": 25,
+          "times": [
+            "2000-01-24_12:00:00",
+            "2000-01-25_12:00:00"
+          ],
+          "geometry": {
+            "bottom_top": 32,
+            "south_north": 60,
+            "west_east": 73
+          }
+        },
+        "input": {
+          "path": "build/udm-alternate-jan2000-data/paired-forecast-v2/ra4/wrfinput_d01",
+          "size_bytes": 5611715,
+          "sha256": "0cc7e188ef585a93ab52550816c6af236932254820fb1bc6937f464bfed38637"
+        },
+        "boundary": {
+          "path": "build/udm-alternate-jan2000-data/paired-forecast-v2/ra4/wrfbdy_d01",
+          "size_bytes": 12041936,
+          "sha256": "ba4241de4f4661a77733cf157f0c87f90668f107df86f8c92d092b56d7bd7bd4"
+        },
+        "namelist": {
+          "path": "build/udm-seaice-winter-validation-v3/ra4-24h-v1/case/namelist.input",
+          "size_bytes": 5140,
+          "sha256": "e22b0df372e3d909d21ea50881fb8429f3a76a7bd433c1d583ebfd2af2754320"
+        },
+        "executable": {
+          "sha256": "3f868da917910ad1be5b1fed9e603c588c56936edebdc1bd7906d54113fe0b9c",
+          "size_bytes": 59010648,
+          "path": "build/udm-seaice-fresh-gnu-dm-sm-v1/source/WRF/main/wrf.exe"
+        },
+        "runtime": {
+          "ld_library_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/netcdf/lib:/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/root/usr/lib/x86_64-linux-gnu:/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/mpich-sock/lib",
+          "master_stack_bytes": 536870912,
+          "omp_threads": 1,
+          "ranks": 4,
+          "timeout_seconds": 1200
+        },
+        "physics": {
+          "mp_physics": 27,
+          "ra_lw_physics": 4,
+          "ra_sw_physics": 4,
+          "cu_physics_parent": 1,
+          "cudt_minutes": 5,
+          "cu_rad_feedback": true,
+          "frozen_mode": 0,
+          "ice_roughness": 1,
+          "frozen_table_sha256": null
+        }
+      },
+      "ra37": {
+        "status": "PASS_RA37_24H",
+        "model_rc": 0,
+        "model_completed": true,
+        "timeout": false,
+        "started_utc": "2026-10-03T13:19:21.487144+00:00",
+        "ended_utc": "2026-10-03T13:22:42.041261+00:00",
+        "elapsed_seconds": 200.55296375602484,
+        "rank_success": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "rank_fatal": [
+          false,
+          false,
+          false,
+          false
+        ],
+        "receipt": {
+          "path": "build/udm-seaice-winter-validation-v3/ra37-24h-v1/execution-receipt-v1.json",
+          "size_bytes": 1982111,
+          "sha256": "150313d70a2a9e3274aed66703e671a22b40338cb5439bb32fb4770324eeabef"
+        },
+        "stage_receipt": {
+          "path": "build/udm-seaice-winter-validation-v3/ra37-24h-v1/stage-receipt-v1.json",
+          "size_bytes": 132494,
+          "sha256": "24ccc17c82593d3ff28c87b6827259670f58575425a075bf8b7b70166a5fdccd"
+        },
+        "history": {
+          "path": "build/udm-seaice-winter-validation-v3/ra37-24h-v1/case/wrfout_d01_2000-01-24_12:00:00",
+          "size_bytes": 194031874,
+          "sha256": "2f916abf9689affd608c20f106877f9c23b4ba149610f104630adda56d3deddb",
+          "records": 25,
+          "times": [
+            "2000-01-24_12:00:00",
+            "2000-01-25_12:00:00"
+          ],
+          "geometry": {
+            "bottom_top": 32,
+            "south_north": 60,
+            "west_east": 73
+          }
+        },
+        "input": {
+          "path": "build/udm-alternate-jan2000-data/paired-forecast-v2/ra37/wrfinput_d01",
+          "size_bytes": 5611715,
+          "sha256": "0cc7e188ef585a93ab52550816c6af236932254820fb1bc6937f464bfed38637"
+        },
+        "boundary": {
+          "path": "build/udm-alternate-jan2000-data/paired-forecast-v2/ra37/wrfbdy_d01",
+          "size_bytes": 12041936,
+          "sha256": "ba4241de4f4661a77733cf157f0c87f90668f107df86f8c92d092b56d7bd7bd4"
+        },
+        "namelist": {
+          "path": "build/udm-seaice-winter-validation-v3/ra37-24h-v1/case/namelist.input",
+          "size_bytes": 5144,
+          "sha256": "37806b6230d9a9479bae32611b6b70d0318ce852fe3931af84ba1e7a15bdcc58"
+        },
+        "executable": {
+          "sha256": "3f868da917910ad1be5b1fed9e603c588c56936edebdc1bd7906d54113fe0b9c",
+          "size_bytes": 59010648,
+          "path": "build/udm-seaice-fresh-gnu-dm-sm-v1/source/WRF/main/wrf.exe"
+        },
+        "runtime": {
+          "ld_library_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/netcdf/lib:/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/root/usr/lib/x86_64-linux-gnu:/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/mpich-sock/lib",
+          "master_stack_bytes": 536870912,
+          "omp_threads": 1,
+          "ranks": 4,
+          "timeout_seconds": 1200
+        },
+        "physics": {
+          "mp_physics": 27,
+          "ra_lw_physics": 37,
+          "ra_sw_physics": 37,
+          "cu_physics_parent": 1,
+          "cudt_minutes": 5,
+          "cu_rad_feedback": true,
+          "frozen_mode": 1,
+          "ice_roughness": 1,
+          "frozen_table_sha256": "8cb00850c3f885f5ec0306563c1ec0a55b512478a7395d626c1c99cebf280583"
+        }
+      }
+    },
+    "configuration_differences": [
+      "RA4 vs RA37: ra_lw_physics and ra_sw_physics 4 vs 37",
+      "RA4 frozen mode 0 / table not active vs RA37 frozen mode 1 and table SHA 8cb00850c3f885f5ec0306563c1ec0a55b512478a7395d626c1c99cebf280583",
+      "same remaining namelist, inputs, executable, MPI4 and OMP1 runtime"
+    ],
+    "existing_full_day_analysis": {
+      "model_extract": {
+        "path": "build/udm37-jan2000-surfrad-full24h-v1/model-extract.json",
+        "size_bytes": 39813,
+        "sha256": "ef28ce501fe69cd6ee91eeccf9305549cf44dff81ad10f32919b960d6a0616de"
+      },
+      "results": {
+        "path": "build/udm37-jan2000-surfrad-full24h-v1/results.json",
+        "size_bytes": 25313,
+        "sha256": "44fee9909b0589cfbf39ab80f0ec06ad7ac654ee2597830a8c724020bd680afa"
+      },
+      "hourly_comparison_csv": {
+        "path": "build/udm37-jan2000-surfrad-full24h-v1/hourly-comparison.csv",
+        "size_bytes": 21953,
+        "sha256": "82f8acacd6952a5f076102a50850ff3f2b7b2d1117cfe4acd2dfb8e47e752dda"
+      },
+      "schema": "winter-model-extract-v1",
+      "status": "DESCRIPTIVE_INTERIOR_THREE_STATIONS_ONE_EVENT",
+      "new_model_build_solver_calls": 0
+    }
+  },
+  "older_failed_pair": {
+    "plan": {
+      "path": "build/udm-alternate-jan2000-data/paired-forecast-v2/pair-plan.json",
+      "size_bytes": 29020,
+      "sha256": "27cd0b601366d0feca0eb4330a1a0f31981d95f8ffc5ad8b74404340eabb7b40"
+    },
+    "run_receipt": {
+      "path": "build/udm-alternate-jan2000-data/paired-forecast-v2/run-receipt.json",
+      "size_bytes": 102772,
+      "sha256": "f394b6885d1cccba785dc426158a6e671feb6ddd2f536c881e651188e0209a57"
+    },
+    "overall_status": "FORECAST_FAILED",
+    "ra37_status": "FORECAST_FAILED",
+    "ra37_returncode": 1,
+    "ra37_history": {
+      "path": "build/udm-alternate-jan2000-data/paired-forecast-v2/ra37/wrfout_d01_2000-01-24_12:00:00",
+      "size_bytes": 21298954,
+      "sha256": "e3fa7be56062c640e52f66c73aaa0bd798d56f0809c1d4501e3b4a0c9c227e4c"
+    },
+    "ra37_times": [
+      "2000-01-24_12:00:00",
+      "2000-01-24_13:00:00",
+      "2000-01-24_14:00:00"
+    ],
+    "fatal_log": {
+      "path": "build/udm-alternate-jan2000-data/paired-forecast-v2/ra37/rsl.error.0002",
+      "size_bytes": 18489,
+      "sha256": "2d70d7d1ad0472450bf824eeef8a504e88b67c03c6c2ed3a05173f260caef0cc"
+    },
+    "fatal_lines": [
+      "LW i=17 j=58: RRTMGP_INPUT_UDM_QI_NEGATIVE value_kgkg=-5.623554244493789E-008 limit_kgkg= 9.999999960041972E-013 layer=7",
+      "application called MPI_Abort(MPI_COMM_WORLD, 1) - process 2"
+    ],
+    "interpretation": "An earlier RA37 forecast stopped at hour 2 on the strict negative-QI guard (about -5.62e-8 kg kg-1 at i=17,j=58,k=7); it is distinct from the later completed RA37 day."
+  },
+  "current_source_omp2_runtime": {
+    "build_receipt": {
+      "path": "build/udm37-restart-cloud-diagnostics-gnu-v1/build-result-v2.json",
+      "size_bytes": 36379,
+      "sha256": "bc7804d997409c3797cb0bc734c157b3f98338b8d7b268570ecdaca16a3ec09a"
+    },
+    "build_status": "BUILD_PASS",
+    "build_rc": 0,
+    "compile_invocations": 1,
+    "build_model_invocations": 0,
+    "source_manifest": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-restart-cloud-diagnostics-gnu-v1/source-manifest-v4.json",
+      "sha256": "03b2ddf6d45a37e95a1b07a4d37c2401704bb67569c0290391dea0397fcabe98",
+      "size_bytes": 1979449
+    },
+    "source_freeze": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-restart-cloud-diagnostics-gnu-v1/source-freeze-v4.json",
+      "sha256": "00ac512a4be1ca5c46d2e155aa27a8c44dbc615c377b29086319416e80cbb45e",
+      "size_bytes": 1822
+    },
+    "configure": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-restart-cloud-diagnostics-gnu-v1/source-v4/WRF/configure.wrf",
+      "sha256": "44f85b7fc9b6994cb3784567e69d310580740a021b5f1ab1efb0586f25cfcba2",
+      "size_bytes": 21191
+    },
+    "executable": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-restart-cloud-diagnostics-gnu-v1/source-v4/WRF/main/wrf.exe",
+      "sha256": "6088620a5a27020bba4454d8380ecc149bbbea78ef1c82b37df15e719163fca5",
+      "size_bytes": 59158736
+    },
+    "runtime_library_count": 51,
+    "run_plan": {
+      "path": "build/udm37-restart-cloud-diagnostics-runtime-v2/runs-v2/plan.json",
+      "size_bytes": 5122648,
+      "sha256": "83ea4c66e1f266f9637138d3b6f56c685ad3d4c2eb9d083899d1bb6adac67e74"
+    },
+    "execution": {
+      "path": "build/udm37-restart-cloud-diagnostics-runtime-v2/runs-v2/execution.json",
+      "size_bytes": 14848878,
+      "sha256": "6229e7d6964618fda7b93fd3c9d8788ce86cccabc0f3bb905ef2d5397e08d65e"
+    },
+    "execution_status": "PASS_SCOPED_RESTART_DIAGNOSTIC_ARRAYS_AND_INVOCATION_METADATA",
+    "long_b32_status": "CASE_VALIDATED",
+    "long_b32_rc": 0,
+    "long_b32_batch": 32,
+    "long_b32_start": "2000-01-24_12:00:00",
+    "long_b32_end": "2000-01-25_12:00:00",
+    "long_b32_history": {
+      "path": "build/udm37-restart-cloud-diagnostics-runtime-v2/runs-v2/cases/long-b32/wrfout_d01_2000-01-24_12:00:00",
+      "size_bytes": 194031874,
+      "sha256": "2f916abf9689affd608c20f106877f9c23b4ba149610f104630adda56d3deddb",
+      "times": {
+        "first": "2000-01-24_12:00:00",
+        "last": "2000-01-25_12:00:00",
+        "count": 25
+      }
+    },
+    "runtime": {
+      "mpi_ranks": 4,
+      "omp_threads": 2,
+      "stack_bytes": 536870912,
+      "WRF_RRTMGP_BATCH_SIZE": 32
+    },
+    "experimental_frozen_mode": 1,
+    "frozen_table_sha256": "8cb00850c3f885f5ec0306563c1ec0a55b512478a7395d626c1c99cebf280583"
+  },
+  "observations": {
+    "verified_receipt": {
+      "path": "build/udm-jan2000-surfrad/verified_observations.json",
+      "size_bytes": 10003,
+      "sha256": "f56901a79d32547507c8ef91d26c3755b411787e5a2c33eb78d99f364d08e4bf"
+    },
+    "hourly_csv": {
+      "path": "build/udm-jan2000-surfrad/hourly_observations.csv",
+      "size_bytes": 40052,
+      "sha256": "69fb3a088ff803b08273bfeb3f9c7c91bd0ed99e93df2672a12d57f7e3f05067"
+    },
+    "download_manifest": {
+      "path": "build/udm-jan2000-surfrad/download_manifest.json",
+      "size_bytes": 7346,
+      "sha256": "430809f7707b357528d745f125f334da4af777786c31937d92f39b80db270aff"
+    },
+    "raw_files": {
+      "gwn00024.dat": {
+        "path": "build/udm-jan2000-surfrad/raw/gwn00024.dat",
+        "size_bytes": 113329,
+        "sha256": "6c3edac924706826370fa7efe415ec555773c9210dea190bd7e49c563ab431c0"
+      },
+      "gwn00025.dat": {
+        "path": "build/udm-jan2000-surfrad/raw/gwn00025.dat",
+        "size_bytes": 113329,
+        "sha256": "e18725d4a106fdbc666b89e82e02c244990630708671cba406f6569b8694060b"
+      },
+      "psu00024.dat": {
+        "path": "build/udm-jan2000-surfrad/raw/psu00024.dat",
+        "size_bytes": 113326,
+        "sha256": "803bb4be1b1606b4fe26d1b1afd4f2c3970052f85826a6bf77b2f3a1cceac383"
+      },
+      "psu00025.dat": {
+        "path": "build/udm-jan2000-surfrad/raw/psu00025.dat",
+        "size_bytes": 113326,
+        "sha256": "cc70d05546f14f3b2c79ce646404909d074dd971e67c5cb9934294dcbf8fff72"
+      },
+      "bon00024.dat": {
+        "path": "build/udm-jan2000-surfrad/raw/bon00024.dat",
+        "size_bytes": 113325,
+        "sha256": "62d1ad850b1b970e2882cb8b8e9f07c1b98886c9b3ccbfe8a69dd144c881eca4"
+      },
+      "bon00025.dat": {
+        "path": "build/udm-jan2000-surfrad/raw/bon00025.dat",
+        "size_bytes": 113325,
+        "sha256": "429d7deeda5ae70d620b0b207bf0f0d341ad49cf8ad0f4ea0d5bc0c7269be795"
+      }
+    },
+    "window": "2000-01-24T12:00:00Z to 2000-01-25T12:00:00Z",
+    "cadence": "3-minute observations, UTC end timestamps, exactly 20 records per complete hourly bin",
+    "sites": {
+      "GWN": {
+        "header": {
+          "station": "gwn",
+          "name": "Goodwin Creek",
+          "header_lat": 34.25,
+          "header_lon": -89.87,
+          "header_elevation_m": 98,
+          "file_version": 1,
+          "date": "2000-01-25",
+          "record_count": 480
+        },
+        "target_records": 480,
+        "times": [
+          "2000-01-24T12:03:00Z",
+          "2000-01-25T12:00:00Z"
+        ],
+        "gaps": 0,
+        "channels": [
+          "dw_solar",
+          "uw_solar",
+          "direct_n",
+          "diffuse",
+          "dw_ir",
+          "uw_ir"
+        ]
+      },
+      "PSU": {
+        "header": {
+          "station": "psu",
+          "name": "Penn State",
+          "header_lat": 40.72,
+          "header_lon": -77.93,
+          "header_elevation_m": 376,
+          "file_version": 1,
+          "date": "2000-01-25",
+          "record_count": 480
+        },
+        "target_records": 480,
+        "times": [
+          "2000-01-24T12:03:00Z",
+          "2000-01-25T12:00:00Z"
+        ],
+        "gaps": 0,
+        "channels": [
+          "dw_solar",
+          "uw_solar",
+          "direct_n",
+          "diffuse",
+          "dw_ir",
+          "uw_ir"
+        ]
+      },
+      "BON": {
+        "header": {
+          "station": "bon",
+          "name": "Bondville",
+          "header_lat": 40.05,
+          "header_lon": -88.37,
+          "header_elevation_m": 213,
+          "file_version": 1,
+          "date": "2000-01-25",
+          "record_count": 480
+        },
+        "target_records": 480,
+        "times": [
+          "2000-01-24T12:03:00Z",
+          "2000-01-25T12:00:00Z"
+        ],
+        "gaps": 0,
+        "channels": [
+          "dw_solar",
+          "uw_solar",
+          "direct_n",
+          "diffuse",
+          "dw_ir",
+          "uw_ir"
+        ]
+      }
+    }
+  },
+  "station_grid_match": {
+    "source": {
+      "path": "build/udm-jan2000-surfrad/grid_match.json",
+      "size_bytes": 2287,
+      "sha256": "8682b39746672e0fba38b0b98491922e03d68bdb41cbd6dfa1c8bb90e4e0afeb"
+    },
+    "bounds_source": {
+      "path": "build/udm37-jan2000-surfrad-full24h-v1/model-extract.json",
+      "size_bytes": 39813,
+      "sha256": "ef28ce501fe69cd6ee91eeccf9305549cf44dff81ad10f32919b960d6a0616de"
+    },
+    "geometry_from_completed_history": {
+      "gwn": {
+        "i_zero_based": 10,
+        "j_zero_based": 23,
+        "cells_to_nearest_edge": 10,
+        "spec_bdy_width": 5,
+        "inside_boundary_zone": false,
+        "lat": 34.17831039428711,
+        "lon": -89.92462158203125,
+        "station": {
+          "name": "Goodwin Creek",
+          "official_lat": 34.2547,
+          "official_lon": -89.8729,
+          "elevation_m": 98
+        },
+        "distance_m": 9734.86318398203,
+        "HGT_m": 84.2879867553711,
+        "LANDMASK": 1.0
+      },
+      "psu": {
+        "i_zero_based": 40,
+        "j_zero_based": 52,
+        "cells_to_nearest_edge": 7,
+        "spec_bdy_width": 5,
+        "inside_boundary_zone": false,
+        "lat": 40.637413024902344,
+        "lon": -77.85830688476562,
+        "station": {
+          "name": "Penn State",
+          "official_lat": 40.72012,
+          "official_lon": -77.93085,
+          "elevation_m": 376
+        },
+        "distance_m": 11045.3492229176,
+        "HGT_m": 359.27490234375,
+        "LANDMASK": 1.0
+      },
+      "bon": {
+        "i_zero_based": 12,
+        "j_zero_based": 45,
+        "cells_to_nearest_edge": 12,
+        "spec_bdy_width": 5,
+        "inside_boundary_zone": false,
+        "lat": 40.161033630371094,
+        "lon": -88.39398193359375,
+        "station": {
+          "name": "Bondville",
+          "official_lat": 40.05192,
+          "official_lon": -88.37309,
+          "elevation_m": 213
+        },
+        "distance_m": 12262.293896813933,
+        "HGT_m": 221.812744140625,
+        "LANDMASK": 1.0
+      }
+    },
+    "boundary_width_cells": 5,
+    "sites": {
+      "gwn": {
+        "grid_latlon": [
+          34.17831039428711,
+          -89.92462158203125
+        ],
+        "gridpoint_i_j_1based": [
+          11,
+          24
+        ],
+        "site_latlon": [
+          34.2547,
+          -89.8729
+        ],
+        "site_elevation_m": 98,
+        "grid_HGT_m": 84.2879867553711,
+        "terrain_minus_station_m": -13.712013244628906,
+        "great_circle_distance_m": 9734.86318398203,
+        "cells_from_nearest_edge": 10,
+        "outside_spec_bdy_width": true,
+        "LANDMASK": 1.0,
+        "nearest_spec_boundary_strip_cell_1based_i_j": [
+          5,
+          24
+        ],
+        "distance_to_nearest_spec_boundary_cell_m": 187063.96438367665
+      },
+      "psu": {
+        "grid_latlon": [
+          40.637413024902344,
+          -77.85830688476562
+        ],
+        "gridpoint_i_j_1based": [
+          41,
+          53
+        ],
+        "site_latlon": [
+          40.72012,
+          -77.93085
+        ],
+        "site_elevation_m": 376,
+        "grid_HGT_m": 359.27490234375,
+        "terrain_minus_station_m": -16.72509765625,
+        "great_circle_distance_m": 11045.3492229176,
+        "cells_from_nearest_edge": 7,
+        "outside_spec_bdy_width": true,
+        "LANDMASK": 1.0,
+        "nearest_spec_boundary_strip_cell_1based_i_j": [
+          41,
+          56
+        ],
+        "distance_to_nearest_spec_boundary_cell_m": 85923.38680289686
+      },
+      "bon": {
+        "grid_latlon": [
+          40.161033630371094,
+          -88.39398193359375
+        ],
+        "gridpoint_i_j_1based": [
+          13,
+          46
+        ],
+        "site_latlon": [
+          40.05192,
+          -88.37309
+        ],
+        "site_elevation_m": 213,
+        "grid_HGT_m": 221.812744140625,
+        "terrain_minus_station_m": 8.812744140625,
+        "great_circle_distance_m": 12262.293896813933,
+        "cells_from_nearest_edge": 12,
+        "outside_spec_bdy_width": true,
+        "LANDMASK": 1.0,
+        "nearest_spec_boundary_strip_cell_1based_i_j": [
+          5,
+          46
+        ],
+        "distance_to_nearest_spec_boundary_cell_m": 250978.99946942925
+      }
+    },
+    "domain_bounds_latlon": {
+      "south": 24.61904,
+      "north": 44.36656,
+      "west": -93.64893,
+      "east": -66.00165
+    },
+    "domain_projection": {
+      "MAP_PROJ": 1,
+      "name": "Lambert Conformal",
+      "DX_m": 30000.0,
+      "DY_m": 30000.0,
+      "grid_shape": {
+        "south_north": 60,
+        "west_east": 73
+      }
+    },
+    "boundary_distance_method": "Great-circle distance from the official station coordinate to each model-cell center in the five-cell outer strip (zero-based x<5 or x>=nx-5 or y<5 or y>=ny-5), computed from XLAT/XLONG of completed RA4 history.",
+    "grid_arrays_source": {
+      "path": "build/udm-seaice-winter-validation-v3/ra4-24h-v1/case/wrfout_d01_2000-01-24_12:00:00",
+      "size_bytes": 192549864,
+      "sha256": "edf0cfbf4efeecbbf69e979c8f4fc21a19a436f4329a3e11330a2c569ea0bcc4",
+      "records": 25,
+      "times": [
+        "2000-01-24_12:00:00",
+        "2000-01-25_12:00:00"
+      ],
+      "geometry": {
+        "bottom_top": 32,
+        "south_north": 60,
+        "west_east": 73
+      }
+    }
+  },
+  "observation_comparison_status": "The `udm37-jan2000-surfrad-full24h-v1` analysis is the relevant completed 24 h three-site comparison. The older `model_observation_comparison.json` remains tied to the earlier RA37 failure and two-hour overlap and is stale for full-day claims. This inventory makes no skill ranking.",
+  "limitations": [
+    "One winter event and three point-to-grid sites; sites are outside the 5-cell lateral boundary strip and LANDMASK=1, but remain within a forecast forced by a broader analysis.",
+    "The complete matched RA4/RA37 24 h pair uses OMP=1 and the earlier executable; the current-source OMP=2 RA37 proof is not a paired RA4/RA37 comparison.",
+    "The current OMP=2 run used experimental frozen optics mode 1 and the pinned 8cb table; it does not establish default-mode behavior.",
+    "The earlier negative-QI failure remains preserved as a separate event.",
+    "No downloads, builds, WRF runs, or source modifications were made to prepare this inventory."
+  ]
+}

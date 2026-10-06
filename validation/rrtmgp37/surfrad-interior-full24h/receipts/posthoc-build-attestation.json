@@ -1,0 +1,166 @@
+{
+  "schema": "udm-seaice-posthoc-build-attestation-v1",
+  "status": "BUILD_PASS_POSTHOC_ATTESTED",
+  "utc": "2026-10-03T13:01:47.696173+00:00",
+  "validation": {
+    "erratum": {
+      "corrected_assertion": "generated QZ0 guard count equals active raw-source guards under the actual recorded CPP flags",
+      "original_assertion": "four raw-source QZ0 guards must remain four after CPP",
+      "reason": "WRF_USE_CTSM source branch is disabled; WRF_USE_CLM is enabled. The frozen generated expectation4 was a harness error; source/objects/executables unchanged."
+    },
+    "freeze_spec": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-seaice-fresh-gnu-dm-sm-v1/runner-source-freeze-spec-v2.json",
+      "sha256": "6bfc99b093547a1a5a5724e338d78f9339da1bb5e519fe865bf8945f57877942",
+      "size_bytes": 7590
+    },
+    "linked_symbols": {
+      "__module_ra_rrtmgp_MOD_rrtmgp_lw_column": true,
+      "__module_ra_rrtmgp_MOD_rrtmgp_sw_column": true,
+      "__module_ra_rrtmgp_input_MOD_rrtmgp_build_cu_inputs": true,
+      "__module_surface_driver_MOD_surface_driver": true
+    },
+    "live_artifact_and_dependency_pins_valid": true,
+    "log_recomputed": {
+      "errors": [],
+      "passed": true,
+      "successful_footer": true
+    },
+    "new_compile_invocations": 0,
+    "new_model_invocations": 0,
+    "original_checks_except_erroneous_count_passed": true,
+    "original_receipt": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-seaice-fresh-gnu-dm-sm-v1/build-result-v1.json",
+      "sha256": "35d2297a2d7d553d1f4fe8a2cfc66f02d6811604454a947adc8af90eb778ada1",
+      "size_bytes": 26873
+    },
+    "original_status": "BUILD_FAIL_PRESERVED",
+    "source_or_original_receipt_mutations": 0,
+    "source_verified": {
+      "configure": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-seaice-fresh-gnu-dm-sm-v1/source/WRF/configure.wrf",
+        "sha256": "44f85b7fc9b6994cb3784567e69d310580740a021b5f1ab1efb0586f25cfcba2",
+        "size_bytes": 21191
+      },
+      "entry_count": 6735,
+      "source_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-seaice-fresh-gnu-dm-sm-v1/source",
+      "symlink_count": 17,
+      "unavailable_source_links": [
+        {
+          "path": "WRF/var/run/crtm_coeffs",
+          "target": "/glade/work/wrfhelp/WRFDA_files/crtm_coeffs_2.3.0"
+        },
+        {
+          "path": "WRF/var/test/radiance/crtm_coeffs",
+          "target": "../../run/crtm_coeffs"
+        }
+      ]
+    },
+    "status": "BUILD_PASS_POSTHOC_ATTESTED",
+    "surface_CPP_proof": {
+      "USTM_counts": [
+        {
+          "expected_count": 3,
+          "generated_count": 3,
+          "label": "USTM pre-ice snapshot",
+          "source_count": 3
+        },
+        {
+          "expected_count": 3,
+          "generated_count": 3,
+          "label": "USTM open-sea restore",
+          "source_count": 3
+        }
+      ],
+      "derived_active_QZ0_guard_count": 3,
+      "generated_QZ0_guard_count": 3,
+      "generated_QZ0_lines": [
+        2925,
+        3282,
+        3858
+      ],
+      "macros": {
+        "BUILD_RRTMG_FAST": "0",
+        "BUILD_RRTMK": "0",
+        "BUILD_SBM_FAST": "1",
+        "CONFIG_BUF_LEN": "65536",
+        "DA_CORE": "0",
+        "DM_PARALLEL": "1",
+        "DWORDSIZE": "8",
+        "EM_CORE": "1",
+        "GRIB1": "1",
+        "INTIO": "1",
+        "IWORDSIZE": "4",
+        "KEEP_INT_AROUND": "1",
+        "LANDREAD_STUB": "1",
+        "LIMIT_ARGS": "1",
+        "LWORDSIZE": "4",
+        "MAX_DOMAINS_F": "21",
+        "MAX_HISTORY": "25",
+        "NETCDF": "1",
+        "NMM_CORE": "0",
+        "NMM_MAX_DIM": "2600",
+        "NMM_NEST": "0",
+        "NONSTANDARD_SYSTEM_SUBR": "1",
+        "RWORDSIZE": "4",
+        "SHOW_ALL_VARS_USED": "0",
+        "USE_ALLOCATABLES": "1",
+        "USE_NETCDF4_FEATURES": "1",
+        "WRFIO_NCD_LARGE_FILE_SUPPORT": "1",
+        "WRFPLUS": "0",
+        "WRF_USE_CLM": "1",
+        "_OPENMP": "1",
+        "wrfmodel": "1"
+      },
+      "raw_QZ0_guard_count": 4,
+      "recorded_command": "/lib/cpp -P -nostdinc -I/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-seaice-fresh-gnu-dm-sm-v1/source/WRF/inc -DEM_CORE=1 -DNMM_CORE=0 -DNMM_MAX_DIM=2600 -DDA_CORE=0 -DWRFPLUS=0 -DIWORDSIZE=4 -DDWORDSIZE=8 -DRWORDSIZE=4 -DLWORDSIZE=4 -DNONSTANDARD_SYSTEM_SUBR  -DWRF_USE_CLM -DUSE_NETCDF4_FEATURES -DWRFIO_NCD_LARGE_FILE_SUPPORT  -DDM_PARALLEL -DNETCDF -DLANDREAD_STUB=1 -DUSE_ALLOCATABLES -Dwrfmodel -DGRIB1 -DINTIO -DKEEP_INT_AROUND -DLIMIT_ARGS -DBUILD_RRTMG_FAST=0 -DBUILD_RRTMK=0 -DBUILD_SBM_FAST=1 -DSHOW_ALL_VARS_USED=0 -DCONFIG_BUF_LEN=65536 -DMAX_DOMAINS_F=21 -DMAX_HISTORY=25 -DNMM_NEST=0  -I. -traditional-cpp -DUSE_NETCDF4_FEATURES -DWRFIO_NCD_LARGE_FILE_SUPPORT  -D_OPENMP module_surface_driver.G  > module_surface_driver.bb",
+      "recorded_command_log_line": 5246,
+      "source_guard_contexts": [
+        {
+          "active": true,
+          "cpp_conditions": [],
+          "source_guard_line": 3051,
+          "source_qz0_line": 3052
+        },
+        {
+          "active": true,
+          "cpp_conditions": [],
+          "source_guard_line": 3415,
+          "source_qz0_line": 3416
+        },
+        {
+          "active": true,
+          "cpp_conditions": [
+            {
+              "active": true,
+              "alternate": false,
+              "argument": "WRF_USE_CLM",
+              "kind": "ifdef",
+              "line": 3821
+            }
+          ],
+          "source_guard_line": 4027,
+          "source_qz0_line": 4028
+        },
+        {
+          "active": false,
+          "cpp_conditions": [
+            {
+              "active": false,
+              "alternate": false,
+              "argument": "WRF_USE_CTSM",
+              "kind": "ifdef",
+              "line": 4083
+            }
+          ],
+          "source_guard_line": 4246,
+          "source_qz0_line": 4247
+        }
+      ]
+    }
+  },
+  "verifier": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-seaice-fresh-gnu-dm-sm-v1/posthoc-build-verifier-v1.py",
+    "sha256": "201d906a1ac31590d4a79ba3a396cda225fa1e269507445d47f830da87b03cc2",
+    "size_bytes": 11115
+  }
+}
