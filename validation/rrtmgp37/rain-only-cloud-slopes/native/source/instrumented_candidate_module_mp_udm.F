@@ -1126,8 +1126,14 @@ subroutine udm2d(t1, q1                                          &
    call slope_hail(1,kdim,ktop,qrs(:,i,4),den(:,i),denfac(:,i),t(:,i),         &
         rslope(:,4),rslopeb(:,4),rslope2(:,4),rslope3(:,4),vth(:))
    ktop = ktopqc
+   write(*,'(A,4(1X,I0),*(1X,ES25.16E3))') 'SLOPEV',loop,1,0,ktopqc,rslopec2(:)
+   write(*,'(A,4(1X,I0),*(1X,ES25.16E3))') 'SLOPEV',loop,2,0,ktopqc,rslopec2(:)
    call slope_cloud(1,kdim,ktop,qci(:,i,1),ncr(:,i,2),den(:,i),denfac(:,i),    &
         t(:,i),qcmin,rslopec(:),rslopec2(:),rslopec3(:))
+   write(*,'(A,4(1X,I0),*(1X,ES25.16E3))') 'SLOPEV',loop,2,1,ktopqc,rslopec2(:)
+
+   write(*,'(A,4(1X,I0),*(1X,ES25.16E3))') 'SLOPEV',loop,1,1,ktopqc,rslopec2(:)
+
 !===============================================================================
 !
 ! melting/freezing

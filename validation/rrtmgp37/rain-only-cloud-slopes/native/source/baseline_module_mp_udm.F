@@ -1056,11 +1056,6 @@ subroutine udm2d(t1, q1                                          &
    ncact(:) = 0.     ; nraut(:) = 0.     ;  ncevp(:) = 0.  ; denqn(:) = 0.
    vtn(:)   = 0.     ; dc(:)  = 0.       ;  dr(:) = 0.     ; di(:)  = 0.
    qrcon(:)= 0.      ; qrconcr(:) = 0.   ;  taucon(:) = 0. ; tmp1d(:) = 0.
-! Rain can consume cloud slopes above the liquid-cloud top. Initialize once
-! per column/substep; keep first-pass values if the later cloud top shrinks.
-   rslopec(:)  = rslopecmax
-   rslopec2(:) = rslopec2max
-   rslopec3(:) = rslopec3max
    qnpath = 0.       ; sfac = 0.         ;  gfac = 0.
    nfrzdtc = 0.      ; nfrzdtr = 0.
    phdep(:)= 0.      ; phaut(:) = 0.   ; pracg(:) = 0. ; phacw(:) = 0.
