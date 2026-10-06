@@ -1,0 +1,208 @@
+{
+  "O0_O2_stdout_byte_identical": true,
+  "activation_block_exact_source_lines": [
+    2508,
+    2520
+  ],
+  "actual_invocation_ledger": {
+    "RTE": 0,
+    "WRF": 0,
+    "compile_attempts": 10,
+    "compile_rc0": 10,
+    "fixture_executable_invocations": 10,
+    "fixture_rc0": 10,
+    "v6_new_compile": 0,
+    "v6_new_fixture_executions": 0
+  },
+  "checks": [
+    {
+      "all_values_finite": true,
+      "compile_rc": 0,
+      "density_and_echo_exact": true,
+      "exact_roster": true,
+      "fixture_rc": 0,
+      "optimization": "O0",
+      "row_count": 12,
+      "rows_match_final_saved_result": true
+    },
+    {
+      "all_values_finite": true,
+      "compile_rc": 0,
+      "density_and_echo_exact": true,
+      "exact_roster": true,
+      "fixture_rc": 0,
+      "optimization": "O2",
+      "row_count": 12,
+      "rows_match_final_saved_result": true
+    }
+  ],
+  "created_utc": "2026-10-05T16:38:35.712145+00:00",
+  "evidence": [
+    {
+      "path": "build/udm37-nc-radiative-evidence-pr-work/WRF/phys/module_mp_udm.F",
+      "sha256": "9b7b878b263f6b0111edba4cfb1c6c30e53b3f7534035cda2c0411a573b81c2c",
+      "size_bytes": 193022
+    },
+    {
+      "path": "build/udm37-activation-contract-fixture-v5/activation-block.exact.f90.inc",
+      "sha256": "c26d239d86b964e84e47834a9ce65e4642930f1ac0d67ac9936ca0be823115e2",
+      "size_bytes": 674
+    },
+    {
+      "path": "build/udm37-activation-contract-fixture-v5/run_fixture.py",
+      "sha256": "2317a365898c1231d459a5c1dc01f0461df41fed6de119a9a3485b11b68705a4",
+      "size_bytes": 14368
+    },
+    {
+      "path": "build/udm37-activation-contract-fixture-v6/finalize_saved_runs.py",
+      "sha256": "33c7e53ca17c976c672af5488acd161d6ba470195bfc0b39388a536c5b443750",
+      "size_bytes": 6656
+    },
+    {
+      "path": "build/udm37-activation-contract-fixture-v6/result.json",
+      "sha256": "2a9cacd7e77d9975994bc70ebf6799aad54c50b67add9fcd6dea1f6d2d8ea59f",
+      "size_bytes": 26896
+    },
+    {
+      "path": "build/udm37-activation-contract-fixture-v5/compile_O0.receipt.json",
+      "sha256": "e577ecad0f2fc066e70119f61593a337e8e8ab3cf9c50666a608cc75b9fc3b6b",
+      "size_bytes": 505
+    },
+    {
+      "path": "build/udm37-activation-contract-fixture-v5/run_O0.receipt.json",
+      "sha256": "880e42e40443af88cb01f2553f113f153ddfdfa85aa8666c5f2d28a053df41ce",
+      "size_bytes": 331
+    },
+    {
+      "path": "build/udm37-activation-contract-fixture-v5/activation_O0.f90",
+      "sha256": "b6306d865e918ece40589521f553c4ae686f2b911ed9879eced7c6e754843f64",
+      "size_bytes": 2226
+    },
+    {
+      "path": "build/udm37-activation-contract-fixture-v5/run_O0.stdout",
+      "sha256": "a2b5f9b794db0c5706c3df150fa46721c7ac19972e8304cb7e1b0e81ea1de139",
+      "size_bytes": 4548
+    },
+    {
+      "path": "build/udm37-activation-contract-fixture-v5/compile_O2.receipt.json",
+      "sha256": "9a618cc383c351433cf98ad05a2aaf34628ea89515235a154f52f2888157ee52",
+      "size_bytes": 505
+    },
+    {
+      "path": "build/udm37-activation-contract-fixture-v5/run_O2.receipt.json",
+      "sha256": "eabf3854baa79a9f5fee49b729c5c562f683b34403c6de41f6114182ae44258b",
+      "size_bytes": 331
+    },
+    {
+      "path": "build/udm37-activation-contract-fixture-v5/activation_O2.f90",
+      "sha256": "b6306d865e918ece40589521f553c4ae686f2b911ed9879eced7c6e754843f64",
+      "size_bytes": 2226
+    },
+    {
+      "path": "build/udm37-activation-contract-fixture-v5/run_O2.stdout",
+      "sha256": "a2b5f9b794db0c5706c3df150fa46721c7ac19972e8304cb7e1b0e81ea1de139",
+      "size_bytes": 4548
+    }
+  ],
+  "findings": [
+    {
+      "detail": "v5 parse_rows only enforces 12 unique IDs. Require exact density IDs1..3 \u00d7 case IDs1..4, finite all fields, expected rho and rho_echo equality. The saved data independently passes these checks; this is validator coverage, not a defect in saved runs.",
+      "id": "required_roster_and_finiteness",
+      "severity": "portable_validator_correction"
+    },
+    {
+      "detail": "v5 compares two already rounded float32 poststates using half a prestate ULP plus 16eps times increment. This is not a general quantization bound between two rounded values. Compare actual stored state against unrounded binary64 expectation with conservative poststate half-ULP plus declared operation allowance, or explicitly limit the current criterion to this fixture. No compiler arithmetic or physical tolerance change is warranted.",
+      "id": "rounding_bound_definition",
+      "severity": "portable_claim_correction"
+    },
+    {
+      "detail": "Active unfloored case checks the process number rate and directions of number-state updates; it does not independently enforce both rounded number poststate values. Exact extracted-source execution and branch checks are supported; avoid claiming an exhaustive arbitrary-state update oracle.",
+      "id": "number_poststates",
+      "severity": "scope_note"
+    },
+    {
+      "detail": "memb/reltol are local to assess but referenced in main result assembly. Both executables and saved outputs succeeded; v6 offline finalization does not constitute a new compiler or fixture invocation.",
+      "id": "v5_nameerror",
+      "severity": "preserved_failure"
+    }
+  ],
+  "portable_final_verdict": "PENDING_FROZEN_PORTABLE_CLI",
+  "precision_and_science_limits": [
+    "The binary64 analytic process increment differs from subtraction of two stored default-REAL states. State cancellation and floor effects must remain explicit.",
+    "Case4 is synthetic below the normal CCN initialization floor and isolates min/max branches.",
+    "Density-basis comparisons are conditional local algebra, not validation of transported Nc units or a physical compression experiment.",
+    "Upstream saturation/cloud-top selection, producer-consumer coupling, radiation and forecast accuracy are outside this extracted-block fixture."
+  ],
+  "preserved_history": [
+    {
+      "all_return_codes_zero": true,
+      "compile_attempts": 2,
+      "failure_error": "RuntimeError('cloud-water increment disagrees with volume-number oracle (3.429013304412365e-07 vs 3.429025584449464e-07)')",
+      "fixture_invocations": 2,
+      "pin": {
+        "path": "build/udm37-activation-contract-fixture-v1/failure.json",
+        "sha256": "4118727121ddb41b8356600b9c227e651302fa917cd2bb482957bd5683732d98",
+        "size_bytes": 13147
+      },
+      "version": 1
+    },
+    {
+      "all_return_codes_zero": true,
+      "compile_attempts": 2,
+      "failure_error": "RuntimeError('uncapped activation did not move expected state variables')",
+      "fixture_invocations": 2,
+      "pin": {
+        "path": "build/udm37-activation-contract-fixture-v2/attempt-02-failure.json",
+        "sha256": "2a6ea1142fa9f0347244b684b4944a4201cb51cbec98b20e3823d50ec3ae3187",
+        "size_bytes": 13098
+      },
+      "version": 2
+    },
+    {
+      "all_return_codes_zero": true,
+      "compile_attempts": 2,
+      "failure_error": "RuntimeError('water-cap state exchange differs from available water')",
+      "fixture_invocations": 2,
+      "pin": {
+        "path": "build/udm37-activation-contract-fixture-v3/attempt-03-failure.json",
+        "sha256": "7e60e6b9186e88e30b36540f5310d0ff1c6dd36bf2f0517405b57bdc67274250",
+        "size_bytes": 13100
+      },
+      "version": 3
+    },
+    {
+      "all_return_codes_zero": true,
+      "compile_attempts": 2,
+      "failure_error": "RuntimeError('ncmin floor branch was not exercised')",
+      "fixture_invocations": 2,
+      "pin": {
+        "path": "build/udm37-activation-contract-fixture-v4/attempt-04-failure.json",
+        "sha256": "c09ac8f6e87a44b9fbe73065e04535047afd607d2d7e2c4f755ff4d8c5126647",
+        "size_bytes": 13083
+      },
+      "version": 4
+    },
+    {
+      "all_return_codes_zero": true,
+      "compile_attempts": 2,
+      "failure_error": "NameError(\"name 'memb' is not defined\")",
+      "fixture_invocations": 2,
+      "pin": {
+        "path": "build/udm37-activation-contract-fixture-v5/attempt-05-failure.json",
+        "sha256": "6e443c0f981de5cb18f51d82f62786f033b312c0d7d72fa4059998b62582740c",
+        "size_bytes": 22288
+      },
+      "version": 5
+    }
+  ],
+  "reviewer_invocations": {
+    "RTE": 0,
+    "WRF": 0,
+    "artifact_readback_python": 1,
+    "compiler": 0,
+    "finalizer": 0,
+    "fixture": 0
+  },
+  "schema": "udm37-activation-fixture-independent-review-v1",
+  "status": "PASS_SCOPED_SAVED_SOURCE_AND_EXECUTION_EVIDENCE_PORTABLE_ORACLE_CORRECTIONS_REQUIRED"
+}

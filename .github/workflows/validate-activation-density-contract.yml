@@ -1,0 +1,29 @@
+name: Verify UDM activation and density contracts
+on:
+  pull_request:
+    paths:
+      - 'validation/rrtmgp37/activation-density-contract/**'
+      - '.github/workflows/validate-activation-density-contract.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'validation/rrtmgp37/activation-density-contract/**'
+      - '.github/workflows/validate-activation-density-contract.yml'
+permissions:
+  contents: read
+jobs:
+  saved-and-fresh-source-contracts:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - name: Authenticate saved source and fixture evidence
+        run: python3 -I -S validation/rrtmgp37/activation-density-contract/verify.py
+      - name: Fresh default-REAL activation block at O0 and O2
+        run: >-
+          python3 -I -S validation/rrtmgp37/activation-density-contract/activation.py
+          --source-root "$PWD" --output-dir build/activation-contract-fresh
+      - name: Fresh default-REAL density compatibility at O0 and O2
+        run: >-
+          python3 -I -S validation/rrtmgp37/activation-density-contract/density.py
+          --source-root "$PWD" --output-dir build/density-contract-fresh

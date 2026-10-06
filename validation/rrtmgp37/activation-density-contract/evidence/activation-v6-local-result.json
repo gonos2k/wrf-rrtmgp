@@ -1,0 +1,845 @@
+{
+  "RTE_calls": 0,
+  "WRF_calls": 0,
+  "cases_per_optimization": 12,
+  "compiled_matrix": [
+    {
+      "compile_receipt_sha256": "e577ecad0f2fc066e70119f61593a337e8e8ab3cf9c50666a608cc75b9fc3b6b",
+      "compile_returncode": 0,
+      "compiler": "GNU Fortran (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0",
+      "executable_sha256": "d1e7c25f6d3993db487d0323608c65b384852a6e445fc3d7d4fd13df9583c546",
+      "generated_fortran_sha256": "b6306d865e918ece40589521f553c4ae686f2b911ed9879eced7c6e754843f64",
+      "optimization": "O0",
+      "oracle_checks": [
+        {
+          "case": 1,
+          "density": 0.5,
+          "inactive_exact_zero": true
+        },
+        {
+          "binary64_volume_oracle_abs_error_in_stored_state": 0.0,
+          "case": 2,
+          "delta_N_activation": 24997989.375,
+          "delta_qc": 7.068010745570064e-07,
+          "delta_qc_quantization_note": "Delta is the subtraction of two default-REAL stored states; the source process increment is checked through rounded expected qc_new, not a relative tolerance on the subtracted delta.",
+          "delta_qv": -7.067574188113213e-07,
+          "density": 0.5,
+          "latent_heating_delta_T": 0.00177001953125,
+          "mass_specific_interpretation_abs_residual": 3.534003255694357e-07,
+          "stored_state_rounding_bound": 4.986095629317807e-12,
+          "volume_interpretation_abs_residual": 4.234181350077981e-13
+        },
+        {
+          "available_vapor": 9.999999717180685e-10,
+          "case": 3,
+          "delta_N_activation": 24997989.375,
+          "density": 0.5,
+          "volume_conditional_residual": 7.058046917819982e-07,
+          "water_cap_active": true,
+          "water_cap_rate": 1.6666666310949374e-11
+        },
+        {
+          "activation_delta_N": 1.7260020399589848e-05,
+          "branch_isolation_only": true,
+          "case": 4,
+          "ccn_floor_after_update": 50000000.0,
+          "cloud_floor": 0.0010000000474974513,
+          "density": 0.5,
+          "observed_cloud_number_delta_after_floor": 0.0010000000474974513
+        },
+        {
+          "case": 1,
+          "density": 1.0,
+          "inactive_exact_zero": true
+        },
+        {
+          "binary64_volume_oracle_abs_error_in_stored_state": 0.0,
+          "case": 2,
+          "delta_N_activation": 24997989.375,
+          "delta_qc": 3.534005372785032e-07,
+          "delta_qc_quantization_note": "Delta is the subtraction of two default-REAL stored states; the source process increment is checked through rounded expected qc_new, not a relative tolerance on the subtracted delta.",
+          "delta_qv": -3.534369170665741e-07,
+          "density": 1.0,
+          "latent_heating_delta_T": 0.000885009765625,
+          "mass_specific_interpretation_abs_residual": 2.1170906750389904e-13,
+          "stored_state_rounding_bound": 4.31203721820476e-12,
+          "volume_interpretation_abs_residual": 2.1170906750389904e-13
+        },
+        {
+          "available_vapor": 9.999999717180685e-10,
+          "case": 3,
+          "delta_N_activation": 24997989.375,
+          "density": 1.0,
+          "volume_conditional_residual": 3.5240394279442755e-07,
+          "water_cap_active": true,
+          "water_cap_rate": 1.6666666310949374e-11
+        },
+        {
+          "activation_delta_N": 1.7260020399589848e-05,
+          "branch_isolation_only": true,
+          "case": 4,
+          "ccn_floor_after_update": 50000000.0,
+          "cloud_floor": 0.0010000000474974513,
+          "density": 1.0,
+          "observed_cloud_number_delta_after_floor": 0.0010000000474974513
+        },
+        {
+          "case": 1,
+          "density": 1.5,
+          "inactive_exact_zero": true
+        },
+        {
+          "binary64_volume_oracle_abs_error_in_stored_state": 0.0,
+          "case": 2,
+          "delta_N_activation": 24997989.375,
+          "delta_qc": 2.3560278350487351e-07,
+          "delta_qc_quantization_note": "Delta is the subtraction of two default-REAL stored states; the source process increment is checked through rounded expected qc_new, not a relative tolerance on the subtracted delta.",
+          "delta_qv": -2.3562461137771606e-07,
+          "density": 1.5,
+          "latent_heating_delta_T": 0.000579833984375,
+          "mass_specific_interpretation_abs_residual": 1.1779796548269717e-07,
+          "stored_state_rounding_bound": 4.087351081167078e-12,
+          "volume_interpretation_abs_residual": 2.284179826391876e-12
+        },
+        {
+          "available_vapor": 9.999999717180685e-10,
+          "case": 3,
+          "delta_N_activation": 24997989.375,
+          "density": 1.5,
+          "volume_conditional_residual": 2.34603693131904e-07,
+          "water_cap_active": true,
+          "water_cap_rate": 1.6666666310949374e-11
+        },
+        {
+          "activation_delta_N": 1.7260020399589848e-05,
+          "branch_isolation_only": true,
+          "case": 4,
+          "ccn_floor_after_update": 50000000.0,
+          "cloud_floor": 0.0010000000474974513,
+          "density": 1.5,
+          "observed_cloud_number_delta_after_floor": 0.0010000000474974513
+        }
+      ],
+      "rows": [
+        {
+          "case_id": 1,
+          "density_id": 1,
+          "values": [
+            0.5,
+            1.0,
+            0.0010000000474974513,
+            9.999999747378752e-05,
+            100000000.0,
+            1000000.0,
+            0.5,
+            0.0010000000474974513,
+            9.999999747378752e-05,
+            100000000.0,
+            1000000.0,
+            273.0,
+            273.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "case_id": 2,
+          "density_id": 1,
+          "values": [
+            0.5,
+            1.000499963760376,
+            0.0010000000474974513,
+            9.999999747378752e-05,
+            100000000.0,
+            1000000.0,
+            0.5,
+            0.00099929329007864,
+            0.00010070679854834452,
+            75002008.0,
+            25997990.0,
+            273.0,
+            273.00177001953125,
+            416633.15625,
+            1.1780019626428384e-08
+          ]
+        },
+        {
+          "case_id": 3,
+          "density_id": 1,
+          "values": [
+            0.5,
+            1.000499963760376,
+            9.999999717180685e-10,
+            9.999999747378752e-05,
+            100000000.0,
+            1000000.0,
+            0.5,
+            0.0,
+            0.00010000099427998066,
+            75002008.0,
+            25997990.0,
+            273.0,
+            273.0,
+            416633.15625,
+            1.6666666310949374e-11
+          ]
+        },
+        {
+          "case_id": 4,
+          "density_id": 1,
+          "values": [
+            0.5,
+            1.0000001192092896,
+            0.0010000000474974513,
+            9.999999747378752e-05,
+            0.009999999776482582,
+            0.0,
+            0.5,
+            0.0010000000474974513,
+            9.999999747378752e-05,
+            50000000.0,
+            0.0010000000474974513,
+            273.0,
+            273.0,
+            2.876670066598308e-07,
+            8.133589415051494e-21
+          ]
+        },
+        {
+          "case_id": 1,
+          "density_id": 2,
+          "values": [
+            1.0,
+            1.0,
+            0.0010000000474974513,
+            9.999999747378752e-05,
+            100000000.0,
+            1000000.0,
+            1.0,
+            0.0010000000474974513,
+            9.999999747378752e-05,
+            100000000.0,
+            1000000.0,
+            273.0,
+            273.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "case_id": 2,
+          "density_id": 2,
+          "values": [
+            1.0,
+            1.000499963760376,
+            0.0010000000474974513,
+            9.999999747378752e-05,
+            100000000.0,
+            1000000.0,
+            1.0,
+            0.0009996466105803847,
+            0.00010035339801106602,
+            75002008.0,
+            25997990.0,
+            273.0,
+            273.0008850097656,
+            416633.15625,
+            5.890009813214192e-09
+          ]
+        },
+        {
+          "case_id": 3,
+          "density_id": 2,
+          "values": [
+            1.0,
+            1.000499963760376,
+            9.999999717180685e-10,
+            9.999999747378752e-05,
+            100000000.0,
+            1000000.0,
+            1.0,
+            0.0,
+            0.00010000099427998066,
+            75002008.0,
+            25997990.0,
+            273.0,
+            273.0,
+            416633.15625,
+            1.6666666310949374e-11
+          ]
+        },
+        {
+          "case_id": 4,
+          "density_id": 2,
+          "values": [
+            1.0,
+            1.0000001192092896,
+            0.0010000000474974513,
+            9.999999747378752e-05,
+            0.009999999776482582,
+            0.0,
+            1.0,
+            0.0010000000474974513,
+            9.999999747378752e-05,
+            50000000.0,
+            0.0010000000474974513,
+            273.0,
+            273.0,
+            2.876670066598308e-07,
+            4.066794707525747e-21
+          ]
+        },
+        {
+          "case_id": 1,
+          "density_id": 3,
+          "values": [
+            1.5,
+            1.0,
+            0.0010000000474974513,
+            9.999999747378752e-05,
+            100000000.0,
+            1000000.0,
+            1.5,
+            0.0010000000474974513,
+            9.999999747378752e-05,
+            100000000.0,
+            1000000.0,
+            273.0,
+            273.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "case_id": 2,
+          "density_id": 3,
+          "values": [
+            1.5,
+            1.000499963760376,
+            0.0010000000474974513,
+            9.999999747378752e-05,
+            100000000.0,
+            1000000.0,
+            1.5,
+            0.0009997644228860736,
+            0.00010023560025729239,
+            75002008.0,
+            25997990.0,
+            273.0,
+            273.0005798339844,
+            416633.15625,
+            3.926673208809461e-09
+          ]
+        },
+        {
+          "case_id": 3,
+          "density_id": 3,
+          "values": [
+            1.5,
+            1.000499963760376,
+            9.999999717180685e-10,
+            9.999999747378752e-05,
+            100000000.0,
+            1000000.0,
+            1.5,
+            0.0,
+            0.00010000099427998066,
+            75002008.0,
+            25997990.0,
+            273.0,
+            273.0,
+            416633.15625,
+            1.6666666310949374e-11
+          ]
+        },
+        {
+          "case_id": 4,
+          "density_id": 3,
+          "values": [
+            1.5,
+            1.0000001192092896,
+            0.0010000000474974513,
+            9.999999747378752e-05,
+            0.009999999776482582,
+            0.0,
+            1.5,
+            0.0010000000474974513,
+            9.999999747378752e-05,
+            50000000.0,
+            0.0010000000474974513,
+            273.0,
+            273.0,
+            2.876670066598308e-07,
+            2.711196538999962e-21
+          ]
+        }
+      ],
+      "run_receipt_sha256": "880e42e40443af88cb01f2553f113f153ddfdfa85aa8666c5f2d28a053df41ce",
+      "run_returncode": 0,
+      "stdout_sha256": "a2b5f9b794db0c5706c3df150fa46721c7ac19972e8304cb7e1b0e81ea1de139"
+    },
+    {
+      "compile_receipt_sha256": "9a618cc383c351433cf98ad05a2aaf34628ea89515235a154f52f2888157ee52",
+      "compile_returncode": 0,
+      "compiler": "GNU Fortran (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0",
+      "executable_sha256": "148d818eb6c2ebbfdc8a9145a8397d0b49afd2771f4ae9822515d21110f2a201",
+      "generated_fortran_sha256": "b6306d865e918ece40589521f553c4ae686f2b911ed9879eced7c6e754843f64",
+      "optimization": "O2",
+      "oracle_checks": [
+        {
+          "case": 1,
+          "density": 0.5,
+          "inactive_exact_zero": true
+        },
+        {
+          "binary64_volume_oracle_abs_error_in_stored_state": 0.0,
+          "case": 2,
+          "delta_N_activation": 24997989.375,
+          "delta_qc": 7.068010745570064e-07,
+          "delta_qc_quantization_note": "Delta is the subtraction of two default-REAL stored states; the source process increment is checked through rounded expected qc_new, not a relative tolerance on the subtracted delta.",
+          "delta_qv": -7.067574188113213e-07,
+          "density": 0.5,
+          "latent_heating_delta_T": 0.00177001953125,
+          "mass_specific_interpretation_abs_residual": 3.534003255694357e-07,
+          "stored_state_rounding_bound": 4.986095629317807e-12,
+          "volume_interpretation_abs_residual": 4.234181350077981e-13
+        },
+        {
+          "available_vapor": 9.999999717180685e-10,
+          "case": 3,
+          "delta_N_activation": 24997989.375,
+          "density": 0.5,
+          "volume_conditional_residual": 7.058046917819982e-07,
+          "water_cap_active": true,
+          "water_cap_rate": 1.6666666310949374e-11
+        },
+        {
+          "activation_delta_N": 1.7260020399589848e-05,
+          "branch_isolation_only": true,
+          "case": 4,
+          "ccn_floor_after_update": 50000000.0,
+          "cloud_floor": 0.0010000000474974513,
+          "density": 0.5,
+          "observed_cloud_number_delta_after_floor": 0.0010000000474974513
+        },
+        {
+          "case": 1,
+          "density": 1.0,
+          "inactive_exact_zero": true
+        },
+        {
+          "binary64_volume_oracle_abs_error_in_stored_state": 0.0,
+          "case": 2,
+          "delta_N_activation": 24997989.375,
+          "delta_qc": 3.534005372785032e-07,
+          "delta_qc_quantization_note": "Delta is the subtraction of two default-REAL stored states; the source process increment is checked through rounded expected qc_new, not a relative tolerance on the subtracted delta.",
+          "delta_qv": -3.534369170665741e-07,
+          "density": 1.0,
+          "latent_heating_delta_T": 0.000885009765625,
+          "mass_specific_interpretation_abs_residual": 2.1170906750389904e-13,
+          "stored_state_rounding_bound": 4.31203721820476e-12,
+          "volume_interpretation_abs_residual": 2.1170906750389904e-13
+        },
+        {
+          "available_vapor": 9.999999717180685e-10,
+          "case": 3,
+          "delta_N_activation": 24997989.375,
+          "density": 1.0,
+          "volume_conditional_residual": 3.5240394279442755e-07,
+          "water_cap_active": true,
+          "water_cap_rate": 1.6666666310949374e-11
+        },
+        {
+          "activation_delta_N": 1.7260020399589848e-05,
+          "branch_isolation_only": true,
+          "case": 4,
+          "ccn_floor_after_update": 50000000.0,
+          "cloud_floor": 0.0010000000474974513,
+          "density": 1.0,
+          "observed_cloud_number_delta_after_floor": 0.0010000000474974513
+        },
+        {
+          "case": 1,
+          "density": 1.5,
+          "inactive_exact_zero": true
+        },
+        {
+          "binary64_volume_oracle_abs_error_in_stored_state": 0.0,
+          "case": 2,
+          "delta_N_activation": 24997989.375,
+          "delta_qc": 2.3560278350487351e-07,
+          "delta_qc_quantization_note": "Delta is the subtraction of two default-REAL stored states; the source process increment is checked through rounded expected qc_new, not a relative tolerance on the subtracted delta.",
+          "delta_qv": -2.3562461137771606e-07,
+          "density": 1.5,
+          "latent_heating_delta_T": 0.000579833984375,
+          "mass_specific_interpretation_abs_residual": 1.1779796548269717e-07,
+          "stored_state_rounding_bound": 4.087351081167078e-12,
+          "volume_interpretation_abs_residual": 2.284179826391876e-12
+        },
+        {
+          "available_vapor": 9.999999717180685e-10,
+          "case": 3,
+          "delta_N_activation": 24997989.375,
+          "density": 1.5,
+          "volume_conditional_residual": 2.34603693131904e-07,
+          "water_cap_active": true,
+          "water_cap_rate": 1.6666666310949374e-11
+        },
+        {
+          "activation_delta_N": 1.7260020399589848e-05,
+          "branch_isolation_only": true,
+          "case": 4,
+          "ccn_floor_after_update": 50000000.0,
+          "cloud_floor": 0.0010000000474974513,
+          "density": 1.5,
+          "observed_cloud_number_delta_after_floor": 0.0010000000474974513
+        }
+      ],
+      "rows": [
+        {
+          "case_id": 1,
+          "density_id": 1,
+          "values": [
+            0.5,
+            1.0,
+            0.0010000000474974513,
+            9.999999747378752e-05,
+            100000000.0,
+            1000000.0,
+            0.5,
+            0.0010000000474974513,
+            9.999999747378752e-05,
+            100000000.0,
+            1000000.0,
+            273.0,
+            273.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "case_id": 2,
+          "density_id": 1,
+          "values": [
+            0.5,
+            1.000499963760376,
+            0.0010000000474974513,
+            9.999999747378752e-05,
+            100000000.0,
+            1000000.0,
+            0.5,
+            0.00099929329007864,
+            0.00010070679854834452,
+            75002008.0,
+            25997990.0,
+            273.0,
+            273.00177001953125,
+            416633.15625,
+            1.1780019626428384e-08
+          ]
+        },
+        {
+          "case_id": 3,
+          "density_id": 1,
+          "values": [
+            0.5,
+            1.000499963760376,
+            9.999999717180685e-10,
+            9.999999747378752e-05,
+            100000000.0,
+            1000000.0,
+            0.5,
+            0.0,
+            0.00010000099427998066,
+            75002008.0,
+            25997990.0,
+            273.0,
+            273.0,
+            416633.15625,
+            1.6666666310949374e-11
+          ]
+        },
+        {
+          "case_id": 4,
+          "density_id": 1,
+          "values": [
+            0.5,
+            1.0000001192092896,
+            0.0010000000474974513,
+            9.999999747378752e-05,
+            0.009999999776482582,
+            0.0,
+            0.5,
+            0.0010000000474974513,
+            9.999999747378752e-05,
+            50000000.0,
+            0.0010000000474974513,
+            273.0,
+            273.0,
+            2.876670066598308e-07,
+            8.133589415051494e-21
+          ]
+        },
+        {
+          "case_id": 1,
+          "density_id": 2,
+          "values": [
+            1.0,
+            1.0,
+            0.0010000000474974513,
+            9.999999747378752e-05,
+            100000000.0,
+            1000000.0,
+            1.0,
+            0.0010000000474974513,
+            9.999999747378752e-05,
+            100000000.0,
+            1000000.0,
+            273.0,
+            273.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "case_id": 2,
+          "density_id": 2,
+          "values": [
+            1.0,
+            1.000499963760376,
+            0.0010000000474974513,
+            9.999999747378752e-05,
+            100000000.0,
+            1000000.0,
+            1.0,
+            0.0009996466105803847,
+            0.00010035339801106602,
+            75002008.0,
+            25997990.0,
+            273.0,
+            273.0008850097656,
+            416633.15625,
+            5.890009813214192e-09
+          ]
+        },
+        {
+          "case_id": 3,
+          "density_id": 2,
+          "values": [
+            1.0,
+            1.000499963760376,
+            9.999999717180685e-10,
+            9.999999747378752e-05,
+            100000000.0,
+            1000000.0,
+            1.0,
+            0.0,
+            0.00010000099427998066,
+            75002008.0,
+            25997990.0,
+            273.0,
+            273.0,
+            416633.15625,
+            1.6666666310949374e-11
+          ]
+        },
+        {
+          "case_id": 4,
+          "density_id": 2,
+          "values": [
+            1.0,
+            1.0000001192092896,
+            0.0010000000474974513,
+            9.999999747378752e-05,
+            0.009999999776482582,
+            0.0,
+            1.0,
+            0.0010000000474974513,
+            9.999999747378752e-05,
+            50000000.0,
+            0.0010000000474974513,
+            273.0,
+            273.0,
+            2.876670066598308e-07,
+            4.066794707525747e-21
+          ]
+        },
+        {
+          "case_id": 1,
+          "density_id": 3,
+          "values": [
+            1.5,
+            1.0,
+            0.0010000000474974513,
+            9.999999747378752e-05,
+            100000000.0,
+            1000000.0,
+            1.5,
+            0.0010000000474974513,
+            9.999999747378752e-05,
+            100000000.0,
+            1000000.0,
+            273.0,
+            273.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "case_id": 2,
+          "density_id": 3,
+          "values": [
+            1.5,
+            1.000499963760376,
+            0.0010000000474974513,
+            9.999999747378752e-05,
+            100000000.0,
+            1000000.0,
+            1.5,
+            0.0009997644228860736,
+            0.00010023560025729239,
+            75002008.0,
+            25997990.0,
+            273.0,
+            273.0005798339844,
+            416633.15625,
+            3.926673208809461e-09
+          ]
+        },
+        {
+          "case_id": 3,
+          "density_id": 3,
+          "values": [
+            1.5,
+            1.000499963760376,
+            9.999999717180685e-10,
+            9.999999747378752e-05,
+            100000000.0,
+            1000000.0,
+            1.5,
+            0.0,
+            0.00010000099427998066,
+            75002008.0,
+            25997990.0,
+            273.0,
+            273.0,
+            416633.15625,
+            1.6666666310949374e-11
+          ]
+        },
+        {
+          "case_id": 4,
+          "density_id": 3,
+          "values": [
+            1.5,
+            1.0000001192092896,
+            0.0010000000474974513,
+            9.999999747378752e-05,
+            0.009999999776482582,
+            0.0,
+            1.5,
+            0.0010000000474974513,
+            9.999999747378752e-05,
+            50000000.0,
+            0.0010000000474974513,
+            273.0,
+            273.0,
+            2.876670066598308e-07,
+            2.711196538999962e-21
+          ]
+        }
+      ],
+      "run_receipt_sha256": "eabf3854baa79a9f5fee49b729c5c562f683b34403c6de41f6114182ae44258b",
+      "run_returncode": 0,
+      "stdout_sha256": "a2b5f9b794db0c5706c3df150fa46721c7ac19972e8304cb7e1b0e81ea1de139"
+    }
+  ],
+  "default_real_oracle": {
+    "formula": "binary64 activation increment and embryo mass, compared to stored default-REAL states after explicit rounding",
+    "relative_number_rate_tolerance": 1.9073486328125e-06,
+    "source_embryo_mass_kg": 1.413716694115407e-14,
+    "state_rounding": "half-ULP at prestate plus 16 binary32 epsilons times expected increment; see per-case records"
+  },
+  "fixture_attempt_history": {
+    "final_execution_attempt": "v5 outputs validated offline in v6; no v6 compile or executable invocation",
+    "preserved_attempts": [
+      {
+        "classification": "FAILED_ORACLE_GATE_RELATIVE_DELTA_IGNORED_DEFAULT_REAL_STATE_QUANTIZATION",
+        "compile_invocations": 2,
+        "compile_rc0": 2,
+        "executable_invocations": 2,
+        "executable_rc0": 2,
+        "failed_stage": "oracle/postflight after successful compile and executable runs",
+        "failure_path": "build/udm37-activation-contract-fixture-v1/failure.json",
+        "failure_sha256": "4118727121ddb41b8356600b9c227e651302fa917cd2bb482957bd5683732d98",
+        "version": "v1"
+      },
+      {
+        "classification": "FAILED_FIXTURE_ASSERTION_CC N_FLOOR_PREVENTED_NCCN_DECREASE_AT_INITIAL_CCNMIN",
+        "compile_invocations": 2,
+        "compile_rc0": 2,
+        "executable_invocations": 2,
+        "executable_rc0": 2,
+        "failed_stage": "oracle/postflight after successful compile and executable runs",
+        "failure_path": "build/udm37-activation-contract-fixture-v2/attempt-02-failure.json",
+        "failure_sha256": "2a6ea1142fa9f0347244b684b4944a4201cb51cbec98b20e3823d50ec3ae3187",
+        "version": "v2"
+      },
+      {
+        "classification": "FAILED_WATER_CAP_ASSERTION_USED_UNROUNDED_SUBTRACTED_STATE_DELTAS",
+        "compile_invocations": 2,
+        "compile_rc0": 2,
+        "executable_invocations": 2,
+        "executable_rc0": 2,
+        "failed_stage": "oracle/postflight after successful compile and executable runs",
+        "failure_path": "build/udm37-activation-contract-fixture-v3/attempt-03-failure.json",
+        "failure_sha256": "7e60e6b9186e88e30b36540f5310d0ff1c6dd36bf2f0517405b57bdc67274250",
+        "version": "v3"
+      },
+      {
+        "classification": "FAILED_NUMBER_FLOOR_EXPECTED_VALUE_USED_UNROUNDED_LITERAL",
+        "compile_invocations": 2,
+        "compile_rc0": 2,
+        "executable_invocations": 2,
+        "executable_rc0": 2,
+        "failed_stage": "oracle/postflight after successful compile and executable runs",
+        "failure_path": "build/udm37-activation-contract-fixture-v4/attempt-04-failure.json",
+        "failure_sha256": "c09ac8f6e87a44b9fbe73065e04535047afd607d2d7e2c4f755ff4d8c5126647",
+        "version": "v4"
+      },
+      {
+        "classification": "FAILED_POSTFLIGHT_SERIALIZATION_NAMEERROR_AFTER_BOTH_EXECUTIONS",
+        "compile_invocations": 2,
+        "compile_rc0": 2,
+        "executable_invocations": 2,
+        "executable_rc0": 2,
+        "failed_stage": "oracle/postflight after successful compile and executable runs",
+        "failure_path": "build/udm37-activation-contract-fixture-v5/attempt-05-failure.json",
+        "failure_sha256": "6e443c0f981de5cb18f51d82f62786f033b312c0d7d72fa4059998b62582740c",
+        "version": "v5"
+      }
+    ],
+    "total_compile_invocations": 10,
+    "total_compile_rc0": 10,
+    "total_executable_invocations": 10,
+    "total_executable_rc0": 10,
+    "v5_final_execution_rcs": [
+      0,
+      0
+    ]
+  },
+  "model_calls": 0,
+  "production_edits": 0,
+  "scope_limit": "This checks local algebra in the extracted native activation block under explicit conditional number interpretations. It does not identify transported QNC units, validate producer-consumer coupling, or establish radiative/forecast accuracy.",
+  "source": {
+    "activation_block_sha256": "c26d239d86b964e84e47834a9ce65e4642930f1ac0d67ac9936ca0be823115e2",
+    "activation_lines": [
+      2508,
+      2520
+    ],
+    "git_head": "246e6f74f3b4fdb0727ea6beeb51edafae435173",
+    "path": "build/udm37-nc-radiative-evidence-pr-work/WRF/phys/module_mp_udm.F",
+    "sha256": "9b7b878b263f6b0111edba4cfb1c6c30e53b3f7534035cda2c0411a573b81c2c"
+  },
+  "status": "PASS_SOURCE_EXTRACTED_ACTIVATION_CONTRACT_FIXTURE"
+}
