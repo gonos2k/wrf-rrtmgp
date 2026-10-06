@@ -1,0 +1,35 @@
+{
+  "created_utc": "2026-10-06T02:17:25.401648+00:00",
+  "findings": [
+    "Plan companion A/B mapping contradicts stock LNCOR1. Correct A=(VNU REAL8, ALFA REAL4, AMOL REAL4 bits promoted, TMPALF REAL4), B=(SP,EPP,HWHMS,PSHIFT REAL4 promoted).",
+    "Reader is an inventory-only nearest-center candidate exporter; it does not implement requested original ASCII identity/companion association or actual A/B interpolation/SPPSP joins. Candidate status correctly avoids numeric acceptance, but the original scientific task remains unfulfilled.",
+    "Generated report limitations incorrectly claim no reader execution or coefficient decoding after the reader runs.",
+    "Actual RC durability, single invocation and pre/post asset closure are only proposed as a future wrapper in v1 plan; not implemented in this inventory reader."
+  ],
+  "next": "Preserve unexecuted v1; review separate frozen v2 implementing exact ASCII\u2192TAPE3\u2192source-value associations before root execution.",
+  "plan": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-coupling-record-audit-preparation-v1/plan.json",
+    "sha256": "9c1a956b4c2d66aee5f2b21398c790f84c415b4fa15f9c82e76fd33ce5dfcc06",
+    "size_bytes": 8696
+  },
+  "reader": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-coupling-record-audit-preparation-v1/read_selected_tape3_groups.py",
+    "sha256": "6894fa5ff2d7c744fbad83803a6a06ac55ed35053b8f6b6aa37a42a7db4356fc",
+    "size_bytes": 9915
+  },
+  "reviewer_invocations": {
+    "compiler": 0,
+    "model": 0,
+    "raw_data_parse": 0,
+    "reader": 0,
+    "solver": 0
+  },
+  "schema": "UDM37_COUPLING_RECORD_DRAFT_STATIC_REVIEW_V1",
+  "source_findings": [
+    "Stock INPUT_BLOCK fixes VNU REAL8, MOL/IFLG INTEGER4 and other inputs REAL4 regardless of GNUdbl working default sizes. Negative IFLG MOL is TRANSFER-reinterpreted as REAL4, promoted to REAL8 AMOL; classifying it as species would be incorrect.",
+    "LNCOR1 TEMPLC=[200,250,296,340] and T=228.3152 selects the 200/250 segment. SLOPE=(next-current)*RECTLC then value=current+SLOPE*TMPDIF.",
+    "SP=SUI*(1+GI*PAVP2), SPPI=(SUI*YI)*PAVP0, SPPSP=SPPI/SP. Main center shifts VNU+RHORAT*PSHIFT before trace metadata.",
+    "LNFL F100 foreign companion FORMAT925 is 2X,4(E13.6,E11.4),I2; assignment encodes A and B in alternating source fields."
+  ],
+  "status": "BLOCKED_DRAFT_V1_SOURCE_MAPPING_AND_SCOPE"
+}

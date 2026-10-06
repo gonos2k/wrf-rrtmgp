@@ -1,0 +1,138 @@
+{
+  "schema": "UDM37_LBLRTM_R3_FINITE_SUPPORT_SOURCE_PREFLIGHT_V2",
+  "status": "SOURCE_AND_SAVED_SUMMARY_REVIEW_COMPLETE_NO_NEW_RUN",
+  "supersedes_scope_only": {
+    "path": "build/udm37-lblrtm-finite-support-source-preflight-v1/review.json",
+    "sha256": "c95b091c5cc0eb1fd9b58770041e9a53b7e5f149ddb164ff5b3571ec3697e1e3",
+    "reason": "V1 proposed additional panel/per-line instrumentation. PR117's R3 term-trace evidence already supplies panel carry checks and per-write source-term accounting; V1 is retained as stale-scope history."
+  },
+  "scope": {
+    "read": [
+      "instrumented oprop.f90 source snapshot and instrumentation patch",
+      "frozen build plan",
+      "saved R3 accounting JSON summary and its saved-reader execution receipt",
+      "existing independent review and its target-index erratum"
+    ],
+    "not_read": ["UDM37_R3_TERM_TRACE raw binary", "line/coefficient source data", "new model output"],
+    "new_solver_or_model_or_build_invocations": 0,
+    "new_raw_trace_scans": 0,
+    "physical_acceptance": "FAIL_NEGATIVE_OD_RETAINED"
+  },
+  "pins": {
+    "instrumented_source": {
+      "path": "build/udm37-lblrtm-r3-term-trace-v1/source/LBLRTM/src/oprop.f90",
+      "sha256": "6b806117a32832371f8947bc54b5a5c3bf38389a7279ae48ae39afc141666300"
+    },
+    "diagnostic_patch": {
+      "path": "build/udm37-lblrtm-r3-term-trace-v1/instrumentation.patch",
+      "sha256": "bf2b1e6c6061e12515e645e225026510f5c88767ec90e6e71d5346a837c14197"
+    },
+    "build_plan": {
+      "path": "build/udm37-lblrtm-r3-term-trace-v1/build-plan.json",
+      "sha256": "061959897b666724a6c70023d71d32b61c459e3c848b28c099647a39574f2c5e"
+    },
+    "accounting_report": {
+      "path": "build/udm37-lblrtm-r3-term-trace-v1/r3-accounting-report-v2.json",
+      "sha256": "e44d08ea068c0b5e242f263c3a2f70c2d5ff4b71b529c10604d8be5de1e438ce",
+      "raw_trace_sha256_recorded_in_report": "5167f1496f7c34577a755f8c5ebd71e59a20245ebf057f9bfc25a260f0e2ccec"
+    },
+    "saved_reader": {
+      "path": "build/udm37-lblrtm-r3-term-trace-v1/analyze_r3_terms_v2.py",
+      "sha256": "f258377d9db12c9e56ca9a96c72cd82daaa1e89863220f70fb31671d3593f3f4"
+    },
+    "saved_reader_execution": {
+      "path": "build/udm37-lblrtm-r3-term-trace-v1/reader-execution-v2.json",
+      "sha256": "e6c2c9f7ce0c98ed74d69689e6f26e404caf9f7cf0143c22f03d47aadece8345",
+      "actual_child_returncode": 0,
+      "solver_build_or_model_invocations": 0
+    },
+    "prior_independent_review": {
+      "path": "build/udm37-lblrtm-r3-term-independent-review-v1/review.json",
+      "sha256": "fe14b49f9b96ef4274947bddb58f295ca80bad7bf7db07fc79504fac350f4536"
+    },
+    "prior_target_index_erratum": {
+      "path": "build/udm37-lblrtm-r3-term-independent-review-v1/review-erratum-v1.json",
+      "sha256": "0614d17a96d51946c2c971b82f9c857746728b1cd7d4a2146b44385cf3951c22"
+    }
+  },
+  "source_findings": {
+    "line_ingest_and_prefilter": [
+      {
+        "routine": "LNCOR1",
+        "source_lines": "1131-1161",
+        "behavior": "The R3-side lower-support test skips a line when VNU + HWF3*ALFV < VFT. Zero-strength/invalid molecule or isotope paths can also skip earlier. The line metadata helper is called only after the lower-support test, and before the IFLAG=0 SPEAK rejection; thus it is not a complete record of all candidate or rejected lines."
+      },
+      {
+        "routine": "CNVFNV",
+        "source_lines": "1298-1320",
+        "behavior": "For an admitted nonzero-SP line the routine derives JMIN1/JMAX1 and maps each J1 to J3. If JMAX1 exceeds MAX1 it requests a panel transition before performing that line's updates; this is not evidence that the line was permanently discarded."
+      },
+      {
+        "routine": "CNVFNV",
+        "source_lines": "1320-1370",
+        "behavior": "Actual R3 writes occur over the finite J1 stencil, for baseline and then, when SPPSP is nonzero, coupling. The diagnostic term record is emitted immediately after each selected R3 assignment."
+      }
+    ],
+    "recorded_per_update_fields": [
+      "source line/batch identity, molecule, isotope, coupling flag and source line index",
+      "J1, J3, IZ3, J3SHFT, JMIN1, JMAX1",
+      "VFT, DVR3, line VNU, SP, SPPSP, RECALF, STRF3, F3 value, coupling factor",
+      "R3 before and after the exact write, ZSLOPE, ZINT and CONF3",
+      "line-state SUI, GI, YI, pressure ratios and line-width state in the trace record"
+    ],
+    "interpretation": "These fields establish which already-executed stencil writes contributed to the saved R3 values and how those writes chain. They do not enumerate candidate transitions omitted before the term hook, or establish a physical cancellation identity."
+  },
+  "saved_evidence_findings": {
+    "status": "PASS_SCOPED_EXACT_UPDATE_ACCOUNTING_AND_NONINTERFERENCE",
+    "physical_reference_acceptance": "FAIL_NEGATIVE_OD_RETAINED",
+    "trace_records": 45785,
+    "bitwise_reconstructed_updates": 45569,
+    "per_write_chain_and_panel_carry": "verified bitwise by the saved report; 45 layer payloads/panel headers match the uninstrumented comparison, with the documented HTIME clock-word exception",
+    "target_layer": 21,
+    "target_grid_coordinate": {
+      "r3_index_one_based": 63,
+      "wavenumber_cm_minus_1": 666.4341333333339,
+      "scope_note": "R3 index coordinates and carried state are not output-array indices."
+    },
+    "target_component_accounting": {
+      "incoming_carried_value": 0.000518142586488824,
+      "baseline_term_sum": 0.0067990251847154974,
+      "coupling_term_sum": -0.015348817314295393,
+      "continuum_XINT_delta": 0.0002595661029347919,
+      "LBLF4_XINT_delta": 0.0,
+      "pre_PANEL_R3": -0.007772083440156277,
+      "component_sum_residual_is_descriptive_only": 2.6020852139652106e-18
+    },
+    "first_negative_coupling_update_at_target": {
+      "saved_report_sequence": 35615,
+      "molecule": 2,
+      "isotope": 1,
+      "coupling_flag": 1,
+      "source_line_index": 32,
+      "vnu_cm_minus_1": 667.385965634841,
+      "actual_operand": -0.013911364162291164,
+      "before": 0.0010453855710148992,
+      "after": -0.012865978591276264,
+      "GI": 0.0,
+      "YI": 3.034229991142273,
+      "SPPSP": 1.0431859088670232,
+      "evidence_origin": "already-saved accounting report; no raw trace reread in this review"
+    }
+  },
+  "hypothesis_assessment": {
+    "finite_support": {
+      "supported_by_current_evidence": "The saved update ledger identifies the finite interpolation stencil actually used for each recorded line-target update (JMIN1/JMAX1/J3 and exact operand). The source confirms the lower support skip condition and panel-overflow handoff.",
+      "not_established": "Whether an omitted candidate line or a physically relevant wing contribution outside the source's finite support explains the negative R3 value. The diagnostic term hook does not log every prefilter rejection or every line in the source TAPE3 candidate range; panel rollover is a handoff, not proof of loss.",
+      "minimum_followup_if_needed": "An offline, source-bound inventory of the exact selected layer's TAPE3 candidate lines in the narrow target neighborhood, joined to the same LNCOR1 input range and classified by zero strength, support test, line rejection, panel handoff, or actual target-stencil update. Keep this distinct from a solver run and do not infer omitted-wing physics solely from source cutoffs."
+    },
+    "missing_cancellation_partner": {
+      "supported_by_current_evidence": "The actual captured updates include signed source operands and identity. At target j3=63, a source line (molecule 2/isotope 1, line index 32) contributes -0.013911364162291164 on the first captured negative coupling update; other actual updates are accounted in the exact chain and component sums.",
+      "not_established": "That a compensating line should exist, was omitted, or would restore nonnegative optical depth. No conservation/cancellation condition follows from this term-accounting experiment, and the term record is not a complete catalog of candidates rejected before CNVFNV.",
+      "minimum_followup_if_needed": "The same candidate-line inventory should include every relevant line identity and its post-LNCOR1 decision, with enough input/coefficient provenance to distinguish absent, rejected, out-of-support, carried-to-next-panel, and accumulated contributions. A counterfactual line insertion or altered cutoff would be a separate experiment and is not proposed here."
+    }
+  },
+  "other_open_issue_correction": {
+    "5702_additional_broadening_flag": "The parent-designated source audit has proved this sentinel unused in the affected path, and paired physical mains agree across 648,464 records. Preserve the earlier failed diagnostic record, but do not describe this as an unreviewed current blocker or use it as evidence for the R3 cause."
+  },
+  "conclusion": "PR117's saved R3 trace closes the actual-update attribution gap that motivated v1. It supports exact accounting of recorded writes and a targeted description of the negative operand. It does not by itself adjudicate finite-support loss, an omitted cancellation partner, spectroscopy, or the retained full-spectrum negative-OD failure. No new instrumentation, solver, model, build, or raw trace scan is warranted by this source-only review."
+}

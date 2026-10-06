@@ -1,0 +1,65 @@
+{
+  "schema": "LBLRTM_V12_17_OFFICIAL_EXAMPLE_ARCHIVE_REVIEW_V1",
+  "status": "ARCHIVE_AUTHENTICATED_AND_INVENTORIED_NO_EXECUTION",
+  "release": {
+    "repository": "AER-RC/LBLRTM",
+    "tag": "v12.17",
+    "tag_commit": "a85ac73447c1e62401a57a34bbcb040683345dca",
+    "asset_id": 162489128,
+    "asset_name": "run_examples_v12.17.tar.gz",
+    "canonical_url": "https://github.com/AER-RC/LBLRTM/releases/download/v12.17/run_examples_v12.17.tar.gz",
+    "expected_bytes": 99484242,
+    "observed_bytes": 99484242,
+    "sha256": "8f8dbbbda2cab47c3eb199f487e59eb7ab59c952ef76399f37d534cc8ea88bcd",
+    "download_http_status": 200,
+    "download_return_code": 0,
+    "retries": 0,
+    "release_metadata_sha256": "c47bb08ab13171483b82fc8254ccbf898888192d626d5147ecb1ddf29417004b",
+    "download_receipt_sha256": "65b83fd7d50edbccbf0abd816093cb77adc108928652d014286f608520678f42"
+  },
+  "inventory": {
+    "roster_sha256": "53e3d8801949f4a921bff47a0481e742e0482ceaa6c76f8101c3072c280c6da1",
+    "member_count": 174,
+    "listed_regular_member_bytes": 222275671,
+    "filesystem_extraction": false,
+    "scripts_or_binaries_executed": false,
+    "archive_member_paths_absolute_or_parent_traversal": 0,
+    "external_relative_symlinks": 10,
+    "external_symlink_note": "Example TAPE3, LNFL, broadening-parameter, executable, and data links refer outside the archive (including AER line-file v3.8.1). They were recorded, not followed or extracted."
+  },
+  "finding": {
+    "documented_reference_outputs_exist": true,
+    "documented_optical_depth_reference_for_a_small_official_example": false,
+    "basis": [
+      "The bundled example scripts run LBLRTM and rename generated TAPE12/TAPE13/TAPE27/TAPE6 files to *_test for comparison against supplied *_ex outputs; those *_ex files are regression examples.",
+      "The solar example README defines TAPE12 as optical depth only for IEMIT=0, and as radiance/transmittance for IEMIT=1. The inspected solar TAPE5 starts with EM=1 (IEMIT=1) and then performs a separate EM=2 solar convolution; it does not establish a standalone OD reference.",
+      "The A-band example also starts with EM=1 and includes TAPE12_ex/TAPE13_ex, but the package does not document those as optical-depth-only reference arrays. The built-in-atmosphere example has TAPE27_ex/TAPE28_ex and no TAPE12_ex."
+    ],
+    "smallest_candidate_for_a_future_non_OD_regression": {
+      "example": "run_examples/run_example_built_in_atm_upwelling",
+      "input": "TAPE5 (821 bytes; 1000-1200 cm-1; US standard atmosphere, nadir view from 100 km)",
+      "provided_references": ["TAPE27_ex", "TAPE28_ex", "TAPE6_ex"],
+      "limitation": "The script expects LBLRTM-generated TAPE12/TAPE27/TAPE28 products; only TAPE27_ex/TAPE28_ex are supplied, and TAPE12 is not an archived *_ex oracle. This is not an OD-only test."
+    },
+    "most_explicit_spectral_reference_candidate": {
+      "example": "run_examples/run_example_aband",
+      "input": "TAPE5 (56,246 bytes; 12,300-13,500 cm-1)",
+      "provided_references": ["TAPE12_ex", "TAPE13_ex", "TAPE27_ex", "TAPE6_ex"],
+      "limitation": "The TAPE5 main calculation has EM=1. The package describes comparison to *_ex outputs, but does not identify TAPE12_ex as an OD-only output. The input depends on an external AER v3.8.1 TAPE3 symlink and solar data."
+    }
+  },
+  "reference_identity_and_compatibility": {
+    "documented_precision": "The solar example README states its *_ex outputs were produced on Linux in double precision with PGI and a little-endian TAPE3. The non-LTE README separately says its *_ex outputs were produced in Linux double precision.",
+    "exact_compiler_build_identity": "Not documented in the inspected archive. The driver symlinks an executable named lblrtm_v12.17_linux_gnu_dbl, while solar README describes PGI-produced expected outputs; this name does not prove the reference binary's compiler identity.",
+    "line_data_identity": "Example TAPE3 links are external relative symlinks named for AER v3.8.1. The archive does not contain the linked line file or a cryptographic digest for it; the TAPE3 README says run_lnfl generates example TAPE3 files, and the linked LNFL executable is also external.",
+    "exact_reproduction_or_gold_standard_claim": false,
+    "implication": "The package is useful for a documented versioned example regression once its external data links and ABI are authenticated. Its bundled *_ex files are not, on current evidence, an exact independent optical-depth gold reference for the local GNU-double stock build."
+  },
+  "scope": {
+    "archive_only_review": true,
+    "no_extraction": true,
+    "no_scripts_binaries_compilers_or_models_run": true,
+    "signed_temporary_download_url_retained_only_in_private_download_receipt": true,
+    "download_receipt_sha256": "65b83fd7d50edbccbf0abd816093cb77adc108928652d014286f608520678f42"
+  }
+}

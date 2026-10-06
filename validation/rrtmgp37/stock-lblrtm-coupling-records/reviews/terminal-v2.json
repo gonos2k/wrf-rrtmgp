@@ -1,0 +1,86 @@
+{
+  "schema": "UDM37_COUPLING_RECORD_TERMINAL_INDEPENDENT_REVIEW_V1",
+  "created_at": "2026-10-06T03:02:30.334483+00:00",
+  "status": "PASS_SCOPED_SAVED_RECORD_AND_COEFFICIENT_PATH_REVIEW",
+  "pins": [
+    {
+      "path": "build/udm37-lblrtm-coupling-record-audit-run-v2/execution.json",
+      "sha256": "bdc75edc6d61520828a998dae0a19954081f802aa7b6b90690b978f5367369bf",
+      "size_bytes": 726
+    },
+    {
+      "path": "build/udm37-lblrtm-coupling-record-audit-run-v2/authorization.json",
+      "sha256": "ede398a6370bc8dffe0bf6778c693b44e4e9cdc194fa7b7f07173c6e45568d10",
+      "size_bytes": 1433
+    },
+    {
+      "path": "build/udm37-lblrtm-coupling-record-audit-run-v2/postflight.json",
+      "sha256": "b06ab8346ccca6d3c4314cf1fdf44d3d04e0665eff82dfacabba3e265c9c8893",
+      "size_bytes": 1071
+    },
+    {
+      "path": "build/udm37-lblrtm-coupling-record-audit-run-v2/record-audit.json",
+      "sha256": "c00cfa87b90146af1ef02a589852f8de30d9b682e00b731ccc1bf07871544fc6",
+      "size_bytes": 17202
+    },
+    {
+      "path": "build/udm37-lblrtm-coupling-record-audit-preparation-v2/plan.json",
+      "sha256": "df0ebcc78e09120617a68c08aacd75e60e5f86f28902b25e9f03b69666946c6b",
+      "size_bytes": 11304
+    },
+    {
+      "path": "build/udm37-lblrtm-coupling-record-audit-preparation-v2/read_selected_records.py",
+      "sha256": "c040ebb6b82a2658cb4bf4e9b9944dfb4caa5f5ed0b0ca8d13dd6d8d9d2017fe",
+      "size_bytes": 22872
+    },
+    {
+      "path": "build/udm37-lblrtm-coupling-record-audit-preflight-review-v1/review-v2.json",
+      "sha256": "36afa73379200fd760309f9c3709064c1a30890646d52973551537ad88a28596",
+      "size_bytes": 5502
+    },
+    {
+      "path": "build/udm37-lblrtm-r3-term-trace-v1/r3-accounting-report-v2.json",
+      "sha256": "e44d08ea068c0b5e242f263c3a2f70c2d5ff4b71b529c10604d8be5de1e438ce",
+      "size_bytes": 53711
+    }
+  ],
+  "actual_execution": {
+    "PID": 1486014,
+    "RC": 0,
+    "confirmed_reader_invocations": 1,
+    "no_timeout_or_interruption": true
+  },
+  "findings": [
+    "Exact authorization plan/reader/supervisor/preflight-review pins and postflight output hashes match.",
+    "Three unique CO2 isotope1 flag1 records I32/I60/I99 in block487, paired slots32/33,60/61,99/100. Nine main-field and eight companion REAL4-promotion matches retained.",
+    "Executed reader collects complete negative-IFLG groups through next nonnegative slot, across blocks and EOF, and checks one companion before acceptance.",
+    "All three YI/GI/SPPSP and shifted centers have zero ULP and join corresponding rows in every prior selected R3 accounting entry. SPPI follows SUI*YI*p0 source association.",
+    "Independent I32 bounded spot-check confirms source row hashes excluding line terminators, main fields including REAL4 RADCN2/BETA0 and strength, all companion promotions, following nonnegative flag, and source-ordered interpolation/products. No raw vectors/text emitted.",
+    "Blank-HOLIND executed F100 controls source interpretation; inherited160-record descriptor is explicitly stale.",
+    "Eleven saved input before/after stats match and current sizes match; nine smaller inputs rehashed. Executed full-stream hashes record AER908403720B/8992860 records and TAPE3122157832B/3129 blocks. Large originals not rescanned."
+  ],
+  "spot_check": {
+    "selected_i": 32,
+    "distinct_ASCII_records": 2,
+    "ASCII_bytes_per_read": 202,
+    "ASCII_read_attempts": 2,
+    "TAPE3_record_read_attempts": 1,
+    "TAPE3_payload_bytes": 39000,
+    "result": "EXACT",
+    "reviewer_correction": "First check incorrectly included line terminators in record SHA; executed reader hashes records excluding CR/LF. Corrected interpretation matches. This was a review assertion, not a source-data defect."
+  },
+  "limits": [
+    "SP/SUI full temperature/population ancestry is not independently reconstructed; traced SUI is reused for SPPI/SPPSP. Original ASCII line-strength-to-TAPE3 SP conversion is a separate checked boundary.",
+    "Source association/coefficient-path consistency only; original coefficient physics, all negative OD and WRF residual remain open.",
+    "Three selected lines at layer21/T228.3152 only; no physical-goal or whole-program acceptance.",
+    "Full large-input hash invariance relies on executed streaming audit plus saved stats/current sizes; no repeated whole908MB scan."
+  ],
+  "reviewer_invocations": {
+    "executed_reader": 0,
+    "models": 0,
+    "compiler": 0,
+    "solver": 0,
+    "bounded_selected_record_spot_check": 1
+  },
+  "blocking_findings": []
+}
