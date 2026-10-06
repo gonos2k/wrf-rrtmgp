@@ -1,0 +1,111 @@
+{
+  "version": 1,
+  "status": "FROZEN_BEFORE_INTEGRATION",
+  "pins": {
+    "packet": {
+      "path": "build/udm37-legacy-lw-source-export-bon-audit-v2/cases/SOURCE_ON/legacy-export/rrtmg4_d01_i13_j46_step721_lw.txt",
+      "sha256": "bd614b57362b48ab8e00b179fc3464925b9c49a8eef0a472489f87fd89e15c7f",
+      "bytes": 2539937
+    },
+    "input": {
+      "path": "build/udm37-bon-night-dry-column-attribution-v1/matched-legacy-dry.input",
+      "sha256": "292f9569b059c373c9cb14f1574cb8835627331574592a19d641ef07c21ec918",
+      "bytes": 39535
+    },
+    "gp_source": {
+      "path": "build/udm37-bon-night-n2-attribution-v1/run-preparation-v1/run-v1/n2-0p7808.result.lw_transport",
+      "sha256": "bb53daf55ea9b6f91c9d0dbc4f132eff11b3ab76fd278bacb327571a1642e792",
+      "bytes": 308081
+    },
+    "angular_helper": {
+      "path": "build/udm37-bon-night-lw-angular-math-v1/angular_reference.py",
+      "sha256": "a64dfa9f3ff90cc788028c1cb0f5ab4d0be1316c49ef74e833b8dddc4eb5cb48",
+      "bytes": 13139
+    },
+    "legacy_helper": {
+      "path": "build/udm37-bon-night-legacy-lw-math-v2/legacy_lw_replay.py",
+      "sha256": "691497decf3992435ada71b6af84e25e88773f534f385c1a56050e370a1aea00",
+      "bytes": 16092
+    },
+    "coefficients": {
+      "path": "build/udm37-bon-common-band-source-pr-work/WRF/run/rrtmgp-gas-lw-g128.nc",
+      "sha256": "70ad65d116531122660318e5da2a2af9db74b425916202860e9527ef2375b8f6",
+      "bytes": 11679993
+    },
+    "gp_kernel": {
+      "path": "build/udm37-bon-common-band-source-pr-work/WRF/external/rte_rrtmgp/rrtmgp-kernels/mo_gas_optics_rrtmgp_kernels.F90",
+      "sha256": "96be9c4379c4e49a7b13e9b1f8314e78908262f402e913a2a03232987706f6e1",
+      "bytes": 41856
+    },
+    "gp_frontend": {
+      "path": "build/udm37-bon-common-band-source-pr-work/WRF/external/rte_rrtmgp/rrtmgp-frontend/mo_gas_optics_rrtmgp.F90",
+      "sha256": "d5e0a7e56bc811575ec2c9655953a5be64c42a62e4100f65198e1e1b44239adc",
+      "bytes": 107884
+    },
+    "gp_loader": {
+      "path": "build/udm37-bon-common-band-source-pr-work/WRF/external/rte_rrtmgp/extensions/mo_load_coefficients.F90",
+      "sha256": "3abc021bf244560f4d7f247be167ad0ecafb6c451f88566a7ce2a0436caebb5b",
+      "bytes": 13301
+    },
+    "legacy_source": {
+      "path": "build/udm37-bon-common-band-source-pr-work/WRF/phys/module_ra_rrtmg_lw.F",
+      "sha256": "09164a1048f2be2001ac6e161da3c0c48f9e74e4ff57271f445032392d9153ef",
+      "bytes": 713929
+    },
+    "design_v1": {
+      "path": "build/udm37-bon-night-independent-planck-design-v1/plan.json",
+      "sha256": "abe0b6a96eb353e09cd7370c71405bed8399433b7a9f275f467c12d1976f2c79",
+      "bytes": 11101
+    }
+  },
+  "common_bands": [
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13
+  ],
+  "constants_SI": {
+    "h": 6.62607015e-34,
+    "c": 299792458.0,
+    "k": 1.380649e-23
+  },
+  "primary_sources": [
+    {
+      "url": "https://www.nist.gov/pml/special-publication-330/sp-330-section-2",
+      "facts": "Exact SI h,c,k values; consulted 2026-10-05."
+    },
+    {
+      "url": "https://nvlpubs.nist.gov/nistpubs/Legacy/TN/nbstechnicalnote910-8.pdf",
+      "facts": "Planck radiance; wavenumber form derived by change of variable."
+    }
+  ],
+  "quadrature_orders": [
+    64,
+    128,
+    256
+  ],
+  "convergence_max_abs_radiance": 1e-10,
+  "stefan_boltzmann_max_relative": 1e-12,
+  "scope": [
+    "Same BON d01 i13 j46 step721 matched diagnostic45 layer state; common physical bands3–13 only.",
+    "No model, build, compiled RTE, optical-depth or flux-transport run. No source modification or renormalization.",
+    "Exact SI B_wavenumber integrated in m^-1. Finite bands only; full-spectrum dimensionless x0..80 check vs analytic pi^4/15.",
+    "GP totplnk used verbatim; physical grid min/max from temp_ref and196 ordinates, exact production interpolate1D. Native coordinate is index only.",
+    "Legacy captured raw native times DELWAVE*1e4 is separately labeled transport-equivalent radiance; also WTDIFF*FLUXFAC/pi convention. Scaling derived from physical W/cm2→W/m2 and saved transport, never fit.",
+    "Compare per-engine same fractional grid interpolation of independent SI integrals to separate temperature curvature from coefficient-table residual. Also compare legacy rounded radcn1/radcn2 formula using explicitly source-declared units.",
+    "GP pfrac inferred from saved SOURCE_LAYER/raw_LUT_Planck only for diagnostic nonindependent layer fractions. Predicted levels use geometric adjacent fractions; predicted surface uses bottom fraction. This does NOT validate correlated-k interpolation independently.",
+    "Legacy layer fractions summed as saved, including upper band12 zeros. No fraction normalization; do not pair gpoints between engines."
+  ],
+  "closure_max_abs": 1e-10,
+  "nonclaims": [
+    "No tolerance for scientific agreement is invented. Numerical differences are reported, not declared observational accuracy or a whole-port pass.",
+    "No pfrac-independent recovery, full-spectrum legacy-vs-GP support assertion, or cloud/daytime validity assertion."
+  ]
+}
