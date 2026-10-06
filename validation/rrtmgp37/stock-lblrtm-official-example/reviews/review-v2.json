@@ -1,0 +1,46 @@
+{
+  "schema": "UDM37_OFFICIAL_EXAMPLE_PREEXECUTION_REVIEW_V2",
+  "created_at": "2026-10-06T03:23:28.216256+00:00",
+  "status": "BLOCKED_COMPARATOR_TERMINAL_GATE",
+  "pins": [
+    {
+      "path": "build/udm37-lblrtm-official-example-execution-preparation-v1/plan-v2.json",
+      "sha256": "1345e79c59bbd4984f1dd924da48e88d37b6694fa90deb4f49d6dd6593fc750d",
+      "size_bytes": 17665
+    },
+    {
+      "path": "build/udm37-lblrtm-official-example-execution-preparation-v1/run_once_v2.py",
+      "sha256": "fe0c4f60e6a2777dd31f5f4cdfd39e7278312a213aac93fee0e4019ef59df1af",
+      "size_bytes": 5893
+    },
+    {
+      "path": "build/udm37-lblrtm-official-example-execution-preparation-v1/compare_once_v2.py",
+      "sha256": "32986e915b71a768044a39810ebb6913bb5c144d6e4d8ffc175a7b4af83fd412",
+      "size_bytes": 6336
+    }
+  ],
+  "runner_verdict": "PASS_SCOPED_RUNNER_INTERRUPTION_CORRECTION",
+  "blocking_findings": [
+    {
+      "file": "compare_once_v2.py",
+      "location": "main terminal checks before spectra",
+      "issue": "Checks RC0/no timeout but not overall terminal status or child.exception/status; a post-spawn failure with already-terminal RC0 can bypass runner failure label.",
+      "required_correction": "Require TERMINAL_RC0_COMPARISON_PENDING overall, both children TERMINAL, exception None, actual RC0 and no timeout before reading spectra. Preservev2 and use additive successor."
+    }
+  ],
+  "findings": [
+    "Runner now protects Popen/launch record/wait with BaseException, TERM/KILL each5s and actual poll RC; nullRC labeled REAP_PENDING. Exceptions prevent inventory and next scientific process.",
+    "Plan retains identical67 inputs, five original archive members, exact decks and original physical controls; no data/source change.",
+    "Exclusive output directory, no retry, parent ROOT and unchanged HOME maintained.",
+    "Comparator consumes entire two-column spectra, finite Decimal values and strictly monotonic grids, compares all printed values without atol/rtol, independently gates clock/spacing-normalized headers, retains raw hashes and mismatch summaries.",
+    "Comparison result is scoped serialized radiance/temperature regression, not OD acceptance, unknown-reference binary identity or WRF residual attribution."
+  ],
+  "reviewer_invocations": {
+    "compiler": 0,
+    "model": 0,
+    "solver": 0,
+    "reader": 0,
+    "large_reference_rehash": 0
+  },
+  "prior_review_sha256": "f7103bfc8a763120ff837e3421f0a40d583b4476189dfc81aa73cdac6ea1ed00"
+}

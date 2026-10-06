@@ -1,0 +1,144 @@
+{
+  "schema": "UDM37_OFFICIAL_EXAMPLE_TERMINAL_REVIEW_V1",
+  "created_at": "2026-10-06T03:30:02.530693+00:00",
+  "status": "PASS_SCOPED_RECEIPT_AND_SAVED_FAIL_REVIEW",
+  "scientific_serialized_regression_status": "FAIL_SCOPED_OFFICIAL_SERIALIZED_EXAMPLE",
+  "pins": [
+    {
+      "path": "build/udm37-lblrtm-official-example-regression-run-v1/terminal.json",
+      "sha256": "1263abe37ca165ee7acdc728aab08c2c05ed36f22b7db5e366fffe54887b6357",
+      "size_bytes": 772
+    },
+    {
+      "path": "build/udm37-lblrtm-official-example-regression-run-v1/authorization-v3.json",
+      "sha256": "8b42f0222efad04e436eb250ed5c1ce1cd58b47e4a248edd31da7b15d9dae329",
+      "size_bytes": 738
+    },
+    {
+      "path": "build/udm37-lblrtm-official-example-regression-run-v1/preflight.json",
+      "sha256": "4ccc46995dbea816a1aaf6c1146f6281c3b26924f872b2fdabb473b66fb86711",
+      "size_bytes": 20737
+    },
+    {
+      "path": "build/udm37-lblrtm-official-example-regression-run-v1/reader-execution.json",
+      "sha256": "f19e64977616de40a391d7fe176abcc8577af2b272fd1d592988c3f2c304ea17",
+      "size_bytes": 277
+    },
+    {
+      "path": "build/udm37-lblrtm-official-example-regression-run-v1/comparison.json",
+      "sha256": "36578da067e32d4b33671753bedd2bf978fe7ca53f8bdd03eb3a0c2a2a8b7622",
+      "size_bytes": 9734
+    },
+    {
+      "path": "build/udm37-lblrtm-official-example-regression-run-v1/lnfl/execution.json",
+      "sha256": "95d8ad4efddd1e577921ffee8657f0e7bfb0e9c95416a0f8c694367ef9e3e33f",
+      "size_bytes": 216
+    },
+    {
+      "path": "build/udm37-lblrtm-official-example-regression-run-v1/lblrtm/execution.json",
+      "sha256": "c158ca4ec6cb838ebb152a86c96a651323b2ba0c55b60e7bdb7b4043dad36fe5",
+      "size_bytes": 229
+    },
+    {
+      "path": "build/udm37-lblrtm-official-example-execution-preparation-v1/plan-v3.json",
+      "sha256": "c27d61e98b070f64749c298143480bb3935209f0e3be0d31cee5e7ec674ec1d4",
+      "size_bytes": 17880
+    },
+    {
+      "path": "build/udm37-lblrtm-official-example-execution-preparation-v1/run_once_v3.py",
+      "sha256": "a5513b904cd19e087e6e0f0c2bf04fe5c12fa3c0c40ee45bdc8c2e28dc9320f4",
+      "size_bytes": 5893
+    },
+    {
+      "path": "build/udm37-lblrtm-official-example-execution-preparation-v1/compare_once_v3.py",
+      "sha256": "068fc0ca16bc4bc0d30bef29dea4ca7d0838691e53e5d7bcd8e0b382c1aa1bbe",
+      "size_bytes": 6493
+    }
+  ],
+  "actual_invocations": {
+    "LNFL": {
+      "count": 1,
+      "PID": 1610445,
+      "RC": 0,
+      "seconds": 202.40078449249268
+    },
+    "LBLRTM": {
+      "count": 1,
+      "PID": 1616461,
+      "RC": 0,
+      "seconds": 14.738252878189087
+    },
+    "comparison_reader": {
+      "count": 1,
+      "PID": 1617679,
+      "RC": 1,
+      "seconds": 4.519621849060059
+    },
+    "compiler": 0,
+    "WRF": 0
+  },
+  "saved_metrics": {
+    "TAPE27": {
+      "points_current": 800904,
+      "points_reference": 800904,
+      "grid_mismatches": 0,
+      "value_mismatches": 794103,
+      "max_abs_difference": 9.73107e-09,
+      "max_relative_difference": 0.0013569523332778665,
+      "mean_difference": 5.72844129396279e-09,
+      "RMS_difference": 6.707455711745276e-09,
+      "printed_numeric_resolution_gate": "FAIL",
+      "header_context_gate": "PASS"
+    },
+    "TAPE28": {
+      "points_current": 800904,
+      "points_reference": 800904,
+      "grid_mismatches": 0,
+      "value_mismatches": 790312,
+      "max_abs_difference": 0.0727,
+      "max_relative_difference": 0.0002477506574678813,
+      "mean_difference": 0.04600167814119923,
+      "RMS_difference": 0.05280587176758377,
+      "printed_numeric_resolution_gate": "FAIL",
+      "header_context_gate": "PASS"
+    }
+  },
+  "bounded_spot_checks": [
+    {
+      "series": "TAPE27",
+      "files": 2,
+      "bounded_headers_verified": true,
+      "numeric_rows_per_file": 3,
+      "saved_mismatch_examples_exact": true
+    },
+    {
+      "series": "TAPE28",
+      "files": 2,
+      "bounded_headers_verified": true,
+      "numeric_rows_per_file": 3,
+      "saved_mismatch_examples_exact": true
+    }
+  ],
+  "findings": [
+    "Authorization/source-reviewed plan/runner/reader pins match actual preflight and comparison;67 declared input specifications exact. Original copied TAPE5 decks and staged continuum retain hashes,generatedTAPE3 inventory pin joins terminal and solve symlink.",
+    "Actual LNFL/LBL terminal receipts RC0/no interruption/timeout precede comparison. Reader RC1 agrees with strict printed-value mismatch, not model process failure.",
+    "Each complete series800904points, no grid mismatch/unpaired/negative values, finite-monotonic reported and clock/spacing-normalized header contextPASS. Both numeric gates remainFAIL without extra tolerance.",
+    "Bounded independent four-file header and first3row check exactly confirms saved mismatch examples and grids; entire spectra not reparsed or rehashed.",
+    "Comparison code uses Decimal token equality for acceptance; max/RMS summaries convert differences to float descriptively and are not acceptance tolerance.",
+    "Terminal RC0COMPARISON_PENDING is frozen execution receipt. Later comparisonFAIL does not overwrite it; reader RC1/report retain updated scientific-regression state."
+  ],
+  "limits": [
+    "No provisional physical/normal-accuracy verdict, no clipping or threshold relaxation. Existing negativeOD failures remain retained.",
+    "Reference compiler/build/data generation ancestry remains incompletely authenticated; source-version or continuum explanation requires independent evidence, not inferred from this mismatch.",
+    "Radiance differences retain the native serialized RADIANCE field units; no broadband W/m2 or WRF flux attribution. TAPE28 is plotted brightness-temperature comparison, not atmospheric state temperature.",
+    "Rawfile/TAPE3 large hashes are executed inventory/reader attestations checked against pins and current sizes; reviewer does not repeat fullhash/800904-point parse."
+  ],
+  "reviewer_invocations": {
+    "model": 0,
+    "compiler": 0,
+    "full_spectral_reader": 0,
+    "large_reference_rehash": 0,
+    "bounded_header_first3rows_check": 1
+  },
+  "blocking_findings": []
+}

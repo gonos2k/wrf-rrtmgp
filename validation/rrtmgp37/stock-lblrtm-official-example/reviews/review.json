@@ -1,0 +1,51 @@
+{
+  "schema": "UDM37_OFFICIAL_LBLRTM_EXAMPLE_PREEXECUTION_REVIEW_V1",
+  "created_at": "2026-10-06T03:21:27.700774+00:00",
+  "status": "BLOCKED_RUNNER_INTERRUPTION_DURABILITY",
+  "reviewed_plan": {
+    "path": "build/udm37-lblrtm-official-example-execution-preparation-v1/plan.json",
+    "sha256": "b833af60010672ad7e726e9c6b010c38241b46a3a5b48d9c8d7816d18c7466a4",
+    "size_bytes": 17152
+  },
+  "reviewed_runner": {
+    "path": "build/udm37-lblrtm-official-example-execution-preparation-v1/run_once.py",
+    "sha256": "9e9cfd4515f1d2a0be476393e4803b6bb75909ce25cb0030a998fbf9412afc6b",
+    "size_bytes": 4764
+  },
+  "inputs_count": 67,
+  "all_input_exists_sizes_checked": true,
+  "small_hashes_checked": [
+    "plan",
+    "runner",
+    "LNFL_TAPE5",
+    "LBLRTM_TAPE5",
+    "prior_plan_v2"
+  ],
+  "blocking_findings": [
+    {
+      "location": "run(): Popen -> save(launch.json) -> child.wait",
+      "issue": "No BaseException cleanup around launch receipt/wait; interruption or launch-receipt I/O failure can leave live child without durable actual RC. SIGKILL path uses unbounded wait().",
+      "required_correction": "Separate immutable successor: catch spawn failures distinctly; protect every post-Popen operation with bounded process-group terminate/reap cleanup; write actual poll RC or explicit termination-pending status before any output inventory. Stop on interruption/failure; no retry."
+    }
+  ],
+  "nonblocking_findings": [
+    "Exact two small archive decks match frozen pins and prior plan: IR LNFL0-5000 LNOUT EXBRD NLTE; built-in EM1 1000-1200 plus original plot records.",
+    "Stock GNU sgl LNFL/GNU dbl LBL, AER3.8.1, continuum and47 runtime library pins declared; full preflight hashes remain runner responsibility.",
+    "ROOT parents2 correct; absolute external library paths supported by Path joining; output mkdir exclusive ensures no reuse.",
+    "Environment derives os.environ.copy without HOME override; PATH/LANG/LC_ALL/LD_LIBRARY_PATH explicitly set.",
+    "Normal completion RC is fsynced before inventory; output terminal labels correctly comparison-pending, not scientific PASS.",
+    "Printed Decimal equality/no new tolerance is future comparison contract, not executed comparison. Cross-compiler/compiler-identity limitations retained."
+  ],
+  "limits": [
+    "No raw references/archive/AER large-file rehash; staged reference sizes only.",
+    "No compiler/model/reader/line-generation execution or downloads.",
+    "No OD-only physical oracle or WRF residual closure."
+  ],
+  "reviewer_invocations": {
+    "compiler": 0,
+    "solver": 0,
+    "numerical_reader": 0,
+    "model": 0,
+    "download": 0
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "schema": "UDM37_OFFICIAL_EXAMPLE_PREEXECUTION_REVIEW_V3",
+  "created_at": "2026-10-06T03:24:04.073658+00:00",
+  "status": "PASS_SCOPED_INPUT_RUNNER_AND_COMPARATOR_READY_FOR_FIRST_STOCK_EXAMPLE",
+  "reviewed_plan": {
+    "path": "build/udm37-lblrtm-official-example-execution-preparation-v1/plan-v3.json",
+    "sha256": "c27d61e98b070f64749c298143480bb3935209f0e3be0d31cee5e7ec674ec1d4",
+    "size_bytes": 17880
+  },
+  "reviewed_runner": {
+    "path": "build/udm37-lblrtm-official-example-execution-preparation-v1/run_once_v3.py",
+    "sha256": "a5513b904cd19e087e6e0f0c2bf04fe5c12fa3c0c40ee45bdc8c2e28dc9320f4",
+    "size_bytes": 5893
+  },
+  "reviewed_reader": {
+    "path": "build/udm37-lblrtm-official-example-execution-preparation-v1/compare_once_v3.py",
+    "sha256": "068fc0ca16bc4bc0d30bef29dea4ca7d0838691e53e5d7bcd8e0b382c1aa1bbe",
+    "size_bytes": 6493
+  },
+  "corrected_prior_blockers": [
+    "Post-Popen launch-record/wait operations protected; bounded TERM/KILL5s cleanup and actual poll RC/REAP_PENDING recorded before inventory. Failure/interruption stops next scientific process.",
+    "Comparator requires overall TERMINAL_RC0_COMPARISON_PENDING and both children TERMINAL, exceptionNone, RC0/no timeout before any spectra read."
+  ],
+  "findings": [
+    "V3 runner differs from reviewedV2 only in plan/auth filenames; physical inputs and execution/cleanup unchanged.",
+    "All67 input specifications,5 staged archive member pins and original exact LNFL IR0-5000 LNOUT/EXBRD/NLTE and built-in atmosphere EM1 1000-1200 decks unchanged.",
+    "One LNFL plus one LBLRTM budget,1200s each,exclusive fresh output directory,no retries. HOME inherited unchanged; ROOT/path handling supports external libraries.",
+    "Normal or interrupted actual RC is saved/fsynced before output inspection; null RC is explicit pending, never successful or followed by inventory.",
+    "Complete two-column spectra parsed as finite Decimal, monotonic grid; all printed values/grids exactly compared with no new atol/rtol. Unpaired/negative/empty data cannot pass.",
+    "Header context gates only source generation clock substitution and whitespace normalization; raw files/hashes/header differences retained separately.",
+    "Comparison is serialized official example radiance/temperature regression, not OD-only optical truth or unknown-reference compiler authentication. Existing negativeOD/WRF residual failures remain open.",
+    "Originalv1/v2 code bytes and blocked reviewer receipts preserved."
+  ],
+  "input_hash_scope": "Two small decks/priorplan verified in preservedv1 review;67 input sizes checked there. V3 retains exact specifications. Full external-data/runtime hashes will be checked by runner; reviewer did not rehash AER/archive/rawrefs.",
+  "blocking_findings": [],
+  "reviewer_invocations": {
+    "compiler": 0,
+    "model": 0,
+    "solver": 0,
+    "reader": 0,
+    "large_reference_rehash": 0
+  },
+  "preserved_prior_reviews": [
+    {
+      "path": "build/udm37-lblrtm-official-example-execution-review-v1/review.json",
+      "sha256": "f7103bfc8a763120ff837e3421f0a40d583b4476189dfc81aa73cdac6ea1ed00"
+    },
+    {
+      "path": "build/udm37-lblrtm-official-example-execution-review-v1/review-v2.json",
+      "sha256": "1eb9070abf8dfe8a8a7583072e4a0f9ef322dadc840e9c999b44d9e1eedc4583"
+    }
+  ]
+}
