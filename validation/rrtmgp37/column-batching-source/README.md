@@ -37,6 +37,11 @@ failure receipts, and any completed longer comparison should be interpreted
 from their own pinned run records rather than inferred from this source-level
 change.
 
+The separate 12-arm performance campaign is documented in
+[`column-batching-performance/`](../column-batching-performance/README.md).
+That report uses only its terminal, pinned benchmark receipt and does not
+replace the correctness evidence above.
+
 The initial independent CI client linked upstream-built objects to the vendored
 library and failed in the LW loader. A local exact-source counterfactual
 confirmed a type/vtable module mismatch. The corrected validation runners
