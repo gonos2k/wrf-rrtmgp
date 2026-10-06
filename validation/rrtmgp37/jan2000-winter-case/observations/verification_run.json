@@ -1,0 +1,31 @@
+{
+  "created_utc": "2026-10-03T06:54:08.042659+00:00",
+  "status": "PASS_OFFLINE_OBSERVATION_VALIDATION_NO_MODEL_COMPARISON",
+  "command": "python3 -m unittest -v test_verify_surfrad.py && python3 verify_surfrad.py --offline-verify",
+  "cwd": "build/udm-jan2000-surfrad",
+  "network_access": "none (offline mode; no network API/import/use)",
+  "synthetic_tests": {
+    "count": 4,
+    "status": "PASS",
+    "test_script_sha256": "51cb2e2ddc343e4260790fc6e8296322420bef37a6f6d509db543c98a1bb3016"
+  },
+  "parser": {
+    "path": "verify_surfrad.py",
+    "sha256": "d0eee4f96fcabd850728a5c6643e3422a9398dd1212bd56442381cf630bd7d68"
+  },
+  "outputs": {
+    "hourly_observations.csv": {
+      "sha256": "69fb3a088ff803b08273bfeb3f9c7c91bd0ed99e93df2672a12d57f7e3f05067",
+      "rows": 432
+    },
+    "verified_observations.json": {
+      "sha256": "f56901a79d32547507c8ef91d26c3755b411787e5a2c33eb78d99f364d08e4bf"
+    }
+  },
+  "immutable_wrfinput": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-alternate-jan2000-data/real-preflight/case/wrfinput_d01",
+    "expected_sha256": "0cc7e188ef585a93ab52550816c6af236932254820fb1bc6937f464bfed38637",
+    "observed_after_sha256": "0cc7e188ef585a93ab52550816c6af236932254820fb1bc6937f464bfed38637"
+  },
+  "scope": "Raw NOAA station files were not changed; no model forecasts or skill statistics were compared."
+}

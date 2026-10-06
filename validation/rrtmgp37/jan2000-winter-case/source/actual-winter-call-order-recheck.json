@@ -1,0 +1,245 @@
+{
+  "actual_commit": "e7c97ed661403b3922fcf752300c052611ef89cd",
+  "actual_source_root": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm-sr-row-dm-sm/source",
+  "errata": [
+    "Original analysis source hashes refer to build/udm-frozen-runtime-wrf/source, not the compiled winter runtime source; four of five source hashes differ. This receipt pins the actual winter source.",
+    "Original analysis source_order.radiation_call incorrectly names phys/module_first_rk_step_part1.F; the file is dyn_em/module_first_rk_step_part1.F.",
+    "Original local UDM clamp line references differ; actual winter source local max(q,0) copies are at lines 863-868.",
+    "Original fatal magnitude ratio uses nominal 1e-12; summary also retains exact ratio against printed single-precision ceiling (56235.54266964403). No change to guard or tolerance."
+  ],
+  "files": {
+    "WRF/dyn_em/module_first_rk_step_part1.F": {
+      "extracts": [
+        {
+          "end_line": 295,
+          "lines": [
+            "      CALL wrf_debug ( 200 , ' call radiation_driver' )",
+            "BENCH_START(rad_driver_tim)",
+            "      ! UDM q fields are mass per dry-air mass. p_hyd_w differences include",
+            "      ! moisture loading and cannot supply that denominator. MUT is the",
+            "      ! current dry column pressure mass (mu_2 + mub); use the native hybrid",
+            "      ! mass coordinate without changing radiation's pressure/gas inputs.",
+            "      IF (config_flags%ra_lw_physics == RRTMGP_LWSCHEME .OR. &",
+            "          config_flags%ra_sw_physics == RRTMGP_SWSCHEME) THEN",
+            "         ALLOCATE(udm_dry_layer_mass(ims:ime,kms:kme,jms:jme))",
+            "         udm_dry_layer_mass=0.",
+            "         DO j=jps,MIN(jpe,jde-1)",
+            "            DO mass_k=k_start,MIN(k_end,kde-1)",
+            "               DO i=ips,MIN(ipe,ide-1)",
+            "                  udm_dry_layer_mass(i,mass_k,j) = &",
+            "                       -grid%dnw(mass_k)*(grid%c1h(mass_k)*grid%mut(i,j)+grid%c2h(mass_k))/g",
+            "               END DO",
+            "            END DO",
+            "         END DO",
+            "      END IF",
+            "",
+            "",
+            "      CALL radiation_driver(                                                  &",
+            "     &         p_top=grid%p_top & !DJW 140312 added p_top for vertical nesting",
+            "     &        ,ACFRCV=grid%acfrcv      ,ACFRST=grid%acfrst      ,ALBEDO=grid%albedo  &"
+          ],
+          "start_line": 272
+        }
+      ],
+      "line_count": 2051,
+      "sha256": "bb1384a82aad375f9f8392da2a16046571919556a2deacf1523992dacc49891f"
+    },
+    "WRF/dyn_em/solve_em.F": {
+      "extracts": [
+        {
+          "end_line": 815,
+          "lines": [
+            "     rk_step_is_one : IF (rk_step == 1) THEN ! only need to initialize diffusion tendencies",
+            "",
+            "BENCH_START(calc_p_rho_tim)",
+            "",
+            "!<DESCRIPTION>",
+            "!<pre>",
+            "!(2) The non-timesplit physics begins with a call to \"phy_prep\"",
+            "!    (which computes some diagnostic variables such as temperature,",
+            "!    pressure, u and v at p points, etc).  This is followed by",
+            "!    calls to the physics drivers:",
+            "!",
+            "!              radiation,",
+            "!              surface,",
+            "!              pbl,",
+            "!              cumulus,",
+            "!              fddagd,",
+            "!              3D TKE and mixing.",
+            "!<pre>",
+            "!</DESCRIPTION>",
+            "",
+            "       IF (coupler_on) CALL cpl_settime( curr_secs2 )",
+            "",
+            "       CALL first_rk_step_part1 (    grid, config_flags         &",
+            "                             , moist , moist_tend               &",
+            "                             , chem  , chem_tend                &",
+            "                             , tracer, tracer_tend              &"
+          ],
+          "start_line": 790
+        },
+        {
+          "end_line": 888,
+          "lines": [
+            "                            )",
+            "",
+            "     END IF rk_step_is_one",
+            "",
+            "BENCH_START(rk_tend_tim)",
+            "     !$OMP PARALLEL DO   &",
+            "     !$OMP PRIVATE ( ij )",
+            "     DO ij = 1 , grid%num_tiles",
+            "",
+            "       CALL wrf_debug ( 200 , ' call rk_tendency' )",
+            "       CALL rk_tendency ( config_flags, rk_step                                                                &",
+            "                         ,grid%ru_tend, grid%rv_tend, rw_tend, ph_tend, t_tend                                 &",
+            "                         ,ru_tendf, rv_tendf, rw_tendf, ph_tendf, t_tendf                                      &"
+          ],
+          "start_line": 876
+        },
+        {
+          "end_line": 3884,
+          "lines": [
+            "BENCH_END(moist_physics_prep_tim)",
+            "     END DO scalar_tile_loop_1a",
+            "     !$OMP END PARALLEL DO",
+            "",
+            "     CALL wrf_debug ( 200 , ' call microphysics_driver' )",
+            "",
+            "     grid%sr = 0.",
+            "     specified_bdy = config_flags%specified .OR. config_flags%nested",
+            "     channel_bdy = config_flags%specified .AND. config_flags%periodic_x",
+            "",
+            "BENCH_START(micro_driver_tim)",
+            "",
+            "!",
+            "! WRFU_AlarmIsRinging always returned false, so using an alternate  method to find out if it is time ",
+            "! to dump history/restart files so microphysics can be told to calculate things like radar reflectivity.",
+            "!",
+            "!     diagflag = .false.",
+            "!     CALL WRFU_ALARMGET(grid%alarms( HISTORY_ALARM ),prevringtime=temp_time,RingInterval=intervaltime)",
+            "!     CALL WRFU_ALARMGET(grid%alarms( RESTART_ALARM ),prevringtime=restart_time,RingInterval=restartinterval)",
+            "!     CALL domain_clock_get ( grid, current_time=CurrTime )",
+            "!     old_dt=min(old_dt,grid%dt)",
+            "!     num = INT(old_dt * precision)",
+            "!     den = precision",
+            "!     CALL WRFU_TimeIntervalSet(dtInterval, Sn=num, Sd=den)",
+            "!     IF (CurrTime .ge. temp_time + intervaltime - dtInterval .or. &",
+            "!         CurrTime .ge. restart_time + restartinterval - dtInterval ) THEN",
+            "!       diagflag = .true.",
+            "!     ENDIF",
+            "!     WRITE(wrf_err_message,*)'diag_flag=',diag_flag",
+            "!     CALL wrf_debug ( 0 , wrf_err_message )",
+            "#ifdef DM_PARALLEL",
+            "#      include \"HALO_EM_SBM.inc\"",
+            "#endif",
+            "",
+            "",
+            "     CALL microphysics_driver(                                            &",
+            "      &         DT=dtm             ,DX=grid%dx              ,DY=grid%dy   &",
+            "      &        ,DZ8W=dz8w          ,F_ICE_PHY=grid%f_ice_phy              &",
+            "      &        ,ITIMESTEP=grid%itimestep             ,LOWLYR=grid%lowlyr  &"
+          ],
+          "start_line": 3846
+        }
+      ],
+      "line_count": 5198,
+      "sha256": "ed03953a8b7b999fc0a5a281893f4808bbed28697ea9032fde9b9b605e0d9ecb"
+    },
+    "WRF/phys/module_mp_udm.F": {
+      "extracts": [
+        {
+          "end_line": 169,
+          "lines": [
+            "   logical, parameter, private :: flgzero = .true."
+          ],
+          "start_line": 169
+        },
+        {
+          "end_line": 207,
+          "lines": [
+            "pure function udm_radiation_negative_limits() result(limits)",
+            "  real :: limits(6)",
+            "  limits = [qcmin,qcmin,qrmin,qrmin,qrmin,qrmin]",
+            "end function udm_radiation_negative_limits"
+          ],
+          "start_line": 204
+        },
+        {
+          "end_line": 873,
+          "lines": [
+            "!-------------------------------------------------------------------------------",
+            "! padding 0 for negative values generated by dynamics - optional",
+            "!",
+            "   qci(:,:,:) = qmin",
+            "   qrs(:,:,:) = qmin",
+            "   ncr(:,:,:) = qmin",
+            "!",
+            "   ktop = ktopini",
+            "   do k = kts, kte",
+            "     do i = its, ite",
+            "       if(flgzero) then",
+            "         qci(k,i,1) = max(qci1(i,k,1),0.0)",
+            "         qci(k,i,2) = max(qci1(i,k,2),0.0)",
+            "         qrs(k,i,1) = max(qrs1(i,k,1),0.0)",
+            "         qrs(k,i,2) = max(qrs1(i,k,2),0.0)",
+            "         qrs(k,i,3) = max(qrs1(i,k,3),0.0)",
+            "         qrs(k,i,4) = max(qrs1(i,k,4),0.0)",
+            "         ncr(k,i,1) = min(max(ncr1(i,k,1),ccnmin),ccnmax)",
+            "         ncr(k,i,2) = max(ncr1(i,k,2),0.0)",
+            "         ncr(k,i,3) = max(ncr1(i,k,3),0.0)",
+            "       else",
+            "         qci(k,i,1) = qci1(i,k,1)"
+          ],
+          "start_line": 852
+        }
+      ],
+      "line_count": 4566,
+      "sha256": "7564be3e5ad7b26ffc00c2680eb632745850baeac01529d48d6bc8393cb9e53d"
+    },
+    "WRF/phys/module_ra_rrtmg_lw.F": {
+      "extracts": [],
+      "line_count": 14970,
+      "sha256": "8ff4d38e060db356f3a3de6c6d431dcb1d82686b966759742b154196fa6b566b"
+    },
+    "WRF/phys/module_ra_rrtmgp_input.F": {
+      "extracts": [
+        {
+          "end_line": 289,
+          "lines": [
+            "    DO p=1,6",
+            "      DO k=1,n",
+            "        IF(.NOT.ieee_is_finite(masses(k,p))) THEN",
+            "          CALL fail_builder_layer(reason,RRTMGP_INPUT_INVALID, &",
+            "               'RRTMGP_INPUT_UDM_'//TRIM(qnames(p))//'_NOT_FINITE',k,column_context)",
+            "          RETURN",
+            "        END IF",
+            "        IF(masses(k,p)<0.) THEN",
+            "          IF(-masses(k,p)<limits(p)) THEN",
+            "            clipped(k,p)=masses(k,p)",
+            "            masses(k,p)=0.0",
+            "          ELSE",
+            "            IF(PRESENT(negative_q_limits)) THEN",
+            "              WRITE(input_label,'(A,A,A,ES23.15E3,A,ES23.15E3)') 'RRTMGP_INPUT_UDM_',TRIM(qnames(p)), &",
+            "                   '_NEGATIVE value_kgkg=',REAL(masses(k,p),real64),' limit_kgkg=',REAL(limits(p),real64)",
+            "            ELSE",
+            "              WRITE(input_label,'(A,A,A,ES23.15E3)') 'RRTMGP_INPUT_UDM_',TRIM(qnames(p)), &",
+            "                   '_NEGATIVE value_kgkg=',REAL(masses(k,p),real64)",
+            "            END IF",
+            "            CALL fail_builder_layer(reason,RRTMGP_INPUT_RANGE,TRIM(input_label),k,column_context)",
+            "            RETURN",
+            "          END IF",
+            "        END IF",
+            "      END DO"
+          ],
+          "start_line": 266
+        }
+      ],
+      "line_count": 758,
+      "sha256": "1460460a23b2b2b552f726c8c01a174a956da7a9d472e8a90b33c2d6ed245eff"
+    }
+  },
+  "interpretation": "Radiation occurs in first_rk_step_part1 before later current-timestep rk_tendency and microphysics_driver. UDM clamps its local microphysics work arrays later. This does not identify the cause of the failing prognostic QI: earlier timesteps and dynamics already evolved the state. The 14:00 saved state is not the 14:50 radiation input.",
+  "preserved_analysis_sha256": "86558159d2d36aade134a473c64f1df45ad9c452e11fc825ff780c2f6ed54bf7",
+  "status": "READ_ONLY_ACTUAL_RUNTIME_SOURCE_RECHECK"
+}
