@@ -1,0 +1,143 @@
+{
+  "schema": "UDM37_OFFICIAL_EXAMPLE_VERSION_CONTEXT_REVIEW_V2",
+  "created_at": "2026-10-06T03:31:30.478110+00:00",
+  "status": "PASS_SCOPED_BOUNDED_METADATA_REVIEW_STRICT_FAIL_RETAINED",
+  "reviewed_context": {
+    "path": "build/udm37-lblrtm-official-example-regression-run-v1/version-context-v2.json",
+    "sha256": "3ba7101c6bb6967647c2f144b6834d66825eccd80a40fd995dff22cfe44bda1c",
+    "size_bytes": 4412
+  },
+  "preserved_terminal_review": {
+    "path": "build/udm37-lblrtm-official-example-execution-review-v1/terminal-review-v1.json",
+    "sha256": "d1e11e1168b2392e7b4a21a776851972ff43114d313a34e43aaadfa270aa980b"
+  },
+  "source_prefix_metadata": {
+    "reference": {
+      "source_path": "build/udm37-lblrtm-official-example-execution-preparation-v1/archive-inputs/TAPE6_ex",
+      "whole_file_sha256_attested": "1f1621d37382fd161668a641fe4d4cc8a25854333c801bbc6c973e4ab5f3e96e",
+      "whole_file_bytes": 334466,
+      "reviewed_prefix_lines": 155,
+      "prefix_bytes": 14020,
+      "prefix_sha256": "b6fdddc400d434dcfb901050f96c109344ce586df4f23f332825c1b3b8125c54",
+      "line_bank": {
+        "source_line_1based": 53,
+        "minimum_cm_minus_1": 0.0,
+        "maximum_cm_minus_1": 3499.995,
+        "reported_total_lines": 3508352
+      },
+      "banner": [
+        {
+          "line_1based": 55,
+          "declared_MT_CKD_version": "4.1"
+        }
+      ],
+      "history_rows_verified": [
+        {
+          "line_1based": 57,
+          "MT_CKD_version": "4.1",
+          "LBLRTM_history_version": "-"
+        },
+        {
+          "line_1based": 58,
+          "MT_CKD_version": "4.0",
+          "LBLRTM_history_version": "-"
+        },
+        {
+          "line_1based": 132,
+          "MT_CKD_version": "4.0",
+          "LBLRTM_history_version": "12.14"
+        },
+        {
+          "line_1based": 134,
+          "MT_CKD_version": "4.1",
+          "LBLRTM_history_version": "12.15"
+        }
+      ],
+      "generation_clock": "23/01/04  11:11:39"
+    },
+    "current": {
+      "source_path": "build/udm37-lblrtm-official-example-regression-run-v1/lblrtm/TAPE6",
+      "whole_file_sha256_attested": "6c52735c6982b8716cab74b42a07c6327d8ac19eafa39400956bfc76a636340b",
+      "whole_file_bytes": 336835,
+      "reviewed_prefix_lines": 155,
+      "prefix_bytes": 14136,
+      "prefix_sha256": "89e723d01563f6b7de027f6d9c744b498e3b03822261dadd6695b4509801f5e5",
+      "line_bank": {
+        "source_line_1based": 53,
+        "minimum_cm_minus_1": 0.0,
+        "maximum_cm_minus_1": 5000.0,
+        "reported_total_lines": 3893964
+      },
+      "banner": [],
+      "history_rows_verified": [
+        {
+          "line_1based": 56,
+          "MT_CKD_version": "4.3",
+          "LBLRTM_history_version": "-"
+        },
+        {
+          "line_1based": 57,
+          "MT_CKD_version": "4.2",
+          "LBLRTM_history_version": "-"
+        },
+        {
+          "line_1based": 58,
+          "MT_CKD_version": "4.2",
+          "LBLRTM_history_version": "-"
+        },
+        {
+          "line_1based": 131,
+          "MT_CKD_version": "4.0",
+          "LBLRTM_history_version": "12.14"
+        },
+        {
+          "line_1based": 132,
+          "MT_CKD_version": "4.0.1",
+          "LBLRTM_history_version": "-"
+        },
+        {
+          "line_1based": 133,
+          "MT_CKD_version": "4.1",
+          "LBLRTM_history_version": "12.15"
+        },
+        {
+          "line_1based": 134,
+          "MT_CKD_version": "4.1.1",
+          "LBLRTM_history_version": "-"
+        },
+        {
+          "line_1based": 135,
+          "MT_CKD_version": "4.2",
+          "LBLRTM_history_version": "12.16"
+        },
+        {
+          "line_1based": 136,
+          "MT_CKD_version": "4.3",
+          "LBLRTM_history_version": "12.17"
+        }
+      ],
+      "generation_clock": "26/10/06  12:27:40"
+    }
+  },
+  "findings": [
+    "Reference first155lines declare mt_ckd4.1 continuum banner and history reaching LBLRTM12.15,clock23/01/04; linebank0..3499.995 with3508352 reported lines.",
+    "Current first155lines show continuum summary4.3 and history through LBLRTM12.17,clock26/10/06; linebank0..5000 with3893964 reported lines. This agrees with previously pinned current4.3/data and12.17 source provenance.",
+    "Current printed4.2 summary explicitly mentions600..1400cm-1, overlapping1000..1200 regression. Overlap is source/version context only, not measured attribution.",
+    "The archive asset filenamev12.17 does not authenticate historical reference execution configuration. Concrete printed metadata mismatch is established, not its causal contribution.",
+    "Version-context finding preserves strict serializedFAIL; no relaxed tolerance, normal-accuracy verdict or negativeOD acceptance."
+  ],
+  "limits": [
+    "Printed history ending12.15 is not cryptographic proof of exact historical executable HEAD or compiler. Reference executable/TAPE3/continuum hashes are unavailable.",
+    "Original model/grid headers may agree while source/data versions differ. Historical same-config counterfactual and causal ratio are not measured.",
+    "Only eachTAPE6 first155lines inspected; no whole-reference/output rehash or spectrum parse. Original source/code/data pins reused as prior attestation.",
+    "Review stores own metadata and prefix digests only, not verbose original text. No WRF4/37 residual or UDM goal closure."
+  ],
+  "reviewer_invocations": {
+    "compiler": 0,
+    "model": 0,
+    "solver": 0,
+    "spectral_reader": 0,
+    "bounded_TAPE6_prefix_check": 1
+  },
+  "blocking_findings": []
+}

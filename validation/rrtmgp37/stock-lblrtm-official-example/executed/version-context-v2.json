@@ -1,0 +1,127 @@
+{
+  "schema": "UDM37_OFFICIAL_EXAMPLE_VERSION_CONTEXT_V2",
+  "status": "CONFIGURATION_MISMATCH_IDENTIFIED_NOT_CAUSALLY_PARTITIONED",
+  "previous_inventory": {
+    "path": "build/udm37-lblrtm-official-example-regression-run-v1/version-context.json",
+    "sha256": "c4a2685f05fe8c66e59adeba0b231fb85b24920522f8443778096ca80bf37088"
+  },
+  "source_files": {
+    "reference": {
+      "path": "build/udm37-lblrtm-official-example-execution-preparation-v1/archive-inputs/TAPE6_ex",
+      "sha256": "1f1621d37382fd161668a641fe4d4cc8a25854333c801bbc6c973e4ab5f3e96e",
+      "bytes": 334466,
+      "line_bank_summary": {
+        "source_line_1based": 53,
+        "minimum_cm_minus_1": 0.0,
+        "maximum_cm_minus_1": 3499.995,
+        "reported_total_lines": 3508352
+      },
+      "printed_continuum_banner": [
+        {
+          "line_1based": 55,
+          "declared_MT_CKD_version": "4.1"
+        }
+      ],
+      "printed_continuum_history": [
+        {
+          "line_1based": 57,
+          "MT_CKD_version": "4.1",
+          "LBLRTM_history_version": "-"
+        },
+        {
+          "line_1based": 58,
+          "MT_CKD_version": "4.0",
+          "LBLRTM_history_version": "-"
+        },
+        {
+          "line_1based": 132,
+          "MT_CKD_version": "4.0",
+          "LBLRTM_history_version": "12.14"
+        },
+        {
+          "line_1based": 134,
+          "MT_CKD_version": "4.1",
+          "LBLRTM_history_version": "12.15"
+        }
+      ],
+      "generation_clock_line_1based": 2,
+      "generation_clock": "23/01/04  11:11:39"
+    },
+    "current": {
+      "path": "build/udm37-lblrtm-official-example-regression-run-v1/lblrtm/TAPE6",
+      "sha256": "6c52735c6982b8716cab74b42a07c6327d8ac19eafa39400956bfc76a636340b",
+      "bytes": 336835,
+      "line_bank_summary": {
+        "source_line_1based": 53,
+        "minimum_cm_minus_1": 0.0,
+        "maximum_cm_minus_1": 5000.0,
+        "reported_total_lines": 3893964
+      },
+      "printed_continuum_banner": [],
+      "printed_continuum_history": [
+        {
+          "line_1based": 56,
+          "MT_CKD_version": "4.3",
+          "LBLRTM_history_version": "-"
+        },
+        {
+          "line_1based": 57,
+          "MT_CKD_version": "4.2",
+          "LBLRTM_history_version": "-"
+        },
+        {
+          "line_1based": 58,
+          "MT_CKD_version": "4.2",
+          "LBLRTM_history_version": "-"
+        },
+        {
+          "line_1based": 131,
+          "MT_CKD_version": "4.0",
+          "LBLRTM_history_version": "12.14"
+        },
+        {
+          "line_1based": 132,
+          "MT_CKD_version": "4.0.1",
+          "LBLRTM_history_version": "-"
+        },
+        {
+          "line_1based": 133,
+          "MT_CKD_version": "4.1",
+          "LBLRTM_history_version": "12.15"
+        },
+        {
+          "line_1based": 134,
+          "MT_CKD_version": "4.1.1",
+          "LBLRTM_history_version": "-"
+        },
+        {
+          "line_1based": 135,
+          "MT_CKD_version": "4.2",
+          "LBLRTM_history_version": "12.16"
+        },
+        {
+          "line_1based": 136,
+          "MT_CKD_version": "4.3",
+          "LBLRTM_history_version": "12.17"
+        }
+      ],
+      "generation_clock_line_1based": 2,
+      "generation_clock": "26/10/06  12:27:40"
+    }
+  },
+  "strict_serialized_failure_preserved": true,
+  "new_solver_runs": 0,
+  "new_compiler_calls": 0,
+  "new_spectrum_parses": 0,
+  "findings": [
+    "Reference TAPE6 declares MT_CKD4.1 and history reaches LBLRTM12.15; current pinned data/code are MT_CKD4.3 and LBLRTM12.17.",
+    "Reference printed line bank maximum3499.995 with3508352 total lines differs from newly generated original archive control maximum5000 with3893964 total lines.",
+    "Reference output release asset naming v12.17 and bundled current decks do not prove the historical reference configuration matches the current executable/linebank/continuum."
+  ],
+  "limitations": [
+    "No historical reference executable, TAPE3 or continuum payload hash exists in this archive.",
+    "Continuum4.2 change is in600\u20131400cm-1, overlapping this1000\u20131200 comparison, but magnitude attributable to that change has not been measured.",
+    "No same-config historical counterfactual performed. Strict numeric failure remains; no port error or normal-difference conclusion.",
+    "This radiance test does not accept negative OD or attribute WRF4/37 residual."
+  ]
+}

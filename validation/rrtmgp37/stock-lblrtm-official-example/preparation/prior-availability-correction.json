@@ -1,0 +1,134 @@
+{
+  "schema": "LBLRTM_OFFICIAL_EXAMPLE_REGRESSION_PREPARATION_V2",
+  "status": "READ_ONLY_PLAN_ONLY_NOT_STAGED_NOT_RUN",
+  "supersedes": {
+    "prior_plan": "build/udm37-lblrtm-official-example-regression-preparation-v1/plan.json",
+    "prior_plan_sha256": "def6aa590470bdb27e48f6185da52ea5925f7b393220c3d99e7bb71d726a7cf3",
+    "correction": "The prior statement that the line-data and MT_CKD assets were unavailable locally was wrong. Existing authenticated private staging and an executed held-state input record show both assets and their exact path pins. The original plan is preserved unchanged."
+  },
+  "scope": "One future official v12.17 example regression against bundled radiance/temperature references; this is not an OD-only reference, WRF validation, UDM validation, or general accuracy claim.",
+  "archive": {
+    "release": "AER-RC/LBLRTM v12.17",
+    "asset_id": 162489128,
+    "canonical_url": "https://github.com/AER-RC/LBLRTM/releases/download/v12.17/run_examples_v12.17.tar.gz",
+    "bytes": 99484242,
+    "sha256": "8f8dbbbda2cab47c3eb199f487e59eb7ab59c952ef76399f37d534cc8ea88bcd",
+    "member_roster_sha256": "53e3d8801949f4a921bff47a0481e742e0482ceaa6c76f8101c3072c280c6da1",
+    "archive_extracted_or_executed": false
+  },
+  "selected_example": {
+    "path": "run_examples/run_example_built_in_atm_upwelling",
+    "tape5": {
+      "member": "run_examples/run_example_built_in_atm_upwelling/TAPE5",
+      "bytes": 821,
+      "sha256": "808a660e1da22fce3f1c6b39d94d4ce5006b3a01dc87a11faa3d23c8cfe7b3dc",
+      "case": "1000-1200 cm-1 built-in US standard atmosphere, nadir from 100 km to surface, IEMIT=1"
+    },
+    "references": {
+      "TAPE27_ex": {"bytes": 33638843, "sha256": "3897dc0e10c89addf0d3808f41569a8d5d46aa94ef7c40f2013cbb122696f326", "quantity": "wavenumber/radiance"},
+      "TAPE28_ex": {"bytes": 33638843, "sha256": "a410b3394ac4652a624e65102817abc4d5da2210605b3f645ea13607c15a98e3", "quantity": "wavenumber/temperature"},
+      "TAPE6_ex": {"bytes": 334466, "sha256": "1f1621d37382fd161668a641fe4d4cc8a25854333c801bbc6c973e4ab5f3e96e", "quantity": "run information"}
+    },
+    "driver_sha256": "c3688d1a556620fb82f91d332b196bba8322f833b0ac93525c4557a1ba52f836"
+  },
+  "authenticated_local_assets": {
+    "aer_line_file": {
+      "path": "build/udm37-lblrtm-reference-stage-v1/data/aer_v_3.8.1/line_file/aer_v_3.8.1",
+      "size_bytes": 908403720,
+      "sha256": "d0ec800cfaeaaa7ab7af7b8168f45b205e383272e147373df6d0eed2677f2bd3",
+      "stage_tree_manifest": "build/udm37-lblrtm-reference-stage-v1/receipts/aer-v3.8.1-extracted-tree-manifest.json",
+      "stage_tree_manifest_sha256": "eb632e8298df10a7eb9fb6a07a504462fa5034d8f7286e20b7c62f8f835ba2c7",
+      "download_archive_sha256": "ea75443cb018286b7c894394a4d04e7dc152e3762644a8e39c706a278af4a697",
+      "provenance_stage_manifest_sha256": "78b0fbce161d2fd79ffddb9bfcba1256e1da7227916e8192640846bf37364785",
+      "use_restriction": "Private stage only; AER research-use/acknowledgment restrictions apply. Do not redistribute the line-data asset."
+    },
+    "mt_ckd_absorption_file": {
+      "path": "build/udm37-lblrtm-reference-stage-v1/sources/MT_CKD_H2O/data/absco-ref_wv-mt-ckd.nc",
+      "size_bytes": 83576,
+      "sha256": "69944eb8b045c268e2daeb2cddf536b99f9e9efe7e91c425067b46a5b287ddb3",
+      "tree_manifest": "build/udm37-lblrtm-reference-stage-v1/receipts/MT_CKD_H2O-4.3-tree-manifest.json",
+      "tree_manifest_sha256": "98cc06017792b59631c275debbbeb10a97a9435a6238362a89ac6c80e1e557ec",
+      "source_commit": "3e043b491a996a9679c65a45a57a3ec4317e9e79",
+      "source_archive_sha256": "778d8affc613269626fb6c1be4d6c8ba617c1975c7a6d8b6b29169840c160dec"
+    },
+    "available_toolchain_artifacts": {
+      "lnfl_source": {
+        "version": "LNFL v3.2",
+        "source_stage_completion_sha256": "dcb9c5fb5dff08a9e6599954005090323d5a36976cb2e01e452a82a9ee971b39",
+        "tree_manifest_sha256": "ce9699c64df08c7b650479a085501023066bfb9c8db4fea84d86eaed20bcc019"
+      },
+      "gnu_single_precision_lnfl": {
+        "path": "build/udm37-lblrtm-stock-build-v1/attempt-2/run/LNFL/lnfl_v3.2_linux_gnu_sgl",
+        "sha256": "825d05dcc530a5bb196f4a95a353f624787089d5b9be75a6696fd0b7c6542586",
+        "size_bytes": 695512,
+        "build_receipt": "build/udm37-lblrtm-stock-build-v1/attempt-2/run/execution.json",
+        "build_receipt_sha256": "90b31eca938cdeb96d42e6cbe3f458540d8b776f7d22e097d2cb2c5e22867924",
+        "build_status": "BUILD_PASS",
+        "compiler_flags": "-Wall -frecord-marker=4 -std=legacy -fallow-argument-mismatch",
+        "compile_return_code": 0
+      },
+      "gnu_double_precision_lblrtm": {
+        "path": "build/udm37-lblrtm-stock-build-v1/attempt-1/source/LBLRTM/lblrtm_v12.17_linux_gnu_dbl",
+        "sha256": "a5c363c87a44b686e8bff1cf0e60fcfb7b0e167c8ec74d0201b6cc6b2b41473b",
+        "size_bytes": 14348016,
+        "qualification": "Use only after fresh preflight confirms current source/config/runtime-library closure and binary hash; an old build receipt is not a new run authorization."
+      }
+    },
+    "existing_held_state_crosscheck": {
+      "plan": "build/udm37-lblrtm-held-state-continuum-od-run-v1/plan.json",
+      "plan_sha256": "05fbb46b8ed13294289795f38035d26271ecbf68e66e8d1f98ac11b90ca41a41",
+      "prepared_input_inventory": "build/udm37-lblrtm-held-state-continuum-od-run-v1/runs/od-v1/prepared.json",
+      "prepared_sha256": "7195f13f22acfb3664908f824af3f6b63dbed059150b20da96b8248c58ad3d48",
+      "prepared_status": "READY_NOT_RUN",
+      "prepared_input_count": 38,
+      "continuum_input": {
+        "kind": "symlink_input",
+        "runtime_name": "absco-ref_wv-mt-ckd.nc",
+        "resolved_path": "build/udm37-lblrtm-reference-stage-v1/sources/MT_CKD_H2O/data/absco-ref_wv-mt-ckd.nc",
+        "sha256": "69944eb8b045c268e2daeb2cddf536b99f9e9efe7e91c425067b46a5b287ddb3",
+        "size_bytes": 83576
+      },
+      "execution_receipt": "build/udm37-lblrtm-held-state-continuum-od-run-v1/runs/od-v1/execution.json",
+      "execution_sha256": "7e6b72d0ab4e452b89a13505b299d479ff408219f8e1ea1402424f756ec0ea0a",
+      "actual_child_return_code": 0,
+      "postflight_receipt": "build/udm37-lblrtm-held-state-continuum-od-run-v1/runs/od-v1/postflight.json",
+      "postflight_sha256": "ec50124531507e5f674280e7551bd6639bcf54851e065079ac4b1fc2f890b98b",
+      "qualification": "This confirms the exact local continuum file is staged, hash-pinned, and included in a 38-item runtime input inventory for a separate held-state case. It does not assert that the official built-in example used this file or that a symlink alone proves it was read. The held-state plan's mt_ckd_data role comment conflicts with its ICNTNM=1 controls and should not be reused as evidence of continuum use."
+    }
+  },
+  "future_run_plan": {
+    "maximum_lnfl_invocations": 1,
+    "maximum_lblrtm_invocations": 1,
+    "timeout_seconds_each": 1200,
+    "no_retry": true,
+    "staging": "Copy only selected example TAPE5/reference members into a new empty private case, preserving original hashes. Use the authenticated local AER 3.8.1 source and MT_CKD 4.3 file by their staged path/hash pins. Resolve the example's external TAPE3-link contract in a new explicit input manifest; do not follow the archive's symlink while unpacking.",
+    "line_file_generation": "Generate only the IR TAPE3 from the archive's small run_lnfl.pl source and its TAPE5_ir_nlte with pinned LNFL v3.2 and AER v3.8.1 inputs; record generated TAPE3 hash and all controls. Existing TAPE3 from the held-state/custom-band run is not silently substituted as the official example line file.",
+    "run": "Use the existing pinned v12.17 GNU-double LBLRTM executable only after source/executable/config/runtime-library hashes and selected TAPE5, line-file, continuum, and cross-section inputs are independently verified before and after. Do not execute the package Perl scripts.",
+    "comparison": "Compare complete TAPE27/TAPE28 numeric tabulations against exact archive members. PLTLBL source FORMAT is (3X,F15.8,4X,1P,G19.8E3), so the prospective gate is equality after parsing and rounding both sides to the archived 8-decimal coordinate and 8-significant-digit dependent-value serialization. Retain bytewise file comparison and report unmodified header/date differences; no wider absolute/relative tolerance is authorized.",
+    "not_an_od_or_accuracy_claim": true
+  },
+  "historical_v1_claim_correction": {
+    "incorrect_v1_claim": "Local AER line-data and absco continuum files were not found under build.",
+    "corrected_fact": "The private source stage contains both resources with authenticated manifest hashes, and the separate held-state prepared input receipt explicitly records absco-ref_wv-mt-ckd.nc among its 38 inputs.",
+    "remaining_identity_limits": [
+      "The run-example archive still contains external symlink references rather than these files themselves.",
+      "No exact compiler-binary identity for the archived reference outputs has been established; documented example precision labels remain a scoped reference attribute.",
+      "The locally generated TAPE3 hash belongs to a different held-state/custom-band input, so it is not the selected example's generated TAPE3."
+    ]
+  },
+  "readiness_correction": {
+    "previous_assessment": "The first preparation overread the archive's external-symlink layout and an incomplete local find result as asset absence.",
+    "now_authenticated_locally": [
+      "AER v3.8.1 line data, 908403720 bytes, SHA256 d0ec800cfaeaaa7ab7af7b8168f45b205e383272e147373df6d0eed2677f2bd3.",
+      "MT_CKD 4.3 absco-ref_wv-mt-ckd.nc, 83576 bytes, SHA256 69944eb8b045c268e2daeb2cddf536b99f9e9efe7e91c425067b46a5b287ddb3.",
+      "GNU LNFL v3.2 single-precision executable with recorded successful build and hash 825d05dcc530a5bb196f4a95a353f624787089d5b9be75a6696fd0b7c6542586.",
+      "GNU-double LBLRTM v12.17 executable has an existing build readback and recorded hash a5c363c87a44b686e8bff1cf0e60fcfb7b0e167c8ec74d0201b6cc6b2b41473b."
+    ],
+    "remaining_preflight": "A future runner must verify current bytes, source/config/library closure, stage the selected archive members into a fresh directory, and produce an exact input inventory before the one authorized LNFL+LBLRTM pair. These are verification gates, not statements that assets are missing."
+  },
+  "non_actions": [
+    "No archive extraction, symlink traversal, compiler, LNFL, LBLRTM, WRF, or solver invocation.",
+    "No large asset was rehashed; asset values above are taken from the existing authenticated stage manifests and held-state receipts.",
+    "No original report, archive, source, receipt, or model output was changed."
+  ]
+}

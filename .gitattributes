@@ -1,2 +1,8 @@
 # Preserve whitespace in the archived, byte-pinned executed runner.
 validation/rrtmgp37/phase-path-statistics/run_integrated_candidate.py whitespace=-blank-at-eol
+
+# Preserve exact official decks and byte-pinned Fortran STOP diagnostics.
+validation/rrtmgp37/stock-lblrtm-official-example/preparation/archive-inputs/TAPE5 -text whitespace=-blank-at-eol
+validation/rrtmgp37/stock-lblrtm-official-example/preparation/archive-inputs/LNFL_TAPE5 -text whitespace=-blank-at-eol,-blank-at-eof
+validation/rrtmgp37/stock-lblrtm-official-example/executed/lnfl/stderr.log -text whitespace=-blank-at-eol
+validation/rrtmgp37/stock-lblrtm-official-example/executed/lblrtm/stderr.log -text whitespace=-blank-at-eol
