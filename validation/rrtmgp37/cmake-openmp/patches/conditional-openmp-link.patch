@@ -1,0 +1,17 @@
+diff --git a/WRF/external/rte_rrtmgp/CMakeLists.txt b/WRF/external/rte_rrtmgp/CMakeLists.txt
+index 956143e..87a6fb4 100644
+--- a/WRF/external/rte_rrtmgp/CMakeLists.txt
++++ b/WRF/external/rte_rrtmgp/CMakeLists.txt
+@@ -7,6 +7,12 @@ file(GLOB rrtmgp_sources CONFIGURE_DEPENDS gas-optics/*.F90 rrtmgp-frontend/*.F9
+ file(GLOB extension_sources CONFIGURE_DEPENDS extensions/*.F90)
+ add_library(wrf_rrtmgp STATIC ${rte_sources} ${rrtmgp_sources} ${extension_sources})
+ target_compile_definitions(wrf_rrtmgp PRIVATE RRTMGP_CPU_ONLY)
++if(USE_OPENMP)
++  if(NOT TARGET OpenMP::OpenMP_Fortran)
++    find_package(OpenMP REQUIRED COMPONENTS Fortran)
++  endif()
++  target_link_libraries(wrf_rrtmgp PUBLIC OpenMP::OpenMP_Fortran)
++endif()
+ set_target_properties(wrf_rrtmgp PROPERTIES Fortran_MODULE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/modules")
+ file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/modules")
+ target_include_directories(wrf_rrtmgp PUBLIC
