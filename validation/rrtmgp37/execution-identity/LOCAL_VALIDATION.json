@@ -1,0 +1,61 @@
+{
+  "schema": "SINGLE_EXECUTION_ENGINEERING_VALIDATION_V1",
+  "source_head": "fe8dfc60cc5e15259f3a2d8d1595967465417823",
+  "source_tree": "4292790cf04a297bc0c46b382e1e62a223966b37",
+  "manifest_sha256": "dca7d85a198f9d19124b52c5f236715ce6540494a1de70204db0c840ab661eb9",
+  "capsule_location": "local retained build/udm37-fe8-execution-capsule-v2; external source/install/system roots required",
+  "verifier_status": "PASS_ENGINEERING_IDENTITY",
+  "physical_status": "NOT_ACCEPTED",
+  "synthetic_tests": 16,
+  "model_executions": {
+    "ideal": 1,
+    "wrf": 1,
+    "forecast_seconds": 60,
+    "sealing_or_verification_model_runs": 0
+  },
+  "verifier_runs": {
+    "this_root_frozen_check": 1,
+    "actual_rc": 0,
+    "cwd": "/tmp"
+  },
+  "startup": {
+    "snow_radius_um": 134.778076171875,
+    "LW_positive_bands": 16,
+    "SW_above_floor_bands": 14
+  },
+  "source_install_libraries_pre_post_equal": true,
+  "remote_cmake": {
+    "run_id": 37443922808,
+    "conclusion": "SUCCESS"
+  },
+  "whole_port_same_head": {
+    "run_id": 37443922887,
+    "conclusion": "FAILURE",
+    "serial_scm": "BUILD_FAILED; runtime SKIPPED",
+    "cause": "Fortran USE_ALLOCATABLES differed from pointer fields emitted by classic Make Registry tools",
+    "resolution": "separate production correction in progress"
+  },
+  "nonclaims": [
+    "Scientific acceptance",
+    "Nc unit/PSD/LUT definition",
+    "RFMIP strict PASS",
+    "LBLRTM reference acceptance",
+    "latest policy 48-hour forecast",
+    "generic prefix relocation",
+    "actual table file-open trace"
+  ],
+  "evidence": [
+    {
+      "path": "evidence/independent-static-review.json",
+      "sha256": "07ef49122e417311420bf10420c3dfdd024752166a197bd82b4fde15a8cf5482"
+    },
+    {
+      "path": "evidence/root-verifier-receipt.json",
+      "sha256": "61582bbc2345f457d93cf2503a1cbd212a7cc383f544f85e41b9561213d51e27"
+    },
+    {
+      "path": "evidence/root-verifier.log",
+      "sha256": "a1c9c5fdb93934301b3421b0592f1c1bb0c4f858f31157af20378a9b7fd14613"
+    }
+  ]
+}

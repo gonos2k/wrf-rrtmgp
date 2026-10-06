@@ -11,9 +11,9 @@
 | 2 | Nc·ice-fit·activation evidence 소스 핀 분리 | PR #128 반영, 해당 CI 5개 통과 |
 | 3 | Nc 생성·수송 단위와 PSD/LUT 크기 정의 | 진행 중, 임의 밀도·반경 배율 적용 금지 |
 | 4 | RFMIP strict 및 LBLRTM reference 수용성 | FAIL 유지, 허용오차 완화·음의 OD clipping 금지 |
-| 5 | 최신 main의 CMake build/install/export/consumer | 통합 공백 검토 중 |
+| 5 | 최신 main의 CMake build/install/export/consumer | PR #131 병합; GNU 직렬 build/install/consumer/SCM CI 통과 |
 | 6 | 최신 정책의 장시간 예보·관측 검증 | 과거 48시간 근거 보존, 최신 정책 재검증 필요 |
-| 7 | 실행·계수·입력·정책을 묶는 최종 identity | 이 목록은 자료 연결 단계, 전체 실행 manifest는 미완료 |
+| 7 | 실행·계수·입력·정책을 묶는 최종 identity | 단일 fe8 SCM의 실행 capsule 검증; 전체 과학 검증 identity는 미완료 |
 
 `PASS_SCOPED`는 명시된 구현·자료·실행 범위의 통과다.
 기록의 hash가 맞거나 일반 CI가 성공했다는 이유로 물리 정확도 또는
@@ -45,3 +45,9 @@ python3 /path/to/repo/validation/rrtmgp37/acceptance/test_verify.py
 V1의 승인 boolean을 바꾸어 PASS를 만드는 방식은 검사기가 거부한다.
 새로운 물리 승인에는 별도의 검토된 decision/schema와 완전한 실행
 identity가 필요하다. 기존 FAIL 기록과 historical producer pin은 유지한다.
+
+후속 main `d26a86e`에서 PR #131·#132 병합을 확인했다. CMake run
+[37443922808](https://github.com/gonos2k/wrf-rrtmgp/actions/runs/37443922808)은
+exact head `fe8dfc6`의 fresh build/install, 외부 consumer 및 SCM을 통과했다.
+[단일 실행 검사기](../execution-identity/README.md)는 이 공학적 범위를
+검사한다. 원본 19개 지적·독립 기준 FAIL·V1의 물리 미승인 상태는 유지한다.
