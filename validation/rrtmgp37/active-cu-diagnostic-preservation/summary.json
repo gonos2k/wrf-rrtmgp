@@ -1,0 +1,345 @@
+{
+  "schema": "active-cu-pr60-diagnostic-preservation-v1",
+  "package_base": "e543ff16f4421a65bd7187e1eb0a0082abc888f6",
+  "integration_scope_status": "POSTHOC_EXACT_VALIDATION_INDEPENDENT_REVIEW_PASSED",
+  "new_historical_model_invocations": 1,
+  "curation_model_build_solver_calls": 0,
+  "run": {
+    "begin": "2000-01-24_12:00:00",
+    "end": "2000-01-25_12:00:00",
+    "duration_hours": 24,
+    "MPI_ranks": 4,
+    "configured_OMP_threads": 2,
+    "batch_size": 1,
+    "timeout_seconds": 3600,
+    "stack_bytes": 536870912,
+    "command": [
+      "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/mpich-sock/bin/mpiexec",
+      "-launcher",
+      "fork",
+      "-iface",
+      "lo",
+      "-n",
+      "4",
+      "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-pr60-active-cu-current-build-v1/source-v3/WRF/main/wrf.exe"
+    ],
+    "environment": {
+      "LD_LIBRARY_PATH": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/netcdf/lib:/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/root/usr/lib/x86_64-linux-gnu:/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/mpich-sock/lib",
+      "MPICH_INTERFACE_HOSTNAME": "127.0.0.1",
+      "NETCDF": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/netcdf",
+      "OMP_DYNAMIC": "FALSE",
+      "OMP_MAX_ACTIVE_LEVELS": "1",
+      "OMP_NESTED": "FALSE",
+      "OMP_NUM_THREADS": "2",
+      "OMP_PROC_BIND": "FALSE",
+      "OMP_STACKSIZE": "512M",
+      "OPENBLAS_NUM_THREADS": "1",
+      "PATH": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/mpich-sock/bin:/usr/bin:/bin",
+      "WRF_RRTMGP_BATCH_SIZE": "1"
+    },
+    "rank_success": [
+      {
+        "file": "rsl.error.0000",
+        "sha256": "f9a7696119b912c2009bd6dba2ab205b7d0268bb770f9aa7eda325b1e37bf5d5",
+        "success_marker": true
+      },
+      {
+        "file": "rsl.error.0001",
+        "sha256": "620d40c0ca132d7f2d2f10a8a923e18d3c9da74a618dcea2a1dcc6770bea2a2e",
+        "success_marker": true
+      },
+      {
+        "file": "rsl.error.0002",
+        "sha256": "4e325e0f631430951c0e6ab3d7ff71a1f83a52677569e203a6f39605702609ab",
+        "success_marker": true
+      },
+      {
+        "file": "rsl.error.0003",
+        "sha256": "27cb4cfb1ecf29b7def1100c122e8b9ce8faa7901d2c740b494fe15002986ff9",
+        "success_marker": true
+      }
+    ],
+    "launcher_returncode": {
+      "evidence": "not durably written; do not infer numeric RC",
+      "inference_only": "All four rank logs contain SUCCESS COMPLETE WRF and expected output files exist; numeric launcher RC was not retained.",
+      "observed": false,
+      "value": null
+    },
+    "restart_launches": 0
+  },
+  "history": {
+    "file": "wrfout_d01_2000-01-24_12:00:00",
+    "Times": [
+      "2000-01-24_12:00:00",
+      "2000-01-24_13:00:00",
+      "2000-01-24_14:00:00",
+      "2000-01-24_15:00:00",
+      "2000-01-24_16:00:00",
+      "2000-01-24_17:00:00",
+      "2000-01-24_18:00:00",
+      "2000-01-24_19:00:00",
+      "2000-01-24_20:00:00",
+      "2000-01-24_21:00:00",
+      "2000-01-24_22:00:00",
+      "2000-01-24_23:00:00",
+      "2000-01-25_00:00:00",
+      "2000-01-25_01:00:00",
+      "2000-01-25_02:00:00",
+      "2000-01-25_03:00:00",
+      "2000-01-25_04:00:00",
+      "2000-01-25_05:00:00",
+      "2000-01-25_06:00:00",
+      "2000-01-25_07:00:00",
+      "2000-01-25_08:00:00",
+      "2000-01-25_09:00:00",
+      "2000-01-25_10:00:00",
+      "2000-01-25_11:00:00",
+      "2000-01-25_12:00:00"
+    ],
+    "variables": 225,
+    "numeric_values": 112048925,
+    "quality": {
+      "masked": 0,
+      "nonfinite": 0,
+      "fill_values": 0
+    },
+    "baseline_sha256": "2f916abf9689affd608c20f106877f9c23b4ba149610f104630adda56d3deddb",
+    "candidate_sha256": "2f916abf9689affd608c20f106877f9c23b4ba149610f104630adda56d3deddb",
+    "whole_file_equal": true,
+    "all_arrays_dims_dtypes_full_attributes_and_variable_sets_exact": true
+  },
+  "checkpoints": [
+    {
+      "file": "wrfrst_d01_2000-01-25_00:00:00",
+      "Times": [
+        "2000-01-25_00:00:00"
+      ],
+      "variables": 667,
+      "numeric_values": 18397069,
+      "quality": {
+        "masked": 0,
+        "nonfinite": 0,
+        "fill_values": 0
+      },
+      "baseline_sha256": "d8472905694b5c6c2fc5480f6a529e9ef4a3b07d26741096071d5ed4d214fc9d",
+      "candidate_sha256": "d8472905694b5c6c2fc5480f6a529e9ef4a3b07d26741096071d5ed4d214fc9d",
+      "whole_file_equal": true,
+      "all_arrays_dims_dtypes_full_attributes_and_variable_sets_exact": true
+    },
+    {
+      "file": "wrfrst_d01_2000-01-25_12:00:00",
+      "Times": [
+        "2000-01-25_12:00:00"
+      ],
+      "variables": 667,
+      "numeric_values": 18397069,
+      "quality": {
+        "masked": 0,
+        "nonfinite": 0,
+        "fill_values": 0
+      },
+      "baseline_sha256": "ff4bf3c55f7d6358b1d7ba59404d32e2c6d48e1dcdb0748e7e414e87e7b9361f",
+      "candidate_sha256": "ff4bf3c55f7d6358b1d7ba59404d32e2c6d48e1dcdb0748e7e414e87e7b9361f",
+      "whole_file_equal": true,
+      "all_arrays_dims_dtypes_full_attributes_and_variable_sets_exact": true
+    }
+  ],
+  "diagnostics": {
+    "all_native_omissions_bounded": true,
+    "cu_clip_records": 778,
+    "cu_population_records": 1556,
+    "native_cf0_detail_records": 3150,
+    "native_phase_records": 3338,
+    "per_rank_tag_counts": {
+      "0": {
+        "RRTMGP_CU_LUT_CLIP": 211,
+        "RRTMGP_CU_POPULATION": 422,
+        "RRTMGP_UDM_CF0_OMITTED": 843,
+        "RRTMGP_UDM_LUT_CLIP": 421,
+        "RRTMGP_UDM_PHASE_PATH": 843
+      },
+      "1": {
+        "RRTMGP_CU_LUT_CLIP": 210,
+        "RRTMGP_CU_POPULATION": 420,
+        "RRTMGP_UDM_CF0_OMITTED": 840,
+        "RRTMGP_UDM_LUT_CLIP": 419,
+        "RRTMGP_UDM_PHASE_PATH": 840
+      },
+      "2": {
+        "RRTMGP_CU_LUT_CLIP": 151,
+        "RRTMGP_CU_POPULATION": 302,
+        "RRTMGP_UDM_CF0_OMITTED": 636,
+        "RRTMGP_UDM_LUT_CLIP": 410,
+        "RRTMGP_UDM_PHASE_PATH": 823
+      },
+      "3": {
+        "RRTMGP_CU_LUT_CLIP": 206,
+        "RRTMGP_CU_POPULATION": 412,
+        "RRTMGP_UDM_CF0_OMITTED": 831,
+        "RRTMGP_UDM_LUT_CLIP": 415,
+        "RRTMGP_UDM_PHASE_PATH": 832
+      }
+    },
+    "positive_cu_accepted_grid_sum_g_m2": 59333443.47186282,
+    "positive_cu_clip_path_sum_g_m2": 4810053.38433347,
+    "positive_cu_rejected_grid_sum_g_m2": 0.052782297134399414,
+    "record_count": 10487
+  },
+  "legacy_diagnostics": {
+    "baseline_groups": 72,
+    "baseline_rows": 7149,
+    "candidate_groups": 72,
+    "candidate_rows": 7149,
+    "exact_numeric_fields": true,
+    "status": "UNCHANGED"
+  },
+  "diagnostic_scope": "Rows from four rsl.error files only. Tile/call observational counts; LW/SW mass sums are not combined into domain/time/area integrals. Positive-CU observations validate exercised diagnostics, not independent physical optics.",
+  "immutability": {
+    "source_unchanged": true,
+    "dependencies_unchanged": true,
+    "candidate_executable_unchanged": true,
+    "baseline_outputs_unchanged": true,
+    "candidate_inputs_after_unchanged": true
+  },
+  "candidate_executable": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-pr60-active-cu-current-build-v1/source-v3/WRF/main/wrf.exe",
+    "sha256": "6378764a2119e3475a4ec8b80cce20f5434739c428dc7fb401c899bcdeb309ed"
+  },
+  "source_readback": {
+    "configure": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-pr60-active-cu-current-build-v1/source-v3/WRF/configure.wrf",
+      "sha256": "44f85b7fc9b6994cb3784567e69d310580740a021b5f1ab1efb0586f25cfcba2",
+      "size_bytes": 21191
+    },
+    "entry_count": 6805,
+    "manifest_sha256": "2b4bf42854acf7fc3a7de91d05741e201b6c8b206c473120813fc14c6b4f101b"
+  },
+  "production_source_review_pins": [
+    {
+      "file": "WRF/phys/module_ra_rrtmg_lw.F",
+      "sha256": "83179d79a383947e0631ec19fc4f1d2d93c86add4c51a32cbd3ae4a5e07e1440",
+      "source_manifest_entry": {
+        "git_blob": "129d144bf3129ed12a17bd5543dd0eecaebd1bcf",
+        "mode": "100644",
+        "path": "WRF/phys/module_ra_rrtmg_lw.F",
+        "sha256": "83179d79a383947e0631ec19fc4f1d2d93c86add4c51a32cbd3ae4a5e07e1440",
+        "size_bytes": 705249,
+        "type": "file"
+      },
+      "package_base_bytes_equal": true
+    },
+    {
+      "file": "WRF/phys/module_ra_rrtmg_sw.F",
+      "sha256": "711e16c6722c89d24ac83e019b62f372dca1fd85a3d7ad1382171ade2b2e479b",
+      "source_manifest_entry": {
+        "git_blob": "4e27067e24a156ef4a9881d2a0d95e0a8727745e",
+        "mode": "100644",
+        "path": "WRF/phys/module_ra_rrtmg_sw.F",
+        "sha256": "711e16c6722c89d24ac83e019b62f372dca1fd85a3d7ad1382171ade2b2e479b",
+        "size_bytes": 666039,
+        "type": "file"
+      },
+      "package_base_bytes_equal": true
+    },
+    {
+      "file": "WRF/phys/module_ra_rrtmgp.F",
+      "sha256": "719504c7221aef989c52090a347c6f6c5fb3f85828cf4e741309790a8314a886",
+      "source_manifest_entry": {
+        "git_blob": "8a0b987ee15bdc685be1acb396734a26fef78bda",
+        "mode": "100644",
+        "path": "WRF/phys/module_ra_rrtmgp.F",
+        "sha256": "719504c7221aef989c52090a347c6f6c5fb3f85828cf4e741309790a8314a886",
+        "size_bytes": 66501,
+        "type": "file"
+      },
+      "package_base_bytes_equal": true
+    },
+    {
+      "file": "WRF/phys/module_ra_rrtmgp_input.F",
+      "sha256": "47dcd1fbe84ec2f5bc21598e05024f38b9f4a4a7decb51cb7e51f7e21d01357f",
+      "source_manifest_entry": {
+        "git_blob": "c075d7f4a40b068dc6b991f740bcc0186313940b",
+        "mode": "100644",
+        "path": "WRF/phys/module_ra_rrtmgp_input.F",
+        "sha256": "47dcd1fbe84ec2f5bc21598e05024f38b9f4a4a7decb51cb7e51f7e21d01357f",
+        "size_bytes": 39498,
+        "type": "file"
+      },
+      "package_base_bytes_equal": true
+    },
+    {
+      "file": "WRF/phys/module_ra_rrtmgp_trace.F",
+      "sha256": "f9d7f16566881b3b4a9351290e6750e87f8212647db7479a45be53659facc53a",
+      "source_manifest_entry": {
+        "git_blob": "a7f5f404529bed344e22ee6f98f55baaaca5cec6",
+        "mode": "100644",
+        "path": "WRF/phys/module_ra_rrtmgp_trace.F",
+        "sha256": "f9d7f16566881b3b4a9351290e6750e87f8212647db7479a45be53659facc53a",
+        "size_bytes": 26343,
+        "type": "file"
+      },
+      "package_base_bytes_equal": true
+    },
+    {
+      "file": "WRF/phys/module_radiation_driver.F",
+      "sha256": "6790dc884c53fff201f15713d60197f54b43dc53b545ed44eb2397e9d2d3687f",
+      "source_manifest_entry": {
+        "git_blob": "6210b0b09d13ec9484b98c7c1aa1f6552b5750a1",
+        "mode": "100644",
+        "path": "WRF/phys/module_radiation_driver.F",
+        "sha256": "6790dc884c53fff201f15713d60197f54b43dc53b545ed44eb2397e9d2d3687f",
+        "size_bytes": 287929,
+        "type": "file"
+      },
+      "package_base_bytes_equal": true
+    },
+    {
+      "file": "WRF/external/rte_rrtmgp/rte-frontend/mo_rte_scalar_math.F90",
+      "sha256": "e782918d8de310349ce9b7b8f5ba477b3b9f2027960cb95dc4951aca64aaa99d",
+      "source_manifest_entry": {
+        "git_blob": "e735109de83c638134b7c9497abb9e353969f5f7",
+        "mode": "100644",
+        "path": "WRF/external/rte_rrtmgp/rte-frontend/mo_rte_scalar_math.F90",
+        "sha256": "e782918d8de310349ce9b7b8f5ba477b3b9f2027960cb95dc4951aca64aaa99d",
+        "size_bytes": 987,
+        "type": "file"
+      },
+      "package_base_bytes_equal": true
+    }
+  ],
+  "preserved_failure": {
+    "original_receipt_status": "RUNNING",
+    "receipt": {
+      "path": "build/udm37-pr60-active-cu-current-build-v1/candidate-run-v1/execution.json",
+      "bytes": 97238,
+      "sha256": "51eb161f5226485059186649fbd402d77cc6323f40f2e6adb04b1164e40fd309"
+    },
+    "truncated_tmp": {
+      "path": "build/udm37-pr60-active-cu-current-build-v1/candidate-run-v1/execution.json.tmp",
+      "bytes": 371056,
+      "sha256": "8292cc9cd96b525801ce3f2c5432e5d64997c523b9ded9e00733aac8d081f468"
+    },
+    "error": "JSONDecodeError: tuple keys in diagnostics.native_cf0_detail_aggregate are not JSON object keys; original RUNNING receipt and truncated .tmp preserved",
+    "numeric_launcher_rc": "UNAVAILABLE",
+    "rerun": false
+  },
+  "posthoc_original": {
+    "path": "build/udm37-pr60-active-cu-current-build-v1/posthoc-verification-v1/posthoc-result-v1.json",
+    "bytes": 222480,
+    "sha256": "4cd445300683a08b71287da443dd291a819a5214707e150751e4e5c8122f7a2c"
+  },
+  "posthoc_helper": {
+    "path": "build/udm37-pr60-active-cu-current-build-v1/posthoc-verification-v1/verify_posthoc.py",
+    "bytes": 6684,
+    "sha256": "6601e7224eca98036595cf5a2584a3d77a097eec9550fd84ad0651aebbe5d467"
+  },
+  "independent_posthoc_review": {
+    "retained_path": "independent/review.json",
+    "sha256": "99da7816f2583560bf9df05e52272f86b2c474e22a01f55b8e5e14f144df94b1",
+    "verdict": "PASS_DATA_AND_DIAGNOSTIC_READBACK; LAUNCHER_RC_UNAVAILABLE",
+    "review_passed": true
+  },
+  "scientific_accuracy": "NOT_ASSESSED",
+  "restart_execution": "NOT_RUN",
+  "current_integration_claim": "PR60 diagnostics preserve this one matched active-CU 24h trajectory and saved checkpoints only."
+}
