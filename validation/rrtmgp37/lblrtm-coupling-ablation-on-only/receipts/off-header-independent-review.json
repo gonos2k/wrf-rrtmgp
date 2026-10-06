@@ -1,0 +1,49 @@
+{
+  "schema": "lblrtm-off-header-layout-addendum-v1",
+  "parent_audit": {
+    "path": "build/udm37-lblrtm-sametape3-off-header-audit-v1/audit.json",
+    "sha256": "29694ec42d5825446022dde991d51502d7288839f3b82bb3b29ce8e24a2d24be"
+  },
+  "actual_frozen_output_context": {
+    "execution_receipt_sha256": "a70ad49709793bf42c399dc99b8441587f1b14be220113496b900bb40c919439",
+    "candidate_build_execution_sha256": "418de0d5d4145e6184e6cd073d47ae30e78c0bf5d08e3921758f8e977c233323",
+    "candidate_build_postflight_sha256": "9459f3a5341f79ae098b2b74d6056b42380f1e1bb7bc57c8391d106a7051b80c",
+    "executable_sha256": "86d2a33ba04ca1f4a28a49f41ee8d9fd4fcff785e46319dc8a918480d5ccc80d"
+  },
+  "source_pins": {
+    "oprop_path": "build/udm37-lblrtm-candidate-decision-run-v3/staging/source/LBLRTM/src/oprop.f90",
+    "oprop_sha256": "a3b5732eca771b74fd373b2f8f67f515c9c05d09dc4c86c1fe77bd7d9bb1bd3c",
+    "lblrtm_path": "build/udm37-lblrtm-candidate-decision-run-v3/staging/source/LBLRTM/src/lblrtm.f90",
+    "lblrtm_sha256": "9ae22638469c4b9e60187b53e47f0a80d5fb502ffd4052f63f88f442dac45aca",
+    "util_gfortran_path": "build/udm37-lblrtm-candidate-decision-run-v3/staging/source/LBLRTM/src/util_gfortran.f90",
+    "util_gfortran_sha256": "64d679afbffa23f81c5faf3289c562b37ee65019d5ff176dd19528cef71b99e2",
+    "build_flags": "-fdefault-integer-8 -fdefault-real-8 -fdefault-double-8 -frecord-marker=4 -std=legacy"
+  },
+  "layout_derivation": {
+    "record_leading_marker_bytes": 4,
+    "FILHDR_order_and_sizes_bytes_in_record_payload": [
+      {"field": "XID(10), CHARACTER*8", "bytes": 80},
+      {"field": "SECANT,PAVE,TAVE, REAL*8", "bytes": 24},
+      {"field": "HMOLID(60), CHARACTER*8", "bytes": 480},
+      {"field": "XALTZ(4), REAL*8", "bytes": 32},
+      {"field": "WK(60), REAL*8", "bytes": 480},
+      {"field": "PZL,PZU,TZL,TZU,WBROAD,DV,V1,V2,TBOUND,EMISIV, REAL*8", "bytes": 80},
+      {"field": "FSCDID(17), default REAL under GNU-dbl flags", "bytes": 136},
+      {"field": "NMOL,LAYER,YI1, default INTEGER/REAL under GNU-dbl flags", "bytes": 24}
+    ],
+    "payload_offset_of_YID1": 1336,
+    "absolute_file_offset_of_YID1": 1340,
+    "absolute_file_offset_of_YID2": 1348,
+    "YID1_alias": "HDATE; 8 chars",
+    "YID2_alias": "HTIME; 8 chars"
+  },
+  "source_authority": {
+    "FILHDR_order": "oprop.f90:107-110",
+    "character_declarations": "lblrtm.f90:377",
+    "FILHDR_YID_equivalence": "lblrtm.f90:518-533",
+    "clock_values_assigned": "lblrtm.f90:660-662",
+    "ftime_date_and_time_format": "util_gfortran.f90:112-118, 144, 151-157; DATE_AND_TIME supplies time characters, then FORMAT A2 ':' A2 ':' A2 constructs the 8-character HTIME string",
+    "filhdr_written_as_first_output_record": "oprop.f90:363-412 writes FILHDR through BUFOUT using NFHDRF"
+  },
+  "audit_conclusion": "The six observed differences in each of the 45 OD files fall within HTIME at absolute offsets 1348-1355. The date YID1 at 1340-1347 is unchanged. All bytes outside those six positions were compared directly and are equal. This explains but does not waive the full-file SHA mismatch; the OFF run remains FAIL_STOP_PRESERVED and ON was not run in this execution."
+}

@@ -1,0 +1,33 @@
+{
+  "status": "PASS_SCOPED_ON_ONLY_V3_DELTA_AND_PLAN_LOAD",
+  "reviewed_runner": {
+    "path": "build/udm37-lblrtm-sametape3-coupling-ablation-v1/run_on_only_v3.py",
+    "sha256": "7e57b49f7bf4439e423548a8d335edde628499d03cc79cc261fe49ace971db32",
+    "size_bytes": 22350
+  },
+  "reviewed_plan": {
+    "path": "build/udm37-lblrtm-sametape3-coupling-ablation-v1/on-only-plan-v3.json",
+    "sha256": "b4f62b0d2daca3a1b4fa57275548ecfcacc97bddc17cacd3a3263b8d2470a435",
+    "size_bytes": 15946
+  },
+  "inherits_unchanged_logic_review": {
+    "path": "build/udm37-lblrtm-on-only-independent-review-v1/review-v2.json",
+    "sha256": "1c7f6d5fe3f395f8c1ecd8858249c7b72475db2dcb8b6a6cf1bf004da0fae364",
+    "size_bytes": 2164
+  },
+  "delta": [
+    "Only paired schema/default-plan updates plus explicit same-TAPE3/TAPE5 hash/size and source stage-manifest/protocol joins.",
+    "Actual complete load_plan passed against the frozen planned38 input rows and recorded build/exe/libs/OFF/header controls; no child.",
+    "Raw comparator/lifecycle and 44 nonselected versus selected21 scope unchanged; prior four manufactured comparator controls apply."
+  ],
+  "limits": [
+    "Historical whole TAPE3 hash joins are receipt-based, not a fresh full raw scan.",
+    "Original OFF full-file failure remains unwaived; no physical or completed ON run claim."
+  ],
+  "invocations": {
+    "subprocess": 0,
+    "compiler": 0,
+    "solver": 0,
+    "model": 0
+  }
+}
