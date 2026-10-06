@@ -1,0 +1,167 @@
+{
+  "schema": "QNN_BOUNDARY_PRIVATE_OBSERVER_IMPLEMENTATION_V1",
+  "status": "SOURCE_FROZEN_FOR_ROOT_REVIEW_UNCOMPILED_UNRUN",
+  "created_at_utc": "2026-10-06T14:12:16.256702+00:00",
+  "worktree": "build/udm37-qnn-boundary-observer-source-v1",
+  "base_head": "474c4af4928b49b4922fae30d422850b29ec1571",
+  "source_pins": [
+    {
+      "path": "build/udm37-qnn-boundary-observer-source-v1/WRF/share/module_bc.F",
+      "sha256": "cf278eb406423d0ba99905dcad647485196f4caae2856db2a50362d1f748c54f",
+      "size_bytes": 176055
+    },
+    {
+      "path": "build/udm37-qnn-boundary-observer-source-v1/WRF/dyn_em/solve_em.F",
+      "sha256": "34930bc35a8fa6358bb64dfe6ba7a780bcc85b8a68cee5ea09ebbbae58a26ede",
+      "size_bytes": 286298
+    }
+  ],
+  "frozen_original_pins": [
+    {
+      "path": "build/udm37-netcdf-zz-runtime-source-v1/WRF/share/module_bc.F",
+      "sha256": "61b9235004b2a7799faabaa928276af8a7ef2e4672619c8ad120c857461301ad",
+      "size_bytes": 164069
+    },
+    {
+      "path": "build/udm37-netcdf-zz-runtime-source-v1/WRF/dyn_em/solve_em.F",
+      "sha256": "ed03953a8b7b999fc0a5a281893f4808bbed28697ea9032fde9b9b605e0d9ecb",
+      "size_bytes": 283280
+    }
+  ],
+  "patch": {
+    "path": "build/udm37-qnn-boundary-observer-implementation-v1/observer.patch",
+    "sha256": "dc186ab8564d5e529b082be6057c0a1253c4962ba2add0a9523e8314665446a3",
+    "size_bytes": 20024
+  },
+  "schema_pin": {
+    "path": "build/udm37-qnn-boundary-observer-implementation-v1/schema.json",
+    "sha256": "d5ab471cb5ed57cce42128822df6829ef3cbde1d6fed2f7ce262ab4a98566976",
+    "size_bytes": 1609
+  },
+  "preservation_proof": {
+    "path": "build/udm37-qnn-boundary-observer-implementation-v1/source-preservation.json",
+    "sha256": "ae8db346495d8363db862c00d39b59984b5147867d885055e3c2c21efc58ba0e",
+    "size_bytes": 539
+  },
+  "source_only_checks": {
+    "changed_paths_exact": [
+      "WRF/dyn_em/solve_em.F",
+      "WRF/share/module_bc.F"
+    ],
+    "diff_check_rc": 0,
+    "original_statement_streams_after_marker_strip_and_signature_restore": true,
+    "original_physical_assignments_count": 8,
+    "predicates_and_call_order_unchanged": true,
+    "OFF_original_call_literal_preserved": true,
+    "gate_serial_before_OMP_no_SAVE_cache": true,
+    "rank_tile_local_unique_NEW_packets": true,
+    "outflow_proof": [
+      {
+        "rank": 0,
+        "side": 1,
+        "selected": [
+          23,
+          1
+        ],
+        "source": [
+          23,
+          6
+        ],
+        "tile_owned": [
+          1,
+          45,
+          1,
+          25
+        ],
+        "source_is_outside_all_boundary_write_destinations": true,
+        "source_is_in_same_call_tile_owned_bounds": true,
+        "capture_time": "SOURCE_QNN reread after destination assignment, not independently sampled beforewrite"
+      },
+      {
+        "rank": 1,
+        "side": 4,
+        "selected": [
+          90,
+          26
+        ],
+        "source": [
+          85,
+          26
+        ],
+        "tile_owned": [
+          46,
+          90,
+          26,
+          50
+        ],
+        "source_is_outside_all_boundary_write_destinations": true,
+        "source_is_in_same_call_tile_owned_bounds": true,
+        "capture_time": "SOURCE_QNN reread after destination assignment, not independently sampled beforewrite"
+      },
+      {
+        "rank": 2,
+        "side": 3,
+        "selected": [
+          1,
+          74
+        ],
+        "source": [
+          6,
+          74
+        ],
+        "tile_owned": [
+          1,
+          45,
+          51,
+          75
+        ],
+        "source_is_outside_all_boundary_write_destinations": true,
+        "source_is_in_same_call_tile_owned_bounds": true,
+        "capture_time": "SOURCE_QNN reread after destination assignment, not independently sampled beforewrite"
+      },
+      {
+        "rank": 3,
+        "side": 2,
+        "selected": [
+          68,
+          99
+        ],
+        "source": [
+          68,
+          94
+        ],
+        "tile_owned": [
+          46,
+          90,
+          76,
+          99
+        ],
+        "source_is_outside_all_boundary_write_destinations": true,
+        "source_is_in_same_call_tile_owned_bounds": true,
+        "capture_time": "SOURCE_QNN reread after destination assignment, not independently sampled beforewrite"
+      }
+    ]
+  },
+  "observer_gate": "WRF_UDM_QNN_BOUNDARY_CAPTURE empty or exactly1",
+  "observer_directory": "WRF_UDM_QNN_BOUNDARY_DIR existing fresh directory; no directory creation in model",
+  "scope_notes": [
+    "Observer source arrays are INTENT(IN); physical QNN field retains every original assignment. QNC/QNR are read-only context.",
+    "No CCN density conversion or physics/microphysics invocation was added.",
+    "Optional omitted calls remain valid; OFF path avoids extra context-array arguments and file I/O.",
+    "Selected source interior values are stable against this boundary routine\u2019s other tile writes by index ownership. This is source reasoning, not actual runtime passivity proof.",
+    "Source helper checks guard nativeREAL32 diagnostic sum/reciprocal; invalid density is flagged without changing any state.",
+    "DefaultREAL64 and other MPI/domain/time layouts are not supported by this private diagnostic.",
+    "FLUSH/CLOSE are checked; no Fortran fsync/durable packet claim. Parent must seal/hash/fsync outputs after actual child termination.",
+    "The materialize.py tool recipe is retained preparation history, not an independently runnable reproduction interface. observer.patch on exactbase is authoritative."
+  ],
+  "operations": {
+    "source_edits": 2,
+    "compile": 0,
+    "models": 0,
+    "RTE": 0,
+    "commit": 0,
+    "push": 0,
+    "raw_capture_reads": 0
+  },
+  "scientific_accepted": false
+}

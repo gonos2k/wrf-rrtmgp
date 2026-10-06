@@ -1,0 +1,391 @@
+diff --git a/WRF/dyn_em/solve_em.F b/WRF/dyn_em/solve_em.F
+index 68b93fc..43908ba 100644
+--- a/WRF/dyn_em/solve_em.F
++++ b/WRF/dyn_em/solve_em.F
+@@ -178,6 +178,11 @@ SUBROUTINE solve_em ( grid , config_flags  &
+    INTEGER :: idum1, idum2, dynamics_option
+ 
+    INTEGER :: rk_order, iwmax, jwmax, kwmax
++! BEGIN UDM_QNN_OBSERVER
++   LOGICAL :: qnn_obs_enabled
++   CHARACTER(LEN=1024) :: qnn_obs_dir
++   INTEGER :: qnn_obs_rank,qnn_obs_i,qnn_obs_j,qnn_obs_side
++! END UDM_QNN_OBSERVER
+    REAL :: dt_rk, dts_rk, dts, dtm, wmax
+    REAL , ALLOCATABLE , DIMENSION(:)  :: max_vert_cfl_tmp, max_horiz_cfl_tmp
+    LOGICAL :: leapfrog
+@@ -378,6 +383,38 @@ SUBROUTINE solve_em ( grid , config_flags  &
+    endif
+    IF (config_flags%nwp_diagnostics == 1) diag_flag = .true.
+ 
++! BEGIN UDM_QNN_OBSERVER: initialized serially on every solve call, never SAVE-lazy.
++   CALL qnn_boundary_capture_config(qnn_obs_enabled,qnn_obs_dir)
++   qnn_obs_rank=0
++   qnn_obs_i=0
++   qnn_obs_j=0
++   qnn_obs_side=0
++   IF(qnn_obs_enabled) THEN
++#ifdef DM_PARALLEL
++      qnn_obs_rank=mytask
++      IF(ntasks/=4.OR.ntasks_x/=2.OR.ntasks_y/=2) &
++         CALL wrf_error_fatal('QNN_BOUNDARY_CAPTURE: private layout requires 2x2 MPI')
++#else
++      CALL wrf_error_fatal('QNN_BOUNDARY_CAPTURE: private layout requires MPI')
++#endif
++      IF(ids/=1.OR.ide/=91.OR.jds/=1.OR.jde/=100.OR.kds/=1.OR.kde/=45.OR. &
++         grid%id/=1.OR.config_flags%mp_physics/=27.OR..NOT.config_flags%specified.OR. &
++         config_flags%periodic_x.OR.config_flags%periodic_y.OR.config_flags%rk_ord/=3.OR. &
++         .NOT.config_flags%non_hydrostatic.OR.P_QNC<PARAM_FIRST_SCALAR.OR.P_QNR<PARAM_FIRST_SCALAR) &
++         CALL wrf_error_fatal('QNN_BOUNDARY_CAPTURE: unsupported private domain/configuration')
++      SELECT CASE(qnn_obs_rank)
++      CASE(0)
++         qnn_obs_i=23; qnn_obs_j=1; qnn_obs_side=1
++      CASE(1)
++         qnn_obs_i=90; qnn_obs_j=26; qnn_obs_side=4
++      CASE(2)
++         qnn_obs_i=1; qnn_obs_j=74; qnn_obs_side=3
++      CASE(3)
++         qnn_obs_i=68; qnn_obs_j=99; qnn_obs_side=2
++      END SELECT
++   ENDIF
++! END UDM_QNN_OBSERVER
++
+    grid%itimestep = grid%itimestep + 1
+    grid%dtbc = grid%dtbc + grid%dt
+ 
+@@ -3052,6 +3089,27 @@ BENCH_END(tracer_adv_tim)
+                                        grid%j_start(ij),grid%j_end(ij), &
+                                        k_start,k_end)
+               ELSEIF (is.EQ.P_QNN) THEN                                    ! for ntu3m
++! BEGIN UDM_QNN_OBSERVER
++               IF(qnn_obs_enabled) THEN
++               CALL flow_dep_bdy_qnn  ( scalar(ims,kms,jms,is),     &
++                                  grid%ru_m, grid%rv_m, config_flags,   &
++                                  grid%spec_zone,                  &
++                                  grid%ccn_conc,              & ! RAS
++                                  ids,ide, jds,jde, kds,kde,  & ! domain dims
++                                  ims,ime, jms,jme, kms,kme,  & ! memory dims
++                                  ips,ipe, jps,jpe, kps,kpe,  & ! patch  dims
++                                  grid%i_start(ij), grid%i_end(ij),  &
++                                  grid%j_start(ij), grid%j_end(ij),  &
++                                  k_start, k_end, &
++                                  observer_enabled=.true.,observer_dir=qnn_obs_dir, &
++                                  observer_domain=grid%id,observer_step=grid%itimestep,observer_rk=rk_step, &
++                                  observer_rank=qnn_obs_rank,observer_tile=ij,observer_i=qnn_obs_i, &
++                                  observer_j=qnn_obs_j,observer_side=qnn_obs_side, &
++                                  observer_al=grid%al,observer_alb=grid%alb, &
++                                  observer_nc=scalar(ims:ime,kms:kme,jms:jme,P_QNC), &
++                                  observer_nr=scalar(ims:ime,kms:kme,jms:jme,P_QNR) )
++               ELSE
++! END UDM_QNN_OBSERVER
+                CALL flow_dep_bdy_qnn  ( scalar(ims,kms,jms,is),     &
+                                   grid%ru_m, grid%rv_m, config_flags,   &
+                                   grid%spec_zone,                  &
+@@ -3062,6 +3120,9 @@ BENCH_END(tracer_adv_tim)
+                                   grid%i_start(ij), grid%i_end(ij),  &
+                                   grid%j_start(ij), grid%j_end(ij),  &
+                                   k_start, k_end                    )
++! BEGIN UDM_QNN_OBSERVER
++               ENDIF
++! END UDM_QNN_OBSERVER
+              ELSE IF ( ( ( ( is .EQ. P_QNWFA ) .OR. ( is .EQ. P_QNIFA ) .OR. ( is .EQ. P_QNBCA ) ) .AND. &
+                          ( config_flags%aer_init_opt .EQ. 0 ) ) &
+                          .OR. &
+diff --git a/WRF/share/module_bc.F b/WRF/share/module_bc.F
+index 473f934..e44f4e2 100644
+--- a/WRF/share/module_bc.F
++++ b/WRF/share/module_bc.F
+@@ -4,10 +4,12 @@
+ 
+ MODULE module_bc
+ 
++   USE, INTRINSIC :: ieee_arithmetic, ONLY : ieee_is_finite
+    USE module_configure
+    USE module_wrf_error
+    USE module_model_constants
+    IMPLICIT NONE
++   PRIVATE :: ieee_is_finite, qnn_boundary_write_row
+ 
+ !   TYPE bcs
+ !
+@@ -2457,6 +2459,59 @@ CONTAINS
+ 
+ !------------------------------------------------------------------------------
+ 
++! BEGIN UDM_QNN_OBSERVER: private diagnostic, no number-basis conversion.
++   SUBROUTINE qnn_boundary_capture_config(enabled,directory)
++      LOGICAL, INTENT(OUT) :: enabled
++      CHARACTER(LEN=*), INTENT(OUT) :: directory
++      CHARACTER(LEN=32) :: gate
++      INTEGER :: n, status
++      enabled=.false.
++      directory=''
++      CALL GET_ENVIRONMENT_VARIABLE('WRF_UDM_QNN_BOUNDARY_CAPTURE',gate,LENGTH=n,STATUS=status)
++      IF(status==1.OR.(status==0.AND.n==0)) RETURN
++      IF(status/=0.OR.n/=1) CALL wrf_error_fatal('QNN_BOUNDARY_CAPTURE: gate must be empty or exactly 1')
++      IF(gate(1:1)/='1') CALL wrf_error_fatal('QNN_BOUNDARY_CAPTURE: gate must be empty or exactly 1')
++      IF(STORAGE_SIZE(1.)/=32) CALL wrf_error_fatal('QNN_BOUNDARY_CAPTURE: this private observer requires REAL32')
++      CALL GET_ENVIRONMENT_VARIABLE('WRF_UDM_QNN_BOUNDARY_DIR',directory,LENGTH=n,STATUS=status)
++      IF(status/=0.OR.n<=0.OR.n>LEN(directory)) &
++         CALL wrf_error_fatal('QNN_BOUNDARY_CAPTURE: missing or oversized fresh directory')
++      IF(INDEX(directory,ACHAR(10))>0.OR.INDEX(directory,ACHAR(13))>0) &
++         CALL wrf_error_fatal('QNN_BOUNDARY_CAPTURE: invalid directory')
++      enabled=.true.
++   END SUBROUTINE qnn_boundary_capture_config
++
++   SUBROUTINE qnn_boundary_write_row(unit,k,branch,source_i,source_j,velocity,ccn, &
++                                     before,after,nc_before,nc_after,nr_before,nr_after,al,alb,source_nn)
++      INTEGER, INTENT(IN) :: unit,k,branch,source_i,source_j
++      REAL, INTENT(IN) :: velocity,ccn,before,after,nc_before,nc_after,nr_before,nr_after,al,alb,source_nn
++      REAL :: native_sum,native_rho
++      REAL(KIND=8) :: wide_sum
++      INTEGER :: valid,ios
++      ! Invalid arithmetic is recorded explicitly; no physical field is changed.
++      valid=0
++      native_sum=0.
++      native_rho=0.
++      IF(ieee_is_finite(al).AND.ieee_is_finite(alb)) THEN
++         wide_sum=REAL(al,KIND=8)+REAL(alb,KIND=8)
++         IF(wide_sum>0.D0.AND.wide_sum<=REAL(HUGE(1.),KIND=8)) THEN
++            native_sum=al+alb
++            IF(native_sum>0..AND.ieee_is_finite(native_sum)) THEN
++               IF(1.D0/REAL(native_sum,KIND=8)<=REAL(HUGE(1.),KIND=8)) THEN
++                  native_rho=1./native_sum
++                  IF(ieee_is_finite(native_rho).AND.native_rho>0.) valid=1
++               ENDIF
++            ENDIF
++         ENDIF
++      ENDIF
++      WRITE(unit,'(5(I0,1X),13(ES26.17E3,1X))',IOSTAT=ios) &
++         k,branch,source_i,source_j,valid, &
++         REAL(velocity,8),REAL(ccn,8),REAL(before,8),REAL(after,8), &
++         REAL(nc_before,8),REAL(nc_after,8),REAL(nr_before,8),REAL(nr_after,8), &
++         REAL(al,8),REAL(alb,8),REAL(native_sum,8),REAL(native_rho,8),REAL(source_nn,8)
++      IF(ios/=0) CALL wrf_error_fatal('QNN_BOUNDARY_CAPTURE: row write failed')
++   END SUBROUTINE qnn_boundary_write_row
++! END UDM_QNN_OBSERVER
++
+    SUBROUTINE flow_dep_bdy_qnn  (  field,          &
+                                u, v, config_flags, &
+                                spec_zone,                  &
+@@ -2464,7 +2519,10 @@ CONTAINS
+                                ids,ide, jds,jde, kds,kde,  & ! domain dims
+                                ims,ime, jms,jme, kms,kme,  & ! memory dims
+                                ips,ipe, jps,jpe, kps,kpe,  & ! patch  dims
+-                               its,ite, jts,jte, kts,kte )
++                               its,ite, jts,jte, kts,kte, &
++                               observer_enabled,observer_dir,observer_domain,observer_step,observer_rk, &
++                               observer_rank,observer_tile,observer_i,observer_j,observer_side, &
++                               observer_al,observer_alb,observer_nc,observer_nr )
+ 
+ !  This subroutine sets zero gradient conditions for outflow and zero value
+ !  for inflow in the boundary specified region. Note that field must be unstaggered.
+@@ -2491,6 +2549,55 @@ CONTAINS
+       INTEGER    :: b_dist, b_limit
+       LOGICAL    :: periodic_x
+ 
++! BEGIN UDM_QNN_OBSERVER
++      LOGICAL, OPTIONAL, INTENT(IN) :: observer_enabled
++      CHARACTER(LEN=*), OPTIONAL, INTENT(IN) :: observer_dir
++      INTEGER, OPTIONAL, INTENT(IN) :: observer_domain,observer_step,observer_rk
++      INTEGER, OPTIONAL, INTENT(IN) :: observer_rank,observer_tile,observer_i,observer_j,observer_side
++      REAL, OPTIONAL, INTENT(IN) :: observer_al(ims:ime,kms:kme,jms:jme)
++      REAL, OPTIONAL, INTENT(IN) :: observer_alb(ims:ime,kms:kme,jms:jme)
++      REAL, OPTIONAL, INTENT(IN) :: observer_nc(ims:ime,kms:kme,jms:jme)
++      REAL, OPTIONAL, INTENT(IN) :: observer_nr(ims:ime,kms:kme,jms:jme)
++      LOGICAL :: capture
++      INTEGER :: capture_i,capture_j,capture_unit,capture_rows,capture_ios
++      REAL :: capture_before,capture_nc_before,capture_nr_before
++      CHARACTER(LEN=1400) :: capture_file
++
++      capture=.false.
++      capture_i=0
++      capture_j=0
++      capture_rows=0
++      IF(PRESENT(observer_enabled)) capture=observer_enabled
++      IF(capture) THEN
++         IF(.NOT.(PRESENT(observer_dir).AND.PRESENT(observer_domain).AND.PRESENT(observer_step).AND. &
++             PRESENT(observer_rk).AND.PRESENT(observer_rank).AND.PRESENT(observer_tile).AND. &
++             PRESENT(observer_i).AND.PRESENT(observer_j).AND.PRESENT(observer_side).AND. &
++             PRESENT(observer_al).AND.PRESENT(observer_alb).AND.PRESENT(observer_nc).AND.PRESENT(observer_nr))) &
++            CALL wrf_error_fatal('QNN_BOUNDARY_CAPTURE: incomplete observer context')
++         capture_i=observer_i
++         capture_j=observer_j
++         capture=capture_i>=its.AND.capture_i<=MIN(ite,ide-1).AND. &
++                 capture_j>=jts.AND.capture_j<=MIN(jte,jde-1)
++         IF(capture) THEN
++            IF(observer_domain<1.OR.observer_step<1.OR.observer_step>2.OR.observer_rk<1.OR.observer_rk>3.OR. &
++               observer_rank<0.OR.observer_rank>3.OR.observer_tile<1.OR.STORAGE_SIZE(1.)/=32) &
++               CALL wrf_error_fatal('QNN_BOUNDARY_CAPTURE: invalid identity or kind')
++            WRITE(capture_file,'(A,"/qnn_d",I0,"_rank",I0,"_tile",I0,"_step",I0,"_rk",I0,"_side",I0,".raw")', &
++                  IOSTAT=capture_ios) TRIM(observer_dir),observer_domain,observer_rank,observer_tile, &
++                                      observer_step,observer_rk,observer_side
++            IF(capture_ios/=0) CALL wrf_error_fatal('QNN_BOUNDARY_CAPTURE: filename overflow')
++            OPEN(NEWUNIT=capture_unit,FILE=TRIM(capture_file),STATUS='NEW',ACTION='WRITE',IOSTAT=capture_ios)
++            IF(capture_ios/=0) CALL wrf_error_fatal('QNN_BOUNDARY_CAPTURE: fresh packet open failed')
++            WRITE(capture_unit,'(A)',IOSTAT=capture_ios) 'UDM37QNNB1'
++            IF(capture_ios/=0) CALL wrf_error_fatal('QNN_BOUNDARY_CAPTURE: magic write failed')
++            WRITE(capture_unit,'(15(I0,1X))',IOSTAT=capture_ios) observer_domain,observer_step,observer_rk, &
++                 observer_rank,observer_tile,observer_side,capture_i,capture_j,kts,kde-1,STORAGE_SIZE(1.), &
++                 its,MIN(ite,ide-1),jts,MIN(jte,jde-1)
++            IF(capture_ios/=0) CALL wrf_error_fatal('QNN_BOUNDARY_CAPTURE: header write failed')
++         ENDIF
++      ENDIF
++! END UDM_QNN_OBSERVER
++
+       periodic_x = config_flags%periodic_x
+ 
+       ibs = ids
+@@ -2512,10 +2619,33 @@ CONTAINS
+               i_inner = max(i,ibs+spec_zone)
+               i_inner = min(i_inner,ibe-spec_zone)
+               IF(periodic_x)i_inner = i
++! BEGIN UDM_QNN_OBSERVER
++              IF(capture.AND.i==capture_i.AND.j==capture_j) THEN
++                 capture_before=field(i,k,j)
++                 capture_nc_before=observer_nc(i,k,j)
++                 capture_nr_before=observer_nr(i,k,j)
++              ENDIF
++! END UDM_QNN_OBSERVER
+               IF(v(i,k,j) .lt. 0.)THEN
+                 field(i,k,j) = field(i_inner,k,jbs+spec_zone)
++! BEGIN UDM_QNN_OBSERVER
++                IF(capture.AND.i==capture_i.AND.j==capture_j) THEN
++                   CALL qnn_boundary_write_row(capture_unit,k,0,i_inner,jbs+spec_zone,v(i,k,j),ccn_conc, &
++                        capture_before,field(i,k,j),capture_nc_before,observer_nc(i,k,j), &
++                        capture_nr_before,observer_nr(i,k,j),observer_al(i,k,j),observer_alb(i,k,j),field(i_inner,k,jbs+spec_zone))
++                   capture_rows=capture_rows+1
++                ENDIF
++! END UDM_QNN_OBSERVER
+               ELSE
+                 field(i,k,j) = ccn_conc ! RAS
++! BEGIN UDM_QNN_OBSERVER
++                IF(capture.AND.i==capture_i.AND.j==capture_j) THEN
++                   CALL qnn_boundary_write_row(capture_unit,k,1,0,0,v(i,k,j),ccn_conc, &
++                        capture_before,field(i,k,j),capture_nc_before,observer_nc(i,k,j), &
++                        capture_nr_before,observer_nr(i,k,j),observer_al(i,k,j),observer_alb(i,k,j),0.)
++                   capture_rows=capture_rows+1
++                ENDIF
++! END UDM_QNN_OBSERVER
+               ENDIF
+             ENDDO
+           ENDDO
+@@ -2532,10 +2662,33 @@ CONTAINS
+               i_inner = max(i,ibs+spec_zone)
+               i_inner = min(i_inner,ibe-spec_zone)
+               IF(periodic_x)i_inner = i
++! BEGIN UDM_QNN_OBSERVER
++              IF(capture.AND.i==capture_i.AND.j==capture_j) THEN
++                 capture_before=field(i,k,j)
++                 capture_nc_before=observer_nc(i,k,j)
++                 capture_nr_before=observer_nr(i,k,j)
++              ENDIF
++! END UDM_QNN_OBSERVER
+               IF(v(i,k,j+1) .gt. 0.)THEN
+                 field(i,k,j) = field(i_inner,k,jbe-spec_zone)
++! BEGIN UDM_QNN_OBSERVER
++                IF(capture.AND.i==capture_i.AND.j==capture_j) THEN
++                   CALL qnn_boundary_write_row(capture_unit,k,0,i_inner,jbe-spec_zone,v(i,k,j+1),ccn_conc, &
++                        capture_before,field(i,k,j),capture_nc_before,observer_nc(i,k,j), &
++                        capture_nr_before,observer_nr(i,k,j),observer_al(i,k,j),observer_alb(i,k,j),field(i_inner,k,jbe-spec_zone))
++                   capture_rows=capture_rows+1
++                ENDIF
++! END UDM_QNN_OBSERVER
+               ELSE
+                 field(i,k,j) = ccn_conc ! RAS
++! BEGIN UDM_QNN_OBSERVER
++                IF(capture.AND.i==capture_i.AND.j==capture_j) THEN
++                   CALL qnn_boundary_write_row(capture_unit,k,1,0,0,v(i,k,j+1),ccn_conc, &
++                        capture_before,field(i,k,j),capture_nc_before,observer_nc(i,k,j), &
++                        capture_nr_before,observer_nr(i,k,j),observer_al(i,k,j),observer_alb(i,k,j),0.)
++                   capture_rows=capture_rows+1
++                ENDIF
++! END UDM_QNN_OBSERVER
+               ENDIF
+             ENDDO
+           ENDDO
+@@ -2551,10 +2704,33 @@ CONTAINS
+             DO j = max(jts,b_dist+jbs+1), min(jtf,jbe-b_dist-1)
+               j_inner = max(j,jbs+spec_zone)
+               j_inner = min(j_inner,jbe-spec_zone)
++! BEGIN UDM_QNN_OBSERVER
++              IF(capture.AND.i==capture_i.AND.j==capture_j) THEN
++                 capture_before=field(i,k,j)
++                 capture_nc_before=observer_nc(i,k,j)
++                 capture_nr_before=observer_nr(i,k,j)
++              ENDIF
++! END UDM_QNN_OBSERVER
+               IF(u(i,k,j) .lt. 0.)THEN
+                 field(i,k,j) = field(ibs+spec_zone,k,j_inner)
++! BEGIN UDM_QNN_OBSERVER
++                IF(capture.AND.i==capture_i.AND.j==capture_j) THEN
++                   CALL qnn_boundary_write_row(capture_unit,k,0,ibs+spec_zone,j_inner,u(i,k,j),ccn_conc, &
++                        capture_before,field(i,k,j),capture_nc_before,observer_nc(i,k,j), &
++                        capture_nr_before,observer_nr(i,k,j),observer_al(i,k,j),observer_alb(i,k,j),field(ibs+spec_zone,k,j_inner))
++                   capture_rows=capture_rows+1
++                ENDIF
++! END UDM_QNN_OBSERVER
+               ELSE
+                 field(i,k,j) = ccn_conc ! RAS
++! BEGIN UDM_QNN_OBSERVER
++                IF(capture.AND.i==capture_i.AND.j==capture_j) THEN
++                   CALL qnn_boundary_write_row(capture_unit,k,1,0,0,u(i,k,j),ccn_conc, &
++                        capture_before,field(i,k,j),capture_nc_before,observer_nc(i,k,j), &
++                        capture_nr_before,observer_nr(i,k,j),observer_al(i,k,j),observer_alb(i,k,j),0.)
++                   capture_rows=capture_rows+1
++                ENDIF
++! END UDM_QNN_OBSERVER
+               ENDIF
+             ENDDO
+           ENDDO
+@@ -2569,10 +2745,33 @@ CONTAINS
+             DO j = max(jts,b_dist+jbs+1), min(jtf,jbe-b_dist-1)
+               j_inner = max(j,jbs+spec_zone)
+               j_inner = min(j_inner,jbe-spec_zone)
++! BEGIN UDM_QNN_OBSERVER
++              IF(capture.AND.i==capture_i.AND.j==capture_j) THEN
++                 capture_before=field(i,k,j)
++                 capture_nc_before=observer_nc(i,k,j)
++                 capture_nr_before=observer_nr(i,k,j)
++              ENDIF
++! END UDM_QNN_OBSERVER
+               IF(u(i+1,k,j) .gt. 0.)THEN
+                 field(i,k,j) = field(ibe-spec_zone,k,j_inner)
++! BEGIN UDM_QNN_OBSERVER
++                IF(capture.AND.i==capture_i.AND.j==capture_j) THEN
++                   CALL qnn_boundary_write_row(capture_unit,k,0,ibe-spec_zone,j_inner,u(i+1,k,j),ccn_conc, &
++                        capture_before,field(i,k,j),capture_nc_before,observer_nc(i,k,j), &
++                        capture_nr_before,observer_nr(i,k,j),observer_al(i,k,j),observer_alb(i,k,j),field(ibe-spec_zone,k,j_inner))
++                   capture_rows=capture_rows+1
++                ENDIF
++! END UDM_QNN_OBSERVER
+               ELSE
+                 field(i,k,j) = ccn_conc ! RAS
++! BEGIN UDM_QNN_OBSERVER
++                IF(capture.AND.i==capture_i.AND.j==capture_j) THEN
++                   CALL qnn_boundary_write_row(capture_unit,k,1,0,0,u(i+1,k,j),ccn_conc, &
++                        capture_before,field(i,k,j),capture_nc_before,observer_nc(i,k,j), &
++                        capture_nr_before,observer_nr(i,k,j),observer_al(i,k,j),observer_alb(i,k,j),0.)
++                   capture_rows=capture_rows+1
++                ENDIF
++! END UDM_QNN_OBSERVER
+               ENDIF
+             ENDDO
+           ENDDO
+@@ -2580,6 +2779,16 @@ CONTAINS
+       ENDIF
+     ENDIF
+ 
++! BEGIN UDM_QNN_OBSERVER
++      IF(capture) THEN
++         IF(capture_rows/=kde-kts) CALL wrf_error_fatal('QNN_BOUNDARY_CAPTURE: incomplete selected column')
++         FLUSH(capture_unit,IOSTAT=capture_ios)
++         IF(capture_ios/=0) CALL wrf_error_fatal('QNN_BOUNDARY_CAPTURE: flush failed')
++         CLOSE(capture_unit,IOSTAT=capture_ios)
++         IF(capture_ios/=0) CALL wrf_error_fatal('QNN_BOUNDARY_CAPTURE: close failed')
++      ENDIF
++! END UDM_QNN_OBSERVER
++
+    END SUBROUTINE flow_dep_bdy_qnn
+ 
+ !-------------------------for ntu3m-------------------------------------------------
