@@ -15,7 +15,7 @@
 
 37번을 실제 WRF 복사 초기화와 LW/SW 호출 경로에 연결했습니다. 압력·온도·기체의 기존 전처리를 재사용하고, 구름·빙정·눈은 RRTMGP 전용 입력 함수에서 준비합니다. 양의 구름분율에서는 수상별 질량을 보존합니다. WRF가 분율을 0으로 진단한 층은 명시적으로 청천 처리하며 제외 질량을 진단합니다. 장파와 단파는 함께 37로 선택하고 에어로졸·화학 피드백은 거부합니다.
 
-WRF 호출은 계속 `ncol=1`입니다. 실제 예보 정확도, 둥지 및 WRF column packing은 후속 검증 대상입니다. 설정과 근거는 [WRF 이식 안내](WRF/doc/rrtmgp/README.md), [검증 기록](WRF/doc/rrtmgp/VALIDATION.md), [NOAA 적용 사례](WRF/doc/rrtmgp/NOAA.md)에 있습니다.
+WRF 호출의 기본 묶음 크기는 `ncol=1`이며, CPU에서는 `WRF_RRTMGP_BATCH_SIZE=32/64/128`로 여러 기둥을 묶어 계산할 수 있습니다. MPI 4개 rank·OpenMP 2개 thread의 동일 실행파일 시험에서 1·32·64·128개 묶음의 40분 출력과 체크포인트가 일치했습니다. 이는 해당 구성의 수치 회귀 검증이며, 성능 향상·장시간 restart·둥지·실제 예보 정확도는 별도 검증 대상입니다. [묶음 계산 구현과 검증 범위](validation/rrtmgp37/column-batching-source/README.md), [WRF 이식 안내](WRF/doc/rrtmgp/README.md), [검증 기록](WRF/doc/rrtmgp/VALIDATION.md), [NOAA 적용 사례](WRF/doc/rrtmgp/NOAA.md)에 설정과 근거를 기록합니다.
 
 초기 범용 포팅 단계에서는 로컬 CTest 29개, 2,048개 시드의 작은 구름분율 시험, 실제 WRF 기둥의 독립 재생과 GNU serial SCM을 검사했습니다. WSM5(4)·Ferrier(5)의 5분 SCM 성공, ETAMPNEW(95)의 후속 적분 실패 및 이전 4/4 공통 변수 204개 일치는 그 단계의 기록입니다. 현재 UDM27 지원 범위나 최신 실험 모드의 검증으로 확대하지 않습니다.
 
