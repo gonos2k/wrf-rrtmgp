@@ -180,20 +180,29 @@ CONTAINS
     CALL require(frozen%increment(atmos))
   END SUBROUTINE
 
-  SUBROUTINE add_frozen_sw(atmos,gwp,hwp,lambda_g,lambda_h,frozen_context)
+  SUBROUTINE add_frozen_sw(atmos,gwp,hwp,lambda_g,lambda_h,frozen_context,raw_tau_g_out,raw_tau_h_out)
     TYPE(ty_optical_props_2str), INTENT(INOUT) :: atmos
     REAL, INTENT(IN) :: gwp(:,:),hwp(:,:),lambda_g(:,:),lambda_h(:,:)
     CHARACTER(LEN=*), OPTIONAL, INTENT(IN) :: frozen_context
+    REAL(wp), OPTIONAL, INTENT(OUT) :: raw_tau_g_out(:,:,:),raw_tau_h_out(:,:,:)
     TYPE(ty_optical_props_2str) :: frozen
     REAL(real64) :: gt(SIZE(gwp,1),SIZE(gwp,2),14),gw(SIZE(gwp,1),SIZE(gwp,2),14), &
                     gmg(SIZE(gwp,1),SIZE(gwp,2),14),ht(SIZE(gwp,1),SIZE(gwp,2),14), &
                     hw(SIZE(gwp,1),SIZE(gwp,2),14),hmg(SIZE(gwp,1),SIZE(gwp,2),14)
     INTEGER :: status
     CHARACTER(LEN=1024) :: message
+    IF(PRESENT(raw_tau_g_out).NEQV.PRESENT(raw_tau_h_out)) &
+      CALL require('RRTMGP_FROZEN_SW_RAW_TAU_OUTPUTS_MUST_BE_PAIRED')
     CALL query_sw(FROZEN_GRAUPEL,REAL(lambda_g,real64),REAL(gwp,real64),gt,gw,gmg,status,message)
     IF(status/=0) CALL require(frozen_error('RRTMGP_FROZEN_SW_GRAUPEL',message,frozen_context))
     CALL query_sw(FROZEN_HAIL,REAL(lambda_h,real64),REAL(hwp,real64),ht,hw,hmg,status,message)
     IF(status/=0) CALL require(frozen_error('RRTMGP_FROZEN_SW_HAIL',message,frozen_context))
+    IF(PRESENT(raw_tau_g_out)) THEN
+      IF(ANY(SHAPE(raw_tau_g_out)/=SHAPE(gt)).OR.ANY(SHAPE(raw_tau_h_out)/=SHAPE(ht))) &
+        CALL require('RRTMGP_FROZEN_SW_RAW_TAU_SHAPE')
+      raw_tau_g_out=REAL(gt,wp)
+      raw_tau_h_out=REAL(ht,wp)
+    END IF
     CALL require(frozen%alloc_2str(SIZE(gwp,1),SIZE(gwp,2),cloud_sw))
     frozen%tau=REAL(gt+ht,wp)
     frozen%ssa=REAL((gw+hw)/MAX(gt+ht,TINY(1._real64)),wp)
@@ -570,7 +579,8 @@ CONTAINS
   SUBROUTINE rrtmgp_sw_column(play,plev,tlay,h2o,co2,o3,n2o,ch4,o2, &
                              avdir,avdif,andir,andif,mu0,solar, &
                              cf,lwp,iwp,swp,rel,rei,res,iceflag,overlap,seed, &
-                             up,dn,hr,upc,dnc,hrc,direct,diffuse,directc,visdir,visdif,nirdir,nirdif,column_seeds,rwp,native_dry_layer_mass_kg_m2,gwp,hwp,lambda_g,lambda_h,frozen_context)
+                             up,dn,hr,upc,dnc,hrc,direct,diffuse,directc,visdir,visdif,nirdir,nirdif,column_seeds,rwp,native_dry_layer_mass_kg_m2,gwp,hwp,lambda_g,lambda_h,frozen_context, &
+                             direct_unscaled,directc_unscaled,visdir_unscaled,nirdir_unscaled)
     REAL, INTENT(IN) :: play(:,:),plev(:,:),tlay(:,:)
     REAL, INTENT(IN) :: h2o(:,:),co2(:,:),o3(:,:),n2o(:,:),ch4(:,:),o2(:,:)
     REAL, INTENT(IN) :: avdir(:),avdif(:),andir(:),andif(:),mu0(:),solar
@@ -580,6 +590,7 @@ CONTAINS
     REAL, OPTIONAL, INTENT(IN) :: rwp(:,:),native_dry_layer_mass_kg_m2(:,:)
     REAL, OPTIONAL, INTENT(IN) :: gwp(:,:),hwp(:,:),lambda_g(:,:),lambda_h(:,:)
     CHARACTER(LEN=*), OPTIONAL, INTENT(IN) :: frozen_context
+    REAL, OPTIONAL, INTENT(OUT) :: direct_unscaled(:,:),directc_unscaled(:,:),visdir_unscaled(:,:),nirdir_unscaled(:,:)
     REAL, INTENT(OUT) :: up(:,:),dn(:,:),hr(:,:),upc(:,:),dnc(:,:),hrc(:,:)
     REAL, INTENT(OUT) :: direct(:,:),diffuse(:,:),directc(:,:)
     REAL, INTENT(OUT) :: visdir(:,:),visdif(:,:),nirdir(:,:),nirdif(:,:)
@@ -597,7 +608,12 @@ CONTAINS
                 albdif(gas_sw%get_nband(),SIZE(play,1)),bands(2,gas_sw%get_nband()), &
                 visible_weight(gas_sw%get_nband())
     LOGICAL :: mask(SIZE(play,1),SIZE(play,2),gas_sw%get_ngpt())
-    INTEGER :: nc,nl,b,c,precip_status
+    REAL(wp), ALLOCATABLE :: raw_gas_tau(:,:,:),raw_cloud_tau(:,:,:),raw_precip_tau(:,:,:), &
+                             raw_frozen_g(:,:,:),raw_frozen_h(:,:,:),direct_gpt(:,:,:),direct_band(:,:,:), &
+                             precip_tau_raw(:,:,:)
+    INTEGER, ALLOCATABLE :: gpoint_band(:)
+    LOGICAL :: need_unscaled
+    INTEGER :: nc,nl,b,c,g,k,precip_status,nb,ngpt
     IF(.NOT.ready) CALL require('initialization must precede parallel column calls')
     CALL validate_frozen_inputs(SHAPE(play),gwp,hwp,lambda_g,lambda_h,frozen_context)
     CALL rrtmgp_validate_column_inputs(play,plev,tlay,cf,lwp,iwp,swp,rel,rei,res)
@@ -627,6 +643,15 @@ CONTAINS
     nc=SIZE(play,1); nl=SIZE(play,2); zero=0._wp
     up=0.; dn=0.; hr=0.; upc=0.; dnc=0.; hrc=0.; direct=0.; diffuse=0.; directc=0.
     visdir=0.; visdif=0.; nirdir=0.; nirdif=0.
+    mask=.FALSE.
+    need_unscaled=PRESENT(direct_unscaled)
+    IF((need_unscaled.NEQV.PRESENT(directc_unscaled)).OR. &
+       (need_unscaled.NEQV.PRESENT(visdir_unscaled)).OR. &
+       (need_unscaled.NEQV.PRESENT(nirdir_unscaled))) &
+      CALL require('RRTMGP_SW_PREDELTA_OUTPUTS_MUST_BE_ALL_OR_NONE')
+    IF(need_unscaled) THEN
+      direct_unscaled=0.; directc_unscaled=0.; visdir_unscaled=0.; nirdir_unscaled=0.
+    END IF
     IF(SIZE(mu0)/=nc.OR.SIZE(avdir)/=nc.OR.SIZE(avdif)/=nc.OR.SIZE(andir)/=nc.OR.SIZE(andif)/=nc) &
       CALL require('SW surface shapes must match columns')
     CALL rrtmgp_check_unit_interval('avdir',RESHAPE(avdir,[nc,1]))
@@ -640,16 +665,31 @@ CONTAINS
        ANY(SHAPE(directc)/=SHAPE(plev)).OR.ANY(SHAPE(visdir)/=SHAPE(plev)).OR. &
        ANY(SHAPE(visdif)/=SHAPE(plev)).OR.ANY(SHAPE(nirdir)/=SHAPE(plev)).OR. &
        ANY(SHAPE(nirdif)/=SHAPE(plev))) CALL require('SW diagnostic shapes must match interfaces')
+    IF(need_unscaled) THEN
+      IF(ANY(SHAPE(direct_unscaled)/=SHAPE(plev)).OR.ANY(SHAPE(directc_unscaled)/=SHAPE(plev)).OR. &
+         ANY(SHAPE(visdir_unscaled)/=SHAPE(plev)).OR.ANY(SHAPE(nirdir_unscaled)/=SHAPE(plev))) &
+        CALL require('RRTMGP_SW_PREDELTA_OUTPUT_SHAPE_MISMATCH')
+    END IF
     CALL set_gases_sw(gases,h2o,co2,o3,n2o,ch4,o2)
     col_dry=gas_dry_column(h2o,plev,native_dry_layer_mass_kg_m2)
     IF(ALL(mu0<=0.)) RETURN
     IF(ANY(mu0<=0.)) CALL require('daylight columns must be packed separately')
+    IF(need_unscaled) THEN
+      nb=gas_sw%get_nband(); ngpt=gas_sw%get_ngpt()
+      ALLOCATE(raw_gas_tau(nc,nl,ngpt),raw_cloud_tau(nc,nl,nb),raw_precip_tau(nc,nl,nb), &
+               raw_frozen_g(nc,nl,nb),raw_frozen_h(nc,nl,nb),direct_gpt(nc,nl+1,ngpt), &
+               direct_band(nc,nl+1,nb),precip_tau_raw(nc,nl,nb),gpoint_band(ngpt))
+      raw_gas_tau=0._wp; raw_cloud_tau=0._wp; raw_precip_tau=0._wp
+      raw_frozen_g=0._wp; raw_frozen_h=0._wp; direct_gpt=0._wp; direct_band=0._wp
+      precip_tau_raw=0._wp
+    END IF
     IF(trace_active('SW')) THEN
       CALL trace_input_start('SW',nc,nl,overlap,seed,iceflag,udm_precip=PRESENT(rwp), &
            gravity=REAL(initialized_gravity,real64),cp_dry=REAL(initialized_cp_dry,real64), &
            mol_weight_dry=REAL(initialized_mol_weight_dry,real64), &
            native_dry_mass=PRESENT(native_dry_layer_mass_kg_m2), &
-           frozen_mode=initialized_frozen_mode,frozen_table_sha256=frozen_table_sha256())
+           frozen_mode=initialized_frozen_mode,frozen_table_sha256=frozen_table_sha256(), &
+           sw_direct_predelta=need_unscaled)
       CALL trace_input('SW','SOLAR',RESHAPE([solar],[1,1]))
       CALL trace_input('SW','PLAY',play)
       CALL trace_input('SW','PLEV',plev)
@@ -695,6 +735,7 @@ CONTAINS
     CALL require(atmos%alloc_2str(nc,nl,gas_sw))
     CALL require(gas_sw%gas_optics(REAL(play,wp)*100._wp,REAL(plev,wp)*100._wp, &
                                  REAL(tlay,wp),gases,atmos,toa,col_dry=col_dry))
+    IF(need_unscaled) raw_gas_tau=atmos%tau
     IF(trace_active('SW')) THEN
       CALL trace_result('SW','GAS_COL_DRY',col_dry)
       CALL trace_result('SW','GAS_TAU',atmos%tau)
@@ -737,9 +778,23 @@ CONTAINS
       CALL require(cloud_sw%cloud_optics(REAL(lwp,wp),REAL(iwp,wp),rl,di,clouds))
       IF(PRESENT(rwp)) THEN
         ds=REAL(res,wp) ! Native UDM snow radius in micrometers.
-        CALL rrtmgp_precip_sw_optics(REAL(rwp,wp),REAL(swp,wp),ds,bands, &
-             snow%tau,snow%ssa,snow%g,precip_status)
+        IF(need_unscaled) THEN
+          CALL rrtmgp_precip_sw_optics(REAL(rwp,wp),REAL(swp,wp),ds,bands, &
+               snow%tau,snow%ssa,snow%g,precip_status,raw_tau=precip_tau_raw)
+        ELSE
+          CALL rrtmgp_precip_sw_optics(REAL(rwp,wp),REAL(swp,wp),ds,bands, &
+               snow%tau,snow%ssa,snow%g,precip_status)
+        END IF
         IF(precip_status/=0) CALL require('RRTMGP_UDM_PRECIP_SW_INVALID_INPUT_OR_BANDS')
+        IF(need_unscaled) THEN
+          raw_cloud_tau=clouds%tau
+          raw_precip_tau=precip_tau_raw
+          DO b=1,nb
+            WHERE(rwp==0._wp.AND.swp==0._wp)
+              raw_precip_tau(:,:,b)=0._wp
+            END WHERE
+          END DO
+        END IF
         ! CCPP precipitation is already delta scaled: scale cloud exactly once.
         CALL require(clouds%delta_scale())
         DO b=1,gas_sw%get_nband()
@@ -758,6 +813,7 @@ CONTAINS
         CALL require(cloud_sw%cloud_optics(zero,REAL(swp,wp),rl,ds,snow))
       END IF
       CALL require(snow%increment(clouds))
+      IF(need_unscaled.AND..NOT.PRESENT(rwp)) raw_cloud_tau=clouds%tau
     IF(trace_active('SW')) THEN
       CALL trace_result('SW','CLOUD_TAU',clouds%tau)
       CALL trace_result('SW','CLOUD_SSA',clouds%ssa)
@@ -779,7 +835,65 @@ CONTAINS
       CALL require(draw_samples(mask,clouds,sampled))
       IF(ANY(cf>0.).AND.overlap/=0) CALL require(sampled%increment(atmos))
     END IF
-    IF(rrtmgp_frozen_enabled()) CALL add_frozen_sw(atmos,gwp,hwp,lambda_g,lambda_h,frozen_context)
+    IF(rrtmgp_frozen_enabled()) THEN
+      IF(need_unscaled) THEN
+        CALL add_frozen_sw(atmos,gwp,hwp,lambda_g,lambda_h,frozen_context,raw_frozen_g,raw_frozen_h)
+      ELSE
+        CALL add_frozen_sw(atmos,gwp,hwp,lambda_g,lambda_h,frozen_context)
+      END IF
+    END IF
+    IF(need_unscaled) THEN
+      gpoint_band=gas_sw%get_gpoint_bands()
+      IF(ANY(gpoint_band<1).OR.ANY(gpoint_band>nb)) CALL require('RRTMGP_SW_INVALID_GPOINT_BAND_MAP')
+      IF(ANY(.NOT.ieee_is_finite(raw_gas_tau)).OR.ANY(raw_gas_tau<0._wp).OR. &
+         ANY(.NOT.ieee_is_finite(raw_cloud_tau)).OR.ANY(raw_cloud_tau<0._wp).OR. &
+         ANY(.NOT.ieee_is_finite(raw_precip_tau)).OR.ANY(raw_precip_tau<0._wp).OR. &
+         ANY(.NOT.ieee_is_finite(raw_frozen_g)).OR.ANY(raw_frozen_g<0._wp).OR. &
+         ANY(.NOT.ieee_is_finite(raw_frozen_h)).OR.ANY(raw_frozen_h<0._wp)) &
+        CALL require('RRTMGP_SW_PREDELTA_RAW_EXTINCTION_INVALID')
+      directc_unscaled=directc
+      DO c=1,nc
+        DO g=1,ngpt
+          direct_gpt(c,nl+1,g)=toa(c,g)*REAL(mu0(c),wp)
+          b=gpoint_band(g)
+          DO k=nl,1,-1
+            ! G/H are occurrence-one uniform grid-mean precipitation. Only
+            ! native cloud and rain/snow follow the realized MCICA mask.
+            IF(overlap/=0.AND.mask(c,k,g)) THEN
+              direct_gpt(c,k,g)=direct_gpt(c,k+1,g)*EXP(-(raw_gas_tau(c,k,g)+ &
+                   raw_cloud_tau(c,k,b)+raw_precip_tau(c,k,b)+raw_frozen_g(c,k,b)+ &
+                   raw_frozen_h(c,k,b))/REAL(mu0(c),wp))
+            ELSE
+              direct_gpt(c,k,g)=direct_gpt(c,k+1,g)*EXP(-(raw_gas_tau(c,k,g)+ &
+                   raw_frozen_g(c,k,b)+raw_frozen_h(c,k,b))/REAL(mu0(c),wp))
+            END IF
+          END DO
+          DO k=1,nl+1
+            direct_band(c,k,b)=direct_band(c,k,b)+direct_gpt(c,k,g)
+          END DO
+        END DO
+      END DO
+      DO k=1,nl+1
+        direct_unscaled(:,k)=SUM(direct_gpt(:,k,:),DIM=2)
+        DO b=1,nb
+          visdir_unscaled(:,k)=visdir_unscaled(:,k)+visible_weight(b)*direct_band(:,k,b)
+          nirdir_unscaled(:,k)=nirdir_unscaled(:,k)+(1._wp-visible_weight(b))*direct_band(:,k,b)
+        END DO
+      END DO
+      IF(trace_active('SW')) THEN
+        CALL trace_input('SW','SW_DIRECT_PREDELTA_POLICY',RESHAPE([1.],[1,1]))
+        CALL trace_input('SW','TOA_GPOINT',REAL(toa))
+        CALL trace_input('SW','RAW_GAS_TAU',REAL(raw_gas_tau))
+        CALL trace_input('SW','MCICA_MASK',REAL(MERGE(1._wp,0._wp,mask)))
+        CALL trace_input('SW','RAW_CLOUD_TAU',REAL(raw_cloud_tau))
+        CALL trace_input('SW','RAW_PRECIP_TAU',REAL(raw_precip_tau))
+        CALL trace_input('SW','RAW_GRAUPEL_TAU_EXT',REAL(raw_frozen_g))
+        CALL trace_input('SW','RAW_HAIL_TAU_EXT',REAL(raw_frozen_h))
+        CALL trace_input('SW','BAND_LIMS_GPOINT',REAL(gas_sw%get_band_lims_gpoint()))
+        CALL trace_input('SW','BAND_LIMS_WAVENUMBER',REAL(bands))
+        CALL trace_input('SW','VISIBLE_WEIGHT',REAL(RESHAPE(visible_weight,[nb,1])))
+      END IF
+    END IF
     IF(trace_active('SW')) THEN
       CALL trace_result('SW','TOTAL_TAU',atmos%tau)
       CALL trace_result('SW','TOTAL_SSA',atmos%ssa)
@@ -808,6 +922,12 @@ CONTAINS
       CALL trace_result('SW','VISDIF',visdif)
       CALL trace_result('SW','NIRDIR',nirdir)
       CALL trace_result('SW','NIRDIF',nirdif)
+      IF(need_unscaled) THEN
+        CALL trace_result('SW','DIRECT_PREDELTA',direct_unscaled)
+        CALL trace_result('SW','DIRECTC_PREDELTA',directc_unscaled)
+        CALL trace_result('SW','VISDIR_PREDELTA',visdir_unscaled)
+        CALL trace_result('SW','NIRDIR_PREDELTA',nirdir_unscaled)
+      END IF
     END IF
   END SUBROUTINE
 END MODULE module_ra_rrtmgp

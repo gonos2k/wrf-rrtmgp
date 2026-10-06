@@ -10443,7 +10443,11 @@ CONTAINS
 
     real, dimension( 1, kts:kte+2 ) ::                   swdkdir, &  ! jararias, 2013/08/10
                                                          swdkdif, &  ! jararias, 2013/08/10
-                                                        swdkdirc     ! PAJ
+                                                        swdkdirc, &  ! PAJ
+                                                  swdkdir_predelta, &
+                                                 swdkdirc_predelta, &
+                                                sibvisdir_predelta, &
+                                                sibnirdir_predelta
 
     real, dimension( 1, kts:kte+1 )  ::                     swhr, &
                                                            swhrc
@@ -11747,16 +11751,28 @@ CONTAINS
                gp_seed,swuflx,swdflx,swhr,swuflxc,swdflxc,swhrc, &
                swdkdir,swdkdif,swdkdirc,sibvisdir,sibvisdif,sibnirdir,sibnirdif,rwp=gp_rwp, &
                native_dry_layer_mass_kg_m2=RESHAPE(udm_dry_layer_mass(i,kts:kte,j),[1,kte-kts+1]), &
-               gwp=gp_gwp,hwp=gp_hwp,lambda_g=gp_lambda_g,lambda_h=gp_lambda_h,frozen_context=gp_context)
+               gwp=gp_gwp,hwp=gp_hwp,lambda_g=gp_lambda_g,lambda_h=gp_lambda_h,frozen_context=gp_context, &
+               direct_unscaled=swdkdir_predelta,directc_unscaled=swdkdirc_predelta, &
+               visdir_unscaled=sibvisdir_predelta,nirdir_unscaled=sibnirdir_predelta)
            ELSE
              CALL rrtmgp_sw_column(play,plev,tlay,h2ovmr,co2vmr,o3vmr,n2ovmr,ch4vmr,o2vmr, &
                asdir,asdif,aldir,aldif,coszen,scon,cldfrac,clwpth,ciwpth,cswpth,rel,rei,res,4,icld, &
                gp_seed,swuflx,swdflx,swhr,swuflxc,swdflxc,swhrc, &
                swdkdir,swdkdif,swdkdirc,sibvisdir,sibvisdif,sibnirdir,sibnirdif,rwp=gp_rwp, &
-               native_dry_layer_mass_kg_m2=RESHAPE(udm_dry_layer_mass(i,kts:kte,j),[1,kte-kts+1]))
+               native_dry_layer_mass_kg_m2=RESHAPE(udm_dry_layer_mass(i,kts:kte,j),[1,kte-kts+1]), &
+               direct_unscaled=swdkdir_predelta,directc_unscaled=swdkdirc_predelta, &
+               visdir_unscaled=sibvisdir_predelta,nirdir_unscaled=sibnirdir_predelta)
            END IF
            swuflxcln=swuflx; swdflxcln=swdflx
-           loc_sw_zbbcddir=swdkdirc(1,1); loc_sw_dirdflux=swdkdir(1,1); loc_sw_difdflux=swdkdif(1,1)
+           DO k=kts,kte+2
+             sibvisdif(1,k)=sibvisdir(1,k)+sibvisdif(1,k)-sibvisdir_predelta(1,k)
+             sibnirdif(1,k)=sibnirdir(1,k)+sibnirdif(1,k)-sibnirdir_predelta(1,k)
+           END DO
+           swdkdir=swdkdir_predelta
+           swdkdif=swdflx-swdkdir_predelta
+           sibvisdir=sibvisdir_predelta
+           sibnirdir=sibnirdir_predelta
+           loc_sw_zbbcddir=swdkdirc_predelta(1,1); loc_sw_dirdflux=swdkdir(1,1); loc_sw_difdflux=swdkdif(1,1)
          ELSE
          call rrtmg_sw &
             (ncol    ,nlay    ,icld    , &

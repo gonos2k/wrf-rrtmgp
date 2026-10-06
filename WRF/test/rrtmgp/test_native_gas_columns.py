@@ -3,7 +3,7 @@
 
 Standalone mode runs the Fortran solver fixture, validates its V6 captures,
 replays them through the independent reference executable, and probes invalid
-native-mass inputs. Capture mode accepts current V6/V7/V8 production captures
+native-mass inputs. Capture mode accepts current V6/V7/V8/V9 production captures
 and validates them with the same independent mass and pressure-derived-
 extension formulas. V8 must contain all four LW trace-gas profiles.
 """
@@ -29,7 +29,7 @@ M_H2O_KG_MOL = 0.018016
 SHAPE_ERROR = "RRTMGP_INPUT_NATIVE_DRY_MASS_SHAPE"
 VALUE_ERROR = "RRTMGP_INPUT_NATIVE_DRY_MASS_NOT_POSITIVE_FINITE"
 REFERENCE_VALUE_ERROR = "V6 native dry layer mass must be finite and positive"
-SUPPORTED_INPUT_MAGICS = {"RRTMGP_REPLAY_V6", "RRTMGP_REPLAY_V7", "RRTMGP_REPLAY_V8"}
+SUPPORTED_INPUT_MAGICS = {"RRTMGP_REPLAY_V6", "RRTMGP_REPLAY_V7", "RRTMGP_REPLAY_V8", "RRTMGP_REPLAY_V9"}
 PHASES = ("LW", "SW")
 
 

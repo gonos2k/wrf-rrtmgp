@@ -98,50 +98,14 @@ def read_raw(path: Path) -> tuple[str, int, int, int, dict[str, np.ndarray]]:
 
 
 def read_input_sections(path: Path) -> tuple[str, int, int, dict[str, np.ndarray]]:
-    """Read V1-V5 input sections as Fortran-order two-dimensional arrays."""
-    lines = path.read_text(encoding="ascii").splitlines()
-    require(len(lines) >= 2 and lines[0].strip().startswith("RRTMGP_REPLAY_V"),
-            f"{path}: unsupported replay input")
-    header = lines[1].split()
-    require(len(header) == 6, f"{path}: malformed replay header")
-    phase = header[0].upper()
+    """Read validated replay sections through the shared version-aware parser."""
+    from test_column_replay import read_input
+
     try:
-        nc, nl = int(header[1]), int(header[2])
-    except ValueError as exc:
-        raise ValidationError(f"{path}: invalid replay dimensions") from exc
-    require(phase in {"LW", "SW"} and nc > 0 and nl > 0,
-            f"{path}: invalid replay phase/dimensions")
-    rec: dict[str, np.ndarray] = {}
-    pos = 2
-    while pos < len(lines):
-        if not lines[pos].strip():
-            pos += 1
-            continue
-        line_no = pos + 1
-        fields = lines[pos].split()
-        pos += 1
-        require(len(fields) == 3, f"{path}:{line_no}: malformed section header")
-        name = fields[0].upper()
-        require(name not in rec, f"{path}:{line_no}: duplicate section {name}")
-        try:
-            nrow, ncol = int(fields[1]), int(fields[2])
-        except ValueError as exc:
-            raise ValidationError(f"{path}:{line_no}: invalid {name} dimensions") from exc
-        require(nrow > 0 and ncol > 0, f"{path}:{line_no}: invalid {name} extent")
-        count = nrow * ncol
-        values: list[float] = []
-        while len(values) < count and pos < len(lines):
-            for token in lines[pos].split():
-                try:
-                    value = float(token.replace("D", "E").replace("d", "e"))
-                except ValueError as exc:
-                    raise ValidationError(f"{path}:{pos + 1}: invalid {name} number") from exc
-                require(np.isfinite(value), f"{path}:{pos + 1}: nonfinite {name}")
-                values.append(value)
-            pos += 1
-        require(len(values) == count, f"{path}: truncated {name}")
-        rec[name] = np.asarray(values, dtype=np.float64).reshape((nrow, ncol), order="F")
-    return phase, nc, nl, rec
+        phase, nc, nl, _overlap, _seed, _iceflag, records = read_input(path)
+    except (RuntimeError, ValueError) as exc:
+        raise ValidationError(str(exc)) from exc
+    return phase, nc, nl, records
 
 
 def _time_string(ds: netCDF4.Dataset, index: int) -> str | None:
@@ -229,7 +193,8 @@ def _self_tests() -> dict[str, bool]:
 
 
 def _validate_capture(raw_path: Path, input_path: Path, wrfinput: Path,
-                      history: Path | None, time_index: int) -> dict[str, Any]:
+                      history: Path | None, time_index: int,
+                      history_state_may_differ: bool = False) -> dict[str, Any]:
     phase, raw_i, raw_j, nl, raw = read_raw(raw_path)
     input_phase, ncol, input_nl, sections = read_input_sections(input_path)
     require(phase == input_phase, f"{raw_path}: phase differs from sibling input")
@@ -281,9 +246,10 @@ def _validate_capture(raw_path: Path, input_path: Path, wrfinput: Path,
     dry_error = assert_real32_close(captured_mass, native_mass32,
                                     "DRY_LAYER_MASS_KG_M2 vs independent MU/MUB/DNW/C1H/C2H")
 
-    # If both files are supplied, prove selected history record is the same
-    # initial coordinate and q state as wrfinput before using it for the capture.
-    if history is not None:
+    # By default, a selected history record must be the initial state from
+    # wrfinput. For a later radiation call, the explicit opt-in below instead
+    # binds raw profiles to that selected history record directly.
+    if history is not None and not history_state_may_differ:
         src = netCDF4.Dataset(wrfinput)
         try:
             for name in (*MASS_VARIABLES.values(), "MU", "MUB", "DNW", "C1H", "C2H"):
@@ -299,6 +265,9 @@ def _validate_capture(raw_path: Path, input_path: Path, wrfinput: Path,
     require(negative_limits is not None and negative_limits.shape == (6,),
             "capture must include six NEGATIVE_Q_LIMITS")
     path_stats: dict[str, Any] = {}
+    frozen_mode = sections.get("FROZEN_MODE")
+    frozen_enabled = (frozen_mode is not None and frozen_mode.shape == (1, 1) and
+                      frozen_mode.item() == 1.0)
     for phase_name, (qname, section_name) in PHASES.items():
         q = raw.get(qname)
         clipped = raw.get(f"NUMERIC_CLIPPED_{qname}")
@@ -330,11 +299,17 @@ def _validate_capture(raw_path: Path, input_path: Path, wrfinput: Path,
         wet = cf > 0.
         expected_rad[wet] = expected_grid[wet] / cf[wet]
         if phase_name in {"GWP", "HWP"}:
-            expected_rad[:] = 0.0  # GWP is omitted; HWP is unsupported and must remain zero.
+            if frozen_enabled:
+                expected_rad[:] = expected_grid  # Uniform frozen occurrence is independent of CF.
+            else:
+                expected_rad[:] = 0.0  # GWP is omitted; HWP is unsupported and must remain zero.
         rad_err = assert_real32_close(rad, expected_rad, f"{phase_name} in-cloud radiation path")
         expected_omitted = np.where(~wet, expected_grid, 0.0)
-        if phase_name == "GWP":
-            expected_omitted = expected_grid.copy()  # Deliberately unmapped from radiation.
+        if phase_name in {"GWP", "HWP"}:
+            if frozen_enabled:
+                expected_omitted = np.zeros(nl, dtype=np.float64)
+            elif phase_name == "GWP":
+                expected_omitted = expected_grid.copy()  # Deliberately unmapped from radiation.
         omitted_err = assert_real32_close(omitted, expected_omitted,
                                           f"{phase_name} omitted grid path / CF contract")
         if section_name in sections:
@@ -413,8 +388,10 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("capture_dir", type=Path, help="directory containing lw/sw.raw and sibling .input files")
     parser.add_argument("wrfinput", type=Path, help="same-run wrfinput_d01")
-    parser.add_argument("--history", type=Path, help="same-run history file containing the matched initial state")
+    parser.add_argument("--history", type=Path, help="same-run history file containing the matched capture state")
     parser.add_argument("--time-index", type=int, default=0, help="history time record, default 0")
+    parser.add_argument("--history-state-may-differ-from-wrfinput", action="store_true",
+                        help="allow an evolved selected history record; raw q and native coordinates must still match it exactly")
     parser.add_argument("--executable", type=Path, help="WRF executable used for the captured run (for provenance)")
     parser.add_argument("--output", type=Path, required=True, help="JSON receipt path")
     parser.add_argument("--self-test-only", action="store_true", help="run rejection checks without case files")
@@ -439,7 +416,8 @@ def main() -> int:
             require(raw_path.is_file() and input_path.is_file(),
                     f"{phase}: expected paired .raw and .input capture")
             result = _validate_capture(raw_path, input_path, args.wrfinput,
-                                       args.history, args.time_index)
+                                       args.history, args.time_index,
+                                       args.history_state_may_differ_from_wrfinput)
             result.update({
                 "raw_path": str(raw_path), "raw_sha256": digest(raw_path),
                 "input_path": str(input_path), "input_sha256": digest(input_path),
@@ -451,6 +429,7 @@ def main() -> int:
             "wrfinput": str(args.wrfinput), "wrfinput_sha256": digest(args.wrfinput),
             "history": str(args.history) if args.history else None,
             "history_sha256": digest(args.history) if args.history else None,
+            "history_state_may_differ_from_wrfinput": args.history_state_may_differ_from_wrfinput,
             "executable": str(args.executable) if args.executable else None,
             "executable_sha256": digest(args.executable) if args.executable else None,
             "self_tests": self_tests,
