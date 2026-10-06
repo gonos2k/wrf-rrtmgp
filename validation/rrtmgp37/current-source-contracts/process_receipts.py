@@ -3,6 +3,8 @@
 
 Each invocation writes an fsynced STARTED row before launch and an fsynced
 terminal row immediately after completion, before callers inspect output.
+Journal I/O failures propagate; persistence cannot be guaranteed if that
+storage fails. In particular, a failed STARTED write prevents child launch.
 TimeoutExpired is terminal because subprocess.run kills and waits for the
 child before raising it; no numeric return code exists for that case.
 """
@@ -78,8 +80,9 @@ class DurableProcessRunner:
                                   "ended_epoch": time.time()})
             raise
         except OSError as exc:
-            _append(self.ledger, {**common, "event": "LAUNCH_FAILED",
+            _append(self.ledger, {**common, "event": "OS_ERROR_PHASE_UNCONFIRMED",
                                   "returncode": None,
+                                  "child_start_state": "UNKNOWN",
                                   "exception": type(exc).__name__,
                                   "message": str(exc), "ended_epoch": time.time()})
             raise

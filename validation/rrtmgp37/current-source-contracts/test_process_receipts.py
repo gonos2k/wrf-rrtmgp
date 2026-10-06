@@ -9,6 +9,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
+from unittest import mock
 
 _HELPER_PATH = Path(__file__).with_name("process_receipts.py")
 _SPEC = importlib.util.spec_from_file_location("test_process_receipts_helper", _HELPER_PATH)
@@ -82,8 +83,18 @@ class DurableProcessReceiptTests(unittest.TestCase):
             with self.assertRaises(FileNotFoundError):
                 runner.run([str(Path(tmp) / "missing-child")])
             rows = [json.loads(line) for line in ledger.read_text().splitlines()]
-            self.assertEqual([row["event"] for row in rows], ["STARTED", "LAUNCH_FAILED"])
+            self.assertEqual([row["event"] for row in rows], ["STARTED", "OS_ERROR_PHASE_UNCONFIRMED"])
             self.assertIsNone(rows[-1]["returncode"])
+            self.assertEqual(rows[-1]["child_start_state"], "UNKNOWN")
+
+    def test_failed_start_journal_prevents_child_launch(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            runner = DurableProcessRunner(Path(tmp) / "process.jsonl")
+            with mock.patch.object(_MODULE, "_append", side_effect=OSError("journal storage")):
+                with mock.patch.object(_MODULE.subprocess, "run") as child:
+                    with self.assertRaisesRegex(OSError, "journal storage"):
+                        runner.run([sys.executable, "-c", "print('unreached')"])
+                    child.assert_not_called()
 
 
 if __name__ == "__main__":
