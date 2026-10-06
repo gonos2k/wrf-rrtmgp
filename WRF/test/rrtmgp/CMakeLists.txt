@@ -362,6 +362,11 @@ add_test(NAME udm_native_radii COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_
 add_test(NAME udm_warm_ice_radius COMMAND "${Python3_EXECUTABLE}"
   "${CMAKE_CURRENT_SOURCE_DIR}/test_udm_warm_ice_radius.py" --wrf-root "${WRF_ROOT}"
   --workdir "${CMAKE_CURRENT_BINARY_DIR}/udm-warm-ice-radius")
+add_test(NAME udm_startup_snow COMMAND "${Python3_EXECUTABLE}"
+  "${CMAKE_CURRENT_SOURCE_DIR}/test_udm_startup_snow.py" --wrf-root "${WRF_ROOT}"
+  --workdir "${CMAKE_CURRENT_BINARY_DIR}/udm-startup-snow")
+add_test(NAME udm_startup_snow_replay COMMAND "${Python3_EXECUTABLE}"
+  "${CMAKE_CURRENT_SOURCE_DIR}/test_udm_startup_snow_replay.py")
 add_test(NAME udm_ccn_tile_startup COMMAND "${Python3_EXECUTABLE}"
   "${CMAKE_CURRENT_SOURCE_DIR}/test_udm_ccn_startup.py")
 add_test(NAME udm_surface_rain_row COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/test_udm_sr_rows.py" "${WRF_ROOT}" --workdir "${CMAKE_CURRENT_BINARY_DIR}/udm-sr-row")

@@ -134,7 +134,7 @@ CONTAINS
 
 ! Local
     real :: HYDRO_dt
-    REAL, ALLOCATABLE :: udm_dry_layer_mass(:,:,:)
+    REAL, ALLOCATABLE :: udm_dry_layer_mass(:,:,:), udm_dry_density(:,:,:)
     INTEGER :: mass_k
     REAL, DIMENSION( ims:ime, jms:jme ) :: exch_temf  ! 1/7/09 WA
 
@@ -278,10 +278,14 @@ BENCH_START(rad_driver_tim)
       IF (config_flags%ra_lw_physics == RRTMGP_LWSCHEME .OR. &
           config_flags%ra_sw_physics == RRTMGP_SWSCHEME) THEN
          ALLOCATE(udm_dry_layer_mass(ims:ime,kms:kme,jms:jme))
+         ALLOCATE(udm_dry_density(ims:ime,kms:kme,jms:jme))
          udm_dry_layer_mass=0.
+         udm_dry_density=0.
          DO j=jps,MIN(jpe,jde-1)
             DO mass_k=k_start,MIN(k_end,kde-1)
                DO i=ips,MIN(ipe,ide-1)
+                  ! Same native dry-density operation used before UDM; no moist-density inversion.
+                  udm_dry_density(i,mass_k,j) = 1./(grid%al(i,mass_k,j)+grid%alb(i,mass_k,j))
                   udm_dry_layer_mass(i,mass_k,j) = &
                        -grid%dnw(mass_k)*(grid%c1h(mass_k)*grid%mut(i,j)+grid%c2h(mass_k))/g
                END DO
@@ -308,6 +312,7 @@ BENCH_START(rad_driver_tim)
      &        ,solar_opt=config_flags%solar_diagnostics                              &
      &        ,P8W=grid%p_hyd_w        ,P=grid%p_hyd            ,PI=pi_phy           &
      &        ,UDM_DRY_LAYER_MASS=udm_dry_layer_mass                                  &
+     &        ,UDM_DRY_DENSITY=udm_dry_density                                        &
      &        ,UDM_SEED_DAY=day                                                      &
      &        ,RADT=grid%radt          ,RA_CALL_OFFSET=grid%ra_call_offset           &
      &        ,RHO=grid%rho            ,RLWTOA=grid%rlwtoa                           &
@@ -564,6 +569,7 @@ BENCH_START(rad_driver_tim)
                                                       )
 
       IF (ALLOCATED(udm_dry_layer_mass)) DEALLOCATE(udm_dry_layer_mass)
+      IF (ALLOCATED(udm_dry_density)) DEALLOCATE(udm_dry_density)
 BENCH_END(rad_driver_tim)
 
 !********* Surface driver
