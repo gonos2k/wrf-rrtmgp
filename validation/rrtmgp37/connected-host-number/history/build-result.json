@@ -1,0 +1,96 @@
+{
+  "status": "PASS",
+  "production_commit": "32c13f2fd39d6846e35212f4f7bb53079fd6bd68",
+  "production_tree": "487d10b2ed8bf6e9defa12341a410833186d1d82",
+  "scope": "full WRF serial REAL32 CMake SCM with reversible test-only observer",
+  "toolchain": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-connected-host-runtime-v2/wrf_gnu_serial.cmake",
+    "sha256": "8c00a7b004133cbbb1b566b6660b5fe1878ebc4aaeb18ecd0a1cd6afebdae6df",
+    "size_bytes": 1211
+  },
+  "executables": {
+    "ideal": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-connected-host-runtime-v2/cmake/main/ideal",
+      "sha256": "788271a60bac467b15a82aca273a8a2e1172d794cc27fa4fee9b913da6244de2",
+      "size_bytes": 37608232
+    },
+    "wrf": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-connected-host-runtime-v2/cmake/main/wrf",
+      "sha256": "0310510658616539597013512d6e322a2cd01720098970186448b37b4996d166",
+      "size_bytes": 44869888
+    }
+  },
+  "commands": [
+    {
+      "argv": [
+        "/usr/bin/gfortran",
+        "--version"
+      ],
+      "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-connected-host-runtime-v2",
+      "kind": "compiler-version",
+      "status": "TERMINAL",
+      "pid": 2153105,
+      "actual_returncode": 0,
+      "timed_out": false,
+      "started_at": 1791376387.8272161,
+      "finished_at": 1791376387.8402927
+    },
+    {
+      "argv": [
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/netcdf/bin/nf-config",
+        "--all"
+      ],
+      "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-connected-host-runtime-v2",
+      "kind": "netcdf-config",
+      "status": "TERMINAL",
+      "pid": 2153106,
+      "actual_returncode": 0,
+      "timed_out": false,
+      "started_at": 1791376387.8451085,
+      "finished_at": 1791376387.8575265
+    },
+    {
+      "argv": [
+        "/usr/local/bin/cmake",
+        "-S",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-connected-host-runtime-v2/source/WRF",
+        "-B",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-connected-host-runtime-v2/cmake",
+        "-DCMAKE_INSTALL_PREFIX=/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-connected-host-runtime-v2/install",
+        "-DCMAKE_TOOLCHAIN_FILE=/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-connected-host-runtime-v2/wrf_gnu_serial.cmake",
+        "-DWRF_CORE=ARW",
+        "-DWRF_CASE=EM_SCM_XY",
+        "-DUSE_ALLOCATABLES=ON",
+        "-DUSE_MPI=OFF",
+        "-DUSE_OPENMP=OFF",
+        "-DUSE_IPO=OFF",
+        "-DFORCE_NETCDF_CLASSIC=ON"
+      ],
+      "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-connected-host-runtime-v2",
+      "kind": "configure",
+      "status": "TERMINAL",
+      "pid": 2153107,
+      "actual_returncode": 0,
+      "timed_out": false,
+      "started_at": 1791376387.8622918,
+      "finished_at": 1791376391.291478
+    },
+    {
+      "argv": [
+        "/usr/local/bin/cmake",
+        "--build",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-connected-host-runtime-v2/cmake",
+        "--parallel",
+        "8"
+      ],
+      "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-connected-host-runtime-v2",
+      "kind": "full-build",
+      "status": "TERMINAL",
+      "pid": 2153519,
+      "actual_returncode": 0,
+      "timed_out": false,
+      "started_at": 1791376391.3037667,
+      "finished_at": 1791376563.8791006
+    }
+  ]
+}

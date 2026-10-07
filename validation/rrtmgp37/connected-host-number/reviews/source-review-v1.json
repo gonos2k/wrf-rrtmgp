@@ -1,0 +1,87 @@
+{
+  "schema": "UDM37_CONNECTED_HOST_STATIC_REVIEW_V1",
+  "status": "FINDINGS_ON_SUPERSEDED_PREPARATION",
+  "created_utc": "2026-10-07T12:40:30.002888+00:00",
+  "base_head": "32c13f2fd39d6846e35212f4f7bb53079fd6bd68",
+  "base_tree": "487d10b2ed8bf6e9defa12341a410833186d1d82",
+  "reviewed_sources": {
+    "preparer": {
+      "path": "WRF/test/rrtmgp/prepare_udm_connected_host.py",
+      "sha256": "91d8de44555f0d3bcc249ca5cf1d6e6ea41f39128bc04ca4486deb5c1a10b0ed",
+      "size_bytes": 7786
+    },
+    "checker": {
+      "path": "WRF/test/rrtmgp/test_udm_connected_host.py",
+      "sha256": "762417a4e27c4df833d57d9943483575a536d7c4d6ef11af5df5609d3e41af4b",
+      "size_bytes": 12302
+    }
+  },
+  "freeze_limit": "Owner changed preparation during report sealing. This receipt binds the old fully inspected hashes; it does not approve new bytes. Initial seal assertion stopped before report creation. Exact old preparer retention not checked.",
+  "reviewer_execution": {
+    "source_AST_and_in_memory_patch_strip_only": true,
+    "snapshot_writes": 0,
+    "compiler_calls": 0,
+    "model_calls": 0,
+    "scientific_array_reads": 0
+  },
+  "findings": [
+    {
+      "id": "HC-01",
+      "severity": "BLOCKER",
+      "source_line": 75,
+      "title": "RK_PRE reads uninitialized scalar_old at RK1",
+      "proof": "module_em.F:1684-1733 assigns scalar_1=scalar_2 before using scalar_1. RK1 old buffer is not a native input.",
+      "resolution": "Root acknowledged and is replacing RK1 field with current scalar via explicit IF; no MERGE expression reading both arguments. New-source review required.",
+      "scope": "Private observer only; no production transport defect claimed."
+    },
+    {
+      "id": "HC-02",
+      "severity": "MEDIUM",
+      "source": "test_udm_connected_host.py:44-98",
+      "title": "Pair checks omit complete per-step/level/slot roster and final RK→UDM entry join",
+      "proof": "RK_PRE requires RK_POST, HELPER_IN requires OUT/RETURN, but no exact expected roster or RK3 POST→ENTRY check exists. Missing UDM/helper rows for some steps/levels can be untested while stage-presence succeeds.",
+      "resolution": "Require exact declared geometry and clock rosters plus explicit source-timed QNC/QNN consumer joins, with first-step reset accounted; no blanket unchanged-state assumption."
+    }
+  ],
+  "checks": [
+    {
+      "status": "PASS_SCOPED_SOURCE",
+      "check": "All five patch sources recover original bytes after removing observer markers",
+      "marker_blocks": 16,
+      "source_sha256": {
+        "phys/module_ra_rrtmgp_trace.F": "c08a1cae7a93f85a08ed59042aa1b98dc1ef6b42d33c6f344b93a9eca9d652e9",
+        "dyn_em/start_em.F": "bce1b0656d73d76f74f4db7f1b71d254cc1e11f16ecfc82e54fe153a84e6c17e",
+        "dyn_em/solve_em.F": "ed03953a8b7b999fc0a5a281893f4808bbed28697ea9032fde9b9b605e0d9ecb",
+        "phys/module_microphysics_driver.F": "c02f227d0fc1bf633fa53e54361e7117093b2c7bb02cedc2b71441c5bd638bd9",
+        "phys/module_mp_udm.F": "7bd96141eefc6ae2cb66cea0ce022fcc2ee64afce5c616aa65f26711c8790947"
+      },
+      "limit": "Text identity does not prove observation passivity."
+    },
+    {
+      "status": "PASS_SCOPED_SOURCE",
+      "check": "Native helper inputs and radii initialized",
+      "anchors": [
+        "module_mp_udm.F:479-490 initializes re_qc to recmin before HELPER_IN.",
+        "module_physics_init.F:1388-1400 initializes cold RE_CLOUD; Registry.EM_COMMON:500 restores RE_CLOUD on restart."
+      ]
+    },
+    {
+      "status": "PASS_SCOPED_SOURCE",
+      "check": "Selected (1,1) inside periodic serial SCM",
+      "anchors": [
+        "namelist.scm37 periodic_x/y TRUE, horizontal3x3.",
+        "microphysics_driver.F:850-855 specified FALSE gives sz=0; crop941-948 includes(1,1)."
+      ],
+      "limit": "No specified-boundary/MPI/OMP coverage."
+    }
+  ],
+  "remaining_limits": [
+    "Preparer copies donor build artifacts if present; root must stage a fresh source/build independently.",
+    "Metadata observer-source-pins.json overwrites a shared snapshot-parent name; root must use unique receipt directory.",
+    "REAL32 and default INTEGER32/equal generated array lengths are narrow build assumptions; helper does not enforce all dimensions.",
+    "Clear ideal state does not establish positive-QC/QNC helper coverage. Root plans a separately declared manufactured cloud arm."
+  ],
+  "production_accepted": false,
+  "physical_units_approved": false,
+  "판정_ko": "원문 복원은 확인했습니다. 최초 observer의 RK1 old 버퍼 읽기는 차단사항이며 root가 수정 중입니다. 단계별 전체 목록과 마지막 RK→UDM 입력 조인은 별도로 강제해야 합니다. 새 소스·실제 시험 결과 승인은 이 기록의 범위가 아닙니다."
+}

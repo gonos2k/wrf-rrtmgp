@@ -1,0 +1,156 @@
+{
+  "schema": "UDM37_CONNECTED_HOST_STATIC_REVIEW_V2",
+  "status": "PASS_SCOPED_REPAIRED_OBSERVER_AND_CONNECTED_CHECKER_SOURCE",
+  "created_utc": "2026-10-07T12:42:39.858053+00:00",
+  "worktree_head": "32c13f2fd39d6846e35212f4f7bb53079fd6bd68",
+  "worktree_tree": "487d10b2ed8bf6e9defa12341a410833186d1d82",
+  "source_pins": {
+    "preparer": {
+      "path": "build/udm37-host-connected-pr-work/WRF/test/rrtmgp/prepare_udm_connected_host.py",
+      "sha256": "1d787be9b76af3859e3ead93d416582f0eaa570c356fd5c845018164ed637d9e",
+      "size_bytes": 7994
+    },
+    "checker": {
+      "path": "build/udm37-host-connected-pr-work/WRF/test/rrtmgp/test_udm_connected_host.py",
+      "sha256": "cda62f878faa5590f630f42c982fe6ce744d0329f986287d4763ae27179aebc8",
+      "size_bytes": 16225
+    },
+    "prior_review": {
+      "path": "build/udm37-host-connected-preparation-v1/source-review-v1.json",
+      "sha256": "5bb9995e5c8800491e4162133eb7ab301909d0052a0dcbe35fb09d49e542ff84",
+      "size_bytes": 4758
+    },
+    "retained_prior_preparer": {
+      "path": "build/udm37-connected-host-runtime-v2/superseded-observer-v1/preparer.py",
+      "sha256": "91d8de44555f0d3bcc249ca5cf1d6e6ea41f39128bc04ca4486deb5c1a10b0ed",
+      "size_bytes": 7786
+    },
+    "native_RK": {
+      "path": "build/udm37-host-connected-pr-work/WRF/dyn_em/module_em.F",
+      "sha256": "67c5842c1c5d407a26139f26bd317f3016c610aeaf60207dfd21394ddb81482c",
+      "size_bytes": 132827
+    },
+    "radius_cold_initializer": {
+      "path": "build/udm37-host-connected-pr-work/WRF/phys/module_physics_init.F",
+      "sha256": "8c5e933467cc316f172d1193e4f130e96b89580da7f28aec3edc3b7c517e59b5",
+      "size_bytes": 315994
+    },
+    "registry": {
+      "path": "build/udm37-host-connected-pr-work/WRF/Registry/Registry.EM_COMMON",
+      "sha256": "87e21a476a06b7e0c926b2d939eaf1028810cba8a7d1e6fc585b50b599f99729",
+      "size_bytes": 448359
+    },
+    "SCM_namelist": {
+      "path": "build/udm37-host-connected-pr-work/WRF/test/rrtmgp/namelist.scm37",
+      "sha256": "5d4394c306b3f0bfa8534ec0b34ac7972ef058a954a346c01807160c6111a04b",
+      "size_bytes": 4477
+    }
+  },
+  "prior_findings_disposition": {
+    "HC-01": "Resolved in new prep: explicit RK1 current-only argument list; old argument list exists only in ELSE. RK_POST uses old buffer after native RK1 initializes it.",
+    "HC-02": "Resolved within declared case: exact stage/step/slot/level roster, RK3 POST→RESET_PRE or UDM_ENTRY, RESET_POST→UDM_ENTRY, previous driver return→next RK1, and helper IN/OUT→driver return bit joins."
+  },
+  "in_memory_static_controls": {
+    "source_AST_parse": "PASS",
+    "RK1_branch_has_no_scalar_old_expression": "PASS",
+    "all_five_marker_strips_exact": "PASS",
+    "marker_blocks": 16,
+    "files": [
+      {
+        "path": "build/udm37-host-connected-pr-work/WRF/phys/module_ra_rrtmgp_trace.F",
+        "sha256": "c08a1cae7a93f85a08ed59042aa1b98dc1ef6b42d33c6f344b93a9eca9d652e9",
+        "size_bytes": 41541,
+        "generated_sha256": "4ea2fc225804e87051a756987bc6564e31ededb4933638f49bebb59d8b73ef4f",
+        "marker_blocks": 2,
+        "strip_exact": true
+      },
+      {
+        "path": "build/udm37-host-connected-pr-work/WRF/dyn_em/start_em.F",
+        "sha256": "bce1b0656d73d76f74f4db7f1b71d254cc1e11f16ecfc82e54fe153a84e6c17e",
+        "size_bytes": 130683,
+        "generated_sha256": "d6eaa88a6804ce53bdebf689578bbdfa45744aec2c1b1f8acafb6eacda04c1ee",
+        "marker_blocks": 3,
+        "strip_exact": true
+      },
+      {
+        "path": "build/udm37-host-connected-pr-work/WRF/dyn_em/solve_em.F",
+        "sha256": "ed03953a8b7b999fc0a5a281893f4808bbed28697ea9032fde9b9b605e0d9ecb",
+        "size_bytes": 283280,
+        "generated_sha256": "a0f8254b143f9758d66a78c94ef72001688b82139eb5b4b70fd484fae8fc7cb4",
+        "marker_blocks": 3,
+        "strip_exact": true
+      },
+      {
+        "path": "build/udm37-host-connected-pr-work/WRF/phys/module_microphysics_driver.F",
+        "sha256": "c02f227d0fc1bf633fa53e54361e7117093b2c7bb02cedc2b71441c5bd638bd9",
+        "size_bytes": 198159,
+        "generated_sha256": "fedf5a2eac70ffcb89f06965a7a502c580c5ce4ff79b6a095774c69fe72a3e9c",
+        "marker_blocks": 5,
+        "strip_exact": true
+      },
+      {
+        "path": "build/udm37-host-connected-pr-work/WRF/phys/module_mp_udm.F",
+        "sha256": "7bd96141eefc6ae2cb66cea0ce022fcc2ee64afce5c616aa65f26711c8790947",
+        "size_bytes": 196865,
+        "generated_sha256": "a842ae0d39bd80625e387feba88cdb0636ecbb7d4537854745af820ba01eafd7",
+        "marker_blocks": 3,
+        "strip_exact": true
+      }
+    ],
+    "native_compilation": "NOT_RUN",
+    "manufactured_runtime_oracle_controls": "NOT_RUN"
+  },
+  "reviewed_stage_semantics": [
+    {
+      "stage": "START_PRE/POST",
+      "proof": "Existing start_em conditional CCN initialization is bracketed. Actual P_QNN/P_QNC are written in startup payload fields7/8. Source clock is initialized/restored before these hooks.",
+      "limit": "Single serial domain selected(1,1), input arrays supplied by ideal/restart; generic MPI ownership is outside scope."
+    },
+    {
+      "stage": "RESET_PRE/POST",
+      "proof": "Both hooks are inside original optional-PRESENT guard and around the same full-domain CCN assignment. RESET emitted only on have_udm_cf step1; restart expected steps7..12 forbid RESET."
+    },
+    {
+      "stage": "RK_PRE/POST",
+      "proof": "Same call inputs/source-coupled mass expressions and native msfty are observed. RK1 uses current scalar; later RK uses old scalar. Exact roster requires six steps ×3RK×2slots×59levels per tag. Numerical oracle follows native multiply/add/divide order in REAL32 with explicit 8epsilon relative bound.",
+      "limit": "Not bit-exact RK arithmetic approval. Separate cross-RK scalar-current continuity and old-buffer invariance are not asserted; individual update equations and consumer boundary joins are asserted."
+    },
+    {
+      "stage": "UDM_ENTRY/RETURN",
+      "proof": "Only actual option37 have_udm_cf branch, selected column within tile, same itimestep and initialized present arrays. Driver return is immediately after native UDM call."
+    },
+    {
+      "stage": "HELPER_IN/OUT",
+      "proof": "Native UDM has copied postprocess NN/NC/NR back to host; local helper inputs and re_qc=recmin are initialized before IN. OUT does not change other seven fields and joins returned driver tuple through native radius write.",
+      "limit": "The helper input number basis or physical optical meaning is not inferred."
+    }
+  ],
+  "positive_cloud_scope": {
+    "status": "PREPARED_NOT_RUNTIME_REVIEWED",
+    "manufacturing": "Warm-cloud arms explicitly change QVAPOR/QCLOUD in warm ideal layers while declaring manufactured number fields; actual HELPER_IN must contain QNC>0 AND QC>0.",
+    "limits": [
+      "Saturation manufacture uses approximate input-generation constants and is not an exact native saturation assertion.",
+      "No radius accuracy, cloud PSD/population or unit approval.",
+      "Clear nonuniform arm may reach zero QNC before helper; that arm alone cannot establish positive-cloud coverage."
+    ]
+  },
+  "passivity_scope": "Checker compares common full history arrays bitwise for nonuniform and warm-cloud OFF/ON, while whole-file SHA identity is separately reported as a boolean. It does not enforce schema/attribute equality or assert restart endpoint equality. New actual runtime not reviewed here.",
+  "preparation_limits": [
+    "Pure patch proof does not establish compiler success or observation passivity.",
+    "Snapshot copies must start from authenticated clean source; preparer copytree does not exclude existing compiled artifacts.",
+    "observer-source-pins.json uses snapshot-parent filename; root must allocate a unique directory.",
+    "Observer enforces REAL32 only; default INTEGER32 and equal field lengths follow the scoped GNU/serial snapshot contract, not a general public API.",
+    "Run is periodic one-domain serial, no actual specified lateral boundary or MPI/OpenMP behavior claim.",
+    "Input→START_PRE checking is explicit for QNN; restart checking covers QNN/QNC/QNR. Cold QNC/QNR input origin is manufactured/source-declared rather than independently checked by the cold-input oracle."
+  ],
+  "reviewer_execution": {
+    "production_source_edits": 0,
+    "snapshot_tree_writes": 0,
+    "compiler_model_solver_calls": 0,
+    "scientific_array_reads": 0,
+    "executed": "Python AST and in-memory source patch/strip only"
+  },
+  "production_accepted": false,
+  "physical_units_approved": false,
+  "판정_ko": "최초 미초기화 RK1 old 읽기가 명시적 IF로 제거됐고, 선언된 59층·6step 단계 목록 및 host→UDM→helper 연결 검사가 추가됐습니다. 가역성도 다섯 파일에서 확인했습니다. 새 실제 런타임·물리 단위·PSD 정확도는 이 소스 검토로 승인하지 않습니다."
+}

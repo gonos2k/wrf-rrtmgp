@@ -1,0 +1,68 @@
+{
+  "status": "PASS",
+  "scope": "incremental full WRF rebuild after test-observer correction",
+  "supersedes": "build-result.json / runtime-v1: unused RK1 old buffer was observed",
+  "observer_source_pins": {
+    "phys/module_ra_rrtmgp_trace.F": {
+      "production_sha256": "c08a1cae7a93f85a08ed59042aa1b98dc1ef6b42d33c6f344b93a9eca9d652e9",
+      "snapshot_sha256": "4ea2fc225804e87051a756987bc6564e31ededb4933638f49bebb59d8b73ef4f",
+      "byte_exact_reverse": true
+    },
+    "dyn_em/start_em.F": {
+      "production_sha256": "bce1b0656d73d76f74f4db7f1b71d254cc1e11f16ecfc82e54fe153a84e6c17e",
+      "snapshot_sha256": "d6eaa88a6804ce53bdebf689578bbdfa45744aec2c1b1f8acafb6eacda04c1ee",
+      "byte_exact_reverse": true
+    },
+    "dyn_em/solve_em.F": {
+      "production_sha256": "ed03953a8b7b999fc0a5a281893f4808bbed28697ea9032fde9b9b605e0d9ecb",
+      "snapshot_sha256": "a0f8254b143f9758d66a78c94ef72001688b82139eb5b4b70fd484fae8fc7cb4",
+      "byte_exact_reverse": true
+    },
+    "phys/module_microphysics_driver.F": {
+      "production_sha256": "c02f227d0fc1bf633fa53e54361e7117093b2c7bb02cedc2b71441c5bd638bd9",
+      "snapshot_sha256": "fedf5a2eac70ffcb89f06965a7a502c580c5ce4ff79b6a095774c69fe72a3e9c",
+      "byte_exact_reverse": true
+    },
+    "phys/module_mp_udm.F": {
+      "production_sha256": "7bd96141eefc6ae2cb66cea0ce022fcc2ee64afce5c616aa65f26711c8790947",
+      "snapshot_sha256": "a842ae0d39bd80625e387feba88cdb0636ecbb7d4537854745af820ba01eafd7",
+      "byte_exact_reverse": true
+    }
+  },
+  "preparer": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-host-connected-pr-work/WRF/test/rrtmgp/prepare_udm_connected_host.py",
+    "sha256": "1d787be9b76af3859e3ead93d416582f0eaa570c356fd5c845018164ed637d9e",
+    "size_bytes": 7994
+  },
+  "executables": {
+    "ideal": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-connected-host-runtime-v2/cmake/main/ideal",
+      "sha256": "9cb7a574ccff3d655a7ac5a20121a0c242290b05b8339b1d87ae80bc663b627c",
+      "size_bytes": 37608232
+    },
+    "wrf": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-connected-host-runtime-v2/cmake/main/wrf",
+      "sha256": "312decdf7e26ada6f6a4e1f9c072e865abe669af89a64abf418e811986330c63",
+      "size_bytes": 44878080
+    }
+  },
+  "commands": [
+    {
+      "argv": [
+        "/usr/local/bin/cmake",
+        "--build",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-connected-host-runtime-v2/cmake",
+        "--parallel",
+        "8"
+      ],
+      "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-connected-host-runtime-v2",
+      "kind": "observer-corrected-full-build",
+      "status": "TERMINAL",
+      "pid": 2165311,
+      "actual_returncode": 0,
+      "timed_out": false,
+      "started_at": 1791376813.3604107,
+      "finished_at": 1791376817.539572
+    }
+  ]
+}

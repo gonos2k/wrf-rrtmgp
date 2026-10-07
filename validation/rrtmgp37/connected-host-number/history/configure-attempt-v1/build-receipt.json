@@ -1,0 +1,69 @@
+{
+  "status": "FAIL",
+  "toolchain": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-connected-host-final-v1/gnu-serial.cmake",
+    "sha256": "434163b449dd01e25d30ccd8cb215326e08c26b76b5b7c68ed1bfe8029615dd0",
+    "size_bytes": 557
+  },
+  "scope": "fresh full WRF serial REAL32 snapshot plus actual manufactured host runtime",
+  "production_accepted": false,
+  "error": "RuntimeError('configure actual RC 1; receipt /NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-connected-host-final-v1/command-03.json')",
+  "commands": [
+    {
+      "argv": [
+        "gfortran",
+        "--version"
+      ],
+      "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-connected-host-final-v1",
+      "kind": "compiler-version",
+      "status": "TERMINAL",
+      "pid": 2169097,
+      "actual_returncode": 0,
+      "timed_out": false,
+      "started_at": 1791377086.5418777,
+      "finished_at": 1791377086.5530567
+    },
+    {
+      "argv": [
+        "/usr/bin/python3.12",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-host-connected-pr-work/WRF/test/rrtmgp/prepare_udm_connected_host.py",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-host-connected-pr-work/WRF",
+        "--snapshot",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-connected-host-final-v1/source/WRF"
+      ],
+      "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-connected-host-final-v1",
+      "kind": "prepare-reversible-observer",
+      "status": "TERMINAL",
+      "pid": 2169099,
+      "actual_returncode": 0,
+      "timed_out": false,
+      "started_at": 1791377086.5586872,
+      "finished_at": 1791377099.0461853
+    },
+    {
+      "argv": [
+        "cmake",
+        "-S",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-connected-host-final-v1/source/WRF",
+        "-B",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-connected-host-final-v1/producer",
+        "-DCMAKE_TOOLCHAIN_FILE=/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-connected-host-final-v1/gnu-serial.cmake",
+        "-DWRF_CORE=ARW",
+        "-DWRF_CASE=EM_SCM_XY",
+        "-DUSE_ALLOCATABLES=ON",
+        "-DUSE_MPI=OFF",
+        "-DUSE_OPENMP=OFF",
+        "-DUSE_IPO=OFF",
+        "-DFORCE_NETCDF_CLASSIC=ON"
+      ],
+      "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-connected-host-final-v1",
+      "kind": "configure",
+      "status": "TERMINAL",
+      "pid": 2169192,
+      "actual_returncode": 1,
+      "timed_out": false,
+      "started_at": 1791377099.0655134,
+      "finished_at": 1791377101.4402134
+    }
+  ]
+}

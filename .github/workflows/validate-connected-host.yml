@@ -1,0 +1,70 @@
+name: Verify actual UDM37 connected host trajectory
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'WRF/dyn_em/**'
+      - 'WRF/phys/**'
+      - 'WRF/Registry/**'
+      - 'WRF/external/**'
+      - 'WRF/CMakeLists.txt'
+      - 'WRF/cmake/**'
+      - 'WRF/test/rrtmgp/**'
+      - 'validation/rrtmgp37/connected-host-number/**'
+      - '.github/workflows/validate-connected-host.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'WRF/dyn_em/**'
+      - 'WRF/phys/**'
+      - 'WRF/Registry/**'
+      - 'WRF/external/**'
+      - 'WRF/CMakeLists.txt'
+      - 'WRF/cmake/**'
+      - 'WRF/test/rrtmgp/**'
+      - 'validation/rrtmgp37/connected-host-number/**'
+      - '.github/workflows/validate-connected-host.yml'
+permissions:
+  contents: read
+jobs:
+  connected-host:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 65
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - name: Install serial GNU and NetCDF dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y cmake gfortran gcc make m4 libnetcdf-dev libnetcdff-dev python3-numpy python3-netcdf4
+      - name: Build current full WRF snapshot and execute actual host joins
+        run: |
+          python3 WRF/test/rrtmgp/test_udm_connected_host_build.py WRF \
+            --workdir build/connected-host --parallel 2
+      - name: Preserve exact observer sources, process receipts and model outputs
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: connected-host-${{ github.run_id }}
+          path: |
+            build/connected-host/*.json
+            build/connected-host/*.stdout
+            build/connected-host/*.stderr
+            build/connected-host/*.cmake
+            build/connected-host/source/observer-source-pins.json
+            build/connected-host/source/WRF/phys/module_ra_rrtmgp_trace.F
+            build/connected-host/source/WRF/phys/module_microphysics_driver.F
+            build/connected-host/source/WRF/phys/module_mp_udm.F
+            build/connected-host/source/WRF/dyn_em/start_em.F
+            build/connected-host/source/WRF/dyn_em/solve_em.F
+            build/connected-host/runtime/*.json
+            build/connected-host/runtime/*.stdout
+            build/connected-host/runtime/*.stderr
+            build/connected-host/runtime/*/namelist.input
+            build/connected-host/runtime/*/input_sounding
+            build/connected-host/runtime/*/input_soil
+            build/connected-host/runtime/*/force_ideal.nc
+            build/connected-host/runtime/*/wrfinput_d01
+            build/connected-host/runtime/*/wrfout_d01*
+            build/connected-host/runtime/*/wrfrst_d01*
+          retention-days: 30
+          if-no-files-found: error
