@@ -1,10 +1,10 @@
 # 이전 검토 지적 해소 체크리스트
 
-현재 기준 main: `457cde630bbeb41a24c09baa1f536c73622b615f`. UDM27–RRTMGP37 전용.
+현재 기준 main: `430776b5a0d9c899a067a64e682d90fed8c065e6`. UDM27–RRTMGP37 전용.
 
-PR #146–#150은 main에 병합됐다. 기존 실행의 source pin·범위는 그대로 보존하며, 현재 전체 tree에서 모든 과거 모델을 새로 실행했다고 주장하지 않는다. PR #149의 NetCDF guard와 기본 namelist 검사는 main에 반영됐고 정확히 같은 tree에서 11개 CI가 성공했다. PR150의 추가 scalar 경계 수정도 main에 반영됐다. 새 I/O 세 항목은 후보 분기에서 실제 backend 시험을 통과했으며 아직 main에 들어가지 않았다.
+PR #146–#151은 main에 병합됐다. 기존 실행의 source pin·범위는 그대로 보존하며, 현재 전체 tree에서 모든 과거 모델을 새로 실행했다고 주장하지 않는다. PR #149의 NetCDF guard와 기본 namelist 검사는 main에 반영됐고 정확히 같은 tree에서 11개 CI가 성공했다. PR150의 추가 scalar 경계 수정도 main에 반영됐다. PR151의 I/O 세 항목도 main에 반영됐고 정확히 같은 전체 tree에서 11개 CI가 성공했다.
 
-후속 해소 목록은 **후보 기준 22개 중 15개 PASS_SCOPED, 7개 OPEN/FAIL/NOT_RUN**. 현재 main은 12개 제한적 완료이고 새 I/O 3개는 통합 전이다이다. 이것은 원래 acceptance의 **19개 gate + current 12개 항목**과 다른 작업 목록이다. [원래 index](checklist.json)는 변경하지 않았고 `production_accepted=false`를 유지한다.
+후속 해소 목록은 **main 기준 22개 중 15개 PASS_SCOPED, 7개 OPEN/FAIL/NOT_RUN**. 항목의 중요도·범위가 다르므로 완료율 백분율로 사용하지 않는다. 이것은 원래 acceptance의 **19개 gate + current 12개 항목**과 다른 작업 목록이다. [원래 index](checklist.json)는 변경하지 않았고 `production_accepted=false`를 유지한다.
 
 | ID | 항목 | 현재 main 반영 | 검증 상태 |
 |---|---|---|---|
@@ -27,9 +27,9 @@ PR #146–#150은 main에 병합됐다. 기존 실행의 source pin·범위는 �
 | DONE-EVD-PIN | Historical/current-source 분리 | 반영 | PASS_SCOPED |
 | P2-IO-HELPER | NetCDF short-token 오류 경로 | 반영 | PASS_SCOPED |
 | P2-NML | Namelist group·중복 key 및 scalar 경계 | 반영 | PASS_SCOPED |
-| P2-IO-VARINFO | 변수정보 wrapper 인자 수 | 후보 수정 | PASS_SCOPED_CANDIDATE |
-| P2-IO-LENGTH | Memory-order 길이·padding | 후보 수정 | PASS_SCOPED_CANDIDATE |
-| P2-IO-WRITE-SIDE-EFFECT | Invalid write의 시간 기록 | 후보 수정 | PASS_SCOPED_CANDIDATE |
+| P2-IO-VARINFO | 변수정보 wrapper 인자 수 | 반영 | PASS_SCOPED |
+| P2-IO-LENGTH | Memory-order 길이·padding | 반영 | PASS_SCOPED |
+| P2-IO-WRITE-SIDE-EFFECT | Invalid write의 시간 기록 | 반영 | PASS_SCOPED |
 
 [기계 판독 목록](review-resolution-checklist.json)은 항목별 종료조건·실행 범위·근거를 제공한다. [새 P2 검증](../helper-error-handling/README_ko.md)은 실제 NetCDF backend O0/O2, 수정 전 경계 오류, Python 15개 namelist 및 기존 4개 프로세스 정리 시험을 연결한다.
 
@@ -40,3 +40,5 @@ PR #146–#150은 main에 병합됐다. 기존 실행의 source pin·범위는 �
 [추가 누락 감사](../helper-error-audit/README_ko.md)는 인덱스 LHS·여러 값/연속 RHS의 조용한 편집을 거부한다. 직접 unit 22개와 실제 4/4·37/37 namelist 전체 바이트의 부모 대비 동일성을 확인했다. 원래 15개 시험도 production 함수를 직접 호출했고 이번 누락 사례가 없었던 것이다.
 
 NetCDF 세 항목은 상속 문제이며 PR149 회귀나 실제 예보 실패로 분류하지 않는다. [후속 actual-backend 시험](../netcdf-preflight-contract/README_ko.md)은 긴 문자열·getter·invalid write와 복구를 O0/O2에서 검사했다. 선택한 wrapper 본문은 실행했지만 전체 module_io/MPI runtime은 실행하지 않았다. 기존 proof package와 물리 승인 FAIL/OPEN은 보존한다.
+
+[PR151 병합·terminal 상태](../netcdf-scalar-terminal/README_ko.md)는 head/main 전체 tree 동일성과 원격 Make/CMake 11개 성공을 연결한다. 이전 실행 기록·source pin은 수정하지 않는다. 같은 backend의 스칼라 order `0` 두 시각 회귀는 별도 로컬 실행으로 관리하며 생산 물리 변경이나 최종 물리 승인에 합산하지 않는다.

@@ -1,8 +1,8 @@
 {
   "schema": "UDM37_REVIEW_RESOLUTION_CHECKLIST_V2",
   "main_snapshot": {
-    "commit": "457cde630bbeb41a24c09baa1f536c73622b615f",
-    "tree": "c108084947ff665b496dde072ca736491ad72bde"
+    "commit": "430776b5a0d9c899a067a64e682d90fed8c065e6",
+    "tree": "9bfa1ebc25cb3ebaf5f6637b4b9afca958f75f76"
   },
   "scope": "UDM27, LW37/SW37; prior review follow-up; original acceptance original19/current12 retained unchanged",
   "production_accepted": false,
@@ -487,57 +487,66 @@
       "priority": "P2",
       "title": "NetCDF 변수정보 wrapper 인자 수",
       "implemented": true,
-      "main_included_at_snapshot": false,
+      "main_included_at_snapshot": true,
       "integration_candidate_included": true,
-      "integrated_validation": "PASS_SCOPED_CANDIDATE",
+      "integrated_validation": "PASS_SCOPED",
       "classification": "INHERITED_NOT_INTRODUCED_BY_PR149",
       "completion_condition": "Verbatim selected wrf_get_var_info NetCDF branch with routing/state shims, linked to actual backend; padded success, missing-variable and short-buffer statuses pass.",
       "scope_limit": "Public API preserved; only NetCDF branch type sink corrected. Other backend arity paths and full module_io/MPI dispatch are outside this closure.",
       "owner": "root; independent team review",
       "evidence": [
         "validation/rrtmgp37/helper-error-audit/netcdf-inherited-review.json",
-        "validation/rrtmgp37/netcdf-preflight-contract/manifest.json"
+        "validation/rrtmgp37/netcdf-preflight-contract/manifest.json",
+        "validation/rrtmgp37/netcdf-scalar-terminal/manifest.json"
       ],
       "feature_branch_validation": "ACTUAL_NETCDF_BACKEND_O0_O2_PASS",
-      "remaining_execution": "Candidate-only fix; remote fresh WRF checks pending. No full module_io/MPI or forecast rerun in this local test."
+      "remaining_execution": "PR151 merged; same full tree GNU serial Make/CMake CI all11 SUCCESS. Local actual backend tests retain serial selected-wrapper scope; not a full local module_io/MPI/model rerun.",
+      "integration_pr_url": "https://github.com/gonos2k/wrf-rrtmgp/pull/151",
+      "tested_source_head": "07b6d2519b702889b76002300e3ddf2e2d55427b"
     },
     {
       "id": "P2-IO-LENGTH",
       "priority": "P2",
       "title": "NetCDF memory-order 길이·padding",
       "implemented": true,
-      "main_included_at_snapshot": false,
+      "main_included_at_snapshot": true,
       "integration_candidate_included": true,
-      "integrated_validation": "PASS_SCOPED_CANDIDATE",
+      "integrated_validation": "PASS_SCOPED",
       "classification": "INHERITED_NOT_INTRODUCED_BY_PR149",
       "completion_condition": "Actual backend padded/direct/public orders, nonblank suffix rejection, getter short output and malformed attributes pass with bounds checks O0/O2.",
       "scope_limit": "NetCDF memory-order contract only; direct leading blanks remain invalid, public leading/trailing normalization retained. Inherited cc helper mismatch and other I/O APIs outside this closure.",
       "owner": "root; independent team review",
       "evidence": [
         "validation/rrtmgp37/helper-error-audit/netcdf-inherited-review.json",
-        "validation/rrtmgp37/netcdf-preflight-contract/manifest.json"
+        "validation/rrtmgp37/netcdf-preflight-contract/manifest.json",
+        "validation/rrtmgp37/netcdf-scalar-terminal/manifest.json"
       ],
       "feature_branch_validation": "ACTUAL_NETCDF_BACKEND_O0_O2_PASS",
-      "remaining_execution": "Candidate-only fix; remote fresh WRF checks pending. No full module_io/MPI or forecast rerun in this local test."
+      "remaining_execution": "PR151 merged; same full tree GNU serial Make/CMake CI all11 SUCCESS. Local actual backend tests retain serial selected-wrapper scope; not a full local module_io/MPI/model rerun.",
+      "integration_pr_url": "https://github.com/gonos2k/wrf-rrtmgp/pull/151",
+      "tested_source_head": "07b6d2519b702889b76002300e3ddf2e2d55427b"
     },
     {
       "id": "P2-IO-WRITE-SIDE-EFFECT",
       "priority": "P2",
       "title": "Invalid FieldIO write 시간 기록 부작용",
       "implemented": true,
-      "main_included_at_snapshot": false,
+      "main_included_at_snapshot": true,
       "integration_candidate_included": true,
-      "integrated_validation": "PASS_SCOPED_CANDIDATE",
+      "integrated_validation": "PASS_SCOPED",
       "classification": "INHERITED_NOT_INTRODUCED_BY_PR149",
       "completion_condition": "Twelve write-error/recovery files per optimization check TimeIndex, Times, unlimited length, buffers and stored fields; independent final file reader passes.",
       "scope_limit": "Order/type/positive active length preflight only. Later NetCDF failures are not transactional and do not have rollback guarantees.",
       "owner": "root; independent team review",
       "evidence": [
         "validation/rrtmgp37/helper-error-audit/netcdf-inherited-review.json",
-        "validation/rrtmgp37/netcdf-preflight-contract/manifest.json"
+        "validation/rrtmgp37/netcdf-preflight-contract/manifest.json",
+        "validation/rrtmgp37/netcdf-scalar-terminal/manifest.json"
       ],
       "feature_branch_validation": "ACTUAL_NETCDF_BACKEND_O0_O2_PASS",
-      "remaining_execution": "Candidate-only fix; remote fresh WRF checks pending. No full module_io/MPI or forecast rerun in this local test."
+      "remaining_execution": "PR151 merged; same full tree GNU serial Make/CMake CI all11 SUCCESS. Local actual backend tests retain serial selected-wrapper scope; not a full local module_io/MPI/model rerun.",
+      "integration_pr_url": "https://github.com/gonos2k/wrf-rrtmgp/pull/151",
+      "tested_source_head": "07b6d2519b702889b76002300e3ddf2e2d55427b"
     }
   ],
   "integration_sources": {
@@ -561,22 +570,23 @@
     }
   },
   "previous_main_snapshot": {
-    "commit": "439bf0d626a89ab105093945e946e47d7cf80f94",
-    "tree": "229f9372bfac5e6a26ed7387dc5c43df39ad3916"
+    "commit": "457cde630bbeb41a24c09baa1f536c73622b615f",
+    "tree": "c108084947ff665b496dde072ca736491ad72bde"
   },
   "previous_checklist": {
-    "source_commit": "457cde630bbeb41a24c09baa1f536c73622b615f",
-    "sha256": "5d30b982620246d26b2c06c243c47244b9880081bffea2708ee03774fcca22f2",
-    "note": "Prior main bytes and historical proof preserved."
+    "source_commit": "430776b5a0d9c899a067a64e682d90fed8c065e6",
+    "sha256": "a5307c7de6f87f10478a23ec9cd6620b0693bc48ff125b3ca5d991f1a1085802",
+    "note": "Merged PR151 candidate-state checklist preserved in original commit/proof; current status updated additively."
   },
   "followup_summary": {
     "total": 22,
     "candidate_scoped_completed": 15,
-    "main_scoped_completed": 12,
+    "main_scoped_completed": 15,
     "candidate_remaining_physical_or_final": 7,
-    "candidate_io_fixes_pending_main_integration": 3,
+    "candidate_io_fixes_pending_main_integration": 0,
     "scoped_completed": 15,
     "remaining": 7,
     "original_acceptance19_current12_unchanged": true
-  }
+  },
+  "merged_netcdf_terminal_manifest": "validation/rrtmgp37/netcdf-scalar-terminal/manifest.json"
 }

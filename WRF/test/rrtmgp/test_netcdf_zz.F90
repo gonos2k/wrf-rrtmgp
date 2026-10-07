@@ -58,6 +58,7 @@ program backend_zz
     call ext_ncd_ioinit('use_netcdf_classic',status)
     call good(status,'init')
     call check_write_preflight()
+    call check_scalar_records()
     filename='zz.nc'
     call ext_ncd_open_for_write_begin(filename,comm,io_comm,'REAL_OUTPUT_SIZE=4',h,status)
     call good(status,'open write begin')
@@ -199,6 +200,65 @@ program backend_zz
   call MPI_Finalize(ierr)
 #endif
 contains
+  subroutine check_scalar_records()
+    integer :: route,local_h,id,td,tl,dims,lo(4),hi(4),local_type,rec
+    integer :: value(1),readback(1),inactive_lengths(4),unused_start(3),unused_end(3)
+    character(30) :: path
+    character(8) :: order
+    character(19) :: actual_date
+    type(wrf_data_handle),pointer :: dh
+    ! Scalar order has no active axes: unused lengths must not be validated.
+    inactive_lengths=[0,-1,0,-9];unused_start=1;unused_end=0
+    do route=1,2
+      write(path,'(A,I1,A)')'scalar-',route,'.nc'
+      value=-17
+      call ext_ncd_open_for_write_begin(trim(path),comm,io_comm,'REAL_OUTPUT_SIZE=4',local_h,status)
+      call good(status,'scalar open')
+      call ext_ncd_write_field(local_h,dates(1),'SCALAR',value,WRF_INTEGER,comm,io_comm,0, &
+        '0','',names,unused_start,unused_end,unused_start,unused_end,unused_start,unused_end,status)
+      call good(status,'scalar define')
+      call ext_ncd_open_for_write_commit(local_h,status);call good(status,'scalar commit')
+      call GetDH(local_h,dh,status);call good(status,'scalar handle')
+      call good(nf_inq_varid(dh%NCID,'SCALAR',id),'scalar varid')
+      call good(nf_inq_varndims(dh%NCID,id,dims),'scalar stored rank')
+      call expect(dims==1,'scalar only has Time axis')
+      call good(nf_inq_unlimdim(dh%NCID,td),'scalar Time id')
+      do rec=1,2
+        value=-17
+        if(rec==2)value=2033
+        if(route==1)then
+          call ext_ncd_write_field(local_h,dates(rec),'SCALAR',value,WRF_INTEGER,comm,io_comm,0, &
+            ' 0 ','',names,unused_start,unused_end,unused_start,unused_end,unused_start,unused_end,status)
+        else
+          call FieldIO('write',local_h,dates(rec),inactive_lengths,'0',WRF_INTEGER,dh%NCID,id,value,status)
+        endif
+        call good(status,'scalar write with nonpositive unused lengths')
+        call good(nf_inq_dimlen(dh%NCID,td,tl),'scalar Time length')
+        call expect(tl==rec.and.dh%TimeIndex==rec,'scalar exactly one record per new time')
+        call good(nf_get_vara_text(dh%NCID,dh%TimesVarID,[1,rec],[19,1],actual_date),'scalar Times')
+        call expect(actual_date==dates(rec),'scalar date identity')
+        readback=-999
+        call good(nf_get_vara_int(dh%NCID,id,[rec],[1],readback),'scalar low-level read')
+        call expect(all(readback==value),'scalar stored value exact')
+      enddo
+      call ext_ncd_ioclose(local_h,status);call good(status,'scalar close write')
+      call ext_ncd_open_for_read(trim(path),comm,io_comm,'',local_h,status);call good(status,'scalar reopen')
+      order='sentinel'
+      call wrf_get_var_info(local_h,'SCALAR',dims,order,stagger,lo,hi,status)
+      call good(status,'scalar wrapper info');call expect(dims==0.and.order=='0','scalar wrapper rank/order')
+      do rec=1,2
+        value=-17
+        if(rec==2)value=2033
+        readback=-999
+        call ext_ncd_read_field(local_h,dates(rec),'SCALAR',readback,WRF_INTEGER,comm,io_comm,0, &
+          ' 0 ','',names,unused_start,unused_end,unused_start,unused_end,unused_start,unused_end,status)
+        call good(status,'scalar public read');call expect(all(readback==value),'scalar public read exact')
+      enddo
+      call ext_ncd_ioclose(local_h,status);call good(status,'scalar close read')
+    enddo
+    print *, 'SCALAR_RECORD_CONTRACT_PASS',2
+  end subroutine
+
   subroutine check_long_orders()
     character(8),parameter :: invalid_long(5)=[character(8) :: 'xyzq','zzq','xyz q',' zz','']
     character(8) :: padded
