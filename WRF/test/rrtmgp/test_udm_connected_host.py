@@ -148,7 +148,7 @@ def main():
     p.add_argument('--workdir',type=Path,required=True)
     a = p.parse_args()
     root, binaries, work = a.wrf_source.resolve(), a.binary_dir.resolve(), a.workdir.resolve()
-    work.mkdir(exist_ok=False)
+    work.mkdir(parents=True,exist_ok=False)
     env = os.environ.copy()
     for name in list(env):
         if name.startswith(('WRF_RRTMGP_','WRF_UDM_HOST_','OMP_','GOMP_','KMP_')):

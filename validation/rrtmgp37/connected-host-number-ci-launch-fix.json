@@ -1,0 +1,19 @@
+{
+  "classification": "test orchestration missing-parent setup, not a model failure",
+  "failed_runs": [
+    37625455780,
+    37625509902
+  ],
+  "original_failed_heads": [
+    "0f635072d8b5dd12b1a23cfcaa77eb356188b219",
+    "8c1f208eff3e05faa5d34f2267a2997962c2bc7c"
+  ],
+  "observed_error": "work.mkdir(exist_ok=False): build parent absent on clean Actions checkout",
+  "new_native_or_model_launches_in_failures": 0,
+  "fix": "work.mkdir(parents=True,exist_ok=False) in build/runtime entrypoints",
+  "local_missing_parent_injection": "PASS; stopped before native child, durable failure record present",
+  "sealed_previous_local_evidence_unchanged": true,
+  "original_saved_scripts_are_historical_before_directory_fix": true,
+  "scientific_payload_and_production_policy_changes": false,
+  "fresh_CI_terminal": "PENDING"
+}

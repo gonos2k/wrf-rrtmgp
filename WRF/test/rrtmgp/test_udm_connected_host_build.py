@@ -29,7 +29,7 @@ def main():
     if a.parallel<1:
         raise ValueError('positive parallel count required')
     source,work=a.wrf.resolve(),a.workdir.resolve()
-    work.mkdir(exist_ok=False)
+    work.mkdir(parents=True,exist_ok=False)
     env=os.environ.copy()
     for key in list(env):
         if key.startswith(('WRF_RRTMGP_','WRF_UDM_HOST_','OMP_','GOMP_','KMP_')):
