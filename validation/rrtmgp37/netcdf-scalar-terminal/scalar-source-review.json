@@ -1,0 +1,144 @@
+{
+  "schema": "UDM37_NETCDF_SCALAR_SOURCE_REVIEW_V1",
+  "created_utc": "2026-10-07T06:16:27.769459+00:00",
+  "status": "PASS_SCOPED_SCALAR_FIXTURE_SOURCE_REVIEW",
+  "worktree": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-scalar-pr-work",
+  "base_commit": "430776b5a0d9c899a067a64e682d90fed8c065e6",
+  "evidence_method": "READ_ONLY_SOURCE_INSPECTION_ONLY",
+  "reviewed_changed_paths": {
+    "WRF/test/rrtmgp/test_netcdf_zz.F90": {
+      "sha256": "462ced8205dc435123c0ccb0259da30785f407613f359c7569a2c9b7172521fc",
+      "size_bytes": 27455
+    },
+    "WRF/test/rrtmgp/test_netcdf_zz.py": {
+      "sha256": "79376b07af06a8f1570ed807546762711bfd8aa185566f25e974eaabc2a505cf",
+      "size_bytes": 16970
+    }
+  },
+  "unchanged_production_pins": {
+    "WRF/external/io_netcdf/wrf_io.F90": {
+      "sha256": "bd19eb9d439ca975fce788cb0685424080b7e547cd0303287055d3c1dcb2b02c",
+      "size_bytes": 131877,
+      "exact_byte_equal_to_base": true
+    },
+    "WRF/external/io_netcdf/field_routines.F90": {
+      "sha256": "96e9b861ded26134694e6d9b7e1f46bd09a711eacf7a8eb8fee079308775079a",
+      "size_bytes": 6466,
+      "exact_byte_equal_to_base": true
+    },
+    "WRF/frame/module_io.F": {
+      "sha256": "1ff21750ce56d78681a9a9dc80d03578ce9b73a0a510664dd165ed84c47fae4b",
+      "size_bytes": 189968,
+      "exact_byte_equal_to_base": true
+    }
+  },
+  "diff_sha256": "1e4461fa81052a81c5d15ab9fc8427d6b9850ff30c337a6fb4eb58ea0e5df72c",
+  "observed_git_modified_paths": [
+    "WRF/test/rrtmgp/test_netcdf_zz.F90",
+    "WRF/test/rrtmgp/test_netcdf_zz.py",
+    "config/registration37.json",
+    "validation/rrtmgp37/acceptance/REVIEW_RESOLUTION_ko.md",
+    "validation/rrtmgp37/acceptance/review-resolution-checklist.json"
+  ],
+  "metadata_scope": "Root-authored registration/checklist changes observed during receipt preparation are outside this fixture-only review. No production modifications observed in the three authenticated files.",
+  "findings": [],
+  "checks": [
+    {
+      "item": "Initialization and reachability",
+      "path": "WRF/test/rrtmgp/test_netcdf_zz.F90",
+      "lines": [
+        58,
+        59,
+        61
+      ],
+      "judgment": "PASS_SOURCE",
+      "evidence": "Exactly one call to check_scalar_records follows ext_ncd_ioinit and its Status check, inside rank-zero branch."
+    },
+    {
+      "item": "Two write routes and distinct records",
+      "path": "WRF/test/rrtmgp/test_netcdf_zz.F90",
+      "lines": [
+        211,
+        227,
+        229,
+        233
+      ],
+      "judgment": "PASS_SOURCE",
+      "evidence": "Separate scalar-1.nc and scalar-2.nc files are defined through the actual public backend. Route1 writes through ext_ncd_write_field with padded order 0; route2 writes through direct FieldIO with order 0. Both write -17 then 2033 at distinct dates(1)/dates(2), checking each Status."
+    },
+    {
+      "item": "Stored Time/value checks",
+      "path": "WRF/test/rrtmgp/test_netcdf_zz.F90",
+      "lines": [
+        223,
+        224,
+        236,
+        237,
+        238,
+        239,
+        241,
+        242
+      ],
+      "judgment": "PASS_SOURCE",
+      "evidence": "Variable rank must be one, unlimited Time length and handle TimeIndex must equal each record ordinal, and actual stored date and low-level integer readback must exactly equal their expected values."
+    },
+    {
+      "item": "Wrapper rank0 and public reads",
+      "path": "WRF/test/rrtmgp/test_netcdf_zz.F90",
+      "lines": [
+        244,
+        245,
+        247,
+        248,
+        253,
+        255
+      ],
+      "judgment": "PASS_SOURCE",
+      "evidence": "Each file is closed/reopened; actual selected wrapper must return NDim0/order0 into a padded buffer. Public ext_ncd_read_field reads both records, each checked against its distinct value."
+    },
+    {
+      "item": "Nonpositive inactive lengths",
+      "path": "WRF/test/rrtmgp/test_netcdf_zz.F90",
+      "lines": [
+        207,
+        211,
+        218,
+        233,
+        254
+      ],
+      "judgment": "PASS_SOURCE",
+      "evidence": "Direct Length=[0,-1,0,-9] and public unused start1/end0 are intentional scalar controls. GetDim(0) gives NDim0; ANY(Length(1:0)<1) is false. GetIndices initializes synthetic scalar indices to one and returns before accessing unused axes. This grants no exemption to nonpositive active-axis lengths."
+    },
+    {
+      "item": "Runner marker gate",
+      "path": "WRF/test/rrtmgp/test_netcdf_zz.py",
+      "lines": [
+        289,
+        294,
+        317,
+        318,
+        319
+      ],
+      "judgment": "PASS_SOURCE",
+      "evidence": "Unique SCALAR_RECORD_CONTRACT_PASS marker is required before scalar coverage flags are persisted. Existing normal/negative helper and ZZ gates remain; no extra compiler/child launch was added to the runner."
+    }
+  ],
+  "scope_limits": [
+    "Source-only review: no actual scalar fixture execution or runtime PASS claimed by reviewer.",
+    "Wrapper body is extracted verbatim with synthetic serial routing dependencies; full module_io execution is not established.",
+    "Scalar checks run on rank zero; optional MPI wrapper does not prove distributed scalar gathering or WRF MPI module_io behavior.",
+    "Runner result roster continues to pin zz.nc. Scalar coverage is gated by exact native assertions and marker; later independent scalar-file hash/schema checks require their own receipt.",
+    "Coverage is integer scalar order0, two records and two write routes; not all scalar types or historical ext_scalar files."
+  ],
+  "reviewer_execution": {
+    "compiler": 0,
+    "fixture": 0,
+    "model": 0,
+    "MPI": 0,
+    "RTE": 0,
+    "raw_NetCDF_reads": 0
+  },
+  "source_mutations": 0,
+  "physical_acceptance": false,
+  "verdict_ko": "scalar order0 시험은 초기화 뒤 호출되고 public/direct 쓰기·두 시각의 상이한 정수값·wrapper rank0·public 읽기를 실제 backend API로 검사한다. 비양수 길이는 비활성 축만 대상으로 하며 생산 backend는 main과 byte-equal이다. 제한된 소스 검토 PASS이며 실제 실행·물리 승인은 아니다."
+}

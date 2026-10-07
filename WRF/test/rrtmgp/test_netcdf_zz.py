@@ -289,7 +289,8 @@ end subroutine
                 if (text.count('BACKEND_ROUNDTRIP_PASS') != 1 or text.count('REPLICA_PASS') != ranks
                         or text.count('HELPER_ORDER_CONTRACT_PASS') != 1
                         or any(text.count(marker) != 1 for marker in ('LONG_ORDER_CONTRACT_PASS',
-                        'WRITE_PREFLIGHT_CONTRACT_PASS', 'VARINFO_WRAPPER_CONTRACT_PASS', 'VARINFO_ATTRIBUTE_CONTRACT_PASS'))):
+                        'WRITE_PREFLIGHT_CONTRACT_PASS', 'VARINFO_WRAPPER_CONTRACT_PASS', 'VARINFO_ATTRIBUTE_CONTRACT_PASS',
+                        'SCALAR_RECORD_CONTRACT_PASS'))):
                     raise RuntimeError('fixture success marker/replica roster mismatch')
                 if pin(executable) != executable_pin:
                     raise RuntimeError('executable changed during fixture')
@@ -313,6 +314,9 @@ end subroutine
                    'direct_helper_valid_order_count': 20,
                    'direct_helper_invalid_order_count': 5,
                    'direct_fieldio_invalid_read_checked': True,
+                   'scalar_order_zero_two_time_records_checked': True,
+                   'scalar_direct_and_public_write_routes_checked': True,
+                   'scalar_nonpositive_inactive_lengths_checked': True,
                    'wrf_forecasts': 0, 'rte_calls': 0, 'physical_acceptance': False})
         print('PASS_SCOPED_NETCDF_ZZ_BACKEND', runner.confirmed_children)
     except BaseException as error:

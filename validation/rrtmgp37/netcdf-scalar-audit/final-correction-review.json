@@ -1,0 +1,108 @@
+{
+  "schema": "UDM37_PR152_ADDITIVE_AUDIT_CORRECTION_REVIEW_V1",
+  "status": "PASS_SCOPED_ADDITIVE_CORRECTION_REVIEW",
+  "scope": "Read-only metadata/source review of the additive PR152 correction package before manifest sealing. No test or raw NetCDF read, compile, model run, or source modification.",
+  "pr_snapshot": {
+    "head": "eaae0f57ddc00010b6633c3b0917731dffbd1820",
+    "base": "430776b5a0d9c899a067a64e682d90fed8c065e6",
+    "prior_checks": {
+      "count": 11,
+      "result": "SUCCESS",
+      "applies_to_head_only": "eaae0f57ddc00010b6633c3b0917731dffbd1820",
+      "new_additive_snapshot_checks_claimed": false
+    }
+  },
+  "erratum": {
+    "artifact": {
+      "path": "validation/rrtmgp37/netcdf-scalar-audit/review-erratum.json",
+      "sha256": "fc2c1e856decbc35b0fa732cba30eb1c2a3b297aee9ffa890f3cf9f821890dbb",
+      "size_bytes": 1101
+    },
+    "old_digest": "a5307c7de6f87f10478a23ec9cd6620b0693bc48ff125b3ca5d991f1a1085802",
+    "old_digest_snapshot": "base 430776b5a0d9c899a067a64e682d90fed8c065e6",
+    "corrected_digest": "57a38f7a666c07c679c43763d754033da20d51991f3e6446e707942fdb33bcfe",
+    "corrected_snapshot": "PR152 head eaae0f57ddc00010b6633c3b0917731dffbd1820",
+    "snapshot_file": {
+      "path": "validation/rrtmgp37/netcdf-scalar-audit/corrected-checklist-snapshot.json",
+      "sha256": "57a38f7a666c07c679c43763d754033da20d51991f3e6446e707942fdb33bcfe",
+      "size_bytes": 31214
+    },
+    "original_package_review_and_manifest_mutated": false
+  },
+  "closed_original_preservation": {
+    "prior_metadata_audit": {
+      "path": "validation/rrtmgp37/netcdf-scalar-audit/metadata-audit.json",
+      "sha256": "e5dbe4046d66ac4cfd57d9b30d7848e8b15e6cb41ea03761aaf836af8d717027",
+      "size_bytes": 4017
+    },
+    "prior_counterfactual_receipt": {
+      "path": "validation/rrtmgp37/netcdf-scalar-audit/counterfactual-reproduction.json",
+      "sha256": "9a13d65f604323867264dbb28f925fd76244425aa54a02a51c86f761b9e2f208",
+      "size_bytes": 345
+    },
+    "postflight": {
+      "path": "validation/rrtmgp37/netcdf-scalar-audit/root-postflight.json",
+      "sha256": "581f6ad9672b895f39c87ef084a0bfb1726a20f3e16481987df77e53cc26ed68",
+      "size_bytes": 726
+    },
+    "original_payloads_preserved_count": 157,
+    "original_file_hashes_preserved_count": 36,
+    "postflight_receipt_reports_both_unchanged": true
+  },
+  "new_reader_and_ci": {
+    "reader": {
+      "path": "WRF/test/rrtmgp/verify_netcdf_zz_outputs.py",
+      "sha256": "2caa734f683e63a93ef35c0bef8d70493ab246fbe243b6d1b1ad003c18a34900",
+      "size_bytes": 6463
+    },
+    "reader_source_review": {
+      "path": "validation/rrtmgp37/netcdf-scalar-audit/reader-fix-source-review.json",
+      "sha256": "882feb30599f9d489b8cc5c08fe0bb827b830ab6dbc934b10bab1547785bbd5e",
+      "size_bytes": 6109
+    },
+    "roster_cli_validation": {
+      "path": "validation/rrtmgp37/netcdf-scalar-audit/roster-fix-validation.json",
+      "sha256": "544713f293f92dbb7a684c8c902a797eadf3e3c129667a3be00013155b935076",
+      "size_bytes": 2647
+    },
+    "cli_cases": 7,
+    "positive": 1,
+    "expected_rejections": 6,
+    "counterfactual_original_reader_runs": 1,
+    "backend_rebuild_or_fixture_reruns": 0,
+    "workflow": {
+      "path": ".github/workflows/validate-port.yml",
+      "sha256": "8b3e95036ff2ac42fe2f9d3d329ca836c6b279be827c966ce786e39314f360b9",
+      "size_bytes": 26633
+    },
+    "registration": {
+      "path": "config/registration37.json",
+      "sha256": "0a9d284ecfda48250bbdc353a19ee0a38e7a825847e5e6bf241ec49384662707",
+      "size_bytes": 33398
+    },
+    "independent_step_after_backend": true,
+    "uploads_independent_receipt_and_36_small_fixtures": true
+  },
+  "scope_and_status": {
+    "production_source_changed": false,
+    "production_accepted": false,
+    "physics_checklist_items_open_or_failed": 7,
+    "completed_of_22": 15,
+    "new_workflow_success_claimed_for_additive_head": false,
+    "current_additive_manifest_present": false,
+    "manifest_state": "pending inclusion of this review; root closure/seal remains outstanding"
+  },
+  "findings": [
+    {
+      "severity": "none",
+      "summary": "The additive erratum correctly distinguishes the base checklist SHA from the eaae PR152 snapshot SHA, while preserving prior sealed bytes. The checker gates the exact 18 expected .nc names in each O0/O2 directory before array reads; the recorded seven CLI outcomes cover positive plus six negative/replacement cases. README and workflow describe the serial-fixture scope, retain production_accepted=false and seven unresolved physics items, and state that prior 11 successful CI checks belong to the earlier eaae head; they do not represent validation of this additive commit."
+    }
+  ],
+  "reviewer_activity": {
+    "test_or_reader_execution": 0,
+    "raw_netcdf_access": 0,
+    "compile": 0,
+    "model": 0,
+    "source_edits": 0
+  }
+}

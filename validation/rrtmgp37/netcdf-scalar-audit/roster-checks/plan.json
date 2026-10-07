@@ -1,0 +1,52 @@
+{
+  "status": "PREPARED",
+  "checker_sha256": "2caa734f683e63a93ef35c0bef8d70493ab246fbe243b6d1b1ad003c18a34900",
+  "cases": [
+    {
+      "name": "positive",
+      "input": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-scalar-backend-v1",
+      "expected_rc": 0,
+      "python_optimized": false
+    },
+    {
+      "name": "replacement",
+      "input": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-pr152-audit-v1/counterfactual-reader/inputs",
+      "expected_rc": 1,
+      "python_optimized": false
+    },
+    {
+      "name": "replacement-python-O",
+      "input": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-pr152-audit-v1/counterfactual-reader/inputs",
+      "expected_rc": 1,
+      "python_optimized": true
+    },
+    {
+      "name": "missing",
+      "input": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-pr152-audit-v1/roster-checks/missing",
+      "expected_rc": 1,
+      "python_optimized": false
+    },
+    {
+      "name": "extra",
+      "input": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-pr152-audit-v1/roster-checks/extra",
+      "expected_rc": 1,
+      "python_optimized": false
+    },
+    {
+      "name": "wrong-value",
+      "input": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-pr152-audit-v1/roster-checks/wrong-value",
+      "expected_rc": 1,
+      "python_optimized": false
+    },
+    {
+      "name": "wrong-dtype",
+      "input": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-pr152-audit-v1/roster-checks/wrong-dtype",
+      "expected_rc": 1,
+      "python_optimized": false
+    }
+  ],
+  "new_backend_compiles": 0,
+  "new_fixture_executions": 0,
+  "original_outputs_modified": false,
+  "physical_acceptance": false
+}

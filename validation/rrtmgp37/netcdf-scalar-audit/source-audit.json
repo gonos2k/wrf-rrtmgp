@@ -1,0 +1,169 @@
+{
+  "schema": "UDM37_PR152_ADVERSARIAL_SOURCE_AUDIT_V1",
+  "created_utc": "2026-10-07T06:52:45.775255+00:00",
+  "status": "NO_BLOCKING_NEW_SCALAR_OR_PRODUCTION_DEFECT_IDENTIFIED; NONBLOCKING_READER_ROSTER_WEAKNESS",
+  "reviewed_commit": "eaae0f57ddc00010b6633c3b0917731dffbd1820",
+  "reviewed_tree": "97495adf3b66e9ac72ba9f09738f1b10bca49074",
+  "base_main": "430776b5a0d9c899a067a64e682d90fed8c065e6",
+  "worktree": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-scalar-pr-work",
+  "clean_worktree_observed": true,
+  "evidence_method": "READ_ONLY_COMMITTED_SOURCE_AND_SMALL_SAVED_METADATA_INSPECTION_ONLY",
+  "source_pins": [
+    {
+      "path": "WRF/test/rrtmgp/test_netcdf_zz.F90",
+      "sha256": "462ced8205dc435123c0ccb0259da30785f407613f359c7569a2c9b7172521fc",
+      "size_bytes": 27455
+    },
+    {
+      "path": "WRF/test/rrtmgp/test_netcdf_zz.py",
+      "sha256": "79376b07af06a8f1570ed807546762711bfd8aa185566f25e974eaabc2a505cf",
+      "size_bytes": 16970
+    }
+  ],
+  "unchanged_production_pins": [
+    {
+      "path": "WRF/external/io_netcdf/wrf_io.F90",
+      "sha256": "bd19eb9d439ca975fce788cb0685424080b7e547cd0303287055d3c1dcb2b02c",
+      "size_bytes": 131877,
+      "byte_equal_to_base": true
+    },
+    {
+      "path": "WRF/external/io_netcdf/field_routines.F90",
+      "sha256": "96e9b861ded26134694e6d9b7e1f46bd09a711eacf7a8eb8fee079308775079a",
+      "size_bytes": 6466,
+      "byte_equal_to_base": true
+    },
+    {
+      "path": "WRF/frame/module_io.F",
+      "sha256": "1ff21750ce56d78681a9a9dc80d03578ce9b73a0a510664dd165ed84c47fae4b",
+      "size_bytes": 189968,
+      "byte_equal_to_base": true
+    }
+  ],
+  "evidence_pins": [
+    {
+      "path": "validation/rrtmgp37/netcdf-scalar-terminal/README_ko.md",
+      "sha256": "064f526c4b21720051a011bf935e2a2e4fcc30b88446b400678d7aecf8d67477",
+      "size_bytes": 3607
+    },
+    {
+      "path": "validation/rrtmgp37/netcdf-scalar-terminal/independent_reader.py",
+      "sha256": "4b8ac087173f22bd0943c2ea980977e51f08dd0e09fc36fa44bcc8f6e10e3a3d",
+      "size_bytes": 3218
+    },
+    {
+      "path": "validation/rrtmgp37/netcdf-scalar-terminal/independent-reader-plan.json",
+      "sha256": "eb7228b8f288a8ee5905693624aa3ffbe5b61d1adb26cf5b76e3635c79c8c046",
+      "size_bytes": 435
+    },
+    {
+      "path": "validation/rrtmgp37/netcdf-scalar-terminal/independent-reader-result.json",
+      "sha256": "b289bc068bdab5523a66315c5a3ccf35560b28e48bc0e73f6c3ca80bd440b8d2",
+      "size_bytes": 15676
+    },
+    {
+      "path": "validation/rrtmgp37/netcdf-scalar-terminal/backend-v1/result.json",
+      "sha256": "1ab3bbfb21595ed0f04d4775497d946c930717b52791476f935c7130d9f5149c",
+      "size_bytes": 13317
+    },
+    {
+      "path": "validation/rrtmgp37/netcdf-scalar-terminal/scalar-source-review.json",
+      "sha256": "05b1e5a8ae5f81f465c6ff59049cb334b2c36242b7d9b572a1e121dd21ebfcbb",
+      "size_bytes": 6089
+    }
+  ],
+  "scalar_fixture_assessment": {
+    "status": "PASS_SCOPED_SOURCE",
+    "anchors": {
+      "WRF/test/rrtmgp/test_netcdf_zz.F90": [
+        58,
+        59,
+        61,
+        203,
+        211,
+        227,
+        229,
+        233,
+        235,
+        237,
+        239,
+        242,
+        245,
+        247,
+        248,
+        253,
+        255,
+        260
+      ],
+      "WRF/test/rrtmgp/test_netcdf_zz.py": [
+        289,
+        294,
+        317,
+        318,
+        319
+      ]
+    },
+    "reasoning": [
+      "Called after backend initialization/status success.",
+      "Two independent files distinguish public write from direct FieldIO write, with -17/2033 at two distinct Times. Native stored value checks and later close/reopen public reads use explicit expected values rather than echoed readback.",
+      "Native Time length, handle TimeIndex, Times values and stored scalar rank are checked. Selected real wrapper returns NDim0/order0.",
+      "Inactive lengths are intentionally nonpositive: NDim0 means Length(1:0) is an empty slice; the test would reject a future check that mistakenly inspected inactive axes.",
+      "Unique scalar success marker is required before coverage flags. Production source does not change, and no WRF/MPI/RTE execution is inferred."
+    ]
+  },
+  "current_saved_receipt_scope": {
+    "status": "PASS_SCOPED_INDEPENDENT_READER",
+    "file_kinds": {
+      "malformed_attribute_fixture": 6,
+      "rejected_write_recovery": 24,
+      "scalar_order_zero": 4,
+      "ordered_ZZ": 2
+    },
+    "scalar_paths": [
+      "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-scalar-backend-v1/O0/ranks-1/scalar-1.nc",
+      "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-scalar-backend-v1/O0/ranks-1/scalar-2.nc",
+      "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-scalar-backend-v1/O2/ranks-1/scalar-1.nc",
+      "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-scalar-backend-v1/O2/ranks-1/scalar-2.nc"
+    ],
+    "scope": "Historical original result genuinely lists all four scalar files. No NetCDF file/array was read or rehashed by this audit. Parent reports current PR152 CI11 success/open; this audit made no remote status query and does not infer main merge."
+  },
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    {
+      "id": "ARCHIVED_READER_NOT_CLOSED_ROSTER",
+      "severity": "LOW",
+      "status": "OPEN_PROOF_HARDENING",
+      "classification": "REAL_VALIDATOR_WEAKNESS; CURRENT_SAVED_RESULT_NOT_INVALIDATED",
+      "path": "validation/rrtmgp37/netcdf-scalar-terminal/independent_reader.py",
+      "lines": [
+        10,
+        12,
+        20,
+        40,
+        43,
+        44
+      ],
+      "evidence": "The reader glob-selects all *.nc per optimization, dispatches by filename prefix, then checks only total length==36. It does not require the exact expected filenames per mode or scalar4/recovery24/ZZ2/malformed6 cardinalities.",
+      "meaningful_proposed_reproducer_not_run": "In a fresh synthetic/copy fixture directory, remove one scalar-2.nc and replace it with a duplicate valid preflight-1-1.nc named preflight-7-1.nc. The duplicate satisfies its recovery oracle and the total remains36, so this reader can PASS with only three scalar files. No such mutation or reader execution was performed.",
+      "minimal_remedy": "Validate the exact 18 expected basenames in each of O0/O2 before parsing, reject extras/missing files, and require per-kind counts. Add a manufactured roster-only removal/replacement negative control. Preserve historical source/result; perform any change additively.",
+      "why_not_current_blocker": "The committed saved receipt explicitly lists the actual four correct scalar files, and native scalar fixture calls/routes are reached and marker-gated. README distinguishes the historical reader result from manifest validation; it does not claim this reader is a closed-roster gate."
+    }
+  ],
+  "optional_scope_expansions_not_defects": [
+    "Other scalar types, same-date overwrite, old ext_scalar compatibility, distributed MPI scalar gather, default-real8, all failure transactionality and full module_io routing are not established. PR152 scopes its new regression to integer order0/two Times/serial backend; absence of these additional cases is not a demonstrated new bug.",
+    "Independent SciPy scalar branch does not separately assert dtype/FieldType. Actual native wrapper/backends check declared field type compatibility, and the saved values/dimensions are exact; this is a possible independent-oracle strengthening, not evidence that stored type was wrong."
+  ],
+  "reviewer_execution": {
+    "compiler": 0,
+    "fixture": 0,
+    "model": 0,
+    "MPI": 0,
+    "RTE": 0,
+    "raw_NetCDF_reads": 0,
+    "manufactured_reproducers": 0
+  },
+  "source_mutations": 0,
+  "prior_reviews_modified": false,
+  "physical_acceptance": false,
+  "verdict_ko": "PR152의 확정 scalar 시험 및 runner에서 차단할 신규 오류는 찾지 못했다. 생산 backend는 기준 main과 동일하고 기존 실제 receipt는 scalar4개를 보존한다. 별도 reader의 총수만 검사하는 목록 검증 약점은 확인됐으나 현재 저장 결과를 무효화하지 않는 비차단 보강 항목이다."
+}

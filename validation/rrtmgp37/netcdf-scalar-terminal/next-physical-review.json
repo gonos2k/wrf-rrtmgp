@@ -1,0 +1,81 @@
+{
+  "schema": "UDM37_NEXT_PHYSICAL_VERIFICATION_BOUNDARY_V1",
+  "snapshot": {
+    "worktree": "build/udm37-netcdf-scalar-pr-work",
+    "head": "430776b5a0d9c899a067a64e682d90fed8c065e6",
+    "tree": "9bfa1ebc25cb3ebaf5f6637b4b9afca958f75f76",
+    "scope": "Read-only evidence/source inventory. No raw scientific arrays, compiler, model, solver, or tolerance changes."
+  },
+  "decision": {
+    "recommended_boundary": "A current-source, one-cell/two-density UDM number-state transition check with partial cloud fraction and strictly partial activation, linking initialized/boundary QNN/QNC through scalar transport, UDM activation and return, then native radius input/output.",
+    "why_this_is_nonduplicative": [
+      "The saved positive-Nc-stage evidence has four positive same-stage radius-helper matches but both activation-rate arrays are zero.",
+      "The saved positive-activation case has a fully active fraction branch at the selected point and the existing CCN floor raises NN; it does not meet a partial-activation, floor-inactive condition.",
+      "The fractional-CF case observes 0<CF<1 and positive NC, but does not establish a partial activation fraction or compare two dry-density states.",
+      "The existing NC radiative sensitivity compares conditional radius interpretations in a held manufactured radiation input; it is not an end-to-end host initialization/transport/process/radius contract."
+    ],
+    "proposed_acceptance": {
+      "source_identity": "Bind the current source tree and exact Registry, module_microphysics_driver, module_mp_udm, and actual selected input/producer path. Historical a91 and 8017 observer evidence remains historical.",
+      "state_conditions": [
+        "Observed 0<CF<1 at the same process stage as the selected number state.",
+        "Observed 0<activation_fraction<1 and positive activation, with CCN minimum, cloud-number minimum/maximum, water cap, and other relevant repairs demonstrably inactive.",
+        "Two otherwise matched density cases use the same declared population basis and thermodynamic state; record QNN/QNC at producer/input, after transport, at UDM entry, after activation, after return, and at radius consumption.",
+        "Check each step with source-ordered native-kind arithmetic and report actual state transitions; do not infer a density multiplier from whichever arm better matches radiation."
+      ],
+      "interpretation_limit": "Until the producer/storage number basis is independently authoritative, this is an observational discriminator, not a physical PASS or justification to insert rho/CF scaling. If a basis cannot be stated, report the measurements and keep PHY-NC open."
+    },
+    "why_not_other_gates_now": [
+      "PHY-SIZE remains blocked on the exact pinned cloud-LUT generator population/habit/effective-size provenance; the retained Wyser moment audit explicitly does not authenticate that table recipe.",
+      "RFMIP's saved 2x2 is a selected 20-profile decomposition and retains the global strict failure; its next closure needs separate reference provenance/coverage work.",
+      "LBLRTM retains negative total OD and strict FAIL after the selected coupling ablation. Existing observer evidence is a separate spectroscopy-source-order task and does not supply a physical accuracy reference."
+    ],
+    "software_boundary_note": "The merged NetCDF scalar/namelist preflight work (PRs 150–151) and a scalar order-0 regression are I/O contract checks. They do not close the UDM number-unit/population contract."
+  },
+  "source_and_evidence_pins": {
+    "current_source": {
+      "WRF/phys/module_mp_udm.F": {
+        "sha256": "7bd96141eefc6ae2cb66cea0ce022fcc2ee64afce5c616aa65f26711c8790947",
+        "relevant_source": "CCN minimum at line 95; activation branch/rates and floor at lines 2528–2538; optional ccn_preinitialized and density flags at lines 233–248, 330–332."
+      },
+      "WRF/phys/module_microphysics_driver.F": {
+        "sha256": "c02f227d0fc1bf633fa53e54361e7117093b2c7bb02cedc2b71441c5bd638bd9",
+        "relevant_source": "Option-37 full-domain QNN initialization from ccn_conc at lines 928–931; UDM direct qnn_curr/qnc_curr passing plus ccn_preinitialized and dry-density flags at lines 2836–2895."
+      },
+      "WRF/Registry/Registry.EM_COMMON": {
+        "sha256": "87e21a476a06b7e0c926b2d939eaf1028810cba8a7d1e6fc585b50b599f99729",
+        "relevant_source": "QNN/QNC/QNR Registry labels and QNCLOUD/CCN fields around lines 536–545."
+      }
+    },
+    "inventories": {
+      "review_resolution_checklist": {
+        "path": "validation/rrtmgp37/acceptance/review-resolution-checklist.json",
+        "sha256": "a5307c7de6f87f10478a23ec9cd6620b0693bc48ff125b3ca5d991f1a1085802",
+        "qualification": "Contains PHY-NC and PHY-SIZE OPEN; its embedded main snapshot is 457cde6, earlier than worktree HEAD. Do not relabel that snapshot as 430776b."
+      },
+      "noaa_nc_contract": {
+        "path": "validation/rrtmgp37/nc-noaa-primary-contract/contract.json",
+        "sha256": "d498cc68f70bded507d63256e077fb1cfde5875416930861bdb84d98188a71ac",
+        "qualification": "Historical source contract snapshot a91d0d8. It records CCN volume initializer evidence, Registry mass-specific labels, and unresolved universal input/storage/population basis. It is not a fresh runtime observation at 430776b."
+      },
+      "positive_nc_stage_checklist": {
+        "path": "validation/rrtmgp37/positive-nc-stage/receipts/physical-contract-checklist.json",
+        "sha256": "1609c89aecbf7c5c615644c5809685ac1842217444f88f4a69677d3712a893d4",
+        "qualification": "The saved two-minute run records positive NC/helper-radius relations, but activation rates are zero."
+      },
+      "positive_activation": {
+        "path": "validation/rrtmgp37/positive-nc-activation/README.md",
+        "sha256": "6de00bee50b1408c31f459f384532022c6224c4493e0abff08636a2581f42aca",
+        "qualification": "Actual selected step has activation fraction 1; CCN floor is active. This does not test partial activation or conservation."
+      },
+      "fractional_cf": {
+        "path": "validation/rrtmgp37/fractional-cf-population/README.md",
+        "sha256": "9c38b3b78366f241aa608b6ca62982a67d13c2a9dac6809a6e4665fa05c7c738",
+        "qualification": "Saved case observes partial CF and positive NC but keeps units/PSD authority open and does not test the proposed partial-activation/two-density combination."
+      },
+      "conditional_nc_sensitivity": "validation/rrtmgp37/nc-unit-radiative-sensitivity/README.md",
+      "ice_size_definition": "validation/rrtmgp37/ice-radius-fit-contract/README.md",
+      "lbl_negative_od": "validation/rrtmgp37/lblrtm-coupling-ablation-on-only/README.md"
+    }
+  },
+  "status": "PREPARATION_ONLY_PHYSICAL_UNIT_AUTHORITY_OPEN"
+}
