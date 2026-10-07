@@ -1,0 +1,185 @@
+{
+  "checks": {
+    "git_status_clean": true,
+    "no_compile_or_model_or_RTE": true,
+    "no_raw_scientific_array_reads": true,
+    "no_source_edits": true,
+    "source_worktree_head_read_only": true
+  },
+  "conclusion": {
+    "not_authorized_by_evidence": "No full-process unit closure, unconditional density multiplier/divider, cloud-fraction correction, producer relabel, or physical correction is established by these findings.",
+    "still_open": [
+      "Whether the host Registry labels or UDM internal convention is stale/incomplete for these actual fields.",
+      "Whether a density conversion belongs at initialization, host transport boundaries, UDM entry/exit, or not at all under the intended coupling contract.",
+      "Whether QNC/QNN are grid-mean or in-cloud concentrations through the full lifecycle, including fractional cloudiness.",
+      "The physical number population/PSD and radiation-LUT mapping.",
+      "Whether process-specific density weighting of rain number in UDM sedimentation is dimensionally intended and how it relates to the host scalar storage basis.",
+      "Whether the selected slope formula\u2019s dimensional intent is representative of every number-related process; this review did not prove that."
+    ],
+    "verified": "The introduction and current UDM source explicitly annotate internal number-concentration parameters in m^-3. The selected cloud-slope expression is dimensionally consistent with a volume number concentration under its mass-per-volume inputs. Host Registry fields QNN/QNC are labeled kg-1, while the driver passes them directly into UDM; this interface remains unresolved. The NOAA presentation\u2019s 100/cc CCN value matches the current ccn_conc default numerically, but does not document mapping that value into the kg-1-labeled QNN field."
+  },
+  "current_constants": {
+    "comparison_to_introduction": "The number-concentration units/comments are retained. Current nrmax=300e6 versus introduction nrmax=2000e3; current ncmax=30000e6 versus introduction ncmax=2000e6. The lower/upper bounds changed, so do not reuse introduction caps as current values.",
+    "interpretation": "The m^-3 comments remain in current source. Some caps differ from the introduction snapshot (nrmax/ncmax); this review does not explain or adjudicate those changes.",
+    "source": "WRF/phys/module_mp_udm.F lines 47, 68-75, 93-95",
+    "values": {
+      "ccn_0_m-3": 50000000.0,
+      "ccnmax_m-3": 20000000000.0,
+      "ccnmin_m-3": 50000000.0,
+      "ncmax_m-3": 30000000000.0,
+      "ncmin_m-3": 0.001,
+      "nrmax_m-3": 300000000.0,
+      "nrmin_m-3": 1e-06,
+      "xncr_m-3": 300000000.0
+    }
+  },
+  "current_worktree": {
+    "clean_at_review": true,
+    "head": "ea1beaa39248e4a971801b2a7c89d4b75bc1a19d",
+    "path": "build/udm37-main-runtime-io-integration-pr-work"
+  },
+  "findings": [
+    {
+      "anchors": {
+        "current": "WRF/phys/module_mp_udm.F:47,68-75,93-95,3025-3064; activation 2513-2537",
+        "intro": "udm-introduction.F:38,60-63,80-82"
+      },
+      "evidence": [
+        "The introduction and current UDM source explicitly annotate xncr, Nc/Nr bounds, and CCN constants in m^-3.",
+        "The selected cloud-slope equation uses lambda = ((pi*rho_water/6 * ncr)/(qc*den))^(1/3); dimensionally, this expression is consistent with ncr as a volume number concentration when qc*den is condensate mass per volume.",
+        "This selected equation is evidence of a volume-based interpretation in that calculation only. It does not establish unit closure for all number-related processes, host fields, or transport pathways."
+      ],
+      "id": "internal-volume-units",
+      "interpretation_limit": "Do not generalize this equation-level dimensional evidence into full process/unit consistency or physical acceptance.",
+      "status": "explicit-unit-comments-and-dimensional-formula-observed"
+    },
+    {
+      "anchors": {
+        "driver": "WRF/phys/module_microphysics_driver.F:931,2857-2890,Registry ccn_conc line 2701",
+        "registry": "WRF/Registry/Registry.EM_COMMON:542-545,2701",
+        "udm": "WRF/phys/module_mp_udm.F:891-903"
+      },
+      "evidence": [
+        "Introduction and current Registry.EM_COMMON define QNCCN/QNCLOUD as number concentration with units # kg(-1).",
+        "The driver initializes QNN_CURR directly from ccn_conc (whose Registry namelist comment is # m-3), with no density or cloud-fraction multiplier/division at this assignment.",
+        "The UDM call passes NN=qnn_curr and NC=qnc_curr directly; the conversion into local ncr1/ncr state is direct/clamped, not multiplied or divided by density.",
+        "The Registry namelist default for ccn_conc is 1.0E8 with unit comment # m-3; the NOAA slide reports CCN initialized at 100/cc (the same numeric concentration after unit conversion), while the UDM startup path assigns ccn_conc directly to QNN_CURR, whose Registry field is labeled # kg(-1)."
+      ],
+      "id": "host-label-and-entry-mismatch",
+      "status": "verified-unresolved-interface-contract"
+    },
+    {
+      "anchors": {
+        "presentation": "slide 5-6; local PDF text extracted from pinned PDF",
+        "source": "udm-introduction.F:910-930,1151-1176; current module_mp_udm.F:1100-1112,1298-1310"
+      },
+      "evidence": [
+        "NOAA 2023 presentation slide 5 says microphysical processes are treated at in-cloud scales, while sedimentation and dynamical processes are at grid-mean scale; slide 6 frames double-moment in-cloud formulation as a development issue.",
+        "UDM code divides/restores condensate mass mixing ratios by cldf in the microphysics loop. The adjacent number arrays ncr are not divided/restored by cldf at those conversion sites.",
+        "This shows no explicit cloud-fraction conversion of number state at these boundaries; it does not alone decide whether the number state is intended as in-cloud or grid-mean."
+      ],
+      "id": "in-cloud-support",
+      "status": "partial-source-evidence"
+    },
+    {
+      "anchors": {
+        "density": "WRF/phys/module_mp_udm.F:865-870",
+        "host_call": "WRF/phys/module_microphysics_driver.F:2857-2890",
+        "rain_number": "WRF/phys/module_mp_udm.F:2639-2656"
+      },
+      "evidence": [
+        "Current UDM entry receives qnn/qnc arrays directly from the host driver and receives rho as DEN; selected calls set input_density_is_dry=.true.",
+        "A prior read-only producer/transport-chain review found no QNN/QNC-specific rho conversion in the generic startup/advection/RK/boundary/restart paths.",
+        "UDM rain-number semi-Lagrangian transport separately multiplies the local rain-number state by dry density before transport and divides by dry density afterward. That process-specific weighting is not a host-storage conversion, and its unit implications are not resolved by this review."
+      ],
+      "id": "transport-and-density-bridges",
+      "prior_review": {
+        "path": "build/udm37-main-runtime-io-integration-preparation-v1/nc-producer-transport-chain-review.json",
+        "sha256": "0d04d113cbe2541842d8bc7e02e0d9dedd1889f730319f8f8e9c4f17b4000afa"
+      },
+      "status": "not-closed"
+    },
+    {
+      "evidence": [
+        "Slide 5 states microphysical processes use in-cloud scales while sedimentation and dynamics use grid-mean scales; slide 6 describes the double-moment in-cloud formulation/development issue.",
+        "Slide 20 lists cloud droplet number Nc, rain number Nr, and CCN as additional 3-D prognostic number-concentration variables.",
+        "Neither slide specifies the WRF Registry storage units or how the displayed/initialized concentration maps to this fork\u2019s QNN/QNC fields.",
+        "The 100/cc presentation value is numerically 1e8 m-3, matching the host ccn_conc default value; that agreement supports the volume interpretation of the namelist value but does not document a conversion into the QNN # kg(-1) state."
+      ],
+      "id": "noaa-presentation-context",
+      "pages": [
+        5,
+        6,
+        17,
+        20
+      ],
+      "source_url": "https://epic.noaa.gov/wp-content/uploads/2023/08/UIFCW-2023-Tue-19.-Songyou-Hong-mp_new-202307-UIFCW-template.pdf",
+      "status": "verified-presentation-scope-only"
+    }
+  ],
+  "introduction_constants": {
+    "interpretation": "Explicit comments label these number concentrations in m^-3. These establish the scheme authors\u2019 internal parameter convention for this source snapshot, not the host prognostic-field serialization convention.",
+    "source": "udm-introduction.F lines 38, 60-63, 80-82",
+    "values": {
+      "ccn_0_m-3": 50000000.0,
+      "ccnmax_m-3": 20000000000.0,
+      "ccnmin_m-3": 50000000.0,
+      "ncmax_m-3": 2000000000.0,
+      "ncmin_m-3": 0.001,
+      "nrmax_m-3": 2000000.0,
+      "nrmin_m-3": 1e-06,
+      "xncr_m-3": 300000000.0
+    }
+  },
+  "pins": {
+    "current_microphysics_driver": {
+      "path": "build/udm37-main-runtime-io-integration-pr-work/WRF/phys/module_microphysics_driver.F",
+      "sha256": "c02f227d0fc1bf633fa53e54361e7117093b2c7bb02cedc2b71441c5bd638bd9",
+      "size_bytes": 198159
+    },
+    "current_registry": {
+      "path": "build/udm37-main-runtime-io-integration-pr-work/WRF/Registry/Registry.EM_COMMON",
+      "sha256": "87e21a476a06b7e0c926b2d939eaf1028810cba8a7d1e6fc585b50b599f99729",
+      "size_bytes": 448359
+    },
+    "current_udm": {
+      "path": "build/udm37-main-runtime-io-integration-pr-work/WRF/phys/module_mp_udm.F",
+      "sha256": "7bd96141eefc6ae2cb66cea0ce022fcc2ee64afce5c616aa65f26711c8790947",
+      "size_bytes": 196865
+    },
+    "introduction_microdriver": {
+      "path": "build/udm37-nc-noaa-primary-preparation-v1/microdriver-introduction.F",
+      "sha256": "ea165d97ff6d65fe76f1ad4ec949df11d357e56c180465f8157a676a1d16fa1e",
+      "size_bytes": 177946
+    },
+    "introduction_registry": {
+      "path": "build/udm37-nc-noaa-primary-preparation-v1/registry-introduction",
+      "sha256": "e63c9e7b36143cc412178e35b3c948e7cb9a0db9d88333728c4d48ec87accf27",
+      "size_bytes": 436955
+    },
+    "introduction_udm": {
+      "path": "build/udm37-nc-noaa-primary-preparation-v1/udm-introduction.F",
+      "sha256": "36e525c53f15b3faed633bca253ca7200f8c08579cbaec3513a22ee0e05f2025",
+      "size_bytes": 169861
+    },
+    "noaa_uifcw_2023_pdf": {
+      "path": "build/udm37-nc-noaa-primary-preparation-v1/noaa-uifcw2023.pdf",
+      "sha256": "ad144b740713668f69871fbe7fa151522e59ae65dc91917bb773f0b6730db6c1",
+      "size_bytes": 2333907
+    }
+  },
+  "primary_fetch_receipt": {
+    "path": "build/udm37-nc-noaa-primary-preparation-v1/primary-fetch.json",
+    "sha256": "8f748637e057088370cd77912612e015ae045865c92eb1a70f709819ebfec188",
+    "upstream_ref": "5fc76c540631be296bd2312e1d96117c07cbf761"
+  },
+  "provenance_note": "The supplied introduction snapshots are pinned to upstream WRF ref 5fc76c540631be296bd2312e1d96117c07cbf761 by primary-fetch.json: raw GitHub source URLs, byte sizes, SHA-256, and Git blob IDs are recorded there. This review independently checked those file hashes against that fetch receipt. The full Git commit object is not present in the current-source worktree, so commit ancestry itself was not checked locally.",
+  "requested_introduction_commit": "5fc76c540631be296bd2312e1d96117c07cbf761",
+  "review_type": "read-only source and presentation review; no builds, models, RTE, or scientific-array reads",
+  "revision": {
+    "scope": "Narrow the statement about unit consistency; no source or numerical review rerun.",
+    "superseded_sha256": "7554fb2cf9be37bc532b72656c11f1748b285a4bc99d61b922e0583fceb7942e",
+    "supersedes_for_wording_only": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-nc-noaa-primary-preparation-v1/source-contract-review.json"
+  },
+  "title": "UDM internal number-concentration source contract review (wording refinement)"
+}
