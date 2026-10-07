@@ -1,0 +1,172 @@
+{
+  "build": {
+    "all_commands_rc0": true,
+    "matches_restart_plan": true,
+    "models": 0,
+    "receipt": {
+      "link": null,
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-main-runtime-io-mpi-build-v1/result.json",
+      "sha256": "8b98903892b9f84e84fd6aa62c713fa9cb30390449e8fe75a01fb5f6a3c6e213",
+      "size_bytes": 2957
+    },
+    "source_head": "dd7eb1da3a23ca8f21bd4d5bf82f7feecf813fc5",
+    "status": "PASS_BUILD_INSTALL_SCOPED",
+    "tree": "c51069f89eccf113dca91a6942264194f3bc839e",
+    "wrf": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-main-runtime-io-mpi-build-v1/install/bin/wrf",
+      "sha256": "9e44dc776a184b6fda1227517930e5c75b7c759c2804f968b8a53badbc919680",
+      "size_bytes": 51655376
+    }
+  },
+  "control": {
+    "arms": {
+      "ra37": {
+        "actual_rc": 0,
+        "history_record_count": 14,
+        "reaped": true,
+        "status": "PASS_RUNTIME_SCOPED",
+        "timed_out": false
+      },
+      "ra4": {
+        "actual_rc": 0,
+        "history_record_count": 14,
+        "reaped": true,
+        "status": "PASS_RUNTIME_SCOPED",
+        "timed_out": false
+      }
+    },
+    "execution": {
+      "link": null,
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-main-runtime-io-mpi-control-v1/execution.json",
+      "sha256": "8c048d170779adb2991a5bc6adb602088af877a2a11d46408e8dab138ef45504",
+      "size_bytes": 207491
+    },
+    "execution_hash_matches": true,
+    "model_calls": 2,
+    "stage_plan": {
+      "link": null,
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-main-runtime-io-mpi-control-v1/stage-plan.json",
+      "sha256": "90c3ca93d1c7bb1e90c54a6f179e8187f8b1ec35cf8f58bba5a30a30986d25cd",
+      "size_bytes": 102187
+    },
+    "stage_plan_hash_matches": true,
+    "status": "PASS_PAIRED_RUNTIME_SCOPED"
+  },
+  "current_source": {
+    "clean": true,
+    "expected_head": "dd7eb1da3a23ca8f21bd4d5bf82f7feecf813fc5",
+    "head": "dd7eb1da3a23ca8f21bd4d5bf82f7feecf813fc5",
+    "matches_plan": true,
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-main-runtime-io-mpi-source-v1",
+    "tree": "c51069f89eccf113dca91a6942264194f3bc839e"
+  },
+  "finding": {
+    "expected": false,
+    "field": "stage-plan.active_stochastic_accepted",
+    "observed": null,
+    "reason": "The stage plan leaves active-stochastic acceptance null while the no-active-stochastic scope, pending authorization, and runner receipt use false. Clarify the frozen plan before authorization and refresh its hash binding.",
+    "severity": "BLOCKER"
+  },
+  "limitations": {
+    "active_stochastic_accepted": false,
+    "models_executed": 0,
+    "netcdf_payloads_decoded": false,
+    "physical_accepted": false
+  },
+  "restart_stage": {
+    "arms": {
+      "ra37": {
+        "changed_variables_only": [
+          "ISEEDARR_MULT3D"
+        ],
+        "copied_seed_is_changed": true,
+        "dimensions_and_global_attrs_unchanged": true,
+        "expected_dtype": "int32",
+        "expected_pattern": "negative signed int32 sequence -1..-N in C order",
+        "expected_shape": [
+          1,
+          15,
+          44
+        ],
+        "file_count": 105,
+        "preexisting_outputs_absent": true,
+        "roster_and_pins_match": true,
+        "seed_enabled": true,
+        "seed_variable": "ISEEDARR_MULT3D",
+        "source_checkpoint_matches_live_pin": true,
+        "staged_executable_sha_matches_build": true
+      },
+      "ra4": {
+        "changed_variables_only": [
+          "ISEEDARR_MULT3D"
+        ],
+        "copied_seed_is_changed": true,
+        "dimensions_and_global_attrs_unchanged": true,
+        "expected_dtype": "int32",
+        "expected_pattern": "negative signed int32 sequence -1..-N in C order",
+        "expected_shape": [
+          1,
+          15,
+          44
+        ],
+        "file_count": 105,
+        "preexisting_outputs_absent": true,
+        "roster_and_pins_match": true,
+        "seed_enabled": true,
+        "seed_variable": "ISEEDARR_MULT3D",
+        "source_checkpoint_matches_live_pin": true,
+        "staged_executable_sha_matches_build": true
+      }
+    },
+    "auth_file_exists": false,
+    "execution_file_exists": false,
+    "expected_seed_sentinel": true,
+    "hash_errors": [],
+    "limits": {
+      "first_failure_stops": true,
+      "max_models": 2,
+      "per_arm_timeout_seconds": 300
+    },
+    "multi_perturb": 0,
+    "numeric_scanner": {
+      "link": null,
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-matthew-dt60-paired-48h-v1/validate_all_numeric.py",
+      "sha256": "82223e77d62dbddf226406b0e1dc49eff6ee4bad3295da7ff376bdd211f70999",
+      "size_bytes": 3771
+    },
+    "one_use_lock_exists": false,
+    "pending_auth_plan_binding": true,
+    "pending_auth_runner_binding": true,
+    "pending_auth_scope": {
+      "active_stochastic_accepted": false,
+      "max_models": 2,
+      "per_model_timeout_seconds": 300,
+      "physical_accepted": false,
+      "seed_sentinel": true,
+      "status": "PENDING_ROOT_REVIEW"
+    },
+    "pending_authorization": {
+      "link": null,
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-main-runtime-io-mpi-restart-v1/PENDING_ROOT_AUTHORIZATION.json",
+      "sha256": "5013435a5025e4352b73d49a5bdf47d0e40c32f0b124ae78b869d8ae2cdff49a",
+      "size_bytes": 357
+    },
+    "runner": {
+      "link": null,
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-main-runtime-io-integration-preparation-v1/mpi_restart_once.py",
+      "sha256": "fa98ff5483c7608307773326312940df7b5d167eda332257a43bf9485c96dec7",
+      "size_bytes": 24391
+    },
+    "scope_description": "inactive I/O persistence control only; no active stochastic acceptance",
+    "stage_plan": {
+      "link": null,
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-main-runtime-io-mpi-restart-v1/stage-plan.json",
+      "sha256": "a76df6f173a5a35a3443f9d39647a745d1d8ca24ded80cbb72699ba4fa7a91fe",
+      "size_bytes": 2287635
+    },
+    "status": "STAGED_UNRUN"
+  },
+  "schema": "UDM37_MAIN_RUNTIME_IO_MPI_RESTART_PRESTART_REVIEW_V1",
+  "scope": "Read-only metadata/hash/schema review; no NetCDF payload decode, model launch, or source/build mutation.",
+  "status": "BLOCKED_SCOPE_METADATA_NULL"
+}

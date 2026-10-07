@@ -1,0 +1,80 @@
+{
+  "status": "PASS_BUILD_INSTALL_SCOPED",
+  "source_head": "dd7eb1da3a23ca8f21bd4d5bf82f7feecf813fc5",
+  "source_tree": "c51069f89eccf113dca91a6942264194f3bc839e",
+  "commands": [
+    {
+      "argv": [
+        "/usr/local/bin/cmake",
+        "-S",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-main-runtime-io-mpi-source-v1/WRF",
+        "-B",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-main-runtime-io-mpi-build-v1/cmake",
+        "-DCMAKE_INSTALL_PREFIX=/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-main-runtime-io-mpi-build-v1/install",
+        "-DCMAKE_TOOLCHAIN_FILE=/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-main-runtime-io-mpi-build-v1/wrf_gnu_mpi_openmp.cmake",
+        "-DWRF_CORE=ARW",
+        "-DWRF_CASE=EM_REAL",
+        "-DUSE_ALLOCATABLES=ON",
+        "-DUSE_MPI=ON",
+        "-DUSE_OPENMP=ON",
+        "-DUSE_IPO=OFF",
+        "-DFORCE_NETCDF_CLASSIC=ON"
+      ],
+      "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-main-runtime-io-mpi-source-v1",
+      "kind": "configure",
+      "status": "TERMINAL",
+      "pid": 600952,
+      "actual_returncode": 0,
+      "timed_out": false,
+      "started_at": 1791334747.2167566,
+      "finished_at": 1791334752.3943946
+    },
+    {
+      "argv": [
+        "/usr/local/bin/cmake",
+        "--build",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-main-runtime-io-mpi-build-v1/cmake",
+        "--parallel",
+        "4"
+      ],
+      "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-main-runtime-io-mpi-source-v1",
+      "kind": "build",
+      "status": "TERMINAL",
+      "pid": 601655,
+      "actual_returncode": 0,
+      "timed_out": false,
+      "started_at": 1791334752.3992302,
+      "finished_at": 1791335031.1260567
+    },
+    {
+      "argv": [
+        "/usr/local/bin/cmake",
+        "--install",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-main-runtime-io-mpi-build-v1/cmake"
+      ],
+      "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-main-runtime-io-mpi-source-v1",
+      "kind": "install",
+      "status": "TERMINAL",
+      "pid": 613620,
+      "actual_returncode": 0,
+      "timed_out": false,
+      "started_at": 1791335031.153897,
+      "finished_at": 1791335032.676163
+    }
+  ],
+  "models": 0,
+  "executables": {
+    "real": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-main-runtime-io-mpi-build-v1/install/bin/real",
+      "sha256": "ca71986ed4d682c8dbf607900d11292c3cb85b694043673fab2e5686a7c5af4b",
+      "size_bytes": 41112200
+    },
+    "wrf": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-main-runtime-io-mpi-build-v1/install/bin/wrf",
+      "sha256": "9e44dc776a184b6fda1227517930e5c75b7c759c2804f968b8a53badbc919680",
+      "size_bytes": 51655376
+    }
+  },
+  "source_and_tool_pins_unchanged": true,
+  "physical_accepted": false
+}

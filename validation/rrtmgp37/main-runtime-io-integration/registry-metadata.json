@@ -1,0 +1,230 @@
+{
+  "schema": "registry-subgrid-metadata-v1",
+  "status": "PASS_SCOPED_GENERATED_METADATA",
+  "scope": "actual Registry generator plus source-selected metadata sentinel; no WRF forecast",
+  "generator_source_sha256": "dae119ef30bf9c8b2a9b69dabc32bf88e59a9078a3f644c00b719fc0afb76fee",
+  "children": [
+    {
+      "argv": [
+        "make",
+        "-C",
+        "tools",
+        "registry",
+        "CC_TOOLS=gcc",
+        "CC_TOOLS_CFLAGS=-O0 -g -fcommon"
+      ],
+      "name": "registry-build",
+      "started": 1791333703.0101511,
+      "pid": 564236,
+      "status": "TERMINAL",
+      "returncode": 0,
+      "ended": 1791333703.8783505,
+      "child_reaped": true,
+      "log_sha256": "b6450cf032c5e52b40a61072a7a9801ff2a15bd53808351118cfd26a7511dbff"
+    },
+    {
+      "argv": [
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-main-runtime-io-integration-tests-v1/registry-metadata/tools/registry",
+        "-DEM_CORE=1",
+        "-DNMM_CORE=0",
+        "-DDA_CORE=0",
+        "-DNMM_MAX_DIM=2600",
+        "-DIWORDSIZE=4",
+        "-DNEW_BDYS",
+        "Registry/Registry"
+      ],
+      "name": "registry-generate",
+      "started": 1791333703.881022,
+      "pid": 564350,
+      "status": "TERMINAL",
+      "returncode": 0,
+      "ended": 1791333703.9975624,
+      "child_reaped": true,
+      "log_sha256": "3b00277bb6cd6f1a53f70f9a8d684a785b9f46838dbae492471a87f6ae4458e5"
+    },
+    {
+      "argv": [
+        "/usr/bin/gfortran-13",
+        "-O0",
+        "-fcheck=all",
+        "-o",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-main-runtime-io-integration-tests-v1/registry-metadata/generated",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-main-runtime-io-integration-tests-v1/registry-metadata/generated.f90"
+      ],
+      "name": "generated-compile",
+      "started": 1791333704.0484107,
+      "pid": 564352,
+      "status": "TERMINAL",
+      "returncode": 0,
+      "ended": 1791333704.1148353,
+      "child_reaped": true,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-main-runtime-io-integration-tests-v1/registry-metadata/generated"
+      ],
+      "name": "generated-execute",
+      "started": 1791333704.1170433,
+      "pid": 564357,
+      "status": "TERMINAL",
+      "returncode": 0,
+      "ended": 1791333704.1277037,
+      "child_reaped": true,
+      "log_sha256": "5417875b586b6739ea5a2552137f41313bfe6e8cebee1742ede88c3ee3d7541f"
+    },
+    {
+      "argv": [
+        "/usr/bin/gfortran-13",
+        "-O0",
+        "-fcheck=all",
+        "-o",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-main-runtime-io-integration-tests-v1/registry-metadata/omitted_seed_control",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-main-runtime-io-integration-tests-v1/registry-metadata/omitted_seed_control.f90"
+      ],
+      "name": "omitted_seed_control-compile",
+      "started": 1791333704.1299925,
+      "pid": 564358,
+      "status": "TERMINAL",
+      "returncode": 0,
+      "ended": 1791333704.1961937,
+      "child_reaped": true,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-main-runtime-io-integration-tests-v1/registry-metadata/omitted_seed_control"
+      ],
+      "name": "omitted_seed_control-execute",
+      "started": 1791333704.1978345,
+      "pid": 564363,
+      "status": "TERMINAL",
+      "returncode": 1,
+      "ended": 1791333704.203893,
+      "child_reaped": true,
+      "log_sha256": "086ebfa6fc86886a58c30946f33e30802155a9b88cb74c85e505db3edba5551c"
+    }
+  ],
+  "harness_sha256": "cb2fab2378a3e8f8316cb2182631f4a9b713f75f9ec16a0af19f9696e0b63037",
+  "model_invocations": 0,
+  "physical_accepted": false,
+  "registry_fixture_sha256": "05e7f36765f6f59fff959dd406efae91577a543533aee5bb2ce663597ef910e4",
+  "generator_executable_sha256": "17b5fae31a81e3218fa4018227f68fad441d0262eb612d9326fe46459ea771b0",
+  "fields": {
+    "iseedarr_mult3d": {
+      "line": 169,
+      "assign_x": [
+        "grid%tail_statevars%subgrid_x = .FALSE."
+      ],
+      "assign_y": [
+        "grid%tail_statevars%subgrid_y = .FALSE."
+      ],
+      "allocate": "ALLOCATE(grid%iseedarr_mult3d(sm32:em32,1:model_config_rec%num_pert_3d),STAT=ierr)",
+      "metadata": {
+        "MemoryOrder": "ZZ",
+        "dimname1": "bottom_top",
+        "dimname2": "num_pert_3d",
+        "dimname3": "",
+        "Ndim": "2",
+        "Restart": ".TRUE."
+      }
+    },
+    "zz_fixture": {
+      "line": 169,
+      "assign_x": [
+        "grid%tail_statevars%subgrid_x = .FALSE."
+      ],
+      "assign_y": [
+        "grid%tail_statevars%subgrid_y = .FALSE."
+      ],
+      "allocate": "ALLOCATE(grid%zz_fixture(sm32:em32),STAT=ierr)",
+      "metadata": {
+        "MemoryOrder": "Z",
+        "dimname1": "bottom_top",
+        "dimname2": "",
+        "dimname3": "",
+        "Ndim": "1",
+        "Restart": ".TRUE."
+      }
+    },
+    "x_fixture": {
+      "line": 169,
+      "assign_x": [
+        "grid%tail_statevars%subgrid_x = .FALSE.",
+        "grid%tail_statevars%subgrid_x = .TRUE."
+      ],
+      "assign_y": [
+        "grid%tail_statevars%subgrid_y = .FALSE."
+      ],
+      "allocate": "ALLOCATE(grid%x_fixture((sm31-1)*sr_x+1:em31*sr_x),STAT=ierr)",
+      "metadata": {
+        "MemoryOrder": "X",
+        "dimname1": "west_east_subgrid",
+        "dimname2": "",
+        "dimname3": "",
+        "Ndim": "1",
+        "Restart": ".TRUE."
+      }
+    },
+    "y_fixture": {
+      "line": 169,
+      "assign_x": [
+        "grid%tail_statevars%subgrid_x = .FALSE."
+      ],
+      "assign_y": [
+        "grid%tail_statevars%subgrid_y = .FALSE.",
+        "grid%tail_statevars%subgrid_y = .TRUE."
+      ],
+      "allocate": "ALLOCATE(grid%y_fixture((sm33-1)*sr_y+1:em33*sr_y),STAT=ierr)",
+      "metadata": {
+        "MemoryOrder": "Y",
+        "dimname1": "south_north_subgrid",
+        "dimname2": "",
+        "dimname3": "",
+        "Ndim": "1",
+        "Restart": ".TRUE."
+      }
+    },
+    "xy_fixture": {
+      "line": 169,
+      "assign_x": [
+        "grid%tail_statevars%subgrid_x = .FALSE.",
+        "grid%tail_statevars%subgrid_x = .FALSE."
+      ],
+      "assign_y": [
+        "grid%tail_statevars%subgrid_y = .FALSE.",
+        "grid%tail_statevars%subgrid_y = .FALSE."
+      ],
+      "allocate": "ALLOCATE(grid%xy_fixture(sm31:em31,sm33:em33),STAT=ierr)",
+      "metadata": {
+        "MemoryOrder": "XY",
+        "dimname1": "west_east",
+        "dimname2": "south_north",
+        "dimname3": "",
+        "Ndim": "2",
+        "Restart": ".TRUE."
+      }
+    },
+    "xy_subgrid_fixture": {
+      "line": 169,
+      "assign_x": [
+        "grid%tail_statevars%subgrid_x = .FALSE.",
+        "grid%tail_statevars%subgrid_x = .TRUE."
+      ],
+      "assign_y": [
+        "grid%tail_statevars%subgrid_y = .FALSE.",
+        "grid%tail_statevars%subgrid_y = .TRUE."
+      ],
+      "allocate": "ALLOCATE(grid%xy_subgrid_fixture((sm31-1)*sr_x+1:em31*sr_x,(sm33-1)*sr_y+1:em33*sr_y),STAT=ierr)",
+      "metadata": {
+        "MemoryOrder": "XY",
+        "dimname1": "west_east_subgrid",
+        "dimname2": "south_north_subgrid",
+        "dimname3": "",
+        "Ndim": "2",
+        "Restart": ".TRUE."
+      }
+    }
+  },
+  "negative_control": "manufactured omission of both seed-array assignments; not an upstream run"
+}

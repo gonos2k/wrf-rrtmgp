@@ -564,6 +564,11 @@ if ( tag == 1 )
              fprintf(fp,"  ALLOCATE( grid%%tail_statevars%%next )\n" ) ;
              fprintf(fp,"  grid%%tail_statevars => grid%%tail_statevars%%next\n") ;
              fprintf(fp,"  NULLIFY( grid%%tail_statevars%%next )\n") ;
+             /* Non-horizontal fields may have neither coordinate axis.  Set
+              * both flags before the dimension-specific assignments below;
+              * the I/O predicates read them for every array field. */
+             fprintf(fp,"  grid%%tail_statevars%%subgrid_x = .FALSE.\n") ;
+             fprintf(fp,"  grid%%tail_statevars%%subgrid_y = .FALSE.\n") ;
              fprintf(fp,"  grid%%tail_statevars%%VarName = '%s'\n", fname) ;
              fprintf(fp,"  grid%%tail_statevars%%DataName = '%s'\n", dname) ;
              fprintf(fp,"  grid%%tail_statevars%%Description = '%s'\n",p->descrip ) ;

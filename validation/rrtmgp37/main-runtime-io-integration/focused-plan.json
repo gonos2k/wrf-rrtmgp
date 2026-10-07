@@ -1,0 +1,155 @@
+{
+  "schema": "UDM37_INTEGRATION_FOCUSED_TEST_PLAN_V1",
+  "base_main": "a91d0d855da3e24094c2e6c7ba1088b56bc8c461",
+  "commands": [
+    [
+      "registration",
+      [
+        "/usr/bin/python3.12",
+        "-B",
+        "tools/register37.py",
+        "--check"
+      ]
+    ],
+    [
+      "startup_lifecycle",
+      [
+        "/usr/bin/python3.12",
+        "-B",
+        "WRF/test/rrtmgp/test_udm_startup_snow_scm_process.py"
+      ]
+    ],
+    [
+      "startup_optics",
+      [
+        "/usr/bin/python3.12",
+        "-B",
+        "WRF/test/rrtmgp/test_udm_startup_optics_contract.py",
+        "--output",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-main-runtime-io-integration-tests-v1/startup-optics.json"
+      ]
+    ],
+    [
+      "registry_metadata",
+      [
+        "/usr/bin/python3.12",
+        "-B",
+        "WRF/test/rrtmgp/test_registry_subgrid_metadata.py",
+        "WRF",
+        "--workdir",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-main-runtime-io-integration-tests-v1/registry-metadata",
+        "--output",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-main-runtime-io-integration-tests-v1/registry-metadata/receipt.json",
+        "--fc",
+        "/usr/bin/gfortran-13"
+      ]
+    ],
+    [
+      "netcdf_backend",
+      [
+        "/usr/bin/python3.12",
+        "-B",
+        "WRF/test/rrtmgp/test_netcdf_zz.py",
+        "WRF",
+        "--workdir",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-main-runtime-io-integration-tests-v1/netcdf-backend",
+        "--output",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-main-runtime-io-integration-tests-v1/netcdf-backend/receipt.json",
+        "--fc",
+        "/usr/bin/gfortran-13"
+      ]
+    ],
+    [
+      "acceptance_index",
+      [
+        "/usr/bin/python3.12",
+        "-B",
+        "validation/rrtmgp37/acceptance/verify.py",
+        "--output",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-main-runtime-io-integration-tests-v1/acceptance-index.json"
+      ]
+    ],
+    [
+      "acceptance_controls",
+      [
+        "/usr/bin/python3.12",
+        "-B",
+        "validation/rrtmgp37/acceptance/test_verify.py"
+      ]
+    ],
+    [
+      "registry_component",
+      [
+        "/usr/bin/python3.12",
+        "-B",
+        "tools/validate.py",
+        "registry"
+      ]
+    ]
+  ],
+  "source_pins": [
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-main-runtime-io-integration-pr-work/WRF/tools/gen_allocs.c",
+      "sha256": "dae119ef30bf9c8b2a9b69dabc32bf88e59a9078a3f644c00b719fc0afb76fee",
+      "size_bytes": 45544
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-main-runtime-io-integration-pr-work/WRF/external/io_netcdf/wrf_io.F90",
+      "sha256": "670b6934259528e664af100692390d5289188e17a604e52c94d4a49ec6a7c5b1",
+      "size_bytes": 129354
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-main-runtime-io-integration-pr-work/WRF/frame/module_io.F",
+      "sha256": "3b4a0e1180b08146c015e4acf37d7e431d751b1a3dbe3a238fb38647feee7eea",
+      "size_bytes": 189901
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-main-runtime-io-integration-pr-work/WRF/test/rrtmgp/test_netcdf_zz.py",
+      "sha256": "5f50803d044c38c79f2275ff8b4440b1338dc59d2f725dd7dace6ea6771d043e",
+      "size_bytes": 14706
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-main-runtime-io-integration-pr-work/WRF/test/rrtmgp/test_netcdf_zz.F90",
+      "sha256": "7d29e72b539339b84d4db6ccc2fccef0461c3d2ecaae4dd1a9e6e834fd0d9547",
+      "size_bytes": 10294
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-main-runtime-io-integration-pr-work/WRF/test/rrtmgp/test_registry_subgrid_metadata.py",
+      "sha256": "cb2fab2378a3e8f8316cb2182631f4a9b713f75f9ec16a0af19f9696e0b63037",
+      "size_bytes": 11952
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-main-runtime-io-integration-pr-work/WRF/test/rrtmgp/test_udm_startup_snow_scm_process.py",
+      "sha256": "f5ec4ee716e5d7644f26e86e42242558e5e0891e92ec25c8c8dd21319d19fb74",
+      "size_bytes": 7097
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-main-runtime-io-integration-pr-work/WRF/test/rrtmgp/test_udm_startup_snow_scm.py",
+      "sha256": "e54646660f0f5b7be8460b48cb176b99fefb5508136a6dbdc9a0b83ee5e4631c",
+      "size_bytes": 39934
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-main-runtime-io-integration-pr-work/WRF/test/rrtmgp/test_udm_startup_optics_contract.py",
+      "sha256": "5b4dcb1231983abd5e0375a491bd6b27b4760c23e295b15ff8b69f479b548829",
+      "size_bytes": 9314
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-main-runtime-io-integration-pr-work/config/registration37.json",
+      "sha256": "5e46795af0443e9b152052c2c695c32779941f07dfaecf30928c9f30aeac47d6",
+      "size_bytes": 32893
+    }
+  ],
+  "python": {
+    "path": "/usr/bin/python3.12",
+    "sha256": "1319c137ea5d30f1d7599943cb0e72666648c20a94cf5932dd095364d07dafeb",
+    "size_bytes": 8016832
+  },
+  "runner": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-main-runtime-io-integration-preparation-v1/root-tests/run_once.py",
+    "sha256": "5457c06844e9ccf7cf3a0b19de79cabb952cf73a2be39522961aa3caafdb8cf8",
+    "size_bytes": 3287
+  },
+  "timeout_per_step_seconds": 300,
+  "wrf_model_invocations": 0,
+  "physical_acceptance": false
+}

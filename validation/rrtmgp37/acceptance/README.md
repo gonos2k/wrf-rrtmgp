@@ -51,3 +51,7 @@ identity가 필요하다. 기존 FAIL 기록과 historical producer pin은 유�
 exact head `fe8dfc6`의 fresh build/install, 외부 consumer 및 SCM을 통과했다.
 [단일 실행 검사기](../execution-identity/README.md)는 이 공학적 범위를
 검사한다. 원본 19개 지적·독립 기준 FAIL·V1의 물리 미승인 상태는 유지한다.
+
+## PR #133–#145 후속 해소
+
+[순차 해소 체크리스트](REVIEW_RESOLUTION_ko.md)는 구현·분기 검증·main 반영·통합 시험을 구분한다. 이 별도 ledger는 원래 gate roster와 historical evidence를 변경하지 않는다.

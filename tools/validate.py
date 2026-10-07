@@ -51,7 +51,7 @@ def verify_import(path):
     return {'commit': source['commit'], 'verified_entries': count, 'bytes': source['bytes']}
 
 def registry(out, log):
-    # Original Registry C main and all generators; communications stub is SERIAL.
+    # Current Registry C main and generators; communications stub is SERIAL.
     src = ROOT / 'WRF'
     for name in ('tools', 'Registry', 'inc'):
         shutil.copytree(src / name, out / name, symlinks=True)
@@ -83,7 +83,7 @@ def registry(out, log):
         if 'grid%'+field not in alloc.lower(): raise ValueError('MISSING_ALLOCATION: '+field)
     generated = sorted(p for d in ('inc','frame') for p in (out/d).iterdir() if p.is_file())
     comparison = compare_registry(ROOT, out, log, execute)
-    return {'scope':'FULL_OFFICIAL_SERIAL_EM_REGISTRY_AND_GENERATED_CONSTANT_MODULE',
+    return {'scope':'FULL_CURRENT_SERIAL_EM_REGISTRY_AND_GENERATED_CONSTANT_MODULE',
             'generated_or_copied_inc_frame_files':len(generated),
             'required_generated_files':len(required),
             'allocation_subroutines_generated':32,'deallocation_subroutines_generated':12,

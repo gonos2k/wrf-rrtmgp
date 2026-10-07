@@ -7,10 +7,12 @@ on:
       - 'WRF/dyn_em/**'
       - 'WRF/arch/postamble'
       - 'WRF/external/**'
+      - 'WRF/frame/module_io.F'
       - 'WRF/main/depend.common'
       - 'WRF/phys/**'
       - 'WRF/share/**'
       - 'WRF/test/rrtmgp/**'
+      - 'WRF/tools/**'
       - 'WRF/run/rrtmgp-*.nc'
       - 'config/**'
       - 'port/**'
@@ -33,10 +35,12 @@ on:
       - 'WRF/dyn_em/**'
       - 'WRF/arch/postamble'
       - 'WRF/external/**'
+      - 'WRF/frame/module_io.F'
       - 'WRF/main/depend.common'
       - 'WRF/phys/**'
       - 'WRF/share/**'
       - 'WRF/test/rrtmgp/**'
+      - 'WRF/tools/**'
       - 'WRF/run/rrtmgp-*.nc'
       - 'config/**'
       - 'port/**'
@@ -101,6 +105,12 @@ jobs:
           sudo apt-get install -y gfortran gcc make libnetcdf-dev python3-numpy python3-scipy
       - name: Compile and execute component validation
         run: python3 tools/validate.py ${{ matrix.kind }}
+      - name: Verify generated subgrid flags and dimension controls
+        if: matrix.kind == 'registry'
+        run: >-
+          python3 WRF/test/rrtmgp/test_registry_subgrid_metadata.py WRF
+          --workdir build/registry-subgrid-metadata
+          --output build/registry-subgrid-metadata/receipt.json
       - name: Save logs and scope
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
@@ -109,6 +119,9 @@ jobs:
           path: |
             build/${{ matrix.kind }}/run.log
             build/${{ matrix.kind }}/result.json
+            build/registry-subgrid-metadata/receipt.json
+            build/registry-subgrid-metadata/*.log
+            build/registry-subgrid-metadata/*.f90
           retention-days: 30
           if-no-files-found: error
   standalone-columns:
@@ -120,7 +133,26 @@ jobs:
       - name: Install compiler, CMake, and NetCDF C/Fortran
         run: |
           sudo apt-get update -qq
-          sudo apt-get install -y cmake gfortran gcc libnetcdf-dev libnetcdff-dev python3-numpy python3-netcdf4 python3-scipy
+          sudo apt-get install -y cmake gfortran gcc m4 libnetcdf-dev libnetcdff-dev python3-numpy python3-netcdf4 python3-scipy
+      - name: Round-trip ordered nonspatial ZZ fields through the actual NetCDF backend
+        run: >-
+          python3 WRF/test/rrtmgp/test_netcdf_zz.py WRF
+          --workdir build/netcdf-zz
+          --output build/netcdf-zz/receipt.json
+      - name: Save NetCDF backend round-trip receipts and logs
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: netcdf-zz-${{ github.run_id }}
+          path: |
+            build/netcdf-zz/receipt.json
+            build/netcdf-zz/*.log
+            build/netcdf-zz/*.json
+            build/netcdf-zz/*.stdout
+            build/netcdf-zz/*.stderr
+            build/netcdf-zz/*.f90
+          retention-days: 30
+          if-no-files-found: error
       - name: Compile and run input_wrf UDM sentinel guards for both storage kinds
         run: >-
           python3 WRF/test/rrtmgp/test_input_wrf_udm_sentinel_kinds.py WRF
@@ -305,7 +337,7 @@ jobs:
           export LD_LIBRARY_PATH="$NETCDF/lib:/usr/lib/x86_64-linux-gnu:${LD_LIBRARY_PATH:-}"
           python3 WRF/test/rrtmgp/test_udm_startup_snow_scm.py \
             build/udm-startup-snow-runtime-only \
-            --candidate-wrf-root "$GITHUB_WORKSPACE/WRF" --runtime-only \
+            --candidate-wrf-root "$GITHUB_WORKSPACE/WRF" --runtime-only --capture-pair \
             | tee build/udm-startup-snow-runtime-only.log
       - name: Check RRTMGP compiler/flags/object inventory rebuilds
         shell: bash
