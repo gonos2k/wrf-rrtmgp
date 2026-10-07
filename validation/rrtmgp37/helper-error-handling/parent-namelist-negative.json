@@ -1,0 +1,20 @@
+{
+  "status": "EXPECTED_PARENT_CONTRACT_VIOLATIONS_REPRODUCED",
+  "parent_commit": "9d7e79182395cd81bc7ed3805126575f64005bc3",
+  "extracted_function_sha256": "5ed6056f2261e2b2bb88b40dfcd1f0ac47c1bd594380cbf24eb4a1074cc3ef98",
+  "cases": [
+    {
+      "input": "&physics\n ra_sw_physics = 4,\n ra_sw_physics = 37,\n/\n",
+      "output": "&physics\n ra_sw_physics = 37,\n ra_sw_physics = 37,\n/\n",
+      "violation": "duplicate target not rejected"
+    },
+    {
+      "input": "&physics\n history_interval = 30,\n/\n&time_control\n history_interval = 60,\n/\n",
+      "output": "&physics\n history_interval = 0,\n/\n&time_control\n history_interval = 60,\n/\n",
+      "violation": "non-target group edited; target group unchanged"
+    }
+  ],
+  "wrf_forecasts": 0,
+  "rte_calls": 0,
+  "physical_acceptance": false
+}

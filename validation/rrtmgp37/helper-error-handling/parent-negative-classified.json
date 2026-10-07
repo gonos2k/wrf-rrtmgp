@@ -1,0 +1,118 @@
+{
+  "status": "PASS_EXPECTED_PARENT_BOUNDS_FAILURE_METADATA_RECLASSIFIED",
+  "plan": {
+    "schema": "UDM37_NETCDF_PARENT_NEGATIVE_V1",
+    "parent_commit": "9d7e79182395cd81bc7ed3805126575f64005bc3",
+    "source": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-helper-errors-parent-negative-v1/parent_wrf_io.F90",
+      "sha256": "670b6934259528e664af100692390d5289188e17a604e52c94d4a49ec6a7c5b1",
+      "size_bytes": 129354
+    },
+    "probe": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-helper-errors-parent-negative-v1/invalid_probe.F90",
+      "sha256": "8ca55d4536fea8c2020ab1a55eca6bb3c923927d2f50986bb8fd74dc206d8b55",
+      "size_bytes": 457
+    },
+    "maximum_direct_children": 4,
+    "optimization": "O0",
+    "expected_failure": "actual backend ExtOrderStr qq bounds error",
+    "full_wrf_builds": 0,
+    "forecasts": 0,
+    "rte_calls": 0,
+    "physical_acceptance": false
+  },
+  "commands": [
+    {
+      "argv": [
+        "/usr/bin/cpp",
+        "-P",
+        "-traditional-cpp",
+        "-DUSE_NETCDF4_FEATURES",
+        "-I/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-helper-errors-pr-work/WRF/external/ioapi_share",
+        "-I/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-helper-errors-pr-work/WRF/external/io_netcdf",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-helper-errors-parent-negative-v1/parent_wrf_io.F90"
+      ],
+      "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-helper-errors-parent-negative-v1",
+      "kind": "cpp_parent",
+      "status": "TERMINAL",
+      "pid": 977474,
+      "actual_returncode": 0,
+      "timed_out": false,
+      "started_at": 1791343434.5101416,
+      "finished_at": 1791343434.5364351
+    },
+    {
+      "argv": [
+        "/usr/bin/m4",
+        "-G",
+        "-Uinclude",
+        "-Uindex",
+        "-Ulen",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-helper-errors-parent-negative-v1/backend.cpp.f90"
+      ],
+      "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-helper-errors-parent-negative-v1",
+      "kind": "m4_parent",
+      "status": "TERMINAL",
+      "pid": 977476,
+      "actual_returncode": 0,
+      "timed_out": false,
+      "started_at": 1791343434.5421128,
+      "finished_at": 1791343434.5583293
+    },
+    {
+      "argv": [
+        "/usr/bin/gfortran",
+        "-O0",
+        "-g",
+        "-fcheck=all",
+        "-finit-integer=99",
+        "-fallow-argument-mismatch",
+        "-ffree-form",
+        "-ffree-line-length-none",
+        "-cpp",
+        "-I/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-helper-errors-pr-work/WRF/external/ioapi_share",
+        "-I/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/netcdf/include",
+        "-I/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/netcdf/include",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-helper-errors-parent-negative-v1/backend.f90",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-helper-errors-pr-work/WRF/external/io_netcdf/field_routines.F90",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-helper-errors-parent-negative-v1/invalid_probe.F90",
+        "-L/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/netcdf/lib",
+        "-lnetcdff",
+        "-lnetcdf",
+        "-lm",
+        "-o",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-helper-errors-parent-negative-v1/parent_probe.exe"
+      ],
+      "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-helper-errors-parent-negative-v1",
+      "kind": "compile_parent_actual_backend",
+      "status": "TERMINAL",
+      "pid": 977477,
+      "actual_returncode": 0,
+      "timed_out": false,
+      "started_at": 1791343434.5635772,
+      "finished_at": 1791343500.8600185
+    },
+    {
+      "argv": [
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-helper-errors-parent-negative-v1/parent_probe.exe"
+      ],
+      "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-helper-errors-parent-negative-v1",
+      "kind": "expected_parent_failure",
+      "status": "TERMINAL",
+      "pid": 981432,
+      "actual_returncode": 2,
+      "timed_out": false,
+      "started_at": 1791343500.867422,
+      "finished_at": 1791343500.9900062
+    }
+  ],
+  "actual_probe_returncode": 2,
+  "stderr": "At line 609 of file /NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-helper-errors-parent-negative-v1/backend.f90\nFortran runtime error: Index '99' of dimension 1 of array 'rovector' outside of expected range (4:1)\n\nError termination. Backtrace:\n#0  0x7bb1c2f85e59 in ???\n#1  0x7bb1c2f86a71 in ???\n#2  0x7bb1c2f87082 in ???\n#3  0x6316ddbdc9cf in __ext_ncd_support_routines_MOD_extorderstr\n\tat /NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-helper-errors-parent-negative-v1/backend.f90:609\n#4  0x6316ddc31617 in invalid_probe\n\tat /NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-helper-errors-parent-negative-v1/invalid_probe.F90:8\n#5  0x6316ddc316e2 in main\n\tat /NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-helper-errors-parent-negative-v1/invalid_probe.F90:2\n",
+  "original_harness_failure_preserved": {
+    "path": "failure.json",
+    "sha256": "c318523c21b5986e375b9e916120ccb1703ec8eb763bc461516cca04ed8ecd14",
+    "reason": "Expected failure matched by a too-narrow diagnostic substring (above upper bound); actual GNU text is outside of expected range. No new compilation or process run."
+  },
+  "new_compiler_or_probe_calls": 0,
+  "physical_acceptance": false
+}

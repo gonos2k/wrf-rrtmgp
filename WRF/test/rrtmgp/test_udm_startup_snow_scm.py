@@ -128,20 +128,158 @@ def atomic_json(path: Path, value: dict[str, Any]) -> None:
 
 
 def set_assignment(text: str, key: str, value: str, *, group: str = "physics") -> str:
-    pattern = rf"(?im)^(\s*{re.escape(key)}\s*=\s*)[^,\n]+,"
-    updated, count = re.subn(pattern, rf"\g<1>{value},", text, count=1)
-    if count == 1:
-        return updated
-    if count != 0:
-        fail(f"duplicate {key} assignment")
-    start = updated.lower().find(f"&{group.lower()}")
-    if start < 0:
-        fail(f"missing &{group} block while adding {key}")
-    end_match = re.search(r"(?m)^\s*/\s*(?:!.*)?$", updated[start:])
-    if end_match is None:
-        fail(f"unterminated &{group} block while adding {key}")
-    end = start + end_match.start()
-    return updated[:end] + f"\n {key} = {value},\n" + updated[end:]
+    """Set one scalar assignment in a line-delimited namelist group.
+
+    WRF namelists can reuse an assignment name in different groups (for
+    example, ``history_interval`` in ``time_control`` and another group).
+    Never replace the first file-wide match. Repeated target groups or target
+    assignments are ambiguous and rejected. Scalar assignments on separate
+    lines or comma-separated on one line are supported. If the target token
+    appears in another same-line layout, reject it instead of inserting a
+    second assignment.
+    """
+    lines = text.splitlines(keepends=True)
+    group_header = re.compile(rf"^\s*&{re.escape(group)}\s*(?:!.*)?(?:\r?\n)?$", re.I)
+    group_starts = [i for i, line in enumerate(lines) if group_header.match(line)]
+    if not group_starts:
+        fail(f"missing &{group} block while setting {key}")
+    if len(group_starts) != 1:
+        fail(f"duplicate &{group} blocks while setting {key}")
+
+    start = group_starts[0]
+    end = None
+    terminator = re.compile(r"^\s*/\s*(?:!.*)?(?:\r?\n)?$")
+    any_header = re.compile(r"^\s*&[A-Za-z][A-Za-z0-9_]*\b")
+    for i in range(start + 1, len(lines)):
+        if terminator.match(lines[i]):
+            end = i
+            break
+        if any_header.match(lines[i]):
+            fail(f"unterminated &{group} block before next namelist group")
+    if end is None:
+        fail(f"unterminated &{group} block while setting {key}")
+
+    def split_comment(line: str) -> tuple[str, str]:
+        quote = None
+        i = 0
+        while i < len(line):
+            ch = line[i]
+            if quote is not None:
+                if ch == quote:
+                    if i + 1 < len(line) and line[i + 1] == quote:
+                        i += 2
+                        continue
+                    quote = None
+            elif ch in ("'", '"'):
+                quote = ch
+            elif ch == "!":
+                return line[:i], line[i:]
+            i += 1
+        return line, ""
+
+    def comma_segments(text_part: str) -> list[tuple[int, int]]:
+        quote = None
+        depth = 0
+        start = 0
+        segments = []
+        i = 0
+        while i < len(text_part):
+            ch = text_part[i]
+            if quote is not None:
+                if ch == quote:
+                    if i + 1 < len(text_part) and text_part[i + 1] == quote:
+                        i += 2
+                        continue
+                    quote = None
+            elif ch in ("'", '"'):
+                quote = ch
+            elif ch == "(":
+                depth += 1
+            elif ch == ")":
+                depth = max(depth - 1, 0)
+            elif ch == "," and depth == 0:
+                segments.append((start, i))
+                start = i + 1
+            i += 1
+        segments.append((start, len(text_part)))
+        return segments
+
+    assignment = re.compile(rf"^(\s*{re.escape(key)}\s*=\s*)(.*)$", re.I)
+    target_token = re.compile(rf"\b{re.escape(key)}\s*=", re.I)
+    found = []
+    target_tokens = 0
+
+    def count_unquoted_target_tokens(text_part: str) -> int:
+        quote = None
+        count = 0
+        i = 0
+        while i < len(text_part):
+            ch = text_part[i]
+            if quote is not None:
+                if ch == quote:
+                    if i + 1 < len(text_part) and text_part[i + 1] == quote:
+                        i += 2
+                        continue
+                    quote = None
+            elif ch in ("'", '"'):
+                quote = ch
+            else:
+                match = target_token.match(text_part, i)
+                if match:
+                    count += 1
+                    i = match.end()
+                    continue
+            i += 1
+        return count
+
+    for i in range(start + 1, end):
+        raw_line = lines[i]
+        if raw_line.endswith("\r\n"):
+            newline, content = "\r\n", raw_line[:-2]
+        elif raw_line.endswith(("\n", "\r")):
+            newline, content = raw_line[-1], raw_line[:-1]
+        else:
+            newline, content = "", raw_line
+        body, comment = split_comment(content)
+        target_tokens += count_unquoted_target_tokens(body)
+        for left, right in comma_segments(body):
+            segment = body[left:right]
+            match = assignment.match(segment)
+            if match:
+                found.append((i, left, right, match, body, comment, newline))
+    if target_tokens > 1 or len(found) > 1:
+        fail(f"duplicate {key} assignments in &{group} block")
+    if target_tokens == 1 and not found:
+        fail(f"unsupported {key} assignment layout in &{group} block")
+    if found:
+        i, left, right, match, body, comment, newline = found[0]
+        rhs = match.group(2)
+        old_value = rhs.rstrip()
+        trailing = rhs[len(old_value):]
+        if not old_value.strip():
+            fail(f"empty {key} assignment in &{group} block")
+        quote = None
+        pos = 0
+        while pos < len(old_value):
+            ch = old_value[pos]
+            if quote is not None:
+                if ch == quote:
+                    if pos + 1 < len(old_value) and old_value[pos + 1] == quote:
+                        pos += 2
+                        continue
+                    quote = None
+            elif ch in ("'", '"'):
+                quote = ch
+            elif ch == "=":
+                fail(f"unsupported non-scalar {key} assignment layout in &{group} block")
+            pos += 1
+        replacement = match.group(1) + value + trailing
+        lines[i] = body[:left] + replacement + body[right:] + comment + newline
+        return "".join(lines)
+
+    newline = "\r\n" if any(line.endswith("\r\n") for line in lines) else "\n"
+    lines.insert(end, f" {key} = {value},{newline}")
+    return "".join(lines)
 
 
 def make_namelist(root: Path, lw: int, sw: int) -> str:

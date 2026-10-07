@@ -19,6 +19,7 @@ program backend_zz
   character(3) :: mo
   character(1) :: stagger
   logical :: zero
+  type(wrf_data_handle),pointer :: handle
   rank=0; nproc=1
 #ifdef USE_MPI
   call MPI_Init(ierr)
@@ -40,6 +41,7 @@ program backend_zz
   got=-999
   comm=0;io_comm=0
   if(rank==0) then
+    call check_helper_orders()
     call dim_from_memorder('ZZ',n)
     call expect(n==2,'generic uppercase rank two')
     call dim_from_memorder('zz',n)
@@ -117,6 +119,14 @@ program backend_zz
       call good(nf_close(ncid),'nf close')
       call ext_ncd_open_for_read(filename,comm,io_comm,'',h,status)
       call good(status,'backend reopen read')
+      call GetDH(h,handle,status)
+      call good(status,'direct FieldIO handle')
+      call good(nf_inq_varid(handle%NCID,'INT_UPPER',vid),'direct FieldIO variable')
+      a=[3,5,1,1]
+      got=-999
+      call FieldIO('read',h,dates(1),a,'qq',WRF_INTEGER,handle%NCID,vid,got,status)
+      call expect(status==WRF_WARN_BAD_MEMORYORDER,'direct FieldIO rejects bad order before dispatch')
+      call expect(all(got==-999),'direct FieldIO invalid read leaves buffer unchanged')
       do record=1,2
         call prepare_record(record)
         do mode=1,4
@@ -185,6 +195,82 @@ program backend_zz
   call MPI_Finalize(ierr)
 #endif
 contains
+  subroutine check_helper_orders()
+    ! Call the actual backend helpers directly, without upper-level I/O guards.
+    ! Invalid orders fit the API's three-character MemoryOrder representation.
+    character(3),parameter :: orders(20)=[character(3) :: &
+      'xyz','xzy','yxz','yzx','zxy','zyx','xsz','xez','ysz','yez', &
+      'xy','yx','xs','xe','ys','ye','z','c','zz','0']
+    character(3),parameter :: invalid(5)=[character(3) :: 'qq','QQ','q','qxz','']
+    integer :: lengths(4),before(4),expected(4),dims,m,axis
+    character(80) :: input_names(4),output_names(4),expected_names(4)
+    logical :: is_zero
+    before=[3,5,7,11]
+    input_names=[character(80) :: 'first','second','third','tail']
+    do m=1,size(orders)
+      expected=before
+      select case(trim(orders(m)))
+      case('xzy'); expected(1:3)=before([1,3,2])
+      case('yxz'); expected(1:3)=before([2,1,3])
+      case('yzx'); expected(1:3)=before([3,1,2])
+      case('zxy'); expected(1:3)=before([2,3,1])
+      case('zyx'); expected(1:3)=before([3,2,1])
+      case('yx'); expected(1:2)=before([2,1])
+      end select
+      call GetDim(orders(m),dims,status)
+      call good(status,'valid helper GetDim')
+      call expect(dims==len_trim(orders(m)).or.trim(orders(m))=='0','valid helper dimension')
+      if(trim(orders(m))=='0') call expect(dims==0,'scalar helper dimension')
+      lengths=before
+      call ExtOrder(orders(m),lengths,status)
+      call good(status,'valid helper ExtOrder')
+      call expect(all(lengths==expected),'valid helper permutation and tail')
+      expected_names=''
+      do axis=1,dims
+        select case(expected(axis))
+        case(3); expected_names(axis)=input_names(1)
+        case(5); expected_names(axis)=input_names(2)
+        case(7); expected_names(axis)=input_names(3)
+        end select
+      enddo
+      output_names='sentinel'
+      call ExtOrderStr(orders(m),input_names,output_names,status)
+      call good(status,'valid helper ExtOrderStr')
+      call expect(all(output_names==expected_names),'valid helper name permutation and defined tail')
+      is_zero=ZeroLengthHorzDim(orders(m),before,status)
+      call good(status,'valid helper ZeroLengthHorzDim')
+      call expect(.not.is_zero,'positive helper horizontal lengths')
+    enddo
+    lengths=[0,5,7,11]
+    is_zero=ZeroLengthHorzDim('xy',lengths,status)
+    call good(status,'zero xy horizontal dimension')
+    call expect(is_zero,'xy zero horizontal length detected')
+    is_zero=ZeroLengthHorzDim('zz',lengths,status)
+    call good(status,'zz is nonspatial')
+    call expect(.not.is_zero,'zz is not a horizontal zero')
+    do m=1,size(invalid)
+      output_names='sentinel'
+      call ExtOrderStr(invalid(m),input_names,output_names,status)
+      call expect(status==WRF_WARN_BAD_MEMORYORDER,'invalid helper ExtOrderStr status retained')
+      call expect(all(output_names==''),'invalid helper names defined blank')
+      lengths=before
+      call ExtOrder(invalid(m),lengths,status)
+      call expect(status==WRF_WARN_BAD_MEMORYORDER,'invalid helper ExtOrder status retained')
+      call expect(all(lengths==before),'invalid helper lengths unchanged')
+      is_zero=ZeroLengthHorzDim(invalid(m),before,status)
+      call expect(status==WRF_WARN_BAD_MEMORYORDER,'invalid helper ZeroLengthHorzDim status retained')
+      call expect(is_zero,'invalid helper logical result defined')
+      dims=99
+      call GetDim(invalid(m),dims,status)
+      call expect(status==WRF_WARN_BAD_MEMORYORDER.and.dims==0,'invalid helper GetDim dimension defined')
+    enddo
+    ! Rejection must not contaminate a subsequent valid call.
+    lengths=before
+    call ExtOrder('YX',lengths,status)
+    call good(status,'valid helper after invalid order')
+    call expect(all(lengths==[5,3,7,11]),'valid permutation after invalid order')
+    print *, 'HELPER_ORDER_CONTRACT_PASS',size(orders),size(invalid)
+  end subroutine
   subroutine good(rc,label)
     integer,intent(in)::rc
     character(*),intent(in)::label
