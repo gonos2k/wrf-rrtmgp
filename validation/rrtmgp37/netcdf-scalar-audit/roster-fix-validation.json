@@ -1,0 +1,67 @@
+{
+  "status": "PASS_SCOPED_EXACT_ROSTER_REJECTION_TESTS",
+  "confirmed_direct_children": 7,
+  "cases": [
+    {
+      "name": "positive",
+      "actual_rc": 0,
+      "expected_rc": 0,
+      "result": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-pr152-audit-v1/roster-checks/positive-result.json",
+      "status": "PASS_SCOPED_NETCDF_OUTPUT_ROSTER",
+      "error": null
+    },
+    {
+      "name": "replacement",
+      "actual_rc": 1,
+      "expected_rc": 1,
+      "result": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-pr152-audit-v1/roster-checks/replacement-result.json",
+      "status": "FAIL_SCOPED_NETCDF_OUTPUT_ROSTER",
+      "error": "O0: output roster mismatch; missing=['scalar-2.nc'], unexpected=['preflight-7-1.nc']"
+    },
+    {
+      "name": "replacement-python-O",
+      "actual_rc": 1,
+      "expected_rc": 1,
+      "result": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-pr152-audit-v1/roster-checks/replacement-python-O-result.json",
+      "status": "FAIL_SCOPED_NETCDF_OUTPUT_ROSTER",
+      "error": "O0: output roster mismatch; missing=['scalar-2.nc'], unexpected=['preflight-7-1.nc']"
+    },
+    {
+      "name": "missing",
+      "actual_rc": 1,
+      "expected_rc": 1,
+      "result": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-pr152-audit-v1/roster-checks/missing-result.json",
+      "status": "FAIL_SCOPED_NETCDF_OUTPUT_ROSTER",
+      "error": "O0: output roster mismatch; missing=['scalar-2.nc'], unexpected=[]"
+    },
+    {
+      "name": "extra",
+      "actual_rc": 1,
+      "expected_rc": 1,
+      "result": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-pr152-audit-v1/roster-checks/extra-result.json",
+      "status": "FAIL_SCOPED_NETCDF_OUTPUT_ROSTER",
+      "error": "O2: output roster mismatch; missing=[], unexpected=['extra.nc']"
+    },
+    {
+      "name": "wrong-value",
+      "actual_rc": 1,
+      "expected_rc": 1,
+      "result": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-pr152-audit-v1/roster-checks/wrong-value-result.json",
+      "status": "FAIL_SCOPED_NETCDF_OUTPUT_ROSTER",
+      "error": "O0/scalar-1.nc: scalar values"
+    },
+    {
+      "name": "wrong-dtype",
+      "actual_rc": 1,
+      "expected_rc": 1,
+      "result": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-pr152-audit-v1/roster-checks/wrong-dtype-result.json",
+      "status": "FAIL_SCOPED_NETCDF_OUTPUT_ROSTER",
+      "error": "O0/scalar-1.nc: scalar INTEGER32 storage"
+    }
+  ],
+  "positive_files": 36,
+  "new_backend_compiles": 0,
+  "new_fixture_executions": 0,
+  "original_outputs_modified": false,
+  "physical_acceptance": false
+}

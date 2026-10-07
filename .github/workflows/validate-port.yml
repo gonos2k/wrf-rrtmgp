@@ -139,6 +139,10 @@ jobs:
           python3 WRF/test/rrtmgp/test_netcdf_zz.py WRF
           --workdir build/netcdf-zz
           --output build/netcdf-zz/receipt.json
+      - name: Independently read the exact scalar and ZZ output roster
+        run: >-
+          python3 WRF/test/rrtmgp/verify_netcdf_zz_outputs.py build/netcdf-zz
+          --output build/netcdf-zz-independent.json
       - name: Save NetCDF backend round-trip receipts and logs
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
@@ -146,6 +150,8 @@ jobs:
           name: netcdf-zz-${{ github.run_id }}
           path: |
             build/netcdf-zz/receipt.json
+            build/netcdf-zz-independent.json
+            build/netcdf-zz/O*/ranks-1/*.nc
             build/netcdf-zz/*.log
             build/netcdf-zz/*.json
             build/netcdf-zz/*.stdout

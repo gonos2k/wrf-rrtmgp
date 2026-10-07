@@ -1,0 +1,143 @@
+{
+  "schema": "UDM37_PR152_READER_ROSTER_FIX_SOURCE_REVIEW_V1",
+  "created_utc": "2026-10-07T06:56:48.218270+00:00",
+  "status": "PASS_SCOPED_STATIC_EXACT_ROSTER_FIX_AND_CI_WIRING",
+  "reviewed_head": "eaae0f57ddc00010b6633c3b0917731dffbd1820",
+  "worktree": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-scalar-pr-work",
+  "source_pins": [
+    {
+      "path": "WRF/test/rrtmgp/verify_netcdf_zz_outputs.py",
+      "sha256": "2caa734f683e63a93ef35c0bef8d70493ab246fbe243b6d1b1ad003c18a34900",
+      "size_bytes": 6463
+    },
+    {
+      "path": ".github/workflows/validate-port.yml",
+      "sha256": "8b3e95036ff2ac42fe2f9d3d329ca836c6b279be827c966ce786e39314f360b9",
+      "size_bytes": 26633
+    }
+  ],
+  "predecessor_audit": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-pr152-audit-v1/source-audit.json",
+    "sha256": "b414deba0c088462dc88bd5e0c081d38c419899101bf8522975c6920e6811557",
+    "size_bytes": 8210
+  },
+  "evidence_method": "READ_ONLY_SOURCE_AND_WORKFLOW_INSPECTION_ONLY; AST SYNTAX/ASSERT-ROSTER INSPECTION; NO CHECKER EXECUTION",
+  "blocking_findings": [],
+  "fixed_issue": {
+    "id": "ARCHIVED_READER_NOT_CLOSED_ROSTER",
+    "status": "ADDRESSED_BY_NEW_CHECKER_SOURCE",
+    "lines": [
+      13,
+      35,
+      38,
+      42,
+      49,
+      50
+    ],
+    "reason": "Both optimization directories must match the exact eighteen expected filenames before any arrays are loaded. All expected names are subsequently read exactly once; extra/missing names raise ValueError. The prior missing scalar plus replacement preflight-7-1 case fails the exact set gate, independently of total count.",
+    "historical_source_scope": "The original archived reader/result remains unchanged; this new checker is a separate reusable route. Historical false coverage reproduction was reported by root, not executed by this reviewer."
+  },
+  "checks": [
+    {
+      "item": "No assert-dependent validation",
+      "status": "PASS_SOURCE",
+      "reason": "All validation uses explicit require/check raising ValueError. AST contains no Assert nodes; Python optimization does not erase these checks."
+    },
+    {
+      "item": "Scalar independent contract",
+      "status": "PASS_SOURCE",
+      "lines": [
+        61,
+        64,
+        65,
+        66,
+        68
+      ],
+      "reason": "Exact two Times, Time-only variable dimensions, 0-space-space MemoryOrder bytes, signed INTEGER32 dtype and [-17,2033] values are independently checked."
+    },
+    {
+      "item": "Retained regression contract",
+      "status": "PASS_SOURCE",
+      "lines": [
+        71,
+        73,
+        76,
+        77,
+        80,
+        85,
+        87,
+        88,
+        90,
+        94,
+        96
+      ],
+      "reason": "Recovery Times/shape/both values, ZZ Times/axis order/MemoryOrder/shape/two records and malformed attributes retain the intended oracles."
+    },
+    {
+      "item": "Read-only input and fresh output",
+      "status": "PASS_SOURCE_WITH_LIMITS",
+      "lines": [
+        52,
+        53,
+        99,
+        118,
+        120,
+        131
+      ],
+      "reason": "netcdf_file opens read-only without mmap; each file is SHA-checked before/after. CLI rejects existing/symlink output and output resolving inside the declared input root, then creates output exclusively. The checker has no input write call; this is not a broader filesystem symlink/inode provenance proof."
+    },
+    {
+      "item": "CI integration",
+      "status": "PASS_SOURCE",
+      "path": ".github/workflows/validate-port.yml",
+      "lines": [
+        136,
+        139,
+        143,
+        144,
+        145,
+        153
+      ],
+      "reason": "Standalone-columns already installs NumPy/SciPy, generates serial O0/O2 files with the actual backend fixture, then calls the new checker against build/netcdf-zz. External receipt is uploaded with existing logs using the always artifact step. Default step success semantics stop a failed checker from appearing successful."
+    }
+  ],
+  "scope_notes": [
+    {
+      "id": "DTYPE_SCOPE_IS_SCALAR_ONLY",
+      "severity": "LOW_SCOPE_QUALIFIER",
+      "lines": [
+        66,
+        75,
+        84,
+        90
+      ],
+      "note": "Only scalar storage dtype is explicitly checked. Recovery/ZZ equality does not independently enforce dtype or FieldType attribute. Do not describe this source as independently checking storage dtype of every variable/file. It does not invalidate the native backend fixture checks or current saved outputs.",
+      "optional_meaningful_control": "If broad independent storage-type coverage is desired, create a fresh copied fixture with integer recovery/ZZ data stored as float/double but same exact numeric values and unchanged metadata; require failure from explicit dtype/type-attribute checks. Not performed by reviewer."
+    },
+    {
+      "id": "IS_FILE_FOLLOWS_SYMLINK",
+      "severity": "LOW_SCOPE_QUALIFIER",
+      "lines": [
+        36,
+        42,
+        120
+      ],
+      "note": "Path.is_file follows symlinks. The exact roster proves expected names with regular-file targets, not absence of symlinked files/directories or cross-mode aliases. The CI fixture uses freshly generated files; no current incorrect input was observed or inferred. A no-symlink/path-containment guarantee would require separate checks."
+    }
+  ],
+  "execution_scope": {
+    "reviewer_checker_runs": 0,
+    "tests": 0,
+    "compiler": 0,
+    "raw_NetCDF_reads": 0,
+    "model": 0,
+    "MPI": 0,
+    "RTE": 0,
+    "reproduction_runs": 0
+  },
+  "source_mutations": 0,
+  "old_package_or_historical_receipts_modified": false,
+  "CI_execution_verdict": "NOT_REVIEWED_AS_ACTUAL_NEW_RUN; source wiring only",
+  "physical_acceptance": false,
+  "verdict_ko": "새 checker의 최적화별18개 exact-roster 검사가 실제 재현된 누락/대체 파일의 false coverage 경로를 차단하며 CI 입력·의존성·외부 receipt upload 결속이 맞다. 소스 검토 범위 PASS다. 독립 dtype 검사는 scalar에 한정되고 symlink 배제까지 증명하지 않는다. 신규 실행·물리 승인은 아니다."
+}

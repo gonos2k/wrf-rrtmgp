@@ -1,0 +1,51 @@
+{
+  "schema": "UDM37_PR152_NETCDF_SCALAR_METADATA_AUDIT_V1",
+  "status": "REVIEW_COMPLETE_WITH_ONE_METADATA_ERRATUM",
+  "scope": "Read-only audit of committed PR152 package, checklist, payload roster, receipts, saved coverage counts, and live PR status. No raw NetCDF arrays/files were read; no compiler or model was run.",
+  "repository": {
+    "worktree": "build/udm37-netcdf-scalar-pr-work",
+    "base_main": "430776b5a0d9c899a067a64e682d90fed8c065e6",
+    "pr152_head": "eaae0f57ddc00010b6633c3b0917731dffbd1820",
+    "pr152_state_observed": "OPEN",
+    "pr152_mergeable_observed": "MERGEABLE",
+    "pr152_status_checks_observed": {"total": 11, "completed_success": 11, "failed": 0, "pending": 0}
+  },
+  "package": {
+    "path": "validation/rrtmgp37/netcdf-scalar-terminal",
+    "manifest_sha256": "d4f88c841e43b7ff2c75171c42f746a14167693874b008ef9c716e0575b2373b",
+    "manifest_payload_count": 30,
+    "actual_regular_payload_count": 30,
+    "payload_roster_exact": true,
+    "payload_hash_size_checks": "30/30 pass",
+    "production_accepted": false,
+    "raw_netcdf_or_executable_payloads": 0
+  },
+  "execution_and_coverage": {
+    "backend_result": {"sha256": "1ab3bbfb21595ed0f04d4775497d946c930717b52791476f935c7130d9f5149c", "status": "PASS_SCOPED_NETCDF_ZZ_BACKEND", "actual_children": 8, "O0_O2_compile_link": 2, "O0_O2_serial_fixture": 2, "all_child_rc_zero": true},
+    "independent_reader": {"sha256": "b289bc068bdab5523a66315c5a3ccf35560b28e48bc0e73f6c3ca80bd440b8d2", "status": "PASS_SCOPED_INDEPENDENT_READER", "files": 36, "kinds": {"scalar_order_zero": 4, "prior_recovery": 24, "ordered_ZZ": 2, "malformed_attribute": 6}},
+    "source_review": {"sha256": "05b1e5a8ae5f81f465c6ff59049cb334b2c36242b7d9b572a1e121dd21ebfcbb", "status": "PASS_SCOPED_SCALAR_FIXTURE_SOURCE_REVIEW", "production_backend_and_module_io_unchanged": true},
+    "source_scope": "The modified test and runner are fixture/evidence changes. Production NetCDF backend and module_io files remain byte-equal to base; test exercises serial backend and extracted wrapper shim, not full module_io/MPI or WRF runtime."
+  },
+  "checklist": {
+    "path": "validation/rrtmgp37/acceptance/review-resolution-checklist.json",
+    "current_sha256": "57a38f7a666c07c679c43763d754033da20d51991f3e6446e707942fdb33bcfe",
+    "base_430_sha256": "a5307c7de6f87f10478a23ec9cd6620b0693bc48ff125b3ca5d991f1a1085802",
+    "items": 22,
+    "scoped_complete": 15,
+    "open_or_failed": 7,
+    "production_accepted": false,
+    "main_merge_authorized": false,
+    "original_acceptance19_current12_preserved": true,
+    "seven_physics_checklist_items_equal_base": true
+  },
+  "concrete_erratum": {
+    "artifact": "validation/rrtmgp37/netcdf-scalar-terminal/final-package-review.json",
+    "artifact_sha256": "77a8483c0b96222e660c267b209899e29a43cb0878dcb3607ec0493f69ff7850",
+    "problem": "Its checklist.sha256 is a5307c7d..., the checklist bytes at base commit 430776b5, while the current PR152 checklist is 57a38f7a.... The file does not label the referenced digest as historical/base, so its checklist pin is stale relative to the committed PR152 tree.",
+    "impact": "The 22-item roster, 15/7 counts, production=false status, and seven physics item contents are correct; this is a stale snapshot pointer, not a change in scientific status or an incorrect count.",
+    "preserve_original": true,
+    "suggested_handling": "Keep the frozen package and its manifest unchanged; add a separate erratum binding the old digest to the base snapshot and the current digest to the PR152 snapshot. Do not rewrite historical receipts."
+  },
+  "no_other_material_issue_found": "README scopes the backend and reader evidence, preserves the unresolved scientific seven and production=false; manifest is a closed exact 30-file roster; PR152 is still open despite its successful checks, so this audit does not claim merge or current-main integration.",
+  "reviewer_activity": {"raw_data_reads": 0, "compile_or_test_runs": 0, "model_runs": 0, "source_edits": 0}
+}
