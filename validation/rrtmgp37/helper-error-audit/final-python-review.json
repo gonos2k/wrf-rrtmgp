@@ -1,0 +1,158 @@
+{
+  "findings": [
+    {
+      "detail": "No regression found in the helper changes for the actual scalar assignment layouts used by make_namelist; indexed targets, comma-separated/repeated values, and continued RHS layouts now fail closed.",
+      "severity": "none_for_current_fixture"
+    },
+    {
+      "detail": "The real-fixture compatibility test should ideally assert history_interval=0 and frames_per_outfile=10000 for both 4/4 and 37/37 make_namelist outputs, in addition to the currently asserted RA choices and history_interval_s. This is coverage, not a detected output defect.",
+      "severity": "nonblocking_test_coverage"
+    }
+  ],
+  "pins": {
+    "SCM_helper": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-helper-audit-pr-work/WRF/test/rrtmgp/test_udm_startup_snow_scm.py",
+      "sha256": "d3e8e68913e956d291e6d31064464f0519866165bbbb1716782581053d3e1c24",
+      "size_bytes": 46505
+    },
+    "current_namelist_fixture": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-helper-audit-pr-work/WRF/test/rrtmgp/namelist.scm37",
+      "sha256": "5d4394c306b3f0bfa8534ec0b34ac7972ef058a954a346c01807160c6111a04b",
+      "size_bytes": 4477
+    },
+    "unit_tests": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-helper-audit-pr-work/WRF/test/rrtmgp/test_udm_startup_snow_scm_namelist.py",
+      "sha256": "d2b8169e989730979be410cb571e7fc4d6c045874da78be16f1a270067b141e7",
+      "size_bytes": 9156
+    }
+  },
+  "review": {
+    "comments_quoted_assignments_and_intervening_next_assignment_preserved_by_tests": true,
+    "continued_RHS_values_rejected": true,
+    "continued_quoted_scalar_rejected": true,
+    "current_make_namelist_required_regression": "The added compatibility test exercises 4/4 and 37/37 options and asserts RA LW/SW options plus history_interval_s insertion. Current test does not assert actual history_interval=0 and frames_per_outfile=10000 outputs; direct helper tests cover scalar replacement/insertion but not these exact integration values.",
+    "indexed_LHS_detected_and_rejected": true,
+    "production_helper_callers": [
+      {
+        "group": "physics",
+        "key": "'ra_lw_physics'",
+        "line": 325,
+        "value": "str(lw)"
+      },
+      {
+        "group": "physics",
+        "key": "'ra_sw_physics'",
+        "line": 326,
+        "value": "str(sw)"
+      },
+      {
+        "group": "time_control",
+        "key": "'history_interval'",
+        "line": 328,
+        "value": "'0'"
+      },
+      {
+        "group": "time_control",
+        "key": "'history_interval_s'",
+        "line": 329,
+        "value": "'60'"
+      },
+      {
+        "group": "time_control",
+        "key": "'frames_per_outfile'",
+        "line": 331,
+        "value": "'10000'"
+      }
+    ],
+    "real_fixture_scalar_targets": [
+      {
+        "assignment_count": 1,
+        "group": "physics",
+        "key": "ra_lw_physics",
+        "line": [
+          "ra_lw_physics                       = 37,"
+        ]
+      },
+      {
+        "assignment_count": 1,
+        "group": "physics",
+        "key": "ra_sw_physics",
+        "line": [
+          "ra_sw_physics                       = 37,"
+        ]
+      },
+      {
+        "assignment_count": 1,
+        "group": "time_control",
+        "key": "history_interval",
+        "line": [
+          "history_interval                    = 1,"
+        ]
+      },
+      {
+        "assignment_count": 0,
+        "group": "time_control",
+        "key": "history_interval_s",
+        "line": []
+      },
+      {
+        "assignment_count": 1,
+        "group": "time_control",
+        "key": "frames_per_outfile",
+        "line": [
+          "frames_per_outfile                  = 10000,"
+        ]
+      }
+    ],
+    "repeat_count_values_rejected": true,
+    "same_line_multiple_RHS_values_rejected": true,
+    "same_line_multiple_assignments_supported": true
+  },
+  "schema": "UDM37_HELPER_ERRORS_FINAL_PYTHON_REVIEW_V1",
+  "scope_limits": [
+    "Review covers only the two Python test files and the SCM namelist helper path.",
+    "No tracked files edited; no compiler, WRF model, RTE, or raw scientific data accessed."
+  ],
+  "status": "PASS_SCOPED_PYTHON_HELPER_FIX",
+  "tests": {
+    "actual_returncode": 0,
+    "compiler_model_rte_calls": 0,
+    "methods": [
+      "test_inserts_when_absent_from_target_group",
+      "test_replaces_only_assignment_in_requested_group",
+      "test_rejects_duplicate_assignment_in_target_group",
+      "test_rejects_same_line_duplicate_assignment",
+      "test_replaces_assignment_after_another_same_line_assignment",
+      "test_rejects_target_after_whitespace_separated_assignment",
+      "test_rejects_other_assignment_after_target_without_comma",
+      "test_rejects_duplicate_target_without_comma",
+      "test_rejects_duplicate_target_groups",
+      "test_rejects_indexed_target_instead_of_inserting",
+      "test_rejects_bare_and_indexed_duplicate_target",
+      "test_rejects_same_line_rhs_list",
+      "test_rejects_continued_rhs_list",
+      "test_rejects_repeat_and_continued_quoted_rhs",
+      "test_preserves_scalar_before_other_assignment_and_comment_lines",
+      "test_actual_scm_fixture_stays_compatible",
+      "test_ignores_comments_and_preserves_quoted_slash_or_bang",
+      "test_quoted_target_looking_text_is_not_an_assignment",
+      "test_replaces_quoted_scalar_and_scalar_without_trailing_comma",
+      "test_crlf_is_preserved_without_duplicate_carriage_returns",
+      "test_rejects_empty_rhs",
+      "test_missing_and_unterminated_group_reject"
+    ],
+    "python_command": "python3.12 -B test_udm_startup_snow_scm_namelist.py",
+    "test_methods": 22,
+    "working_directory": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-helper-audit-pr-work/WRF/test/rrtmgp"
+  },
+  "worktree": {
+    "base_head": "439bf0d626a89ab105093945e946e47d7cf80f94",
+    "changed_files": [
+      "WRF/test/rrtmgp/test_udm_startup_snow_scm.py",
+      "WRF/test/rrtmgp/test_udm_startup_snow_scm_namelist.py"
+    ],
+    "diff_check": "PASS",
+    "diff_sha256": "404cb6d0a4cd1ff1dd3fbc099bdd90b07c6b44d199356569433cbc12d4ef9ab1",
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-helper-audit-pr-work"
+  }
+}

@@ -56,6 +56,52 @@ class SetAssignmentTests(unittest.TestCase):
         with self.assertRaisesRegex(RuntimeError, "duplicate &time_control blocks"):
             scm.set_assignment(text, "history_interval", "0", group="time_control")
 
+    def test_rejects_indexed_target_instead_of_inserting(self) -> None:
+        for lhs in ("ra_lw_physics(1)", "ra_lw_physics ( 1:2 )"):
+            with self.subTest(lhs=lhs):
+                text = f"&physics\n {lhs} = 4,\n/\n"
+                with self.assertRaisesRegex(RuntimeError, "unsupported ra_lw_physics"):
+                    scm.set_assignment(text, "ra_lw_physics", "37")
+
+    def test_rejects_bare_and_indexed_duplicate_target(self) -> None:
+        text = "&physics\n ra_lw_physics=4, ra_lw_physics(1)=5,\n/\n"
+        with self.assertRaisesRegex(RuntimeError, "duplicate ra_lw_physics"):
+            scm.set_assignment(text, "ra_lw_physics", "37")
+
+    def test_rejects_same_line_rhs_list(self) -> None:
+        for rhs in ("4,5,", "4, 'other',", "4, , 5,", "4,,", "4, , ra_sw_physics=4,"):
+            with self.subTest(rhs=rhs):
+                with self.assertRaisesRegex(RuntimeError, "unsupported multiple ra_lw_physics"):
+                    scm.set_assignment(f"&physics\n ra_lw_physics={rhs}\n/\n", "ra_lw_physics", "37")
+
+    def test_rejects_continued_rhs_list(self) -> None:
+        text = "&physics\n ra_lw_physics=4, ! comment\n ! comment line\n 5,\n/\n"
+        with self.assertRaisesRegex(RuntimeError, "unsupported continued ra_lw_physics"):
+            scm.set_assignment(text, "ra_lw_physics", "37")
+
+    def test_rejects_repeat_and_continued_quoted_rhs(self) -> None:
+        with self.assertRaisesRegex(RuntimeError, "unsupported repeated ra_lw_physics"):
+            scm.set_assignment("&physics\n ra_lw_physics=2*4,\n/\n", "ra_lw_physics", "37")
+        with self.assertRaisesRegex(RuntimeError, "unsupported continued quoted run_label"):
+            scm.set_assignment("&physics\n run_label='part\n two',\n/\n", "run_label", "'new'")
+
+    def test_preserves_scalar_before_other_assignment_and_comment_lines(self) -> None:
+        text = "&physics\n ra_lw_physics=4, ! tail\n ! separate comment\n ra_sw_physics(1)=4,\n/\n"
+        got = scm.set_assignment(text, "ra_lw_physics", "37")
+        self.assertEqual(got, text.replace("ra_lw_physics=4", "ra_lw_physics=37"))
+
+    def test_actual_scm_fixture_stays_compatible(self) -> None:
+        from pathlib import Path
+        root = Path(__file__).resolve().parents[2]
+        for lw, sw in ((4, 4), (37, 37)):
+            with self.subTest(lw=lw):
+                text = scm.make_namelist(root, lw, sw)
+                self.assertRegex(text, rf"(?m)^\s*ra_lw_physics\s*=\s*{lw}\s*,")
+                self.assertRegex(text, rf"(?m)^\s*ra_sw_physics\s*=\s*{sw}\s*,")
+                self.assertIn("history_interval_s = 60,", text)
+                self.assertRegex(text, r"(?m)^\s*history_interval\s*=\s*0\s*,")
+                self.assertRegex(text, r"(?m)^\s*frames_per_outfile\s*=\s*10000\s*,")
+
     def test_ignores_comments_and_preserves_quoted_slash_or_bang(self) -> None:
         text = (
             "&physics\n title = 'literal / ! token', note='it''s safe',\n/\n"

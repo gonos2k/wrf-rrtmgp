@@ -1,0 +1,50 @@
+{
+  "base": "439bf0d626a89ab105093945e946e47d7cf80f94",
+  "source_sha256": {
+    "WRF/test/rrtmgp/test_udm_startup_snow_scm.py": "d3e8e68913e956d291e6d31064464f0519866165bbbb1716782581053d3e1c24",
+    "WRF/test/rrtmgp/test_udm_startup_snow_scm_namelist.py": "d2b8169e989730979be410cb571e7fc4d6c045874da78be16f1a270067b141e7",
+    "WRF/test/rrtmgp/namelist.scm37": "5d4394c306b3f0bfa8534ec0b34ac7972ef058a954a346c01807160c6111a04b",
+    "config/registration37.json": "39920e8297e4226a5979c8b5c5dfffa3a1cec898c1a921d4d8fb1de134e68671"
+  },
+  "python_version": "3.12.3 (main, Nov  6 2025, 13:44:16) [GCC 13.3.0]",
+  "commands": [
+    {
+      "command": [
+        "/usr/bin/python3.12",
+        "-B",
+        "WRF/test/rrtmgp/test_udm_startup_snow_scm_namelist.py"
+      ],
+      "returncode": 0,
+      "stdout": "check-0.stdout",
+      "stderr": "check-0.stderr"
+    },
+    {
+      "command": [
+        "/usr/bin/python3.12",
+        "-B",
+        "tools/register37.py",
+        "--check"
+      ],
+      "returncode": 0,
+      "stdout": "check-1.stdout",
+      "stderr": "check-1.stderr"
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "returncode": 0,
+      "stdout": "check-2.stdout",
+      "stderr": "check-2.stderr"
+    }
+  ],
+  "unit_methods": 22,
+  "physical_accepted": false,
+  "compiler_calls": 0,
+  "WRF_runs": 0,
+  "MPI_jobs": 0,
+  "RTE_calls": 0,
+  "initial_edit_test_failures": "Three assertion failures (fixture alignment twice, specific quote error message once); fixed test regex and validation ordering before this terminal test. Initial raw output was not saved."
+}

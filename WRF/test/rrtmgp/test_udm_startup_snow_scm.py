@@ -136,7 +136,8 @@ def set_assignment(text: str, key: str, value: str, *, group: str = "physics") -
     assignments are ambiguous and rejected. Scalar assignments on separate
     lines or comma-separated on one line are supported. If the target token
     appears in another same-line layout, reject it instead of inserting a
-    second assignment.
+    second assignment. Indexed targets, repeated/list RHS values and continued
+    values are outside this scalar editor's contract and rejected.
     """
     lines = text.splitlines(keepends=True)
     group_header = re.compile(rf"^\s*&{re.escape(group)}\s*(?:!.*)?(?:\r?\n)?$", re.I)
@@ -205,7 +206,8 @@ def set_assignment(text: str, key: str, value: str, *, group: str = "physics") -
         return segments
 
     assignment = re.compile(rf"^(\s*{re.escape(key)}\s*=\s*)(.*)$", re.I)
-    target_token = re.compile(rf"\b{re.escape(key)}\s*=", re.I)
+    target_token = re.compile(rf"\b{re.escape(key)}\s*(?:=|\()", re.I)
+    any_assignment = re.compile(r"^\s*[A-Za-z][A-Za-z0-9_]*(?:\s*\([^)]*\))?\s*=", re.I)
     found = []
     target_tokens = 0
 
@@ -273,6 +275,33 @@ def set_assignment(text: str, key: str, value: str, *, group: str = "physics") -
             elif ch == "=":
                 fail(f"unsupported non-scalar {key} assignment layout in &{group} block")
             pos += 1
+        if quote is not None:
+            fail(f"unsupported continued quoted {key} value in &{group} block")
+        if re.match(r"^\s*\d+\s*\*", old_value):
+            fail(f"unsupported repeated {key} value in &{group} block")
+        # Until another assignment begins, additional values belong to this
+        # RHS. Reject them rather than changing only the first array element.
+        next_assignment = False
+        for next_left, next_right in comma_segments(body):
+            if next_left <= right:
+                continue
+            remainder = body[next_left:next_right]
+            if not remainder.strip():
+                if next_right < len(body):
+                    fail(f"unsupported multiple {key} values in &{group} block")
+                continue
+            if any_assignment.match(remainder):
+                next_assignment = True
+                break
+            fail(f"unsupported multiple {key} values in &{group} block")
+        if not next_assignment:
+            for following in lines[i + 1:end]:
+                following_body, _ = split_comment(following.rstrip("\r\n"))
+                if not following_body.strip():
+                    continue
+                if any_assignment.match(following_body):
+                    break
+                fail(f"unsupported continued {key} value in &{group} block")
         replacement = match.group(1) + value + trailing
         lines[i] = body[:left] + replacement + body[right:] + comment + newline
         return "".join(lines)
