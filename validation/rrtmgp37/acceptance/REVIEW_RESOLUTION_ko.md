@@ -1,6 +1,6 @@
 # 이전 검토 지적 해소 체크리스트
 
-현재 기준 main: `a152b2798ef465c57822db6a45e983a4b1d4ef34`. UDM27–RRTMGP37 전용.
+현재 기준 main: `32c13f2fd39d6846e35212f4f7bb53079fd6bd68`. UDM27–RRTMGP37 전용.
 
 PR #146–#151은 main에 병합됐다. 기존 실행의 source pin·범위는 그대로 보존하며, 현재 전체 tree에서 모든 과거 모델을 새로 실행했다고 주장하지 않는다. PR #149의 NetCDF guard와 기본 namelist 검사는 main에 반영됐고 정확히 같은 tree에서 11개 CI가 성공했다. PR150의 추가 scalar 경계 수정도 main에 반영됐다. PR151의 I/O 세 항목도 main에 반영됐고 정확히 같은 전체 tree에서 11개 CI가 성공했다.
 
@@ -60,3 +60,14 @@ PR154 main 통합과 11개 terminal SUCCESS를 연결한다. 신규 O0/O2 fixtur
 보존·QNN boundary 직접 주입을 검사한다. 전체 모듈/WRF host/UDM routing은 아니다.
 초기화→수송→UDM 입구의 의도된 단위·population은 여전히 OPEN이며
 15개 완료/7개 잔여와 원래19/current12, production_accepted=false를 유지한다.
+
+[PR155 terminal 및 실제 연결된 host 실행](../connected-host-number/README_ko.md)은
+PR155의 main 반영과 11개 terminal SUCCESS를 연결한다. 새 가역 관측 snapshot의
+전체 WRF GNU13/REAL32/serial/allocatable SCM에서 비균일 입력, QNN=0 입력,
+양의 구름 입력, 실제 비균일 checkpoint restart를 실행했다. 입력→start_em→실제
+Registry QNN/QNC RK1–3→첫 driver 상수 reset→UDM entry→native helper→반환을
+같은 셀·층·step에서 연결하고 청천/구름 OFF/ON history 전체 bytes를 검사했다.
+첫 driver는 외부 QNN을 상수로 바꾸며 restart에는 해당 reset이 실행되지 않는다.
+이것은 현 정책의 관측이지 외부 QNN 보존을 승인하거나 단위를 결정한 수정이 아니다.
+real.exe, 실제 specified lateral boundary, 다른 수송 정책, 입자크기 물리 승인과
+최종 예보 정확도는 포함하지 않는다. 완료15/잔여7과 production_accepted=false 유지.

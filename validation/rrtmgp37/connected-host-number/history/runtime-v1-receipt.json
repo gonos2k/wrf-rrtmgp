@@ -1,0 +1,260 @@
+{
+  "status": "PASS",
+  "scope": "full WRF serial REAL32 periodic SCM connected host trace",
+  "physical_units_approved": false,
+  "production_accepted": false,
+  "actual_lateral_boundary": "NOT_RUN: periodic x/y manufactured SCM",
+  "executables": {
+    "ideal": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-connected-host-runtime-v2/cmake/main/ideal",
+      "sha256": "788271a60bac467b15a82aca273a8a2e1172d794cc27fa4fee9b913da6244de2",
+      "size_bytes": 37608232
+    },
+    "wrf": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-connected-host-runtime-v2/cmake/main/wrf",
+      "sha256": "0310510658616539597013512d6e322a2cd01720098970186448b37b4996d166",
+      "size_bytes": 44869888
+    }
+  },
+  "arms": {
+    "nonuniform-off": {
+      "input": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-connected-host-runtime-v2/runtime-v1/nonuniform-off/wrfinput_d01",
+        "sha256": "eba0b764fa93c8dd51c36eb0549c3939984c7de91bef2f4fdc5fa071b63fad10",
+        "size_bytes": 77284
+      },
+      "namelist": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-connected-host-runtime-v2/runtime-v1/nonuniform-off/namelist.input",
+        "sha256": "4a4f2c31c033c9327f59e6fd67e49871ef03ab9896695eae881219c720e68eac",
+        "size_bytes": 4560
+      },
+      "log": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-connected-host-runtime-v2/runtime-v1/command-02.stdout",
+        "sha256": "73ff60c587927f043a885134207353cbc01ff04d4a77fbb8a1c7fb9f09ffd116",
+        "size_bytes": 39673
+      },
+      "history": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-connected-host-runtime-v2/runtime-v1/nonuniform-off/wrfout_d01_1999-10-22_19:00:00",
+        "sha256": "a40e9a00c2c55b795215e6ceeb44c1e97dd16fd9cf86c02e9df62673a34a7e1e",
+        "size_bytes": 118300
+      }
+    },
+    "nonuniform-on": {
+      "input": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-connected-host-runtime-v2/runtime-v1/nonuniform-on/wrfinput_d01",
+        "sha256": "eba0b764fa93c8dd51c36eb0549c3939984c7de91bef2f4fdc5fa071b63fad10",
+        "size_bytes": 77284
+      },
+      "namelist": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-connected-host-runtime-v2/runtime-v1/nonuniform-on/namelist.input",
+        "sha256": "4a4f2c31c033c9327f59e6fd67e49871ef03ab9896695eae881219c720e68eac",
+        "size_bytes": 4560
+      },
+      "log": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-connected-host-runtime-v2/runtime-v1/command-03.stdout",
+        "sha256": "6643cdfd475011afbb483b4754fa7fcf518d3c7bbabd96e2508465105722113e",
+        "size_bytes": 642579
+      },
+      "history": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-connected-host-runtime-v2/runtime-v1/nonuniform-on/wrfout_d01_1999-10-22_19:00:00",
+        "sha256": "a40e9a00c2c55b795215e6ceeb44c1e97dd16fd9cf86c02e9df62673a34a7e1e",
+        "size_bytes": 118300
+      },
+      "joined_checks": {
+        "stage_rows": {
+          "START_PRE": 59,
+          "START_POST": 59,
+          "RK_PRE": 2124,
+          "RK_POST": 2124,
+          "RESET_PRE": 59,
+          "RESET_POST": 59,
+          "UDM_ENTRY": 354,
+          "HELPER_IN": 354,
+          "HELPER_OUT": 354,
+          "UDM_RETURN": 354
+        },
+        "actual_RK_stages": [
+          1,
+          2,
+          3
+        ],
+        "RK_update_pairs": 2124,
+        "nonzero_advection_tendency_rows": 369,
+        "max_RK_relative_residual": 0.0,
+        "same_cell_helper_to_driver_return_bitwise": true,
+        "restart_without_first_step_reset": false,
+        "input_to_start_em_exact": true,
+        "start_em_supplied_nonuniform_preserved": true,
+        "empty_QNN_initialized": false,
+        "first_driver_constant_reset_observed": true
+      }
+    },
+    "empty-qnn-on": {
+      "input": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-connected-host-runtime-v2/runtime-v1/empty-qnn-on/wrfinput_d01",
+        "sha256": "068a435ef7fa9c615aae8e206153e8d3c431481cd8366d384b929392ce0d8b05",
+        "size_bytes": 77284
+      },
+      "namelist": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-connected-host-runtime-v2/runtime-v1/empty-qnn-on/namelist.input",
+        "sha256": "4a4f2c31c033c9327f59e6fd67e49871ef03ab9896695eae881219c720e68eac",
+        "size_bytes": 4560
+      },
+      "log": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-connected-host-runtime-v2/runtime-v1/command-04.stdout",
+        "sha256": "0510b34decfaaa4c0fcfbbb9d4875f71c74368a71179159a20ae7240d17417d2",
+        "size_bytes": 642579
+      },
+      "history": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-connected-host-runtime-v2/runtime-v1/empty-qnn-on/wrfout_d01_1999-10-22_19:00:00",
+        "sha256": "61ae591bfcbd3f6d018b02317feb7a1b55869beda2b9b70fcd5f6a541b95bba0",
+        "size_bytes": 118300
+      },
+      "joined_checks": {
+        "stage_rows": {
+          "START_PRE": 59,
+          "START_POST": 59,
+          "RK_PRE": 2124,
+          "RK_POST": 2124,
+          "RESET_PRE": 59,
+          "RESET_POST": 59,
+          "UDM_ENTRY": 354,
+          "HELPER_IN": 354,
+          "HELPER_OUT": 354,
+          "UDM_RETURN": 354
+        },
+        "actual_RK_stages": [
+          1,
+          2,
+          3
+        ],
+        "RK_update_pairs": 2124,
+        "nonzero_advection_tendency_rows": 192,
+        "max_RK_relative_residual": 0.0,
+        "same_cell_helper_to_driver_return_bitwise": true,
+        "restart_without_first_step_reset": false,
+        "input_to_start_em_exact": true,
+        "start_em_supplied_nonuniform_preserved": false,
+        "empty_QNN_initialized": true,
+        "first_driver_constant_reset_observed": true
+      }
+    },
+    "restart-on": {
+      "input": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-connected-host-runtime-v2/runtime-v1/restart-on/wrfrst_d01_1999-10-22_19:01:00",
+        "sha256": "b1aa706b9eefb52328c684034ace35ecd52a379f3db0814a0e30e77ca73e7fc0",
+        "size_bytes": 395452
+      },
+      "log": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-connected-host-runtime-v2/runtime-v1/command-05.stdout",
+        "sha256": "5a17ce478b16df11e0aba7a10c6e9a43c64cc18fd6ac6f2b53e7d6f28078e932",
+        "size_bytes": 628996
+      },
+      "joined_checks": {
+        "stage_rows": {
+          "START_PRE": 59,
+          "START_POST": 59,
+          "RK_PRE": 2124,
+          "RK_POST": 2124,
+          "UDM_ENTRY": 354,
+          "HELPER_IN": 354,
+          "HELPER_OUT": 354,
+          "UDM_RETURN": 354
+        },
+        "actual_RK_stages": [
+          1,
+          2,
+          3
+        ],
+        "RK_update_pairs": 2124,
+        "nonzero_advection_tendency_rows": 139,
+        "max_RK_relative_residual": 0.0,
+        "same_cell_helper_to_driver_return_bitwise": true,
+        "restart_without_first_step_reset": true
+      },
+      "namelist": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-connected-host-runtime-v2/runtime-v1/restart-on/namelist.input",
+        "sha256": "04db15158b10d6f6ab5f57ec9298c0a56d84883751d271f979eff64a2f7eed73",
+        "size_bytes": 4558
+      }
+    }
+  },
+  "observer_passivity": {
+    "history_arrays_bitwise": 211,
+    "history_file_bytes_equal": true
+  },
+  "limitations": [
+    "No real.exe or external-analysis ingestion",
+    "No actual specified lateral boundary",
+    "No approved number units or population",
+    "Native radius helper called on ideal state; positive-cloud radius accuracy not tested",
+    "No continuous/restart forecast endpoint equivalence claim"
+  ],
+  "commands": [
+    {
+      "argv": [
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-connected-host-runtime-v2/cmake/main/ideal"
+      ],
+      "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-connected-host-runtime-v2/runtime-v1/seed",
+      "kind": "ideal",
+      "status": "TERMINAL",
+      "pid": 2162013,
+      "actual_returncode": 0,
+      "timed_out": false,
+      "started_at": 1791376590.2517402,
+      "finished_at": 1791376590.3745196
+    },
+    {
+      "argv": [
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-connected-host-runtime-v2/cmake/main/wrf"
+      ],
+      "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-connected-host-runtime-v2/runtime-v1/nonuniform-off",
+      "kind": "forecast-nonuniform-off",
+      "status": "TERMINAL",
+      "pid": 2162015,
+      "actual_returncode": 0,
+      "timed_out": false,
+      "started_at": 1791376590.4255753,
+      "finished_at": 1791376592.6022744
+    },
+    {
+      "argv": [
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-connected-host-runtime-v2/cmake/main/wrf"
+      ],
+      "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-connected-host-runtime-v2/runtime-v1/nonuniform-on",
+      "kind": "forecast-nonuniform-on",
+      "status": "TERMINAL",
+      "pid": 2162071,
+      "actual_returncode": 0,
+      "timed_out": false,
+      "started_at": 1791376592.6924508,
+      "finished_at": 1791376594.872074
+    },
+    {
+      "argv": [
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-connected-host-runtime-v2/cmake/main/wrf"
+      ],
+      "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-connected-host-runtime-v2/runtime-v1/empty-qnn-on",
+      "kind": "forecast-empty-qnn-on",
+      "status": "TERMINAL",
+      "pid": 2162242,
+      "actual_returncode": 0,
+      "timed_out": false,
+      "started_at": 1791376594.9921215,
+      "finished_at": 1791376597.1719134
+    },
+    {
+      "argv": [
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-connected-host-runtime-v2/cmake/main/wrf"
+      ],
+      "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-connected-host-runtime-v2/runtime-v1/restart-on",
+      "kind": "restart",
+      "status": "TERMINAL",
+      "pid": 2162263,
+      "actual_returncode": 0,
+      "timed_out": false,
+      "started_at": 1791376597.3011968,
+      "finished_at": 1791376599.4793346
+    }
+  ]
+}

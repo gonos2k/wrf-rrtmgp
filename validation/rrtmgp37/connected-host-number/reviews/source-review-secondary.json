@@ -1,0 +1,52 @@
+{
+  "status": "PASS_SCOPED_SOURCE_REVIEW_WITH_NONBLOCKING_SCOPE_NOTES",
+  "review_scope": "Source and small metadata only. No compiler, model, solver, raw stdout, NetCDF, or packet artifacts were read or executed.",
+  "worktree": {
+    "path": "build/udm37-host-connected-pr-work",
+    "head": "32c13f2fd39d6846e35212f4f7bb53079fd6bd68",
+    "tree": "487d10b2ed8bf6e9defa12341a410833186d1d82",
+    "tracked_diff_paths": [
+      ".github/workflows/validate-port.yml",
+      "config/registration37.json",
+      "validation/rrtmgp37/acceptance/review-resolution-checklist.json"
+    ],
+    "production_WRF_sources_modified_in_tracked_diff": false
+  },
+  "reviewed_files": {
+    "WRF/test/rrtmgp/test_udm_connected_host_build.py": "507fbcc2eb843f558aed2b9c8fb8565a22be782334b99b68151cb3f4c240cea1",
+    "WRF/test/rrtmgp/test_udm_connected_host.py": "cda62f878faa5590f630f42c982fe6ce744d0329f986287d4763ae27179aebc8",
+    "WRF/test/rrtmgp/prepare_udm_connected_host.py": "1d787be9b76af3859e3ead93d416582f0eaa570c356fd5c845018164ed637d9e",
+    ".github/workflows/validate-connected-host.yml": "8a672f9612092b14b89c406903ae69e92ff0eb1fdc60ff48d6b910ff15eb8b0f"
+  },
+  "source_findings": [
+    {
+      "finding": "Observer hooks are contained in five explicit source files and marker-delimited. The preparer asserts each insertion anchor is unique and immediately strips all markers to compare bytes with the original before saving per-file production/snapshot SHA-256 pins. This provides a direct reversible-source check for the hooked files; it does not pin every source-tree file."
+    },
+    {
+      "finding": "Observer output is gated by WRF_UDM_HOST_TRACE and the helper uses only reads/WRITE. Hooks observe start_em before/after the QNN initialization guard; RK scalar inputs/outputs; the option-37 driver entry/return; and native radius-helper entry/return. No production arithmetic is added or changed."
+    },
+    {
+      "finding": "The first-step QNN reset timing is coherent: solve_em calls rk_update_scalar at line 3012 before microphysics_driver at line 3881; the option-37 driver performs QNN_CURR=ccn_conc at module_microphysics_driver.F line 931. Thus comparing first-step RK_POST to RESET_PRE and UDM_ENTRY to RESET_POST expresses the actual source order. Subsequent RK_POST-to-UDM_ENTRY and RK_PRE-to-prior UDM_RETURN joins are also consistent with the hook locations."
+    },
+    {
+      "finding": "The checker enforces exact stage/step/RK/slot/level roster, 59 levels, QNN/QNC distinct positive Registry slots, all three RK stages, restart starting at steps 7-12 without first-step reset, bitwise state joins, and the source-form RK scalar update identity. Its 8-epsilon relative/absolute-scaled allowance is explicitly a compiler-arithmetic check, not physical tolerance."
+    },
+    {
+      "finding": "The manufactured trajectories are declared as serial REAL32 periodic SCM and explicitly disclaim unit/population, physical radius accuracy, actual external lateral-boundary, and continuous/restart endpoint equivalence. Positive mass/number helper input is required for warm-cloud-on."
+    }
+  ],
+  "nonblocking_limits": [
+    "The checker reports nonzero_advection_tendency_rows but does not require that count to be positive. The nonuniform input therefore establishes state wiring and RK identity, but the assertion suite does not itself guarantee a nonzero advection response. If active transport is a required claim, require a positive count in the nonuniform arm or qualify the result as connected call-path evidence.",
+    "OFF/ON history comparison requires equal variable-name sets and equal raw array bytes; it does not compare array shapes/dtypes/attributes explicitly. The file SHA equality is recorded, and the saved package verifier requires it, but the runtime test itself does not fail solely on a false history_file_bytes_equal field. Keep claims to array-payload passivity unless the schema/file identity is separately gated.",
+    "The full-build workflow artifact path uploads the five observed source files, source pin JSON, commands, and runtime tree; it does not upload pristine copies of the five source files or the gzip source pair expected by the separate sealed-package verifier. This is not a build/test correctness blocker, but the workflow artifact alone is not a self-contained verifier package."
+  ],
+  "workflow_review": {
+    "pinned_actions": true,
+    "permissions": "contents: read",
+    "build": "fresh CMake serial ARW EM_SCM_XY; USE_ALLOCATABLES on; MPI/OpenMP/IPO off; classic NetCDF; full build before one integrated test invocation",
+    "limits": "65-minute job; build and test runners apply 3600s and 300s command bounds respectively",
+    "result": "workflow path filters cover production WRF/Registry/external/CMake, tests, validation package, and workflow changes; failure artifact upload runs with always()"
+  },
+  "runtime_status": "NOT_REVIEWED: no build/model logs or NetCDF/packet outputs were inspected. Source review is not evidence of a successful final-v2 build or forecast.",
+  "recommendation": "No source-level blocker found. Preserve the stated limits and consider the three nonblocking checks/packaging clarifications before publication."
+}

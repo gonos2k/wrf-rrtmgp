@@ -1,0 +1,100 @@
+{
+  "title": "Connected host QNN/QNC trace: source anchors and observation contract",
+  "status": "SOURCE_ONLY_PROPOSAL; NOT_INSTRUMENTED_OR_EXECUTED",
+  "source_identity": {
+    "requested_main_commit": "32c13f2 (parent-provided abbreviated identity)",
+    "review_checkout": "build/udm37-host-number-pr-work",
+    "checkout_head": "ef19898ee269e7ef2afc10a01981ef78d4cdac81",
+    "checkout_tree": "487d10b2ed8bf6e9defa12341a410833186d1d82",
+    "relation": "The reviewed checkout tree matches the requested current-main tree; checkout HEAD is a local commit with the same tree, not a claim that its commit ID is the remote-main ID.",
+    "pinned_files": [
+      {"path":"WRF/phys/module_microphysics_driver.F","sha256":"c02f227d0fc1bf633fa53e54361e7117093b2c7bb02cedc2b71441c5bd638bd9"},
+      {"path":"WRF/phys/module_mp_udm.F","sha256":"7bd96141eefc6ae2cb66cea0ce022fcc2ee64afce5c616aa65f26711c8790947"},
+      {"path":"WRF/dyn_em/solve_em.F","sha256":"ed03953a8b7b999fc0a5a281893f4808bbed28697ea9032fde9b9b605e0d9ecb"},
+      {"path":"WRF/dyn_em/module_em.F","sha256":"67c5842c1c5d407a26139f26bd317f3016c610aeaf60207dfd21394ddb81482c"},
+      {"path":"WRF/dyn_em/start_em.F","sha256":"bce1b0656d73d76f74f4db7f1b71d254cc1e11f16ecfc82e54fe153a84e6c17e"},
+      {"path":"WRF/dyn_em/module_initialize_real.F","sha256":"81b40b4ae6891d522b2e30d8cee2036c20e139ef9e780c9a17b0d895ca13d87f"}
+    ]
+  },
+  "anchor_map": [
+    {
+      "stage":"host_timestep_identity",
+      "source":"WRF/dyn_em/solve_em.F:381-384",
+      "observe":["grid%itimestep immediately after increment","grid%restart and a restart/source provenance flag if available","domain id"],
+      "note":"solve_em increments grid%itimestep once at the beginning of this advance. Start-em QNN initialization is separate; do not reinterpret step 1 as proof that the state came from a fresh initialization."
+    },
+    {
+      "stage":"start_em_qnn_initialization",
+      "source":"WRF/dyn_em/start_em.F:1791-1815",
+      "observe":["f_qnn branch entered","mp_physics","nssl_ccn_is_ccna if relevant","grid%ccn_conc before/after scheme branch","pre/post QNN max and selected cell value","grid%itimestep","whether max<1 initialization branch ran"],
+      "note":"For f_qnn, this code conditionally writes QNN only when the selected-domain max is <1. WDM5/6 are NO OP here; NSSL has its own branch. It is not the same assignment as the option-37 driver reset."
+    },
+    {
+      "stage":"per_real_scalar_transport",
+      "source":"WRF/dyn_em/solve_em.F:2927-3030; WRF/dyn_em/module_em.F:1096-1442 and 1587-1799",
+      "selection":"Inside other_scalar_advance, instrument only is==P_QNN or is==P_QNC. Preserve the scalar loop's source order and tile coordinates.",
+      "observe":["grid%itimestep","rk_step and rk_order","dt_rk","is and symbolic P_QNN/P_QNC","domain id, ij/tile bounds, exact (i,k,j)","scalar_old, scalar before rk_scalar_tend, scalar after rk_update_scalar","advect_tend and scalar_tend at that cell","mu_1, mu_2, mub, c1h, c2h, msfty","selected advection/diffusion settings and whether boundary tendencies were applied"],
+      "note":"rk_scalar_tend computes the configured scalar advection/diffusion tendencies, then rk_update_scalar applies the stage update. The exact cell identity plus timestep, RK stage and tile is required; a timestep-only record cannot establish which RK value was observed."
+    },
+    {
+      "stage":"specified_qnn_boundary",
+      "source":"WRF/dyn_em/solve_em.F:3054-3064; WRF/share/module_bc.F:2460-2583",
+      "observe":["whether this branch was entered","same grid%itimestep/rk_step/tile/cell","inflow/outflow classification from face velocity","field value immediately before/after","ccn_conc"],
+      "note":"The QNN boundary routine receives ccn_conc but no density argument; on inflow it assigns ccn_conc directly. This boundary path is conditional; don't infer it ran merely from specified-boundary configuration."
+    },
+    {
+      "stage":"option37_driver_init_and_entry",
+      "source":"WRF/phys/module_microphysics_driver.F:920-933 and 2834-2905",
+      "observe":["itimestep, have_udm_cf, num_tiles","QNN/QNC selected-cell values before and after line 931 initialization","ccn_conc","exact selection of the have_udm_cf branch","QNN/QNC/QNR, DEN, P, T, qv, coordinate and units metadata immediately before CALL udm at 2863-2905"],
+      "note":"When have_udm_cf and itimestep==1, this driver writes ccn_conc over the full memory-domain QNN array once before the tile loop. In the selected branch, UDM is called with ccn_preinitialized=.true. and input_density_is_dry=.true. Existing trace_udm_entry_density_state is an available pre-call observation, but its selected location uses a separate column selector and its record needs to be joined to this same grid/timestep/cell."
+    },
+    {
+      "stage":"UDM_return_and_native_consumption",
+      "source":"WRF/phys/module_microphysics_driver.F:2863-2924; WRF/phys/module_mp_udm.F:211-503, 3749-3850",
+      "observe":["same cell and timestep QNN/QNC/QNR/DEN immediately after CALL udm returns","actual native RE_CLOUD/RE_ICE/RE_SNOW writes after the return","the same call's DEN and flags"],
+      "note":"The existing post-call trace_udm_radius_state records temperature, QC/QI/QS/QNC, rho, native effective radii and CF state, but not returned QNN. Add a separate QNN/QNC post-call read at the same selected cell if the goal is a true before/after number-state trace. Native cloud radius helper forms rnc=nc*rho at lines 3804-3808 and later uses nc in the lambda expression at 3820-3824; the source-observed input basis remains under review, so record rather than convert."
+    }
+  ],
+  "time_and_restart_semantics": {
+    "itimestep": "solve_em increments grid%itimestep at line 381 before this advance's scalar loops; the driver and UDM receive that value. Record the actual integer every time.",
+    "rk_stage": "RK state may change multiple times within a single itimestep. Record rk_step and dt_rk at the scalar update call; bracket each update rather than sampling only once per model timestep.",
+    "restart": "A nonzero or one-based itimestep alone does not identify fresh versus restarted state. Record grid%restart plus the actual QNN initialization predicates and writes. A restart can retain QNN while first-call reset behavior is controlled separately by driver conditions.",
+    "cell_identity": "Use domain id, i/j tile and selected global i,j plus k; also record scalar index/is and P_QNN/P_QNC symbolic mapping. Join entry/return with the exact same coordinates and current itimestep. Do not join by nearest cell or by timestep alone."
+  },
+  "minimal_observer_design": {
+    "record_sequence": [
+      "A: startup/input state for selected cell before any QNN initialization; include restart/source identity.",
+      "B: after start_em's conditional QNN initialization (if this path is actually entered).",
+      "C: option-37 driver initialization at itimestep 1, record before/after the full-domain ccn_conc assignment for selected cell.",
+      "D: per RK stage for P_QNN and P_QNC, record before rk_scalar_tend, tendency result, and after rk_update_scalar; separately record specified-flow boundary before/after if its branch is entered.",
+      "E: immediately before UDM, reuse/extend the existing entry observer at the identical cell; immediately after UDM, record returned QNN/QNC and the native radius outputs."
+    ],
+    "anti_aliasing": "Use explicit record tags and one monotonically increasing sequence within (domain, itimestep, rk_step, tile, scalar index, cell). Include branch-entered flags; no absent event is equivalent to zero change.",
+    "avoid_duplicate_reset": "Do not read pre-call QNN only after line 931 and label it as transported state. Store source-event records for the line-931 reset and each RK update separately."
+  },
+  "independent_oracles": [
+    {
+      "name":"scalar mass-coupling identity",
+      "procedure":"Actual module_em.rk_update_scalar in a small manufactured cell/domain; one chosen scalar; zero advective and physics tendencies; controlled distinct old/new mu; no model step.",
+      "source_equation":"Mnew*qnew = Mold*qold, with M=c1*(mu+mu_base)+c2, corresponding exactly to the source left-to-right update; check the source expression and floating-point result separately.",
+      "scope":"Tests the host mass coupling/decoupling component, not advection and not QNN units."
+    },
+    {
+      "name":"closed-periodic scalar flux conservation",
+      "procedure":"Actual configured advect_scalar implementation and rk_update_scalar on a tiny periodic domain, one scalar and stage, zero physics/diffusion/source terms.",
+      "oracle":"Sum source-equivalent layer dry-mass and horizontal metric/area weighted q over the domain; compare with integrated face-flux divergence. The periodic boundary flux must cancel. Capture and independently recompute all selected face fluxes using the same stencil, velocity staggering, map factors, and RK coefficients.",
+      "scope":"Tests the configured discrete conservative transport. It cannot settle whether a producer's numerical field means #kg-1 or #m-3."
+    },
+    {
+      "name":"state-boundary unit/basis trace",
+      "procedure":"At same cell/step capture initialization source, every QNN/QNC RK update, UDM pre/post state, dry DEN and consumer output. Distinguish driver reset, specified-boundary inflow, restart retention, and UDM internal clamp events.",
+      "oracle":"No universal numeric conversion is imposed. Compare only against a separately authenticated intended storage policy; otherwise report observed assignments and mass/volume transformations without declaring pass/fail on physical units."
+    }
+  ],
+  "limits": [
+    "Source analysis only. No production source modification, compile, model, solver, actual observer run, or raw scientific array read.",
+    "This is an anchor proposal, not permission to instrument or run a model. The actual host runtime route and restart/input population remain unobserved.",
+    "The existing entry/radius observers were identified as reusable source sites; no runtime observer semantics or output schema were validated in this task.",
+    "Do not infer a density correction from the mass-weighted scalar equation alone. The producer/storage-unit contract and numerical conservation of host transport are distinct questions."
+  ]
+}

@@ -1,0 +1,80 @@
+{
+  "schema": "UDM37_CONNECTED_HOST_STATIC_REVIEW_V3",
+  "status": "PASS_SCOPED_FINAL_INTER_RK_AND_NONUNIFORM_RESTART_SOURCE_DELTA",
+  "created_utc": "2026-10-07T12:43:57.903948+00:00",
+  "pins": {
+    "preparer": {
+      "path": "build/udm37-host-connected-pr-work/WRF/test/rrtmgp/prepare_udm_connected_host.py",
+      "sha256": "1d787be9b76af3859e3ead93d416582f0eaa570c356fd5c845018164ed637d9e",
+      "size_bytes": 7994
+    },
+    "checker": {
+      "path": "build/udm37-host-connected-pr-work/WRF/test/rrtmgp/test_udm_connected_host.py",
+      "sha256": "cda62f878faa5590f630f42c982fe6ce744d0329f986287d4763ae27179aebc8",
+      "size_bytes": 16225
+    },
+    "prior_v1": {
+      "path": "build/udm37-host-connected-preparation-v1/source-review-v1.json",
+      "sha256": "5bb9995e5c8800491e4162133eb7ab301909d0052a0dcbe35fb09d49e542ff84",
+      "size_bytes": 4758
+    },
+    "prior_v2": {
+      "path": "build/udm37-host-connected-preparation-v1/source-review-v2.json",
+      "sha256": "391eb5c82273ed8fadc24f5b4a8e4a786a6209c7e6cfb6f51527945306be998d",
+      "size_bytes": 8927
+    }
+  },
+  "correction_to_prior_review": "V2 sampled final checker cda62f87 at seal but retained stale earlier wording saying inter-RK current/old continuity is not asserted. That statement is incorrect for its pinned checker. This additive review corrects that description; v2 is preserved unchanged. The rest of v2 source/reversibility checks remain scoped as stated.",
+  "checks": [
+    {
+      "id": "HC-03",
+      "status": "PASS_SCOPED_SOURCE",
+      "path": "WRF/test/rrtmgp/test_udm_connected_host.py",
+      "lines": [
+        95,
+        98
+      ],
+      "proof": "For every RK_PRE with rk<3, other is the exact same step/slot/level RK_POST; its first two raw REAL32 bit words must equal the next RK_PRE first two words. Exact roster requires all pairs. Endpoint drift is fatal.",
+      "meaning": "Checks actual selected-cell current-state continuity and old-buffer invariance between consecutive RK update observations; not global field conservation."
+    },
+    {
+      "id": "HC-04",
+      "status": "PASS_SCOPED_SOURCE",
+      "path": "WRF/test/rrtmgp/test_udm_connected_host.py",
+      "lines": [
+        257,
+        266,
+        275,
+        279
+      ],
+      "proof": "Only warm-cloud-on 60-second checkpoint is selected, exactly one required. Before launch both QNCCN and QNCLOUD must have more than one distinct value. Restart START_PRE QNN/QNC/QNR equals actual checkpoint selected column per level. START_PRE→POST equality and exact steps7..12/no RESET are required by verify_join.",
+      "meaning": "Nonuniform checkpoint ingestion/retention plus connected runtime path; not continuous-versus-restart endpoint equivalence, restored units, radius physics, or external analysis ingestion."
+    },
+    {
+      "id": "HC-01",
+      "status": "REMAINS_RESOLVED",
+      "proof": "Preparer unchanged from repaired pin, explicit IF(rk_step==1) current-only list; ELSE old list; original frozen failure retained."
+    },
+    {
+      "id": "HC-02",
+      "status": "REMAINS_RESOLVED_SCOPED",
+      "proof": "Exact 59-layer/6-step/two-Registry-slot event roster and host consumer joins remain mandatory. Added HC-03 closes the separately noted inter-RK property."
+    }
+  ],
+  "execution_scope": {
+    "reviewer_source_edits": 0,
+    "compiler_model_solver_calls": 0,
+    "raw_runtime_packet_reads": 0,
+    "scientific_array_reads": 0,
+    "syntax_check": "Python AST only",
+    "actual_final_runtime": "NOT_REVIEWED; root owns execution"
+  },
+  "limitations": [
+    "Restart nonuniform check is whole stored field uniqueness, not a requirement of horizontal variation at every layer.",
+    "OFF/ON comparisons remain history-array bitwise checks with whole-file equality separately reported; no schema/attribute passivity claim.",
+    "Manufactured warm-cloud saturation constants are input construction only; actual helper positive QC/QNC is mandatory and physical accuracy is unapproved."
+  ],
+  "production_accepted": false,
+  "physical_units_approved": false,
+  "판정_ko": "현재 동결 코드에는 RK 단계 사이 current/old 비트 연결과 양의 구름 checkpoint의 비균일 QNN/QNC restart 검사가 있습니다. 소스 범위에서는 추가 차단사항을 찾지 못했습니다. 새 실제 런타임과 물리 승인 여부는 별도입니다."
+}
