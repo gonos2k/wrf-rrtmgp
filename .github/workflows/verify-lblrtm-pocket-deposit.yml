@@ -1,0 +1,23 @@
+name: Verify LBLRTM pocket deposit evidence
+on:
+  pull_request:
+    paths:
+      - 'validation/rrtmgp37/lblrtm-pocket-deposit/**'
+      - '.github/workflows/verify-lblrtm-pocket-deposit.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'validation/rrtmgp37/lblrtm-pocket-deposit/**'
+      - '.github/workflows/verify-lblrtm-pocket-deposit.yml'
+permissions:
+  contents: read
+jobs:
+  saved-capsule-integrity:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - name: Exercise verifier mutation controls
+        run: python3 -I -S validation/rrtmgp37/lblrtm-pocket-deposit/test_verify_saved.py
+      - name: Reconstruct the selected saved deposits from lossless record pairs
+        run: python3 -I -S validation/rrtmgp37/lblrtm-pocket-deposit/verify_saved.py
