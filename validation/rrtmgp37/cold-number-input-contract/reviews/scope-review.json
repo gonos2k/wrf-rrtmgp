@@ -1,0 +1,51 @@
+{
+  "status": "SOURCE_SCOPE_REVIEW_COMPLETE_NO_EXECUTION",
+  "scope": "Read-only source/design review of proposed cold-file-to-start_em and QNC/QNR preservation assertions. No raw runtime data, NetCDF payload, compiler, model, or test execution was inspected or performed.",
+  "worktree": {
+    "path": "build/udm37-cold-number-input-pr-work",
+    "head": "23c118bd04729a73a3e7bb873e14b2c37b262f31",
+    "tree": "3c5ce46d5a89264c0cbffb4352a5d09152c3327f",
+    "status_clean": true
+  },
+  "source_pins": {
+    "test_udm_connected_host.py": {
+      "path": "build/udm37-cold-number-input-pr-work/WRF/test/rrtmgp/test_udm_connected_host.py",
+      "sha256": "6e242da40b4f5b542092ec677622233433703ad506f96c0567b2450ca35e5b66"
+    },
+    "prepare_udm_connected_host.py": {
+      "path": "build/udm37-cold-number-input-pr-work/WRF/test/rrtmgp/prepare_udm_connected_host.py",
+      "sha256": "1d787be9b76af3859e3ead93d416582f0eaa570c356fd5c845018164ed637d9e"
+    },
+    "start_em.F": {
+      "path": "build/udm37-cold-number-input-pr-work/WRF/dyn_em/start_em.F",
+      "sha256": "bce1b0656d73d76f74f4db7f1b71d254cc1e11f16ecfc82e54fe153a84e6c17e"
+    },
+    "module_microphysics_driver.F": {
+      "path": "build/udm37-cold-number-input-pr-work/WRF/phys/module_microphysics_driver.F",
+      "sha256": "c02f227d0fc1bf633fa53e54361e7117093b2c7bb02cedc2b71441c5bd638bd9"
+    }
+  },
+  "source_assessment": [
+    "The current host test confirms the NetCDF file has QNCCN/QNCLOUD/QNRAIN, but manufactures QNRAIN as zero. It joins QNCCN at START_PRE and applies the expected QNN startup guard result at START_POST; it does not currently join all three cold-file fields to START_PRE or check QNC/QNR preservation across START_POST and RESET_PRE/RESET_POST.",
+    "Pinned start_em.F startup code computes ccn_max_val from P_QNN and only writes P_QNN when ccn_max_val < 1.0 (around line 1803-1814). The inspected routine contains no QNC/QNR initialization or write. Thus the narrow proposed assertions can verify cold-file-to-start_em ingress for QNN/QNC/QNR, preserve the existing QNN initialization policy, and require QNC/QNR to remain unchanged across the startup guard.",
+    "Pinned module_microphysics_driver.F has a separate first-timestep option-37 reset that writes QNN_CURR=ccn_conc (around line 931); this is downstream of RK scalar updates and before the option-37 UDM call. The reset hook already brackets only that assignment. Checking QNC/QNR bits across RESET_PRE/RESET_POST is directly source-grounded; it verifies they are not changed by the QNN-only reset.",
+    "A manufactured finite positive QNR is a useful nonzero sentinel: it makes zero-fill, wrong-slot, or blanket-reset errors observable where the present zero QNR input cannot distinguish preservation from destructive zeroing. Distinct level/cell values make substitution or indexing mistakes easier to detect. This remains a test sentinel only; it does not validate units, number-population meaning, PSD consistency, process rates, or physical QNR positivity."
+  ],
+  "recommended_assertion_contract": [
+    "For the selected observed column and each represented level, compare the actual input-file QNCCN/QNCLOUD/QNRAIN values to START_PRE using exact REAL32 bit patterns.",
+    "Across START_PRE\u2192START_POST, assert QNC and QNR exact bit preservation. For QNN, preserve existing behavior: unchanged for positive/nonempty input, and only the already-declared ccn_conc initialization branch for the empty-QNN arm.",
+    "Across RESET_PRE\u2192RESET_POST, assert QNC and QNR exact bit preservation while retaining the explicit QNN reset-to-ccn_conc expectation. Join RESET_POST to subsequent UDM_ENTRY for all three numbers if this is within the targeted call-path claim.",
+    "Use event bit words and the input variable\u2019s REAL32 representation for bit checks; keep finite-value validation and do not introduce unit or magnitude acceptance thresholds beyond the manufactured sentinel setup."
+  ],
+  "limits": [
+    "This closes only the tested selected-column cold-file ingress and preservation across the two named initialization/reset points. It does not prove every horizontal cell or every model phase preserves those fields.",
+    "A positive manufactured QNR strengthens test sensitivity but is not a physical initial-condition validation or approval of the current startup policy.",
+    "Whether production initialization policy should initialize or preserve any field remains OPEN and is outside this test-only assertion scope."
+  ],
+  "no_execution": {
+    "compiler_calls": 0,
+    "model_calls": 0,
+    "test_calls": 0,
+    "raw_scientific_payload_reads": 0
+  }
+}
