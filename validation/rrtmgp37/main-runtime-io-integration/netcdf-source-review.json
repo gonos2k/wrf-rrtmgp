@@ -1,0 +1,93 @@
+{
+  "blocking_findings": [],
+  "limitations": [
+    "No tests/builds were executed in this review.",
+    "The generic module_io rank routines are selected verbatim and run, but the full module_io module is not built or linked.",
+    "MPI behavior is a fixture broadcast, not actual WRF I/O decomposition.",
+    "The workflow directly invokes the Python fixture in standalone-columns; the NetCDF ZZ fixture itself is not registered as a CTest in the shown CMake changes."
+  ],
+  "pins": {
+    ".github/workflows/validate-port.yml": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-main-runtime-io-integration-pr-work/.github/workflows/validate-port.yml",
+      "sha256": "8c3c8930fb5889bd90db5f1eca5852dec315a308ee179975626177a86d4df186",
+      "size_bytes": 26327
+    },
+    "WRF/external/io_netcdf/wrf_io.F90": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-main-runtime-io-integration-pr-work/WRF/external/io_netcdf/wrf_io.F90",
+      "sha256": "670b6934259528e664af100692390d5289188e17a604e52c94d4a49ec6a7c5b1",
+      "size_bytes": 129354
+    },
+    "WRF/frame/module_io.F": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-main-runtime-io-integration-pr-work/WRF/frame/module_io.F",
+      "sha256": "3b4a0e1180b08146c015e4acf37d7e431d751b1a3dbe3a238fb38647feee7eea",
+      "size_bytes": 189901
+    },
+    "WRF/test/rrtmgp/test_netcdf_zz.F90": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-main-runtime-io-integration-pr-work/WRF/test/rrtmgp/test_netcdf_zz.F90",
+      "sha256": "7d29e72b539339b84d4db6ccc2fccef0461c3d2ecaae4dd1a9e6e834fd0d9547",
+      "size_bytes": 10294
+    },
+    "WRF/test/rrtmgp/test_netcdf_zz.py": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-main-runtime-io-integration-pr-work/WRF/test/rrtmgp/test_netcdf_zz.py",
+      "sha256": "5f50803d044c38c79f2275ff8b4440b1338dc59d2f725dd7dace6ea6771d043e",
+      "size_bytes": 14706
+    }
+  },
+  "reviewed_changes": [
+    {
+      "finding": "The fixture writes two different sentinel records at 00:00 and 01:00, confirms the low-level Time dimension ID is the unlimited dimension, checks its length is 2, then reads and validates the corresponding data at both dates.",
+      "item": "Unlimited time dimension and multi-record readback"
+    },
+    {
+      "finding": "For both REAL4-on-output variables, the fixture reads as WRF_REAL and WRF_DOUBLE. It compares the double read with exact promotion of the read REAL4 values; the DOUBLE write uses representable half increments and checks the REAL4 result against conversion.",
+      "item": "REAL4-to-DOUBLE read"
+    },
+    {
+      "finding": "A read using QQ must return WRF_WARN_BAD_MEMORYORDER; a subsequent valid lowercase zz read of the second record is checked exactly.",
+      "item": "Bad-order read and recovery"
+    },
+    {
+      "finding": "The Python harness extracts the actual dim_from_memorder and lower_case subroutines from the pinned module_io.F source, compiles them with the fixture, and checks uppercase/lowercase ZZ rank 2 plus XY, XYZ, and rejected QQ behavior. The receipt labels this as selected helper execution, not full module_io runtime.",
+      "item": "Generic rank helper"
+    },
+    {
+      "finding": "Integer, REAL, and DOUBLE-to-REAL4 writes; uppercase/lowercase ZZ; a 3x5 nonsquare ordered sentinel; names/extents/rank metadata; absence of unsupported variable; and nonspatial helper behavior remain asserted.",
+      "item": "Existing backend coverage retained"
+    },
+    {
+      "finding": "The runner pins module_io.F and test/backend sources before use, runs O0 and O2, journals child return codes, and checks test success markers; optional MPI mode exercises monitor/backend/broadcast fixture behavior rather than full WRF module_io.",
+      "item": "Runner coverage"
+    }
+  ],
+  "reviewed_not_run": true,
+  "schema": "UDM27_NETCDF_ZZ_ENHANCEMENT_STATIC_REVIEW_V1",
+  "scope": "Static review only. No compilation or test execution.",
+  "source_locations": {
+    "WRF/external/io_netcdf/wrf_io.F90": {
+      "REAL4_transpose_identity": "926-981",
+      "ZZ_rank": "426-449",
+      "axis_identity": "532-610",
+      "nonspatial_zero_extent": "496-530",
+      "transpose_identity": "755-791"
+    },
+    "WRF/test/rrtmgp/test_netcdf_zz.F90": {
+      "double_readback": "146-151",
+      "generic_helper_checks": "43-54",
+      "two_record_reads": "120-161",
+      "two_record_writes": "79-84",
+      "unlimited_dimension": "87-112",
+      "valid_read_after_bad_order": "155-161"
+    },
+    "WRF/test/rrtmgp/test_netcdf_zz.py": {
+      "O0_O2_build_and_run": "237-261",
+      "module_io_helper_extraction": "225-236",
+      "receipt_scope": "266-274"
+    }
+  },
+  "status": "PASS_SCOPED_ENHANCED_ZZ_FIXTURE_STATIC_REVIEW",
+  "worktree": {
+    "dirty_expected": true,
+    "head": "a91d0d855da3e24094c2e6c7ba1088b56bc8c461",
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-main-runtime-io-integration-pr-work"
+  }
+}

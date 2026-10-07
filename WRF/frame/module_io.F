@@ -4438,7 +4438,7 @@ SUBROUTINE dim_from_memorder(MemoryOrder,NDim)
   SELECT CASE (MemOrd)
     CASE ('xyz','xzy','yxz','yzx','zxy','zyx')
       NDim = 3
-    CASE ('xy','yx')
+    CASE ('xy','yx','zz')
       NDim = 2
     CASE ('z','c','0')
       NDim = 1

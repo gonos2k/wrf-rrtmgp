@@ -1,0 +1,296 @@
+{
+  "PR_heads": {
+    "135": "84da94aa7121e29749e5128f6b2780bbdcf392dd",
+    "136": "7a8d1ba85f7ff53d67b6ca7c28923e4d3985090a",
+    "137": "3fb741aaa57289fc097af7ea58ed4b780199f38e"
+  },
+  "common_base": "75abbc5cf035503343caf9bc2b37667f648168ac",
+  "counts": {
+    "compilers": 0,
+    "fetches_by_reviewer": 0,
+    "models": 0,
+    "raw_scientific_reads": 0,
+    "solvers": 0,
+    "source_edits": 0,
+    "tests": 0
+  },
+  "created_utc": "2026-10-07T00:37:02.621130+00:00",
+  "dependency_findings": [
+    "PR136 descends from PR135; PR137 descends from PR136. Use ordered scoped changes or final PR137 allowlist, not whole branch replacement.",
+    "Production changes are exactly WRF/tools/gen_allocs.c plus WRF/external/io_netcdf/wrf_io.F90 and WRF/frame/module_io.F. PR135 contains no production physics correction.",
+    "Registry false defaults must precede per-dimension overrides; ZZ rank/identity backend and module_io helper are both required for full I/O path.",
+    "Startup controls import current sibling SCM/replay helpers already present on main. CMake adds two Python test registrations; workflow applies --capture-pair to the existing serial SCM step.",
+    "Registry test builds current C tools then Fortran metadata sentinels; workflow installs GCC/make/gfortran and preserves artifacts. NetCDF backend test needs nf-config/NetCDF Fortran, CPP and M4; workflow explicitly adds M4. Optional MPI wrapper is not actual module_io execution.",
+    "config/registration37.json changes only two patched_blobs for CMakeLists and SCM harness and both identify selected final blob bytes. Existing imported source/evidence pins must remain unchanged.",
+    "All17 selected main blobs equal common-base blobs (including absence for additions), so no selected-path content conflict is observed at this main SHA. Main newer evidence/workflows outside allowlist remain untouched."
+  ],
+  "excluded_historical_evidence_count": 22,
+  "excluded_historical_evidence_paths": [
+    "validation/rrtmgp37/netcdf-nonspatial-zz/README.md",
+    "validation/rrtmgp37/netcdf-nonspatial-zz/actual-wrf-followup/README.md",
+    "validation/rrtmgp37/netcdf-nonspatial-zz/actual-wrf-followup/control-independent.json",
+    "validation/rrtmgp37/netcdf-nonspatial-zz/actual-wrf-followup/control-summary.json",
+    "validation/rrtmgp37/netcdf-nonspatial-zz/actual-wrf-followup/execution-identity.json",
+    "validation/rrtmgp37/netcdf-nonspatial-zz/actual-wrf-followup/index.json",
+    "validation/rrtmgp37/netcdf-nonspatial-zz/actual-wrf-followup/prelaunch-independent.json",
+    "validation/rrtmgp37/netcdf-nonspatial-zz/actual-wrf-followup/remote-ci.json",
+    "validation/rrtmgp37/netcdf-nonspatial-zz/actual-wrf-followup/restart-independent.json",
+    "validation/rrtmgp37/netcdf-nonspatial-zz/actual-wrf-followup/restart-summary.json",
+    "validation/rrtmgp37/netcdf-nonspatial-zz/backend-fixture.json",
+    "validation/rrtmgp37/netcdf-nonspatial-zz/backend-independent.json",
+    "validation/rrtmgp37/netcdf-nonspatial-zz/current-serial-independent.json",
+    "validation/rrtmgp37/netcdf-nonspatial-zz/current-serial.json",
+    "validation/rrtmgp37/netcdf-nonspatial-zz/full-build.json",
+    "validation/rrtmgp37/netcdf-nonspatial-zz/receipt-index.json",
+    "validation/rrtmgp37/netcdf-nonspatial-zz/restart-design.json",
+    "validation/rrtmgp37/netcdf-nonspatial-zz/source-independent.json",
+    "validation/rrtmgp37/startup-validator-followup/README.md",
+    "validation/rrtmgp37/startup-validator-followup/result.json",
+    "validation/rrtmgp37/startup-validator-followup/root-execution.json",
+    "validation/rrtmgp37/startup-validator-followup/runtime.json"
+  ],
+  "historical_document_notes": [
+    "Registry and NetCDF docs describe original failure and separately required runtime scope; retained successful feature followup evidence is excluded from this minimal source transplant. Preserve historical labels; any latest-main scope/result uses new evidence."
+  ],
+  "incremental_changes": {
+    "135": {
+      "head": "84da94aa7121e29749e5128f6b2780bbdcf392dd",
+      "historical_evidence_paths": [
+        "validation/rrtmgp37/startup-validator-followup/README.md",
+        "validation/rrtmgp37/startup-validator-followup/result.json",
+        "validation/rrtmgp37/startup-validator-followup/root-execution.json",
+        "validation/rrtmgp37/startup-validator-followup/runtime.json"
+      ],
+      "parent_scope": "75abbc5cf035503343caf9bc2b37667f648168ac",
+      "paths": [
+        ".github/workflows/validate-port.yml",
+        "WRF/doc/rrtmgp/UDM_STARTUP_OPTICS_CONTRACT.md",
+        "WRF/test/rrtmgp/CMakeLists.txt",
+        "WRF/test/rrtmgp/test_udm_startup_optics_contract.py",
+        "WRF/test/rrtmgp/test_udm_startup_snow_scm.py",
+        "WRF/test/rrtmgp/test_udm_startup_snow_scm_process.py",
+        "config/registration37.json"
+      ]
+    },
+    "136": {
+      "head": "7a8d1ba85f7ff53d67b6ca7c28923e4d3985090a",
+      "historical_evidence_paths": [],
+      "parent_scope": "84da94aa7121e29749e5128f6b2780bbdcf392dd",
+      "paths": [
+        ".github/workflows/validate-port.yml",
+        "WRF/doc/rrtmgp/REGISTRY_SUBGRID_RESTART_CONTRACT.md",
+        "WRF/test/rrtmgp/test_registry_subgrid_metadata.py",
+        "WRF/tools/gen_allocs.c",
+        "tools/compare_registry.py",
+        "tools/validate.py"
+      ]
+    },
+    "137": {
+      "head": "3fb741aaa57289fc097af7ea58ed4b780199f38e",
+      "historical_evidence_paths": [
+        "validation/rrtmgp37/netcdf-nonspatial-zz/README.md",
+        "validation/rrtmgp37/netcdf-nonspatial-zz/actual-wrf-followup/README.md",
+        "validation/rrtmgp37/netcdf-nonspatial-zz/actual-wrf-followup/control-independent.json",
+        "validation/rrtmgp37/netcdf-nonspatial-zz/actual-wrf-followup/control-summary.json",
+        "validation/rrtmgp37/netcdf-nonspatial-zz/actual-wrf-followup/execution-identity.json",
+        "validation/rrtmgp37/netcdf-nonspatial-zz/actual-wrf-followup/index.json",
+        "validation/rrtmgp37/netcdf-nonspatial-zz/actual-wrf-followup/prelaunch-independent.json",
+        "validation/rrtmgp37/netcdf-nonspatial-zz/actual-wrf-followup/remote-ci.json",
+        "validation/rrtmgp37/netcdf-nonspatial-zz/actual-wrf-followup/restart-independent.json",
+        "validation/rrtmgp37/netcdf-nonspatial-zz/actual-wrf-followup/restart-summary.json",
+        "validation/rrtmgp37/netcdf-nonspatial-zz/backend-fixture.json",
+        "validation/rrtmgp37/netcdf-nonspatial-zz/backend-independent.json",
+        "validation/rrtmgp37/netcdf-nonspatial-zz/current-serial-independent.json",
+        "validation/rrtmgp37/netcdf-nonspatial-zz/current-serial.json",
+        "validation/rrtmgp37/netcdf-nonspatial-zz/full-build.json",
+        "validation/rrtmgp37/netcdf-nonspatial-zz/receipt-index.json",
+        "validation/rrtmgp37/netcdf-nonspatial-zz/restart-design.json",
+        "validation/rrtmgp37/netcdf-nonspatial-zz/source-independent.json"
+      ],
+      "parent_scope": "7a8d1ba85f7ff53d67b6ca7c28923e4d3985090a",
+      "paths": [
+        ".github/workflows/validate-port.yml",
+        "WRF/doc/rrtmgp/NETCDF_NONSPATIAL_ZZ.md",
+        "WRF/external/io_netcdf/wrf_io.F90",
+        "WRF/frame/module_io.F",
+        "WRF/test/rrtmgp/test_netcdf_zz.F90",
+        "WRF/test/rrtmgp/test_netcdf_zz.py"
+      ]
+    }
+  },
+  "main": {
+    "commit": "a91d0d855da3e24094c2e6c7ba1088b56bc8c461",
+    "tree": "887d3fd1cf8c097219b201b1bdb9cdd428d593a9"
+  },
+  "patch": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-main-runtime-io-integration-preparation-v1/workspace-review/selected-runtime-tests.patch",
+    "sha256": "a20cbef248136315119e8130a0eb8f5077c7c0e52af92d7393ebbad7bf7a4744",
+    "size_bytes": 92088
+  },
+  "physical_reference_accepted": false,
+  "production_acceptance_claimed": false,
+  "remaining_checks": [
+    "Root must prepare isolated latest-main worktree and inspect full resulting diff before commit.",
+    "Run relevant source/registration, startup optics/lifecycle, Registry metadata, NetCDF backend fixtures and exact-head CI under separately authorized root execution; historical branch results are not new-main results.",
+    "New main execution needed to claim latest-main build/model/restart gates; original feature evidence remains separately pinned and must not be relabeled."
+  ],
+  "repository": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-lblrtm-pocket-deposit-evidence-pr-work",
+  "schema": "UDM37_MAIN_RUNTIME_IO_READ_ONLY_INTEGRATION_INVENTORY_V1",
+  "selected_path_count": 17,
+  "selected_paths": [
+    {
+      "base_blob": "b4b4e873614422049086c7581b863ab856689c40",
+      "current_main_blob": "b4b4e873614422049086c7581b863ab856689c40",
+      "main_matches_common_base": true,
+      "path": ".github/workflows/validate-port.yml",
+      "selected_pr137_blob": "1b42cb5a09091782289d3f95a47a88be305ebda8",
+      "selected_sha256": "8c3c8930fb5889bd90db5f1eca5852dec315a308ee179975626177a86d4df186",
+      "size_bytes": 26327
+    },
+    {
+      "base_blob": null,
+      "current_main_blob": null,
+      "main_matches_common_base": true,
+      "path": "WRF/doc/rrtmgp/NETCDF_NONSPATIAL_ZZ.md",
+      "selected_pr137_blob": "9e722c76f5e2d902e9ef65832eee623aa4306382",
+      "selected_sha256": "09c15147cb8200c380e691a407ae415dec9ac9bdd241e1b88185994922b1090a",
+      "size_bytes": 3050
+    },
+    {
+      "base_blob": null,
+      "current_main_blob": null,
+      "main_matches_common_base": true,
+      "path": "WRF/doc/rrtmgp/REGISTRY_SUBGRID_RESTART_CONTRACT.md",
+      "selected_pr137_blob": "e9271325552ab19490fffc95553c75b31c2f92cf",
+      "selected_sha256": "762754abb83f27262c9c92675e4b9fd91796e4a99bb51fba0cd7843609e40c8c",
+      "size_bytes": 2777
+    },
+    {
+      "base_blob": null,
+      "current_main_blob": null,
+      "main_matches_common_base": true,
+      "path": "WRF/doc/rrtmgp/UDM_STARTUP_OPTICS_CONTRACT.md",
+      "selected_pr137_blob": "396a64129c2398615b4d1f45fb8a7daebe83e6e0",
+      "selected_sha256": "b7fdba3316fc6c0c52c14c6fcbf91e9418103bd3e47a0869115cdc4b00abc782",
+      "size_bytes": 2578
+    },
+    {
+      "base_blob": "8863e4e29f2735d01ecfc489ba75f733c34097b7",
+      "current_main_blob": "8863e4e29f2735d01ecfc489ba75f733c34097b7",
+      "main_matches_common_base": true,
+      "path": "WRF/external/io_netcdf/wrf_io.F90",
+      "selected_pr137_blob": "b5943d1cabd7f6ef35424c2d35fc290f504aaaa9",
+      "selected_sha256": "670b6934259528e664af100692390d5289188e17a604e52c94d4a49ec6a7c5b1",
+      "size_bytes": 129354
+    },
+    {
+      "base_blob": "f02f4de6fa19e5bab7ad5336abae19fc294d9a8c",
+      "current_main_blob": "f02f4de6fa19e5bab7ad5336abae19fc294d9a8c",
+      "main_matches_common_base": true,
+      "path": "WRF/frame/module_io.F",
+      "selected_pr137_blob": "514d0087af21cd662e4d73528ad2dd7dd9e3dbae",
+      "selected_sha256": "3b4a0e1180b08146c015e4acf37d7e431d751b1a3dbe3a238fb38647feee7eea",
+      "size_bytes": 189901
+    },
+    {
+      "base_blob": "00b93ae46d9755f6d4fb33fade54cfe88fb90baf",
+      "current_main_blob": "00b93ae46d9755f6d4fb33fade54cfe88fb90baf",
+      "main_matches_common_base": true,
+      "path": "WRF/test/rrtmgp/CMakeLists.txt",
+      "selected_pr137_blob": "2d4b9bb2f8f8b6809fdaf637dda11ad13ee0905d",
+      "selected_sha256": "60f8ece6a159aafd0197268239c6185fef9d187051a657ccf8fa1a2de849acba",
+      "size_bytes": 31357
+    },
+    {
+      "base_blob": null,
+      "current_main_blob": null,
+      "main_matches_common_base": true,
+      "path": "WRF/test/rrtmgp/test_netcdf_zz.F90",
+      "selected_pr137_blob": "499ae14d038480101d70d1471ebc8e8d54e4dc72",
+      "selected_sha256": "d0b2fdb9d0e42dc19b71c5ad03bf30dd95b6ead0e3aa7d1c3e4fdc1984c64399",
+      "size_bytes": 8247
+    },
+    {
+      "base_blob": null,
+      "current_main_blob": null,
+      "main_matches_common_base": true,
+      "path": "WRF/test/rrtmgp/test_netcdf_zz.py",
+      "selected_pr137_blob": "e120557ecb5064d481e29e68854dd81134e0cc0e",
+      "selected_sha256": "78254d976b5f759ca02431620c89a25f869e65bdfcd32e09859175ec48b2a70e",
+      "size_bytes": 13652
+    },
+    {
+      "base_blob": null,
+      "current_main_blob": null,
+      "main_matches_common_base": true,
+      "path": "WRF/test/rrtmgp/test_registry_subgrid_metadata.py",
+      "selected_pr137_blob": "2a789b1d730d5b8a9b424e5e0aa408b84c5cf346",
+      "selected_sha256": "cb2fab2378a3e8f8316cb2182631f4a9b713f75f9ec16a0af19f9696e0b63037",
+      "size_bytes": 11952
+    },
+    {
+      "base_blob": null,
+      "current_main_blob": null,
+      "main_matches_common_base": true,
+      "path": "WRF/test/rrtmgp/test_udm_startup_optics_contract.py",
+      "selected_pr137_blob": "5c9d1d147e262398dd28aac43b78db6b71e37706",
+      "selected_sha256": "5b4dcb1231983abd5e0375a491bd6b27b4760c23e295b15ff8b69f479b548829",
+      "size_bytes": 9314
+    },
+    {
+      "base_blob": "f390f9827daf8b364f56e72b483e1b332fad7a9b",
+      "current_main_blob": "f390f9827daf8b364f56e72b483e1b332fad7a9b",
+      "main_matches_common_base": true,
+      "path": "WRF/test/rrtmgp/test_udm_startup_snow_scm.py",
+      "selected_pr137_blob": "76b5d0908de136669d33a99253197b20d786a6ce",
+      "selected_sha256": "e54646660f0f5b7be8460b48cb176b99fefb5508136a6dbdc9a0b83ee5e4631c",
+      "size_bytes": 39934
+    },
+    {
+      "base_blob": null,
+      "current_main_blob": null,
+      "main_matches_common_base": true,
+      "path": "WRF/test/rrtmgp/test_udm_startup_snow_scm_process.py",
+      "selected_pr137_blob": "b68ad03db799173089acc6a785ddebd09a68ea91",
+      "selected_sha256": "f5ec4ee716e5d7644f26e86e42242558e5e0891e92ec25c8c8dd21319d19fb74",
+      "size_bytes": 7097
+    },
+    {
+      "base_blob": "0ab8cd5f64304e51c98e80f7b35b165acccc1e4b",
+      "current_main_blob": "0ab8cd5f64304e51c98e80f7b35b165acccc1e4b",
+      "main_matches_common_base": true,
+      "path": "WRF/tools/gen_allocs.c",
+      "selected_pr137_blob": "08bfd754bf42fcfb7994b4c66ddf6f50d2e283f7",
+      "selected_sha256": "dae119ef30bf9c8b2a9b69dabc32bf88e59a9078a3f644c00b719fc0afb76fee",
+      "size_bytes": 45544
+    },
+    {
+      "base_blob": "02cee7627a28576642a47753a04e0ac77df2c548",
+      "current_main_blob": "02cee7627a28576642a47753a04e0ac77df2c548",
+      "main_matches_common_base": true,
+      "path": "config/registration37.json",
+      "selected_pr137_blob": "0ac8e81085092564d3484b44038f87eef3efc9f6",
+      "selected_sha256": "5e46795af0443e9b152052c2c695c32779941f07dfaecf30928c9f30aeac47d6",
+      "size_bytes": 32893
+    },
+    {
+      "base_blob": "3d5d9d4fbcbce2583eba9d82d1d6f41e7172a163",
+      "current_main_blob": "3d5d9d4fbcbce2583eba9d82d1d6f41e7172a163",
+      "main_matches_common_base": true,
+      "path": "tools/compare_registry.py",
+      "selected_pr137_blob": "ef29de75d28edbefa72fcf2182cd15f7909ac0ce",
+      "selected_sha256": "8cb72952c14517e7ddd38e124ca86a1f803dd35ff15070e12412248462f8742e",
+      "size_bytes": 4915
+    },
+    {
+      "base_blob": "f63f2f7fc17e16704009a91db82e68eb9b7f01c7",
+      "current_main_blob": "f63f2f7fc17e16704009a91db82e68eb9b7f01c7",
+      "main_matches_common_base": true,
+      "path": "tools/validate.py",
+      "selected_pr137_blob": "d80f2ec939cfe219ce6721c4ead490d184ad8297",
+      "selected_sha256": "d60d6813a98d934679048a111455738cc90ad2803430235f177acbf1dff631cc",
+      "size_bytes": 7805
+    }
+  ],
+  "status": "PASS_SCOPED_SOURCE_INTEGRATION_FEASIBILITY"
+}

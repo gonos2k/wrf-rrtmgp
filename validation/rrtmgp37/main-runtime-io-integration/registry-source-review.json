@@ -1,0 +1,44 @@
+{
+  "schema": "UDM37_MAIN_REGISTRY_SUBGRID_IMPACT_REVIEW_V1",
+  "status": "PASS_SCOPED_SOURCE_IMPACT_AND_TEST_PLAN",
+  "scope": "Read-only review of PR136's Registry array subgrid metadata initialization against current main a91d0d8, relevant Make/CMake generator paths, and merged PR134 storage-kind behavior. No source edits, tests, compilers, models, or scientific execution.",
+  "source_identity": {
+    "current_main_head": "a91d0d855da3e24094c2e6c7ba1088b56bc8c461",
+    "pr136_review_ref_head": "7a8d1ba85f7ff53d67b6ca7c28923e4d3985090a",
+    "pr136_fix_commit": "0289aa8b10be65fc8362845d6bb9106d28ee9528",
+    "main_gen_allocs_sha256": "5d269cee5ce6956db4a4ff7e94ed0a5b15b9e2e30932b449cdd9463ceaf0db51",
+    "pr136_gen_allocs_sha256": "dae119ef30bf9c8b2a9b69dabc32bf88e59a9078a3f644c00b719fc0afb76fee",
+    "main_input_wrf_sha256": "b3c663892cb7f46c6503ff3a4a7c5202a5301c71a70c8db1fad21a293c2a48b1",
+    "main_registry_tools_cmake_sha256": "bdbdb759dcd0c587d7d6851324a122ee7af19e01988eaea099bdff33edd63836",
+    "pr136_test_sha256": "cb2fab2378a3e8f8316cb2182631f4a9b713f75f9ec16a0af19f9696e0b63037",
+    "pr136_workflow_sha256": "7e1b1f32c071f0f3ce90990fbebe4bbf0688b0a1193d0328028b0f193a731b74",
+    "note": "The integration worktree at a91d0d8 has root-owned uncommitted edits, including a candidate generator/test integration. This review anchors the baseline to committed HEAD and the candidate implementation to the pinned PR136 ref/commit; it did not modify or validate the dirty worktree."
+  },
+  "source_findings": {
+    "defect": "The derived-type members subgrid_x/subgrid_y are LOGICAL without default initialization (WRF/frame/module_domain_type.F:71). The original generator emits an assignment only when a declared dimension has COORD_X or COORD_Y (WRF/tools/gen_allocs.c around lines 650-675). A ZZ or Z-only array node can therefore retain undefined metadata.",
+    "consumers": "Both input_wrf.F and output_wrf.F gate 2-D and 3-D state-array processing on .NOT.p%subgrid_x/.NOT.p%subgrid_y plus grid%sr_x/sr_y. Relevant base source locations: input_wrf.F around 1521/1603; output_wrf.F around 1266/1372. These predicates can alter field selection and I/O call ordering when metadata is undefined. The observed restart divergence is consistent with this defect, but its original flag values were not recorded, so this source review does not prove the runtime stall's cause.",
+    "candidate_change": "The PR136 generator adds two .FALSE. assignments immediately after linking each array statevars node, before the existing per-dimension emission. Existing X/Y dimension branches then overwrite the defaults from the dimension's subgrid property. No input/output predicate, field registration, or physical calculation is changed.",
+    "defined_four_preservation": "For array nodes with X and/or Y axes, the old generator already emitted the final axis-derived value; the new initial defaults are overwritten. This preserves the previously defined metadata behavior for ordinary four-scheme and other normal X/Y state arrays. For nodes with no X/Y axis, the old result was undefined and cannot be treated as a valid behavior-preservation baseline; the intended deterministic result is false/false. This is a Registry metadata/I/O correction, not a claim of bitwise model-physics parity or restart support for ZZ fields.",
+    "pr134_context": "PR134 is already merged in current main (merge 1065232). It emits registry_state_storage.h from the same gen_defs.c compile condition used for the generated state declaration and makes input_wrf UDM sentinel checks select ALLOCATED versus ASSOCIATED using WRF_REGISTRY_STATE_ALLOCATABLE. That solves the separate pointer-versus-allocatable guard mismatch. It does not initialize subgrid_x/y, and PR136 does not alter the PR134 storage-kind contract. Keep the two fixes and their tests distinct."
+  },
+  "test_plan": {
+    "make_generator": "Run the focused source-selected Registry test in a fresh directory. It should build real Registry tools with Make, generate the actual seed array plus Z/ZZ, X-only, Y-only, XY, and XY-subgrid controls, inspect generated allocation/dimension metadata, and compile/run a sentinel that starts flags true then executes exact generated assignments. The preserved negative control removes the seed default and must fail for that field. Also run the existing serial Registry component validator for full Registry output/baseline diagnostics; it is generator validation, not WRF execution.",
+    "cmake_generator": "Add a separate CMake-path assertion before claiming both build systems: configure/build the WRF Registry target or registry_code target in a fresh CMake binary tree, invoke/use that tree's generated allocs_*.F, and apply the same source-extracted metadata sentinel. Do not reuse Make-generated allocations for this leg. The generator source is shared, and WRF/tools/CMakeLists.txt already builds the registry C target and declares allocs_*.F as registry_code outputs, so no separate source change to the generated-output roster is expected.",
+    "pr134_storage_kind": "Keep PR134's two storage-kind guard fixtures as a separate test leg. They verify the generated numeric storage header and input_wrf ALLOCATED/ASSOCIATED guards; they do not substitute for PR136's generated subgrid metadata test. Verify CMake's registry_state_storage.h output dependency independently if the combined CMake Registry target is changed.",
+    "restart_followup": "Do not label the metadata sentinel as restart persistence. Existing fixed 12-hour RA4 evidence shows writer entry alignment but ISEEDARR_MULT3D was rejected by the NetCDF backend (BAD MEMORY ORDER ZZ/status -5 and -19) and absent from the checkpoint. If restart persistence is a goal, separately test actual backend write/read support after the metadata fix; no such support is established by PR136."
+  },
+  "existing_evidence_context": {
+    "pr134_storage_guard_readme": "build/udm37-main-runtime-io-integration-pr-work/validation/rrtmgp37/registry-storage-guard/README.md",
+    "pr134_current_main_merge": "1065232ddc47c7e1e03442a03a44514e748088e5",
+    "subgrid_seed_persistence_review": {
+      "path": "build/udm37-registry-subgrid-seed-persistence-independent-v1/review.json",
+      "sha256": "0362816578aab83a37431d25e08dd977682d649f9335c86b158e27129efec1ce",
+      "status": "RESTART_COMPLETED_BUT_ISEEDARR_MULT3D_BACKEND_WRITE_REJECTED"
+    }
+  },
+  "nonclaims": [
+    "The original undefined metadata values or the restart stall's runtime cause were not observed directly.",
+    "No WRF runtime, restart persistence, NetCDF ZZ capability, physical accuracy, or UDM radiation behavior is approved.",
+    "No equivalence is claimed for previously undefined no-horizontal-axis metadata."
+  ]
+}
