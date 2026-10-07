@@ -1,0 +1,117 @@
+{
+  "schema": "UDM37_COLD_NUMBER_INPUT_FINAL_SOURCE_REVIEW_V1",
+  "status": "PASS_SCOPED_FINAL_CHECKER_SOURCE",
+  "created_utc": "2026-10-07T14:26:51.511223+00:00",
+  "base_head": "23c118bd04729a73a3e7bb873e14b2c37b262f31",
+  "base_tree": "3c5ce46d5a89264c0cbffb4352a5d09152c3327f",
+  "pins": {
+    "checker": {
+      "path": "build/udm37-cold-number-input-pr-work/WRF/test/rrtmgp/test_udm_connected_host.py",
+      "sha256": "ea39a767fd95be341665bd55960a9f18bc61fbe22babf88496dc3ea95d7896d7",
+      "size_bytes": 20506
+    },
+    "observer_preparer": {
+      "path": "build/udm37-cold-number-input-pr-work/WRF/test/rrtmgp/prepare_udm_connected_host.py",
+      "sha256": "1d787be9b76af3859e3ead93d416582f0eaa570c356fd5c845018164ed637d9e",
+      "size_bytes": 7994
+    },
+    "start_em": {
+      "path": "build/udm37-cold-number-input-pr-work/WRF/dyn_em/start_em.F",
+      "sha256": "bce1b0656d73d76f74f4db7f1b71d254cc1e11f16ecfc82e54fe153a84e6c17e",
+      "size_bytes": 130683
+    },
+    "driver": {
+      "path": "build/udm37-cold-number-input-pr-work/WRF/phys/module_microphysics_driver.F",
+      "sha256": "c02f227d0fc1bf633fa53e54361e7117093b2c7bb02cedc2b71441c5bd638bd9",
+      "size_bytes": 198159
+    },
+    "prior_source_proposal": {
+      "path": "build/udm37-cold-number-input-preparation-v1/source-contract-review-v1.json",
+      "sha256": "3e851d1791961a7c4a84d2972e982425c4f788cf43d0cb1aa9b07de722e14eaa",
+      "size_bytes": 9092
+    }
+  },
+  "tracked_diff_paths": [
+    "WRF/test/rrtmgp/test_udm_connected_host.py"
+  ],
+  "findings": [],
+  "checks": [
+    {
+      "id": "ALL_THREE_FILE_BITS",
+      "status": "PASS_SCOPED_SOURCE",
+      "lines": [
+        146,
+        164
+      ],
+      "detail": "Registered names QNCCN/QNCLOUD/QNRAIN map to payload indices0/1/2. Original selected [0,:,0,0] slice must be floating4byte, shape59 and finite. Contiguous native-endian REAL32 array is viewed as uint32 and compared to START_PRE raw bits, preserving signed zero and finite bit identity. No f8-to-f4 acceptance because original variable dtype is checked first.",
+      "limit": "Declared known SCM variable layout/first time record/selected column only, not a general NetCDF dimension-order API."
+    },
+    {
+      "id": "LOCAL_NUMBER_PRESERVATION",
+      "status": "PASS_SCOPED_SOURCE",
+      "lines": [
+        165,
+        176
+      ],
+      "detail": "START_PRE/POST bits[1:3] and RESET_PRE/POST bits[1:3] must match. Only QNN expected reset is prescribed (REAL32 1e8, identical to controlled namelist). No comparison of START_POST→RESET_PRE NC/NR, where transport can change values. Existing RESET_POST→UDM_ENTRY and helper→return joins remain mandatory.",
+      "source_basis": "start_em:1791-1818 writes only p_qnn; driver:920-933 writes only QNN_CURR."
+    },
+    {
+      "id": "CALLER_BINDING",
+      "status": "PASS_SCOPED_SOURCE",
+      "lines": [
+        317,
+        323,
+        351,
+        360
+      ],
+      "detail": "Every ON cold arm first parses and verifies the exact stage/step/slot/layer join then verifies all-three input mapping with the explicit empty-QNN flag. Only nonuniform-on executes saved-evidence negative controls. Restart joins the copied warm-cloud checkpoint with restart=True and suppresses cold RESET requirements. False reset booleans on restart describe an unexecuted cold reset, not a failed preservation result."
+    },
+    {
+      "id": "POSITIVE_QNR_SENTINEL",
+      "status": "PASS_SCOPED_SOURCE",
+      "lines": [
+        293,
+        297
+      ],
+      "detail": "QNRAIN=1e4+100*k+300*i+500*j is a distinct positive raw finite REAL32 sentinel after file storage. It removes all-zero QNR as a vacuous ingestion/preservation oracle. This is an independently declared manufactured input, not a justified rain PSD/number-unit population or a production initialization change."
+    },
+    {
+      "id": "NEGATIVE_CONTROL_BOUNDARIES",
+      "status": "PASS_SCOPED_SOURCE_NOT_EXECUTED",
+      "lines": [
+        186,
+        229
+      ],
+      "expected_controls": 7,
+      "detail": "Three copied files each perturb exactly declared [0,9,0,0] field one REAL32 nextafter step, leaving original downstream events unchanged; verify_join rechecks that original event stream. Four independent dict copies perturb one NC or NR field at START_POST/RESET_POST layer10, updating value and raw bits consistently. Rejection must occur at the expected file-join or immediate-preservation boundary; unrelated rejection cannot count as success. Copies leave original source/input unmodified; final original pin equality is required.",
+      "limit": "Pair-mutated events are passed only to verify_input_numbers; they are not claimed to continue passing the full verify_join. original_downstream_join_passes refers to original observations. No claim these manufactured controls were executed by this reviewer."
+    }
+  ],
+  "remaining_scoped_limits": [
+    "QNR is observed at input/start/reset/UDM/helper; no new QNR-specific RK transport roster is added.",
+    "verify_input_numbers relies on its caller verify_join for exact event roster and parse for payload finiteness. The documented main and negative-control callers satisfy this precondition.",
+    "No dtype-corruption, signed-zero or missing-field negative control is newly executed in this source review. Current function rejects f8/wrong slice length/nonfinite inputs by explicit checks.",
+    "No production unit conversion, CF/PSD policy or source physics modification.",
+    "Root-reported seven successful model children are not independently verified here; no runtime receipts/raw logs/NetCDF arrays were read."
+  ],
+  "reviewer_activity": {
+    "source_inspection": true,
+    "Python_AST_only": true,
+    "test_execution": 0,
+    "compiler_calls": 0,
+    "model_calls": 0,
+    "raw_log_reads": 0,
+    "NetCDF_scientific_reads": 0,
+    "source_edits": 0,
+    "new_files": "Only this JSON review"
+  },
+  "retained_scope": {
+    "original19_current12": "No changes made or promotions inferred",
+    "scoped_completed": 15,
+    "physical_open": 7,
+    "physical_accepted": false,
+    "production_accepted": false
+  },
+  "판정_ko": "현재 보강은 선언된 REAL32 SCM 입력 세 변수의 비트 연결과 두 즉시 초기화 구간의 QNC/QNR 보존을 정확히 검사합니다. 반례의 변조·오류 경계도 적절하며 새 소스 차단사항을 찾지 못했습니다. 실제 모델 결과나 단위·PSD 물리 승인은 별도입니다."
+}

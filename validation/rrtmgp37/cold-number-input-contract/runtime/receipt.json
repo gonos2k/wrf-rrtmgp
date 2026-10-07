@@ -1,0 +1,451 @@
+{
+  "status": "PASS",
+  "scope": "full WRF serial REAL32 periodic SCM connected host trace",
+  "physical_units_approved": false,
+  "production_accepted": false,
+  "actual_lateral_boundary": "NOT_RUN: periodic x/y manufactured SCM",
+  "executables": {
+    "ideal": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-connected-host-final-v2/producer/main/ideal",
+      "sha256": "7f752677b77ebb936cda213e8132866988283464f12ef125e5983d79e40f8d63",
+      "size_bytes": 37612328
+    },
+    "wrf": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-connected-host-final-v2/producer/main/wrf",
+      "sha256": "7990e7ddc8160016761f87e4e21fc0744be5fdfdba862d8f9e732a245c63e1cd",
+      "size_bytes": 44878080
+    }
+  },
+  "arms": {
+    "nonuniform-off": {
+      "input": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cold-number-input-runtime-v1/nonuniform-off/wrfinput_d01",
+        "sha256": "30eeefdd08e4e20f54ca861a75448e2d2ff6443226b778fa9be7ba2a8cc227a8",
+        "size_bytes": 77284
+      },
+      "namelist": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cold-number-input-runtime-v1/nonuniform-off/namelist.input",
+        "sha256": "4a4f2c31c033c9327f59e6fd67e49871ef03ab9896695eae881219c720e68eac",
+        "size_bytes": 4560
+      },
+      "log": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cold-number-input-runtime-v1/command-02.stdout",
+        "sha256": "78e514b7f036c1ad4b6be7a9024a80995f1c0a8b7e415cb1f798ca8b765009a7",
+        "size_bytes": 39645
+      },
+      "history": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cold-number-input-runtime-v1/nonuniform-off/wrfout_d01_1999-10-22_19:00:00",
+        "sha256": "944923c4d974477ecbcf03b1becb5af2845fda796887547f218367735ed51825",
+        "size_bytes": 118300
+      }
+    },
+    "nonuniform-on": {
+      "input": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cold-number-input-runtime-v1/nonuniform-on/wrfinput_d01",
+        "sha256": "30eeefdd08e4e20f54ca861a75448e2d2ff6443226b778fa9be7ba2a8cc227a8",
+        "size_bytes": 77284
+      },
+      "namelist": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cold-number-input-runtime-v1/nonuniform-on/namelist.input",
+        "sha256": "4a4f2c31c033c9327f59e6fd67e49871ef03ab9896695eae881219c720e68eac",
+        "size_bytes": 4560
+      },
+      "log": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cold-number-input-runtime-v1/command-03.stdout",
+        "sha256": "3f4dc72de63df54d2798635cb59c8dc66d7dc6708878ffb98a64ae017de29ddb",
+        "size_bytes": 642551
+      },
+      "history": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cold-number-input-runtime-v1/nonuniform-on/wrfout_d01_1999-10-22_19:00:00",
+        "sha256": "944923c4d974477ecbcf03b1becb5af2845fda796887547f218367735ed51825",
+        "size_bytes": 118300
+      },
+      "joined_checks": {
+        "stage_rows": {
+          "START_PRE": 59,
+          "START_POST": 59,
+          "RK_PRE": 2124,
+          "RK_POST": 2124,
+          "RESET_PRE": 59,
+          "RESET_POST": 59,
+          "UDM_ENTRY": 354,
+          "HELPER_IN": 354,
+          "HELPER_OUT": 354,
+          "UDM_RETURN": 354
+        },
+        "actual_RK_stages": [
+          1,
+          2,
+          3
+        ],
+        "RK_update_pairs": 2124,
+        "nonzero_advection_tendency_rows": 369,
+        "max_RK_relative_residual": 0.0,
+        "exact_stage_step_slot_layer_roster": true,
+        "actual_Registry_number_slots": {
+          "QNN": 2,
+          "QNC": 3
+        },
+        "input_return_transport_consumer_join_bitwise": true,
+        "inter_RK_scalar_old_buffer_join_bitwise": true,
+        "same_cell_helper_to_driver_return_bitwise": true,
+        "restart_without_first_step_reset": false,
+        "input_to_start_em_exact": true,
+        "input_number_variables": [
+          "QNCCN",
+          "QNCLOUD",
+          "QNRAIN"
+        ],
+        "input_number_layers": 59,
+        "input_number_comparison": "REAL32_BITS",
+        "start_em_QNC_QNR_preserved_bitwise": true,
+        "first_driver_QNC_QNR_preserved_bitwise": true,
+        "first_driver_constant_reset_observed": true,
+        "start_em_supplied_nonuniform_preserved": true,
+        "empty_QNN_initialized": false,
+        "positive_QNC_QC_helper_rows": 0
+      }
+    },
+    "empty-qnn-on": {
+      "input": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cold-number-input-runtime-v1/empty-qnn-on/wrfinput_d01",
+        "sha256": "6e1d8151408455d209f72e362a2d322446352b0096c31624f87520319404ebd5",
+        "size_bytes": 77284
+      },
+      "namelist": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cold-number-input-runtime-v1/empty-qnn-on/namelist.input",
+        "sha256": "4a4f2c31c033c9327f59e6fd67e49871ef03ab9896695eae881219c720e68eac",
+        "size_bytes": 4560
+      },
+      "log": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cold-number-input-runtime-v1/command-04.stdout",
+        "sha256": "a4024a14cf2249ad2382a5ccec8447188f777402e6f9c9096a2149a0200c0b4a",
+        "size_bytes": 642551
+      },
+      "history": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cold-number-input-runtime-v1/empty-qnn-on/wrfout_d01_1999-10-22_19:00:00",
+        "sha256": "1f24d8b84a37591047ca003f9d418c08577c452b3ee024b3181927e2f3a240bc",
+        "size_bytes": 118300
+      },
+      "joined_checks": {
+        "stage_rows": {
+          "START_PRE": 59,
+          "START_POST": 59,
+          "RK_PRE": 2124,
+          "RK_POST": 2124,
+          "RESET_PRE": 59,
+          "RESET_POST": 59,
+          "UDM_ENTRY": 354,
+          "HELPER_IN": 354,
+          "HELPER_OUT": 354,
+          "UDM_RETURN": 354
+        },
+        "actual_RK_stages": [
+          1,
+          2,
+          3
+        ],
+        "RK_update_pairs": 2124,
+        "nonzero_advection_tendency_rows": 192,
+        "max_RK_relative_residual": 0.0,
+        "exact_stage_step_slot_layer_roster": true,
+        "actual_Registry_number_slots": {
+          "QNN": 2,
+          "QNC": 3
+        },
+        "input_return_transport_consumer_join_bitwise": true,
+        "inter_RK_scalar_old_buffer_join_bitwise": true,
+        "same_cell_helper_to_driver_return_bitwise": true,
+        "restart_without_first_step_reset": false,
+        "input_to_start_em_exact": true,
+        "input_number_variables": [
+          "QNCCN",
+          "QNCLOUD",
+          "QNRAIN"
+        ],
+        "input_number_layers": 59,
+        "input_number_comparison": "REAL32_BITS",
+        "start_em_QNC_QNR_preserved_bitwise": true,
+        "first_driver_QNC_QNR_preserved_bitwise": true,
+        "first_driver_constant_reset_observed": true,
+        "start_em_supplied_nonuniform_preserved": false,
+        "empty_QNN_initialized": true,
+        "positive_QNC_QC_helper_rows": 0
+      }
+    },
+    "warm-cloud-off": {
+      "input": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cold-number-input-runtime-v1/warm-cloud-off/wrfinput_d01",
+        "sha256": "f0f163a10ff9141c0225fcc718ee1647e8635c6d694155496743bbd52db0fb4e",
+        "size_bytes": 77284
+      },
+      "namelist": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cold-number-input-runtime-v1/warm-cloud-off/namelist.input",
+        "sha256": "4a4f2c31c033c9327f59e6fd67e49871ef03ab9896695eae881219c720e68eac",
+        "size_bytes": 4560
+      },
+      "log": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cold-number-input-runtime-v1/command-05.stdout",
+        "sha256": "a8fda5750898d268afd6973125c6f9570caf83c74373b859c05dc08c79be5a6c",
+        "size_bytes": 49771
+      },
+      "history": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cold-number-input-runtime-v1/warm-cloud-off/wrfout_d01_1999-10-22_19:00:00",
+        "sha256": "db61ebac14059c13781b8fdbf9f37f8005fe3d70161a0dd8f6ef1b7a9bd45e8c",
+        "size_bytes": 118300
+      }
+    },
+    "warm-cloud-on": {
+      "input": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cold-number-input-runtime-v1/warm-cloud-on/wrfinput_d01",
+        "sha256": "f0f163a10ff9141c0225fcc718ee1647e8635c6d694155496743bbd52db0fb4e",
+        "size_bytes": 77284
+      },
+      "namelist": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cold-number-input-runtime-v1/warm-cloud-on/namelist.input",
+        "sha256": "4a4f2c31c033c9327f59e6fd67e49871ef03ab9896695eae881219c720e68eac",
+        "size_bytes": 4560
+      },
+      "log": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cold-number-input-runtime-v1/command-06.stdout",
+        "sha256": "06f4e1cc4985e5151a80b3489dc31a22b60efa46b978dc0908ce319d51b02fc0",
+        "size_bytes": 652677
+      },
+      "history": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cold-number-input-runtime-v1/warm-cloud-on/wrfout_d01_1999-10-22_19:00:00",
+        "sha256": "db61ebac14059c13781b8fdbf9f37f8005fe3d70161a0dd8f6ef1b7a9bd45e8c",
+        "size_bytes": 118300
+      },
+      "joined_checks": {
+        "stage_rows": {
+          "START_PRE": 59,
+          "START_POST": 59,
+          "RK_PRE": 2124,
+          "RK_POST": 2124,
+          "RESET_PRE": 59,
+          "RESET_POST": 59,
+          "UDM_ENTRY": 354,
+          "HELPER_IN": 354,
+          "HELPER_OUT": 354,
+          "UDM_RETURN": 354
+        },
+        "actual_RK_stages": [
+          1,
+          2,
+          3
+        ],
+        "RK_update_pairs": 2124,
+        "nonzero_advection_tendency_rows": 1750,
+        "max_RK_relative_residual": 0.0,
+        "exact_stage_step_slot_layer_roster": true,
+        "actual_Registry_number_slots": {
+          "QNN": 2,
+          "QNC": 3
+        },
+        "input_return_transport_consumer_join_bitwise": true,
+        "inter_RK_scalar_old_buffer_join_bitwise": true,
+        "same_cell_helper_to_driver_return_bitwise": true,
+        "restart_without_first_step_reset": false,
+        "input_to_start_em_exact": true,
+        "input_number_variables": [
+          "QNCCN",
+          "QNCLOUD",
+          "QNRAIN"
+        ],
+        "input_number_layers": 59,
+        "input_number_comparison": "REAL32_BITS",
+        "start_em_QNC_QNR_preserved_bitwise": true,
+        "first_driver_QNC_QNR_preserved_bitwise": true,
+        "first_driver_constant_reset_observed": true,
+        "start_em_supplied_nonuniform_preserved": true,
+        "empty_QNN_initialized": false,
+        "positive_QNC_QC_helper_rows": 186
+      }
+    },
+    "restart-on": {
+      "input": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cold-number-input-runtime-v1/restart-on/wrfrst_d01_1999-10-22_19:01:00",
+        "sha256": "7ebe7e7ad7b5fa4ff07a5d6138e6c3b6d2a4520dc05e1c2ec6048c8bf5b49e07",
+        "size_bytes": 395452
+      },
+      "log": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cold-number-input-runtime-v1/command-07.stdout",
+        "sha256": "39ca6e5ee287fdeb5e4361f4fcd9842975155cccc1096c00ad5191e55122bd35",
+        "size_bytes": 643108
+      },
+      "joined_checks": {
+        "stage_rows": {
+          "START_PRE": 59,
+          "START_POST": 59,
+          "RK_PRE": 2124,
+          "RK_POST": 2124,
+          "UDM_ENTRY": 354,
+          "HELPER_IN": 354,
+          "HELPER_OUT": 354,
+          "UDM_RETURN": 354
+        },
+        "actual_RK_stages": [
+          1,
+          2,
+          3
+        ],
+        "RK_update_pairs": 2124,
+        "nonzero_advection_tendency_rows": 1768,
+        "max_RK_relative_residual": 0.0,
+        "exact_stage_step_slot_layer_roster": true,
+        "actual_Registry_number_slots": {
+          "QNN": 2,
+          "QNC": 3
+        },
+        "input_return_transport_consumer_join_bitwise": true,
+        "inter_RK_scalar_old_buffer_join_bitwise": true,
+        "same_cell_helper_to_driver_return_bitwise": true,
+        "restart_without_first_step_reset": true,
+        "input_to_start_em_exact": true,
+        "input_number_variables": [
+          "QNCCN",
+          "QNCLOUD",
+          "QNRAIN"
+        ],
+        "input_number_layers": 59,
+        "input_number_comparison": "REAL32_BITS",
+        "start_em_QNC_QNR_preserved_bitwise": true,
+        "first_driver_QNC_QNR_preserved_bitwise": false,
+        "first_driver_constant_reset_observed": false,
+        "start_em_supplied_nonuniform_preserved": true,
+        "empty_QNN_initialized": false
+      },
+      "namelist": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cold-number-input-runtime-v1/restart-on/namelist.input",
+        "sha256": "04db15158b10d6f6ab5f57ec9298c0a56d84883751d271f979eff64a2f7eed73",
+        "size_bytes": 4558
+      }
+    }
+  },
+  "input_contract_negative_controls": {
+    "status": "PASS",
+    "rejected_count": 7,
+    "rejections": {
+      "file_only_QNCCN": "QNCCN: file does not join START_PRE at layer 10",
+      "file_only_QNCLOUD": "QNCLOUD: file does not join START_PRE at layer 10",
+      "file_only_QNRAIN": "QNRAIN: file does not join START_PRE at layer 10",
+      "START_POST_QNCLOUD": "QNC/QNR changed across start_em initialization at layer 10",
+      "START_POST_QNRAIN": "QNC/QNR changed across start_em initialization at layer 10",
+      "RESET_POST_QNCLOUD": "QNC/QNR changed across first driver QNN reset at layer 10",
+      "RESET_POST_QNRAIN": "QNC/QNR changed across first driver QNN reset at layer 10"
+    },
+    "original_downstream_join_passes": true,
+    "original_input_unchanged": true,
+    "additional_model_runs": 0
+  },
+  "observer_passivity": {
+    "nonuniform": {
+      "history_arrays_bitwise": 211,
+      "history_file_bytes_equal": true
+    },
+    "warm-cloud": {
+      "history_arrays_bitwise": 211,
+      "history_file_bytes_equal": true
+    }
+  },
+  "limitations": [
+    "No real.exe or external-analysis ingestion",
+    "No actual specified lateral boundary",
+    "No approved number units or population",
+    "Positive-cloud native radius linkage observed; physical radius accuracy not tested",
+    "No continuous/restart forecast endpoint equivalence claim"
+  ],
+  "commands": [
+    {
+      "argv": [
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-connected-host-final-v2/producer/main/ideal"
+      ],
+      "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cold-number-input-runtime-v1/seed",
+      "kind": "ideal",
+      "status": "TERMINAL",
+      "pid": 2402658,
+      "actual_returncode": 0,
+      "timed_out": false,
+      "started_at": 1791383059.2725415,
+      "finished_at": 1791383059.3973906
+    },
+    {
+      "argv": [
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-connected-host-final-v2/producer/main/wrf"
+      ],
+      "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cold-number-input-runtime-v1/nonuniform-off",
+      "kind": "forecast-nonuniform-off",
+      "status": "TERMINAL",
+      "pid": 2402659,
+      "actual_returncode": 0,
+      "timed_out": false,
+      "started_at": 1791383059.4740083,
+      "finished_at": 1791383061.7541888
+    },
+    {
+      "argv": [
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-connected-host-final-v2/producer/main/wrf"
+      ],
+      "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cold-number-input-runtime-v1/nonuniform-on",
+      "kind": "forecast-nonuniform-on",
+      "status": "TERMINAL",
+      "pid": 2402704,
+      "actual_returncode": 0,
+      "timed_out": false,
+      "started_at": 1791383061.8283722,
+      "finished_at": 1791383064.0592048
+    },
+    {
+      "argv": [
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-connected-host-final-v2/producer/main/wrf"
+      ],
+      "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cold-number-input-runtime-v1/empty-qnn-on",
+      "kind": "forecast-empty-qnn-on",
+      "status": "TERMINAL",
+      "pid": 2402852,
+      "actual_returncode": 0,
+      "timed_out": false,
+      "started_at": 1791383064.3137922,
+      "finished_at": 1791383066.5491643
+    },
+    {
+      "argv": [
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-connected-host-final-v2/producer/main/wrf"
+      ],
+      "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cold-number-input-runtime-v1/warm-cloud-off",
+      "kind": "forecast-warm-cloud-off",
+      "status": "TERMINAL",
+      "pid": 2402855,
+      "actual_returncode": 0,
+      "timed_out": false,
+      "started_at": 1791383066.6926897,
+      "finished_at": 1791383068.9196887
+    },
+    {
+      "argv": [
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-connected-host-final-v2/producer/main/wrf"
+      ],
+      "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cold-number-input-runtime-v1/warm-cloud-on",
+      "kind": "forecast-warm-cloud-on",
+      "status": "TERMINAL",
+      "pid": 2402892,
+      "actual_returncode": 0,
+      "timed_out": false,
+      "started_at": 1791383068.9884617,
+      "finished_at": 1791383071.2146688
+    },
+    {
+      "argv": [
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-connected-host-final-v2/producer/main/wrf"
+      ],
+      "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cold-number-input-runtime-v1/restart-on",
+      "kind": "restart",
+      "status": "TERMINAL",
+      "pid": 2402898,
+      "actual_returncode": 0,
+      "timed_out": false,
+      "started_at": 1791383071.4054406,
+      "finished_at": 1791383073.638109
+    }
+  ]
+}

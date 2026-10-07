@@ -71,3 +71,9 @@ Registry QNN/QNC RK1–3→첫 driver 상수 reset→UDM entry→native helper�
 이것은 현 정책의 관측이지 외부 QNN 보존을 승인하거나 단위를 결정한 수정이 아니다.
 real.exe, 실제 specified lateral boundary, 다른 수송 정책, 입자크기 물리 승인과
 최종 예보 정확도는 포함하지 않는다. 완료15/잔여7과 production_accepted=false 유지.
+
+[Cold-start 세 number 입력 보강](../cold-number-input-contract/README_ko.md)은 PR156의
+기존 정책을 유지하면서 파일→START_PRE QNN/QNC/QNR 비트 대조와 START/reset
+직전·직후 QNC/QNR 보존을 자동 강제한다. 양의 제조 QNR sentinel, 7개 오류 반례,
+기존 실행파일을 재사용한 7개 모델 자식 및 OFF/ON 동일성을 보존한다.
+초기화 정책 결정과 단위 계약은 여전히 OPEN이며 완료15/잔여7을 변경하지 않는다.

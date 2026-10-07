@@ -25,6 +25,7 @@ on:
       - 'validation/rrtmgp37/udm-thompson-cloud-radius/**'
       - 'validation/rrtmgp37/host-number-transport/**'
       - 'validation/rrtmgp37/connected-host-number/**'
+      - 'validation/rrtmgp37/cold-number-input-contract/**'
       - 'validation/rrtmgp37/bon-night-common-band-source/**'
       - 'validation/rrtmgp37/bon-night-planck-source/**'
       - 'validation/rrtmgp37/bon-night-independent-pfrac/**'
@@ -57,6 +58,7 @@ on:
       - 'validation/rrtmgp37/udm-thompson-cloud-radius/**'
       - 'validation/rrtmgp37/host-number-transport/**'
       - 'validation/rrtmgp37/connected-host-number/**'
+      - 'validation/rrtmgp37/cold-number-input-contract/**'
       - 'validation/rrtmgp37/bon-night-common-band-source/**'
       - 'validation/rrtmgp37/bon-night-planck-source/**'
       - 'validation/rrtmgp37/bon-night-independent-pfrac/**'
@@ -87,6 +89,8 @@ jobs:
         run: python3 -I -S validation/rrtmgp37/host-number-transport/verify_saved.py
       - name: Verify sealed actual connected host records without physical approval
         run: python3 -I -S validation/rrtmgp37/connected-host-number/verify_saved.py
+      - name: Verify sealed cold-start three-number input proof scope
+        run: python3 -I -S validation/rrtmgp37/cold-number-input-contract/verify_saved.py
       # Stored numerical evidence pins the pre-stage-instrumentation sources.
       # Authenticate that historical checkout rather than retagging old results
       # as calculations from the current wrappers. Current code is checked above

@@ -1,0 +1,190 @@
+{
+  "schema": "UDM37_COLD_NUMBER_INPUT_SOURCE_CONTRACT_REVIEW_V1",
+  "status": "PASS_SCOPED_SOURCE_PROPOSAL_RUNTIME_NOT_RUN",
+  "created_utc": "2026-10-07T14:19:55.545420+00:00",
+  "base_head": "23c118bd04729a73a3e7bb873e14b2c37b262f31",
+  "base_tree": "3c5ce46d5a89264c0cbffb4352a5d09152c3327f",
+  "evidence": "Committed baseline source inspection only. Source pins deliberately use immutable base blobs, not a concurrently edited draft checker.",
+  "source_pins": [
+    {
+      "path": "WRF/test/rrtmgp/prepare_udm_connected_host.py",
+      "source_head": "23c118bd04729a73a3e7bb873e14b2c37b262f31",
+      "sha256": "1d787be9b76af3859e3ead93d416582f0eaa570c356fd5c845018164ed637d9e",
+      "size_bytes": 7994,
+      "git_blob": "7dc475ca63a3172053f0d4db15cd3ea9c4f396df"
+    },
+    {
+      "path": "WRF/test/rrtmgp/test_udm_connected_host.py",
+      "source_head": "23c118bd04729a73a3e7bb873e14b2c37b262f31",
+      "sha256": "6e242da40b4f5b542092ec677622233433703ad506f96c0567b2450ca35e5b66",
+      "size_bytes": 16510,
+      "git_blob": "f9ca9ae79f284856a624c82e30180859a75ae47e"
+    },
+    {
+      "path": "WRF/dyn_em/start_em.F",
+      "source_head": "23c118bd04729a73a3e7bb873e14b2c37b262f31",
+      "sha256": "bce1b0656d73d76f74f4db7f1b71d254cc1e11f16ecfc82e54fe153a84e6c17e",
+      "size_bytes": 130683,
+      "git_blob": "11d109ef487310952f3a31d3d330b69ca4053121"
+    },
+    {
+      "path": "WRF/phys/module_microphysics_driver.F",
+      "source_head": "23c118bd04729a73a3e7bb873e14b2c37b262f31",
+      "sha256": "c02f227d0fc1bf633fa53e54361e7117093b2c7bb02cedc2b71441c5bd638bd9",
+      "size_bytes": 198159,
+      "git_blob": "f8a600470e9342025863d4787dc19f1470c01768"
+    },
+    {
+      "path": "WRF/Registry/Registry.EM_COMMON",
+      "source_head": "23c118bd04729a73a3e7bb873e14b2c37b262f31",
+      "sha256": "87e21a476a06b7e0c926b2d939eaf1028810cba8a7d1e6fc585b50b599f99729",
+      "size_bytes": 448359,
+      "git_blob": "af9e04b947371daf5884b5603a02a6869f2a8399"
+    }
+  ],
+  "payload_contract": {
+    "native_kind": "Serial default REAL32; each field emitted via TRANSFER(value,0) as eight hexadecimal digits.",
+    "field_index_basis": "Zero-based bits/values arrays after parsing the eight numeric payload fields.",
+    "START_PRE_START_POST": {
+      "0": "QNN",
+      "1": "QNC",
+      "2": "QNR",
+      "3": "ccn_conc",
+      "4": "restart flag",
+      "5": "zero",
+      "6": "P_QNN",
+      "7": "P_QNC"
+    },
+    "RESET_PRE_RESET_POST": {
+      "0": "QNN_CURR",
+      "1": "QNC_CURR",
+      "2": "QNR_CURR",
+      "3": "ccn_conc",
+      "4_to_7": "zero"
+    },
+    "existing_identity": "59 levels selected (i,j)=(1,1), one serial periodic domain; START keys step0 cold/step6 restart, RK0,slot0; RESET step1 only. Exact event roster already required.",
+    "number_registered_names": [
+      "QNCCN",
+      "QNCLOUD",
+      "QNRAIN"
+    ]
+  },
+  "source_permissions": [
+    {
+      "path": "WRF/dyn_em/start_em.F",
+      "lines": [
+        1791,
+        1818
+      ],
+      "scope": "START_PRE→START_POST immediately before physical scalar boundary processing",
+      "writes": "Only scalar(...,p_qnn)=grid%ccn_conc when domain QNN max<1.",
+      "protected": "No QNC/QNR write between these hooks. Scheme branch can update grid%ccn_conc, but START_PRE is after that branch.",
+      "gate": "QNC/QNR immediate pair bits[1:3] identical in cold and restart. QNN follows existing supplied/empty branch oracle; restart has existing all-three preservation assertion."
+    },
+    {
+      "path": "WRF/phys/module_microphysics_driver.F",
+      "lines": [
+        920,
+        933
+      ],
+      "scope": "RESET_PRE→RESET_POST around the single full-memory QNN assignment",
+      "writes": "QNN_CURR(...)=ccn_conc under have_udm_cf, timestep1, num_tiles>0 and original PRESENT guards.",
+      "protected": "QNC_CURR/QNR_CURR have no assignments in the pair.",
+      "gate": "QNC/QNR immediate pair bits[1:3] identical; QNN POST matches native REAL32 ccn_conc. Preserve existing POST→UDM_ENTRY bits[:3] gate."
+    }
+  ],
+  "minimal_checker_changes": [
+    {
+      "id": "COLD-INPUT-3",
+      "proposal": "Extend cold input join from QNCCN alone to all three names in declared QNN/QNC/QNR order. Select each [0,level-1,0,0] and compare its original float32 uint32 representation to START_PRE bits[field], not numerical ==. Require dtype float32 and expected variable shape/59-level selected slice; reject rather than silently cast an unexpected storage type.",
+      "claim": "Authenticated selected-column cold ingestion only; no universal storage unit or population interpretation."
+    },
+    {
+      "id": "START-PRESERVE-NC-NR",
+      "proposal": "For every START_PRE/POST level pair, require bits[1:3] equality. Keep the current independent QNN supplied/empty behavior gate.",
+      "claim": "Immediate source block leaves QNC/QNR unchanged."
+    },
+    {
+      "id": "RESET-PRESERVE-NC-NR",
+      "proposal": "For every exact RESET_PRE/POST identity, require bits[1:3] equality. Keep QNN reset and POST→ENTRY validation.",
+      "claim": "Native constant reset writes only QNN."
+    }
+  ],
+  "forbidden_overreach": [
+    "Do not require START_POST QNC/QNR equal RESET_PRE across actual RK transport.",
+    "Do not require UDM_ENTRY QNC/QNR equal UDM_RETURN: microphysics can change them.",
+    "Do not require cold QNC/QNR remain positive until helper except in the separately declared warm-cloud discriminator.",
+    "Do not replace the QNN max<1 initialization predicate, change ccn_conc or apply density/CF conversion.",
+    "QNR is not added to the RK two-slot roster by this proposal; its cold ingestion and local preservation do not establish a complete QNR transport trajectory."
+  ],
+  "manufactured_counterexample_proposals": [
+    {
+      "name": "NORMAL_SUPPLIED_QNN",
+      "expect": "PASS",
+      "construction": "Distinct finite REAL32 QNC/QNR input words, nonempty supplied QNN; START matches input and all three retained, reset alters only QNN."
+    },
+    {
+      "name": "NORMAL_EMPTY_QNN",
+      "expect": "PASS",
+      "construction": "Zero input QNN, distinct finite QNC/QNR; START QNN becomes configured ccn_conc, QNC/QNR unchanged; native reset still only changes QNN."
+    },
+    {
+      "name": "INPUT_QNC_COHERENT_TAMPER",
+      "expect": "FAIL_COLD_INPUT",
+      "construction": "Change START_PRE and START_POST QNC by the same one-bit finite amount while supplied input remains original. Immediate preservation alone passes; new ingestion gate must fail."
+    },
+    {
+      "name": "INPUT_QNR_COHERENT_TAMPER",
+      "expect": "FAIL_COLD_INPUT",
+      "construction": "Same coherent START-pair perturbation in QNR. Existing QNN-only cold gate misses it."
+    },
+    {
+      "name": "NUMBER_ORDER_SWAP",
+      "expect": "FAIL_COLD_INPUT",
+      "construction": "Swap distinct QNC/QNR words in both START records; use distinct manufactured values to avoid a vacuous equal-value case."
+    },
+    {
+      "name": "START_QNC_CHANGE",
+      "expect": "FAIL_START_PRESERVATION",
+      "construction": "Change only POST QNC, retaining exact level/clock identity."
+    },
+    {
+      "name": "START_QNR_CHANGE",
+      "expect": "FAIL_START_PRESERVATION",
+      "construction": "Change only POST QNR, retaining exact level/clock identity."
+    },
+    {
+      "name": "RESET_QNC_QNR_CHANGE",
+      "expect": "FAIL_RESET_PRESERVATION",
+      "construction": "Perturb each field independently in RESET_POST and UDM_ENTRY consistently. Existing POST→ENTRY gate can pass; new RESET pair gate must fail."
+    },
+    {
+      "name": "SIGNED_ZERO_BIT_TAMPER",
+      "expect": "FAIL_EXACT_INPUT_OR_PRESERVATION",
+      "construction": "Use +0 and -0 in a pure manufactured protected field pair; numeric equality is true but raw bits differ. This is a test of exact observation fidelity, not a new physical sign policy."
+    },
+    {
+      "name": "TRANSPORT_CHANGE_ALLOWED",
+      "expect": "PASS_LOCAL_PRESERVATION",
+      "construction": "START_POST NC/NR differ from RESET_PRE after intervening source-timed transport, while both immediate START and RESET pairs preserve their NC/NR. No long-interval invariance assertion is allowed."
+    }
+  ],
+  "tests_status": "PROPOSED_NOT_RUN",
+  "reviewer_activity": {
+    "source_edits": 0,
+    "compiler_model_calls": 0,
+    "NetCDF_reads": 0,
+    "raw_log_reads": 0,
+    "scientific_arrays": 0,
+    "new_files": "Only this source review JSON."
+  },
+  "ledger_scope": {
+    "original_acceptance_items": 19,
+    "current_items": 12,
+    "scoped_completed": 15,
+    "physical_open": 7,
+    "physical_accepted": false,
+    "note": "Requested retained ledger policy; no checklist or historical payload was edited or newly promoted."
+  },
+  "판정_ko": "START/RESET의 첫 세 필드는 QNN·QNC·QNR 순서입니다. 초기입력 세 변수의 원래 REAL32 비트→START_PRE 대조와 각 START/RESET 직전·직후 QNC/QNR 보존을 추가하는 것이 최소 보강입니다. 그 사이 실제 수송·미세물리 변화까지 금지하거나 단위·population 정책을 변경하면 안 됩니다."
+}
