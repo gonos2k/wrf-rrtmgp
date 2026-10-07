@@ -1,0 +1,57 @@
+{
+  "title": "Host QNN/QNC scalar initialization, transport, and UDM boundary source review",
+  "status": "SOURCE_ONLY_REVIEW_COMPLETE; NO_BUILD_OR_MODEL_OR_ARRAY_READ",
+  "repository": {
+    "path": "build/udm37-thompson-radius-pr-work",
+    "head": "74dcfb368212e2d6983004ff81804099c09ee444",
+    "tree": "92c73cece68279af1d04ab3e15643ae3cad94eae",
+    "scope_note": "Pinned PR154 tree. No assertion about later/unpinned changes."
+  },
+  "source_pins": [
+    {"path":"WRF/Registry/Registry.EM_COMMON","sha256":"87e21a476a06b7e0c926b2d939eaf1028810cba8a7d1e6fc585b50b599f99729","anchors":["122","536-545","2701"]},
+    {"path":"WRF/phys/module_microphysics_driver.F","sha256":"c02f227d0fc1bf633fa53e54361e7117093b2c7bb02cedc2b71441c5bd638bd9","anchors":["928-931","2836-2895"]},
+    {"path":"WRF/phys/module_mp_udm.F","sha256":"7bd96141eefc6ae2cb66cea0ce022fcc2ee64afce5c616aa65f26711c8790947","anchors":["326-338","891-901"]},
+    {"path":"WRF/dyn_em/solve_em.F","sha256":"ed03953a8b7b999fc0a5a281893f4808bbed28697ea9032fde9b9b605e0d9ecb","anchors":["3054-3059","3998-4000"]},
+    {"path":"WRF/dyn_em/module_em.F","sha256":"67c5842c1c5d407a26139f26bd317f3016c610aeaf60207dfd21394ddb81482c","anchors":["1096-1442 rk_scalar_tend","1587-1799 rk_update_scalar; update at 1722-1724 and 1773"]},
+    {"path":"WRF/dyn_em/module_advect_em.F","sha256":"58253bdbeb188dd47ed0579fcd2891086be1889b75c0c7d3696c9ad1d213559d","anchors":["6069-7885 advect_scalar_pd","ADT rho-to-rho*q comments at 3260-3277 and 3387-3388"]},
+    {"path":"WRF/share/module_bc.F","sha256":"61b9235004b2a7799faabaa928276af8a7ef2e4672619c8ad120c857461301ad","anchors":["2460-2583 flow_dep_bdy_qnn"]},
+    {"path":"WRF/dyn_em/start_em.F","sha256":"bce1b0656d73d76f74f4db7f1b71d254cc1e11f16ecfc82e54fe153a84e6c17e","anchors":["1796-1811 f_qnn initialization"]},
+    {"path":"WRF/dyn_em/module_initialize_real.F","sha256":"81b40b4ae6891d522b2e30d8cee2036c20e139ef9e780c9a17b0d895ca13d87f","anchors":["2027-2035 QNC vertical interpolation"]}
+  ],
+  "findings": {
+    "registry_and_initialization": [
+      "Registry declares QNN/NetCDF QNCCN and QNC/NetCDF QNCLOUD as number concentrations with units # kg(-1) (Registry.EM_COMMON 536-545; internal QNC variable similarly at line 122). This is the declared interface, not independent proof of every producer's numerical basis.",
+      "The namelist ccn_conc default is 1.0E8 with units # m-3 (Registry.EM_COMMON 2701). In start_em, f_qnn initializes QNN from grid%ccn_conc when the scalar maximum is <1; NSSL may set ccn_conc=nssl_cccn/1.225 or zero (start_em.F 1796-1811). Other listed schemes are NO OP in this block. This is a distinct route from the option-37 driver initialization.",
+      "On first timestep, the microphysics driver can initialize full-memory QNN_CURR directly to ccn_conc (module_microphysics_driver.F 928-931). In the UDM branch, the call passes ccn_preinitialized=.true. and input_density_is_dry=.true. (2836-2895), so the optional UDM timestep-1 CCN initialization is disabled for that call; UDM's omitted-argument defaults would initialize NN and interpret DEN as non-dry otherwise (module_mp_udm.F 326-338).",
+      "UDM clamps its first CCN mode to [ccnmin,ccnmax] (module_mp_udm.F 891-901); constants are labeled m-3 in the source. This is a consumer-side clamp, not evidence that Registry prognostic QNN has been converted or that all QNN routes use volume units.",
+      "QNC can be vertically interpolated from qnc_gc to P_QNC when flag_qnc is active (module_initialize_real.F 2027-2035). The later generic number initialization path inspected for selected schemes excludes UDM, so this source block does not establish a universal QNC initialization conversion. Restart/other input producer authority remains unresolved."
+    ],
+    "transport_and_boundaries": [
+      "solve_em routes each scalar through rk_scalar_tend and rk_update_scalar; QNN and QNC are scalar indices and are passed to the microphysics driver (solve_em.F 3998-4000). rk_scalar_tend selects positive-definite, monotonic, or other advect_scalar implementations according to runtime options and then includes diffusion (module_em.F 1096-1442).",
+      "The advection procedures form fluxes from mass-coupled staggered winds and scalar values; source comments explicitly describe the ADT equation as rho-to-rho*q (module_advect_em.F, e.g. 3260-3277 and 3387-3388). Thus the transported scalar follows the host's mass-weighted tracer equation. The chosen stencil/configuration determines the actual face flux; a scalar-only update is not an advection test.",
+      "rk_update_scalar multiplies advect_tend by msfty, adds scalar tendencies, defines muold=mu_old+mu_base and munew=mu_new+mu_base, then updates q by ((c1*muold+c2)*q_old + dt*tendency)/(c1*munew+c2) (module_em.F 1587-1799, especially 1722-1724 and 1773). With zero tendency this preserves the source-defined weighted amount across a changing mass state. This is host mass coupling/decoupling, not conversion to a volume number density.",
+      "For specified QNN boundaries, solve_em calls flow_dep_bdy_qnn with ccn_conc and no density argument (solve_em.F 3054-3059). The routine writes ccn_conc directly at inflow and copies the interior scalar at outflow (module_bc.F 2460-2583). Boundary injection therefore follows the volume-labelled ccn_conc route; whether this is intended for a #kg-1 transported field is not resolved by this source alone."
+    ],
+    "contract_assessment": "There is a concrete source seam: Registry describes QNN/QNC as #kg-1, while selected initialization and QNN boundary inflow assign ccn_conc labelled #m-3 without a visible conversion, and the host scalar equation mass-weights its prognostic scalar. This is a testable interface inconsistency candidate, not a proven production bug: runtime route/configuration and intended storage policy must be captured/authenticated before a physical conclusion."
+  },
+  "smallest_discriminating_test": {
+    "stage_a_actual_update_procedure": {
+      "target": "module_em.rk_update_scalar",
+      "setup": "Use a small manufactured interior domain; one scalar, one RK stage, zero advect_tend and zero sc_tend; choose unequal positive old/new dry column mass (mu_old+mu_base != mu_new+mu_base), and explicit c1/c2.",
+      "oracle": "For the selected update, compare Mnew*qnew to Mold*qold, where Mold=c1*(mu_old+mu_base)+c2 and Mnew=c1*(mu_new+mu_base)+c2, using the source update ordering. With zero tendency, the algebraic update implies equality up to floating-point evaluation. Also verify qnew=(Mold/Mnew)*qold.",
+      "meaning": "Confirms the actual host update's mass-weighted scalar behavior under changing dry mass; it cannot establish whether the incoming numerical QNN/QNC value represents #kg-1 or #m-3."
+    },
+    "stage_b_actual_closed_flux_procedure": {
+      "target": "module_em.rk_scalar_tend + selected module_advect_em.advect_scalar_* + rk_update_scalar",
+      "setup": "Use a tiny periodic horizontal grid, fixed vertical mass, zero physics/diffusion and a documented supported stencil/order. Capture the actual face fluxes and use source map factors/areas and layer mass weights.",
+      "oracle": "Independently sum finite-volume flux divergence over the periodic domain; net boundary flux is zero, so the dry-mass/map-area weighted scalar total must be conserved through the selected stage. Include all face metrics and the actual RK coefficients; do not compare an unweighted sum.",
+      "meaning": "Confirms scalar transport's discrete conservative-flux implementation, not number-population units."
+    },
+    "basis_discriminator": "At the same exact UDM call boundary, record QNN/QNC immediately before and after the UDM call together with DEN, timestep, input flags, and initialization/boundary-route provenance. Compare an otherwise identical controlled state at two dry-density values: a declared mass-specific scalar should remain #kg-1 and its physical volume concentration changes with dry density; a volume concentration should require an explicit density conversion before/after mass-weighted transport. This requires a purpose-built source/unit fixture; this review does not execute it or select a physical policy."
+  },
+  "limits": [
+    "No compiler, model, solver, reader, or raw scientific-array access was performed.",
+    "The task only reviewed host QNN/QNC initialization and scalar transport boundary. It does not authenticate restart/input producer units, quantify runtime route activation, or validate UDM's internal number processes/radius formulas.",
+    "Do not infer a universal density multiplier or change production semantics from the source seam. The conserved-flux test and the producer/storage-unit authority question are separate gates."
+  ]
+}

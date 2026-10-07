@@ -1,8 +1,8 @@
 {
   "schema": "UDM37_REVIEW_RESOLUTION_CHECKLIST_V2",
   "main_snapshot": {
-    "commit": "42641d19d5cd5cf4b3b124270d365aa973be7727",
-    "tree": "4ccaf55b452f329780465b27b742956a07c01f26"
+    "commit": "a152b2798ef465c57822db6a45e983a4b1d4ef34",
+    "tree": "92c73cece68279af1d04ab3e15643ae3cad94eae"
   },
   "scope": "UDM27, LW37/SW37; prior review follow-up; original acceptance original19/current12 retained unchanged",
   "production_accepted": false,
@@ -199,7 +199,8 @@
         "validation/rrtmgp37/main-runtime-io-integration-terminal/nc-producer-transport-chain-review.json",
         "validation/rrtmgp37/nc-noaa-primary-contract/manifest.json",
         "validation/rrtmgp37/partial-activation-observation/manifest.json",
-        "validation/rrtmgp37/udm-thompson-cloud-radius/manifest.json"
+        "validation/rrtmgp37/udm-thompson-cloud-radius/manifest.json",
+        "validation/rrtmgp37/host-number-transport/manifest.json"
       ],
       "source_pr_urls": [
         "https://github.com/gonos2k/wrf-rrtmgp/pull/98",
@@ -237,6 +238,13 @@
         "source_base_main": "42641d19d5cd5cf4b3b124270d365aa973be7727",
         "scope": "Full modules, isolated liquid helper kernels; test-only Thompson private cloud initializer, actual UDM init. Conditional number inputs; no WRF routing, optics or unit authority.",
         "physical_gate_closed": false
+      },
+      "host_transport_observation": {
+        "status": "PASS_SCOPED_NATIVE_SCALAR_TRANSPORT",
+        "source_base_main": "a152b2798ef465c57822db6a45e983a4b1d4ef34",
+        "scope": "Four verbatim native procedures with type/shape adapters. Manufactured generic scalar slots, order2 periodic fluxes, varying map/hybrid dry-mass ledger, isolated QNN inflow/outflow. Not full modules/WRF host/UDM routing.",
+        "physical_gate_closed": false,
+        "remaining": "Authenticate actual producer/restart storage, scalar-slot/UDM population and intended density/unit interface. No guessed correction."
       }
     },
     {
@@ -594,13 +602,13 @@
     }
   },
   "previous_main_snapshot": {
-    "commit": "457cde630bbeb41a24c09baa1f536c73622b615f",
-    "tree": "c108084947ff665b496dde072ca736491ad72bde"
+    "commit": "42641d19d5cd5cf4b3b124270d365aa973be7727",
+    "tree": "4ccaf55b452f329780465b27b742956a07c01f26"
   },
   "previous_checklist": {
-    "source_commit": "430776b5a0d9c899a067a64e682d90fed8c065e6",
-    "sha256": "a5307c7de6f87f10478a23ec9cd6620b0693bc48ff125b3ca5d991f1a1085802",
-    "note": "Merged PR151 candidate-state checklist preserved in original commit/proof; current status updated additively."
+    "commit": "a152b2798ef465c57822db6a45e983a4b1d4ef34",
+    "sha256": "e381723116d755184510e6551b5fe289d50fc3eddff40c8cd171334141763552",
+    "note": "PR154 merged checklist preserved in original commit; follow-up adds host source/transport evidence without changing gate statuses."
   },
   "followup_summary": {
     "total": 22,
@@ -612,5 +620,6 @@
     "remaining": 7,
     "original_acceptance19_current12_unchanged": true
   },
-  "merged_netcdf_terminal_manifest": "validation/rrtmgp37/netcdf-scalar-terminal/manifest.json"
+  "merged_netcdf_terminal_manifest": "validation/rrtmgp37/netcdf-scalar-terminal/manifest.json",
+  "merged_pr154_terminal_manifest": "validation/rrtmgp37/host-number-transport/manifest.json"
 }

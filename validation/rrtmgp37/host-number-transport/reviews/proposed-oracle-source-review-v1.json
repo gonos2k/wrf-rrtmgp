@@ -1,0 +1,164 @@
+{
+  "schema": "UDM37_HOST_NUMBER_PROPOSED_ORACLE_SOURCE_REVIEW_V1",
+  "created_at_utc": "2026-10-07T11:15:40.477720+00:00",
+  "status": "SOURCE_ONLY_FV_DESIGN_CONSISTENT_WITH_REQUIRED_WIRING_CONSTRAINTS_NOT_EXECUTED",
+  "verdict_ko": "제안한 1차원 주기 경계·2차 flux와 hybrid 층질량 oracle은 실제 source의 map coupling과 일치합니다. 두 scalar별 tendency 및 PD 갱신의 이미 결합된 tendency를 구분해야 합니다. 이 fixture는 실제 절차 일부의 수치 계약만 검증하며 host 수농도 단위나 전체 WRF 실행을 승인하지 않습니다.",
+  "head": "a152b2798ef465c57822db6a45e983a4b1d4ef34",
+  "tree": "92c73cece68279af1d04ab3e15643ae3cad94eae",
+  "procedures": [
+    {
+      "name": "advect_scalar",
+      "source": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-host-number-pr-work/WRF/dyn_em/module_advect_em.F",
+        "sha256": "58253bdbeb188dd47ed0579fcd2891086be1889b75c0c7d3696c9ad1d213559d",
+        "size_bytes": 427881
+      },
+      "anchors": "3029-4359; order2 4029-4069; vertical order2 4335-4353",
+      "block_SHA256_regex_including_leading_whitespace": "8f0bb3e6a4f9d29c934291b8f05083b6d358cb25a4ebdceca90f02045a84ae63",
+      "config_adapter_fields": [
+        "h_sca_adv_order",
+        "nested",
+        "open_xe",
+        "open_xs",
+        "open_ye",
+        "open_ys",
+        "periodic_x",
+        "periodic_y",
+        "polar",
+        "specified",
+        "symmetric_xe",
+        "symmetric_xs",
+        "symmetric_ye",
+        "symmetric_ys",
+        "v_sca_adv_order"
+      ]
+    },
+    {
+      "name": "rk_update_scalar",
+      "source": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-host-number-pr-work/WRF/dyn_em/module_em.F",
+        "sha256": "67c5842c1c5d407a26139f26bd317f3016c610aeaf60207dfd21394ddb81482c",
+        "size_bytes": 132827
+      },
+      "anchors": "1587-1799; tendency map 1702/1753; update 1722-1724/1773",
+      "block_SHA256_regex_including_leading_whitespace": "8be2e164d4f169d3341bccf5fda2916ec1f69e7f451d1cad232b303f7fa483f8",
+      "config_adapter_fields": [
+        "nested",
+        "periodic_x",
+        "rk_ord",
+        "specified"
+      ]
+    },
+    {
+      "name": "rk_update_scalar_pd",
+      "source": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-host-number-pr-work/WRF/dyn_em/module_em.F",
+        "sha256": "67c5842c1c5d407a26139f26bd317f3016c610aeaf60207dfd21394ddb81482c",
+        "size_bytes": 132827
+      },
+      "anchors": "1803-1916; consumes/zeros sc_tend 1884-1885",
+      "block_SHA256_regex_including_leading_whitespace": "7ce0752695653dab5fd50df6ea8813c6b9b7099cf892d207bde278b32953ea86",
+      "config_adapter_fields": [
+        "nested",
+        "periodic_x",
+        "specified"
+      ]
+    },
+    {
+      "name": "flow_dep_bdy_qnn",
+      "source": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-host-number-pr-work/WRF/share/module_bc.F",
+        "sha256": "61b9235004b2a7799faabaa928276af8a7ef2e4672619c8ad120c857461301ad",
+        "size_bytes": 164069
+      },
+      "anchors": "2460-2583",
+      "block_SHA256_regex_including_leading_whitespace": "973e13f8e2fad5fb7f8ee1303c796576b5c6bf746509273a6b39d2074e229055",
+      "config_adapter_fields": [
+        "periodic_x"
+      ]
+    }
+  ],
+  "other_source_pins": {
+    "WRF/phys/module_microphysics_driver.F": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-host-number-pr-work/WRF/phys/module_microphysics_driver.F",
+      "sha256": "c02f227d0fc1bf633fa53e54361e7117093b2c7bb02cedc2b71441c5bd638bd9",
+      "size_bytes": 198159
+    },
+    "WRF/dyn_em/solve_em.F": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-host-number-pr-work/WRF/dyn_em/solve_em.F",
+      "sha256": "ed03953a8b7b999fc0a5a281893f4808bbed28697ea9032fde9b9b605e0d9ecb",
+      "size_bytes": 283280
+    },
+    "WRF/dyn_em/module_big_step_utilities_em.F": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-host-number-pr-work/WRF/dyn_em/module_big_step_utilities_em.F",
+      "sha256": "b8c46ba091d017f70e2d75b9a87e198a0242f6c80341cd402d65677ba339a532",
+      "size_bytes": 233868
+    }
+  },
+  "source_algebra": {
+    "actual_order2_advection": "Tx=-msftx*rdx*[ru_right*(chi_right+chi)/2 - ru_left*(chi+chi_left)/2]; y term analogously uses msftx*rdy. Vertical rom=0 makes its initialized flux contribution zero.",
+    "RK_coupling": "rk_update_scalar uses T=advect_tend*msfty+sc_tend and chi_new=[(c1*(mu_old+mu_base)+c2)*chi_old+dt*T]/[c1*(mu_new+mu_base)+c2]. Thus effective horizontal metric factor is msftx*msfty.",
+    "independent_ledger": "For manufactured c1/c2 constant in horizontal space at each level, A=1/(msftx*msfty), W=c1*mu_total+c2, Mlayer=-dnw*W/g. Per-cell flux identity implies delta(sum A*Mlayer*chi) is the periodic net face flux, zero with matching endpoints. Cell dx*dy may be set1 or retained as a common area factor.",
+    "continuity": "With rdx=1 and G already a metric-coupled face column-mass flux, mu_total_new=mu_total_old-dt*(msftx*msfty)*(G_right-G_left). ru=c1*G+c2*Uconst yields matching layer-mass divergence because delta(Uconst)=0. For rdx!=1 include rdx explicitly.",
+    "physical_velocity_caveat": "Native big-step coupling uses ru=u*(c1*muu+c2)/msfu (module_big_step_utilities_em.F:372). Manufactured G/Uconst are flux inputs; do not call them authenticated primitive winds without that metric/mass relation."
+  },
+  "required_wiring_and_oracle_constraints": [
+    {
+      "id": "SCALAR-SPECIFIC-TENDENCY",
+      "evidence": "advect_tend is one 3-D array; production solve_em:3012 invokes scs=is,sce=is.",
+      "requirement": "For two independent scalars compute each advection tendency from its own field and call the update per index. A multi-scalar call using one patterned advect_tend is invalid."
+    },
+    {
+      "id": "PD-INPUT-BASIS",
+      "evidence": "rk_update_scalar_pd has no msfty multiplication and consumes then zeros sc_tend.",
+      "requirement": "Supply fully mass-coupled T to sc_tend once, verify tendency reset, and label this as scalar-update coverage. This does not exercise advect_scalar_pd or prove PD advection/positivity."
+    },
+    {
+      "id": "RK-AND-BOUNDS",
+      "requirement": "Set rk_step1 with scalar_2 as old state and verify scalar_1 copy, or separately declare a later-RK arm using scalar_1. Include mu_base in both weights; initialize all branches dummy inputs. Budget only owned i<=ide-1,j<=jde-1,k<=kde-1 cells, excluding halos/top interface."
+    },
+    {
+      "id": "METRICS-DISCRIMINATION",
+      "requirement": "Constant nonunit maps are a global area scale; total conservation alone cannot discriminate missing map factors. Require per-cell independent flux/update and uniform-tracer preservation against matching mass continuity. A varying-map arm is optional additional evidence, not inferred coverage."
+    },
+    {
+      "id": "RAW-SUM",
+      "requirement": "Raw sum need not change for uniform tracer. Demonstrate raw-sum nonconservation only in a deliberate nonuniform/changing-mass discriminating arm. Require positive new layer masses and finite outputs; no arbitrary clipping."
+    },
+    {
+      "id": "SOURCE-EXTRACTION",
+      "requirement": "Hash exact extracted procedures/IF block and recover byte-identical source without physics edits. Minimal wrapper/config adapters, error stubs and shape/initialization are distinct authored artifacts. Full procedure compilation is not full module or WRF host compilation."
+    }
+  ],
+  "minimal_adapter": {
+    "config": "Union of exact config fields listed per procedure, all explicitly initialized. Chosen advection uses h_sca_adv_order=2,v_sca_adv_order=2,periodic_x/y true and open/specified/nested/polar false.",
+    "arrays": "Initialize full memory/halo fields, field_old, tendency, ru/rv/rom, six map arrays, mut,c1/c2,fzm/fzp/rdzw; periodic halo values and face flux equality must be independently checked.",
+    "vertical": "Choose -dnw>0,g>0,c1*mu+c2>0; use nontrivial flat/hybrid coefficients but document them as manufactured, not actual host profile.",
+    "two_scalars": "Keep separate old arrays/tendencies and count exact case/index roster; nonzero patterned input must actually differ from uniform arm."
+  },
+  "coldstart_boundary_contract": {
+    "coldstart": "Driver lines924-933 assigns ccn_conc directly to entire memory QNN_CURR when have_udm_cf,itimestep1,num_tiles>0 and all required optional fields are PRESENT. Fixture must initialize/test these predicates or explicitly limit its evidence to extraction with externally supplied predicate. It is not owned-cell-only initialization.",
+    "boundary": "flow_dep_bdy_qnn assigns ccn_conc at inflow and copies source interior at outflow; at zero normal velocity it follows ELSE inflow. Include four sides, sign/zero cases, periodic_x suppression, corners/width and full-array untouched halo tests using independent coordinate expectations.",
+    "limits": "No density conversion is present in these source statements. Numerical equality to ccn_conc cannot establish physical units, imported/restart authority or UDM consumer compatibility."
+  },
+  "recommended_adversarial_controls": [
+    "Missing msfty/incorrect face metric must fail per-cell/uniform preservation check.",
+    "Wrong mu_base or layer c2 must fail independent weight/update.",
+    "Wrong scalar-specific tendency must fail distinct patterned second scalar.",
+    "Nonmatching periodic face or halo must fail closure.",
+    "PD tendency not reset must fail reset check.",
+    "Inflow/outflow or zero-velocity branch swap must fail full-array independent boundary expected values.",
+    "Coldstart itimestep!=1/num_tiles0/missing optional must preserve prefilled sentinels."
+  ],
+  "material_production_bug_confirmed": false,
+  "scientific_acceptance": false,
+  "number_unit_authority_approved": false,
+  "reviewer_counts": {
+    "compiler": 0,
+    "fixture": 0,
+    "WRF_model": 0,
+    "RTE": 0,
+    "raw_scientific_array_reads": 0
+  },
+  "next_step": "Parent owns actual extraction/fixture implementation and bounded execution. Review completed adapter/source hashes and meaningful numerical receipts separately; do not promote design-only source evidence to runtime PASS."
+}

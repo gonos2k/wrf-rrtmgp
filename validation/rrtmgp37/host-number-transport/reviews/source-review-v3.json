@@ -1,0 +1,102 @@
+{
+  "schema": "UDM37_HOST_NUMBER_FIXTURE_FINAL_SOURCE_METADATA_REVIEW_V3",
+  "created_at_utc": "2026-10-07T11:24:02.537127+00:00",
+  "status": "PASS_SCOPED_FROZEN_V4_SOURCE_AND_TERMINAL_METADATA",
+  "verdict_ko": "확정 현 소스와 v4 저장 영수증이 일치합니다. 네 원문 절차와 adapter 결합을 재구성했고 O0/O2의 정확한 cell/경계 목록과 실제 RC0 metadata를 확인했습니다. PD는 같은 old/new 질량에서 source 추가·소비만 검사하며 일반 RK는 변하는 질량을 검사합니다. 전체 WRF host·수농도 단위·물리 승인은 포함하지 않습니다.",
+  "pins": {
+    "checker": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-host-number-pr-work/WRF/test/rrtmgp/test_udm_host_number_transport.py",
+      "sha256": "4f0a550f2973a2d85f014ef3df16697ae0d4b924d7eaddcf0e52badbea64b5fe",
+      "size_bytes": 12651
+    },
+    "fixture": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-host-number-pr-work/WRF/test/rrtmgp/test_udm_host_number_transport.f90",
+      "sha256": "f369e1491a3fdbca344d2652db661fcf37d46d6fabbe79dad2154eb6ddc2d405",
+      "size_bytes": 4152
+    },
+    "receipt_v4": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-host-number-native-v4/receipt.json",
+      "sha256": "774addf63632ef9ab487b55ce13aa9b4d14655560cea429b5574407819fea16d",
+      "size_bytes": 41450
+    },
+    "generated_source": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-host-number-native-v4/native-scalar-slices.f90",
+      "sha256": "aa4fa0f0260613c03027315882d4b862f3979b363406e49e4a2150bbc5e35db8",
+      "size_bytes": 55980
+    },
+    "previous_source_review": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-host-number-contract-preparation-v1/source-review-v2.json",
+      "sha256": "4d3ad68f0391e5c6886083a143025ae3eb7b7c6902532cb971496fde4b0253d4",
+      "size_bytes": 9039
+    }
+  },
+  "source_proof": {
+    "all_13_actual_source_pins_before_after_and_current_equal": true,
+    "four_procedure_slice_SHA256_independently_recomputed": true,
+    "generated_adapter_plus_verbatim_slices_byte_equal_actual_compiled_source": true,
+    "procedure_extract_horizontal_whitespace": "Actual extract permits leading horizontal spaces and terminates at END without consuming trailing blank lines. Reviewer first metadata proof used an over-broad whitespace regex and failed before writing this report; corrected source-only reconstruction matches all four saved slice hashes. No fixture/compile rerun occurred.",
+    "procedures": [
+      "advect_scalar",
+      "rk_update_scalar",
+      "rk_update_scalar_pd",
+      "flow_dep_bdy_qnn"
+    ],
+    "static_source_additions": "UDM/start_em/module_initialize_real/module_first_rk_step_part1 are extra read-only source pins, not newly invoked native procedures."
+  },
+  "actual_v4_metadata": {
+    "status": "PASS_SCOPED_NATIVE_SCALAR_TRANSPORT",
+    "process_count": 5,
+    "compiler_link_children": 2,
+    "fixture_children": 2,
+    "compiler_version_queries": 1,
+    "all_processes_TERMINAL_RC0_no_timeout": true,
+    "all_five_command_journals_exactly_join_final_receipt": true,
+    "O0_O2_each": {
+      "cell_records": 768,
+      "boundary_records": 720,
+      "procedure_calls": [
+        32,
+        32,
+        32,
+        6
+      ],
+      "FV_budget_rows": 32,
+      "negative_controls": [
+        "missing-cell",
+        "wrong-map",
+        "wrong-mass",
+        "wrong-number",
+        "uncleared-source",
+        "wrong-inflow"
+      ]
+    },
+    "metadata_qualification": "Control outcomes reviewed as small saved JSON. Raw CELL/BOUNDARY stdout, executable binaries and arrays were not decoded by reviewer."
+  },
+  "scope": {
+    "normal_RK": "Per-scalar tendency, changing column mass/hybrid weights, source-selected stages1/3 tested separately with stage3 scalar_2 sentinel.",
+    "FV": "Eight manufactured arms include spatially varying maps, uniform/patterned two generic scalars, second-order periodic horizontal fluxes, zero vertical flux. Per-cell3e-7/0.1 comparison and global1.5e-7 closure are tolerance-bounded FV algebra, not exact native-kind replay.",
+    "PD": "mu_old=mu_new=mu1. Fully mass-coupled prescribed source addition and sc_tend reset only; no unequal-mass PD decoupling or PD advection limiter claim.",
+    "boundary": "Six -1/0/+1 velocity ×periodic_x false/true width1 arms; all120 memory cells/arm,720 records per optimization. Exact side-coordinate oracle includes halos/top, zero-velocity inflow, interior outflow copies and periodic-x suppression.",
+    "coldstart": "Not newly executed. Added initializer/producer source pins remain static, not runtime coldstart proof.",
+    "not_host": "No full-module/WRF/MPI/UDM/physics/radius/optics/RTE/balanced EOS trajectory."
+  },
+  "limits": [
+    "Generic mass-weighted scalar conservation cannot decide concentration units, dry/moist denominator or producer/storage/restart/UDM population authority.",
+    "Default GNU storage is the tested scope; no promoted-real or all-compiler ABI approval.",
+    "No cross-optimization bitwise equality, full RK trajectory, higher-order/diffusive transport or host lateral boundary evolution.",
+    "Production source and density/number policy are unchanged."
+  ],
+  "material_blockers": [],
+  "production_bug_confirmed": false,
+  "scientific_acceptance": false,
+  "remaining_physical_gates": 7,
+  "reviewer_counts": {
+    "compile_link": 0,
+    "fixture": 0,
+    "model": 0,
+    "UDM": 0,
+    "RTE": 0,
+    "raw_scientific_array_decodes": 0
+  },
+  "history": "Initial source and proposed-oracle reviews remain unchanged. This additive record binds only final v4 source and receipt; no prior attempt is reclassified."
+}

@@ -1,6 +1,6 @@
 # 이전 검토 지적 해소 체크리스트
 
-현재 기준 main: `42641d19d5cd5cf4b3b124270d365aa973be7727`. UDM27–RRTMGP37 전용.
+현재 기준 main: `a152b2798ef465c57822db6a45e983a4b1d4ef34`. UDM27–RRTMGP37 전용.
 
 PR #146–#151은 main에 병합됐다. 기존 실행의 source pin·범위는 그대로 보존하며, 현재 전체 tree에서 모든 과거 모델을 새로 실행했다고 주장하지 않는다. PR #149의 NetCDF guard와 기본 namelist 검사는 main에 반영됐고 정확히 같은 tree에서 11개 CI가 성공했다. PR150의 추가 scalar 경계 수정도 main에 반영됐다. PR151의 I/O 세 항목도 main에 반영됐고 정확히 같은 전체 tree에서 11개 CI가 성공했다.
 
@@ -53,3 +53,10 @@ Thompson의 private cloud 상태만 준비하며 `thompson_init`·WRF 8/28 routi
 질량당 입력→체적 수농도→gamma 모멘트 경계, 고정 체적 수농도와 UDM 원시 수농도의
 조건부 반응을 구분한다. actual helper 72회는 기상 사례 수가 아니며 물리 gate를 닫지 않는다.
 Thompson37 운영 지원·광학/예보 우열은 주장하지 않는다. 기존 sealed source pin은 유지한다.
+
+[PR154 terminal 및 host scalar 수송 절차](../host-number-transport/README_ko.md)는
+PR154 main 통합과 11개 terminal SUCCESS를 연결한다. 신규 O0/O2 fixture는
+실제 네 절차를 원문 추출해 최소 adapter로 호출하며 셀별 flux·건조질량/면적
+보존·QNN boundary 직접 주입을 검사한다. 전체 모듈/WRF host/UDM routing은 아니다.
+초기화→수송→UDM 입구의 의도된 단위·population은 여전히 OPEN이며
+15개 완료/7개 잔여와 원래19/current12, production_accepted=false를 유지한다.
