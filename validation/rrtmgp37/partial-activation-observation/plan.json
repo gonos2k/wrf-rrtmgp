@@ -1,0 +1,108 @@
+{
+  "schema": "UDM37_PARTIAL_ACTIVATION_OBSERVATION_V1",
+  "status": "PREPARED",
+  "source_pins_before": [
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-pr-work/WRF/phys/module_mp_udm.F",
+      "sha256": "7bd96141eefc6ae2cb66cea0ce022fcc2ee64afce5c616aa65f26711c8790947",
+      "size_bytes": 196865
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-pr-work/WRF/phys/module_mp_radar.F",
+      "sha256": "fa5e06a4d64bbc32089a1357bfa5c57e6c682e5b68c706842698c2b0f292e68e",
+      "size_bytes": 25452
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-pr-work/WRF/phys/module_gfs_machine.F",
+      "sha256": "300ee4f75663e89d34c8a9b8733cc07a5dd48c3d973da019d31cb76524babe25",
+      "size_bytes": 567
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-pr-work/WRF/test/rrtmgp/test_udm_partial_activation.py",
+      "sha256": "eba6f4093df2fec2f84f518464a807f103adb65d93ccb3bb6b1454ab893d37ef",
+      "size_bytes": 19221
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-pr-work/WRF/test/rrtmgp/test_udm_partial_activation.f90",
+      "sha256": "5b7c3dc59cb8534ad6f0cebd04c3070b5e333621e02601bf1c324790b33ac01a",
+      "size_bytes": 4696
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-pr-work/WRF/test/rrtmgp/test_netcdf_zz.py",
+      "sha256": "79376b07af06a8f1570ed807546762711bfd8aa185566f25e974eaabc2a505cf",
+      "size_bytes": 16970
+    }
+  ],
+  "compiler": {
+    "path": "/usr/bin/x86_64-linux-gnu-gfortran-13",
+    "sha256": "7e292e9d5da17a37bb1c17a06afb6463db786c70827fd6893ed31a86715b03c3",
+    "size_bytes": 1027128
+  },
+  "full_WRF_builds": 0,
+  "WRF_host_runs": 0,
+  "RTE_runs": 0,
+  "scientific_acceptance": false,
+  "remaining_physical_gates": 7,
+  "observer_anchors": [
+    {
+      "anchor": "  module module_mp_udm\n",
+      "before": false
+    },
+    {
+      "anchor": "   call adjust_number_concent(ktopqr,kdim,qrs(:,i,1),ncr(:,i,3),den(:,i),      &\n",
+      "before": true
+    },
+    {
+      "anchor": "        pidnc,one_1,qcmin,ncmin,ncmax,di15,  dcmin, dcmax)\n",
+      "before": false
+    },
+    {
+      "anchor": "   if (present(udm_cf_top)) udm_cf_top(i)=ktop\n",
+      "before": false
+    },
+    {
+      "anchor": "! update the slope parameters for microphysics computation\n",
+      "before": false
+    },
+    {
+      "anchor": "     qci(k,i,1) = qci(k,i,1) * cldf(k)\n",
+      "before": true
+    },
+    {
+      "anchor": "     qrs(k,i,4) = qrs(k,i,4) * cldf(k)\n",
+      "before": false
+    },
+    {
+      "anchor": "     if(rh_mul(k)>1.) then\n",
+      "before": true
+    },
+    {
+      "anchor": "                     (3.*den(k,i)),max(q(k,i),0.)*rdtcld)\n",
+      "before": false
+    },
+    {
+      "anchor": "       t(k,i) = t(k,i) + pcact(k)*xlv(k,i)/cpm(k,i)*dtcld\n",
+      "before": false
+    },
+    {
+      "anchor": "            call udm_mp_effective_radius(t1d,qc1d,qi1d,qs1d,den1d,qmin, t0c    &\n",
+      "before": true
+    },
+    {
+      "anchor": "                               ,re_qc, re_qi, re_qs, kts, kte, i, j)\n",
+      "before": false
+    }
+  ],
+  "snapshots": [
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/native_udm.F",
+      "sha256": "7bd96141eefc6ae2cb66cea0ce022fcc2ee64afce5c616aa65f26711c8790947",
+      "size_bytes": 196865
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/observed_udm.F",
+      "sha256": "8c9793edf281feb7601d9eeccd9e10b8592546ec6b96b6c95ed7f3f96645578e",
+      "size_bytes": 199615
+    }
+  ]
+}

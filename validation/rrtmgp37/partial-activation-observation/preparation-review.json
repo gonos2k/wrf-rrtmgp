@@ -1,0 +1,111 @@
+{
+  "created_utc": "2026-10-07",
+  "explicit_open_questions": [
+    "Independent authority for the actual stored/prognostic NN/NC number basis across initialization, boundaries, restart, and transport remains unresolved.",
+    "A two-density pair is not an independent proof that a density conversion is physically required or correct.",
+    "The CF snapshot is before the in-cloud transformation; activation uses restored grid-mean condensate. No universal claim about all process inputs follows.",
+    "Existing saved cases do not jointly show strictly partial CF, 0<activation_fraction<1, and inactive number/water floors/caps at one identified source call."
+  ],
+  "minimal_next_fixture": {
+    "design": "One bounded same-source actual-module paired run, two EOS-consistent dry-density states, one registered cell/level and actual call key; retain a same-step source-order trace across CF capture, divide, restore, activation, and returned radius helper. Reuse existing fractional-CF and positive-activation observation interfaces where their fields suffice; add only the missing stage/call identity or branch-state fields as a diagnostic observer, not production arithmetic.",
+    "pass_scope": "Only demonstrates that these selected, EOS-consistent states traverse the observed code path and that source-ordered updates/branch predicates are internally reproducible. It does not close producer-unit authority, restart/boundary/transport population basis, PSD/LUT metric, or physical accuracy.",
+    "required_observations": [
+      "actual option37 invocation and call identity; QV/ QC/ QI/ QNN/ QNC / P / T / dry DEN at entry, plus initialization provenance",
+      "pre-CF condensate values, captured CF and its timestep/top identity",
+      "whether CF in-cloud divide and grid-mean restore loops cover the selected level; activation-site restored QV/QC and NN/NC",
+      "RH, satmax, activation temp/fraction, raw and capped NC_ACT, raw and capped PC_ACT, floor/cap active flags, post-activation state",
+      "actual radius-helper arguments/return values, including the exact NC and density arguments"
+    ]
+  },
+  "saved_evidence_pins": [
+    {
+      "path": "validation/rrtmgp37/positive-nc-activation/README.md",
+      "scope": "paired short run; selected recorded activation branch is full fraction (activation_fraction=1) with CCN floor active; does not demonstrate partial activation or inactive floors",
+      "sha256": "6de00bee50b1408c31f459f384532022c6224c4493e0abff08636a2581f42aca"
+    },
+    {
+      "path": "validation/rrtmgp37/positive-nc-activation/scope.json",
+      "scope": "saved observer/configuration metadata only",
+      "sha256": "ac32bfae7d414102621dea07be0870a6c4ed3f8b6c8f7a7151aa43d585383d76"
+    },
+    {
+      "path": "validation/rrtmgp37/fractional-cf-population/README.md",
+      "scope": "partial cloud-fraction evidence; no paired activation-fraction or two-density isolation",
+      "sha256": "9c38b3b78366f241aa608b6ca62982a67d13c2a9dac6809a6e4665fa05c7c738"
+    },
+    {
+      "path": "validation/rrtmgp37/activation-density-contract/README.md",
+      "scope": "source-extracted local algebra fixtures, not whole-module paired partial-CF run",
+      "sha256": "2399d0b87cf699dc7f0618846a0c0326afd8334ffaf97be26c2cdc24cfbe060b"
+    }
+  ],
+  "schema": "udm37-partial-activation-preparation-v1",
+  "scope": {
+    "compiler_model_or_solver_runs": 0,
+    "head": "59697ca409279cc0f837c4182fb5045cdc675e46",
+    "production_edits": 0,
+    "raw_scientific_arrays_read": false,
+    "repository_worktree": "build/udm37-netcdf-scalar-pr-work",
+    "tree": "7491ad2dcfdbf4db750b7a990e16d7abae4fdabd",
+    "worktree_clean_at_review_start": true
+  },
+  "source_findings": {
+    "activation_source_equations": {
+      "fact": "For RH>1, temp=min(1, exp(log((RH-1)/satmax)*actk)); NC_ACT=max(0,((NN+NC)*temp-NC))*rdtcld then min with max(NN,0)*rdtcld; PC_ACT is min of the embryo-mass expression and max(Q,0)*rdtcld. NN/NC/QC/Q updates follow at 2534-2538.",
+      "partial_activation_conditions": "Require measured 0<temp<1 and NC_ACT>0; also record that the NN cap and vapor-mass cap are inactive, and that pre/post NN and NC do not hit ccnmin/ncmin. These are runtime predicates, not assumed from input intent."
+    },
+    "ccn_initialization_and_density": {
+      "fact": "The option-37 driver first-timestep initialization writes QNN_CURR=ccn_conc at 928-931. The UDM call marks this preinitialized and declares DEN dry. UDM's default flags are different (initialize CCN true and input density dry false at 330-332), so fixture must confirm the actual option-37 path, not rely on defaults.",
+      "scope_limit": "This only identifies the configured branch/source assignments; it does not authenticate all restart, boundary, advection, or producer paths."
+    },
+    "cloud_fraction_timing": {
+      "fact": "UDM calls cldf_diag, copies cldf to udm_cldfra, and records timestep/top at lines 1094-1098. It then divides condensate mass arrays qci/qrs by cldf for in-cloud process calculations at 1100-1112, and multiplies them back by cldf at 1299-1311 before the activation block starts at 2512.",
+      "interpretation": "The captured CF is the preceding closure-stage fraction. Activation sees restored grid-mean condensate arrays, not the transient in-cloud qci values. Do not label the activation qc as still in-cloud or claim every UDM process uses in-cloud mass."
+    },
+    "inactive_controls": {
+      "recommendation": "At the selected partial-CF/partial-activation call record explicit branch booleans and pre/post values for the NN activation cap, PC_ACT vapor cap, ccnmin/ncmin floors, and any number repair/floor path preceding activation. Choose states with margins from these thresholds and verify them in the actual module output; do not claim them inactive solely because requested inputs were chosen that way."
+    },
+    "mass_basis_activation_sees": {
+      "fact": "The activation block consumes the current q(k,i), qci(k,i,1), and ncr(k,i,1:2) arrays after the CF restoration loop. This invocation receives qv_curr/qc_curr/qnn_curr/qnc_curr and rho through the option-37 driver call; that call explicitly sets ccn_preinitialized=.true. and input_density_is_dry=.true. at 2894-2895.",
+      "scope_limit": "The equations show no extra CF division at the activation site, and the passed condensate arrays have been restored to grid mean. The block uses its current NN/NC values directly; this source review does not independently establish the universal producer/storage population unit or convert it to #m^-3. Do not infer a density correction."
+    },
+    "partial_cf_conditions": {
+      "fact": "cldf_diag thresholds at 3394-3450 zero cloud for qc+qi<1e-6; clamp CF to [0,1], map <0.01 to zero, >0.99 to one, and raise values from 0.01 to below 0.5 up to 0.5.",
+      "fixture_target": "Select a real same-call state with 0.5 <= captured CF < 0.99; verify the observed value and exact timestep/column/level join. Do not assume that selecting subgrid inputs guarantees partial CF."
+    },
+    "two_density_comparison": {
+      "recommendation": "Use two distinct but EOS-consistent tuples of p,T,qv and dry density from the same WRF dry-density authority, with all other held inputs and code fixed. Capture the exact same selected cell/level/call at UDM entry and the internal source-state needed to prove the selected density policy. Compare observer-reported activation intermediates/rates and radius-helper inputs/outputs. Treat the contrast as density sensitivity only; it cannot choose a density multiplier or establish physical Nc units without an independent population-basis authority."
+    }
+  },
+  "source_pins": [
+    {
+      "anchors": {
+        "activation": "2512-2538",
+        "cldf_diag_thresholds": "3394-3450",
+        "cloud_fraction_diagnostic_and_capture": "1094-1098",
+        "condensate_to_in_cloud": "1100-1112",
+        "restore_to_grid_mean": "1299-1311",
+        "udm_optional_density_and_ccn_flags": "233-248, 330-332, 863-870"
+      },
+      "path": "WRF/phys/module_mp_udm.F",
+      "sha256": "7bd96141eefc6ae2cb66cea0ce022fcc2ee64afce5c616aa65f26711c8790947"
+    },
+    {
+      "anchors": {
+        "actual_option37_udm_call_flags_and_inputs": "2836-2895",
+        "ccn_preinitialized_and_dry_density": "2894-2895",
+        "first_step_ccn_initialization": "928-931"
+      },
+      "path": "WRF/phys/module_microphysics_driver.F",
+      "sha256": "c02f227d0fc1bf633fa53e54361e7117093b2c7bb02cedc2b71441c5bd638bd9"
+    },
+    {
+      "anchors": {
+        "QNN_QNC_QNR_registry_names_and_units": "536-545"
+      },
+      "path": "WRF/Registry/Registry.EM_COMMON",
+      "sha256": "87e21a476a06b7e0c926b2d939eaf1028810cba8a7d1e6fc585b50b599f99729"
+    }
+  ],
+  "status": "SOURCE_AND_SAVED_EVIDENCE_REVIEW_ONLY"
+}

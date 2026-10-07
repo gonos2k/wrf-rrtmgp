@@ -1,0 +1,1387 @@
+{
+  "schema": "UDM37_PARTIAL_ACTIVATION_OBSERVATION_V1",
+  "status": "PASS_SCOPED_ACTUAL_UDM_PARTIAL_ACTIVATION",
+  "source_pins_before": [
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-pr-work/WRF/phys/module_mp_udm.F",
+      "sha256": "7bd96141eefc6ae2cb66cea0ce022fcc2ee64afce5c616aa65f26711c8790947",
+      "size_bytes": 196865
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-pr-work/WRF/phys/module_mp_radar.F",
+      "sha256": "fa5e06a4d64bbc32089a1357bfa5c57e6c682e5b68c706842698c2b0f292e68e",
+      "size_bytes": 25452
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-pr-work/WRF/phys/module_gfs_machine.F",
+      "sha256": "300ee4f75663e89d34c8a9b8733cc07a5dd48c3d973da019d31cb76524babe25",
+      "size_bytes": 567
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-pr-work/WRF/test/rrtmgp/test_udm_partial_activation.py",
+      "sha256": "eba6f4093df2fec2f84f518464a807f103adb65d93ccb3bb6b1454ab893d37ef",
+      "size_bytes": 19221
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-pr-work/WRF/test/rrtmgp/test_udm_partial_activation.f90",
+      "sha256": "5b7c3dc59cb8534ad6f0cebd04c3070b5e333621e02601bf1c324790b33ac01a",
+      "size_bytes": 4696
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-pr-work/WRF/test/rrtmgp/test_netcdf_zz.py",
+      "sha256": "79376b07af06a8f1570ed807546762711bfd8aa185566f25e974eaabc2a505cf",
+      "size_bytes": 16970
+    }
+  ],
+  "compiler": {
+    "path": "/usr/bin/x86_64-linux-gnu-gfortran-13",
+    "sha256": "7e292e9d5da17a37bb1c17a06afb6463db786c70827fd6893ed31a86715b03c3",
+    "size_bytes": 1027128
+  },
+  "full_WRF_builds": 0,
+  "WRF_host_runs": 0,
+  "RTE_runs": 0,
+  "scientific_acceptance": false,
+  "remaining_physical_gates": 7,
+  "observer_anchors": [
+    {
+      "anchor": "  module module_mp_udm\n",
+      "before": false
+    },
+    {
+      "anchor": "   call adjust_number_concent(ktopqr,kdim,qrs(:,i,1),ncr(:,i,3),den(:,i),      &\n",
+      "before": true
+    },
+    {
+      "anchor": "        pidnc,one_1,qcmin,ncmin,ncmax,di15,  dcmin, dcmax)\n",
+      "before": false
+    },
+    {
+      "anchor": "   if (present(udm_cf_top)) udm_cf_top(i)=ktop\n",
+      "before": false
+    },
+    {
+      "anchor": "! update the slope parameters for microphysics computation\n",
+      "before": false
+    },
+    {
+      "anchor": "     qci(k,i,1) = qci(k,i,1) * cldf(k)\n",
+      "before": true
+    },
+    {
+      "anchor": "     qrs(k,i,4) = qrs(k,i,4) * cldf(k)\n",
+      "before": false
+    },
+    {
+      "anchor": "     if(rh_mul(k)>1.) then\n",
+      "before": true
+    },
+    {
+      "anchor": "                     (3.*den(k,i)),max(q(k,i),0.)*rdtcld)\n",
+      "before": false
+    },
+    {
+      "anchor": "       t(k,i) = t(k,i) + pcact(k)*xlv(k,i)/cpm(k,i)*dtcld\n",
+      "before": false
+    },
+    {
+      "anchor": "            call udm_mp_effective_radius(t1d,qc1d,qi1d,qs1d,den1d,qmin, t0c    &\n",
+      "before": true
+    },
+    {
+      "anchor": "                               ,re_qc, re_qi, re_qs, kts, kte, i, j)\n",
+      "before": false
+    }
+  ],
+  "snapshots": [
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/native_udm.F",
+      "sha256": "7bd96141eefc6ae2cb66cea0ce022fcc2ee64afce5c616aa65f26711c8790947",
+      "size_bytes": 196865
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/observed_udm.F",
+      "sha256": "8c9793edf281feb7601d9eeccd9e10b8592546ec6b96b6c95ed7f3f96645578e",
+      "size_bytes": 199615
+    }
+  ],
+  "compiler_version": {
+    "text": "GNU Fortran (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0\nCopyright (C) 2023 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n",
+    "stdout": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/command-01.stdout",
+      "sha256": "164c77399862886648a0d9c6bbf3893b553ab1e090d03b760cd6daaa0ee9bbf1",
+      "size_bytes": 252
+    }
+  },
+  "results": {
+    "O0": {
+      "rows": [
+        {
+          "case": 1,
+          "k": 1,
+          "rho_d": 0.699999988079071,
+          "preceding_closure_cf": 0.5800508260726929,
+          "actual_alpha": 0.34999585151672363,
+          "nn_before": 200000000.0,
+          "nc_before": 49999908.0,
+          "nn_after": 162500976.0,
+          "nc_after": 87498928.0,
+          "number_budget_residual": -4.0,
+          "number_and_water_caps_floors_inactive": true,
+          "helper": {
+            "nc": 87498928.0,
+            "qc": 0.00010368569201091304,
+            "rho": 0.699999988079071,
+            "t": 285.0089111328125,
+            "qi": 0.0,
+            "qs": 0.0,
+            "rec": 5.828744633618044e-06,
+            "rei": 5.01000022268272e-06,
+            "res": 2.499999936844688e-05
+          }
+        },
+        {
+          "case": 1,
+          "k": 2,
+          "rho_d": 0.699999988079071,
+          "preceding_closure_cf": 0.5800508260726929,
+          "actual_alpha": 0.34999585151672363,
+          "nn_before": 200000000.0,
+          "nc_before": 49999908.0,
+          "nn_after": 162500976.0,
+          "nc_after": 87498928.0,
+          "number_budget_residual": -4.0,
+          "number_and_water_caps_floors_inactive": true,
+          "helper": {
+            "nc": 87498928.0,
+            "qc": 0.00010368569201091304,
+            "rho": 0.699999988079071,
+            "t": 285.0089111328125,
+            "qi": 0.0,
+            "qs": 0.0,
+            "rec": 5.828744633618044e-06,
+            "rei": 5.01000022268272e-06,
+            "res": 2.499999936844688e-05
+          }
+        },
+        {
+          "case": 1,
+          "k": 3,
+          "rho_d": 0.699999988079071,
+          "preceding_closure_cf": 0.5800508260726929,
+          "actual_alpha": 0.34999585151672363,
+          "nn_before": 200000000.0,
+          "nc_before": 49999908.0,
+          "nn_after": 162500976.0,
+          "nc_after": 87498928.0,
+          "number_budget_residual": -4.0,
+          "number_and_water_caps_floors_inactive": true,
+          "helper": {
+            "nc": 87498928.0,
+            "qc": 0.00010368569201091304,
+            "rho": 0.699999988079071,
+            "t": 285.0089111328125,
+            "qi": 0.0,
+            "qs": 0.0,
+            "rec": 5.828744633618044e-06,
+            "rei": 5.01000022268272e-06,
+            "res": 2.499999936844688e-05
+          }
+        },
+        {
+          "case": 2,
+          "k": 1,
+          "rho_d": 0.699999988079071,
+          "preceding_closure_cf": 0.5800508260726929,
+          "actual_alpha": 0.6499993205070496,
+          "nn_before": 200000000.0,
+          "nc_before": 49999908.0,
+          "nn_after": 87500144.0,
+          "nc_after": 162499760.0,
+          "number_budget_residual": -4.0,
+          "number_and_water_caps_floors_inactive": true,
+          "helper": {
+            "nc": 162499760.0,
+            "qc": 0.00011034255294362083,
+            "rho": 0.699999988079071,
+            "t": 285.0250244140625,
+            "qi": 0.0,
+            "qs": 0.0,
+            "rec": 4.841348982154159e-06,
+            "rei": 5.01000022268272e-06,
+            "res": 2.499999936844688e-05
+          }
+        },
+        {
+          "case": 2,
+          "k": 2,
+          "rho_d": 0.699999988079071,
+          "preceding_closure_cf": 0.5800508260726929,
+          "actual_alpha": 0.6499993205070496,
+          "nn_before": 200000000.0,
+          "nc_before": 49999908.0,
+          "nn_after": 87500144.0,
+          "nc_after": 162499760.0,
+          "number_budget_residual": -4.0,
+          "number_and_water_caps_floors_inactive": true,
+          "helper": {
+            "nc": 162499760.0,
+            "qc": 0.00011034255294362083,
+            "rho": 0.699999988079071,
+            "t": 285.0250244140625,
+            "qi": 0.0,
+            "qs": 0.0,
+            "rec": 4.841348982154159e-06,
+            "rei": 5.01000022268272e-06,
+            "res": 2.499999936844688e-05
+          }
+        },
+        {
+          "case": 2,
+          "k": 3,
+          "rho_d": 0.699999988079071,
+          "preceding_closure_cf": 0.5800508260726929,
+          "actual_alpha": 0.6499993205070496,
+          "nn_before": 200000000.0,
+          "nc_before": 49999908.0,
+          "nn_after": 87500144.0,
+          "nc_after": 162499760.0,
+          "number_budget_residual": -4.0,
+          "number_and_water_caps_floors_inactive": true,
+          "helper": {
+            "nc": 162499760.0,
+            "qc": 0.00011034255294362083,
+            "rho": 0.699999988079071,
+            "t": 285.0250244140625,
+            "qi": 0.0,
+            "qs": 0.0,
+            "rec": 4.841348982154159e-06,
+            "rei": 5.01000022268272e-06,
+            "res": 2.499999936844688e-05
+          }
+        },
+        {
+          "case": 3,
+          "k": 1,
+          "rho_d": 1.100000023841858,
+          "preceding_closure_cf": 0.5800508260726929,
+          "actual_alpha": 0.34999585151672363,
+          "nn_before": 200000000.0,
+          "nc_before": 49999768.0,
+          "nn_after": 162500880.0,
+          "nc_after": 87498888.0,
+          "number_budget_residual": 0.0,
+          "number_and_water_caps_floors_inactive": true,
+          "helper": {
+            "nc": 87498888.0,
+            "qc": 0.00010315891995560378,
+            "rho": 1.100000023841858,
+            "t": 285.0076599121094,
+            "qi": 0.0,
+            "qs": 0.0,
+            "rec": 6.765023044863483e-06,
+            "rei": 5.01000022268272e-06,
+            "res": 2.499999936844688e-05
+          }
+        },
+        {
+          "case": 3,
+          "k": 2,
+          "rho_d": 1.100000023841858,
+          "preceding_closure_cf": 0.5800508260726929,
+          "actual_alpha": 0.34999585151672363,
+          "nn_before": 200000000.0,
+          "nc_before": 49999768.0,
+          "nn_after": 162500880.0,
+          "nc_after": 87498888.0,
+          "number_budget_residual": 0.0,
+          "number_and_water_caps_floors_inactive": true,
+          "helper": {
+            "nc": 87498888.0,
+            "qc": 0.00010315891995560378,
+            "rho": 1.100000023841858,
+            "t": 285.0076599121094,
+            "qi": 0.0,
+            "qs": 0.0,
+            "rec": 6.765023044863483e-06,
+            "rei": 5.01000022268272e-06,
+            "res": 2.499999936844688e-05
+          }
+        },
+        {
+          "case": 3,
+          "k": 3,
+          "rho_d": 1.100000023841858,
+          "preceding_closure_cf": 0.5800508260726929,
+          "actual_alpha": 0.34999585151672363,
+          "nn_before": 200000000.0,
+          "nc_before": 49999768.0,
+          "nn_after": 162500880.0,
+          "nc_after": 87498888.0,
+          "number_budget_residual": 0.0,
+          "number_and_water_caps_floors_inactive": true,
+          "helper": {
+            "nc": 87498888.0,
+            "qc": 0.00010315891995560378,
+            "rho": 1.100000023841858,
+            "t": 285.0076599121094,
+            "qi": 0.0,
+            "qs": 0.0,
+            "rec": 6.765023044863483e-06,
+            "rei": 5.01000022268272e-06,
+            "res": 2.499999936844688e-05
+          }
+        },
+        {
+          "case": 4,
+          "k": 1,
+          "rho_d": 1.100000023841858,
+          "preceding_closure_cf": 0.5800508260726929,
+          "actual_alpha": 0.6499993205070496,
+          "nn_before": 200000000.0,
+          "nc_before": 49999768.0,
+          "nn_after": 87500088.0,
+          "nc_after": 162499680.0,
+          "number_budget_residual": 0.0,
+          "number_and_water_caps_floors_inactive": true,
+          "helper": {
+            "nc": 162499680.0,
+            "qc": 0.0001088477365556173,
+            "rho": 1.100000023841858,
+            "t": 285.0215148925781,
+            "qi": 0.0,
+            "qs": 0.0,
+            "rec": 5.603036697721109e-06,
+            "rei": 5.01000022268272e-06,
+            "res": 2.499999936844688e-05
+          }
+        },
+        {
+          "case": 4,
+          "k": 2,
+          "rho_d": 1.100000023841858,
+          "preceding_closure_cf": 0.5800508260726929,
+          "actual_alpha": 0.6499993205070496,
+          "nn_before": 200000000.0,
+          "nc_before": 49999768.0,
+          "nn_after": 87500088.0,
+          "nc_after": 162499680.0,
+          "number_budget_residual": 0.0,
+          "number_and_water_caps_floors_inactive": true,
+          "helper": {
+            "nc": 162499680.0,
+            "qc": 0.0001088477365556173,
+            "rho": 1.100000023841858,
+            "t": 285.0215148925781,
+            "qi": 0.0,
+            "qs": 0.0,
+            "rec": 5.603036697721109e-06,
+            "rei": 5.01000022268272e-06,
+            "res": 2.499999936844688e-05
+          }
+        },
+        {
+          "case": 4,
+          "k": 3,
+          "rho_d": 1.100000023841858,
+          "preceding_closure_cf": 0.5800508260726929,
+          "actual_alpha": 0.6499993205070496,
+          "nn_before": 200000000.0,
+          "nc_before": 49999768.0,
+          "nn_after": 87500088.0,
+          "nc_after": 162499680.0,
+          "number_budget_residual": 0.0,
+          "number_and_water_caps_floors_inactive": true,
+          "helper": {
+            "nc": 162499680.0,
+            "qc": 0.0001088477365556173,
+            "rho": 1.100000023841858,
+            "t": 285.0215148925781,
+            "qi": 0.0,
+            "qs": 0.0,
+            "rec": 5.603036697721109e-06,
+            "rei": 5.01000022268272e-06,
+            "res": 2.499999936844688e-05
+          }
+        }
+      ],
+      "pristine_OFF_ON_returns_bitwise_equal": true,
+      "negative_controls_rejected": {
+        "forced-floor": "number floor/cap active",
+        "nonpartial-alpha": "not positive partial activation",
+        "missing-stage": "exact observer case/stage/layer/subcycle roster differs",
+        "temperature-update": "activation temperature update differs"
+      },
+      "stage_records": 140
+    },
+    "O2": {
+      "rows": [
+        {
+          "case": 1,
+          "k": 1,
+          "rho_d": 0.699999988079071,
+          "preceding_closure_cf": 0.5800508260726929,
+          "actual_alpha": 0.34999585151672363,
+          "nn_before": 200000000.0,
+          "nc_before": 49999908.0,
+          "nn_after": 162500976.0,
+          "nc_after": 87498928.0,
+          "number_budget_residual": -4.0,
+          "number_and_water_caps_floors_inactive": true,
+          "helper": {
+            "nc": 87498928.0,
+            "qc": 0.00010368569201091304,
+            "rho": 0.699999988079071,
+            "t": 285.0089111328125,
+            "qi": 0.0,
+            "qs": 0.0,
+            "rec": 5.828744633618044e-06,
+            "rei": 5.01000022268272e-06,
+            "res": 2.499999936844688e-05
+          }
+        },
+        {
+          "case": 1,
+          "k": 2,
+          "rho_d": 0.699999988079071,
+          "preceding_closure_cf": 0.5800508260726929,
+          "actual_alpha": 0.34999585151672363,
+          "nn_before": 200000000.0,
+          "nc_before": 49999908.0,
+          "nn_after": 162500976.0,
+          "nc_after": 87498928.0,
+          "number_budget_residual": -4.0,
+          "number_and_water_caps_floors_inactive": true,
+          "helper": {
+            "nc": 87498928.0,
+            "qc": 0.00010368569201091304,
+            "rho": 0.699999988079071,
+            "t": 285.0089111328125,
+            "qi": 0.0,
+            "qs": 0.0,
+            "rec": 5.828744633618044e-06,
+            "rei": 5.01000022268272e-06,
+            "res": 2.499999936844688e-05
+          }
+        },
+        {
+          "case": 1,
+          "k": 3,
+          "rho_d": 0.699999988079071,
+          "preceding_closure_cf": 0.5800508260726929,
+          "actual_alpha": 0.34999585151672363,
+          "nn_before": 200000000.0,
+          "nc_before": 49999908.0,
+          "nn_after": 162500976.0,
+          "nc_after": 87498928.0,
+          "number_budget_residual": -4.0,
+          "number_and_water_caps_floors_inactive": true,
+          "helper": {
+            "nc": 87498928.0,
+            "qc": 0.00010368569201091304,
+            "rho": 0.699999988079071,
+            "t": 285.0089111328125,
+            "qi": 0.0,
+            "qs": 0.0,
+            "rec": 5.828744633618044e-06,
+            "rei": 5.01000022268272e-06,
+            "res": 2.499999936844688e-05
+          }
+        },
+        {
+          "case": 2,
+          "k": 1,
+          "rho_d": 0.699999988079071,
+          "preceding_closure_cf": 0.5800508260726929,
+          "actual_alpha": 0.6499993205070496,
+          "nn_before": 200000000.0,
+          "nc_before": 49999908.0,
+          "nn_after": 87500144.0,
+          "nc_after": 162499760.0,
+          "number_budget_residual": -4.0,
+          "number_and_water_caps_floors_inactive": true,
+          "helper": {
+            "nc": 162499760.0,
+            "qc": 0.00011034255294362083,
+            "rho": 0.699999988079071,
+            "t": 285.0250244140625,
+            "qi": 0.0,
+            "qs": 0.0,
+            "rec": 4.841348982154159e-06,
+            "rei": 5.01000022268272e-06,
+            "res": 2.499999936844688e-05
+          }
+        },
+        {
+          "case": 2,
+          "k": 2,
+          "rho_d": 0.699999988079071,
+          "preceding_closure_cf": 0.5800508260726929,
+          "actual_alpha": 0.6499993205070496,
+          "nn_before": 200000000.0,
+          "nc_before": 49999908.0,
+          "nn_after": 87500144.0,
+          "nc_after": 162499760.0,
+          "number_budget_residual": -4.0,
+          "number_and_water_caps_floors_inactive": true,
+          "helper": {
+            "nc": 162499760.0,
+            "qc": 0.00011034255294362083,
+            "rho": 0.699999988079071,
+            "t": 285.0250244140625,
+            "qi": 0.0,
+            "qs": 0.0,
+            "rec": 4.841348982154159e-06,
+            "rei": 5.01000022268272e-06,
+            "res": 2.499999936844688e-05
+          }
+        },
+        {
+          "case": 2,
+          "k": 3,
+          "rho_d": 0.699999988079071,
+          "preceding_closure_cf": 0.5800508260726929,
+          "actual_alpha": 0.6499993205070496,
+          "nn_before": 200000000.0,
+          "nc_before": 49999908.0,
+          "nn_after": 87500144.0,
+          "nc_after": 162499760.0,
+          "number_budget_residual": -4.0,
+          "number_and_water_caps_floors_inactive": true,
+          "helper": {
+            "nc": 162499760.0,
+            "qc": 0.00011034255294362083,
+            "rho": 0.699999988079071,
+            "t": 285.0250244140625,
+            "qi": 0.0,
+            "qs": 0.0,
+            "rec": 4.841348982154159e-06,
+            "rei": 5.01000022268272e-06,
+            "res": 2.499999936844688e-05
+          }
+        },
+        {
+          "case": 3,
+          "k": 1,
+          "rho_d": 1.100000023841858,
+          "preceding_closure_cf": 0.5800508260726929,
+          "actual_alpha": 0.34999585151672363,
+          "nn_before": 200000000.0,
+          "nc_before": 49999768.0,
+          "nn_after": 162500880.0,
+          "nc_after": 87498888.0,
+          "number_budget_residual": 0.0,
+          "number_and_water_caps_floors_inactive": true,
+          "helper": {
+            "nc": 87498888.0,
+            "qc": 0.00010315891995560378,
+            "rho": 1.100000023841858,
+            "t": 285.0076599121094,
+            "qi": 0.0,
+            "qs": 0.0,
+            "rec": 6.765023044863483e-06,
+            "rei": 5.01000022268272e-06,
+            "res": 2.499999936844688e-05
+          }
+        },
+        {
+          "case": 3,
+          "k": 2,
+          "rho_d": 1.100000023841858,
+          "preceding_closure_cf": 0.5800508260726929,
+          "actual_alpha": 0.34999585151672363,
+          "nn_before": 200000000.0,
+          "nc_before": 49999768.0,
+          "nn_after": 162500880.0,
+          "nc_after": 87498888.0,
+          "number_budget_residual": 0.0,
+          "number_and_water_caps_floors_inactive": true,
+          "helper": {
+            "nc": 87498888.0,
+            "qc": 0.00010315891995560378,
+            "rho": 1.100000023841858,
+            "t": 285.0076599121094,
+            "qi": 0.0,
+            "qs": 0.0,
+            "rec": 6.765023044863483e-06,
+            "rei": 5.01000022268272e-06,
+            "res": 2.499999936844688e-05
+          }
+        },
+        {
+          "case": 3,
+          "k": 3,
+          "rho_d": 1.100000023841858,
+          "preceding_closure_cf": 0.5800508260726929,
+          "actual_alpha": 0.34999585151672363,
+          "nn_before": 200000000.0,
+          "nc_before": 49999768.0,
+          "nn_after": 162500880.0,
+          "nc_after": 87498888.0,
+          "number_budget_residual": 0.0,
+          "number_and_water_caps_floors_inactive": true,
+          "helper": {
+            "nc": 87498888.0,
+            "qc": 0.00010315891995560378,
+            "rho": 1.100000023841858,
+            "t": 285.0076599121094,
+            "qi": 0.0,
+            "qs": 0.0,
+            "rec": 6.765023044863483e-06,
+            "rei": 5.01000022268272e-06,
+            "res": 2.499999936844688e-05
+          }
+        },
+        {
+          "case": 4,
+          "k": 1,
+          "rho_d": 1.100000023841858,
+          "preceding_closure_cf": 0.5800508260726929,
+          "actual_alpha": 0.6499993205070496,
+          "nn_before": 200000000.0,
+          "nc_before": 49999768.0,
+          "nn_after": 87500088.0,
+          "nc_after": 162499680.0,
+          "number_budget_residual": 0.0,
+          "number_and_water_caps_floors_inactive": true,
+          "helper": {
+            "nc": 162499680.0,
+            "qc": 0.0001088477365556173,
+            "rho": 1.100000023841858,
+            "t": 285.0215148925781,
+            "qi": 0.0,
+            "qs": 0.0,
+            "rec": 5.603036697721109e-06,
+            "rei": 5.01000022268272e-06,
+            "res": 2.499999936844688e-05
+          }
+        },
+        {
+          "case": 4,
+          "k": 2,
+          "rho_d": 1.100000023841858,
+          "preceding_closure_cf": 0.5800508260726929,
+          "actual_alpha": 0.6499993205070496,
+          "nn_before": 200000000.0,
+          "nc_before": 49999768.0,
+          "nn_after": 87500088.0,
+          "nc_after": 162499680.0,
+          "number_budget_residual": 0.0,
+          "number_and_water_caps_floors_inactive": true,
+          "helper": {
+            "nc": 162499680.0,
+            "qc": 0.0001088477365556173,
+            "rho": 1.100000023841858,
+            "t": 285.0215148925781,
+            "qi": 0.0,
+            "qs": 0.0,
+            "rec": 5.603036697721109e-06,
+            "rei": 5.01000022268272e-06,
+            "res": 2.499999936844688e-05
+          }
+        },
+        {
+          "case": 4,
+          "k": 3,
+          "rho_d": 1.100000023841858,
+          "preceding_closure_cf": 0.5800508260726929,
+          "actual_alpha": 0.6499993205070496,
+          "nn_before": 200000000.0,
+          "nc_before": 49999768.0,
+          "nn_after": 87500088.0,
+          "nc_after": 162499680.0,
+          "number_budget_residual": 0.0,
+          "number_and_water_caps_floors_inactive": true,
+          "helper": {
+            "nc": 162499680.0,
+            "qc": 0.0001088477365556173,
+            "rho": 1.100000023841858,
+            "t": 285.0215148925781,
+            "qi": 0.0,
+            "qs": 0.0,
+            "rec": 5.603036697721109e-06,
+            "rei": 5.01000022268272e-06,
+            "res": 2.499999936844688e-05
+          }
+        }
+      ],
+      "pristine_OFF_ON_returns_bitwise_equal": true,
+      "negative_controls_rejected": {
+        "forced-floor": "number floor/cap active",
+        "nonpartial-alpha": "not positive partial activation",
+        "missing-stage": "exact observer case/stage/layer/subcycle roster differs",
+        "temperature-update": "activation temperature update differs"
+      },
+      "stage_records": 140
+    }
+  },
+  "source_pins_after": [
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-pr-work/WRF/phys/module_mp_udm.F",
+      "sha256": "7bd96141eefc6ae2cb66cea0ce022fcc2ee64afce5c616aa65f26711c8790947",
+      "size_bytes": 196865
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-pr-work/WRF/phys/module_mp_radar.F",
+      "sha256": "fa5e06a4d64bbc32089a1357bfa5c57e6c682e5b68c706842698c2b0f292e68e",
+      "size_bytes": 25452
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-pr-work/WRF/phys/module_gfs_machine.F",
+      "sha256": "300ee4f75663e89d34c8a9b8733cc07a5dd48c3d973da019d31cb76524babe25",
+      "size_bytes": 567
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-pr-work/WRF/test/rrtmgp/test_udm_partial_activation.py",
+      "sha256": "eba6f4093df2fec2f84f518464a807f103adb65d93ccb3bb6b1454ab893d37ef",
+      "size_bytes": 19221
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-pr-work/WRF/test/rrtmgp/test_udm_partial_activation.f90",
+      "sha256": "5b7c3dc59cb8534ad6f0cebd04c3070b5e333621e02601bf1c324790b33ac01a",
+      "size_bytes": 4696
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-pr-work/WRF/test/rrtmgp/test_netcdf_zz.py",
+      "sha256": "79376b07af06a8f1570ed807546762711bfd8aa185566f25e974eaabc2a505cf",
+      "size_bytes": 16970
+    }
+  ],
+  "processes": [
+    {
+      "argv": [
+        "/usr/bin/x86_64-linux-gnu-gfortran-13",
+        "--version"
+      ],
+      "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6",
+      "kind": "compiler_version",
+      "status": "TERMINAL",
+      "pid": 1598906,
+      "actual_returncode": 0,
+      "timed_out": false,
+      "started_at": 1791360067.7760155,
+      "finished_at": 1791360067.7914085
+    },
+    {
+      "argv": [
+        "/usr/bin/x86_64-linux-gnu-gfortran-13",
+        "-O0",
+        "-g",
+        "-ffree-form",
+        "-ffree-line-length-none",
+        "-fcheck=all",
+        "-finit-real=snan",
+        "-ffpe-trap=invalid,zero,overflow",
+        "-J",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/O0",
+        "-I",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/O0",
+        "-ffixed-form",
+        "-c",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-pr-work/WRF/phys/module_gfs_machine.F",
+        "-o",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/O0/module_gfs_machine.o"
+      ],
+      "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/O0",
+      "kind": "compile",
+      "status": "TERMINAL",
+      "pid": 1598923,
+      "actual_returncode": 0,
+      "timed_out": false,
+      "started_at": 1791360067.7992468,
+      "finished_at": 1791360067.8209314
+    },
+    {
+      "argv": [
+        "/usr/bin/x86_64-linux-gnu-gfortran-13",
+        "-O0",
+        "-g",
+        "-ffree-form",
+        "-ffree-line-length-none",
+        "-fcheck=all",
+        "-finit-real=snan",
+        "-ffpe-trap=invalid,zero,overflow",
+        "-J",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/O0",
+        "-I",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/O0",
+        "-c",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/O0/module_wrf_error.f90",
+        "-o",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/O0/module_wrf_error.o"
+      ],
+      "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/O0",
+      "kind": "compile",
+      "status": "TERMINAL",
+      "pid": 1598926,
+      "actual_returncode": 0,
+      "timed_out": false,
+      "started_at": 1791360067.8318858,
+      "finished_at": 1791360067.8645692
+    },
+    {
+      "argv": [
+        "/usr/bin/x86_64-linux-gnu-gfortran-13",
+        "-O0",
+        "-g",
+        "-ffree-form",
+        "-ffree-line-length-none",
+        "-fcheck=all",
+        "-finit-real=snan",
+        "-ffpe-trap=invalid,zero,overflow",
+        "-J",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/O0",
+        "-I",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/O0",
+        "-c",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-pr-work/WRF/phys/module_mp_radar.F",
+        "-o",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/O0/module_mp_radar.o"
+      ],
+      "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/O0",
+      "kind": "compile",
+      "status": "TERMINAL",
+      "pid": 1598929,
+      "actual_returncode": 0,
+      "timed_out": false,
+      "started_at": 1791360067.8742003,
+      "finished_at": 1791360067.9624112
+    },
+    {
+      "argv": [
+        "/usr/bin/x86_64-linux-gnu-gfortran-13",
+        "-O0",
+        "-g",
+        "-ffree-form",
+        "-ffree-line-length-none",
+        "-fcheck=all",
+        "-finit-real=snan",
+        "-ffpe-trap=invalid,zero,overflow",
+        "-J",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/O0",
+        "-I",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/O0",
+        "-cpp",
+        "-DOBSERVER_ONLY",
+        "-c",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-pr-work/WRF/test/rrtmgp/test_udm_partial_activation.f90",
+        "-o",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/O0/test_udm_partial_activation.o"
+      ],
+      "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/O0",
+      "kind": "compile",
+      "status": "TERMINAL",
+      "pid": 1598932,
+      "actual_returncode": 0,
+      "timed_out": false,
+      "started_at": 1791360067.98341,
+      "finished_at": 1791360068.0121589
+    },
+    {
+      "argv": [
+        "/usr/bin/x86_64-linux-gnu-gfortran-13",
+        "-O0",
+        "-g",
+        "-ffree-form",
+        "-ffree-line-length-none",
+        "-fcheck=all",
+        "-finit-real=snan",
+        "-ffpe-trap=invalid,zero,overflow",
+        "-J",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/O0",
+        "-I",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/O0",
+        "-c",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/native_udm.F",
+        "-o",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/O0/native.o"
+      ],
+      "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/O0",
+      "kind": "compile",
+      "status": "TERMINAL",
+      "pid": 1598935,
+      "actual_returncode": 0,
+      "timed_out": false,
+      "started_at": 1791360068.018916,
+      "finished_at": 1791360069.595895
+    },
+    {
+      "argv": [
+        "/usr/bin/x86_64-linux-gnu-gfortran-13",
+        "-O0",
+        "-g",
+        "-ffree-form",
+        "-ffree-line-length-none",
+        "-fcheck=all",
+        "-finit-real=snan",
+        "-ffpe-trap=invalid,zero,overflow",
+        "-J",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/O0",
+        "-I",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/O0",
+        "-cpp",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-pr-work/WRF/test/rrtmgp/test_udm_partial_activation.f90",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/O0/module_gfs_machine.o",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/O0/module_wrf_error.o",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/O0/module_mp_radar.o",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/O0/test_udm_partial_activation.o",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/O0/native.o",
+        "-o",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/O0/native"
+      ],
+      "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/O0",
+      "kind": "link",
+      "status": "TERMINAL",
+      "pid": 1598962,
+      "actual_returncode": 0,
+      "timed_out": false,
+      "started_at": 1791360069.61517,
+      "finished_at": 1791360069.7441661
+    },
+    {
+      "argv": [
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/O0/native",
+        "off"
+      ],
+      "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/O0",
+      "kind": "actual_udm_fixture",
+      "status": "TERMINAL",
+      "pid": 1598967,
+      "actual_returncode": 0,
+      "timed_out": false,
+      "started_at": 1791360069.7576852,
+      "finished_at": 1791360072.9416816
+    },
+    {
+      "argv": [
+        "/usr/bin/x86_64-linux-gnu-gfortran-13",
+        "-O0",
+        "-g",
+        "-ffree-form",
+        "-ffree-line-length-none",
+        "-fcheck=all",
+        "-finit-real=snan",
+        "-ffpe-trap=invalid,zero,overflow",
+        "-J",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/O0",
+        "-I",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/O0",
+        "-c",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/observed_udm.F",
+        "-o",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/O0/observed.o"
+      ],
+      "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/O0",
+      "kind": "compile",
+      "status": "TERMINAL",
+      "pid": 1598972,
+      "actual_returncode": 0,
+      "timed_out": false,
+      "started_at": 1791360073.0116878,
+      "finished_at": 1791360074.6422877
+    },
+    {
+      "argv": [
+        "/usr/bin/x86_64-linux-gnu-gfortran-13",
+        "-O0",
+        "-g",
+        "-ffree-form",
+        "-ffree-line-length-none",
+        "-fcheck=all",
+        "-finit-real=snan",
+        "-ffpe-trap=invalid,zero,overflow",
+        "-J",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/O0",
+        "-I",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/O0",
+        "-cpp",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-pr-work/WRF/test/rrtmgp/test_udm_partial_activation.f90",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/O0/module_gfs_machine.o",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/O0/module_wrf_error.o",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/O0/module_mp_radar.o",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/O0/test_udm_partial_activation.o",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/O0/observed.o",
+        "-o",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/O0/observed"
+      ],
+      "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/O0",
+      "kind": "link",
+      "status": "TERMINAL",
+      "pid": 1598994,
+      "actual_returncode": 0,
+      "timed_out": false,
+      "started_at": 1791360074.652373,
+      "finished_at": 1791360074.779653
+    },
+    {
+      "argv": [
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/O0/observed",
+        "off"
+      ],
+      "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/O0",
+      "kind": "actual_udm_fixture",
+      "status": "TERMINAL",
+      "pid": 1598999,
+      "actual_returncode": 0,
+      "timed_out": false,
+      "started_at": 1791360074.7994103,
+      "finished_at": 1791360077.9874897
+    },
+    {
+      "argv": [
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/O0/observed",
+        "on"
+      ],
+      "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/O0",
+      "kind": "actual_udm_fixture",
+      "status": "TERMINAL",
+      "pid": 1599041,
+      "actual_returncode": 0,
+      "timed_out": false,
+      "started_at": 1791360078.0000181,
+      "finished_at": 1791360081.2356791
+    },
+    {
+      "argv": [
+        "/usr/bin/x86_64-linux-gnu-gfortran-13",
+        "-O2",
+        "-g",
+        "-ffree-form",
+        "-ffree-line-length-none",
+        "-fcheck=all",
+        "-finit-real=snan",
+        "-ffpe-trap=invalid,zero,overflow",
+        "-J",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/O2",
+        "-I",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/O2",
+        "-ffixed-form",
+        "-c",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-pr-work/WRF/phys/module_gfs_machine.F",
+        "-o",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/O2/module_gfs_machine.o"
+      ],
+      "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/O2",
+      "kind": "compile",
+      "status": "TERMINAL",
+      "pid": 1599069,
+      "actual_returncode": 0,
+      "timed_out": false,
+      "started_at": 1791360081.2539287,
+      "finished_at": 1791360081.2803757
+    },
+    {
+      "argv": [
+        "/usr/bin/x86_64-linux-gnu-gfortran-13",
+        "-O2",
+        "-g",
+        "-ffree-form",
+        "-ffree-line-length-none",
+        "-fcheck=all",
+        "-finit-real=snan",
+        "-ffpe-trap=invalid,zero,overflow",
+        "-J",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/O2",
+        "-I",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/O2",
+        "-c",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/O2/module_wrf_error.f90",
+        "-o",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/O2/module_wrf_error.o"
+      ],
+      "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/O2",
+      "kind": "compile",
+      "status": "TERMINAL",
+      "pid": 1599072,
+      "actual_returncode": 0,
+      "timed_out": false,
+      "started_at": 1791360081.2913558,
+      "finished_at": 1791360081.3213694
+    },
+    {
+      "argv": [
+        "/usr/bin/x86_64-linux-gnu-gfortran-13",
+        "-O2",
+        "-g",
+        "-ffree-form",
+        "-ffree-line-length-none",
+        "-fcheck=all",
+        "-finit-real=snan",
+        "-ffpe-trap=invalid,zero,overflow",
+        "-J",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/O2",
+        "-I",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/O2",
+        "-c",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-pr-work/WRF/phys/module_mp_radar.F",
+        "-o",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/O2/module_mp_radar.o"
+      ],
+      "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/O2",
+      "kind": "compile",
+      "status": "TERMINAL",
+      "pid": 1599075,
+      "actual_returncode": 0,
+      "timed_out": false,
+      "started_at": 1791360081.3302608,
+      "finished_at": 1791360081.5024204
+    },
+    {
+      "argv": [
+        "/usr/bin/x86_64-linux-gnu-gfortran-13",
+        "-O2",
+        "-g",
+        "-ffree-form",
+        "-ffree-line-length-none",
+        "-fcheck=all",
+        "-finit-real=snan",
+        "-ffpe-trap=invalid,zero,overflow",
+        "-J",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/O2",
+        "-I",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/O2",
+        "-cpp",
+        "-DOBSERVER_ONLY",
+        "-c",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-pr-work/WRF/test/rrtmgp/test_udm_partial_activation.f90",
+        "-o",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/O2/test_udm_partial_activation.o"
+      ],
+      "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/O2",
+      "kind": "compile",
+      "status": "TERMINAL",
+      "pid": 1599078,
+      "actual_returncode": 0,
+      "timed_out": false,
+      "started_at": 1791360081.5168235,
+      "finished_at": 1791360081.5579467
+    },
+    {
+      "argv": [
+        "/usr/bin/x86_64-linux-gnu-gfortran-13",
+        "-O2",
+        "-g",
+        "-ffree-form",
+        "-ffree-line-length-none",
+        "-fcheck=all",
+        "-finit-real=snan",
+        "-ffpe-trap=invalid,zero,overflow",
+        "-J",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/O2",
+        "-I",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/O2",
+        "-c",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/native_udm.F",
+        "-o",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/O2/native.o"
+      ],
+      "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/O2",
+      "kind": "compile",
+      "status": "TERMINAL",
+      "pid": 1599081,
+      "actual_returncode": 0,
+      "timed_out": false,
+      "started_at": 1791360081.564493,
+      "finished_at": 1791360086.9486809
+    },
+    {
+      "argv": [
+        "/usr/bin/x86_64-linux-gnu-gfortran-13",
+        "-O2",
+        "-g",
+        "-ffree-form",
+        "-ffree-line-length-none",
+        "-fcheck=all",
+        "-finit-real=snan",
+        "-ffpe-trap=invalid,zero,overflow",
+        "-J",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/O2",
+        "-I",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/O2",
+        "-cpp",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-pr-work/WRF/test/rrtmgp/test_udm_partial_activation.f90",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/O2/module_gfs_machine.o",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/O2/module_wrf_error.o",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/O2/module_mp_radar.o",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/O2/test_udm_partial_activation.o",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/O2/native.o",
+        "-o",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/O2/native"
+      ],
+      "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/O2",
+      "kind": "link",
+      "status": "TERMINAL",
+      "pid": 1599091,
+      "actual_returncode": 0,
+      "timed_out": false,
+      "started_at": 1791360086.954704,
+      "finished_at": 1791360087.231033
+    },
+    {
+      "argv": [
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/O2/native",
+        "off"
+      ],
+      "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/O2",
+      "kind": "actual_udm_fixture",
+      "status": "TERMINAL",
+      "pid": 1599096,
+      "actual_returncode": 0,
+      "timed_out": false,
+      "started_at": 1791360087.2411559,
+      "finished_at": 1791360088.9223251
+    },
+    {
+      "argv": [
+        "/usr/bin/x86_64-linux-gnu-gfortran-13",
+        "-O2",
+        "-g",
+        "-ffree-form",
+        "-ffree-line-length-none",
+        "-fcheck=all",
+        "-finit-real=snan",
+        "-ffpe-trap=invalid,zero,overflow",
+        "-J",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/O2",
+        "-I",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/O2",
+        "-c",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/observed_udm.F",
+        "-o",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/O2/observed.o"
+      ],
+      "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/O2",
+      "kind": "compile",
+      "status": "TERMINAL",
+      "pid": 1599121,
+      "actual_returncode": 0,
+      "timed_out": false,
+      "started_at": 1791360088.9330385,
+      "finished_at": 1791360094.4689496
+    },
+    {
+      "argv": [
+        "/usr/bin/x86_64-linux-gnu-gfortran-13",
+        "-O2",
+        "-g",
+        "-ffree-form",
+        "-ffree-line-length-none",
+        "-fcheck=all",
+        "-finit-real=snan",
+        "-ffpe-trap=invalid,zero,overflow",
+        "-J",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/O2",
+        "-I",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/O2",
+        "-cpp",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-pr-work/WRF/test/rrtmgp/test_udm_partial_activation.f90",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/O2/module_gfs_machine.o",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/O2/module_wrf_error.o",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/O2/module_mp_radar.o",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/O2/test_udm_partial_activation.o",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/O2/observed.o",
+        "-o",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/O2/observed"
+      ],
+      "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/O2",
+      "kind": "link",
+      "status": "TERMINAL",
+      "pid": 1599131,
+      "actual_returncode": 0,
+      "timed_out": false,
+      "started_at": 1791360094.4750407,
+      "finished_at": 1791360094.7491364
+    },
+    {
+      "argv": [
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/O2/observed",
+        "off"
+      ],
+      "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/O2",
+      "kind": "actual_udm_fixture",
+      "status": "TERMINAL",
+      "pid": 1599136,
+      "actual_returncode": 0,
+      "timed_out": false,
+      "started_at": 1791360094.8143568,
+      "finished_at": 1791360096.4920998
+    },
+    {
+      "argv": [
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/O2/observed",
+        "on"
+      ],
+      "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/O2",
+      "kind": "actual_udm_fixture",
+      "status": "TERMINAL",
+      "pid": 1599139,
+      "actual_returncode": 0,
+      "timed_out": false,
+      "started_at": 1791360096.5029676,
+      "finished_at": 1791360098.1818144
+    }
+  ],
+  "executable_pins_before_and_after": [
+    {
+      "before": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/O0/native",
+        "sha256": "9fc58c0e5a8b63813f3fb00b8f4dc00c97deafbb27873a7d167cb537a1019615",
+        "size_bytes": 6438048
+      },
+      "after": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/O0/native",
+        "sha256": "9fc58c0e5a8b63813f3fb00b8f4dc00c97deafbb27873a7d167cb537a1019615",
+        "size_bytes": 6438048
+      }
+    },
+    {
+      "before": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/O0/observed",
+        "sha256": "835e82b899e066a01cb4a859884789b2ae6d463cc9a9f3260467c3bf9df844b4",
+        "size_bytes": 6494432
+      },
+      "after": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/O0/observed",
+        "sha256": "835e82b899e066a01cb4a859884789b2ae6d463cc9a9f3260467c3bf9df844b4",
+        "size_bytes": 6494432
+      }
+    },
+    {
+      "before": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/O2/native",
+        "sha256": "682845919b819f1b603b7dd7eca12a75634d9b1c07cb3c7617d0d440c8bae984",
+        "size_bytes": 5575552
+      },
+      "after": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/O2/native",
+        "sha256": "682845919b819f1b603b7dd7eca12a75634d9b1c07cb3c7617d0d440c8bae984",
+        "size_bytes": 5575552
+      }
+    },
+    {
+      "before": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/O2/observed",
+        "sha256": "095505ea1e13edfc1e0626c573944fe163e5de1feeea062a958587043387d675",
+        "size_bytes": 5563224
+      },
+      "after": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v6/O2/observed",
+        "sha256": "095505ea1e13edfc1e0626c573944fe163e5de1feeea062a958587043387d675",
+        "size_bytes": 5563224
+      }
+    }
+  ],
+  "counts": {
+    "compiler_or_link_processes": 16,
+    "fixture_processes": 6,
+    "compiler_version_queries": 1,
+    "actual_outer_udm_calls": 24,
+    "observed_active_cells": 24
+  },
+  "limits": [
+    "Direct outer UDM fixture, not producer/storage/transport/WRF integration.",
+    "CF is the preceding closure value. Its temporary mass transform is restored before activation.",
+    "Density arms use EOS-consistent p/qv, matched T and target RH, and unchanged raw number inputs.",
+    "No mass-versus-volume number unit or PSD/LUT equivalence is approved."
+  ]
+}

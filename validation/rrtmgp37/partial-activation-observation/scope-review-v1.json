@@ -1,0 +1,121 @@
+{
+  "schema": "UDM37_PARTIAL_ACTIVATION_SCOPE_REVIEW_V1",
+  "status": "PASS_SCOPED_ACTUAL_MODULE_OBSERVATION_REVIEW",
+  "scope": "Independent static source and saved-receipt review of the new native UDM partial-activation fixture. No raw scientific arrays, compiler, model, or RTE were run by reviewer.",
+  "worktree": {
+    "path": "build/udm37-partial-activation-pr-work",
+    "base_head": "d87cd50d33d3ccebb4fdaec9c69d3ae800ae9479",
+    "base_tree": "7491ad2dcfdbf4db750b7a990e16d7abae4fdabd"
+  },
+  "reviewed_files": [
+    {
+      "path": "build/udm37-partial-activation-pr-work/WRF/test/rrtmgp/test_udm_partial_activation.py",
+      "sha256": "07045d51c834784f22ffd9d2e0256758a8be507040c35265a3461f9b5a6a6ff5",
+      "size_bytes": 19115
+    },
+    {
+      "path": "build/udm37-partial-activation-pr-work/WRF/test/rrtmgp/test_udm_partial_activation.f90",
+      "sha256": "5b7c3dc59cb8534ad6f0cebd04c3070b5e333621e02601bf1c324790b33ac01a",
+      "size_bytes": 4696
+    },
+    {
+      "path": "build/udm37-partial-activation-pr-work/WRF/phys/module_mp_udm.F",
+      "sha256": "7bd96141eefc6ae2cb66cea0ce022fcc2ee64afce5c616aa65f26711c8790947",
+      "size_bytes": 196865
+    },
+    {
+      "path": "build/udm37-partial-activation-pr-work/WRF/phys/module_mp_radar.F",
+      "sha256": "fa5e06a4d64bbc32089a1357bfa5c57e6c682e5b68c706842698c2b0f292e68e",
+      "size_bytes": 25452
+    },
+    {
+      "path": "build/udm37-partial-activation-pr-work/WRF/phys/module_gfs_machine.F",
+      "sha256": "300ee4f75663e89d34c8a9b8733cc07a5dd48c3d973da019d31cb76524babe25",
+      "size_bytes": 567
+    }
+  ],
+  "execution_receipt": {
+    "path": "build/udm37-partial-activation-native-v5/receipt.json",
+    "sha256": "572db3650bfb68a92ebb0c254a99b2c6bc15fffad5a1fccc5a8df0a74e91a72c",
+    "size_bytes": 51981
+  },
+  "receipt_scope": {
+    "status": "PASS_SCOPED_ACTUAL_UDM_PARTIAL_ACTIVATION",
+    "compiler_or_link_children": 16,
+    "fixture_children": 6,
+    "compiler_version_queries": 1,
+    "actual_outer_udm_calls": 24,
+    "observed_active_cells": 24,
+    "O0_and_O2": [
+      "O0",
+      "O2"
+    ],
+    "pristine_off_on_return_bits_equal": {
+      "O0": true,
+      "O2": true
+    },
+    "source_pins_before_equal_after": true,
+    "observer_strips_to_pristine_exactly": true,
+    "full_WRF_builds": 0,
+    "WRF_host_runs": 0,
+    "RTE_runs": 0,
+    "scientific_acceptance": false
+  },
+  "source_semantics": {
+    "activation_block": "At module_mp_udm.F:2527-2539, RH>1 selects activation; alpha=min(1,exp(log((RH-1)/satmax)*actk)); NC_ACT=max(0,((NN+NC)*alpha-NC))*rdt then capped by max(NN,0)*rdt; PC_ACT is the embryo-mass rate capped by max(QV,0)*rdt. Updates are source-ordered to QV/QC, NN/NC and T.",
+    "manual_oracle": "The final v5 oracle mirrors the native left-associated PC_ACT numerator and denominator, checks the source NC_ACT equation and branch targets, checks activation temperature and unassigned state, and permits only a declared REAL32/libm relative bound for the exp/log mass-rate reconstruction. It requires strict partial alpha and positive NC_ACT.",
+    "warm_partial_cf_timing": "CF is diagnosed at cldf_diag and recorded before the in-cloud divide (1096-1112); the source restores condensate arrays to grid mean (1303-1311) before activation begins (2512 onward). The observer captures closure, divide/restore, activation, and radius-helper stages. The fixture uses warm T=285 K and observed CF about 0.58005 with target alpha 0.35/0.65.",
+    "cap_floor_checks": "The checker verifies the pre-CF number adjustment is unchanged across its bracket, activation NN-rate cap and vapor-mass cap are strictly inactive, CCN and cloud-number floors are not reached, and the resulting NC remains below the configured NC ceiling. Forced-floor and nonpartial-alpha mutations are rejected. This applies to selected activation conditions, not every limiter in every UDM process.",
+    "density_and_units": "Two EOS-consistent dry-density arms share temperature, target RH, and raw number inputs. The receipt explicitly disclaims number-population unit authority and PSD/LUT equivalence."
+  },
+  "checklist": {
+    "sha256": "427f0628e0c3277b3df6c453243efabea0af12767d057817565ae52001cb6567",
+    "main_snapshot": {
+      "commit": "d87cd50d33d3ccebb4fdaec9c69d3ae800ae9479",
+      "tree": "7491ad2dcfdbf4db750b7a990e16d7abae4fdabd"
+    },
+    "production_accepted": false,
+    "main_merge_authorized": false,
+    "physics_items": {
+      "PHY-NC": "OPEN",
+      "PHY-SIZE": "OPEN",
+      "REF-RFMIP": "FAIL",
+      "REF-LBL": "FAIL",
+      "PHY-OCCURRENCE": "OPEN",
+      "FINAL-IDENTITY": "OPEN",
+      "FINAL-FORECAST": "NOT_RUN"
+    },
+    "all_seven_open_or_failed": true
+  },
+  "pr152_ci_context": {
+    "terminal_record": {
+      "path": "build/udm37-partial-activation-pr-work/validation/rrtmgp37/partial-activation-observation/pr152-terminal-main.json",
+      "sha256": "b80980399de1ff3279bb8dbf0f96a1b000a7f36dfd34acdb7779c4f5ac2cee62",
+      "size_bytes": 5078
+    },
+    "pr_head": "59697ca409279cc0f837c4182fb5045cdc675e46",
+    "merge_commit": "d87cd50d33d3ccebb4fdaec9c69d3ae800ae9479",
+    "main_commit": "d87cd50d33d3ccebb4fdaec9c69d3ae800ae9479",
+    "main_tree": "7491ad2dcfdbf4db750b7a990e16d7abae4fdabd",
+    "merged": true,
+    "eleven_checks_success": true,
+    "scope_note": "This saved terminal record ties the 11 checks to merged PR152 head 59697ca and main d87cd50 tree. It is not evidence that the new partial-activation test itself has already passed on a later commit."
+  },
+  "nonblocking_test_hardening": {
+    "finding": "The analyzer requires 0<CF_IN<1 and separately records ACT_PRE.cf as preceding_closure_cf, but it does not explicitly assert CF_IN.cf == ACT_PRE.cf. The pinned source has no intervening cldf assignment between cldf_diag and activation, so current sequence supports the interpretation; a direct equality gate would make the temporal join regression-proof.",
+    "severity": "nonblocking_source-backed_hardening"
+  },
+  "overall_limits": [
+    "Direct outer UDM test fixture; no host producer/storage/transport/restart path.",
+    "No authority for number concentration units or population conversion.",
+    "No independent liquid/ice/snow LUT or PSD/moment validation.",
+    "No WRF forecast, MPI, RTE, or full host integration.",
+    "The seven existing physical gates retain their prior OPEN/FAIL/NOT_RUN status."
+  ],
+  "reviewer_activity": {
+    "compiler_or_link_runs": 0,
+    "model_runs": 0,
+    "raw_array_access": 0,
+    "tracked_source_edits": 0
+  }
+}
