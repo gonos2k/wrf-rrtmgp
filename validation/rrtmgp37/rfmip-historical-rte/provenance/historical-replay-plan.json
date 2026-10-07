@@ -1,0 +1,653 @@
+{
+  "acceptance": {
+    "all_output_profiles_keys_order_and_finite": true,
+    "current_optics_arm_is_descriptive_only_in_this_run": true,
+    "failure_is_preserved_no_retry": true,
+    "historical_rte_compiles_and_links_against_pinned_modules": true,
+    "historical_solver_equals_saved_historical_solver_bytewise_all20": true,
+    "historical_written_equals_saved_historical_written_bytewise_all20": true,
+    "ldd_resolves_without_missing_symbols": true,
+    "no_tolerance_or_gate_change": true,
+    "prelaunch_all_plan_pins_match": true,
+    "source_post_current_and_historical_byte_equal": true
+  },
+  "budgets": {
+    "compiler_child_max": 1,
+    "ldd_child_max": 1,
+    "link_child_max": 1,
+    "max_fixed_rte_calls": 40,
+    "retries": 0,
+    "rte_harness_child_max": 1,
+    "timeout_compile_s": 300,
+    "timeout_ldd_s": 30,
+    "timeout_link_s": 120,
+    "timeout_rte_harness_s": 120,
+    "timeout_validation_s": 60,
+    "validation_child_max": 1
+  },
+  "comparator": {
+    "path": "build/udm37-rfmip-historical-rte-discriminator-v2/validate_historical_exact.py",
+    "sha256": "a751f9a864dda16bc92a4ea0be60af6b6df2f4c9eac5dd2b203a2ef6551b12a9",
+    "size_bytes": 2203
+  },
+  "expected_commands": {
+    "compile": [
+      "/usr/bin/x86_64-linux-gnu-gfortran-13",
+      "-O0",
+      "-ffree-line-length-none",
+      "-I<netcdf-include>",
+      "-I<historical-source/build>",
+      "-I<historical-objects>",
+      "-c",
+      "rrtmgp_rfmip_sw_fixed_rte.F90",
+      "-o",
+      "rrtmgp_rfmip_sw_fixed_rte.o"
+    ],
+    "ldd": [
+      "/usr/bin/ldd",
+      "-r",
+      "rrtmgp_rfmip_sw_fixed_rte"
+    ],
+    "link": [
+      "/usr/bin/x86_64-linux-gnu-gfortran-13",
+      "-O0",
+      "-ffree-line-length-none",
+      "-o",
+      "rrtmgp_rfmip_sw_fixed_rte",
+      "rrtmgp_rfmip_sw_fixed_rte.o",
+      "<historical-objects>/mo_simple_netcdf.o",
+      "<historical-objects>/mo_rfmip_io.o",
+      "-L<historical-source/build>",
+      "-L<netcdf-lib>",
+      "-lrrtmgp",
+      "-lrte",
+      "-lnetcdff",
+      "-lnetcdf"
+    ],
+    "run": [
+      "rrtmgp_rfmip_sw_fixed_rte",
+      "<input>",
+      "<current-coeff>",
+      "<historical-coeff>",
+      "<profiles20>",
+      "<current-optics>",
+      "<historical-optics>",
+      "<shared-current-source-post>",
+      "<shared-historical-source-post>",
+      "<fresh-output-prefix>"
+    ]
+  },
+  "harness": {
+    "path": "build/udm37-rfmip-historical-rte-discriminator-v2/rrtmgp_rfmip_sw_fixed_rte.F90",
+    "sha256": "5a46c11921b045a3dc1ff9bbe911cd2f886250773b8686dfe1345ff042fd9925",
+    "size_bytes": 14629
+  },
+  "historical_rte_build_authority": {
+    "abi_files": [
+      {
+        "path": "build/udm37-rfmip-historical-source-experiment-v1/source/rte/mo_rte_sw.F90",
+        "sha256": "f96f8d0bf74b34d8f99103403e6f7f19fe1c2bda6dd93262e9a291cc55b707d0",
+        "size_bytes": 10323
+      },
+      {
+        "path": "build/udm37-rfmip-historical-source-experiment-v1/source/rte/mo_optical_props.F90",
+        "sha256": "e699b73872da8f14ec34fe03f70a7a910cb3cd1935fd7fb3b6841759e01f53fe",
+        "size_bytes": 55131
+      },
+      {
+        "path": "build/udm37-rfmip-historical-source-experiment-v1/source/rte/mo_fluxes.F90",
+        "sha256": "98f84b9784431397907f5b3bed03859e6583810f7b7f3a9589593b221d7fea8e",
+        "size_bytes": 9318
+      },
+      {
+        "path": "build/udm37-rfmip-historical-source-experiment-v1/source/rte/kernels/mo_rte_solver_kernels.F90",
+        "sha256": "ae6fe692ad1a6374e418900c07bb4e9bed76d16f739add407472c247aff31551",
+        "size_bytes": 47472
+      },
+      {
+        "path": "build/udm37-rfmip-historical-source-experiment-v1/source/rte/mo_rte_kind.F90",
+        "sha256": "5fc64188cb65588bf33ed98153ef4f1cc6238f73944c1df98cb55133966d2f4e",
+        "size_bytes": 1489
+      },
+      {
+        "path": "build/udm37-rfmip-historical-source-experiment-v1/source/rte/mo_util_array.F90",
+        "sha256": "cc47f9de9b0cc8b26e94ef11f72386f412dd9eb76c44b629f58fc1036b670309",
+        "size_bytes": 8512
+      },
+      {
+        "path": "build/udm37-rfmip-historical-source-experiment-v1/source/build/mo_rte_sw.mod",
+        "sha256": "5b616b7667c02686abf57e467dfb7d6723d3f443b0e3a3e4c255bbd5fdfa3db5",
+        "size_bytes": 9986
+      },
+      {
+        "path": "build/udm37-rfmip-historical-source-experiment-v1/source/build/mo_optical_props.mod",
+        "sha256": "0adf43910bede7fc0ff3751b4bd3c67fa95eb33badd967600153b7cf8fae99ba",
+        "size_bytes": 13262
+      },
+      {
+        "path": "build/udm37-rfmip-historical-source-experiment-v1/source/build/mo_fluxes.mod",
+        "sha256": "2b1453ffe49ab6b3b63044de1735e744d919d3cdd90d4239259991e39d554a51",
+        "size_bytes": 9774
+      },
+      {
+        "path": "build/udm37-rfmip-historical-source-experiment-v1/source/build/mo_rte_solver_kernels.mod",
+        "sha256": "af0979bbd3d8cd8e45e870e1353df9c4adb6257a46894f106198c018122ef01d",
+        "size_bytes": 4032
+      },
+      {
+        "path": "build/udm37-rfmip-historical-source-experiment-v1/source/build/mo_rte_kind.mod",
+        "sha256": "ddec64aca7bb6b77f16f4c823dfe6e1df699403033c5fa864c5b3d395d13e211",
+        "size_bytes": 608
+      },
+      {
+        "path": "build/udm37-rfmip-historical-source-experiment-v1/source/build/mo_util_array.mod",
+        "sha256": "61a3a9f556b76d7e3f23ed2f342b6b00a71367cbde5e499ccc2f7b969ba8c7fd",
+        "size_bytes": 910
+      },
+      {
+        "path": "build/udm37-rfmip-historical-source-experiment-v1/source/build/librte.a",
+        "sha256": "ac3b7233d7a99c67794fc4ac6c8c62ab2336dfb527f71a7700899825be18cc1b",
+        "size_bytes": 281508
+      },
+      {
+        "path": "build/udm37-rfmip-historical-source-experiment-v1/source/build/librrtmgp.a",
+        "sha256": "59113851d550b54d7c3ebeb444d35dd79514eb843668cf83db89cb864c41c9b2",
+        "size_bytes": 265302
+      },
+      {
+        "path": "build/udm37-rfmip-historical-source-experiment-v1/objects/mo_rfmip_io.mod",
+        "sha256": "5cb34d18567be06fe7ccb55eb2bf385e9c8243cf619d56cacb4a38408653a3fa",
+        "size_bytes": 3505
+      },
+      {
+        "path": "build/udm37-rfmip-historical-source-experiment-v1/objects/mo_rfmip_io.o",
+        "sha256": "c50aafd33c1af2da92deddc576c87b1a078c99929b013cb5be0f3aa4e87e6de8",
+        "size_bytes": 69232
+      },
+      {
+        "path": "build/udm37-rfmip-historical-source-experiment-v1/objects/mo_simple_netcdf.mod",
+        "sha256": "2dcadcadad97b2e9eedf383e477b86bc259a70df79ab250bffec1caf4bed38eb",
+        "size_bytes": 1777
+      },
+      {
+        "path": "build/udm37-rfmip-historical-source-experiment-v1/objects/mo_simple_netcdf.o",
+        "sha256": "de238c582f794171a3e41f49bcde751075a24bda0204b4a57e70f1b77ea8c835",
+        "size_bytes": 34104
+      },
+      {
+        "path": "/usr/bin/x86_64-linux-gnu-gfortran-13",
+        "sha256": "7e292e9d5da17a37bb1c17a06afb6463db786c70827fd6893ed31a86715b03c3",
+        "size_bytes": 1027128
+      },
+      {
+        "path": "build/deps/root/usr/include/netcdf.mod",
+        "sha256": "07fcbcbe7bdf661b06967630c57230c5ae1089f360fbf4c3f2d28f32d6f5e3b5",
+        "size_bytes": 22588
+      },
+      {
+        "path": "build/deps/root/usr/lib/x86_64-linux-gnu/libnetcdff.so.7.1.0",
+        "sha256": "9e8fe96709d71af61b88ad88caff7db8899369162b96aee66ecd6a553a5370f9",
+        "size_bytes": 653744
+      },
+      {
+        "path": "build/deps/root/usr/lib/x86_64-linux-gnu/libnetcdf.so.19",
+        "sha256": "04fc972259131718fd96f0ea876654fe0a410a4af1635349dc8ec1590764f0f5",
+        "size_bytes": 1395960
+      },
+      {
+        "path": "build/udm37-rfmip-historical-source-experiment-v1/source/examples/rfmip-clear-sky/mo_rfmip_io.F90",
+        "sha256": "2a810b231a2a19a7a000c75508c967ddd272a0a216a7e60cdefaeb59f2118abc",
+        "size_bytes": 21592
+      },
+      {
+        "path": "build/udm37-rfmip-historical-source-experiment-v1/source/examples/mo_simple_netcdf.F90",
+        "sha256": "a28a70dc134c8fb0d675705ac414d451a00833fd4fe3dc0cf2be3dce357c8801",
+        "size_bytes": 17984
+      },
+      {
+        "path": "build/udm37-rfmip-historical-source-experiment-v1/source/build/Makefile.conf.gfortran",
+        "sha256": "3440f48ac141457ef266b35ee051fd405e876a47a868b10feb501f32c682c974",
+        "size_bytes": 547
+      },
+      {
+        "path": "build/udm37-rfmip-historical-source-experiment-v1/source/build/Makefile",
+        "sha256": "063e18a497f0029d7f75f6c66a863e6b93968c69481cb2f808cf1034a8822a36",
+        "size_bytes": 834
+      }
+    ],
+    "build_receipt": {
+      "path": "build/udm37-rfmip-historical-source-experiment-v1/build-receipt.json",
+      "sha256": "56b1d6b1f9c947471927e33393850c8565f27c2e6fb918e52dd227dbf628f643",
+      "size_bytes": 18025
+    },
+    "build_receipt_sha256": "56b1d6b1f9c947471927e33393850c8565f27c2e6fb918e52dd227dbf628f643",
+    "compiler": {
+      "path": "/usr/bin/x86_64-linux-gnu-gfortran-13",
+      "sha256": "7e292e9d5da17a37bb1c17a06afb6463db786c70827fd6893ed31a86715b03c3",
+      "size": 1027128
+    },
+    "controlled_environment": {
+      "LANG": "C",
+      "LC_ALL": "C",
+      "LD_LIBRARY_PATH": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/root/usr/lib/x86_64-linux-gnu",
+      "OMP_NUM_THREADS": "1",
+      "PATH": "/usr/bin:/bin"
+    },
+    "flags": [
+      "-O0",
+      "-ffree-line-length-none"
+    ],
+    "historical_executable": {
+      "path": "build/udm37-rfmip-historical-source-experiment-v1/rrtmgp_rfmip_sw_diag",
+      "sha256": "7a0c8cd8e50847b86f04f8605762bed96cd43467e3c1943b96c1b324eb76b177",
+      "size_bytes": 550448
+    },
+    "historical_runtime_closure_exact_to_v5": true,
+    "historical_source_commit": "ed5b0113109fcd23a010a90c61f21bad551146ef",
+    "runtime_closure": {
+      "/lib64/ld-linux-x86-64.so.2": {
+        "path": "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2",
+        "sha256": "6222a16be7f2d458d6870efe6e715fc0c8d45766fb79cf7dcc3125538d703e28",
+        "size": 236616
+      },
+      "libaec.so.0": {
+        "path": "/usr/lib/x86_64-linux-gnu/libaec.so.0.1.2",
+        "sha256": "4fd52145f7a3f0648b3f5a9527bc3143f96e47768bb68acd62bd12399871ddcc",
+        "size": 34808
+      },
+      "libbrotlicommon.so.1": {
+        "path": "/usr/lib/x86_64-linux-gnu/libbrotlicommon.so.1.1.0",
+        "sha256": "a91ead095d2c80520c55a89057bbe10b031a075340442e63f44b310f93883a1b",
+        "size": 141640
+      },
+      "libbrotlidec.so.1": {
+        "path": "/usr/lib/x86_64-linux-gnu/libbrotlidec.so.1.1.0",
+        "sha256": "64d8a5019d4c294b89fde1193343ea324bbd8603652554e5545f0a01595fa2c5",
+        "size": 51512
+      },
+      "libc.so.6": {
+        "path": "/usr/lib/x86_64-linux-gnu/libc.so.6",
+        "sha256": "511f825ee075610ac9c0f7f91e2c13de2000d0f7b859f6461137e809a0a009d0",
+        "size": 2125328
+      },
+      "libcom_err.so.2": {
+        "path": "/usr/lib/x86_64-linux-gnu/libcom_err.so.2.1",
+        "sha256": "022943b3b11c860b049bce41342f1c2594941b7b401d95dfdf235521099fee08",
+        "size": 18504
+      },
+      "libcrypto.so.3": {
+        "path": "/usr/lib/x86_64-linux-gnu/libcrypto.so.3",
+        "sha256": "c19c2cf8d7cf91c4f273b1d3bbc56a9d19c91a739bfe57ad630756ee8ede7b77",
+        "size": 5305304
+      },
+      "libcurl-gnutls.so.4": {
+        "path": "/usr/lib/x86_64-linux-gnu/libcurl-gnutls.so.4.8.0",
+        "sha256": "25a1efac8eb6e18913a29baf0d5340ae842398cb944c9e847bed7cb2a7a8f765",
+        "size": 765856
+      },
+      "libcurl.so.4": {
+        "path": "/usr/lib/x86_64-linux-gnu/libcurl.so.4.8.0",
+        "sha256": "bc0f65f0c1574a232b9cbd90bd5b45e04a1a263a04eae36007336dd5bbb2293c",
+        "size": 786336
+      },
+      "libffi.so.8": {
+        "path": "/usr/lib/x86_64-linux-gnu/libffi.so.8.1.4",
+        "sha256": "00f593fe192f2851b8ce23b25cec2488d769beb5a8f63e8c9e563071e1075153",
+        "size": 47672
+      },
+      "libgcc_s.so.1": {
+        "path": "/usr/lib/x86_64-linux-gnu/libgcc_s.so.1",
+        "sha256": "02f3f192bf5f79b811f1e34a650fea443d407408703448906585232383957f60",
+        "size": 183024
+      },
+      "libgfortran.so.5": {
+        "path": "/usr/lib/x86_64-linux-gnu/libgfortran.so.5.0.0",
+        "sha256": "5b574c8ad93f1d816afa2d53fb33684ff8f9a0de0fcbe51e0ec21ddf0a56a028",
+        "size": 3263912
+      },
+      "libgmp.so.10": {
+        "path": "/usr/lib/x86_64-linux-gnu/libgmp.so.10.5.0",
+        "sha256": "0ccdfb6d6f5c039465f6d002cf7e4c072d48ac6a2cffc8dd6c748dec31592804",
+        "size": 534896
+      },
+      "libgnutls.so.30": {
+        "path": "/usr/lib/x86_64-linux-gnu/libgnutls.so.30.37.1",
+        "sha256": "96137275400f39510c9a533c6ad8a921e94266e664e7e09c9ad6ea9f23277c23",
+        "size": 2057632
+      },
+      "libgssapi_krb5.so.2": {
+        "path": "/usr/lib/x86_64-linux-gnu/libgssapi_krb5.so.2.2",
+        "sha256": "b9a20df712d206654477c079f03b568276933e91cbe237e62af791f0f3ab8d8b",
+        "size": 338696
+      },
+      "libhdf5_serial.so.103": {
+        "path": "/usr/lib/x86_64-linux-gnu/libhdf5_serial.so.103.4.0",
+        "sha256": "aa9c9c402261b73469d0b79fe0d585537bdea8d4b5dab872fab613640277db0e",
+        "size": 3613632
+      },
+      "libhdf5_serial_hl.so.100": {
+        "path": "/usr/lib/x86_64-linux-gnu/libhdf5_serial_hl.so.100.1.7",
+        "sha256": "f7612eea5f3df4d0fb7b7d8d0840b79ee25958e00da8d4934fe869ae36431a2b",
+        "size": 142800
+      },
+      "libhogweed.so.6": {
+        "path": "/usr/lib/x86_64-linux-gnu/libhogweed.so.6.8",
+        "sha256": "c3c606139d4f7776efa4dbd4a6b62e30c916b07a0cafd8c3ef173d6f093607e3",
+        "size": 288920
+      },
+      "libicudata.so.74": {
+        "path": "/usr/lib/x86_64-linux-gnu/libicudata.so.74.2",
+        "sha256": "ddbb3718b8bd9cbd780e5ab08b4503c30a6c4fa0706ebe5d074ed6b596c1714e",
+        "size": 30795392
+      },
+      "libicuuc.so.74": {
+        "path": "/usr/lib/x86_64-linux-gnu/libicuuc.so.74.2",
+        "sha256": "7560aadde38e5f4237a47a1ddd5891f9b36768a77a60faae30beee003ac01901",
+        "size": 2140336
+      },
+      "libidn2.so.0": {
+        "path": "/usr/lib/x86_64-linux-gnu/libidn2.so.0.4.0",
+        "sha256": "6e632fd9a3125db60bbc623719bbc17b0470330321c5b1c57f1ff7190e5551ad",
+        "size": 133192
+      },
+      "libk5crypto.so.3": {
+        "path": "/usr/lib/x86_64-linux-gnu/libk5crypto.so.3.1",
+        "sha256": "8394027f2be7c2cc7b2da4797476a8b688a21f75ee231941fa2df8d00ba79d08",
+        "size": 178648
+      },
+      "libkeyutils.so.1": {
+        "path": "/usr/lib/x86_64-linux-gnu/libkeyutils.so.1.10",
+        "sha256": "f48214417757f18793ed6e180cc14ee1d6f04252a518fc7270e8ca1d0b4260fe",
+        "size": 22600
+      },
+      "libkrb5.so.3": {
+        "path": "/usr/lib/x86_64-linux-gnu/libkrb5.so.3.3",
+        "sha256": "52c143c9c77a223a4dac5449eac41fd2490e37c8a30430f1559c1421f4f8ed73",
+        "size": 823488
+      },
+      "libkrb5support.so.0": {
+        "path": "/usr/lib/x86_64-linux-gnu/libkrb5support.so.0.1",
+        "sha256": "8e1ef5a40f7b0d5b0fbcd6e4f28dd50b263650338a2bb72503be34632f3629d6",
+        "size": 47904
+      },
+      "liblber.so.2": {
+        "path": "/usr/lib/x86_64-linux-gnu/liblber.so.2.0.200",
+        "sha256": "6f6935b26c962d5b51ef2011332472cfd96ff244a4edc9d47120be6faa70e602",
+        "size": 59888
+      },
+      "libldap.so.2": {
+        "path": "/usr/lib/x86_64-linux-gnu/libldap.so.2.0.200",
+        "sha256": "4a0664ab6a8a66c685e78d5604b79df330f5710f0c5e2c382536a8325dc4c2a4",
+        "size": 372400
+      },
+      "liblzma.so.5": {
+        "path": "/usr/lib/x86_64-linux-gnu/liblzma.so.5.4.5",
+        "sha256": "a9793942a8a5f6f4d0f523ef9e0a5be4f0033f2c6c28520cd2b4e706d53c6e17",
+        "size": 202904
+      },
+      "libm.so.6": {
+        "path": "/usr/lib/x86_64-linux-gnu/libm.so.6",
+        "sha256": "f06f2ce1f1833df5f41cf13b6447ff07bea993ad9b27297d3428c2f70ab3f0e7",
+        "size": 952616
+      },
+      "libnetcdf.so.19": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/root/usr/lib/x86_64-linux-gnu/libnetcdf.so.19",
+        "sha256": "04fc972259131718fd96f0ea876654fe0a410a4af1635349dc8ec1590764f0f5",
+        "size": 1395960
+      },
+      "libnetcdff.so.7": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/root/usr/lib/x86_64-linux-gnu/libnetcdff.so.7.1.0",
+        "sha256": "9e8fe96709d71af61b88ad88caff7db8899369162b96aee66ecd6a553a5370f9",
+        "size": 653744
+      },
+      "libnettle.so.8": {
+        "path": "/usr/lib/x86_64-linux-gnu/libnettle.so.8.8",
+        "sha256": "a245ed916229583d6fe0b07657b3ed945bc148c28cc08b5266295f620d2b91cc",
+        "size": 342280
+      },
+      "libnghttp2.so.14": {
+        "path": "/usr/lib/x86_64-linux-gnu/libnghttp2.so.14.26.0",
+        "sha256": "398c6d2025210279f4c7413ebdb7f4c63bc5afda5ec3b1ccc58885a65acc2b78",
+        "size": 170352
+      },
+      "libp11-kit.so.0": {
+        "path": "/usr/lib/x86_64-linux-gnu/libp11-kit.so.0.3.1",
+        "sha256": "c6b469a006685ebf2075e200180c3b21f41b88ad722c5697d736ea558cfe3ea1",
+        "size": 1714008
+      },
+      "libpsl.so.5": {
+        "path": "/usr/lib/x86_64-linux-gnu/libpsl.so.5.3.4",
+        "sha256": "ae6c5a9aecc249fc66e03c16ec6c4385d09d7e12e0ea7694bb831ab4fee8133c",
+        "size": 75768
+      },
+      "libresolv.so.2": {
+        "path": "/usr/lib/x86_64-linux-gnu/libresolv.so.2",
+        "sha256": "878e927be164fde61bf85f44c27901a1d569526f5c8f058990e8a4edc3df1fa0",
+        "size": 68104
+      },
+      "librtmp.so.1": {
+        "path": "/usr/lib/x86_64-linux-gnu/librtmp.so.1",
+        "sha256": "15a2a75e8c437b9c99971b5ee10278ab110beef1a56d1d9e5d6759ea140e98ac",
+        "size": 121848
+      },
+      "libsasl2.so.2": {
+        "path": "/usr/lib/x86_64-linux-gnu/libsasl2.so.2.0.25",
+        "sha256": "a0f410ad093236856eee59c4ff2838dc04d932ea0993400f23ed77d67d85af34",
+        "size": 101200
+      },
+      "libssh.so.4": {
+        "path": "/usr/lib/x86_64-linux-gnu/libssh.so.4.9.6",
+        "sha256": "ed3828e179eaea8effe1b6b001ae827b38de4575d2fa768c04489dc74b54ccde",
+        "size": 458264
+      },
+      "libssl.so.3": {
+        "path": "/usr/lib/x86_64-linux-gnu/libssl.so.3",
+        "sha256": "63597a81ef19496ad0423cbaaf04d5b0244c7a9e261e331a5a7f3ac0fcdb9590",
+        "size": 696512
+      },
+      "libstdc++.so.6": {
+        "path": "/usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.33",
+        "sha256": "a68762c86d371e6041f03f03a33a78fa235809ae7d81c90185940c93c3535aed",
+        "size": 2592224
+      },
+      "libsz.so.2": {
+        "path": "/usr/lib/x86_64-linux-gnu/libsz.so.2.0.1",
+        "sha256": "e73fa40252e84d38d64f9b3268ae6679530a777a55d6478d6b24de176d845c4b",
+        "size": 14256
+      },
+      "libtasn1.so.6": {
+        "path": "/usr/lib/x86_64-linux-gnu/libtasn1.so.6.6.3",
+        "sha256": "7c9c7830afbaac7b07ec21ddaa6b4d606423432c264efd2636e8ca9734b4d7b6",
+        "size": 88216
+      },
+      "libunistring.so.5": {
+        "path": "/usr/lib/x86_64-linux-gnu/libunistring.so.5.0.0",
+        "sha256": "7bcf825cd449892db5105ad2aed91dcf94a27b796426600c765720c584c54dd1",
+        "size": 1755312
+      },
+      "libxml2.so.2": {
+        "path": "/usr/lib/x86_64-linux-gnu/libxml2.so.2.9.14",
+        "sha256": "0ec89f65e1868cb79caa8a4cd5f47194ce95ac09f7a1d49e76049f391254a3a3",
+        "size": 1967424
+      },
+      "libz.so.1": {
+        "path": "/usr/lib/x86_64-linux-gnu/libz.so.1.3",
+        "sha256": "9b64150b28505a33d6bc3ecf709c279f6de97a1c184dbda65d06ee4537f6d286",
+        "size": 113000
+      },
+      "libzstd.so.1": {
+        "path": "/usr/lib/x86_64-linux-gnu/libzstd.so.1.5.5",
+        "sha256": "0a2128bc10841fb29e76d08d945864dfb0b6a66da5df6df5d8299197439e54bb",
+        "size": 755864
+      }
+    },
+    "source_commit": "ed5b0113109fcd23a010a90c61f21bad551146ef",
+    "source_repo_head": "ed5b0113109fcd23a010a90c61f21bad551146ef",
+    "source_repository_clean_at_preparation": true
+  },
+  "inputs": {
+    "current_optics": {
+      "path": "build/udm37-rfmip-fixed-rte-subsets-v1/streams/current_optics.bin",
+      "sha256": "9d5d713117f33d6d4f98fa6f2928f8d4c4afe8b06a285126e5307e53845cb5ad",
+      "size_bytes": 6451360
+    },
+    "current_solver_reference_context_only": {
+      "path": "build/udm37-rfmip-fixed-rte-subsets-v1/streams/current_solver.bin",
+      "sha256": "b59eab02e4b79fdb6ea019393a4ac10ac696cfdcf9a8157d6c1b12c6ab8a54ee",
+      "size_bytes": 19680
+    },
+    "current_spectral_descriptor": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/official-rrtmgp-reference/data/rrtmgp-gas-sw-g224.nc",
+      "sha256": "584f1dd41ea9fc07d4ee3754eb1dafbd46ad3161cd6fd20fa06b6922b6f0702e",
+      "size_bytes": 11083642
+    },
+    "current_written_reference_context_only": {
+      "path": "build/udm37-rfmip-fixed-rte-subsets-v1/streams/current_written.bin",
+      "sha256": "b59eab02e4b79fdb6ea019393a4ac10ac696cfdcf9a8157d6c1b12c6ab8a54ee",
+      "size_bytes": 19680
+    },
+    "historical_optics": {
+      "path": "build/udm37-rfmip-fixed-rte-subsets-v1/streams/historical_optics.bin",
+      "sha256": "cc197aebde8e15c940a22a51b63520734caa52aa0e2fb46f1652935a78483c71",
+      "size_bytes": 6451360
+    },
+    "historical_solver_reference": {
+      "path": "build/udm37-rfmip-fixed-rte-subsets-v1/streams/historical_solver.bin",
+      "sha256": "58d33eba302936e3e6ea5929c47dd6f6b1b31c68a916ec29ab3ddf61bfa09309",
+      "size_bytes": 19680
+    },
+    "historical_source_post": {
+      "path": "build/udm37-rfmip-fixed-rte-subsets-v1/streams/historical_source_post.bin",
+      "sha256": "62334c919f1d0b3e2c3275f93476ca63820b65ce0acefb1ecf35dc9d49e0d2a8",
+      "size_bytes": 36000
+    },
+    "historical_spectral_descriptor": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-historical-provenance-v1/authentic-v1.0-sw-g224.nc",
+      "sha256": "b9f4b15796d132880fffb49ac45c29753c1ee70a8ee3fed733899cb315c75e9b",
+      "size_bytes": 14954928
+    },
+    "historical_written_reference": {
+      "path": "build/udm37-rfmip-fixed-rte-subsets-v1/streams/historical_written.bin",
+      "sha256": "58d33eba302936e3e6ea5929c47dd6f6b1b31c68a916ec29ab3ddf61bfa09309",
+      "size_bytes": 19680
+    },
+    "profile_keys": {
+      "path": "build/udm37-rfmip-historical-rte-discriminator-v2/profiles20.txt",
+      "sha256": "d3d7037d48dbe603ce93d2a70610a140d4c5373f91d691942b9f50a2eb8d1178",
+      "size_bytes": 103
+    },
+    "record_provenance": {
+      "path": "build/udm37-rfmip-fixed-rte-subsets-v1/record-provenance.json",
+      "sha256": "349dfe2481b726eb945461e0e0373e2f71dc1f1008666f116bfc1210d0be438c",
+      "size_bytes": 86262
+    },
+    "rfmip_input": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/official-rrtmgp-reference/data/examples/rfmip-clear-sky/inputs/multiple_input4MIPs_radiation_RFMIP_UColorado-RFMIP-1-2_none.nc",
+      "sha256": "b8dc05d7cd2e0e6354b4a6198771ddf3bc09f18d72b49f20a41e2024e2fd51f4",
+      "size_bytes": 1859666
+    },
+    "selected21_coverage_join": {
+      "path": "build/udm37-rfmip-historical-rte-discriminator-v1/input-metadata/selected21-coverage-join.json",
+      "sha256": "a7a5a018199c78390f11de7321ed96890196ffbff57d32b382699e1a5cbb6ae0",
+      "size_bytes": 12392
+    },
+    "shared_source_post": {
+      "path": "build/udm37-rfmip-fixed-rte-subsets-v1/streams/current_source_post.bin",
+      "sha256": "62334c919f1d0b3e2c3275f93476ca63820b65ce0acefb1ecf35dc9d49e0d2a8",
+      "size_bytes": 36000
+    },
+    "subset_manifest": {
+      "path": "build/udm37-rfmip-fixed-rte-subsets-v1/subset-manifest.json",
+      "sha256": "244fa05a0b1e4d97005bf01381e0bcba9b39fce3d2efeafb820635b8c2a90b7b",
+      "size_bytes": 18506
+    }
+  },
+  "limitations": [
+    "No compile or RTE calls have run for this discriminator.",
+    "This tests a retained historical code/build snapshot, not authenticated CMIP6 executable/compiler provenance.",
+    "A successful bitwise historical match would explain the capture-to-RTE convention for this selected20 subset only; it would not close the global strict RFMIP failure ledger or establish accuracy.",
+    "The 21 selected strict-failure cells map to 20 profiles and are only a subset diagnostic."
+  ],
+  "outputs": {
+    "durable_child_rc_before_log_hashing_or_validation": true,
+    "must_be_absent_before_authorized_launch": true,
+    "output_files": [
+      "replay_current_solver.bin",
+      "replay_current_written.bin",
+      "replay_historical_solver.bin",
+      "replay_historical_written.bin"
+    ],
+    "run_directory": "build/udm37-rfmip-historical-rte-discriminator-v2/run-v1"
+  },
+  "prior_current_fixed_rte": {
+    "execution_receipt": {
+      "path": "build/udm37-rfmip-fixed-rte-replay-execution-v4/execution.json",
+      "sha256": "de63e764cf2bb4649b54ad444d2662f8c3b7e2013aa7ba7c17019c2634e998fc",
+      "size_bytes": 32128
+    },
+    "output_current_solver": {
+      "path": "build/udm37-rfmip-fixed-rte-replay-execution-v4/replay_current_solver.bin",
+      "sha256": "b59eab02e4b79fdb6ea019393a4ac10ac696cfdcf9a8157d6c1b12c6ab8a54ee",
+      "size_bytes": 19680
+    },
+    "output_current_written": {
+      "path": "build/udm37-rfmip-fixed-rte-replay-execution-v4/replay_current_written.bin",
+      "sha256": "b59eab02e4b79fdb6ea019393a4ac10ac696cfdcf9a8157d6c1b12c6ab8a54ee",
+      "size_bytes": 19680
+    },
+    "output_historical_solver": {
+      "path": "build/udm37-rfmip-fixed-rte-replay-execution-v4/replay_historical_solver.bin",
+      "sha256": "1169f986217a259640a4784df7ff75c2e0651a190cbecef24191266fc3d77c53",
+      "size_bytes": 19680
+    },
+    "output_historical_written": {
+      "path": "build/udm37-rfmip-fixed-rte-replay-execution-v4/replay_historical_written.bin",
+      "sha256": "1169f986217a259640a4784df7ff75c2e0651a190cbecef24191266fc3d77c53",
+      "size_bytes": 19680
+    },
+    "receipt_calls": 40,
+    "will_not_be_modified": true
+  },
+  "purpose": "Compile the frozen 5a46 SW fixed-RTE harness against the retained historical RTE modules/libraries, then test whether the historical-optics arm reproduces the saved historical 20-profile solver and written streams byte-for-byte.",
+  "run_directory": "build/udm37-rfmip-historical-rte-discriminator-v2/run-v1",
+  "runtime_environment": {
+    "LANG": "C",
+    "LC_ALL": "C",
+    "LD_LIBRARY_PATH": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/root/usr/lib/x86_64-linux-gnu",
+    "OMP_NUM_THREADS": "1",
+    "PATH": "/usr/bin:/bin"
+  },
+  "schema": "udm37-rfmip-historical-rte-discriminator-plan-v2",
+  "scope": {
+    "compiler_execution_identity": "Preflight resolves PATH gfortran to the exact pinned compiler binary; compile and link argv use the pinned absolute path.",
+    "expected_rte_calls": 40,
+    "global_strict_gate_change": false,
+    "levels": 61,
+    "new_fixed_rte_calls_max": 40,
+    "new_forecasts": 0,
+    "new_gas_optics_calls": 0,
+    "optics_arms": [
+      "current_optics_descriptive",
+      "historical_optics_exact_gate"
+    ],
+    "physical_accuracy_claim": false,
+    "profiles": 20,
+    "runner_success_cleanup": "After every child exit, SIGKILL any surviving descendants in its process group; preserve leader actual RC.",
+    "runtime_pin_size_compatibility": "Accept immutable size_bytes or legacy size pin keys; reject contradictory dual size fields.",
+    "selected21_cells_are_not_global_closure": true,
+    "selected_subset_note": "Twenty selected profiles cover 21 selected strict-failure cells; this is not the global failure census.",
+    "shared_source": "identical current/historical source_post stream; harness asserts equality",
+    "shared_source_byte_equality_required": true,
+    "source_vectors": "Use current_source_post.bin and historical_source_post.bin as distinct pinned inputs; preflight requires their bytes and SHA values identical, matching the retained 20-profile capture audit."
+  },
+  "source_abi_review": {
+    "assessment": "Source-level positional surface matches the frozen harness. Module files/libraries were built by the same pinned compiler executable family; compile-time ABI compatibility remains untested until the single authorized compile.",
+    "flux_type": "ty_fluxes_broadband public flux_up/flux_dn pointer fields",
+    "harness_call": "rte_sw(optics, top_at_1, mu0, toa_flux, sfc_alb, sfc_alb, fluxes)",
+    "historical_rte_sw_sha256": "f96f8d0bf74b34d8f99103403e6f7f19fe1c2bda6dd93262e9a291cc55b707d0",
+    "historical_signature": "function rte_sw(atmos, top_at_1, mu0, inc_flux, sfc_alb_dir, sfc_alb_dif, fluxes, inc_flux_dif optional)",
+    "old_io_surface": "The harness uses only read_size, read_and_block_pt, and read_and_block_sw_bc from the archived mo_rfmip_io module. Their historical declarations exist in the pinned source; module/compiler ABI remains untested until compile.",
+    "optical_type": "ty_optical_props_2str with alloc_2str(ncol,nlay,band_lims_wvn,band_lims_gpt); tau/ssa/g fields"
+  },
+  "status": "PREPARED_NOT_AUTHORIZED_NOT_RUN"
+}

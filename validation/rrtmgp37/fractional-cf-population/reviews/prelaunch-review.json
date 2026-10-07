@@ -1,0 +1,99 @@
+{
+  "build_result": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-fractional-cf-population-observer-build-v1/result.json",
+    "sha256": "e8fc300420d384e9cb03c4d70c110d8713f76ef17e785f885e59a9879c7d4d68",
+    "size_bytes": 4714
+  },
+  "contract_review": {
+    "OFF_gate_unset_ON_gate_exactly_1": true,
+    "authorization_one_use_bound": true,
+    "durable_actual_rc_and_timeout_cleanup": true,
+    "exact_build_source_and_runtime_closure": true,
+    "first_failure_stops_second_arm": true,
+    "fresh_output_and_staged_inputs": true,
+    "packet_contract": "8 CF packets / 352 rows, with substep and clock; stage/history joins are source-step scoped. Above-top CF=1 is initialized working state, while diagnosed mask is explicit.",
+    "phase_contract": "CF packets phases1..4 bracket gridmean/in-cloud conversion and restoration; validator requires exact source-operation REAL32 divide/multiply and unchanged number/context fields.",
+    "physical_scope": "source-stage observer/passivity only; no Nc units, PSD/LUT mapping, or physical-accuracy approval."
+  },
+  "limitations": [
+    "No root authorization was present; the reviewed package is prepared but not launched.",
+    "This review establishes launch-contract consistency, not runtime success or scientific acceptance."
+  ],
+  "reviewer_actions": {
+    "build_calls": 0,
+    "model_calls": 0,
+    "stage_verifier_run": true,
+    "synthetic_python_controls_run": true
+  },
+  "root_authorization_present": false,
+  "runner": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-fractional-cf-population-runtime-runner-v1.py",
+    "sha256": "d25c5a633eb780b000a9d056f2ed337695f256b2c6d9cc0f6b22b1af1b32de6c",
+    "size_bytes": 29939
+  },
+  "runtime_contract": {
+    "MPI": 4,
+    "OMP": 2,
+    "dt_seconds": 60,
+    "duration_seconds": 120,
+    "first_failure_stops": true,
+    "history_interval_minutes": 1,
+    "max_models": 2,
+    "restart_interval_minutes": 2,
+    "timeout_seconds_each": 300
+  },
+  "schema": "UDM37_FRACTIONAL_CF_POPULATION_RUNTIME_PRELAUNCH_REVIEW_V1",
+  "sealed_preparation_receipt": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-fractional-cf-population-runtime-preparation-v1/sealed-preparation-receipt.json",
+    "sha256": "8b451078e27b5a7bd4ecf32346fa25425f526851dc7c2e4d033c49f60ad94955",
+    "size_bytes": 2478
+  },
+  "source": {
+    "head": "11623344baae090c621f796e93e5d98d78ea1fe0",
+    "matches_committed_source": "11623344baae090c621f796e93e5d98d78ea1fe0 / 8e9d6aea8d1fbfa59765bfd57eb880a7b726378b",
+    "tree": "8e9d6aea8d1fbfa59765bfd57eb880a7b726378b"
+  },
+  "source_validation": {
+    "output": "............\n----------------------------------------------------------------------\nRan 12 tests in 0.135s\n\nOK\n",
+    "prelock_receipt_status": "PASS_FULL_MAIN_PREFLIGHT_UP_TO_DELIBERATE_PRELOCK_STOP; no model child launched",
+    "synthetic_control_suite_exit_code": 0,
+    "test_count": 12
+  },
+  "stage_plan": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-fractional-cf-population-runtime-v1/stage-plan.json",
+    "sha256": "0eea0c6e3ae9d8550cbb3b045c02f85aa1bf6bb05ef975fe02523b340965615e",
+    "size_bytes": 120980
+  },
+  "stage_verifier": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-fractional-cf-population-runtime-v1/verify_stage.py",
+    "sha256": "ea08562845c2679722d07091d16d5b247d85728269d3f3beb7c8ffa4fde351ca",
+    "size_bytes": 1350
+  },
+  "staging": {
+    "cases": {
+      "off": {
+        "capture_directory": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-fractional-cf-population-runtime-v1/stage/off/capture",
+        "capture_gate": "unset",
+        "file_count": 104,
+        "number_capture_directory": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-fractional-cf-population-runtime-v1/stage/off/number_capture",
+        "status": "STAGED_UNRUN"
+      },
+      "on": {
+        "capture_directory": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-fractional-cf-population-runtime-v1/stage/on/capture",
+        "capture_gate": "1",
+        "file_count": 104,
+        "number_capture_directory": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-fractional-cf-population-runtime-v1/stage/on/number_capture",
+        "status": "STAGED_UNRUN"
+      }
+    },
+    "stage_verifier_exit_code": 0,
+    "stage_verifier_stderr": "",
+    "stage_verifier_stdout": "{\"status\": \"PASS_STAGED_UNRUN\", \"errors\": [], \"files_per_arm\": 104, \"models\": 0}"
+  },
+  "status": "PASS_SCOPED_PRELAUNCH_NO_MODEL_LAUNCH",
+  "validator": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-fractional-cf-population-runtime-preparation-v1/validate_cf_population.py",
+    "sha256": "f001a1f81c1c03d67f2c31875eb12aab9f074236d781af9a2d71ca9c152ad23a",
+    "size_bytes": 8364
+  }
+}

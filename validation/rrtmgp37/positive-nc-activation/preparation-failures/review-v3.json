@@ -1,0 +1,38 @@
+{
+  "status": "BLOCKED_PRELAUNCH_VALIDATOR_PATH_BINDING",
+  "reviewed_plan": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-activation-supersat-runtime-v3/stage-plan.json",
+    "sha256": "a80c6201dc59a182c179013141fc576d1ecf4288040e24e4379f3a20af5a23d6",
+    "size_bytes": 125651
+  },
+  "reviewed_runner": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-activation-supersat-runtime-runner-v3.py",
+    "sha256": "058cfb638a61e435f6f6682475816f1146f2388a0fba326c00b1db4b4c8dc4b3",
+    "size_bytes": 27959
+  },
+  "blocking_findings": [
+    {
+      "id": "GLOBAL_VALIDATOR_PATH_STALE",
+      "runner_line": 19,
+      "pin_guard_line": 179,
+      "observed_global": "build/udm37-activation-supersat-runtime-v2/validate_activation.py",
+      "declared_plan": "build/udm37-activation-supersat-runtime-v3/validate_activation.py",
+      "effect": "Exact pin includes path; preflight fails before model despite byte-identical validator."
+    }
+  ],
+  "resolved": [
+    "V2 arm directory mismatch corrected across snapshot, inputs, process cwd and complete output comparison."
+  ],
+  "manufactured_controls": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-activation-supersaturation-independent-review-v1/manufactured-validator-controls-v2.json",
+    "sha256": "d1d76d0cbc2dbb49c29fa2484a01a4d10b311a7409dc2b95d3858278c5ad1b87",
+    "size_bytes": 1732
+  },
+  "limits": [
+    "Four controls verify protocol/cached state updates, not physical activation formula or unit authority."
+  ],
+  "models": 0,
+  "compilers": 0,
+  "scientific_readers": 0,
+  "scientific_accepted": false
+}

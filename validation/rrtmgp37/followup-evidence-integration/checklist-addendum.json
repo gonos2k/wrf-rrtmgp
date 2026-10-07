@@ -1,0 +1,56 @@
+{
+  "schema": "UDM37_REVIEW_RESOLUTION_ADDENDUM_V1",
+  "main_snapshot": {
+    "head": "a91d0d855da3e24094c2e6c7ba1088b56bc8c461",
+    "tree": "887d3fd1cf8c097219b201b1bdb9cdd428d593a9"
+  },
+  "main_included": false,
+  "production_accepted": false,
+  "runtime_integration_pr": "https://github.com/gonos2k/wrf-rrtmgp/pull/146",
+  "items": [
+    {
+      "id": "EVD-RFMIP",
+      "source_prs": [
+        138,
+        140
+      ],
+      "implemented": true,
+      "candidate_included": true,
+      "integrated_validation": "PASS_SCOPED_SAVED_EVIDENCE_INTEGRATION",
+      "main_included": false,
+      "remaining": "User merge and final main index linkage; published strict gate remains FAIL.",
+      "evidence": "saved-validation-result.json"
+    },
+    {
+      "id": "EVD-NC",
+      "source_prs": [
+        139,
+        141,
+        143,
+        144
+      ],
+      "implemented": true,
+      "candidate_included": true,
+      "integrated_validation": "PASS_SCOPED_SAVED_EVIDENCE_INTEGRATION",
+      "main_included": false,
+      "remaining": "User merge and final main index linkage; Nc unit/population/PSD authority remains OPEN.",
+      "evidence": "saved-validation-result.json"
+    }
+  ],
+  "unchanged_gates": {
+    "PHY-NC": "OPEN",
+    "PHY-SIZE": "OPEN",
+    "REF-RFMIP": "FAIL",
+    "REF-LBL": "FAIL",
+    "FINAL-FORECAST": "NOT_RUN_ON_FINAL_INTEGRATED_TREE"
+  },
+  "new_execution_counts": {
+    "compilers": 0,
+    "wrf_models": 0,
+    "rte": 0,
+    "lblrtm": 0,
+    "bounded_saved_verifiers": 6,
+    "manufactured_controls": 12
+  },
+  "historical_count_warning": "Any actual_models/rte_calls in nested old reports describes the original archived execution, never calls made by this new saved verification."
+}

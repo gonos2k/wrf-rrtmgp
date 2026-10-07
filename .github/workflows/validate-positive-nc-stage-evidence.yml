@@ -1,0 +1,23 @@
+name: Verify saved positive-Nc UDM stage evidence
+on:
+  pull_request:
+    paths:
+      - 'validation/rrtmgp37/positive-nc-stage/**'
+      - 'validation/rrtmgp37/qnn-boundary-rk-observer/**'
+      - '.github/workflows/validate-positive-nc-stage-evidence.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'validation/rrtmgp37/positive-nc-stage/**'
+      - 'validation/rrtmgp37/qnn-boundary-rk-observer/**'
+      - '.github/workflows/validate-positive-nc-stage-evidence.yml'
+permissions:
+  contents: read
+jobs:
+  saved-packet-integrity:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - name: Verify saved positive-Nc packets and OFF/ON receipts
+        run: python3 -I -S validation/rrtmgp37/positive-nc-stage/verify_saved.py

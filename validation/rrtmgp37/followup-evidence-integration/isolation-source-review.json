@@ -1,0 +1,38 @@
+{
+  "schema": "UDM37_PHASE2_EVIDENCE_INTEGRATION_CORRECTED_PREFLIGHT_V1",
+  "review_scope": {
+    "worktree": "build/udm37-followup-evidence-integration-pr-work",
+    "wrapper": "validation/rrtmgp37/followup-evidence-integration/verify_historical_isolated.py",
+    "workflow": ".github/workflows/validate-rfmip-historical-rte.yml",
+    "read_only": true,
+    "wrapper_or_workflow_executed": false
+  },
+  "supersedes": {
+    "path": "build/udm37-followup-evidence-integration-preparation-v1/preflight-review.json",
+    "sha256": "4ab8943612d3cac63c6731e035d82060415cc2cb350827497168e9bd36f7e1fb",
+    "qualification": "The earlier historical-package-mutation finding accurately described the old direct verifier invocation. This receipt reviews the new isolated wrapper and the updated workflow invocation."
+  },
+  "pins": {
+    "wrapper_sha256": "e5bac6a70801155478efed348a635ee3a554c0d14bcf6bfb1098f4cdf1d45ee6",
+    "workflow_sha256": "00b82891c1943d04a7957df34037f67d6d554f223ad4f0e2379b84818c378279",
+    "archived_verifier_sha256": "7dd14b145977304360242d8e7d8dd54fdb127d326b9094e765902c04ebfecf62",
+    "analyzer_sha256": "9a64381073ccbae49e036cc08ffba05d95d317ac92bc03fec16f08034a1bf6eb",
+    "historical_package_manifest_sha256": "836de12e7d1b6ad57d54f6b7855f08e9e605cda69cbe6d854e4c257852db91a7"
+  },
+  "result": {
+    "status": "PASS_SCOPED_WRAPPER_PREFLIGHT",
+    "former_blocker": "Closed for the updated workflow path: the unchanged historical verifier now runs only on copied fixed-RTE and historical-RTE packages in a TemporaryDirectory. The analyzer's write to two_by_two_analysis.json is confined to that disposable copy.",
+    "checks": [
+      "The wrapper calculates size and SHA-256 pins for every regular package file and the harness before copying; it rejects symlinks.",
+      "It verifies that the disposable copies match the originals before execution, and rechecks both disposable and original trees after the child exits.",
+      "The wrapper starts the historical verifier in a new process group, enforces a 120-second wait, and sends SIGKILL to the process group on any BaseException/timeout before reaping the direct child.",
+      "The historical workflow still runs the fixed-RTE package verifier first, then the isolated historical wrapper; its trigger includes the wrapper and both package trees.",
+      "The workflow retains read-only contents permission, pinned checkout action, and five-minute job timeout."
+    ],
+    "remaining_blockers": [],
+    "nonblocking_hardening": [
+      "The positive-Nc-activation and fractional-CF workflows still use actions/checkout@v4 instead of an immutable checkout commit."
+    ],
+    "scope": "Static source review only. No wrapper/verifier was run. The wrapper does not add model, compiler, or radiation-solver calls. Scientific scope and unresolved physical/strict-gate limitations remain as documented in the package README files."
+  }
+}

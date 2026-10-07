@@ -1,0 +1,40 @@
+name: Validate saved fractional CF population
+
+on:
+  pull_request:
+    paths:
+      - 'validation/rrtmgp37/fractional-cf-population/**'
+      - 'validation/rrtmgp37/positive-nc-stage/**'
+      - 'validation/rrtmgp37/positive-nc-activation/**'
+      - '.github/workflows/validate-fractional-cf-population.yml'
+  push:
+    paths:
+      - 'validation/rrtmgp37/fractional-cf-population/**'
+      - 'validation/rrtmgp37/positive-nc-stage/**'
+      - 'validation/rrtmgp37/positive-nc-activation/**'
+      - '.github/workflows/validate-fractional-cf-population.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  saved-evidence:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Authenticate manifest and verify saved relationships
+        env:
+          PACKAGE: validation/rrtmgp37/fractional-cf-population
+          EXPECTED_MANIFEST: 289569920f4c356439a6cb895cd0b7d7f1e5fdb661f8bf142dc06bf9610f104b
+        run: |
+          printf '%s  %s\n' "$EXPECTED_MANIFEST" "$PACKAGE/manifest.json" | sha256sum -c -
+          python3 -I -S "$PACKAGE/verify_saved.py" --output build/fractional-cf-verification.json
+      - name: Preserve saved-only verification receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: fractional-cf-saved-verification
+          path: build/fractional-cf-verification.json
+          if-no-files-found: warn

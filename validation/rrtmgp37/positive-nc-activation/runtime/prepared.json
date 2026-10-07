@@ -1,0 +1,113 @@
+{
+  "arms": {
+    "off": {
+      "capture_dir": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-activation-supersat-runtime-v4/stage/off/capture",
+      "files": 104,
+      "number_capture_dir": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-activation-supersat-runtime-v4/stage/off/number_capture",
+      "outputs_present": false,
+      "stage": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-activation-supersat-runtime-v4/stage/off"
+    },
+    "on": {
+      "capture_dir": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-activation-supersat-runtime-v4/stage/on/capture",
+      "files": 104,
+      "number_capture_dir": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-activation-supersat-runtime-v4/stage/on/number_capture",
+      "outputs_present": false,
+      "stage": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-activation-supersat-runtime-v4/stage/on"
+    }
+  },
+  "builds_launched": 0,
+  "derived_input": {
+    "link": null,
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-activation-supersat-input-v1/derived/wrfinput_d01",
+    "sha256": "4be27d2dfbec0286a5dc7e8a73d0b2ee78de028e7cacf735fd8b393567e44380",
+    "size_bytes": 10975310
+  },
+  "expected_scope": {
+    "activation_gate": "stage31 NC_ACT_RATE > 0 in same step; PC_ACT_RATE and source-equation NN/NC/QV/QC/T updates also checked",
+    "levels_per_packet": 44,
+    "max_models": 2,
+    "observer_packets": 20,
+    "rh_gate": "stage30 source lookup at i23,j2,k7 > 1.0",
+    "timeout_each_seconds": 300
+  },
+  "input_review": {
+    "link": null,
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-activation-supersaturation-independent-review-v1/input-review.json",
+    "sha256": "e52f1f33a3b0406013259bfc672714bfc93dcc6b0f4c55e81a0aa3c2e654dcb9",
+    "size_bytes": 2823
+  },
+  "limitations": "Manufactured one-cell QVAPOR intervention and selected observer state only. No QNC unit authority, PSD/LUT mapping, physical acceptance, or forecast claim.",
+  "models_launched": 0,
+  "negative_control_reused": "Existing original-input stage packets are read-only; they report RH<1 and NC_ACT=0. No baseline model is repeated.",
+  "parent_negative_control_validator": {
+    "path": "/tmp/udm37-activation-negative-control-v2-final.json",
+    "sha256": "b436ad2de19ae253b4594ff1527acb8a24c756b16042b075ddc11941e00bf445",
+    "size_bytes": 10998
+  },
+  "prelaunch_preflight": {
+    "link": null,
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-activation-prelaunch-preflight-v4.json",
+    "sha256": "2e6acf2d671e22f5e464a8605d18d74a096aef28d9cd0e38e542dcd31c692eb6",
+    "size_bytes": 1191
+  },
+  "prelaunch_preflight_status": "PREFLIGHT_PASS_STOPPED_BEFORE_MODEL_LAUNCH",
+  "readme": {
+    "link": null,
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-activation-supersat-runtime-v4/README.md",
+    "sha256": "5ee7d392e9fe47078acf6a750f01764382633d16de85bf8e4af6e8cfbfe9bdcf",
+    "size_bytes": 1676
+  },
+  "runner": {
+    "link": null,
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-activation-supersat-runtime-runner-v4.py",
+    "sha256": "b3ba7349ca8aefe38162281564661f95856e2ffc89f1ce10b9acefd7e2c70e3b",
+    "size_bytes": 27959
+  },
+  "schema": "UDM37_ACTIVATION_SUPERSAT_PREPARED_V4",
+  "stage_plan": {
+    "link": null,
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-activation-supersat-runtime-v4/stage-plan.json",
+    "sha256": "f1f888c8c997487b740567b5b5f94c01b837b67ce46045b82b144ab259a6a438",
+    "size_bytes": 125727
+  },
+  "stage_verifier": {
+    "link": null,
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-activation-supersat-runtime-v4/verify_stage.py",
+    "sha256": "e6b81c66f7c25a92dd9c4e9ed66294b2f3494f105130bee3864225d15434c1bb",
+    "size_bytes": 1404
+  },
+  "status": "STAGED_UNRUN_PENDING_ROOT_AUTHORIZATION",
+  "thermodynamic_source_pins": {
+    "WRF/phys/module_microphysics_driver.F": {
+      "link": null,
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-positive-nc-stage-observer-source-v2/WRF/phys/module_microphysics_driver.F",
+      "sha256": "c2568eef1fe6223eab587c864ae104bbfaace5fde1266313ddc36ba89541d74d",
+      "size_bytes": 203985
+    },
+    "WRF/phys/module_mp_udm.F": {
+      "link": null,
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-positive-nc-stage-observer-source-v2/WRF/phys/module_mp_udm.F",
+      "sha256": "9f25a1aaebd0d29ba3ecdf86c9fe65065cf920fc187bdfd904e8b8192bc7e3c8",
+      "size_bytes": 208324
+    },
+    "WRF/phys/module_physics_init.F": {
+      "link": null,
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-positive-nc-stage-observer-source-v2/WRF/phys/module_physics_init.F",
+      "sha256": "8c5e933467cc316f172d1193e4f130e96b89580da7f28aec3edc3b7c517e59b5",
+      "size_bytes": 315994
+    },
+    "WRF/share/module_model_constants.F": {
+      "link": null,
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-positive-nc-stage-observer-source-v2/WRF/share/module_model_constants.F",
+      "sha256": "5b80377fecdc18a5f0ad38d3b6c15cfc86ad5d76701adbbbb08a08698d0f7062",
+      "size_bytes": 8280
+    }
+  },
+  "v1_to_v4_history": "v1 preserves initial draft; v2 corrected host constants/source state and lookup rounding; v3 corrected per-arm path routing; v4 corrected activation-validator runtime path binding. All model/build counts remain zero.",
+  "validator": {
+    "link": null,
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-activation-supersat-runtime-v4/validate_activation.py",
+    "sha256": "2d916bb2d5f3aff68e00174efad93428fe62a79a30a189396b057dde945d7b7c",
+    "size_bytes": 10603
+  }
+}
