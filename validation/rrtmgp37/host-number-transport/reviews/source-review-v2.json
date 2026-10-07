@@ -1,0 +1,167 @@
+{
+  "schema": "UDM37_HOST_NUMBER_FIXTURE_SOURCE_REVIEW_V2",
+  "created_at_utc": "2026-10-07T11:21:04.108529+00:00",
+  "status": "PASS_SCOPED_STATIC_FOUR_PROCEDURE_FIXTURE_REVIEW",
+  "verdict_ko": "현재 source fixture의 절차 추출·scalar별 tendency·stage 구분·주기 FV 예산·경계 전체 저장 셀 oracle은 일관됩니다. PD source 갱신은 old/new 질량을 같게 둔 제한된 검사입니다. 생산 결함이나 물리 수농도 단위의 승인을 뜻하지 않으며 cold-start 실행 범위로 확대할 수 없습니다.",
+  "head": "a152b2798ef465c57822db6a45e983a4b1d4ef34",
+  "tree": "92c73cece68279af1d04ab3e15643ae3cad94eae",
+  "pins": {
+    "WRF/test/rrtmgp/test_udm_host_number_transport.py": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-host-number-pr-work/WRF/test/rrtmgp/test_udm_host_number_transport.py",
+      "sha256": "4f0a550f2973a2d85f014ef3df16697ae0d4b924d7eaddcf0e52badbea64b5fe",
+      "size_bytes": 12651
+    },
+    "WRF/test/rrtmgp/test_udm_host_number_transport.f90": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-host-number-pr-work/WRF/test/rrtmgp/test_udm_host_number_transport.f90",
+      "sha256": "f369e1491a3fdbca344d2652db661fcf37d46d6fabbe79dad2154eb6ddc2d405",
+      "size_bytes": 4152
+    },
+    "WRF/dyn_em/module_advect_em.F": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-host-number-pr-work/WRF/dyn_em/module_advect_em.F",
+      "sha256": "58253bdbeb188dd47ed0579fcd2891086be1889b75c0c7d3696c9ad1d213559d",
+      "size_bytes": 427881
+    },
+    "WRF/dyn_em/module_em.F": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-host-number-pr-work/WRF/dyn_em/module_em.F",
+      "sha256": "67c5842c1c5d407a26139f26bd317f3016c610aeaf60207dfd21394ddb81482c",
+      "size_bytes": 132827
+    },
+    "WRF/share/module_bc.F": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-host-number-pr-work/WRF/share/module_bc.F",
+      "sha256": "61b9235004b2a7799faabaa928276af8a7ef2e4672619c8ad120c857461301ad",
+      "size_bytes": 164069
+    },
+    "WRF/phys/module_microphysics_driver.F": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-host-number-pr-work/WRF/phys/module_microphysics_driver.F",
+      "sha256": "c02f227d0fc1bf633fa53e54361e7117093b2c7bb02cedc2b71441c5bd638bd9",
+      "size_bytes": 198159
+    },
+    "WRF/dyn_em/solve_em.F": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-host-number-pr-work/WRF/dyn_em/solve_em.F",
+      "sha256": "ed03953a8b7b999fc0a5a281893f4808bbed28697ea9032fde9b9b605e0d9ecb",
+      "size_bytes": 283280
+    },
+    "WRF/Registry/Registry.EM_COMMON": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-host-number-pr-work/WRF/Registry/Registry.EM_COMMON",
+      "sha256": "87e21a476a06b7e0c926b2d939eaf1028810cba8a7d1e6fc585b50b599f99729",
+      "size_bytes": 448359
+    },
+    "WRF/test/rrtmgp/test_netcdf_zz.py": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-host-number-pr-work/WRF/test/rrtmgp/test_netcdf_zz.py",
+      "sha256": "79376b07af06a8f1570ed807546762711bfd8aa185566f25e974eaabc2a505cf",
+      "size_bytes": 16970
+    }
+  },
+  "source_extraction": {
+    "procedures": [
+      "advect_scalar",
+      "rk_update_scalar",
+      "rk_update_scalar_pd",
+      "flow_dep_bdy_qnn"
+    ],
+    "method": "Requires exactly one anchored SUBROUTINE/END SUBROUTINE pair per name, takes original text including body, records parent source SHA, line interval and slice SHA. Adapter adds a module/type/error handler around retained procedures.",
+    "adapter": "Config contains exact referenced field union with explicit defaults. No production arithmetic rewritten. read_text newline convention matches current retained LF source; this does not claim universal CRLF byte preservation.",
+    "not_full_module": "Only four source-selected procedures and adapter compile. No full module/WRF host or UDM procedure is called."
+  },
+  "transport_oracle": {
+    "configurations": 8,
+    "factors": [
+      "two base dry column masses",
+      "uniform/patterned tracer",
+      "flat/unit-map versus hybrid/spatially varying maps"
+    ],
+    "independent_stages": [
+      1,
+      3
+    ],
+    "generic_scalar_slots": 2,
+    "owned_shape": [
+      4,
+      2,
+      3
+    ],
+    "exact_CELL_roster": 768,
+    "CELL_REAL32_word_width": 23,
+    "expected_calls_each_procedure_per_optimization": {
+      "advect_scalar": 32,
+      "rk_update_scalar": 32,
+      "rk_update_scalar_pd": 32
+    },
+    "source_association": "Order2 native advect divergence has msftx; native RK applies msfty once. Per-cell ledger uses face arithmetic independently and weighted update with c1*(mu+mu_base)+c2. rdx=rdy=1,rv=rom=0; periodic face endpoints and input halos are encoded and checked.",
+    "stage_identity": "Stage1 updates scalar_1 from scalar_2; stage3 starts scalar_2=-777 and requires output from old scalar_1. Stage cases start separately; not a multi-stage trajectory.",
+    "per_scalar": "Each slot computes its own tendency and invokes scs=sce=im using selected array section; no shared tendency is incorrectly applied to both generic slots.",
+    "weighted_budget": "Area=1/(mx*my), positive layer coefficient=-dnw/g, mass W=c1*(mu+base)+c2. Periodic total closure <=1.5e-7, prescribed source budget checked independently, uniform tracer preserved and patterned raw sum must differ by>1e-6. Spatially varying maps discriminate area weighting.",
+    "arithmetic_scope": "Per-cell comparisons use declared relative3e-7/absolute0.1 bound and REAL32 captured operands; independent FV algebra is not exact native-kind/ULP replay."
+  },
+  "boundary_oracle": {
+    "new_runtime_procedure": "flow_dep_bdy_qnn",
+    "arms": 6,
+    "velocity_values": [
+      -1,
+      0,
+      1
+    ],
+    "periodic_x_values": [
+      false,
+      true
+    ],
+    "owned_shape": [
+      4,
+      2,
+      3
+    ],
+    "storage_shape": [
+      6,
+      4,
+      5
+    ],
+    "exact_BOUNDARY_roster": 720,
+    "BOUNDARY_REAL32_word_width": 6,
+    "spec_zone": 1,
+    "source_proof": "Native Y-start uses v<0 outflow; Y-end v>0 outflow; X-start u<0; X-end u>0. Zero goes to ccn_conc. Oracle mirrors these predicates through independently expressed side coordinates and checks all memory cells.",
+    "corner_and_source_safety": "Y boundaries cover corners with clamped interior i, then X touches j2 only. All selected outflow sources lie in unchanged interior i2/3,j2; expectation from initial source is valid in this width1 fixture. Periodic_x disables X update and removes Y i-clamp.",
+    "untouched_cells": "Complete storage roster checks halos, top interface and nonboundary interior equality to initialized unique values.",
+    "limits": "Width1 isolated state; no general multi-zone/corner-alias evolution, MPI/halo exchange or host trajectory proof. Existing coldstart producer evidence is pinned source-only, not newly called."
+  },
+  "qualifications": [
+    {
+      "id": "PD-CHANGING-MASS",
+      "status": "COVERAGE_LIMIT_NOT_PRODUCTION_BUG",
+      "path": "WRF/test/rrtmgp/test_udm_host_number_transport.f90",
+      "evidence": "PD call uses mu_old=mu_new=mu1; mass weights therefore cancel. It exercises added fully coupled source and sc_tend reset, but would not distinguish PD old-mass/new-mass selection. Regular RK call does exercise unequal mass.",
+      "requirement": "Keep source-update-only wording, or add a separately discriminating unequal-mass PD arm before claiming that coverage."
+    },
+    {
+      "id": "STAGE-AND-TRANSPORT-SCOPE",
+      "status": "CORRECTLY_QUALIFIED",
+      "evidence": "Stage1/3 start from prescribed old state independently; vertical flux zero, second-order horizontal centered stencil and no diffusion/PD limiter/monotonic-WENO path. Limits do not call this a full trajectory or PD advection test."
+    },
+    {
+      "id": "NUMBER-UNITS",
+      "status": "OPEN",
+      "evidence": "Two generic scalar slots can prove source-defined mass weighting. Static Registry/driver/boundary source pins do not authenticate input/restart or UDM internal population basis. No rho conversion or density-factor production correction follows from this fixture."
+    }
+  ],
+  "adversarial_controls_declared": [
+    "missing-cell",
+    "wrong-map",
+    "wrong-mass",
+    "wrong-number",
+    "uncleared-source",
+    "wrong-inflow"
+  ],
+  "material_blockers_in_declared_scope": [],
+  "production_bug_confirmed": false,
+  "scientific_acceptance": false,
+  "remaining_physical_gates": 7,
+  "actual_execution_status": "Parent executes O0/O2; this review does not inspect raw output or independently run controls. Runtime PASS must come from its separately pinned actual receipt, not this source review.",
+  "reviewer_counts": {
+    "compiler": 0,
+    "fixture": 0,
+    "WRF_model": 0,
+    "UDM_calls": 0,
+    "RTE": 0,
+    "raw_scientific_array_decodes": 0,
+    "test_or_saved_checker_execution": 0
+  }
+}

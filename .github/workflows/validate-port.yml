@@ -23,6 +23,7 @@ on:
       - 'validation/rrtmgp37/upstream-reference/**'
       - 'validation/rrtmgp37/partial-activation-observation/**'
       - 'validation/rrtmgp37/udm-thompson-cloud-radius/**'
+      - 'validation/rrtmgp37/host-number-transport/**'
       - 'validation/rrtmgp37/bon-night-common-band-source/**'
       - 'validation/rrtmgp37/bon-night-planck-source/**'
       - 'validation/rrtmgp37/bon-night-independent-pfrac/**'
@@ -53,6 +54,7 @@ on:
       - 'validation/rrtmgp37/upstream-reference/**'
       - 'validation/rrtmgp37/partial-activation-observation/**'
       - 'validation/rrtmgp37/udm-thompson-cloud-radius/**'
+      - 'validation/rrtmgp37/host-number-transport/**'
       - 'validation/rrtmgp37/bon-night-common-band-source/**'
       - 'validation/rrtmgp37/bon-night-planck-source/**'
       - 'validation/rrtmgp37/bon-night-independent-pfrac/**'
@@ -79,6 +81,8 @@ jobs:
         run: python3 -I -S validation/rrtmgp37/partial-activation-observation/verify_saved.py
       - name: Verify saved UDM and Thompson cloud-kernel comparison scope
         run: python3 -I -S validation/rrtmgp37/udm-thompson-cloud-radius/verify_saved.py
+      - name: Verify saved native scalar transport without approving number units
+        run: python3 -I -S validation/rrtmgp37/host-number-transport/verify_saved.py
       # Stored numerical evidence pins the pre-stage-instrumentation sources.
       # Authenticate that historical checkout rather than retagging old results
       # as calculations from the current wrappers. Current code is checked above
@@ -159,6 +163,22 @@ jobs:
         run: >-
           python3 WRF/test/rrtmgp/test_udm_thompson_radius.py WRF
           --workdir build/udm-thompson-radius
+      - name: Check selected current host scalar transport and QNN boundary procedures
+        run: >-
+          python3 WRF/test/rrtmgp/test_udm_host_number_transport.py WRF
+          --workdir build/host-number-transport
+      - name: Preserve scalar source slices and actual process results
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: host-number-transport-${{ github.run_id }}
+          path: |
+            build/host-number-transport/*.json
+            build/host-number-transport/*.stdout
+            build/host-number-transport/*.stderr
+            build/host-number-transport/*.f90
+          retention-days: 30
+          if-no-files-found: error
       - name: Preserve radius-kernel sources and actual process results
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02

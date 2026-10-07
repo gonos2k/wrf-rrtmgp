@@ -1,0 +1,183 @@
+{
+  "assertion_scope": {
+    "fixture_roster": "Per O0/O2: 8 manufactured spatial/number/mass arms, two separately initialized RK stages (1 and 3), two generic scalar slots, 768 cell records, 720 boundary records, and procedure call totals [32,32,32,6]. Stage 1 and stage 3 are not a continuous RK trajectory.",
+    "native_procedures": "Four verbatim source slices: advect_scalar, rk_update_scalar, rk_update_scalar_pd and flow_dep_bdy_qnn; compiled with a minimal adapter type and stubs, not the full source modules.",
+    "negative_controls": "Each optimization rejects missing-cell, wrong-map, wrong-mass, wrong-number, uncleared-source, and wrong-inflow mutations.",
+    "numerical_checks": "The independent finite-volume ledger checks order-2 periodic horizontal advection, dry-mass-weighted conservation, prescribed source update, raw-sum discriminator, uniform scalar preservation, source clearing, and boundary inflow/copy/untouched behavior. Relative closure/source guards are fixture-specific checks, not physical accuracy tolerances.",
+    "source_context_pins": "v4 pins module_mp_udm, start_em, module_initialize_real and module_first_rk_step_part1 as context. Those files are not extracted or run by this fixture; pinning them does not establish host state wiring."
+  },
+  "limits": [
+    "Four verbatim procedures with minimal config/type/shape adapter; not full modules or a WRF host run.",
+    "Order-2 horizontal periodic manufactured fluxes; vertical flux zero, manual periodic halos.",
+    "Two generic scalar slots, not Registry-managed QNN/QNC initialization or UDM routing.",
+    "Stages 1/3 checked separately with identical prescribed input, not a full RK trajectory.",
+    "Source update consumes prescribed mass-coupled tendency; PD advection limiter not executed.",
+    "Boundary inflow/outflow/zero velocity and periodic-x suppression are isolated; no complete lateral boundary host trajectory.",
+    "Mass-coupled transport behavior does not decide intended UDM stored units or population.",
+    "No microphysics, radius, optics, forecast, EOS/balanced atmospheric column or MPI."
+  ],
+  "pins": [
+    {
+      "path": "build/udm37-host-number-pr-work/WRF/test/rrtmgp/test_udm_host_number_transport.py",
+      "sha256": "4f0a550f2973a2d85f014ef3df16697ae0d4b924d7eaddcf0e52badbea64b5fe",
+      "size_bytes": 12651
+    },
+    {
+      "path": "build/udm37-host-number-pr-work/WRF/test/rrtmgp/test_udm_host_number_transport.f90",
+      "sha256": "f369e1491a3fdbca344d2652db661fcf37d46d6fabbe79dad2154eb6ddc2d405",
+      "size_bytes": 4152
+    },
+    {
+      "path": "build/udm37-host-number-native-v4/receipt.json",
+      "sha256": "774addf63632ef9ab487b55ce13aa9b4d14655560cea429b5574407819fea16d",
+      "size_bytes": 41450
+    }
+  ],
+  "receipt_summary": {
+    "RTE_runs": 0,
+    "UDM_calls": 0,
+    "WRF_host_runs": 0,
+    "compiler": "GNU Fortran 13.3.0",
+    "full_WRF_builds": 0,
+    "full_module_builds": 0,
+    "optimizations": [
+      "O0",
+      "O2"
+    ],
+    "per_optimization": {
+      "O0": {
+        "boundary_storage_records": 720,
+        "budget_rows": 32,
+        "cell_records": 768,
+        "negative_controls_rejected": [
+          "missing-cell",
+          "uncleared-source",
+          "wrong-inflow",
+          "wrong-map",
+          "wrong-mass",
+          "wrong-number"
+        ],
+        "procedure_calls": [
+          32,
+          32,
+          32,
+          6
+        ]
+      },
+      "O2": {
+        "boundary_storage_records": 720,
+        "budget_rows": 32,
+        "cell_records": 768,
+        "negative_controls_rejected": [
+          "missing-cell",
+          "uncleared-source",
+          "wrong-inflow",
+          "wrong-map",
+          "wrong-mass",
+          "wrong-number"
+        ],
+        "procedure_calls": [
+          32,
+          32,
+          32,
+          6
+        ]
+      }
+    },
+    "processes": [
+      {
+        "actual_returncode": 0,
+        "kind": "compiler_version",
+        "status": "TERMINAL",
+        "timed_out": false
+      },
+      {
+        "actual_returncode": 0,
+        "kind": "compile_link",
+        "status": "TERMINAL",
+        "timed_out": false
+      },
+      {
+        "actual_returncode": 0,
+        "kind": "native_scalar_fixture",
+        "status": "TERMINAL",
+        "timed_out": false
+      },
+      {
+        "actual_returncode": 0,
+        "kind": "compile_link",
+        "status": "TERMINAL",
+        "timed_out": false
+      },
+      {
+        "actual_returncode": 0,
+        "kind": "native_scalar_fixture",
+        "status": "TERMINAL",
+        "timed_out": false
+      }
+    ],
+    "remaining_physical_gates": 7,
+    "scientific_acceptance": false,
+    "source_pins_before_after_equal": true,
+    "status": "PASS_SCOPED_NATIVE_SCALAR_TRANSPORT"
+  },
+  "reviewer_activity": {
+    "compiler_runs": 0,
+    "fixture_runs": 0,
+    "model_runs": 0,
+    "raw_scientific_arrays_read": 0,
+    "solver_runs": 0,
+    "tracked_source_edits": 0
+  },
+  "schema": "UDM37_HOST_NUMBER_TRANSPORT_SCOPE_REVIEW_V1",
+  "scope": "Independent static review of the final v4 fixture sources and saved receipt metadata only. No compiler, model, solver, or raw scientific array access by reviewer.",
+  "source_slices": [
+    {
+      "procedure": "advect_scalar",
+      "slice_sha256": "8f0bb3e6a4f9d29c934291b8f05083b6d358cb25a4ebdceca90f02045a84ae63",
+      "source_lines": [
+        3029,
+        4359
+      ],
+      "source_sha256": "58253bdbeb188dd47ed0579fcd2891086be1889b75c0c7d3696c9ad1d213559d"
+    },
+    {
+      "procedure": "rk_update_scalar",
+      "slice_sha256": "124eb6c5cb22ccbdb2d471a226cda6fe55a399c67ae43720b08c34919eac0ecb",
+      "source_lines": [
+        1587,
+        1799
+      ],
+      "source_sha256": "67c5842c1c5d407a26139f26bd317f3016c610aeaf60207dfd21394ddb81482c"
+    },
+    {
+      "procedure": "rk_update_scalar_pd",
+      "slice_sha256": "059af2c3470c1245b2625903798c0e81bc7f11f30f3c44b6dd282c3e1c7b0d0b",
+      "source_lines": [
+        1803,
+        1916
+      ],
+      "source_sha256": "67c5842c1c5d407a26139f26bd317f3016c610aeaf60207dfd21394ddb81482c"
+    },
+    {
+      "procedure": "flow_dep_bdy_qnn",
+      "slice_sha256": "467a1444c40f046d15f90d9112ecc71666a6114809df099fb5e4a0496eca02af",
+      "source_lines": [
+        2460,
+        2583
+      ],
+      "source_sha256": "61b9235004b2a7799faabaa928276af8a7ef2e4672619c8ad120c857461301ad"
+    }
+  ],
+  "status": "PASS_SCOPED_GENERIC_SCALAR_TRANSPORT_REVIEW",
+  "unapproved_host_seam": {
+    "description": "The production chain from driver ccn_conc initialization into QNN, through Registry-managed scalar transport/boundary calls, to the raw NN/NC arrays passed into UDM remains unverified. The fixture uses a manufactured scalar ledger and passes 1.e8 directly as the boundary helper argument; it does not bind its generic slots to QNN/QNC/NN/NC.",
+    "status": "OPEN_NOT_ESTABLISHED",
+    "therefore_not_established": [
+      "stored number units or density conversion",
+      "population identity/slot mapping",
+      "initialization/transport end-to-end behavior in the host",
+      "UDM number authority or PSD/LUT equivalence"
+    ]
+  }
+}
