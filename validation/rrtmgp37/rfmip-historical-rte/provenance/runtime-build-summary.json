@@ -1,0 +1,69 @@
+{
+  "coefficient_descriptor_pins": {
+    "current_sw": {
+      "file": "rrtmgp-gas-sw-g224.nc",
+      "sha256": "584f1dd41ea9fc07d4ee3754eb1dafbd46ad3161cd6fd20fa06b6922b6f0702e",
+      "size_bytes": 11083642
+    },
+    "historical_sw": {
+      "file": "authentic-v1.0-sw-g224.nc",
+      "sha256": "b9f4b15796d132880fffb49ac45c29753c1ee70a8ee3fed733899cb315c75e9b",
+      "size_bytes": 14954928
+    }
+  },
+  "cross_runtime_optics_context": {
+    "current_runtime_historical_optics_solver_and_written_sha256": "1169f986217a259640a4784df7ff75c2e0651a190cbecef24191266fc3d77c53",
+    "historical_runtime_diagonal_anchor_sha256": "58d33eba302936e3e6ea5929c47dd6f6b1b31c68a916ec29ab3ddf61bfa09309",
+    "label": "Current-runtime replay using historical optics. This is a cross-runtime/off-diagonal arm, not the historical-runtime/historical-optics (HH) historical diagonal anchor."
+  },
+  "current_runtime": {
+    "build_plan": {
+      "path": "current-runtime-fixed-rte-run-plan.json",
+      "sha256": "627edcc68416791620621676cf49305c2c2e5f2c0d657fe79a2eae028d245535"
+    },
+    "compiler": "/usr/bin/gfortran 13.3.0",
+    "compiler_sha256": "7e292e9d5da17a37bb1c17a06afb6463db786c70827fd6893ed31a86715b03c3",
+    "current_saved_solver_sha256": "b59eab02e4b79fdb6ea019393a4ac10ac696cfdcf9a8157d6c1b12c6ab8a54ee",
+    "flags": [
+      "-O0",
+      "-ffree-line-length-none"
+    ],
+    "rte_runtime_anchor_execution_sha256": "de63e764cf2bb4649b54ad444d2662f8c3b7e2013aa7ba7c17019c2634e998fc",
+    "source_commit": "41c5fcd950fed09b8afe186dede266824eca7fd3",
+    "source_repository": "earth-system-radiation/rte-rrtmgp"
+  },
+  "harness": {
+    "sha256": "5a46c11921b045a3dc1ff9bbe911cd2f886250773b8686dfe1345ff042fd9925",
+    "size_bytes": 14629,
+    "source": "frozen fixed-optics harness, byte-identical to current-runtime replay harness"
+  },
+  "historical_runtime": {
+    "build_receipt": {
+      "path": "historical-build-receipt.json",
+      "sha256": "56b1d6b1f9c947471927e33393850c8565f27c2e6fb918e52dd227dbf628f643"
+    },
+    "compile_link_compiler": {
+      "path": "/usr/bin/x86_64-linux-gnu-gfortran-13",
+      "sha256": "7e292e9d5da17a37bb1c17a06afb6463db786c70827fd6893ed31a86715b03c3",
+      "size": 1027128
+    },
+    "flags": [
+      "-O0",
+      "-ffree-line-length-none"
+    ],
+    "historical_saved_solver_anchor_sha256": "58d33eba302936e3e6ea5929c47dd6f6b1b31c68a916ec29ab3ddf61bfa09309",
+    "historical_saved_written_anchor_sha256": "58d33eba302936e3e6ea5929c47dd6f6b1b31c68a916ec29ab3ddf61bfa09309",
+    "newly_compiled_harness_binary": {
+      "path": "(retained in original root execution directory; hash/size only)",
+      "sha256": "37acf1f3a41e1dc18c4616bc3b4bafe698751e61c31b086d6c0dbcfe8408f74c",
+      "size_bytes": 360560
+    },
+    "replay_plan": {
+      "path": "historical-replay-plan.json",
+      "sha256": "dcdaf8187110b3e53dee38196b726d8224fddfcf7c0733ceedf19172128429bb"
+    },
+    "runtime_closure_pinned_libraries": 47,
+    "source_commit": "ed5b0113109fcd23a010a90c61f21bad551146ef"
+  },
+  "interpretation": "Different retained source/build/runtime stacks; not a pure algorithm-only attribution. This is not authenticated original published executable/compiler provenance."
+}

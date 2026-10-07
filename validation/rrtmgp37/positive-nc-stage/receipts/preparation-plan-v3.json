@@ -1,0 +1,200 @@
+{
+  "schema": "POSITIVE_NC_SAME_RUN_TARGET2_SOURCE_PREPARATION_V3",
+  "status": "PREPARED_UNRUN_REQUIRES_ROOT_REVIEW",
+  "parent_commit": "b149cf464b5b90c49f2dd0df4e2f3bf79f68cafa",
+  "implementation": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-positive-nc-stage-observer-preparation-v1/implementation.json",
+    "sha256": "b75cb622116a70d354d7ae22ce9f0f2dc86fd3d4bcc1b8c284caa5c3f937e6af",
+    "size_bytes": 4431
+  },
+  "prepared_sources": [
+    {
+      "path_relative": "WRF/phys/module_mp_udm.F",
+      "parent_b149": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-positive-nc-stage-observer-source-v1/WRF/phys/module_mp_udm.F",
+        "sha256": "522f924ff4efc59654f4d409caf71be10f72fa5e019d26e151dc0917341b2c41",
+        "size_bytes": 208324
+      },
+      "prepared": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-positive-nc-stage-observer-source-v2/WRF/phys/module_mp_udm.F",
+        "sha256": "9f25a1aaebd0d29ba3ecdf86c9fe65065cf920fc187bdfd904e8b8192bc7e3c8",
+        "size_bytes": 208324
+      },
+      "outside_NEW_markers_byte_exact": true
+    },
+    {
+      "path_relative": "WRF/phys/module_microphysics_driver.F",
+      "parent_b149": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-positive-nc-stage-observer-source-v1/WRF/phys/module_microphysics_driver.F",
+        "sha256": "682c22fb6c6c3d6f3752b1b1248964d20fa79075350f174f627a96e181adb1b0",
+        "size_bytes": 203946
+      },
+      "prepared": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-positive-nc-stage-observer-source-v2/WRF/phys/module_microphysics_driver.F",
+        "sha256": "c2568eef1fe6223eab587c864ae104bbfaace5fde1266313ddc36ba89541d74d",
+        "size_bytes": 203985
+      },
+      "outside_NEW_markers_byte_exact": true
+    }
+  ],
+  "unchanged_qnn_observer_sources": [
+    {
+      "relative_path": "WRF/share/module_bc.F",
+      "pin": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-positive-nc-stage-observer-source-v1/WRF/share/module_bc.F",
+        "sha256": "cf278eb406423d0ba99905dcad647485196f4caae2856db2a50362d1f748c54f",
+        "size_bytes": 176055
+      },
+      "parent_byte_exact": true
+    },
+    {
+      "relative_path": "WRF/dyn_em/solve_em.F",
+      "pin": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-positive-nc-stage-observer-source-v1/WRF/dyn_em/solve_em.F",
+        "sha256": "34930bc35a8fa6358bb64dfe6ba7a780bcc85b8a68cee5ea09ebbbae58a26ede",
+        "size_bytes": 286298
+      },
+      "parent_byte_exact": true
+    }
+  ],
+  "positive_input_receipt": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-positive-nc-stage-observer-preparation-v1/positive-input-receipt.json",
+    "sha256": "147475c63817df29e4353088945fff5f7a4dc744048ade94948ef2d1839e2b2f",
+    "size_bytes": 15110
+  },
+  "positive_input": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-positive-nc-stage-observer-preparation-v1/inputs/wrfinput_d01",
+    "sha256": "849f340d8d74b8e252b40d41c2d660126ae7a7b755d2e2b9eb24e988c97efc03",
+    "size_bytes": 10699727
+  },
+  "root_owned_execution_only": true,
+  "executions_by_this_preparation": {
+    "compiler": 0,
+    "WRF_forecast": 0,
+    "RTE": 0
+  },
+  "future_case": {
+    "grid": [
+      90,
+      99,
+      44
+    ],
+    "MPI_ranks": 4,
+    "OMP_threads": 2,
+    "dt_seconds": 60,
+    "duration_minutes": 2,
+    "proposed_max_models": 2,
+    "timeout_seconds_each": 300,
+    "capture_OFF_ON": "New same source-v2 committed head/fullbuild/install binary and positive849f input; OFF/ON gates differ only. Parent b149/source-v1/build-v1/actualFAIL are immutable; never relabel old executable as newtarget.",
+    "ON_environment": {
+      "WRF_UDM_NUMBER_STAGE_CAPTURE": "1",
+      "WRF_UDM_NUMBER_STAGE_DIR": "fresh per-case number packet directory",
+      "WRF_UDM_QNN_BOUNDARY_CAPTURE": "1",
+      "WRF_UDM_CAPTURE": "leave generic process-global radiation/entry trace unset unless separate proven thread-safe contract",
+      "WRF_UDM_QNN_BOUNDARY_DIR": "fresh per-case boundary directory"
+    },
+    "input_mutations": [
+      {
+        "variable": "QCLOUD",
+        "value_float32": 0.0005000000237487257,
+        "units": "kg kg-1",
+        "cells_Fortran": [
+          [
+            23,
+            1
+          ],
+          [
+            23,
+            2
+          ]
+        ],
+        "levels_Fortran": [
+          1,
+          44
+        ]
+      },
+      {
+        "variable": "QNCLOUD",
+        "value_float32": 100000000.0,
+        "registered_units": "# kg-1 (metadata label only; physical producer authority unresolved)",
+        "cells_Fortran": [
+          [
+            23,
+            1
+          ],
+          [
+            23,
+            2
+          ]
+        ],
+        "levels_Fortran": [
+          1,
+          44
+        ]
+      }
+    ],
+    "untouched_population_fields": "QNCCN=0,QNRAIN=0; no mass/state fields other than stated QCLOUD/QNCLOUD mutation.",
+    "positive_survival_gate": "Require actual new QNC>0 with QC>0 at selected same-cell UDM entry and helper stage; positive wrfinput alone is not success. Evaporation/transport may make this a non-discriminating fixture; preserve any failure rather than adjusting production.",
+    "new_qnn_gate": "Require new QNN boundary packets from this same actual positive case, never reuse old1056 zero-Nc rows.",
+    "join_gate": "Same future run/cell/clock/step for NUMBERj2 stages; QNNj1 destination and j2 source are explicit differentcoords. Only source-QNN ancestry for actualoutflow can join QNNj2; destinationQNC/QNRj1 do not prove sourcej2 values. Inflow ancestry must not be invented.",
+    "numerical_gate": "Preserve exact copy joins and source-operation default-REAL bounds where meaningful; process stages may change counts/mass and must be interpreted through actual original equations.",
+    "physical_acceptance": false,
+    "NUMBER_target_Fortran": [
+      23,
+      2
+    ],
+    "QNN_destination_Fortran": [
+      23,
+      1
+    ],
+    "QNN_outflow_source_Fortran": [
+      23,
+      2
+    ]
+  },
+  "open_authority": [
+    "Registered #kg-1 labels versus volume-style PSD/activation and mass-specific number sedimentation remain unresolved.",
+    "No empirical density correction or rnc-only fix authorized.",
+    "Default activation/restart/imported Nc/population authority not approved."
+  ],
+  "review_gate": "Root and independent source review must bind these exact source/patch/schema/input pins before any fresh compiler/model authorization.",
+  "supersedes_blocked_preparation_v1": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-positive-nc-stage-observer-preparation-v1/plan.json",
+    "sha256": "4cfe15fb8f8d0ad2fc3eba7b749a725a8139cce78a37dfcc1a9904da800f7a3c",
+    "size_bytes": 6454
+  },
+  "implementation_qualification": "V1 implementation describes hooks; v2 optional-clock correction and exact source pins supersede its mutable-worktree current pins. V1 source bytes preserved in this v2 historical-source-v1 directory.",
+  "schema_contract": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-positive-nc-stage-observer-preparation-v3/schema.json",
+    "sha256": "cf1fd542de344ee34d209f2b5d9d3f89f72cc8b6db9884e413c903d577c32be0",
+    "size_bytes": 1915
+  },
+  "source_patch": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-positive-nc-stage-observer-preparation-v3/target-only.patch",
+    "sha256": "6152beb6c1cca5ca56ccfee70bc836c1ffe03374c126815328bc5048ea769c51",
+    "size_bytes": 3986
+  },
+  "static_checks": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-positive-nc-stage-observer-preparation-v3/static-checks.json",
+    "sha256": "b101164dd1ff9207131f80da4b75d90ee262be803fb67ed9bec0aca37ddf27ce",
+    "size_bytes": 790
+  },
+  "clock_correction": "XTIME is forwarded to optional clock dummy; disabled configure returns before reading clock; enabled configure explicitly requires PRESENT before any clock read.",
+  "source_worktree": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-positive-nc-stage-observer-source-v2",
+  "full_observer_patch": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-positive-nc-stage-observer-preparation-v3/full-observer.patch",
+    "sha256": "ff06d1b306cae5fce56a784ecb113f83cee37df4163a928d87deb4c4351d5ee8",
+    "size_bytes": 27109
+  },
+  "crop_proof": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-positive-nc-stage-observer-preparation-v3/crop-proof.json",
+    "sha256": "396c6a821f3c7343ea4ee1e67dc117c4b8cb660fc9d894f3ca1cbdc5b228917e",
+    "size_bytes": 3359
+  },
+  "predecessor_actual_failure": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-positive-nc-stage-observer-preparation-v3/predecessor-failure.json",
+    "sha256": "8babd6397fde838ea4c4e87a49438e49d21505f4183ca78fb359fa6cdc5d67a5",
+    "size_bytes": 1140
+  },
+  "root_owned_future_build": "Fresh full CMake build output-v2, not old binary reuse; source head bound by root after review and commit. No compiler/model by this preparation."
+}

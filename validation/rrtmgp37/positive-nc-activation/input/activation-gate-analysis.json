@@ -1,0 +1,38 @@
+{
+  "activation_constants": {
+    "actk": 0.6,
+    "ep2": 0.6217504143714905,
+    "qmin": 1e-15,
+    "satmax": 0.0048
+  },
+  "computed_if_baseline_call_state_were_unchanged": {
+    "activation_temp_fraction": 0.7542752027511597,
+    "captured_NCCN_m3": 100000000.0,
+    "captured_NC_m3": 98857920.0,
+    "interpretation": "The source formula is expected to produce positive activation if the selected call state stays near the saved baseline apart from the QV shift. This is targeting arithmetic only; no model response is predicted or accepted.",
+    "nc_over_nccn_plus_nc": 0.4971284020269346,
+    "net_number_rate_numerator_before_rdtcld_m3": 51135677.92667389,
+    "positive_ncact_condition_temp_gt_nc_over_nccn_plus_nc": 0.4971284020269346,
+    "rdtcld_applied_later": true,
+    "supersaturation_fraction_over_satmax": 0.6250043511390686
+  },
+  "formula_pins": {
+    "module_model_constants.F_sha256": "5b80377fecdc18a5f0ad38d3b6c15cfc86ad5d76701adbbbb08a08698d0f7062",
+    "module_mp_udm.F_sha256": "9f25a1aaebd0d29ba3ecdf86c9fe65065cf920fc187bdfd904e8b8192bc7e3c8"
+  },
+  "future_runtime_gate": "Recompute RH and activation from actual stage30/31 packets; do not treat this saved-state calculation as the future result.",
+  "schema": "UDM_ACTIVATION_BASELINE_SOURCE_FORMULA_TARGETING_V1",
+  "source_pins": {
+    "path": "build/udm37-positive-nc-stage-runtime-2min-v2/stage/on/number_capture/number_d1_tile1_i23_j2_step1_stage30_sub1.raw",
+    "sha256": "b7fdfb7c6130c0133ab13fd2740f272ec68bb98b5fd97eb0481cf50b94dd9454",
+    "size_bytes": 16875
+  },
+  "target": {
+    "baseline_rh_estimate": 0.9398766160011292,
+    "i": 23,
+    "j": 2,
+    "native_k": 7,
+    "target_rh": 1.003,
+    "target_rh_default_real": 1.003000020980835
+  }
+}

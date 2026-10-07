@@ -1,0 +1,803 @@
+{
+  "checks": [
+    {
+      "check": "terminal-status",
+      "evidence": "PASS_SCOPED_FIXED_RTE_BASELINE_REPRODUCTION",
+      "result": "PASS"
+    },
+    {
+      "check": "receipt-pin",
+      "evidence": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-fixed-rte-replay-execution-v4/execution.json",
+        "sha256": "de63e764cf2bb4649b54ad444d2662f8c3b7e2013aa7ba7c17019c2634e998fc"
+      },
+      "result": "PASS"
+    },
+    {
+      "check": "authorization-joins",
+      "evidence": {
+        "authorization_sha256": "913bfa426d2071ca250e77bf9d775073023cfa2123cfefa3370cc63eb04937a8"
+      },
+      "result": "PASS"
+    },
+    {
+      "check": "run-plan-and-runner-pins",
+      "evidence": {
+        "plan": {
+          "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-fixed-rte-replay-run-v5/run-plan.json",
+          "sha256": "627edcc68416791620621676cf49305c2c2e5f2c0d657fe79a2eae028d245535",
+          "size_bytes": 8491
+        },
+        "runner": {
+          "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-fixed-rte-replay-run-v5/run_once.py",
+          "sha256": "11a336f08c1af29ef7e6026530944bd25a6b58675fa68e2d7c25d1ff4da3d03e",
+          "size_bytes": 25662
+        }
+      },
+      "result": "PASS"
+    },
+    {
+      "check": "frozen-harness-pin",
+      "evidence": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-fixed-rte-replay-preparation-v1/rrtmgp_rfmip_sw_fixed_rte.F90",
+        "sha256": "5a46c11921b045a3dc1ff9bbe911cd2f886250773b8686dfe1345ff042fd9925",
+        "size_bytes": 14629
+      },
+      "result": "PASS"
+    },
+    {
+      "check": "structural-rte-bound",
+      "evidence": {
+        "arm_loop_line": [
+          118
+        ],
+        "expected_calls": 40,
+        "profile_loop_lines": [
+          63,
+          133
+        ],
+        "rte_sw_call_line": [
+          153
+        ]
+      },
+      "result": "PASS"
+    },
+    {
+      "check": "no-gas-optics-call",
+      "evidence": {
+        "call_gas_optics_found": false
+      },
+      "result": "PASS"
+    },
+    {
+      "check": "scope-claims",
+      "evidence": null,
+      "result": "PASS"
+    },
+    {
+      "check": "subset-integrity-pins",
+      "evidence": null,
+      "result": "PASS"
+    },
+    {
+      "check": "child-terminal-returncodes",
+      "evidence": [
+        {
+          "label": "compile",
+          "pid": 3821273,
+          "rc": 0,
+          "status": "CHILD_REAPED"
+        },
+        {
+          "label": "link",
+          "pid": 3821276,
+          "rc": 0,
+          "status": "CHILD_REAPED"
+        },
+        {
+          "label": "dynamic_dependency_resolution",
+          "pid": 3821279,
+          "rc": 0,
+          "status": "CHILD_REAPED"
+        },
+        {
+          "label": "fixed_rte_replay",
+          "pid": 3821286,
+          "rc": 0,
+          "status": "CHILD_REAPED"
+        },
+        {
+          "label": "saved_stream_validation",
+          "pid": 3821287,
+          "rc": 0,
+          "status": "CHILD_REAPED"
+        }
+      ],
+      "result": "PASS"
+    },
+    {
+      "check": "child-log-compile",
+      "evidence": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-fixed-rte-replay-execution-v4/compile.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "size_bytes": 0
+      },
+      "result": "PASS"
+    },
+    {
+      "check": "child-log-link",
+      "evidence": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-fixed-rte-replay-execution-v4/link.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "size_bytes": 0
+      },
+      "result": "PASS"
+    },
+    {
+      "check": "child-log-dynamic_dependency_resolution",
+      "evidence": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-fixed-rte-replay-execution-v4/ldd.log",
+        "sha256": "585866082d640dc8924d7e2f926a485034872169d8d3740082e4218db2712a3b",
+        "size_bytes": 3768
+      },
+      "result": "PASS"
+    },
+    {
+      "check": "child-log-fixed_rte_replay",
+      "evidence": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-fixed-rte-replay-execution-v4/rte.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "size_bytes": 0
+      },
+      "result": "PASS"
+    },
+    {
+      "check": "child-log-saved_stream_validation",
+      "evidence": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-fixed-rte-replay-execution-v4/validation.log",
+        "sha256": "da127860741c066ec9ea8495520ec88715738a0dda943454b50704a38f7c7869",
+        "size_bytes": 768
+      },
+      "result": "PASS"
+    },
+    {
+      "check": "output-schema-current_solver",
+      "evidence": {
+        "bytes": 19680,
+        "finite_and_ordered": true,
+        "profiles": 20
+      },
+      "result": "PASS"
+    },
+    {
+      "check": "current-reference-bitwise-current_solver",
+      "evidence": {
+        "bytes": 19680,
+        "output_sha256": "b59eab02e4b79fdb6ea019393a4ac10ac696cfdcf9a8157d6c1b12c6ab8a54ee",
+        "reference_sha256": "b59eab02e4b79fdb6ea019393a4ac10ac696cfdcf9a8157d6c1b12c6ab8a54ee"
+      },
+      "result": "PASS"
+    },
+    {
+      "check": "output-schema-current_written",
+      "evidence": {
+        "bytes": 19680,
+        "finite_and_ordered": true,
+        "profiles": 20
+      },
+      "result": "PASS"
+    },
+    {
+      "check": "current-reference-bitwise-current_written",
+      "evidence": {
+        "bytes": 19680,
+        "output_sha256": "b59eab02e4b79fdb6ea019393a4ac10ac696cfdcf9a8157d6c1b12c6ab8a54ee",
+        "reference_sha256": "b59eab02e4b79fdb6ea019393a4ac10ac696cfdcf9a8157d6c1b12c6ab8a54ee"
+      },
+      "result": "PASS"
+    },
+    {
+      "check": "output-schema-historical_solver",
+      "evidence": {
+        "bytes": 19680,
+        "finite_and_ordered": true,
+        "profiles": 20
+      },
+      "result": "PASS"
+    },
+    {
+      "check": "output-schema-historical_written",
+      "evidence": {
+        "bytes": 19680,
+        "finite_and_ordered": true,
+        "profiles": 20
+      },
+      "result": "PASS"
+    },
+    {
+      "check": "saved-validator-summary",
+      "evidence": {
+        "comparisons": {
+          "current_solver": {
+            "byte_identical_records": 20,
+            "different_record_ordinals": [],
+            "exact_gate": true,
+            "profiles": 20
+          },
+          "current_written": {
+            "byte_identical_records": 20,
+            "different_record_ordinals": [],
+            "exact_gate": true,
+            "profiles": 20
+          },
+          "historical_solver": {
+            "byte_identical_records": 0,
+            "different_record_ordinals": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13,
+              14,
+              15,
+              16,
+              17,
+              18,
+              19,
+              20
+            ],
+            "exact_gate": false,
+            "profiles": 20
+          },
+          "historical_written": {
+            "byte_identical_records": 0,
+            "different_record_ordinals": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13,
+              14,
+              15,
+              16,
+              17,
+              18,
+              19,
+              20
+            ],
+            "exact_gate": false,
+            "profiles": 20
+          }
+        },
+        "physical_accuracy_claim": false,
+        "status": "PASS_CURRENT_OPTICS_BASELINE_REPLAY_GATE",
+        "strict_published_gate_changed": false
+      },
+      "result": "PASS"
+    },
+    {
+      "check": "pinned-external_assets",
+      "evidence": {
+        "count": 3,
+        "pins": [
+          {
+            "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/official-rrtmgp-reference/data/rrtmgp-gas-sw-g224.nc",
+            "sha256": "584f1dd41ea9fc07d4ee3754eb1dafbd46ad3161cd6fd20fa06b6922b6f0702e",
+            "size_bytes": 11083642
+          },
+          {
+            "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/official-rrtmgp-reference/data/examples/rfmip-clear-sky/inputs/multiple_input4MIPs_radiation_RFMIP_UColorado-RFMIP-1-2_none.nc",
+            "sha256": "b8dc05d7cd2e0e6354b4a6198771ddf3bc09f18d72b49f20a41e2024e2fd51f4",
+            "size_bytes": 1859666
+          },
+          {
+            "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-historical-provenance-v1/authentic-v1.0-sw-g224.nc",
+            "sha256": "b9f4b15796d132880fffb49ac45c29753c1ee70a8ee3fed733899cb315c75e9b",
+            "size_bytes": 14954928
+          }
+        ]
+      },
+      "result": "PASS"
+    },
+    {
+      "check": "pinned-link_assets",
+      "evidence": {
+        "count": 5,
+        "pins": [
+          {
+            "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/official-rrtmgp-reference/source/build/librrtmgp.a",
+            "sha256": "42f5409a6b98ae0911a93ea4acc34a66be2047953d9610537e2ba40579b23b42",
+            "size_bytes": 290164
+          },
+          {
+            "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/official-rrtmgp-reference/source/build/librte.a",
+            "sha256": "228d414f8f5816439bf2d128fc991692e99d93824889f149eae5402ca2c4acc6",
+            "size_bytes": 342350
+          },
+          {
+            "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/official-rrtmgp-reference/source/examples/rfmip-clear-sky/mo_rfmip_io.o",
+            "sha256": "1dc0bf26e5b90cc2c0c2b911383fcc183cf8396c429e9459b51bc18ebcb19fbb",
+            "size_bytes": 68296
+          },
+          {
+            "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/official-rrtmgp-reference/source/examples/rfmip-clear-sky/mo_rfmip_io.F90",
+            "sha256": "a51e3d0c851836e770a262b5e9b5f70f068adb8d27e74d54a5ee446a227acb23",
+            "size_bytes": 22972
+          },
+          {
+            "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/official-rrtmgp-reference/source/examples/rfmip-clear-sky/mo_simple_netcdf.o",
+            "sha256": "ba7fa4bef03c56c77eb0e1851b7d3a3a0e6e93707ce3a4e18460840b1b50ac75",
+            "size_bytes": 33816
+          }
+        ]
+      },
+      "result": "PASS"
+    },
+    {
+      "check": "pinned-module_files",
+      "evidence": {
+        "count": 7,
+        "pins": [
+          {
+            "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/official-rrtmgp-reference/source/build/mo_fluxes.mod",
+            "sha256": "6da5d50aef54f69a1d2e2927ef6e7ef15a06cd1430bd2e342c0924d6039bb1cd",
+            "size_bytes": 10061
+          },
+          {
+            "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/official-rrtmgp-reference/source/build/mo_optical_props.mod",
+            "sha256": "5b190ab17cc7ee252a3c9280b39bed6f4497e8d1dffe9d5c337accc6ff854f87",
+            "size_bytes": 8707
+          },
+          {
+            "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/official-rrtmgp-reference/source/examples/rfmip-clear-sky/mo_rfmip_io.mod",
+            "sha256": "a266fab9979ec255c88ca3ca24b6f956c51aad51ca12a85e966c7983d3ec6abd",
+            "size_bytes": 3505
+          },
+          {
+            "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/official-rrtmgp-reference/source/build/mo_rte_kind.mod",
+            "sha256": "ddec64aca7bb6b77f16f4c823dfe6e1df699403033c5fa864c5b3d395d13e211",
+            "size_bytes": 608
+          },
+          {
+            "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/official-rrtmgp-reference/source/build/mo_rte_sw.mod",
+            "sha256": "d143fb744b9d76b3396ab47daf9aec0263159724666dfc7e6227105d220cd61d",
+            "size_bytes": 10296
+          },
+          {
+            "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/official-rrtmgp-reference/source/examples/rfmip-clear-sky/mo_simple_netcdf.mod",
+            "sha256": "2dcadcadad97b2e9eedf383e477b86bc259a70df79ab250bffec1caf4bed38eb",
+            "size_bytes": 1777
+          },
+          {
+            "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/root/usr/include/netcdf.mod",
+            "sha256": "07fcbcbe7bdf661b06967630c57230c5ae1089f360fbf4c3f2d28f32d6f5e3b5",
+            "size_bytes": 22588
+          }
+        ]
+      },
+      "result": "PASS"
+    },
+    {
+      "check": "pinned-runtime_libraries",
+      "evidence": {
+        "count": 47,
+        "pins": [
+          {
+            "path": "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2",
+            "sha256": "6222a16be7f2d458d6870efe6e715fc0c8d45766fb79cf7dcc3125538d703e28",
+            "size_bytes": 236616
+          },
+          {
+            "path": "/usr/lib/x86_64-linux-gnu/libaec.so.0.1.2",
+            "sha256": "4fd52145f7a3f0648b3f5a9527bc3143f96e47768bb68acd62bd12399871ddcc",
+            "size_bytes": 34808
+          },
+          {
+            "path": "/usr/lib/x86_64-linux-gnu/libbrotlicommon.so.1.1.0",
+            "sha256": "a91ead095d2c80520c55a89057bbe10b031a075340442e63f44b310f93883a1b",
+            "size_bytes": 141640
+          },
+          {
+            "path": "/usr/lib/x86_64-linux-gnu/libbrotlidec.so.1.1.0",
+            "sha256": "64d8a5019d4c294b89fde1193343ea324bbd8603652554e5545f0a01595fa2c5",
+            "size_bytes": 51512
+          },
+          {
+            "path": "/usr/lib/x86_64-linux-gnu/libc.so.6",
+            "sha256": "511f825ee075610ac9c0f7f91e2c13de2000d0f7b859f6461137e809a0a009d0",
+            "size_bytes": 2125328
+          },
+          {
+            "path": "/usr/lib/x86_64-linux-gnu/libcom_err.so.2.1",
+            "sha256": "022943b3b11c860b049bce41342f1c2594941b7b401d95dfdf235521099fee08",
+            "size_bytes": 18504
+          },
+          {
+            "path": "/usr/lib/x86_64-linux-gnu/libcrypto.so.3",
+            "sha256": "c19c2cf8d7cf91c4f273b1d3bbc56a9d19c91a739bfe57ad630756ee8ede7b77",
+            "size_bytes": 5305304
+          },
+          {
+            "path": "/usr/lib/x86_64-linux-gnu/libcurl-gnutls.so.4.8.0",
+            "sha256": "25a1efac8eb6e18913a29baf0d5340ae842398cb944c9e847bed7cb2a7a8f765",
+            "size_bytes": 765856
+          },
+          {
+            "path": "/usr/lib/x86_64-linux-gnu/libcurl.so.4.8.0",
+            "sha256": "bc0f65f0c1574a232b9cbd90bd5b45e04a1a263a04eae36007336dd5bbb2293c",
+            "size_bytes": 786336
+          },
+          {
+            "path": "/usr/lib/x86_64-linux-gnu/libffi.so.8.1.4",
+            "sha256": "00f593fe192f2851b8ce23b25cec2488d769beb5a8f63e8c9e563071e1075153",
+            "size_bytes": 47672
+          },
+          {
+            "path": "/usr/lib/x86_64-linux-gnu/libgcc_s.so.1",
+            "sha256": "02f3f192bf5f79b811f1e34a650fea443d407408703448906585232383957f60",
+            "size_bytes": 183024
+          },
+          {
+            "path": "/usr/lib/x86_64-linux-gnu/libgfortran.so.5.0.0",
+            "sha256": "5b574c8ad93f1d816afa2d53fb33684ff8f9a0de0fcbe51e0ec21ddf0a56a028",
+            "size_bytes": 3263912
+          },
+          {
+            "path": "/usr/lib/x86_64-linux-gnu/libgmp.so.10.5.0",
+            "sha256": "0ccdfb6d6f5c039465f6d002cf7e4c072d48ac6a2cffc8dd6c748dec31592804",
+            "size_bytes": 534896
+          },
+          {
+            "path": "/usr/lib/x86_64-linux-gnu/libgnutls.so.30.37.1",
+            "sha256": "96137275400f39510c9a533c6ad8a921e94266e664e7e09c9ad6ea9f23277c23",
+            "size_bytes": 2057632
+          },
+          {
+            "path": "/usr/lib/x86_64-linux-gnu/libgssapi_krb5.so.2.2",
+            "sha256": "b9a20df712d206654477c079f03b568276933e91cbe237e62af791f0f3ab8d8b",
+            "size_bytes": 338696
+          },
+          {
+            "path": "/usr/lib/x86_64-linux-gnu/libhdf5_serial.so.103.4.0",
+            "sha256": "aa9c9c402261b73469d0b79fe0d585537bdea8d4b5dab872fab613640277db0e",
+            "size_bytes": 3613632
+          },
+          {
+            "path": "/usr/lib/x86_64-linux-gnu/libhdf5_serial_hl.so.100.1.7",
+            "sha256": "f7612eea5f3df4d0fb7b7d8d0840b79ee25958e00da8d4934fe869ae36431a2b",
+            "size_bytes": 142800
+          },
+          {
+            "path": "/usr/lib/x86_64-linux-gnu/libhogweed.so.6.8",
+            "sha256": "c3c606139d4f7776efa4dbd4a6b62e30c916b07a0cafd8c3ef173d6f093607e3",
+            "size_bytes": 288920
+          },
+          {
+            "path": "/usr/lib/x86_64-linux-gnu/libicudata.so.74.2",
+            "sha256": "ddbb3718b8bd9cbd780e5ab08b4503c30a6c4fa0706ebe5d074ed6b596c1714e",
+            "size_bytes": 30795392
+          },
+          {
+            "path": "/usr/lib/x86_64-linux-gnu/libicuuc.so.74.2",
+            "sha256": "7560aadde38e5f4237a47a1ddd5891f9b36768a77a60faae30beee003ac01901",
+            "size_bytes": 2140336
+          },
+          {
+            "path": "/usr/lib/x86_64-linux-gnu/libidn2.so.0.4.0",
+            "sha256": "6e632fd9a3125db60bbc623719bbc17b0470330321c5b1c57f1ff7190e5551ad",
+            "size_bytes": 133192
+          },
+          {
+            "path": "/usr/lib/x86_64-linux-gnu/libk5crypto.so.3.1",
+            "sha256": "8394027f2be7c2cc7b2da4797476a8b688a21f75ee231941fa2df8d00ba79d08",
+            "size_bytes": 178648
+          },
+          {
+            "path": "/usr/lib/x86_64-linux-gnu/libkeyutils.so.1.10",
+            "sha256": "f48214417757f18793ed6e180cc14ee1d6f04252a518fc7270e8ca1d0b4260fe",
+            "size_bytes": 22600
+          },
+          {
+            "path": "/usr/lib/x86_64-linux-gnu/libkrb5.so.3.3",
+            "sha256": "52c143c9c77a223a4dac5449eac41fd2490e37c8a30430f1559c1421f4f8ed73",
+            "size_bytes": 823488
+          },
+          {
+            "path": "/usr/lib/x86_64-linux-gnu/libkrb5support.so.0.1",
+            "sha256": "8e1ef5a40f7b0d5b0fbcd6e4f28dd50b263650338a2bb72503be34632f3629d6",
+            "size_bytes": 47904
+          },
+          {
+            "path": "/usr/lib/x86_64-linux-gnu/liblber.so.2.0.200",
+            "sha256": "6f6935b26c962d5b51ef2011332472cfd96ff244a4edc9d47120be6faa70e602",
+            "size_bytes": 59888
+          },
+          {
+            "path": "/usr/lib/x86_64-linux-gnu/libldap.so.2.0.200",
+            "sha256": "4a0664ab6a8a66c685e78d5604b79df330f5710f0c5e2c382536a8325dc4c2a4",
+            "size_bytes": 372400
+          },
+          {
+            "path": "/usr/lib/x86_64-linux-gnu/liblzma.so.5.4.5",
+            "sha256": "a9793942a8a5f6f4d0f523ef9e0a5be4f0033f2c6c28520cd2b4e706d53c6e17",
+            "size_bytes": 202904
+          },
+          {
+            "path": "/usr/lib/x86_64-linux-gnu/libm.so.6",
+            "sha256": "f06f2ce1f1833df5f41cf13b6447ff07bea993ad9b27297d3428c2f70ab3f0e7",
+            "size_bytes": 952616
+          },
+          {
+            "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/root/usr/lib/x86_64-linux-gnu/libnetcdf.so.19",
+            "sha256": "04fc972259131718fd96f0ea876654fe0a410a4af1635349dc8ec1590764f0f5",
+            "size_bytes": 1395960
+          },
+          {
+            "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/root/usr/lib/x86_64-linux-gnu/libnetcdff.so.7.1.0",
+            "sha256": "9e8fe96709d71af61b88ad88caff7db8899369162b96aee66ecd6a553a5370f9",
+            "size_bytes": 653744
+          },
+          {
+            "path": "/usr/lib/x86_64-linux-gnu/libnettle.so.8.8",
+            "sha256": "a245ed916229583d6fe0b07657b3ed945bc148c28cc08b5266295f620d2b91cc",
+            "size_bytes": 342280
+          },
+          {
+            "path": "/usr/lib/x86_64-linux-gnu/libnghttp2.so.14.26.0",
+            "sha256": "398c6d2025210279f4c7413ebdb7f4c63bc5afda5ec3b1ccc58885a65acc2b78",
+            "size_bytes": 170352
+          },
+          {
+            "path": "/usr/lib/x86_64-linux-gnu/libp11-kit.so.0.3.1",
+            "sha256": "c6b469a006685ebf2075e200180c3b21f41b88ad722c5697d736ea558cfe3ea1",
+            "size_bytes": 1714008
+          },
+          {
+            "path": "/usr/lib/x86_64-linux-gnu/libpsl.so.5.3.4",
+            "sha256": "ae6c5a9aecc249fc66e03c16ec6c4385d09d7e12e0ea7694bb831ab4fee8133c",
+            "size_bytes": 75768
+          },
+          {
+            "path": "/usr/lib/x86_64-linux-gnu/libresolv.so.2",
+            "sha256": "878e927be164fde61bf85f44c27901a1d569526f5c8f058990e8a4edc3df1fa0",
+            "size_bytes": 68104
+          },
+          {
+            "path": "/usr/lib/x86_64-linux-gnu/librtmp.so.1",
+            "sha256": "15a2a75e8c437b9c99971b5ee10278ab110beef1a56d1d9e5d6759ea140e98ac",
+            "size_bytes": 121848
+          },
+          {
+            "path": "/usr/lib/x86_64-linux-gnu/libsasl2.so.2.0.25",
+            "sha256": "a0f410ad093236856eee59c4ff2838dc04d932ea0993400f23ed77d67d85af34",
+            "size_bytes": 101200
+          },
+          {
+            "path": "/usr/lib/x86_64-linux-gnu/libssh.so.4.9.6",
+            "sha256": "ed3828e179eaea8effe1b6b001ae827b38de4575d2fa768c04489dc74b54ccde",
+            "size_bytes": 458264
+          },
+          {
+            "path": "/usr/lib/x86_64-linux-gnu/libssl.so.3",
+            "sha256": "63597a81ef19496ad0423cbaaf04d5b0244c7a9e261e331a5a7f3ac0fcdb9590",
+            "size_bytes": 696512
+          },
+          {
+            "path": "/usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.33",
+            "sha256": "a68762c86d371e6041f03f03a33a78fa235809ae7d81c90185940c93c3535aed",
+            "size_bytes": 2592224
+          },
+          {
+            "path": "/usr/lib/x86_64-linux-gnu/libsz.so.2.0.1",
+            "sha256": "e73fa40252e84d38d64f9b3268ae6679530a777a55d6478d6b24de176d845c4b",
+            "size_bytes": 14256
+          },
+          {
+            "path": "/usr/lib/x86_64-linux-gnu/libtasn1.so.6.6.3",
+            "sha256": "7c9c7830afbaac7b07ec21ddaa6b4d606423432c264efd2636e8ca9734b4d7b6",
+            "size_bytes": 88216
+          },
+          {
+            "path": "/usr/lib/x86_64-linux-gnu/libunistring.so.5.0.0",
+            "sha256": "7bcf825cd449892db5105ad2aed91dcf94a27b796426600c765720c584c54dd1",
+            "size_bytes": 1755312
+          },
+          {
+            "path": "/usr/lib/x86_64-linux-gnu/libxml2.so.2.9.14",
+            "sha256": "0ec89f65e1868cb79caa8a4cd5f47194ce95ac09f7a1d49e76049f391254a3a3",
+            "size_bytes": 1967424
+          },
+          {
+            "path": "/usr/lib/x86_64-linux-gnu/libz.so.1.3",
+            "sha256": "9b64150b28505a33d6bc3ecf709c279f6de97a1c184dbda65d06ee4537f6d286",
+            "size_bytes": 113000
+          },
+          {
+            "path": "/usr/lib/x86_64-linux-gnu/libzstd.so.1.5.5",
+            "sha256": "0a2128bc10841fb29e76d08d945864dfb0b6a66da5df6df5d8299197439e54bb",
+            "size_bytes": 755864
+          }
+        ]
+      },
+      "result": "PASS"
+    },
+    {
+      "check": "executable-pin",
+      "evidence": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-fixed-rte-replay-execution-v4/work/rrtmgp_rfmip_sw_fixed_rte",
+        "sha256": "3bee13ad62721c312bbd5049028c1dcb9b30431c2793c4f016c79f9e28e2168b",
+        "size_bytes": 403544
+      },
+      "result": "PASS"
+    }
+  ],
+  "children": [
+    {
+      "label": "compile",
+      "log": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-fixed-rte-replay-execution-v4/compile.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "size_bytes": 0
+      },
+      "pid": 3821273,
+      "returncode": 0,
+      "status": "CHILD_REAPED"
+    },
+    {
+      "label": "link",
+      "log": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-fixed-rte-replay-execution-v4/link.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "size_bytes": 0
+      },
+      "pid": 3821276,
+      "returncode": 0,
+      "status": "CHILD_REAPED"
+    },
+    {
+      "label": "dynamic_dependency_resolution",
+      "log": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-fixed-rte-replay-execution-v4/ldd.log",
+        "sha256": "585866082d640dc8924d7e2f926a485034872169d8d3740082e4218db2712a3b",
+        "size_bytes": 3768
+      },
+      "pid": 3821279,
+      "returncode": 0,
+      "status": "CHILD_REAPED"
+    },
+    {
+      "label": "fixed_rte_replay",
+      "log": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-fixed-rte-replay-execution-v4/rte.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "size_bytes": 0
+      },
+      "pid": 3821286,
+      "returncode": 0,
+      "status": "CHILD_REAPED"
+    },
+    {
+      "label": "saved_stream_validation",
+      "log": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-fixed-rte-replay-execution-v4/validation.log",
+        "sha256": "da127860741c066ec9ea8495520ec88715738a0dda943454b50704a38f7c7869",
+        "size_bytes": 768
+      },
+      "pid": 3821287,
+      "returncode": 0,
+      "status": "CHILD_REAPED"
+    }
+  ],
+  "execution_pins": {
+    "authorization": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-fixed-rte-replay-run-v5/authorization.json",
+      "sha256": "913bfa426d2071ca250e77bf9d775073023cfa2123cfefa3370cc63eb04937a8",
+      "size_bytes": 933
+    },
+    "harness": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-fixed-rte-replay-preparation-v1/rrtmgp_rfmip_sw_fixed_rte.F90",
+      "sha256": "5a46c11921b045a3dc1ff9bbe911cd2f886250773b8686dfe1345ff042fd9925",
+      "size_bytes": 14629
+    },
+    "preparation_plan": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-fixed-rte-replay-preparation-v1/plan.json",
+      "sha256": "2c369ee729436bb6cde3a09f5c2e5d9c874e65491a5f698e1b4cd4dc0a56bc7e",
+      "size_bytes": 19191
+    },
+    "record_provenance": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-fixed-rte-subsets-v1/record-provenance.json",
+      "sha256": "349dfe2481b726eb945461e0e0373e2f71dc1f1008666f116bfc1210d0be438c",
+      "size_bytes": 86262
+    },
+    "run_plan": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-fixed-rte-replay-run-v5/run-plan.json",
+      "sha256": "627edcc68416791620621676cf49305c2c2e5f2c0d657fe79a2eae028d245535",
+      "size_bytes": 8491
+    },
+    "runner": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-fixed-rte-replay-run-v5/run_once.py",
+      "sha256": "11a336f08c1af29ef7e6026530944bd25a6b58675fa68e2d7c25d1ff4da3d03e",
+      "size_bytes": 25662
+    },
+    "subset_audit": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-fixed-rte-subsets-v1/independent-audit.json",
+      "sha256": "80cb9d63a42a729b0def452b0c7e55f592edc09331569e75b9b35abbc06e8f5e",
+      "size_bytes": 98511
+    },
+    "subset_manifest": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-fixed-rte-subsets-v1/subset-manifest.json",
+      "sha256": "244fa05a0b1e4d97005bf01381e0bcba9b39fce3d2efeafb820635b8c2a90b7b",
+      "size_bytes": 18506
+    }
+  },
+  "failed_checks": [],
+  "interpretation_limits": [
+    "Current optics solver and post-night-mask streams exactly reproduce all 20 saved current-source/old-solar references.",
+    "The historical-arm saved comparison differs on all 20 profiles but is descriptive only; its captured historical result used a different RTE source revision.",
+    "This is a fixed-optics RTE replay only; it does not validate physical accuracy, coefficient provenance, gas-optics calculations, or alter the original strict threshold."
+  ],
+  "outputs": {
+    "current_solver": {
+      "actual_sha256": "b59eab02e4b79fdb6ea019393a4ac10ac696cfdcf9a8157d6c1b12c6ab8a54ee",
+      "byte_identical": true,
+      "gate": true,
+      "reference_sha256": "b59eab02e4b79fdb6ea019393a4ac10ac696cfdcf9a8157d6c1b12c6ab8a54ee"
+    },
+    "current_written": {
+      "actual_sha256": "b59eab02e4b79fdb6ea019393a4ac10ac696cfdcf9a8157d6c1b12c6ab8a54ee",
+      "byte_identical": true,
+      "gate": true,
+      "reference_sha256": "b59eab02e4b79fdb6ea019393a4ac10ac696cfdcf9a8157d6c1b12c6ab8a54ee"
+    },
+    "historical_solver": {
+      "actual_sha256": "1169f986217a259640a4784df7ff75c2e0651a190cbecef24191266fc3d77c53",
+      "byte_identical": false,
+      "gate": false,
+      "reference_sha256": "58d33eba302936e3e6ea5929c47dd6f6b1b31c68a916ec29ab3ddf61bfa09309"
+    },
+    "historical_written": {
+      "actual_sha256": "1169f986217a259640a4784df7ff75c2e0651a190cbecef24191266fc3d77c53",
+      "byte_identical": false,
+      "gate": false,
+      "reference_sha256": "58d33eba302936e3e6ea5929c47dd6f6b1b31c68a916ec29ab3ddf61bfa09309"
+    }
+  },
+  "schema": "udm37-fixed-rte-replay-terminal-independent-review-v1",
+  "scope": "Saved receipt, static harness loop bound, exact current-arm output bytes, schemas, and pinned dependencies. No compiler/linker/RTE/model execution by reviewer.",
+  "source_structure": {
+    "arm_loop_lines": [
+      118
+    ],
+    "gas_optics_calls": 0,
+    "profile_loop_lines": [
+      63,
+      133
+    ],
+    "rte_sw_call_lines": [
+      153
+    ],
+    "structurally_expected_calls": 40
+  },
+  "status": "PASS_SCOPED_FIXED_RTE_REPLAY_REVIEW",
+  "terminal_receipt": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-rfmip-fixed-rte-replay-execution-v4/execution.json",
+    "sha256": "de63e764cf2bb4649b54ad444d2662f8c3b7e2013aa7ba7c17019c2634e998fc",
+    "status": "PASS_SCOPED_FIXED_RTE_BASELINE_REPRODUCTION"
+  }
+}

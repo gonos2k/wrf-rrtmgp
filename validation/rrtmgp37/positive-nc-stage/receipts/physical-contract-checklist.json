@@ -1,0 +1,189 @@
+{
+  "current_positive_stage_observation": {
+    "capture_validation": {
+      "inflow_rows": 756,
+      "outflow_rows": 300,
+      "packets": 24,
+      "rows": 1056,
+      "sha256": "e650e5a0e38566d6b61197248c27f48046145d9aea2090d0b77c9458c0ea1bc8",
+      "size_bytes": 405019
+    },
+    "execution": {
+      "actual_rcs": {
+        "off": 0,
+        "on": 0
+      },
+      "arms": {
+        "off": 1,
+        "on": 1
+      },
+      "sha256": "a01d551cb84d21f3b55a693d1bad5b544bd0eebb9f1980eb857b8cc3dc4bdc49",
+      "size_bytes": 472533,
+      "status": "PASS_PAIRED_POSITIVE_NC_OBSERVER_RUNTIME_SCOPED"
+    },
+    "number_packet_validation": {
+      "packet_count": 20,
+      "rows": 880,
+      "same_step_level_positive_entry_helper": [
+        [
+          1,
+          7
+        ],
+        [
+          1,
+          18
+        ],
+        [
+          1,
+          44
+        ],
+        [
+          2,
+          44
+        ]
+      ],
+      "scientific_accepted": false,
+      "sha256": "3103fc25c5e6fd5d3c01ad827f148f6329c26f533f589613c6f67993e71ce832",
+      "size_bytes": 368972,
+      "status": "PASS_SCOPED_NEW_POSITIVE_STAGE_PACKET_STRUCTURE"
+    },
+    "run": "build/udm37-positive-nc-stage-runtime-2min-v2/stage",
+    "saved_recovery": {
+      "observed_facts": {
+        "QNC_unchanged_by_initializer": true,
+        "entry_helper_positive_same_step_level_points": 4,
+        "number_packets": 20,
+        "radius_active_levels": {
+          "step_1": [
+            7,
+            18,
+            44
+          ],
+          "step_2": [
+            44
+          ]
+        },
+        "radius_matches_source_order_REAL32_replay_for_all_44_levels": true,
+        "stage30_to31_QNC_exact_by_step": {
+          "1": true,
+          "2": true
+        },
+        "stage31_NC_ACT_RATE_all_zero": true,
+        "stage31_PC_ACT_RATE_all_zero": true,
+        "step_1_QNN_post_equals_CCN_conc": true,
+        "step_1_initializer_active": true
+      },
+      "path": "build/udm37-positive-nc-stage-runtime-saved-recovery-v2/result.json",
+      "sha256": "c92e3d739b5246995ef04f8a7a9814d33c6882a7288256dfa741f2684be3bdb8"
+    }
+  },
+  "evidence_inherited_not_recounted": {
+    "earlier_radius_transfer_join": {
+      "path": "build/udm37-evidence-source-pin-split-work/validation/rrtmgp37/native-radius-stage/evidence/stage-join.json",
+      "qualification": "Two exact producer-to-radiation radius array joins at 10-second lag. Exact transfer verifies wiring, not same-stage closure or unit authority.",
+      "sha256": "671cc6a66086677b514030f7039a03b93000e13e0a6a2e3b9ee3b6e8a15c241d"
+    },
+    "mass_volume_prototype_review": {
+      "path": "build/udm37-nc-mass-volume-prototype-independent-review-v1/review.json",
+      "qualification": "Synthetic/source-coupled opt-in fixtures; no production acceptance, no host initialization/restart authority.",
+      "sha256": "212ced60d265c9b177f5aa0bab423357ccc5ffa7e8d194f430609cec8dcf8190"
+    },
+    "native_radius_source_review": {
+      "path": "build/udm37-evidence-source-pin-split-work/validation/rrtmgp37/native-radius-stage/evidence/nc-source-review.json",
+      "sha256": "99db8ff4dc72308e5f3775b2ca53105964b8bf8cc0326f34539a81af7cfba888"
+    },
+    "native_radius_supplement": {
+      "path": "build/udm37-evidence-source-pin-split-work/validation/rrtmgp37/native-radius-stage/evidence/nc-source-supplement.json",
+      "sha256": "b2e8e8189eeab5d337ec27b353280709eeba699cb179ec17680627d44e932cb1"
+    },
+    "radius_moment_result": {
+      "path": "build/udm37-startup-snow-build-v2/source-candidate38/validation/rrtmgp37/radius-moment-contract/evidence/moment-result.json",
+      "sha256": "cccb6daef16f147a4ce6436f33dab224806b0d8c5ce8011a50c52a597ff005bb"
+    },
+    "radius_moment_source_review": {
+      "path": "build/udm37-startup-snow-build-v2/source-candidate38/validation/rrtmgp37/radius-moment-contract/evidence/source-review.json",
+      "sha256": "6b6a639e391b1bbb43faba9a399ac5b8ba76f1d31d7ee0135433072ab614a176"
+    },
+    "unit_sensitivity": "Prior PR98-108 conditional sensitivity / opt-in fixtures remain sensitivity only; they cannot choose a convention based on which arm better matches fluxes."
+  },
+  "next_discriminator": {
+    "budget_and_limits": {
+      "new_builds": 0,
+      "new_compiles": 0,
+      "new_model_runs": 0,
+      "physics_changes": 0,
+      "source_changes": 0,
+      "status": "PREPARATION_ONLY",
+      "tolerance_changes": 0
+    },
+    "decision_criteria": {
+      "fail": "The source claims one basis but the observed producer or transformation follows another; exact source-ordered replay fails; or a claimed shared PSD/moment lacks the required number/mass population equality.",
+      "non_discriminating": "Positive NC with no documented producer basis; matching radii without an independent basis; zero activation rates; a sensitivity matrix whose best-flux arm is selected post hoc; or a gamma moment comparison without proof that this is the radiative PSD.",
+      "pass_for_contract_only": "Every captured QN state can be traced to a producer with explicit basis; all intervening conversions/updates are source-ordered and match actual same-stage records; the optical size metric and the LUT producer population/coordinate are linked by primary documentation. This would close only the state/size contract, not radiative accuracy."
+    },
+    "goal": "Establish actual number-state provenance and compare size metrics only after the controlling producer and cloud-size population are explicitly specified.",
+    "observational_design": {
+      "PSD_LUT_join": "Obtain primary provenance for the actual selected cloud PSD, size-coordinate meaning, habit/roughness and population (in-cloud vs grid-mean). Then compute N, M2, M3 from that declared distribution and compare the precisely defined intended radius metric with the exact radius passed into the pinned LUT. Keep the gamma autoconversion PSD separate unless source authority explicitly connects them.",
+      "activation_probe": "Require a naturally realized or source-controlled positive NC_ACT_RATE and PC_ACT_RATE pair at the selected point. Compare actual number and water updates to the source-ordered equations with actual rho and default-REAL rounding. If both rates are zero, mark activation component NON_DISCRIMINATING.",
+      "number_lineage": "Join initial or restart record -> lateral-boundary source if applicable -> transported scalar immediately before UDM -> microphysics input/output, using authoritative units at each producer. Do not infer unit from values or from registry metadata. Include a source-class label and per-boundary conversion flags in the observer record.",
+      "same_call_state": "Select an actual UDM call with positive QC and NC, nonzero native number tendency where possible, and the radiation consumer on the same model step/cell/layer. Record the authoritative pre-call input source, qnc/qnn/qnr, QC/CF, original dry density, any initialization/transport/UDM source delta, local ncr state before/after process updates, lambda/re_cloud, and exact LUT input. Preserve phase/time/substep identity.",
+      "sedimentation_probe": "For falling NR, capture NR before/after the semi-Lagrangian step, DEN at every level, qnpath and the bottom outflow. Compare the declared transported basis and weighted column budget under density gradient; separately test no-rain and zero-NR controls."
+    }
+  },
+  "schema": "UDM27_NC_PSD_PRODUCER_TO_LUT_DISCRIMINATOR_PLAN_V1",
+  "source_contract_facts": {
+    "current_observer_source_lines": {
+      "Registry.EM_COMMON": "537-545; QNRAIN, QNCCN, QNCLOUD labels use # kg(-1).",
+      "module_microphysics_driver.F": "931-949: option-37 QNN initialization to ccn_conc; 2890-2900 and 2930-2939: same-call density metadata and UDM argument path; QNC is passed directly.",
+      "module_mp_udm.F": "3131-3170 slope_cloud uses pidnc*NC/(QC*DEN); 2628-2637 activation uses NC_ACT_RATE directly for number updates and divides the water-mass rate by DEN; 2746+ rain-number sedimentation multiplies NR by density before semi-Lagrangian transport and divides on return; 3912-3930 radius guard uses NC*RHO while lambda uses raw NC."
+    },
+    "radius_and_psd": {
+      "interpretation": "This shows the native spherical volume-mean size and gamma area-weighted M3/M2 are different metrics. The source does not say that the autoconversion gamma law is the radiative PSD; no conversion factor is authorized.",
+      "lut_gap": "The RRTMGP wrapper forwards the diagnosed radius to cloud optics, but the pinned table's complete producer PSD/habit/population recipe has not been joined to the actual UDM cloud distribution. Table axis/API naming does not close that missing producer contract.",
+      "moment_audit": "For the conditional gamma law n(r)=n0*r^nu*exp(-lambda*r), M3/M2=(nu+3)/lambda and volume-mean radius=(M3/M0)^(1/3). The saved moment audit reports gamma M3/M2 divided by the native volume-mean-radius formula ranges 1.06005-1.27718 over nu=2..15.",
+      "native_liquid_formula": "r_native=clamp(0.5*(QC*DEN/(pidnc*NC))^(1/3), rmin, rmax); the same code first tests NC*RHO for a floor, but does not put that product into lambda."
+    },
+    "unit_reading": {
+      "conflicting_signals": "Registry scalar metadata and mass-weighted generic transport support # kg-1 storage; internal UDM number-rate and PSD formulas use volumetric number; the effective-radius guard and adjacent raw-NC lambda formula are not a consistent declaration of a universal input unit.",
+      "firm_equation_requirement": "For lambda^3=pidnc*NC/(QC*DEN), with pidnc kg m-3 and QC*DEN kg m-3, NC must be # m-3 for lambda to have m-1 units.",
+      "source_of_missing_authority": "The producer-specific path that populated the selected QNC state (initial/restart/boundary/transport/prior UDM call) has not been tied to an authoritative unit definition. Registry metadata alone is not producer truth."
+    }
+  },
+  "source_snapshot": {
+    "head": "8017ff7caf8f979dc16e1d9119c9a88eaa362a2b",
+    "observer_source_files": {
+      "WRF/Registry/Registry.EM_COMMON": {
+        "sha256": "87e21a476a06b7e0c926b2d939eaf1028810cba8a7d1e6fc585b50b599f99729",
+        "size_bytes": 448359
+      },
+      "WRF/phys/module_microphysics_driver.F": {
+        "sha256": "c2568eef1fe6223eab587c864ae104bbfaace5fde1266313ddc36ba89541d74d",
+        "size_bytes": 203985
+      },
+      "WRF/phys/module_mp_udm.F": {
+        "sha256": "9f25a1aaebd0d29ba3ecdf86c9fe65065cf920fc187bdfd904e8b8192bc7e3c8",
+        "size_bytes": 208324
+      }
+    },
+    "path": "build/udm37-positive-nc-stage-observer-source-v2",
+    "qualification": "Private observer-prefixed source based on the imported production snapshot; do not relabel this as remote/current main or a production source commit.",
+    "tree": "eef44b724e452bd412431928bad1d26f15c6dab4"
+  },
+  "status": "PLAN_ONLY_UNITS_AND_PSD_AUTHORITY_OPEN",
+  "what_positive_stage_can_establish": {
+    "established_within_observer_scope": [
+      "At the selected d01/i23/j2 column and two one-minute model times, packet headers and source ordering identify recorded scalar/radius states at instrumented stages.",
+      "The saved observer check finds four positive QC+NC entry/helper matches at identical (step,k), and the native radius output matches the independent source-ordered REAL32 equation over all 44 vertical levels.",
+      "The stage-1 option-37 initializer sets QNN to CCN_CONC while QNC is exactly unchanged; stage 2 does not reinitialize QNN.",
+      "For the observed stage-30\u219231 interval, QNC is bitwise unchanged and both NC_ACT_RATE and PC_ACT_RATE are zero. Therefore this particular pair does not test activation transfer or its number/water consistency."
+    ],
+    "not_established": [
+      "A value's intended #/kg or #/m3 meaning: observed NC and density alone cannot identify the producer's unit convention.",
+      "A universal initial, restart, lateral-boundary, or advection QNC contract, or that the selected short column exercises all producer routes.",
+      "A universal mass/number conservation law across UDM's microphysical tendency and sedimentation paths.",
+      "That the activation number/water relation is tested by this run; the observed activation rates are zero.",
+      "That the gamma PSD used in autoconversion is the intended radiation PSD, or that its moment defines RRTMGP's cloud-ice/liquid table coordinate.",
+      "Radiative accuracy, forecast improvement, or a justified density/radius multiplier."
+    ]
+  }
+}

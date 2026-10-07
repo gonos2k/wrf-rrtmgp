@@ -1,0 +1,103 @@
+{
+  "source_head": "87b3f116e7e9832be14916dcb7821c5e3f09a4e9",
+  "source_tree": "558db787ca8d9a1bc68c4e10d9f30409d78335d8",
+  "processes": [
+    {
+      "name": "configure",
+      "argv": [
+        "/usr/local/bin/cmake",
+        "-S",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-qnn-boundary-observer-source-v1/WRF",
+        "-B",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-qnn-boundary-observer-build-v1/cmake",
+        "-DCMAKE_INSTALL_PREFIX=/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-qnn-boundary-observer-build-v1/install",
+        "-DCMAKE_TOOLCHAIN_FILE=/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-qnn-boundary-observer-build-v1/wrf_gnu_mpi_openmp.cmake",
+        "-DWRF_CORE=ARW",
+        "-DWRF_CASE=EM_REAL",
+        "-DUSE_ALLOCATABLES=ON",
+        "-DUSE_MPI=ON",
+        "-DUSE_OPENMP=ON",
+        "-DUSE_IPO=OFF",
+        "-DFORCE_NETCDF_CLASSIC=ON"
+      ],
+      "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-qnn-boundary-observer-source-v1",
+      "source_head": "87b3f116e7e9832be14916dcb7821c5e3f09a4e9",
+      "started_unix": 1791296277.0725102,
+      "pid": 3774887,
+      "actual_rc": 0,
+      "reaped": true,
+      "status": "PROCESS_COMPLETE",
+      "ended_unix": 1791296282.060435,
+      "log": {
+        "sha256": "3770e68d978f74926e4d0f78fa62ac52bc6b9167e5739325935712c03de0dd58",
+        "size_bytes": 4577
+      }
+    },
+    {
+      "name": "build",
+      "argv": [
+        "/usr/local/bin/cmake",
+        "--build",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-qnn-boundary-observer-build-v1/cmake",
+        "--parallel",
+        "4"
+      ],
+      "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-qnn-boundary-observer-source-v1",
+      "source_head": "87b3f116e7e9832be14916dcb7821c5e3f09a4e9",
+      "started_unix": 1791296282.0652554,
+      "pid": 3775548,
+      "actual_rc": 0,
+      "reaped": true,
+      "status": "PROCESS_COMPLETE",
+      "ended_unix": 1791296561.791115,
+      "log": {
+        "sha256": "138b88b3d9308980cd71b3b6db4308c49f302a3596c73dffc07ddb04efaf6039",
+        "size_bytes": 88648
+      }
+    },
+    {
+      "name": "install",
+      "argv": [
+        "/usr/local/bin/cmake",
+        "--install",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-qnn-boundary-observer-build-v1/cmake"
+      ],
+      "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-qnn-boundary-observer-source-v1",
+      "source_head": "87b3f116e7e9832be14916dcb7821c5e3f09a4e9",
+      "started_unix": 1791296561.794557,
+      "pid": 3786861,
+      "actual_rc": 0,
+      "reaped": true,
+      "status": "PROCESS_COMPLETE",
+      "ended_unix": 1791296563.3729875,
+      "log": {
+        "sha256": "fcd73a53e76ed78565790ee8bf923109be8d19b1bd426e274b59a10ba9b951ad",
+        "size_bytes": 31839
+      }
+    }
+  ],
+  "models": 0,
+  "status": "PASS_BUILD_INSTALL_SCOPED",
+  "executables": {
+    "real": {
+      "sha256": "39e8f395c38698453938f31d7337d8f261e85c678b0ef95ee9e2cd0586cb67a2",
+      "size_bytes": 41128720
+    },
+    "wrf": {
+      "sha256": "1877feb231b11666387fb2af8015de178ffed0cb78c6da70025ea65f6e14e7c3",
+      "size_bytes": 51676000
+    }
+  },
+  "source_still_clean": true,
+  "source_head_unchanged": true,
+  "selected_source_files_unchanged": true,
+  "toolchain_unchanged": true,
+  "plan": {
+    "sha256": "377afbc2e533a402e98b28c5bf6a48354767e7550c5a60d2f68b3603d9a0ee2a",
+    "size_bytes": 9617
+  },
+  "runner": {
+    "sha256": "3dc798b3f0da9f62b6407ca6f6aa626a02fd3ae0bae6b050d7ce00d1f71a491d",
+    "size_bytes": 5484
+  }
+}

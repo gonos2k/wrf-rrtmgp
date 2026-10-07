@@ -1,0 +1,52 @@
+{
+  "status": "BLOCKED_V1_SOURCE_ORACLE_PREPARATION_NOT_LAUNCH_APPROVED",
+  "created_utc": "2026-10-06T16:59:04.950838+00:00",
+  "validator": {
+    "path": "build/udm37-activation-supersat-runtime-v1/validate_activation.py",
+    "sha256": "f03a7712ae85bc00d126d148a4eff7f24ea052a80582d2ec602f256f0f24a22b",
+    "size_bytes": 9687
+  },
+  "stage_plan": {
+    "path": "build/udm37-activation-supersat-runtime-v1/stage-plan.json",
+    "sha256": "c4b0b6b403c5cbfc4f498cdd8d57a8f18f3bc8e7b0b8d3b8694c19594f3a4747",
+    "size_bytes": 123415
+  },
+  "runner": {
+    "path": "build/udm37-activation-supersat-runtime-runner-v1.py",
+    "sha256": "0160dc3ee19026139c69ffe024a67354b256065220675df928064dfb6bd492f7",
+    "size_bytes": 27771
+  },
+  "findings": [
+    {
+      "severity": "blocking",
+      "issue": "T oracle uses saturation-table constants as host microphysics constants and recomputes cpm/xlv from stage30",
+      "source_authority": "module_microphysics_driver CPD=cp,CPV=cpv,XLV0=xlv,T0C=svpt0; udm2d996-998 cached initial state; udminit xlv1=cliq-cpv via module_physics_init call",
+      "required": "Correct host constants; cached same-call initial state (first-substep stage21 is before physical process updates); explicit substep scope."
+    },
+    {
+      "severity": "blocking",
+      "issue": "qsat_source omits fsvp_water min(es,.99*P)",
+      "required": "Apply defaultREAL pressure cap before ep2*es/(P-es)."
+    },
+    {
+      "severity": "source_order",
+      "issue": "fsvp table node computes f32(psat*double_pow) instead of f32(psat*f32(pow)); one defaultREAL operation boundary skipped",
+      "required": "Mirror explicit REAL32 node order while keeping qualified compiled intrinsic identity limits."
+    }
+  ],
+  "valid_preparation_conditions": [
+    "Separate actual RH>1 and positive NC_ACT_RATE gates at same step/k7; no previous all-zero oracle reuse.",
+    "Same-input OFF/ON passivity comparison remains separate from discriminating activation."
+  ],
+  "limits": [
+    "Original v1 files retained unchanged; author preparing additive v2.",
+    "Zero activation baseline has zero thermal increment and cannot discriminate wrong cached constants.",
+    "No approval of runtime stage or launch; final v2 bytes/joins remain to be reviewed."
+  ],
+  "invocations": {
+    "model": 0,
+    "compiler": 0,
+    "RTE": 0,
+    "validator_execution": 0
+  }
+}

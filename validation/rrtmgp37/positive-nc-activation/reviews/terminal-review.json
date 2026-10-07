@@ -1,0 +1,133 @@
+{
+  "activation_packet_validation": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-activation-supersat-runtime-v4/activation-packet-validation.json",
+    "sha256": "6e3a769520bea604e738315ed5b0b647f9dc686833f027d02a8a884bcfb15a64",
+    "size_bytes": 10967
+  },
+  "actual_processes": [
+    {
+      "actual_rc": 0,
+      "arm": "off",
+      "pid": 4016174,
+      "reaped": true
+    },
+    {
+      "actual_rc": 0,
+      "arm": "on",
+      "pid": 4016398,
+      "reaped": true
+    }
+  ],
+  "actual_success_logs": {
+    "off": 4,
+    "on": 4
+  },
+  "execution": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-activation-supersat-runtime-v4/execution.json",
+    "sha256": "5136fdb833295d59d09948c60edb5559965fe9f58197f0062f2b9c692bc96573",
+    "size_bytes": 473019
+  },
+  "independent_check_execution": {
+    "argv": [
+      "python3",
+      "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-activation-supersat-terminal-independent-review-v1/check_saved.py"
+    ],
+    "interpretation": "Saved-only Python analysis, no subprocess model or compiler.",
+    "new_RTE": 0,
+    "new_compilers": 0,
+    "new_models": 0,
+    "observed_tool_exit_code": 0
+  },
+  "independent_checker": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-activation-supersat-terminal-independent-review-v1/check_saved.py",
+    "sha256": "8375ef40547de79da4c4d5729ca4d9c8c153f3b492cbd2c3dedea49de7bdc8d2",
+    "size_bytes": 8035
+  },
+  "independent_saved_details": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-activation-supersat-terminal-independent-review-v1/saved-review-details.json",
+    "sha256": "01d63c29ee82f33e9d44f646f45e251ee6dc9034b4115bbf0dee54271c5cc82d",
+    "size_bytes": 11378
+  },
+  "input_pins_before_after_exact": true,
+  "limits": [
+    "RH target1.003 was an input hypothesis; actual step1 RH1.01349 hits activation_fraction=1 saturation branch.",
+    "NC_ACT rate and stored changes reflect native binary32 rounding plus CCN floor; stored total count is not conserved by this floor operation.",
+    "Matched helper input at later stage does not mean stage31 state survives unchanged: intervening UDM processes act.",
+    "Source loaded states and exact numerical operations do not establish number units, PSD validity, physical accuracy, restart basis, or forecast relevance.",
+    "libm float32 reconstruction is observed equal for these selected values only; not a universal compiler intrinsic guarantee.",
+    "MPI launcher reap is recorded by root runner; independent /proc descendant audit belongs to root.",
+    "The saved packet unit suffixes are source-process labels only, not physical number-basis authority.",
+    "Original v1/v2/v3 preparation failures remain separate and preserved; this runtime does not retag them.",
+    "Postactivation NC retained at helper does not establish generic stage31-to-helper identity for all variables or all cases."
+  ],
+  "main_findings": [
+    "Step1 source-table RH=1.0134907960891724, supersaturation/satmax=2.810582399368286 and activation fraction=1. Input targetRH1.003 was a hypothesis, not observed branch.",
+    "NC_ACT=1666666.625; initial computed rate is below NN rate cap1666666.75, so second number-rate cap is inactive. PC_ACT=2.2078543437942244e-8, QV mass cap inactive.",
+    "Stage21 cached CPM1019.5618286132812 and XLV2449557.75 yield exact source-ordered post31 NN/NC/QV/QC/T. Selected libm binary32 SVP/rate calculations match saved fields exactly.",
+    "Step1 native ncact*dt rounds1e8; NN raw post is0 and ccnmin floor sets5e7. NC stored increment is99999992. Stored NN+NC sum changes49999992 (binary64 subtraction of promoted stored binary32 fields). This is source-floor behavior, not count conservation.",
+    "Step2 RH0.9675918221473694 and actual activation rates0; all selected updates exactly preserved.",
+    "Stage40 postreturn state to helper50 and helper51 read-only state match first9fields at44levels in both steps. Helper NC k7 retains post31 NC but QC/T evolve through intervening processes. Helper radius step1=8.9602444859338e-6m, step2=7.80178470449755e-6m.",
+    "Bounded history profiles QNCLOUD/QNCCN/QNRAIN/QCLOUD/QRAIN/QVAPOR44levels match helper inputs at source-step aligned records1/2 (historyXTIME1/2 vs packetclock0/1).",
+    "Independent complete file byte equality plus matching SHA establishes all stored arrays/schema/attributes exact for history231variables and restart668variables."
+  ],
+  "packets": {
+    "column": [
+      23,
+      2
+    ],
+    "count": 20,
+    "native_bits": 32,
+    "rows": 880,
+    "selected_level": 7,
+    "steps": [
+      1,
+      2
+    ]
+  },
+  "prelaunch_review": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-activation-supersaturation-independent-review-v1/review-v4.json",
+    "sha256": "995e8af29edb2738684a683c78c551c271e8b386ae4c509c754e2ff32ce336ad",
+    "size_bytes": 11555
+  },
+  "reviewed_utc": "2026-10-06T17:16:30.384796+00:00",
+  "scientific_accepted": false,
+  "selected_source_pin_count": 9,
+  "selected_source_pins_match_current_frozen_source": true,
+  "source": {
+    "head": "8017ff7caf8f979dc16e1d9119c9a88eaa362a2b",
+    "tree": "eef44b724e452bd412431928bad1d26f15c6dab4"
+  },
+  "source_equation_checks": 2126,
+  "stage_plan": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-activation-supersat-runtime-v4/stage-plan.json",
+    "sha256": "f1f888c8c997487b740567b5b5f94c01b837b67ce46045b82b144ab259a6a438",
+    "size_bytes": 125727
+  },
+  "status": "PASS_SCOPED_TERMINAL_ACTIVATION_AND_PASSIVITY_REVIEW",
+  "whole_output_comparisons": [
+    {
+      "claim_scope": "Complete encoded file equality proves all stored variable/schema/attribute bytes; bounded profiles separately read.",
+      "entire_file_exact": true,
+      "kind": "wrfout_d01_2016-10-06_00:00:00",
+      "sha256": "87b03b02d5888ea0839a886219766fb339a79ce00c5d0661d537237e54c4133d",
+      "times": [
+        "2016-10-06_00:00:00",
+        "2016-10-06_00:01:00",
+        "2016-10-06_00:02:00"
+      ],
+      "variables": 231,
+      "whole_file_bytes": 172538204
+    },
+    {
+      "claim_scope": "Complete encoded file equality proves all stored variable/schema/attribute bytes; bounded profiles separately read.",
+      "entire_file_exact": true,
+      "kind": "wrfrst_d01_2016-10-06_00:02:00",
+      "sha256": "d522ff72f8ea19d36d5aedd60596441094b2969a6803e02cf82dc44d83b43897",
+      "times": [
+        "2016-10-06_00:02:00"
+      ],
+      "variables": 668,
+      "whole_file_bytes": 193255236
+    }
+  ]
+}

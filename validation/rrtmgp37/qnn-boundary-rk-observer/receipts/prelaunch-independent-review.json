@@ -1,0 +1,109 @@
+{
+  "schema": "QNN_OFF_ON_PREFLIGHT_REVIEW_V2",
+  "status": "PASS_SCOPED_PRELAUNCH_REVIEW",
+  "created_utc": "2026-10-06T14:36:05.737686+00:00",
+  "reviewed_plan": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-qnn-boundary-runtime-2min-v2/stage/stage-plan.json",
+    "sha256": "f69cea4be76d1b30d54ac887a796c0ce8904377689b58b984ea4e0c4470eec42",
+    "size_bytes": 103787
+  },
+  "reviewed_runner": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-qnn-boundary-runtime-2min-runner-v2.py",
+    "sha256": "2fc7748b06daf69a0670c6e1f8c9e666ebae5359b1953ceed986d85e1be30f19",
+    "size_bytes": 22685
+  },
+  "reviewed_preparer": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/prepare-udm37-qnn-boundary-runtime-2min-v2.py",
+    "sha256": "1cfdf329df692e882c3a5a1e086e9b9bc4de5f0fc1e5bec58a6fc3e3fa82846d",
+    "size_bytes": 9643
+  },
+  "reviewed_stage_validator": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-qnn-boundary-runtime-2min-v2/stage/verify_stage.py",
+    "sha256": "ddf1442f57ab02eaa6d9976d110d597d611e859f279202c81b1826af4753de59",
+    "size_bytes": 931
+  },
+  "predecessor_blocked_review": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-qnn-boundary-runtime-preflight-independent-review-v1/review.json",
+    "sha256": "4dfdbf0b6fbef37f34496c20ff2c6be15c77c3b8bf993e5ad646f2f96200269d",
+    "size_bytes": 3797
+  },
+  "corrected_findings": [
+    {
+      "id": "history_layout",
+      "status": "CORRECTED",
+      "claim": "One initial-timestamp history file with exact three Times00:00/00:01/00:02 plus one00:02 restart. OFF/ON compares both entire files plus raw arrays/schema/dimensions/attributes."
+    },
+    {
+      "id": "terminal_RC_order",
+      "status": "CORRECTED",
+      "claim": "Observed wait/timeout cleanup RC and reaped state persisted inside log context before close and before output inspection. On RUNNING-journal or exited-child exceptions, bounded process-group TERM/KILL cleanup retains actual poll RC and stops."
+    },
+    {
+      "id": "required_inflow",
+      "status": "CORRECTED",
+      "claim": "Selected inflow requires exact CCN1e8 and QNN_AFTER=CCN; zero inflows raises before pairedPASS. Outflow requires exact interior source identity/value; QNC/QNR readonly; density replay uses REAL32 AL+ALB and reciprocal."
+    },
+    {
+      "id": "helper_binding",
+      "status": "CORRECTED",
+      "claim": "Exact stage helper path/hash/size checked before helper subprocess invocation."
+    }
+  ],
+  "stage_metadata_checks": {
+    "off": {
+      "asset_count": 104,
+      "names_types_sizes_resolved_paths_links_match": true,
+      "namelist_pin": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-qnn-boundary-runtime-2min-v2/stage/off/namelist.input",
+        "sha256": "b93cd257c5d3bed6dea6f8e52bb83e30e0d87637ea5cb3489ebedc3790d212d8",
+        "size_bytes": 4131
+      },
+      "expected_history_file": "wrfout_d01_2016-10-06_00:00:00",
+      "expected_history_times": [
+        "2016-10-06_00:00:00",
+        "2016-10-06_00:01:00",
+        "2016-10-06_00:02:00"
+      ],
+      "expected_restart": "wrfrst_d01_2016-10-06_00:02:00"
+    },
+    "on": {
+      "asset_count": 104,
+      "names_types_sizes_resolved_paths_links_match": true,
+      "namelist_pin": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-qnn-boundary-runtime-2min-v2/stage/on/namelist.input",
+        "sha256": "b93cd257c5d3bed6dea6f8e52bb83e30e0d87637ea5cb3489ebedc3790d212d8",
+        "size_bytes": 4131
+      },
+      "expected_history_file": "wrfout_d01_2016-10-06_00:00:00",
+      "expected_history_times": [
+        "2016-10-06_00:00:00",
+        "2016-10-06_00:01:00",
+        "2016-10-06_00:02:00"
+      ],
+      "expected_restart": "wrfrst_d01_2016-10-06_00:02:00"
+    }
+  },
+  "scope": [
+    "Exact87b3 private source/build1877feb; same retained RA37 seed/data with no input numerical modification other than frozen2-minute namelist time/output override.",
+    "MPI4/OMP2/dt60; at most2forecasts, each<=300s wait timeout plus bounded cleanup; first failure stops; HOME inherited.",
+    "24 selected packets\u00d744rows=1056 intended observations; actual execution needed to establish inflow, valid dry density and passivity.",
+    "Only four selected boundary columns; captured sourceQNN is read after destination assignment, not a separately observed prewrite source."
+  ],
+  "limits": [
+    "Static prelaunch review only; no runner/preparer/helper import or execution, no model/build/compiler.",
+    "Large executable/static-asset hashes were not recomputed in this successor review; original independent built-executable seal and author staged verifier receipts retained. Runner performs full preflight file hashes before model launch.",
+    "Asset name/type/size/resolve/link checks and small namelist hashes independently read; prospective terminal output comparison remains NOT_RUN.",
+    "Storage/fsync failure cannot guarantee durable records; no generic physical/dimensional Nc approval.",
+    "Unreachable legacy NONZERO_INFLOW_NOT_OBSERVED display branch remains, but read_capture now raises on zero inflow before anyPASS."
+  ],
+  "invocation_counts": {
+    "models": 0,
+    "compilers": 0,
+    "builds": 0,
+    "RTE": 0,
+    "numeric_packet_reads": 0,
+    "runner_invocations": 0,
+    "scientific_data_reads": 0
+  },
+  "scientific_accepted": false
+}

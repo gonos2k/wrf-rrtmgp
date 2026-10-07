@@ -1,0 +1,73 @@
+{
+  "identical_entries": 7494,
+  "maximum_ulp_difference": 1,
+  "method": "Compare Python double pow/exp followed by source-order REAL32 rounding with current host libc powf/expf at every source table node. This is not proof of the compiled Fortran runtime intrinsic implementation. For this selected T/P, both interpolation endpoints and derived qsat/target QV are bitwise identical across the two methods.",
+  "mismatches": [
+    {
+      "index_1based": 3381,
+      "libm_powf_expf_f32": 76.83340454101562,
+      "python_f32": 76.8333969116211,
+      "temperature_K": 247.60000610351562,
+      "ulp_difference": 1
+    },
+    {
+      "index_1based": 4734,
+      "libm_powf_expf_f32": 680.6234130859375,
+      "python_f32": 680.6233520507812,
+      "temperature_K": 274.6600036621094,
+      "ulp_difference": 1
+    },
+    {
+      "index_1based": 4796,
+      "libm_powf_expf_f32": 743.60693359375,
+      "python_f32": 743.6068725585938,
+      "temperature_K": 275.8999938964844,
+      "ulp_difference": 1
+    },
+    {
+      "index_1based": 5194,
+      "libm_powf_expf_f32": 1285.501953125,
+      "python_f32": 1285.5018310546875,
+      "temperature_K": 283.8599853515625,
+      "ulp_difference": 1
+    },
+    {
+      "index_1based": 5483,
+      "libm_powf_expf_f32": 1872.621337890625,
+      "python_f32": 1872.6212158203125,
+      "temperature_K": 289.6400146484375,
+      "ulp_difference": 1
+    },
+    {
+      "index_1based": 6547,
+      "libm_powf_expf_f32": 6527.337890625,
+      "python_f32": 6527.33740234375,
+      "temperature_K": 310.91998291015625,
+      "ulp_difference": 1
+    },
+    {
+      "index_1based": 7254,
+      "libm_powf_expf_f32": 13500.63671875,
+      "python_f32": 13500.6357421875,
+      "temperature_K": 325.05999755859375,
+      "ulp_difference": 1
+    }
+  ],
+  "schema": "UDM_SVP_TABLE_LIBM_CROSSCHECK_V2",
+  "status": "TARGET_LOOKUP_MATCHES_CURRENT_HOST_LIBM; GLOBAL_TABLE_HAS_SINGLE_ULP_DIFFERENCES",
+  "table_entries_compared": 7501,
+  "target_interpolation": {
+    "all_target_results_bitwise_equal": true,
+    "es_libm_f32_Pa": 2627.3857421875,
+    "es_python_f32_Pa": 2627.3857421875,
+    "fortran_table_lower_index_1based": 5754,
+    "fraction": 0.876953125,
+    "lower_and_upper_entries_match": true,
+    "qsat_libm_f32": 0.01810630038380623,
+    "qsat_python_f32": 0.01810630038380623,
+    "stage30_T_K": 295.0775451660156,
+    "target_pressure_Pa": 92848.9140625,
+    "target_qv_libm_f32": 0.018160618841648102,
+    "target_qv_python_f32": 0.018160618841648102
+  }
+}

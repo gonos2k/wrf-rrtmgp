@@ -1,0 +1,58 @@
+{
+  "clock_reals": [
+    "XTIME_minutes",
+    "driver_dt_seconds",
+    "dt_substep_seconds"
+  ],
+  "existing_packets": "OriginalNUMBER*.raw20 andQNN*.raw24 unchanged schema; new*.cfpop avoids oldglob*.raw count collision.",
+  "filename": "population_d<domain>_tile<tile>_i<i>_j<j>_step<step>_sub<substep>_phase<1..4>.cfpop",
+  "header_integers": [
+    "domain",
+    "step",
+    "phase",
+    "substep",
+    "tile",
+    "i",
+    "j",
+    "kts",
+    "kte",
+    "host_real_bits",
+    "CF_TOP_USED",
+    "QC_TOP",
+    "QI_TOP"
+  ],
+  "identity": "Same future run/domain/source-step/substep/tile/i23/j2 and individual native level. No RK identity inferred from NUMBER clock.",
+  "magic": "UDM37CFPOP1",
+  "mask_rule": "CF_CONVERSION_APPLIED=1 only k<=CF_TOP_USED and CF>0; diagnosed flag1 only k<=CF_TOP_USED. Above top CF is working default, not diagnosed cover.",
+  "number_basis": "NN/NC/NR raw source values without unit suffix/physical approval",
+  "output_mode": "Statelessper-column/step/substep/tile/phase NEW file; no reused processglobaltrace/SAVE buffers",
+  "phase_names": {
+    "1": "after cldf_diag, immediately before division",
+    "2": "immediately after division before first slope calls",
+    "3": "immediately before restoration after phase processes",
+    "4": "immediately after restoration before recomputed RH/slopes"
+  },
+  "row_integers": [
+    "k",
+    "CF_CONVERSION_APPLIED",
+    "CF_DIAGNOSED_AT_THIS_LEVEL"
+  ],
+  "row_reals": [
+    "CF",
+    "T",
+    "P",
+    "QV",
+    "QC",
+    "QI",
+    "QR",
+    "QS",
+    "QG",
+    "QH",
+    "NN",
+    "NC",
+    "NR",
+    "DEN"
+  ],
+  "rows_per_packet": 44,
+  "status": "SOURCE_MATERIALIZED_UNCOMPILED_UNRUN"
+}

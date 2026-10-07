@@ -1,0 +1,132 @@
+{
+  "baseline_main": {
+    "head": "a91d0d855da3e24094c2e6c7ba1088b56bc8c461",
+    "tree": "887d3fd1cf8c097219b201b1bdb9cdd428d593a9"
+  },
+  "dependencies": [
+    {
+      "consumer": "rfmip-fixed-rte",
+      "reason": "External archived harness is part of exact fixed package manifest; retain original bytes. Test-only, not production Fortran.",
+      "requires": [
+        "WRF/test/rrtmgp/rrtmgp_rfmip_sw_fixed_rte.F90"
+      ]
+    },
+    {
+      "consumer": "rfmip-historical-rte",
+      "exact_parent_manifest": "7b1b66f9c0bc77a8086a53159b4dc72bf5602c4f3279b4521e440868af0dfe1b",
+      "reason": "Analyzer pins fixed package plus20 profiles/execution/reference/strict details; workflow verifies both sequentially.",
+      "requires": [
+        "rfmip-fixed-rte"
+      ]
+    },
+    {
+      "consumer": "positive-nc-stage",
+      "exact_parent_manifest": "da113ecf2a55727b0ca7068b00f469a6212555f7f19a01e2194bb67fe9a795b5",
+      "requires": [
+        "qnn-boundary-rk-observer"
+      ]
+    },
+    {
+      "consumer": "positive-nc-activation",
+      "exact_parent_manifest": "a243f7ee893bf50358dcf67bb05924d76be5b5dd5ec0add5e10c2d67958088a1",
+      "reason": "Reuses archived driver/UDM/constants/trace/build/schema assets, never current production copies.",
+      "requires": [
+        "positive-nc-stage"
+      ]
+    },
+    {
+      "consumer": "fractional-cf-population",
+      "exact_parent_manifests": [
+        "a243f7ee893bf50358dcf67bb05924d76be5b5dd5ec0add5e10c2d67958088a1",
+        "4654a613cb91a0acafb41c74e646462df8457a6c1380156fef9470eeb652e305"
+      ],
+      "reason": "Reconstructs private observed source patch and strips markers against archived parent; exact parent closed rosters mandatory.",
+      "requires": [
+        "positive-nc-stage",
+        "positive-nc-activation"
+      ]
+    }
+  ],
+  "groups": [
+    {
+      "group": "RFMIP",
+      "payload_bytes": 8929619,
+      "selected_paths": 64,
+      "source_head": "dd4b41d9fca46da28f12371236009ea1f3e0015b"
+    },
+    {
+      "group": "NC",
+      "payload_bytes": 7504130,
+      "selected_paths": 283,
+      "source_head": "7d76d66bd793ed3fa252a6cf68387fcd8f567dac"
+    }
+  ],
+  "packages": {
+    "validation/rrtmgp37/fractional-cf-population/": {
+      "package_files_including_manifest": 89,
+      "path": "validation/rrtmgp37/fractional-cf-population/manifest.json",
+      "payload_bytes_including_manifest": 1370282,
+      "sha256": "289569920f4c356439a6cb895cd0b7d7f1e5fdb661f8bf142dc06bf9610f104b",
+      "size_bytes": 16385,
+      "source_head": "7d76d66bd793ed3fa252a6cf68387fcd8f567dac"
+    },
+    "validation/rrtmgp37/positive-nc-activation/": {
+      "package_files_including_manifest": 73,
+      "path": "validation/rrtmgp37/positive-nc-activation/manifest.json",
+      "payload_bytes_including_manifest": 2081635,
+      "sha256": "4654a613cb91a0acafb41c74e646462df8457a6c1380156fef9470eeb652e305",
+      "size_bytes": 13432,
+      "source_head": "7d76d66bd793ed3fa252a6cf68387fcd8f567dac"
+    },
+    "validation/rrtmgp37/positive-nc-stage/": {
+      "package_files_including_manifest": 68,
+      "path": "validation/rrtmgp37/positive-nc-stage/manifest.json",
+      "payload_bytes_including_manifest": 2670430,
+      "sha256": "a243f7ee893bf50358dcf67bb05924d76be5b5dd5ec0add5e10c2d67958088a1",
+      "size_bytes": 12590,
+      "source_head": "7d76d66bd793ed3fa252a6cf68387fcd8f567dac"
+    },
+    "validation/rrtmgp37/qnn-boundary-rk-observer/": {
+      "package_files_including_manifest": 49,
+      "path": "validation/rrtmgp37/qnn-boundary-rk-observer/manifest.json",
+      "payload_bytes_including_manifest": 1377787,
+      "sha256": "da113ecf2a55727b0ca7068b00f469a6212555f7f19a01e2194bb67fe9a795b5",
+      "size_bytes": 8616,
+      "source_head": "7d76d66bd793ed3fa252a6cf68387fcd8f567dac"
+    },
+    "validation/rrtmgp37/rfmip-fixed-rte/": {
+      "package_files_including_manifest": 34,
+      "path": "validation/rrtmgp37/rfmip-fixed-rte/package-manifest.json",
+      "payload_bytes_including_manifest": 8632304,
+      "sha256": "7b1b66f9c0bc77a8086a53159b4dc72bf5602c4f3279b4521e440868af0dfe1b",
+      "size_bytes": 25724,
+      "source_head": "dd4b41d9fca46da28f12371236009ea1f3e0015b"
+    },
+    "validation/rrtmgp37/rfmip-historical-rte/": {
+      "package_files_including_manifest": 27,
+      "path": "validation/rrtmgp37/rfmip-historical-rte/package-manifest.json",
+      "payload_bytes_including_manifest": 280900,
+      "sha256": "836de12e7d1b6ad57d54f6b7855f08e9e605cda69cbe6d854e4c257852db91a7",
+      "size_bytes": 4331,
+      "source_head": "dd4b41d9fca46da28f12371236009ea1f3e0015b"
+    }
+  },
+  "counts": {
+    "compilers": 0,
+    "fetches": 0,
+    "models": 0,
+    "raw_scientific_decodes": 0,
+    "solvers": 0,
+    "source_mutations": 0,
+    "test_or_data_execution": 0
+  },
+  "limitations": [
+    "Path/size/blob and small script/manifest inspection only; numerical packet/stream not decoded.",
+    "No apply/test performed. Observed collision-free at exact a91 does not claim subsequent remote-main containment."
+  ],
+  "integration_target": "Independent main-based integrate-udm37-review-evidence; not stacked onto PR146.",
+  "original_selected_paths": 347,
+  "original_selected_bytes": 16433749,
+  "original_payloads_preserved": true,
+  "historical_workflow_invocation_changed_to_isolated_wrapper": true
+}

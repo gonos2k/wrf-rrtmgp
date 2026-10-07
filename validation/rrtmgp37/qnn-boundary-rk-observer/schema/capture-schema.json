@@ -1,0 +1,79 @@
+{
+  "magic": "UDM37QNNB1",
+  "format": "FORMATTED text, one fresh packet per selected column/step/RK",
+  "filename": "qnn_d<domain>_rank<rank>_tile<tile>_step<step>_rk<rk>_side<side>.raw",
+  "header_format": "15 I0 integers",
+  "header_fields": [
+    "domain",
+    "model_step",
+    "rk_step",
+    "rank",
+    "tile",
+    "side",
+    "i",
+    "j",
+    "kts",
+    "ktf",
+    "host_real_bits",
+    "its",
+    "itf",
+    "jts",
+    "jtf"
+  ],
+  "row_format": "5 I0 integers +13 ES26.17E3 promoted reals",
+  "row_integer_fields": [
+    "k",
+    "branch",
+    "source_i",
+    "source_j",
+    "density_valid"
+  ],
+  "row_real_fields": [
+    "velocity_test_operand",
+    "CCN_CONC",
+    "QNN_BEFORE",
+    "QNN_AFTER",
+    "QNC_BEFORE",
+    "QNC_AFTER",
+    "QNR_BEFORE",
+    "QNR_AFTER",
+    "AL",
+    "ALB",
+    "AL_PLUS_ALB_NATIVE",
+    "RHO_DRY_REEVALUATED",
+    "OUTFLOW_SOURCE_QNN_AFTER_DESTINATION_ASSIGNMENT"
+  ],
+  "side_values": {
+    "1": "Y-start",
+    "2": "Y-end",
+    "3": "X-start",
+    "4": "X-end"
+  },
+  "branch_values": {
+    "0": "outflow",
+    "1": "inflow"
+  },
+  "inflow_unused_source_fields": {
+    "source_i": 0,
+    "source_j": 0,
+    "source_qnn": 0.0
+  },
+  "density_invalid": {
+    "density_valid": 0,
+    "native_sum_or_rho_zero": "An unavailable/invalid diagnostic sentinel, never physical zero-density evidence."
+  },
+  "host_kind": 32,
+  "rows_each_packet": 44,
+  "model_steps": [
+    1,
+    2
+  ],
+  "RK_steps": [
+    1,
+    2,
+    3
+  ],
+  "expected_packets": 24,
+  "expected_rows": 1056,
+  "actual_scope": "four selected physical boundary columns, no allboundary runtime claim"
+}

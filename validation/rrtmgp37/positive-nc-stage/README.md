@@ -1,0 +1,17 @@
+# Positive-Nc UDM stage observer evidence
+
+This archive records one two-minute, 90×99×44 WRF GNU REAL32 run pair using four MPI ranks and two OpenMP threads. Both arms used the same instrumented source and inputs; the number-stage observer was OFF in one arm and ON in the other. Both model processes returned 0 and were reaped. The archive contains 20 NUMBER packets (880 rows) and 24 QNN boundary packets (1,056 rows), plus source, stage, build, validation, and saved-readback receipts. It does not contain the large NetCDF history/restart files or executable; external pins and a saved full-variable comparison receipt are included.
+
+The NUMBER packets cover selected cell `(i,j)=(23,2)`, levels 1–44, two one-minute steps, and ten named observer stages. The four QNN boundary observers cover selected columns, both steps, and all three RK passes. The QNN destination `(23,1)` and outflow source `(23,2)` are distinct locations; the packet sets are from this positive-Nc run, not the inherited PR139 QNN run. NUMBER packets carry microphysics step and explicit clock, not RK identity. Steps 1 and 2 map to history times 00:00 and 00:01; there is no NUMBER packet at the final 00:02 history record.
+
+The saved readback finds 76 positive-QC/QNC entry rows and four same-step, same-level positive QC/QNC helper rows: `(step,k)=(1,7),(1,18),(1,44),(2,44)`. A source-ordered default REAL32 replay matches helper radius at all 44 levels in both steps. This establishes the observed equation and wiring for these saved states. It does not establish the producer's intended NC units or a particle-population contract. The physical-contract checklist explicitly leaves those questions open.
+
+All captured activation-loop `NC_ACT_RATE` and `PC_ACT_RATE` values are zero, and QNC is unchanged across the loop. This run therefore does not test activation transfer or activation closure. The step-1 initializer sets QNN to the recorded CCN concentration while QNC remains unchanged; step 2 is not reinitialized. These describe this input and interval only.
+
+The OFF/ON history file and restart file were identical byte-for-byte. The readback additionally compared every variable's array bytes, dtype, dimensions, shape and attributes, and all global attributes. The history has 231 variables and the restart has 668. The NetCDF files remain external; this package carries their external hash/size pins and the comparison receipt rather than the files.
+
+An earlier target at `(23,1)` was outside the actual UDM crop and produced only initializer packets. That failed attempt is retained as a predecessor receipt; the corrected run selects `(23,2)` after a source-backed crop review. The inherited PR139 QNN observer package is referenced by its exact manifest hash, while this package separately preserves the new run's 24 QNN packets.
+
+This is evidence from one manufactured-input, two-minute case and selected observer paths. Density reconstruction and radius replay do not validate NC units, activation transfer, PSD/LUT meaning, physical accuracy, or a general microphysics policy. No scientific acceptance is claimed.
+
+From the repository root, run `python3 -I -S validation/rrtmgp37/positive-nc-stage/verify_saved.py` to verify archive closure, source and sibling-package pins, all 44 packet records, and the saved readback joins. It uses only the standard library and does not launch WRF or open NetCDF files.

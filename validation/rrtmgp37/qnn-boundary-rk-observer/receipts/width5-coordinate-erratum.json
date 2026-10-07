@@ -1,0 +1,39 @@
+{
+  "actual_zone1_destinations_source_only": {
+    "actual_observed_selected_levels": 1056,
+    "horizontal": 374,
+    "levels44": 16456
+  },
+  "correct_source_call": "solve_em passes grid%spec_zone, not grid%spec_bdy_width. Registry default1 plus no input override, actual namelist.output SPEC_ZONE1 independently confirms runtime setting.",
+  "correct_sources": {
+    "0": [
+      23,
+      2
+    ],
+    "1": [
+      89,
+      26
+    ],
+    "2": [
+      2,
+      74
+    ],
+    "3": [
+      68,
+      98
+    ]
+  },
+  "incorrect_assumption": "spec_bdy_width5 was mistaken for actual flow_dep_bdy_qnn spec_zone. Old width5 source-coordinate and boundary-count claims are not valid for retained selected runtime.",
+  "old_observer_implementation": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-qnn-boundary-observer-implementation-v1/implementation.json",
+    "sha256": "a34266def0d7d004bcff78e4b4a2de95ea0abd43ed52fd1ac0bdd0b841c0e113",
+    "size_bytes": 5743
+  },
+  "old_source_assertion": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-nc-boundary-rk-source-assertion-v1/review.json",
+    "sha256": "ca70dc70baa98c48c79065951f5defaf1e722b9ee5d21444705bb421f1356e9c",
+    "size_bytes": 13094
+  },
+  "outflow_source_timing": "Value reread after destination assignment; source lies outside zone1 boundary-write destinations and same owned tile. Not independent prewrite-source sampling.",
+  "preserved": true
+}
