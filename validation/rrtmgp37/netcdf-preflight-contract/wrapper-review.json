@@ -1,0 +1,32 @@
+{
+  "status": "PASS_SCOPED_SOURCE_AND_FIXTURE_REVIEW",
+  "scope": "Read-only review of the NetCDF branch WrfType adapter and extracted public-wrapper test; no compile, test execution, model, or raw scientific data access.",
+  "source": {
+    "worktree": "build/udm37-netcdf-preflight-pr-work/WRF",
+    "head": "457cde630bbeb41a24c09baa1f536c73622b615f",
+    "files": [
+      {"path": "WRF/frame/module_io.F", "sha256": "1ff21750ce56d78681a9a9dc80d03578ce9b73a0a510664dd165ed84c47fae4b", "reviewed_lines": "1791-1909"},
+      {"path": "WRF/external/io_netcdf/wrf_io.F90", "sha256": "bd19eb9d439ca975fce788cb0685424080b7e547cd0303287055d3c1dcb2b02c", "reviewed_lines": "3313-3492"},
+      {"path": "WRF/test/rrtmgp/test_netcdf_zz.F90", "sha256": "b4b71ef9b56b72dac3fd476fcf9dc4972021065232080c1050a7999fad683821", "reviewed_lines": "126, 296-348"},
+      {"path": "WRF/test/rrtmgp/test_netcdf_zz.py", "sha256": "60f5ff15926fee02c2b94f8c24187e04f4932233e8f343e1ef3e21a00adbb032", "reviewed_lines": "225-268, 288-299"}
+    ]
+  },
+  "review": {
+    "wrapper_signature": "The extracted wrf_get_var_info retains its public eight-argument signature. Its NETCDF branch passes NetCDFFieldType as argument eight and Status as argument nine to ext_ncd_get_var_info, matching the backend declaration. Other backend branches and the public API are unchanged.",
+    "wrapper_fixture": "The Python runner extracts the actual dim_from_memorder, lower_case, and wrf_get_var_info bodies from module_io.F. It links the actual ext_ncd_get_var_info backend from wrf_io.F90; only WRF state/routing/monitor dependencies are stubbed. The fixture explicitly traps an unexpected quilt-path call.",
+    "coverage": [
+      "The main test opens a real backend NetCDF read handle and invokes check_varinfo_buffers while that handle is live.",
+      "A padded output buffer verifies successful wrapper dispatch and returned rank/order/domain end.",
+      "A missing-variable call checks that the public Status returns the NetCDF backend error, rather than the backend WrfType value overwriting Status.",
+      "A one-character output buffer is checked through both the backend and public wrapper; the wrapper must return WRF_WARN_CHARSTR_GT_LENDATA with NDim reset to zero and the short order buffer blanked.",
+      "Malformed MemoryOrder attribute rejection is tested directly against the backend; it is not represented as a public-wrapper test."
+    ],
+    "source_safety": "The backend initializes NDim and MemoryOrder before handle/attribute checks. It reads the MemoryOrder attribute into a fixed three-character temporary only after checking the NetCDF attribute length, then rejects a caller buffer shorter than the stored nonblank value before assignment. The fixture's padded and short-buffer expectations align with that order of operations.",
+    "remaining_scope_limits": [
+      "This is an extracted-wrapper fixture, not a full module_io build/runtime. The handle mapping, io_form selection, monitor predicate, and quilt implementation are replaced by deterministic stubs.",
+      "The public wrapper has other backends whose dummy counts differ. This change only repairs and tests the NETCDF branch; it does not establish or repair the PHDF5, NETCDFPAR, PNETCDF, PIO, ADIOS2, GRIB2, GRIB1, or INT/ESMF paths.",
+      "No execution result is claimed by this review."
+    ]
+  },
+  "execution": {"compile": "NOT_RUN", "fixture": "NOT_RUN", "models": 0, "source_edits_by_reviewer": 0}
+}

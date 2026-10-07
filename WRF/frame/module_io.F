@@ -1811,6 +1811,7 @@ SUBROUTINE wrf_get_var_info ( DataHandle , VarName , NDim , MemoryOrder , Stagge
   INTEGER, EXTERNAL           :: use_package
   LOGICAL, EXTERNAL           :: wrf_dm_on_monitor, multi_files, use_output_servers_for
   INTEGER                     :: Hndl
+  INTEGER                     :: NetCDFFieldType
 
   CALL wrf_debug( DEBUG_LVL, 'module_io.F: in wrf_get_var_info' )
 
@@ -1824,7 +1825,7 @@ SUBROUTINE wrf_get_var_info ( DataHandle , VarName , NDim , MemoryOrder , Stagge
           CALL ext_ncd_get_var_info ( Hndl , VarName , NDim ,            &
                                       MemoryOrder , Stagger ,                  &
                                       DomainStart , DomainEnd ,                &
-                                      Status )
+                                      NetCDFFieldType , Status )
 #endif
 #ifdef PHDF5
         CASE ( IO_PHDF5)

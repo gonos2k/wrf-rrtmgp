@@ -432,6 +432,11 @@ subroutine GetDim(MemoryOrder,NDim,Status)
 
   ! Define the output even when the memory order is rejected.
   NDim = 0
+  ! Trailing blank padding is valid; never truncate a nonblank suffix.
+  if(len_trim(MemoryOrder) > len(MemOrd)) then
+    Status = WRF_WARN_BAD_MEMORYORDER
+    return
+  endif
   call LowerCase(MemoryOrder,MemOrd)
   select case (MemOrd)
     case ('xyz','xzy','yxz','yzx','zxy','zyx','xsz','xez','ysz','yez')
@@ -641,7 +646,9 @@ subroutine LowerCase(MemoryOrder,MemOrd)
   integer                    :: i,N
 
   MemOrd = ' '
-  N = len(MemoryOrder)
+  ! A longer nonblank token is invalid; padding alone is harmless.
+  if(len_trim(MemoryOrder) > len(MemOrd)) return
+  N = min(len(MemoryOrder),len(MemOrd))
   MemOrd(1:N) = MemoryOrder(1:N)
   do i=1,N
     c = MemoryOrder(i:i)
@@ -658,7 +665,9 @@ subroutine UpperCase(MemoryOrder,MemOrd)
   integer                    :: i,N
 
   MemOrd = ' '
-  N = len(MemoryOrder)
+  ! A longer nonblank token is invalid; padding alone is harmless.
+  if(len_trim(MemoryOrder) > len(MemOrd)) return
+  N = min(len(MemoryOrder),len(MemOrd))
   MemOrd(1:N) = MemoryOrder(1:N)
   do i=1,N
     c = MemoryOrder(i:i)
@@ -707,6 +716,20 @@ subroutine FieldIO(IO,DataHandle,DateStr,Length,MemoryOrder &
   integer,dimension(NVarDims)               :: VStart
   integer,dimension(NVarDims)               :: VCount
 
+  ! Reject deterministic input errors before GetTimeIndex mutates Times.
+  call GetDim(MemoryOrder,NDim,Status)
+  if(Status /= WRF_NO_ERR) return
+  ! WRF_REAL may equal WRF_DOUBLE: use comparisons, not SELECT CASE.
+  if(FieldType /= WRF_REAL .and. FieldType /= WRF_DOUBLE .and. &
+     FieldType /= WRF_INTEGER .and. FieldType /= WRF_LOGICAL) then
+    Status = WRF_WARN_DATA_TYPE_NOT_FOUND
+    return
+  endif
+  if(any(Length(1:NDim) < 1)) then
+    Status = WRF_WARN_LENGTH_LESS_THAN_1
+    return
+  endif
+
   call GetTimeIndex(IO,DataHandle,DateStr,TimeIndex,Status)
   if(Status /= WRF_NO_ERR) then
     write(msg,*) 'Warning in ',__FILE__,', line', __LINE__
@@ -715,8 +738,6 @@ subroutine FieldIO(IO,DataHandle,DateStr,Length,MemoryOrder &
     call wrf_debug ( WARN , TRIM(msg))
     return
   endif
-  call GetDim(MemoryOrder,NDim,Status)
-  if(Status /= WRF_NO_ERR) return
   VStart(:) = 1
   VCount(:) = 1
   VStart(1:NDim) = 1
@@ -801,13 +822,18 @@ subroutine Transpose(IO,MemoryOrder,di, Field,l1,l2,m1,m2,n1,n2 &
 end subroutine Transpose
 
 subroutine reorder (MemoryOrder,MemO)
+  include 'wrf_status_codes.h'
   character*(*)     ,intent(in)    :: MemoryOrder
   character*3       ,intent(out)   :: MemO
   character*3                      :: MemOrd
-  integer                          :: N,i,i1,i2,i3
+  integer                          :: N,i,i1,i2,i3,NDim,Status
 
-  MemO = MemoryOrder
+  MemO = ' '
+  call GetDim(MemoryOrder,NDim,Status)
+  if(Status /= WRF_NO_ERR) return
   N = len_trim(MemoryOrder)
+  if(N < 1 .or. N > len(MemO)) return
+  MemO = MemoryOrder
   if(N == 1) return
   call lowercase(MemoryOrder,MemOrd)
 ! never invert the boundary codes
@@ -2488,6 +2514,12 @@ subroutine ext_ncd_write_field(DataHandle,DateStr,Var,Field,FieldTypeIn,  &
   integer                                      :: block_size
 #endif
 
+  ! Public APIs retain leading/trailing blank normalization, but must reject
+  ! a longer nonblank token before assigning into the three-character buffer.
+  if(len_trim(adjustl(MemoryOrdIn)) > len(MemoryOrder)) then
+    Status = WRF_WARN_BAD_MEMORYORDER
+    return
+  endif
   MemoryOrder = trim(adjustl(MemoryOrdIn))
   NullName=char(0)
   call GetDim(MemoryOrder,NDim,Status)
@@ -2848,6 +2880,12 @@ subroutine ext_ncd_read_field(DataHandle,DateStr,Var,Field,FieldType,Comm,  &
   integer                                      :: di
   integer                                      :: FType
 
+  ! Public APIs retain leading/trailing blank normalization, but must reject
+  ! a longer nonblank token before assigning into the three-character buffer.
+  if(len_trim(adjustl(MemoryOrdIn)) > len(MemoryOrder)) then
+    Status = WRF_WARN_BAD_MEMORYORDER
+    return
+  endif
   MemoryOrder = trim(adjustl(MemoryOrdIn))
   call GetDim(MemoryOrder,NDim,Status)
   if(Status /= WRF_NO_ERR) then
@@ -3330,6 +3368,11 @@ subroutine ext_ncd_get_var_info(DataHandle,Name,NDim,MemoryOrder,Stagger,DomainS
   integer                               :: j
   integer                               :: stat
   integer                               :: XType
+  integer                               :: OrderLength
+  character(3)                          :: StoredOrder
+
+  NDim = 0
+  MemoryOrder = ''
 
   call GetDH(DataHandle,DH,Status)
   if(Status /= WRF_NO_ERR) then
@@ -3418,19 +3461,34 @@ subroutine ext_ncd_get_var_info(DataHandle,Name,NDim,MemoryOrder,Stagger,DomainS
         return
     end select
 
-    stat = NF_GET_ATT_TEXT(DH%NCID,VarID,'MemoryOrder',MemoryOrder)
+    ! Never let the NetCDF attribute read overrun a caller's short buffer.
+    stat = NF_INQ_ATTLEN(DH%NCID,VarID,'MemoryOrder',OrderLength)
+    call netcdf_err(stat,Status)
+    if(Status /= WRF_NO_ERR) return
+    if(OrderLength < 1 .or. OrderLength > len(StoredOrder)) then
+      Status = WRF_WARN_BAD_MEMORYORDER
+      return
+    endif
+    StoredOrder = ''
+    stat = NF_GET_ATT_TEXT(DH%NCID,VarID,'MemoryOrder',StoredOrder)
     call netcdf_err(stat,Status)
     if(Status /= WRF_NO_ERR) then
       write(msg,*) 'NetCDF error in ',__FILE__,', line', __LINE__ 
       call wrf_debug ( WARN , TRIM(msg))
       return
     endif
-    call GetDim(MemoryOrder,NDim,Status)
+    call GetDim(StoredOrder,NDim,Status)
     if(Status /= WRF_NO_ERR) then
       write(msg,*) 'Warning BAD MEMORY ORDER ',TRIM(MemoryOrder),' in ',__FILE__,', line', __LINE__
       call wrf_debug ( WARN , TRIM(msg))
       return
     endif
+    if(len(MemoryOrder) < len_trim(StoredOrder)) then
+      NDim = 0
+      Status = WRF_WARN_CHARSTR_GT_LENDATA
+      return
+    endif
+    MemoryOrder = StoredOrder
     stat = NF_INQ_VARDIMID(DH%NCID,VarID,VDimIDs)
     call netcdf_err(stat,Status)
     if(Status /= WRF_NO_ERR) then

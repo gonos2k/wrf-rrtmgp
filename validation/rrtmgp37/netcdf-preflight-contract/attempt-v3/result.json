@@ -1,0 +1,309 @@
+{
+  "status": "PASS_SCOPED_NETCDF_ZZ_BACKEND",
+  "confirmed_direct_children": 8,
+  "commands": [
+    {
+      "argv": [
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/netcdf/bin/nf-config",
+        "--fflags"
+      ],
+      "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-preflight-backend-v3",
+      "kind": "nf_config_flags",
+      "status": "TERMINAL",
+      "pid": 1194942,
+      "actual_returncode": 0,
+      "timed_out": false,
+      "started_at": 1791350378.0699866,
+      "finished_at": 1791350378.083524
+    },
+    {
+      "argv": [
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/netcdf/bin/nf-config",
+        "--flibs"
+      ],
+      "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-preflight-backend-v3",
+      "kind": "nf_config_libraries",
+      "status": "TERMINAL",
+      "pid": 1194943,
+      "actual_returncode": 0,
+      "timed_out": false,
+      "started_at": 1791350378.0909588,
+      "finished_at": 1791350378.0988069
+    },
+    {
+      "argv": [
+        "/usr/bin/cpp",
+        "-P",
+        "-traditional-cpp",
+        "-DUSE_NETCDF4_FEATURES",
+        "-I/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-preflight-pr-work/WRF/external/ioapi_share",
+        "-I/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-preflight-pr-work/WRF/external/io_netcdf",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-preflight-pr-work/WRF/external/io_netcdf/wrf_io.F90"
+      ],
+      "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-preflight-backend-v3",
+      "kind": "cpp",
+      "status": "TERMINAL",
+      "pid": 1194944,
+      "actual_returncode": 0,
+      "timed_out": false,
+      "started_at": 1791350378.1132376,
+      "finished_at": 1791350378.1411214
+    },
+    {
+      "argv": [
+        "/usr/bin/m4",
+        "-G",
+        "-Uinclude",
+        "-Uindex",
+        "-Ulen",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-preflight-backend-v3/wrf_io.cpp.f90"
+      ],
+      "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-preflight-backend-v3",
+      "kind": "m4",
+      "status": "TERMINAL",
+      "pid": 1194946,
+      "actual_returncode": 0,
+      "timed_out": false,
+      "started_at": 1791350378.1500578,
+      "finished_at": 1791350378.1634784
+    },
+    {
+      "argv": [
+        "/usr/bin/gfortran",
+        "-O0",
+        "-g",
+        "-fcheck=all",
+        "-finit-integer=99",
+        "-fallow-argument-mismatch",
+        "-ffree-form",
+        "-ffree-line-length-none",
+        "-cpp",
+        "-DNETCDF",
+        "-I/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-preflight-pr-work/WRF/external/ioapi_share",
+        "-I/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/netcdf/include",
+        "-I/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/netcdf/include",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-preflight-backend-v3/wrf_io.f90",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-preflight-pr-work/WRF/external/io_netcdf/field_routines.F90",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-preflight-backend-v3/generic_rank_helper.f90",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-preflight-pr-work/WRF/test/rrtmgp/test_netcdf_zz.F90",
+        "-L/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/netcdf/lib",
+        "-lnetcdff",
+        "-lnetcdf",
+        "-lm",
+        "-o",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-preflight-backend-v3/O0/fixture.exe"
+      ],
+      "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-preflight-backend-v3/O0",
+      "kind": "GNU_compile_link",
+      "status": "TERMINAL",
+      "pid": 1194947,
+      "actual_returncode": 0,
+      "timed_out": false,
+      "started_at": 1791350378.1735885,
+      "finished_at": 1791350431.6615376
+    },
+    {
+      "argv": [
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-preflight-backend-v3/O0/fixture.exe"
+      ],
+      "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-preflight-backend-v3/O0/ranks-1",
+      "kind": "fixture_serial",
+      "status": "TERMINAL",
+      "pid": 1200387,
+      "actual_returncode": 0,
+      "timed_out": false,
+      "started_at": 1791350431.6781373,
+      "finished_at": 1791350431.7530015
+    },
+    {
+      "argv": [
+        "/usr/bin/gfortran",
+        "-O2",
+        "-g",
+        "-fcheck=all",
+        "-finit-integer=99",
+        "-fallow-argument-mismatch",
+        "-ffree-form",
+        "-ffree-line-length-none",
+        "-cpp",
+        "-DNETCDF",
+        "-I/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-preflight-pr-work/WRF/external/ioapi_share",
+        "-I/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/netcdf/include",
+        "-I/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/netcdf/include",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-preflight-backend-v3/wrf_io.f90",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-preflight-pr-work/WRF/external/io_netcdf/field_routines.F90",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-preflight-backend-v3/generic_rank_helper.f90",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-preflight-pr-work/WRF/test/rrtmgp/test_netcdf_zz.F90",
+        "-L/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/netcdf/lib",
+        "-lnetcdff",
+        "-lnetcdf",
+        "-lm",
+        "-o",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-preflight-backend-v3/O2/fixture.exe"
+      ],
+      "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-preflight-backend-v3/O2",
+      "kind": "GNU_compile_link",
+      "status": "TERMINAL",
+      "pid": 1200388,
+      "actual_returncode": 0,
+      "timed_out": false,
+      "started_at": 1791350431.7650995,
+      "finished_at": 1791350471.735821
+    },
+    {
+      "argv": [
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-preflight-backend-v3/O2/fixture.exe"
+      ],
+      "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-preflight-backend-v3/O2/ranks-1",
+      "kind": "fixture_serial",
+      "status": "TERMINAL",
+      "pid": 1203138,
+      "actual_returncode": 0,
+      "timed_out": false,
+      "started_at": 1791350471.7432082,
+      "finished_at": 1791350471.8126523
+    }
+  ],
+  "results": [
+    {
+      "optimization": "O0",
+      "ranks": 1,
+      "executable": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-preflight-backend-v3/O0/fixture.exe",
+        "sha256": "3216091c1a8ba3b90880d43acb0bb6ff24e0e5596783b528e33d6c547befc07e",
+        "size_bytes": 1069632
+      },
+      "netcdf": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-preflight-backend-v3/O0/ranks-1/zz.nc",
+        "sha256": "b5e7cdcc8dff3b53edfe55bed25ed21c746a86bd8949f583bd07c65a22ed9eea",
+        "size_bytes": 1124
+      }
+    },
+    {
+      "optimization": "O2",
+      "ranks": 1,
+      "executable": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-preflight-backend-v3/O2/fixture.exe",
+        "sha256": "3847062c8c1257ca72e2c380af40940cf5aa2d1a59838335f6e8d3e0079aec25",
+        "size_bytes": 1279608
+      },
+      "netcdf": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-preflight-backend-v3/O2/ranks-1/zz.nc",
+        "sha256": "b5e7cdcc8dff3b53edfe55bed25ed21c746a86bd8949f583bd07c65a22ed9eea",
+        "size_bytes": 1124
+      }
+    }
+  ],
+  "source_pins": [
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-preflight-pr-work/WRF/external/io_netcdf/wrf_io.F90",
+      "sha256": "bd19eb9d439ca975fce788cb0685424080b7e547cd0303287055d3c1dcb2b02c",
+      "size_bytes": 131877
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-preflight-pr-work/WRF/external/io_netcdf/field_routines.F90",
+      "sha256": "96e9b861ded26134694e6d9b7e1f46bd09a711eacf7a8eb8fee079308775079a",
+      "size_bytes": 6466
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-preflight-pr-work/WRF/test/rrtmgp/test_netcdf_zz.F90",
+      "sha256": "9812e443b59dd56279479f25e8001a88480c8b0299d0132769f83ebd8f1b99b0",
+      "size_bytes": 24103
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-preflight-pr-work/WRF/external/ioapi_share/wrf_io_flags.h",
+      "sha256": "ae2ef0a8ba2a1a042cce334921c82822b3560725fa49a5eb240bfc6cd4635124",
+      "size_bytes": 1167
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-preflight-pr-work/WRF/external/ioapi_share/wrf_status_codes.h",
+      "sha256": "df25bc800cb2729b8d21c52087920b7f6167a355ac208e071d574e7f7ba3618d",
+      "size_bytes": 8977
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-preflight-pr-work/WRF/frame/module_io.F",
+      "sha256": "1ff21750ce56d78681a9a9dc80d03578ce9b73a0a510664dd165ed84c47fae4b",
+      "size_bytes": 189968
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-preflight-pr-work/WRF/external/io_netcdf/ext_ncd_get_dom_ti.code",
+      "sha256": "574f8aa0f4c121e2888194f40a0d113884a13f192e23d9dcfc1c17f74021772d",
+      "size_bytes": 5449
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-preflight-pr-work/WRF/external/io_netcdf/ext_ncd_get_var_td.code",
+      "sha256": "305c9ae2d96732324d87739ae5f06e0beffa68601e205748e4098ec76d2890f8",
+      "size_bytes": 7956
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-preflight-pr-work/WRF/external/io_netcdf/ext_ncd_get_var_ti.code",
+      "sha256": "9cafeee3e7f7fd7a09913fd90a66b49f7011cd841a35e19150ed1e2925021af7",
+      "size_bytes": 6039
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-preflight-pr-work/WRF/external/io_netcdf/ext_ncd_put_dom_ti.code",
+      "sha256": "8c4ae2ff9e3f08aee8e137ddb1f19a30c4234268f683a4f98db840b955614565",
+      "size_bytes": 5769
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-preflight-pr-work/WRF/external/io_netcdf/ext_ncd_put_var_td.code",
+      "sha256": "7458d05b4b66dedbbbbbb7a3fe9aa5413172d553e65306e7275aa307359810f0",
+      "size_bytes": 8091
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-preflight-pr-work/WRF/external/io_netcdf/ext_ncd_put_var_ti.code",
+      "sha256": "48e7aa111b7248477b91a494b9bb0081655910c998f733e4de00e80c51fadadd",
+      "size_bytes": 4957
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-preflight-pr-work/WRF/external/io_netcdf/transpose.code",
+      "sha256": "542f84b1ce7a1d531d107ff6a087146744f86cd985b01aaa4a088da2fc807e08",
+      "size_bytes": 822
+    }
+  ],
+  "direct_netcdf_dependencies": [
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/root/usr/include/netcdf.inc",
+      "sha256": "7e9acf4acfbf4b70e7e2697c034aed2cd8378a4f02a6d4d4cfb5ed59cc8d4463",
+      "size_bytes": 61393
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/root/usr/include/netcdf.inc",
+      "sha256": "7e9acf4acfbf4b70e7e2697c034aed2cd8378a4f02a6d4d4cfb5ed59cc8d4463",
+      "size_bytes": 61393
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/root/usr/lib/x86_64-linux-gnu/libnetcdff.so.7.1.0",
+      "sha256": "9e8fe96709d71af61b88ad88caff7db8899369162b96aee66ecd6a553a5370f9",
+      "size_bytes": 653744
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/root/usr/lib/x86_64-linux-gnu/libnetcdf.so.19",
+      "sha256": "04fc972259131718fd96f0ea876654fe0a410a4af1635349dc8ec1590764f0f5",
+      "size_bytes": 1395960
+    }
+  ],
+  "mpi_is_actual_module_io": false,
+  "generic_rank_helper": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-preflight-backend-v3/generic_rank_helper.f90",
+    "sha256": "10f127cf634b8e1ba57dde0d245b144df1cbba9c45d7c5a137dce733ae2e97ae",
+    "size_bytes": 7463
+  },
+  "generic_helper_executed": true,
+  "selected_varinfo_wrapper_executed": true,
+  "wrapper_is_full_module_io": false,
+  "direct_write_preflight_cases": 12,
+  "memory_order_length_contract_checked": true,
+  "varinfo_attribute_and_output_lengths_checked": true,
+  "time_records": 2,
+  "time_unlimited_checked": true,
+  "real4_to_double_read_checked": true,
+  "invalid_read_order_checked": true,
+  "direct_helper_invalid_orders_checked": true,
+  "direct_helper_valid_order_count": 20,
+  "direct_helper_invalid_order_count": 5,
+  "direct_fieldio_invalid_read_checked": true,
+  "wrf_forecasts": 0,
+  "rte_calls": 0,
+  "physical_acceptance": false
+}
