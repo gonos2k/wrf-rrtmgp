@@ -1,6 +1,6 @@
 # 이전 검토 지적 해소 체크리스트
 
-현재 기준 main: `d87cd50d33d3ccebb4fdaec9c69d3ae800ae9479`. UDM27–RRTMGP37 전용.
+현재 기준 main: `42641d19d5cd5cf4b3b124270d365aa973be7727`. UDM27–RRTMGP37 전용.
 
 PR #146–#151은 main에 병합됐다. 기존 실행의 source pin·범위는 그대로 보존하며, 현재 전체 tree에서 모든 과거 모델을 새로 실행했다고 주장하지 않는다. PR #149의 NetCDF guard와 기본 namelist 검사는 main에 반영됐고 정확히 같은 tree에서 11개 CI가 성공했다. PR150의 추가 scalar 경계 수정도 main에 반영됐다. PR151의 I/O 세 항목도 main에 반영됐고 정확히 같은 전체 tree에서 11개 CI가 성공했다.
 
@@ -46,3 +46,10 @@ NetCDF 세 항목은 상속 문제이며 PR149 회귀나 실제 예보 실패로
 [PR152 자체 감사·정정](../netcdf-scalar-audit/README_ko.md)은 최종 검토 영수증의 잘못 연결된 체크리스트 hash를 새 정정 영수증으로 분리한다. 원래 sealed 기록은 변경하지 않았으며 완료15/미완료7의 내용은 동일하다. 독립 reader의 총수만 검사하던 약점은 실제 replacement 반례로 확인했고, 정확한 파일 roster 검사와 CI 독립 판독을 추가했다.
 
 [PR152 최종 CI 및 현재 UDM 부분 활성화 관측](../partial-activation-observation/README_ko.md)은 병합된 head의 11개 terminal SUCCESS와 같은 전체 tree를 연결한다. 새 직접 UDM fixture는 두 EOS 일관 밀도, 선행 부분 CF, 엄밀한 부분 activation 및 선택 과정 cap/floor 비활성을 관측한다. CF로 나눈 질량은 activation 전에 grid mean으로 복원됨을 구분한다. 생산 source·수농도 변환식은 바꾸지 않았으며 host input/storage/transport·단위·PSD/LUT 계약은 여전히 OPEN이다. 완료15/잔여7 및 원래19/current12는 그대로 유지한다.
+
+[PR153 terminal 및 실제 Thompson–UDM 액체 반경 커널 대조](../udm-thompson-cloud-radius/README_ko.md)는
+PR153의 main 통합과 11개 terminal SUCCESS를 별도로 연결한다. 새 O0/O2 시험은
+Thompson의 private cloud 상태만 준비하며 `thompson_init`·WRF 8/28 routing은 실행하지 않는다.
+질량당 입력→체적 수농도→gamma 모멘트 경계, 고정 체적 수농도와 UDM 원시 수농도의
+조건부 반응을 구분한다. actual helper 72회는 기상 사례 수가 아니며 물리 gate를 닫지 않는다.
+Thompson37 운영 지원·광학/예보 우열은 주장하지 않는다. 기존 sealed source pin은 유지한다.

@@ -1,0 +1,63 @@
+{
+  "ci_wiring": {
+    "artifact_upload_preserves_fresh_run_receipts": true,
+    "fresh_kernel_test_step_present": true,
+    "package_validation_path_trigger_present": false,
+    "saved_verifier_step_present": true
+  },
+  "claims_review": {
+    "README_distinguishes_old_PR153_remote_runs_from_local_kernel_process_counts": true,
+    "README_keeps_physical_acceptance_false_and_does_not_claim PSD/LUT or radiation accuracy": true,
+    "README_labels_kernel test as not full thompson_init nor WRF 8/28 routing": true,
+    "checklist_followup_completed": 15,
+    "checklist_followup_open": 7,
+    "historical_and_new_are_separated": true,
+    "original_acceptance_unchanged": true,
+    "production_accepted": false
+  },
+  "conclusion": "Package claims, archive identity, 111-payload roster metadata, source-pin equality metadata, receipt counts, and checklist scope align on read. Saved verification and the new fresh helper test are separate. Do not present PR153 terminal checks as validation of the new kernel candidate run; that run is an independent future workflow step. No physical acceptance is asserted.",
+  "finding": {
+    "detail": "The saved verifier and fresh kernel test are wired into validate-port.yml, but the workflow pull_request/push path filters do not include validation/rrtmgp37/udm-thompson-cloud-radius/**. A package-only edit to README, manifest, verifier, or saved payloads will not trigger this workflow automatically; adding that path to both filters closes the gap. WRF/test and workflow edits do trigger it, so the current change set will exercise it.",
+    "severity": "actionable_ci_trigger_gap"
+  },
+  "review_scope": {
+    "head": "42641d19d5cd5cf4b3b124270d365aa973be7727",
+    "no_compiler_model_rawstdout_or_array_decode": true,
+    "no_verifier_execution": true,
+    "tree": "4ccaf55b452f329780465b27b742956a07c01f26",
+    "worktree": "build/udm37-thompson-radius-pr-work"
+  },
+  "saved_historical_proof": {
+    "all_checks_completed_success": true,
+    "checks": 11,
+    "open_physical_gates": 7,
+    "pr153_head": "f5be994cf738d23336f6d9b88c000252091d5edd",
+    "pr153_merge": "42641d19d5cd5cf4b3b124270d365aa973be7727",
+    "pr153_state": "MERGED",
+    "process_counts": {
+      "actual_helper_calls": 72,
+      "compiler_or_link_processes": 22,
+      "compiler_version_queries": 1,
+      "fixture_processes": 6,
+      "observed_cloud_cells": 24
+    },
+    "receipt_status": "PASS_SCOPED_ACTUAL_CLOUD_RADIUS_KERNELS",
+    "scientific_acceptance": false,
+    "source_pins_before_equal_after": true,
+    "thompson_init_calls": 0
+  },
+  "schema": "udm37-thompson-radius-final-package-review-v1",
+  "sealed_package": {
+    "base_main": "42641d19d5cd5cf4b3b124270d365aa973be7727",
+    "base_tree": "4ccaf55b452f329780465b27b742956a07c01f26",
+    "manifest_payload_count": 111,
+    "manifest_sha256": "7c6f0a60f443d2f8e4e16cc3c657343cf4b83d3c17a35be71e1fb4daba33b21f",
+    "path": "validation/rrtmgp37/udm-thompson-cloud-radius",
+    "readme_sha256": "10e2e273f8f19c0c1885d5a7cda359c988aeb28eede0401e5b892531e8d49a61",
+    "receipt_sha256": "b07a32b9a09e18bc59444822dfccfc0114ae72fb7306b60dd81c152c97b976cc",
+    "scope": "Saved actual liquid-kernel comparison, conditional number contracts; not WRF/Thompson init/optics.",
+    "unique_payload_paths": 111,
+    "verifier_sha256": "5f68c3d3321dd4f530920cdfaf3534f8b87f4a8656306341ae659e098bfcb348"
+  },
+  "status": "PASS_SCOPED_WITH_TRIGGER_GAP"
+}

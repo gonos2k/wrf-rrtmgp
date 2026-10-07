@@ -1,0 +1,153 @@
+{
+  "schema": "UDM_THOMPSON_RADIUS_COMPARATOR_STATIC_REVIEW_V2",
+  "created_at_utc": "2026-10-07T10:24:46.856602+00:00",
+  "status": "PASS_SCOPED_FINAL_V3_SOURCE_AND_TERMINAL_METADATA_REVIEW",
+  "verdict_ko": "확정 v3 소스와 실제 저장 영수증을 확인했습니다. 폐쇄 record 폭, 제조 입력·조건부 수농도 arm, 초기화 anchor와 비활성 phase 검사가 보강됐고 O0/O2 각 다섯 부정대조가 거부됐습니다. 정확한 native-kind/ULP 재생은 아니며 그 제한과 같은 shape일 때만 밀도 상쇄된다는 제한이 이제 명시돼 있습니다. 생산 버그·단위·PSD/LUT 승인을 뜻하지 않습니다.",
+  "pins": {
+    "checker": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-thompson-radius-pr-work/WRF/test/rrtmgp/test_udm_thompson_radius.py",
+      "sha256": "0b6a6000126ed14f534c4e61b7e29590d4a93f599f786d342487021e41a8b70e",
+      "size_bytes": 15394
+    },
+    "fixture": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-thompson-radius-pr-work/WRF/test/rrtmgp/test_udm_thompson_radius.f90",
+      "sha256": "552333718dd13af3d828ce00d2da41eb140cf6474ea46f84ce3d6807abefcfbc",
+      "size_bytes": 2503
+    },
+    "UDM": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-thompson-radius-pr-work/WRF/phys/module_mp_udm.F",
+      "sha256": "7bd96141eefc6ae2cb66cea0ce022fcc2ee64afce5c616aa65f26711c8790947",
+      "size_bytes": 196865
+    },
+    "Thompson": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-thompson-radius-pr-work/WRF/phys/module_mp_thompson.F",
+      "sha256": "fabf19e2a9073cff886e882b187080bfdf089d3fd40c0fce1d19bc93b1e5e802",
+      "size_bytes": 240308
+    },
+    "receipt_v3": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-thompson-radius-native-v3/receipt.json",
+      "sha256": "b07a32b9a09e18bc59444822dfccfc0114ae72fb7306b60dd81c152c97b976cc",
+      "size_bytes": 49675
+    },
+    "prior_static_review": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-thompson-udm-radius-comparison-v1/comparator-static-review-v1.json",
+      "sha256": "0ce2596074b09129ebd2982dd33ffc606d26c14f447f5efd9d024fc1ad17b9c9",
+      "size_bytes": 7827
+    }
+  },
+  "prior_review_binding_correction": {
+    "prior_review_preserved": true,
+    "prior_check_body_read_sha256": "1169a3320b440e73da2cab454368de6f2b02088a7820b45f134d9827e4ae7c27",
+    "prior_review_recorded_checker_pin": "0b6a6000126ed14f534c4e61b7e29590d4a93f599f786d342487021e41a8b70e",
+    "cause": "Owner hardened checker while prior review was being sealed; final pin was sampled after that change but body observations initially described earlier bytes.",
+    "disposition": "Prior review is not a final-v3 approval. This additive review independently reads and binds exact 0b6a6000… bytes. Prior OBS-width suggestion is now resolved. No claim that the earlier entire checker bytes are preserved in the prior review."
+  },
+  "resolved_or_scoped_items": [
+    {
+      "id": "OBS-VECTOR-SIZE",
+      "status": "RESOLVED",
+      "evidence": "Parser requires CASE exactly19 and OBS exactly6 REAL32 words."
+    },
+    {
+      "id": "MANUFACTURED-ARMS",
+      "status": "HARDENED",
+      "evidence": "Each case verifies T/QV/QC, EOS/selected rho, explicit raw number formula, mode/constants, inactive ice/snow outputs; wrong-input-arm tamper is rejected."
+    },
+    {
+      "id": "INITIALIZATION",
+      "status": "QUALIFIED_AND_ANCHORED",
+      "evidence": "snapshot requires actual native Thompson initializer obmr and flag-setting anchors before inserting bridge. Test bridge initializes only private flag/exponent; thompson_init remains zero and mode labels explicitly refer to kernel state."
+    },
+    {
+      "id": "KIND-REPLAY",
+      "status": "CORRECTLY_QUALIFIED",
+      "evidence": "Report limits explicitly state Python binary64 pow/division with REAL32 operands is tolerance-bounded, not exact native-kind/ULP replay; assertion wording now bounded source-association. Relative2e-6/3e-6 remains declared."
+    },
+    {
+      "id": "SHAPE-CANCELLATION",
+      "status": "CORRECTLY_QUALIFIED",
+      "evidence": "Report states Thompson mass/number cancellation requires same gamma shape; high-number arms change shape. Cases3/4 share mu15. This does not infer universal density invariance."
+    }
+  ],
+  "source_preservation": {
+    "production_helpers_unchanged": true,
+    "all_four_bridge_observed_snapshot_marker_strips_equal_original_source": true,
+    "all_current_source_pins_join_saved_v3_before_and_after": true,
+    "no_number_unit_or_radiation_gate_change": true,
+    "read_only_init_inputs_and_return_case_bits": "Fixture verifies input array bits before/after helper; CASE dictionaries include raw hexadecimal words and compare exactly for bridge-off/observed-off/observed-on within each optimization."
+  },
+  "saved_actual_metadata": {
+    "status": "PASS_SCOPED_ACTUAL_CLOUD_RADIUS_KERNELS",
+    "counts": {
+      "compiler_or_link_processes": 22,
+      "fixture_processes": 6,
+      "compiler_version_queries": 1,
+      "actual_helper_calls": 72,
+      "observed_cloud_cells": 24
+    },
+    "actual_process_entries": 29,
+    "all_TERMINAL_RC0_no_timeout": true,
+    "each_optimization_cases": 12,
+    "each_optimization_negative_controls": [
+      "wrong-number",
+      "missing-observation",
+      "wrong-shape",
+      "clamped-radius",
+      "wrong-input-arm"
+    ],
+    "O0_O2_bridge_OFF_ON_CASE_equal_attested": true,
+    "snapshot_pins": [
+      {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-thompson-radius-native-v3/udm-bridge.F",
+        "sha256": "28e74dd2cbd17c94e3ba69f2b4d533542d6460cfc3254ca39419f2d32a0fc98f",
+        "size_bytes": 197040
+      },
+      {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-thompson-radius-native-v3/udm-observed.F",
+        "sha256": "3604ff9ebebc11fed150d5f121ed63f5d609b9d0a04a90b03a37ca54a8e3aacb",
+        "size_bytes": 197246
+      },
+      {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-thompson-radius-native-v3/thompson-bridge.F",
+        "sha256": "fa7455227b4352a85a032ea28249044a573e89a9894803494696607ac90ccc96",
+        "size_bytes": 240562
+      },
+      {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-thompson-radius-native-v3/thompson-observed.F",
+        "sha256": "206cefd55b6202fb2069da0ed91a9a1df793c5bb68e3b85e614eec33a34757cd",
+        "size_bytes": 240781
+      }
+    ],
+    "executable_pin_entries": 4,
+    "compiler": {
+      "path": "/usr/bin/x86_64-linux-gnu-gfortran-13",
+      "sha256": "7e292e9d5da17a37bb1c17a06afb6463db786c70827fd6893ed31a86715b03c3",
+      "size_bytes": 1027128
+    },
+    "compiler_version": "GNU Fortran (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0\nCopyright (C) 2023 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n",
+    "metadata_only_qualification": "Executable and state values were not read by reviewer. Process status, variant equality and control outcomes are reviewed as saved receipts; physical states were not independently reparsed."
+  },
+  "remaining_limits": [
+    "Full modules compile with dependency stubs and --gc-sections; no full WRF host/model/transport initialization or forecast is tested.",
+    "Bridge baseline is the actual helper with narrowly seeded private kernel state, not an uninitalized Thompson module and not thompson_init.",
+    "Cloud-only arms exclude ice/snow physics and radiation optics.",
+    "UDM raw NC slope versus rho-weighted activity gate is observed without deciding host unit authority or correcting the formula.",
+    "Conditional volume-number inputs remain declared hypotheses.",
+    "Thompson moment oracle assumes spherical liquid mass and generalized gamma PSD; matching this algebra does not prove physical PSD/LUT compatibility.",
+    "Bounds comparison and finite output guards exclude clamped/non-discriminating selected cases, but general cap/floor branches are not covered.",
+    "No cross-optimization bitwise equality or exact native-power implementation claim is made."
+  ],
+  "material_blockers": [],
+  "production_bug_confirmed": false,
+  "scientific_acceptance": false,
+  "number_unit_authority_approved": false,
+  "PSD_LUT_equivalence_approved": false,
+  "reviewer_counts": {
+    "compiler": 0,
+    "fixture": 0,
+    "model": 0,
+    "RTE": 0,
+    "raw_scientific_array_decodes": 0,
+    "synthetic_or_saved_checker_runs": 0
+  }
+}
