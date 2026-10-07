@@ -71,6 +71,8 @@ jobs:
         run: python3 tools/register37.py --check
       - name: Verify WRF UDM module dependency edges schedule under parallel make
         run: python3 WRF/test/rrtmgp/test_wrf_udm_dependencies.py WRF/main/depend.common
+      - name: Verify saved partial-activation bytes without approving physical units
+        run: python3 -I -S validation/rrtmgp37/partial-activation-observation/verify_saved.py
       # Stored numerical evidence pins the pre-stage-instrumentation sources.
       # Authenticate that historical checkout rather than retagging old results
       # as calculations from the current wrappers. Current code is checked above
@@ -143,6 +145,22 @@ jobs:
         run: >-
           python3 WRF/test/rrtmgp/verify_netcdf_zz_outputs.py build/netcdf-zz
           --output build/netcdf-zz-independent.json
+      - name: Observe current UDM partial activation at two EOS-consistent densities
+        run: >-
+          python3 WRF/test/rrtmgp/test_udm_partial_activation.py WRF
+          --workdir build/udm-partial-activation
+      - name: Preserve current UDM observation sources, states, and actual return codes
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: udm-partial-activation-${{ github.run_id }}
+          path: |
+            build/udm-partial-activation/*.json
+            build/udm-partial-activation/*.stdout
+            build/udm-partial-activation/*.stderr
+            build/udm-partial-activation/*.F
+          retention-days: 30
+          if-no-files-found: error
       - name: Save NetCDF backend round-trip receipts and logs
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02

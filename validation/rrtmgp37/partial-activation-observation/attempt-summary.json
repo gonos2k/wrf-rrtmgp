@@ -1,0 +1,83 @@
+{
+  "schema": "UDM37_PARTIAL_ACTIVATION_ATTEMPTS_V1",
+  "trials": [
+    {
+      "attempt": 1,
+      "receipt_sha256": "4689f50ebc660d7a1ac31d59d4fab1509344144c7e1c47aa97caae8085794372",
+      "status": "FAIL_PRESERVED_STOPPED",
+      "error": "Fixture UTF-8 decode used ASCII; preparation failed before child launch.",
+      "compiler_or_link_children": 0,
+      "fixture_children": 0,
+      "compiler_version_queries": 0,
+      "physical_acceptance": false
+    },
+    {
+      "attempt": 2,
+      "receipt_sha256": "50042cad691c04bf61f31f15ca11afd205688278e53a18485cdff175f92b6e19",
+      "status": "FAIL_PRESERVED_STOPPED",
+      "error": "RuntimeError: link actual RC 1; receipt /NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v2/command-06.json",
+      "compiler_or_link_children": 6,
+      "fixture_children": 0,
+      "compiler_version_queries": 0,
+      "physical_acceptance": false
+    },
+    {
+      "attempt": 3,
+      "receipt_sha256": "473ffbf55e093f2458cc168e4a1f63417607aecfaf872be4ec202dd254285ed6",
+      "status": "FAIL_PRESERVED_STOPPED",
+      "error": "ValueError: exact observer case/stage/layer/subcycle roster differs",
+      "compiler_or_link_children": 8,
+      "fixture_children": 3,
+      "compiler_version_queries": 0,
+      "physical_acceptance": false
+    },
+    {
+      "attempt": 4,
+      "receipt_sha256": "e8529d5d654124353154766025fb25d53aaf94fdddc0034328ac8839f848b70c",
+      "status": "PASS_SCOPED_ACTUAL_UDM_PARTIAL_ACTIVATION",
+      "error": "",
+      "compiler_or_link_children": 16,
+      "fixture_children": 6,
+      "compiler_version_queries": 0,
+      "physical_acceptance": false
+    },
+    {
+      "attempt": 5,
+      "receipt_sha256": "572db3650bfb68a92ebb0c254a99b2c6bc15fffad5a1fccc5a8df0a74e91a72c",
+      "status": "PASS_SCOPED_ACTUAL_UDM_PARTIAL_ACTIVATION",
+      "error": "",
+      "compiler_or_link_children": 16,
+      "fixture_children": 6,
+      "compiler_version_queries": 1,
+      "physical_acceptance": false
+    },
+    {
+      "attempt": 6,
+      "receipt_sha256": "ac8f87463e579a54c8d0da94b0b7afc3240784a216408fc4f018c19e1a6847ff",
+      "status": "PASS_SCOPED_ACTUAL_UDM_PARTIAL_ACTIVATION",
+      "error": "",
+      "compiler_or_link_children": 16,
+      "fixture_children": 6,
+      "compiler_version_queries": 1,
+      "physical_acceptance": false
+    }
+  ],
+  "notes": [
+    "Attempt2: observer module duplicate symbols in fixture link; no UDM call.",
+    "Attempt3: expected all four layers active, but actual udm2d ktopini=kte-1. The analyzer expectation was corrected; production code unchanged.",
+    "Attempt4: first scoped PASS, then team review tightened rate association and latent-temperature coverage.",
+    "Attempt5: final fresh source/compile/execution with the strengthened oracle; earlier records preserved.",
+    "Attempt6: explicit preceding closure CF-to-activation identity join added after the independent reviewer suggestion; final fresh compile/execution."
+  ],
+  "counts": {
+    "compiler_or_link_children": 62,
+    "fixture_children": 21,
+    "compiler_version_queries": 2,
+    "actual_outer_udm_calls": 84,
+    "full_WRF_builds": 0,
+    "WRF_host_runs": 0,
+    "RTE_runs": 0
+  },
+  "original_trial_receipts_preserved_locally": true,
+  "final_trial": 6
+}

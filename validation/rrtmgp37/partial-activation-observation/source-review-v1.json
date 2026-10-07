@@ -1,0 +1,133 @@
+{
+  "schema": "UDM37_PARTIAL_ACTIVATION_SOURCE_REVIEW_V1",
+  "created_at_utc": "2026-10-07T07:57:45.497543+00:00",
+  "status": "FINDINGS_REQUIRE_ORACLE_CORRECTION_FOR_COMPLETE_SAME_STAGE_ARITHMETIC_CLAIM",
+  "verdict_ko": "생산 회귀는 확인하지 않았습니다. 원문 보존과 native/OFF/ON 반환값 비교 및 양의 부분 activation 관측은 타당하나, 질량 rate 연산 순서와 온도 증가 oracle의 검증 공백을 수정해야 합니다. 기존 v4 실행 성공은 보존하며 수정된 검사에 대한 성공으로 재표시하지 않습니다.",
+  "review_scope": [
+    "Static source and saved small JSON metadata only",
+    "No fixture execution, compiler, model, RTE, scientific array or binary reads by reviewer"
+  ],
+  "head": "d87cd50d33d3ccebb4fdaec9c69d3ae800ae9479",
+  "head_tree": "7491ad2dcfdbf4db750b7a990e16d7abae4fdabd",
+  "pins": {
+    "actual_v4_receipt": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v4/receipt.json",
+      "sha256": "e8529d5d654124353154766025fb25d53aaf94fdddc0034328ac8839f848b70c",
+      "size_bytes": 48647
+    },
+    "actual_v4_plan": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v4/plan.json",
+      "sha256": "f07ba26db3f3a883fd7eb29c7a93213a34ce2d599860c5dcad8a6777ce31ab2c",
+      "size_bytes": 3832
+    },
+    "production_source": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-pr-work/WRF/phys/module_mp_udm.F",
+      "sha256": "7bd96141eefc6ae2cb66cea0ce022fcc2ee64afce5c616aa65f26711c8790947",
+      "size_bytes": 196865
+    },
+    "native_source_snapshot": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v4/native_udm.F",
+      "sha256": "7bd96141eefc6ae2cb66cea0ce022fcc2ee64afce5c616aa65f26711c8790947",
+      "size_bytes": 196865
+    },
+    "observed_source_snapshot": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v4/observed_udm.F",
+      "sha256": "8c9793edf281feb7601d9eeccd9e10b8592546ec6b96b6c95ed7f3f96645578e",
+      "size_bytes": 199615
+    },
+    "fixture_as_reviewed": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-pr-work/WRF/test/rrtmgp/test_udm_partial_activation.f90",
+      "sha256": "5b7c3dc59cb8534ad6f0cebd04c3070b5e333621e02601bf1c324790b33ac01a",
+      "size_bytes": 4696
+    },
+    "checker_as_initially_reviewed": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-pr-work/WRF/test/rrtmgp/test_udm_partial_activation.py",
+      "sha256": "b599997c8afc3ebd01635e0e3442ae4d84d6ef85257f6daef8ea5cc981576398",
+      "size_bytes": 17970
+    }
+  },
+  "identity_note": "Initial checker SHA b599997c8afc3ebd01635e0e3442ae4d84d6ef85257f6daef8ea5cc981576398 is pinned by the unchanged v4 receipt. Owner began additive validation corrections while this review was being sealed; current working checker bytes are not represented as v4 bytes or approved by this review.",
+  "source_equivalence": {
+    "native_snapshot_equals_HEAD_and_current_production": true,
+    "strip_12_marked_blocks_recovers_production_exact_bytes": true,
+    "production_modified_by_fixture": false,
+    "hooks": "Imports and capture calls inserted at unique anchors; six immediate CF mass transforms and the native activation/radius statements remain unchanged."
+  },
+  "actual_saved_metadata": {
+    "status": "PASS_SCOPED_ACTUAL_UDM_PARTIAL_ACTIVATION",
+    "counts": {
+      "compiler_or_link_processes": 16,
+      "fixture_processes": 6,
+      "actual_outer_udm_calls": 24,
+      "observed_active_cells": 24
+    },
+    "commands": 22,
+    "all_journals_status_TERMINAL_actual_returncode_0_no_timeout": true,
+    "all_22_journal_PID_and_RC_join_to_receipt": true,
+    "O0_and_O2_observed_stage_records_each": 140,
+    "rows_each": 12,
+    "compiler": {
+      "path": "/usr/bin/x86_64-linux-gnu-gfortran-13",
+      "sha256": "7e292e9d5da17a37bb1c17a06afb6463db786c70827fd6893ed31a86715b03c3",
+      "size_bytes": 1027128
+    },
+    "source_pins_before_equal_after": true,
+    "journal_limit": "TERMINAL is supported by command metadata; these journals do not provide a distinct process_group_clean/reaped field. No independent process-table check was performed."
+  },
+  "checks_supported": [
+    "Six fixture processes cover native OFF, instrumented OFF and instrumented ON separately at GNU O0/O2; all four cases compare 73 RETURN REAL32 hex words and integer tags against native OFF within each optimization.",
+    "Exact observer roster includes three active udm2d layers, four helper layers, four cases and one subcycle; missing/duplicate identities are rejected. The top helper layer is observed but is outside the 12 active-cell arithmetic checks per optimization.",
+    "Density arms 0.7/1.1 use supplied dry density and EOS-consistent p=rho_d*T*(Rd+Rv*qv), fixed T and manufactured RH targets; the actual supplied ep2=.622 convention is explicit. This is a direct fixture contract, not a full WRF host-state proof.",
+    "Immediate CF division and restoration check all six masses and three unchanged number arrays. Intervening process changes are permitted; no inverse-through-process identity is asserted.",
+    "Activation occurs after CF mass restoration (source lines 1298-1314 versus 2527-2538). preceding_closure_cf labels retained CF context; activation QC is restored grid-mean source state, not an in-cloud activation input.",
+    "Partial alpha, positive NC_ACT, inactive NN/water caps and inactive number floors are checked. Tests reject forced floor, alpha=1 and missing-stage mutations. Number budget permits declared native rounding residual.",
+    "Radius helper inputs are unchanged by its call and checked against returned T/QC/QI/QS/NC/radii for active layers. The fixture does not establish number-unit authority, PSD moments or LUT equivalence."
+  ],
+  "findings": [
+    {
+      "id": "ORACLE-MASS-ASSOCIATION",
+      "severity": "MEDIUM_VALIDATION_GAP",
+      "status": "ROOT_ACCEPTED_FIX_PENDING_NEW_RECEIPT",
+      "path": "WRF/test/rrtmgp/test_udm_partial_activation.py",
+      "lines": [
+        184,
+        191
+      ],
+      "source_anchor": "WRF/phys/module_mp_udm.F:2532-2533",
+      "evidence": "Checker forms prefactor/(3*rho) and then multiplies NC_ACT; native source multiplies NC_ACT into numerator before denominator division. REAL32 rounding need not be identical. The libm bound cannot be described as exact preservation of source association.",
+      "required_change": "Reconstruct (((4*pi)*denr)*exp(log(actr)*3)*ncact)/(3*rho) in source order, retaining only the declared libm comparison qualification."
+    },
+    {
+      "id": "ORACLE-TEMPERATURE-AND-UNTOUCHED-STATE",
+      "severity": "MEDIUM_VALIDATION_GAP",
+      "status": "ROOT_ACCEPTED_FIX_PENDING_NEW_RECEIPT",
+      "path": "WRF/test/rrtmgp/test_udm_partial_activation.py",
+      "lines": [
+        194,
+        204
+      ],
+      "source_anchor": "WRF/phys/module_mp_udm.F:2534-2538",
+      "evidence": "ACT_POST captures T but check() does not verify preT + ((pcact*cached_xlv)/cached_cpm)*dt. It also does not explicitly verify unchanged NR/other condensates/P/rho/CF through this isolated activation block. Matching native/OFF/ON returns proves observer passivity, not an independent equation oracle.",
+      "required_change": "Add source-ordered temperature arithmetic and nonupdated-state invariants, plus temperature/unchanged-field tamper controls. Use recorded cached CPM/XLV, not an incorrectly recomputed current-state cache."
+    }
+  ],
+  "nonblocking_qualifiers": [
+    "INPUT vectors are compared as decoded finite floats; RETURN vectors compare exact hexadecimal words. Only the latter supports bitwise wording, including signed zero.",
+    "pristine_OFF_ON_returns_bitwise_equal means the retained uninstrumented project UDM source in this fixture, not upstream pristine WRF.",
+    "No cross-optimization bitwise equivalence claim is made or required.",
+    "The fixture deliberately uses uncapped/unfloored partial activation; it does not test active cap/floor branches.",
+    "Compiler version and executable pre/post pins are not in the retained v4 final receipt; parent plans an additive successor with those identities."
+  ],
+  "production_bug_confirmed": false,
+  "scientific_acceptance": false,
+  "number_units_approved": false,
+  "PSD_or_LUT_equivalence_approved": false,
+  "reviewer_execution_counts": {
+    "compiler": 0,
+    "fixture": 0,
+    "model": 0,
+    "RTE": 0,
+    "raw_scientific_reads": 0
+  },
+  "next_step": "Parent owns source correction and a fresh separately recorded fixture run. Preserve v4 successful receipt and all earlier failures; inspect successor pins/receipt in an additive review."
+}

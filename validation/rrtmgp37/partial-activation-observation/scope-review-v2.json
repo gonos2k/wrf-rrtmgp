@@ -1,0 +1,67 @@
+{
+  "delta_review": {
+    "assertion": "before['cf'] == restored['cf'] == pre['cf']",
+    "finding": "The equality binds diagnosed cloud fraction before the in-cloud divide, its value after restoration, and activation entry state. It resolves the prior review\u2019s nonblocking source-backed temporal-identity hardening finding.",
+    "negative_control": "Deleting CF_RESTORED is rejected as a missing-stage; forced-floor, nonpartial-alpha, and temperature-update controls remain.",
+    "stages": [
+      "CF_IN",
+      "CF_RESTORED",
+      "ACT_PRE"
+    ]
+  },
+  "execution_receipt": {
+    "O0_O2": true,
+    "RTE_runs": 0,
+    "WRF_host_runs": 0,
+    "counts": {
+      "actual_outer_udm_calls": 24,
+      "compiler_or_link_processes": 16,
+      "compiler_version_queries": 1,
+      "fixture_processes": 6,
+      "observed_active_cells": 24
+    },
+    "full_WRF_builds": 0,
+    "path": "build/udm37-partial-activation-native-v6/receipt.json",
+    "pristine_OFF_ON_return_bits_equal": {
+      "O0": true,
+      "O2": true
+    },
+    "sha256": "ac8f87463e579a54c8d0da94b0b7afc3240784a216408fc4f018c19e1a6847ff",
+    "source_pin_match": true,
+    "source_pins_before_after_equal": true,
+    "status": "PASS_SCOPED_ACTUAL_UDM_PARTIAL_ACTIVATION"
+  },
+  "prior_review": {
+    "path": "build/udm37-partial-activation-preparation-v1/scope-review-v1.json",
+    "preserved": true,
+    "sha256": "42962d0bc844f204a51afc1fd71b61c7634ee72fcf81525056ccd42b7cba97e00"
+  },
+  "reviewer_activity": {
+    "compiler_or_link_runs": 0,
+    "fixture_runs": 0,
+    "model_runs": 0,
+    "raw_array_access": 0,
+    "tracked_source_edits": 0
+  },
+  "schema": "UDM37_PARTIAL_ACTIVATION_CF_IDENTITY_REVIEW_V2",
+  "scope": "Additive review of the CF identity gate and v6 saved receipt only. Static source/JSON metadata review; no compiler, fixture execution, model, RTE, or raw scientific-array access by reviewer.",
+  "scope_limits": {
+    "production_or_physical_acceptance": false,
+    "qualification": "This is a source-level actual-module fixture result, not physical or host-path acceptance.",
+    "remaining_physical_gates": 7,
+    "unresolved": [
+      "host producer/storage/transport/restart integration",
+      "number concentration unit/population authority",
+      "PSD/moment/LUT equivalence",
+      "full WRF/MPI/RTE behavior"
+    ]
+  },
+  "source": {
+    "fortran_harness_sha256": "5b7c3dc59cb8534ad6f0cebd04c3070b5e333621e02601bf1c324790b33ac01a",
+    "fortran_harness_size_bytes": 4696,
+    "path": "build/udm37-partial-activation-pr-work/WRF/test/rrtmgp/test_udm_partial_activation.py",
+    "sha256": "eba6f4093df2fec2f84f518464a807f103adb65d93ccb3bb6b1454ab893d37ef",
+    "size_bytes": 19221
+  },
+  "status": "PASS_SCOPED_CF_IDENTITY_HARDENING_REVIEW"
+}

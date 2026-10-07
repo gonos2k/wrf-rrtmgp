@@ -1,0 +1,145 @@
+{
+  "schema": "UDM37_PARTIAL_ACTIVATION_SOURCE_REVIEW_V2",
+  "created_at_utc": "2026-10-07T07:59:17.454571+00:00",
+  "status": "PASS_SCOPED_STATIC_SOURCE_AND_SAVED_V5_METADATA_REVIEW",
+  "verdict_ko": "초기 두 oracle 공백이 수정되었습니다. 원문 복원, native/OFF/ON 반환값 비교, 부분 activation의 같은 단계 연산과 온도 증가 검사를 확인했습니다. O0/O2 성공은 실제 저장 receipt에 근거하며 reviewer는 실행하지 않았습니다. Nc 단위·PSD·복사·전체 WRF 물리 승인으로 확대할 수 없습니다.",
+  "head": "d87cd50d33d3ccebb4fdaec9c69d3ae800ae9479",
+  "head_tree": "7491ad2dcfdbf4db750b7a990e16d7abae4fdabd",
+  "pins": {
+    "initial_findings": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-preparation-v1/source-review-v1.json",
+      "sha256": "40faf813c4c7eccb1243fefe03ee1fc98f04dc96c94ddb79809698a58061943f",
+      "size_bytes": 8885
+    },
+    "saved_v5_receipt": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v5/receipt.json",
+      "sha256": "572db3650bfb68a92ebb0c254a99b2c6bc15fffad5a1fccc5a8df0a74e91a72c",
+      "size_bytes": 51981
+    },
+    "saved_v5_plan": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v5/plan.json",
+      "sha256": "e9651780080d559659a206ffc83709f13c3790a0841a0f103f4a85b13d55af4c",
+      "size_bytes": 3832
+    },
+    "checker": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-pr-work/WRF/test/rrtmgp/test_udm_partial_activation.py",
+      "sha256": "07045d51c834784f22ffd9d2e0256758a8be507040c35265a3461f9b5a6a6ff5",
+      "size_bytes": 19115
+    },
+    "fixture": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-pr-work/WRF/test/rrtmgp/test_udm_partial_activation.f90",
+      "sha256": "5b7c3dc59cb8534ad6f0cebd04c3070b5e333621e02601bf1c324790b33ac01a",
+      "size_bytes": 4696
+    },
+    "production_udm": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-pr-work/WRF/phys/module_mp_udm.F",
+      "sha256": "7bd96141eefc6ae2cb66cea0ce022fcc2ee64afce5c616aa65f26711c8790947",
+      "size_bytes": 196865
+    },
+    "native_snapshot": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v5/native_udm.F",
+      "sha256": "7bd96141eefc6ae2cb66cea0ce022fcc2ee64afce5c616aa65f26711c8790947",
+      "size_bytes": 196865
+    },
+    "observed_snapshot": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v5/observed_udm.F",
+      "sha256": "8c9793edf281feb7601d9eeccd9e10b8592546ec6b96b6c95ed7f3f96645578e",
+      "size_bytes": 199615
+    },
+    "preserved_v4_receipt": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v4/receipt.json",
+      "sha256": "e8529d5d654124353154766025fb25d53aaf94fdddc0034328ac8839f848b70c",
+      "size_bytes": 48647
+    }
+  },
+  "review_scope": "Source and saved small JSON only; no fixture log/array, executable binary, compiler, scientific reader, WRF model or RTE execution.",
+  "finding_dispositions": [
+    {
+      "id": "ORACLE-MASS-ASSOCIATION",
+      "status": "RESOLVED_SCOPED",
+      "source": "WRF/test/rrtmgp/test_udm_partial_activation.py:184",
+      "evidence": "Numerator now multiplies NC_ACT before division by native (3*rho), matching module_mp_udm.F:2532-2533. Eight REAL32 eps relative bound remains explicitly limited to libm exp/log differences, not a portable bitwise rate claim."
+    },
+    {
+      "id": "ORACLE-TEMPERATURE-AND-UNTOUCHED-STATE",
+      "status": "RESOLVED_SCOPED",
+      "source": "WRF/test/rrtmgp/test_udm_partial_activation.py:200",
+      "evidence": "ACT_POST T is checked exactly against source-ordered preT + ((pcact*recorded cached XLV)/recorded cached CPM)*dt. NR/QI/QR/QS/QG/QH/P/rho/CF are required unchanged. Temperature tamper is rejected at both O0 and O2 in the saved result."
+    }
+  ],
+  "source_checks": {
+    "same_12_marker_blocks_as_v4": true,
+    "strip_recovers_production_byte_exact": true,
+    "native_snapshot_equals_production_and_HEAD": true,
+    "production_physics_not_modified": true,
+    "fixture_f90_unchanged_from_v4": true,
+    "cached_thermo_operands": "ACT_RATE records native CPM/XLV cache from initial udm2d stage; temperature check consumes those operands rather than recomputing from changed activation state.",
+    "CF_order": "Six masses are restored at native lines 1298-1314 before activation at 2527-2538; preceding_closure_cf is context, not an in-cloud activation-QC label."
+  },
+  "saved_terminal_checks": {
+    "receipt_sha_expected": "572db3650bfb68a92ebb0c254a99b2c6bc15fffad5a1fccc5a8df0a74e91a72c",
+    "status": "PASS_SCOPED_ACTUAL_UDM_PARTIAL_ACTIVATION",
+    "counts": {
+      "compiler_or_link_processes": 16,
+      "fixture_processes": 6,
+      "compiler_version_queries": 1,
+      "actual_outer_udm_calls": 24,
+      "observed_active_cells": 24
+    },
+    "actual_children_total": 23,
+    "all_23_command_journals_equal_final_process_entries": true,
+    "all_actual_RC0_terminal_no_timeout": true,
+    "native_OFF_observed_OFF_ON_per_optimization": true,
+    "returned_73_REAL32_words_and_tags_equal": true,
+    "exact_stage_records_per_ON": 140,
+    "active_rows_per_optimization": 12,
+    "positive_partial_alpha": true,
+    "caps_and_floors_inactive": true,
+    "four_negative_controls_per_optimization": [
+      "forced-floor",
+      "nonpartial-alpha",
+      "missing-stage",
+      "temperature-update"
+    ],
+    "six_source_pins_before_after_and_current_equal": true,
+    "four_executable_before_after_metadata_pins_equal": true,
+    "fixture_argv_joins_to_executable_pins": true,
+    "compiler": {
+      "path": "/usr/bin/x86_64-linux-gnu-gfortran-13",
+      "sha256": "7e292e9d5da17a37bb1c17a06afb6463db786c70827fd6893ed31a86715b03c3",
+      "size_bytes": 1027128
+    },
+    "compiler_version": {
+      "text": "GNU Fortran (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0\nCopyright (C) 2023 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n",
+      "stdout": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-partial-activation-native-v5/command-01.stdout",
+        "sha256": "164c77399862886648a0d9c6bbf3893b553ab1e090d03b760cd6daaa0ee9bbf1",
+        "size_bytes": 252
+      }
+    },
+    "compiler_or_executable_binaries_not_rehashed_by_reviewer": true
+  },
+  "EOS_scope": "Direct manufactured cells use actual supplied dry rho, T=285 and p=rho_d*T*(287+461.6*qv), source REAL32 association and ep2=.622 saturation convention. Two density arms keep raw number arrays equal and target partial alpha; this establishes the explicit fixture inputs, not universal host thermodynamics or number-unit authority.",
+  "remaining_limits": [
+    "native/pristine wording refers to the uninstrumented current project UDM, not upstream pristine WRF.",
+    "INPUT comparison uses decoded finite values; only returned hexadecimal words support signed-zero-sensitive bitwise wording.",
+    "Passivity covers the 73 returned REAL32 words and integer tags at each optimization; cross-optimization equality is not claimed.",
+    "Three active layers per case receive arithmetic checks; the fourth layer is helper-observed only.",
+    "Only inactive-cap/floor partial activation branches are tested; active cap/floor general coverage is not claimed.",
+    "Helper state-to-return joins are demonstrated; no independent PSD/moment/LUT equivalence or host producer/storage/transport unit authority is demonstrated.",
+    "Command journals state TERMINAL/RC0 and no timeout; no separate process_group_clean field or independent process-table inspection was performed by reviewer.",
+    "No full WRF build, WRF host run, MPI integration, RTE or physical accuracy claim arises from this fixture."
+  ],
+  "scientific_acceptance": false,
+  "number_units_approved": false,
+  "PSD_equivalence_approved": false,
+  "production_bug_confirmed": false,
+  "reviewer_counts": {
+    "compiler": 0,
+    "fixture": 0,
+    "WRF_model": 0,
+    "RTE": 0,
+    "raw_scientific_reads": 0
+  },
+  "historical_preservation": "source-review-v1.json and actual v4 receipt remain unchanged; this review binds only corrected v5. Earlier failed attempts remain historical and are not reclassified."
+}
