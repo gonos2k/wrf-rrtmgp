@@ -1,0 +1,92 @@
+{
+  "artifact_provenance_note": {
+    "note": "The previously saved current-test-receipt.json predates the final source freeze; current Python unit and registration checks were independently rerun successfully. Root is preparing refreshed final evidence receipts.",
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-helper-audit-pr-work/validation/rrtmgp37/helper-error-audit/current-test-receipt.json",
+    "prior_receipt_source_hashes_match_latest": {
+      "WRF/test/rrtmgp/namelist.scm37": true,
+      "WRF/test/rrtmgp/test_udm_startup_snow_scm.py": false,
+      "WRF/test/rrtmgp/test_udm_startup_snow_scm_namelist.py": false,
+      "config/registration37.json": false
+    },
+    "sha256": "aed3c3464f061e2abf0bcbfb35bccb2774a7e71a50ed2d2297ca4c20f921eea0"
+  },
+  "current_source_pins": {
+    "helper": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-helper-audit-pr-work/WRF/test/rrtmgp/test_udm_startup_snow_scm.py",
+      "sha256": "cce0cef780f38c226b0a31694bb74f4d072a91c05f34562244afbe600243803d",
+      "size_bytes": 46629
+    },
+    "registration": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-helper-audit-pr-work/config/registration37.json",
+      "sha256": "92425b6aef0a3d3d38b929c521e17ceeb2798e2da11243b31913cc62bb6ce4e8",
+      "size_bytes": 32994
+    },
+    "tests": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-helper-audit-pr-work/WRF/test/rrtmgp/test_udm_startup_snow_scm_namelist.py",
+      "sha256": "845c029d7e62c89e9f1a15256157daf0a45c843a93a5d0dfe7df2e3fb297d243",
+      "size_bytes": 9354
+    }
+  },
+  "fixture_equivalence": {
+    "base_commit": "439bf0d626a89ab105093945e946e47d7cf80f94",
+    "comparison": "Full make_namelist output bytes using the same namelist.scm37; parent set_assignment versus current implementation. Independently reproduced and compared to the saved fixture files.",
+    "independent_reproduction": "PASS; 4/4 and 37/37 current outputs equal parent outputs byte-for-byte and match saved output files.",
+    "receipt_path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-helper-audit-pr-work/validation/rrtmgp37/helper-error-audit/fixture-compatibility.json",
+    "receipt_sha256": "0c0a6dce7ba2b4c1d119b1a998a80c91a6db5ce349dbc513b2b3b87ecabfdfcd",
+    "results": [
+      {
+        "bytes_equal_parent": true,
+        "lw": 4,
+        "sha256": "a99f19621e5103b20a6bfb347e47e6132b1e4a82f6967569298b5469880b6dfd",
+        "sw": 4
+      },
+      {
+        "bytes_equal_parent": true,
+        "lw": 37,
+        "sha256": "df74350575c64b9faf71610e81499decc2640025ea9858e3c3e7506895aee6dc",
+        "sw": 37
+      }
+    ]
+  },
+  "review_findings": [
+    {
+      "detail": "Indexed targets, duplicate indexed targets, same-line RHS list values including null slots, continued RHS values, repeat counts and continued quoted RHS values now fail closed. Existing comment/quoted scalar/same-line other-assignment behavior remains tested.",
+      "severity": "none_detected"
+    },
+    {
+      "detail": "Current real make_namelist 4/4 and 37/37 outputs retain the exact parent byte sequences. The compatibility tests now assert the generated RA values, history_interval=0, history_interval_s=60 and frames_per_outfile=10000.",
+      "severity": "none_detected"
+    }
+  ],
+  "schema": "UDM37_HELPER_ERRORS_FINAL_PYTHON_REVIEW_V2",
+  "scope_limits": [
+    "Review and tests are Python-only; no compiler, WRF model, RTE, MPI or scientific payload access.",
+    "The worktree also contains registration/checklist edits and an untracked helper-error-audit evidence directory; only the helper/test diff and registration check were evaluated here."
+  ],
+  "status": "PASS_SCOPED_HELPER_AND_FIXTURE_REVIEW_REGISTRATION_CURRENT",
+  "test_results": {
+    "actual_returncode": 0,
+    "command": "python3.12 -B test_udm_startup_snow_scm_namelist.py",
+    "compiler_model_rte_calls": 0,
+    "registration_check_command": "python3.12 -B tools/register37.py --check",
+    "registration_check_returncode": 0,
+    "registration_stderr": "",
+    "registration_stdout": "REGISTERED37_CPU_LINKED_AND_VERIFIED",
+    "test_method_count": 22,
+    "tests_passed": 22
+  },
+  "worktree": {
+    "diff_check": "PASS",
+    "head": "439bf0d626a89ab105093945e946e47d7cf80f94",
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-helper-audit-pr-work",
+    "status_paths": [
+      " M WRF/test/rrtmgp/test_udm_startup_snow_scm.py",
+      " M WRF/test/rrtmgp/test_udm_startup_snow_scm_namelist.py",
+      " M config/registration37.json",
+      " M validation/rrtmgp37/acceptance/REVIEW_RESOLUTION_ko.md",
+      " M validation/rrtmgp37/acceptance/review-resolution-checklist.json",
+      "?? validation/rrtmgp37/helper-error-audit/"
+    ],
+    "two_python_file_diff_sha256": "99f2180cfd1ac1fe494a4a9c788f452e60ef47a915040e78c1e191dd733bcb61"
+  }
+}

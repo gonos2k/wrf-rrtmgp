@@ -1,8 +1,8 @@
 {
   "schema": "UDM37_REVIEW_RESOLUTION_CHECKLIST_V2",
   "main_snapshot": {
-    "commit": "9d7e79182395cd81bc7ed3805126575f64005bc3",
-    "tree": "e6bff303ab9d7aebee505334c8dfe3ce17f576e1"
+    "commit": "439bf0d626a89ab105093945e946e47d7cf80f94",
+    "tree": "229f9372bfac5e6a26ed7387dc5c43df39ad3916"
   },
   "scope": "UDM27, LW37/SW37; prior review follow-up; original acceptance original19/current12 retained unchanged",
   "production_accepted": false,
@@ -449,7 +449,7 @@
       "priority": "P2",
       "title": "NetCDF helper 오류 상태·차원값·출력 정의",
       "implemented": true,
-      "main_included_at_snapshot": false,
+      "main_included_at_snapshot": true,
       "integration_candidate_included": true,
       "integrated_validation": "PASS_SCOPED",
       "completion_condition": "Actual backend O0/O2 direct helper errors and existing ZZ round-trip pass; parent bounds failure reproduced.",
@@ -457,21 +457,76 @@
       "owner": "root; independent team review",
       "evidence": [
         "validation/rrtmgp37/helper-error-handling/manifest.json"
-      ]
+      ],
+      "integration_pr_url": "https://github.com/gonos2k/wrf-rrtmgp/pull/149",
+      "tested_source_head": "1b879fc726e23b7a35d606246fb2267e9d5054e9"
     },
     {
       "id": "P2-NML",
       "priority": "P2",
       "title": "SCM namelist 목표 group·중복 key 검사",
       "implemented": true,
-      "main_included_at_snapshot": false,
+      "main_included_at_snapshot": true,
       "integration_candidate_included": true,
       "integrated_validation": "PASS_SCOPED",
-      "completion_condition": "15 focused unit methods; zero insert/one replace/duplicate reject within one target group; quote/comment/CRLF controls.",
-      "scope_limit": "Scalar editing in line-delimited namelist groups and comma-separated assignment segments; unsupported whitespace-separated layouts reject, not a full Fortran namelist parser.",
+      "completion_condition": "22 direct production-helper unit methods; indexed target/list/null/repeated/continued RHS rejection; existing group/quote/comment/CRLF; complete actual 4/4 and 37/37 generated namelist bytes equal parent.",
+      "scope_limit": "Scalar editor only; not a full Fortran parser. PR149 basic group/duplicate fix is merged, but this follow-up indexed/list boundary rejection is candidate-only.",
       "owner": "root; independent team review",
       "evidence": [
-        "validation/rrtmgp37/helper-error-handling/manifest.json"
+        "validation/rrtmgp37/helper-error-handling/manifest.json",
+        "validation/rrtmgp37/helper-error-audit/manifest.json"
+      ],
+      "integration_pr_url": "https://github.com/gonos2k/wrf-rrtmgp/pull/149",
+      "tested_source_head": "1b879fc726e23b7a35d606246fb2267e9d5054e9",
+      "additional_scalar_boundary_fix_in_main": false,
+      "additional_scalar_boundary_validation": "PASS_SCOPED_CANDIDATE"
+    },
+    {
+      "id": "P2-IO-VARINFO",
+      "priority": "P2",
+      "title": "NetCDF 변수정보 wrapper 인자 수",
+      "implemented": false,
+      "main_included_at_snapshot": false,
+      "integration_candidate_included": false,
+      "integrated_validation": "OPEN",
+      "classification": "INHERITED_NOT_INTRODUCED_BY_PR149",
+      "completion_condition": "Explicit matching API and wrapper/backend execution; valid type/status and failure return.",
+      "scope_limit": "WRF/frame/module_io.F:1824 NetCDF call supplies eight actuals for nine-dummy backend; source inspection only, no internal caller found.",
+      "owner": "root; independent team review",
+      "evidence": [
+        "validation/rrtmgp37/helper-error-audit/netcdf-inherited-review.json"
+      ]
+    },
+    {
+      "id": "P2-IO-LENGTH",
+      "priority": "P2",
+      "title": "NetCDF memory-order 길이·padding",
+      "implemented": false,
+      "main_included_at_snapshot": false,
+      "integration_candidate_included": false,
+      "integrated_validation": "OPEN",
+      "classification": "INHERITED_NOT_INTRODUCED_BY_PR149",
+      "completion_condition": "Declared accepted length/padding policy and bounds-safe helper/public API direct tests.",
+      "scope_limit": "LowerCase/UpperCase writes LEN(input) into shorter destination; public read/write truncate overlength token. Source inspection only.",
+      "owner": "root; independent team review",
+      "evidence": [
+        "validation/rrtmgp37/helper-error-audit/netcdf-inherited-review.json"
+      ]
+    },
+    {
+      "id": "P2-IO-WRITE-SIDE-EFFECT",
+      "priority": "P2",
+      "title": "Invalid FieldIO write 시간 기록 부작용",
+      "implemented": false,
+      "main_included_at_snapshot": false,
+      "integration_candidate_included": false,
+      "integrated_validation": "OPEN",
+      "classification": "INHERITED_NOT_INTRODUCED_BY_PR149",
+      "completion_condition": "Validate before mutating Times/TimeIndex and verify rejected write preserves metadata/contents.",
+      "scope_limit": "GetTimeIndex write occurs before order validation; existing direct invalid fixture tests read only. Source inspection only.",
+      "owner": "root; independent team review",
+      "evidence": [
+        "validation/rrtmgp37/helper-error-audit/netcdf-inherited-review.json"
       ]
     }
   ],
@@ -496,19 +551,24 @@
     }
   },
   "previous_main_snapshot": {
-    "commit": "a91d0d855da3e24094c2e6c7ba1088b56bc8c461",
-    "tree": "887d3fd1cf8c097219b201b1bdb9cdd428d593a9"
+    "commit": "9d7e79182395cd81bc7ed3805126575f64005bc3",
+    "tree": "e6bff303ab9d7aebee505334c8dfe3ce17f576e1"
   },
   "previous_checklist": {
-    "source_commit": "9d7e79182395cd81bc7ed3805126575f64005bc3",
-    "sha256": "00e5476414b31b3dc82b9df826bd72d9d05a8cf252a13aa8d65003a64c500152",
-    "note": "Prior bytes remain available at this base commit; historical evidence/manifests unchanged."
+    "source_commit": "439bf0d626a89ab105093945e946e47d7cf80f94",
+    "sha256": "0bce08a7d508b8ef24dcb16092e188070abcc93f57622d10252969db4ab46ed3",
+    "note": "Original bytes retained at PR149 merged main; historical packages unmodified."
   },
   "followup_summary": {
-    "total": 19,
+    "total": 22,
     "scoped_completed": 12,
-    "remaining": 7,
-    "new_p2_candidate_not_yet_merged": true,
+    "remaining": 10,
+    "previous_followup19": {
+      "scoped_completed": 12,
+      "physical_or_final_remaining": 7
+    },
+    "new_inherited_p2_remaining": 3,
+    "additional_scalar_candidate_not_yet_merged": true,
     "original_acceptance19_current12_unchanged": true
   }
 }

@@ -1,0 +1,71 @@
+{
+  "base": "439bf0d626a89ab105093945e946e47d7cf80f94",
+  "source_sha256": {
+    "WRF/test/rrtmgp/test_udm_startup_snow_scm.py": "cce0cef780f38c226b0a31694bb74f4d072a91c05f34562244afbe600243803d",
+    "WRF/test/rrtmgp/test_udm_startup_snow_scm_namelist.py": "845c029d7e62c89e9f1a15256157daf0a45c843a93a5d0dfe7df2e3fb297d243",
+    "WRF/test/rrtmgp/namelist.scm37": "5d4394c306b3f0bfa8534ec0b34ac7972ef058a954a346c01807160c6111a04b",
+    "config/registration37.json": "92425b6aef0a3d3d38b929c521e17ceeb2798e2da11243b31913cc62bb6ce4e8"
+  },
+  "python_version": "3.12.3 (main, Nov  6 2025, 13:44:16) [GCC 13.3.0]",
+  "commands": [
+    {
+      "command": [
+        "/usr/bin/python3.12",
+        "-B",
+        "WRF/test/rrtmgp/test_udm_startup_snow_scm_namelist.py"
+      ],
+      "returncode": 0,
+      "stdout": "check-0.stdout",
+      "stderr": "check-0.stderr"
+    },
+    {
+      "command": [
+        "/usr/bin/python3.12",
+        "-B",
+        "tools/register37.py",
+        "--check"
+      ],
+      "returncode": 0,
+      "stdout": "check-1.stdout",
+      "stderr": "check-1.stderr"
+    },
+    {
+      "command": [
+        "/usr/bin/python3.12",
+        "-B",
+        "validation/rrtmgp37/acceptance/verify.py",
+        "--output",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-helper-audit-pr-work/validation/rrtmgp37/helper-error-audit/acceptance-verification.json"
+      ],
+      "returncode": 0,
+      "stdout": "check-2.stdout",
+      "stderr": "check-2.stderr"
+    },
+    {
+      "command": [
+        "/usr/bin/python3.12",
+        "-B",
+        "validation/rrtmgp37/acceptance/test_verify.py"
+      ],
+      "returncode": 0,
+      "stdout": "check-3.stdout",
+      "stderr": "check-3.stderr"
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "returncode": 0,
+      "stdout": "check-4.stdout",
+      "stderr": "check-4.stderr"
+    }
+  ],
+  "unit_methods": 22,
+  "compiler_calls": 0,
+  "WRF_runs": 0,
+  "MPI_jobs": 0,
+  "RTE_calls": 0,
+  "production_accepted": false
+}

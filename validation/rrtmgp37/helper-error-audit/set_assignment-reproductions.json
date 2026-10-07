@@ -1,0 +1,50 @@
+{
+  "source_sha256": "cc296dc50bc0caef998e98227949afa4ec8cbbac8b8a311f7a32ff4117c34e28",
+  "cases": {
+    "indexed_lhs_scalar_key": {
+      "outcome": "returned",
+      "before": "&physics\n ra_lw_physics(1)=4,\n /\n",
+      "after": "&physics\n ra_lw_physics(1)=4,\n ra_lw_physics = 37,\n /\n",
+      "changed_target_occurrences": 1,
+      "indexed_lhs_preserved": true
+    },
+    "indexed_lhs_slice": {
+      "outcome": "returned",
+      "before": "&physics\n ra_lw_physics(1:2)=4,5,\n /\n",
+      "after": "&physics\n ra_lw_physics(1:2)=4,5,\n ra_lw_physics = 37,\n /\n",
+      "changed_target_occurrences": 1,
+      "indexed_lhs_preserved": true
+    },
+    "same_line_scalar_list_rhs": {
+      "outcome": "returned",
+      "before": "&physics\n ra_lw_physics=4, 5,\n other=9,\n /\n",
+      "after": "&physics\n ra_lw_physics=37, 5,\n other=9,\n /\n",
+      "changed_target_occurrences": 1,
+      "indexed_lhs_preserved": false
+    },
+    "continued_scalar_list_rhs": {
+      "outcome": "returned",
+      "before": "&physics\n ra_lw_physics=4,\n 5,\n other=9,\n /\n",
+      "after": "&physics\n ra_lw_physics=37,\n 5,\n other=9,\n /\n",
+      "changed_target_occurrences": 1,
+      "indexed_lhs_preserved": false
+    },
+    "multiline_rhs_starts_empty": {
+      "outcome": "rejected",
+      "error": "empty ra_lw_physics assignment in &physics block",
+      "before": "&physics\n ra_lw_physics =\n 4,\n /\n"
+    },
+    "quoted_false_duplicate_text": {
+      "outcome": "returned",
+      "before": "&physics\n some_text='ra_lw_physics=4, ! not target',\n ra_lw_physics=4,\n /\n",
+      "after": "&physics\n some_text='ra_lw_physics=4, ! not target',\n ra_lw_physics=37,\n /\n",
+      "changed_target_occurrences": 2,
+      "indexed_lhs_preserved": false
+    },
+    "duplicate_true": {
+      "outcome": "rejected",
+      "error": "duplicate ra_lw_physics assignments in &physics block",
+      "before": "&physics\n ra_lw_physics=4,\n ra_lw_physics=5,\n /\n"
+    }
+  }
+}

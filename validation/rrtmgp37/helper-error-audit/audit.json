@@ -1,0 +1,121 @@
+{
+  "execution_scope": "Python-only AST extraction and synthetic string cases; no tracked source edits, compiler, model, RTE, or NetCDF access.",
+  "fixture": {
+    "current_fixture_callsite_assessment": "All present target entries are one unindexed scalar assignment each; history_interval_s is absent and safely inserted. No reproduced edge case occurs in this fixture.",
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-helper-errors-pr-work/WRF/test/rrtmgp/namelist.scm37",
+    "sha256": "5d4394c306b3f0bfa8534ec0b34ac7972ef058a954a346c01807160c6111a04b",
+    "size_bytes": 4477,
+    "target_rows": [
+      {
+        "group": "physics",
+        "indexed_lhs_count": 0,
+        "key": "ra_lw_physics",
+        "lines": [
+          "ra_lw_physics                       = 37,"
+        ],
+        "status": "one_simple_scalar",
+        "unindexed_assignment_count": 1
+      },
+      {
+        "group": "physics",
+        "indexed_lhs_count": 0,
+        "key": "ra_sw_physics",
+        "lines": [
+          "ra_sw_physics                       = 37,"
+        ],
+        "status": "one_simple_scalar",
+        "unindexed_assignment_count": 1
+      },
+      {
+        "group": "time_control",
+        "indexed_lhs_count": 0,
+        "key": "history_interval",
+        "lines": [
+          "history_interval                    = 1,"
+        ],
+        "status": "one_simple_scalar",
+        "unindexed_assignment_count": 1
+      },
+      {
+        "group": "time_control",
+        "indexed_lhs_count": 0,
+        "key": "history_interval_s",
+        "lines": [],
+        "status": "one_simple_scalar",
+        "unindexed_assignment_count": 0
+      },
+      {
+        "group": "time_control",
+        "indexed_lhs_count": 0,
+        "key": "frames_per_outfile",
+        "lines": [
+          "frames_per_outfile                  = 10000,"
+        ],
+        "status": "one_simple_scalar",
+        "unindexed_assignment_count": 1
+      }
+    ]
+  },
+  "impact_qualification": "These are concrete helper behaviors for malformed/array/list layouts. No claim is made about how the WRF Fortran namelist reader interprets those malformed scalar-target cases. None is present in the current SCM template used by make_namelist.",
+  "recommendation": "Fail closed if a target key appears on an indexed LHS. For scalar targets, reject additional comma-separated/continued RHS values rather than retaining them. Add direct Python tests for both cases; retain existing duplicate/group/comment tests.",
+  "reproductions": {
+    "captured_output": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-helper-audit-preparation-v1/set_assignment-reproductions.json",
+      "sha256": "6266a2b642d997464633797a292bebafadc4cd763a48ef3df39194339071cdad"
+    },
+    "cases": {
+      "actual_duplicate": "Rejected as duplicate",
+      "empty_multiline_rhs": "Rejected as empty assignment",
+      "extra_rhs_values": {
+        "examples": [
+          "ra_lw_physics=4, 5,",
+          "ra_lw_physics=4, followed by a line containing 5,"
+        ],
+        "observed": "Replaces only first scalar token while retaining extra value(s)"
+      },
+      "indexed_lhs": {
+        "examples": [
+          "ra_lw_physics(1)=4,",
+          "ra_lw_physics(1:2)=4,5,"
+        ],
+        "observed": "Returns modified text and inserts a new scalar assignment while preserving indexed LHS"
+      },
+      "quoted_comment_like_token": "Handled without false target detection"
+    },
+    "script": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-helper-audit-preparation-v1/reproduce_set_assignment_cases.py",
+      "sha256": "273359ccf944c47d3ae6a75cda3ac424dface72ff04695d75d09670bfdf34e5c"
+    }
+  },
+  "schema": "UDM37_STARTUP_SCM_NAMELIST_HELPER_AUDIT_V1",
+  "source": {
+    "callsite_lines": [
+      {
+        "line": 298,
+        "source": "text = set_assignment(text, \"ra_lw_physics\", str(lw))"
+      },
+      {
+        "line": 299,
+        "source": "text = set_assignment(text, \"ra_sw_physics\", str(sw))"
+      },
+      {
+        "line": 301,
+        "source": "text = set_assignment(text, \"history_interval\", \"0\", group=\"time_control\")"
+      },
+      {
+        "line": 302,
+        "source": "text = set_assignment(text, \"history_interval_s\", \"60\", group=\"time_control\")"
+      },
+      {
+        "line": 304,
+        "source": "text = set_assignment(text, \"frames_per_outfile\", \"10000\", group=\"time_control\")"
+      }
+    ],
+    "exclusive_runtime_scope": "make_namelist only; used for RA LW/SW choices and time_control history/frame settings",
+    "function": "set_assignment",
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-helper-errors-pr-work/WRF/test/rrtmgp/test_udm_startup_snow_scm.py",
+    "sha256": "cc296dc50bc0caef998e98227949afa4ec8cbbac8b8a311f7a32ff4117c34e28",
+    "size_bytes": 45063
+  },
+  "status": "CONCRETE_LAYOUT_GAPS_REPRODUCED_CURRENT_FIXTURE_SAFE"
+}

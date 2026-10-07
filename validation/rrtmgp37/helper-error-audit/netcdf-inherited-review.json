@@ -1,0 +1,149 @@
+{
+  "schema": "UDM37_NETCDF_INHERITED_SOURCE_REVIEW_V1",
+  "created_utc": "2026-10-07T03:59:20.946892+00:00",
+  "status": "SOURCE_REVIEW_COMPLETE_WITH_THREE_INHERITED_OPEN_ITEMS",
+  "verdict_ko": "PR149가 추가한 정상 3자 order guard 경로에서 신규 회귀는 확인하지 못했다. 확인된 세 항목은 모두 상속된 문제이며 미수정 OPEN이다. 소스 검토만 수행했고 컴파일·실행으로 증명한 결과가 아니다.",
+  "reviewed_source_worktree": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-helper-errors-pr-work",
+  "reviewed_source_head": "1b879fc726e23b7a35d606246fb2267e9d5054e9",
+  "base_commit": "439bf0d626a89ab105093945e946e47d7cf80f94",
+  "pre_pr149_baseline": "9d7e79182395cd81bc7ed3805126575f64005bc3",
+  "pr": 149,
+  "evidence_method": "READ_ONLY_SOURCE_INSPECTION_ONLY",
+  "source_pins": {
+    "WRF/external/io_netcdf/wrf_io.F90": {
+      "sha256": "298617cc040134c75287add00a20bd949cb266683a1ae3cada93bba1c7d164ab",
+      "size_bytes": 129627,
+      "exact_byte_equal_to_base_commit": true
+    },
+    "WRF/frame/module_io.F": {
+      "sha256": "3b4a0e1180b08146c015e4acf37d7e431d751b1a3dbe3a238fb38647feee7eea",
+      "size_bytes": 189901,
+      "exact_byte_equal_to_base_commit": true
+    },
+    "WRF/test/rrtmgp/test_netcdf_zz.F90": {
+      "sha256": "78a1f288c41297e44912e1e0ed5cc0de861080a95cc535ef9992ff1018db0c68",
+      "size_bytes": 14717,
+      "exact_byte_equal_to_base_commit": true
+    },
+    "validation/rrtmgp37/helper-error-handling/README_ko.md": {
+      "sha256": "f21bcc1c56e6bd44175356ea97e05c69baba844ee65776881699d9cbd6ae263d",
+      "size_bytes": 3491,
+      "exact_byte_equal_to_base_commit": true
+    }
+  },
+  "normal_three_character_guard_review": {
+    "status": "NO_INTRODUCED_REGRESSION_IDENTIFIED_BY_SOURCE_INSPECTION",
+    "scope": "GetDim failure NDim=0, immediate helper/FieldIO Status guards, ExtOrder preservation and ExtOrderStr blank initialization. Existing valid dimension/name permutations are retained; valid unused ExtOrderStr slots are now defined blank. This is not a new runtime validation claim."
+  },
+  "findings": [
+    {
+      "id": "NETCDF-VAR-INFO-WRAPPER-ARITY",
+      "status": "OPEN",
+      "classification": "INHERITED_NOT_INTRODUCED_BY_PR149",
+      "anchors": [
+        {
+          "path": "WRF/frame/module_io.F",
+          "lines": [
+            1824,
+            1825,
+            1826,
+            1827
+          ]
+        },
+        {
+          "path": "WRF/external/io_netcdf/wrf_io.F90",
+          "lines": [
+            3313,
+            3326,
+            3327,
+            3338
+          ]
+        }
+      ],
+      "source_evidence": "wrf_get_var_info NETCDF branch passes eight explicit arguments. ext_ncd_get_var_info requires nine: the eighth is WrfType and the ninth is Status. The wrapper supplies its Status as the eighth argument and supplies no Status actual argument.",
+      "impact_scope": "Latent wrapper/API argument mismatch. No repository call to wrf_get_var_info was found in the inspected WRF tree. No runtime failure was reproduced or inferred as observed.",
+      "fixture_limit": "test_netcdf_zz.F90:134 calls the backend directly with all nine arguments. It does not exercise the module_io wrapper.",
+      "inherited_evidence": "The same eight-argument call exists in the pre-PR149 baseline 9d7e79182395cd81bc7ed3805126575f64005bc3."
+    },
+    {
+      "id": "NETCDF-MEMORY-ORDER-LENGTH-PADDING",
+      "status": "OPEN",
+      "classification": "INHERITED_NOT_INTRODUCED_BY_PR149",
+      "anchors": [
+        {
+          "path": "WRF/external/io_netcdf/wrf_io.F90",
+          "lines": [
+            431,
+            435,
+            636,
+            644,
+            645,
+            646,
+            648,
+            653,
+            661,
+            662,
+            663,
+            665,
+            2491,
+            2851,
+            3421,
+            3428
+          ]
+        }
+      ],
+      "source_evidence": "LowerCase and UpperCase use LEN(input) for output substring assignment and per-character writes without comparing LEN(output). GetDim supplies CHARACTER*3 MemOrd. A padded input longer than three characters, even a valid token such as CHARACTER(8) containing zz, can exceed the output substring bounds before the new Status guards. Public field read/write instead first assign TRIM(ADJUSTL(input)) to CHARACTER(3), silently truncating a token such as xyzq to xyz.",
+      "impact_scope": "Length and normalization policy is unresolved for long/padded direct-helper and variable-info API arguments. Existing ordinary three-character paths are unaffected by this observation. No compiled bounds reproduction was run.",
+      "fixture_limit": "The selected 20 valid and five invalid helper tokens are CHARACTER(3); variable-info output mo is also CHARACTER(3). Long padded input, long output buffer, and overlength nonblank rejection are not exercised.",
+      "inherited_evidence": "LowerCase/UpperCase and public read/write CHARACTER(3) normalization already exist in pre-PR149 baseline 9d7e79182395cd81bc7ed3805126575f64005bc3."
+    },
+    {
+      "id": "NETCDF-FIELDIO-INVALID-WRITE-TIME-SIDE-EFFECT",
+      "status": "OPEN",
+      "classification": "INHERITED_NOT_INTRODUCED_BY_PR149",
+      "anchors": [
+        {
+          "path": "WRF/external/io_netcdf/wrf_io.F90",
+          "lines": [
+            356,
+            383,
+            399,
+            400,
+            405,
+            695,
+            710,
+            718,
+            719
+          ]
+        }
+      ],
+      "source_evidence": "FieldIO calls GetTimeIndex before GetDim. For IO=write, GetTimeIndex can update DH%TimeIndex, DH%Times and the NetCDF Times variable before FieldIO rejects a bad memory order. The new guard stops field dispatch but does not make invalid direct writes free of time-bookkeeping side effects.",
+      "impact_scope": "Direct FieldIO invalid-write rejection is not transactional. Public ext_ncd_write_field checks GetDim before reaching this helper. No invalid-write runtime reproduction was run.",
+      "fixture_limit": "test_netcdf_zz.F90:128 invokes invalid FieldIO read at an existing date and verifies the data buffer remains unchanged. It does not test invalid direct write with a new date or Times/TimeIndex preservation.",
+      "inherited_evidence": "The GetTimeIndex-before-GetDim order and time mutations exist in pre-PR149 baseline 9d7e79182395cd81bc7ed3805126575f64005bc3."
+    }
+  ],
+  "current_direct_fixture_scope": {
+    "valid_selected_orders": 20,
+    "invalid_short_orders": 5,
+    "all_getdim_orders_claim": false,
+    "cc_getdim_helper_mismatch": "Inherited and explicitly excluded by README",
+    "actual_backend_direct_calls": true,
+    "full_module_io_wrapper_execution": false,
+    "read_buffer_error_preservation_checked": true,
+    "write_time_side_effect_checked": false,
+    "arbitrary_string_length_checked": false
+  },
+  "execution_counts_by_this_review": {
+    "compiler": 0,
+    "fixture": 0,
+    "model": 0,
+    "mpi": 0,
+    "rte": 0,
+    "solver": 0
+  },
+  "physical_acceptance": false,
+  "source_mutations": 0,
+  "historical_receipts_modified": false,
+  "next_integration_limit": "This review does not describe or approve a subsequent integration fix. All three findings remain OPEN until separately reviewed changes and meaningful tests are completed."
+}
