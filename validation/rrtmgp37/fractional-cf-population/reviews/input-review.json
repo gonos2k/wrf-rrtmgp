@@ -1,0 +1,71 @@
+{
+  "baseline": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-activation-supersat-input-v1/derived/wrfinput_d01",
+    "sha256": "4be27d2dfbec0286a5dc7e8a73d0b2ee78de028e7cacf735fd8b393567e44380",
+    "size_bytes": 10975310
+  },
+  "derived": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-fractional-cf-input-v1/derived/wrfinput_d01",
+    "sha256": "dd9bcee9457db0071fd43355472039f8c8731c71c3c7b655fa7a128d0d682cc1",
+    "size_bytes": 10975310
+  },
+  "derived_expected_sha256": "dd9bcee9457db0071fd43355472039f8c8731c71c3c7b655fa7a128d0d682cc1",
+  "independent_comparison": {
+    "Fortran_i_j_k": [
+      23,
+      2,
+      7
+    ],
+    "all_other_QCLOUD_elements_byte_equal": true,
+    "dimensions_equal": true,
+    "global_attributes_equal": true,
+    "new_value_real32": 9.999999747378752e-05,
+    "old_value_real32": 0.0005000000237487257,
+    "only_changed_python_index": [
+      0,
+      6,
+      1,
+      22
+    ],
+    "only_changed_variable": "QCLOUD",
+    "other_196_arrays_byte_equal": true,
+    "status": "PASS",
+    "variable_metadata_equal": true,
+    "variables": 197
+  },
+  "preparation_attempts": [
+    {
+      "actual_rc": 1,
+      "phase": "PIN_CHECK_BEFORE_COPY",
+      "script": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-fractional-cf-input-v1/prepare_one_qc.py",
+        "sha256": "e669bc1f94c5e2779b6084591c18871676a1f0a9e25b9d96eac85f8d435a97d7",
+        "size_bytes": 3490
+      }
+    },
+    {
+      "actual_rc": 0,
+      "phase": "ONE_QC_COPY_AND_FULL197_VARIABLE_COMPARISON",
+      "script": {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-fractional-cf-input-v1/prepare_one_qc_v2.py",
+        "sha256": "727549e228cecfdb74132f46ab16ef2fe76d0b19f984bb21fdbf37746fca9188",
+        "size_bytes": 3489
+      }
+    }
+  ],
+  "preparation_receipt": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-fractional-cf-input-v1/input-preparation-execution.json",
+    "sha256": "aa1b8ee157d391f5a6f0eaecc88035a07187a22af076a3c84760aa4a0f8c53b5",
+    "size_bytes": 1311
+  },
+  "published_join_receipt": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-fractional-cf-input-v1/input-variable-join.json",
+    "sha256": "619ef70c2dbaea5d1f97d0e9b3abe349d06aaa6ba2ea112170f5e81390254a97",
+    "size_bytes": 76411
+  },
+  "reviewer_check_note": "An initial local assertion compared a REAL32 value directly to the unrounded Python decimal literal and failed; corrected check compares against np.float32 literals and passes exact bitwise-difference checks. No input bytes were changed.",
+  "reviewer_execution": "read-only Python/netCDF4 array and metadata comparison; no model/compiler/build.",
+  "schema": "UDM37_FRACTIONAL_CF_DERIVED_INPUT_INDEPENDENT_REVIEW_V1",
+  "source_reviewer_note": "Preparation report documents one intended QCLOUD intervention relative to supersaturation input; it is a second intervention relative to original 849f baseline. No unit, PSD or physical-acceptance claim follows.",
+  "status": "PASS_SCOPED_READ_ONLY_INPUT_JOIN"
+}

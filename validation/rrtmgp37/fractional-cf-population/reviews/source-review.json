@@ -1,0 +1,58 @@
+{
+  "build_or_model_execution_by_reviewer": 0,
+  "build_runner_static": {
+    "flags": "PASS: pinned toolchain file specifies GNU Fortran/C and compiler flags; CMake configure flags are explicit.",
+    "fresh_output": "PASS: OUT.mkdir(exist_ok=False) refuses reuse.",
+    "models": "0 by contract.",
+    "runtime_closure": "PASS: 50 library pins are checked by path/hash/size before and after; MPI and NetCDF directories are explicitly set in environment.",
+    "source_binding": "PASS: requires exact committed head/tree, clean tracked worktree, exact one-file diff from parent, expected modified source SHA and selected source hashes.",
+    "terminal_receipt": "PASS: writes RUNNING then terminal actual RC/reap state before log close/hash; finite 1800-second per-step timeout and process-group cleanup are present."
+  },
+  "implementation_receipt": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-fractional-cf-population-observer-preparation-v1/implementation-receipt.json",
+    "sha256": "86cfc930fe0a561afa4b3073d44abb3d52d09e8c4149502408435001d9bf7969",
+    "size_bytes": 1372
+  },
+  "launch_contract": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-fractional-cf-population-observer-preparation-v1/build-launch-contract.json",
+    "sha256": "94a06bb3721eaf08f8f160c7e3be3ab420e95405ce0b0e053d4b1690de7eeab0",
+    "size_bytes": 1307
+  },
+  "marker_stripped_byte_equal": true,
+  "marker_stripped_sha256": "9f25a1aaebd0d29ba3ecdf86c9fe65065cf920fc187bdfd904e8b8192bc7e3c8",
+  "parent_source_sha256": "9f25a1aaebd0d29ba3ecdf86c9fe65065cf920fc187bdfd904e8b8192bc7e3c8",
+  "patch": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-fractional-cf-population-observer-preparation-v1/instrumentation.patch",
+    "sha256": "bb20155eaa25024b6b7e175be8b303e59d5707ce6ac9a76d073e82a05906890c",
+    "size_bytes": 7141
+  },
+  "plan": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-fractional-cf-population-observer-preparation-v1/plan.json",
+    "sha256": "55207120060b0e8e247580c907c43962b08c6aef11924e81783295d29eeffa22",
+    "size_bytes": 17828
+  },
+  "runner": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-fractional-cf-population-observer-build-runner-v1.py",
+    "sha256": "877e50e4b6e8d1192bd3a2822e9ffaec99e2f96bb1d7aa6036ad986b9c382c7b",
+    "size_bytes": 8579
+  },
+  "schema": "UDM37_FRACTIONAL_CF_OBSERVER_SOURCE_AND_BUILD_REVIEW_V1",
+  "source_head_at_review": "8017ff7caf8f979dc16e1d9119c9a88eaa362a2b",
+  "source_pin": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-fractional-cf-population-observer-source-v1/WRF/phys/module_mp_udm.F",
+    "sha256": "84f507242683661799ea61ccb80e614f9f2e856790d03d9485707e61f62b0b0b",
+    "size_bytes": 213724
+  },
+  "source_tree_at_review": "eef44b724e452bd412431928bad1d26f15c6dab4",
+  "source_worktree": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-fractional-cf-population-observer-source-v1",
+  "static_findings": {
+    "diagnostic_scope": "NOTE: cldf_diag only diagnoses levels 1:ktop; above-top CF may be retained working state and diagnosed/applied flags must be retained in interpretation.",
+    "disabled_and_thread_safety": "PASS: hooks use the existing optional per-call observer context and selected-column predicate; no new SAVE/global/cache or environment state is introduced.",
+    "field_mapping": "PASS: qci slots are qc/qi; qrs slots are qr/qs/qg/qh; ncr slots are nn/nc/nr, as established by local initialization and write-back.",
+    "hooks": "PASS: four phase calls are placed around grid-mean/in-cloud transforms and process restoration boundaries; the actual ktop and substep loop are recorded.",
+    "physics_delta": "PASS: source preparation reports exact marker stripping and zero original physical statements changed.",
+    "writer_contract": "PASS: default REAL arrays, fixed 44-level/kts=1 selected shape, REAL32 context, finite values, CF range and positive substep checks; status=new and domain/tile/i/j/step/substep/phase in .cfpop name."
+  },
+  "status": "PASS_SCOPED_WITH_TOOLCHAIN_IDENTITY_LIMITATION",
+  "toolchain_identity_limitation": "The runner pins the toolchain file and 50 runtime libraries, but does not separately pin resolved cmake/gfortran/gcc executable hashes or version output before build. CMake logs/cache may identify them after build; do not describe compiler binaries as independently pre-pinned."
+}
