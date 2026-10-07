@@ -1,0 +1,106 @@
+{
+  "title": "Public-source authority review: cloud number concentration units and grid/in-cloud basis",
+  "status": "SCOPED_SOURCE_REVIEW; no model/compiler/raw-capture execution",
+  "scope": {
+    "question": "What public primary-source contracts establish QNC/QNN units and grid-mean versus in-cloud basis, and what remains unresolved for this WRF UDM integration?",
+    "conclusion": "The WRF Registry declares QNCLOUD and QNCCN as # kg(-1), but that label alone does not define the air-mass denominator, subgrid cloud basis, or the producer-to-consumer conversion. The WDM6 primary formulation explicitly gives number-concentration source rates in m^-3 s^-1 and uses air density in its PSD equations; this is useful precedent, not authority for UDM. The current UDM call path explicitly passes dry density and flags the supplied density as dry, while the UDM implementation contains cloud-fraction and number adjustment operations. Public sources reviewed here do not supply a complete authoritative UDM QNC/QNN contract reconciling those conventions.",
+    "not_concluded": [
+      "No finding that # kg(-1) necessarily means per kg dry air rather than another mass basis.",
+      "No finding that QNC is grid-mean or in-cloud at every producer/transport/consumer boundary.",
+      "No density, cloud-fraction, or empirical correction is selected.",
+      "The WDM6 paper is not treated as a UDM specification, and the WDM7 code is not treated as proof of UDM semantics."
+    ]
+  },
+  "local_source_pins": {
+    "WRF/Registry/Registry.EM_COMMON": {
+      "sha256": "87e21a476a06b7e0c926b2d939eaf1028810cba8a7d1e6fc585b50b599f99729",
+      "size_bytes": 448359
+    },
+    "WRF/phys/module_microphysics_driver.F": {
+      "sha256": "c02f227d0fc1bf633fa53e54361e7117093b2c7bb02cedc2b71441c5bd638bd9",
+      "size_bytes": 198159
+    },
+    "WRF/phys/module_mp_udm.F": {
+      "sha256": "7bd96141eefc6ae2cb66cea0ce022fcc2ee64afce5c616aa65f26711c8790947",
+      "size_bytes": 196865
+    }
+  },
+  "source_observations": [
+    {
+      "source": "WRF Registry.EM_COMMON",
+      "location": "scalar state declarations around lines 543-545",
+      "observed": "QNCCN and QNCLOUD are scalar fields with unit label # kg(-1) and i0rhusdf=(bdy_interp:dt) traits. The neighboring water mixing ratios use kg kg-1.",
+      "interpretation_limit": "This is direct field metadata and transport registration, not a documented dry/moist-air basis or grid/in-cloud contract."
+    },
+    {
+      "source": "WRF module_microphysics_driver.F",
+      "location": "UDM dispatch around lines 2880-2896",
+      "observed": "The selected WDM/UDM call receives the qnc/qnn state arrays and rho; the UDM call identifies ccn_preinitialized=.true. and input_density_is_dry=.true.",
+      "interpretation_limit": "Confirms call arguments and density convention flag; does not by itself define the incoming number field basis."
+    },
+    {
+      "source": "WRF module_mp_udm.F",
+      "location": "UDM entry and cloud-number routines around lines 330, 858-872, 891-902, 1096-1130, 2510-2540, 3394-3450, 3617-3653",
+      "observed": "The implementation honors the dry-density flag; applies CCN/NC bounds or floors in identified paths; computes cloud fraction in cldf_diag; routes cloud mass and number through slope/activation processes.",
+      "interpretation_limit": "These are code-path semantics. They do not replace a source-authoritative statement of what the producer’s QNC/QNN values represent."
+    }
+  ],
+  "public_primary_sources": [
+    {
+      "title": "WRF Registry.EM_COMMON.var (upstream WRF source)",
+      "url": "https://github.com/wrf-model/WRF/blob/master/Registry/Registry.EM_COMMON",
+      "authority": "Direct WRF Registry metadata. QNC/QNN are declared with # kg(-1); water mixing ratios are separately kg kg-1.",
+      "use": "Supports the literal metadata field unit and registry nature only."
+    },
+    {
+      "title": "Lim and Hong (2010), Development of the WRF Double-Moment 6-Class Microphysics Scheme, Monthly Weather Review 138, 1587–1611",
+      "url": "https://www2.mmm.ucar.edu/wrf/users/physics/phys_refs/MICRO_PHYS/WDM5_6.pdf",
+      "anchors": "Section 2, equations (1)–(4), pp. 1588–1589; Appendix activation equation (A2), p. 1604; Table A1, p. 1610.",
+      "authority": "Primary WDM6 paper. It calls N_X total number concentration, forms the size-distribution slope using N_X and rho_a q_X, gives number tendency in the transport equation, and explicitly labels activation-rate units m^-3 s^-1.",
+      "use": "A directly relevant WRF double-moment precedent for volumetric process quantities. It is not a current UDM specification and does not establish how WRF Registry # kg(-1) fields are mapped."
+    },
+    {
+      "title": "WRF WDM7 implementation (upstream WRF source)",
+      "url": "https://raw.githubusercontent.com/wrf-model/WRF/master/phys/module_mp_wdm7.F",
+      "anchors": "Header lines 119–130; PSD/slope expression around lines 527–531; NC-dependent lambda use around lines 757–765 and 1172–1185; activation and state updates around lines 2244–2258.",
+      "authority": "Official source implementation, not a standards document. It documents WDM7 but does not explicitly state the interface unit of NC in the declarations. The formulas use NC with q and air density, and activation updates CCN/NC together.",
+      "use": "Shows why tracing the actual interface and conversions matters; not used to infer a UDM contract or authorize a unit conversion."
+    },
+    {
+      "title": "WRF Users Guide, Physics schemes",
+      "url": "https://www2.mmm.ucar.edu/wrf/users/wrf_users_guide/build/html/physics.html",
+      "anchors": "Microphysics scheme descriptions around lines 249–275.",
+      "authority": "Official scheme overview: double-moment schemes predict number concentration; WDM7 species roster includes Nc and Nr.",
+      "use": "Confirms scheme prognostic-variable context only; it does not specify the units or cloud-fraction basis."
+    },
+    {
+      "title": "NCAR 2024 UDM abstract (reviewed previously in project evidence)",
+      "url": "https://www2.mmm.ucar.edu/events/workshops/2024/abstracts/",
+      "authority": "The cited abstract describes an in-cloud UDM/NOAA UFS application, but provides no explicit QNC/QNN unit denominator or producer-to-transport conversion.",
+      "use": "Context only; does not resolve the present question."
+    },
+    {
+      "title": "NSSL Microphysics scheme repository (NOAA-NSSL official project documentation)",
+      "url": "https://github.com/NOAA-National-Severe-Storms-Laboratory/NSSL-MP",
+      "authority": "Scheme-specific documentation states its configured background CCN value is per m^3 at sea level and describes deriving a homogeneous number mixing ratio by dividing by reference air density, with cloud-base concentration varying with local density.",
+      "use": "A concrete example that an explicit volume-to-mass initialization bridge can be documented; it is NSSL, not WRF UDM/WDM7, so its conversion must not be transferred to the present fields."
+    }
+  ],
+  "distinctions": {
+    "registry_vs_process": "A Registry unit string is authoritative for the declared field metadata, not by itself a complete process equation or conversion contract. A scheme paper’s m^-3 process terms do not prove that a WRF field stores m^-3 without a conversion at the interface.",
+    "grid_vs_incloud": "Cloud fraction may be computed or used in later process calculations. That alone does not say whether transported QNC is already in-cloud, grid-mean, or conditionally converted. The checked public sources do not state that full chain for this UDM call path.",
+    "density": "The current call path explicitly uses dry density for UDM; this does not resolve whether a field declared # kg(-1) is per kg dry air or whether a volumetric state is converted before/after the call."
+  },
+  "next_discriminating_contract": [
+    "At the actual QNC/QNN producer, cite the defining equation and identify whether number is per volume or per mass, and if per mass state the exact mass denominator (dry air, moist air, or another basis).",
+    "At every transport/advection/boundary/restart interface, identify the represented grid-cell quantity and any conversion involving density or cloud fraction.",
+    "At the UDM entry, trace exact conversion and bounds before the first consumer; independently audit the no-cloud-fraction, partial-cloud-fraction, and activation paths.",
+    "Use source-extracted fixtures at two dry-density values and at CF inactive/partial/active states, plus RH below, between, and above activation thresholds. Compare the same declared input field under alternate *conditional* interpretations as diagnostics; do not use flux agreement to choose a convention.",
+    "Keep producer-unit authority, PSD population definition, and radiation-LUT mapping as separate acceptance gates."
+  ],
+  "limitations": [
+    "Public WDM6 equations are related-scheme context, not proof about UDM.",
+    "No scientific arrays, compiler, model, RTE, or numerical solver were run or read for this report.",
+    "The WRF public Registry URL tracks upstream main; local source pins above identify the inspected worktree snapshot."
+  ]
+}

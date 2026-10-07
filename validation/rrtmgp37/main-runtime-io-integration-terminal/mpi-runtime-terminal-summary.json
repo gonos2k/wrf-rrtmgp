@@ -1,0 +1,142 @@
+{
+  "schema": "UDM37_MAIN_INTEGRATION_MPI_RESTART_TERMINAL_SUMMARY_V1",
+  "source_head": "dd7eb1da3a23ca8f21bd4d5bf82f7feecf813fc5",
+  "source_tree": "c51069f89eccf113dca91a6942264194f3bc839e",
+  "status": "PASS_SCOPED_ORDERED_ZZ_INACTIVE_RESTART_AND_SAME_ARM_ARRAYS",
+  "model_calls": 4,
+  "compiler_builds": 1,
+  "mpi_ranks": 4,
+  "openmp_threads": 2,
+  "multi_perturb": 0,
+  "frozen_mode37": 1,
+  "physical_accepted": false,
+  "active_stochastic_accepted": false,
+  "arms": {
+    "ra4": {
+      "hourly_control_records": 14,
+      "ordered_seed_values_preserved": 660,
+      "seed_dimensions": [
+        "Time",
+        "num_pert_3d",
+        "bottom_top"
+      ],
+      "seed_shape": [
+        1,
+        15,
+        44
+      ],
+      "seed_sha256": "33418dd8d15a022a4c80095645e7379da1b2daff3a44e8edcc570607092632e0",
+      "all_history_variables_exact": 228,
+      "all_variable_attributes_exact": true,
+      "global_attribute_differences": [
+        {
+          "continuous": "'2016-10-06_00:00:00'",
+          "name": "START_DATE",
+          "resumed": "'2016-10-06_12:00:00'"
+        }
+      ],
+      "metadata_accepted": false
+    },
+    "ra37": {
+      "hourly_control_records": 14,
+      "ordered_seed_values_preserved": 660,
+      "seed_dimensions": [
+        "Time",
+        "num_pert_3d",
+        "bottom_top"
+      ],
+      "seed_shape": [
+        1,
+        15,
+        44
+      ],
+      "seed_sha256": "33418dd8d15a022a4c80095645e7379da1b2daff3a44e8edcc570607092632e0",
+      "all_history_variables_exact": 231,
+      "all_variable_attributes_exact": true,
+      "global_attribute_differences": [
+        {
+          "continuous": "'2016-10-06_00:00:00'",
+          "name": "START_DATE",
+          "resumed": "'2016-10-06_12:00:00'"
+        }
+      ],
+      "metadata_accepted": false
+    }
+  },
+  "children": [
+    {
+      "kind": "control",
+      "arm": "ra37",
+      "pid": 618829,
+      "actual_rc": 0,
+      "reaped": true,
+      "group_absent_at_postflight": true,
+      "elapsed_seconds": 117.22234010696411
+    },
+    {
+      "kind": "control",
+      "arm": "ra4",
+      "pid": 616467,
+      "actual_rc": 0,
+      "reaped": true,
+      "group_absent_at_postflight": true,
+      "elapsed_seconds": 104.321457862854
+    },
+    {
+      "kind": "restart",
+      "arm": "ra37",
+      "pid": 624597,
+      "actual_rc": 0,
+      "reaped": true,
+      "group_absent_at_postflight": true,
+      "elapsed_seconds": 16.975204467773438
+    },
+    {
+      "kind": "restart",
+      "arm": "ra4",
+      "pid": 624190,
+      "actual_rc": 0,
+      "reaped": true,
+      "group_absent_at_postflight": true,
+      "elapsed_seconds": 17.4092857837677
+    }
+  ],
+  "receipt_pins": [
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-main-runtime-io-mpi-build-v1/plan.json",
+      "sha256": "e697101cd80bde8e0bdf30fa2e2189665baae8a15be11c6cff4aab0f44c22a35",
+      "size_bytes": 5103
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-main-runtime-io-mpi-build-v1/result.json",
+      "sha256": "8b98903892b9f84e84fd6aa62c713fa9cb30390449e8fe75a01fb5f6a3c6e213",
+      "size_bytes": 2957
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-main-runtime-io-mpi-control-v1/stage-plan.json",
+      "sha256": "90c3ca93d1c7bb1e90c54a6f179e8187f8b1ec35cf8f58bba5a30a30986d25cd",
+      "size_bytes": 102187
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-main-runtime-io-mpi-control-v1/execution.json",
+      "sha256": "8c048d170779adb2991a5bc6adb602088af877a2a11d46408e8dab138ef45504",
+      "size_bytes": 207491
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-main-runtime-io-mpi-restart-v1/stage-plan.json",
+      "sha256": "6320ebd660a91d09f0a983584231cb4c3c055d889b332ba2eea5275ba077982f",
+      "size_bytes": 2287674
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-main-runtime-io-mpi-restart-v1/execution.json",
+      "sha256": "3cb8a18d9b09b6df9ee37c72250a3b9a87ea9ca176b872c1321248f8cdf3dec0",
+      "size_bytes": 211810
+    }
+  ],
+  "limitations": [
+    "Sentinel is inactive registered integer I/O; it is not active stochastic sequence or McICA seed acceptance.",
+    "Same-arm continuation only, not a radiation accuracy or NOAA operational physics proof.",
+    "13-hour control and1-hour restarts are not48-hour final-tree observation validation.",
+    "Main merge remains pending; executed exactPR146 head frozen above."
+  ]
+}

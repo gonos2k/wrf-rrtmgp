@@ -1,0 +1,106 @@
+{
+  "title": "Source-only QNC/QNN producer and transport chain review",
+  "status": "READ_ONLY_SOURCE_REVIEW; no compiler/model/solver/scientific-array access",
+  "source_checkout": {
+    "path": "build/udm37-main-runtime-io-integration-pr-work",
+    "head": "dd7eb1da3a23ca8f21bd4d5bf82f7feecf813fc5",
+    "files": {
+      "WRF/Registry/Registry.EM_COMMON": {
+        "sha256": "87e21a476a06b7e0c926b2d939eaf1028810cba8a7d1e6fc585b50b599f99729",
+        "size_bytes": 448359
+      },
+      "WRF/phys/module_microphysics_driver.F": {
+        "sha256": "c02f227d0fc1bf633fa53e54361e7117093b2c7bb02cedc2b71441c5bd638bd9",
+        "size_bytes": 198159
+      },
+      "WRF/phys/module_mp_udm.F": {
+        "sha256": "7bd96141eefc6ae2cb66cea0ce022fcc2ee64afce5c616aa65f26711c8790947",
+        "size_bytes": 196865
+      },
+      "WRF/phys/module_physics_init.F": {
+        "sha256": "8c5e933467cc316f172d1193e4f130e96b89580da7f28aec3edc3b7c517e59b5",
+        "size_bytes": 315994
+      },
+      "WRF/dyn_em/solve_em.F": {
+        "sha256": "ed03953a8b7b999fc0a5a281893f4808bbed28697ea9032fde9b9b605e0d9ecb",
+        "size_bytes": 283280
+      },
+      "WRF/dyn_em/module_em.F": {
+        "sha256": "67c5842c1c5d407a26139f26bd317f3016c610aeaf60207dfd21394ddb81482c",
+        "size_bytes": 132827
+      },
+      "WRF/dyn_em/module_advect_em.F": {
+        "sha256": "58253bdbeb188dd47ed0579fcd2891086be1889b75c0c7d3696c9ad1d213559d",
+        "size_bytes": 427881
+      },
+      "WRF/share/module_bc.F": {
+        "sha256": "61b9235004b2a7799faabaa928276af8a7ef2e4672619c8ad120c857461301ad",
+        "size_bytes": 164069
+      }
+    }
+  },
+  "findings": [
+    {
+      "id": "registry-representation",
+      "source": "WRF/Registry/Registry.EM_COMMON:542-545,2701",
+      "fact": "QNCCN/QNCLOUD are Registry scalar fields with unit label # kg(-1), scalar package membership, and Registry trait string i0rhusdf=(bdy_interp:dt). The ccn_conc rconfig is separately labeled # m-3 with default 1.0E8.",
+      "scope": "Registry declares metadata and scalar state behavior; it does not identify the denominator behind # kg(-1), nor whether qnc is grid-mean or in-cloud."
+    },
+    {
+      "id": "qnc-producer",
+      "source": "WRF/phys/module_microphysics_driver.F:2870-2896; WRF/Registry/Registry.EM_COMMON:3095",
+      "fact": "For the option-37 UDM package, qnc_curr is passed directly as NC to UDM and returned state remains in the same scalar array. No driver-side rho or cloud-fraction multiplier is applied at this call boundary. The qnc field is provided by Registry-managed scalar state (initial/restart/boundary data); no dedicated model-side QNC conversion initializer was found in the inspected chain.",
+      "scope": "This establishes pass-through at the UDM interface; it cannot identify how an external initial-condition producer intended QNC."
+    },
+    {
+      "id": "qnn-reset",
+      "source": "WRF/phys/module_microphysics_driver.F:910-933,2880-2896; WRF/phys/module_mp_udm.F:330-338; WRF/phys/module_physics_init.F:4861-4862, WRF/Registry/Registry.EM_COMMON:2701",
+      "fact": "When the option-37 diagnosed-cloud-fraction path is enabled and itimestep==1, the driver fills the entire qnn_curr storage array with ccn_conc, with no rho/CF conversion, then passes ccn_preinitialized=.true.; UDM thereby skips its per-tile ccn0 initialization. ccn_conc is Registry-labeled # m-3. UDM initialization udminit receives ccn_conc as INTENT(IN) and does not transform it. The legacy UDM fallback likewise assigns ccn0 directly if used.",
+      "scope": "The implemented seed path places the configured volume-unit scalar directly in a field declared # kg(-1). This is a source-level interface inconsistency; it does not determine which unit label or initializer convention is the intended contract."
+    },
+    {
+      "id": "scalar-transport",
+      "source": "WRF/dyn_em/solve_em.F:2960-3070,3990-4003; WRF/dyn_em/module_em.F:1096-1442,1587-1799; WRF/dyn_em/module_advect_em.F:3029-4359",
+      "fact": "QNC/QNN are in the generic 3-D scalar advance. rk_scalar_tend calls the configured scalar advection and mixing routines; rk_update_scalar advances the value using ((c1*mu_old+c2)*scalar_old + dt*tendency)/(c1*mu_new+c2). The code comments that scalar tendencies are coupled with mu. There is no QNC/QNN-specific conversion by rho in this generic advance.",
+      "scope": "The transport equation conserves scalar-times-dry-mass-coordinate (mu) under the WRF scalar formulation. This supports a per-dry-mass transported interpretation, but does not establish the upstream producer definition or repair the QNN volume-unit seed."
+    },
+    {
+      "id": "boundary-and-restart",
+      "source": "WRF/dyn_em/solve_em.F:3038-3070; WRF/share/module_bc.F:2460-2580; WRF/Registry/Registry.EM_COMMON:542-545",
+      "fact": "For specified-boundary handling, P_QNN receives the dedicated flow_dep_bdy_qnn routine; inflow assigns ccn_conc directly, and outflow copies an interior scalar. QNC follows the generic scalar boundary path. Registry trait strings include restart handling for both state scalars. No field-specific conversion was found in the restart or boundary path inspected.",
+      "scope": "Boundary behavior repeats the QNN seed mismatch; generic Registry restart preserves values but adds no physical unit conversion."
+    },
+    {
+      "id": "udm-entry-and-consumer",
+      "source": "WRF/phys/module_microphysics_driver.F:2870-2896; WRF/phys/module_mp_udm.F:632-638,858-902,3025-3064",
+      "fact": "Driver passes rho and input_density_is_dry=.true. UDM uses the supplied density as its dry-density value and copies qnn/qnc into internal number arrays without a boundary conversion. Cloud slope calculation is source expression lambda=(pidnc*Nc/(qc*rho))^(1/3), with pidnc=pi*rho_water/6.",
+      "scope": "Density is explicitly classified as dry, but no source declaration states the unit/basis of the incoming Nc or whether Nc is grid-mean or in-cloud. The slope expression is dimensionally consistent with a volumetric Nc interpretation; this is a diagnostic source observation, not proof of intended producer semantics."
+    }
+  ],
+  "contract_result": {
+    "closed": [
+      "The Registry declares QNC/QNN as # kg(-1).",
+      "The option-37 QNN cold-start and specified-inflow seed paths copy ccn_conc directly; ccn_conc is declared # m-3.",
+      "Generic scalar RK transport weights the scalar by mu and applies no QNC/QNN-specific rho conversion.",
+      "The UDM driver explicitly marks its density argument dry and passes QNC/QNN arrays without a unit conversion at that interface."
+    ],
+    "open": [
+      "Whether the # kg(-1) Registry labels are intended as per kg dry air, per kg moist air, or are stale for these fields.",
+      "Whether ccn_conc is intended to be converted to a mass-specific value before QNN initialization/boundary assignment, or whether the field’s intended representation is actually volumetric.",
+      "Whether QNC is grid-mean or in-cloud at initialization, advection, cloud-fraction processing, activation, sedimentation, and radiation-radius use.",
+      "The authoritative producer/initial-condition contract for QNC and QNN, including restart/real-data generation."
+    ],
+    "decision": "Do not close the unit contract or choose a rho/CF correction from these findings alone. The source chain proves a direct mismatch between declared QNN units and the configured QNN seed value, while exposing no authoritative intended-value definition."
+  },
+  "next_contract": [
+    "Obtain or write the authoritative initialization contract for ccn_conc and input QNC/QNN, including whether each is # m-3 or # kg_dry-1 and whether it is grid-mean or in-cloud.",
+    "Require one consistent declared representation at initialization, boundary inflow, restart, dynamics transport, UDM process entry, and diagnostic output. If a conversion is intended, name its exact density (dry versus moist) and its precise interface.",
+    "Only after the contract is approved, use source-extracted tests at two dry densities to verify the agreed conversion is applied once at each relevant boundary and never compounded; use inactive/partial/full CF and below/partial/capped RH cases to separate cloud-fraction and activation behavior.",
+    "Keep radiation PSD population/LUT interpretation as a separate unresolved contract."
+  ],
+  "limitations": [
+    "No source was modified.",
+    "No compilation, model, solver, runtime log, NetCDF/raw state, or scientific numeric array was read or produced.",
+    "Source paths/line ranges and hashes refer to the frozen PR146 source checkout identified above."
+  ]
+}

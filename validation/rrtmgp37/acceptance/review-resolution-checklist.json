@@ -17,17 +17,20 @@
       "feature_branch_validation": "SCOPED_EVIDENCE_EXISTS",
       "main_included_at_snapshot": false,
       "integration_candidate_included": true,
-      "integrated_validation": "PASS_FOCUSED_RUNTIME_PENDING",
+      "integrated_validation": "PASS_SCOPED",
       "completion_condition": "RUNNING 기록 실패에서 자식 그룹 종료·회수; 모든 LW/SW 밴드와 독립 광학식 검사; 통합 실행파일의 OFF/ON 동일성",
-      "scope_limit": "현재 focused controls와 새 CI를 분리한다. 과거 211개 배열 결과를 새 tree 실행으로 바꾸지 않는다.",
+      "scope_limit": "Fresh CI startup runtime-only capture OFF/ON, all-band optics and focused failure injection pass. This CI startup arm does not compare a pristine engine4 binary.",
       "owner": "root; independent team review",
       "evidence": [
-        "validation/rrtmgp37/main-runtime-io-integration/manifest.json"
+        "validation/rrtmgp37/main-runtime-io-integration/manifest.json",
+        "validation/rrtmgp37/main-runtime-io-integration-terminal/manifest.json"
       ],
       "source_pr_urls": [
         "https://github.com/gonos2k/wrf-rrtmgp/pull/135"
       ],
-      "remaining_execution": "Final-tree full build/SCM and actual MPI checkpoint/restart as applicable; no main merge yet."
+      "remaining_execution": "Main merge remains pending. Document-only terminal addendum does not change the executed production/source subtrees.",
+      "integration_pr_url": "https://github.com/gonos2k/wrf-rrtmgp/pull/146",
+      "tested_source_head": "dd7eb1da3a23ca8f21bd4d5bf82f7feecf813fc5"
     },
     {
       "id": "INT-136",
@@ -38,17 +41,20 @@
       "feature_branch_validation": "SCOPED_EVIDENCE_EXISTS",
       "main_included_at_snapshot": false,
       "integration_candidate_included": true,
-      "integrated_validation": "PASS_FOCUSED_RUNTIME_PENDING",
+      "integrated_validation": "PASS_SCOPED",
       "completion_condition": "실제 Registry 생성물에서 비공간/Z/X/Y의 명시 기본값 및 실제 XY subgrid override 보존; 통합 빌드·restart",
       "scope_limit": "미정의 메타데이터를 고치는 변경이다. 이전 미정의 동작의 bitwise 보존을 요구하지 않는다.",
       "owner": "root; independent team review",
       "evidence": [
-        "validation/rrtmgp37/main-runtime-io-integration/manifest.json"
+        "validation/rrtmgp37/main-runtime-io-integration/manifest.json",
+        "validation/rrtmgp37/main-runtime-io-integration-terminal/manifest.json"
       ],
       "source_pr_urls": [
         "https://github.com/gonos2k/wrf-rrtmgp/pull/136"
       ],
-      "remaining_execution": "Final-tree full build/SCM and actual MPI checkpoint/restart as applicable; no main merge yet."
+      "remaining_execution": "Main merge remains pending. Document-only terminal addendum does not change the executed production/source subtrees.",
+      "integration_pr_url": "https://github.com/gonos2k/wrf-rrtmgp/pull/146",
+      "tested_source_head": "dd7eb1da3a23ca8f21bd4d5bf82f7feecf813fc5"
     },
     {
       "id": "INT-137",
@@ -59,17 +65,20 @@
       "feature_branch_validation": "SCOPED_EVIDENCE_EXISTS",
       "main_included_at_snapshot": false,
       "integration_candidate_included": true,
-      "integrated_validation": "PASS_FOCUSED_RUNTIME_PENDING",
+      "integrated_validation": "PASS_SCOPED",
       "completion_condition": "3×5 배열, 이름·순서·두 Time 기록·타입 변환·오류; 실제 통합 MPI checkpoint 읽기/재저장",
       "scope_limit": "Backend와 generic rank helper 시험은 전체 module_io/MPI restart 실행과 구분한다.",
       "owner": "root; independent team review",
       "evidence": [
-        "validation/rrtmgp37/main-runtime-io-integration/manifest.json"
+        "validation/rrtmgp37/main-runtime-io-integration/manifest.json",
+        "validation/rrtmgp37/main-runtime-io-integration-terminal/manifest.json"
       ],
       "source_pr_urls": [
         "https://github.com/gonos2k/wrf-rrtmgp/pull/137"
       ],
-      "remaining_execution": "Final-tree full build/SCM and actual MPI checkpoint/restart as applicable; no main merge yet."
+      "remaining_execution": "Main merge remains pending. Document-only terminal addendum does not change the executed production/source subtrees.",
+      "integration_pr_url": "https://github.com/gonos2k/wrf-rrtmgp/pull/146",
+      "tested_source_head": "dd7eb1da3a23ca8f21bd4d5bf82f7feecf813fc5"
     },
     {
       "id": "INT-BUILD",
@@ -80,16 +89,21 @@
       "feature_branch_validation": "SCOPED_EVIDENCE_EXISTS",
       "main_included_at_snapshot": false,
       "integration_candidate_included": true,
-      "integrated_validation": "NOT_RUN",
+      "integrated_validation": "PASS_SCOPED",
       "completion_condition": "새 main 기반 PR의 정확한 head에서 Make/CMake fresh build/install/consumer/SCM 종료 결과",
-      "scope_limit": "후속 분기와 main의 과거 PASS를 새 통합 tree PASS로 전용하지 않는다.",
+      "scope_limit": "Exact dd7 head: all11 checks SUCCESS, fresh GNU serial Make SCM and CMake install/consumer/SCM; local fresh GNU13 REAL32 allocatable MPI/OpenMP build/install. No Intel/REAL64/relocation approval.",
       "owner": "root; independent team review",
-      "evidence": [],
+      "evidence": [
+        "validation/rrtmgp37/main-runtime-io-integration-terminal/manifest.json"
+      ],
       "source_pr_urls": [
         "https://github.com/gonos2k/wrf-rrtmgp/pull/135",
         "https://github.com/gonos2k/wrf-rrtmgp/pull/136",
         "https://github.com/gonos2k/wrf-rrtmgp/pull/137"
-      ]
+      ],
+      "integration_pr_url": "https://github.com/gonos2k/wrf-rrtmgp/pull/146",
+      "tested_source_head": "dd7eb1da3a23ca8f21bd4d5bf82f7feecf813fc5",
+      "remaining_execution": "Main merge remains pending. Document-only terminal addendum does not change the executed production/source subtrees."
     },
     {
       "id": "INT-RESTART",
@@ -99,16 +113,21 @@
       "implemented": true,
       "feature_branch_validation": "SCOPED_EVIDENCE_EXISTS",
       "main_included_at_snapshot": false,
-      "integration_candidate_included": false,
-      "integrated_validation": "NOT_RUN",
+      "integration_candidate_included": true,
+      "integrated_validation": "PASS_SCOPED",
       "completion_condition": "최종 실행파일로 ordered non-square ZZ 저장·복원·재저장 및 연속/restart 비교",
-      "scope_limit": "multi_perturb=0의 I/O 일치는 활성 확률물리 난수열 승인이나 McICA seed 검증이 아니다.",
+      "scope_limit": "MPI4×OpenMP2;13h controls and12→13h restarts; inactive multi_perturb=0 integer ZZ persistence660 values per arm;228/231 same-arm history arrays and variable attributes exact. Global START_DATE differs. No active stochastic/McICA sequence approval.",
       "owner": "root; independent team review",
-      "evidence": [],
+      "evidence": [
+        "validation/rrtmgp37/main-runtime-io-integration-terminal/manifest.json"
+      ],
       "source_pr_urls": [
         "https://github.com/gonos2k/wrf-rrtmgp/pull/136",
         "https://github.com/gonos2k/wrf-rrtmgp/pull/137"
-      ]
+      ],
+      "integration_pr_url": "https://github.com/gonos2k/wrf-rrtmgp/pull/146",
+      "tested_source_head": "dd7eb1da3a23ca8f21bd4d5bf82f7feecf813fc5",
+      "remaining_execution": "Main merge remains pending. Document-only terminal addendum does not change the executed production/source subtrees."
     },
     {
       "id": "EVD-RFMIP",
@@ -118,16 +137,22 @@
       "implemented": true,
       "feature_branch_validation": "SCOPED_EVIDENCE_EXISTS",
       "main_included_at_snapshot": false,
-      "integration_candidate_included": false,
-      "integrated_validation": "NOT_RUN",
+      "integration_candidate_included": true,
+      "integrated_validation": "PASS_SCOPED_SAVED_EVIDENCE",
       "completion_condition": "원본 package·선행 manifest·원래 source pin을 보존한 통합 및 saved verifier",
       "scope_limit": "작은 2×2 분해 잔차는 published strict PASS가 아니다.",
       "owner": "root; independent team review",
-      "evidence": [],
+      "evidence": [
+        "https://github.com/gonos2k/wrf-rrtmgp/blob/0a0592d9c5f289c3fc4bc330eef64ea2f6abaebf/validation/rrtmgp37/followup-evidence-integration/manifest.json"
+      ],
       "source_pr_urls": [
         "https://github.com/gonos2k/wrf-rrtmgp/pull/138",
         "https://github.com/gonos2k/wrf-rrtmgp/pull/140"
-      ]
+      ],
+      "integration_candidate_location": "SEPARATE_MAIN_BASED_PR147_NOT_PR146_TREE",
+      "integration_pr_url": "https://github.com/gonos2k/wrf-rrtmgp/pull/147",
+      "tested_source_head": "0a0592d9c5f289c3fc4bc330eef64ea2f6abaebf",
+      "remaining_execution": "PR147 main merge pending; six saved verifiers and12 manufactured controls passed; no fresh scientific producer or RTE run claimed."
     },
     {
       "id": "EVD-NC",
@@ -137,18 +162,24 @@
       "implemented": true,
       "feature_branch_validation": "SCOPED_EVIDENCE_EXISTS",
       "main_included_at_snapshot": false,
-      "integration_candidate_included": false,
-      "integrated_validation": "NOT_RUN",
+      "integration_candidate_included": true,
+      "integrated_validation": "PASS_SCOPED_SAVED_EVIDENCE",
       "completion_condition": "선행 package와 producer/helper 단계 join을 보존하고 현재 index에 범위를 연결",
       "scope_limit": "측정된 raw population 동작과 단위·PSD의 과학적 정당성은 구분한다.",
       "owner": "root; independent team review",
-      "evidence": [],
+      "evidence": [
+        "https://github.com/gonos2k/wrf-rrtmgp/blob/0a0592d9c5f289c3fc4bc330eef64ea2f6abaebf/validation/rrtmgp37/followup-evidence-integration/manifest.json"
+      ],
       "source_pr_urls": [
         "https://github.com/gonos2k/wrf-rrtmgp/pull/139",
         "https://github.com/gonos2k/wrf-rrtmgp/pull/141",
         "https://github.com/gonos2k/wrf-rrtmgp/pull/143",
         "https://github.com/gonos2k/wrf-rrtmgp/pull/144"
-      ]
+      ],
+      "integration_candidate_location": "SEPARATE_MAIN_BASED_PR147_NOT_PR146_TREE",
+      "integration_pr_url": "https://github.com/gonos2k/wrf-rrtmgp/pull/147",
+      "tested_source_head": "0a0592d9c5f289c3fc4bc330eef64ea2f6abaebf",
+      "remaining_execution": "PR147 main merge pending; six saved verifiers and12 manufactured controls passed; no fresh scientific producer or RTE run claimed."
     },
     {
       "id": "PHY-NC",
@@ -163,7 +194,10 @@
       "completion_condition": "0<cloud CF<1, 0<activation fraction<1, cap/floor 비활성 및 두 dry density 상태에서 input→storage→process→radius 계약",
       "scope_limit": "단위 authority 없이 NC를 CF/밀도로 보정하지 않는다.",
       "owner": "root; independent team review",
-      "evidence": [],
+      "evidence": [
+        "validation/rrtmgp37/main-runtime-io-integration-terminal/nc-authority-review.json",
+        "validation/rrtmgp37/main-runtime-io-integration-terminal/nc-producer-transport-chain-review.json"
+      ],
       "source_pr_urls": [
         "https://github.com/gonos2k/wrf-rrtmgp/pull/98",
         "https://github.com/gonos2k/wrf-rrtmgp/pull/99",
@@ -182,7 +216,9 @@
         "https://github.com/gonos2k/wrf-rrtmgp/pull/142",
         "https://github.com/gonos2k/wrf-rrtmgp/pull/143",
         "https://github.com/gonos2k/wrf-rrtmgp/pull/144"
-      ]
+      ],
+      "contract_state": "OPEN_SOURCE_CONTRACT_CONFLICT",
+      "remaining_execution": "Resolve authority: ccn_conc labeled #m-3 copied directly into QNN labeled #kg(-1); generic mu-weighted scalar transport and volumetric slope consumption contain no unit bridge. Do not guess which label/producer convention to change."
     },
     {
       "id": "PHY-SIZE",
@@ -321,9 +357,11 @@
       "integration_candidate_included": false,
       "integrated_validation": "OPEN",
       "completion_condition": "최종 tree/compiler/flags/binaries/libraries/input/coefficients/namelist/results 연결",
-      "scope_limit": "과거 fe8 SCM capsule은 해당 실행만 검증한다.",
+      "scope_limit": "New scoped dd7 build/input/checkpoint/process/results identity is linked. Final merged production policy, complete coefficient-open provenance and independent physical acceptance remain OPEN.",
       "owner": "root; independent team review",
-      "evidence": [],
+      "evidence": [
+        "validation/rrtmgp37/main-runtime-io-integration-terminal/manifest.json"
+      ],
       "source_pr_urls": [
         "https://github.com/gonos2k/wrf-rrtmgp/pull/133"
       ]
@@ -339,9 +377,11 @@
       "integration_candidate_included": false,
       "integrated_validation": "NOT_RUN",
       "completion_condition": "최종 정책의 장시간 4/37 비교; 복사 효과와 UDM 정책·분할·restart 효과 구분",
-      "scope_limit": "후속 분기 48h 완주는 최종 통합 main의 관측 정확도 승인과 다르다.",
+      "scope_limit": "Fresh13h control/restart gate is recorded; it is not a final merged48h forecast/observation comparison. Earlier48h evidence remains historical.",
       "owner": "root; independent team review",
-      "evidence": [],
+      "evidence": [
+        "validation/rrtmgp37/main-runtime-io-integration-terminal/manifest.json"
+      ],
       "source_pr_urls": [
         "https://github.com/gonos2k/wrf-rrtmgp/pull/69",
         "https://github.com/gonos2k/wrf-rrtmgp/pull/136"
@@ -407,5 +447,19 @@
     "136": "7a8d1ba85f7ff53d67b6ca7c28923e4d3985090a",
     "137": "3fb741aaa57289fc097af7ea58ed4b780199f38e"
   },
-  "focused_validation_manifest": "validation/rrtmgp37/main-runtime-io-integration/manifest.json"
+  "focused_validation_manifest": "validation/rrtmgp37/main-runtime-io-integration/manifest.json",
+  "terminal_validation_manifest": "validation/rrtmgp37/main-runtime-io-integration-terminal/manifest.json",
+  "candidate_prs": {
+    "runtime_io": "https://github.com/gonos2k/wrf-rrtmgp/pull/146",
+    "saved_evidence": "https://github.com/gonos2k/wrf-rrtmgp/pull/147"
+  },
+  "executed_source_identity": {
+    "head": "dd7eb1da3a23ca8f21bd4d5bf82f7feecf813fc5",
+    "tree": "c51069f89eccf113dca91a6942264194f3bc839e",
+    "subtrees": {
+      "WRF": "2c31e86c94cc3f9c2a95dff7b4a51f4c1a3952c4",
+      "config": "cb5184cbd03b180fc7767e060e5492b84a9217cb",
+      "tools": "a36bb804b334a363e20ed90e24d478d5003155bc"
+    }
+  }
 }
