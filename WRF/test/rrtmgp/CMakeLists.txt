@@ -369,6 +369,8 @@ add_test(NAME udm_startup_snow_replay COMMAND "${Python3_EXECUTABLE}"
   "${CMAKE_CURRENT_SOURCE_DIR}/test_udm_startup_snow_replay.py")
 add_test(NAME udm_startup_snow_scm_process COMMAND "${Python3_EXECUTABLE}"
   "${CMAKE_CURRENT_SOURCE_DIR}/test_udm_startup_snow_scm_process.py")
+add_test(NAME udm_startup_snow_scm_namelist COMMAND "${Python3_EXECUTABLE}"
+  "${CMAKE_CURRENT_SOURCE_DIR}/test_udm_startup_snow_scm_namelist.py")
 add_test(NAME udm_startup_optics_contract COMMAND "${Python3_EXECUTABLE}"
   "${CMAKE_CURRENT_SOURCE_DIR}/test_udm_startup_optics_contract.py")
 add_test(NAME udm_ccn_tile_startup COMMAND "${Python3_EXECUTABLE}"

@@ -239,7 +239,7 @@ def main():
             build = output / optimization
             build.mkdir()
             executable = build / 'fixture.exe'
-            argv = [tools['fc'], '-' + optimization, '-g', '-fcheck=all', '-fallow-argument-mismatch',
+            argv = [tools['fc'], '-' + optimization, '-g', '-fcheck=all', '-finit-integer=99', '-fallow-argument-mismatch',
                     '-ffree-form', '-ffree-line-length-none', '-cpp', '-I' + str(ioapi)]
             if args.mpiexec:
                 argv += ['-DUSE_MPI']
@@ -253,7 +253,8 @@ def main():
                 argv = [str(executable)] if ranks == 1 else [tools['mpiexec']] + shlex.split(args.mpi_args) + ['-n', str(ranks), str(executable)]
                 log = runner.run(argv, case, 'fixture_serial' if ranks == 1 else 'fixture_MPI_wrapper')
                 text = log.read_text()
-                if text.count('BACKEND_ROUNDTRIP_PASS') != 1 or text.count('REPLICA_PASS') != ranks:
+                if (text.count('BACKEND_ROUNDTRIP_PASS') != 1 or text.count('REPLICA_PASS') != ranks
+                        or text.count('HELPER_ORDER_CONTRACT_PASS') != 1):
                     raise RuntimeError('fixture success marker/replica roster mismatch')
                 if pin(executable) != executable_pin:
                     raise RuntimeError('executable changed during fixture')
@@ -270,6 +271,10 @@ def main():
                    'generic_helper_executed': True, 'time_records': 2,
                    'time_unlimited_checked': True, 'real4_to_double_read_checked': True,
                    'invalid_read_order_checked': True,
+                   'direct_helper_invalid_orders_checked': True,
+                   'direct_helper_valid_order_count': 20,
+                   'direct_helper_invalid_order_count': 5,
+                   'direct_fieldio_invalid_read_checked': True,
                    'wrf_forecasts': 0, 'rte_calls': 0, 'physical_acceptance': False})
         print('PASS_SCOPED_NETCDF_ZZ_BACKEND', runner.confirmed_children)
     except BaseException as error:

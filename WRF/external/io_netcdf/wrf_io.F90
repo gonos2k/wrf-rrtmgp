@@ -430,6 +430,8 @@ subroutine GetDim(MemoryOrder,NDim,Status)
   integer       ,intent(out) :: Status
   character*3                :: MemOrd
 
+  ! Define the output even when the memory order is rejected.
+  NDim = 0
   call LowerCase(MemoryOrder,MemOrd)
   select case (MemOrd)
     case ('xyz','xzy','yxz','yzx','zxy','zyx','xsz','xez','ysz','yez')
@@ -505,6 +507,10 @@ logical function ZeroLengthHorzDim(MemoryOrder,Vector,Status)
   logical zero_length
 
   call GetDim(MemoryOrder,NDim,Status)
+  if(Status /= WRF_NO_ERR) then
+    ZeroLengthHorzDim = .true.
+    return
+  endif
   temp(1:NDim) = Vector(1:NDim)
   call LowerCase(MemoryOrder,MemOrd)
   zero_length = .false.
@@ -540,6 +546,7 @@ subroutine ExtOrder(MemoryOrder,Vector,Status)
   character*3                               :: MemOrd
 
   call GetDim(MemoryOrder,NDim,Status)
+  if(Status /= WRF_NO_ERR) return
   temp(1:NDim) = Vector(1:NDim)
   call LowerCase(MemoryOrder,MemOrd)
   select case (MemOrd)
@@ -586,7 +593,9 @@ subroutine ExtOrderStr(MemoryOrder,Vector,ROVector,Status)
   integer                                         :: NDim
   character*3                                     :: MemOrd
 
+  ROVector = ''
   call GetDim(MemoryOrder,NDim,Status)
+  if(Status /= WRF_NO_ERR) return
   ROVector(1:NDim) = Vector(1:NDim)
   call LowerCase(MemoryOrder,MemOrd)
   select case (MemOrd)
@@ -707,6 +716,7 @@ subroutine FieldIO(IO,DataHandle,DateStr,Length,MemoryOrder &
     return
   endif
   call GetDim(MemoryOrder,NDim,Status)
+  if(Status /= WRF_NO_ERR) return
   VStart(:) = 1
   VCount(:) = 1
   VStart(1:NDim) = 1
