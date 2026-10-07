@@ -1,0 +1,131 @@
+{
+  "schema": "UDM27_NOAA_NUMBER_CONTRACT_EVIDENCE_V1",
+  "scope": "UDM27/37; primary developer provenance and selected source semantics; no numerical/physical acceptance",
+  "reviewed_main": "a91d0d855da3e24094c2e6c7ba1088b56bc8c461",
+  "reviewed_tree": "887d3fd1cf8c097219b201b1bdb9cdd428d593a9",
+  "source_files": [
+    {
+      "path": "WRF/phys/module_mp_udm.F",
+      "sha256": "7bd96141eefc6ae2cb66cea0ce022fcc2ee64afce5c616aa65f26711c8790947",
+      "size_bytes": 196865,
+      "commit": "a91d0d855da3e24094c2e6c7ba1088b56bc8c461"
+    },
+    {
+      "path": "WRF/phys/module_microphysics_driver.F",
+      "sha256": "c02f227d0fc1bf633fa53e54361e7117093b2c7bb02cedc2b71441c5bd638bd9",
+      "size_bytes": 198159,
+      "commit": "a91d0d855da3e24094c2e6c7ba1088b56bc8c461"
+    },
+    {
+      "path": "WRF/Registry/Registry.EM_COMMON",
+      "sha256": "87e21a476a06b7e0c926b2d939eaf1028810cba8a7d1e6fc585b50b599f99729",
+      "size_bytes": 448359,
+      "commit": "a91d0d855da3e24094c2e6c7ba1088b56bc8c461"
+    },
+    {
+      "path": "WRF/share/module_bc.F",
+      "sha256": "61b9235004b2a7799faabaa928276af8a7ef2e4672619c8ad120c857461301ad",
+      "size_bytes": 164069,
+      "commit": "a91d0d855da3e24094c2e6c7ba1088b56bc8c461"
+    },
+    {
+      "path": "WRF/dyn_em/module_em.F",
+      "sha256": "67c5842c1c5d407a26139f26bd317f3016c610aeaf60207dfd21394ddb81482c",
+      "size_bytes": 132827,
+      "commit": "a91d0d855da3e24094c2e6c7ba1088b56bc8c461"
+    }
+  ],
+  "support": [
+    {
+      "id": "CCN_INITIAL_VOLUME",
+      "status": "VERIFIED_FOR_2023_EXPERIMENT",
+      "source": "https://epic.noaa.gov/wp-content/uploads/2023/08/UIFCW-2023-Tue-19.-Songyou-Hong-mp_new-202307-UIFCW-template.pdf",
+      "pdf_page": 17,
+      "finding": "해당 발표 실험의 CCN 초기값은100/cc이며100cm^-3=1e8m^-3이다. 모든 UDM host 저장값의 정의가 되는 것은 아니다."
+    },
+    {
+      "id": "PROCESS_SCALE",
+      "status": "VERIFIED_DESIGN_PRINCIPLE",
+      "source": "https://epic.noaa.gov/wp-content/uploads/2023/08/UIFCW-2023-Tue-19.-Songyou-Hong-mp_new-202307-UIFCW-template.pdf",
+      "pdf_pages": [
+        5,
+        6,
+        20
+      ],
+      "finding": "미세물리와 침강/역학의 평균 기준을 구분하고 이중모멘트 적용을 개발 과제로 설명한다. Nc/Nr/CCN은 예측변수이나 변수별 저장·변환 규약은 제시하지 않는다."
+    },
+    {
+      "id": "INTERNAL_NUMBER_UNITS",
+      "status": "VERIFIED_EXPLICIT_SOURCE_COMMENTS",
+      "source": "https://github.com/wrf-model/WRF/blob/5fc76c540631be296bd2312e1d96117c07cbf761/phys/module_mp_udm.F",
+      "intro_lines": [
+        38,
+        60,
+        61,
+        62,
+        63,
+        80,
+        81,
+        82
+      ],
+      "current_lines": [
+        47,
+        68,
+        69,
+        74,
+        75,
+        93,
+        94,
+        95
+      ],
+      "finding": "UDM 내부 number 상수와 bounds에m^-3가 명시되고 선택된 cloud-slope 식도 체적 수농도 해석을 지원한다. 과정 전체의 차원 정합성/물리 정확도를 확정하지 않는다."
+    },
+    {
+      "id": "PUBLIC_SOURCE_LINEAGE",
+      "status": "VERIFIED_UPSTREAM_PR_METADATA",
+      "source": "https://github.com/wrf-model/WRF/pull/2147",
+      "merge_commit": "5fc76c540631be296bd2312e1d96117c07cbf761",
+      "merged_at": "2025-02-05T22:49:27Z",
+      "finding": "공개 WRF 도입과 개발자 계보의 근거이며 NOAA 내부 host wrapper의 동일성이나 운영 채택을 증명하지 않는다."
+    }
+  ],
+  "interface_mapping": {
+    "status": "OPEN_SOURCE_CONTRACT_CONFLICT",
+    "host_field_labels": "QNN/QNC #kg(-1); dry-vs-moist denominator/population not explicitly settled",
+    "initial_input_label": "ccn_conc #m-3;default1.0e8",
+    "observed_seed": "qnn_curr=ccn_conc directly",
+    "observed_host_transport": "generic scalar RK is mu-weighted; no QNN/QNC-specific rho bridge found",
+    "observed_udm_entry": "direct NN/NC arrays; dry rho supplied in37 path",
+    "observed_cloud_fraction_boundary": "six condensate mass categories divide/restore; number arrays not converted at those sites",
+    "not_determined": [
+      "stale unit metadata versus missing host conversion",
+      "number basis at input/storage/RK/process/sedimentation/helper/output",
+      "QNN cloud and clear-air populations",
+      "density/CF conversion locations and approved denominators",
+      "process-wide dimensional closure and PSD/LUT optical size contract"
+    ]
+  },
+  "constant_version_comparison": {
+    "intro_ncmax_m-3": 2000000000.0,
+    "current_ncmax_m-3": 30000000000.0,
+    "intro_nrmax_m-3": 2000000.0,
+    "current_nrmax_m-3": 300000000.0,
+    "note": "Current caps differ; a future cap/floor-inactive fixture must bind current source, not reuse introduction values. This review does not approve or modify cap changes."
+  },
+  "conditional_relations": {
+    "volume_mass": "n=rho_d*eta ONLY if eta is per dry-air mass for the same population",
+    "cloud_number": "nbar_c=fc*n_incloud_c ONLY if clear-air cloud droplet population is zero",
+    "ccn": "nbar_CCN=fc*n_CCN_cloud+(1-fc)*n_CCN_clear; automatic division byfc unsupported without clear-air population closure",
+    "decision": "No unconditional rho/CF scaling or Registry relabeling applied."
+  },
+  "new_execution": {
+    "compiler": 0,
+    "model": 0,
+    "RTE": 0,
+    "scientific_array_analysis": 0
+  },
+  "production_accepted": false,
+  "number_mapping_accepted": false,
+  "PSD_LUT_accepted": false,
+  "developer_contact_sent": false
+}
