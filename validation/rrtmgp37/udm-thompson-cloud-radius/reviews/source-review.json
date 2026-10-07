@@ -1,0 +1,58 @@
+{
+  "limitations": [
+    "The kernel comparison cannot determine whether a host NC field is universally #m-3 or #kg-1; Thompson multiplies nc1d by its EOS density while UDM's formula uses nc directly after a separate rho-based gate.",
+    "A test-only is_aerosol_aware switch does not substitute for WRF's full initialization and mp_physics routing. Full thompson_init allocates/builds lookup tables and requires broader module dependencies; it is unnecessary for the radius-kernel algebra but remains necessary to claim the entire production initialization path.",
+    "An analytic gamma-moment oracle verifies the assumed distribution formula; it does not prove that the pinned UDM or Thompson PSD is the physically correct population for the LUT or radiation.",
+    "This source review did not compile, run a model, read scientific arrays, alter production code, or change the UDM-only gate."
+  ],
+  "minimal_discriminating_test": {
+    "acceptance": "Require finite positive concentrations, correct active branch/index, unclipped radius in each arm, and source-order replay matching the actual helper outputs. If output hits a min/max clamp, mark that arm non-discriminating for formula validation. Keep standalone direct-kernel result separate from any radiation flux/optical validation.",
+    "independent_moment_oracle": "For assumed generalized-gamma N(D)=N0*D^nu*exp(-lambda*D), moments Mj=N0*Gamma(j+nu+1)/lambda^(j+nu+1). With n=M0 and liquid mass concentration rc=am_r*M3, lambda^3=n*am_r*[(nu+1)(nu+2)(nu+3)]/rc and volume/surface effective radius is 0.5*M3/M2=(nu+3)/(2*lambda). Verify g_ratio(inu_c) equals the moment product. Reproduce production kinds/order: Thompson inputs and lambda RHS use default REAL before assignment to double `lamc`; final radius expression uses double intermediates then SNGL. Report exact bits/ULPs rather than silently loosening tolerance.",
+    "recommended_scope": "Compile the actual full module sources in an isolated test harness (root-owned execution). Call calc_effectRad on a one-level cloud-only state after a reversible in-module test initializer sets only private Thompson radius state: is_aerosol_aware=false/true and obmr=1./bm_r. For the UDM side, call real udminit then udm_mp_effective_radius with the same recorded qc, thermodynamic state, selected density, and explicitly recorded NC argument. Set qi=qs=ni=0 to keep this test cloud-only; choose qc/n away from threshold and result bounds so clamps do not hide the formula difference. Record all raw inputs, derived rho/nc/rq, shape index, lambda, pre/post clamps and returned radius.",
+    "three_arms": "(1) Thompson fixed-Nt_c false-state; (2) Thompson prognostic-number true-state, where the routine's own mapping is nc1d*rho; (3) UDM initialized helper on the actual passed NC value. If adding a common per-volume algebra arm, explicitly set Thompson nc1d=n_volume/rho and UDM nc=n_volume, and label this a formula comparison only, not a claim about host stored NC units."
+  },
+  "schema": "udm37-thompson-udm-radius-comparison-source-review-v1",
+  "source_snapshot": {
+    "files": [
+      {
+        "anchors": {
+          "calc_effectRad": "5594-5699",
+          "caller_radius_inputs_and_outputs": "1236-1250, 1467-1477",
+          "initialization_and_cloud_state": "424-480, 656-721",
+          "scheme_modes_and_parameters": "18-32, 88-89, 101-113"
+        },
+        "path": "WRF/phys/module_mp_thompson.F",
+        "sha256": "fabf19e2a9073cff886e882b187080bfdf089d3fd40c0fce1d19bc93b1e5e802"
+      },
+      {
+        "anchors": {
+          "effective_radius_helper": "3749-3850",
+          "udminit_constants": "3460-3475"
+        },
+        "path": "WRF/phys/module_mp_udm.F",
+        "sha256": "7bd96141eefc6ae2cb66cea0ce022fcc2ee64afce5c616aa65f26711c8790947"
+      }
+    ],
+    "head": "f5be994cf738d23336f6d9b88c000252091d5edd",
+    "tree": "4ccaf55b452f329780465b27b742956a07c01f26",
+    "worktree": "build/udm37-partial-activation-pr-work"
+  },
+  "status": "SOURCE_ONLY_DESIGN_NO_EXECUTION",
+  "thompson_cloud_radius": {
+    "mode_mapping_caveat": "calc_effectRad selects fixed versus prognostic cloud number using private is_aerosol_aware, not a direct mp_physics integer. thompson_init sets that state based on presence of nwfa2d, nwfa, and nifa (line 480). Therefore a test-only false/true state pair is a controlled kernel mode comparison, not proof of the full host's mp_physics=8/28 initialization/configuration path. Confirm actual host argument presence separately before calling it a production-mode comparison.",
+    "source_facts": [
+      "Module header identifies mp_physics=8 as one-moment cloud water with prescribed Nt_c and mp_physics=28 as double-moment cloud number; Nt_c=100e6 m-3 and Nt_c_max=1999e6 at lines 18-20, 88-89.",
+      "calc_effectRad derives rho=0.622*p/(R*T*(qv+0.622)), rc=max(R1,qc*rho), and nc=max(2,min(nc1d*rho,Nt_c_max)); when private is_aerosol_aware is false, it replaces nc with Nt_c (lines 5623-5631).",
+      "The active integer shape index is inu_c=15 for nc<100, 2 for nc>1e10, otherwise min(15,NINT(1000e6/nc)+2). It computes lamc=(nc*am_r*g_ratio(inu_c)/rc)**obmr and re=clamp(0.5*(3+inu_c)/lamc,2.51e-6,50e-6) (lines 5636-5647). am_r=PI*rho_w/6, rho_w=1000; g_ratio table is fixed at lines 70-71 and 128; obmr=1/bm_r is initialized at line 721.",
+      "The host caller initializes outputs to background values, calls calc_effectRad only when all three has_re* flags are nonzero, then applies RE_QC_BG and 50-micron outer bounds (1467-1477)."
+    ]
+  },
+  "udm_cloud_radius": {
+    "needed_initialization": "Use real udminit with the actual DENR/model constants before calling udm_mp_effective_radius, or a source-pinned test-only initializer limited to state required by this helper. Do not copy Thompson's initialization into UDM.",
+    "source_facts": [
+      "udminit sets pidnc=pi*denr/6 (lines 3460-3468). The helper forms rqc=max(1e-12,qc*rho) and rnc=max(1e-6,nc*rho) for activity tests (3805-3808).",
+      "For active cloud it evaluates lamc=(pidnc*nc/rqc)**obmr and re=max(recmin,min(0.5/lamc,recmax) (3821-3824); there is no Thompson nu_c factor in this expression.",
+      "The helper's NC value enters the activity gate as nc*rho but enters lamc directly. Source algebra is recorded here; no interpretation or correction of UDM's population-unit contract is made."
+    ]
+  }
+}

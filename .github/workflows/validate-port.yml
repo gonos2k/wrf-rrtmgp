@@ -21,6 +21,8 @@ on:
       - 'tools/validate.py'
       - 'tools/udm_frozen_optics/**'
       - 'validation/rrtmgp37/upstream-reference/**'
+      - 'validation/rrtmgp37/partial-activation-observation/**'
+      - 'validation/rrtmgp37/udm-thompson-cloud-radius/**'
       - 'validation/rrtmgp37/bon-night-common-band-source/**'
       - 'validation/rrtmgp37/bon-night-planck-source/**'
       - 'validation/rrtmgp37/bon-night-independent-pfrac/**'
@@ -49,6 +51,8 @@ on:
       - 'tools/validate.py'
       - 'tools/udm_frozen_optics/**'
       - 'validation/rrtmgp37/upstream-reference/**'
+      - 'validation/rrtmgp37/partial-activation-observation/**'
+      - 'validation/rrtmgp37/udm-thompson-cloud-radius/**'
       - 'validation/rrtmgp37/bon-night-common-band-source/**'
       - 'validation/rrtmgp37/bon-night-planck-source/**'
       - 'validation/rrtmgp37/bon-night-independent-pfrac/**'
@@ -73,6 +77,8 @@ jobs:
         run: python3 WRF/test/rrtmgp/test_wrf_udm_dependencies.py WRF/main/depend.common
       - name: Verify saved partial-activation bytes without approving physical units
         run: python3 -I -S validation/rrtmgp37/partial-activation-observation/verify_saved.py
+      - name: Verify saved UDM and Thompson cloud-kernel comparison scope
+        run: python3 -I -S validation/rrtmgp37/udm-thompson-cloud-radius/verify_saved.py
       # Stored numerical evidence pins the pre-stage-instrumentation sources.
       # Authenticate that historical checkout rather than retagging old results
       # as calculations from the current wrappers. Current code is checked above
@@ -149,6 +155,22 @@ jobs:
         run: >-
           python3 WRF/test/rrtmgp/test_udm_partial_activation.py WRF
           --workdir build/udm-partial-activation
+      - name: Compare current UDM and Thompson liquid-radius kernels
+        run: >-
+          python3 WRF/test/rrtmgp/test_udm_thompson_radius.py WRF
+          --workdir build/udm-thompson-radius
+      - name: Preserve radius-kernel sources and actual process results
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: udm-thompson-radius-${{ github.run_id }}
+          path: |
+            build/udm-thompson-radius/*.json
+            build/udm-thompson-radius/*.stdout
+            build/udm-thompson-radius/*.stderr
+            build/udm-thompson-radius/*.F
+          retention-days: 30
+          if-no-files-found: error
       - name: Preserve current UDM observation sources, states, and actual return codes
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02

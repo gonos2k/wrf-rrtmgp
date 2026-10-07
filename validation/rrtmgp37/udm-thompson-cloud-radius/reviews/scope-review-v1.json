@@ -1,0 +1,76 @@
+{
+  "count_interpretation": {
+    "24_observed_cells": "Correctly counts the 12 observed-on output records at each optimization level; the other four fixture processes still execute kernels but do not emit observer records.",
+    "72_actual_helper_calls": "Correctly counts one selected radius-helper invocation for each of 12 case IDs in each of six fixture processes (bridge-off, observed-off, observed-on at O0 and O2).",
+    "case_uniqueness": "The 12 IDs comprise 10 distinct constructed input states: case 11 duplicates case 1 and case 12 duplicates case 3 as repeat/state-leak controls. Avoid describing them as 12 unique meteorological profiles."
+  },
+  "receipt_summary": {
+    "RTE_runs": 0,
+    "WRF_host_runs": 0,
+    "bitwise_bridge_observed_return_equality": {
+      "O0": true,
+      "O2": true
+    },
+    "compiler": "GNU Fortran 13.3.0",
+    "counts": {
+      "actual_helper_calls": 72,
+      "compiler_or_link_processes": 22,
+      "compiler_version_queries": 1,
+      "fixture_processes": 6,
+      "observed_cloud_cells": 24
+    },
+    "full_WRF_builds": 0,
+    "optimizations": [
+      "O0",
+      "O2"
+    ],
+    "source_pins_before_after_equal": true,
+    "status": "PASS_SCOPED_ACTUAL_CLOUD_RADIUS_KERNELS",
+    "thompson_init_calls": 0
+  },
+  "reviewed_source": [
+    {
+      "path": "build/udm37-thompson-radius-pr-work/WRF/test/rrtmgp/test_udm_thompson_radius.py",
+      "sha256": "0b6a6000126ed14f534c4e61b7e29590d4a93f599f786d342487021e41a8b70e",
+      "size_bytes": 15394
+    },
+    {
+      "path": "build/udm37-thompson-radius-pr-work/WRF/test/rrtmgp/test_udm_thompson_radius.f90",
+      "sha256": "552333718dd13af3d828ce00d2da41eb140cf6474ea46f84ce3d6807abefcfbc",
+      "size_bytes": 2503
+    },
+    {
+      "path": "build/udm37-thompson-radius-native-v3/receipt.json",
+      "sha256": "b07a32b9a09e18bc59444822dfccfc0114ae72fb7306b60dd81c152c97b976cc",
+      "size_bytes": 49675
+    }
+  ],
+  "reviewer_activity": {
+    "compiler_or_link_runs": 0,
+    "fixture_runs": 0,
+    "model_runs": 0,
+    "raw_array_access": 0,
+    "raw_stdout_reads": 0,
+    "tracked_source_edits": 0
+  },
+  "schema": "UDM37_THOMPSON_RADIUS_COMPARISON_SCOPE_REVIEW_V1",
+  "scope": "Read-only review of isolated liquid-radius comparison source and saved receipt metadata. No compiler, fixture, model, RTE, or raw stdout execution/read by reviewer.",
+  "status": "PASS_SCOPED_RADIUS_KERNEL_REVIEW",
+  "technical_scope": {
+    "conditional_number_arm": "Raw and density-scaled number-input cases are explicitly labeled as conditional hypotheses; no conversion or unit/population authority is established.",
+    "gamma_check": "The independent gamma-moment algebra checks consistency of the selected Thompson liquid kernel and its inputs. It does not show that UDM uses the same PSD or that either result matches a production cloud-optics LUT.",
+    "kernels": "Mode 8 fixed-volume Thompson liquid kernel, mode 28 aerosol-aware Thompson liquid kernel, and mode 27 UDM liquid radius helper, using compiled modules and the source-pinned isolated fixture.",
+    "not_covered": [
+      "ice/snow radius validation",
+      "full Thompson initialization or production physics routing",
+      "CF/activation integration",
+      "producer/storage/transport/restart path",
+      "forecast/MPI/RTE behavior",
+      "number-unit authority",
+      "UDM PSD/LUT equivalence"
+    ],
+    "production_or_physical_acceptance": false,
+    "remaining_physical_gates": 7,
+    "thompson_initialization": "A reversible test bridge sets the private aerosol-awareness flag and inverse exponent needed by this kernel. It intentionally bypasses thompson_init and does not initialize host microphysics tables/state."
+  }
+}

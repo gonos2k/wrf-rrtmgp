@@ -1,8 +1,8 @@
 {
   "schema": "UDM37_REVIEW_RESOLUTION_CHECKLIST_V2",
   "main_snapshot": {
-    "commit": "d87cd50d33d3ccebb4fdaec9c69d3ae800ae9479",
-    "tree": "7491ad2dcfdbf4db750b7a990e16d7abae4fdabd"
+    "commit": "42641d19d5cd5cf4b3b124270d365aa973be7727",
+    "tree": "4ccaf55b452f329780465b27b742956a07c01f26"
   },
   "scope": "UDM27, LW37/SW37; prior review follow-up; original acceptance original19/current12 retained unchanged",
   "production_accepted": false,
@@ -198,7 +198,8 @@
         "validation/rrtmgp37/main-runtime-io-integration-terminal/nc-authority-review.json",
         "validation/rrtmgp37/main-runtime-io-integration-terminal/nc-producer-transport-chain-review.json",
         "validation/rrtmgp37/nc-noaa-primary-contract/manifest.json",
-        "validation/rrtmgp37/partial-activation-observation/manifest.json"
+        "validation/rrtmgp37/partial-activation-observation/manifest.json",
+        "validation/rrtmgp37/udm-thompson-cloud-radius/manifest.json"
       ],
       "source_pr_urls": [
         "https://github.com/gonos2k/wrf-rrtmgp/pull/98",
@@ -230,6 +231,12 @@
         "missing_host_chain": "Producer/storage/scalar transport and unit/population authority remain OPEN.",
         "CF_timing": "Temporary condensate transform is restored to grid mean before activation; CF is a preceding closure-stage observation, not a fresh activation-stage diagnosis.",
         "physical_gate_closed": false
+      },
+      "radius_kernel_comparison": {
+        "status": "PASS_SCOPED_ACTUAL_CLOUD_RADIUS_KERNELS",
+        "source_base_main": "42641d19d5cd5cf4b3b124270d365aa973be7727",
+        "scope": "Full modules, isolated liquid helper kernels; test-only Thompson private cloud initializer, actual UDM init. Conditional number inputs; no WRF routing, optics or unit authority.",
+        "physical_gate_closed": false
       }
     },
     {
@@ -245,7 +252,9 @@
       "completion_condition": "Producer PSD/모멘트와 정확한 LUT 생성 population·크기 정의를 primary evidence로 연결",
       "scope_limit": "Wyser 식 복원과 radius→diameter 단위 변환만으로 물리 호환성은 확정되지 않는다.",
       "owner": "root; independent team review",
-      "evidence": [],
+      "evidence": [
+        "validation/rrtmgp37/udm-thompson-cloud-radius/manifest.json"
+      ],
       "source_pr_urls": [
         "https://github.com/gonos2k/wrf-rrtmgp/pull/98",
         "https://github.com/gonos2k/wrf-rrtmgp/pull/99",
@@ -253,7 +262,13 @@
         "https://github.com/gonos2k/wrf-rrtmgp/pull/101",
         "https://github.com/gonos2k/wrf-rrtmgp/pull/102",
         "https://github.com/gonos2k/wrf-rrtmgp/pull/103"
-      ]
+      ],
+      "radius_kernel_comparison": {
+        "status": "PASS_SCOPED_ACTUAL_CLOUD_RADIUS_KERNELS",
+        "source_base_main": "42641d19d5cd5cf4b3b124270d365aa973be7727",
+        "scope": "Full modules, isolated liquid helper kernels; test-only Thompson private cloud initializer, actual UDM init. Conditional number inputs; no WRF routing, optics or unit authority.",
+        "physical_gate_closed": false
+      }
     },
     {
       "id": "REF-RFMIP",
