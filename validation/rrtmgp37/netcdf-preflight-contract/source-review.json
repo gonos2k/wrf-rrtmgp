@@ -1,0 +1,85 @@
+{
+  "schema": "UDM37_NETCDF_PREFLIGHT_SOURCE_REVIEW_V1",
+  "created_utc": "2026-10-07T05:17:52.634902+00:00",
+  "status": "BLOCKED_FIXTURE_CALL_OMISSION",
+  "evidence_method": "READ_ONLY_SOURCE_INSPECTION_ONLY",
+  "worktree": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-preflight-pr-work",
+  "base_commit": "457cde630bbeb41a24c09baa1f536c73622b615f",
+  "reviewed_source_pins": {
+    "WRF/external/io_netcdf/wrf_io.F90": {
+      "sha256": "bd19eb9d439ca975fce788cb0685424080b7e547cd0303287055d3c1dcb2b02c",
+      "size_bytes": 131877
+    },
+    "WRF/frame/module_io.F": {
+      "sha256": "1ff21750ce56d78681a9a9dc80d03578ce9b73a0a510664dd165ed84c47fae4b",
+      "size_bytes": 189968
+    },
+    "WRF/test/rrtmgp/test_netcdf_zz.F90": {
+      "sha256": "1b129e7c6a970f5dc6366ce4346a361d8faa6dd517c2b2c2d12a5be9c275812d",
+      "size_bytes": 23886
+    },
+    "WRF/test/rrtmgp/test_netcdf_zz.py": {
+      "sha256": "60f5ff15926fee02c2b94f8c24187e04f4932233e8f343e1ef3e21a00adbb032",
+      "size_bytes": 16698
+    }
+  },
+  "diff_sha256": "269740e9d8fd7c7e542fe99bde47035bdbb9e0c2a9aae6a6b788aee87ad6a308",
+  "production_review": {
+    "status": "PASS_SCOPED_STATIC_LENGTH_AND_FIELDIO_PREFLIGHT",
+    "limits": "No compile or runtime claim by this reviewer. Production length handling and deterministic FieldIO preconditions are source-coherent; this does not claim all malformed file/API cases or all later NetCDF errors are side-effect-free.",
+    "observations": [
+      "GetDim rejects a nonblank suffix exceeding its three-character canonical buffer before case conversion. Trailing blank padding remains accepted; direct leading blank rejection is preserved.",
+      "LowerCase/UpperCase return blank for a nonblank input exceeding output capacity, otherwise bound copy/iteration by both declared lengths. This avoids silent truncation of xyzq and padded zz overrun.",
+      "Public read/write preserve TRIM(ADJUSTL(input)) compatibility but reject overlength normalized tokens before CHARACTER(3) assignment.",
+      "reorder now safely rejects token length outside 1:3 before substring loops; valid public permutations and ZZ identity remain unchanged. Invalid repeated three-character tokens remain a separate inherited limitation.",
+      "get_var_info checks attribute length 1:3 before reading into a blank-initialized local CHARACTER(3), validates rank there, rejects a too-short caller output, and copies to a blank-padded caller buffer. Existing writer format is three-character MemoryOrder.",
+      "FieldIO checks order, supported field type and all active dimension lengths before GetTimeIndex; scalar NDim=0 retains the empty length-section behavior. Later handle/date/NetCDF failures are not claimed transactional.",
+      "module_io NetCDF wrapper now passes a local NetCDFFieldType as eighth argument and Status as ninth without changing public wrapper arguments or other package branches."
+    ]
+  },
+  "blockers": [
+    {
+      "id": "FIXTURE_UNCALLED_VARINFO_BUFFER_TEST",
+      "status": "OPEN",
+      "path": "WRF/test/rrtmgp/test_netcdf_zz.F90",
+      "line": 327,
+      "evidence": "check_varinfo_buffers is defined but no CALL occurs in the reviewed bytes. It contains wrapper/padded output/short output/public-read suffix checks and prints VARINFO_WRAPPER_CONTRACT_PASS.",
+      "consequence": "The Python runner requires this marker and cannot record a passing fixture from these bytes. Its selected_varinfo_wrapper_executed=true and output-length claims cannot be established without actually executing that subroutine.",
+      "minimal_remedy": "Call check_varinfo_buffers while h is still open for read, before ext_ncd_ioclose(h,...). Preserve any already-started attempt and failures; source correction needs new execution/source pins."
+    }
+  ],
+  "inherited_limits": [
+    {
+      "id": "REORDER_BAD_THREE_CHAR_TOKEN",
+      "classification": "INHERITED_NOT_INTRODUCED_BY_LENGTH_PATCH",
+      "status": "OPEN_SCOPED_OUT_UNLESS_EXPLICITLY_CLAIMED",
+      "path": "WRF/external/io_netcdf/wrf_io.F90",
+      "source_anchor": "reorder loop followed by i2=6-i1-i3",
+      "evidence": "Direct reorder(xxx,...) has N=3 and equal characters, leaving i1=i3=1 so i2=4 and subsequently reading input(4:4). The new length guard alone does not validate axis tokens.",
+      "normal_public_scope": "Public write calls GetDim first, which rejects xxx; no normal public regression is inferred.",
+      "possible_followup": "If full direct-reorder invalid-token safety is intended, validate supported order before permutation rather than describe length guard as full token validation."
+    }
+  ],
+  "fixture_source_coverage": {
+    "existing_selected_valid_orders": 20,
+    "existing_invalid_short_orders": 5,
+    "new_direct_long_cases": 5,
+    "new_write_preflight_cases": 12,
+    "new_attribute_malformed_cases": 3,
+    "new_varinfo_buffer_function_called": false,
+    "wrapper_body_extracted_verbatim": true,
+    "wrapper_routing_dependencies": "Serial synthetic routing stubs; full module_io/MPI execution not claimed",
+    "normal_data_path": "Existing integer/real/double 3x5 two-Time write/reopen/read with uppercase/lowercase and public leading/trailing blank padding retained"
+  },
+  "execution_by_reviewer": {
+    "compiler": 0,
+    "fixture": 0,
+    "model": 0,
+    "mpi": 0,
+    "rte": 0,
+    "solver": 0
+  },
+  "physical_acceptance": false,
+  "source_mutations": 0,
+  "verdict_ko": "생산 길이·padding 및 FieldIO 선검사는 소스상 타당하나, wrapper/buffer 시험 함수 호출 누락으로 현재 fixture 승인은 차단한다. 잘못된 3자 reorder token은 별도 상속 제한이며 정상 public 호출의 신규 회귀가 아니다."
+}

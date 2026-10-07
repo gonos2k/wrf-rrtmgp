@@ -1,0 +1,108 @@
+{
+  "status": "FAIL_PRESERVED",
+  "confirmed_direct_children": 5,
+  "commands": [
+    {
+      "argv": [
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/netcdf/bin/nf-config",
+        "--fflags"
+      ],
+      "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-preflight-backend-v1",
+      "kind": "nf_config_flags",
+      "status": "TERMINAL",
+      "pid": 1179892,
+      "actual_returncode": 0,
+      "timed_out": false,
+      "started_at": 1791350158.4157338,
+      "finished_at": 1791350158.4243052
+    },
+    {
+      "argv": [
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/netcdf/bin/nf-config",
+        "--flibs"
+      ],
+      "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-preflight-backend-v1",
+      "kind": "nf_config_libraries",
+      "status": "TERMINAL",
+      "pid": 1179893,
+      "actual_returncode": 0,
+      "timed_out": false,
+      "started_at": 1791350158.428358,
+      "finished_at": 1791350158.4375608
+    },
+    {
+      "argv": [
+        "/usr/bin/cpp",
+        "-P",
+        "-traditional-cpp",
+        "-DUSE_NETCDF4_FEATURES",
+        "-I/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-preflight-pr-work/WRF/external/ioapi_share",
+        "-I/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-preflight-pr-work/WRF/external/io_netcdf",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-preflight-pr-work/WRF/external/io_netcdf/wrf_io.F90"
+      ],
+      "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-preflight-backend-v1",
+      "kind": "cpp",
+      "status": "TERMINAL",
+      "pid": 1179895,
+      "actual_returncode": 0,
+      "timed_out": false,
+      "started_at": 1791350158.4549136,
+      "finished_at": 1791350158.480496
+    },
+    {
+      "argv": [
+        "/usr/bin/m4",
+        "-G",
+        "-Uinclude",
+        "-Uindex",
+        "-Ulen",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-preflight-backend-v1/wrf_io.cpp.f90"
+      ],
+      "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-preflight-backend-v1",
+      "kind": "m4",
+      "status": "TERMINAL",
+      "pid": 1179898,
+      "actual_returncode": 0,
+      "timed_out": false,
+      "started_at": 1791350158.4856808,
+      "finished_at": 1791350158.5025642
+    },
+    {
+      "argv": [
+        "/usr/bin/gfortran",
+        "-O0",
+        "-g",
+        "-fcheck=all",
+        "-finit-integer=99",
+        "-fallow-argument-mismatch",
+        "-ffree-form",
+        "-ffree-line-length-none",
+        "-cpp",
+        "-DNETCDF",
+        "-I/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-preflight-pr-work/WRF/external/ioapi_share",
+        "-I/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/netcdf/include",
+        "-I/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/netcdf/include",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-preflight-backend-v1/wrf_io.f90",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-preflight-pr-work/WRF/external/io_netcdf/field_routines.F90",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-preflight-backend-v1/generic_rank_helper.f90",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-preflight-pr-work/WRF/test/rrtmgp/test_netcdf_zz.F90",
+        "-L/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/netcdf/lib",
+        "-lnetcdff",
+        "-lnetcdf",
+        "-lm",
+        "-o",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-preflight-backend-v1/O0/fixture.exe"
+      ],
+      "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-preflight-backend-v1/O0",
+      "kind": "GNU_compile_link",
+      "status": "TERMINAL",
+      "pid": 1179899,
+      "actual_returncode": 1,
+      "timed_out": false,
+      "started_at": 1791350158.5107212,
+      "finished_at": 1791350217.9515448
+    }
+  ],
+  "error": "RuntimeError('GNU_compile_link actual RC 1; receipt /NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-preflight-backend-v1/command-05.json')",
+  "physical_acceptance": false
+}

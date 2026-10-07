@@ -1,8 +1,8 @@
 {
   "schema": "UDM37_REVIEW_RESOLUTION_CHECKLIST_V2",
   "main_snapshot": {
-    "commit": "439bf0d626a89ab105093945e946e47d7cf80f94",
-    "tree": "229f9372bfac5e6a26ed7387dc5c43df39ad3916"
+    "commit": "457cde630bbeb41a24c09baa1f536c73622b615f",
+    "tree": "c108084947ff665b496dde072ca736491ad72bde"
   },
   "scope": "UDM27, LW37/SW37; prior review follow-up; original acceptance original19/current12 retained unchanged",
   "production_accepted": false,
@@ -470,64 +470,74 @@
       "integration_candidate_included": true,
       "integrated_validation": "PASS_SCOPED",
       "completion_condition": "22 direct production-helper unit methods; indexed target/list/null/repeated/continued RHS rejection; existing group/quote/comment/CRLF; complete actual 4/4 and 37/37 generated namelist bytes equal parent.",
-      "scope_limit": "Scalar editor only; not a full Fortran parser. PR149 basic group/duplicate fix is merged, but this follow-up indexed/list boundary rejection is candidate-only.",
+      "scope_limit": "Scalar editor only; indexed/list boundary fix also merged via PR150. No full Fortran parser claim.",
       "owner": "root; independent team review",
       "evidence": [
         "validation/rrtmgp37/helper-error-handling/manifest.json",
         "validation/rrtmgp37/helper-error-audit/manifest.json"
       ],
-      "integration_pr_url": "https://github.com/gonos2k/wrf-rrtmgp/pull/149",
+      "integration_pr_url": "https://github.com/gonos2k/wrf-rrtmgp/pull/150",
       "tested_source_head": "1b879fc726e23b7a35d606246fb2267e9d5054e9",
-      "additional_scalar_boundary_fix_in_main": false,
-      "additional_scalar_boundary_validation": "PASS_SCOPED_CANDIDATE"
+      "additional_scalar_boundary_fix_in_main": true,
+      "additional_scalar_boundary_validation": "PASS_SCOPED_MERGED_PR150",
+      "additional_scalar_tested_head": "e7aec540d5cd61d2a8f4586c7c2297af793c3ac0"
     },
     {
       "id": "P2-IO-VARINFO",
       "priority": "P2",
       "title": "NetCDF 변수정보 wrapper 인자 수",
-      "implemented": false,
+      "implemented": true,
       "main_included_at_snapshot": false,
-      "integration_candidate_included": false,
-      "integrated_validation": "OPEN",
+      "integration_candidate_included": true,
+      "integrated_validation": "PASS_SCOPED_CANDIDATE",
       "classification": "INHERITED_NOT_INTRODUCED_BY_PR149",
-      "completion_condition": "Explicit matching API and wrapper/backend execution; valid type/status and failure return.",
-      "scope_limit": "WRF/frame/module_io.F:1824 NetCDF call supplies eight actuals for nine-dummy backend; source inspection only, no internal caller found.",
+      "completion_condition": "Verbatim selected wrf_get_var_info NetCDF branch with routing/state shims, linked to actual backend; padded success, missing-variable and short-buffer statuses pass.",
+      "scope_limit": "Public API preserved; only NetCDF branch type sink corrected. Other backend arity paths and full module_io/MPI dispatch are outside this closure.",
       "owner": "root; independent team review",
       "evidence": [
-        "validation/rrtmgp37/helper-error-audit/netcdf-inherited-review.json"
-      ]
+        "validation/rrtmgp37/helper-error-audit/netcdf-inherited-review.json",
+        "validation/rrtmgp37/netcdf-preflight-contract/manifest.json"
+      ],
+      "feature_branch_validation": "ACTUAL_NETCDF_BACKEND_O0_O2_PASS",
+      "remaining_execution": "Candidate-only fix; remote fresh WRF checks pending. No full module_io/MPI or forecast rerun in this local test."
     },
     {
       "id": "P2-IO-LENGTH",
       "priority": "P2",
       "title": "NetCDF memory-order 길이·padding",
-      "implemented": false,
+      "implemented": true,
       "main_included_at_snapshot": false,
-      "integration_candidate_included": false,
-      "integrated_validation": "OPEN",
+      "integration_candidate_included": true,
+      "integrated_validation": "PASS_SCOPED_CANDIDATE",
       "classification": "INHERITED_NOT_INTRODUCED_BY_PR149",
-      "completion_condition": "Declared accepted length/padding policy and bounds-safe helper/public API direct tests.",
-      "scope_limit": "LowerCase/UpperCase writes LEN(input) into shorter destination; public read/write truncate overlength token. Source inspection only.",
+      "completion_condition": "Actual backend padded/direct/public orders, nonblank suffix rejection, getter short output and malformed attributes pass with bounds checks O0/O2.",
+      "scope_limit": "NetCDF memory-order contract only; direct leading blanks remain invalid, public leading/trailing normalization retained. Inherited cc helper mismatch and other I/O APIs outside this closure.",
       "owner": "root; independent team review",
       "evidence": [
-        "validation/rrtmgp37/helper-error-audit/netcdf-inherited-review.json"
-      ]
+        "validation/rrtmgp37/helper-error-audit/netcdf-inherited-review.json",
+        "validation/rrtmgp37/netcdf-preflight-contract/manifest.json"
+      ],
+      "feature_branch_validation": "ACTUAL_NETCDF_BACKEND_O0_O2_PASS",
+      "remaining_execution": "Candidate-only fix; remote fresh WRF checks pending. No full module_io/MPI or forecast rerun in this local test."
     },
     {
       "id": "P2-IO-WRITE-SIDE-EFFECT",
       "priority": "P2",
       "title": "Invalid FieldIO write 시간 기록 부작용",
-      "implemented": false,
+      "implemented": true,
       "main_included_at_snapshot": false,
-      "integration_candidate_included": false,
-      "integrated_validation": "OPEN",
+      "integration_candidate_included": true,
+      "integrated_validation": "PASS_SCOPED_CANDIDATE",
       "classification": "INHERITED_NOT_INTRODUCED_BY_PR149",
-      "completion_condition": "Validate before mutating Times/TimeIndex and verify rejected write preserves metadata/contents.",
-      "scope_limit": "GetTimeIndex write occurs before order validation; existing direct invalid fixture tests read only. Source inspection only.",
+      "completion_condition": "Twelve write-error/recovery files per optimization check TimeIndex, Times, unlimited length, buffers and stored fields; independent final file reader passes.",
+      "scope_limit": "Order/type/positive active length preflight only. Later NetCDF failures are not transactional and do not have rollback guarantees.",
       "owner": "root; independent team review",
       "evidence": [
-        "validation/rrtmgp37/helper-error-audit/netcdf-inherited-review.json"
-      ]
+        "validation/rrtmgp37/helper-error-audit/netcdf-inherited-review.json",
+        "validation/rrtmgp37/netcdf-preflight-contract/manifest.json"
+      ],
+      "feature_branch_validation": "ACTUAL_NETCDF_BACKEND_O0_O2_PASS",
+      "remaining_execution": "Candidate-only fix; remote fresh WRF checks pending. No full module_io/MPI or forecast rerun in this local test."
     }
   ],
   "integration_sources": {
@@ -551,24 +561,22 @@
     }
   },
   "previous_main_snapshot": {
-    "commit": "9d7e79182395cd81bc7ed3805126575f64005bc3",
-    "tree": "e6bff303ab9d7aebee505334c8dfe3ce17f576e1"
+    "commit": "439bf0d626a89ab105093945e946e47d7cf80f94",
+    "tree": "229f9372bfac5e6a26ed7387dc5c43df39ad3916"
   },
   "previous_checklist": {
-    "source_commit": "439bf0d626a89ab105093945e946e47d7cf80f94",
-    "sha256": "0bce08a7d508b8ef24dcb16092e188070abcc93f57622d10252969db4ab46ed3",
-    "note": "Original bytes retained at PR149 merged main; historical packages unmodified."
+    "source_commit": "457cde630bbeb41a24c09baa1f536c73622b615f",
+    "sha256": "5d30b982620246d26b2c06c243c47244b9880081bffea2708ee03774fcca22f2",
+    "note": "Prior main bytes and historical proof preserved."
   },
   "followup_summary": {
     "total": 22,
-    "scoped_completed": 12,
-    "remaining": 10,
-    "previous_followup19": {
-      "scoped_completed": 12,
-      "physical_or_final_remaining": 7
-    },
-    "new_inherited_p2_remaining": 3,
-    "additional_scalar_candidate_not_yet_merged": true,
+    "candidate_scoped_completed": 15,
+    "main_scoped_completed": 12,
+    "candidate_remaining_physical_or_final": 7,
+    "candidate_io_fixes_pending_main_integration": 3,
+    "scoped_completed": 15,
+    "remaining": 7,
     "original_acceptance19_current12_unchanged": true
   }
 }

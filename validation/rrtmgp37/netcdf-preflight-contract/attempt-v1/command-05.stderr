@@ -1,0 +1,58 @@
+/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-preflight-backend-v1/wrf_io.f90:1565:36:
+
+ 1565 |   CALL ext_ncd_open_for_read_begin( DatasetName, Comm1, Comm2, SysDepInfo, DataHandle, Status )
+      |                                    1
+Warning: Dummy argument ‘datasetname’ with INTENT(IN) in variable definition context (actual argument to INTENT = OUT/INOUT) at (1)
+/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-preflight-backend-v1/wrf_io.f90:7597:58:
+
+ 3244 |       stat = NF_PUT_ATT_INT (DH%NCID,NF_GLOBAL,Element,NF_INT,Count,Data)
+      |                                                                    2
+......
+ 7597 |     stat = NF_PUT_ATT_INT(NCID,VarID,'FieldType',NF_INT,1,FieldType)
+      |                                                          1
+Warning: Rank mismatch between actual argument at (1) and actual argument at (2) (rank-1 and scalar)
+/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-preflight-backend-v1/wrf_io.f90:7659:71:
+
+ 7659 |                                                    ,i1,i2,j1,j2,k1,k2 )
+      |                                                                       1
+Warning: Type mismatch in argument ‘field’ at (1); passed INTEGER(4) to REAL(8)
+/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-preflight-backend-v1/wrf_io.f90:7659:71:
+
+ 7659 |                                                    ,i1,i2,j1,j2,k1,k2 )
+      |                                                                       1
+Warning: Type mismatch in argument ‘xfield’ at (1); passed INTEGER(4) to REAL(4)
+/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-preflight-backend-v1/wrf_io.f90:7804:49:
+
+ 2586 |     stat = NF_GET_ATT_INT (DH%NCID,NF_GLOBAL,Element,Buffer)
+      |                                                     2
+......
+ 7804 |     stat = NF_GET_ATT_INT(NCID,VarID,'FieldType',FType)
+      |                                                 1
+Warning: Rank mismatch between actual argument at (1) and actual argument at (2) (rank-1 and scalar)
+/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-preflight-backend-v1/wrf_io.f90:8271:52:
+
+ 2586 |     stat = NF_GET_ATT_INT (DH%NCID,NF_GLOBAL,Element,Buffer)
+      |                                                     2
+......
+ 8271 |     stat = NF_GET_ATT_INT(DH%NCID,VarID,'FieldType',WrfType)
+      |                                                    1
+Warning: Rank mismatch between actual argument at (1) and actual argument at (2) (rank-1 and scalar)
+/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-preflight-pr-work/WRF/external/io_netcdf/field_routines.F90:156:52:
+
+  108 |     stat = NF_PUT_VARA_INT(NCID,VarID,VStart,VCount,Data)
+      |                                                    2
+......
+  156 |     stat = NF_PUT_VARA_INT(NCID,VarID,VStart,VCount,Buffer)
+      |                                                    1
+Warning: Rank mismatch between actual argument at (1) and actual argument at (2) (scalar and rank-3)
+/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-preflight-pr-work/WRF/external/io_netcdf/field_routines.F90:158:52:
+
+  110 |     stat = NF_GET_VARA_INT(NCID,VarID,VStart,VCount,Data)
+      |                                                    2
+......
+  158 |     stat = NF_GET_VARA_INT(NCID,VarID,VStart,VCount,Buffer)
+      |                                                    1
+Warning: Rank mismatch between actual argument at (1) and actual argument at (2) (scalar and rank-3)
+/usr/bin/ld: /tmp/ccerM5yF.o: in function `wrf_get_var_info_':
+/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-preflight-backend-v1/generic_rank_helper.f90:164:(.text+0x745): undefined reference to `wrf_quilt_get_var_info_'
+collect2: error: ld returned 1 exit status

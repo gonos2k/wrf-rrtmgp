@@ -42,6 +42,7 @@ program backend_zz
   comm=0;io_comm=0
   if(rank==0) then
     call check_helper_orders()
+    call check_long_orders()
     call dim_from_memorder('ZZ',n)
     call expect(n==2,'generic uppercase rank two')
     call dim_from_memorder('zz',n)
@@ -56,6 +57,7 @@ program backend_zz
     call expect(status==WRF_WARN_BAD_MEMORYORDER,'unsupported qq remains rejected')
     call ext_ncd_ioinit('use_netcdf_classic',status)
     call good(status,'init')
+    call check_write_preflight()
     filename='zz.nc'
     call ext_ncd_open_for_write_begin(filename,comm,io_comm,'REAL_OUTPUT_SIZE=4',h,status)
     call good(status,'open write begin')
@@ -121,6 +123,7 @@ program backend_zz
       call good(status,'backend reopen read')
       call GetDH(h,handle,status)
       call good(status,'direct FieldIO handle')
+      call check_varinfo_buffers()
       call good(nf_inq_varid(handle%NCID,'INT_UPPER',vid),'direct FieldIO variable')
       a=[3,5,1,1]
       got=-999
@@ -138,7 +141,7 @@ program backend_zz
           call expect(gtype==WRF_INTEGER,'backend integer type')
           got=-999
           call ext_ncd_read_field(h,dates(record),varname(mode),got,WRF_INTEGER,comm,io_comm,0, &
-            'ZZ','',names,s,e,s,e,s,e,status)
+            ' zz ','',names,s,e,s,e,s,e,status)
           call good(status,'backend read integer')
           call expect(all(got==field),'3x5 unique integers exact')
         else
@@ -183,7 +186,8 @@ program backend_zz
       call ExtOrderStr('zz',names,rnames,status)
       call good(status,'ExtOrderStr')
       call expect(all(rnames(1:2)==names(1:2)),'name order retained')
-      print *, 'BACKEND_ROUNDTRIP_PASS',nproc,15,4,lens
+      call check_varinfo_attributes()
+    print *, 'BACKEND_ROUNDTRIP_PASS',nproc,15,4,lens
   endif
     call prepare_record(2)
 #ifdef USE_MPI
@@ -195,6 +199,155 @@ program backend_zz
   call MPI_Finalize(ierr)
 #endif
 contains
+  subroutine check_long_orders()
+    character(8),parameter :: invalid_long(5)=[character(8) :: 'xyzq','zzq','xyz q',' zz','']
+    character(8) :: padded
+    character(3) :: canonical
+    integer :: m,dims,lengths(4),before(4)
+    character(80) :: input_names(4),output_names(4)
+    logical :: is_zero
+    padded='zz';before=[3,5,7,11];input_names='axis'
+    call GetDim(padded,dims,status)
+    call good(status,'padded GetDim');call expect(dims==2,'padded rank')
+    call LowerCase('ZZ      ',canonical);call expect(canonical=='zz','padded LowerCase')
+    call UpperCase('zz      ',canonical);call expect(canonical=='ZZ','padded UpperCase')
+    call LowerCase('xyzq',canonical);call expect(canonical=='','LowerCase no suffix truncation')
+    call UpperCase('xyzq',canonical);call expect(canonical=='','UpperCase no suffix truncation')
+    call reorder(padded,canonical);call expect(canonical=='ZZ','padded reorder')
+    call reorder('xyzq',canonical);call expect(canonical=='','long reorder safely blank')
+    call reorder('xxx',canonical);call expect(canonical=='','invalid token reorder safely blank')
+    lengths=before;call ExtOrder(padded,lengths,status)
+    call good(status,'padded ExtOrder');call expect(all(lengths==before),'padded order unchanged')
+    call ExtOrderStr(padded,input_names,output_names,status);call good(status,'padded ExtOrderStr')
+    is_zero=ZeroLengthHorzDim(padded,before,status);call good(status,'padded ZeroLengthHorzDim')
+    do m=1,size(invalid_long)
+      call GetDim(invalid_long(m),dims,status)
+      call expect(status==WRF_WARN_BAD_MEMORYORDER.and.dims==0,'invalid long GetDim')
+      lengths=before;call ExtOrder(invalid_long(m),lengths,status)
+      call expect(status==WRF_WARN_BAD_MEMORYORDER.and.all(lengths==before),'invalid long ExtOrder')
+      call ExtOrderStr(invalid_long(m),input_names,output_names,status)
+      call expect(status==WRF_WARN_BAD_MEMORYORDER.and.all(output_names==''),'invalid long ExtOrderStr')
+      is_zero=ZeroLengthHorzDim(invalid_long(m),before,status)
+      call expect(status==WRF_WARN_BAD_MEMORYORDER.and.is_zero,'invalid long ZeroLengthHorzDim')
+    enddo
+    print *, 'LONG_ORDER_CONTRACT_PASS'
+  end subroutine
+
+  subroutine check_write_preflight()
+    integer :: bad,follow,local_h,local_vid,td,tl,ft,expected_status,counts(4),starts(4),saved(3,5)
+    character(8) :: bad_order
+    character(19) :: saved_times(2),next_date,actual_date
+    character(30) :: path
+    type(wrf_data_handle),pointer :: dh
+    ! Twelve independent files exercise same-time and next-time recovery.
+    do follow=1,2
+      do bad=1,6
+        write(path,'(A,I1,A,I1,A)') 'preflight-',bad,'-',follow,'.nc'
+        call ext_ncd_open_for_write_begin(trim(path),comm,io_comm,'REAL_OUTPUT_SIZE=4',local_h,status)
+        call good(status,'preflight open')
+        call ext_ncd_write_field(local_h,dates(1),'FIELD',field,WRF_INTEGER,comm,io_comm,0, &
+          'ZZ','',names,s,e,s,e,s,e,status);call good(status,'preflight define')
+        call ext_ncd_open_for_write_commit(local_h,status);call good(status,'preflight commit')
+        call ext_ncd_write_field(local_h,dates(1),'FIELD',field,WRF_INTEGER,comm,io_comm,0, &
+          'ZZ','',names,s,e,s,e,s,e,status);call good(status,'preflight first write')
+        call GetDH(local_h,dh,status);call good(status,'preflight handle')
+        call good(nf_inq_varid(dh%NCID,'FIELD',local_vid),'preflight varid')
+        call good(nf_inq_unlimdim(dh%NCID,td),'preflight Time id')
+        call good(nf_inq_dimlen(dh%NCID,td,tl),'preflight initial Time length')
+        call expect(tl==1.and.dh%TimeIndex==1,'first record identity')
+        saved_times=dh%Times(1:2);saved=field
+        bad_order='ZZ';ft=WRF_INTEGER;counts=[3,5,1,1];expected_status=WRF_WARN_BAD_MEMORYORDER
+        select case(bad)
+        case(1);bad_order='qq'
+        case(2);bad_order='xyzq'
+        case(3);ft=-999;expected_status=WRF_WARN_DATA_TYPE_NOT_FOUND
+        case(4);counts(1)=0;expected_status=WRF_WARN_LENGTH_LESS_THAN_1
+        case(5);counts(2)=-1;expected_status=WRF_WARN_LENGTH_LESS_THAN_1
+        case(6);bad_order='zzq'
+        end select
+        call FieldIO('write',local_h,dates(2),counts,bad_order,ft,dh%NCID,local_vid,field,status)
+        call expect(status==expected_status,'direct invalid write status')
+        call expect(dh%TimeIndex==1.and.all(dh%Times(1:2)==saved_times),'direct invalid write memory Times unchanged')
+        call good(nf_inq_dimlen(dh%NCID,td,tl),'rejected write Time length')
+        call expect(tl==1.and.all(field==saved),'rejected write file length and buffer unchanged')
+        ! Public entry points reject nonblank suffixes before truncation.
+        call ext_ncd_write_field(local_h,dates(2),'FIELD',field,WRF_INTEGER,comm,io_comm,0, &
+          ' xyzq ','',names,s,e,s,e,s,e,status)
+        call expect(status==WRF_WARN_BAD_MEMORYORDER,'public write suffix rejected')
+        call expect(dh%TimeIndex==1.and.all(dh%Times(1:2)==saved_times),'public rejection Times unchanged')
+        counts=[3,5,1,1];starts=1
+        call good(nf_get_vara_int(dh%NCID,local_vid,starts,counts,got),'read existing record after errors')
+        call expect(all(got==saved),'existing field preserved')
+        next_date=dates(2)
+        if(follow==2)next_date='2026-10-06_02:00:00'
+        call ext_ncd_write_field(local_h,next_date,'FIELD',field,WRF_INTEGER,comm,io_comm,0, &
+          ' ZZ ','',names,s,e,s,e,s,e,status);call good(status,'normal write after rejection')
+        call good(nf_inq_dimlen(dh%NCID,td,tl),'recovery Time length')
+        call expect(tl==2.and.dh%TimeIndex==2,'no rejected intermediate time record')
+        call good(nf_get_vara_text(dh%NCID,dh%TimesVarID,[1,2],[19,1],actual_date),'recovery Times value')
+        call expect(actual_date==next_date,'actual recovery date stored')
+        starts=[1,1,2,1]
+        call good(nf_get_vara_int(dh%NCID,local_vid,starts,counts,got),'recovery field values')
+        call expect(all(got==saved),'recovery field exact')
+        call ext_ncd_ioclose(local_h,status);call good(status,'preflight close')
+      enddo
+    enddo
+    print *, 'WRITE_PREFLIGHT_CONTRACT_PASS',12
+  end subroutine
+
+  subroutine check_varinfo_attributes()
+    integer :: local_h,id,file_id,m,dims,local_type,lo(4),hi(4)
+    character(30) :: path
+    character(8) :: out_order
+    character(4) :: bad_attr
+    do m=1,3
+      write(path,'(A,I1,A)')'bad-order-attribute-',m,'.nc'
+      call ext_ncd_open_for_write_begin(trim(path),comm,io_comm,'REAL_OUTPUT_SIZE=4',local_h,status)
+      call good(status,'attribute fixture open')
+      call ext_ncd_write_field(local_h,dates(1),'FIELD',field,WRF_INTEGER,comm,io_comm,0, &
+        'ZZ','',names,s,e,s,e,s,e,status);call good(status,'attribute define')
+      call ext_ncd_open_for_write_commit(local_h,status);call good(status,'attribute commit')
+      call ext_ncd_ioclose(local_h,status);call good(status,'attribute close')
+      call good(nf_open(trim(path),NF_WRITE,file_id),'attribute nf open')
+      call good(nf_inq_varid(file_id,'FIELD',id),'attribute varid')
+      call good(nf_redef(file_id),'attribute redefine')
+      bad_attr='xyzq'
+      if(m==2)bad_attr='qq'
+      if(m==3)bad_attr=''
+      call good(nf_put_att_text(file_id,id,'MemoryOrder',len_trim(bad_attr),trim(bad_attr)),'set malformed attribute')
+      call good(nf_enddef(file_id),'attribute enddef')
+      call good(nf_close(file_id),'attribute nf close')
+      call ext_ncd_open_for_read(trim(path),comm,io_comm,'',local_h,status);call good(status,'attribute reopen')
+      out_order='sentinel'
+      call ext_ncd_get_var_info(local_h,'FIELD',dims,out_order,stagger,lo,hi,local_type,status)
+      call expect(status==WRF_WARN_BAD_MEMORYORDER.and.dims==0.and.out_order=='','malformed attribute safe rejection')
+      call ext_ncd_ioclose(local_h,status);call good(status,'attribute read close')
+    enddo
+    print *, 'VARINFO_ATTRIBUTE_CONTRACT_PASS'
+  end subroutine
+
+  subroutine check_varinfo_buffers()
+    character(8) :: padded_order
+    character(1) :: short_order
+    integer :: dims,local_type,lo(4),hi(4)
+    padded_order='sentinel';lo=-1;hi=-1
+    call wrf_get_var_info(h,'INT_UPPER',dims,padded_order,stagger,lo,hi,status)
+    call good(status,'actual selected NetCDF wrapper dispatch')
+    call expect(dims==2.and.padded_order=='ZZ'.and.all(hi(1:2)==[3,5]),'wrapper padded output')
+    call wrf_get_var_info(h,'MISSING',dims,padded_order,stagger,lo,hi,status)
+    call expect(status==WRF_WARN_NETCDF,'wrapper backend error reaches public Status')
+    short_order='x'
+    call ext_ncd_get_var_info(h,'INT_UPPER',dims,short_order,stagger,lo,hi,local_type,status)
+    call expect(status==WRF_WARN_CHARSTR_GT_LENDATA.and.dims==0.and.short_order=='','short output safely rejected')
+    short_order='x'
+    call wrf_get_var_info(h,'INT_UPPER',dims,short_order,stagger,lo,hi,status)
+    call expect(status==WRF_WARN_CHARSTR_GT_LENDATA.and.dims==0.and.short_order=='','wrapper short output rejection')
+    call ext_ncd_read_field(h,dates(1),'INT_UPPER',got,WRF_INTEGER,comm,io_comm,0, &
+      'xyzq','',names,s,e,s,e,s,e,status)
+    call expect(status==WRF_WARN_BAD_MEMORYORDER,'public read suffix rejected')
+    print *, 'VARINFO_WRAPPER_CONTRACT_PASS'
+  end subroutine
+
   subroutine check_helper_orders()
     ! Call the actual backend helpers directly, without upper-level I/O guards.
     ! Invalid orders fit the API's three-character MemoryOrder representation.
@@ -311,9 +464,9 @@ contains
   end subroutine
   subroutine write_one(m,r)
     integer,intent(in)::m,r
-    character(2)::order
-    order='ZZ'
-    if(m>1)order='zz'
+    character(8)::order
+    order=' ZZ '
+    if(m>1)order=' zz '
     if(m<=2) then
       call ext_ncd_write_field(h,dates(r),varname(m),field,WRF_INTEGER,comm,io_comm,0, &
         order,'',names,s,e,s,e,s,e,status)

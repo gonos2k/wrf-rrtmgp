@@ -1,0 +1,31 @@
+{
+  "status": "PASS_SCOPED_PRESEAL_PACKAGE_REVIEW",
+  "scope": "Read-only audit of final NetCDF preflight documentation, checklist, source review and saved O0/O2/SciPy receipts. No raw NetCDF contents were opened, no source was changed, and no compiler/test was run by this reviewer.",
+  "package": "build/udm37-netcdf-preflight-pr-work/validation/rrtmgp37/netcdf-preflight-contract",
+  "source_snapshot": {"base": "457cde630bbeb41a24c09baa1f536c73622b615f", "tested_head": "e7aec540d5cd61d2a8f4586c7c2297af793c3ac0", "main_tree": "c108084947ff665b496dde072ca736491ad72bde"},
+  "source_review_v3": {"path": "source-review-v3.json", "sha256": "8decefe8bd4bafc4ab934a0468cb174e25608fd79a31e183696691f2736a23aa", "status": "PASS_SCOPED_ACTUAL_BACKEND_TERMINAL_AND_SOURCE_REVIEW", "current_hashes_match_review": true},
+  "reviewed_source_pins": {
+    "WRF/frame/module_io.F": "1ff21750ce56d78681a9a9dc80d03578ce9b73a0a510664dd165ed84c47fae4b",
+    "WRF/external/io_netcdf/wrf_io.F90": "bd19eb9d439ca975fce788cb0685424080b7e547cd0303287055d3c1dcb2b02c",
+    "WRF/test/rrtmgp/test_netcdf_zz.F90": "9812e443b59dd56279479f25e8001a88480c8b0299d0132769f83ebd8f1b99b0",
+    "WRF/test/rrtmgp/test_netcdf_zz.py": "60f5ff15926fee02c2b94f8c24187e04f4932233e8f343e1ef3e21a00adbb032"
+  },
+  "saved_execution_evidence": {
+    "summary": {"path": "execution-summary.json", "attempts": ["v1 FAIL_PRESERVED: 5 children, compile/link RC1, no fixture", "v2 FAIL_PRESERVED: 6 children, fixture RC71 before backend initialization", "v3 PASS_SCOPED: 8 children, two O0/O2 compile-links and two serial fixture runs, all actual RC0"]},
+    "terminal_result": {"path": "attempt-v3/result.json", "sha256": "c43d8b2ea94f8944db3ef968c62b32fbb6d44e0c9b6e43ae18bcc806f835ccc1", "sha256_of_plan": "21dcdaca3728949aaadbe5ef85b73413f2b166960bdb630e41186bb8886f6a02"},
+    "independent_scipy_reader": {"path": "independent-reader-result.json", "sha256": "e7bc072f26c49cf833e67e2d61a94f5af8c5bd99ec9043daf4739afa8ebb1d3a", "status": "PASS_SCOPED_INDEPENDENT_READER", "reported_files": 32, "scope": "saved receipt metadata reviewed only; no NetCDF arrays/files read by this reviewer"},
+    "scope_limits": ["Actual NetCDF backend and source-extracted public wrapper with serial routing shims; not full module_io, MPI or WRF runtime.", "No model/forecast, RTE, LBLRTM, or physical acceptance.", "The NetCDF-only WrfType sink fix does not resolve other backend arity paths."]
+  },
+  "documentation_and_checklist": {
+    "readme": {"path": "README_ko.md", "sha256": "33ba9cff46cecfd770fd4ea86ff2fed9cb7f08b28c139796e85d9150493a72f1"},
+    "checklist": {"path": "../acceptance/review-resolution-checklist.json", "sha256": "a5307c7de6f87f10478a23ec9cd6620b0693bc48ff125b3ca5d991f1a1085802", "item_count": 22, "scoped_complete_count": 15, "open_or_failed_count": 7, "production_accepted": false, "main_merge_authorized": false},
+    "pr150": {"path": "pr150-terminal.json", "state": "MERGED", "head": "e7aec540d5cd61d2a8f4586c7c2297af793c3ac0", "merge_commit": "457cde630bbeb41a24c09baa1f536c73622b615f", "checks_reported_success": true},
+    "historical_acceptance": {"original_gates": 19, "current_items": 12, "unchanged": true},
+    "claims": "README and checklist distinguish candidate-only NetCDF changes from current main, retain physical acceptance false and the RFMIP/LBL negative-OD gates, and label extracted-wrapper scope rather than full module_io/MPI coverage."
+  },
+  "manifest_closure": {
+    "status": "PENDING_ROOT_SEAL",
+    "note": "No package manifest is present yet; root confirmed this is intentional until this review is added to the payload set. A separate root postflight must verify the final closed roster and hashes."
+  },
+  "reviewer_activity": {"source_mutations": 0, "compiler_runs": 0, "fixture_runs": 0, "raw_netcdf_reads": 0, "models": 0}
+}

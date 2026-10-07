@@ -1,0 +1,70 @@
+{
+  "source_sha256": {
+    "WRF/external/io_netcdf/wrf_io.F90": "bd19eb9d439ca975fce788cb0685424080b7e547cd0303287055d3c1dcb2b02c",
+    "WRF/frame/module_io.F": "1ff21750ce56d78681a9a9dc80d03578ce9b73a0a510664dd165ed84c47fae4b",
+    "WRF/test/rrtmgp/test_netcdf_zz.F90": "9812e443b59dd56279479f25e8001a88480c8b0299d0132769f83ebd8f1b99b0",
+    "WRF/test/rrtmgp/test_netcdf_zz.py": "60f5ff15926fee02c2b94f8c24187e04f4932233e8f343e1ef3e21a00adbb032",
+    "config/registration37.json": "66dc90130ab955581b9c0e72860c9ecf833e51792358bbec26bc043d4d836b90"
+  },
+  "checks": [
+    {
+      "argv": [
+        "/usr/bin/python3.12",
+        "-B",
+        "tools/register37.py",
+        "--check"
+      ],
+      "actual_returncode": 0,
+      "stdout": "root-check-0.stdout",
+      "stderr": "root-check-0.stderr"
+    },
+    {
+      "argv": [
+        "/usr/bin/python3.12",
+        "-B",
+        "validation/rrtmgp37/acceptance/verify.py",
+        "--output",
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-preflight-pr-work/validation/rrtmgp37/netcdf-preflight-contract/acceptance-verification.json"
+      ],
+      "actual_returncode": 0,
+      "stdout": "root-check-1.stdout",
+      "stderr": "root-check-1.stderr"
+    },
+    {
+      "argv": [
+        "/usr/bin/python3.12",
+        "-B",
+        "validation/rrtmgp37/acceptance/test_verify.py"
+      ],
+      "actual_returncode": 0,
+      "stdout": "root-check-2.stdout",
+      "stderr": "root-check-2.stderr"
+    },
+    {
+      "argv": [
+        "/usr/bin/python3.12",
+        "-B",
+        "WRF/test/rrtmgp/test_udm_startup_snow_scm_namelist.py"
+      ],
+      "actual_returncode": 0,
+      "stdout": "root-check-3.stdout",
+      "stderr": "root-check-3.stderr"
+    },
+    {
+      "argv": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "actual_returncode": 0,
+      "stdout": "root-check-4.stdout",
+      "stderr": "root-check-4.stderr"
+    }
+  ],
+  "source_execution_matches": "Final v3 source pins; static v1/v2 proof kept with respective earlier fixture pins",
+  "candidate_scoped_completed": 15,
+  "main_scoped_completed": 12,
+  "remaining_physical_or_final": 7,
+  "new_candidate_pending_main": 3,
+  "production_accepted": false
+}

@@ -227,20 +227,53 @@ def main():
         helper_source = (wrf_root / 'frame/module_io.F').read_text()
         helper = output / 'generic_rank_helper.f90'
         selected = []
-        for name in ('dim_from_memorder', 'lower_case'):
-            pattern = rf'(?ims)^SUBROUTINE {name}\([^\n]*\).*?^END SUBROUTINE {name}\s*$'
+        for name in ('dim_from_memorder', 'lower_case', 'wrf_get_var_info'):
+            pattern = rf'(?ims)^SUBROUTINE {name}\b.*?^END SUBROUTINE {name}\s*$'
             matches = re.findall(pattern, helper_source)
             if len(matches) != 1:
                 raise RuntimeError(f'generic rank helper source roster changed: {name}')
             selected.append(matches[0])
-        helper.write_text('\n'.join(selected) + '\n')
+        # Keep the wrapper body verbatim; provide only serial handle/routing
+        # dependencies and state constants, not a substitute NetCDF backend.
+        helper.write_text('''module module_state_description
+  integer,parameter :: IO_NETCDF=2, DEBUG_LVL=0
+end module
+''' + '\n'.join(selected) + '''
+subroutine get_handle(hndl,io_form,for_out,datahandle)
+  integer,intent(in) :: datahandle
+  integer,intent(out) :: hndl,io_form
+  logical,intent(out) :: for_out
+  hndl=datahandle;io_form=2;for_out=.false.
+end subroutine
+integer function use_package(io_form)
+  integer,intent(in)::io_form
+  use_package=io_form
+end function
+logical function multi_files(io_form)
+  integer,intent(in)::io_form
+  multi_files=.false.
+end function
+logical function wrf_dm_on_monitor()
+  wrf_dm_on_monitor=.true.
+end function
+logical function use_output_servers_for(io_form)
+  integer,intent(in)::io_form
+  use_output_servers_for=.false.
+end function
+subroutine wrf_quilt_get_var_info(h,name,nd,order,stagger,lo,hi,status)
+  integer :: h,nd,lo(*),hi(*),status
+  character(*) :: name,order,stagger
+  ! This selected wrapper fixture must never take the quilt branch.
+  error stop 83
+end subroutine
+''')
         results = []
         for optimization in ('O0', 'O2'):
             build = output / optimization
             build.mkdir()
             executable = build / 'fixture.exe'
             argv = [tools['fc'], '-' + optimization, '-g', '-fcheck=all', '-finit-integer=99', '-fallow-argument-mismatch',
-                    '-ffree-form', '-ffree-line-length-none', '-cpp', '-I' + str(ioapi)]
+                    '-ffree-form', '-ffree-line-length-none', '-cpp', '-DNETCDF', '-I' + str(ioapi)]
             if args.mpiexec:
                 argv += ['-DUSE_MPI']
             argv += flags + [str(expanded), str(backend / 'field_routines.F90'), str(helper), str(fixture)] + libs
@@ -254,7 +287,9 @@ def main():
                 log = runner.run(argv, case, 'fixture_serial' if ranks == 1 else 'fixture_MPI_wrapper')
                 text = log.read_text()
                 if (text.count('BACKEND_ROUNDTRIP_PASS') != 1 or text.count('REPLICA_PASS') != ranks
-                        or text.count('HELPER_ORDER_CONTRACT_PASS') != 1):
+                        or text.count('HELPER_ORDER_CONTRACT_PASS') != 1
+                        or any(text.count(marker) != 1 for marker in ('LONG_ORDER_CONTRACT_PASS',
+                        'WRITE_PREFLIGHT_CONTRACT_PASS', 'VARINFO_WRAPPER_CONTRACT_PASS', 'VARINFO_ATTRIBUTE_CONTRACT_PASS'))):
                     raise RuntimeError('fixture success marker/replica roster mismatch')
                 if pin(executable) != executable_pin:
                     raise RuntimeError('executable changed during fixture')
@@ -268,7 +303,10 @@ def main():
                    'confirmed_direct_children': runner.confirmed_children, 'commands': runner.commands,
                    'results': results, 'source_pins': source_pins, 'direct_netcdf_dependencies': dependency_pins,
                    'mpi_is_actual_module_io': False, 'generic_rank_helper': pin(helper),
-                   'generic_helper_executed': True, 'time_records': 2,
+                   'generic_helper_executed': True, 'selected_varinfo_wrapper_executed': True,
+                   'wrapper_is_full_module_io': False,
+                   'direct_write_preflight_cases': 12, 'memory_order_length_contract_checked': True,
+                   'varinfo_attribute_and_output_lengths_checked': True, 'time_records': 2,
                    'time_unlimited_checked': True, 'real4_to_double_read_checked': True,
                    'invalid_read_order_checked': True,
                    'direct_helper_invalid_orders_checked': True,

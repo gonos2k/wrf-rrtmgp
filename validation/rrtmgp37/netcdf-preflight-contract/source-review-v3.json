@@ -1,0 +1,258 @@
+{
+  "schema": "UDM37_NETCDF_PREFLIGHT_SOURCE_AND_SAVED_TERMINAL_REVIEW_V3",
+  "created_utc": "2026-10-07T05:25:11.451422+00:00",
+  "status": "PASS_SCOPED_ACTUAL_BACKEND_TERMINAL_AND_SOURCE_REVIEW",
+  "evidence_method": "READ_ONLY_SOURCE_AND_SAVED_RECEIPT_INSPECTION; NO RAW NETCDF READ OR REEXECUTION",
+  "worktree": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-preflight-pr-work",
+  "base_commit": "457cde630bbeb41a24c09baa1f536c73622b615f",
+  "reviewed_source_pins": {
+    "WRF/external/io_netcdf/wrf_io.F90": {
+      "sha256": "bd19eb9d439ca975fce788cb0685424080b7e547cd0303287055d3c1dcb2b02c",
+      "size_bytes": 131877
+    },
+    "WRF/frame/module_io.F": {
+      "sha256": "1ff21750ce56d78681a9a9dc80d03578ce9b73a0a510664dd165ed84c47fae4b",
+      "size_bytes": 189968
+    },
+    "WRF/test/rrtmgp/test_netcdf_zz.F90": {
+      "sha256": "9812e443b59dd56279479f25e8001a88480c8b0299d0132769f83ebd8f1b99b0",
+      "size_bytes": 24103
+    },
+    "WRF/test/rrtmgp/test_netcdf_zz.py": {
+      "sha256": "60f5ff15926fee02c2b94f8c24187e04f4932233e8f343e1ef3e21a00adbb032",
+      "size_bytes": 16698
+    }
+  },
+  "diff_sha256": "f7bc1a9e2edcc5c47c534ac81ac23085b892e94f1b40131ab4e0dfbb58f73009",
+  "production_review": {
+    "status": "PASS_SCOPED_STATIC_WITH_SAVED_ACTUAL_BACKEND_SUPPORT",
+    "limits": "Actual source-linked backend fixture evidence is now available and joined. Broader error classes and later NetCDF failures remain outside the tested deterministic preconditions; no all-failure transactionality or physics claim.",
+    "observations": [
+      "GetDim rejects a nonblank suffix exceeding its three-character canonical buffer before case conversion. Trailing blank padding remains accepted; direct leading blank rejection is preserved.",
+      "LowerCase/UpperCase return blank for a nonblank input exceeding output capacity, otherwise bound copy/iteration by both declared lengths. This avoids silent truncation of xyzq and padded zz overrun.",
+      "Public read/write preserve TRIM(ADJUSTL(input)) compatibility but reject overlength normalized tokens before CHARACTER(3) assignment.",
+      "reorder now invokes GetDim and returns on unsupported tokens before all length/permutation loops. Valid orders retain native permutations, and ZZ retains its identity path. This closes the previously identified direct xxx bounds path.",
+      "get_var_info checks attribute length 1:3 before reading into a blank-initialized local CHARACTER(3), validates rank there, rejects a too-short caller output, and copies to a blank-padded caller buffer. Existing writer format is three-character MemoryOrder.",
+      "FieldIO checks order, supported field type and all active dimension lengths before GetTimeIndex; scalar NDim=0 retains the empty length-section behavior. Later handle/date/NetCDF failures are not claimed transactional.",
+      "module_io NetCDF wrapper now passes a local NetCDFFieldType as eighth argument and Status as ninth without changing public wrapper arguments or other package branches."
+    ]
+  },
+  "blockers": [],
+  "inherited_limits": [],
+  "fixture_source_coverage": {
+    "existing_selected_valid_orders": 20,
+    "existing_invalid_short_orders": 5,
+    "new_direct_long_cases": 5,
+    "new_write_preflight_cases": 12,
+    "new_attribute_malformed_cases": 3,
+    "new_varinfo_buffer_function_called": true,
+    "wrapper_body_extracted_verbatim": true,
+    "wrapper_routing_dependencies": "Serial synthetic routing stubs; full module_io/MPI execution not claimed",
+    "normal_data_path": "Existing integer/real/double 3x5 two-Time write/reopen/read with uppercase/lowercase and public leading/trailing blank padding retained",
+    "new_short_output_backend_and_wrapper_controls": true,
+    "new_invalid_three_character_reorder_control": true
+  },
+  "execution_by_reviewer": {
+    "compiler": 0,
+    "fixture": 0,
+    "model": 0,
+    "mpi": 0,
+    "rte": 0,
+    "solver": 0
+  },
+  "physical_acceptance": false,
+  "source_mutations": 0,
+  "verdict_ko": "최종 v3 원문·핀과 저장된 영수증을 결속해 GNU O0/O2 실제 backend 2compile/2serialfixture 및 32개 파일의 별도 SciPy 검증 PASS를 확인했다. v1 link RC1·v2 초기화 순서 fixture RC71 실패는 보존한다. 전체 module_io/MPI/모델·물리 승인은 아니다.",
+  "predecessor_review": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-preflight-preparation-v1/source-review-v2.json",
+    "sha256": "13a11f79dd453741bef76c0fda624f4e9520bce919fce1b72d6719b9bb714d8e",
+    "size_bytes": 7087,
+    "status": "PASS_SCOPED_STATIC_NETCDF_PREFLIGHT_AND_FIXTURE_WIRING",
+    "preserved_unchanged": true
+  },
+  "changed_path_roster": [
+    "WRF/external/io_netcdf/wrf_io.F90",
+    "WRF/frame/module_io.F",
+    "WRF/test/rrtmgp/test_netcdf_zz.F90",
+    "WRF/test/rrtmgp/test_netcdf_zz.py"
+  ],
+  "resolved_predecessor_findings": [
+    {
+      "id": "FIXTURE_UNCALLED_VARINFO_BUFFER_TEST",
+      "status": "RESOLVED_BY_SOURCE_INSPECTION",
+      "path": "WRF/test/rrtmgp/test_netcdf_zz.F90",
+      "lines": [
+        123,
+        126,
+        329,
+        343,
+        344
+      ],
+      "evidence": "Exactly one call to check_varinfo_buffers is now present after reopening the existing backend file for read and obtaining its handle. The function is reached while h is valid and before closing it; padded wrapper output, backend error propagation, short backend output, short wrapper output and public-read suffix rejection are executed by this fixture path. This is source wiring proof, not a runtime result."
+    },
+    {
+      "id": "REORDER_BAD_THREE_CHAR_TOKEN",
+      "status": "RESOLVED_BY_SOURCE_INSPECTION",
+      "path": "WRF/external/io_netcdf/wrf_io.F90",
+      "line": 832,
+      "evidence": "reorder initializes blank output and invokes GetDim before its length/permutation loops. Unsupported xxx returns before the old i2=4 substring hazard. Existing accepted order set remains GetDim-controlled; valid spatial orders and ZZ path retain native permutations. The fixture now explicitly checks reorder(xxx) yields blank."
+    }
+  ],
+  "runtime_result_scope": "Actual O0/O2 backend compile/link and serial fixtures passed, joined through eight saved command journals and exact current source pins. This is not full module_io execution, MPI, full WRF, forecast, RTE, solver or physical acceptance. No new runtime was launched by this reviewer.",
+  "remaining_limits": [
+    "GetDim still accepts cc while several downstream helpers reject it; this inherited acceptance mismatch remains outside this patch.",
+    "Direct helper leading blanks remain rejected, while public read/write retain leading/trailing blank normalization; this preserves the prior distinction.",
+    "get_var_info supports the existing one-to-three-byte stored MemoryOrder attribute contract. Longer attributes, including longer blank-padded stored attributes, are rejected rather than read or truncated.",
+    "Selected wrapper body is verbatim extracted with serial routing stubs; the fixture is not a full module_io, MPI, full WRF or model execution.",
+    "FieldIO rejects the specified deterministic preconditions before time bookkeeping. Later NetCDF or other failures are not claimed transactional."
+  ],
+  "fixture_v3_delta": {
+    "path": "WRF/test/rrtmgp/test_netcdf_zz.F90",
+    "evidence": "check_write_preflight is called exactly once after ext_ncd_ioinit and its successful-status check. Other reviewed production/runner pins remain identical to v2 review.",
+    "previous_fixture_sha256": "b4b71ef9b56b72dac3fd476fcf9dc4972021065232080c1050a7999fad683821",
+    "current_fixture_sha256": "9812e443b59dd56279479f25e8001a88480c8b0299d0132769f83ebd8f1b99b0"
+  },
+  "actual_backend_terminal": {
+    "receipt": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-preflight-backend-v3-result.json",
+      "sha256": "c43d8b2ea94f8944db3ef968c62b32fbb6d44e0c9b6e43ae18bcc806f835ccc1",
+      "size_bytes": 13285
+    },
+    "inner_result_exact_equal": true,
+    "plan": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-preflight-backend-v3/plan.json",
+      "sha256": "21dcdaca3728949aaadbe5ef85b73413f2b166960bdb630e41186bb8886f6a02",
+      "size_bytes": 5074
+    },
+    "toolchain": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-preflight-backend-v3/toolchain.json",
+      "sha256": "a24f9e9555d68494c83fe78828f1c2209284cf6998de020d0f8290e4d48d7438",
+      "size_bytes": 1513
+    },
+    "direct_children": 8,
+    "compile_link_children": 2,
+    "serial_fixture_children": 2,
+    "optimization_modes": [
+      "O0",
+      "O2"
+    ],
+    "all_actual_returncodes": 0,
+    "all_journals_terminal": true,
+    "all_timed_out": false,
+    "compile_flags": [
+      "-fcheck=all",
+      "-finit-integer=99",
+      "-DNETCDF"
+    ],
+    "immediate_command_journals": [
+      {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-preflight-backend-v3/command-01.json",
+        "sha256": "d4f5468ba1542986e22f80f8b0c3c54c32817547ad7bce22cd03a8ffc0755aa1",
+        "size_bytes": 411
+      },
+      {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-preflight-backend-v3/command-02.json",
+        "sha256": "eb3eadc8e423b6b34b46c37c610a6f3f9e7e1585e9493f70dd5d86c3746cd941",
+        "size_bytes": 415
+      },
+      {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-preflight-backend-v3/command-03.json",
+        "sha256": "b88e443df63f5f042f9adab493b386c697f011f60ccf674e12af50acf3b552ef",
+        "size_bytes": 741
+      },
+      {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-preflight-backend-v3/command-04.json",
+        "sha256": "f6cc5f27de3ae6e745ce114f9f1a46d7b79fb589a1d75b4eadccf1369d709394",
+        "size_bytes": 480
+      },
+      {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-preflight-backend-v3/command-05.json",
+        "sha256": "eafbe23e2d8311eb9098e8270f4675fc60911588458679c42f1ea239c55c8489",
+        "size_bytes": 1520
+      },
+      {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-preflight-backend-v3/command-06.json",
+        "sha256": "013a99579298488d4f95704078470ee6ffdd9951fd778e831969b9b488aeb084",
+        "size_bytes": 429
+      },
+      {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-preflight-backend-v3/command-07.json",
+        "sha256": "01f9ae282238b95c4fe773b7074e542fb8af22e678706e9bf440a38dc495119a",
+        "size_bytes": 1519
+      },
+      {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-preflight-backend-v3/command-08.json",
+        "sha256": "9d4c8533c6e0f7c76c07af9561ee43a69069dc5c4ac4c6bb6bf9707e07010733",
+        "size_bytes": 429
+      }
+    ],
+    "success_marker_logs": [
+      {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-preflight-backend-v3/command-06.stdout",
+        "sha256": "99074415364ec8ee9781ba119ff9307d89196c665264699211f13c5e56a57778",
+        "size_bytes": 864
+      },
+      {
+        "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-preflight-backend-v3/command-08.stdout",
+        "sha256": "99074415364ec8ee9781ba119ff9307d89196c665264699211f13c5e56a57778",
+        "size_bytes": 864
+      }
+    ],
+    "source_pin_count": 13,
+    "all_source_pin_hashes_and_sizes_match_current_files": true,
+    "actual_extracted_helpers_verbatim": true,
+    "generic_helper": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-preflight-backend-v3/generic_rank_helper.f90",
+      "sha256": "10f127cf634b8e1ba57dde0d245b144df1cbba9c45d7c5a137dce733ae2e97ae",
+      "size_bytes": 7463
+    },
+    "netcdf_library_closure": "Stored result lists direct NetCDF include/library pins; no new library hashing or generic full dependency-closure proof claimed by this review."
+  },
+  "independent_saved_reader": {
+    "result": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-preflight-preparation-v1/independent-reader-result.json",
+      "sha256": "e7bc072f26c49cf833e67e2d61a94f5af8c5bd99ec9043daf4739afa8ebb1d3a",
+      "size_bytes": 14052
+    },
+    "plan": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-preflight-preparation-v1/independent-reader-plan.json",
+      "sha256": "f78a24bf2ff076f16cac0006881e07a03f63ed6b76ec5a99ded65cb9e3e8a6ad",
+      "size_bytes": 520
+    },
+    "reader_source": {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-preflight-preparation-v1/independent_reader.py",
+      "sha256": "6493b89a57fad96a7777718b99a70a300d89f36c03bd8e4bd315e45fcd01aa9f",
+      "size_bytes": 2680
+    },
+    "status": "PASS_SCOPED_INDEPENDENT_READER",
+    "evidence_scope": "Root-executed saved SciPy result inspected as metadata only; this reviewer did not read or hash any NetCDF output arrays/files.",
+    "files": 32,
+    "recovery_files": 24,
+    "malformed_attribute_files": 6,
+    "normal_ordered_ZZ_files": 2,
+    "normal_ZZ_hashes_join_backend_receipt": true,
+    "production_accepted": false
+  },
+  "preserved_failed_attempts": [
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-preflight-backend-v1-result.json",
+      "sha256": "f55f1d3a16d215a8eb2a56ff0a4dcd7aa77620d42e0dfaafa6b4b51653064741",
+      "size_bytes": 4261,
+      "status": "FAIL_PRESERVED",
+      "confirmed_direct_children": 5,
+      "last_child_kind": "GNU_compile_link",
+      "last_child_actual_returncode": 1,
+      "interpretation": "link failure"
+    },
+    {
+      "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-netcdf-preflight-backend-v2-result.json",
+      "sha256": "94f843284c15b8bc1994c69f958931959808e78ea291571ed294480d611d281a",
+      "size_bytes": 4741,
+      "status": "FAIL_PRESERVED",
+      "confirmed_direct_children": 6,
+      "last_child_kind": "fixture_serial",
+      "last_child_actual_returncode": 71,
+      "interpretation": "fixture error-stop 71 before required backend initialization"
+    }
+  ]
+}
