@@ -1,0 +1,451 @@
+{
+  "schema": "UDM37_REMAINING_SIZE_OCCURRENCE_SOURCE_REVIEW_V1",
+  "status": "PASS_SCOPED_SOURCE_AND_PRIMARY_DOCUMENT_INVENTORY_PHYSICAL_OPEN",
+  "created_utc": "2026-10-08T01:01:17.943285+00:00",
+  "verdict_ko": "PHY-SIZE와 PHY-OCCURRENCE는 OPEN입니다. 현재 소스·보존 근거는 크기 계산 및 CF/경로 처리의 구현을 검증하지만, native PSD와 정확한 LUT 생성 population·모멘트, 종별 발생분율의 물리적 타당성을 확정하지 않습니다. 추가 승인 없이 가능한 다음 작업은 고정 소스의 정의표와 공식 생성 계보를 문헌으로 연결하는 것입니다.",
+  "source_identity": {
+    "local_head": "e1f1caea90ee4e4b71f7d6f03a314735b578d9be",
+    "tree": "720e462503a36a1b1c79ec55bc04c6aab2f92b26",
+    "source_hashes_equal_head": true,
+    "scope": "Same PR157 tested tree; no new remote-main readback implied"
+  },
+  "source_pins": {
+    "WRF/phys/module_mp_udm.F": {
+      "path": "build/udm37-cold-number-input-pr-work/WRF/phys/module_mp_udm.F",
+      "sha256": "7bd96141eefc6ae2cb66cea0ce022fcc2ee64afce5c616aa65f26711c8790947",
+      "size_bytes": 196865
+    },
+    "WRF/phys/module_ra_rrtmgp_input.F": {
+      "path": "build/udm37-cold-number-input-pr-work/WRF/phys/module_ra_rrtmgp_input.F",
+      "sha256": "65e61158b31d83d34da98dac51524606733b3fde4a89743498f9b1cd52646274",
+      "size_bytes": 41665
+    },
+    "WRF/phys/module_ra_rrtmgp.F": {
+      "path": "build/udm37-cold-number-input-pr-work/WRF/phys/module_ra_rrtmgp.F",
+      "sha256": "1852452555fbe667a0a95d59242bcd9c3833f2877fc51f882d5d3d929a058f58",
+      "size_bytes": 74962
+    },
+    "WRF/external/rte_rrtmgp/rrtmgp-frontend/mo_cloud_optics_rrtmgp.F90": {
+      "path": "build/udm37-cold-number-input-pr-work/WRF/external/rte_rrtmgp/rrtmgp-frontend/mo_cloud_optics_rrtmgp.F90",
+      "sha256": "14dcab00e6dfe1a64d40b5ddf3cf86186380fac2b8d0c0c3aa2e1f466b0446fc",
+      "size_bytes": 38204
+    }
+  },
+  "checklist_pin": {
+    "path": "build/udm37-cold-number-input-pr-work/validation/rrtmgp37/acceptance/review-resolution-checklist.json",
+    "sha256": "9b4877f3abb19e0514b8e83dacfe99e885a9c8b2407126e01ec10c24fc13ddd4",
+    "size_bytes": 34426
+  },
+  "existing_items_verbatim": [
+    {
+      "id": "PHY-SIZE",
+      "priority": "P1",
+      "title": "UDM PSD 모멘트와 pinned LUT 유효크기",
+      "source_prs": "98–103",
+      "implemented": false,
+      "feature_branch_validation": "OPEN",
+      "main_included_at_snapshot": false,
+      "integration_candidate_included": false,
+      "integrated_validation": "OPEN",
+      "completion_condition": "Producer PSD/모멘트와 정확한 LUT 생성 population·크기 정의를 primary evidence로 연결",
+      "scope_limit": "Wyser 식 복원과 radius→diameter 단위 변환만으로 물리 호환성은 확정되지 않는다.",
+      "owner": "root; independent team review",
+      "evidence": [
+        "validation/rrtmgp37/udm-thompson-cloud-radius/manifest.json"
+      ],
+      "source_pr_urls": [
+        "https://github.com/gonos2k/wrf-rrtmgp/pull/98",
+        "https://github.com/gonos2k/wrf-rrtmgp/pull/99",
+        "https://github.com/gonos2k/wrf-rrtmgp/pull/100",
+        "https://github.com/gonos2k/wrf-rrtmgp/pull/101",
+        "https://github.com/gonos2k/wrf-rrtmgp/pull/102",
+        "https://github.com/gonos2k/wrf-rrtmgp/pull/103"
+      ],
+      "radius_kernel_comparison": {
+        "status": "PASS_SCOPED_ACTUAL_CLOUD_RADIUS_KERNELS",
+        "source_base_main": "42641d19d5cd5cf4b3b124270d365aa973be7727",
+        "scope": "Full modules, isolated liquid helper kernels; test-only Thompson private cloud initializer, actual UDM init. Conditional number inputs; no WRF routing, optics or unit authority.",
+        "physical_gate_closed": false
+      }
+    },
+    {
+      "id": "PHY-OCCURRENCE",
+      "priority": "P1",
+      "title": "CF0 강수·qg/qh 발생/재료 정책",
+      "source_prs": "18–29,62–83",
+      "implemented": true,
+      "feature_branch_validation": "SCOPED_EVIDENCE_EXISTS",
+      "main_included_at_snapshot": true,
+      "integration_candidate_included": false,
+      "integrated_validation": "OPEN",
+      "completion_condition": "정책별 발생분율·입자 가정 및 관측/독립 광학 기준 검증",
+      "scope_limit": "Mode 0과 실험 mode 1 구분. 구현·실행 성공을 UDM 전체 상태의 물리 승인으로 확대하지 않는다.",
+      "owner": "root; independent team review",
+      "evidence": [],
+      "source_pr_urls": [
+        "https://github.com/gonos2k/wrf-rrtmgp/pull/18",
+        "https://github.com/gonos2k/wrf-rrtmgp/pull/19",
+        "https://github.com/gonos2k/wrf-rrtmgp/pull/20",
+        "https://github.com/gonos2k/wrf-rrtmgp/pull/21",
+        "https://github.com/gonos2k/wrf-rrtmgp/pull/22",
+        "https://github.com/gonos2k/wrf-rrtmgp/pull/23",
+        "https://github.com/gonos2k/wrf-rrtmgp/pull/24",
+        "https://github.com/gonos2k/wrf-rrtmgp/pull/25",
+        "https://github.com/gonos2k/wrf-rrtmgp/pull/26",
+        "https://github.com/gonos2k/wrf-rrtmgp/pull/27",
+        "https://github.com/gonos2k/wrf-rrtmgp/pull/28",
+        "https://github.com/gonos2k/wrf-rrtmgp/pull/29",
+        "https://github.com/gonos2k/wrf-rrtmgp/pull/62",
+        "https://github.com/gonos2k/wrf-rrtmgp/pull/63",
+        "https://github.com/gonos2k/wrf-rrtmgp/pull/64",
+        "https://github.com/gonos2k/wrf-rrtmgp/pull/65",
+        "https://github.com/gonos2k/wrf-rrtmgp/pull/66",
+        "https://github.com/gonos2k/wrf-rrtmgp/pull/67",
+        "https://github.com/gonos2k/wrf-rrtmgp/pull/68",
+        "https://github.com/gonos2k/wrf-rrtmgp/pull/69",
+        "https://github.com/gonos2k/wrf-rrtmgp/pull/70",
+        "https://github.com/gonos2k/wrf-rrtmgp/pull/71",
+        "https://github.com/gonos2k/wrf-rrtmgp/pull/72",
+        "https://github.com/gonos2k/wrf-rrtmgp/pull/73",
+        "https://github.com/gonos2k/wrf-rrtmgp/pull/74",
+        "https://github.com/gonos2k/wrf-rrtmgp/pull/75",
+        "https://github.com/gonos2k/wrf-rrtmgp/pull/76",
+        "https://github.com/gonos2k/wrf-rrtmgp/pull/77",
+        "https://github.com/gonos2k/wrf-rrtmgp/pull/78",
+        "https://github.com/gonos2k/wrf-rrtmgp/pull/79",
+        "https://github.com/gonos2k/wrf-rrtmgp/pull/80",
+        "https://github.com/gonos2k/wrf-rrtmgp/pull/81",
+        "https://github.com/gonos2k/wrf-rrtmgp/pull/82",
+        "https://github.com/gonos2k/wrf-rrtmgp/pull/83"
+      ]
+    }
+  ],
+  "historical_audit_pins": [
+    {
+      "path": "build/udm37-liquid-lut-size-definition-followup-v1/findings.json",
+      "sha256": "8b44b751397323047f675def489d2c1b6f67c0b97335239852b824fce791f853",
+      "size_bytes": 17992
+    },
+    {
+      "path": "build/udm37-nc-radius-moment-source-followup-v1/findings.json",
+      "sha256": "2a40b4f3c8efef8429d4e0efabb2e5c3c2dee6b0b16b95c3c224ca451a91c9d9",
+      "size_bytes": 5833
+    },
+    {
+      "path": "build/udm37-rrtmgp-cloud-definition-primary-source-v1/findings.json",
+      "sha256": "0602e8e0d3b20d34f45264c0d0f290ece16e8197834de5e49c1908015c0e9838",
+      "size_bytes": 3090
+    },
+    {
+      "path": "build/udm37-rrtmgp-cloud-definition-primary-source-v1/RRTMGP_final_report.txt",
+      "sha256": "4a0df953560729909b39dd0d7b259ad655a676265b2af2ad0d5ac00a76bb9c11",
+      "size_bytes": 23706
+    },
+    {
+      "path": "build/udm37-nc-psd-population-contract-plan-v1/findings.json",
+      "sha256": "1ba7be5f05ea3d8774c36fd678ceda2f0a60676eaf29f0c224c1f19cf335dea3",
+      "size_bytes": 7029
+    }
+  ],
+  "evidence_metadata_pins": [
+    {
+      "path": "build/udm37-cold-number-input-pr-work/validation/rrtmgp37/udm-thompson-cloud-radius/manifest.json",
+      "sha256": "f8a7aab5b635c4f1d93649952ce632c7f8ba3a50bd37ab10702425c0a340ca66",
+      "size_bytes": 18167
+    },
+    {
+      "path": "build/udm37-cold-number-input-pr-work/validation/rrtmgp37/udm-thompson-cloud-radius/README_ko.md",
+      "sha256": "10e2e273f8f19c0c1885d5a7cda359c988aeb28eede0401e5b892531e8d49a61",
+      "size_bytes": 5451
+    },
+    {
+      "path": "build/udm37-cold-number-input-pr-work/validation/rrtmgp37/native-radius-stage/manifest.json",
+      "sha256": "8d7dc2aef8221ab137f5480d6755f1cbf1b87c8cd08cebb6d4ea97618a8de09d",
+      "size_bytes": 5819
+    },
+    {
+      "path": "build/udm37-cold-number-input-pr-work/validation/rrtmgp37/native-radius-stage/README.md",
+      "sha256": "04af3a6a739bc948ecfaa99c5dfdd3f635a664b8661eae129a488ce29be67be2",
+      "size_bytes": 5268
+    },
+    {
+      "path": "build/udm37-cold-number-input-pr-work/validation/rrtmgp37/radius-moment-contract/manifest.json",
+      "sha256": "fcd1c5eae66e24bd716a4612771b1ba2dcc42af653a17c3d185528f238fe5663",
+      "size_bytes": 1671
+    },
+    {
+      "path": "build/udm37-cold-number-input-pr-work/validation/rrtmgp37/radius-moment-contract/README.md",
+      "sha256": "1268813f23199c0177711fd0a705345bd1dac8d78f9d85e1f05d5464dbf3d1c3",
+      "size_bytes": 6524
+    },
+    {
+      "path": "build/udm37-cold-number-input-pr-work/validation/rrtmgp37/fractional-cf-population/manifest.json",
+      "sha256": "289569920f4c356439a6cb895cd0b7d7f1e5fdb661f8bf142dc06bf9610f104b",
+      "size_bytes": 16385
+    },
+    {
+      "path": "build/udm37-cold-number-input-pr-work/validation/rrtmgp37/fractional-cf-population/README.md",
+      "sha256": "9c38b3b78366f241aa608b6ca62982a67d13c2a9dac6809a6e4665fa05c7c738",
+      "size_bytes": 6534
+    },
+    {
+      "path": "build/udm37-cold-number-input-pr-work/validation/rrtmgp37/cf0-precipitation-held-audit/manifest.json",
+      "sha256": "aa33a758fa1a541819222b539380d918874f824371605ddd97c0b2c84dcebb0c",
+      "size_bytes": 6044
+    },
+    {
+      "path": "build/udm37-cold-number-input-pr-work/validation/rrtmgp37/cf0-precipitation-held-audit/README.md",
+      "sha256": "2989d512c3625b7eda7c0c01a4c26740f1edcbc09cf0d12b44800128ad284e94",
+      "size_bytes": 5983
+    },
+    {
+      "path": "build/udm37-cold-number-input-pr-work/validation/rrtmgp37/frozen-optics-reference/manifest.json",
+      "sha256": "e37a77672de03425830d5420d544cfcadf0f741ce171fc2af154388594ffd751",
+      "size_bytes": 3827
+    },
+    {
+      "path": "build/udm37-cold-number-input-pr-work/validation/rrtmgp37/frozen-optics-reference/README.md",
+      "sha256": "ea2639903654f766abbbcaebc29b48c67a2b1ad0c700f86c25d0514e67f5a461",
+      "size_bytes": 5639
+    },
+    {
+      "path": "build/udm37-cold-number-input-pr-work/validation/rrtmgp37/frozen-optics-lookup/manifest.json",
+      "sha256": "1cb4fc67710da8c1c7fdd7c3894028d7d57218c335960d045864278211396ade",
+      "size_bytes": 4643
+    },
+    {
+      "path": "build/udm37-cold-number-input-pr-work/validation/rrtmgp37/frozen-optics-lookup/README.md",
+      "sha256": "8b1501afdf53aaabcdb2cf881da19d011f338ac4689ca3c9e1846835f58bfc85",
+      "size_bytes": 7313
+    },
+    {
+      "path": "build/udm37-cold-number-input-pr-work/validation/rrtmgp37/nc-noaa-primary-contract/manifest.json",
+      "sha256": "5427fca02b3b942f98da3ae07bc6811618d8c98b305f710df3656f9e8ac45dbb",
+      "size_bytes": 3362
+    },
+    {
+      "path": "build/udm37-cold-number-input-pr-work/validation/rrtmgp37/nc-noaa-primary-contract/README_ko.md",
+      "sha256": "431937eaccd00c41f4c1575488fb11361b7111648086439cb38a031e2ce05ff2",
+      "size_bytes": 4029
+    }
+  ],
+  "PHY_SIZE": {
+    "status": "OPEN",
+    "original_completion_condition": "Producer PSD/모멘트와 정확한 LUT 생성 population·크기 정의를 primary evidence로 연결",
+    "producer_facts": [
+      {
+        "path": "WRF/phys/module_mp_udm.F",
+        "lines": [
+          149,
+          155,
+          193,
+          195,
+          559,
+          1417,
+          1458,
+          3566,
+          3568,
+          4183,
+          4234,
+          4236,
+          4358
+        ],
+        "finding": "LB2017 autoconversion has process-local nu_c, lambda, Gamma recurrence/integral tables and n0c normalization. nu_c=min(nint(1e9/n_c)+2,15), n_c is bounded current number and L_c=restored QC*DEN. This is evidence for a particular process PSD calculation, not a declared universal radiation distribution."
+      },
+      {
+        "path": "WRF/phys/module_mp_udm.F",
+        "lines": [
+          3030,
+          3064
+        ],
+        "finding": "slope_cloud uses pidnc*N/(Q*DEN), cube-root association and bounded slope; no nu argument. Its algebra differs from local LB2017 shape-dependent lambda."
+      },
+      {
+        "path": "WRF/phys/module_mp_udm.F",
+        "lines": [
+          3749,
+          3789,
+          3803,
+          3824
+        ],
+        "finding": "Radiation helper accepts raw NC and rho, tests NC*rho but computes lambda from pidnc*NC/(QC*rho); output is bounded 0.5/lambda. Local nu_c is declared but not used in this liquid expression; no M2/PSD argument is passed."
+      },
+      {
+        "path": "WRF/phys/module_mp_udm.F",
+        "lines": [
+          100,
+          101,
+          3467,
+          3823,
+          3824
+        ],
+        "finding": "Under explicit same-population volume-number and spherical-mass assumptions, the unbounded expression equals [3*rho*QC/(4*pi*rho_water*NC)]^(1/3). Optical M3/(2*M2) is not fixed by mass and count alone. This conditional algebra does not authenticate actual NC units or a Gamma multiplier."
+      }
+    ],
+    "consumer_facts": {
+      "path": "WRF/external/rte_rrtmgp/rrtmgp-frontend/mo_cloud_optics_rrtmgp.F90",
+      "anchors": {
+        "Mie_method": [
+          12,
+          15
+        ],
+        "uniform_coordinate_step": [
+          142
+        ],
+        "interpolation_and_tau": [
+          665,
+          688
+        ]
+      },
+      "finding": "Pinned API/table coordinate and linear interpolation are known. Prior coefficient-metadata audit attests 20 liquid sizes, 2.5–21.5 micrometres, LW16/SW14 bands; no coefficient arrays re-read or hashed here.",
+      "coefficient_pins_reused": {
+        "lw": "09d6704c5b863b4c3ceb417d20bb3076ec492e6bf2dfbcc9f3c5996a3706f0b0",
+        "sw": "7671835992a45afe66244b591a02c0b3df73d7d59ecb746bbffd9763497651cd"
+      },
+      "provenance_limit": "Mie method/API effective-size label and matching bounds do not prove the exact distribution/moment recipe used to generate these pinned files."
+    },
+    "official_provenance": [
+      {
+        "url": "https://www.osti.gov/biblio/1575901",
+        "full_report": "https://www.osti.gov/servlets/purl/1575901",
+        "authority": "Mlawer/Pincus development final report, primary source",
+        "local_text": "build/udm37-rrtmgp-cloud-definition-primary-source-v1/RRTMGP_final_report.txt",
+        "lines": [
+          151,
+          175
+        ],
+        "finding": "Section E gives refractive-index sources, Mie method, 1 micrometre radius increments, generated2.5–59.5 and model2.5–21.5 range. It does not explicitly specify the liquid PSD shape/width, integration distribution or M3/M2 recipe. Source demonstrates example host coupling, not identity with arbitrary host cloud descriptions.",
+        "fresh_web": "Bibliographic page read successfully; purl refresh returned502; relied on separately pinned retained text for section details"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/earth-system-radiation/rrtmgp-data/ea788bb39876948fa8d2c235665ccff19b4686b5/README.md",
+        "lines": [
+          5,
+          11
+        ],
+        "finding": "Official data repository says copied/renamed from RRTMGP74a0e09. This is data-distribution lineage, not a recovered table generator. The pinned data tree has no cloud-generator code; inspected source-tree41c5fcd has consumer/sample code, not located liquid generation recipe."
+      },
+      {
+        "url": "https://journals.ametsoc.org/view/journals/atsc/74/5/jas-d-16-0207.1.xml",
+        "doi": "10.1175/JAS-D-16-0207.1",
+        "finding": "Resolved actual Lee/Baik2017 primary process reference named by source559/1421. Publisher indexed abstract available; full-text request403, so exact paper PSD equation was not authenticated in this review."
+      },
+      {
+        "url": "https://journals.ametsoc.org/view/journals/atsc/76/10/jas-d-19-0211.1.xml",
+        "doi": "10.1175/JAS-D-19-0211.1",
+        "finding": "Publisher corrigendum specifies SI k_c/b corrections. Current source b_aut at4262 and r_star at4260 must be distinguished from original paper when completing process provenance; this is a documentation comparison lead, not a new physics-bug claim."
+      }
+    ],
+    "not_established": [
+      "Unique producer PSD applicable to final helper state",
+      "Physical number basis and conditional versus grid population at each process/helper boundary",
+      "Exact local-LUT generator commit, distribution, truncation and radius/moment definition",
+      "Mapping for ice/snow habit and diameter/projected-area definition as well as liquid"
+    ],
+    "completion_steps": [
+      "Authenticate producer number basis/population and source stage independently of Registry comments, numeric seed or radius agreement; dependencies on PHY-NC remain explicit.",
+      "Bind exact generator code or primary author documentation to pinned liquid tables, including PSD independent variable, shape/width/truncation, effective coordinate, refractive data and band integration.",
+      "Map actual source process definitions to final helper state; derive M2 only under authenticated assumptions and record every clipping/cap stage.",
+      "Review any proposed size mapping separately against an independent optical reference with predeclared criteria. Kernel agreement and table interpolation alone do not close the physical gate."
+    ],
+    "next_without_new_execution_approval": [
+      {
+        "id": "SIZE-DOC-1",
+        "task": "Prepare source equation-to-definition table: LB2017 source1417–1458/3566–3568/4236–4358 versus paper equations15–19 and corrigendum; record radius-versus-diameter, n0 normalization and moment convention per process. Full text unavailable means pending, not inferred."
+      },
+      {
+        "id": "SIZE-DOC-2",
+        "task": "Read official upstream74a0e09 cloud-data history/release documentation to trace each local LUT to its generating source. That commit is absent from existing local source object store, so current consumers cannot substitute for its generator. Read-only official metadata/source retrieval is next; no table generation or raw coefficient decode."
+      },
+      {
+        "id": "SIZE-DOC-3",
+        "task": "Draft precise unresolved questions for original data authors: distribution shape/truncation, meaning of liquid effective-size coordinate, generator revision and file hashes. Draft only; sending is not authorized by this review."
+      }
+    ]
+  },
+  "PHY_OCCURRENCE": {
+    "status": "OPEN",
+    "original_completion_condition": "정책별 발생분율·입자 가정 및 관측/독립 광학 기준 검증",
+    "source_facts": [
+      {
+        "path": "WRF/phys/module_mp_udm.F",
+        "lines": [
+          1047,
+          1090,
+          1112,
+          1130,
+          1298,
+          1311,
+          3394,
+          3450
+        ],
+        "finding": "Working CF initially1 above diagnosed range; diagnosed from QC/QI and fixed dxmeter. Six masses divide/restore within selected cloudy range while number arrays lack a paired CF conversion; phase changes intervene. UDM_CF is pre-process diagnosis and cannot be silently re-labelled simultaneous post-return precipitation occurrence."
+      },
+      {
+        "path": "WRF/phys/module_ra_rrtmgp_input.F",
+        "lines": [
+          491,
+          548
+        ],
+        "finding": "Default mode refuses positive hail, handles CF0 condensate through explicit allow/omission path, and divides non-G/H paths by positive CF. Experimental uniform_frozen sets G/H occurrence1 and uses grid paths directly. These are implemented policy choices, not measured species occurrence."
+      },
+      {
+        "path": "WRF/phys/module_ra_rrtmgp.F",
+        "lines": [
+          276,
+          288,
+          531,
+          565,
+          597,
+          620
+        ],
+        "finding": "Frozen mode0/1 and ice roughness1–3 are global settings; cloud mask derives from supplied CF; CU bundle validation uses same CF. Shared sampling is distinct from proof that native cloud, CU and precipitation occupy identical subgrid populations."
+      }
+    ],
+    "existing_evidence_limits": [
+      "fractional-cf-population: retained OFF/ON and immediate six-mass transformations, two selected fractional-CF helper rows; proves source-state transitions, not physical calibration of CF or number population.",
+      "cf0-precipitation-held-audit: declared occurrence-one rain/snow same-state intervention and scoped compiled-reader checks; cannot establish true precipitation occurrence or a domain-average observational budget.",
+      "frozen-optics-reference/lookup: numerical homogeneous ice-sphere/exponential-PSD contracts, quadrature/interpolation comparisons; no authority for wet hail, porosity, nonsphericity or operational adoption.",
+      "udm-cu-cloud-populations: historical population separation/shared-CF sampling evidence is scoped; archive contains failed historical restart context and must not be reclassified by later engineering results."
+    ],
+    "completion_steps": [
+      "Document species-by-species grid/in-occurrence mass and number populations, including clear-air CCN and CF0 precipitation; identify native/CU joint occurrence and overlap assumptions.",
+      "Define an explicit candidate occurrence policy and G/H material/habit/melting assumptions using source/observational primary evidence; implementation must remain separate from policy acceptance.",
+      "Validate selected occurrence and optical assumptions against observations or an independent physical optical reference with predeclared scope/criteria; held-state response or numerical same-table reproduction is insufficient.",
+      "Preserve source-step/timing and actual diagnosed extent; do not treat initialized CF above top or stale CF as fresh occurrence truth."
+    ],
+    "next_without_new_execution_approval": [
+      {
+        "id": "OCC-DOC-1",
+        "task": "Create a source-only six-species occurrence matrix covering mode0/mode1, CF0/positive CF, native/CU, diagnosed/initialized CF extent, mass path and mask placement; authenticate existing contracts via small manifest/receipt metadata."
+      },
+      {
+        "id": "OCC-DOC-2",
+        "task": "Read primary Park/Hong cloud-fraction references cited by cldf_diag3401 and developer UDM design documentation; separate diagnosed cloud cover from precipitation fraction and record missing policy authority."
+      },
+      {
+        "id": "OCC-DOC-3",
+        "task": "Draft bounded independent physical-reference design and criteria only after the occurrence/material definition is explicit; no arbitrary CF/rho scaling, threshold change or clipping correction."
+      }
+    ]
+  },
+  "overall_limits": {
+    "production_changes": false,
+    "physical_accepted": false,
+    "PHY_SIZE_closed": false,
+    "PHY_OCCURRENCE_closed": false,
+    "original19_current12": "Preserved, no historical or checklist edits",
+    "engineering_vs_physical": "Existing scoped engineering evidence remains valid within its source/case scope; RFMIP/LBL strict failures are not changed by this report",
+    "no_universal_Gamma_factor": true,
+    "no_unconditional_rho_or_CF_conversion": true
+  },
+  "reviewer_counts": {
+    "compilers": 0,
+    "tests": 0,
+    "models": 0,
+    "solvers": 0,
+    "scientific_payload_reads": 0,
+    "source_edits": 0
+  },
+  "writes": "Only this new JSON; all historical reports and packages preserved"
+}

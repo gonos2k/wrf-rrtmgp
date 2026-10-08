@@ -1,0 +1,164 @@
+{
+  "schema": "UDM37_REMAINING_CONTRACT_SOURCE_CI_REVIEW_V1",
+  "created_utc": "2026-10-08T01:16:41.169776+00:00",
+  "status": "SOURCE_REVIEW_FINDINGS_RECORDED_CURRENT_CHECKER_V3_PENDING",
+  "verdict_ko": "건조 CCN 입구 clamp의 실행 범위와 물리 미승인 표현은 타당합니다. 최초 검토 checker의 제조 입력·밀도·폭 검증 부족을 지적했고 root가 별도v3에서 보강 중입니다. v2 실제 실행과 원래 실패는 보존됩니다. 링크 및 근거 prefix는 수정 확인했습니다.",
+  "review_scope": "Source/docs/small JSON only, no binary/log/NetCDF or native execution",
+  "worktree": {
+    "head": "0f6dd96c4ad588f974c2f89600c1b9aecbde7ccd",
+    "tree": "720e462503a36a1b1c79ec55bc04c6aab2f92b26"
+  },
+  "pins": {
+    "reviewed_v2_script": {
+      "path": "build/udm37-remaining-contracts-pr-work/validation/rrtmgp37/remaining-contract-resolution/evidence/audit-tools/run_native_bounds.py",
+      "sha256": "4b9fb5a2f9aa514e8f406e22d13faf227e29fb3f48555a9a2f4fea4c9cec7333",
+      "size_bytes": 11846
+    },
+    "current_script_at_report_write": {
+      "path": "build/udm37-remaining-contracts-pr-work/WRF/test/rrtmgp/test_udm_native_ccn_bounds.py",
+      "sha256": "2967f706b08d4e582cdf846999e8769975e9a3a062949dc0d3a4b4a59212d3c7",
+      "size_bytes": 13457
+    },
+    "template": {
+      "path": "build/udm37-remaining-contracts-pr-work/WRF/test/rrtmgp/test_udm_partial_activation.f90",
+      "sha256": "5b7c3dc59cb8534ad6f0cebd04c3070b5e333621e02601bf1c324790b33ac01a",
+      "size_bytes": 4696
+    },
+    "README": {
+      "path": "build/udm37-remaining-contracts-pr-work/validation/rrtmgp37/remaining-contract-resolution/README_ko.md",
+      "sha256": "2621ce2b52ece912c1ef5bbf3c374290abcbcf1bc97ed70a4b6cef5cb5f8e15a",
+      "size_bytes": 6831
+    },
+    "checklist": {
+      "path": "build/udm37-remaining-contracts-pr-work/validation/rrtmgp37/remaining-contract-resolution/checklist.json",
+      "sha256": "5c6fae87dc4aa5a06920ff04792353bcbcc7a5e50abfb2dbb941bc8febb24a76",
+      "size_bytes": 7172
+    },
+    "workflow": {
+      "path": "build/udm37-remaining-contracts-pr-work/.github/workflows/validate-port.yml",
+      "sha256": "6a4e31a77fa8d4b3d5a2c8a4bfea1f346b2df62562ec34db88b9b2b3957eedc3",
+      "size_bytes": 31322
+    },
+    "v2_receipt": {
+      "path": "build/udm37-remaining-contracts-pr-work/validation/rrtmgp37/remaining-contract-resolution/evidence/native-bounds-v2/receipt.json",
+      "sha256": "f0a0a406606b7479723a3f5df40e2a8d0570e538bbe7148a9250b4e4c6b6c98e",
+      "size_bytes": 65751
+    },
+    "v1_receipt": {
+      "path": "build/udm37-remaining-contracts-pr-work/validation/rrtmgp37/remaining-contract-resolution/evidence/native-bounds-v1/receipt.json",
+      "sha256": "3a7a8361dc24b29953af36e8fd9bb9951a3a504c2e3496ad31d7044c45b3cbe6",
+      "size_bytes": 14327
+    },
+    "saved_verifier_source": {
+      "path": "build/udm37-remaining-contracts-pr-work/validation/rrtmgp37/remaining-contract-resolution/verify_saved.py",
+      "sha256": "6e027d120287708c706a4519d1834d4529cf5e21013c18ed852258253e2af808",
+      "size_bytes": 8027
+    }
+  },
+  "findings": [
+    {
+      "id": "INPUT_ORACLE_SCOPE",
+      "severity": "checker_hardening_required_for_stronger_arm_coverage",
+      "reviewed_lines": [
+        93,
+        108,
+        119,
+        129
+      ],
+      "fact": "V2 checker requires20cases and per-cell clamp(raw) but not independently ten expected raw NN values, two expected densities, exact INPUT15/RETURN73/ENTRY5/EXIT6/TAGS2 widths, and manufactured dry-input fields. Fixed source generates those arms, so this is not proof actual v2 results wrong.",
+      "counterexample_design": "Consistently replace all20cases with same interior rawNN and compatible clamp/returns; current v2 verify lacks an expected-arm gate. No manufactured control was executed by reviewer.",
+      "disposition": "Root acknowledged; preserve v1/v2 exact scripts and receipts, new v3 checker/current-source execution pending review"
+    },
+    {
+      "id": "OFFICIAL_LINEAGE_URL",
+      "severity": "documentary",
+      "fact": "Initial README used rrtmgp-data repository for39fb commit, but authenticated history belongs to rte-rrtmgp.",
+      "disposition": "Corrected current README to rte-rrtmgp commit URL"
+    },
+    {
+      "id": "CHECKLIST_EVIDENCE_PREFIX",
+      "severity": "documentary",
+      "fact": "Initial evidence entries omitted evidence/ directory.",
+      "disposition": "Current checklist every declared evidence path exists; fixed"
+    }
+  ],
+  "sound_source_contracts": [
+    "Markers strip to unchanged production bytes; native full module versus observed module difference is capture only.",
+    "ENTRY roster20cases×3active layers and EXIT20cases×4storage levels are distinct. Bounds check applies only3active layers.",
+    "Source flgzeroTRUE only; FALSE branch source observation is not executed coverage.",
+    "Delt360 withdtcldcr180 yields2subcycles; dry fixture inactive activation/condensate transfers. ENTRY/EXIT capture does not separately enumerate intermediate subcycle events.",
+    "Native/OFF/ON compares full emitted INPUT,RETURN,TAGS bit words within eachoptimization, and OFF requires no observations. No O0/O2 bitwise-equality claim.",
+    "Current radius/number units, host initialization/transport, physical PSD and final-return range invariant remain unapproved."
+  ],
+  "saved_v2_metadata_only": {
+    "status": "PASS_SCOPED_NATIVE_ENTRY_BOUNDS_AND_DRY_EXPORT",
+    "process_count": 23,
+    "all_actual_returncodes_zero": true,
+    "counts": {
+      "manufactured_configurations": 20,
+      "fixture_processes": 6,
+      "actual_outer_udm_calls": 120,
+      "compiler_link_processes": 16
+    },
+    "reported_active_rows_per_optimization": {
+      "O0": 60,
+      "O2": 60
+    },
+    "independent_log_or_binary_replay": false
+  },
+  "CI_source_review": {
+    "trigger_scope": "WRF/test/rrtmgp existing triggers plus remaining-contract-resolution path in pull_request/push(main)",
+    "new_test_invocation": "python3 WRF/test/rrtmgp/test_udm_native_ccn_bounds.py WRF --workdir build/udm-native-ccn-bounds",
+    "workflow_permissions": "contents:read retained",
+    "fresh_checkout_source_test_vs_saved_evidence": "Separate fresh native fixture step and stdlib saved-package verifier. Remote status not queried; no future CI PASS inferred.",
+    "artifact_scope": "JSON/stdout/stderr and generated F/f90 captured; native executables/objects omitted",
+    "relative_test_link_resolves": true
+  },
+  "checklist_review": {
+    "IDs": [
+      "PHY-NC",
+      "PHY-SIZE",
+      "REF-RFMIP",
+      "REF-LBL",
+      "PHY-OCCURRENCE",
+      "FINAL-IDENTITY",
+      "FINAL-FORECAST"
+    ],
+    "statuses": {
+      "PHY-NC": "OPEN",
+      "PHY-SIZE": "OPEN",
+      "REF-RFMIP": "FAIL",
+      "REF-LBL": "FAIL",
+      "PHY-OCCURRENCE": "OPEN",
+      "FINAL-IDENTITY": "OPEN",
+      "FINAL-FORECAST": "NOT_RUN"
+    },
+    "15_scoped_7_remaining": true,
+    "production_accepted": false,
+    "all_physical_gates_false": true,
+    "evidence_paths_exist": true,
+    "original_acceptance_files": {
+      "checklist.json": {
+        "byte_equal_parent_HEAD": true,
+        "path": "build/udm37-remaining-contracts-pr-work/validation/rrtmgp37/acceptance/checklist.json",
+        "sha256": "2581d111803afaa6c4f87828ea71e96e814f91ac14ad11fe1880534cbb108060",
+        "size_bytes": 33239
+      }
+    },
+    "historical_statuses_retained": "v1 bounds checkerFAIL, v2 scopedPASS, RFMIP/LBLFAIL, finalforecastNOT_RUN; no input-preservation implementation authorized"
+  },
+  "production_diff_empty": true,
+  "review_limits": [
+    "Package manifest not yet sealed at review; no final closed-roster publication approval.",
+    "Source census is being added by another agent; excluded from this first source review.",
+    "Current v3 checker requires separate review after final hash announcement."
+  ],
+  "reviewer_execution_counts": {
+    "compiler": 0,
+    "test": 0,
+    "model": 0,
+    "solver": 0,
+    "raw_payload_reads": 0
+  },
+  "writes": "This new report only"
+}

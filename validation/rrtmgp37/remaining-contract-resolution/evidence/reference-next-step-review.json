@@ -1,0 +1,139 @@
+{
+  "schema": "UDM37_REMAINING_REFERENCE_NEXT_STEP_REVIEW_V1",
+  "status": "SOURCE_AND_SMALL_RECEIPT_REVIEW_NEXT_STEPS_DEFINED",
+  "created_utc": "2026-10-08",
+  "scope": {
+    "items": [
+      "REF-RFMIP",
+      "REF-LBL"
+    ],
+    "allowed_inspection": [
+      "source",
+      "documentation",
+      "small plans and execution receipts"
+    ],
+    "not_performed": [
+      "production edits",
+      "compiler/build",
+      "model or solver",
+      "raw scientific output reads",
+      "strict threshold changes"
+    ],
+    "acceptance": {
+      "production_accepted": false,
+      "physical_reference_accepted": false,
+      "original19_and_current12_checklists": "unchanged",
+      "strict_gates": "unchanged"
+    }
+  },
+  "REF-RFMIP": {
+    "current_status": "STRICT_FAIL_PRESERVED",
+    "failure_reason_and_limit": [
+      "The pinned historical-source candidate still has 21 strict SW failures (13 RSD, 8 RSU). Its source era and authentic v1.0 coefficient bytes are established, but its original published generator executable, compiler/options, complete inputs, and pre-cast outputs are not recovered.",
+      "For the 13 historical cells with saved prewrite observations, the retained audit shows output float32 rounding is not a complete explanation; 8 of the 21 cells lack prewrite coverage. Therefore another candidate run can explain local candidate serialization, but cannot by itself identify the publisher's original executable or make the published output pass.",
+      "The official example README says its comparison answers came from a Mac with Intel Fortran 19 and typical differences around 1e-6 W/m2. That generic note does not identify the exact executable/build for these stored files."
+    ],
+    "last_evidence": [
+      {
+        "path": "build/udm37-rfmip-output-quantization-audit-v1/README.md",
+        "sha256": "c8fec8745de2a610766351c56ac4181834712caee3d4f9998dfb692d20da40fa"
+      },
+      {
+        "path": "build/udm37-rfmip-output-quantization-audit-v1/quantization-audit.json",
+        "sha256": "75920583a589bf4d812bfba9cdbd6af10da7f7efb359804746fce753c2f154d4"
+      },
+      {
+        "path": "build/udm37-rfmip-historical-rte-independent-review-v1/review.json",
+        "sha256": "6741bf8de8a4099a8800c2c82c7faf0a499c90ba33a15d9f42f5fc2f4c372255"
+      },
+      {
+        "path": "build/udm37-rfmip-fixed-rte-replay-terminal-independent-review-v1/review.json",
+        "sha256": "eccf4eeee3f8871c6442774c3700f1362ecf5e732f649f8420556f5b1a28e463"
+      },
+      {
+        "path": "build/udm37-resolution-checklist-v21/manifest.json",
+        "sha256": "3e1f073b59d89a925d8800a67808c44e1ea862aa6683f4295b5fee3274b977c2"
+      },
+      {
+        "path": "build/official-rrtmgp-reference/source/examples/rfmip-clear-sky/Readme.md",
+        "sha256": "aa6f4cb1fb187e6df437ab6e360894a83aae8bcf6ed0149819558390ee478fdf"
+      },
+      {
+        "path": "build/official-rrtmgp-reference/source/examples/rfmip-clear-sky/Makefile",
+        "sha256": "6b92a3a4cdc39fe9253b02adc589948e18070a8858f8dfcc9a1355d3e8f28132"
+      }
+    ],
+    "next_step_for_root": {
+      "name": "Complete historical-candidate prewrite coverage for the eight uncaptured strict-failure cells.",
+      "boundary": "Use a fresh private copy of the existing historical RFMIP SW candidate only. Keep the authenticated v1.0 source, authentic SW coefficient file, input roster, GNU Fortran 13.3 options, and all solver arithmetic fixed. Extend only the diagnostic capture selector in the existing historical observer; do not change the production/reference comparator or the output fields. Capture the selected prewrite double values, then compare each to the corresponding stored float32 rounding interval and the existing atol=1e-5, rtol=0 gate.",
+      "source_and_saved_inputs": [
+        "build/udm37-rfmip-historical-source-experiment-v1/rrtmgp_rfmip_sw_diag.F90",
+        "build/udm37-rfmip-historical-source-experiment-v1/plan.json",
+        "build/udm37-rfmip-historical-source-experiment-v1/analysis.json",
+        "build/udm37-rfmip-historical-source-experiment-v1/residual-details.json",
+        "build/udm37-rfmip-historical-source-experiment-v1/build.py",
+        "build/udm37-rfmip-historical-source-experiment-v1/run.py"
+      ],
+      "command_boundary": "Root should stage a new isolated run directory and use a new one-use wrapper bound to the copied historical driver, existing plan, compiler path/options, input/coefficient hashes, and fresh output paths; one compile/link and one standalone historical SW RTE invocation are sufficient. Do not reuse or overwrite the retained run outputs. The exact selected coordinates must be derived from the pinned residual-details/quantization audit before compilation.",
+      "resources": "One small standalone SW driver build and one bounded RTE invocation; no WRF build, forecast, or coefficient regeneration. Reuse the already retained source, tables, and input files; no download is needed.",
+      "expected_decision_value": "Determines whether those eight candidate cells were already outside the stored float32 rounding intervals before serialization, or whether candidate serialization explains additional threshold crossings. It will not recover the publisher's pre-cast values or original build provenance.",
+      "if_not_resolved": "Request from the reference publisher the exact generating source commit/tree, executable and compiler/version/options, linked-library/runtime closure, all input and coefficient hashes, and pre-cast RSD/RSU values for the 21 cells. Without these records, keep the original strict failure as the operative outcome.",
+      "why_strict_gate_stays": "The documented comparator tolerance and the preserved strict result are the defined reference contract. Existing evidence shows non-quantization residuals and unresolved generator identity; loosening tolerance would neither recover the publisher's run nor prove accuracy."
+    }
+  },
+  "REF-LBL": {
+    "current_status": "NEGATIVE_OD_FAIL_AND_STRICT_TRACE_FAIL_PRESERVED",
+    "failure_reason_and_limit": [
+      "The held LBL case retains negative total OD. The targeted coupling-off experiment reduced the selected layer-21 negative count from 654 to 430, while other 44 layers were reported exact by the saved receipt; this is a diagnostic intervention, not a physical correction or nonnegative-OD pass.",
+      "The strict 45-file gate remains failed: the v10 observer's files differed in HTIME bytes and matched outside those header bytes, while parser v8 rejected target 5 because its predecessor stage-1 R1 record was not captured. The saved v14 XINT/ancestry arithmetic reader has a completed execution receipt and a 53,275-byte result file, but the most recent independent receipt inspected here only authenticates its process/hash bindings, not semantic source closure or physical reference validity.",
+      "The v4 stage-2-to-stage-3 deposit check is exact for eight selected samples only. It does not establish the missing predecessor chain, all continuum/coupling terms, global signed OD validity, or agreement with an independent physical reference."
+    ],
+    "last_evidence": [
+      {
+        "path": "build/udm37-resolution-checklist-v21/01-current/current.json",
+        "sha256": "8e4bdd63bf8c9e4cb24980d319ac51c318463ccbab637ffb41015ee0ae51bd0c",
+        "field": "LBL_negative_OD and LBL_negative_pocket_v10_followup"
+      },
+      {
+        "path": "build/udm37-lblrtm-negative-pocket-observer-v10-run-v1/root-postflight-all45-comparison.json",
+        "sha256": "b5069dba05aa11aa6e40c7ab3cde1c86b0e2fd2aeb5b9f8341911892bc5f0531"
+      },
+      {
+        "path": "build/udm37-lblrtm-negative-pocket-observer-v10-run-v1/root-parser-v8-execution.json",
+        "sha256": "28a3395125cc4818712a9c045e9d14bfb74903453adb228ed011cf50ab9ea7eb"
+      },
+      {
+        "path": "build/udm37-lblrtm-pocket-deposit-v2/result-v4.json",
+        "sha256": "612a19d771424bbf41a5195b7d6503cc25d8240333bb56a587e54576b8fd7229"
+      },
+      {
+        "path": "build/udm37-lblrtm-xint-v14-execution-independent-review-v1/review.json",
+        "sha256": "939465455a579872ddbe0fbedca89a07d1cdebf9d581cc96098258f7ca5697ff"
+      },
+      {
+        "path": "build/udm37-lblrtm-xint-arithmetic-final-plan-review-v2/review.json",
+        "sha256": "d6d1c57d0cdc853873cbdd64aff5c38db30c38488f28805017db4b0b8ffdccc9"
+      },
+      {
+        "path": "build/udm37-resolution-checklist-v21/manifest.json",
+        "sha256": "3e1f073b59d89a925d8800a67808c44e1ea862aa6683f4295b5fee3274b977c2"
+      }
+    ],
+    "next_step_for_root": {
+      "name": "Have an independent reviewer perform a saved-only semantic audit of the completed v14 arithmetic result before planning any new observer or LBL solver run.",
+      "boundary": "Read only the small v14 root result JSON (build/udm37-lblrtm-xint-arithmetic-actual-preparation-v1/root-actual-result-v4.json), its v4 plan, execution receipt, source review, source-pair/schema pins, and existing target list. Do not open UDM37_XINT_ANCESTRY, UDM37_POCKET_ANCESTRY, TAPE3/TAPE5, or OD files; do not rerun the reader, compiler, or solver. Verify result-to-execution and plan hashes; check the declared target/record coverage and classify every target as source-closed, partial, or unsupported without converting missing records to zero.",
+      "command_boundary": "Use a new independent saved-result reviewer under build/udm37-remaining-resolution-v1, invoked once from a foreign working directory with /usr/bin/python3 -I -S -B. It should bind result, plan, execution, and source-review file pins before interpreting status fields and write a separate review receipt; it must not mutate the existing output.",
+      "resources": "One stdlib-only review of a 53,275-byte saved result plus small receipts; zero compilation, LBL calls, WRF runs, or scientific stream reads.",
+      "expected_decision_value": "Either validates the exact source-linked partial closure already present and names unsupported targets/terms, or exposes a result/plan join defect. Only if the audit identifies a concrete missing captured term should a later observer amendment be planned. This is not an OD rerun or physical acceptance.",
+      "why_strict_gate_stays": "A zero solver exit code establishes execution, not nonnegative physical OD. The existing strict trace failure includes an explicit missing predecessor record, and the coupling ablation leaves negative OD. Treating absent ancestry as zero or relaxing the full-file/OD criteria would convert missing evidence into a pass."
+    }
+  },
+  "overall": {
+    "no_new_model_or_solver_action_in_this_review": true,
+    "next_action_order": [
+      "LBL: independently audit the already saved v14 result and source-linked coverage; do not rerun LBL first.",
+      "RFMIP: if useful after root review, run the eight-cell historical-candidate prewrite capture; separately obtain publisher provenance for a strict-reference resolution."
+    ],
+    "completion_note": "These steps reduce specific evidence gaps. Neither alone guarantees closure; all original strict comparisons remain active until the missing source/provenance or full source-linked physical evidence is supplied."
+  }
+}
