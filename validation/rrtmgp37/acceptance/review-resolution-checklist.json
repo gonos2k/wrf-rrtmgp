@@ -1,9 +1,9 @@
 {
   "schema": "UDM37_REVIEW_RESOLUTION_CHECKLIST_V2",
   "main_snapshot": {
-    "commit": "8c2bc9e6f914db34895b8a1395319bb5e6129505",
-    "tree": "40dcab22257abea8aeff6904e458973d318ad6e1",
-    "merged_pr": 162
+    "commit": "784e831c1c7f3fc6e823f93a0d6ae7cf21d2d19b",
+    "tree": "b7383329120ad8bdd3f00ecb5557889e3388778b",
+    "merged_pr": 163
   },
   "scope": "UDM27, LW37/SW37; prior review follow-up; original acceptance original19/current12 retained unchanged",
   "production_accepted": false,
@@ -309,7 +309,7 @@
       "id": "REF-LBL",
       "priority": "P1",
       "title": "LBLRTM negative OD와 앞단 누적",
-      "source_prs": "114–126,142,145,160–162",
+      "source_prs": "114–126,142,145,160–163",
       "implemented": false,
       "feature_branch_validation": "OPEN",
       "main_included_at_snapshot": false,
@@ -335,7 +335,11 @@
         "validation/rrtmgp37/lbl-line-selection-census/manifest.json",
         "validation/rrtmgp37/lbl-line-selection-census/result.json",
         "validation/rrtmgp37/lbl-line-selection-census/readback.json",
-        "validation/rrtmgp37/lbl-line-selection-census/controls.json"
+        "validation/rrtmgp37/lbl-line-selection-census/controls.json",
+        "validation/rrtmgp37/lbl-layer-line-use/manifest.json",
+        "validation/rrtmgp37/lbl-layer-line-use/result.json",
+        "validation/rrtmgp37/lbl-layer-line-use/TAPE3-readback.json",
+        "validation/rrtmgp37/lbl-layer-line-use/scientific-record-comparison.json"
       ],
       "source_pr_urls": [
         "https://github.com/gonos2k/wrf-rrtmgp/pull/114",
@@ -355,7 +359,8 @@
         "https://github.com/gonos2k/wrf-rrtmgp/pull/145",
         "https://github.com/gonos2k/wrf-rrtmgp/pull/160",
         "https://github.com/gonos2k/wrf-rrtmgp/pull/161",
-        "https://github.com/gonos2k/wrf-rrtmgp/pull/162"
+        "https://github.com/gonos2k/wrf-rrtmgp/pull/162",
+        "https://github.com/gonos2k/wrf-rrtmgp/pull/163"
       ],
       "minimal_target_next_step": {
         "path": "validation/rrtmgp37/reference-precision-interpretation/lbl-minimal-target-plan-v1.json",
@@ -363,8 +368,8 @@
         "status": "PLAN_PRESERVED_SCOPED_OBSERVATION_NOW_AVAILABLE",
         "physical_reference_accepted": false
       },
-      "dynamic_progress": "PR160/161 are merged: selected first-negative accumulator prefix and TAPE3-local CO2 line/sidecar coefficient arithmetic are scoped complete. Follow-up same-run selected R3/R2/R1/continuum/radiation/output join matches actual OD panel; selected final OD remains negative. Individual surrounding-line physical ancestry is not complete. PR162 is now merged. New root full ASCII/TAPE3 read proves supplied CO2 projected field roster with multiplicities reaches TAPE3 without missing/extra entries; normalized strength/quantum and physical partner completeness remain outside.",
-      "next_unresolved_boundary": "Original Y/G physical model and physical partner requirements beyond supplied-roster equality; actual layer-specific surviving coupled-line/finite-support inventory, cutoff/grid convergence, independent component and full spectrum/flux acceptance. Actual historical LNFL strength rejection is zero; do not assume SRD defaults were applied. Preserve FAIL gates.",
+      "dynamic_progress": "PR160–163 are merged; retain completed selected first-negative, TAPE3/ASCII coefficient, final OD and supplied CO2 projected multiset boundaries. New root GNU double OFF/ON actual layer21 panel13/14 observer records9253 LNC entries:5337 retained/3916 flag0 SPEAK-rejected,11 lower width clamps. All1976 physical-target R3 writes join1007 unclamped contributor lines and actual TAPE3 positions; full45 OD science records53279 remain identical to OFF/ON/PR162. Selected final OD remains negative. No physical approval.",
+      "next_unresolved_boundary": "Actual DV/cutoff convergence with width/support/line-roster deltas; original mixing applicability and physical partner requirements; every direct R1/R2 stencil contribution and independent full-spectrum/flux acceptance. Repeat neither supplied roster census nor already joined selected R3 writes as new completion conditions. Preserve REF-LBL FAIL.",
       "coefficient_progress": {
         "path": "validation/rrtmgp37/lbl-coupling-generation/result.json",
         "status": "PASS_SCOPED_TAPE3_LINE_TO_COUPLING_OPERANDS",
@@ -390,11 +395,23 @@
       "line_selection_progress": {
         "path": "validation/rrtmgp37/lbl-line-selection-census/result.json",
         "status": "PASS_SCOPED_CO2_SOURCE_TO_TAPE3_HASHED_FIELD_ROSTER",
-        "included_in_main_at_snapshot": false,
+        "included_in_main_at_snapshot": true,
         "CO2_ordinary_lines": 180771,
         "CO2_coupled_main_lines": 127543,
         "projected_missing_or_extra": 0,
         "upstream_physical_partner_completeness_established": false,
+        "physical_reference_accepted": false
+      },
+      "layer_line_use_progress": {
+        "path": "validation/rrtmgp37/lbl-layer-line-use/result.json",
+        "status": "PASS_SCOPED_LAYER_SELECTION_TO_ALL_SELECTED_R3_WRITES",
+        "included_in_main_at_snapshot": false,
+        "root_final_make_processes": 1,
+        "root_final_solver_processes": 2,
+        "LNC_entries": 9253,
+        "R3_target_contributing_lines": 1007,
+        "R3_target_write_count": 1976,
+        "grid_convergence_executed": false,
         "physical_reference_accepted": false
       }
     },
@@ -670,8 +687,9 @@
     }
   },
   "previous_main_snapshot": {
-    "commit": "4c97d835ef5169f5f55262d1b34cb096c182318c",
-    "tree": "fb15a10670f77406c8489fa85c9548ebe07724cc"
+    "commit": "8c2bc9e6f914db34895b8a1395319bb5e6129505",
+    "tree": "40dcab22257abea8aeff6904e458973d318ad6e1",
+    "merged_pr": 162
   },
   "previous_checklist": {
     "commit": "32c13f2fd39d6846e35212f4f7bb53079fd6bd68",

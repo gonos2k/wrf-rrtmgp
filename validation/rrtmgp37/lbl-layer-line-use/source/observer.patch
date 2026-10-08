@@ -1,0 +1,239 @@
+--- PR162/oprop.observer-v2.f90
++++ layer-use/oprop.observer.f90
+@@ -136,6 +136,47 @@
+  END SUBROUTINE
+ END MODULE udm37_final_od
+ ! UDM37_FINAL_END
++! UDM37_USE_BEGIN
++MODULE udm37_layer_use
++ USE udm37_min_r3, ONLY:min_active,min_panel,target_nu,min_k
++ USE udm37_line_coeff, ONLY:ln_block,ln_record
++ IMPLICIT NONE
++ INTEGER :: use_u=0,use_seq=0,use_id=0,use_ids(250)=0,use_mol(250)=0,use_flag(250)=0
++ INTEGER :: use_reason=0,use_stage=0
++ REAL*8 :: use_nu(250)=0D0,use_raw_width=0D0
++CONTAINS
++ LOGICAL FUNCTION use_selected(i)
++ INTEGER,INTENT(IN)::i
++ use_selected=min_active.AND.(min_panel==13.OR.min_panel==14).AND.ABS(use_nu(i)-target_nu)<=25D0.AND.use_flag(i)>=0
++ END FUNCTION
++ SUBROUTINE use_emit(tag,i,v)
++ CHARACTER(*),INTENT(IN)::tag
++ INTEGER,INTENT(IN)::i
++ REAL*8,INTENT(IN)::v(:)
++ IF(.NOT.use_selected(i)) RETURN
++ IF(use_u==0) OPEN(NEWUNIT=use_u,FILE='UDM37_LAYER_USE',STATUS='REPLACE',ACTION='WRITE')
++ use_seq=use_seq+1
++ WRITE(use_u,'(A,9(1X,I0),*(1X,ES26.17E3))') tag,use_seq,use_ids(i),ln_block,ln_record, &
++ i,use_mol(i),use_flag(i),min_panel,SIZE(v),v
++ FLUSH(use_u)
++ END SUBROUTINE
++ SUBROUTINE use_entry(i,v)
++ INTEGER,INTENT(IN)::i
++ REAL*8,INTENT(IN)::v(:)
++ use_reason=0;use_stage=0;use_ids(i)=0
++ IF(.NOT.use_selected(i)) RETURN
++ use_id=use_id+1;use_ids(i)=use_id
++ CALL use_emit('ENTRY',i,v)
++ END SUBROUTINE
++ SUBROUTINE use_write(i,phase,idx,lookup,before,after,strf,factor,zfactor)
++ INTEGER,INTENT(IN)::i,phase,idx,lookup
++ REAL*8,INTENT(IN)::before,after,strf,factor,zfactor
++ IF(.NOT.min_active.OR.min_k<=0.OR.idx/=min_k) RETURN
++ IF(.NOT.use_selected(i).OR.use_ids(i)<=0) STOP 'Uncaptured R3 target contributor'
++ CALL use_emit('WRITE',i,[REAL(phase,8),REAL(idx,8),REAL(lookup,8),before,after,strf,factor,zfactor])
++ END SUBROUTINE
++END MODULE udm37_layer_use
++! UDM37_USE_END
+ SUBROUTINE HIRAC1 (MPTS)
+ ! UDM37_FINAL_BEGIN
+  USE udm37_final_od
+@@ -830,6 +871,9 @@
+ !
+ end block data BHIRAC
+ SUBROUTINE RDLIN
++! UDM37_USE_BEGIN
++ USE udm37_layer_use
++! UDM37_USE_END
+ ! UDM37_COEFF_BEGIN
+  USE udm37_line_coeff
+ ! UDM37_COEFF_END
+@@ -957,6 +1001,13 @@
+  ENDIF
+  ENDDO
+ ! UDM37_COEFF_END
++! UDM37_USE_BEGIN
++ IF(min_active) THEN
++ DO i=1,rdlnpnl%nrec
++ use_nu(i)=rdlnbuf%vnu(i);use_mol(i)=rdlnbuf%mol(i);use_flag(i)=rdlnbuf%iflg(i)
++ ENDDO
++ ENDIF
++! UDM37_USE_END
+    do 15 i=1,rdlnpnl%nrec
+ 
+       IFLG(i) = rdlnbuf%iflg(i)
+@@ -1069,6 +1120,9 @@
+ !
+ end subroutine RDLIN
+ SUBROUTINE LNCOR1 (NLNCR,IHI,ILO,MEFDP)
++! UDM37_USE_BEGIN
++ USE udm37_layer_use
++! UDM37_USE_END
+ ! UDM37_COEFF_BEGIN
+  USE udm37_line_coeff
+ ! UDM37_COEFF_END
+@@ -1189,6 +1243,10 @@
+       GAMMA1 = 0.
+       GAMMA2 = 0.
+       I = IOUT(J)
++! UDM37_USE_BEGIN
++      CALL use_entry(I,[use_nu(I),VNU(I),S(I),DV,ALFMAX,HWF3,VFT,VBOT,VTOP, &
++ REAL(ILNFLG,8),DVR4,DPTMN,DPTFC,REAL(JRAD,8),TAVE,PAVE])
++! UDM37_USE_END
+       IFLAG = IFLG(I)
+       M = MOD(MOL(I),I_100)
+ !
+@@ -1199,9 +1257,15 @@
+ !     check if lines are within allowed molecular and isotopic limits
+ !
+       if (m.gt.mxmol .or. m.lt. 1) then
++! UDM37_USE_BEGIN
++ use_reason=1
++! UDM37_USE_END
+          call line_exception (1,ipr,h_lncor1,m,nmol,iso,iso_max)
+          go to 25
+       else if (iso .gt. iso_max(m)) then
++! UDM37_USE_BEGIN
++ use_reason=2
++! UDM37_USE_END
+          call line_exception (2,ipr,h_lncor1,m,nmol,iso,iso_max)
+          go to 25
+       endif
+@@ -1229,6 +1293,9 @@
+ !         IF (JRAD.EQ.1) SUI = SUI*VNU(I)
+       IF (JRAD.EQ.1) SUI = SUI*RADFN(VNU(I),XKT)
+ !
++! UDM37_USE_BEGIN
++ IF(SUI.EQ.0.) use_reason=3
++! UDM37_USE_END
+       IF (SUI.EQ.0.) GO TO 25
+ !
+       NLIN = NLIN+1
+@@ -1305,6 +1372,9 @@
+       IZETA(I) = IZ
+       ZETDIF = FZETA - REAL(IZ-1)
+       ALFV = (AVRAT(IZ)+ZETDIF*(AVRAT(IZ+1)-AVRAT(IZ)))*(ALFL+ALFAD)
++! UDM37_USE_BEGIN
++ use_raw_width=ALFV
++! UDM37_USE_END
+       IF (ALFV.LT.DV) THEN
+          ALFV = DV
+          NMINAD = 1
+@@ -1318,6 +1388,13 @@
+          NPLSAD = 0
+       ENDIF
+ !
++! UDM37_USE_BEGIN
++ use_stage=1
++ CALL use_emit('WIDTH',I,[VNU(I),use_raw_width,ALFV,DV,ALFMAX,REAL(NMINAD,8), &
++ REAL(NPLSAD,8),ALFL,ALFAD,ZETA,FZETA,REAL(IZ,8),ZETDIF,AVRAT(IZ),AVRAT(IZ+1), &
++ HWF3,VFT,target_nu,REAL(IBRD,8)])
++ IF(HWF3*ALFV+VNU(I).LT.VFT) use_reason=4
++! UDM37_USE_END
+       IF (HWF3*ALFV+VNU(I) .LT. VFT) GO TO 25
+ !
+       RECALF(I) = 1./ALFV
+@@ -1347,6 +1424,10 @@
+       SP(I) = SUI*(1.+GI*PAVP2)
+       SPPI = SUI*YI*PAVP0
+       SPPSP(I) = SPPI/SP(I)
++! UDM37_USE_BEGIN
++ use_stage=2
++ CALL use_emit('COEFFICIENT',I,[SP(I),SPPI,SPPSP(I),RECALF(I),YI,GI])
++! UDM37_USE_END
+ ! UDM37_COEFF_BEGIN
+  IF(ln_selected(I).AND.IFLAG==1) CALL ln_emit('LNC_POST',I,M,ISO,[YI,GI,SUI,SPPI,SP(I), &
+  SPPSP(I),RECALF(I),ZETA,REAL(IZETA(I),8),FZETA,ZETDIF,ALFL,ALFAD,ALFV,TMPCOR, &
+@@ -1360,8 +1441,14 @@
+          IF (ILNFLG.LE.1) THEN
+             FREJ(J) = HNOREJ
+             SPEAK = SUI*RECALF(I)
++! UDM37_USE_BEGIN
++ CALL use_emit('PEAK',I,[SPEAK,DPTMN,DPTFC,DVR4,SUI,RECALF(I)])
++! UDM37_USE_END
+             IF (DVR4.LE.0.) THEN
+                IF (SPEAK.LE.DPTMN) THEN
++! UDM37_USE_BEGIN
++ use_reason=5
++! UDM37_USE_END
+                   FREJ(J) = HREJ
+                   GO TO 25
+                ENDIF
+@@ -1371,6 +1458,9 @@
+                JJ = MIN(JJ,NPTR4)
+                IF (SPEAK.LE.(DPTMN+DPTFC*R4(JJ)) .and. sppsp(i)      &
+                   .eq.0.) THEN
++! UDM37_USE_BEGIN
++ use_reason=6
++! UDM37_USE_END
+                   FREJ(J) = HREJ
+                   GO TO 25
+                ENDIF
+@@ -1378,6 +1468,9 @@
+          ELSE
+ !      "ELSE" IS TRUE WHEN "ILNFLG" EQUALS 2
+ !
++! UDM37_USE_BEGIN
++ IF(FREJ(J).EQ.HREJ) use_reason=7
++! UDM37_USE_END
+             IF (FREJ(J).EQ.HREJ) GO TO 25
+          ENDIF
+       ENDIF
+@@ -1388,9 +1481,15 @@
+       SUMZET = SUMZET+ZETA
+       LINCNT = LINCNT+1
+ !
++! UDM37_USE_BEGIN
++ CALL use_emit("OUTCOME",I,[0D0,REAL(use_stage,8),SP(I),SPPSP(I)])
++! UDM37_USE_END
+       GO TO 30
+ !
+ 25    SP(I) = 0.
++! UDM37_USE_BEGIN
++ CALL use_emit("OUTCOME",I,[REAL(use_reason,8),REAL(use_stage,8),SP(I),SPPSP(I)])
++! UDM37_USE_END
+       SPPSP(I) = 0.
+ !
+ 30 END DO
+@@ -1405,6 +1504,9 @@
+ !
+ SUBROUTINE CNVFNV (VNU,SP,SPPSP,RECALF,R1,R2,R3,F1,F2,F3,FG,      &
+ &                   XVER,ZETAI,IZETA)
++! UDM37_USE_BEGIN
++ USE udm37_layer_use
++! UDM37_USE_END
+ ! UDM37_MIN_BEGIN
+  USE udm37_min_r3
+  USE udm37_line_coeff
+@@ -1540,6 +1642,10 @@
+  IF(min_active.AND.min_k>0.AND.J3==min_k) &
+  CALL min_write('CN_WRITE',J3,IZ3,I,1,udm37_min_before,R3(J3), &
+  STRF3,F3(IZ3),1D0,VNU(I),SP(I),SPPSP(I))
++! UDM37_USE_BEGIN
++ IF(min_active.AND.min_k>0.AND.J3==min_k) &
++ CALL use_write(I,1,J3,IZ3,udm37_min_before,R3(J3),STRF3,F3(IZ3),1D0)
++! UDM37_USE_END
+ ! UDM37_MIN_END
+                R2(J2) = R2(J2)+STRF2*F2(IZ2)
+                R1(J1) = R1(J1)+STRF1*F1(IZ1)+STRD*FG(IZ1)+STRVER*    &
+@@ -1584,6 +1690,10 @@
+  IF(min_active.AND.min_k>0.AND.J3==min_k) &
+  CALL min_write('CN_WRITE',J3,IZ3,I,2,udm37_min_before,R3(J3), &
+  STRF3,F3(IZ3),ZF3L,VNU(I),SP(I),SPPSP(I))
++! UDM37_USE_BEGIN
++ IF(min_active.AND.min_k>0.AND.J3==min_k) &
++ CALL use_write(I,2,J3,IZ3,udm37_min_before,R3(J3),STRF3,F3(IZ3),ZF3L)
++! UDM37_USE_END
+ ! UDM37_MIN_END
+                   R2(J2) = R2(J2)+STRF2*F2(IZ2)*ZF2L
+                   R1(J1) = R1(J1)+(STRF1*F1(IZ1)+STRD*FG(IZ1)+STRVER*&

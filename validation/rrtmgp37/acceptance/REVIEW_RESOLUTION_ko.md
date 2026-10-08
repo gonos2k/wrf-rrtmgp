@@ -1,6 +1,6 @@
 # 이전 검토 지적 해소 체크리스트
 
-현재 기준 main: `4c97d835ef5169f5f55262d1b34cb096c182318c` (PR #161 병합, tree `fb15a10670f77406c8489fa85c9548ebe07724cc`). UDM27–RRTMGP37 전용.
+현재 기준 main: `784e831c1c7f3fc6e823f93a0d6ae7cf21d2d19b` (PR #163 병합, tree `b7383329120ad8bdd3f00ecb5557889e3388778b`). UDM27–RRTMGP37 전용.
 
 PR #146–#151은 main에 병합됐다. 기존 실행의 source pin·범위는 그대로 보존하며, 현재 전체 tree에서 모든 과거 모델을 새로 실행했다고 주장하지 않는다. PR #149의 NetCDF guard와 기본 namelist 검사는 main에 반영됐고 정확히 같은 tree에서 11개 CI가 성공했다. PR150의 추가 scalar 경계 수정도 main에 반영됐다. PR151의 I/O 세 항목도 main에 반영됐고 정확히 같은 전체 tree에서 11개 CI가 성공했다.
 
@@ -92,6 +92,15 @@ real.exe, 실제 specified lateral boundary, 다른 수송 정책, 입자크기 
 
 ## PR162 병합 후 CO₂ 공급 목록 감사
 
-현재 pin은 8c2bc9e6/40dcab22(PR162 병합)이다. 원 ASCII 전체와 historical TAPE3 전체를 root가 읽어 요청475–2275 cm⁻¹에서 CO₂ 일반 선180,771개(그중 coupled127,543개)의 비교 필드 multiset이 누락0/추가0임을 확인했다. 중복 multiplicity를 유지하며 strength/quantum/추가 broadener 전체 인증은 하지 않는다. 저장 CI는 해시 목록과 control bytes를 비교하고 private raw 파일을 재판독하지 않는다.
+당시 공급 목록 감사의 기준 pin은 8c2bc9e6/40dcab22(PR162 병합)이며, 해당 작업은 PR163으로 병합됐다. 원 ASCII 전체와 historical TAPE3 전체를 root가 읽어 요청475–2275 cm⁻¹에서 CO₂ 일반 선180,771개(그중 coupled127,543개)의 비교 필드 multiset이 누락0/추가0임을 확인했다. 중복 multiplicity를 유지하며 strength/quantum/추가 broadener 전체 인증은 하지 않는다. 저장 CI는 해시 목록과 control bytes를 비교하고 private raw 파일을 재판독하지 않는다.
 
 실제 LNFL TAPE6 strength rejection은 모두0이다. 소스 SRD 하한을 실제 적용값으로 전용하지 않는다. LBLRTM SPEAK는 IFLAG0에서 적용되나 유효 범위/다른 제외는 남는다. 공급 목록 전달을 물리적 partner 완전성으로 승인하지 않으며, REF-LBL FAIL과15개 제한적 완료/7개 물리·최종 미완료 및 production_accepted=false를 유지한다. 다음은 층별 survivor/support inventory와 원 mixing 적용성/독립 기준이다.
+
+
+## PR163 이후 실제 층별 선택·R3 기여 연결
+
+[실제 line-use](../lbl-layer-line-use/README_ko.md)는 root의 새 GNU double make1회와 OFF/ON solver2회에서 layer21/panel13–14의 LNC 진입9253개를 실제 TAPE3 record/slot과 연결한다. 통과5337/flag0 SPEAK 거부3916, 하한폭 제한11개를 기록하고 계산을 재생했다. 문제 물리 파수의 R3 write1976개는1007개 실제 기여 선과 연결됐으며 이1007개에는 폭 제한이 없다. 기존 최초 음수·최종 OD 및 공급 roster의 완료 경계를 다시 열지 않는다.
+
+원시45개 OD의 과학 record53279개는 OFF/ON과 PR162에 동일하다. 날짜·시각에 따른 전체 파일 FAIL과 선택 최종 OD −0.009028119955355695를 보존한다. 초기 관측 크기 상한 종료는 별도 보존하고 적격 최종 쌍만 증거로 사용한다. 저장 CI는 발췌·trace·영수증 재생이며 새 solver 실행이 아니다.
+
+이번은 전체 층·band 또는 모든 직접 R1/R2 stencil 기여의 인증이 아니다. 다음은 DV/절단 변화에 따른 실제 폭·기여 선 차이와 mixing 근사의 물리 적용성, 독립 reference 수용성이다. REF-LBL FAIL,15개 제한적 완료/7개 미완료 및 production_accepted=false는 유지한다. UDM 초기화·단위·PSD 정책은 별도로 미확정이다.
