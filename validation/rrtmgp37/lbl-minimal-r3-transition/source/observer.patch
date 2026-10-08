@@ -1,0 +1,309 @@
+--- stock/oprop.f90
++++ observer/oprop.f90
+@@ -1,3 +1,73 @@
++! UDM37_MIN_BEGIN
++MODULE udm37_min_r3
++ IMPLICIT NONE
++ INTEGER :: min_k=0,min_max=0,min_layer=0,min_panel=0,min_u=0,min_seq=0
++ REAL*8 :: min_vft=0D0,min_dv=0D0
++ REAL*8, PARAMETER :: target_nu=618.6144711111115D0
++ LOGICAL :: min_active=.FALSE.
++CONTAINS
++ SUBROUTINE min_grid(v,d,n)
++ REAL*8,INTENT(IN)::v,d
++ INTEGER,INTENT(IN)::n
++ INTEGER::candidate
++ min_vft=v; min_dv=d; min_max=n; min_k=0
++ IF(.NOT.min_active.OR.d<=0D0) RETURN
++ candidate=NINT((target_nu-v)/d)+1
++ IF(candidate<1.OR.candidate>n) RETURN
++ IF(ABS(v+REAL(candidate-1)*d-target_nu)>1D-7) RETURN
++ min_k=candidate
++ END SUBROUTINE
++ SUBROUTINE min_emit(tag,idx,src,line,phase,flags,values)
++ CHARACTER(*),INTENT(IN)::tag
++ INTEGER,INTENT(IN)::idx,src,line,phase,flags
++ REAL*8,INTENT(IN)::values(:)
++ IF(.NOT.min_active) RETURN
++ IF(min_u==0) OPEN(NEWUNIT=min_u,FILE='UDM37_MIN_R3',STATUS='NEW',ACTION='WRITE')
++ min_seq=min_seq+1
++ WRITE(min_u,'(a,1x,11(i0,1x),*(es26.17e3,1x))') tag,min_seq,min_layer,min_panel, &
++ min_k,min_max,idx,src,line,phase,flags,SIZE(values),min_vft,min_dv,values
++ END SUBROUTINE
++ SUBROUTINE min_init(layer,v,d,n,r,flags)
++ INTEGER,INTENT(IN)::layer,n,flags(4)
++ REAL*8,INTENT(IN)::v,d,r(*)
++ CHARACTER(8)::switch
++ INTEGER::envstatus
++ CALL GET_ENVIRONMENT_VARIABLE('UDM37_MIN_R3_TRACE',switch,STATUS=envstatus)
++ min_active=layer==21.AND.envstatus==0.AND.TRIM(switch)=='1'
++ min_layer=layer; min_panel=1
++ CALL min_grid(v,d,n)
++ IF(.NOT.min_active) RETURN
++ CALL min_emit('INIT',0,0,0,0,0,REAL(flags,8))
++ CALL min_frame('INIT_STATE',r,v,d,n,0)
++ END SUBROUTINE
++ SUBROUTINE min_frame(tag,r,v,d,n,flag)
++ CHARACTER(*),INTENT(IN)::tag
++ INTEGER,INTENT(IN)::n,flag
++ REAL*8,INTENT(IN)::r(*),v,d
++ CALL min_grid(v,d,n)
++ IF(.NOT.min_active) RETURN
++ IF(min_k>0) THEN
++ CALL min_emit(tag,min_k,0,0,0,flag,[r(min_k)])
++ ELSE
++ CALL min_emit(tag,0,0,0,0,flag,[0D0])
++ ENDIF
++ END SUBROUTINE
++ SUBROUTINE min_write(tag,idx,src,line,phase,before,after,a,b,c,vn,sp,spp)
++ CHARACTER(*),INTENT(IN)::tag
++ INTEGER,INTENT(IN)::idx,src,line,phase
++ REAL*8,INTENT(IN)::before,after,a,b,c,vn,sp,spp
++ IF(.NOT.min_active.OR.min_k==0.OR.idx/=min_k) RETURN
++ CALL min_emit(tag,idx,src,line,phase,1,[before,after,a,b,c,vn,sp,spp])
++ END SUBROUTINE
++ SUBROUTINE min_shift(v,d,n)
++ REAL*8,INTENT(IN)::v,d
++ INTEGER,INTENT(IN)::n
++ min_panel=min_panel+1
++ CALL min_grid(v,d,n)
++ CALL min_emit('GRID_SHIFT',min_k,0,0,0,0,[target_nu])
++ END SUBROUTINE
++END MODULE udm37_min_r3
++! UDM37_MIN_END
+ !     path:      $HeadURL$
+ !     revision:  $Revision$
+ !     created:   $Date$
+@@ -23,10 +93,16 @@
+ !  --------------------------------------------------------------------------
+ !
+ SUBROUTINE HIRAC1 (MPTS)
++! UDM37_MIN_BEGIN
++ USE udm37_min_r3
++! UDM37_MIN_END
+ !
+    USE lblparams, ONLY: n_absrb, NFPTS, NFMX, MXMOL
+    USE phys_consts, ONLY: radcn2
+    IMPLICIT REAL*8           (V)
++! UDM37_MIN_BEGIN
++ REAL*8 :: udm37_min_before
++! UDM37_MIN_END
+ !
+ !
+ !**********************************************************************
+@@ -437,6 +513,9 @@
+    NCHNG = 0
+    NLNCR = 0
+ !
++! UDM37_MIN_BEGIN
++   CALL min_init(LAYER,VFT,DVR3,MAX3,R3,[ILBLF4,IXSECT,ICNTNM,IR4])
++! UDM37_MIN_END
+    V1R4ST = V1R4
+    V2R4ST = V2R4
+    IF (ILBLF4.GE.1) CALL LBLF4 (JRAD,V1R4ST,V2R4ST)
+@@ -468,8 +547,14 @@
+ 
+ 70 CONTINUE
+ !
++! UDM37_MIN_BEGIN
++   CALL min_frame('CN_PRE',R3,VFT,DVR3,MAX3,0)
++! UDM37_MIN_END
+    CALL CNVFNV (VNU,SP,SPPSP,RECALF,R1,R2,R3,F1,F2,F3,FG,XVER,ZETAI, &
+    &             IZETA)
++! UDM37_MIN_BEGIN
++   CALL min_frame('CN_POST',R3,VFT,DVR3,MAX3,0)
++! UDM37_MIN_END
+ !
+    IF (IPANEL.EQ.0) GO TO 60
+ !
+@@ -498,12 +583,18 @@
+    N2R2 = NLIM2+(NSHIFT/4)-1+4
+    N2R3 = NLIM3+(NSHIFT/16)-1+3
+ !
++! UDM37_MIN_BEGIN
++   CALL min_frame('RSYM_GATE',R3,VFT,DVR3,MAX3,MERGE(1,0,VFT.LE.0.))
++! UDM37_MIN_END
+    IF (VFT.LE.0.) THEN
+       CALL RSYM (R1,DV,VFT)
+       CALL RSYM (R2,DVR2,VFT)
+       CALL RSYM (R3,DVR3,VFT)
+    ENDIF
+ !
++! UDM37_MIN_BEGIN
++   CALL min_frame('XSECT_GATE',R3,VFT,DVR3,MAX3,MERGE(1,0,IXSECT.GE.1.AND.IR4.EQ.0))
++! UDM37_MIN_END
+    IF (IXSECT.GE.1.AND.IR4.EQ.0) THEN
+       CALL CPUTIM (TIME0)
+       CALL XSECTM (IFST,IR4)
+@@ -513,13 +604,16 @@
+ !
+    CALL CPUTIM(TPAT0)
+    IF (ILBLF4.GE.1)                                                  &
+-   &    CALL XINT (V1R4,V2R4,DVR4,R4,1.0,VFT,DVR3,R3,N1R3,N2R3)
++   &    CALL UDM37_MIN_XINT (V1R4,V2R4,DVR4,R4,1.0,VFT,DVR3,R3,N1R3,N2R3)
+ 
+    IF (ICNTNM.GE.1)                                                  &
+-   &    CALL XINT (V1ABS,V2ABS,DVABS,ABSRB,1.,VFT,DVR3,R3,N1R3,N2R3)
++   &    CALL UDM37_MIN_XINT (V1ABS,V2ABS,DVABS,ABSRB,1.,VFT,DVR3,R3,N1R3,N2R3)
+    CALL CPUTIM(TPAT1)
+    TXINT = TXINT + TPAT1-TPAT0
+ !
++! UDM37_MIN_BEGIN
++   CALL min_frame('PANEL_PRE',R3,VFT,DVR3,MAX3,0)
++! UDM37_MIN_END
+    CALL PANEL (R1,R2,R3,KFILE,JRAD,IENTER)
+ !
+    IF (ISTOP.NE.1) THEN
+@@ -1199,8 +1293,14 @@
+ !
+ SUBROUTINE CNVFNV (VNU,SP,SPPSP,RECALF,R1,R2,R3,F1,F2,F3,FG,      &
+ &                   XVER,ZETAI,IZETA)
++! UDM37_MIN_BEGIN
++ USE udm37_min_r3
++! UDM37_MIN_END
+ !
+    IMPLICIT REAL*8           (V)
++! UDM37_MIN_BEGIN
++ REAL*8 :: udm37_min_before
++! UDM37_MIN_END
+ !
+ !     SUBROUTINE CNVFNV PERFORMS THE CONVOLUTION OF THE LINE DATA WITH
+ !     THE VOIGT LINE SHAPE (APPROXIMATED)
+@@ -1313,7 +1413,15 @@
+                IZ3 = ABS(ZF3)+1.5
+                IZ2 = ABS(ZF2)+1.5
+                IZ1 = ABS(ZF1)+1.5
++! UDM37_MIN_BEGIN
++ IF(min_active.AND.min_k>0.AND.J3==min_k) udm37_min_before=R3(J3)
++! UDM37_MIN_END
+                R3(J3) = R3(J3)+STRF3*F3(IZ3)
++! UDM37_MIN_BEGIN
++ IF(min_active.AND.min_k>0.AND.J3==min_k) &
++ CALL min_write('CN_WRITE',J3,IZ3,I,1,udm37_min_before,R3(J3), &
++ STRF3,F3(IZ3),1D0,VNU(I),SP(I),SPPSP(I))
++! UDM37_MIN_END
+                R2(J2) = R2(J2)+STRF2*F2(IZ2)
+                R1(J1) = R1(J1)+STRF1*F1(IZ1)+STRD*FG(IZ1)+STRVER*    &
+                   XVER (IZ1)
+@@ -1342,7 +1450,15 @@
+                   IZ3 = ABS(ZF3L)+1.5
+                   IZ2 = ABS(ZF2L)+1.5
+                   IZ1 = ABS(ZF1L)+1.5
++! UDM37_MIN_BEGIN
++ IF(min_active.AND.min_k>0.AND.J3==min_k) udm37_min_before=R3(J3)
++! UDM37_MIN_END
+                   R3(J3) = R3(J3)+STRF3*F3(IZ3)*ZF3L
++! UDM37_MIN_BEGIN
++ IF(min_active.AND.min_k>0.AND.J3==min_k) &
++ CALL min_write('CN_WRITE',J3,IZ3,I,2,udm37_min_before,R3(J3), &
++ STRF3,F3(IZ3),ZF3L,VNU(I),SP(I),SPPSP(I))
++! UDM37_MIN_END
+                   R2(J2) = R2(J2)+STRF2*F2(IZ2)*ZF2L
+                   R1(J1) = R1(J1)+(STRF1*F1(IZ1)+STRD*FG(IZ1)+STRVER*&
+                      XVER(IZ1))*ZF1L
+@@ -1369,9 +1485,15 @@
+ !
+ end subroutine CNVFNV
+ SUBROUTINE PANEL (R1,R2,R3,KFILE,JRAD,IENTER)
++! UDM37_MIN_BEGIN
++ USE udm37_min_r3
++! UDM37_MIN_END
+ !
+    USE phys_consts, ONLY: radcn2
+    IMPLICIT REAL*8           (V)
++! UDM37_MIN_BEGIN
++ REAL*8 :: udm37_min_before
++! UDM37_MIN_END
+ !
+ !     SUBROUTINE PANEL COMBINES RESULTS OF R3, R2, AND R1 INTO R1 ARRAY
+ !     AND OUTPUTS THE ARRAY R1
+@@ -1531,7 +1653,13 @@
+       CALL PNLINT (R1(NLO),IENTER)
+    ENDIF
+ !
++! UDM37_MIN_BEGIN
++   CALL min_frame('SHIFT_PRE',R3,VFT,DVR3,MAX3,ISTOP)
++! UDM37_MIN_END
+    VFT = VFT+ REAL(NLIM1-1)*DV
++! UDM37_MIN_BEGIN
++   CALL min_shift(VFT,DVR3,MAX3)
++! UDM37_MIN_END
+    IF (ISTOP.NE.1) THEN
+       DO 50 J = NLIM1, MAX1
+          R1(J-NLIM1+1) = R1(J)
+@@ -1547,10 +1675,19 @@
+ 80    CONTINUE
+       DO 90 J = NLIM3, MAX3
+          R3(J-NLIM3+1) = R3(J)
++! UDM37_MIN_BEGIN
++ CALL min_write('CARRY',J-NLIM3+1,J,0,0,R3(J),R3(J-NLIM3+1),0D0,0D0,0D0,0D0,0D0,0D0)
++! UDM37_MIN_END
+ 90    CONTINUE
+       DO 100 J = MAX3-NLIM3+2, MAX3
+          R3(J) = 0.
++! UDM37_MIN_BEGIN
++ CALL min_write('CLEAR',J,0,0,0,0D0,R3(J),0D0,0D0,0D0,0D0,0D0,0D0)
++! UDM37_MIN_END
+ 100   CONTINUE
++! UDM37_MIN_BEGIN
++      CALL min_frame('SHIFT_POST',R3,VFT,DVR3,MAX3,ISTOP)
++! UDM37_MIN_END
+       NLO = NSHIFT+1
+    ENDIF
+    CALL CPUTIM (TIME)
+@@ -4981,7 +5118,7 @@
+ !      ===> R3
+ !
+    ELSEIF (DVX.LT.DVR4.OR.ILBLF4.EQ.0) THEN
+-      CALL XINT (V1X,V2X,DVX,RX,1.0,VFT,DVR3,R3,N1R3,N2R3)
++      CALL UDM37_MIN_XINT (V1X,V2X,DVX,RX,1.0,VFT,DVR3,R3,N1R3,N2R3)
+       IR4 = 0
+ !
+ !      ===> R4
+@@ -11796,3 +11933,46 @@
+ !
+    RETURN
+ end subroutine AtoB
++
++! UDM37_MIN_BEGIN
++SUBROUTINE UDM37_MIN_XINT (V1A,V2A,DVA,A,AFACT,VFT,DVR3,R3,N1R3,N2R3)
++!
++   USE udm37_min_r3
++   IMPLICIT REAL*8           (V)
++   REAL*8 :: udm37_min_before
++!
++!     THIS SUBROUTINE INTERPOLATES THE A ARRAY STORED
++!     FROM V1A TO V2A IN INCREMENTS OF DVA USING A MULTIPLICATIVE
++!     FACTOR AFACT, INTO THE R3 ARRAY FROM LOCATION N1R3 TO N2R3 IN
++!     INCREMENTS OF DVR3
++!
++   COMMON /LAMCHN/ ONEPL,ONEMI,EXPMIN,ARGMIN
++   DIMENSION A(*),R3(*)
++!
++   RECDVA = 1./DVA
++   ILO = (V1A+DVA-VFT)/DVR3+1.+ONEMI
++   ILO = MAX(ILO,N1R3)
++   IHI = (V2A-DVA-VFT)/DVR3+ONEMI
++   IHI = MIN(IHI,N2R3)
++!
++   CALL min_emit('XINT_CALL',0,0,0,0,0,[V1A,V2A,DVA,AFACT,REAL(ILO,8),REAL(IHI,8)])
++   DO 10 I = ILO, IHI
++      VI = VFT+DVR3* REAL(I-1)
++      J = (VI-V1A)*RECDVA+ONEPL
++      VJ = V1A+DVA* REAL(J-1)
++      P = RECDVA*(VI-VJ)
++      C = (3.-2.*P)*P*P
++      B = 0.5*P*(1.-P)
++      B1 = B*(1.-P)
++      B2 = B*P
++      CONTI = -A(J-1)*B1+A(J)*(1.-C+B2)+A(J+1)*(C+B1)-A(J+2)*B2
++      IF(min_active.AND.min_k>0.AND.I==min_k) udm37_min_before=R3(I)
++      R3(I) = R3(I)+CONTI*AFACT
++      IF(min_active.AND.min_k>0.AND.I==min_k) &
++      CALL min_write('XINT_WRITE',I,J,0,0,udm37_min_before,R3(I),CONTI,AFACT,1D0,VI,0D0,0D0)
++10 END DO
++!
++   RETURN
++!
++end subroutine UDM37_MIN_XINT
++! UDM37_MIN_END
