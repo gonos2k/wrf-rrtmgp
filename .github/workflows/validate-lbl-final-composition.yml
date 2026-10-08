@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - 'validation/rrtmgp37/lbl-final-od-composition/**'
+      - 'validation/rrtmgp37/lbl-coupling-ascii-origin/**'
       - 'validation/rrtmgp37/lbl-coupling-generation/**'
       - 'validation/rrtmgp37/lbl-minimal-r3-transition/**'
       - '.github/workflows/validate-lbl-final-composition.yml'
@@ -11,6 +12,7 @@ on:
     branches: [main]
     paths:
       - 'validation/rrtmgp37/lbl-final-od-composition/**'
+      - 'validation/rrtmgp37/lbl-coupling-ascii-origin/**'
       - 'validation/rrtmgp37/lbl-coupling-generation/**'
       - 'validation/rrtmgp37/lbl-minimal-r3-transition/**'
       - '.github/workflows/validate-lbl-final-composition.yml'
@@ -26,3 +28,7 @@ jobs:
         run: python3 -I -S validation/rrtmgp37/lbl-final-od-composition/verify_saved.py
       - name: Reject omitted operations, altered inputs and OD corruption
         run: python3 -I -S validation/rrtmgp37/lbl-final-od-composition/test_saved.py
+      - name: Join decoded publisher ASCII facts to actual TAPE3
+        run: python3 -I -S validation/rrtmgp37/lbl-coupling-ascii-origin/verify_saved.py
+      - name: Reject coefficient, record, format and authority corruption
+        run: python3 -I -S validation/rrtmgp37/lbl-coupling-ascii-origin/test_saved.py
