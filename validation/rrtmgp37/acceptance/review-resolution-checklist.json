@@ -1,8 +1,8 @@
 {
   "schema": "UDM37_REVIEW_RESOLUTION_CHECKLIST_V2",
   "main_snapshot": {
-    "commit": "452e698ab1b477d7854c5937b6f825c8012874de",
-    "tree": "9c8a387f28308e8fa92315a3755c1b180d50e197"
+    "commit": "4c97d835ef5169f5f55262d1b34cb096c182318c",
+    "tree": "fb15a10670f77406c8489fa85c9548ebe07724cc"
   },
   "scope": "UDM27, LW37/SW37; prior review follow-up; original acceptance original19/current12 retained unchanged",
   "production_accepted": false,
@@ -308,7 +308,7 @@
       "id": "REF-LBL",
       "priority": "P1",
       "title": "LBLRTM negative OD와 앞단 누적",
-      "source_prs": "114–126,142,145",
+      "source_prs": "114–126,142,145,160–161",
       "implemented": false,
       "feature_branch_validation": "OPEN",
       "main_included_at_snapshot": false,
@@ -324,7 +324,10 @@
         "validation/rrtmgp37/lbl-minimal-r3-transition/result.json",
         "validation/rrtmgp37/lbl-coupling-generation/manifest.json",
         "validation/rrtmgp37/lbl-coupling-generation/result.json",
-        "validation/rrtmgp37/lbl-coupling-generation/line-readback.json"
+        "validation/rrtmgp37/lbl-coupling-generation/line-readback.json",
+        "validation/rrtmgp37/lbl-final-od-composition/manifest.json",
+        "validation/rrtmgp37/lbl-final-od-composition/result.json",
+        "validation/rrtmgp37/lbl-final-od-composition/OD-readback.json"
       ],
       "source_pr_urls": [
         "https://github.com/gonos2k/wrf-rrtmgp/pull/114",
@@ -342,7 +345,8 @@
         "https://github.com/gonos2k/wrf-rrtmgp/pull/126",
         "https://github.com/gonos2k/wrf-rrtmgp/pull/142",
         "https://github.com/gonos2k/wrf-rrtmgp/pull/145",
-        "https://github.com/gonos2k/wrf-rrtmgp/pull/160"
+        "https://github.com/gonos2k/wrf-rrtmgp/pull/160",
+        "https://github.com/gonos2k/wrf-rrtmgp/pull/161"
       ],
       "minimal_target_next_step": {
         "path": "validation/rrtmgp37/reference-precision-interpretation/lbl-minimal-target-plan-v1.json",
@@ -350,14 +354,21 @@
         "status": "PLAN_PRESERVED_SCOPED_OBSERVATION_NOW_AVAILABLE",
         "physical_reference_accepted": false
       },
-      "dynamic_progress": "PR160 selected accumulator prefix is merged. Follow-up actual capture joins TAPE3 data record521/block260/slot124 and sidecar125, encoded molecule2 (CO2 header)/isotopologue1, original VNU618.023668 to shifted618.0235026348411. Recorded Y/G temperature interpolation, line correction, STRF3 and F3/ZF3L arithmetic join the first negative transition. This is not an authenticated upstream database ID or full physical operand ancestry.",
-      "next_unresolved_boundary": "Upstream spectroscopic line/mixing coefficient provenance and physical acceptance; independent WK/SCOR/ALFD1 and AVRAT/CF3 generation validation; required surrounding line/R1/R2/continuum cancellation and final OD acceptance. Preserve signed terms and all scientific FAIL gates.",
+      "dynamic_progress": "PR160/161 are merged: selected first-negative accumulator prefix and TAPE3-local CO2 line/sidecar coefficient arithmetic are scoped complete. Follow-up same-run selected R3/R2/R1/continuum/radiation/output join matches actual OD panel; selected final OD remains negative. Individual surrounding-line physical ancestry is not complete.",
+      "next_unresolved_boundary": "Upstream Y/G physical provenance and line/mixing/continuum selection-cutoff validity; independent continuum/RADFNI and lookup/strength generation; individual surrounding line/component physical ancestry and full spectrum/flux acceptance. Selected numerical output join is complete; preserve all scientific FAIL gates.",
       "coefficient_progress": {
         "path": "validation/rrtmgp37/lbl-coupling-generation/result.json",
         "status": "PASS_SCOPED_TAPE3_LINE_TO_COUPLING_OPERANDS",
-        "included_in_main_at_snapshot": false,
+        "included_in_main_at_snapshot": true,
         "upstream_database_identity_authenticated": false,
         "complete_physical_operand_ancestry": false,
+        "physical_reference_accepted": false
+      },
+      "final_composition_progress": {
+        "path": "validation/rrtmgp37/lbl-final-od-composition/result.json",
+        "status": "PASS_SCOPED_SAME_RUN_COMPOSITION_NEGATIVE_OD_RETAINED",
+        "included_in_main_at_snapshot": false,
+        "selected_OD": -0.009028119955355695,
         "physical_reference_accepted": false
       }
     },

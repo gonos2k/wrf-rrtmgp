@@ -1,0 +1,28 @@
+name: Verify saved LBLRTM selected final OD composition
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'validation/rrtmgp37/lbl-final-od-composition/**'
+      - 'validation/rrtmgp37/lbl-coupling-generation/**'
+      - 'validation/rrtmgp37/lbl-minimal-r3-transition/**'
+      - '.github/workflows/validate-lbl-final-composition.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'validation/rrtmgp37/lbl-final-od-composition/**'
+      - 'validation/rrtmgp37/lbl-coupling-generation/**'
+      - 'validation/rrtmgp37/lbl-minimal-r3-transition/**'
+      - '.github/workflows/validate-lbl-final-composition.yml'
+permissions:
+  contents: read
+jobs:
+  saved-final-composition:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - name: Replay selected continuum, PANEL and actual OD payload
+        run: python3 -I -S validation/rrtmgp37/lbl-final-od-composition/verify_saved.py
+      - name: Reject omitted operations, altered inputs and OD corruption
+        run: python3 -I -S validation/rrtmgp37/lbl-final-od-composition/test_saved.py
