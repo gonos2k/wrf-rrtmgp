@@ -89,3 +89,9 @@ real.exe, 실제 specified lateral boundary, 다른 수송 정책, 입자크기 
 [같은 실행의 최종 OD 연결](../lbl-final-od-composition/README_ko.md)은 PR161에서 닫은 선택 계수 경계 이후의 R3→R2→R1·continuum·복사장 배율과 실제 OD panel을 연결한다. 주변36개 표본과 continuum8개 stencil을 재생했으며 선택 파수의 최종 OD는 −0.009028119955355695로 남는다. 선택 수치 합성 경계는 완료이나 원 계수·모든 개별 선의 물리 계보·전체 reference 수용성은 닫지 않는다. REF-LBL FAIL, 완료15/잔여7 및 production_accepted=false 유지.
 
 [원 AER ASCII의 선택 CO2 기록](../lbl-coupling-ascii-origin/README_ko.md)은 실제 combined/lncpl_lines의 유일한 인접 두 record와 publisher archive checksum을 확인하고 16개 scalar를 TAPE3에 연결한다. 실제 성공 설정은 blank HOLIND의 F100이다. 배포 header의 Lamouroux2015 계보와 원 mixing 생성의 독립 인증을 분리한다. 선택 ASCII 파일 경계는 완료이며 전체 band의 partner/cutoff·물리 reference와 최종 음의 OD는 미완료로 유지한다.
+
+## PR162 병합 후 CO₂ 공급 목록 감사
+
+현재 pin은 8c2bc9e6/40dcab22(PR162 병합)이다. 원 ASCII 전체와 historical TAPE3 전체를 root가 읽어 요청475–2275 cm⁻¹에서 CO₂ 일반 선180,771개(그중 coupled127,543개)의 비교 필드 multiset이 누락0/추가0임을 확인했다. 중복 multiplicity를 유지하며 strength/quantum/추가 broadener 전체 인증은 하지 않는다. 저장 CI는 해시 목록과 control bytes를 비교하고 private raw 파일을 재판독하지 않는다.
+
+실제 LNFL TAPE6 strength rejection은 모두0이다. 소스 SRD 하한을 실제 적용값으로 전용하지 않는다. LBLRTM SPEAK는 IFLAG0에서 적용되나 유효 범위/다른 제외는 남는다. 공급 목록 전달을 물리적 partner 완전성으로 승인하지 않으며, REF-LBL FAIL과15개 제한적 완료/7개 물리·최종 미완료 및 production_accepted=false를 유지한다. 다음은 층별 survivor/support inventory와 원 mixing 적용성/독립 기준이다.
