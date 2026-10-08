@@ -1,0 +1,112 @@
+{
+  "schema": "UDM37_REFERENCE_PRECISION_FINAL_SOURCE_REVIEW_V2",
+  "created_utc": "2026-10-08T03:10:48.228903+00:00",
+  "status": "PASS_SCOPED_SOURCE_DOCS_SMALL_JSON_REVIEW",
+  "verdict_ko": "새 분석기는 mixed 비교와 저장값 strict 기준 및 미확정 publisher prewrite를 명확히 분리한다. Fraction 경계와 실제 round-back 조건을 검사한 per-cell 가상 witness 설계는 타당하며 공동 publisher 실행을 증명한 것으로 과장하지 않는다. 기존 봉인 패키지와 생산 소스 변경 없이 추가된 해석·시험·경량 CI 범위에 substantive blocker를 확인하지 못했다.",
+  "predecessor": {
+    "path": "build/udm37-reference-precision-preparation-v1/source-precision-interpretation-review-v1.json",
+    "sha256": "70bd4b05639e2386a8e0c9a29f776daf765ab895edc3e156f5c87d90220d87a0",
+    "bytes": 9502
+  },
+  "reviewed_base": {
+    "head": "b1da3b9be540666d2fcb0b4b8d9abee02e712963",
+    "tree": "484509499ee85d9a8312d114be0c1ff8cb7951b5"
+  },
+  "pins": [
+    {
+      "path": "build/udm37-reference-precision-pr-work/validation/rrtmgp37/reference-precision-interpretation/analyze.py",
+      "sha256": "042ec5486065b848ea59c9f088c5ade18e3810eddda35d73bf5a42a9643abc9f",
+      "bytes": 9547
+    },
+    {
+      "path": "build/udm37-reference-precision-pr-work/validation/rrtmgp37/reference-precision-interpretation/result.json",
+      "sha256": "e1f32b2d851e2985c50a79331ea5e5bc8f1a59c9c6729485608a41132ee736e3",
+      "bytes": 34930
+    },
+    {
+      "path": "build/udm37-reference-precision-pr-work/validation/rrtmgp37/reference-precision-interpretation/README_ko.md",
+      "sha256": "e6972d18dd2a54eff5191663d209107ed505ef557c1104faa0b6c0d278b94bd6",
+      "bytes": 3188
+    },
+    {
+      "path": "build/udm37-reference-precision-pr-work/validation/rrtmgp37/reference-precision-interpretation/test_precision.py",
+      "sha256": "9593bf9c0aa9348df147920640920accd4ab2de9820f218f4abc882225650b03",
+      "bytes": 2453
+    },
+    {
+      "path": "build/udm37-reference-precision-pr-work/.github/workflows/validate-reference-precision-interpretation.yml",
+      "sha256": "6edc34f2a00d21745e05abf310c7862c799e42548c0ea02a56ace48cf3a1c8a8",
+      "bytes": 1099
+    },
+    {
+      "path": "build/udm37-reference-precision-pr-work/validation/rrtmgp37/remaining-contract-resolution/manifest.json",
+      "sha256": "13c31b40506fa02121f8782df53eafe9dfc41a17805aee914397568c3df76ced",
+      "bytes": 37239
+    },
+    {
+      "path": "build/udm37-reference-precision-pr-work/validation/rrtmgp37/remaining-contract-resolution/evidence/rfmip-previous/residual-details.json",
+      "sha256": "58a3901f6e6f4f7c255ae0d0b4629315842bedbe1a244c3cff220ed484aa5879",
+      "bytes": 29400
+    },
+    {
+      "path": "build/udm37-reference-precision-pr-work/validation/rrtmgp37/remaining-contract-resolution/evidence/rfmip-eight/result.json",
+      "sha256": "6bc5347976e3e0d24cc4363ec38184ed30299a3a1075613cfc95954db55fa0c9",
+      "bytes": 10959
+    }
+  ],
+  "raw_input_pins_read_from_JSON_only": [
+    {
+      "path": "validation/rrtmgp37/remaining-contract-resolution/evidence/rfmip-previous/diag_flux_written.bin",
+      "sha256": "b3157937988ca79cfcd1e76b13c578322489749b9ef9fe6606b21ed291cfffbf",
+      "bytes": 132840
+    },
+    {
+      "path": "validation/rrtmgp37/remaining-contract-resolution/evidence/rfmip-eight/diag_flux_written.bin",
+      "sha256": "b4b59ec9aee698b52acb105c15d211eb4bbbccd1917e292e8024d2072ab2839c",
+      "bytes": 7872
+    }
+  ],
+  "scope": {
+    "source_docs_small_JSON_only": true,
+    "raw_binary_NetCDF_logs_arrays_read": false,
+    "scientific_analysis_or_tests_executed_by_reviewer": false,
+    "compiler_model_solver_children": 0,
+    "new_candidate_capture_requested": false,
+    "root_reported_execution": "Root reports existing21 candidate capture read and4 semantics tests PASS. This reviewer did not execute analyzer/tests or independently reread binary prewrites.",
+    "production_accepted": false
+  },
+  "analysis_source_review": {
+    "Fraction": "Finite candidate/stored/reference floats are converted to exact rational values; ATOL=1/100000. Midpoints, lower/upper bounds and threshold predicates are derived with Fraction, displayed decimals only at reporting.",
+    "binary32_hull": "Reference must be exact finite positive binary32, adjacent endpoints form asymmetric binade-aware hull. Max finite overflow-next-neighbor explicitly unsupported. Significand parity marks midpoint tie inclusion; conservative closed hull distinguished from true preimage.",
+    "bounds": "lower=max(L-c,c-U,0), upper=max(abs(c-L),abs(c-U)); exact numerators/denominators retained. All21 actual stored rows are reported as strict lower<atol<upper. No ULP/tolerance waiver.",
+    "witnesses": "Near/far hypothetical binary64 candidates constructed from exact distances, then checked after binary64 conversion: strictly interior to hull, binary32 round-back exactly reference, and exact error below/above ATOL. Failed witness construction is fatal rather than a fabricated value.",
+    "labels": "Stored failure21, mixed candidate64/reference-stored32 failure14, candidate cast crossing7 with reference stored fixed. Original publisher pre-cast failure UNKNOWN. Legacy ambiguous key preserved only as explicitly explained historical label.",
+    "authenticity": "Input files joined to sealed parent manifest and archived candidate JSON; result includes source/manifest/input hashes and --verify exact regenerated JSON equality. This remains internal reproduction, not an independently signed provenance or publisher storage-model authentication.",
+    "finite_scope": "No generalized arbitrary-sign, overflow-boundary or alternate-packing claim; held positive reference case only. Conservative real-cell bounds do not assume publisher pre-cast format, and concrete witnesses explicitly demonstrate existence of binary64 values only.",
+    "counts": "21 rows, summary21/14/7/21/21 and all UNKNOWN publisher decisions match small saved JSON. No independent arithmetic result recomputation by reviewer."
+  },
+  "tests_static_review": {
+    "methods": 4,
+    "covered": [
+      "Asymmetric power-of-two/binade rounding cell",
+      "Odd-significand midpoint ties excluded",
+      "Mixed failure with binary64 under/over-tolerance hypothetical reference witnesses",
+      "Bad candidate cast join, nonfinite input and non-binary32 reference rejected"
+    ],
+    "test_execution": "NOT_RUN_BY_REVIEWER; root-reported4PASS only"
+  },
+  "docs_CI_review": {
+    "README": "Clearly distinguishes mixed comparison, stored FAIL, conditional one-cast/no-extra-packing model and actual missing publisher prewrite; per-cell witnesses not actual/jointly-realizable publisher run. Existing candidate capture complete and no repeat proposed.",
+    "links": "Relative predecessor manifest/result paths resolve in repository; commands match current analyzer --verify and semantics test CLI.",
+    "workflow": "Contents-read only, pinned checkout action, ubuntu24.04/5min single job; PR/main-push triggers both current analysis and sealed parent paths, workflow_dispatch. Isolated stdlib -I -S saved analyzer and4 semantic tests; no compiler/model/solver invocation. No new exact-head CI completion inferred.",
+    "preservation": "No git diff in entire old remaining-contract-resolution tracked directory or production phys/dyn/share/Registry/external. New paths confined reference-precision directory and dedicated workflow. Original acceptance19/current12 untouched."
+  },
+  "limits": [
+    "Publisher original source/build/inputs/prewrite and actual serialization model remain unauthenticated.",
+    "Per-cell possible reference prewrites are not a joint solver-state reconstruction, error distribution or probabilistic accuracy proof.",
+    "Original stored-array atol1e-5/rtol0 FAIL13RSD+8RSU remains unchanged.",
+    "PHY-NC/SIZE/OCCURRENCE and other physical/final gates receive no approval.",
+    "No independent raw-byte/scientific-array verification or newly executed test by reviewer."
+  ],
+  "material_blockers": []
+}

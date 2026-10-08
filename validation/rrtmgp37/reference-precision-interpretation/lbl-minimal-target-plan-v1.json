@@ -1,0 +1,168 @@
+{
+  "acceptance": {
+    "compiler_solver_or_raw_data_used": false,
+    "complete_ancestry_accepted": false,
+    "execution_authorized": false,
+    "negative_OD": "FAIL_PRESERVED",
+    "physical_reference_accepted": false,
+    "production_accepted": false,
+    "strict_original_trace": "FAIL_PRESERVED"
+  },
+  "decision": "Use the single fixed attribution target R3(20), target_id=1, as the smallest useful source-observation case. It has one direct target array and no PANEL write from R2 into R3. Its history still requires complete R3 direct-writer coverage and carry lineage.",
+  "evidence_pins": {
+    "fixed_35_roster": {
+      "path": "build/udm37-lblrtm-35-negative-attribution-roster-v1.json",
+      "sha256": "b641c2afae6a52bb271e9d02658807c4c01eb3067d58b4810d7a93b9a6385b91",
+      "size_bytes": 10003
+    },
+    "partial_ancestry_semantic_review": {
+      "path": "build/udm37-lblrtm-xint-arithmetic-actual-preparation-v1/terminal-peer-review-v4.json",
+      "sha256": "4a291b18cc84408643b73ca2453a7e2a71088ee0812a21bb4376dcb794e3e93f",
+      "size_bytes": 6083
+    },
+    "source_census": {
+      "path": "build/udm37-remaining-resolution-v1/lbl-r1-r2-r3-source-census-v1.json",
+      "sha256": "0e001c98de852984b899561db555adab727aadfc600677b465ac1b6b328123cc",
+      "size_bytes": 153174
+    },
+    "source_v13": {
+      "path": "build/udm37-lblrtm-pocket-ancestry-observer-v13-source-v1/oprop.ancestry-observer-v13.UNCOMPILED.f90",
+      "sha256": "9e599f124f6ac744e75164a35394008d199ddab234814737969196fcdc910b84",
+      "size_bytes": 519271
+    },
+    "v14_capture_source": {
+      "path": "build/udm37-lblrtm-xint-active-write-observer-v14-source-v2/oprop.xint-observer-v14-v2.UNCOMPILED.f90",
+      "sha256": "06f0151bd077e1372eda79559e793f180b550ff8bd5eace1e06a3fca84799832",
+      "size_bytes": 533010
+    },
+    "v14_extent_contract": {
+      "path": "build/udm37-lblrtm-xint-active-write-observer-v14-source-v2/extent-contract.json",
+      "sha256": "705583f814ed07038ae5259b9dac9cde7d091cdc96f25b6f89466e920ff6293b",
+      "size_bytes": 3434
+    },
+    "v14_field_contract": {
+      "path": "build/udm37-lblrtm-xint-active-write-observer-v14-source-v2/field-contract.json",
+      "sha256": "4d777f56328b276e896e0dcba4e5a03f8bad0cab6c3d54e9d604ec5154e610b0",
+      "size_bytes": 5397
+    },
+    "v14_schema": {
+      "path": "build/udm37-lblrtm-xint-active-write-observer-v14-source-v2/schema.json",
+      "sha256": "07a0d068d886abb0076956d8086d42a6e67d8ecebb4371e09bacbf7ad1fb6b9f",
+      "size_bytes": 6056
+    }
+  },
+  "minimal_observer_contract": {
+    "cross_array_scope": "R2 and R1 are downstream of R3 in the PANEL interpolation chain and are not required to prove a first negative mutation of this R3 cell, provided the source/call alias census proves no reverse R2/R1-to-R3 mutation. R4 is upstream through conditional R4\u2192R3 XINT and is a blocking source unless absent or fully authorized by selected stencil+extent evidence.",
+    "first_negative_rule": "Only identify an origin if initialization is proven, every R3 mutation/carry/clear affecting the same physical frequency is accounted for in total source order, all before/after values are finite and joined, and the first transition from nonnegative to negative is directly observed. If it is already negative at the first eligible observation, label inherited/unknown, never attribute it to zero.",
+    "required_events": [
+      {
+        "capture": [
+          "MAX1",
+          "MAX2",
+          "MAX3",
+          "NLIM1",
+          "NLIM2",
+          "NLIM3",
+          "VFT",
+          "DV",
+          "DVR2",
+          "DVR3",
+          "R3(20) after clear"
+        ],
+        "event": "HIRAC1_INIT",
+        "gate": "Must prove R3(20) lies in the actual initialized extent; source says loop clears 1:MAX3."
+      },
+      {
+        "capture": [
+          "call sequence/epoch/layer",
+          "VFT and grid spacings",
+          "JMIN1/JMAX1",
+          "each actual J1 producing J3=target index",
+          "J2SHFT/J3SHFT",
+          "line identity",
+          "phase",
+          "SPPSP gate",
+          "R3 before/after each baseline and coupling assignment"
+        ],
+        "event": "CNVFNV_BEGIN_END",
+        "gate": "Record every hit in exact statement order; include zero-hit call summaries and source RDLIN identity. A zero-hit summary is only valid if invocation and loop bounds were actually observed."
+      },
+      {
+        "capture": [
+          "branch/XS chunk/route/output level",
+          "N1/N2/ILO/IHI",
+          "source backing/populated extent authority",
+          "actual target write indices",
+          "J and source interpolation stencil values",
+          "before/after destination",
+          "normal return/early-exit reason and counters"
+        ],
+        "event": "XINT_BEGIN_END_AND_TARGET_WRITE",
+        "gate": "Capture all destination-R3 XINT invocations, including empty target intervals. Any target stencil without backing and populated/initialized authority is unsupported; do not read or synthesize padding."
+      },
+      {
+        "capture": [
+          "call sequence/VFT/DV/IP/IPMAX/P branch",
+          "each actual R3 destination assignment at the tracked target cell",
+          "the exact source operand indices/values and destination before/after"
+        ],
+        "event": "RSYM_TARGET_ASSIGNMENTS",
+        "gate": "Do not infer no-write from VFT alone; source-derived index reach must establish whether target is touched."
+      },
+      {
+        "capture": [
+          "PANEL call context",
+          "VFT before/after",
+          "NLO/NHI/N1R3/N2R3/MAX3/NLIM3/NSHIFT/ISTOP",
+          "R3 target before/after",
+          "if nonfinal, old R3(i+150) and new R3(i), plus tail-clear membership"
+        ],
+        "event": "PANEL_AND_SHIFT",
+        "gate": "Final ISTOP==1 skips shift/clear; nonfinal shift/clear must be separately recorded. The target is followed by physical frequency, not a fixed array index across panels."
+      },
+      {
+        "capture": [
+          "source-level call/alias inventory for all actual R3 writers in the selected HIRAC1 path",
+          "per-invocation coverage counts"
+        ],
+        "event": "OTHER_MUTATOR_CENSUS",
+        "gate": "Any uninstrumented writer or unmatched call count makes first-negative ordering unsupported."
+      }
+    ],
+    "scope": "One target frequency trajectory only; no full R1/R2/R3 dumps and no full ancestry or physical-reference acceptance.",
+    "v14_schema_limit": "Current v14 schema captures selected XINT destination-write records and source stencils only when its pre-read guards are satisfied; source extent padding certificate is false/unimplemented, and it does not itself provide complete R3 initialization, RSYM, CNVFNV, panel-shift, or full R4-array coverage. The existing schema alone therefore cannot certify the first negative origin."
+  },
+  "schema": "UDM37_LBLRTM_MINIMAL_SINGLE_NEGATIVE_TARGET_OBSERVER_PLAN_V1",
+  "source_only_flow_facts": {
+    "carry": "For nonfinal PANEL (ISTOP!=1), NLIM3=151; new R3(i) receives old R3(i+150) for the shifted range, then the source zeroes the upper tail MAX3-NLIM3+2:MAX3. For a target cell at current index 20, the immediate pre-shift source is R3(170), only if runtime MAX3>=170 and the assignment is in range. For a target frequency traced across panels, continue the source-frequency identity through each observed VFT shift; do not assume every panel shifts or infer an absent source cell as zero.",
+    "direct_line_writers": "CNVFNV baseline loop writes R3(J3) with J3=J1-J3SHFT; a second coupling loop can write R3(J3) when SPPSP(I)!=0. The target is hit only when J3=the frequency-mapped target index. Capture must preserve source operation order and before/after values for both phases.",
+    "initialization": "HIRAC1 computes dynamic MAX3 and clears R3(1:MAX3). The source comment gives a representative MAX3=282, not an execution guarantee. For R3(20), actual membership requires runtime MAX3>=20 and proof that no unobserved prior write occurred.",
+    "interpolation_writers": "XINT writes destination R3(I) within runtime N1R3:N2R3. XSECTM can select R3 based on runtime DVX/DVR2/DVR3/DVR4 and ILBLF4; the outer continuum XINT has a separate ICNTNM gate. Capture every invocation including zero-selected-write returns, and every selected write to the target.",
+    "other_R3_mutators": "RSYM conditionally modifies its actual array argument when VFT<=0. PANEL reads R3 to add to R2 and does not otherwise directly mutate R3; after output it may shift/clear R3 if ISTOP!=1. PNLINT acts on R1, not R3.",
+    "possible_R4_source": "An early XINT can interpolate from R4 into R3 when ILBLF4>=1. The v14 schema does not capture full R4 arrays, and its extent contract does not establish a populated source interval by default. Thus this route must either be source/runtime-proven absent for the target interval or have eligible selected source-stencil values plus a valid initialized/populated extent certificate. Otherwise ancestry remains UNSUPPORTED.",
+    "target_frequency_mapping": "At each captured state, record VFT, DVR3, MAX3, target cell index, and the exact source-ordered computed grid frequency. For each nonfinal shift, check source VFT advance and R3 index translation against NLIM1/NLIM3. A matching panel header number alone does not establish ownership."
+  },
+  "status": "SOURCE_ONLY_PLAN_DRAFT_NOT_EXECUTED",
+  "target": {
+    "array": "R3",
+    "historical_stage1_sign": "negative",
+    "historical_stage1_value": -1.686827144352549e-05,
+    "identity_caveat": "owner_header=14 is a historical output-header identifier. It is NOT assumed to equal runtime IPANEL, IDATA, a PANEL invocation ordinal, or a source line/chunk number. Bind the physical frequency by recorded source VFT/DVR3 and exact source-order grid evaluation at each frame; if the owning frame/cell cannot be shown, return UNSUPPORTED.",
+    "index": 20,
+    "level": 3,
+    "native_nu_cm1": 618.6144711111115,
+    "owner_header": 14,
+    "roster_schema": "UDM37_NEGATIVE_ATTRIBUTION_ROSTER_FROM_SAVED_TERMINAL_RESULT_V1",
+    "target_id": 1
+  },
+  "unknown_or_blocking_without_new_target_capture": [
+    "runtime MAX3 and initialized extent for the target trajectory",
+    "runtime mapping from historical owner_header 14 to actual source VFT and target cell ownership",
+    "full CNVFNV target-hit inventory and all line identities/phase updates before the negative state",
+    "all R3-target XINT invocations, including zero-hit calls and conditional source routes",
+    "valid initialized/populated extent and selected stencil for any R4-to-R3 route",
+    "RSYM target-cell writes and source operands when VFT<=0",
+    "every nonfinal/final PANEL shift/clear decision and physical-frequency carry lineage",
+    "source-roster closure across actual call arguments/array aliases beyond the OPROP call chain"
+  ]
+}

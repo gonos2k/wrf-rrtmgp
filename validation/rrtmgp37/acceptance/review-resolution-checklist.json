@@ -1,8 +1,8 @@
 {
   "schema": "UDM37_REVIEW_RESOLUTION_CHECKLIST_V2",
   "main_snapshot": {
-    "commit": "0f6dd96c4ad588f974c2f89600c1b9aecbde7ccd",
-    "tree": "720e462503a36a1b1c79ec55bc04c6aab2f92b26"
+    "commit": "b1da3b9be540666d2fcb0b4b8d9abee02e712963",
+    "tree": "484509499ee85d9a8312d114be0c1ff8cb7951b5"
   },
   "scope": "UDM27, LW37/SW37; prior review follow-up; original acceptance original19/current12 retained unchanged",
   "production_accepted": false,
@@ -298,7 +298,8 @@
         "https://github.com/gonos2k/wrf-rrtmgp/pull/97",
         "https://github.com/gonos2k/wrf-rrtmgp/pull/138",
         "https://github.com/gonos2k/wrf-rrtmgp/pull/140"
-      ]
+      ],
+      "precision_interpretation": "14 is candidate binary64 prewrite versus published stored binary32; original publisher prewrite error is unknown. Conditional rounding bounds straddle tolerance in all21 cells; original stored strict13RSD+8RSU FAIL retained."
     },
     {
       "id": "REF-LBL",
@@ -330,7 +331,13 @@
         "https://github.com/gonos2k/wrf-rrtmgp/pull/126",
         "https://github.com/gonos2k/wrf-rrtmgp/pull/142",
         "https://github.com/gonos2k/wrf-rrtmgp/pull/145"
-      ]
+      ],
+      "minimal_target_next_step": {
+        "path": "validation/rrtmgp37/reference-precision-interpretation/lbl-minimal-target-plan-v1.json",
+        "target": "R3(20), target_id1; physical-frequency tracking, not owner_header14=runtime panel ordinal",
+        "status": "PREPARED_SOURCE_ONLY_NOT_EXECUTED",
+        "physical_reference_accepted": false
+      }
     },
     {
       "id": "PHY-OCCURRENCE",
@@ -634,5 +641,12 @@
   "remaining_contract_resolution": {
     "path": "validation/rrtmgp37/remaining-contract-resolution/checklist.json",
     "scope": "New scoped subtasks only; seven parent physical/final gates remain open/fail/not run."
+  },
+  "reference_precision_interpretation": {
+    "path": "validation/rrtmgp37/reference-precision-interpretation/result.json",
+    "mixed_comparison_failures": 14,
+    "stored_strict_failures_preserved": 21,
+    "publisher_prewrite_strict_failures": "UNKNOWN",
+    "production_accepted": false
   }
 }

@@ -79,3 +79,5 @@ real.exe, 실제 specified lateral boundary, 다른 수송 정책, 입자크기 
 초기화 정책 결정과 단위 계약은 여전히 OPEN이며 완료15/잔여7을 변경하지 않는다.
 
 [현재 7개 미완료 해소 대장](../remaining-contract-resolution/README_ko.md)은 native CCN 범위·누락 RFMIP prewrite·실행 byte 연결의 완료 하위 작업과 물리 승인 OPEN/FAIL을 분리한다. 기존 실제 host 연결은 완료 범위를 유지한다.
+
+[PR158 terminal과 정밀도 해석](../reference-precision-interpretation/README_ko.md)은 병합된 main `b1da3b9…`와 같은 tree의 12개 성공을 연결한다. 기존 `candidate_precast_strict_fail=14`는 혼합 정밀도 비교이며 publisher 원래 prewrite 비교는 미확정이다. 봉인 자료와 strict FAIL 21개는 변경하지 않는다.
