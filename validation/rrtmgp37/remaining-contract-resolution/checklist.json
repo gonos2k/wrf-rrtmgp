@@ -1,0 +1,128 @@
+{
+  "schema": "UDM37_REMAINING_CONTRACT_RESOLUTION_V1",
+  "base_main": "0f6dd96c4ad588f974c2f89600c1b9aecbde7ccd",
+  "base_tree": "720e462503a36a1b1c79ec55bc04c6aab2f92b26",
+  "production_accepted": false,
+  "main_merge_authorized": false,
+  "parent_completed_scoped": 15,
+  "parent_remaining": 7,
+  "original_gate_count": 19,
+  "current_gate_count": 12,
+  "items": [
+    {
+      "id": "PHY-NC",
+      "title": "수농도와 초기화 정책",
+      "status": "OPEN",
+      "completion_condition": "입력·경계·질량분모·population·UDM 과정·반경·반환의 단위와 변환 위치를 개발자 규약 및 실제 경로로 연결한다.",
+      "completed_subtasks": [
+        "PR156–157의 실제 host 연결·세 number 입력 보존 검사는 완료 상태다.",
+        "두 밀도 및 CCN 하한·상한 안팎 20개 제조 입력을 실제 UDM O0/O2로 검사했다. native/OFF/ON 반환 비트가 일치한다.",
+        "기존 상수 cold-start reset과 반복되는 native 입구 clip, 조건부 과정 제한 및 unclamped export를 구분했다.",
+        "검사기에 정확한 20개 입력군/상태 폭/건조 조건을 추가한 v3 actual O0/O2 실행 및 네 반례 거부도 완료했다. v1 실패와 v2 성공은 별도 보존했다."
+      ],
+      "next_work": "변수별 질량분모/population을 확정하고 기존 상수 초기화의 지원범위를 결정한다. 외부 입력 보존은 별도 계약이다. 가정한 밀도/CF 보정은 적용하지 않는다.",
+      "evidence": [
+        "evidence/native-bounds-v3/receipt.json",
+        "evidence/native-bounds-v2/receipt.json",
+        "evidence/native-bounds-v1/receipt.json",
+        "evidence/size-occurrence-contract-matrix-v1.json",
+        "evidence/native-bounds-oracle-negative-controls-v1.json"
+      ],
+      "physical_gate_closed": false
+    },
+    {
+      "id": "PHY-SIZE",
+      "title": "PSD와 LUT 유효크기",
+      "status": "OPEN",
+      "completion_condition": "Native PSD의 M0/M2/M3 및 pinned LUT 생성 population·재료·크기 정의가 연결된다.",
+      "completed_subtasks": [
+        "UDM 과정별 Gamma 정규화·slope·최종 helper와 LUT consumer의 정의표를 작성했다.",
+        "공식 데이터 계보를 AER SVN revision 2174까지 좁혔다. 정확한 LUT generator 식은 확보하지 못했다."
+      ],
+      "next_work": "AER revision 2174의 정확한 생성 recipe·계수/PSD와 현재 pinned 파일의 연결을 확보한다. 평균체적 반경과 광학 유효반경을 임의 1.06 배율로 맞추지 않는다.",
+      "evidence": [
+        "evidence/size-occurrence-contract-matrix-v1.json",
+        "evidence/source-size-occurrence-review.json"
+      ],
+      "physical_gate_closed": false
+    },
+    {
+      "id": "REF-RFMIP",
+      "title": "RFMIP published strict 기준",
+      "status": "FAIL",
+      "completion_condition": "Publisher의 생성 source/data/solar/compiler/runtime 및 저장 규약을 인증하고 고정 atol=1e-5, rtol=0을 통과하거나 독립 기준의 승인 여부를 결정한다.",
+      "completed_subtasks": [
+        "누락된 8개 실패 셀의 candidate binary64 prewrite를 새로운 1회 SW standalone 실행으로 확보했다. 전체 flux float32 bytes와 기존 결과가 동일하다.",
+        "기존 13개와 합쳐 21/21 실패 셀의 candidate prewrite를 확보했다. 14개는 cast 전 strict 초과, 7개는 cast가 strict 경계를 넘는다. 21개 모두 publisher 저장값의 rounding interval 밖이다."
+      ],
+      "next_work": "정확한 publisher 생성 환경과 pre-cast reference를 확보한다. Candidate prewrite 분류는 strict 실패의 해결이나 publisher 재현이 아니다.",
+      "evidence": [
+        "evidence/rfmip-eight/result.json",
+        "evidence/rfmip-previous/residual-details.json",
+        "evidence/reference-next-step-review-v2.json"
+      ],
+      "physical_gate_closed": false
+    },
+    {
+      "id": "REF-LBL",
+      "title": "LBLRTM 음의 광학두께",
+      "status": "FAIL",
+      "completion_condition": "완전하고 정의된 predecessor/기여/상쇄를 추적하고 독립 물리 reference의 수용성을 검증한다.",
+      "completed_subtasks": [
+        "기존 v14 semantic review가 이미 완료됐음을 대장에 연결했다. 35개의 선택 direct XINT write는 음수 목적지의 최초 발생원을 설명하지 않는다.",
+        "완료된 saved semantic review 반복 제안을 v2 정정으로 취소했다.",
+        "35개 attribution/29개 distinct native cell의 target별 R1/R2/R3 writer·clear·shift·초기화 source 표를 작성했다. 기존 35 XINT write와 다른 대상 집합이며 runtime hit/extent/완전 writer roster는 UNKNOWN이다."
+      ],
+      "next_work": "소스 표의 UNKNOWN인 runtime target hit·실제 MAX/valid extent·owner panel·predecessor stage를 인증한다. 관측 범위를 독립 검토한 후에만 새 reference 실행을 준비한다. 음의 중간 기여를 clipping하지 않는다.",
+      "evidence": [
+        "evidence/lbl-existing-terminal-peer-review-v4.json",
+        "evidence/reference-next-step-review-v2.json",
+        "evidence/lbl-r1-r2-r3-source-census-v1.json"
+      ],
+      "physical_gate_closed": false
+    },
+    {
+      "id": "PHY-OCCURRENCE",
+      "title": "강수 발생분율과 frozen 재료",
+      "status": "OPEN",
+      "completion_condition": "CF0 강수와 qg/qh의 발생영역·재료·습성·PSD 정책을 독립 기준 및 관측으로 검증한다.",
+      "completed_subtasks": [
+        "6종 native/CU·mode0/1·CF0/positive CF의 물경로와 마스크 소스 표를 작성했다.",
+        "Mode0의 제외·fatal 조건과 experimental mode1의 발생분율 1 가정을 구분했다."
+      ],
+      "next_work": "종별 발생분율과 재료/습성 가정을 정한 독립 optics 및 관측 대조를 수행한다. source 표의 완성은 물리 정책의 승인이 아니다.",
+      "evidence": [
+        "evidence/size-occurrence-contract-matrix-v1.json"
+      ],
+      "physical_gate_closed": false
+    },
+    {
+      "id": "FINAL-IDENTITY",
+      "title": "최종 실행 identity",
+      "status": "OPEN",
+      "completion_condition": "승인된 최종 정책의 source tree·compiler/flags·binary/library·입력/계수·정책·결과와 at-execution closure를 묶는다.",
+      "completed_subtasks": [
+        "보존된 connected-host 실행의 binary/input/namelist/log/history와 현재 생산 source bytes를 연결했다. 5915개 WRF 파일 일치, 차이는 시험 runner 2개다.",
+        "5개 관측 삽입 파일의 원본 byte 복원을 확인했다."
+      ],
+      "next_work": "최종 정책이 승인된 뒤 새 실행의 실제 환경과 library closure를 기록한다. 이번 ldd는 현재 audit 환경이며 원래 실행환경 인증이 아니다.",
+      "evidence": [
+        "evidence/scoped-execution-identity-v1.json",
+        "evidence/identity-audit-attempts.json"
+      ],
+      "physical_gate_closed": false
+    },
+    {
+      "id": "FINAL-FORECAST",
+      "title": "최종 장시간 예보와 관측",
+      "status": "NOT_RUN",
+      "completion_condition": "확정 정책의 장시간 4/37 쌍·restart/분할·관측을 평가하고 복사 엔진과 UDM 정책 및 상태 feedback 효과를 분리한다.",
+      "completed_subtasks": [
+        "기존 13h/48h 및 관측 자료의 source/policy 범위를 유지한다. 새 최종 정책 실행으로 전용하지 않는다."
+      ],
+      "next_work": "최종 정책·수송 옵션·입력·관측 지표를 고정한 뒤 해당 구성의 장시간 쌍과 관측을 실행한다. 정책 미확정 상태에서 종료 성공만으로 정확도를 승인하지 않는다.",
+      "evidence": [],
+      "physical_gate_closed": false
+    }
+  ]
+}

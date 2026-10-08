@@ -1,0 +1,99 @@
+{
+  "schema": "UDM37_REMAINING_REFERENCE_NEXT_STEP_REVIEW_V2",
+  "status": "SOURCE_AND_SAVED_METADATA_REVIEW_NEXT_STEPS_UPDATED",
+  "created_utc": "2026-10-08",
+  "supersedes": {
+    "path": "build/udm37-remaining-resolution-v1/reference-next-step-review.json",
+    "sha256": "ce3c80de2d13352540fd9d5b5084ef82ba4b40767101ba38834b01cb5882c2ce",
+    "change": "Retains the RFMIP next step; withdraws the redundant suggestion to independently re-review v14's saved semantic result because that review already exists. Replaces it with the still-missing source-roster/initialized-extent audit."
+  },
+  "scope": {
+    "inspection": "source, documentation, and small metadata JSON only",
+    "not_performed": ["raw trace/OD/NetCDF read", "scientific reader or replay", "compiler/build", "model or solver", "production source edit"],
+    "acceptance": {
+      "production_accepted": false,
+      "physical_reference_accepted": false,
+      "strict_RFMIP_gate": "FAIL_PRESERVED",
+      "strict_LBL_trace_and_negative_OD": "FAIL_PRESERVED",
+      "checklist_counts": "original19/current12 unchanged; current15 scoped complete/7 physical open"
+    }
+  },
+  "REF-RFMIP": {
+    "status": "STRICT_FAIL_PRESERVED",
+    "previous_next_step_unchanged": true,
+    "current_failure_summary": "The historical-source candidate retains 21 strict SW failures (13 RSD, 8 RSU). Thirteen have saved prewrite diagnostics; eight do not. Exact publisher executable/build, compiler/options, complete inputs and pre-cast outputs remain unidentified. Existing results show output float32 rounding cannot explain all observed historical failures.",
+    "next_step": {
+      "action": "Complete prewrite capture for the eight uncaptured historical-candidate failure cells.",
+      "source_boundary": "Fresh private copy of build/udm37-rfmip-historical-source-experiment-v1; alter only diagnostic cell selection in the historical SW observer. Hold the authenticated v1.0 source, SW coefficient file, input set, GNU Fortran 13.3 options, and solver arithmetic fixed. Compare each captured double to the corresponding stored float32 interval and the unchanged atol=1e-5, rtol=0 gate.",
+      "root_command_sequence": [
+        "Stage an unused v2 directory by copying the existing pinned experiment inputs/source/build recipe and writing a new immutable run plan.",
+        "Use a one-use bounded build wrapper to compile/link the diagnostic SW driver against the already pinned historical libraries; journal actual child RC before postflight.",
+        "Invoke one standalone historical SW RTE run, then analyze only the eight selected prewrite values plus the existing strict-failure metadata."
+      ],
+      "resource_bound": "One diagnostic-driver build/link and one standalone SW invocation; no WRF/REAL/forecast, coefficient regeneration, or download.",
+      "limit": "This classifies candidate-side prewrite versus serialization behavior; it does not establish the original publisher's pre-cast values or build provenance. Obtain those original run records from the reference publisher to resolve attribution."
+    },
+    "evidence_pins": [
+      {"path": "build/udm37-rfmip-output-quantization-audit-v1/README.md", "sha256": "c8fec8745de2a610766351c56ac4181834712caee3d4f9998dfb692d20da40fa"},
+      {"path": "build/udm37-rfmip-historical-rte-independent-review-v1/review.json", "sha256": "6741bf8de8a4099a8800c2c82c7faf0a499c90ba33a15d9f42f5fc2f4c372255"},
+      {"path": "build/udm37-rfmip-fixed-rte-replay-terminal-independent-review-v1/review.json", "sha256": "eccf4eeee3f8871c6442774c3700f1362ecf5e732f649f8420556f5b1a28e463"},
+      {"path": "build/official-rrtmgp-reference/source/examples/rfmip-clear-sky/Readme.md", "sha256": "aa6f4cb1fb187e6df437ab6e360894a83aae8bcf6ed0149819558390ee478fdf"},
+      {"path": "build/official-rrtmgp-reference/source/examples/rfmip-clear-sky/Makefile", "sha256": "6b92a3a4cdc39fe9253b02adc589948e18070a8858f8dfcc9a1355d3e8f28132"}
+    ],
+    "why_strict_gate_stays": "The reference contract is not changed by an independently rerun candidate. The historical reproduction is not the original publisher build, and the existing mismatches exceed what serialization alone explains."
+  },
+  "REF-LBL": {
+    "status": "NEGATIVE_OD_FAIL_AND_STRICT_TRACE_FAIL_PRESERVED",
+    "completed_v14_saved_semantic_review": {
+      "path": "build/udm37-lblrtm-xint-arithmetic-actual-preparation-v1/terminal-peer-review-v4.json",
+      "sha256": "4a291b18cc84408643b73ca2453a7e2a71088ee0812a21bb4376dcb794e3e93f",
+      "status": "PASS_SCOPED_SAVED_OBSERVATIONAL_ARITHMETIC_AND_ENDPOINT_TERMINAL",
+      "scope_summary": {
+        "selected_source_order_writes": 35,
+        "selected_route": "direct continuum XINT route 10",
+        "negative_before": 31,
+        "negative_after": 30,
+        "new_negative_crossings_in_these_writes": 0,
+        "ANC_endpoint_matches": 130,
+        "complete_origin_count": 0,
+        "source_roster_authority": "UNSUPPORTED",
+        "initialized_extent_authority": "UNSUPPORTED",
+        "strict_trace": "FAIL_PRESERVED",
+        "negative_OD": "FAIL_PRESERVED",
+        "physical_reference_accepted": false
+      },
+      "interpretation": "This is already the saved semantic review; do not repeat it. It shows the selected positive continuum writes mostly act on destinations that were already negative, but does not identify the earlier writer or prove complete ancestry. Endpoint matches are not complete origins."
+    },
+    "previous_recommendation_withdrawn": "Do not run or commission another independent review of the same v14 saved semantic result as the next step; that review is complete and pinned above.",
+    "next_step_for_root": {
+      "name": "Perform a source-only write/initialization census for the exact target-specific R1/R2/R3 ancestry windows before any new LBL solve.",
+      "reason": "The highest-value unresolved issue is now source coverage: the reviewed v14 result has 35 writes and endpoint joins, but complete origins are zero and source-roster/initialized-extent authority remains unsupported. Another run without knowing every writer and initial-value region risks repeating an incomplete capture or treating absent terms as zero.",
+      "precise_source_boundary": [
+        "Pin the uninstrumented source corresponding to the v14 stripped OPROP, then inspect the native OPROP caller and the exact CNVFNV, PANEL, XSECTM, and XINT routines that can mutate or shift the R1/R2/R3 backing arrays before each target panel.",
+        "For the fixed 35 target writes and their mapped physical-frequency/panel owners, enumerate every active write, carry/shift, clear/zero, and initialization route into each needed stencil cell. Include XSECTM's conditional direct R1/R2/R3 XINT destinations as well as CNVFNV writes; do not infer that endpoint equality proves the roster complete.",
+        "Trace actual declaration/COMMON equivalences, allocation/backing bounds, and runtime-valid N1R*/N2R* ranges separately. Prove which predecessor cells are initialized and populated at the relevant time; a larger array extent alone does not prove defined values.",
+        "Join that source-derived writer roster against the already reviewed v14 capture schema and the saved target index/panel metadata. Classify each expected source as captured, source-proven absent/inactive, or unsupported. Never turn an absent/censored record into a numeric zero."
+      ],
+      "source_start_points": [
+        {"path": "build/udm37-lblrtm-xint-active-write-observer-v14-source-v2/oprop.xint-observer-v14-v2.UNCOMPILED.f90", "sha256": "06f0151bd077e1372eda79559e793f180b550ff8bd5eace1e06a3fca84799832", "regions": "OPROP calls near lines 481, 531-586 and 611; XSECTM near lines 4936-5453; CNVFNV near 1434-1709; XINT near 2570-2622"},
+        {"path": "build/udm37-lblrtm-xint-arithmetic-actual-preparation-v1/plan-v4.json", "sha256": "15a61ebaf56b15fdca55bb062655e4ad6fc9129a0ac7b689686172193401cf9a", "role": "Pinned actual-result/source/capture plan; source only, do not rerun the reader"},
+        {"path": "build/udm37-lblrtm-xint-arithmetic-actual-preparation-v1/terminal-peer-review-v4.json", "sha256": "4a291b18cc84408643b73ca2453a7e2a71088ee0812a21bb4376dcb794e3e93f", "role": "Already-completed semantic saved review and explicit unsupported limits"}
+      ],
+      "command_boundary": "One independent source auditor (stdlib/source parsing only) should consume the pinned 35-target roster and capture schema, emit a per-array/per-target writer-and-initialization table, and report coverage gaps. It must not read XINT/ANC raw streams, OD arrays, TAPE3/TAPE5, compile, invoke LBLRTM, or change source. If the census proves an actual missing active writer, prepare a separate observer proposal and obtain independent review before any one-use build/solver authorization.",
+      "resources": "Small source files, plans, and saved semantic-review JSON; no compilation, solver, model, raw scientific payload or large data read.",
+      "why_strict_gate_stays": "The negative-OD criterion is a physical output property, and a successful solver exit or partial ancestry arithmetic does not establish it. The strict source trace requires complete defined inputs; unsupported or uninitialized predecessors cannot be waived or imputed."
+    },
+    "evidence_pins": [
+      {"path": "build/udm37-lblrtm-xint-v14-execution-independent-review-v1/review.json", "sha256": "939465455a579872ddbe0fbedca89a07d1cdebf9d581cc96098258f7ca5697ff", "scope": "metadata/run binding only"},
+      {"path": "build/udm37-lblrtm-negative-pocket-observer-v10-run-v1/root-postflight-all45-comparison.json", "sha256": "b5069dba05aa11aa6e40c7ab3cde1c86b0e2fd2aeb5b9f8341911892bc5f0531", "scope": "outside-HTIME exact; whole-file strict failures retained"},
+      {"path": "build/udm37-lblrtm-negative-pocket-observer-v10-run-v1/root-parser-v8-execution.json", "sha256": "28a3395125cc4818712a9c045e9d14bfb74903453adb228ed011cf50ab9ea7eb", "scope": "strict parser rejection due missing predecessor stage-1 R1 record"},
+      {"path": "build/udm37-lblrtm-pocket-deposit-v2/result-v4.json", "sha256": "612a19d771424bbf41a5195b7d6503cc25d8240333bb56a587e54576b8fd7229", "scope": "eight selected stage-2 to stage-3 samples only"}
+    ]
+  },
+  "overall": {
+    "do_not_repeat": "The v14 saved semantic result review is complete; the actionable LBL gap is source-defined writer/initialization coverage.",
+    "do_not_relax": ["RFMIP strict tolerance", "LBL full-trace completeness", "negative-OD validity"],
+    "production_accepted": false,
+    "physical_reference_accepted": false
+  }
+}

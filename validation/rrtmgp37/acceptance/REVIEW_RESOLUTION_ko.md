@@ -77,3 +77,5 @@ real.exe, 실제 specified lateral boundary, 다른 수송 정책, 입자크기 
 직전·직후 QNC/QNR 보존을 자동 강제한다. 양의 제조 QNR sentinel, 7개 오류 반례,
 기존 실행파일을 재사용한 7개 모델 자식 및 OFF/ON 동일성을 보존한다.
 초기화 정책 결정과 단위 계약은 여전히 OPEN이며 완료15/잔여7을 변경하지 않는다.
+
+[현재 7개 미완료 해소 대장](../remaining-contract-resolution/README_ko.md)은 native CCN 범위·누락 RFMIP prewrite·실행 byte 연결의 완료 하위 작업과 물리 승인 OPEN/FAIL을 분리한다. 기존 실제 host 연결은 완료 범위를 유지한다.

@@ -1,0 +1,770 @@
+{
+  "schema": "UDM37_SIZE_OCCURRENCE_SOURCE_CONTRACT_MATRIX_V1",
+  "status": "PASS_SCOPED_DOCUMENTARY_SUBTASKS_PHYSICAL_OPEN",
+  "recorded_utc": "2026-10-08T01:06:30.201600+00:00",
+  "verdict_ko": "고정 소스의 과정별 크기 정의표와 여섯 종 발생분율/경로 표, 공식74a0e09의 공개 파일 계보를 작성했습니다. 문서화 하위 작업만 완료했으며 native 최종 PSD·액체 LUT 생성 모멘트와 발생분율의 물리 승인은 여전히 OPEN입니다.",
+  "parent_review": {
+    "path": "build/udm37-remaining-resolution-v1/source-size-occurrence-review.json",
+    "sha256": "7470dd1a3c97e5b9935d0fdb1ebeffb5b98d7c8df19bcb9d69ac3ec8269841ee",
+    "size_bytes": 23701
+  },
+  "source_identity": {
+    "head": "e1f1caea90ee4e4b71f7d6f03a314735b578d9be",
+    "tree": "720e462503a36a1b1c79ec55bc04c6aab2f92b26",
+    "source_files_equal_HEAD": true,
+    "remote_status": "Not queried for project main; this report is scoped to retained tested worktree"
+  },
+  "source_pins": {
+    "WRF/phys/module_mp_udm.F": {
+      "path": "build/udm37-cold-number-input-pr-work/WRF/phys/module_mp_udm.F",
+      "sha256": "7bd96141eefc6ae2cb66cea0ce022fcc2ee64afce5c616aa65f26711c8790947",
+      "size_bytes": 196865
+    },
+    "WRF/phys/module_ra_rrtmgp_input.F": {
+      "path": "build/udm37-cold-number-input-pr-work/WRF/phys/module_ra_rrtmgp_input.F",
+      "sha256": "65e61158b31d83d34da98dac51524606733b3fde4a89743498f9b1cd52646274",
+      "size_bytes": 41665
+    },
+    "WRF/phys/module_ra_rrtmgp.F": {
+      "path": "build/udm37-cold-number-input-pr-work/WRF/phys/module_ra_rrtmgp.F",
+      "sha256": "1852452555fbe667a0a95d59242bcd9c3833f2877fc51f882d5d3d929a058f58",
+      "size_bytes": 74962
+    },
+    "WRF/external/rte_rrtmgp/rrtmgp-frontend/mo_cloud_optics_rrtmgp.F90": {
+      "path": "build/udm37-cold-number-input-pr-work/WRF/external/rte_rrtmgp/rrtmgp-frontend/mo_cloud_optics_rrtmgp.F90",
+      "sha256": "14dcab00e6dfe1a64d40b5ddf3cf86186380fac2b8d0c0c3aa2e1f466b0446fc",
+      "size_bytes": 38204
+    }
+  },
+  "equation_to_definition_table": [
+    {
+      "id": "LB2017_LOCAL_PSD",
+      "file": "WRF/phys/module_mp_udm.F",
+      "anchors": {
+        "citation": [
+          559,
+          1421
+        ],
+        "inputs_and_slope": [
+          1423,
+          1429
+        ],
+        "normalization_and_process": [
+          1441,
+          1458
+        ],
+        "shape_tables": [
+          149,
+          155,
+          193,
+          195,
+          3566,
+          3568
+        ],
+        "integral_tables": [
+          4236,
+          4358
+        ]
+      },
+      "ordered_expressions": [
+        "L_c=QC_restored*DEN",
+        "n_c=max(min(NC_current,1e12),2)",
+        "nu_c=min(nint(1e9/n_c)+2,15)",
+        "lambda_local=bounded((n_c*pidnc*8*ccg(nu_c)*ocg1(nu_c)/L_c)**obmr1)",
+        "Gamma recurrence gamma1(0)=1/lambda; gamma1(n)=gamma1(n-1)*n/lambda; n0c=n_c/gamma1(nu_c)"
+      ],
+      "definition": "Process-local shape-dependent autoconversion integration; ccg=Gamma(3+n+1), ocg1=1/Gamma(1+n).",
+      "coordinate": "The factor8 converts pi*rho/6 to spherical-radius mass coefficient; exact correspondence to paper radius/diameter PSD convention remains OPEN until full primary equations are authenticated.",
+      "not_equivalent_to": "A single shape policy applied to final helper/radiation state",
+      "authority": "Source formula proven; native number/population meaning and universal radiative moment remain OPEN"
+    },
+    {
+      "id": "SLOPE_CLOUD",
+      "file": "WRF/phys/module_mp_udm.F",
+      "anchors": [
+        3030,
+        3064
+      ],
+      "ordered_expressions": [
+        "lambda=exp(log(pidnc*N/(Q*DEN))*0.33333333)",
+        "lambda bounded to lamdacmin/max; inverse powers retained"
+      ],
+      "definition": "Cloud process slope diagnostic from current Q,N,DEN; no nu/M2 argument. Decimal exponent and native association retained; not a binary exact ideal cube-root claim.",
+      "authority": "Numeric producer contract known; complete PSD/shape/number units not declared by this procedure"
+    },
+    {
+      "id": "FINAL_LIQUID_HELPER",
+      "file": "WRF/phys/module_mp_udm.F",
+      "anchors": {
+        "postreturn_call": [
+          448,
+          495
+        ],
+        "signature": [
+          3749,
+          3774
+        ],
+        "availability_and_formula": [
+          3803,
+          3824
+        ],
+        "radius_limits": [
+          100,
+          101
+        ]
+      },
+      "ordered_expressions": [
+        "rqc=max(R1,QC*rho)",
+        "rnc=max(R2,NC*rho) for availability only",
+        "lambda=(pidnc*raw_NC/rqc)**obmr",
+        "radius=clamp(0.5/lambda,recmin,recmax)"
+      ],
+      "definition": "Returned liquid size from final native tuple, no CF or PSD shape/M2 input. nu_c local declaration is unused in liquid formula.",
+      "conditional_identity": "If raw_NC is matching volume number and QC*rho matching spherical liquid mass, the unclipped output is volume-equivalent radius. No optical M3/(2*M2) identification follows without PSD/shape authority.",
+      "authority": "Implementation and scoped kernel evidence known; physical unit/population/moment contract OPEN"
+    },
+    {
+      "id": "LUT_CONSUMER",
+      "file": "WRF/external/rte_rrtmgp/rrtmgp-frontend/mo_cloud_optics_rrtmgp.F90",
+      "anchors": {
+        "Mie_label": [
+          12,
+          16
+        ],
+        "coordinate_step": [
+          142
+        ],
+        "interpolation": [
+          665,
+          688
+        ]
+      },
+      "ordered_expressions": [
+        "step=(radliq_upr-radliq_lwr)/(nsize_liq-1)",
+        "table index/fraction from supplied size",
+        "tau=liquid_path*linear(extliq); tauSSA and tauSSAg follow"
+      ],
+      "definition": "Effective-size API in micrometres, pinned metadata attests20 sizes2.5–21.5; linear band LUT. Consumer does not infer number or reconstruct PSD.",
+      "authority": "Interface verified; exact generating distribution/moment recipe OPEN. Existing local table SHA metadata is inherited, not refreshed by reading coefficient arrays."
+    }
+  ],
+  "six_species_occurrence_matrix": [
+    {
+      "species": "cloud_liquid",
+      "input_mass": "qc",
+      "population": "native UDM",
+      "modes": {
+        "mode0": {
+          "positive_CF": "Grid path=q*layer_mass; in-occurrence path=grid_path/CF. Optical contribution joins prepared cloud optics before shared CF sampling; native/cloud+rain/snow sampled into atmosphere only if overlap!=0.",
+          "CF0": "Positive mass requires explicit allow-clear/omission builder policy; otherwise reject. Under omission record omitted grid path; native optical path remains zero.",
+          "definition_status": "Implemented contract only; independent species occurrence not accepted."
+        },
+        "mode1": {
+          "positive_CF": "Grid path=q*layer_mass; in-occurrence path=grid_path/CF. Optical contribution joins prepared cloud optics before shared CF sampling; native/cloud+rain/snow sampled into atmosphere only if overlap!=0.",
+          "CF0": "Positive mass requires explicit allow-clear/omission builder policy; otherwise reject. Under omission record omitted grid path; native optical path remains zero.",
+          "definition_status": "Implemented contract only; independent species occurrence not accepted."
+        }
+      },
+      "mass_basis": "Grid dry-mixing ratio to g/m2 via supplied dry-layer mass (fallback dp/g when optional mass absent); unit basis authority is an upstream contract dependency.",
+      "optical_path": "Liquid cloud LUT with supplied re_cloud",
+      "CU": "No separate CU rain/snow inputs; CU liquid/ice contributions only, described in overlays.",
+      "anchors": {
+        "builder": [
+          424,
+          427,
+          504,
+          549
+        ],
+        "LW": [
+          835,
+          879,
+          889,
+          896
+        ],
+        "SW": [
+          1175,
+          1254,
+          1270,
+          1274,
+          1297,
+          1305
+        ]
+      }
+    },
+    {
+      "species": "cloud_ice",
+      "input_mass": "qi",
+      "population": "native UDM",
+      "modes": {
+        "mode0": {
+          "positive_CF": "Grid path=q*layer_mass; in-occurrence path=grid_path/CF. Optical contribution joins prepared cloud optics before shared CF sampling; native/cloud+rain/snow sampled into atmosphere only if overlap!=0.",
+          "CF0": "Positive mass requires explicit allow-clear/omission builder policy; otherwise reject. Under omission record omitted grid path; native optical path remains zero.",
+          "definition_status": "Implemented contract only; independent species occurrence not accepted."
+        },
+        "mode1": {
+          "positive_CF": "Grid path=q*layer_mass; in-occurrence path=grid_path/CF. Optical contribution joins prepared cloud optics before shared CF sampling; native/cloud+rain/snow sampled into atmosphere only if overlap!=0.",
+          "CF0": "Positive mass requires explicit allow-clear/omission builder policy; otherwise reject. Under omission record omitted grid path; native optical path remains zero.",
+          "definition_status": "Implemented contract only; independent species occurrence not accepted."
+        }
+      },
+      "mass_basis": "Grid dry-mixing ratio to g/m2 via supplied dry-layer mass (fallback dp/g when optional mass absent); unit basis authority is an upstream contract dependency.",
+      "optical_path": "Ice cloud LUT with supplied re_ice and selected iceflag/roughness",
+      "CU": "No separate CU rain/snow inputs; CU liquid/ice contributions only, described in overlays.",
+      "anchors": {
+        "builder": [
+          424,
+          427,
+          504,
+          549
+        ],
+        "LW": [
+          835,
+          879,
+          889,
+          896
+        ],
+        "SW": [
+          1175,
+          1254,
+          1270,
+          1274,
+          1297,
+          1305
+        ]
+      }
+    },
+    {
+      "species": "rain",
+      "input_mass": "qr",
+      "population": "native UDM",
+      "modes": {
+        "mode0": {
+          "positive_CF": "Grid path=q*layer_mass; in-occurrence path=grid_path/CF. Optical contribution joins prepared cloud optics before shared CF sampling; native/cloud+rain/snow sampled into atmosphere only if overlap!=0.",
+          "CF0": "Positive mass requires explicit allow-clear/omission builder policy; otherwise reject. Under omission record omitted grid path; native optical path remains zero.",
+          "definition_status": "Implemented contract only; independent species occurrence not accepted."
+        },
+        "mode1": {
+          "positive_CF": "Grid path=q*layer_mass; in-occurrence path=grid_path/CF. Optical contribution joins prepared cloud optics before shared CF sampling; native/cloud+rain/snow sampled into atmosphere only if overlap!=0.",
+          "CF0": "Positive mass requires explicit allow-clear/omission builder policy; otherwise reject. Under omission record omitted grid path; native optical path remains zero.",
+          "definition_status": "Implemented contract only; independent species occurrence not accepted."
+        }
+      },
+      "mass_basis": "Grid dry-mixing ratio to g/m2 via supplied dry-layer mass (fallback dp/g when optional mass absent); unit basis authority is an upstream contract dependency.",
+      "optical_path": "Precipitation optics when RWP API bundle is present",
+      "CU": "No separate CU rain/snow inputs; CU liquid/ice contributions only, described in overlays.",
+      "anchors": {
+        "builder": [
+          424,
+          427,
+          504,
+          549
+        ],
+        "LW": [
+          835,
+          879,
+          889,
+          896
+        ],
+        "SW": [
+          1175,
+          1254,
+          1270,
+          1274,
+          1297,
+          1305
+        ]
+      }
+    },
+    {
+      "species": "snow",
+      "input_mass": "qs",
+      "population": "native UDM",
+      "modes": {
+        "mode0": {
+          "positive_CF": "Grid path=q*layer_mass; in-occurrence path=grid_path/CF. Optical contribution joins prepared cloud optics before shared CF sampling; native/cloud+rain/snow sampled into atmosphere only if overlap!=0.",
+          "CF0": "Positive mass requires explicit allow-clear/omission builder policy; otherwise reject. Under omission record omitted grid path; native optical path remains zero.",
+          "definition_status": "Implemented contract only; independent species occurrence not accepted."
+        },
+        "mode1": {
+          "positive_CF": "Grid path=q*layer_mass; in-occurrence path=grid_path/CF. Optical contribution joins prepared cloud optics before shared CF sampling; native/cloud+rain/snow sampled into atmosphere only if overlap!=0.",
+          "CF0": "Positive mass requires explicit allow-clear/omission builder policy; otherwise reject. Under omission record omitted grid path; native optical path remains zero.",
+          "definition_status": "Implemented contract only; independent species occurrence not accepted."
+        }
+      },
+      "mass_basis": "Grid dry-mixing ratio to g/m2 via supplied dry-layer mass (fallback dp/g when optional mass absent); unit basis authority is an upstream contract dependency.",
+      "optical_path": "Precipitation optics when RWP API bundle is present; legacy no-RWP API uses native cloud snow path",
+      "CU": "No separate CU rain/snow inputs; CU liquid/ice contributions only, described in overlays.",
+      "anchors": {
+        "builder": [
+          424,
+          427,
+          504,
+          549
+        ],
+        "LW": [
+          835,
+          879,
+          889,
+          896
+        ],
+        "SW": [
+          1175,
+          1254,
+          1270,
+          1274,
+          1297,
+          1305
+        ]
+      }
+    },
+    {
+      "species": "graupel",
+      "input_mass": "qg",
+      "population": "native UDM",
+      "modes": {
+        "mode0": {
+          "positive_CF": "Builder may create diagnostic G paths but no G optical consumption",
+          "CF0": "Positive G included in default CF0-condensate rejection/explicit omission checks; no G optics",
+          "optical_acceptance": "Not supported by mode0"
+        },
+        "mode1": {
+          "all_CF": "Uniform G/H occurrence=1; optical path is grid path, no division by CF; independent of native cloud/CU McICA mask.",
+          "mass_mask": "Added after native cloud sampling (LW) / outside masked native cloud+rain/snow attenuation (SW).",
+          "optical_acceptance": "Experimental frozen table/material/PSD assumptions; physical occurrence not accepted"
+        }
+      },
+      "CU": "No separate CU G/H input or occurrence option at this API",
+      "anchors": {
+        "builder": [
+          491,
+          497,
+          504,
+          505,
+          535,
+          548
+        ],
+        "LW": [
+          889,
+          896
+        ],
+        "SW": [
+          1297,
+          1305
+        ]
+      }
+    },
+    {
+      "species": "hail",
+      "input_mass": "qh",
+      "population": "native UDM",
+      "modes": {
+        "mode0": {
+          "positive_CF": "Positive hail rejected before builder produces usable paths",
+          "CF0": "Positive hail rejected independently of CF",
+          "optical_acceptance": "Not supported by mode0"
+        },
+        "mode1": {
+          "all_CF": "Uniform G/H occurrence=1; optical path is grid path, no division by CF; independent of native cloud/CU McICA mask.",
+          "mass_mask": "Added after native cloud sampling (LW) / outside masked native cloud+rain/snow attenuation (SW).",
+          "optical_acceptance": "Experimental frozen table/material/PSD assumptions; physical occurrence not accepted"
+        }
+      },
+      "CU": "No separate CU G/H input or occurrence option at this API",
+      "anchors": {
+        "builder": [
+          491,
+          497,
+          504,
+          505,
+          535,
+          548
+        ],
+        "LW": [
+          889,
+          896
+        ],
+        "SW": [
+          1297,
+          1305
+        ]
+      }
+    }
+  ],
+  "CU_population_overlays": {
+    "supported_species": [
+      "liquid",
+      "ice"
+    ],
+    "source_anchors": {
+      "input_validator": [
+        597,
+        620
+      ],
+      "LW": [
+        835,
+        867,
+        889,
+        894
+      ],
+      "SW": [
+        1175,
+        1213,
+        1270,
+        1274
+      ]
+    },
+    "path_contract": "CU LWP/IWP and supplied WRF fallback sizes are separately provided; partial bundle, invalid radii and positive CU path at CF0 rejected. No CU rain/snow/G/H bundle.",
+    "sampling": "Native and CU optics combine before the same supplied-CF mask; global frozen mode does not create an independently diagnosed CU overlap policy.",
+    "ambiguities_OPEN": [
+      "Whether native and CU fractions physically overlap and to what degree",
+      "Joint occurrence for rain/snow versus native cloud",
+      "How stale/initialized UDM CF relates to each species at radiation time"
+    ],
+    "scope_limit": "Low-level legacy no-RWP branch handles snow differently. Matrix labels that branch and does not claim one scalar/API configuration covers all host routes."
+  },
+  "native_CF_stage_boundaries": {
+    "file": "WRF/phys/module_mp_udm.F",
+    "anchors": {
+      "initial_CF": [
+        1047
+      ],
+      "diagnose_and_publish": [
+        1093,
+        1100
+      ],
+      "mass_divide": [
+        1102,
+        1112
+      ],
+      "mass_restore": [
+        1298,
+        1311
+      ],
+      "actual_diagnosis": [
+        3394,
+        3450
+      ]
+    },
+    "meaning": "CF diagnosed from QC/QI only over1:ktop; working CF above extent remains initialized1. Six masses undergo temporary conditional scaling; NN/NC/NR lack paired scaling at these sites. Other processes intervene and final helper has no CF input. No unchanged-state or conditional-number definition inferred."
+  },
+  "official_74a0e09_inventory": {
+    "query_method": "Read-only gh api; no coefficient blob payload fetched",
+    "commit": {
+      "sha": "74a0e098b2163425e4b5466c2dfcf8ae26d560a5",
+      "tree": "17333e8d00317e1daafeb54d2a579b6378356022",
+      "date": "2023-01-10T15:58:46Z",
+      "message_summary": "Updated SW cloud optics data, finalization routines for RRTMGP, overhauled CI (#204)",
+      "parent_shas": [
+        "83ff9b315953506333c9143c0b6538d8f7020244"
+      ]
+    },
+    "tree": {
+      "sha": "17333e8d00317e1daafeb54d2a579b6378356022",
+      "entry_count": 124,
+      "truncated": false,
+      "cloud_related_entries": [
+        {
+          "path": "examples/all-sky/mo_load_cloud_coefficients.F90",
+          "type": "blob",
+          "sha": "e7c537011285071f56f52ce024ed68fe17c69a63",
+          "size": 9450
+        },
+        {
+          "path": "extensions/cloud_optics",
+          "type": "tree",
+          "sha": "a73122933b5e89eb1af905cd0f7b2b33a5e5f1b0",
+          "size": null
+        },
+        {
+          "path": "extensions/cloud_optics/mo_cloud_optics.F90",
+          "type": "blob",
+          "sha": "5ddfc99be4839f7eab099760547f21cddf26c8dd",
+          "size": 37620
+        },
+        {
+          "path": "extensions/cloud_optics/mo_cloud_sampling.F90",
+          "type": "blob",
+          "sha": "f2359b096479815e67e057c1e007dd85f09e2948",
+          "size": 14044
+        },
+        {
+          "path": "extensions/cloud_optics/rrtmgp-cloud-optics-coeffs-lw.nc",
+          "type": "blob",
+          "sha": "f3cb19064b98ec4cdbdf88081aadebcdb7714195",
+          "size": 32212
+        },
+        {
+          "path": "extensions/cloud_optics/rrtmgp-cloud-optics-coeffs-reordered-sw.nc",
+          "type": "blob",
+          "sha": "2a98593aa110cb81621bbf18f09fb3e15a42a4df",
+          "size": 29380
+        },
+        {
+          "path": "rrtmgp/data/README.md",
+          "type": "blob",
+          "sha": "98057d767c171c57546fb74dfa7c61df46460810",
+          "size": 488
+        }
+      ],
+      "all_tracked_paths": [
+        ".github",
+        ".github/dependabot.yml",
+        ".github/workflows",
+        ".github/workflows/containerized-ci.yml",
+        ".github/workflows/continuous-integration.yml",
+        ".github/workflows/doc-deployment.yml",
+        ".github/workflows/module_switcher",
+        ".github/workflows/self-hosted-ci.yml",
+        ".gitignore",
+        "Compiler-flags.md",
+        "Contributing.md",
+        "LICENSE",
+        "Makefile",
+        "README.md",
+        "build",
+        "build/Makefile",
+        "doc",
+        "doc/build_documentation.sh",
+        "doc/class_diagrams",
+        "doc/class_diagrams/mo_optical_props.puml",
+        "doc/ford_site",
+        "doc/ford_site/rrtmgp-fortran-interface.md",
+        "doc/ford_site/rrtmgp-kernels.md",
+        "doc/ford_site/rte-fortran-interface.md",
+        "doc/ford_site/rte-kernels.md",
+        "doc/jekyll_site",
+        "doc/jekyll_site/.gitignore",
+        "doc/jekyll_site/Gemfile",
+        "doc/jekyll_site/_config.yml",
+        "doc/jekyll_site/_posts",
+        "doc/jekyll_site/_posts/2022-06-02-Release-notes.md",
+        "doc/jekyll_site/explanations",
+        "doc/jekyll_site/explanations/index.md",
+        "doc/jekyll_site/how-tos",
+        "doc/jekyll_site/how-tos/index.md",
+        "doc/jekyll_site/index.markdown",
+        "doc/jekyll_site/reference",
+        "doc/jekyll_site/reference/index.md",
+        "doc/jekyll_site/tutorials",
+        "doc/jekyll_site/tutorials/index.md",
+        "environment-dev.yml",
+        "environment-noplots.yml",
+        "environment.yml",
+        "examples",
+        "examples/all-sky",
+        "examples/all-sky/Makefile",
+        "examples/all-sky/README.md",
+        "examples/all-sky/compare-to-reference.py",
+        "examples/all-sky/garand-atmos-1.nc",
+        "examples/all-sky/mo_garand_atmos_io.F90",
+        "examples/all-sky/mo_load_cloud_coefficients.F90",
+        "examples/all-sky/rrtmgp_allsky.F90",
+        "examples/all-sky/run-allsky-example.py",
+        "examples/mo_load_coefficients.F90",
+        "examples/mo_simple_netcdf.F90",
+        "examples/rfmip-clear-sky",
+        "examples/rfmip-clear-sky/Makefile",
+        "examples/rfmip-clear-sky/Readme.md",
+        "examples/rfmip-clear-sky/compare-to-reference.py",
+        "examples/rfmip-clear-sky/mo_rfmip_io.F90",
+        "examples/rfmip-clear-sky/rrtmgp_rfmip_lw.F90",
+        "examples/rfmip-clear-sky/rrtmgp_rfmip_sw.F90",
+        "examples/rfmip-clear-sky/run-rfmip-examples.py",
+        "examples/rfmip-clear-sky/stage_files.py",
+        "examples/rfmip-clear-sky/stage_files.sh",
+        "extensions",
+        "extensions/cloud_optics",
+        "extensions/cloud_optics/mo_cloud_optics.F90",
+        "extensions/cloud_optics/mo_cloud_sampling.F90",
+        "extensions/cloud_optics/rrtmgp-cloud-optics-coeffs-lw.nc",
+        "extensions/cloud_optics/rrtmgp-cloud-optics-coeffs-reordered-sw.nc",
+        "extensions/mo_compute_bc.F90",
+        "extensions/mo_fluxes_byband.F90",
+        "extensions/mo_fluxes_bygpoint.F90",
+        "extensions/mo_heating_rates.F90",
+        "extensions/mo_rrtmgp_clr_all_sky.F90",
+        "extensions/mo_zenith_angle_spherical_correction.F90",
+        "extensions/solar_variability",
+        "extensions/solar_variability/mo_solar_variability.F90",
+        "extensions/solar_variability/rrtmgp-solar-var-tables.nc",
+        "rrtmgp",
+        "rrtmgp/Make.depends",
+        "rrtmgp/data",
+        "rrtmgp/data/README.md",
+        "rrtmgp/data/rrtmgp-data-lw-g128-210809.nc",
+        "rrtmgp/data/rrtmgp-data-lw-g256-2018-12-04.nc",
+        "rrtmgp/data/rrtmgp-data-sw-g112-210809.nc",
+        "rrtmgp/data/rrtmgp-data-sw-g224-2018-12-04.nc",
+        "rrtmgp/kernels-openacc",
+        "rrtmgp/kernels-openacc/mo_gas_optics_kernels.F90",
+        "rrtmgp/kernels",
+        "rrtmgp/kernels/mo_gas_optics_kernels.F90",
+        "rrtmgp/mo_gas_concentrations.F90",
+        "rrtmgp/mo_gas_optics.F90",
+        "rrtmgp/mo_gas_optics_rrtmgp.F90",
+        "rrtmgp/mo_rrtmgp_constants.F90",
+        "rrtmgp/mo_rrtmgp_util_string.F90",
+        "rte",
+        "rte/Make.depends",
+        "rte/kernels-openacc",
+        "rte/kernels-openacc/mo_optical_props_kernels.F90",
+        "rte/kernels-openacc/mo_rte_solver_kernels.F90",
+        "rte/kernels",
+        "rte/kernels/mo_fluxes_broadband_kernels.F90",
+        "rte/kernels/mo_optical_props_kernels.F90",
+        "rte/kernels/mo_rte_solver_kernels.F90",
+        "rte/mo_fluxes.F90",
+        "rte/mo_optical_props.F90",
+        "rte/mo_rte_config.F90",
+        "rte/mo_rte_kind.F90",
+        "rte/mo_rte_lw.F90",
+        "rte/mo_rte_sw.F90",
+        "rte/mo_rte_util_array.F90",
+        "rte/mo_source_functions.F90",
+        "tests",
+        "tests/Makefile",
+        "tests/Readme.md",
+        "tests/clear_sky_regression.F90",
+        "tests/intel-codecov.sh",
+        "tests/mo_rcemip_profiles.F90",
+        "tests/mo_testing_io.F90",
+        "tests/test_zenith_angle_spherical_correction.F90",
+        "tests/validation-plots.py",
+        "tests/verification.py"
+      ]
+    },
+    "path_histories": {
+      "extensions/cloud_optics/rrtmgp-cloud-optics-coeffs-lw.nc": [
+        {
+          "sha": "39fb66b80fc69c70a15f6f15fb9b2c68d14f24b3",
+          "date": "2018-08-09T17:27:57Z",
+          "message_summary": "Feature cloud optics (#1)",
+          "AER_SVN2174_explicit": true
+        }
+      ],
+      "extensions/cloud_optics/rrtmgp-cloud-optics-coeffs-reordered-sw.nc": [
+        {
+          "sha": "74a0e098b2163425e4b5466c2dfcf8ae26d560a5",
+          "date": "2023-01-10T15:58:46Z",
+          "message_summary": "Updated SW cloud optics data, finalization routines for RRTMGP, overhauled CI (#204)",
+          "AER_SVN2174_explicit": false
+        }
+      ],
+      "extensions/cloud_optics/rrtmgp-cloud-optics-coeffs-sw.nc": [
+        {
+          "sha": "74a0e098b2163425e4b5466c2dfcf8ae26d560a5",
+          "date": "2023-01-10T15:58:46Z",
+          "message_summary": "Updated SW cloud optics data, finalization routines for RRTMGP, overhauled CI (#204)",
+          "AER_SVN2174_explicit": false
+        },
+        {
+          "sha": "39fb66b80fc69c70a15f6f15fb9b2c68d14f24b3",
+          "date": "2018-08-09T17:27:57Z",
+          "message_summary": "Feature cloud optics (#1)",
+          "AER_SVN2174_explicit": true
+        }
+      ]
+    },
+    "old_cloud_consumer_blob": {
+      "path": "extensions/cloud_optics/mo_cloud_optics.F90",
+      "git_blob_sha": "5ddfc99be4839f7eab099760547f21cddf26c8dd",
+      "size_bytes": 37620,
+      "sha256": "005b159944cb3f0b69089d7ee4859547201556002c2409ffcb64e93eaf0beaa0",
+      "anchors": {
+        "Mie_and_author": [
+          12,
+          16
+        ],
+        "uniform_radius_step": [
+          141
+        ],
+        "liquid_input_unit": [
+          379
+        ],
+        "liquid_lookup": [
+          488,
+          490
+        ]
+      },
+      "PSD_or_M2_generator_definition_found": false
+    },
+    "new_lineage_lead": {
+      "commit": "39fb66b80fc69c70a15f6f15fb9b2c68d14f24b3",
+      "date": "2018-08-09T17:27:57Z",
+      "upstream_explicit_origin": "Mike Iacono work in AER Subversion revision2174",
+      "status": "Primary commit metadata provenance lead; original SVN source/recipe not authenticated here"
+    },
+    "SW_change": "74a0e09 removes oldSW path and adds reorderedSW; commit describes spectral ordering correction. This is not a documented PSD generation change.",
+    "limits": [
+      "Checked full124-entry public tree and source consumers, no located generator implementation; does not prove private AER sources absent.",
+      "Git blob SHA authenticates public archived file identity only; no claim of exact byte identity between 2023 table and renamed/NCO-edited current files without a separate transformation proof.",
+      "Original generator revision/inputs, PSD shape/truncation and optical moment definition remain OPEN."
+    ]
+  },
+  "primary_documents": [
+    {
+      "url": "https://raw.githubusercontent.com/earth-system-radiation/rrtmgp-data/ea788bb39876948fa8d2c235665ccff19b4686b5/README.md",
+      "anchors": [
+        5,
+        11
+      ],
+      "supports": "Copied/renamed74a0e09 distribution lineage"
+    },
+    {
+      "url": "https://www.osti.gov/biblio/1575901",
+      "local_pin": {
+        "path": "build/udm37-rrtmgp-cloud-definition-primary-source-v1/RRTMGP_final_report.txt",
+        "sha256": "4a0df953560729909b39dd0d7b259ad655a676265b2af2ad0d5ac00a76bb9c11",
+        "size_bytes": 23706
+      },
+      "anchors": [
+        151,
+        175
+      ],
+      "supports": "Liquid Mie/refractive inputs and size range; no explicit PSD/moment recipe"
+    },
+    {
+      "url": "https://journals.ametsoc.org/view/journals/atsc/74/5/jas-d-16-0207.1.xml",
+      "supports": "LB2017 citation; exact full equations remain pending because publisher full-text403 in predecessor review"
+    },
+    {
+      "url": "https://journals.ametsoc.org/view/journals/atsc/76/10/jas-d-19-0211.1.xml",
+      "supports": "Corrigendum must accompany any SI process coefficient provenance comparison"
+    }
+  ],
+  "documentary_subtasks": {
+    "equation_definition_table": "COMPLETE_SCOPED",
+    "six_species_mode_and_occurrence_matrix": "COMPLETE_SCOPED_WITH_EXPLICIT_BRANCH_LIMITS",
+    "official_commit_tree_and_file_history": "COMPLETE_SCOPED",
+    "exact_liquid_generator_recipe": "OPEN",
+    "native_final_PSD_and_optical_mapping": "OPEN",
+    "physical_occurrence_authority": "OPEN"
+  },
+  "next_concrete_documentary_tasks": [
+    {
+      "task": "Read/authenticate AER SVN revision2174 or exact original generator documentation if publicly available, and compare named cloud-data revisions. Private/contact access is not fabricated; draft questions only, no messages sent."
+    },
+    {
+      "task": "Obtain primary LB2017 full equations/corrigendum through authorized public source, reconcile process coordinate and normalization with source, without using that local PSD as final radiation PSD automatically."
+    },
+    {
+      "task": "Resolve species joint/clear-air occurrence and material assumptions from developer/observational primary evidence before designing any new physical comparison."
+    }
+  ],
+  "preserved_gates": {
+    "PHY_SIZE": "OPEN",
+    "PHY_OCCURRENCE": "OPEN",
+    "production_accepted": false,
+    "original19_current12": "Unchanged",
+    "physical_weighting_or_conversion_approved": false
+  },
+  "reviewer_counts": {
+    "compile": 0,
+    "test": 0,
+    "model": 0,
+    "solver": 0,
+    "raw_scientific_payload_reads": 0,
+    "production_edits": 0
+  },
+  "writes": "This exclusive new JSON only; predecessor unchanged"
+}
