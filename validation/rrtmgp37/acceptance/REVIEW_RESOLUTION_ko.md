@@ -1,6 +1,6 @@
 # 이전 검토 지적 해소 체크리스트
 
-현재 기준 main: `b1da3b9be540666d2fcb0b4b8d9abee02e712963` (PR #158 병합, tree `484509499ee85d9a8312d114be0c1ff8cb7951b5`). UDM27–RRTMGP37 전용.
+현재 기준 main: `d2226c6581c01dcdce6ea87e9f8b8ec30d36cdec` (PR #159 병합, tree `c86d36ce9c5d8491728e4aac51864661145a83a1`). UDM27–RRTMGP37 전용.
 
 PR #146–#151은 main에 병합됐다. 기존 실행의 source pin·범위는 그대로 보존하며, 현재 전체 tree에서 모든 과거 모델을 새로 실행했다고 주장하지 않는다. PR #149의 NetCDF guard와 기본 namelist 검사는 main에 반영됐고 정확히 같은 tree에서 11개 CI가 성공했다. PR150의 추가 scalar 경계 수정도 main에 반영됐다. PR151의 I/O 세 항목도 main에 반영됐고 정확히 같은 전체 tree에서 11개 CI가 성공했다.
 
@@ -81,3 +81,5 @@ real.exe, 실제 specified lateral boundary, 다른 수송 정책, 입자크기 
 [현재 7개 미완료 해소 대장](../remaining-contract-resolution/README_ko.md)은 native CCN 범위·누락 RFMIP prewrite·실행 byte 연결의 완료 하위 작업과 물리 승인 OPEN/FAIL을 분리한다. 기존 실제 host 연결은 완료 범위를 유지한다.
 
 [PR158 terminal과 정밀도 해석](../reference-precision-interpretation/README_ko.md)은 병합된 main `b1da3b9…`와 같은 tree의 12개 성공을 연결한다. 기존 `candidate_precast_strict_fail=14`는 혼합 정밀도 비교이며 publisher 원래 prewrite 비교는 미확정이다. 봉인 자료와 strict FAIL 21개는 변경하지 않는다.
+
+[최소 R3 대상의 실제 관측](../lbl-minimal-r3-transition/README_ko.md)은 과거 source-only 계획을 실행으로 진행했다. 실제 MAX3=283과 물리 좌표를 연결해 tail clear→CNVFNV coupling의 최초 음수→R3(170)에서 R3(20) carry→양의 continuum→과거 PANEL_PRE 상태를 관측했다. 선택 누적값 경로는 닫혔지만 원래 line 식별과 계수·전체 입력 생성·물리 reference는 여전히 미확정이다. OFF/ON 및 과거 실행의 과학 record53,279개는 같고 파일의 날짜·시각 차이는 FAIL로 유지한다. 완료15/물리·최종7 및 production_accepted=false는 그대로다.
