@@ -1,0 +1,41 @@
+--- PR164/oprop.observer.f90
++++ grid-threshold/oprop.observer.f90
+@@ -3,7 +3,7 @@
+  IMPLICIT NONE
+  INTEGER :: min_k=0,min_max=0,min_layer=0,min_panel=0,min_u=0,min_seq=0
+  REAL*8 :: min_vft=0D0,min_dv=0D0
+- REAL*8, PARAMETER :: target_nu=618.6144711111115D0
++ REAL*8, PARAMETER :: target_nu=618.6133629315808D0
+  LOGICAL :: min_active=.FALSE.
+ CONTAINS
+  SUBROUTINE min_grid(v,d,n)
+@@ -118,7 +118,7 @@
+  INTEGER :: final_u=0,final_seq=0
+ CONTAINS
+  LOGICAL FUNCTION final_active()
+- final_active=min_active.AND.min_layer==21.AND.min_panel==14
++ final_active=.FALSE. ! Old grid-specific final stencils are not used for this experiment
+  END FUNCTION
+  SUBROUTINE final_emit(tag,v)
+  CHARACTER(*),INTENT(IN)::tag
+@@ -147,7 +147,7 @@
+ CONTAINS
+  LOGICAL FUNCTION use_selected(i)
+  INTEGER,INTENT(IN)::i
+- use_selected=min_active.AND.(min_panel==13.OR.min_panel==14).AND.ABS(use_nu(i)-target_nu)<=25D0.AND.use_flag(i)>=0
++ use_selected=min_active.AND.ABS(use_nu(i)-target_nu)<=5D0.AND.use_flag(i)>=0
+  END FUNCTION
+  SUBROUTINE use_emit(tag,i,v)
+  CHARACTER(*),INTENT(IN)::tag
+@@ -1487,10 +1487,10 @@
+       GO TO 30
+ !
+ 25    SP(I) = 0.
++      SPPSP(I) = 0.
+ ! UDM37_USE_BEGIN
+  CALL use_emit("OUTCOME",I,[REAL(use_reason,8),REAL(use_stage,8),SP(I),SPPSP(I)])
+ ! UDM37_USE_END
+-      SPPSP(I) = 0.
+ !
+ 30 END DO
+ !
