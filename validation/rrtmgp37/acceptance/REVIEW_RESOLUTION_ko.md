@@ -1,6 +1,6 @@
 # 이전 검토 지적 해소 체크리스트
 
-현재 기준 main: `452e698ab1b477d7854c5937b6f825c8012874de` (PR #160 병합, tree `9c8a387f28308e8fa92315a3755c1b180d50e197`). UDM27–RRTMGP37 전용.
+현재 기준 main: `4c97d835ef5169f5f55262d1b34cb096c182318c` (PR #161 병합, tree `fb15a10670f77406c8489fa85c9548ebe07724cc`). UDM27–RRTMGP37 전용.
 
 PR #146–#151은 main에 병합됐다. 기존 실행의 source pin·범위는 그대로 보존하며, 현재 전체 tree에서 모든 과거 모델을 새로 실행했다고 주장하지 않는다. PR #149의 NetCDF guard와 기본 namelist 검사는 main에 반영됐고 정확히 같은 tree에서 11개 CI가 성공했다. PR150의 추가 scalar 경계 수정도 main에 반영됐다. PR151의 I/O 세 항목도 main에 반영됐고 정확히 같은 전체 tree에서 11개 CI가 성공했다.
 
@@ -85,3 +85,7 @@ real.exe, 실제 specified lateral boundary, 다른 수송 정책, 입자크기 
 [최소 R3 대상의 실제 관측](../lbl-minimal-r3-transition/README_ko.md)은 과거 source-only 계획을 실행으로 진행했다. 실제 MAX3=283과 물리 좌표를 연결해 tail clear→CNVFNV coupling의 최초 음수→R3(170)에서 R3(20) carry→양의 continuum→과거 PANEL_PRE 상태를 관측했다. 선택 누적값 경로는 닫혔지만 원래 line 식별과 계수·전체 입력 생성·물리 reference는 여전히 미확정이다. OFF/ON 및 과거 실행의 과학 record53,279개는 같고 파일의 날짜·시각 차이는 FAIL로 유지한다. 완료15/물리·최종7 및 production_accepted=false는 그대로다.
 
 [선택 line의 coupling 계수 생성](../lbl-coupling-generation/README_ko.md)은 실제 TAPE3 record521/block260/slot124와 sidecar125의 CO2 molecule code2/isotopologue1을 관측한 LNCOR1→CNVFNV 입력에 연결한다. 온도별 signed Y 계수의 보간부터 SPPI/SP·STRF3 및 F3/ZF3L까지 선택 연산을 재생했다. PR160의 전체 R3 trace와 과학 OD record는 유지된다. 이 TAPE3 내부 식별을 upstream 분광 데이터베이스의 고유 line ID 인증이나 mixing 계수의 물리 승인으로 확대하지 않는다. WK/partition·lookup table 생성의 독립 검증과 최종 분광 상쇄는 여전히 OPEN이며 REF-LBL FAIL, 완료15/잔여7과 production_accepted=false를 유지한다.
+
+[같은 실행의 최종 OD 연결](../lbl-final-od-composition/README_ko.md)은 PR161에서 닫은 선택 계수 경계 이후의 R3→R2→R1·continuum·복사장 배율과 실제 OD panel을 연결한다. 주변36개 표본과 continuum8개 stencil을 재생했으며 선택 파수의 최종 OD는 −0.009028119955355695로 남는다. 선택 수치 합성 경계는 완료이나 원 계수·모든 개별 선의 물리 계보·전체 reference 수용성은 닫지 않는다. REF-LBL FAIL, 완료15/잔여7 및 production_accepted=false 유지.
+
+[원 AER ASCII의 선택 CO2 기록](../lbl-coupling-ascii-origin/README_ko.md)은 실제 combined/lncpl_lines의 유일한 인접 두 record와 publisher archive checksum을 확인하고 16개 scalar를 TAPE3에 연결한다. 실제 성공 설정은 blank HOLIND의 F100이다. 배포 header의 Lamouroux2015 계보와 원 mixing 생성의 독립 인증을 분리한다. 선택 ASCII 파일 경계는 완료이며 전체 band의 partner/cutoff·물리 reference와 최종 음의 OD는 미완료로 유지한다.

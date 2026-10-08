@@ -1,0 +1,180 @@
+--- pr161/oprop.f90
++++ final/oprop.f90
+@@ -111,7 +111,35 @@
+ ! |                       (http://www.rtweb.aer.com/)                        |
+ !  --------------------------------------------------------------------------
+ !
++! UDM37_FINAL_BEGIN
++MODULE udm37_final_od
++ USE udm37_min_r3, ONLY: min_active,min_panel,min_layer
++ IMPLICIT NONE
++ INTEGER :: final_u=0,final_seq=0
++CONTAINS
++ LOGICAL FUNCTION final_active()
++ final_active=min_active.AND.min_layer==21.AND.min_panel==14
++ END FUNCTION
++ SUBROUTINE final_emit(tag,v)
++ CHARACTER(*),INTENT(IN)::tag
++ REAL*8,INTENT(IN)::v(:)
++ IF(.NOT.final_active()) RETURN
++ IF(final_u==0) OPEN(NEWUNIT=final_u,FILE='UDM37_FINAL_OD',STATUS='NEW',ACTION='WRITE')
++ final_seq=final_seq+1
++ WRITE(final_u,'(a,1x,4(i0,1x),*(es26.17e3,1x))') tag,final_seq,min_layer,min_panel,SIZE(v),v
++ END SUBROUTINE
++ SUBROUTINE final_frame(tag,r1,r2,r3,v,d,d2,d3)
++ CHARACTER(*),INTENT(IN)::tag
++ REAL*8,INTENT(IN)::r1(*),r2(*),r3(*),v,d,d2,d3
++ IF(.NOT.final_active()) RETURN
++ CALL final_emit(tag,[v,d,d2,d3,r1(289:324),r2(72:84),r3(17:24)])
++ END SUBROUTINE
++END MODULE udm37_final_od
++! UDM37_FINAL_END
+ SUBROUTINE HIRAC1 (MPTS)
++! UDM37_FINAL_BEGIN
++ USE udm37_final_od
++! UDM37_FINAL_END
+ ! UDM37_MIN_BEGIN
+  USE udm37_min_r3
+ ! UDM37_MIN_END
+@@ -614,6 +642,9 @@
+ ! UDM37_MIN_BEGIN
+    CALL min_frame('XSECT_GATE',R3,VFT,DVR3,MAX3,MERGE(1,0,IXSECT.GE.1.AND.IR4.EQ.0))
+ ! UDM37_MIN_END
++! UDM37_FINAL_BEGIN
++ CALL final_frame('PRE_XSECT',R1,R2,R3,VFT,DV,DVR2,DVR3)
++! UDM37_FINAL_END
+    IF (IXSECT.GE.1.AND.IR4.EQ.0) THEN
+       CALL CPUTIM (TIME0)
+       CALL XSECTM (IFST,IR4)
+@@ -621,6 +652,10 @@
+       TXS = TXS+TIME-TIME0
+    ENDIF
+ !
++! UDM37_FINAL_BEGIN
++ CALL final_frame('PRE_EXTRA',R1,R2,R3,VFT,DV,DVR2,DVR3)
++ CALL final_emit('EXTRA_FLAGS',REAL([ILBLF4,IXSECT,ICNTNM,IR4,N1R1,N2R1,N1R2,N2R2,N1R3,N2R3],8))
++! UDM37_FINAL_END
+    CALL CPUTIM(TPAT0)
+    IF (ILBLF4.GE.1)                                                  &
+    &    CALL UDM37_MIN_XINT (V1R4,V2R4,DVR4,R4,1.0,VFT,DVR3,R3,N1R3,N2R3)
+@@ -629,6 +664,12 @@
+    &    CALL UDM37_MIN_XINT (V1ABS,V2ABS,DVABS,ABSRB,1.,VFT,DVR3,R3,N1R3,N2R3)
+    CALL CPUTIM(TPAT1)
+    TXINT = TXINT + TPAT1-TPAT0
++! UDM37_FINAL_BEGIN
++ CALL final_emit('CONT_META',[V1ABS,V2ABS,DVABS,REAL(NPTABS,8)])
++! UDM37_FINAL_END
++! UDM37_FINAL_BEGIN
++ CALL final_frame('POST_EXTRA',R1,R2,R3,VFT,DV,DVR2,DVR3)
++! UDM37_FINAL_END
+ !
+ ! UDM37_MIN_BEGIN
+    CALL min_frame('PANEL_PRE',R3,VFT,DVR3,MAX3,0)
+@@ -1570,12 +1611,18 @@
+ !
+ end subroutine CNVFNV
+ SUBROUTINE PANEL (R1,R2,R3,KFILE,JRAD,IENTER)
++! UDM37_FINAL_BEGIN
++ USE udm37_final_od
++! UDM37_FINAL_END
+ ! UDM37_MIN_BEGIN
+  USE udm37_min_r3
+ ! UDM37_MIN_END
+ !
+    USE phys_consts, ONLY: radcn2
+    IMPLICIT REAL*8           (V)
++! UDM37_FINAL_BEGIN
++ REAL*8 :: final_before
++! UDM37_FINAL_END
+ ! UDM37_MIN_BEGIN
+  REAL*8 :: udm37_min_before
+ ! UDM37_MIN_END
+@@ -1663,6 +1710,11 @@
+    IF (N1R2.EQ.1) LIMLO = LIMLO+4
+    LIMHI = (NHI/4)+1
+ !
++! UDM37_FINAL_BEGIN
++ CALL final_frame('PRE_PANEL',R1,R2,R3,VFT,DV,DVR2,DVR3)
++ CALL final_emit('PANEL_META',[REAL(NLO,8),REAL(NHI,8),REAL(LIMLO,8),REAL(LIMHI,8), &
++ REAL(ISTOP,8),REAL(JRAD,8),DVOUT,V1P,V2P,DVP,REAL(NLIM,8)])
++! UDM37_FINAL_END
+    DO 10 J = LIMLO, LIMHI, 4
+       J3 = (J-1)/4+1
+       R2(J) = R2(J)+R3(J3)
+@@ -1682,6 +1734,9 @@
+       R2(J+1) = R2(J+1)+X00*R3(J3-1)+X01*R3(J3)+X02*R3(J3+1)+X03*R3(J3+2)
+    endif
+ 
++! UDM37_FINAL_BEGIN
++ CALL final_frame('POST_R2',R1,R2,R3,VFT,DV,DVR2,DVR3)
++! UDM37_FINAL_END
+    DO 20 J = NLO, NHI, 4
+       J2 = (J-1)/4+1
+       R1(J) = R1(J)+R2(J2)
+@@ -1692,6 +1747,9 @@
+       R1(J+3) = R1(J+3)+X03*R2(J2-1)+X02*R2(J2)+X01*R2(J2+1)+        &
+          X00*R2(J2+2)
+ 20 END DO
++! UDM37_FINAL_BEGIN
++ CALL final_frame('POST_R1',R1,R2,R3,VFT,DV,DVR2,DVR3)
++! UDM37_FINAL_END
+ !
+ !     IN THE FOLLOWING SECTION THE ABSORPTION COEFFICIENT IS MULTIPIIED
+ !     BY THE RADIATION FIELD
+@@ -1717,7 +1775,14 @@
+ !
+       DO 40 I = NPTSI1, NPTSI2
+ !           VI = VI+DV
++! UDM37_FINAL_BEGIN
++ IF(final_active().AND.I>=289.AND.I<=324) final_before=R1(I)
++! UDM37_FINAL_END
+          R1(I) = R1(I)*RADVI
++! UDM37_FINAL_BEGIN
++ IF(final_active().AND.I>=289.AND.I<=324) &
++ CALL final_emit('RAD_MULT',[REAL(I,8),VFT+REAL(I-1)*DV,final_before,RADVI,R1(I),XKT])
++! UDM37_FINAL_END
+          RADVI = RADVI+RDEL
+ 40    CONTINUE
+ !
+@@ -1728,6 +1793,9 @@
+ !     V1P IS FIRST FREQ OF PANEL
+ !     V2P IS LAST FREQ OF PANEL
+ !
++! UDM37_FINAL_BEGIN
++ CALL final_frame('PRE_OUTPUT',R1,R2,R3,VFT,DV,DVR2,DVR3)
++! UDM37_FINAL_END
+    IF (DVOUT.EQ.0.) THEN
+       CALL BUFOUT (KFILE,PNLHDR(1),NPHDRF)
+       CALL BUFOUT (KFILE,R1(NLO),NLIM)
+@@ -12021,9 +12089,15 @@
+ 
+ ! UDM37_MIN_BEGIN
+ SUBROUTINE UDM37_MIN_XINT (V1A,V2A,DVA,A,AFACT,VFT,DVR3,R3,N1R3,N2R3)
++! UDM37_FINAL_BEGIN
++ USE udm37_final_od
++! UDM37_FINAL_END
+ !
+    USE udm37_min_r3
+    IMPLICIT REAL*8           (V)
++! UDM37_FINAL_BEGIN
++ REAL*8 :: final_before
++! UDM37_FINAL_END
+    REAL*8 :: udm37_min_before
+ !
+ !     THIS SUBROUTINE INTERPOLATES THE A ARRAY STORED
+@@ -12052,7 +12126,15 @@
+       B2 = B*P
+       CONTI = -A(J-1)*B1+A(J)*(1.-C+B2)+A(J+1)*(C+B1)-A(J+2)*B2
+       IF(min_active.AND.min_k>0.AND.I==min_k) udm37_min_before=R3(I)
++! UDM37_FINAL_BEGIN
++ IF(final_active().AND.I>=17.AND.I<=24) final_before=R3(I)
++! UDM37_FINAL_END
+       R3(I) = R3(I)+CONTI*AFACT
++! UDM37_FINAL_BEGIN
++ IF(final_active().AND.I>=17.AND.I<=24) &
++ CALL final_emit('XINT_EXTRA',[REAL(I,8),REAL(J,8),V1A,V2A,DVA,AFACT,VI,VJ,RECDVA,P,C,B,B1,B2, &
++ A(J-1),A(J),A(J+1),A(J+2),CONTI,final_before,R3(I)])
++! UDM37_FINAL_END
+       IF(min_active.AND.min_k>0.AND.I==min_k) &
+       CALL min_write('XINT_WRITE',I,J,0,0,udm37_min_before,R3(I),CONTI,AFACT,1D0,VI,0D0,0D0)
+ 10 END DO
