@@ -1,6 +1,6 @@
 # 이전 검토 지적 해소 체크리스트
 
-현재 기준 main: `d2226c6581c01dcdce6ea87e9f8b8ec30d36cdec` (PR #159 병합, tree `c86d36ce9c5d8491728e4aac51864661145a83a1`). UDM27–RRTMGP37 전용.
+현재 기준 main: `452e698ab1b477d7854c5937b6f825c8012874de` (PR #160 병합, tree `9c8a387f28308e8fa92315a3755c1b180d50e197`). UDM27–RRTMGP37 전용.
 
 PR #146–#151은 main에 병합됐다. 기존 실행의 source pin·범위는 그대로 보존하며, 현재 전체 tree에서 모든 과거 모델을 새로 실행했다고 주장하지 않는다. PR #149의 NetCDF guard와 기본 namelist 검사는 main에 반영됐고 정확히 같은 tree에서 11개 CI가 성공했다. PR150의 추가 scalar 경계 수정도 main에 반영됐다. PR151의 I/O 세 항목도 main에 반영됐고 정확히 같은 전체 tree에서 11개 CI가 성공했다.
 
@@ -83,3 +83,5 @@ real.exe, 실제 specified lateral boundary, 다른 수송 정책, 입자크기 
 [PR158 terminal과 정밀도 해석](../reference-precision-interpretation/README_ko.md)은 병합된 main `b1da3b9…`와 같은 tree의 12개 성공을 연결한다. 기존 `candidate_precast_strict_fail=14`는 혼합 정밀도 비교이며 publisher 원래 prewrite 비교는 미확정이다. 봉인 자료와 strict FAIL 21개는 변경하지 않는다.
 
 [최소 R3 대상의 실제 관측](../lbl-minimal-r3-transition/README_ko.md)은 과거 source-only 계획을 실행으로 진행했다. 실제 MAX3=283과 물리 좌표를 연결해 tail clear→CNVFNV coupling의 최초 음수→R3(170)에서 R3(20) carry→양의 continuum→과거 PANEL_PRE 상태를 관측했다. 선택 누적값 경로는 닫혔지만 원래 line 식별과 계수·전체 입력 생성·물리 reference는 여전히 미확정이다. OFF/ON 및 과거 실행의 과학 record53,279개는 같고 파일의 날짜·시각 차이는 FAIL로 유지한다. 완료15/물리·최종7 및 production_accepted=false는 그대로다.
+
+[선택 line의 coupling 계수 생성](../lbl-coupling-generation/README_ko.md)은 실제 TAPE3 record521/block260/slot124와 sidecar125의 CO2 molecule code2/isotopologue1을 관측한 LNCOR1→CNVFNV 입력에 연결한다. 온도별 signed Y 계수의 보간부터 SPPI/SP·STRF3 및 F3/ZF3L까지 선택 연산을 재생했다. PR160의 전체 R3 trace와 과학 OD record는 유지된다. 이 TAPE3 내부 식별을 upstream 분광 데이터베이스의 고유 line ID 인증이나 mixing 계수의 물리 승인으로 확대하지 않는다. WK/partition·lookup table 생성의 독립 검증과 최종 분광 상쇄는 여전히 OPEN이며 REF-LBL FAIL, 완료15/잔여7과 production_accepted=false를 유지한다.

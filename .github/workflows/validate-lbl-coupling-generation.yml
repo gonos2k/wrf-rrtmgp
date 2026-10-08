@@ -1,0 +1,26 @@
+name: Verify saved LBLRTM selected coupling generation
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'validation/rrtmgp37/lbl-coupling-generation/**'
+      - 'validation/rrtmgp37/lbl-minimal-r3-transition/**'
+      - '.github/workflows/validate-lbl-coupling-generation.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'validation/rrtmgp37/lbl-coupling-generation/**'
+      - 'validation/rrtmgp37/lbl-minimal-r3-transition/**'
+      - '.github/workflows/validate-lbl-coupling-generation.yml'
+permissions:
+  contents: read
+jobs:
+  saved-coefficient-generation:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - name: Replay actual TAPE3 excerpts and observed coefficient arithmetic
+        run: python3 -I -S validation/rrtmgp37/lbl-coupling-generation/verify_saved.py
+      - name: Reject species, sidecar, record and coefficient corruption
+        run: python3 -I -S validation/rrtmgp37/lbl-coupling-generation/test_saved.py
