@@ -1,0 +1,181 @@
+--- pr160/oprop.f90
++++ line-coeff/oprop.f90
+@@ -68,6 +68,25 @@
+  END SUBROUTINE
+ END MODULE udm37_min_r3
+ ! UDM37_MIN_END
++! UDM37_COEFF_BEGIN
++MODULE udm37_line_coeff
++ USE udm37_min_r3, ONLY: min_active,min_panel
++ IMPLICIT NONE
++ INTEGER :: ln_u=0,ln_seq=0,ln_block=0,ln_first_data=3,ln_record=0
++ LOGICAL :: ln_selected(250)=.FALSE.
++CONTAINS
++ SUBROUTINE ln_emit(tag,slot,mol,iso,v)
++ CHARACTER(*),INTENT(IN)::tag
++ INTEGER,INTENT(IN)::slot,mol,iso
++ REAL*8,INTENT(IN)::v(:)
++ IF(.NOT.min_active) RETURN
++ IF(ln_u==0) OPEN(NEWUNIT=ln_u,FILE='UDM37_LINE_COEFF',STATUS='NEW',ACTION='WRITE')
++ ln_seq=ln_seq+1
++ WRITE(ln_u,'(a,1x,8(i0,1x),*(es26.17e3,1x))') &
++ tag,ln_seq,ln_block,ln_record,slot,mol,iso,min_panel,SIZE(v),v
++ END SUBROUTINE
++END MODULE udm37_line_coeff
++! UDM37_COEFF_END
+ !     path:      $HeadURL$
+ !     revision:  $Revision$
+ !     created:   $Date$
+@@ -770,6 +789,9 @@
+ !
+ end block data BHIRAC
+ SUBROUTINE RDLIN
++! UDM37_COEFF_BEGIN
++ USE udm37_line_coeff
++! UDM37_COEFF_END
+ !
+    USE struct_types
+ 
+@@ -838,6 +860,10 @@
+    IF (ILO.LE.0) THEN
+       REWIND LNFL
+       read (lnfl) HLINID
++! UDM37_COEFF_BEGIN
++      ln_block=0; ln_first_data=3; ln_selected=.FALSE.
++      IF(HLINID(7)(8:8)=='^') ln_first_data=4
++! UDM37_COEFF_END
+       READ (HLINID(7),950) CNEGEPP
+       IF (CNEGEPP(8).eq.'^') THEN
+          read (lnfl) n_negepp,n_resetepp,xspace
+@@ -846,6 +872,11 @@
+ !
+    !print *,'will read pnlhd'
+ 10 CALL BUFIN_sgl(Lnfl,LEOF,rdlnpnl,npnlhd)
++! UDM37_COEFF_BEGIN
++ IF(LEOF/=0) THEN
++ ln_block=ln_block+1; ln_record=ln_first_data+2*(ln_block-1)
++ ENDIF
++! UDM37_COEFF_END
+    !print *,'leof,vmax ',leof,rdlnpnl%vmax
+    IF (LEOF.EQ.0) THEN
+       !print *,'leof eq 0',dumbuf%vnu(1:5)
+@@ -872,6 +903,19 @@
+ !     precision conversion occurs here:
+ !     incoming on right: vlin is real*8, others real*4 and integer*4
+ !
++! UDM37_COEFF_BEGIN
++ ln_selected=.FALSE.
++ DO i=1,rdlnpnl%nrec
++ IF(ABS(rdlnbuf%vnu(i)-618.023668D0)<1D-12.AND.rdlnbuf%mol(i)==102.AND.rdlnbuf%iflg(i)==1) THEN
++ ln_selected(i)=.TRUE.
++ CALL ln_emit('RAW_LINE',i,2,1,[rdlnbuf%vnu(i),REAL(rdlnbuf%sp(i),8), &
++ REAL(rdlnbuf%alfa(i),8),REAL(rdlnbuf%epp(i),8),REAL(rdlnbuf%hwhm(i),8), &
++ REAL(rdlnbuf%tmpalf(i),8),REAL(rdlnbuf%pshift(i),8),REAL(rdlnbuf%iflg(i),8), &
++ REAL(rdlnbuf%mol(i),8),REAL(rdlnbuf%brd_mol_flg_in(:,i),8), &
++ REAL(rdlnbuf%brd_mol_dat(:,i),8),REAL(rdlnbuf%speed_dep(i),8)])
++ ENDIF
++ ENDDO
++! UDM37_COEFF_END
+    do 15 i=1,rdlnpnl%nrec
+ 
+       IFLG(i) = rdlnbuf%iflg(i)
+@@ -931,6 +975,12 @@
+       endif
+ 
+ 15 continue
++! UDM37_COEFF_BEGIN
++ DO i=1,rdlnpnl%nrec-1
++ IF(ln_selected(i)) CALL ln_emit('RAW_COUPLING',i+1,2,1,[VNU(i+1),SP(i+1),ALFA0(i+1),EPP(i+1), &
++ AMOL(i+1),HWHMS(i+1),TMPALF(i+1),PSHIFT(i+1),REAL(IFLG(i+1),8)])
++ ENDDO
++! UDM37_COEFF_END
+ 
+    IF ((ILO.EQ.0).AND.(VMIN.GT.VBOT)) WRITE (IPR,905)
+    ILO = 1
+@@ -978,11 +1028,17 @@
+ !
+ end subroutine RDLIN
+ SUBROUTINE LNCOR1 (NLNCR,IHI,ILO,MEFDP)
++! UDM37_COEFF_BEGIN
++ USE udm37_line_coeff
++! UDM37_COEFF_END
+ !
+    USE lblparams, ONLY: MXMOL, MXISOTPL
+    USE phys_consts, ONLY: radcn2
+    USE struct_types, ONLY: mxbrdmol, nlinerec
+    IMPLICIT REAL*8           (V)
++! UDM37_COEFF_BEGIN
++ REAL*8 :: ln_weight
++! UDM37_COEFF_END
+ !
+    CHARACTER*1 FREJ(nlinerec),HREJ,HNOREJ
+    COMMON /RCNTRL/ ILNFLG
+@@ -1110,6 +1166,15 @@
+       endif
+ !
+       MOL(I) = M
++! UDM37_COEFF_BEGIN
++ IF(ln_selected(I)) THEN
++ ln_weight=WK(M)
++ IF(ISOTPL_FLAG(M,ISO)/=0) ln_weight=WKI(M,ISO)
++ CALL ln_emit('LNC_PRE',I,M,ISO,[VNU(I),S(I),ALFA0(I),EPP(I),HWHMS(I),TMPALF(I),PSHIFT(I), &
++ TAVE,TEMP0,PAVE,P0,XKT,RHOSLF(M),RHORAT,TRATIO,PAVP0,PAVP2,BETACR, &
++ SCOR(M,ISO),ALFD1(M,ISO),ln_weight,REAL(ISOTPL_FLAG(M,ISO),8),REAL(JRAD,8),RADCN2,ALFMAX,DV,REAL(IBRD,8)])
++ ENDIF
++! UDM37_COEFF_END
+ !
+       IF (ISOTPL_FLAG(M,ISO).EQ.0) THEN
+          SUI = S(I)*WK(M)
+@@ -1241,6 +1306,12 @@
+       SP(I) = SUI*(1.+GI*PAVP2)
+       SPPI = SUI*YI*PAVP0
+       SPPSP(I) = SPPI/SP(I)
++! UDM37_COEFF_BEGIN
++ IF(ln_selected(I).AND.IFLAG==1) CALL ln_emit('LNC_POST',I,M,ISO,[YI,GI,SUI,SPPI,SP(I), &
++ SPPSP(I),RECALF(I),ZETA,REAL(IZETA(I),8),FZETA,ZETDIF,ALFL,ALFAD,ALFV,TMPCOR, &
++ ALFA0I,HWHMSI,VNU(I),REAL(ILC,8),RECTLC,TMPDIF,A,B,AVRAT(IZ),AVRAT(IZ+1), &
++ REAL(NMINAD,8),REAL(NPLSAD,8),REAL(SUM(brd_mol_flg(:,I)),8),SLOPEA,SLOPEB])
++! UDM37_COEFF_END
+ !
+ !     SPEAK is used for line rejection (no LCPL lines (sppsp ne 1) are r
+ 
+@@ -1295,11 +1366,15 @@
+ &                   XVER,ZETAI,IZETA)
+ ! UDM37_MIN_BEGIN
+  USE udm37_min_r3
++ USE udm37_line_coeff
+ ! UDM37_MIN_END
+ !
+    IMPLICIT REAL*8           (V)
+ ! UDM37_MIN_BEGIN
+  REAL*8 :: udm37_min_before
++! UDM37_COEFF_BEGIN
++ REAL*8 :: ln_base
++! UDM37_COEFF_END
+ ! UDM37_MIN_END
+ !
+ !     SUBROUTINE CNVFNV PERFORMS THE CONVOLUTION OF THE LINE DATA WITH
+@@ -1377,6 +1452,9 @@
+             STRF1 = DEPTHI*(CF1(IZM)+ZETDIF*(CF1(IZM+1)-CF1(IZM)))
+             STRF2 = DEPTHI*(CF2(IZM)+ZETDIF*(CF2(IZM+1)-CF2(IZM)))
+             STRF3 = DEPTHI*(CF3(IZM)+ZETDIF*(CF3(IZM+1)-CF3(IZM)))
++! UDM37_COEFF_BEGIN
++ IF(ln_selected(I)) ln_base=STRF3
++! UDM37_COEFF_END
+             STRD = DEPTHI*(CGAUSS(IZM)+ZETDIF*(CGAUSS(IZM+1)-        &
+                CGAUSS(IZM)))
+             STRVER = DEPTHI*(CER(IZM)+ZETDIF*(CER(IZM+1)-CER(IZM)) )
+@@ -1453,6 +1531,13 @@
+ ! UDM37_MIN_BEGIN
+  IF(min_active.AND.min_k>0.AND.J3==min_k) udm37_min_before=R3(J3)
+ ! UDM37_MIN_END
++! UDM37_COEFF_BEGIN
++ IF(min_active.AND.ln_selected(I).AND.min_k>0.AND.J3==min_k) &
++ CALL ln_emit('CN_GEN',I,2,1,[SP(I),RECALF(I),DEPTHI,REAL(IZM,8),ZETAI(I),ZETDIF, &
++ CF3(IZM),CF3(IZM+1),ln_base,CLC3,DPTRAT,STRF3,VNU(I),ZSLOPE,WAVDXF,ZINT,CONF3, &
++ REAL(JMIN1,8),REAL(JMAX1,8),REAL(J3SHFT,8),REAL(JMIN3,8),HWDXF,ZF3L,REAL(IZ3,8),F3(IZ3), &
++ HWF1,DXF1,REAL(NX1,8),HWF2,DXF2,REAL(NX2,8),HWF3,DXF3,REAL(NX3,8)])
++! UDM37_COEFF_END
+                   R3(J3) = R3(J3)+STRF3*F3(IZ3)*ZF3L
+ ! UDM37_MIN_BEGIN
+  IF(min_active.AND.min_k>0.AND.J3==min_k) &
