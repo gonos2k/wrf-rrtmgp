@@ -1,0 +1,26 @@
+name: Verify RFMIP precision interpretation
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'validation/rrtmgp37/reference-precision-interpretation/**'
+      - 'validation/rrtmgp37/remaining-contract-resolution/**'
+      - '.github/workflows/validate-reference-precision-interpretation.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'validation/rrtmgp37/reference-precision-interpretation/**'
+      - 'validation/rrtmgp37/remaining-contract-resolution/**'
+      - '.github/workflows/validate-reference-precision-interpretation.yml'
+permissions:
+  contents: read
+jobs:
+  precision-semantics:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - name: Verify conditional rounding bounds without approving publisher accuracy
+        run: python3 -I -S validation/rrtmgp37/reference-precision-interpretation/analyze.py --verify
+      - name: Check mixed-comparison ambiguity and midpoint semantics
+        run: python3 -I -S validation/rrtmgp37/reference-precision-interpretation/test_precision.py

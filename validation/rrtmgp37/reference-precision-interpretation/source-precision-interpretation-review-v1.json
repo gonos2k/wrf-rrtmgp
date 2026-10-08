@@ -1,0 +1,123 @@
+{
+  "schema": "UDM37_REFERENCE_PRECISION_SOURCE_REVIEW_V1",
+  "created_utc": "2026-10-08T03:04:35.002139+00:00",
+  "status": "PASS_SCOPED_INTERPRETATION_REVIEW_ADDITIVE_LABEL_CORRECTION_REQUIRED",
+  "verdict_ko": "기존 14개 수치는 candidate binary64 prewrite와 reference 저장 binary32의 혼합 정밀도 비교 초과 개수다. Publisher의 cast 전 값과 비교한 실패 개수로 해석할 수 없다. 21개 모두 가능한 reference rounding cell에 대해 tolerance를 걸친다는 결과는 publisher pre-cast 판정을 미결로 남긴다. 저장값 strict 21개 FAIL 및 물리 미승인은 그대로 유지한다.",
+  "main_identity": {
+    "local_git_object_commit": "b1da3b9be540666d2fcb0b4b8d9abee02e712963",
+    "local_git_object_tree": "484509499ee85d9a8312d114be0c1ff8cb7951b5",
+    "remote_PR158_12_terminal_checks": "Parent directly verified; not freshly queried by this reviewer."
+  },
+  "read_scope": {
+    "source_documentation_small_JSON_only": true,
+    "raw_scientific_bytes_read": false,
+    "compiler_test_model_solver_children": 0,
+    "new_capture_requested": false,
+    "sealed_predecessor_modified": false,
+    "new_numeric_interval_scan_executed": false
+  },
+  "pins": [
+    {
+      "path": "build/udm37-remaining-contracts-pr-work/validation/rrtmgp37/remaining-contract-resolution/verify_saved.py",
+      "sha256": "4a31938ccb7706284b8ff8d5d6d841e9f33cfbf315005b45621c8a4eba9aa3d1",
+      "bytes": 8029
+    },
+    {
+      "path": "build/udm37-remaining-contracts-pr-work/validation/rrtmgp37/remaining-contract-resolution/checklist.json",
+      "sha256": "135c8a861a61ec7a1195b3dfac0f45b06967cdb712f0f06321095ce09eecfc3a",
+      "bytes": 7837
+    },
+    {
+      "path": "build/udm37-remaining-contracts-pr-work/validation/rrtmgp37/remaining-contract-resolution/README_ko.md",
+      "sha256": "f31e932e6b86928a823c71430be99e4cf1e11020ec888f8197764d93c8827603",
+      "bytes": 8672
+    },
+    {
+      "path": "build/udm37-remaining-contracts-pr-work/validation/rrtmgp37/remaining-contract-resolution/manifest.json",
+      "sha256": "13c31b40506fa02121f8782df53eafe9dfc41a17805aee914397568c3df76ced",
+      "bytes": 37239
+    },
+    {
+      "path": "build/udm37-remaining-contracts-pr-work/validation/rrtmgp37/remaining-contract-resolution/evidence/rfmip-eight/result.json",
+      "sha256": "6bc5347976e3e0d24cc4363ec38184ed30299a3a1075613cfc95954db55fa0c9",
+      "bytes": 10959
+    },
+    {
+      "path": "build/udm37-remaining-contracts-pr-work/validation/rrtmgp37/remaining-contract-resolution/evidence/rfmip-previous/residual-details.json",
+      "sha256": "58a3901f6e6f4f7c255ae0d0b4629315842bedbe1a244c3cff220ed484aa5879",
+      "bytes": 29400
+    }
+  ],
+  "source_findings": [
+    {
+      "path": "validation/rrtmgp37/remaining-contract-resolution/verify_saved.py",
+      "lines": [
+        121,
+        126,
+        129,
+        130,
+        131,
+        132,
+        133,
+        134,
+        135,
+        136,
+        137,
+        143,
+        144
+      ],
+      "observed_expression": "precast_fail += abs(value - ref) > 1e-5; value is captured candidate binary64 and ref is original reference_stored_W_m2 (stored binary32 exactly represented in Python binary64).",
+      "historical_key": "candidate_precast_strict_fail",
+      "historical_count": 14,
+      "actual_meaning": "Candidate binary64 prewrite versus reference stored binary32 center comparison; not both sides pre-cast.",
+      "recommended_additive_key": "candidate_binary64_vs_reference_stored_binary32_fail_count",
+      "recommendation": "Preserve original key and bytes; additive schema explicitly marks its historical mixed-comparison meaning and names the new canonical label."
+    },
+    {
+      "path": "validation/rrtmgp37/remaining-contract-resolution/checklist.json",
+      "line": 56,
+      "historical_wording": "14개는 cast 전 strict 초과, 7개는 cast가 strict 경계를 넘는다.",
+      "issue": "The abbreviated wording can incorrectly imply the original publisher binary64 value is known, or that14 cells are proven to fail regardless of publisher rounding.",
+      "recommended_wording_ko": "Candidate binary64와 reference 저장 binary32의 혼합 비교는 14개가 atol을 초과한다. 같은 reference 저장값을 고정하면 candidate를 binary32로 저장하는 과정에서 나머지 7개도 저장값 strict 기준을 넘는다. Publisher의 원래 pre-cast 값에 대한 실패 개수는 미확정이다."
+    }
+  ],
+  "definitions": {
+    "c": "Authenticated captured candidate binary64 prewrite value for one of21 stored-failure cells.",
+    "s": "Candidate stored binary32 value, exactly lifted to a real value; existing saved checks establish RN32(c)=s.",
+    "r": "Publisher reference stored binary32 value exactly lifted to a real value. It is not authenticated publisher pre-cast output.",
+    "x": "Unknown publisher pre-cast value.",
+    "t": "Unchanged fixed absolute tolerance1e-5 W/m2, rtol0; strict stored failure when |s-r|>t.",
+    "I_closure": "For the saved finite positive normal reference values, r_minus and r_plus are adjacent binary32 numbers. L=(r_minus+r)/2; U=(r+r_plus)/2; I_closure(r)=[L,U].",
+    "nearest_even_boundary_caveat": "This closed interval is the closure of the round-to-nearest-even preimage, a conservative closed cell. Both endpoints round to r only when the binary32 significand of r is even; for odd significands the exact tie endpoints round to the adjacent even numbers. Calling every endpoint an actual preimage without parity qualification is incorrect.",
+    "rounding_assumption": "x in the nearest-even cell is conditional on a correctly rounded final binary32 serialization without an additional transform/quantizer. Publisher exact pre-cast precision/rounding/pipeline is not independently authenticated here.",
+    "dmin": "infimum over x in the admissible cell of |c-x|; using the closed hull gives max(L-c,0,c-U).",
+    "dmax": "supremum over x in the admissible cell of |c-x|; using the closed hull gives max(|c-L|,|c-U|).",
+    "robust_straddle": "dmin<t<dmax implies admissible interior points on both sides of the strict threshold under the stated rounding assumption. Strict inequality avoids an endpoint/tie ambiguity. If either bound equals t, endpoint inclusion/discrete pre-cast format must be handled explicitly."
+  },
+  "scientific_interpretation": {
+    "all21_straddle": "Parent reports dmin/dmax straddling for all21 cells. This review establishes its mathematical interpretation, not an independent re-computation of21 raw payloads or a new executed precision classifier.",
+    "meaning": "For each cell the stored reference alone permits pre-cast candidates that would satisfy |c-x|<=t and others that would fail it. Thus the stored reference cannot identify whether the actual publisher pre-cast comparison passed or failed for that cell.",
+    "no_statistical_claim": "The interval is representational uncertainty conditional on rounding, not a probability distribution, confidence interval, or permission to assume a favorable x. Cells can be correlated by a shared solver; per-cell possible choices do not demonstrate a jointly realizable publisher run.",
+    "14_and7": "14 is the mixed c-versus-r failure count. Seven are candidate-side storage threshold crossings when r is held fixed. Neither is a demonstrated native-versus-native error decomposition or attribution of publisher differences to candidate/reference serialization.",
+    "outside_I_all21": "c outside the reference closed rounding cell excludes c as an identical nearest-even pre-cast value producing r, under the rounding assumption. It does not establish |c-x|>t; distance to the cell can remain below t.",
+    "physical_authority": "No claim about RTE physical accuracy, publisher scientific validity, flux normalization, solar/data choice or production acceptance follows from these representational bounds."
+  },
+  "parent_FAIL_preservation": {
+    "stored_contract": "Keep original stored-array strict comparison atol1e-5/rtol0, its13 RSD+8 RSU failures, and reference/input/source identities unchanged.",
+    "no_waiver": "Do not inflate tolerance, substitute ULP tolerance, choose an accommodating reference x, or promote interval straddling to stored PASS.",
+    "native_comparison": "A source/input/configuration-authenticated publisher pre-cast reference would be needed to decide the separate pre-cast-versus-pre-cast comparison. Existing candidate capture coverage21/21 is complete; repeating candidate capture is not proposed.",
+    "until_provenance": "Publisher pre-cast comparison remains UNKNOWN/UNRESOLVED, distinct from the existing stored strict FAIL. Any separately approved reference contract would need an explicit scientific decision; this review provides none.",
+    "production_accepted": false
+  },
+  "additive_documentary_recommendation": {
+    "retain_sealed_package": true,
+    "include_original_key_disposition": true,
+    "required_explicit_labels": [
+      "candidate_binary64_vs_reference_stored_binary32",
+      "candidate_stored_binary32_vs_reference_stored_binary32",
+      "publisher_precast_vs_candidate_precast_UNRESOLVED"
+    ],
+    "new_interval_summary_scope": "If a future saved-only summary rederives dmin/dmax from authenticated existing captures, pin its inputs and disclose nearest-even/endpoint assumptions. It is a separate representation analysis, not a new solver result or publisher reconstruction.",
+    "no_new_raw_or_model_request": true
+  }
+}
