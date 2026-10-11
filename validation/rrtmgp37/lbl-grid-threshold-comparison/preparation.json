@@ -1,0 +1,28 @@
+{
+  "parent_sha256": "eb5d8e590712c75f484f92878e9bb52f99ac21fd2fb8bb416663761df32b8b4b",
+  "source_sha256": "eed73a64cad2661e7a3f512e6e7cad7b47146c803cda2d1ac7c19b454fd829fb",
+  "observer_only_changes": [
+    {
+      "before": "target_nu=618.6144711111115D0",
+      "after": "target_nu=618.6133629315808D0"
+    },
+    {
+      "before": "use_selected=min_active.AND.(min_panel==13.OR.min_panel==14).AND.ABS(use_nu(i)-target_nu)<=25D0.AND.use_flag(i)>=0",
+      "after": "use_selected=min_active.AND.ABS(use_nu(i)-target_nu)<=5D0.AND.use_flag(i)>=0"
+    },
+    {
+      "before": "final_active=min_active.AND.min_layer==21.AND.min_panel==14",
+      "after": "final_active=.FALSE. ! Old grid-specific final stencils are not used for this experiment"
+    },
+    {
+      "before": "! UDM37_USE_BEGIN\n CALL use_emit(\"OUTCOME\",I,[REAL(use_reason,8),REAL(use_stage,8),SP(I),SPPSP(I)])\n! UDM37_USE_END\n      SPPSP(I) = 0.\n",
+      "after": "      SPPSP(I) = 0.\n! UDM37_USE_BEGIN\n CALL use_emit(\"OUTCOME\",I,[REAL(use_reason,8),REAL(use_stage,8),SP(I),SPPSP(I)])\n! UDM37_USE_END\n"
+    }
+  ],
+  "inverse_observer_changes_restore_parent_bytes": true,
+  "actual_target_cm1": 618.6133629315808,
+  "line_centre_window_cm1": 5,
+  "physical_grid_IOD": 2,
+  "production_changed": false,
+  "old_FINAL_OD_stencils_used": false
+}

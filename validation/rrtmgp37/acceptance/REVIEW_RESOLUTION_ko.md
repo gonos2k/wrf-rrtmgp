@@ -1,6 +1,6 @@
 # 이전 검토 지적 해소 체크리스트
 
-현재 기준 main: `784e831c1c7f3fc6e823f93a0d6ae7cf21d2d19b` (PR #163 병합, tree `b7383329120ad8bdd3f00ecb5557889e3388778b`). UDM27–RRTMGP37 전용.
+현재 기준 main: `8eb96d2b7676eff152bf3563dc030bb924c3a4a9` (PR #164 병합, tree `14b2c6ca35e7f75071aed2d71a2c51690fee92cd`). UDM27–RRTMGP37 전용.
 
 PR #146–#151은 main에 병합됐다. 기존 실행의 source pin·범위는 그대로 보존하며, 현재 전체 tree에서 모든 과거 모델을 새로 실행했다고 주장하지 않는다. PR #149의 NetCDF guard와 기본 namelist 검사는 main에 반영됐고 정확히 같은 tree에서 11개 CI가 성공했다. PR150의 추가 scalar 경계 수정도 main에 반영됐다. PR151의 I/O 세 항목도 main에 반영됐고 정확히 같은 전체 tree에서 11개 CI가 성공했다.
 
@@ -104,3 +104,11 @@ real.exe, 실제 specified lateral boundary, 다른 수송 정책, 입자크기 
 원시45개 OD의 과학 record53279개는 OFF/ON과 PR162에 동일하다. 날짜·시각에 따른 전체 파일 FAIL과 선택 최종 OD −0.009028119955355695를 보존한다. 초기 관측 크기 상한 종료는 별도 보존하고 적격 최종 쌍만 증거로 사용한다. 저장 CI는 발췌·trace·영수증 재생이며 새 solver 실행이 아니다.
 
 이번은 전체 층·band 또는 모든 직접 R1/R2 stencil 기여의 인증이 아니다. 다음은 DV/절단 변화에 따른 실제 폭·기여 선 차이와 mixing 근사의 물리 적용성, 독립 reference 수용성이다. REF-LBL FAIL,15개 제한적 완료/7개 미완료 및 production_accepted=false는 유지한다. UDM 초기화·단위·PSD 정책은 별도로 미확정이다.
+
+## PR164 병합 후 실제 격자·약선 기준 대조
+
+[실제 비교](../lbl-grid-threshold-comparison/README_ko.md)는 공식 IOD2 exact-DV 경로를 모든 비교에서 고정하고 SAMPLE4/8/16 및 DPTMIN 기본/10/0을 실행했다. root make1회·최종 solver6회·별도 과거 실행파일 probe1회 모두 종료/회수됐고, probe/새 OFF/새 ON의45개 OD 과학 record57007개는 같았다. 명목0은 실제 SPEAK threshold0으로 실행된다.
+
+새 공통점618.6133629315808 cm-1은 역사적 파수와0.00110818 cm-1 다르며 과거 IOD0 결과를 대체하지 않는다. 다섯 선택 OD는 모두 음수다. h/2→h/4에서 선택점은 약5.52e-15 차이이나 주변81점 최대 차이는2.69e-4이고51개 음수가 유지된다. 같은 비영 R3 곱 항을 가진987개 선의 격자 폭은 같고 threshold0에서는 새로운 기여 선 중 폭 하한1개가 있다.
+
+선택 구성의 대조 실행 하위 단계는 완료로 유지한다. 전체 window 수렴·mixing 물리 적용성·independent reference 승인은 별도이며 REF-LBL FAIL, 완료15/미완료7 및 production_accepted=false를 유지한다. 저장 CI는 trace/발췌 재생으로 새 solver나 전체 원자료 재판독이 아니다. QNN·PSD 정책은 별도 OPEN이다.

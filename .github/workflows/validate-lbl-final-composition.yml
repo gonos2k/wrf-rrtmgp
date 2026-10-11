@@ -7,6 +7,7 @@ on:
       - 'validation/rrtmgp37/lbl-coupling-ascii-origin/**'
       - 'validation/rrtmgp37/lbl-line-selection-census/**'
       - 'validation/rrtmgp37/lbl-layer-line-use/**'
+      - 'validation/rrtmgp37/lbl-grid-threshold-comparison/**'
       - 'validation/rrtmgp37/lbl-coupling-generation/**'
       - 'validation/rrtmgp37/lbl-minimal-r3-transition/**'
       - '.github/workflows/validate-lbl-final-composition.yml'
@@ -17,6 +18,7 @@ on:
       - 'validation/rrtmgp37/lbl-coupling-ascii-origin/**'
       - 'validation/rrtmgp37/lbl-line-selection-census/**'
       - 'validation/rrtmgp37/lbl-layer-line-use/**'
+      - 'validation/rrtmgp37/lbl-grid-threshold-comparison/**'
       - 'validation/rrtmgp37/lbl-coupling-generation/**'
       - 'validation/rrtmgp37/lbl-minimal-r3-transition/**'
       - '.github/workflows/validate-lbl-final-composition.yml'
@@ -44,3 +46,7 @@ jobs:
         run: python3 -I -S validation/rrtmgp37/lbl-layer-line-use/verify_saved.py
       - name: Reject missing entries, wrong origins, width and outcome corruption
         run: python3 -I -S validation/rrtmgp37/lbl-layer-line-use/test_saved.py
+      - name: Replay executed exact-DV grids and weak-line threshold contrasts
+        run: python3 -I -S validation/rrtmgp37/lbl-grid-threshold-comparison/verify_saved.py
+      - name: Reject changed DV, frequency, threshold, write, OD and physical promotion
+        run: python3 -I -S validation/rrtmgp37/lbl-grid-threshold-comparison/test_saved.py
