@@ -198,6 +198,10 @@ def analyze(saved):
             'PHY_OCCURRENCE':'OPEN','phase_summary':phase_summary,'captures':groups}, csv_text(cells)
 
 
+import importlib.util
+_h=importlib.util.spec_from_file_location('historical_source',ROOT/'validation/rrtmgp37/historical-source/binding.py')
+historical=importlib.util.module_from_spec(_h);_h.loader.exec_module(historical)
+
 def verify(package=PACKAGE):
     manifest=json.loads((package/'manifest.json').read_text())
     require(manifest['physical_approval'] is False and manifest['production_accepted'] is False,'false physical approval')
@@ -210,7 +214,9 @@ def verify(package=PACKAGE):
     corpus=json.loads((ROOT/'validation/rrtmgp37/connected-host-number/source/tracked-WRF-corpus.json').read_text())
     require(source['production_files_checked']==len(corpus['files'])==5910,'source corpus count')
     for row in corpus['files']:
-        require(sha((ROOT/row['path']).read_bytes())==row['sha256'],'current production source changed '+row['path'])
+        # This replay belongs to the pinned pre-policy source, not current WRF.
+        require(sha(historical.historical_bytes(ROOT,row['path'],row['sha256']))==row['sha256'],
+                'historical production source changed '+row['path'])
     audit=json.loads(load_bytes(package/'saved/source-audit.json.gz'))
     require(audit['source_files']==5910 and not audit['missing'] and not audit['mismatch'],'retained source snapshot mismatch')
     require({x['path']:x['production_sha256'] for x in audit['files']}=={x['path']:x['sha256'] for x in corpus['files']},'source audit roster mismatch')
@@ -258,4 +264,6 @@ def verify(package=PACKAGE):
 
 if __name__=='__main__':
     result=verify()
-    print(json.dumps({k:result[k] for k in ('status','actual_wrf_runs','captured_phase_calls','production_accepted','PHY_OCCURRENCE')},indent=2))
+    report={k:result[k] for k in ('status','actual_wrf_runs','captured_phase_calls','production_accepted','PHY_OCCURRENCE')}
+    report['source_scope']='historical_snapshot';report['current_candidate_certified']=False
+    print(json.dumps(report,indent=2))

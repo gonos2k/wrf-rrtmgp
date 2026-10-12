@@ -18,7 +18,7 @@ def main():
     c.require(meta['fresh_solver_executions']==0 and meta['production_accepted'] is False,'readback scope')
     p=c.load(B/'profile.json');results={}
     for case,r in p['namelist_bindings'].items():
-        n=(c.ROOT/r['path']).read_bytes();results[case]=c.audit(c.ROOT,p,case,n)
+        n=(c.ROOT/r['path']).read_bytes();results[case]=c.audit(c.ROOT,p,case,n,source_scope="retained")
     c.require(results==c.load(B/'result.json'),'declared research audit vs computed state/source binding')
-    print(json.dumps({'status':'PASS_SCOPED_RESEARCH_POLICY_CONTRACT','retained_namelists':2,'source_files':11,'checked_snapshots':4,'history_60s_CF0_positive_ice_cells':12,'physical_required_gates_unresolved':7,'physical_ready':False,'root_actual_saved_NetCDF_readback':True,'CI_independent_NetCDF_variable_decode':False,'fresh_solver_runs':0,'production_accepted':False}))
+    print(json.dumps({'status':'PASS_SCOPED_RESEARCH_POLICY_CONTRACT','retained_namelists':2,'source_files':11,'source_scope':'historical_snapshot','current_tree_approved_by_legacy_profile':False,'checked_snapshots':4,'history_60s_CF0_positive_ice_cells':12,'physical_required_gates_unresolved':7,'physical_ready':False,'root_actual_saved_NetCDF_readback':True,'CI_independent_NetCDF_variable_decode':False,'fresh_solver_runs':0,'production_accepted':False}))
 if __name__=='__main__':main()

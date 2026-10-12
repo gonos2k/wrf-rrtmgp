@@ -55,6 +55,7 @@
     INTEGER idt
     INTEGER itmp
     INTEGER filestate, ierr3
+    INTEGER udm_file_number_policy, udm_policy_ierr
     INTEGER hybrid_opt, use_theta_m
     INTEGER :: ide_compare , jde_compare , kde_compare
     CHARACTER (len=19) simulation_start_date , first_date_input , first_date_nml
@@ -154,6 +155,35 @@
     CALL wrf_debug( 300 , wrf_err_message )
 
     check_if_dryrun : IF ( .NOT. dryrun ) THEN
+
+    ! A number-bearing input/boundary/checkpoint must declare its representation.
+    ! Missing metadata is legacy raw only; never silently reinterpret it as eta.
+    IF (switch == input_only .OR. switch == restart_only .OR. switch == boundary_only) THEN
+      IF (config_flags%udm_number_policy /= 0 .AND. config_flags%udm_number_policy /= 1) &
+        CALL wrf_error_fatal("Unknown udm_number_policy")
+      IF (config_flags%mp_physics == UDMSCHEME .OR. config_flags%udm_number_policy /= 0) THEN
+        udm_file_number_policy=0
+        CALL wrf_get_dom_ti_integer(fid,"UDM_NUMBER_POLICY",udm_file_number_policy,1,icnt,udm_policy_ierr)
+        IF (udm_policy_ierr == 0) THEN
+          IF (icnt /= 1) CALL wrf_error_fatal("Malformed UDM number policy metadata")
+        ELSE
+          IF (udm_policy_ierr /= WRF_WARN_MD_NF .AND. &
+              udm_policy_ierr /= WRF_WARN_VAR_NF .AND. &
+              udm_policy_ierr /= WRF_WARN_NETCDF) &
+            CALL wrf_error_fatal("Malformed UDM number policy metadata")
+          udm_file_number_policy=0
+        ENDIF
+        IF (udm_file_number_policy /= config_flags%udm_number_policy) &
+          CALL wrf_error_fatal("UDM number representation differs between file and namelist; explicit conversion required")
+        IF (config_flags%udm_number_policy == 1) THEN
+          IF (config_flags%mp_physics /= UDMSCHEME .OR. &
+              config_flags%ra_lw_physics /= RRTMGP_LWSCHEME .OR. &
+              config_flags%ra_sw_physics /= RRTMGP_SWSCHEME .OR. &
+              config_flags%scalar_adv_opt /= 0) &
+            CALL wrf_error_fatal("dry-number-grid-v1 supports UDM27/LW37/SW37 with scalar_adv_opt=0")
+        ENDIF
+      ENDIF
+    ENDIF
 
 #if ( ( EM_CORE == 1 ) && ( DA_CORE != 1 ) )
       IF ( switch .EQ. boundary_only ) THEN

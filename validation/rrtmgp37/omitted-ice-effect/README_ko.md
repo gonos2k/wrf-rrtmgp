@@ -66,3 +66,7 @@ python3 -I -S validation/rrtmgp37/omitted-ice-effect/test_saved.py
 현재 fixed radii/LUT sensitivity는 그 정의 선택을 기다리지 않고 수행한 조건부 연구입니다. 정확한 PSD/LUT primary evidence와 새로운 number bridge의 wet/density 검증은 여전히 필요합니다. 생산 정책과 물리 정확도는 아직 승인하지 않습니다.
 
 기존 일곱 종료 조건을 bytes 그대로 보존했습니다. PHY-NC/SIZE/OCCURRENCE 및 FINAL-IDENTITY는 OPEN, REF-RFMIP/LBL은 FAIL, FINAL-FORECAST는 NOT_RUN, `production_accepted=false`입니다. 이번에 완료한 것은 **누락 ice만의 ΔF/Δheating·sample spread와 정책 판단 근거**입니다.
+
+## 이후 opt-in 생산 후보와 증거 적용 범위
+
+이 계산의 기존 source hash는 그대로 유지합니다. 변경된 소스는 `../historical-source/`의 당시 bytes에 대조하여 이 저장 실행을 재생합니다. 새 number 후보의 현재 소스·실행 근거는 `../dry-number-grid-v1/`에서 별도 검증하며, 과거 민감도 실행을 새 정책 실행으로 재명명하지 않습니다.

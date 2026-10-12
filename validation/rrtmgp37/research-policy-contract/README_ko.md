@@ -50,3 +50,7 @@ python3 -I -S validation/rrtmgp37/research-policy-contract/test_contract.py
 [공식 UDM 도입 소스](https://github.com/wrf-model/WRF/blob/5fc76c540631be296bd2312e1d96117c07cbf761/phys/module_mp_udm.F), [기존 NOAA 근거](../nc-noaa-primary-contract/README_ko.md), [RRTMGP effective-radius interface](https://earth-system-radiation.github.io/rte-rrtmgp/reference/rrtmgp-fortran-interface/sourcefile/mo_cloud_optics_rrtmgp.f90.html)를 따른다. 이번 공개 검색에서 이 미확정 host 계약을 닫는 새 근거는 확보하지 못했다. Primary source의 존재와 현재 물리 승인을 동일시하지 않는다.
 
 `root-readback.py`는 원래 작업공간용 실제 판독 스크립트의보존사본이며NetCDF4/NumPy가필요하다. 저장소 재생에는stdlib verify_saved.py를 사용한다. 내부manifest/hash는byte연결·일관성근거이며외부독립신뢰서명은아니다.
+
+## 이후 소스 변경과 보존 자료 재생
+
+`--source-scope current`(기본)는 여전히 당시 11개 소스와 현재 tree가 일치해야 합니다. 새 opt-in number 후보가 추가된 tree는 이 legacy profile의 현재 실행 근거로 승인하지 않습니다. `--source-scope retained`는 원래 source pin을 변경하지 않고 `historical-source/`의 611837c6 원본 snapshot으로 과거 결과를 재생합니다. 새 정책의 실행 근거는 `dry-number-grid-v1/`에 따로 둡니다.

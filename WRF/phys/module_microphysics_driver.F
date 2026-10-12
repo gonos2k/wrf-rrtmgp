@@ -209,6 +209,7 @@ SUBROUTINE microphysics_driver(                                          &
 ! Model Layer
    USE module_model_constants
    USE module_wrf_error
+   USE, INTRINSIC :: ieee_arithmetic, ONLY: udm_density_is_finite=>ieee_is_finite
    USE module_configure, only: grid_config_rec_type
 #if ( WRF_CHEM == 1 )   
 !mchen   USE module_state_description, only: num_scalar               ! For CAMMGMP scheme Prognostic aerosols
@@ -805,6 +806,7 @@ REAL, DIMENSION( ims:ime, kms:kme, jms:jme ),                        &
    INTEGER :: i,j,k,its,ite,jts,jte,ij,sz,n
    LOGICAL :: channel
    LOGICAL :: have_udm_cf
+   INTEGER :: udm_number_policy_value, udm_number_i, udm_number_j, udm_number_k
    LOGICAL :: udm_radius_selected
    INTEGER :: udm_radius_i,udm_radius_j,udm_radius_domain
    LOGICAL :: nssl_progn = .false.
@@ -907,6 +909,12 @@ REAL, DIMENSION( ims:ime, kms:kme, jms:jme ),                        &
 
 ! Determine the option-37 UDM coupling once, before the shared tile loop.
 ! The diagnostic pointers and native-radius flags are specific to this path.
+   udm_number_policy_value = 0
+   IF (PRESENT(config_flags)) udm_number_policy_value=config_flags%udm_number_policy
+   IF (udm_number_policy_value /= 0 .AND. udm_number_policy_value /= 1) &
+     CALL wrf_error_fatal("Unknown udm_number_policy")
+   IF (udm_number_policy_value == 1 .AND. mp_physics /= UDMSCHEME) &
+     CALL wrf_error_fatal("dry-number-grid-v1 requires UDM27")
    have_udm_cf = .false.
    IF (mp_physics == UDMSCHEME) THEN
      IF (has_reqc==1 .AND. has_reqi==1 .AND. has_reqs==1) THEN
@@ -917,6 +925,8 @@ REAL, DIMENSION( ims:ime, kms:kme, jms:jme ),                        &
        ENDIF
      ENDIF
    ENDIF
+   IF (udm_number_policy_value == 1 .AND. .NOT. have_udm_cf) &
+     CALL wrf_error_fatal("dry-number-grid-v1 requires UDM27/LW37/SW37 connected diagnostics")
 ! The legacy UDM reset writes the full memory domain from every tile. For the
 ! option-37 call, initialize once including halos/storage, then skip the tile
 ! reset. Other radiation paths retain the legacy call below.
@@ -928,7 +938,29 @@ REAL, DIMENSION( ims:ime, kms:kme, jms:jme ),                        &
           PRESENT( QNN_CURR ) .AND. PRESENT ( QNC_CURR ) .AND. &
           PRESENT( QNR_CURR ) .AND.                           &
           PRESENT( RAINNC ) .AND. PRESENT( RAINNCV ) ) THEN
-       QNN_CURR(ims:ime,kms:kme,jms:jme) = ccn_conc
+       IF (udm_number_policy_value == 1) THEN
+         DO udm_number_j=jms,jme
+           DO udm_number_k=kms,kme
+             DO udm_number_i=ims,ime
+               IF (udm_density_is_finite(rho(udm_number_i,udm_number_k,udm_number_j)) .AND. &
+                   rho(udm_number_i,udm_number_k,udm_number_j)>0.) THEN
+                 QNN_CURR(udm_number_i,udm_number_k,udm_number_j) = &
+                   ccn_conc/rho(udm_number_i,udm_number_k,udm_number_j)
+               ELSE
+                 IF (udm_number_i>=ids .AND. udm_number_i<ide .AND. &
+                     udm_number_j>=jds .AND. udm_number_j<jde .AND. &
+                     udm_number_k>=kts .AND. udm_number_k<=kte) &
+                   CALL wrf_error_fatal("UDM: invalid physical cold-start density")
+                 ! Unused memory has no defined density; halo exchange fills
+                 ! active neighbours. Never divide an undefined halo/top value.
+                 QNN_CURR(udm_number_i,udm_number_k,udm_number_j)=0.
+               ENDIF
+             ENDDO
+           ENDDO
+         ENDDO
+       ELSE
+         QNN_CURR(ims:ime,kms:kme,jms:jme) = ccn_conc
+       ENDIF
      ENDIF
    ENDIF
 
@@ -2857,7 +2889,7 @@ REAL, DIMENSION( ims:ime, kms:kme, jms:jme ),                        &
                    qnn_curr(udm_radius_i,kts:kte,udm_radius_j),qnc_curr(udm_radius_i,kts:kte,udm_radius_j), &
                    qnr_curr(udm_radius_i,kts:kte,udm_radius_j), &
                    r_d,r_v,cp,cpv,g,dt,epsilon,svpt0,rhoair0,rhowater,time_minutes=xtime, &
-                   input_density_is_dry=.true.)
+                   input_density_is_dry=.true.,number_policy=udm_number_policy_value)
                ENDIF
              ENDIF
              CALL udm(                                              &
@@ -2892,6 +2924,7 @@ REAL, DIMENSION( ims:ime, kms:kme, jms:jme ),                        &
                  ,udm_cldfra=udm_cldfra, udm_cf_step=udm_cf_step     &
                  ,udm_cf_top=udm_cf_top                             &
                  ,ccn_preinitialized=.true.                        &
+                 ,number_policy=udm_number_policy_value             &
                  ,input_density_is_dry=.true.                       &
                  ,has_reqc=has_reqc                                 &  ! for radiation +
                  ,has_reqi=has_reqi                                 &
@@ -2920,7 +2953,7 @@ REAL, DIMENSION( ims:ime, kms:kme, jms:jme ),                        &
                    re_cloud(udm_radius_i,kts:kte,udm_radius_j),re_ice(udm_radius_i,kts:kte,udm_radius_j), &
                    re_snow(udm_radius_i,kts:kte,udm_radius_j),udm_cldfra(udm_radius_i,kts:kte,udm_radius_j), &
                    udm_cf_step(udm_radius_i,udm_radius_j),udm_cf_top(udm_radius_i,udm_radius_j), &
-                   epsilon,svpt0,rhowater,rhosnow,time_minutes=xtime)
+                   epsilon,svpt0,rhowater,rhosnow,time_minutes=xtime,number_policy=udm_number_policy_value)
                ENDIF
              ENDIF
              ELSE

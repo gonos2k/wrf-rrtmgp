@@ -1,0 +1,117 @@
+{
+  "status": "SPECIES_SCOPE_UNRESOLVED",
+  "source_files_read": [
+    {
+      "path": "WRF/phys/module_mp_udm.F",
+      "sha256": "45780e79e24e45f4bfa49a31bbaa8f4cdb28855e28d39da81e1b3290435bad8c"
+    },
+    {
+      "path": "external/rte-rrtmgp/rrtmgp-frontend/mo_cloud_optics_rrtmgp.F90",
+      "sha256": "8dc8184d8ef338af08270c618b0a966552373e23b553d018e856371d2d197845"
+    }
+  ],
+  "LUT_files": [
+    {
+      "path": "WRF/run/rrtmgp-clouds-lw-bnd.nc",
+      "sha256": "09d6704c5b863b4c3ceb417d20bb3076ec492e6bf2dfbcc9f3c5996a3706f0b0",
+      "coordinate_metadata": {
+        "radliq_lwr": {
+          "value": 2.5,
+          "attributes": {
+            "standard_name": "radliq_lwr",
+            "description": "Liquid particle size lower bound for band LUT interpolation",
+            "units": "microns"
+          }
+        },
+        "radliq_upr": {
+          "value": 21.5,
+          "attributes": {
+            "standard_name": "radliq_upr",
+            "description": "Liquid particle size upper bound for band LUT interpolation",
+            "units": "microns"
+          }
+        },
+        "diamice_lwr": {
+          "value": 10.0,
+          "attributes": {
+            "standard_name": "diamice_lwr",
+            "description": "Ice particle size lower bound for band LUT interpolation",
+            "units": "microns"
+          }
+        },
+        "diamice_upr": {
+          "value": 180.0,
+          "attributes": {
+            "standard_name": "diamice_upr",
+            "description": "Ice particle size upper bound for band LUT interpolation",
+            "units": "microns"
+          }
+        }
+      },
+      "metadata_readback_only": true,
+      "generating_PSD_moments_authenticated": false
+    },
+    {
+      "path": "WRF/run/rrtmgp-clouds-sw-bnd.nc",
+      "sha256": "7671835992a45afe66244b591a02c0b3df73d7d59ecb746bbffd9763497651cd",
+      "coordinate_metadata": {
+        "radliq_lwr": {
+          "value": 2.5,
+          "attributes": {
+            "standard_name": "radliq_lwr",
+            "description": "Liquid particle size lower bound for band LUT interpolation",
+            "units": "microns"
+          }
+        },
+        "radliq_upr": {
+          "value": 21.5,
+          "attributes": {
+            "standard_name": "radliq_upr",
+            "description": "Liquid particle size upper bound for band LUT interpolation",
+            "units": "microns"
+          }
+        },
+        "diamice_lwr": {
+          "value": 10.0,
+          "attributes": {
+            "standard_name": "diamice_lwr",
+            "description": "Ice particle size lower bound for band LUT interpolation",
+            "units": "microns"
+          }
+        },
+        "diamice_upr": {
+          "value": 180.0,
+          "attributes": {
+            "standard_name": "diamice_upr",
+            "description": "Ice particle size upper bound for band LUT interpolation",
+            "units": "microns"
+          }
+        }
+      },
+      "metadata_readback_only": true,
+      "generating_PSD_moments_authenticated": false
+    }
+  ],
+  "species": {
+    "liquid": {
+      "native": "mean-volume radius conditional on adopted eta/grid population",
+      "LUT_definition": "frontend calls effective size; bounds metadata only states microns",
+      "automatic_native_to_LUT_equivalence": "REJECTED_UNSUPPORTED",
+      "missing": "generating PSD population and moments; final native PSD shape"
+    },
+    "ice": {
+      "native": "temperature/mass-density fit; no prognostic ice number in this bridge",
+      "binding": "UNRESOLVED; liquid Gamma multiplier not applicable"
+    },
+    "snow": {
+      "native": "diagnosed characteristic size from mass-density/temperature",
+      "binding": "UNRESOLVED; cloud-ice/liquid mapping cannot be transferred"
+    },
+    "rain": {
+      "native": "final volume rain number retained for native processes/reflectivity",
+      "cloud_LUT_mapping": "NOT_APPLICABLE_WITHOUT_SEPARATE_PRECIP_OPTICS_CONTRACT"
+    }
+  },
+  "PHY_SIZE_closed": false,
+  "production_accepted": false
+}

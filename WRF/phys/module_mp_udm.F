@@ -7,6 +7,7 @@
   module module_mp_udm
    use module_mp_radar
    use module_gfs_machine , only : kind_phys
+   use, intrinsic :: ieee_arithmetic, only : ieee_is_finite
 !
 !-------------------------------------------------------------------------------
 ! parameters for microphysical processes
@@ -232,6 +233,7 @@ subroutine udm(th, q, qc, qr, qi, qs, qg, qh                                  &
                  ,udm_cldfra, udm_cf_step, udm_cf_top                           &
                  ,ccn_preinitialized                                          &
                  ,input_density_is_dry                                        &
+                 ,number_policy                                               &
                                                                                )
 !-------------------------------------------------------------------------------
   implicit none
@@ -246,6 +248,7 @@ subroutine udm(th, q, qc, qr, qi, qs, qg, qh                                  &
   integer, dimension(ims:ime,jms:jme), optional, intent(inout) :: udm_cf_top
   logical, optional, intent(in) :: ccn_preinitialized
   logical, optional, intent(in) :: input_density_is_dry
+  integer, optional, intent(in) :: number_policy
   real,              intent(in   ) :: delt, g, ccn0, rd, rv, t0c,     &
                                       den0, cpd, cpv, ep1, ep2,       &
                                       qmin, xls, xlv0, xlf0, cliq,    &
@@ -305,7 +308,8 @@ subroutine udm(th, q, qc, qr, qi, qs, qg, qh                                  &
   real, dimension( its:ite , kts:kte, 2 ) ::   qci
   real, dimension( its:ite , kts:kte, 4 ) ::   qrs, ncr
   integer                                 ::   i,j,k
-  logical :: initialize_ccn, use_input_density_is_dry
+  logical :: initialize_ccn, use_input_density_is_dry, dry_number
+  real, dimension(its:ite,kts:kte) :: number_density
 !
 ! for reflectivlity
 !
@@ -330,11 +334,29 @@ subroutine udm(th, q, qc, qr, qi, qs, qg, qh                                  &
   if (present(ccn_preinitialized)) initialize_ccn = .not. ccn_preinitialized
   use_input_density_is_dry = .false.
   if (present(input_density_is_dry)) use_input_density_is_dry = input_density_is_dry
+  dry_number = .false.
+  if (present(number_policy)) then
+    if (number_policy /= 0 .and. number_policy /= 1) &
+      call wrf_error_fatal("UDM: unknown number policy")
+    dry_number = number_policy == 1
+  endif
+  if (dry_number .and. .not. use_input_density_is_dry) &
+    call wrf_error_fatal("dry-number-grid-v1 requires dry-air density")
       if (itimestep==1 .and. initialize_ccn) then
         do j = jms,jme
           do k = kms,kme
             do i = ims,ime
-              nn(i,k,j) = ccn0
+              if (dry_number) then
+                if (ieee_is_finite(den(i,k,j)) .and. den(i,k,j)>0.) then
+                  nn(i,k,j) = ccn0/den(i,k,j)
+                else
+                  if (i>=its .and. i<=ite .and. k>=kts .and. k<=kte .and. j>=jts .and. j<=jte) &
+                    call wrf_error_fatal("UDM: invalid physical cold-start dry density")
+                  nn(i,k,j)=0.
+                endif
+              else
+                nn(i,k,j) = ccn0
+              endif
             enddo
           enddo
         enddo
@@ -364,6 +386,17 @@ subroutine udm(th, q, qc, qr, qi, qs, qg, qh                                  &
             ncr(i,k,1) = nn(i,k,j)
             ncr(i,k,2) = nc(i,k,j)
             ncr(i,k,3) = nr(i,k,j)
+            if (dry_number) then
+              ! One call uses this density for both conversion directions.
+              number_density(i,k)=den(i,k,j)
+              if (.not. ieee_is_finite(number_density(i,k)) .or. number_density(i,k)<=0.) &
+                call wrf_error_fatal("UDM: invalid bridge dry density")
+              if (.not. all(ieee_is_finite(ncr(i,k,1:3)))) &
+                call wrf_error_fatal("UDM: nonfinite host dry number")
+              ncr(i,k,1:3)=ncr(i,k,1:3)*number_density(i,k)
+              if (.not. all(ieee_is_finite(ncr(i,k,1:3)))) &
+                call wrf_error_fatal("UDM: nonfinite native volume number")
+            endif
           enddo
         enddo
 !
@@ -445,9 +478,11 @@ subroutine udm(th, q, qc, qr, qi, qs, qg, qh                                  &
             qs(i,k,j) = qrs(i,k,2)
             qg(i,k,j) = qrs(i,k,3)
             qh(i,k,j) = qrs(i,k,4)
+            if (.not. dry_number) then
             nn(i,k,j) = ncr(i,k,1)
             nc(i,k,j) = ncr(i,k,2)
             nr(i,k,j) = ncr(i,k,3)
+            endif
           enddo
         enddo
 !-------------------------------------------------------------------------------
@@ -463,6 +498,7 @@ subroutine udm(th, q, qc, qr, qi, qs, qg, qh                                  &
                   qg1d(k)=qg(i,k,j)
                   qh1d(k)=qh(i,k,j)
                   nr1d(k) = nr(i,k,j)
+                  if (dry_number) nr1d(k) = ncr(i,k,3)
                enddo
                call udm_mp_reflectivity (qv1d, qr1d, qs1d, qg1d,       &
                        nr1d,                                           &
@@ -487,6 +523,7 @@ subroutine udm(th, q, qc, qr, qi, qs, qg, qh                                  &
               qi1d(k) = qi(i,k,j)
               qs1d(k) = qs(i,k,j)
               nc1d(k) = nc(i,k,j)
+              if (dry_number) nc1d(k) = ncr(i,k,2)
             enddo
             call udm_mp_effective_radius(t1d,qc1d,qi1d,qs1d,den1d,qmin, t0c    &
                                ,nc1d                                           &
@@ -498,6 +535,17 @@ subroutine udm(th, q, qc, qr, qi, qs, qg, qh                                  &
             enddo
           enddo
         endif     ! has_reqc, etc...
+        if (dry_number) then
+          ! Native limits/processes and radius consumed volume number above.
+          ! Return the completed process, without a new final CCN projection.
+          do k=kts,kte
+            do i=its,ite
+              nn(i,k,j)=ncr(i,k,1)/number_density(i,k)
+              nc(i,k,j)=ncr(i,k,2)/number_density(i,k)
+              nr(i,k,j)=ncr(i,k,3)/number_density(i,k)
+            enddo
+          enddo
+        endif
 !-------------------------------------------------------------------------------
       enddo
 end subroutine udm

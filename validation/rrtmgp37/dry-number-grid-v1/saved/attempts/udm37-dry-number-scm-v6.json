@@ -1,0 +1,115 @@
+{
+  "schema": "DRY_NUMBER_GRID_V1_SCM_TEST",
+  "status": "PASS_SCOPED_POLICY1_SCM_RESTART",
+  "production_accepted": false,
+  "seed_input": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cold-number-input-runtime-v1/warm-cloud-on/wrfinput_d01",
+    "sha256": "f0f163a10ff9141c0225fcc718ee1647e8635c6d694155496743bbd52db0fb4e",
+    "size_bytes": 77284
+  },
+  "executable": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-dry-number-build-v1/producer/main/wrf",
+    "sha256": "1bc138d465733dcadeac1fcb248337f07b6a4d5a8467322f3bb5adbeb5ba03f1",
+    "size_bytes": 44828712
+  },
+  "processes": [
+    {
+      "argv": [
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-dry-number-build-v1/producer/main/wrf"
+      ],
+      "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-dry-number-scm-v6/control",
+      "kind": "WRF_policy1_control",
+      "status": "TERMINAL",
+      "pid": 145915,
+      "actual_returncode": 0,
+      "timed_out": false,
+      "started_at": 1791802832.6316295,
+      "finished_at": 1791802835.2570157
+    },
+    {
+      "argv": [
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-dry-number-build-v1/producer/main/wrf"
+      ],
+      "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-dry-number-scm-v6/restart",
+      "kind": "WRF_policy1_restart",
+      "status": "TERMINAL",
+      "pid": 146160,
+      "actual_returncode": 0,
+      "timed_out": false,
+      "started_at": 1791802835.6005058,
+      "finished_at": 1791802837.8258872
+    },
+    {
+      "argv": [
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-dry-number-build-v1/producer/main/wrf"
+      ],
+      "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-dry-number-scm-v6/reject_missing_cold_tag",
+      "kind": "WRF_reject_missing_cold_tag",
+      "status": "TERMINAL",
+      "pid": 146163,
+      "actual_returncode": 0,
+      "timed_out": false,
+      "started_at": 1791802838.123043,
+      "finished_at": 1791802838.19622
+    },
+    {
+      "argv": [
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-dry-number-build-v1/producer/main/wrf"
+      ],
+      "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-dry-number-scm-v6/reject_raw_restart",
+      "kind": "WRF_reject_raw_restart",
+      "status": "TERMINAL",
+      "pid": 146164,
+      "actual_returncode": 0,
+      "timed_out": false,
+      "started_at": 1791802838.4799867,
+      "finished_at": 1791802838.5524223
+    },
+    {
+      "argv": [
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-dry-number-build-v1/producer/main/wrf"
+      ],
+      "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-dry-number-scm-v6/reject_eta_as_legacy",
+      "kind": "WRF_reject_eta_as_legacy",
+      "status": "TERMINAL",
+      "pid": 146165,
+      "actual_returncode": 0,
+      "timed_out": false,
+      "started_at": 1791802838.8368077,
+      "finished_at": 1791802838.9101598
+    }
+  ],
+  "history_variables_compared": 211,
+  "control_seconds": 120,
+  "restart_seconds": 60,
+  "WRF_processes": 5,
+  "expected_representation_rejections": 3,
+  "source_files": {
+    "phys/module_mp_udm.F": "45780e79e24e45f4bfa49a31bbaa8f4cdb28855e28d39da81e1b3290435bad8c",
+    "phys/module_microphysics_driver.F": "13561e69b615533ae85a94ae056f419f9d544ba8cb87848305eac99fda135fff",
+    "share/input_wrf.F": "30e0e5ef6c47ae4521560f737c9c8c844c549a80e266372122c72e9dd1c3f2a6",
+    "share/output_wrf.F": "f7591fbc023d4874c9cc7d60fa13b8f85e380915ad8a9ed47e13f7eafb35cf99",
+    "Registry/Registry.EM_COMMON": "338c6b923bf91ca6e3efab91c9ab664ebc70b009873a14ed852de93e960d194c",
+    "dyn_em/start_em.F": "0faaaefdd3fe087c0f7f8d15d4746799425c506c46b4bad5526f71b195748195"
+  },
+  "checkpoint": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-dry-number-scm-v6/control/wrfrst_d01_1999-10-22_19:01:00",
+    "sha256": "38b6bff419c7b1375ad09e9add46599199b7b180f8959f86602359801f9dcfac",
+    "size_bytes": 395488
+  },
+  "control_history": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-dry-number-scm-v6/control/wrfout_d01_1999-10-22_19:00:00",
+    "sha256": "ce6602b091b864dd62b28b307a9bdf1b7d5150f084c9a3f13b578b9ef3266768",
+    "size_bytes": 460744
+  },
+  "restart_history": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-dry-number-scm-v6/restart/wrfout_d01_1999-10-22_19:01:10",
+    "sha256": "2d19636ba83c3514c599a868e813f4c10f4cb179407fadfb60aa1463fd4ee0b0",
+    "size_bytes": 242848
+  },
+  "limits": [
+    "One manufactured periodic 2x2x59 SCM with scalar_adv_opt=0; no general transport/MPI or atmosphere validation.",
+    "Cold input explicitly transformed; no legacy checkpoint migration and no external QNN preservation.",
+    "Restart equality covers saved terminal variables; not physical PSD/occurrence/reference/forecast acceptance."
+  ]
+}

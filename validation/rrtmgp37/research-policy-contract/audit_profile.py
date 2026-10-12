@@ -1,8 +1,10 @@
 """Bind one retained research configuration; never authorize physical production."""
 from pathlib import Path
-import argparse,hashlib,json,math,struct
+import argparse,hashlib,json,math,struct,importlib.util
 B=Path(__file__).resolve().parent
 ROOT=B.parents[2]
+_h=importlib.util.spec_from_file_location('historical_source',ROOT/'validation/rrtmgp37/historical-source/binding.py')
+historical=importlib.util.module_from_spec(_h);_h.loader.exec_module(historical)
 GATES=('PHY-NC','PHY-SIZE','PHY-OCCURRENCE','REF-RFMIP','REF-LBL','FINAL-IDENTITY','FINAL-FORECAST')
 MASS=('QCLOUD','QICE','QRAIN','QSNOW','QGRAUP','QHAIL')
 def require(ok,msg):
@@ -36,13 +38,15 @@ def decode_state(meta,raw):
       'number_unit_population_approved':False,
       'number_raw_ranges':{n:[min(arrays[n]),max(arrays[n])] for n in ('QNCCN','QNCLOUD','QNRAIN')}}
 
-def audit(repo,profile,case,namelist,purpose='research',number_policy='legacy_constant'):
+def audit(repo,profile,case,namelist,purpose='research',number_policy='legacy_constant',source_scope='current'):
     validate_profile(profile)
     require(case in profile['namelist_bindings'],'unknown retained configuration')
     require(number_policy=='legacy_constant','external preservation conflicts with this implemented cold-start policy')
     binding=profile['namelist_bindings'][case];require(len(namelist)==binding['bytes'] and hashlib.sha256(namelist).hexdigest()==binding['sha256'],'configuration outside exact retained profile; new binding required')
     for r in profile['source_pins']:
-        p=repo/r['path'];require(p.is_file() and p.stat().st_size==r['bytes'] and digest(p)==r['sha256'],'source changed; revise profile and its evidence')
+        require(source_scope in ('current','retained'),'unknown source scope')
+        raw=(repo/r['path']).read_bytes() if source_scope=='current' else historical.historical_bytes(repo,r['path'],r['sha256'])
+        require(len(raw)==r['bytes'] and hashlib.sha256(raw).hexdigest()==r['sha256'],'source changed; revise profile and its evidence')
     closure=load(B/'closure-conditions.json');require({r['id'] for r in closure['items']}==set(GATES),'fixed seven closure conditions')
     check=load(repo/'validation/rrtmgp37/acceptance/review-resolution-checklist.json');items={r['id']:r for r in check['items']}
     for r in closure['items']:require(items[r['id']]['completion_condition']==r['completion_condition'],'closure condition changed; explicit version review required')
@@ -61,9 +65,9 @@ def audit(repo,profile,case,namelist,purpose='research',number_policy='legacy_co
       'limits':'No every-timestep admission, actual radiation omission budget, external input authority, other transport/parallel configuration, independent reference or final forecast approval.'}
 
 def main():
-    a=argparse.ArgumentParser(description=__doc__);a.add_argument('--source',type=Path,default=ROOT);a.add_argument('--case',choices=('warm-cloud-on','restart-on'),default='warm-cloud-on');a.add_argument('--namelist',type=Path);a.add_argument('--purpose',choices=('research','physical'),default='research');a.add_argument('--number-policy',choices=('legacy_constant','preserve_external'),default='legacy_constant');a.add_argument('--output',type=Path)
+    a=argparse.ArgumentParser(description=__doc__);a.add_argument('--source-scope',choices=('current','retained'),default='current');a.add_argument('--source',type=Path,default=ROOT);a.add_argument('--case',choices=('warm-cloud-on','restart-on'),default='warm-cloud-on');a.add_argument('--namelist',type=Path);a.add_argument('--purpose',choices=('research','physical'),default='research');a.add_argument('--number-policy',choices=('legacy_constant','preserve_external'),default='legacy_constant');a.add_argument('--output',type=Path)
     args=a.parse_args();profile=load(B/'profile.json');path=args.namelist or args.source/profile['namelist_bindings'][args.case]['path']
-    try:r=audit(args.source,profile,args.case,path.read_bytes(),args.purpose,args.number_policy)
+    try:r=audit(args.source,profile,args.case,path.read_bytes(),args.purpose,args.number_policy,args.source_scope)
     except (ValueError,OSError) as exc:r={'status':'REJECT_PROFILE_BINDING','reason':str(exc),'production_accepted':False};rc=2
     else:rc=0 if args.purpose=='research' else 2
     text=json.dumps(r,ensure_ascii=False,indent=2)+'\n'

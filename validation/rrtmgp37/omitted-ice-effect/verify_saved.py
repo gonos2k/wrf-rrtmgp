@@ -23,6 +23,10 @@ def restore(package,output):
         p=output/name;p.parent.mkdir(parents=True,exist_ok=True);p.write_bytes(data)
 
 
+import importlib.util
+_h=importlib.util.spec_from_file_location('historical_source',ROOT/'validation/rrtmgp37/historical-source/binding.py')
+historical=importlib.util.module_from_spec(_h);_h.loader.exec_module(historical)
+
 def verify(package=PACKAGE):
     manifest=json.loads((package/'manifest.json').read_text())
     a.require(manifest['production_accepted'] is False,'false physical approval')
@@ -31,7 +35,7 @@ def verify(package=PACKAGE):
         a.require(hashlib.sha256(p.read_bytes()).hexdigest()==row['sha256'] and p.stat().st_size==row['size_bytes'],'evidence changed '+name)
     identity=json.loads((package/'saved/build-and-input-identity.json').read_text())
     for name,digest in identity['source_files'].items():
-        a.require(hashlib.sha256((ROOT/name).read_bytes()).hexdigest()==digest,'production source changed')
+        a.require(hashlib.sha256(historical.historical_bytes(ROOT,name,digest)).hexdigest()==digest,'historical production source changed')
     patched=gzip.decompress((package/'saved/module_ra_rrtmgp_diagnostic.F.gz').read_bytes())
     a.require(hashlib.sha256(patched).hexdigest()==identity['compiled_diagnostic_source_sha256'],'compiled diagnostic source changed')
     a.require(b'diagnostic_raw_ice(c,k,b)' in patched and b'ICE_DIAG_PREDELTA64' in patched,'missing ice raw-direct linkage')
@@ -50,4 +54,4 @@ def verify(package=PACKAGE):
     return result
 
 if __name__=='__main__':
-    r=verify();print(json.dumps({'status':r['status'],'summary':r['summary'],'production_accepted':False},indent=2))
+    r=verify();print(json.dumps({'status':r['status'],'summary':r['summary'],'production_accepted':False,'source_scope':'historical_snapshot','current_candidate_certified':False},indent=2))

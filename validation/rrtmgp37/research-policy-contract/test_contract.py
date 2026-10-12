@@ -8,12 +8,16 @@ class ResearchContract(unittest.TestCase):
     def test_actual_cold_and_restart_profile_with_disclosed_CF0_state(self):
         p=c.load(B/'profile.json')
         for case in p['namelist_bindings']:
-            r=c.audit(c.ROOT,p,case,(c.ROOT/p['namelist_bindings'][case]['path']).read_bytes())
+            r=c.audit(c.ROOT,p,case,(c.ROOT/p['namelist_bindings'][case]['path']).read_bytes(),source_scope='retained')
             self.assertFalse(r['production_accepted']);self.assertEqual(len(r['unresolved_required_gates']),7)
             by={s['role']:s for s in r['checked_snapshots']}
             self.assertFalse(by['initial_input_before_CF_diagnosis']['CF_diagnostic_stamp_nonnegative'])
             self.assertEqual(by['history_60s_after_step6']['CF0_positive_condensate_cells']['QICE'],12)
             self.assertFalse(by['history_60s_after_step6']['direct_radiation_call_state'])
+    def test_current_candidate_cannot_inherit_old_source_approval(self):
+        p=c.load(B/'profile.json');n=(c.ROOT/p['namelist_bindings']['warm-cloud-on']['path']).read_bytes()
+        with self.assertRaisesRegex(ValueError,'source changed'):
+            c.audit(c.ROOT,p,'warm-cloud-on',n)
     def test_external_preservation_and_implicit_unit_approval_refused(self):
         p=c.load(B/'profile.json');n=(c.ROOT/p['namelist_bindings']['warm-cloud-on']['path']).read_bytes()
         with self.assertRaisesRegex(ValueError,'external preservation'):c.audit(c.ROOT,p,'warm-cloud-on',n,number_policy='preserve_external')
@@ -35,8 +39,8 @@ class ResearchContract(unittest.TestCase):
                 for i in x['items']:
                     if i['id'] in c.GATES:i['integrated_validation']='PASS_PHYSICAL'
             return x
-        with patch.object(c,'load',side_effect=retag):r=c.audit(c.ROOT,p,'warm-cloud-on',n,purpose='physical')
+        with patch.object(c,'load',side_effect=retag):r=c.audit(c.ROOT,p,'warm-cloud-on',n,purpose='physical',source_scope='retained')
         self.assertEqual(r['status'],'REJECT_PHYSICAL_ACCEPTANCE');self.assertFalse(r['production_accepted'])
-        proc=subprocess.run([sys.executable,'-I','-S',str(B/'audit_profile.py'),'--purpose','physical'],capture_output=True,text=True,timeout=60)
+        proc=subprocess.run([sys.executable,'-I','-S',str(B/'audit_profile.py'),'--purpose','physical','--source-scope','retained'],capture_output=True,text=True,timeout=60)
         self.assertEqual(proc.returncode,2);self.assertEqual(json.loads(proc.stdout)['status'],'REJECT_PHYSICAL_ACCEPTANCE')
 if __name__=='__main__':unittest.main(verbosity=2)
