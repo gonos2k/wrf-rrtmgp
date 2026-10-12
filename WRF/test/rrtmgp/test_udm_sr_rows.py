@@ -44,7 +44,7 @@ def compile_and_run(wrf: pathlib.Path, directory: pathlib.Path, compiler: str,
     stub.write_text(
         "module module_wrf_error\n  implicit none\ncontains\n"
         "  subroutine wrf_debug(level,text)\n    integer,intent(in)::level\n"
-        "    character(*),intent(in)::text\n  end subroutine\nend module\n")
+        "    character(*),intent(in)::text\n  end subroutine\nend module\nsubroutine wrf_error_fatal(text)\ncharacter(*),intent(in)::text\nprint *,trim(text)\nerror stop 2\nend subroutine\n")
     include = ["-I", str(directory), "-J", str(directory)]
     compile_commands = [
         [compiler, "-O0", "-ffixed-form", "-c", str(wrf / "phys/module_gfs_machine.F"),

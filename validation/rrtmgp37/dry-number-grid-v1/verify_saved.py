@@ -32,6 +32,9 @@ def verify(package=B):
   require(sha(read('saved/current-source/'+name+'.gz'))==row['sha256'],'compiled-source snapshot differs')
  corpus=json.loads((ROOT/'validation/rrtmgp37/connected-host-number/source/tracked-WRF-corpus.json').read_text())
  changed=set(identity['source_files']);require(len(changed)==7,'candidate source scope')
+ supporting=identity['supporting_test_files']
+ for name,row in supporting.items():require(sha((ROOT/name).read_bytes())==row['sha256'],'current fixture stub differs')
+ changed |= set(supporting)
  for row in corpus['files']:
   if row['path'] not in changed:require(sha((ROOT/row['path']).read_bytes())==row['sha256'],'unlisted production source changed')
  require(sha(read('saved/build/wrf.gz'))==identity['executable']['sha256'],'executed binary changed')

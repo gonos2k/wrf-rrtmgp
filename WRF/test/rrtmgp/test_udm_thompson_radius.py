@@ -159,6 +159,11 @@ integer,intent(in)::level
 character(*),intent(in)::text
 end subroutine
 end module
+subroutine wrf_error_fatal(text)
+character(*),intent(in)::text
+print *,trim(text)
+error stop 2
+end subroutine
 module module_timing
 end module
 module module_domain

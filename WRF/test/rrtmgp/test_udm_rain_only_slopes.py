@@ -215,7 +215,7 @@ def main() -> int:
     deps = [wrf / "phys/module_mp_radar.F", wrf / "phys/module_gfs_machine.F"]
     stub_text = ("module module_wrf_error\ncontains\n"
                  "subroutine wrf_debug(level,text)\ninteger,intent(in)::level\ncharacter(*),intent(in)::text\nend subroutine\n"
-                 "end module\n")
+                 "end module\nsubroutine wrf_error_fatal(text)\ncharacter(*),intent(in)::text\nprint *,trim(text)\nerror stop 2\nend subroutine\n")
     stub_source = work / "module_wrf_error.f90"
     stub_source.write_text(stub_text, encoding="ascii")
     current_source = source_path.read_bytes()
