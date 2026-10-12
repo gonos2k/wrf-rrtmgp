@@ -1,6 +1,6 @@
 # 이전 검토 지적 해소 체크리스트
 
-현재 기준 main: `3e577a5bacc5d189cd2528675255da1c1b3641b6` (PR #165 병합, tree `a63510836516da367aaabda461eacbad6327b047`). UDM27–RRTMGP37 전용.
+현재 기준 main: `d74f8e9b185bbc407156b6a7dd930dd2f1c03929` (PR #166 병합, tree `41223688a2488c93593a78f631c4c0ab4eba5d4c`). UDM27–RRTMGP37 전용.
 
 PR #146–#151은 main에 병합됐다. 기존 실행의 source pin·범위는 그대로 보존하며, 현재 전체 tree에서 모든 과거 모델을 새로 실행했다고 주장하지 않는다. PR #149의 NetCDF guard와 기본 namelist 검사는 main에 반영됐고 정확히 같은 tree에서 11개 CI가 성공했다. PR150의 추가 scalar 경계 수정도 main에 반영됐다. PR151의 I/O 세 항목도 main에 반영됐고 정확히 같은 전체 tree에서 11개 CI가 성공했다.
 
@@ -120,3 +120,11 @@ real.exe, 실제 specified lateral boundary, 다른 수송 정책, 입자크기 
 두 격자의 R3에 정렬된11점은 최대1.15741e-14 차이지만 그 사이에는2.69e-4 차이가 남는다. 직접 R1/R2 기여의 원인분해는 OD만으로 인증하지 않는다. 최솟값과 음수 run은 창의 오른쪽 끝에 걸려 있어 전체 음수 구간이나 band 최소값을 확보했다는 뜻도 아니다.
 
 Native 창 판독·위치·정렬 분석은 완료한 하위 작업으로 유지한다. 물리 계약·독립 정확도·최종 정책 실행의7개 잔여 항목 및 REF-LBL FAIL, 완료15/미완료7, production_accepted=false는 그대로다. 이전 대조 실행·source roster·최초 음수 계보를 다시 열거나 새 수렴 허용기준을 사후에 만들지 않는다.
+
+## PR166 병합 후 연구 실행 계약과 고정된 종료 조건
+
+[연구 계약](../research-policy-contract/README_ko.md)은 새 분광/모델 실행을 추가하지 않고 기존 상수CCN·원래raw number·native size·공유CF omission·qg=qh=0의 보존된 연구 구성을source11개와두 namelist에 연결한다. 최초 과학 승인 범위의 선택은 제안 상태이고, 단위/population과PSD/발생분율의 승인이 아니다. 기존 일곱 종료 조건을 원문으로 고정했다.
+
+Root는 보존된 NetCDF3개에서4개 상태를 직접 판독했다. 초기CF 진단 전 상태와60초 상태를 구분하며 후자의CF0 양성QICE12개는 potential snapshot omission 조건으로 보고한다. 실제 radiation loss나 every-step 상태 인증으로 부르지 않는다. 연구 binding은RC0, physical 요청은의도된RC2로거부한다. Label만변경해도연구-only profile이물리승인을내지않는다.
+
+생산코드·단위변환·초기화·LUT·허용오차는변경하지않고새compiler/solver는0회다. 기존완료15/물리·최종7과production_accepted=false를유지하며, 기존계보·대조·161/321 판독을새미완료로다시만들지않는다.

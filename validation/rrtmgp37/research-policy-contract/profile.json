@@ -1,0 +1,132 @@
+{
+  "schema": "UDM37_RESEARCH_BASELINE_CONTRACT_V1",
+  "profile_id": "legacy-connected-scm-v1",
+  "purpose": "RESEARCH_ONLY",
+  "selection_status": "PROPOSED_SCOPE_NOT_PHYSICS_APPROVAL",
+  "main_snapshot": {
+    "commit": "d74f8e9b185bbc407156b6a7dd930dd2f1c03929",
+    "tree": "41223688a2488c93593a78f631c4c0ab4eba5d4c",
+    "merged_pr": 166
+  },
+  "source_pins": [
+    {
+      "path": "WRF/phys/module_mp_udm.F",
+      "bytes": 196865,
+      "sha256": "7bd96141eefc6ae2cb66cea0ce022fcc2ee64afce5c616aa65f26711c8790947"
+    },
+    {
+      "path": "WRF/phys/module_microphysics_driver.F",
+      "bytes": 198159,
+      "sha256": "c02f227d0fc1bf633fa53e54361e7117093b2c7bb02cedc2b71441c5bd638bd9"
+    },
+    {
+      "path": "WRF/phys/module_ra_rrtmgp_input.F",
+      "bytes": 41665,
+      "sha256": "65e61158b31d83d34da98dac51524606733b3fde4a89743498f9b1cd52646274"
+    },
+    {
+      "path": "WRF/phys/module_ra_rrtmgp.F",
+      "bytes": 74962,
+      "sha256": "1852452555fbe667a0a95d59242bcd9c3833f2877fc51f882d5d3d929a058f58"
+    },
+    {
+      "path": "WRF/phys/module_ra_rrtmg_lw.F",
+      "bytes": 715867,
+      "sha256": "123c9d14c7b6d092c9f39e6c0f908747ce6c7d494f57e2484b0aeb226ede178f"
+    },
+    {
+      "path": "WRF/phys/module_ra_rrtmg_sw.F",
+      "bytes": 674830,
+      "sha256": "b3d191a67053d696413f4a759d68a76b526424a369ee2ba11a98cf33f3e4524c"
+    },
+    {
+      "path": "WRF/Registry/Registry.EM_COMMON",
+      "bytes": 448359,
+      "sha256": "87e21a476a06b7e0c926b2d939eaf1028810cba8a7d1e6fc585b50b599f99729"
+    },
+    {
+      "path": "WRF/share/module_bc.F",
+      "bytes": 164069,
+      "sha256": "61b9235004b2a7799faabaa928276af8a7ef2e4672619c8ad120c857461301ad"
+    },
+    {
+      "path": "WRF/dyn_em/module_em.F",
+      "bytes": 132827,
+      "sha256": "67c5842c1c5d407a26139f26bd317f3016c610aeaf60207dfd21394ddb81482c"
+    },
+    {
+      "path": "WRF/dyn_em/start_em.F",
+      "bytes": 130683,
+      "sha256": "bce1b0656d73d76f74f4db7f1b71d254cc1e11f16ecfc82e54fe153a84e6c17e"
+    },
+    {
+      "path": "WRF/external/rte_rrtmgp/rrtmgp-frontend/mo_cloud_optics_rrtmgp.F90",
+      "bytes": 38204,
+      "sha256": "14dcab00e6dfe1a64d40b5ddf3cf86186380fac2b8d0c0c3aa2e1f466b0446fc"
+    }
+  ],
+  "namelist_bindings": {
+    "warm-cloud-on": {
+      "path": "validation/rrtmgp37/connected-host-number/runtime/warm-cloud-on/namelist.input",
+      "bytes": 4560,
+      "sha256": "4a4f2c31c033c9327f59e6fd67e49871ef03ab9896695eae881219c720e68eac",
+      "cold_start": true
+    },
+    "restart-on": {
+      "path": "validation/rrtmgp37/connected-host-number/runtime/restart-on/namelist.input",
+      "bytes": 4558,
+      "sha256": "04db15158b10d6f6ab5f57ec9298c0a56d84883751d271f979eff64a2f7eed73",
+      "cold_start": false
+    }
+  },
+  "resolved_configuration": {
+    "mp_physics": 27,
+    "ra_lw_physics": 37,
+    "ra_sw_physics": 37,
+    "scalar_adv_opt": 0,
+    "rk_ord": 3,
+    "h_sca_adv_order": 5,
+    "v_sca_adv_order": 3,
+    "periodic_x": true,
+    "periodic_y": true,
+    "max_dom": 1,
+    "cldovrlp": 2,
+    "ccn_conc_raw": 100000000.0,
+    "frozen_optics_mode": 0,
+    "frozen_mode_resolution": "Registry default0; key absent in retained namelist",
+    "ice_roughness": 1,
+    "ice_roughness_resolution": "Registry default1; key absent in retained namelist"
+  },
+  "number_policy": {
+    "cold_start": "legacy_constant_before_first_UDM",
+    "external_QNN_preservation_supported": false,
+    "restart": "tested_native_checkpoint_restoration",
+    "zero_QNN": "legacy_background_initialization",
+    "missing_QNN_variable": "NOT_CERTIFIED",
+    "encoding": "UNRESOLVED_NATIVE_RAW",
+    "dry_mass_denominator_approved": false,
+    "population_approved": false,
+    "rho_or_CF_scaling_added": false,
+    "CCN_entry_clip_raw": [
+      50000000.0,
+      20000000000.0
+    ],
+    "clip_is_not_an_all_process_return_invariant": true
+  },
+  "size_policy": {
+    "mapping": "native_helper_unchanged",
+    "PSD_LUT_moment_approved": false,
+    "empirical_radius_multiplier": null,
+    "LUT_api": "effective radius; exact native moment/generator connection OPEN"
+  },
+  "occurrence_policy": {
+    "mapping": "legacy_shared_CF_with_explicit_clear_condensate_omission",
+    "production_LW_SW_allow_clear_condensate": true,
+    "graupel_hail_in_this_profile": "qg=qh=0 in checked snapshots; positive values outside this profile",
+    "frozen_mode1": "outside this profile; existing experimental implementation retained",
+    "physical_occurrence_approved": false
+  },
+  "scientific_acceptance": false,
+  "full_timestep_state_admission_certified": false,
+  "production_accepted": false
+}
