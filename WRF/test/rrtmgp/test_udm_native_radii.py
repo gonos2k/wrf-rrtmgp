@@ -50,7 +50,7 @@ def build_and_run(wrf: pathlib.Path, directory: pathlib.Path, compiler: str, mis
         "  integer, intent(in) :: level\n"
         "  character(*), intent(in) :: text\n"
         "  end subroutine wrf_debug\n"
-        "end module module_wrf_error\n"
+        "end module module_wrf_error\nsubroutine wrf_error_fatal(text)\ncharacter(*),intent(in)::text\nprint *,trim(text)\nerror stop 2\nend subroutine\n"
     )
     include = ["-I", str(directory), "-J", str(directory)]
     commands = [

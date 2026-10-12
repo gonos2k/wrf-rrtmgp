@@ -560,12 +560,13 @@ CONTAINS
   ! selected physical column and timestep produces one status='new' file.
   SUBROUTINE trace_udm_radius_state(domain_id,step,i,j,kts,kte,t,qc,qi,qs,nc,rho, &
                                     re_cloud,re_ice,re_snow,cf_used,cf_step,cf_top, &
-                                    qmin,t0c,rho_water,rho_snow,time_minutes)
+                                    qmin,t0c,rho_water,rho_snow,time_minutes,number_policy)
     INTEGER,INTENT(IN) :: domain_id,step,i,j,kts,kte
     REAL,INTENT(IN) :: t(:),qc(:),qi(:),qs(:),nc(:),rho(:),re_cloud(:),re_ice(:),re_snow(:),cf_used(:)
     INTEGER,INTENT(IN) :: cf_step,cf_top
     REAL,INTENT(IN) :: qmin,t0c,rho_water,rho_snow
     REAL,OPTIONAL,INTENT(IN) :: time_minutes
+    INTEGER,OPTIONAL,INTENT(IN) :: number_policy
     INTEGER :: expected,unit,ios
     CHARACTER(len=1200) :: filename,path
 
@@ -597,6 +598,13 @@ CONTAINS
     CALL write_radius_vector(unit,'SOURCE_QI',qi)
     CALL write_radius_vector(unit,'SOURCE_QS',qs)
     CALL write_radius_vector(unit,'SOURCE_QNC',nc)
+    IF(PRESENT(number_policy)) THEN
+      IF(number_policy==1) THEN
+        CALL write_radius_scalar(unit,'HOST_NUMBER_POLICY',1.)
+        ! Reconstructed after the eta return; not the private helper input.
+        CALL write_radius_vector(unit,'NATIVE_NC_RECONSTRUCTED',nc*rho)
+      ENDIF
+    ENDIF
     CALL write_radius_vector(unit,'SOURCE_RHO',rho)
     CALL write_radius_vector(unit,'SOURCE_RE_CLOUD',re_cloud)
     CALL write_radius_vector(unit,'SOURCE_RE_ICE',re_ice)
@@ -627,11 +635,12 @@ CONTAINS
 
   SUBROUTINE trace_udm_entry_density_state(domain_id,step,i,j,kts,kte,th,pii,p,qv,rho, &
        qc,qi,qr,qs,qg,qh,nn,nc,nr,rd,rv,cpd,cpv,gravity,delt,qmin,t0c,rho0,rho_water, &
-       time_minutes,input_density_is_dry)
+       time_minutes,input_density_is_dry,number_policy)
     INTEGER,INTENT(IN) :: domain_id,step,i,j,kts,kte
     REAL,INTENT(IN) :: th(:),pii(:),p(:),qv(:),rho(:),qc(:),qi(:),qr(:),qs(:),qg(:),qh(:),nn(:),nc(:),nr(:)
     REAL,INTENT(IN) :: rd,rv,cpd,cpv,gravity,delt,qmin,t0c,rho0,rho_water
     REAL,OPTIONAL,INTENT(IN) :: time_minutes
+    INTEGER,OPTIONAL,INTENT(IN) :: number_policy
     LOGICAL,OPTIONAL,INTENT(IN) :: input_density_is_dry
     REAL,ALLOCATABLE :: temperature(:),dend(:),dend_legacy(:)
     LOGICAL :: selected_density_is_dry
@@ -716,6 +725,9 @@ CONTAINS
     CALL write_radius_vector(unit,'QS_RAW',qs)
     CALL write_radius_vector(unit,'QG_RAW',qg)
     CALL write_radius_vector(unit,'QH_RAW',qh)
+    IF(PRESENT(number_policy)) THEN
+      IF(number_policy==1) CALL write_radius_scalar(unit,'HOST_NUMBER_POLICY',1.)
+    ENDIF
     CALL write_radius_vector(unit,'NN_RAW',nn)
     CALL write_radius_vector(unit,'NC_RAW',nc)
     CALL write_radius_vector(unit,'NR_RAW',nr)

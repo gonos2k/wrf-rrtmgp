@@ -202,7 +202,7 @@ def make_sources(wrf: Path, work: Path) -> tuple[list[Path],dict]:
     # Only wrf_debug's output dependency is stubbed; the actual radar module,
     # UDM initializer, declarations and model constants are compiled unchanged.
     stub=work/'module_wrf_error.f90'
-    stub.write_text('module module_wrf_error\ncontains\nsubroutine wrf_debug(level,text)\ninteger::level\ncharacter(*)::text\nend subroutine\nend module\n')
+    stub.write_text('module module_wrf_error\ncontains\nsubroutine wrf_debug(level,text)\ninteger::level\ncharacter(*)::text\nend subroutine\nend module\nsubroutine wrf_error_fatal(text)\ncharacter(*),intent(in)::text\nprint *,trim(text)\nerror stop 2\nend subroutine\n')
     blocks={phase:wrapper_block((wrf/f'phys/module_ra_rrtmg_{phase}.F').read_text()) for phase in ['lw','sw']}
     tail=''
     for phase,block in blocks.items():

@@ -286,7 +286,7 @@ def main():
                 directory = work/opt[1:]/variant
                 directory.mkdir(parents=True)
                 stub = directory/"module_wrf_error.f90"
-                stub.write_text("module module_wrf_error\ncontains\nsubroutine wrf_debug(level,text)\ninteger,intent(in)::level\ncharacter(*),intent(in)::text\nend subroutine\nend module\n")
+                stub.write_text("module module_wrf_error\ncontains\nsubroutine wrf_debug(level,text)\ninteger,intent(in)::level\ncharacter(*),intent(in)::text\nend subroutine\nend module\nsubroutine wrf_error_fatal(text)\ncharacter(*),intent(in)::text\nprint *,trim(text)\nerror stop 2\nend subroutine\n")
                 include = ["-I", str(directory), "-J", str(directory)]
                 objects = []
                 for source, extra in ((paths[2], ["-ffixed-form"]), (stub, ["-ffree-form", "-ffree-line-length-none"]),

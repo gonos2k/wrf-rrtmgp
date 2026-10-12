@@ -5,7 +5,7 @@ External executables, coefficients, full NetCDF and LBL streams are not reopened
 An internally consistent manifest is not independent provenance authentication.
 """
 import hashlib
-import importlib.util
+import importlib.util,types
 import json
 from pathlib import Path
 import struct
@@ -64,8 +64,11 @@ def main():
         require(len(raw) == row['bytes'] and hashlib.sha256(raw).hexdigest() == row['sha256'],
                 'included bytes changed: ' + row['path'])
     script = REPO / 'WRF/test/rrtmgp/test_udm_native_ccn_bounds.py'
-    require(hashlib.sha256(script.read_bytes()).hexdigest() == manifest['current_bounds_script_sha256'],
-            'saved and current bounds scripts differ')
+    hs=importlib.util.spec_from_file_location('historical_source',REPO/'validation/rrtmgp37/historical-source/binding.py')
+    historical=importlib.util.module_from_spec(hs);hs.loader.exec_module(historical)
+    script_raw=historical.historical_bytes(REPO,str(script.relative_to(REPO)),manifest['current_bounds_script_sha256'])
+    require(hashlib.sha256(script_raw).hexdigest() == manifest['current_bounds_script_sha256'],
+            'saved and historical bounds scripts differ')
     checklist = read('checklist.json')
     ids = {'PHY-NC', 'PHY-SIZE', 'PHY-OCCURRENCE', 'REF-RFMIP', 'REF-LBL',
            'FINAL-IDENTITY', 'FINAL-FORECAST'}
@@ -85,9 +88,8 @@ def main():
     require(bounds['status'] == 'PASS_SCOPED_NATIVE_ENTRY_BOUNDS_AND_DRY_EXPORT', 'bounds scope')
     require(bounds['counts'] == {'manufactured_configurations': 20, 'fixture_processes': 6,
                                 'actual_outer_udm_calls': 120, 'compiler_link_processes': 16}, 'bounds counts')
-    spec = importlib.util.spec_from_file_location('saved_bounds', script)
-    module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
+    module=types.ModuleType('saved_bounds');module.__file__=str(script)
+    exec(compile(script_raw,str(script),'exec'),module.__dict__)
     for opt in ('O0', 'O2'):
         commands = [r for r in bounds['processes'] if r['kind'] == 'actual_udm_bounds_fixture'
                     and Path(r['cwd']).name == opt]
@@ -139,7 +141,7 @@ def main():
     require(identity['status'] == 'PASS_SCOPED_BYTE_BINDINGS_FINAL_IDENTITY_OPEN'
             and identity['production_accepted'] is False, 'identity scope promoted')
     print(json.dumps({'status': 'PASS_SCOPED_INCLUDED_EVIDENCE', 'production_accepted': False,
-                      'parent_completed_scoped': 15, 'parent_remaining': 7,
+                      'parent_completed_scoped': 15, 'parent_remaining': 7, 'bounds_script_source_scope':'historical_snapshot',
                       'candidate_prewrite_coverage': 21, 'candidate_precast_strict_fail': 14,
                       'serialization_threshold_crossings': 7,
                       'RFMIP_stored_strict_fail': 21, 'external_payloads_reopened': False}))

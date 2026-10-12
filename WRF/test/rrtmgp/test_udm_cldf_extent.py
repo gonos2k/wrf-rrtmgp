@@ -28,7 +28,7 @@ def build_one(wrf: pathlib.Path, compiler: str, opt: str, build: pathlib.Path) -
     stub = build / "module_wrf_error.f90"
     stub.write_text("module module_wrf_error\nimplicit none\ncontains\n"
                     "subroutine wrf_debug(level,text)\ninteger,intent(in)::level\n"
-                    "character(*),intent(in)::text\nend subroutine\nend module\n")
+                    "character(*),intent(in)::text\nend subroutine\nend module\nsubroutine wrf_error_fatal(text)\ncharacter(*),intent(in)::text\nprint *,trim(text)\nerror stop 2\nend subroutine\n")
     commands.append([compiler, "-O0", "-ffree-form", "-ffree-line-length-none", "-c", str(stub),
                      "-o", str(build / "error.o"), *include])
     commands.append([compiler, "-O0", "-ffree-form", "-ffree-line-length-none", "-c",

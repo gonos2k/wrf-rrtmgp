@@ -1,0 +1,37 @@
+{
+  "id": "dry-number-grid-v1",
+  "namelist": {
+    "udm_number_policy": 1,
+    "default": 0
+  },
+  "implementation": "OPT_IN_RESEARCH_CANDIDATE",
+  "NOAA_original_intent_certified": false,
+  "host": {
+    "unit": "number per kg dry air",
+    "population": {
+      "QNN": "free preactivation CCN reservoir",
+      "QNC": "cloud droplets",
+      "QNR": "rain drops"
+    },
+    "spatial_definition": "grid mean"
+  },
+  "native_work": "number per cubic meter using one call dry-density snapshot",
+  "entry": "n=rho_call*eta; existing native entry/process limits unchanged",
+  "exit": "eta=n_final/rho_call; no added final clipping",
+  "cold_background": "eta_NN=ccn_conc/rho_d; no external QNN preservation",
+  "density_refresh": "new density snapshot on each microphysics call/RK time",
+  "radius": "final native volume number before eta return; no empirical radius correction",
+  "CF": "no new multiplication/division of number by CF; native stage bookkeeping remains observed, physics not certified",
+  "input_restart_boundary": "explicit UDM_NUMBER_POLICY metadata; missing is legacy0; mismatches refused in both directions",
+  "unimplemented_producers": "real/ideal input and boundary output may not label old number state as policy1; explicit eta producer required",
+  "tested_scope": "one periodic 2x2x59 SCM, scalar_adv_opt=0, GNU serial REAL32 plus manufactured UDM at two dry densities",
+  "unsupported_scope": [
+    "automatic legacy checkpoint migration",
+    "external QNN preservation",
+    "verified nonperiodic/nested/MPI campaign",
+    "PSD/LUT physical approval",
+    "occurrence approval",
+    "independent reference and final forecast"
+  ],
+  "production_accepted": false
+}

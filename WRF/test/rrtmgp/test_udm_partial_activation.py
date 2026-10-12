@@ -257,7 +257,7 @@ def main():
                      '-finit-real=snan','-ffpe-trap=invalid,zero,overflow','-J',str(directory),'-I',str(directory)]
             stub = directory/'module_wrf_error.f90'
             stub.write_text('module module_wrf_error\ncontains\nsubroutine wrf_debug(level,text)\n'
-                            'integer,intent(in)::level\ncharacter(*),intent(in)::text\nend subroutine\nend module\n')
+                            'integer,intent(in)::level\ncharacter(*),intent(in)::text\nend subroutine\nend module\nsubroutine wrf_error_fatal(text)\ncharacter(*),intent(in)::text\nprint *,trim(text)\nerror stop 2\nend subroutine\n')
             objects = []
             for source,extra in ((paths[2],['-ffixed-form']),(stub,[]),(paths[1],[]),
                                  (fixture,['-cpp','-DOBSERVER_ONLY'])):

@@ -1804,7 +1804,9 @@ endif
 #if ( defined( DM_PARALLEL ) && ( ! defined( STUBMPI ) ) )
       ccn_max_val = wrf_dm_max_real ( ccn_max_val )
 #endif
-      IF ( ccn_max_val < 1.0 ) THEN ! initialization of ccn not already done
+      IF ( ccn_max_val < 1.0 .AND. .NOT. &
+           (config_flags%mp_physics == UDMSCHEME .AND. config_flags%udm_number_policy == 1) ) THEN
+         ! v1 cold initialization belongs to the driver; restart retains eta.
          DO j=jts,MIN(jte,jde-1)
             DO k=kts,kte
                DO i=its,MIN(ite,ide-1)

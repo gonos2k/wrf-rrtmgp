@@ -459,3 +459,9 @@ add_test(NAME frozen_reject_missing_table COMMAND "${Python3_EXECUTABLE}" "${CMA
 add_test(NAME frozen_independent_replay COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/test_frozen_replay.py"
   "${RRTMGP_DATA_DIR}" "${FROZEN_TABLE}" "$<TARGET_FILE:test_rrtmgp_frozen_adapter>" "$<TARGET_FILE:reference_column>"
   --output "${CMAKE_CURRENT_BINARY_DIR}/frozen-independent-replay.json")
+
+# Selected PHY-NC candidate: fresh full-module paired controls, not physics approval.
+add_test(NAME udm_dry_number_grid_candidate COMMAND "${Python3_EXECUTABLE}"
+  "${CMAKE_CURRENT_SOURCE_DIR}/test_udm_dry_number_bridge.py" "${WRF_ROOT}"
+  --workdir "${CMAKE_CURRENT_BINARY_DIR}/udm-dry-number-grid-candidate")
+set_tests_properties(udm_dry_number_grid_candidate PROPERTIES TIMEOUT 240)

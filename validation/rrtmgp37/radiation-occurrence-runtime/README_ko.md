@@ -43,7 +43,7 @@ Native raw는 59층이며 LW backend는 모델 위 padding을 포함한 103층, 
 
 ## 검증 범위와 재생
 
-`archive_runtime.py`는 실제 최종 NetCDF 전체와 captures를 읽어 비교·packet 추출을 수행했습니다. `verify_saved.py`의 CI 재생은 stdlib로 캡처와 packet·저장된 NetCDF 전체 bytes를 재검사합니다. **CI가 NetCDF 변수를 다시 해석하거나 WRF를 실행하는 것은 아닙니다.** source snapshot의 독립 readback은 `saved/source-audit.json.gz`에 보존했고 현재 생산 corpus와 다시 대조합니다.
+`archive_runtime.py`는 실제 최종 NetCDF 전체와 captures를 읽어 비교·packet 추출을 수행했습니다. `verify_saved.py`의 CI 재생은 stdlib로 캡처와 packet·저장된 NetCDF 전체 bytes를 재검사합니다. **CI가 NetCDF 변수를 다시 해석하거나 WRF를 실행하는 것은 아닙니다.** source snapshot의 독립 readback은 `saved/source-audit.json.gz`에 보존했고 원래 생산 corpus와 다시 대조합니다. 이후 opt-in 소스 변경은 `historical-source/`의 당시 원본으로 재생하고, 새 후보 실행 근거와 분리합니다.
 
 ```sh
 python3 -I -S validation/rrtmgp37/radiation-occurrence-runtime/verify_saved.py

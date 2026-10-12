@@ -643,6 +643,15 @@ endif
 #endif
     ibuf(1) = mp_physics
     CALL wrf_put_dom_ti_integer ( fid , 'MP_PHYSICS' ,  ibuf , 1 , ierr )
+    ! Persist the number representation in history/input/boundary/restart files.
+    IF (mp_physics == 27) THEN
+      IF (config_flags%udm_number_policy == 1 .AND. &
+          (switch == input_only .OR. switch == boundary_only)) &
+        CALL wrf_error_fatal('dry-number-grid-v1 input/boundary producer is not implemented; supply explicitly encoded eta files')
+      ibuf(1)=config_flags%udm_number_policy
+      CALL wrf_put_dom_ti_integer(fid,'UDM_NUMBER_POLICY',ibuf,1,ierr)
+      IF (ierr /= 0) CALL wrf_error_fatal('Cannot persist UDM number policy')
+    ENDIF
     ibuf(1) = ra_lw_physics
     CALL wrf_put_dom_ti_integer ( fid , 'RA_LW_PHYSICS' ,  ibuf , 1 , ierr )
     ibuf(1) = ra_sw_physics

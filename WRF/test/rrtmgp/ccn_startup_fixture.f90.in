@@ -1,12 +1,28 @@
 ! Harness template. Python injects literal control blocks from the current WRF source.
 module ccn_fixture_state
+  use, intrinsic :: ieee_arithmetic, only: ieee_is_finite
   implicit none
   integer, parameter :: ims=0,ime=5,kms=0,kme=2,jms=0,jme=3
   integer, parameter :: ccn0=7, num_tiles=2
   real, parameter :: ccn_conc=7.0
   real :: qnn_curr(ims:ime,kms:kme,jms:jme)
   real :: dummy3(ims:ime,kms:kme,jms:jme), dummy2(ims:ime,jms:jme)
+  ! Legacy-only startup fixture; policy1 has its full-module candidate tests.
+  logical, parameter :: dry_number=.false.
+  integer, parameter :: udm_number_policy_value=0
+  integer, parameter :: ids=1,ide=5,jds=1,jde=3,kts=1,kte=1
+  integer :: udm_number_i,udm_number_j,udm_number_k
+  real :: rho(ims:ime,kms:kme,jms:jme)=1.,den(ims:ime,kms:kme,jms:jme)=1.
 contains
+  logical function udm_density_is_finite(value)
+    real,intent(in)::value
+    udm_density_is_finite=ieee_is_finite(value)
+  end function
+  subroutine wrf_error_fatal(text)
+    character(*),intent(in)::text
+    print *,trim(text)
+    error stop 2
+  end subroutine
   subroutine driver_preloop_init(have_udm_cf,itimestep,qv_curr,qc_curr,qr_curr,qi_curr, &
       qs_curr,qg_curr,qh_curr,qnn_curr,qnc_curr,qnr_curr,rainnc,rainncv)
     logical,intent(in)::have_udm_cf
