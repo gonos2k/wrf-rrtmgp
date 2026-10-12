@@ -1,6 +1,6 @@
 # 이전 검토 지적 해소 체크리스트
 
-현재 기준 main: `8eb96d2b7676eff152bf3563dc030bb924c3a4a9` (PR #164 병합, tree `14b2c6ca35e7f75071aed2d71a2c51690fee92cd`). UDM27–RRTMGP37 전용.
+현재 기준 main: `3e577a5bacc5d189cd2528675255da1c1b3641b6` (PR #165 병합, tree `a63510836516da367aaabda461eacbad6327b047`). UDM27–RRTMGP37 전용.
 
 PR #146–#151은 main에 병합됐다. 기존 실행의 source pin·범위는 그대로 보존하며, 현재 전체 tree에서 모든 과거 모델을 새로 실행했다고 주장하지 않는다. PR #149의 NetCDF guard와 기본 namelist 검사는 main에 반영됐고 정확히 같은 tree에서 11개 CI가 성공했다. PR150의 추가 scalar 경계 수정도 main에 반영됐다. PR151의 I/O 세 항목도 main에 반영됐고 정확히 같은 전체 tree에서 11개 CI가 성공했다.
 
@@ -112,3 +112,11 @@ real.exe, 실제 specified lateral boundary, 다른 수송 정책, 입자크기 
 새 공통점618.6133629315808 cm-1은 역사적 파수와0.00110818 cm-1 다르며 과거 IOD0 결과를 대체하지 않는다. 다섯 선택 OD는 모두 음수다. h/2→h/4에서 선택점은 약5.52e-15 차이이나 주변81점 최대 차이는2.69e-4이고51개 음수가 유지된다. 같은 비영 R3 곱 항을 가진987개 선의 격자 폭은 같고 threshold0에서는 새로운 기여 선 중 폭 하한1개가 있다.
 
 선택 구성의 대조 실행 하위 단계는 완료로 유지한다. 전체 window 수렴·mixing 물리 적용성·independent reference 승인은 별도이며 REF-LBL FAIL, 완료15/미완료7 및 production_accepted=false를 유지한다. 저장 CI는 trace/발췌 재생으로 새 solver나 전체 원자료 재판독이 아니다. QNN·PSD 정책은 별도 OPEN이다.
+
+## PR165 병합 후 기존 payload의 native 창 분석
+
+[Native 창 판독](../lbl-native-spectral-window/README_ko.md)은 이전 대조를 다시 실행하지 않고 봉인된 실제 payload의81/161/321개 native 점과161개 공통점을 재생한다. 새 compiler/solver/관측기 삽입은0회다. h/4의321개 중204개가 음수이고 최대 차이는2.68886e-4로 기존81점 결과와 같다. 최대 위치618.538480758013은 두 계산에서 양수이며 출력 panel 내부다.
+
+두 격자의 R3에 정렬된11점은 최대1.15741e-14 차이지만 그 사이에는2.69e-4 차이가 남는다. 직접 R1/R2 기여의 원인분해는 OD만으로 인증하지 않는다. 최솟값과 음수 run은 창의 오른쪽 끝에 걸려 있어 전체 음수 구간이나 band 최소값을 확보했다는 뜻도 아니다.
+
+Native 창 판독·위치·정렬 분석은 완료한 하위 작업으로 유지한다. 물리 계약·독립 정확도·최종 정책 실행의7개 잔여 항목 및 REF-LBL FAIL, 완료15/미완료7, production_accepted=false는 그대로다. 이전 대조 실행·source roster·최초 음수 계보를 다시 열거나 새 수렴 허용기준을 사후에 만들지 않는다.

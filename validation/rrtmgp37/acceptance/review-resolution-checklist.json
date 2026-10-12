@@ -1,9 +1,9 @@
 {
   "schema": "UDM37_REVIEW_RESOLUTION_CHECKLIST_V2",
   "main_snapshot": {
-    "commit": "8eb96d2b7676eff152bf3563dc030bb924c3a4a9",
-    "tree": "14b2c6ca35e7f75071aed2d71a2c51690fee92cd",
-    "merged_pr": 164
+    "commit": "3e577a5bacc5d189cd2528675255da1c1b3641b6",
+    "tree": "a63510836516da367aaabda461eacbad6327b047",
+    "merged_pr": 165
   },
   "scope": "UDM27, LW37/SW37; prior review follow-up; original acceptance original19/current12 retained unchanged",
   "production_accepted": false,
@@ -309,7 +309,7 @@
       "id": "REF-LBL",
       "priority": "P1",
       "title": "LBLRTM negative OD와 앞단 누적",
-      "source_prs": "114–126,142,145,160–164",
+      "source_prs": "114–126,142,145,160–165",
       "implemented": false,
       "feature_branch_validation": "OPEN",
       "main_included_at_snapshot": false,
@@ -343,7 +343,12 @@
         "validation/rrtmgp37/lbl-grid-threshold-comparison/manifest.json",
         "validation/rrtmgp37/lbl-grid-threshold-comparison/result.json",
         "validation/rrtmgp37/lbl-grid-threshold-comparison/passivity.json",
-        "validation/rrtmgp37/lbl-grid-threshold-comparison/contributions.json"
+        "validation/rrtmgp37/lbl-grid-threshold-comparison/contributions.json",
+        "validation/rrtmgp37/lbl-native-spectral-window/manifest.json",
+        "validation/rrtmgp37/lbl-native-spectral-window/result.json",
+        "validation/rrtmgp37/lbl-native-spectral-window/parent-pins.json",
+        "validation/rrtmgp37/lbl-native-spectral-window/half-quarter.shared161.csv",
+        "validation/rrtmgp37/lbl-native-spectral-window/quarter.native.csv"
       ],
       "source_pr_urls": [
         "https://github.com/gonos2k/wrf-rrtmgp/pull/114",
@@ -365,7 +370,8 @@
         "https://github.com/gonos2k/wrf-rrtmgp/pull/161",
         "https://github.com/gonos2k/wrf-rrtmgp/pull/162",
         "https://github.com/gonos2k/wrf-rrtmgp/pull/163",
-        "https://github.com/gonos2k/wrf-rrtmgp/pull/164"
+        "https://github.com/gonos2k/wrf-rrtmgp/pull/164",
+        "https://github.com/gonos2k/wrf-rrtmgp/pull/165"
       ],
       "minimal_target_next_step": {
         "path": "validation/rrtmgp37/reference-precision-interpretation/lbl-minimal-target-plan-v1.json",
@@ -373,8 +379,8 @@
         "status": "PLAN_PRESERVED_SCOPED_OBSERVATION_NOW_AVAILABLE",
         "physical_reference_accepted": false
       },
-      "dynamic_progress": "PR160–164 are merged; prior selected ancestry, final negative OD and source roster/actual line-use boundaries remain scoped complete. New exact-DV IOD2 grid h/h2/h4 and fixed-h SPEAK default/10/0 contrasts executed with one make, six final solvers and separate probe. All target R3 writes and 81 shared actual OD samples replay; 45-file probe/OFF/ON science records57007 identical. All five selected OD and 51/81 shared samples remain negative; formal convergence/physics acceptance not established.",
-      "next_unresolved_boundary": "Interpret remaining shared-window discretization differences separately from stable selected target; assess original mixing applicability/physical partner requirements and direct R1/R2/other composition with an independently acceptable reference. Do not reopen already executed nearby exact-DV grid/threshold contrasts or prior source/line/first-negative joins. Preserve historical IOD0 selected negative OD and REF-LBL FAIL.",
+      "dynamic_progress": "PR160–165 are merged; selected ancestry, final negative OD, source roster/line-use and actual grid/threshold contrast boundaries remain complete. New readback uses the unchanged PR165 actual panel payloads:81/161/321 native samples and161 half/quarter shared points. Quarter204/321 are negative; maximum shared difference2.68886e-4 occurs away from R3 nodes and inside the saved output panel. Eleven common R3 nodes differ by at most1.15741e-14. No compiler/model/observer run; no component or physical acceptance.",
+      "next_unresolved_boundary": "Separate native-window interstitial grid dependence from stable common R3 nodes; the maximum difference location is618.538480758013, positive in both grids and not at saved output-panel edges. OD-only readback cannot attribute direct R1/R2/other component changes. Mixing applicability/partner physics and independent full-spectrum/flux acceptance remain unresolved. Preserve REF-LBL FAIL; do not reopen prior joins, executed contrasts or now completed161/321 readback as new completion conditions.",
       "coefficient_progress": {
         "path": "validation/rrtmgp37/lbl-coupling-generation/result.json",
         "status": "PASS_SCOPED_TAPE3_LINE_TO_COUPLING_OPERANDS",
@@ -422,7 +428,7 @@
       "grid_threshold_progress": {
         "path": "validation/rrtmgp37/lbl-grid-threshold-comparison/result.json",
         "status": "PASS_SCOPED_EXECUTED_GRID_AND_THRESHOLD_COMPARISON",
-        "included_in_main_at_snapshot": false,
+        "included_in_main_at_snapshot": true,
         "root_make_processes": 1,
         "root_final_solver_processes": 6,
         "separate_prior_executable_probe_processes": 1,
@@ -431,6 +437,31 @@
         "historical_target_replaced": false,
         "shared_OD_samples": 81,
         "grid_and_threshold_contrasts_executed": true,
+        "full_window_convergence_accepted": false,
+        "physical_reference_accepted": false
+      },
+      "native_window_progress": {
+        "path": "validation/rrtmgp37/lbl-native-spectral-window/result.json",
+        "status": "PASS_SCOPED_PR165_NATIVE_WINDOW_READBACK",
+        "included_in_main_at_snapshot": false,
+        "fresh_compiler_processes": 0,
+        "fresh_solver_processes": 0,
+        "native_samples": {
+          "h": 81,
+          "half": 161,
+          "quarter": 321
+        },
+        "native_negative_samples": {
+          "h": 51,
+          "half": 102,
+          "quarter": 204
+        },
+        "common_half_quarter_samples": 161,
+        "max_common_abs_OD_difference": 0.0002688857634407498,
+        "max_common_physical_nu_cm1": 618.538480758013,
+        "both_R3_node_samples": 11,
+        "both_R3_node_max_abs_difference": 1.1574075031717257e-14,
+        "direct_R1_R2_component_attribution_established": false,
         "full_window_convergence_accepted": false,
         "physical_reference_accepted": false
       }
@@ -707,9 +738,9 @@
     }
   },
   "previous_main_snapshot": {
-    "commit": "784e831c1c7f3fc6e823f93a0d6ae7cf21d2d19b",
-    "tree": "b7383329120ad8bdd3f00ecb5557889e3388778b",
-    "merged_pr": 163
+    "commit": "8eb96d2b7676eff152bf3563dc030bb924c3a4a9",
+    "tree": "14b2c6ca35e7f75071aed2d71a2c51690fee92cd",
+    "merged_pr": 164
   },
   "previous_checklist": {
     "commit": "32c13f2fd39d6846e35212f4f7bb53079fd6bd68",
@@ -760,5 +791,12 @@
     "status": "PASS_SCOPED_SELECTED_LINE_RECORD_AND_COEFFICIENT_REPLAY",
     "parent_reference_status": "FAIL_PRESERVED",
     "production_accepted": false
-  }
+  },
+  "main_snapshot_history": [
+    {
+      "commit": "8eb96d2b7676eff152bf3563dc030bb924c3a4a9",
+      "tree": "14b2c6ca35e7f75071aed2d71a2c51690fee92cd",
+      "merged_pr": 164
+    }
+  ]
 }

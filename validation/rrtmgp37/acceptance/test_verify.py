@@ -1,6 +1,8 @@
-"""Exercise documentary acceptance boundaries without running science."""
+"""Documentary and saved-spectrum boundaries; no model/solver execution."""
 import copy
 import json
+import subprocess
+import sys
 import unittest
 from pathlib import Path
 from verify import verify
@@ -60,6 +62,19 @@ class AcceptanceBoundary(unittest.TestCase):
         self.assertEqual(result['index_integrity'], 'PASS')
         self.assertFalse(result['startup_source_subset_matches'])
         self.assertFalse(result['production_accepted'])
+
+
+class SavedNativeWindowIntegration(unittest.TestCase):
+    def test_saved_native_window_and_negative_controls(self):
+        # Existing CI entry point, separate from physical/index approval.
+        package = ROOT / 'validation/rrtmgp37/lbl-native-spectral-window'
+        for name in ('verify_saved.py', 'test_saved.py'):
+            proc = subprocess.run(
+                [sys.executable, '-I', '-S', str(package / name)],
+                cwd=ROOT, capture_output=True, text=True, timeout=60)
+            print(proc.stdout, end='')
+            print(proc.stderr, end='')
+            self.assertEqual(proc.returncode, 0, name)
 
 
 if __name__ == '__main__':
