@@ -166,18 +166,43 @@ def analyze():
     }
 
 
+def historical_analyze():
+    # Execute the exact saved analysis source with only its two sealed inputs
+    # (analysis source receipt and parent manifest) mapped to historic bytes.
+    # Arithmetic, captures, tolerances and the old result remain unchanged.
+    import importlib.util, types
+    hs=importlib.util.spec_from_file_location('historical_source',REPO/'validation/rrtmgp37/historical-source/binding.py')
+    h=importlib.util.module_from_spec(hs);hs.loader.exec_module(h)
+    old=json.loads((BASE/'result.json').read_text())
+    name=str(Path(__file__).relative_to(REPO))
+    expected={name:old['script']['sha256'],old['input_pins'][0]['path']:old['input_pins'][0]['sha256']}
+    source=h.historical_bytes(REPO,name,expected[name])
+    class HistoricalPath(type(Path())):
+        def read_bytes(self):
+            try:key=str(self.relative_to(REPO))
+            except ValueError:return super().read_bytes()
+            if key in expected:return h.historical_bytes(REPO,key,expected[key])
+            return super().read_bytes()
+        def read_text(self,encoding=None,errors=None):
+            return self.read_bytes().decode(encoding or 'utf-8',errors or 'strict')
+    module=types.ModuleType('historical_precision');module.__file__=__file__
+    exec(compile(source,__file__,'exec'),module.__dict__)
+    module.Path=HistoricalPath;module.BASE=HistoricalPath(BASE);module.REPO=HistoricalPath(REPO)
+    return module.analyze()
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--output', type=Path)
     parser.add_argument('--verify', action='store_true')
     args = parser.parse_args()
-    result = analyze()
+    result = historical_analyze()
     if args.verify:
         require(json.loads((BASE/'result.json').read_text()) == result, 'sealed interpretation result differs')
     if args.output:
         with args.output.open('x') as stream:
             stream.write(json.dumps(result, ensure_ascii=False, indent=2)+'\n')
-    print(json.dumps({'status': result['status'], **result['summary']}))
+    print(json.dumps({'status': result['status'], 'source_scope':'historical_analysis_and_parent_manifest', **result['summary']}))
 
 
 if __name__ == '__main__':

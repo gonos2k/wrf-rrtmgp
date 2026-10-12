@@ -49,6 +49,7 @@ def compare_registry(root: Path, out: Path, log: Path, execute: Callable) -> dic
         ('rrtmgp_data_path', 'character', int(receipt.get('backend') == 'CPU_LINKED')),
         ('rrtmgp_ice_roughness', 'integer', int('rrtmgp_ice_roughness' in global_names)),
         ('rrtmgp_udm_frozen_optics', 'integer', int('rrtmgp_udm_frozen_optics' in global_names)),
+        ('udm_number_policy', 'integer', int('udm_number_policy' in global_names)),
         ('rrtmgp_udm_frozen_table', 'character', int('rrtmgp_udm_frozen_table' in global_names)),
     )
     for name, kind, expected in specifications:

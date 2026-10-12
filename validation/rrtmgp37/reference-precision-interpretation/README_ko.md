@@ -37,3 +37,7 @@ python3 -I -S validation/rrtmgp37/reference-precision-interpretation/test_precis
 [팀 정밀도 해석 검토](source-precision-interpretation-review-v1.json)는 mixed 비교와 publisher prewrite 미확정을 구분한다. [최소 LBL 대상 계획](lbl-minimal-target-plan-v1.json)은 target1의 `R3(20)`을 물리 주파수로 추적하고 초기화·CNVFNV·XINT·RSYM·PANEL carry/clear와 R4 경로까지 확인하도록 정했다. Source-only 계획이며 동적 계보를 실행하거나 완성한 결과가 아니다. 남은 물리·최종 7개는 그대로 유지한다.
 
 [최종 source·JSON 검토](final-review-v2.json)는 비교 이름, 정확한 유리수 경계, midpoint ties와 가상 witness의 제한을 대조해 `PASS_SCOPED`로 판정했다. 이 검토는 원시 자료 판독이나 모델 실행을 수행하지 않았다.
+
+## 새 정책 소스와 보존된 분석
+
+현재 CLI 재생은 원래 분석 소스와 그때 봉인된 remaining-contract manifest를 immutable snapshot에서 읽습니다. 원 scientific result의 script/input hash와 21·14·7, UNKNOWN 및 strict 기준은 변경하지 않습니다. 새 source/fixture 등록을 옛 계산의 provenance로 덮어쓰지 않습니다. 현재 arithmetic 함수의 회귀시험과 historical 계산 재생은 구분합니다.
