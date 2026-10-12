@@ -89,5 +89,17 @@ class SavedResearchContractIntegration(unittest.TestCase):
             self.assertEqual(proc.returncode, 0, name)
 
 
+class SavedRadiationOccurrenceIntegration(unittest.TestCase):
+    def test_actual_call_paths_and_post_capture_noninterference(self):
+        package = ROOT / 'validation/rrtmgp37/radiation-occurrence-runtime'
+        for name in ('verify_saved.py', 'test_saved.py'):
+            proc = subprocess.run(
+                [sys.executable, '-I', '-S', str(package / name)],
+                cwd=ROOT, capture_output=True, text=True, timeout=60)
+            print(proc.stdout, end='')
+            print(proc.stderr, end='')
+            self.assertEqual(proc.returncode, 0, name)
+
+
 if __name__ == '__main__':
     unittest.main()
