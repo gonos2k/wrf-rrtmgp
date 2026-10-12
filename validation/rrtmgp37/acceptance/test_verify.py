@@ -101,5 +101,17 @@ class SavedRadiationOccurrenceIntegration(unittest.TestCase):
             self.assertEqual(proc.returncode, 0, name)
 
 
+class SavedOmittedIceSensitivityIntegration(unittest.TestCase):
+    def test_held_ice_effect_and_isolation_boundaries(self):
+        package = ROOT / 'validation/rrtmgp37/omitted-ice-effect'
+        for name in ('verify_saved.py', 'test_saved.py'):
+            proc = subprocess.run(
+                [sys.executable, '-I', '-S', str(package / name)],
+                cwd=ROOT, capture_output=True, text=True, timeout=90)
+            print(proc.stdout, end='')
+            print(proc.stderr, end='')
+            self.assertEqual(proc.returncode, 0, name)
+
+
 if __name__ == '__main__':
     unittest.main()
