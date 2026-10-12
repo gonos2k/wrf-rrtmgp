@@ -20,7 +20,7 @@
 
 ## 과거 증거와 새 소스
 
-과거의 source pin은 변경하지 않았습니다. 당시 소스 bytes를 `../historical-source/`에 보존하여 이전 연구 계약과 #168/#169 replay를 실행합니다. 현재 tree는 이전 profile의 현재 실행 근거로 승인되지 않습니다. 새 정책의 현재 7개 변경 소스, executable, 설정·입력·결과는 이 package의 별도 identity에 연결합니다. 변경되지 않은 5,893개 기존 corpus 파일은 이전 corpus와 비교합니다. 추가 10개 standalone fixture에는 새 fatal 함수의 테스트용 출력/종료 dependency를 연결했습니다. 이는 후보 실행의 제한된 identity이며 FINAL-IDENTITY 종료가 아닙니다.
+과거의 source pin은 변경하지 않았습니다. 당시 소스 bytes를 `../historical-source/`에 보존하여 이전 연구 계약과 #168/#169 replay를 실행합니다. 현재 tree는 이전 profile의 현재 실행 근거로 승인되지 않습니다. 새 정책의 현재 7개 변경 소스, executable, 설정·입력·결과는 이 package의 별도 identity에 연결합니다. 변경되지 않은 5,892개 기존 corpus 파일은 이전 corpus와 비교합니다. 추가 10개 standalone fixture에는 새 fatal 함수의 테스트용 출력/종료 dependency를 연결했습니다. 새 CTest에는 실제 후보의 O0/O2 full-module paired control을 연결했습니다. 이는 후보 실행의 제한된 identity이며 FINAL-IDENTITY 종료가 아닙니다.
 
 ```sh
 python3 WRF/test/rrtmgp/test_udm_dry_number_bridge.py WRF --workdir /new/scratch/module-test
