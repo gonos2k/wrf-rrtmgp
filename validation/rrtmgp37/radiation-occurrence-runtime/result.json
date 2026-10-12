@@ -1,0 +1,1077 @@
+{
+  "schema": "UDM37_RADIATION_OCCURRENCE_RUNTIME_V1",
+  "status": "PASS_SCOPED",
+  "actual_wrf_runs": 10,
+  "final_evidence_wrf_runs": 5,
+  "initial_campaign_wrf_runs": 5,
+  "captured_phase_calls": 8,
+  "physical_columns": 4,
+  "source_time_seconds": 60,
+  "LW_SW_counts_are_separate": true,
+  "netcdf_readback_in_saved_CI": false,
+  "source_to_builder_to_backend_mapping": "PASS",
+  "f32_partition_replay": "PASS",
+  "weighted_path_is_not_optical_or_flux_loss": true,
+  "CF0_optical_input_exclusion_verified": true,
+  "physical_approval": false,
+  "production_accepted": false,
+  "PHY_OCCURRENCE": "OPEN",
+  "phase_summary": {
+    "LW": {
+      "LWP": {
+        "grid_sum_g_m2": 7173.578075408936,
+        "omitted_sum_g_m2": 0.0,
+        "positive_cells": 124,
+        "cf0_positive_cells": 0
+      },
+      "IWP": {
+        "grid_sum_g_m2": 327.4193944274448,
+        "omitted_sum_g_m2": 0.2963788635097451,
+        "positive_cells": 36,
+        "cf0_positive_cells": 12,
+        "omitted_to_total_native_column_path_ratio": 0.0009051964194974463
+      },
+      "RWP": {
+        "grid_sum_g_m2": 9.147203139960766,
+        "omitted_sum_g_m2": 0.0,
+        "positive_cells": 84,
+        "cf0_positive_cells": 0
+      },
+      "SWP": {
+        "grid_sum_g_m2": 0.0,
+        "omitted_sum_g_m2": 0.0,
+        "positive_cells": 0,
+        "cf0_positive_cells": 0
+      },
+      "GWP": {
+        "grid_sum_g_m2": 0.0,
+        "omitted_sum_g_m2": 0.0,
+        "positive_cells": 0,
+        "cf0_positive_cells": 0
+      },
+      "HWP": {
+        "grid_sum_g_m2": 0.0,
+        "omitted_sum_g_m2": 0.0,
+        "positive_cells": 0,
+        "cf0_positive_cells": 0
+      }
+    },
+    "SW": {
+      "LWP": {
+        "grid_sum_g_m2": 7173.578075408936,
+        "omitted_sum_g_m2": 0.0,
+        "positive_cells": 124,
+        "cf0_positive_cells": 0
+      },
+      "IWP": {
+        "grid_sum_g_m2": 327.4193944274448,
+        "omitted_sum_g_m2": 0.2963788635097451,
+        "positive_cells": 36,
+        "cf0_positive_cells": 12,
+        "omitted_to_total_native_column_path_ratio": 0.0009051964194974463
+      },
+      "RWP": {
+        "grid_sum_g_m2": 9.147203139960766,
+        "omitted_sum_g_m2": 0.0,
+        "positive_cells": 84,
+        "cf0_positive_cells": 0
+      },
+      "SWP": {
+        "grid_sum_g_m2": 0.0,
+        "omitted_sum_g_m2": 0.0,
+        "positive_cells": 0,
+        "cf0_positive_cells": 0
+      },
+      "GWP": {
+        "grid_sum_g_m2": 0.0,
+        "omitted_sum_g_m2": 0.0,
+        "positive_cells": 0,
+        "cf0_positive_cells": 0
+      },
+      "HWP": {
+        "grid_sum_g_m2": 0.0,
+        "omitted_sum_g_m2": 0.0,
+        "positive_cells": 0,
+        "cf0_positive_cells": 0
+      }
+    }
+  },
+  "captures": [
+    {
+      "phase": "LW",
+      "i": 1,
+      "j": 1,
+      "native_layers": 59,
+      "backend_layers": 103,
+      "history_CF_differs_from_radiation_CF_cells": 31,
+      "supplied_udm_CF_differs_from_radiation_CF_cells": 36,
+      "paths": {
+        "LWP": {
+          "grid_sum_g_m2": 1793.3981018066406,
+          "omitted_sum_g_m2": 0.0,
+          "positive_cells": 31,
+          "cf0_positive_cells": 0
+        },
+        "IWP": {
+          "grid_sum_g_m2": 81.85493730798044,
+          "omitted_sum_g_m2": 0.07409698746778304,
+          "positive_cells": 8,
+          "cf0_positive_cells": 2
+        },
+        "RWP": {
+          "grid_sum_g_m2": 2.291924126446247,
+          "omitted_sum_g_m2": 0.0,
+          "positive_cells": 21,
+          "cf0_positive_cells": 0
+        },
+        "SWP": {
+          "grid_sum_g_m2": 0.0,
+          "omitted_sum_g_m2": 0.0,
+          "positive_cells": 0,
+          "cf0_positive_cells": 0
+        },
+        "GWP": {
+          "grid_sum_g_m2": 0.0,
+          "omitted_sum_g_m2": 0.0,
+          "positive_cells": 0,
+          "cf0_positive_cells": 0
+        },
+        "HWP": {
+          "grid_sum_g_m2": 0.0,
+          "omitted_sum_g_m2": 0.0,
+          "positive_cells": 0,
+          "cf0_positive_cells": 0
+        }
+      },
+      "maximum_partition_rounding_residual_g_m2": 5.290938133839518e-06,
+      "cf0_ice_cells": [
+        {
+          "phase": "LW",
+          "i": 1,
+          "j": 1,
+          "level1": 52,
+          "source_time_seconds": 60,
+          "radiation_step": 7,
+          "udm_cf_source_step": 6,
+          "cf": 0.0,
+          "history_cf": 0.0,
+          "supplied_udm_cf": 0.0,
+          "qice_kg_kg": 5.424692917088692e-10,
+          "dry_mass_kg_m2": 217.1477508544922,
+          "grid_path_g_m2": 0.00011779598571592942,
+          "incloud_path_g_m2": 0.0,
+          "omitted_path_g_m2": 0.00011779598571592942,
+          "host_radius_m": 1.6531677829334512e-05,
+          "adapter_radius_um": 16.53167724609375,
+          "used_diameter_um": 33.0633544921875,
+          "CLOUD_TAU": 0.0,
+          "PRECIP_TAU": 0.0,
+          "PREPARED_TAU": 0.0,
+          "MASK": 0.0
+        },
+        {
+          "phase": "LW",
+          "i": 1,
+          "j": 1,
+          "level1": 53,
+          "source_time_seconds": 60,
+          "radiation_step": 7,
+          "udm_cf_source_step": 6,
+          "cf": 0.0,
+          "history_cf": 0.0,
+          "supplied_udm_cf": 0.0,
+          "qice_kg_kg": 3.3227232165700116e-07,
+          "dry_mass_kg_m2": 222.64625549316406,
+          "grid_path_g_m2": 0.07397919148206711,
+          "incloud_path_g_m2": 0.0,
+          "omitted_path_g_m2": 0.07397919148206711,
+          "host_radius_m": 2.4122718969010748e-05,
+          "adapter_radius_um": 24.122718811035156,
+          "used_diameter_um": 48.24543762207031,
+          "CLOUD_TAU": 0.0,
+          "PRECIP_TAU": 0.0,
+          "PREPARED_TAU": 0.0,
+          "MASK": 0.0
+        }
+      ]
+    },
+    {
+      "phase": "SW",
+      "i": 1,
+      "j": 1,
+      "native_layers": 59,
+      "backend_layers": 60,
+      "history_CF_differs_from_radiation_CF_cells": 31,
+      "supplied_udm_CF_differs_from_radiation_CF_cells": 36,
+      "paths": {
+        "LWP": {
+          "grid_sum_g_m2": 1793.3981018066406,
+          "omitted_sum_g_m2": 0.0,
+          "positive_cells": 31,
+          "cf0_positive_cells": 0
+        },
+        "IWP": {
+          "grid_sum_g_m2": 81.85493730798044,
+          "omitted_sum_g_m2": 0.07409698746778304,
+          "positive_cells": 8,
+          "cf0_positive_cells": 2
+        },
+        "RWP": {
+          "grid_sum_g_m2": 2.291924126446247,
+          "omitted_sum_g_m2": 0.0,
+          "positive_cells": 21,
+          "cf0_positive_cells": 0
+        },
+        "SWP": {
+          "grid_sum_g_m2": 0.0,
+          "omitted_sum_g_m2": 0.0,
+          "positive_cells": 0,
+          "cf0_positive_cells": 0
+        },
+        "GWP": {
+          "grid_sum_g_m2": 0.0,
+          "omitted_sum_g_m2": 0.0,
+          "positive_cells": 0,
+          "cf0_positive_cells": 0
+        },
+        "HWP": {
+          "grid_sum_g_m2": 0.0,
+          "omitted_sum_g_m2": 0.0,
+          "positive_cells": 0,
+          "cf0_positive_cells": 0
+        }
+      },
+      "maximum_partition_rounding_residual_g_m2": 5.290938133839518e-06,
+      "cf0_ice_cells": [
+        {
+          "phase": "SW",
+          "i": 1,
+          "j": 1,
+          "level1": 52,
+          "source_time_seconds": 60,
+          "radiation_step": 7,
+          "udm_cf_source_step": 6,
+          "cf": 0.0,
+          "history_cf": 0.0,
+          "supplied_udm_cf": 0.0,
+          "qice_kg_kg": 5.424692917088692e-10,
+          "dry_mass_kg_m2": 217.1477508544922,
+          "grid_path_g_m2": 0.00011779598571592942,
+          "incloud_path_g_m2": 0.0,
+          "omitted_path_g_m2": 0.00011779598571592942,
+          "host_radius_m": 1.6531677829334512e-05,
+          "adapter_radius_um": 16.53167724609375,
+          "used_diameter_um": 33.0633544921875,
+          "CLOUD_TAU": 0.0,
+          "PRECIP_TAU": 0.0,
+          "PREPARED_TAU": 0.0,
+          "MASK": 0.0
+        },
+        {
+          "phase": "SW",
+          "i": 1,
+          "j": 1,
+          "level1": 53,
+          "source_time_seconds": 60,
+          "radiation_step": 7,
+          "udm_cf_source_step": 6,
+          "cf": 0.0,
+          "history_cf": 0.0,
+          "supplied_udm_cf": 0.0,
+          "qice_kg_kg": 3.3227232165700116e-07,
+          "dry_mass_kg_m2": 222.64625549316406,
+          "grid_path_g_m2": 0.07397919148206711,
+          "incloud_path_g_m2": 0.0,
+          "omitted_path_g_m2": 0.07397919148206711,
+          "host_radius_m": 2.4122718969010748e-05,
+          "adapter_radius_um": 24.122718811035156,
+          "used_diameter_um": 48.24543762207031,
+          "CLOUD_TAU": 0.0,
+          "PRECIP_TAU": 0.0,
+          "PREPARED_TAU": 0.0,
+          "MASK": 0.0
+        }
+      ]
+    },
+    {
+      "phase": "LW",
+      "i": 2,
+      "j": 1,
+      "native_layers": 59,
+      "backend_layers": 103,
+      "history_CF_differs_from_radiation_CF_cells": 31,
+      "supplied_udm_CF_differs_from_radiation_CF_cells": 36,
+      "paths": {
+        "LWP": {
+          "grid_sum_g_m2": 1793.3950729370117,
+          "omitted_sum_g_m2": 0.0,
+          "positive_cells": 31,
+          "cf0_positive_cells": 0
+        },
+        "IWP": {
+          "grid_sum_g_m2": 81.854776488668,
+          "omitted_sum_g_m2": 0.07409370509412874,
+          "positive_cells": 10,
+          "cf0_positive_cells": 4
+        },
+        "RWP": {
+          "grid_sum_g_m2": 2.287241881713271,
+          "omitted_sum_g_m2": 0.0,
+          "positive_cells": 21,
+          "cf0_positive_cells": 0
+        },
+        "SWP": {
+          "grid_sum_g_m2": 0.0,
+          "omitted_sum_g_m2": 0.0,
+          "positive_cells": 0,
+          "cf0_positive_cells": 0
+        },
+        "GWP": {
+          "grid_sum_g_m2": 0.0,
+          "omitted_sum_g_m2": 0.0,
+          "positive_cells": 0,
+          "cf0_positive_cells": 0
+        },
+        "HWP": {
+          "grid_sum_g_m2": 0.0,
+          "omitted_sum_g_m2": 0.0,
+          "positive_cells": 0,
+          "cf0_positive_cells": 0
+        }
+      },
+      "maximum_partition_rounding_residual_g_m2": 5.055676410847809e-06,
+      "cf0_ice_cells": [
+        {
+          "phase": "LW",
+          "i": 2,
+          "j": 1,
+          "level1": 50,
+          "source_time_seconds": 60,
+          "radiation_step": 7,
+          "udm_cf_source_step": 6,
+          "cf": 0.0,
+          "history_cf": 0.0,
+          "supplied_udm_cf": 0.0,
+          "qice_kg_kg": 2.1892337186606092e-25,
+          "dry_mass_kg_m2": 206.55764770507812,
+          "grid_path_g_m2": 4.5220296802351846e-20,
+          "incloud_path_g_m2": 0.0,
+          "omitted_path_g_m2": 4.5220296802351846e-20,
+          "host_radius_m": 5.01000022268272e-06,
+          "adapter_radius_um": 5.010000228881836,
+          "used_diameter_um": 10.020000457763672,
+          "CLOUD_TAU": 0.0,
+          "PRECIP_TAU": 0.0,
+          "PREPARED_TAU": 0.0,
+          "MASK": 0.0
+        },
+        {
+          "phase": "LW",
+          "i": 2,
+          "j": 1,
+          "level1": 51,
+          "source_time_seconds": 60,
+          "radiation_step": 7,
+          "udm_cf_source_step": 6,
+          "cf": 0.0,
+          "history_cf": 0.0,
+          "supplied_udm_cf": 0.0,
+          "qice_kg_kg": 1.6938522331101434e-21,
+          "dry_mass_kg_m2": 211.78695678710938,
+          "grid_path_g_m2": 3.587358173376149e-16,
+          "incloud_path_g_m2": 0.0,
+          "omitted_path_g_m2": 3.587358173376149e-16,
+          "host_radius_m": 5.01000022268272e-06,
+          "adapter_radius_um": 5.010000228881836,
+          "used_diameter_um": 10.020000457763672,
+          "CLOUD_TAU": 0.0,
+          "PRECIP_TAU": 0.0,
+          "PREPARED_TAU": 0.0,
+          "MASK": 0.0
+        },
+        {
+          "phase": "LW",
+          "i": 2,
+          "j": 1,
+          "level1": 52,
+          "source_time_seconds": 60,
+          "radiation_step": 7,
+          "udm_cf_source_step": 6,
+          "cf": 0.0,
+          "history_cf": 0.0,
+          "supplied_udm_cf": 0.0,
+          "qice_kg_kg": 5.424503068951481e-10,
+          "dry_mass_kg_m2": 217.1477508544922,
+          "grid_path_g_m2": 0.00011779186752391979,
+          "incloud_path_g_m2": 0.0,
+          "omitted_path_g_m2": 0.00011779186752391979,
+          "host_radius_m": 1.653158506087493e-05,
+          "adapter_radius_um": 16.531585693359375,
+          "used_diameter_um": 33.06317138671875,
+          "CLOUD_TAU": 0.0,
+          "PRECIP_TAU": 0.0,
+          "PREPARED_TAU": 0.0,
+          "MASK": 0.0
+        },
+        {
+          "phase": "LW",
+          "i": 2,
+          "j": 1,
+          "level1": 53,
+          "source_time_seconds": 60,
+          "radiation_step": 7,
+          "udm_cf_source_step": 6,
+          "cf": 0.0,
+          "history_cf": 0.0,
+          "supplied_udm_cf": 0.0,
+          "qice_kg_kg": 3.3225762763322564e-07,
+          "dry_mass_kg_m2": 222.64625549316406,
+          "grid_path_g_m2": 0.07397591322660446,
+          "incloud_path_g_m2": 0.0,
+          "omitted_path_g_m2": 0.07397591322660446,
+          "host_radius_m": 2.412267349427566e-05,
+          "adapter_radius_um": 24.12267303466797,
+          "used_diameter_um": 48.24534606933594,
+          "CLOUD_TAU": 0.0,
+          "PRECIP_TAU": 0.0,
+          "PREPARED_TAU": 0.0,
+          "MASK": 0.0
+        }
+      ]
+    },
+    {
+      "phase": "SW",
+      "i": 2,
+      "j": 1,
+      "native_layers": 59,
+      "backend_layers": 60,
+      "history_CF_differs_from_radiation_CF_cells": 31,
+      "supplied_udm_CF_differs_from_radiation_CF_cells": 36,
+      "paths": {
+        "LWP": {
+          "grid_sum_g_m2": 1793.3950729370117,
+          "omitted_sum_g_m2": 0.0,
+          "positive_cells": 31,
+          "cf0_positive_cells": 0
+        },
+        "IWP": {
+          "grid_sum_g_m2": 81.854776488668,
+          "omitted_sum_g_m2": 0.07409370509412874,
+          "positive_cells": 10,
+          "cf0_positive_cells": 4
+        },
+        "RWP": {
+          "grid_sum_g_m2": 2.287241881713271,
+          "omitted_sum_g_m2": 0.0,
+          "positive_cells": 21,
+          "cf0_positive_cells": 0
+        },
+        "SWP": {
+          "grid_sum_g_m2": 0.0,
+          "omitted_sum_g_m2": 0.0,
+          "positive_cells": 0,
+          "cf0_positive_cells": 0
+        },
+        "GWP": {
+          "grid_sum_g_m2": 0.0,
+          "omitted_sum_g_m2": 0.0,
+          "positive_cells": 0,
+          "cf0_positive_cells": 0
+        },
+        "HWP": {
+          "grid_sum_g_m2": 0.0,
+          "omitted_sum_g_m2": 0.0,
+          "positive_cells": 0,
+          "cf0_positive_cells": 0
+        }
+      },
+      "maximum_partition_rounding_residual_g_m2": 5.055676410847809e-06,
+      "cf0_ice_cells": [
+        {
+          "phase": "SW",
+          "i": 2,
+          "j": 1,
+          "level1": 50,
+          "source_time_seconds": 60,
+          "radiation_step": 7,
+          "udm_cf_source_step": 6,
+          "cf": 0.0,
+          "history_cf": 0.0,
+          "supplied_udm_cf": 0.0,
+          "qice_kg_kg": 2.1892337186606092e-25,
+          "dry_mass_kg_m2": 206.55764770507812,
+          "grid_path_g_m2": 4.5220296802351846e-20,
+          "incloud_path_g_m2": 0.0,
+          "omitted_path_g_m2": 4.5220296802351846e-20,
+          "host_radius_m": 5.01000022268272e-06,
+          "adapter_radius_um": 5.010000228881836,
+          "used_diameter_um": 10.020000457763672,
+          "CLOUD_TAU": 0.0,
+          "PRECIP_TAU": 0.0,
+          "PREPARED_TAU": 0.0,
+          "MASK": 0.0
+        },
+        {
+          "phase": "SW",
+          "i": 2,
+          "j": 1,
+          "level1": 51,
+          "source_time_seconds": 60,
+          "radiation_step": 7,
+          "udm_cf_source_step": 6,
+          "cf": 0.0,
+          "history_cf": 0.0,
+          "supplied_udm_cf": 0.0,
+          "qice_kg_kg": 1.6938522331101434e-21,
+          "dry_mass_kg_m2": 211.78695678710938,
+          "grid_path_g_m2": 3.587358173376149e-16,
+          "incloud_path_g_m2": 0.0,
+          "omitted_path_g_m2": 3.587358173376149e-16,
+          "host_radius_m": 5.01000022268272e-06,
+          "adapter_radius_um": 5.010000228881836,
+          "used_diameter_um": 10.020000457763672,
+          "CLOUD_TAU": 0.0,
+          "PRECIP_TAU": 0.0,
+          "PREPARED_TAU": 0.0,
+          "MASK": 0.0
+        },
+        {
+          "phase": "SW",
+          "i": 2,
+          "j": 1,
+          "level1": 52,
+          "source_time_seconds": 60,
+          "radiation_step": 7,
+          "udm_cf_source_step": 6,
+          "cf": 0.0,
+          "history_cf": 0.0,
+          "supplied_udm_cf": 0.0,
+          "qice_kg_kg": 5.424503068951481e-10,
+          "dry_mass_kg_m2": 217.1477508544922,
+          "grid_path_g_m2": 0.00011779186752391979,
+          "incloud_path_g_m2": 0.0,
+          "omitted_path_g_m2": 0.00011779186752391979,
+          "host_radius_m": 1.653158506087493e-05,
+          "adapter_radius_um": 16.531585693359375,
+          "used_diameter_um": 33.06317138671875,
+          "CLOUD_TAU": 0.0,
+          "PRECIP_TAU": 0.0,
+          "PREPARED_TAU": 0.0,
+          "MASK": 0.0
+        },
+        {
+          "phase": "SW",
+          "i": 2,
+          "j": 1,
+          "level1": 53,
+          "source_time_seconds": 60,
+          "radiation_step": 7,
+          "udm_cf_source_step": 6,
+          "cf": 0.0,
+          "history_cf": 0.0,
+          "supplied_udm_cf": 0.0,
+          "qice_kg_kg": 3.3225762763322564e-07,
+          "dry_mass_kg_m2": 222.64625549316406,
+          "grid_path_g_m2": 0.07397591322660446,
+          "incloud_path_g_m2": 0.0,
+          "omitted_path_g_m2": 0.07397591322660446,
+          "host_radius_m": 2.412267349427566e-05,
+          "adapter_radius_um": 24.12267303466797,
+          "used_diameter_um": 48.24534606933594,
+          "CLOUD_TAU": 0.0,
+          "PRECIP_TAU": 0.0,
+          "PREPARED_TAU": 0.0,
+          "MASK": 0.0
+        }
+      ]
+    },
+    {
+      "phase": "LW",
+      "i": 1,
+      "j": 2,
+      "native_layers": 59,
+      "backend_layers": 103,
+      "history_CF_differs_from_radiation_CF_cells": 31,
+      "supplied_udm_CF_differs_from_radiation_CF_cells": 36,
+      "paths": {
+        "LWP": {
+          "grid_sum_g_m2": 1793.385025024414,
+          "omitted_sum_g_m2": 0.0,
+          "positive_cells": 31,
+          "cf0_positive_cells": 0
+        },
+        "IWP": {
+          "grid_sum_g_m2": 81.85493798469543,
+          "omitted_sum_g_m2": 0.07409368184744416,
+          "positive_cells": 10,
+          "cf0_positive_cells": 4
+        },
+        "RWP": {
+          "grid_sum_g_m2": 2.2882005870342255,
+          "omitted_sum_g_m2": 0.0,
+          "positive_cells": 21,
+          "cf0_positive_cells": 0
+        },
+        "SWP": {
+          "grid_sum_g_m2": 0.0,
+          "omitted_sum_g_m2": 0.0,
+          "positive_cells": 0,
+          "cf0_positive_cells": 0
+        },
+        "GWP": {
+          "grid_sum_g_m2": 0.0,
+          "omitted_sum_g_m2": 0.0,
+          "positive_cells": 0,
+          "cf0_positive_cells": 0
+        },
+        "HWP": {
+          "grid_sum_g_m2": 0.0,
+          "omitted_sum_g_m2": 0.0,
+          "positive_cells": 0,
+          "cf0_positive_cells": 0
+        }
+      },
+      "maximum_partition_rounding_residual_g_m2": 5.642999894917011e-06,
+      "cf0_ice_cells": [
+        {
+          "phase": "LW",
+          "i": 1,
+          "j": 2,
+          "level1": 50,
+          "source_time_seconds": 60,
+          "radiation_step": 7,
+          "udm_cf_source_step": 6,
+          "cf": 0.0,
+          "history_cf": 0.0,
+          "supplied_udm_cf": 0.0,
+          "qice_kg_kg": 2.189236430369971e-25,
+          "dry_mass_kg_m2": 206.55764770507812,
+          "grid_path_g_m2": 4.52203517323144e-20,
+          "incloud_path_g_m2": 0.0,
+          "omitted_path_g_m2": 4.52203517323144e-20,
+          "host_radius_m": 5.01000022268272e-06,
+          "adapter_radius_um": 5.010000228881836,
+          "used_diameter_um": 10.020000457763672,
+          "CLOUD_TAU": 0.0,
+          "PRECIP_TAU": 0.0,
+          "PREPARED_TAU": 0.0,
+          "MASK": 0.0
+        },
+        {
+          "phase": "LW",
+          "i": 1,
+          "j": 2,
+          "level1": 51,
+          "source_time_seconds": 60,
+          "radiation_step": 7,
+          "udm_cf_source_step": 6,
+          "cf": 0.0,
+          "history_cf": 0.0,
+          "supplied_udm_cf": 0.0,
+          "qice_kg_kg": 1.6938522331101434e-21,
+          "dry_mass_kg_m2": 211.78695678710938,
+          "grid_path_g_m2": 3.587358173376149e-16,
+          "incloud_path_g_m2": 0.0,
+          "omitted_path_g_m2": 3.587358173376149e-16,
+          "host_radius_m": 5.01000022268272e-06,
+          "adapter_radius_um": 5.010000228881836,
+          "used_diameter_um": 10.020000457763672,
+          "CLOUD_TAU": 0.0,
+          "PRECIP_TAU": 0.0,
+          "PREPARED_TAU": 0.0,
+          "MASK": 0.0
+        },
+        {
+          "phase": "LW",
+          "i": 1,
+          "j": 2,
+          "level1": 52,
+          "source_time_seconds": 60,
+          "radiation_step": 7,
+          "udm_cf_source_step": 6,
+          "cf": 0.0,
+          "history_cf": 0.0,
+          "supplied_udm_cf": 0.0,
+          "qice_kg_kg": 5.424461990699569e-10,
+          "dry_mass_kg_m2": 217.1477508544922,
+          "grid_path_g_m2": 0.00011779097258113325,
+          "incloud_path_g_m2": 0.0,
+          "omitted_path_g_m2": 0.00011779097258113325,
+          "host_radius_m": 1.653163053561002e-05,
+          "adapter_radius_um": 16.531631469726562,
+          "used_diameter_um": 33.063262939453125,
+          "CLOUD_TAU": 0.0,
+          "PRECIP_TAU": 0.0,
+          "PREPARED_TAU": 0.0,
+          "MASK": 0.0
+        },
+        {
+          "phase": "LW",
+          "i": 1,
+          "j": 2,
+          "level1": 53,
+          "source_time_seconds": 60,
+          "radiation_step": 7,
+          "udm_cf_source_step": 6,
+          "cf": 0.0,
+          "history_cf": 0.0,
+          "supplied_udm_cf": 0.0,
+          "qice_kg_kg": 3.322575139463879e-07,
+          "dry_mass_kg_m2": 222.64625549316406,
+          "grid_path_g_m2": 0.07397589087486267,
+          "incloud_path_g_m2": 0.0,
+          "omitted_path_g_m2": 0.07397589087486267,
+          "host_radius_m": 2.412261164863594e-05,
+          "adapter_radius_um": 24.12261199951172,
+          "used_diameter_um": 48.24522399902344,
+          "CLOUD_TAU": 0.0,
+          "PRECIP_TAU": 0.0,
+          "PREPARED_TAU": 0.0,
+          "MASK": 0.0
+        }
+      ]
+    },
+    {
+      "phase": "SW",
+      "i": 1,
+      "j": 2,
+      "native_layers": 59,
+      "backend_layers": 60,
+      "history_CF_differs_from_radiation_CF_cells": 31,
+      "supplied_udm_CF_differs_from_radiation_CF_cells": 36,
+      "paths": {
+        "LWP": {
+          "grid_sum_g_m2": 1793.385025024414,
+          "omitted_sum_g_m2": 0.0,
+          "positive_cells": 31,
+          "cf0_positive_cells": 0
+        },
+        "IWP": {
+          "grid_sum_g_m2": 81.85493798469543,
+          "omitted_sum_g_m2": 0.07409368184744416,
+          "positive_cells": 10,
+          "cf0_positive_cells": 4
+        },
+        "RWP": {
+          "grid_sum_g_m2": 2.2882005870342255,
+          "omitted_sum_g_m2": 0.0,
+          "positive_cells": 21,
+          "cf0_positive_cells": 0
+        },
+        "SWP": {
+          "grid_sum_g_m2": 0.0,
+          "omitted_sum_g_m2": 0.0,
+          "positive_cells": 0,
+          "cf0_positive_cells": 0
+        },
+        "GWP": {
+          "grid_sum_g_m2": 0.0,
+          "omitted_sum_g_m2": 0.0,
+          "positive_cells": 0,
+          "cf0_positive_cells": 0
+        },
+        "HWP": {
+          "grid_sum_g_m2": 0.0,
+          "omitted_sum_g_m2": 0.0,
+          "positive_cells": 0,
+          "cf0_positive_cells": 0
+        }
+      },
+      "maximum_partition_rounding_residual_g_m2": 5.642999894917011e-06,
+      "cf0_ice_cells": [
+        {
+          "phase": "SW",
+          "i": 1,
+          "j": 2,
+          "level1": 50,
+          "source_time_seconds": 60,
+          "radiation_step": 7,
+          "udm_cf_source_step": 6,
+          "cf": 0.0,
+          "history_cf": 0.0,
+          "supplied_udm_cf": 0.0,
+          "qice_kg_kg": 2.189236430369971e-25,
+          "dry_mass_kg_m2": 206.55764770507812,
+          "grid_path_g_m2": 4.52203517323144e-20,
+          "incloud_path_g_m2": 0.0,
+          "omitted_path_g_m2": 4.52203517323144e-20,
+          "host_radius_m": 5.01000022268272e-06,
+          "adapter_radius_um": 5.010000228881836,
+          "used_diameter_um": 10.020000457763672,
+          "CLOUD_TAU": 0.0,
+          "PRECIP_TAU": 0.0,
+          "PREPARED_TAU": 0.0,
+          "MASK": 0.0
+        },
+        {
+          "phase": "SW",
+          "i": 1,
+          "j": 2,
+          "level1": 51,
+          "source_time_seconds": 60,
+          "radiation_step": 7,
+          "udm_cf_source_step": 6,
+          "cf": 0.0,
+          "history_cf": 0.0,
+          "supplied_udm_cf": 0.0,
+          "qice_kg_kg": 1.6938522331101434e-21,
+          "dry_mass_kg_m2": 211.78695678710938,
+          "grid_path_g_m2": 3.587358173376149e-16,
+          "incloud_path_g_m2": 0.0,
+          "omitted_path_g_m2": 3.587358173376149e-16,
+          "host_radius_m": 5.01000022268272e-06,
+          "adapter_radius_um": 5.010000228881836,
+          "used_diameter_um": 10.020000457763672,
+          "CLOUD_TAU": 0.0,
+          "PRECIP_TAU": 0.0,
+          "PREPARED_TAU": 0.0,
+          "MASK": 0.0
+        },
+        {
+          "phase": "SW",
+          "i": 1,
+          "j": 2,
+          "level1": 52,
+          "source_time_seconds": 60,
+          "radiation_step": 7,
+          "udm_cf_source_step": 6,
+          "cf": 0.0,
+          "history_cf": 0.0,
+          "supplied_udm_cf": 0.0,
+          "qice_kg_kg": 5.424461990699569e-10,
+          "dry_mass_kg_m2": 217.1477508544922,
+          "grid_path_g_m2": 0.00011779097258113325,
+          "incloud_path_g_m2": 0.0,
+          "omitted_path_g_m2": 0.00011779097258113325,
+          "host_radius_m": 1.653163053561002e-05,
+          "adapter_radius_um": 16.531631469726562,
+          "used_diameter_um": 33.063262939453125,
+          "CLOUD_TAU": 0.0,
+          "PRECIP_TAU": 0.0,
+          "PREPARED_TAU": 0.0,
+          "MASK": 0.0
+        },
+        {
+          "phase": "SW",
+          "i": 1,
+          "j": 2,
+          "level1": 53,
+          "source_time_seconds": 60,
+          "radiation_step": 7,
+          "udm_cf_source_step": 6,
+          "cf": 0.0,
+          "history_cf": 0.0,
+          "supplied_udm_cf": 0.0,
+          "qice_kg_kg": 3.322575139463879e-07,
+          "dry_mass_kg_m2": 222.64625549316406,
+          "grid_path_g_m2": 0.07397589087486267,
+          "incloud_path_g_m2": 0.0,
+          "omitted_path_g_m2": 0.07397589087486267,
+          "host_radius_m": 2.412261164863594e-05,
+          "adapter_radius_um": 24.12261199951172,
+          "used_diameter_um": 48.24522399902344,
+          "CLOUD_TAU": 0.0,
+          "PRECIP_TAU": 0.0,
+          "PREPARED_TAU": 0.0,
+          "MASK": 0.0
+        }
+      ]
+    },
+    {
+      "phase": "LW",
+      "i": 2,
+      "j": 2,
+      "native_layers": 59,
+      "backend_layers": 103,
+      "history_CF_differs_from_radiation_CF_cells": 31,
+      "supplied_udm_CF_differs_from_radiation_CF_cells": 36,
+      "paths": {
+        "LWP": {
+          "grid_sum_g_m2": 1793.3998756408691,
+          "omitted_sum_g_m2": 0.0,
+          "positive_cells": 31,
+          "cf0_positive_cells": 0
+        },
+        "IWP": {
+          "grid_sum_g_m2": 81.85474264610093,
+          "omitted_sum_g_m2": 0.07409448910038918,
+          "positive_cells": 8,
+          "cf0_positive_cells": 2
+        },
+        "RWP": {
+          "grid_sum_g_m2": 2.279836544767022,
+          "omitted_sum_g_m2": 0.0,
+          "positive_cells": 21,
+          "cf0_positive_cells": 0
+        },
+        "SWP": {
+          "grid_sum_g_m2": 0.0,
+          "omitted_sum_g_m2": 0.0,
+          "positive_cells": 0,
+          "cf0_positive_cells": 0
+        },
+        "GWP": {
+          "grid_sum_g_m2": 0.0,
+          "omitted_sum_g_m2": 0.0,
+          "positive_cells": 0,
+          "cf0_positive_cells": 0
+        },
+        "HWP": {
+          "grid_sum_g_m2": 0.0,
+          "omitted_sum_g_m2": 0.0,
+          "positive_cells": 0,
+          "cf0_positive_cells": 0
+        }
+      },
+      "maximum_partition_rounding_residual_g_m2": 6.936834324733354e-06,
+      "cf0_ice_cells": [
+        {
+          "phase": "LW",
+          "i": 2,
+          "j": 2,
+          "level1": 52,
+          "source_time_seconds": 60,
+          "radiation_step": 7,
+          "udm_cf_source_step": 6,
+          "cf": 0.0,
+          "history_cf": 0.0,
+          "supplied_udm_cf": 0.0,
+          "qice_kg_kg": 5.424581339674717e-10,
+          "dry_mass_kg_m2": 217.1477508544922,
+          "grid_path_g_m2": 0.0001177935628220439,
+          "incloud_path_g_m2": 0.0,
+          "omitted_path_g_m2": 0.0001177935628220439,
+          "host_radius_m": 1.653163053561002e-05,
+          "adapter_radius_um": 16.531631469726562,
+          "used_diameter_um": 33.063262939453125,
+          "CLOUD_TAU": 0.0,
+          "PRECIP_TAU": 0.0,
+          "PREPARED_TAU": 0.0,
+          "MASK": 0.0
+        },
+        {
+          "phase": "LW",
+          "i": 2,
+          "j": 2,
+          "level1": 53,
+          "source_time_seconds": 60,
+          "radiation_step": 7,
+          "udm_cf_source_step": 6,
+          "cf": 0.0,
+          "history_cf": 0.0,
+          "supplied_udm_cf": 0.0,
+          "qice_kg_kg": 3.322611235034856e-07,
+          "dry_mass_kg_m2": 222.64625549316406,
+          "grid_path_g_m2": 0.07397669553756714,
+          "incloud_path_g_m2": 0.0,
+          "omitted_path_g_m2": 0.07397669553756714,
+          "host_radius_m": 2.4122688046190888e-05,
+          "adapter_radius_um": 24.12268829345703,
+          "used_diameter_um": 48.24537658691406,
+          "CLOUD_TAU": 0.0,
+          "PRECIP_TAU": 0.0,
+          "PREPARED_TAU": 0.0,
+          "MASK": 0.0
+        }
+      ]
+    },
+    {
+      "phase": "SW",
+      "i": 2,
+      "j": 2,
+      "native_layers": 59,
+      "backend_layers": 60,
+      "history_CF_differs_from_radiation_CF_cells": 31,
+      "supplied_udm_CF_differs_from_radiation_CF_cells": 36,
+      "paths": {
+        "LWP": {
+          "grid_sum_g_m2": 1793.3998756408691,
+          "omitted_sum_g_m2": 0.0,
+          "positive_cells": 31,
+          "cf0_positive_cells": 0
+        },
+        "IWP": {
+          "grid_sum_g_m2": 81.85474264610093,
+          "omitted_sum_g_m2": 0.07409448910038918,
+          "positive_cells": 8,
+          "cf0_positive_cells": 2
+        },
+        "RWP": {
+          "grid_sum_g_m2": 2.279836544767022,
+          "omitted_sum_g_m2": 0.0,
+          "positive_cells": 21,
+          "cf0_positive_cells": 0
+        },
+        "SWP": {
+          "grid_sum_g_m2": 0.0,
+          "omitted_sum_g_m2": 0.0,
+          "positive_cells": 0,
+          "cf0_positive_cells": 0
+        },
+        "GWP": {
+          "grid_sum_g_m2": 0.0,
+          "omitted_sum_g_m2": 0.0,
+          "positive_cells": 0,
+          "cf0_positive_cells": 0
+        },
+        "HWP": {
+          "grid_sum_g_m2": 0.0,
+          "omitted_sum_g_m2": 0.0,
+          "positive_cells": 0,
+          "cf0_positive_cells": 0
+        }
+      },
+      "maximum_partition_rounding_residual_g_m2": 6.936834324733354e-06,
+      "cf0_ice_cells": [
+        {
+          "phase": "SW",
+          "i": 2,
+          "j": 2,
+          "level1": 52,
+          "source_time_seconds": 60,
+          "radiation_step": 7,
+          "udm_cf_source_step": 6,
+          "cf": 0.0,
+          "history_cf": 0.0,
+          "supplied_udm_cf": 0.0,
+          "qice_kg_kg": 5.424581339674717e-10,
+          "dry_mass_kg_m2": 217.1477508544922,
+          "grid_path_g_m2": 0.0001177935628220439,
+          "incloud_path_g_m2": 0.0,
+          "omitted_path_g_m2": 0.0001177935628220439,
+          "host_radius_m": 1.653163053561002e-05,
+          "adapter_radius_um": 16.531631469726562,
+          "used_diameter_um": 33.063262939453125,
+          "CLOUD_TAU": 0.0,
+          "PRECIP_TAU": 0.0,
+          "PREPARED_TAU": 0.0,
+          "MASK": 0.0
+        },
+        {
+          "phase": "SW",
+          "i": 2,
+          "j": 2,
+          "level1": 53,
+          "source_time_seconds": 60,
+          "radiation_step": 7,
+          "udm_cf_source_step": 6,
+          "cf": 0.0,
+          "history_cf": 0.0,
+          "supplied_udm_cf": 0.0,
+          "qice_kg_kg": 3.322611235034856e-07,
+          "dry_mass_kg_m2": 222.64625549316406,
+          "grid_path_g_m2": 0.07397669553756714,
+          "incloud_path_g_m2": 0.0,
+          "omitted_path_g_m2": 0.07397669553756714,
+          "host_radius_m": 2.4122688046190888e-05,
+          "adapter_radius_um": 24.12268829345703,
+          "used_diameter_um": 48.24537658691406,
+          "CLOUD_TAU": 0.0,
+          "PRECIP_TAU": 0.0,
+          "PREPARED_TAU": 0.0,
+          "MASK": 0.0
+        }
+      ]
+    }
+  ]
+}
