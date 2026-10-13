@@ -488,3 +488,9 @@ add_test(NAME udm_warm_population_integration COMMAND "${Python3_EXECUTABLE}"
   "${CMAKE_CURRENT_SOURCE_DIR}/test_udm_population_integration.py" "${WRF_ROOT}"
   --workdir "${CMAKE_CURRENT_BINARY_DIR}/udm-warm-population-integration")
 set_tests_properties(udm_warm_population_integration PROPERTIES TIMEOUT 240)
+
+# Actual diagnosed-clear warm transitions; distinct opt-in research policy 2.
+add_test(NAME udm_cf0_warm_transition COMMAND "${Python3_EXECUTABLE}"
+  "${CMAKE_CURRENT_SOURCE_DIR}/test_udm_cf0_transition.py" "${WRF_ROOT}"
+  --workdir "${CMAKE_CURRENT_BINARY_DIR}/udm-cf0-warm-transition")
+set_tests_properties(udm_cf0_warm_transition PROPERTIES TIMEOUT 240)

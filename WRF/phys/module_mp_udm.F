@@ -310,7 +310,7 @@ subroutine udm(th, q, qc, qr, qi, qs, qg, qh                                  &
   integer                                 ::   i,j,k
   logical :: initialize_ccn, use_input_density_is_dry, dry_number
   real, dimension(its:ite,kts:kte) :: number_density
-  logical :: fixed_population
+  logical :: fixed_population, residual_population
 !
 ! for reflectivlity
 !
@@ -344,10 +344,12 @@ subroutine udm(th, q, qc, qr, qi, qs, qg, qh                                  &
   if (dry_number .and. .not. use_input_density_is_dry) &
     call wrf_error_fatal("dry-number-grid-v1 requires dry-air density")
   fixed_population=.false.
+  residual_population=.false.
   if (present(population_policy)) then
-    if (population_policy/=0 .and. population_policy/=1) &
+    if (population_policy<0 .or. population_policy>2) &
       call wrf_error_fatal("UDM: unknown population policy")
-    fixed_population=population_policy==1
+    fixed_population=population_policy>=1
+    residual_population=population_policy==2
   endif
   if (fixed_population .and. .not. dry_number) &
     call wrf_error_fatal("fixed-footprint-warm-LR-v1 requires dry-number-grid-v1")
@@ -431,7 +433,7 @@ subroutine udm(th, q, qc, qr, qi, qs, qg, qh                                  &
                     ,graupel(ims,j),graupelncv(ims,j)              &
                     ,hail(ims,j),hailncv(ims,j),itimestep           &
                     ,udm_cldfra(:,:,j),udm_cf_step(:,j),udm_cf_top(:,j) &
-                    ,fixed_population=fixed_population                             &
+                    ,fixed_population=fixed_population, residual_population=residual_population &
                     ,input_density_is_dry=use_input_density_is_dry     &
                                                                    )
          else
@@ -454,7 +456,7 @@ subroutine udm(th, q, qc, qr, qi, qs, qg, qh                                  &
                     ,graupel(ims,j),graupelncv(ims,j)              &
                     ,hail(ims,j),hailncv(ims,j),itimestep           &
                     ,udm_cldfra(:,:,j),udm_cf_step(:,j)             &
-                    ,fixed_population=fixed_population                             &
+                    ,fixed_population=fixed_population, residual_population=residual_population &
                     ,input_density_is_dry=use_input_density_is_dry   &
                                                                    )
          endif
@@ -477,7 +479,7 @@ subroutine udm(th, q, qc, qr, qi, qs, qg, qh                                  &
                     ,snow(ims,j),snowncv(ims,j)                    &
                     ,graupel(ims,j),graupelncv(ims,j)              &
                     ,hail(ims,j),hailncv(ims,j),itimestep           &
-                    ,fixed_population=fixed_population                             &
+                    ,fixed_population=fixed_population, residual_population=residual_population &
                     ,input_density_is_dry=use_input_density_is_dry &
                                                                    )
          endif
@@ -584,7 +586,7 @@ subroutine udm2d(t1, q1                                          &
                    ,graupel,graupelncv                            &
                    ,hail,hailncv,itimestep                       &
                    ,udm_cldfra,udm_cf_step,udm_cf_top            &
-                   ,input_density_is_dry, fixed_population        &
+                   ,input_density_is_dry, fixed_population, residual_population &
                                                                   )
 !
 !-------------------------------------------------------------------------------
@@ -689,9 +691,10 @@ subroutine udm2d(t1, q1                                          &
                                                     ims,ime, jms,jme, kms,kme, &
                                                     its,ite, jts,jte, kts,kte
    integer, intent(in) :: itimestep
-   logical, intent(in) :: input_density_is_dry, fixed_population
+   logical, intent(in) :: input_density_is_dry, fixed_population, residual_population
    real, dimension(kts:kte) :: footprint
    real :: ccn_returned, ccn_clipped
+   character(len=2048) :: cf0_message
    real, dimension(ims:ime,kms:kme), optional, intent(inout) :: udm_cldfra
    integer, dimension(ims:ime), optional, intent(inout) :: udm_cf_step
    integer, dimension(ims:ime), optional, intent(inout) :: udm_cf_top
@@ -1161,6 +1164,7 @@ subroutine udm2d(t1, q1                                          &
 ! obtain in-cloud properties
 !
    ktop = max(ktopqc,ktopqi)
+   if (residual_population) ktop=ktopini ! diagnose clear/rain-only levels explicitly
    call cldf_diag(1,kdim,t(:,i),p(:,i),q(:,i),qci(:,i,1),qci(:,i,2),           &
         dxmeter(i),cldf(:),ktop)
    if (present(udm_cldfra)) udm_cldfra(i,kts:kte)=cldf(:)
@@ -1173,8 +1177,21 @@ subroutine udm2d(t1, q1                                          &
      do k=kts,ktopini
        if (.not.ieee_is_finite(footprint(k)) .or. footprint(k)<0. .or. footprint(k)>1.) &
          call wrf_error_fatal("fixed-footprint-warm-LR-v1: invalid footprint")
-       if (footprint(k)==0. .and. (qci(k,i,1)>0. .or. qrs(k,i,1)>0.)) &
-         call wrf_error_fatal("fixed-footprint-warm-LR-v1: CF0 condensate unsupported")
+       if (footprint(k)==0. .and. (qci(k,i,1)>0. .or. qrs(k,i,1)>0.)) then
+         write(cf0_message,'(a,5(i0,1x),a,8(es23.16,1x))') &
+           'UDM_CF0_REJECT step/sub/i/call_lat/k=',itimestep,loop,i,lat,k, &
+           ' qc/qr/nc/nr/T/qv/rho/cf=',qci(k,i,1),qrs(k,i,1),ncr(k,i,2),ncr(k,i,3), &
+           t(k,i),q(k,i),den(k,i),cldf(k)
+         if (residual_population) then
+! Version 2: retain diagnosed-clear warm liquid/rain as a uniform grid
+! population. This does not change cloud CF or delete/evaporate water by fiat.
+! Local == grid at f=1; existing rates provide all water/latent transfers.
+           footprint(k)=1.
+         else
+           call wrf_debug(0,trim(cf0_message))
+           call wrf_error_fatal("fixed-footprint-warm-LR-v1: CF0 condensate unsupported")
+         endif
+       endif
      enddo
    endif
 !

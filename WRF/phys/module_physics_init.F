@@ -2439,7 +2439,8 @@ CHARACTER(LEN=8) :: name
                   CALL rrtmgp_init(config_flags%rrtmgp_data_path,config_flags%rrtmgp_ice_roughness, &
                        gravity=g,cp_dry=cp,mol_weight_dry=mwdry*1.e-3, &
                        frozen_optics=config_flags%rrtmgp_udm_frozen_optics, &
-                       frozen_table=config_flags%rrtmgp_udm_frozen_table)
+                       frozen_table=config_flags%rrtmgp_udm_frozen_table, &
+                       uniform_clear_warm=config_flags%udm_population_policy==2)
              CALL rrtmg_lwinit(                             &
                            p_top, allowed_to_read ,         &
                            ids, ide, jds, jde, kds, kde,    &
@@ -2558,7 +2559,8 @@ CHARACTER(LEN=8) :: name
                   CALL rrtmgp_init(config_flags%rrtmgp_data_path,config_flags%rrtmgp_ice_roughness, &
                        gravity=g,cp_dry=cp,mol_weight_dry=mwdry*1.e-3, &
                        frozen_optics=config_flags%rrtmgp_udm_frozen_optics, &
-                       frozen_table=config_flags%rrtmgp_udm_frozen_table)
+                       frozen_table=config_flags%rrtmgp_udm_frozen_table, &
+                       uniform_clear_warm=config_flags%udm_population_policy==2)
              CALL rrtmg_swinit(                             &
                            allowed_to_read ,                &
                            ids, ide, jds, jde, kds, kde,    &

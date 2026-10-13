@@ -26,9 +26,10 @@ def verify():
  for n,row in manifest['files'].items():
   p=B/n;require(not p.is_symlink() and sha(p.read_bytes())==row['sha256'] and len(p.read_bytes())==row['bytes'],'sealed file changed '+n)
  identity=json.loads((B/'identity.json').read_text());require(identity['population_policy']==identity['number_policy']==1 and identity['physical_approval'] is False,'wrong/approved policy')
- for n,digest in identity['source_files'].items():require(sha((ROOT/n).read_bytes())==digest,'current integrated source differs '+n)
+ history=load(ROOT/'validation/rrtmgp37/historical-source/binding.py','history_warm173')
+ for n,digest in identity['source_files'].items():require(sha(history.historical_bytes(ROOT,n,digest))==digest,'retained integrated source differs '+n)
  test=load(ROOT/'WRF/test/rrtmgp/test_udm_population_integration.py','integrated_test');r=json.loads((B/'saved/module/receipt.json').read_text())
- raw=(ROOT/'WRF/phys/module_mp_udm.F').read_bytes();require(raw==read('saved/module/production.F.gz') and sha(raw)==r['source_sha256'],'compiled source differs')
+ raw=history.historical_bytes(ROOT,'WRF/phys/module_mp_udm.F',r['source_sha256']);require(raw==read('saved/module/production.F.gz') and sha(raw)==r['source_sha256'],'compiled source differs')
  require(test.observed(raw)==read('saved/module/observed.F.gz'),'observer cannot reproduce compiled source')
  require(test.fixture(ROOT/'WRF')==read('saved/module/fixture.f90.gz'),'actual manufactured input generator differs')
  require(sha(read('saved/module/runner.py.gz'))==r['script_sha256']==identity['source_files']['WRF/test/rrtmgp/test_udm_population_integration.py'],'actual script differs')
@@ -78,5 +79,5 @@ def verify():
  psd=json.loads((B/'final-liquid-moments.json').read_text());require(psd['PHY_SIZE']=='OPEN' and psd['fixed_LUT_generation_PSD_certified'] is False and psd['production_radius_changed'] is False,'false optical approval')
  for row in psd['records']:
   require(math.isclose(row['M3_grid']/row['M2_monodisperse'],row['reff_monodisperse_m'],rel_tol=1.e-15) and row['reff_two_radius_m']>row['reff_monodisperse_m'],'PSD hypotheses do not separate M2')
- return {'status':'PASS_SCOPED_ACTUAL_WARM_POPULATION_INTEGRATION','actual_UDM_calls':120,'expected_module_scope_refusals':scope_rejections,'grid_CCN_exchange_records':exchange_checks,'actual_WRF_processes':5,'continuous_seconds':20,'checkpoint_resume_seconds':10,'terminal_arrays_bitwise_equal':211,'fresh_model_runs_in_replay':0,'final_M2_identified':False,'physical_gate_closed':False,'production_accepted':False}
+ return {'status':'PASS_SCOPED_ACTUAL_WARM_POPULATION_INTEGRATION','actual_UDM_calls':120,'expected_module_scope_refusals':scope_rejections,'grid_CCN_exchange_records':exchange_checks,'actual_WRF_processes':5,'continuous_seconds':20,'checkpoint_resume_seconds':10,'terminal_arrays_bitwise_equal':211,'fresh_model_runs_in_replay':0,'final_M2_identified':False,'physical_gate_closed':False,'source_scope':'historical_PR173_snapshot','current_policy2_certified':False,'production_accepted':False}
 if __name__=='__main__':print(json.dumps(verify()))
