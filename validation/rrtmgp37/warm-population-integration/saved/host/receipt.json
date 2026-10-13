@@ -1,0 +1,90 @@
+{
+  "schema": "UDM_POPULATION_SCM_V1",
+  "status": "PASS_SCOPED_ACTUAL_WARM_HOST_INTEGRATION",
+  "executable": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-population-integration-build-v1/producer/main/wrf",
+    "sha256": "9a23d5977d1c84ec562a42b755f71f4f3f43578ca1370216be02cb05f7034530",
+    "size_bytes": 44898584
+  },
+  "production_accepted": false,
+  "processes": [
+    {
+      "argv": [
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-population-integration-build-v1/producer/main/wrf"
+      ],
+      "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-population-integration-scm-v8/control",
+      "kind": "WRF_integrated_control",
+      "status": "TERMINAL",
+      "pid": 1441358,
+      "actual_returncode": 0,
+      "timed_out": false,
+      "started_at": 1791880133.85387,
+      "finished_at": 1791880136.0401962
+    },
+    {
+      "argv": [
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-population-integration-build-v1/producer/main/wrf"
+      ],
+      "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-population-integration-scm-v8/restart",
+      "kind": "WRF_integrated_restart",
+      "status": "TERMINAL",
+      "pid": 1441396,
+      "actual_returncode": 0,
+      "timed_out": false,
+      "started_at": 1791880136.3953085,
+      "finished_at": 1791880138.5334203
+    },
+    {
+      "argv": [
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-population-integration-build-v1/producer/main/wrf"
+      ],
+      "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-population-integration-scm-v8/full20",
+      "kind": "WRF_integrated_full20",
+      "status": "TERMINAL",
+      "pid": 1441426,
+      "actual_returncode": 0,
+      "timed_out": false,
+      "started_at": 1791880138.8447115,
+      "finished_at": 1791880141.2764924
+    },
+    {
+      "argv": [
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-population-integration-build-v1/producer/main/wrf"
+      ],
+      "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-population-integration-scm-v8/reject_population",
+      "kind": "WRF_reject_population",
+      "status": "TERMINAL",
+      "pid": 1441441,
+      "actual_returncode": 0,
+      "timed_out": false,
+      "started_at": 1791880141.719935,
+      "finished_at": 1791880141.8032377
+    },
+    {
+      "argv": [
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-population-integration-build-v1/producer/main/wrf"
+      ],
+      "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-population-integration-scm-v8/reject_cold",
+      "kind": "WRF_reject_cold",
+      "status": "TERMINAL",
+      "pid": 1441442,
+      "actual_returncode": 0,
+      "timed_out": false,
+      "started_at": 1791880142.0631166,
+      "finished_at": 1791880143.9896293
+    }
+  ],
+  "terminal_variable_comparisons": 211,
+  "finite_state": true,
+  "WRF_processes": 5,
+  "control_seconds": 20,
+  "restart_seconds": 10,
+  "physical_gate_closed": false,
+  "source_files": {
+    "phys/module_mp_udm.F": "046cd21519643773edaa9c7f45bb725740eae31bc45db49be6f6faa06735c291",
+    "phys/module_microphysics_driver.F": "702a1ec58e74bdb4e11dbed44a9b13ffbab75dad8619426478aec073cbc84424",
+    "share/input_wrf.F": "df8458510e3071f2b14f69c01b35fbc394ad110df2fd64d3bf8ba6082a42a421",
+    "share/output_wrf.F": "af36e08a51e5daa45d030ffdee1e16c08f7ad7522786f31f1af9d5ea6469305e",
+    "Registry/Registry.EM_COMMON": "633b679ff978e5ffbbe01332940fad3a8dc568d0a4fefd6a1f6fa1ed5baab022"
+  }
+}

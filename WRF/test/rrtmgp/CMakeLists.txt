@@ -477,8 +477,14 @@ add_test(NAME udm_dry_number_boundary_guard COMMAND "${Python3_EXECUTABLE}"
   --workdir "${CMAKE_CURRENT_BINARY_DIR}/udm-dry-number-boundary-guard")
 set_tests_properties(udm_dry_number_boundary_guard PROPERTIES TIMEOUT 60)
 
-# Research fixed-footprint candidate, not a production physics option.
+# Original test-only fixed-footprint comparison, retained alongside the opt-in runtime test.
 add_test(NAME udm_partial_population_candidate COMMAND "${Python3_EXECUTABLE}"
   "${CMAKE_CURRENT_SOURCE_DIR}/test_udm_partial_population.py" "${WRF_ROOT}"
   --workdir "${CMAKE_CURRENT_BINARY_DIR}/udm-partial-population-candidate")
 set_tests_properties(udm_partial_population_candidate PROPERTIES TIMEOUT 240)
+
+# Fresh actual opt-in warm population integration; physical gates remain open.
+add_test(NAME udm_warm_population_integration COMMAND "${Python3_EXECUTABLE}"
+  "${CMAKE_CURRENT_SOURCE_DIR}/test_udm_population_integration.py" "${WRF_ROOT}"
+  --workdir "${CMAKE_CURRENT_BINARY_DIR}/udm-warm-population-integration")
+set_tests_properties(udm_warm_population_integration PROPERTIES TIMEOUT 240)

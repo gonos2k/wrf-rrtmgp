@@ -41,8 +41,9 @@ def verify():
  for name,row in manifest['files'].items():
   p=B/name;require(not p.is_symlink() and len(p.read_bytes())==row['bytes'] and sha(p.read_bytes())==row['sha256'],'sealed file changed '+name)
  test=load(ROOT/'WRF/test/rrtmgp/test_udm_partial_population.py','population_verify');identity=json.loads((B/'identity.json').read_text())
- for name,digest in identity['source_files'].items():require(sha((ROOT/name).read_bytes())==digest,'current source/fixture differs '+name)
- receipt=json.loads((B/'saved/receipt.json').read_text());raw=(ROOT/'WRF/phys/module_mp_udm.F').read_bytes();require(sha(raw)==receipt['production_source_sha256'],'production binding')
+ history=load(ROOT/'validation/rrtmgp37/historical-source/binding.py','historical_population')
+ for name,digest in identity['source_files'].items():require(sha(history.historical_bytes(ROOT,name,digest))==digest,'retained source/fixture differs '+name)
+ receipt=json.loads((B/'saved/receipt.json').read_text());raw=history.historical_bytes(ROOT,'WRF/phys/module_mp_udm.F',receipt['production_source_sha256']);require(sha(raw)==receipt['production_source_sha256'],'production binding')
  research,patches=test.snapshot(raw);require(research==read('saved/research.F.gz') and raw==read('saved/production.F.gz') and patches==receipt['patches'],'research transformation is not exact current source')
  require(read('saved/fixture.f90.gz')==test.fixture((ROOT/'WRF/test/rrtmgp/test_udm_partial_activation.f90').read_bytes()),'actual input generator differs')
  require(sha(read('saved/runner_script.py.gz'))==receipt['runner_script_sha256']==sha((ROOT/'WRF/test/rrtmgp/test_udm_partial_population.py').read_bytes()),'actual runner binding')
@@ -56,5 +57,5 @@ def verify():
   filename=Path(row['file']).name;band='lw' if '-lw-' in filename else 'sw';j=json.loads((B/f'publisher/udm37-population-{band}-publisher.json').read_text());data=base64.b64decode(j['content']);current=(ROOT/row['file']).read_bytes()
   require(data==current and sha(data)==row['sha256'],'fixed LUT differs from actual publisher bytes');require(hashlib.sha1(b'blob '+str(len(data)).encode()+b'\0'+data).hexdigest()==j['sha']==row['blob'],'publisher blob differs')
  require(json.loads((B/'closure-conditions.json').read_text())==json.loads((ROOT/'validation/rrtmgp37/dry-number-grid-v1/closure-conditions.json').read_text()),'seven original closure conditions changed')
- return {'status':'PASS_SCOPED_ACTUAL_PARTIAL_POPULATION_CANDIDATE','actual_UDM_calls':120,'manufactured_initial_states':12,'CF':[1.,.5,.25],'dry_densities':[.7,1.1],'CF1_original_native_bitwise':True,'local_warm_rates_invariant':True,'grid_warm_rates_and_melt_increment_area_scaled':True,'final_joins':result['O0'],'publisher_LUT_bytes_equal':True,'production_source_changed':False,'production_accepted':False,'physical_gate_closed':False,'CI_new_solver_runs_in_this_replay':0}
+ return {'status':'PASS_SCOPED_ACTUAL_PARTIAL_POPULATION_CANDIDATE','actual_UDM_calls':120,'manufactured_initial_states':12,'CF':[1.,.5,.25],'dry_densities':[.7,1.1],'CF1_original_native_bitwise':True,'local_warm_rates_invariant':True,'grid_warm_rates_and_melt_increment_area_scaled':True,'final_joins':result['O0'],'publisher_LUT_bytes_equal':True,'production_source_changed':False,'source_scope':'historical_PR172_snapshot','current_policy_integration_certified':False,'production_accepted':False,'physical_gate_closed':False,'CI_new_solver_runs_in_this_replay':0}
 if __name__=='__main__':print(json.dumps(verify()))
