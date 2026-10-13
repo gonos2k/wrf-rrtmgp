@@ -1,0 +1,75 @@
+{
+  "schema": "SCOPED_WARM_POPULATION_IDENTITY_V1",
+  "source_files": {
+    "WRF/phys/module_mp_udm.F": "046cd21519643773edaa9c7f45bb725740eae31bc45db49be6f6faa06735c291",
+    "WRF/phys/module_microphysics_driver.F": "702a1ec58e74bdb4e11dbed44a9b13ffbab75dad8619426478aec073cbc84424",
+    "WRF/share/input_wrf.F": "df8458510e3071f2b14f69c01b35fbc394ad110df2fd64d3bf8ba6082a42a421",
+    "WRF/share/output_wrf.F": "af36e08a51e5daa45d030ffdee1e16c08f7ad7522786f31f1af9d5ea6469305e",
+    "WRF/Registry/Registry.EM_COMMON": "633b679ff978e5ffbbe01332940fad3a8dc568d0a4fefd6a1f6fa1ed5baab022",
+    "WRF/test/rrtmgp/test_udm_population_integration.py": "ff8b0b0c9a3f1a0d2b4920ecc50507e17099c9516847c24772deca96d0eaf2b3",
+    "WRF/test/rrtmgp/test_udm_population_scm.py": "095755edbd06cc5198a62e78cf2d71167a93d892bcb334f9b55ece7595715d47",
+    "WRF/test/rrtmgp/test_udm_partial_population.py": "45665dd3e61466ddae273cafadff325a7482c729bdd6aa3eff3ab36dc5cb0f20",
+    "WRF/test/rrtmgp/test_udm_partial_activation.f90": "5b7c3dc59cb8534ad6f0cebd04c3070b5e333621e02601bf1c324790b33ac01a",
+    "WRF/test/rrtmgp/test_netcdf_zz.py": "79376b07af06a8f1570ed807546762711bfd8aa185566f25e974eaabc2a505cf",
+    "WRF/phys/module_gfs_machine.F": "300ee4f75663e89d34c8a9b8733cc07a5dd48c3d973da019d31cb76524babe25",
+    "WRF/phys/module_mp_radar.F": "fa5e06a4d64bbc32089a1357bfa5c57e6c682e5b68c706842698c2b0f292e68e"
+  },
+  "population_policy": 1,
+  "number_policy": 1,
+  "name": "fixed-footprint-warm-LR-v1",
+  "physical_approval": false,
+  "FINAL_IDENTITY": "OPEN",
+  "compiler_flags": {
+    "WRF": "GNU serial REAL32 O2; toolchain and cache retained",
+    "module": "GNU O0/O2; bounds checks; SNaN init; invalid/zero/overflow traps"
+  },
+  "coefficients": {
+    "run/rrtmgp-clouds-lw-bnd.nc": "09d6704c5b863b4c3ceb417d20bb3076ec492e6bf2dfbcc9f3c5996a3706f0b0",
+    "run/rrtmgp-clouds-sw-bnd.nc": "7671835992a45afe66244b591a02c0b3df73d7d59ecb746bbffd9763497651cd"
+  },
+  "WRF_executable": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-population-integration-build-v1/producer/main/wrf",
+    "sha256": "9a23d5977d1c84ec562a42b755f71f4f3f43578ca1370216be02cb05f7034530",
+    "size_bytes": 44898584
+  },
+  "actual_libraries": {
+    "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/root/usr/lib/x86_64-linux-gnu/libnetcdff.so.7.1.0": {
+      "bytes": 653744,
+      "sha256": "9e8fe96709d71af61b88ad88caff7db8899369162b96aee66ecd6a553a5370f9"
+    },
+    "/usr/lib/x86_64-linux-gnu/libgfortran.so.5.0.0": {
+      "bytes": 3263912,
+      "sha256": "5b574c8ad93f1d816afa2d53fb33684ff8f9a0de0fcbe51e0ec21ddf0a56a028"
+    },
+    "/usr/lib/x86_64-linux-gnu/libm.so.6": {
+      "bytes": 952616,
+      "sha256": "f06f2ce1f1833df5f41cf13b6447ff07bea993ad9b27297d3428c2f70ab3f0e7"
+    },
+    "/usr/lib/x86_64-linux-gnu/libmvec.so.1": {
+      "bytes": 1018144,
+      "sha256": "2f435206d0df590a958be1a0bb06457b8a284d27608280644b7a22238d300b45"
+    },
+    "/usr/lib/x86_64-linux-gnu/libgcc_s.so.1": {
+      "bytes": 183024,
+      "sha256": "02f3f192bf5f79b811f1e34a650fea443d407408703448906585232383957f60"
+    },
+    "/usr/lib/x86_64-linux-gnu/libc.so.6": {
+      "bytes": 2125328,
+      "sha256": "511f825ee075610ac9c0f7f91e2c13de2000d0f7b859f6461137e809a0a009d0"
+    }
+  },
+  "compiler_executable": {
+    "path": "/usr/bin/x86_64-linux-gnu-gfortran-13",
+    "sha256": "7e292e9d5da17a37bb1c17a06afb6463db786c70827fd6893ed31a86715b03c3"
+  },
+  "actual_objects": {
+    "module_mp_udm": {
+      "bytes": 379384,
+      "sha256": "4cacd43fac4b2a23e86c07ffcd983f4f570b105c7d6f5efacd92b6c4e9662521"
+    },
+    "module_microphysics_driver": {
+      "bytes": 116280,
+      "sha256": "7b10cae5d37cb38b56c455fc8515fc4a4e304b7865e03316ef319013edf2c7b8"
+    }
+  }
+}

@@ -55,6 +55,7 @@
     INTEGER idt
     INTEGER itmp
     INTEGER filestate, ierr3
+    INTEGER udm_file_population_policy
     INTEGER udm_file_number_policy, udm_policy_ierr
     INTEGER hybrid_opt, use_theta_m
     INTEGER :: ide_compare , jde_compare , kde_compare
@@ -159,6 +160,21 @@
     ! A number-bearing input/boundary/checkpoint must declare its representation.
     ! Missing metadata is legacy raw only; never silently reinterpret it as eta.
     IF (switch == input_only .OR. switch == restart_only .OR. switch == boundary_only) THEN
+      IF (config_flags%udm_population_policy/=0 .AND. config_flags%udm_population_policy/=1) &
+        CALL wrf_error_fatal("Unknown udm_population_policy")
+      IF (config_flags%udm_population_policy==1 .AND. config_flags%udm_number_policy/=1) &
+        CALL wrf_error_fatal("fixed-footprint-warm-LR-v1 requires dry-number-grid-v1")
+      udm_file_population_policy=0
+      CALL wrf_get_dom_ti_integer(fid,"UDM_POPULATION_POLICY",udm_file_population_policy,1,icnt,udm_policy_ierr)
+      IF (udm_policy_ierr==0) THEN
+        IF (icnt/=1) CALL wrf_error_fatal("Malformed UDM population metadata")
+      ELSE
+        IF (udm_policy_ierr/=WRF_WARN_MD_NF .AND. udm_policy_ierr/=WRF_WARN_VAR_NF .AND. &
+            udm_policy_ierr/=WRF_WARN_NETCDF) CALL wrf_error_fatal("Malformed UDM population metadata")
+        udm_file_population_policy=0
+      ENDIF
+      IF (udm_file_population_policy/=config_flags%udm_population_policy) &
+        CALL wrf_error_fatal("UDM population differs between file and namelist")
       IF (config_flags%udm_number_policy /= 0 .AND. config_flags%udm_number_policy /= 1) &
         CALL wrf_error_fatal("Unknown udm_number_policy")
       IF (config_flags%mp_physics == UDMSCHEME .OR. config_flags%udm_number_policy /= 0) THEN

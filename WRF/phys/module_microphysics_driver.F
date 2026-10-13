@@ -806,6 +806,7 @@ REAL, DIMENSION( ims:ime, kms:kme, jms:jme ),                        &
    INTEGER :: i,j,k,its,ite,jts,jte,ij,sz,n
    LOGICAL :: channel
    LOGICAL :: have_udm_cf
+   INTEGER :: udm_population_policy_value
    INTEGER :: udm_number_policy_value, udm_number_i, udm_number_j, udm_number_k
    LOGICAL :: udm_radius_selected
    INTEGER :: udm_radius_i,udm_radius_j,udm_radius_domain
@@ -909,6 +910,15 @@ REAL, DIMENSION( ims:ime, kms:kme, jms:jme ),                        &
 
 ! Determine the option-37 UDM coupling once, before the shared tile loop.
 ! The diagnostic pointers and native-radius flags are specific to this path.
+   udm_population_policy_value=0
+   IF (PRESENT(config_flags)) udm_population_policy_value=config_flags%udm_population_policy
+   IF (udm_population_policy_value/=0 .AND. udm_population_policy_value/=1) &
+     CALL wrf_error_fatal("Unknown udm_population_policy")
+   IF (udm_population_policy_value==1) THEN
+     IF (.NOT.PRESENT(config_flags)) CALL wrf_error_fatal("UDM population policy requires configuration")
+     IF (config_flags%udm_number_policy/=1) &
+       CALL wrf_error_fatal("fixed-footprint-warm-LR-v1 requires dry-number-grid-v1")
+   ENDIF
    udm_number_policy_value = 0
    IF (PRESENT(config_flags)) udm_number_policy_value=config_flags%udm_number_policy
    IF (udm_number_policy_value /= 0 .AND. udm_number_policy_value /= 1) &
@@ -2925,6 +2935,7 @@ REAL, DIMENSION( ims:ime, kms:kme, jms:jme ),                        &
                  ,udm_cf_top=udm_cf_top                             &
                  ,ccn_preinitialized=.true.                        &
                  ,number_policy=udm_number_policy_value             &
+                 ,population_policy=udm_population_policy_value     &
                  ,input_density_is_dry=.true.                       &
                  ,has_reqc=has_reqc                                 &  ! for radiation +
                  ,has_reqi=has_reqi                                 &

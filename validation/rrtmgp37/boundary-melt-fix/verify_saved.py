@@ -26,14 +26,12 @@ def verify():
  for name,r in m['files'].items():
   p=B/name;require(not p.is_symlink() and len(p.read_bytes())==r['bytes'] and sha(p.read_bytes())==r['sha256'],'sealed file changed '+name)
  identity=json.loads((B/'identity.json').read_text())
+ history=load(ROOT/'validation/rrtmgp37/historical-source/binding.py','historical_boundary_melt')
  for name,r in identity['source_files'].items():
-  if name=='WRF/test/rrtmgp/CMakeLists.txt':
-   history=load(ROOT/'validation/rrtmgp37/historical-source/binding.py','historical_test_config')
-   require(sha(history.historical_bytes(ROOT,name,r))==r,'retained test configuration differs')
-  else:require(sha((ROOT/name).read_bytes())==r,'current fix source differs '+name)
+  require(sha(history.historical_bytes(ROOT,name,r))==r,'retained fix source differs '+name)
  require(identity['production_accepted'] is False,'identity physical approval')
  module=json.loads((B/'saved/module/receipt.json').read_text());melt=load(ROOT/'WRF/test/rrtmgp/test_udm_ice_melt_number.py','melt')
- raw=(ROOT/'WRF/phys/module_mp_udm.F').read_bytes();require(sha(raw)==module['source_sha256'],'module source binding')
+ raw=history.historical_bytes(ROOT,'WRF/phys/module_mp_udm.F',module['source_sha256']);require(sha(raw)==module['source_sha256'],'module source binding')
  require(read('saved/module/fixed.F.gz')==raw,'compiled fixed source differs')
  require(read('saved/module/observed.F.gz')==melt.observe(raw,True),'compiled observer source differs')
  old=read('saved/module/old_order.F.gz');old=old.decode();import re
@@ -43,8 +41,8 @@ def verify():
  for opt in ('O0','O2'):
   rows=melt.analyze(datasets(module,opt));require(rows==module['results'][opt]['rows'],'stored melting rows differ')
  require(module['results']['O0']==module['results']['O2'] and module['UDM_calls']==48,'optimization or execution count')
- boundary=json.loads((B/'saved/boundary/receipt.json').read_text());require(boundary['input_source_sha256']==sha((ROOT/'WRF/share/input_wrf.F').read_bytes()),'boundary/current source mismatch')
- source=(ROOT/'WRF/share/input_wrf.F').read_text();start=source.index('        IF (config_flags%udm_number_policy == 1) THEN');end=source.index('        ENDIF',start)+len('        ENDIF');guard=source[start:end]
+ boundary=json.loads((B/'saved/boundary/receipt.json').read_text());require(boundary['input_source_sha256']==sha(history.historical_bytes(ROOT,'WRF/share/input_wrf.F',boundary['input_source_sha256'])),'boundary/current source mismatch')
+ source=history.historical_bytes(ROOT,'WRF/share/input_wrf.F',boundary['input_source_sha256']).decode();start=source.index('        IF (config_flags%udm_number_policy == 1) THEN');end=source.index('        ENDIF',start)+len('        ENDIF');guard=source[start:end]
  require(sha(guard.encode())==boundary['guard_block_sha256'] and guard in read('saved/boundary/input_guard.f90.gz').decode(),'compiled guard is not exact current input block')
  require(boundary['executable']['sha256']==identity['wrf_executable']['sha256'],'WRF executable binding')
  require(len(boundary['probe'])==16 and len(boundary['WRF_runs'])==3,'scope execution count')
@@ -58,5 +56,5 @@ def verify():
    if c['kind']=='WRF_specified_policy1':require('specified/nested boundaries unsupported' in s and 'FATAL CALLED' in s and 'SUCCESS COMPLETE WRF' not in s,'specified boundary not refused')
    else:require('SUCCESS COMPLETE WRF' in s and 'FATAL CALLED' not in s,'periodic runtime failed')
  closure=json.loads((B/'closure-conditions.json').read_text());require(closure==json.loads((ROOT/'validation/rrtmgp37/dry-number-grid-v1/closure-conditions.json').read_text()),'seven original conditions changed')
- return {'status':'PASS_SCOPED_BOUNDARY_AND_MELT_FIX','actual_full_UDM_calls':48,'actual_WRF_periodic_successes':2,'actual_WRF_specified_refusals':1,'exact_guard_probe_executions':16,'mass_and_latent_heat_block_preserved':True,'source_scope':'current_fix','retained_test_configuration':'PR171_snapshot','CI_fresh_model_runs':0,'physical_gate_closed':False,'production_accepted':False}
+ return {'status':'PASS_SCOPED_BOUNDARY_AND_MELT_FIX','actual_full_UDM_calls':48,'actual_WRF_periodic_successes':2,'actual_WRF_specified_refusals':1,'exact_guard_probe_executions':16,'mass_and_latent_heat_block_preserved':True,'source_scope':'historical_PR171_snapshot','current_fix_certified':False,'retained_test_configuration':'PR171_snapshot','CI_fresh_model_runs':0,'physical_gate_closed':False,'production_accepted':False}
 if __name__=='__main__':print(json.dumps(verify()))

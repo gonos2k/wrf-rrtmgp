@@ -233,7 +233,7 @@ subroutine udm(th, q, qc, qr, qi, qs, qg, qh                                  &
                  ,udm_cldfra, udm_cf_step, udm_cf_top                           &
                  ,ccn_preinitialized                                          &
                  ,input_density_is_dry                                        &
-                 ,number_policy                                               &
+                 ,number_policy, population_policy                            &
                                                                                )
 !-------------------------------------------------------------------------------
   implicit none
@@ -248,7 +248,7 @@ subroutine udm(th, q, qc, qr, qi, qs, qg, qh                                  &
   integer, dimension(ims:ime,jms:jme), optional, intent(inout) :: udm_cf_top
   logical, optional, intent(in) :: ccn_preinitialized
   logical, optional, intent(in) :: input_density_is_dry
-  integer, optional, intent(in) :: number_policy
+  integer, optional, intent(in) :: number_policy, population_policy
   real,              intent(in   ) :: delt, g, ccn0, rd, rv, t0c,     &
                                       den0, cpd, cpv, ep1, ep2,       &
                                       qmin, xls, xlv0, xlf0, cliq,    &
@@ -310,6 +310,7 @@ subroutine udm(th, q, qc, qr, qi, qs, qg, qh                                  &
   integer                                 ::   i,j,k
   logical :: initialize_ccn, use_input_density_is_dry, dry_number
   real, dimension(its:ite,kts:kte) :: number_density
+  logical :: fixed_population
 !
 ! for reflectivlity
 !
@@ -342,6 +343,14 @@ subroutine udm(th, q, qc, qr, qi, qs, qg, qh                                  &
   endif
   if (dry_number .and. .not. use_input_density_is_dry) &
     call wrf_error_fatal("dry-number-grid-v1 requires dry-air density")
+  fixed_population=.false.
+  if (present(population_policy)) then
+    if (population_policy/=0 .and. population_policy/=1) &
+      call wrf_error_fatal("UDM: unknown population policy")
+    fixed_population=population_policy==1
+  endif
+  if (fixed_population .and. .not. dry_number) &
+    call wrf_error_fatal("fixed-footprint-warm-LR-v1 requires dry-number-grid-v1")
       if (itimestep==1 .and. initialize_ccn) then
         do j = jms,jme
           do k = kms,kme
@@ -422,6 +431,7 @@ subroutine udm(th, q, qc, qr, qi, qs, qg, qh                                  &
                     ,graupel(ims,j),graupelncv(ims,j)              &
                     ,hail(ims,j),hailncv(ims,j),itimestep           &
                     ,udm_cldfra(:,:,j),udm_cf_step(:,j),udm_cf_top(:,j) &
+                    ,fixed_population=fixed_population                             &
                     ,input_density_is_dry=use_input_density_is_dry     &
                                                                    )
          else
@@ -444,6 +454,7 @@ subroutine udm(th, q, qc, qr, qi, qs, qg, qh                                  &
                     ,graupel(ims,j),graupelncv(ims,j)              &
                     ,hail(ims,j),hailncv(ims,j),itimestep           &
                     ,udm_cldfra(:,:,j),udm_cf_step(:,j)             &
+                    ,fixed_population=fixed_population                             &
                     ,input_density_is_dry=use_input_density_is_dry   &
                                                                    )
          endif
@@ -466,6 +477,7 @@ subroutine udm(th, q, qc, qr, qi, qs, qg, qh                                  &
                     ,snow(ims,j),snowncv(ims,j)                    &
                     ,graupel(ims,j),graupelncv(ims,j)              &
                     ,hail(ims,j),hailncv(ims,j),itimestep           &
+                    ,fixed_population=fixed_population                             &
                     ,input_density_is_dry=use_input_density_is_dry &
                                                                    )
          endif
@@ -572,7 +584,7 @@ subroutine udm2d(t1, q1                                          &
                    ,graupel,graupelncv                            &
                    ,hail,hailncv,itimestep                       &
                    ,udm_cldfra,udm_cf_step,udm_cf_top            &
-                   ,input_density_is_dry                          &
+                   ,input_density_is_dry, fixed_population        &
                                                                   )
 !
 !-------------------------------------------------------------------------------
@@ -677,7 +689,9 @@ subroutine udm2d(t1, q1                                          &
                                                     ims,ime, jms,jme, kms,kme, &
                                                     its,ite, jts,jte, kts,kte
    integer, intent(in) :: itimestep
-   logical, intent(in) :: input_density_is_dry
+   logical, intent(in) :: input_density_is_dry, fixed_population
+   real, dimension(kts:kte) :: footprint
+   real :: ccn_returned, ccn_clipped
    real, dimension(ims:ime,kms:kme), optional, intent(inout) :: udm_cldfra
    integer, dimension(ims:ime), optional, intent(inout) :: udm_cf_step
    integer, dimension(ims:ime), optional, intent(inout) :: udm_cf_top
@@ -1133,6 +1147,12 @@ subroutine udm2d(t1, q1                                          &
 ! adjustment of nc and nr according to avaialble size of clouds and rain
 !
 !===============================================================================
+   if (fixed_population) then
+     do k=kts,ktopini
+       if (t(k,i)<=t0c .or. qci(k,i,2)/=0. .or. any(qrs(k,i,2:4)/=0.)) &
+         call wrf_error_fatal("fixed-footprint-warm-LR-v1: warm-only column required")
+     enddo
+   endif
    call adjust_number_concent(ktopqr,kdim,qrs(:,i,1),ncr(:,i,3),den(:,i),      &
         pidnr,drcoeff,qrmin,nrmin,nrmax,di1000,drmin,drmax)
    call adjust_number_concent(ktopqc,kdim,qci(:,i,1),ncr(:,i,2),den(:,i),      &
@@ -1146,6 +1166,17 @@ subroutine udm2d(t1, q1                                          &
    if (present(udm_cldfra)) udm_cldfra(i,kts:kte)=cldf(:)
    if (present(udm_cf_step)) udm_cf_step(i)=itimestep
    if (present(udm_cf_top)) udm_cf_top(i)=ktop
+! Freeze the representation footprint for this substep. Grid state is restored
+! before the next diagnosis; no local state survives a change of footprint.
+   footprint(:)=cldf(:)
+   if (fixed_population) then
+     do k=kts,ktopini
+       if (.not.ieee_is_finite(footprint(k)) .or. footprint(k)<0. .or. footprint(k)>1.) &
+         call wrf_error_fatal("fixed-footprint-warm-LR-v1: invalid footprint")
+       if (footprint(k)==0. .and. (qci(k,i,1)>0. .or. qrs(k,i,1)>0.)) &
+         call wrf_error_fatal("fixed-footprint-warm-LR-v1: CF0 condensate unsupported")
+     enddo
+   endif
 !
    do k = ktop, kts, -1
 ! change condensate variables to in-cloud variables
@@ -1156,6 +1187,9 @@ subroutine udm2d(t1, q1                                          &
          qrs(k,i,2) = qrs(k,i,2) / cldf(k)
          qrs(k,i,3) = qrs(k,i,3) / cldf(k)
          qrs(k,i,4) = qrs(k,i,4) / cldf(k)
+         if (fixed_population) then
+           ncr(k,i,2:3)=ncr(k,i,2:3)/footprint(k)
+         endif
        endif
    enddo
 !-------------------------------------------------------------------------------
@@ -1356,6 +1390,7 @@ subroutine udm2d(t1, q1                                          &
        qrs(k,i,2) = qrs(k,i,2) * cldf(k)
        qrs(k,i,3) = qrs(k,i,3) * cldf(k)
        qrs(k,i,4) = qrs(k,i,4) * cldf(k)
+       if (fixed_population) ncr(k,i,2:3)=ncr(k,i,2:3)*footprint(k)
      endif
    enddo
 !-------------------------------------------------------------------------------
@@ -1395,6 +1430,16 @@ subroutine udm2d(t1, q1                                          &
    ktopmax = max(ktopqc,ktopqi,ktopqr,ktopqs,ktopqg,ktopqh,ktoprh)
 !-------------------------------------------------------------------------------
 ! update the slope parameters and microphysical parameters
+! The ambient/free CCN reservoir remains grid mean. Only cloud/rain share
+! this research footprint. Clear, condensate-free levels are not conditioned.
+   if (fixed_population) then
+     do k=kts,ktopini
+       if (footprint(k)>0.) then
+         call udm_warm_representation(qci(k,i,1),qrs(k,i,1), &
+                ncr(k,i,2),ncr(k,i,3),footprint(k),.true.)
+       endif
+     enddo
+   endif
 !
    ktop = ktopqr
    call slope_rain(1,kdim,ktop,qrs(:,i,1),den(:,i),denfac(:,i),t(:,i),         &
@@ -1585,8 +1630,13 @@ subroutine udm2d(t1, q1                                          &
 ! nrevp: evaporation/condensation rate of rain   [lh a14]
 !        (nr->nccn)
            if(prevp(k)==-qrs(k,i,1)*rdtcld) then
-             ncr(k,i,1) = min(ncr(k,i,1) + ncr(k,i,3), ccnmax)
-             ncr(k,i,3) = 0.
+             if (fixed_population) then
+               call udm_return_rain_ccn(ncr(k,i,1),ncr(k,i,3),footprint(k), &
+                                        ccn_returned,ccn_clipped)
+             else
+               ncr(k,i,1) = min(ncr(k,i,1) + ncr(k,i,3), ccnmax)
+               ncr(k,i,3) = 0.
+             endif
            endif
          else
            prevp(k) = min(prevp(k),satrdt(k)*.5)
@@ -1596,6 +1646,23 @@ subroutine udm2d(t1, q1                                          &
    endif
 !===============================================================================
 !
+! Restore states AND tendencies once, before existing grid donor/update limits.
+   if (fixed_population) then
+     do k=kts,ktopini
+       if (footprint(k)>0.) then
+         call udm_warm_representation(qci(k,i,1),qrs(k,i,1), &
+                ncr(k,i,2),ncr(k,i,3),footprint(k),.false.)
+         praut(k)=praut(k)*footprint(k)
+         pracw(k)=pracw(k)*footprint(k)
+         prevp(k)=prevp(k)*footprint(k)
+         ncaut(k)=ncaut(k)*footprint(k)
+         nraut(k)=nraut(k)*footprint(k)
+         nccol(k)=nccol(k)*footprint(k)
+         nracw(k)=nracw(k)*footprint(k)
+         nrcol(k)=nrcol(k)*footprint(k)
+       endif
+     enddo
+   endif
 ! cold rain processes
 !
 !===============================================================================
@@ -2878,6 +2945,12 @@ subroutine udm2d(t1, q1                                          &
    endif
 !-------------------------------------------------------------------------------
 !
+   if (fixed_population) then
+     do k=kts,ktopini
+       if (t(k,i)<=t0c .or. qci(k,i,2)/=0. .or. any(qrs(k,i,2:4)/=0.)) &
+         call wrf_error_fatal("fixed-footprint-warm-LR-v1: completed state outside warm scope")
+     enddo
+   endif
    enddo i_loop                  ! i-loops
 !
 !===============================================================================
@@ -2913,6 +2986,39 @@ subroutine udm2d(t1, q1                                          &
 !
 !
 end subroutine udm2d
+
+! Complete rain evaporation: local rain count -> ambient grid CCN before cap.
+! Returned and clipped amounts are separate accounting quantities, not a new
+! universal particle-number conservation law.
+subroutine udm_warm_representation(qc_grid,qr_grid,nc_grid,nr_grid,f,to_local)
+  real,intent(inout) :: qc_grid,qr_grid,nc_grid,nr_grid
+  real,intent(in) :: f
+  logical,intent(in) :: to_local
+  if (.not.ieee_is_finite(f) .or. f<=0. .or. f>1.) &
+    call wrf_error_fatal("UDM warm representation requires positive footprint")
+  if (to_local) then
+    qc_grid=qc_grid/f; qr_grid=qr_grid/f
+    nc_grid=nc_grid/f; nr_grid=nr_grid/f
+  else
+    qc_grid=qc_grid*f; qr_grid=qr_grid*f
+    nc_grid=nc_grid*f; nr_grid=nr_grid*f
+  endif
+end subroutine udm_warm_representation
+
+subroutine udm_return_rain_ccn(ccn_grid,rain_local,f,returned,clipped)
+  real, intent(inout) :: ccn_grid,rain_local
+  real, intent(in) :: f
+  real, intent(out) :: returned,clipped
+  real :: transfer,available
+  if (.not.ieee_is_finite(f) .or. f<=0. .or. f>1.) &
+    call wrf_error_fatal("UDM rain/CCN exchange requires positive footprint")
+  transfer=f*rain_local
+  available=max(ccnmax-ccn_grid,0.)
+  returned=min(transfer,available)
+  clipped=transfer-returned
+  ccn_grid=min(ccn_grid+transfer,ccnmax)
+  rain_local=0.
+end subroutine udm_return_rain_ccn
 !-------------------------------------------------------------------------------
 !
 !
