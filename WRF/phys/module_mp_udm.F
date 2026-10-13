@@ -1269,7 +1269,6 @@ subroutine udm2d(t1, q1                                          &
        if(.not.ifice(k) .and. qci(k,i,2)>0.) then
          qci(k,i,1) = qci(k,i,1) + qci(k,i,2)
          t(k,i) = t(k,i) - xlf0/cpm(k,i)*qci(k,i,2)*cldf(k)
-         qci(k,i,2) = 0.
 !---------------------------------------------------------------
 ! nimlt: instantaneous melting of cloud ice  [lh a18]
 !        (t>t0: ->nc)
@@ -1277,6 +1276,8 @@ subroutine udm2d(t1, q1                                          &
          temp = sqrt(sqrt(temp*temp*temp))
          ni(k) = min(max(5.38e7*temp,1.e3),1.e6)
          ncr(k,i,2) = min(ncr(k,i,2) + ni(k),ncmax)
+! Clear only after the mass-dependent melt number has consumed the ice.
+         qci(k,i,2) = 0.
        endif
      enddo
    endif

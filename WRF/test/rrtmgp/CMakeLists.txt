@@ -465,3 +465,14 @@ add_test(NAME udm_dry_number_grid_candidate COMMAND "${Python3_EXECUTABLE}"
   "${CMAKE_CURRENT_SOURCE_DIR}/test_udm_dry_number_bridge.py" "${WRF_ROOT}"
   --workdir "${CMAKE_CURRENT_BINARY_DIR}/udm-dry-number-grid-candidate")
 set_tests_properties(udm_dry_number_grid_candidate PROPERTIES TIMEOUT 240)
+
+# Actual warm ice melt branch and exact input guard: scoped fixes, no approval.
+add_test(NAME udm_ice_melt_number_order COMMAND "${Python3_EXECUTABLE}"
+  "${CMAKE_CURRENT_SOURCE_DIR}/test_udm_ice_melt_number.py" "${WRF_ROOT}"
+  --workdir "${CMAKE_CURRENT_BINARY_DIR}/udm-ice-melt-number-order")
+set_tests_properties(udm_ice_melt_number_order PROPERTIES TIMEOUT 240)
+
+add_test(NAME udm_dry_number_boundary_guard COMMAND "${Python3_EXECUTABLE}"
+  "${CMAKE_CURRENT_SOURCE_DIR}/test_udm_dry_number_boundary.py" "${WRF_ROOT}"
+  --workdir "${CMAKE_CURRENT_BINARY_DIR}/udm-dry-number-boundary-guard")
+set_tests_properties(udm_dry_number_boundary_guard PROPERTIES TIMEOUT 60)

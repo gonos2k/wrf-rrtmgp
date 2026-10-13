@@ -26,21 +26,22 @@ def verify(package=B):
  require(actual==set(manifest['files']),'package file roster')
  for name,row in manifest['files'].items():
   p=B/name;require(not p.is_symlink() and len(p.read_bytes())==row['bytes'] and sha(p.read_bytes())==row['sha256'],'sealed file changed '+name)
+ history=load(ROOT/'validation/rrtmgp37/historical-source/binding.py','history')
  identity=json.loads((B/'saved/build/identity.json').read_text());require(identity['production_accepted'] is False,'false execution approval')
  for name,row in identity['source_files'].items():
-  require(sha((ROOT/name).read_bytes())==row['sha256'],'current candidate source differs '+name)
+  require(sha(history.historical_bytes(ROOT,name,row['sha256']))==row['sha256'],'retained candidate source differs '+name)
   require(sha(read('saved/current-source/'+name+'.gz'))==row['sha256'],'compiled-source snapshot differs')
  corpus=json.loads((ROOT/'validation/rrtmgp37/connected-host-number/source/tracked-WRF-corpus.json').read_text())
  changed=set(identity['source_files']);require(len(changed)==7,'candidate source scope')
  supporting=identity['supporting_test_files']
- for name,row in supporting.items():require(sha((ROOT/name).read_bytes())==row['sha256'],'current fixture stub differs')
+ for name,row in supporting.items():require(sha(history.historical_bytes(ROOT,name,row['sha256']))==row['sha256'],'retained fixture stub differs')
  changed |= set(supporting)
  for row in corpus['files']:
   if row['path'] not in changed:require(sha((ROOT/row['path']).read_bytes())==row['sha256'],'unlisted production source changed')
  require(sha(read('saved/build/wrf.gz'))==identity['executable']['sha256'],'executed binary changed')
  require(sha(read('saved/build/ideal.gz'))==identity['ideal_executable']['sha256'],'ideal binary changed')
  dependencies=json.loads((B/'saved/test-source-pins.json').read_text())
- for name,digest in dependencies.items():require(sha((ROOT/name).read_bytes())==digest,'current test dependency changed')
+ for name,digest in dependencies.items():require(sha(history.historical_bytes(ROOT,name,digest))==digest,'retained test dependency changed')
  bridge=load(ROOT/'WRF/test/rrtmgp/test_udm_dry_number_bridge.py','bridge');partial=load(ROOT/'WRF/test/rrtmgp/test_udm_partial_activation.py','partial')
  module=json.loads((B/'saved/module/receipt.json').read_text());require(module['status']=='PASS_SCOPED_DRY_NUMBER_BRIDGE','module status')
  require(module['source_sha256']==identity['source_files']['WRF/phys/module_mp_udm.F']['sha256'],'module/current source mismatch')
@@ -84,5 +85,5 @@ def verify(package=B):
  require('input/boundary producer is not implemented' in read('saved/ideal-guard/command-01.stdout.gz').decode(errors='replace'),'producer falsely labels eta')
  closure=json.loads((B/'closure-conditions.json').read_text());old=json.loads((ROOT/'validation/rrtmgp37/omitted-ice-effect/closure-conditions.json').read_text());require(closure==old,'seven original conditions changed')
  policy=json.loads((B/'policy.json').read_text());require(policy['id']=='dry-number-grid-v1' and policy['implementation']=='OPT_IN_RESEARCH_CANDIDATE' and policy['production_accepted'] is False,'candidate wrongly promoted')
- return {'status':'PASS_SCOPED_DRY_NUMBER_GRID_V1_CANDIDATE','manufactured_module_pairs':rows,'manufactured_UDM_calls':64,'SCM_restart_variables_bitwise_equal':211,'legacy_default_variables_bitwise_equal':211,'live_calls':12,'cold_background_layers':cold,'radius_layers_checked':radius,'radius_reconstruction_max_relative_difference':max_relative,'expected_representation_rejections':4,'ideal_producer_refused':True,'CI_fresh_solver_runs':0,'physical_gate_closed':False,'production_accepted':False}
+ return {'status':'PASS_SCOPED_DRY_NUMBER_GRID_V1_CANDIDATE','manufactured_module_pairs':rows,'manufactured_UDM_calls':64,'SCM_restart_variables_bitwise_equal':211,'legacy_default_variables_bitwise_equal':211,'live_calls':12,'cold_background_layers':cold,'radius_layers_checked':radius,'radius_reconstruction_max_relative_difference':max_relative,'expected_representation_rejections':4,'ideal_producer_refused':True,'CI_fresh_solver_runs':0,'source_scope':'historical_snapshot','current_fix_certified':False,'physical_gate_closed':False,'production_accepted':False}
 if __name__=='__main__':print(json.dumps(verify()))

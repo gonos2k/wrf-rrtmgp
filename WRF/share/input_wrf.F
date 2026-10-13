@@ -176,6 +176,12 @@
         IF (udm_file_number_policy /= config_flags%udm_number_policy) &
           CALL wrf_error_fatal("UDM number representation differs between file and namelist; explicit conversion required")
         IF (config_flags%udm_number_policy == 1) THEN
+          ! No eta producer/transform exists for lateral or nested boundaries.
+          ! Reject on input, before a correctly tagged file can enter that path.
+          IF (config_flags%specified .OR. config_flags%nested .OR. &
+              config_flags%max_dom /= 1 .OR. grid%id /= 1 .OR. &
+              .NOT. config_flags%periodic_x .OR. .NOT. config_flags%periodic_y) &
+            CALL wrf_error_fatal("dry-number-grid-v1 requires one periodic domain; specified/nested boundaries unsupported")
           IF (config_flags%mp_physics /= UDMSCHEME .OR. &
               config_flags%ra_lw_physics /= RRTMGP_LWSCHEME .OR. &
               config_flags%ra_sw_physics /= RRTMGP_SWSCHEME .OR. &
