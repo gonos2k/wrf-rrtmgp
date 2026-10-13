@@ -476,3 +476,9 @@ add_test(NAME udm_dry_number_boundary_guard COMMAND "${Python3_EXECUTABLE}"
   "${CMAKE_CURRENT_SOURCE_DIR}/test_udm_dry_number_boundary.py" "${WRF_ROOT}"
   --workdir "${CMAKE_CURRENT_BINARY_DIR}/udm-dry-number-boundary-guard")
 set_tests_properties(udm_dry_number_boundary_guard PROPERTIES TIMEOUT 60)
+
+# Research fixed-footprint candidate, not a production physics option.
+add_test(NAME udm_partial_population_candidate COMMAND "${Python3_EXECUTABLE}"
+  "${CMAKE_CURRENT_SOURCE_DIR}/test_udm_partial_population.py" "${WRF_ROOT}"
+  --workdir "${CMAKE_CURRENT_BINARY_DIR}/udm-partial-population-candidate")
+set_tests_properties(udm_partial_population_candidate PROPERTIES TIMEOUT 240)
