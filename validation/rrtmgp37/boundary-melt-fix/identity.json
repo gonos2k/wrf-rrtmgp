@@ -1,0 +1,69 @@
+{
+  "schema": "BOUNDARY_MELT_RESEARCH_BUILD_IDENTITY_V1",
+  "base_commit": "e26ab7ba04ccf54b02f22d3e87f7f886122a824a",
+  "production_accepted": false,
+  "source_files": {
+    "WRF/Registry/Registry.EM_COMMON": "338c6b923bf91ca6e3efab91c9ab664ebc70b009873a14ed852de93e960d194c",
+    "WRF/dyn_em/start_em.F": "0faaaefdd3fe087c0f7f8d15d4746799425c506c46b4bad5526f71b195748195",
+    "WRF/phys/module_microphysics_driver.F": "13561e69b615533ae85a94ae056f419f9d544ba8cb87848305eac99fda135fff",
+    "WRF/phys/module_mp_udm.F": "26af87bf3c468c711e99856673fb169cc39f72265f656187c20b1f0b1c97ac02",
+    "WRF/phys/module_ra_rrtmgp_trace.F": "759633315dac7d443c3b40e208b1912e445d71a04e86e122fdf8b3934dfa65b5",
+    "WRF/share/input_wrf.F": "932bad1c3025330201b5e5641f32fcc22838501d869e8fb4577b8eabf9eefccb",
+    "WRF/share/output_wrf.F": "f7591fbc023d4874c9cc7d60fa13b8f85e380915ad8a9ed47e13f7eafb35cf99",
+    "WRF/test/rrtmgp/test_udm_ice_melt_number.py": "e7c48288f839d666b4951fbd04459900e3991d86940bd22a2f3df2a2e5734787",
+    "WRF/test/rrtmgp/test_udm_dry_number_boundary.py": "b051183f52c4f1faa3fabced8ea548d12d9f087d779cbb9aa26238c882fda44f",
+    "WRF/test/rrtmgp/test_udm_partial_activation.py": "e81ef824a9d23defae000acee3466bacfa1f9b41918e5ed8010491e96a879909",
+    "WRF/test/rrtmgp/test_udm_partial_activation.f90": "5b7c3dc59cb8534ad6f0cebd04c3070b5e333621e02601bf1c324790b33ac01a",
+    "WRF/test/rrtmgp/test_udm_dry_number_bridge.py": "e16faa2094db1910618b039c56b74fb9602a42228d4887b425974b2cbf67c635",
+    "WRF/test/rrtmgp/test_netcdf_zz.py": "79376b07af06a8f1570ed807546762711bfd8aa185566f25e974eaabc2a505cf",
+    "WRF/test/rrtmgp/CMakeLists.txt": "e9f18d2912826d01439028a161e57acec3975bd34cc85a3fb2d6bca401586306"
+  },
+  "pre_fix_mp_sha256": "45780e79e24e45f4bfa49a31bbaa8f4cdb28855e28d39da81e1b3290435bad8c",
+  "wrf_executable": {
+    "sha256": "bff20ed4f732205c918b5929ebf5b72dd4ff39722313c5d18841daf6ceecb8db",
+    "bytes": 44820520
+  },
+  "ideal_executable": {
+    "sha256": "05f75797cda0009368f60ead1410ddd34d2e6e41ee6db8419407e39451e334f0",
+    "bytes": 37579616
+  },
+  "actual_libraries": {
+    "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/deps/root/usr/lib/x86_64-linux-gnu/libnetcdff.so.7.1.0": {
+      "sha256": "9e8fe96709d71af61b88ad88caff7db8899369162b96aee66ecd6a553a5370f9",
+      "bytes": 653744
+    },
+    "/usr/lib/x86_64-linux-gnu/libgfortran.so.5.0.0": {
+      "sha256": "5b574c8ad93f1d816afa2d53fb33684ff8f9a0de0fcbe51e0ec21ddf0a56a028",
+      "bytes": 3263912
+    },
+    "/usr/lib/x86_64-linux-gnu/libm.so.6": {
+      "sha256": "f06f2ce1f1833df5f41cf13b6447ff07bea993ad9b27297d3428c2f70ab3f0e7",
+      "bytes": 952616
+    },
+    "/usr/lib/x86_64-linux-gnu/libmvec.so.1": {
+      "sha256": "2f435206d0df590a958be1a0bb06457b8a284d27608280644b7a22238d300b45",
+      "bytes": 1018144
+    },
+    "/usr/lib/x86_64-linux-gnu/libgcc_s.so.1": {
+      "sha256": "02f3f192bf5f79b811f1e34a650fea443d407408703448906585232383957f60",
+      "bytes": 183024
+    },
+    "/usr/lib/x86_64-linux-gnu/libc.so.6": {
+      "sha256": "511f825ee075610ac9c0f7f91e2c13de2000d0f7b859f6461137e809a0a009d0",
+      "bytes": 2125328
+    },
+    "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": {
+      "sha256": "6222a16be7f2d458d6870efe6e715fc0c8d45766fb79cf7dcc3125538d703e28",
+      "bytes": 236616
+    }
+  },
+  "binary_retention": "Actual executables retained in local isolated build; CI saved replay does not rebuild or execute them",
+  "configuration": {
+    "case": "EM_SCM_XY",
+    "compiler": "GNU 13.3",
+    "REAL": 32,
+    "MPI": false,
+    "OpenMP": false,
+    "policy1_scope": "one periodic domain, scalar_adv_opt=0"
+  }
+}

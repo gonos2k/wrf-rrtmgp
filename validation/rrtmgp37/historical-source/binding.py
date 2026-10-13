@@ -7,12 +7,14 @@ def historical_bytes(repo,name,expected_sha256):
     current=(repo/name).read_bytes()
     if hashlib.sha256(current).hexdigest()==expected_sha256:
         return current
-    rows=json.loads((B/'snapshot.json').read_text())['files']
-    if name not in rows:
-        raise ValueError('No historical source snapshot: '+name)
-    row=rows[name]
-    if row['sha256']!=expected_sha256:
-        raise ValueError('Historical source identity differs: '+name)
+    candidates=[]
+    for receipt in (B/'snapshot.json',B/'snapshot-e26ab7ba.json'):
+        rows=json.loads(receipt.read_text())['files']
+        if name in rows and rows[name]['sha256']==expected_sha256:
+            candidates.append(rows[name])
+    if len(candidates)!=1:
+        raise ValueError('No unique historical source identity: '+name)
+    row=candidates[0]
     compressed=(B/row['archive']).read_bytes()
     if hashlib.sha256(compressed).hexdigest()!=row['compressed_sha256']:
         raise ValueError('Historical source archive changed: '+name)
