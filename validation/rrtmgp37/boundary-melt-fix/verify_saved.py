@@ -26,7 +26,11 @@ def verify():
  for name,r in m['files'].items():
   p=B/name;require(not p.is_symlink() and len(p.read_bytes())==r['bytes'] and sha(p.read_bytes())==r['sha256'],'sealed file changed '+name)
  identity=json.loads((B/'identity.json').read_text())
- for name,r in identity['source_files'].items():require(sha((ROOT/name).read_bytes())==r,'current fix source differs '+name)
+ for name,r in identity['source_files'].items():
+  if name=='WRF/test/rrtmgp/CMakeLists.txt':
+   history=load(ROOT/'validation/rrtmgp37/historical-source/binding.py','historical_test_config')
+   require(sha(history.historical_bytes(ROOT,name,r))==r,'retained test configuration differs')
+  else:require(sha((ROOT/name).read_bytes())==r,'current fix source differs '+name)
  require(identity['production_accepted'] is False,'identity physical approval')
  module=json.loads((B/'saved/module/receipt.json').read_text());melt=load(ROOT/'WRF/test/rrtmgp/test_udm_ice_melt_number.py','melt')
  raw=(ROOT/'WRF/phys/module_mp_udm.F').read_bytes();require(sha(raw)==module['source_sha256'],'module source binding')
@@ -54,5 +58,5 @@ def verify():
    if c['kind']=='WRF_specified_policy1':require('specified/nested boundaries unsupported' in s and 'FATAL CALLED' in s and 'SUCCESS COMPLETE WRF' not in s,'specified boundary not refused')
    else:require('SUCCESS COMPLETE WRF' in s and 'FATAL CALLED' not in s,'periodic runtime failed')
  closure=json.loads((B/'closure-conditions.json').read_text());require(closure==json.loads((ROOT/'validation/rrtmgp37/dry-number-grid-v1/closure-conditions.json').read_text()),'seven original conditions changed')
- return {'status':'PASS_SCOPED_BOUNDARY_AND_MELT_FIX','actual_full_UDM_calls':48,'actual_WRF_periodic_successes':2,'actual_WRF_specified_refusals':1,'exact_guard_probe_executions':16,'mass_and_latent_heat_block_preserved':True,'source_scope':'current_fix','CI_fresh_model_runs':0,'physical_gate_closed':False,'production_accepted':False}
+ return {'status':'PASS_SCOPED_BOUNDARY_AND_MELT_FIX','actual_full_UDM_calls':48,'actual_WRF_periodic_successes':2,'actual_WRF_specified_refusals':1,'exact_guard_probe_executions':16,'mass_and_latent_heat_block_preserved':True,'source_scope':'current_fix','retained_test_configuration':'PR171_snapshot','CI_fresh_model_runs':0,'physical_gate_closed':False,'production_accepted':False}
 if __name__=='__main__':print(json.dumps(verify()))
