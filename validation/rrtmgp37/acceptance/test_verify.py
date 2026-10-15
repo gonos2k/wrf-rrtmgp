@@ -170,5 +170,16 @@ class CF0WarmTransitionIntegration(unittest.TestCase):
             self.assertEqual(proc.returncode, 0, name)
 
 
+class Policy2BudgetOpticsStudyIntegration(unittest.TestCase):
+    def test_retained_host_budgets_and_independent_optical_scope(self):
+        package = ROOT / 'validation/rrtmgp37/policy2-budget-optics'
+        for name in ('verify_saved.py', 'test_saved.py'):
+            proc = subprocess.run([sys.executable, '-I', '-S', str(package / name)],
+                                  cwd=ROOT, capture_output=True, text=True, timeout=90)
+            print(proc.stdout, end='')
+            print(proc.stderr, end='')
+            self.assertEqual(proc.returncode, 0, name)
+
+
 if __name__ == '__main__':
     unittest.main()
