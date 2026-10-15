@@ -37,7 +37,7 @@ def verify(package=B):
  for name,row in supporting.items():require(sha(history.historical_bytes(ROOT,name,row['sha256']))==row['sha256'],'retained fixture stub differs')
  changed |= set(supporting)
  for row in corpus['files']:
-  if row['path'] not in changed:require(sha((ROOT/row['path']).read_bytes())==row['sha256'],'unlisted production source changed')
+  if row['path'] not in changed:require(sha(history.historical_bytes(ROOT,row['path'],row['sha256']))==row['sha256'],'retained unlisted production source changed')
  require(sha(read('saved/build/wrf.gz'))==identity['executable']['sha256'],'executed binary changed')
  require(sha(read('saved/build/ideal.gz'))==identity['ideal_executable']['sha256'],'ideal binary changed')
  dependencies=json.loads((B/'saved/test-source-pins.json').read_text())

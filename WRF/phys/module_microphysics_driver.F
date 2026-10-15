@@ -912,9 +912,9 @@ REAL, DIMENSION( ims:ime, kms:kme, jms:jme ),                        &
 ! The diagnostic pointers and native-radius flags are specific to this path.
    udm_population_policy_value=0
    IF (PRESENT(config_flags)) udm_population_policy_value=config_flags%udm_population_policy
-   IF (udm_population_policy_value/=0 .AND. udm_population_policy_value/=1) &
+   IF (udm_population_policy_value<0 .OR. udm_population_policy_value>2) &
      CALL wrf_error_fatal("Unknown udm_population_policy")
-   IF (udm_population_policy_value==1) THEN
+   IF (udm_population_policy_value>=1) THEN
      IF (.NOT.PRESENT(config_flags)) CALL wrf_error_fatal("UDM population policy requires configuration")
      IF (config_flags%udm_number_policy/=1) &
        CALL wrf_error_fatal("fixed-footprint-warm-LR-v1 requires dry-number-grid-v1")

@@ -159,5 +159,16 @@ class WarmPopulationRuntimeIntegration(unittest.TestCase):
             self.assertEqual(proc.returncode, 0, name)
 
 
+class CF0WarmTransitionIntegration(unittest.TestCase):
+    def test_actual_transition_and_later_optics(self):
+        package = ROOT / 'validation/rrtmgp37/cf0-warm-transition'
+        for name in ('verify_saved.py', 'test_saved.py'):
+            proc = subprocess.run([sys.executable, '-I', '-S', str(package / name)],
+                                  cwd=ROOT, capture_output=True, text=True, timeout=60)
+            print(proc.stdout, end='')
+            print(proc.stderr, end='')
+            self.assertEqual(proc.returncode, 0, name)
+
+
 if __name__ == '__main__':
     unittest.main()

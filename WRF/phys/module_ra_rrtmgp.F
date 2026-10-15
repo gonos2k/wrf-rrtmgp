@@ -45,7 +45,7 @@ MODULE module_ra_rrtmgp
     TYPE(ty_gas_concs) :: gases
     TYPE(ty_optical_props_2str) :: atmos,clouds,snow,sampled,frozen,cu
     REAL(wp), ALLOCATABLE :: raw_gas_tau(:,:,:),raw_cloud_tau(:,:,:),raw_precip_tau(:,:,:), &
-      raw_frozen_g(:,:,:),raw_frozen_h(:,:,:),direct_gpt(:,:,:),direct_band(:,:,:),precip_tau_raw(:,:,:)
+      raw_frozen_g(:,:,:),raw_frozen_h(:,:,:),raw_uniform_tau(:,:,:),direct_gpt(:,:,:),direct_band(:,:,:),precip_tau_raw(:,:,:)
     REAL(wp), ALLOCATABLE :: raw_native_cloud_tau(:,:,:),raw_cu_cloud_tau(:,:,:)
     REAL(wp), ALLOCATABLE :: bands(:,:),visible_weight(:)
     INTEGER, ALLOCATABLE :: gpoint_band(:)
@@ -59,6 +59,8 @@ MODULE module_ra_rrtmgp
   TYPE(ty_gas_optics_rrtmgp), SAVE :: gas_lw, gas_sw
   TYPE(ty_cloud_optics_rrtmgp), SAVE :: cloud_lw, cloud_sw
   LOGICAL, SAVE :: ready = .FALSE.
+  LOGICAL, SAVE :: initialized_uniform_clear_warm=.FALSE.
+  PUBLIC :: rrtmgp_resolved_clear_enabled
   INTEGER, SAVE :: initialized_ice_roughness = 1
   REAL(wp), SAVE :: initialized_gravity = 9.80665_wp
   REAL(wp), SAVE :: initialized_cp_dry = 1004.64_wp
@@ -181,12 +183,12 @@ CONTAINS
     END IF
     IF(.NOT.ALLOCATED(work%raw_gas_tau)) THEN
       ALLOCATE(work%raw_gas_tau(nc,nl,ng),work%raw_cloud_tau(nc,nl,nb),work%raw_precip_tau(nc,nl,nb), &
-        work%raw_frozen_g(nc,nl,nb),work%raw_frozen_h(nc,nl,nb),work%direct_gpt(nc,nl+1,ng), &
+        work%raw_frozen_g(nc,nl,nb),work%raw_frozen_h(nc,nl,nb),work%raw_uniform_tau(nc,nl,nb),work%direct_gpt(nc,nl+1,ng), &
         work%direct_band(nc,nl+1,nb),work%precip_tau_raw(nc,nl,nb))
     END IF
     ! Branch defaults and accumulators must be reset on every daylight call.
     work%raw_gas_tau=0._wp; work%raw_cloud_tau=0._wp; work%raw_precip_tau=0._wp
-    work%raw_frozen_g=0._wp; work%raw_frozen_h=0._wp
+    work%raw_frozen_g=0._wp; work%raw_frozen_h=0._wp; work%raw_uniform_tau=0._wp
     work%direct_gpt=0._wp; work%direct_band=0._wp; work%precip_tau_raw=0._wp
   END SUBROUTINE
 
@@ -240,7 +242,7 @@ CONTAINS
   SUBROUTINE release_sw_diagnostics(work)
     TYPE(ty_rrtmgp_sw_workspace), INTENT(INOUT) :: work
     IF(ALLOCATED(work%raw_gas_tau)) DEALLOCATE(work%raw_gas_tau,work%raw_cloud_tau,work%raw_precip_tau, &
-      work%raw_frozen_g,work%raw_frozen_h,work%direct_gpt,work%direct_band,work%precip_tau_raw)
+      work%raw_frozen_g,work%raw_frozen_h,work%raw_uniform_tau,work%direct_gpt,work%direct_band,work%precip_tau_raw)
     IF(ALLOCATED(work%raw_native_cloud_tau)) DEALLOCATE(work%raw_native_cloud_tau,work%raw_cu_cloud_tau)
   END SUBROUTINE
 
@@ -260,18 +262,22 @@ CONTAINS
     CALL rrtmgp_fatal('RRTMGP: '//TRIM(message),'module_ra_rrtmgp.F')
   END SUBROUTINE
 
-  SUBROUTINE rrtmgp_init(data_path,ice_roughness,gravity,cp_dry,mol_weight_dry,frozen_optics,frozen_table)
+  SUBROUTINE rrtmgp_init(data_path,ice_roughness,gravity,cp_dry,mol_weight_dry,frozen_optics,frozen_table,uniform_clear_warm)
     CHARACTER(LEN=*), INTENT(IN) :: data_path
     INTEGER, OPTIONAL, INTENT(IN) :: ice_roughness
     REAL, OPTIONAL, INTENT(IN) :: gravity,cp_dry,mol_weight_dry
     INTEGER, OPTIONAL, INTENT(IN) :: frozen_optics
     CHARACTER(LEN=*), OPTIONAL, INTENT(IN) :: frozen_table
+    LOGICAL, OPTIONAL, INTENT(IN) :: uniform_clear_warm
+    LOGICAL :: selected_uniform_clear_warm
     INTEGER :: selected_mode,frozen_status
     CHARACTER(LEN=:), ALLOCATABLE :: selected_table
     CHARACTER(LEN=1024) :: frozen_message
     INTEGER :: selected_roughness
     REAL(wp) :: selected_gravity,selected_cp,selected_mol_weight
     TYPE(ty_gas_concs) :: gases
+    selected_uniform_clear_warm=.FALSE.
+    IF(PRESENT(uniform_clear_warm)) selected_uniform_clear_warm=uniform_clear_warm
     selected_mode=0; selected_table=""
     IF(PRESENT(frozen_optics)) selected_mode=frozen_optics
     IF(PRESENT(frozen_table)) selected_table=TRIM(frozen_table)
@@ -292,6 +298,8 @@ CONTAINS
       CALL require('RRTMGP mol_weight_dry must be finite and positive in kg/mol')
     CALL trace_configure()
     IF (ready) THEN
+      IF(selected_uniform_clear_warm.NEQV.initialized_uniform_clear_warm) &
+        CALL require("UDM clear residual optical policy must be global and unchanged")
       IF(selected_mode/=initialized_frozen_mode.OR.selected_table/=initialized_frozen_path) &
         CALL require("UDM frozen optics mode and table path must be global and unchanged")
       IF(TRIM(data_path)/=initialized_path) CALL require('rrtmgp_data_path must be global and unchanged after initialization')
@@ -318,6 +326,7 @@ CONTAINS
       CALL initialize_frozen(selected_table,frozen_status,frozen_message)
       IF(frozen_status/=0) CALL require("RRTMGP_FROZEN_TABLE: "//TRIM(frozen_message))
     END IF
+    initialized_uniform_clear_warm=selected_uniform_clear_warm
     initialized_frozen_mode=selected_mode
     initialized_frozen_path=selected_table
     initialized_ice_roughness=selected_roughness
@@ -327,6 +336,27 @@ CONTAINS
     initialized_path=TRIM(data_path)
     ready = .TRUE.
   END SUBROUTINE
+
+  SUBROUTINE validate_uniform_warm(cf,rel,lwp,rwp,active)
+    REAL,INTENT(IN) :: cf(:,:),rel(:,:)
+    REAL,OPTIONAL,INTENT(IN) :: lwp(:,:),rwp(:,:)
+    LOGICAL,INTENT(OUT) :: active
+    active=.FALSE.
+    IF(PRESENT(lwp).NEQV.PRESENT(rwp)) CALL require('uniform warm paths must be supplied together')
+    IF(.NOT.PRESENT(lwp)) RETURN
+    IF(ANY(SHAPE(lwp)/=SHAPE(cf)).OR.ANY(SHAPE(rwp)/=SHAPE(cf))) CALL require('uniform warm shape mismatch')
+    IF(ANY(.NOT.ieee_is_finite(lwp)).OR.ANY(.NOT.ieee_is_finite(rwp)).OR.ANY(lwp<0.).OR.ANY(rwp<0.)) &
+      CALL require('uniform warm paths must be finite nonnegative')
+    active=ANY(lwp>0.).OR.ANY(rwp>0.)
+    IF(.NOT.active) RETURN
+    IF(.NOT.initialized_uniform_clear_warm) CALL require('uniform warm research policy not initialized')
+    IF(ANY(cf>0..AND.(lwp>0..OR.rwp>0.))) CALL require('uniform warm is restricted to CF0')
+    IF(ANY(lwp>0..AND.rel<=0.)) CALL require('uniform liquid requires explicit positive native radius')
+  END SUBROUTINE
+
+  PURE LOGICAL FUNCTION rrtmgp_resolved_clear_enabled()
+    rrtmgp_resolved_clear_enabled=initialized_uniform_clear_warm
+  END FUNCTION
 
   PURE LOGICAL FUNCTION rrtmgp_frozen_enabled()
     rrtmgp_frozen_enabled=initialized_frozen_mode==1
@@ -637,7 +667,7 @@ CONTAINS
   RECURSIVE SUBROUTINE rrtmgp_lw_column(play,plev,tlay,tlev,tsfc,h2o,co2,o3,n2o,ch4,o2,emis, &
                              cf,lwp,iwp,swp,rel,rei,res,iceflag,overlap,seed, &
                              up,dn,hr,upc,dnc,hrc,column_seeds,rwp,native_dry_layer_mass_kg_m2,gwp,hwp,lambda_g,lambda_h, &
-                             frozen_context,cfc11vmr,cfc12vmr,cfc22vmr,ccl4vmr,workspace,cu_lwp,cu_iwp,cu_rel,cu_rei)
+                             frozen_context,cfc11vmr,cfc12vmr,cfc22vmr,ccl4vmr,workspace,cu_lwp,cu_iwp,cu_rel,cu_rei,uniform_lwp,uniform_rwp)
     REAL, INTENT(IN) :: play(:,:),plev(:,:),tlay(:,:),tlev(:,:),tsfc(:),emis(:,:)
     REAL, INTENT(IN) :: h2o(:,:),co2(:,:),o3(:,:),n2o(:,:),ch4(:,:),o2(:,:)
     REAL, INTENT(IN) :: cf(:,:),lwp(:,:),iwp(:,:),swp(:,:),rel(:,:),rei(:,:),res(:,:)
@@ -649,6 +679,8 @@ CONTAINS
     REAL, OPTIONAL, INTENT(IN) :: cfc11vmr(:,:),cfc12vmr(:,:),cfc22vmr(:,:),ccl4vmr(:,:)
     REAL, INTENT(OUT) :: up(:,:),dn(:,:),hr(:,:),upc(:,:),dnc(:,:),hrc(:,:)
     REAL, OPTIONAL, INTENT(IN) :: cu_lwp(:,:),cu_iwp(:,:),cu_rel(:,:),cu_rei(:,:)
+    REAL, OPTIONAL, INTENT(IN) :: uniform_lwp(:,:),uniform_rwp(:,:)
+    LOGICAL :: active_uniform
     TYPE(ty_rrtmgp_lw_workspace), OPTIONAL, TARGET, INTENT(INOUT) :: workspace
     TYPE(ty_rrtmgp_lw_workspace), TARGET :: local_workspace
     TYPE(ty_rrtmgp_lw_workspace), POINTER :: work
@@ -659,7 +691,7 @@ CONTAINS
     REAL(wp) :: heat(SIZE(play,1),SIZE(play,2)),zero(SIZE(play,1),SIZE(play,2))
     REAL(wp) :: emissivity(gas_lw%get_nband(),SIZE(play,1))
     REAL(wp) :: rl(SIZE(play,1),SIZE(play,2)),di(SIZE(play,1),SIZE(play,2)),ds(SIZE(play,1),SIZE(play,2))
-    LOGICAL :: mask(SIZE(play,1),SIZE(play,2),gas_lw%get_ngpt())
+    LOGICAL :: mask(SIZE(play,1),SIZE(play,2),gas_lw%get_ngpt()), uniform_mask(SIZE(play,1),SIZE(play,2),gas_lw%get_ngpt())
     INTEGER :: nc,nl,precip_status
     LOGICAL :: trace_gases,has_cu,active_cu
     IF(PRESENT(workspace)) THEN
@@ -672,6 +704,7 @@ CONTAINS
     CALL validate_frozen_inputs(SHAPE(play),gwp,hwp,lambda_g,lambda_h,frozen_context)
     CALL rrtmgp_validate_column_inputs(play,plev,tlay,cf,lwp,iwp,swp,rel,rei,res)
     CALL validate_cu_inputs(SHAPE(play),cf,cu_lwp,cu_iwp,cu_rel,cu_rei,has_cu)
+    CALL validate_uniform_warm(cf,rel,uniform_lwp,uniform_rwp,active_uniform)
     active_cu=.FALSE.
     IF(has_cu) active_cu=ANY(cu_lwp>0.).OR.ANY(cu_iwp>0.)
     IF(PRESENT(native_dry_layer_mass_kg_m2)) THEN
@@ -893,6 +926,22 @@ CONTAINS
       CALL require(draw_samples(mask,clouds,sampled))
       IF(ANY(cf>0.).AND.overlap/=0) CALL require(sampled%increment(atmos))
     END IF
+    IF(active_uniform) THEN
+      CALL ensure_1scl(clouds,nc,nl,cloud_lw)
+      CALL ensure_1scl(snow,nc,nl,cloud_lw)
+      CALL ensure_1scl(sampled,nc,nl,gas_lw)
+      zero=0._wp; uniform_mask=.TRUE.
+      rl=MAX(cloud_lw%get_min_radius_liq(),MIN(cloud_lw%get_max_radius_liq(),REAL(rel,wp)))
+      di=cloud_lw%get_min_radius_ice(); ds=REAL(res,wp)
+      CALL require(cloud_lw%cloud_optics(REAL(uniform_lwp,wp),zero,rl,di,clouds))
+      CALL rrtmgp_precip_lw_optics(REAL(uniform_rwp,wp),zero,ds, &
+           gas_lw%get_band_lims_wavenumber(),snow%tau,precip_status)
+      IF(precip_status/=0) CALL require('RRTMGP_CLEAR_WARM_LW_INVALID')
+      CALL require(snow%increment(clouds))
+      CALL require(draw_samples(uniform_mask,clouds,sampled))
+      CALL require(sampled%increment(atmos))
+      IF(trace_active('LW')) CALL trace_result('LW','UNIFORM_CF0_TAU',clouds%tau)
+    END IF
     IF(rrtmgp_frozen_enabled()) CALL add_frozen_lw(atmos,work%frozen,tlay,gwp,hwp,lambda_g,lambda_h,frozen_context)
     IF(trace_active('LW')) THEN
       CALL trace_result('LW','TOTAL_TAU',atmos%tau)
@@ -925,7 +974,7 @@ CONTAINS
                              cf,lwp,iwp,swp,rel,rei,res,iceflag,overlap,seed, &
                              up,dn,hr,upc,dnc,hrc,direct,diffuse,directc,visdir,visdif,nirdir,nirdif,column_seeds,rwp,native_dry_layer_mass_kg_m2,gwp,hwp,lambda_g,lambda_h,frozen_context, &
                              direct_unscaled,directc_unscaled,visdir_unscaled,nirdir_unscaled,workspace,cu_lwp,cu_iwp,cu_rel,cu_rei, &
-                             solar_by_column)
+                             solar_by_column,uniform_lwp,uniform_rwp)
     REAL, INTENT(IN) :: play(:,:),plev(:,:),tlay(:,:)
     REAL, INTENT(IN) :: h2o(:,:),co2(:,:),o3(:,:),n2o(:,:),ch4(:,:),o2(:,:)
     REAL, INTENT(IN) :: avdir(:),avdif(:),andir(:),andif(:),mu0(:),solar
@@ -940,6 +989,8 @@ CONTAINS
     REAL, INTENT(OUT) :: direct(:,:),diffuse(:,:),directc(:,:)
     REAL, INTENT(OUT) :: visdir(:,:),visdif(:,:),nirdir(:,:),nirdif(:,:)
     REAL, OPTIONAL, INTENT(IN) :: cu_lwp(:,:),cu_iwp(:,:),cu_rel(:,:),cu_rei(:,:)
+    REAL, OPTIONAL, INTENT(IN) :: uniform_lwp(:,:),uniform_rwp(:,:)
+    LOGICAL :: active_uniform
     ! Optional per-column solar irradiance for batched WRF tiles. The scalar
     ! `solar` argument remains the backward-compatible default.
     REAL, OPTIONAL, INTENT(IN) :: solar_by_column(:)
@@ -957,7 +1008,7 @@ CONTAINS
     REAL(wp) :: toa(SIZE(play,1),gas_sw%get_ngpt()),albdir(gas_sw%get_nband(),SIZE(play,1)), &
                 albdif(gas_sw%get_nband(),SIZE(play,1))
     REAL(wp) :: solar_column
-    LOGICAL :: mask(SIZE(play,1),SIZE(play,2),gas_sw%get_ngpt())
+    LOGICAL :: mask(SIZE(play,1),SIZE(play,2),gas_sw%get_ngpt()), uniform_mask(SIZE(play,1),SIZE(play,2),gas_sw%get_ngpt())
     LOGICAL :: need_unscaled,has_cu,active_cu
     INTEGER :: nc,nl,b,c,g,k,precip_status,nb,ngpt
     IF(PRESENT(workspace)) THEN
@@ -970,6 +1021,7 @@ CONTAINS
     CALL validate_frozen_inputs(SHAPE(play),gwp,hwp,lambda_g,lambda_h,frozen_context)
     CALL rrtmgp_validate_column_inputs(play,plev,tlay,cf,lwp,iwp,swp,rel,rei,res)
     CALL validate_cu_inputs(SHAPE(play),cf,cu_lwp,cu_iwp,cu_rel,cu_rei,has_cu)
+    CALL validate_uniform_warm(cf,rel,uniform_lwp,uniform_rwp,active_uniform)
     active_cu=.FALSE.
     IF(has_cu) active_cu=ANY(cu_lwp>0.).OR.ANY(cu_iwp>0.)
     IF(PRESENT(native_dry_layer_mass_kg_m2)) THEN
@@ -1274,6 +1326,30 @@ CONTAINS
       CALL require(draw_samples(mask,clouds,sampled))
       IF(ANY(cf>0.).AND.overlap/=0) CALL require(sampled%increment(atmos))
     END IF
+    IF(active_uniform) THEN
+      CALL ensure_2str(clouds,nc,nl,cloud_sw)
+      CALL ensure_2str(snow,nc,nl,cloud_sw)
+      CALL ensure_2str(sampled,nc,nl,gas_sw)
+      zero=0._wp; uniform_mask=.TRUE.
+      rl=MAX(cloud_sw%get_min_radius_liq(),MIN(cloud_sw%get_max_radius_liq(),REAL(rel,wp)))
+      di=cloud_sw%get_min_radius_ice(); ds=REAL(res,wp)
+      CALL require(cloud_sw%cloud_optics(REAL(uniform_lwp,wp),zero,rl,di,clouds))
+      IF(need_unscaled) work%raw_uniform_tau=clouds%tau
+      CALL require(clouds%delta_scale())
+      IF(need_unscaled) THEN
+        CALL rrtmgp_precip_sw_optics(REAL(uniform_rwp,wp),zero,ds,work%bands, &
+             snow%tau,snow%ssa,snow%g,precip_status,raw_tau=work%precip_tau_raw)
+        work%raw_uniform_tau=work%raw_uniform_tau+work%precip_tau_raw
+      ELSE
+        CALL rrtmgp_precip_sw_optics(REAL(uniform_rwp,wp),zero,ds,work%bands, &
+             snow%tau,snow%ssa,snow%g,precip_status)
+      END IF
+      IF(precip_status/=0) CALL require('RRTMGP_CLEAR_WARM_SW_INVALID')
+      CALL require(snow%increment(clouds))
+      CALL require(draw_samples(uniform_mask,clouds,sampled))
+      CALL require(sampled%increment(atmos))
+      IF(trace_active('SW')) CALL trace_result('SW','UNIFORM_CF0_TAU',clouds%tau)
+    END IF
     IF(rrtmgp_frozen_enabled()) THEN
       IF(need_unscaled) THEN
         CALL add_frozen_sw(atmos,work%frozen,gwp,hwp,lambda_g,lambda_h,frozen_context,work%raw_frozen_g,work%raw_frozen_h)
@@ -1299,10 +1375,10 @@ CONTAINS
             IF(overlap/=0.AND.mask(c,k,g)) THEN
               work%direct_gpt(c,k,g)=work%direct_gpt(c,k+1,g)*EXP(-(work%raw_gas_tau(c,k,g)+ &
                    work%raw_cloud_tau(c,k,b)+work%raw_precip_tau(c,k,b)+work%raw_frozen_g(c,k,b)+ &
-                   work%raw_frozen_h(c,k,b))/REAL(mu0(c),wp))
+                   work%raw_frozen_h(c,k,b)+work%raw_uniform_tau(c,k,b))/REAL(mu0(c),wp))
             ELSE
               work%direct_gpt(c,k,g)=work%direct_gpt(c,k+1,g)*EXP(-(work%raw_gas_tau(c,k,g)+ &
-                   work%raw_frozen_g(c,k,b)+work%raw_frozen_h(c,k,b))/REAL(mu0(c),wp))
+                   work%raw_frozen_g(c,k,b)+work%raw_frozen_h(c,k,b)+work%raw_uniform_tau(c,k,b))/REAL(mu0(c),wp))
             END IF
           END DO
           DO k=1,nl+1
@@ -1339,6 +1415,7 @@ CONTAINS
           END IF
         END IF
         CALL trace_input('SW','RAW_PRECIP_TAU',REAL(work%raw_precip_tau))
+        IF(active_uniform) CALL trace_input('SW','RAW_UNIFORM_TAU',REAL(work%raw_uniform_tau))
         CALL trace_input('SW','RAW_GRAUPEL_TAU_EXT',REAL(work%raw_frozen_g))
         CALL trace_input('SW','RAW_HAIL_TAU_EXT',REAL(work%raw_frozen_h))
         CALL trace_input('SW','BAND_LIMS_GPOINT',REAL(gas_sw%get_band_lims_gpoint()))

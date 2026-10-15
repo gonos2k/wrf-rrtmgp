@@ -160,9 +160,9 @@
     ! A number-bearing input/boundary/checkpoint must declare its representation.
     ! Missing metadata is legacy raw only; never silently reinterpret it as eta.
     IF (switch == input_only .OR. switch == restart_only .OR. switch == boundary_only) THEN
-      IF (config_flags%udm_population_policy/=0 .AND. config_flags%udm_population_policy/=1) &
+      IF (config_flags%udm_population_policy<0 .OR. config_flags%udm_population_policy>2) &
         CALL wrf_error_fatal("Unknown udm_population_policy")
-      IF (config_flags%udm_population_policy==1 .AND. config_flags%udm_number_policy/=1) &
+      IF (config_flags%udm_population_policy>=1 .AND. config_flags%udm_number_policy/=1) &
         CALL wrf_error_fatal("fixed-footprint-warm-LR-v1 requires dry-number-grid-v1")
       udm_file_population_policy=0
       CALL wrf_get_dom_ti_integer(fid,"UDM_POPULATION_POLICY",udm_file_population_policy,1,icnt,udm_policy_ierr)

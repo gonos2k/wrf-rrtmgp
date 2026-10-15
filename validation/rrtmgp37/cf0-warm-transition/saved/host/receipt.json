@@ -1,0 +1,77 @@
+{
+  "schema": "CF0_WARM_SCM_V1",
+  "status": "PASS_SCOPED_ACTUAL_CF0_CONTINUATION",
+  "executable": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-transition-build-v1/producer/main/wrf",
+    "sha256": "15617c00550c2b3fcb34605653aab3b3c191b217ede55a437e17ed37d0781956",
+    "size_bytes": 44878328
+  },
+  "original_input": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-population-integration-scm-v5/control/wrfinput_d01",
+    "sha256": "e5a639cf73e0305de522d9f3b8034e4b3c00f2df7c48670c0fe2bc4d0511d2f1",
+    "size_bytes": 77464
+  },
+  "original_namelist": {
+    "path": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-population-integration-scm-v5/control/namelist.input",
+    "sha256": "7a08dbc127c80fcb8ceb5114930df210e5c76cca06fe605c5336ef58ba496986",
+    "size_bytes": 4612
+  },
+  "source_files": {
+    "phys/module_mp_udm.F": "e19b8a9f77972a47203c0b633cb366ae5f35f1b4da36902e87f94c83bda3f3a5",
+    "phys/module_ra_rrtmgp.F": "6f03fe01d504ff7f3e02204877b28c7ebc6895111a81d606530c31c8e86fb7c1",
+    "phys/module_ra_rrtmg_lw.F": "dba68f0f7633b532308977e4d6d7be94ab42bc9fda5df3a6b2a3c629101d9aa2",
+    "phys/module_ra_rrtmg_sw.F": "f0c1a53265c0758017060f995ba500904f570a984e29cfc23b4a77b5291259a3",
+    "phys/module_physics_init.F": "504adc9c490dbf65b2f80c8c9914a8255b14889c06b7c0ed130c7dfc3a001bc2",
+    "share/input_wrf.F": "a0ea6427d881df53aa0c8324459db4c2dc801462019ad14551fb657f3b989f33"
+  },
+  "processes": [
+    {
+      "argv": [
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-transition-build-v1/producer/main/wrf"
+      ],
+      "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-scm-v3/strict",
+      "kind": "WRF_original_strict",
+      "status": "TERMINAL",
+      "pid": 1537108,
+      "actual_returncode": 0,
+      "timed_out": false,
+      "started_at": 1791887640.654729,
+      "finished_at": 1791887642.8792198
+    },
+    {
+      "argv": [
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-transition-build-v1/producer/main/wrf"
+      ],
+      "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-scm-v3/control",
+      "kind": "WRF_CF0_grid_control",
+      "status": "TERMINAL",
+      "pid": 1537157,
+      "actual_returncode": 0,
+      "timed_out": false,
+      "started_at": 1791887643.1661499,
+      "finished_at": 1791887645.7398953
+    },
+    {
+      "argv": [
+        "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-transition-build-v1/producer/main/wrf"
+      ],
+      "cwd": "/NHNHOME/WORKSPACE/26weather002_A/yhlee/RRTMGP/build/udm37-cf0-scm-v3/restart",
+      "kind": "WRF_CF0_grid_restart",
+      "status": "TERMINAL",
+      "pid": 1537179,
+      "actual_returncode": 0,
+      "timed_out": false,
+      "started_at": 1791887646.0280714,
+      "finished_at": 1791887648.2033854
+    }
+  ],
+  "production_accepted": false,
+  "WRF_processes": 3,
+  "continuous_seconds": 60,
+  "restart_seconds": 30,
+  "checkpoint_before_original_failure": true,
+  "terminal_arrays_equal": 211,
+  "physical_initial_arrays_unchanged": true,
+  "first_strict_failure_seconds": 40,
+  "physical_gate_closed": false
+}

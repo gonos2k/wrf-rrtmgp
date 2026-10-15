@@ -10193,7 +10193,7 @@ CONTAINS
    USE MODULE_RA_CLWRF_SUPPORT, ONLY : read_CAMgases
    USE module_mp_udm, ONLY: cldf_diag, udm_radiation_negative_limits, udm_startup_snow_radius
    USE mo_rte_kind, ONLY: wp
-   USE module_ra_rrtmgp, ONLY: rrtmgp_sw_column, rrtmgp_frozen_enabled, rrtmgp_fatal, &
+   USE module_ra_rrtmgp, ONLY: rrtmgp_sw_column, rrtmgp_frozen_enabled, rrtmgp_resolved_clear_enabled, rrtmgp_fatal, &
         ty_rrtmgp_sw_workspace,rrtmgp_release_workspace, rrtmgp_cloud_lut_bounds, rrtmgp_ice_lut_coordinate
    USE module_ra_rrtmgp_input, ONLY: rrtmgp_build_udm_inputs, rrtmgp_build_cu_inputs, &
         rrtmgp_summarize_cu_filter, &
@@ -10281,6 +10281,7 @@ CONTAINS
    CHARACTER(LEN=3), PARAMETER :: gp_phase_names(6) = [CHARACTER(LEN=3) :: "LWP","IWP","RWP","SWP","GWP","HWP"]
    INTEGER :: gp_reason
    REAL :: gp_grid(kte-kts+1,6),gp_rad(kte-kts+1,6),gp_sizes(kte-kts+1,3)
+   REAL :: gp_uniform_lwp(1,kts:kte+1),gp_uniform_rwp(1,kts:kte+1)
    REAL :: gp_omitted_phase(kte-kts+1,6),gp_qh(kte-kts+1),gp_qg(kte-kts+1)
    REAL :: gp_gwp(1,kts:kte+1),gp_hwp(1,kts:kte+1)
    REAL :: gp_lambda_g(1,kts:kte+1),gp_lambda_h(1,kts:kte+1)
@@ -10729,6 +10730,7 @@ CONTAINS
         END SELECT
       END IF
     END IF
+    IF(run_rrtmgp.AND.rrtmgp_resolved_clear_enabled()) gp_batch_requested=1
     gp_batch_enabled=run_rrtmgp.AND.gp_batch_requested>1
     IF(gp_batch_enabled) THEN
       gp_capture_env=''; gp_audit_env=''
@@ -11822,6 +11824,16 @@ CONTAINS
                   gp_omitted_phase(:,6)=gp_grid(:,6)
                   gp_rad(:,5)=0.; gp_rad(:,6)=0.
                END IF
+               gp_uniform_lwp=0.; gp_uniform_rwp=0.
+               IF(rrtmgp_resolved_clear_enabled()) THEN
+                 gp_uniform_lwp(1,kts:kte)=gp_omitted_phase(:,1)
+                 gp_uniform_rwp(1,kts:kte)=gp_omitted_phase(:,3)
+                 gp_omitted_phase(:,1)=0.; gp_omitted_phase(:,3)=0.
+                 IF(trace_active('SW')) THEN
+                   CALL trace_raw('SW','UNIFORM_CF0_LWP',gp_uniform_lwp(1,kts:kte))
+                   CALL trace_raw('SW','UNIFORM_CF0_RWP',gp_uniform_rwp(1,kts:kte))
+                 END IF
+               END IF
                clwpth(ncol,kts:kte)=gp_rad(:,1)
                ciwpth(ncol,kts:kte)=gp_rad(:,2)
                gp_rwp(ncol,kts:kte)=gp_rad(:,3)
@@ -12199,7 +12211,7 @@ CONTAINS
                  gwp=gp_gwp,hwp=gp_hwp,lambda_g=gp_lambda_g,lambda_h=gp_lambda_h,frozen_context=gp_context, &
                  direct_unscaled=swdkdir_predelta,directc_unscaled=swdkdirc_predelta, &
                  visdir_unscaled=sibvisdir_predelta,nirdir_unscaled=sibnirdir_predelta,workspace=gp_workspace, &
-                 cu_lwp=gp_cu_lwp,cu_iwp=gp_cu_iwp,cu_rel=gp_cu_rel,cu_rei=gp_cu_rei)
+                 cu_lwp=gp_cu_lwp,cu_iwp=gp_cu_iwp,cu_rel=gp_cu_rel,cu_rei=gp_cu_rei,uniform_lwp=gp_uniform_lwp,uniform_rwp=gp_uniform_rwp)
              ELSE
                CALL rrtmgp_sw_column(play,plev,tlay,h2ovmr,co2vmr,o3vmr,n2ovmr,ch4vmr,o2vmr, &
                  asdir,asdif,aldir,aldif,coszen,scon,cldfrac,clwpth,ciwpth,cswpth,rel,rei,res,4,icld, &
@@ -12208,7 +12220,7 @@ CONTAINS
                  native_dry_layer_mass_kg_m2=RESHAPE(udm_dry_layer_mass(i,kts:kte,j),[1,kte-kts+1]), &
                  gwp=gp_gwp,hwp=gp_hwp,lambda_g=gp_lambda_g,lambda_h=gp_lambda_h,frozen_context=gp_context, &
                  direct_unscaled=swdkdir_predelta,directc_unscaled=swdkdirc_predelta, &
-                 visdir_unscaled=sibvisdir_predelta,nirdir_unscaled=sibnirdir_predelta,workspace=gp_workspace)
+                 visdir_unscaled=sibvisdir_predelta,nirdir_unscaled=sibnirdir_predelta,workspace=gp_workspace,uniform_lwp=gp_uniform_lwp,uniform_rwp=gp_uniform_rwp)
              END IF
            ELSE
              IF(use_cu_population) THEN
@@ -12219,7 +12231,7 @@ CONTAINS
                  native_dry_layer_mass_kg_m2=RESHAPE(udm_dry_layer_mass(i,kts:kte,j),[1,kte-kts+1]), &
                  direct_unscaled=swdkdir_predelta,directc_unscaled=swdkdirc_predelta, &
                  visdir_unscaled=sibvisdir_predelta,nirdir_unscaled=sibnirdir_predelta,workspace=gp_workspace, &
-                 cu_lwp=gp_cu_lwp,cu_iwp=gp_cu_iwp,cu_rel=gp_cu_rel,cu_rei=gp_cu_rei)
+                 cu_lwp=gp_cu_lwp,cu_iwp=gp_cu_iwp,cu_rel=gp_cu_rel,cu_rei=gp_cu_rei,uniform_lwp=gp_uniform_lwp,uniform_rwp=gp_uniform_rwp)
              ELSE
                CALL rrtmgp_sw_column(play,plev,tlay,h2ovmr,co2vmr,o3vmr,n2ovmr,ch4vmr,o2vmr, &
                  asdir,asdif,aldir,aldif,coszen,scon,cldfrac,clwpth,ciwpth,cswpth,rel,rei,res,4,icld, &
@@ -12227,7 +12239,7 @@ CONTAINS
                  swdkdir,swdkdif,swdkdirc,sibvisdir,sibvisdif,sibnirdir,sibnirdif,rwp=gp_rwp, &
                  native_dry_layer_mass_kg_m2=RESHAPE(udm_dry_layer_mass(i,kts:kte,j),[1,kte-kts+1]), &
                  direct_unscaled=swdkdir_predelta,directc_unscaled=swdkdirc_predelta, &
-                 visdir_unscaled=sibvisdir_predelta,nirdir_unscaled=sibnirdir_predelta,workspace=gp_workspace)
+                 visdir_unscaled=sibvisdir_predelta,nirdir_unscaled=sibnirdir_predelta,workspace=gp_workspace,uniform_lwp=gp_uniform_lwp,uniform_rwp=gp_uniform_rwp)
              END IF
            END IF
            swuflxcln=swuflx; swdflxcln=swdflx
