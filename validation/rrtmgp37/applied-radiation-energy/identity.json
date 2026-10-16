@@ -1,0 +1,40 @@
+{
+  "base_main": "c7443e7b0bf602cb76e70779629f320bd8fec182",
+  "base_tree": "e8c332723b335a5357d670ea056b0f77aeefe86f",
+  "production_source_changed": false,
+  "production_accepted": false,
+  "physics_gates_closed": false,
+  "source_files": {
+    "WRF/phys/module_ra_rrtmgp.F": "6f03fe01d504ff7f3e02204877b28c7ebc6895111a81d606530c31c8e86fb7c1",
+    "WRF/dyn_em/solve_em.F": "ed03953a8b7b999fc0a5a281893f4808bbed28697ea9032fde9b9b605e0d9ecb",
+    "WRF/dyn_em/module_first_rk_step_part2.F": "9c8c06b246c1cb1bb1632c25e5683a0cfd8545e6832df6eeaa1c744524325738",
+    "WRF/dyn_em/module_small_step_em.F": "cabf1a177d50fb0096db79644af20cfe6d75217dbe63ab406a7e29bb54c17634",
+    "WRF/phys/physics_mmm/bl_ysu.F90": "15d76892fc6ffa5c9f8f7ebecfeb6eaa5c23d71b44e8c53a8832f49ff711ea7e",
+    "external/rte-rrtmgp/extensions/mo_heating_rates.F90": "cfe6d07d50b51a6beb2773b21af032d9707302381c383c2423a3a174ef037dad",
+    "WRF/dyn_em/module_big_step_utilities_em.F": "b8c46ba091d017f70e2d75b9a87e198a0242f6c80341cd402d65677ba339a532",
+    "WRF/dyn_em/module_em.F": "67c5842c1c5d407a26139f26bd317f3016c610aeaf60207dfd21394ddb81482c",
+    "WRF/phys/module_ra_rrtmg_sw.F": "f0c1a53265c0758017060f995ba500904f570a984e29cfc23b4a77b5291259a3",
+    "WRF/phys/module_bl_ysu.F": "46ad9d21ecc88461ec3fc06086f9cb25fdccf9fc0f9b8f122a0cc2ff7c92a662",
+    "WRF/phys/module_radiation_driver.F": "31b95f0d2e9c121011672268c5874b20d7753a01794f7bdde9f6452d73b58385",
+    "WRF/phys/module_mp_udm.F": "e19b8a9f77972a47203c0b633cb366ae5f35f1b4da36902e87f94c83bda3f3a5",
+    "WRF/phys/module_physics_addtendc.F": "51f0b8f84c2ea7c4f436b3ad996ee22a3ea48c788fc888076695576d24a1e1af",
+    "WRF/phys/module_ra_rrtmg_lw.F": "dba68f0f7633b532308977e4d6d7be94ab42bc9fda5df3a6b2a3c629101d9aa2"
+  },
+  "actual_input_sha256": "2b2c0e3a3ed93ea68306176923fe08a844b3b544bb3c74efccf7bc5cedd70ae0",
+  "qualified_process_counts": {
+    "WRF": 3,
+    "new_RTE_standalone": 0,
+    "new_UDM_standalone": 0,
+    "new_Mie": 0
+  },
+  "excluded": "first diagnostic build: two objects compiled, part2 observer index names rejected by compiler; no model process. Final five diagnostic objects compiled with original production statements preserved; no production files changed.",
+  "science_scope": "one 2x2x59 all-warm periodic manufactured initial state; radiation intervals 10 and30s, actual60s integration; kernel water-vapor YSU matrix only; four PSD outputs reused from PR177",
+  "historical_PSD_package": "validation/rrtmgp37/host-source-fixed-psd",
+  "host_off_on_noninterference": true,
+  "prior_PSD_sha256": {
+    "sw-s8-LUT/sw.result": "1989996c5e56eb2eea5e3e0d91eec9a261d0549431d72a46388b6ee27eb3d12b",
+    "sw-s8-NIR_Mie/sw.result": "70d9b3fd0abd972b3bc968cc814cd39d35c6369f654366cdd5d33cf8c624a843",
+    "sw-s16-LUT/sw.result": "f783f92349c7e07866304a04fb47056356b16984342c8010a2bad76ad11d92a9",
+    "sw-s16-NIR_Mie/sw.result": "960e65225cdac77e1020e091070c921257311fa7a14a952611ed0d77d7c7f17c"
+  }
+}
