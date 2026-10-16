@@ -29,6 +29,7 @@ MODULE module_ra_rrtmgp
   USE, INTRINSIC :: ieee_arithmetic, ONLY: ieee_is_finite
   IMPLICIT NONE
   PRIVATE
+  PUBLIC :: rrtmgp_research_column
   PUBLIC :: rrtmgp_init, rrtmgp_lw_column, rrtmgp_sw_column, cloud_mask, rrtmgp_frozen_enabled
   PUBLIC :: rrtmgp_fatal
   ! Caller-owned scratch: one live workspace per concurrent column/tile call.
@@ -76,6 +77,54 @@ MODULE module_ra_rrtmgp
   ! input, not a BON measurement or a value tuned to match another engine.
   REAL(wp), PARAMETER :: dry_background_n2_vmr = 0.7808_wp
 CONTAINS
+  ! These are research definitions, not an approval of moist thermodynamics/PSD.
+  SUBROUTINE rrtmgp_research_column(capacity_policy,size_policy,cp_dry,rv_over_rd,md,qv,rho,qc,eta,cf,rel,capacity)
+    INTEGER, INTENT(IN) :: capacity_policy,size_policy
+    REAL, INTENT(IN) :: cp_dry,rv_over_rd,md(:),qv(:),rho(:),qc(:),eta(:),cf(:)
+    REAL, INTENT(INOUT) :: rel(:)
+    REAL(wp), ALLOCATABLE, INTENT(OUT) :: capacity(:,:)
+    REAL(wp) :: f,m0,m2,m3,lambda
+    INTEGER :: k
+    IF(capacity_policy<0.OR.capacity_policy>1.OR.size_policy<0.OR.size_policy>1) &
+      CALL require('unknown radiation research definition')
+    IF(SIZE(md)/=SIZE(qv).OR.SIZE(md)/=SIZE(rho).OR.SIZE(md)/=SIZE(qc).OR. &
+       SIZE(md)/=SIZE(eta).OR.SIZE(md)/=SIZE(cf).OR.SIZE(md)/=SIZE(rel)) CALL require('research column shape mismatch')
+    IF(capacity_policy==1) THEN
+      IF(.NOT.ALL(ieee_is_finite(md)).OR..NOT.ALL(ieee_is_finite(qv))) CALL require('invalid research mass/qv')
+      IF(ANY(md<=0.).OR.ANY(qv<0.)) CALL require('invalid research mass/qv')
+      ALLOCATE(capacity(1,SIZE(md)))
+      capacity(1,:)=REAL(md,wp)*REAL(cp_dry,wp)*(1._wp+REAL(rv_over_rd,wp)*REAL(qv,wp))
+    ENDIF
+    IF(size_policy==1) THEN
+      IF(.NOT.ALL(ieee_is_finite(qc)).OR..NOT.ALL(ieee_is_finite(eta)).OR. &
+         .NOT.ALL(ieee_is_finite(rho)).OR..NOT.ALL(ieee_is_finite(cf))) CALL require('invalid Gamma8 state')
+      DO k=1,SIZE(qc)
+        IF(qc(k)<=0.) CYCLE
+        IF(eta(k)<=0..OR.rho(k)<=0..OR.cf(k)<0..OR.cf(k)>1.) CALL require('invalid Gamma8 population')
+        f=1._wp
+        IF(cf(k)>0.) f=REAL(cf(k),wp)
+        m0=REAL(rho(k),wp)*REAL(eta(k),wp)/f
+        m3=3._wp*REAL(rho(k),wp)*REAL(qc(k),wp)/(4._wp*ACOS(-1._wp)*1000._wp*f)
+        lambda=(m0*8._wp*9._wp*10._wp/m3)**(1._wp/3._wp)
+        m2=m0*8._wp*9._wp/lambda**2
+        rel(k)=REAL(m3/m2*1.e6_wp)
+      ENDDO
+    ENDIF
+  END SUBROUTINE
+
+  SUBROUTINE apply_native_capacity(fu,fd,heat,capacity)
+    REAL(wp), INTENT(IN) :: fu(:,:),fd(:,:)
+    REAL(wp), INTENT(INOUT) :: heat(:,:)
+    REAL(wp), OPTIONAL, INTENT(IN) :: capacity(:,:)
+    INTEGER :: n
+    IF(.NOT.PRESENT(capacity)) RETURN
+    n=SIZE(capacity,2)
+    IF(SIZE(capacity,1)/=SIZE(heat,1).OR.n<1.OR.n>SIZE(heat,2)) CALL require('invalid native capacity shape')
+    IF(.NOT.ALL(ieee_is_finite(capacity))) CALL require('nonfinite native capacity')
+    IF(ANY(capacity<=0._wp)) CALL require('nonpositive native capacity')
+    heat(:,1:n)=(fd(:,2:n+1)-fu(:,2:n+1)-fd(:,1:n)+fu(:,1:n))/capacity
+  END SUBROUTINE
+
   SUBROUTINE require(msg)
     CHARACTER(LEN=*), INTENT(IN) :: msg
     IF (LEN_TRIM(msg)>0) CALL rrtmgp_fatal('RRTMGP: '//TRIM(msg),'module_ra_rrtmgp.F')
@@ -667,7 +716,7 @@ CONTAINS
   RECURSIVE SUBROUTINE rrtmgp_lw_column(play,plev,tlay,tlev,tsfc,h2o,co2,o3,n2o,ch4,o2,emis, &
                              cf,lwp,iwp,swp,rel,rei,res,iceflag,overlap,seed, &
                              up,dn,hr,upc,dnc,hrc,column_seeds,rwp,native_dry_layer_mass_kg_m2,gwp,hwp,lambda_g,lambda_h, &
-                             frozen_context,cfc11vmr,cfc12vmr,cfc22vmr,ccl4vmr,workspace,cu_lwp,cu_iwp,cu_rel,cu_rei,uniform_lwp,uniform_rwp)
+                             frozen_context,cfc11vmr,cfc12vmr,cfc22vmr,ccl4vmr,workspace,cu_lwp,cu_iwp,cu_rel,cu_rei,uniform_lwp,uniform_rwp,native_heat_capacity)
     REAL, INTENT(IN) :: play(:,:),plev(:,:),tlay(:,:),tlev(:,:),tsfc(:),emis(:,:)
     REAL, INTENT(IN) :: h2o(:,:),co2(:,:),o3(:,:),n2o(:,:),ch4(:,:),o2(:,:)
     REAL, INTENT(IN) :: cf(:,:),lwp(:,:),iwp(:,:),swp(:,:),rel(:,:),rei(:,:),res(:,:)
@@ -680,6 +729,7 @@ CONTAINS
     REAL, INTENT(OUT) :: up(:,:),dn(:,:),hr(:,:),upc(:,:),dnc(:,:),hrc(:,:)
     REAL, OPTIONAL, INTENT(IN) :: cu_lwp(:,:),cu_iwp(:,:),cu_rel(:,:),cu_rei(:,:)
     REAL, OPTIONAL, INTENT(IN) :: uniform_lwp(:,:),uniform_rwp(:,:)
+    REAL(wp), OPTIONAL, INTENT(IN) :: native_heat_capacity(:,:)
     LOGICAL :: active_uniform
     TYPE(ty_rrtmgp_lw_workspace), OPTIONAL, TARGET, INTENT(INOUT) :: workspace
     TYPE(ty_rrtmgp_lw_workspace), TARGET :: local_workspace
@@ -850,6 +900,7 @@ CONTAINS
     CALL check_finite_wp_output('LW','clear','DN',fd,'interface')
     upc=REAL(fu); dnc=REAL(fd)
     CALL require(compute_heating_rate(fu,fd,REAL(plev,wp)*100._wp,heat))
+    CALL apply_native_capacity(fu,fd,heat,native_heat_capacity)
     CALL check_finite_wp_output('LW','clear','HEAT',heat,'layer')
     CALL check_finite_wp_output('LW','clear','HEAT_K_PER_DAY',heat*86400._wp,'layer')
     hrc=REAL(heat*86400._wp)
@@ -951,6 +1002,7 @@ CONTAINS
     CALL check_finite_wp_output('LW','allsky','DN',fd,'interface')
     up=REAL(fu); dn=REAL(fd)
     CALL require(compute_heating_rate(fu,fd,REAL(plev,wp)*100._wp,heat))
+    CALL apply_native_capacity(fu,fd,heat,native_heat_capacity)
     CALL check_finite_wp_output('LW','allsky','HEAT',heat,'layer')
     CALL check_finite_wp_output('LW','allsky','HEAT_K_PER_DAY',heat*86400._wp,'layer')
     hr=REAL(heat*86400._wp)
@@ -958,6 +1010,10 @@ CONTAINS
     CALL check_finite_real_output('LW','allsky','DN',dn,'interface')
     CALL check_finite_real_output('LW','allsky','HEAT_K_PER_DAY',hr,'layer')
     IF(trace_active('LW')) THEN
+      IF(PRESENT(native_heat_capacity)) CALL trace_result('LW','NATIVE_CAPACITY_J_M2_K',native_heat_capacity)
+      CALL trace_result('LW','UP_WP',fu)
+      CALL trace_result('LW','DN_WP',fd)
+      CALL trace_result('LW','HEAT_WP_K_S',heat)
       CALL trace_result('LW','UP',up)
       CALL trace_result('LW','DN',dn)
       CALL trace_result('LW','HR',hr)
@@ -974,7 +1030,7 @@ CONTAINS
                              cf,lwp,iwp,swp,rel,rei,res,iceflag,overlap,seed, &
                              up,dn,hr,upc,dnc,hrc,direct,diffuse,directc,visdir,visdif,nirdir,nirdif,column_seeds,rwp,native_dry_layer_mass_kg_m2,gwp,hwp,lambda_g,lambda_h,frozen_context, &
                              direct_unscaled,directc_unscaled,visdir_unscaled,nirdir_unscaled,workspace,cu_lwp,cu_iwp,cu_rel,cu_rei, &
-                             solar_by_column,uniform_lwp,uniform_rwp)
+                             solar_by_column,uniform_lwp,uniform_rwp,native_heat_capacity)
     REAL, INTENT(IN) :: play(:,:),plev(:,:),tlay(:,:)
     REAL, INTENT(IN) :: h2o(:,:),co2(:,:),o3(:,:),n2o(:,:),ch4(:,:),o2(:,:)
     REAL, INTENT(IN) :: avdir(:),avdif(:),andir(:),andif(:),mu0(:),solar
@@ -990,6 +1046,7 @@ CONTAINS
     REAL, INTENT(OUT) :: visdir(:,:),visdif(:,:),nirdir(:,:),nirdif(:,:)
     REAL, OPTIONAL, INTENT(IN) :: cu_lwp(:,:),cu_iwp(:,:),cu_rel(:,:),cu_rei(:,:)
     REAL, OPTIONAL, INTENT(IN) :: uniform_lwp(:,:),uniform_rwp(:,:)
+    REAL(wp), OPTIONAL, INTENT(IN) :: native_heat_capacity(:,:)
     LOGICAL :: active_uniform
     ! Optional per-column solar irradiance for batched WRF tiles. The scalar
     ! `solar` argument remains the backward-compatible default.
@@ -1208,6 +1265,7 @@ CONTAINS
     END DO
     upc=REAL(fu); dnc=REAL(fd); directc=REAL(fdir)
     CALL require(compute_heating_rate(fu,fd,REAL(plev,wp)*100._wp,heat))
+    CALL apply_native_capacity(fu,fd,heat,native_heat_capacity)
     CALL check_finite_wp_output('SW','clear','HEAT',heat,'layer')
     CALL check_finite_wp_output('SW','clear','HEAT_K_PER_DAY',heat*86400._wp,'layer')
     hrc=REAL(heat*86400._wp)
@@ -1439,6 +1497,7 @@ CONTAINS
     END DO
     up=REAL(fu); dn=REAL(fd); direct=REAL(fdir); diffuse=REAL(fd-fdir)
     CALL require(compute_heating_rate(fu,fd,REAL(plev,wp)*100._wp,heat))
+    CALL apply_native_capacity(fu,fd,heat,native_heat_capacity)
     CALL check_finite_wp_output('SW','allsky','HEAT',heat,'layer')
     CALL check_finite_wp_output('SW','allsky','HEAT_K_PER_DAY',heat*86400._wp,'layer')
     hr=REAL(heat*86400._wp)
@@ -1466,6 +1525,10 @@ CONTAINS
       CALL check_finite_real_output('SW','allsky','NIR_DIRECT_PREDELTA',nirdir_unscaled,'interface')
     END IF
     IF(trace_active('SW')) THEN
+      IF(PRESENT(native_heat_capacity)) CALL trace_result('SW','NATIVE_CAPACITY_J_M2_K',native_heat_capacity)
+      CALL trace_result('SW','UP_WP',fu)
+      CALL trace_result('SW','DN_WP',fd)
+      CALL trace_result('SW','HEAT_WP_K_S',heat)
       CALL trace_result('SW','UP',up)
       CALL trace_result('SW','DN',dn)
       CALL trace_result('SW','HR',hr)

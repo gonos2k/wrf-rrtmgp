@@ -25,9 +25,10 @@ def verify():
     for name,row in manifest['files'].items():
         p=B/name;require(not p.is_symlink() and sha(p.read_bytes())==row['sha256'] and len(p.read_bytes())==row['bytes'],'sealed file differs '+name)
     identity=json.loads((B/'identity.json').read_text());require(identity['population_policy']==2 and identity['number_policy']==1 and identity['production_accepted'] is False and identity['physical_gate_closed'] is False,'policy/approval differs')
-    for n,digest in identity['source_files'].items():require(sha((ROOT/n).read_bytes())==digest,'current candidate source differs '+n)
+    history=load(ROOT/'validation/rrtmgp37/historical-source/binding.py','history')
+    for n,digest in identity['source_files'].items():require(sha(history.historical_bytes(ROOT,n,digest))==digest,'retained candidate source differs '+n)
     for n,digest in identity['coefficient_files'].items():require(sha((ROOT/n).read_bytes())==digest,'fixed coefficient differs '+n)
-    require(read('columns/src/module_ra_rrtmgp.F')==(ROOT/'WRF/phys/module_ra_rrtmgp.F').read_bytes(),'standalone compiled adapter differs')
+    require(read('columns/src/module_ra_rrtmgp.F')==history.historical_bytes(ROOT,'WRF/phys/module_ra_rrtmgp.F',identity['source_files']['WRF/phys/module_ra_rrtmgp.F']),'standalone compiled adapter differs')
     test=load(ROOT/'WRF/test/rrtmgp/test_udm_cf0_transition.py','cf0_actual');module=json.loads((B/'saved/module/receipt.json').read_text())
     raw=read('module/production.F');require(sha(raw)==module['source_sha256']==identity['source_files']['WRF/phys/module_mp_udm.F'],'actual compiled source differs')
     require(test.observer(raw)==read('module/observed.F') and test.fixture(ROOT/'WRF')==read('module/fixture.f90'),'actual observer/input differs')
@@ -76,5 +77,5 @@ def verify():
         for row in case['checks']:
             require(math.isclose(row['observed_tau_increment'],row['coefficient_formula_tau_increment'],rel_tol=8.e-6,abs_tol=2.e-8),'once-scaled liquid coefficient mismatch')
     require(json.loads((B/'closure-conditions.json').read_text())==json.loads((ROOT/'validation/rrtmgp37/dry-number-grid-v1/closure-conditions.json').read_text()),'seven closure conditions changed')
-    return {'status':'PASS_SCOPED_CF0_RESEARCH_TRANSITION','actual_UDM_calls':36,'actual_WRF_processes':4,'original_failure_seconds':40,'continued_seconds':60,'terminal_arrays_bitwise_equal':211,'actual_later_radiation_seconds':50,'standalone_RTE_columns':8,'manufactured_CF0_liquid_columns':2,'fresh_model_runs_in_replay':0,'physical_gate_closed':False,'production_accepted':False}
+    return {'source_scope':'historical_snapshot','current_integration_certified':False,'status':'PASS_SCOPED_CF0_RESEARCH_TRANSITION','actual_UDM_calls':36,'actual_WRF_processes':4,'original_failure_seconds':40,'continued_seconds':60,'terminal_arrays_bitwise_equal':211,'actual_later_radiation_seconds':50,'standalone_RTE_columns':8,'manufactured_CF0_liquid_columns':2,'fresh_model_runs_in_replay':0,'physical_gate_closed':False,'production_accepted':False}
 if __name__=='__main__':print(json.dumps(verify()))
