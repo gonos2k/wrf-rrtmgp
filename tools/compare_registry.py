@@ -50,6 +50,8 @@ def compare_registry(root: Path, out: Path, log: Path, execute: Callable) -> dic
         ('rrtmgp_ice_roughness', 'integer', int('rrtmgp_ice_roughness' in global_names)),
         ('rrtmgp_udm_frozen_optics', 'integer', int('rrtmgp_udm_frozen_optics' in global_names)),
         ('udm_population_policy', 'integer', int('udm_population_policy' in global_names)),
+        ('rrtmgp_capacity_policy', 'integer', int('rrtmgp_capacity_policy' in global_names)),
+        ('rrtmgp_liquid_size_policy', 'integer', int('rrtmgp_liquid_size_policy' in global_names)),
         ('udm_number_policy', 'integer', int('udm_number_policy' in global_names)),
         ('rrtmgp_udm_frozen_table', 'character', int('rrtmgp_udm_frozen_table' in global_names)),
     )
