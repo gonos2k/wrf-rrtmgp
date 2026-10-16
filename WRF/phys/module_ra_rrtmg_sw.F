@@ -10097,7 +10097,7 @@
 !------------------------------------------------------------------
 MODULE module_ra_rrtmg_sw
 
-use module_model_constants, only : cp, RE_QC_BG, RE_QI_BG, RE_QS_BG, &
+use module_model_constants, only : cp, rvovrd, RE_QC_BG, RE_QI_BG, RE_QS_BG, &
      udm_qmin => epsilon, udm_t0c => svpt0
 USE module_wrf_error
 #if (HWRF == 1)
@@ -10188,10 +10188,12 @@ CONTAINS
                        ,sw_difdflux                               & ! WRF-CMAQ twoway coupled model
                        ,use_rrtmgp,qh3d,f_qh,udm_cldfra,udm_cf_step,udm_cf_top, &
                         mcica_seed_override,audit_step,audit_time,udm_dry_layer_mass,udm_dry_density,rrtmgp_domain_id,rrtmgp_calendar_day, &
-                        native_qc3d,native_qi3d,cu_qc3d,cu_qi3d,cu_cf3d,cu_dp3d,cu_sh3d,cu_population_policy,qnc3d )
+                        native_qc3d,native_qi3d,cu_qc3d,cu_qi3d,cu_cf3d,cu_dp3d,cu_sh3d,cu_population_policy,qnc3d, &
+                        rrtmgp_capacity_policy,rrtmgp_liquid_size_policy )
 !------------------------------------------------------------------
    USE MODULE_RA_CLWRF_SUPPORT, ONLY : read_CAMgases
    USE module_mp_udm, ONLY: cldf_diag, udm_radiation_negative_limits, udm_startup_snow_radius
+   USE module_ra_rrtmgp, ONLY: rrtmgp_research_column
    USE mo_rte_kind, ONLY: wp
    USE module_ra_rrtmgp, ONLY: rrtmgp_sw_column, rrtmgp_frozen_enabled, rrtmgp_resolved_clear_enabled, rrtmgp_fatal, &
         ty_rrtmgp_sw_workspace,rrtmgp_release_workspace, rrtmgp_cloud_lut_bounds, rrtmgp_ice_lut_coordinate
@@ -10221,6 +10223,9 @@ CONTAINS
    LOGICAL, OPTIONAL, INTENT(IN) :: f_qh
    REAL, OPTIONAL, INTENT(IN) :: qh3d(ims:ime,kms:kme,jms:jme)
    REAL, OPTIONAL, INTENT(IN) :: udm_cldfra(ims:ime,kms:kme,jms:jme),audit_time
+   INTEGER, OPTIONAL, INTENT(IN) :: rrtmgp_capacity_policy,rrtmgp_liquid_size_policy
+   INTEGER :: gp_capacity_policy,gp_size_policy
+   REAL(wp), ALLOCATABLE :: gp_capacity(:,:)
    ! Diagnostic-only host number state; no size conversion is inferred here.
    REAL, OPTIONAL, INTENT(IN) :: qnc3d(ims:ime,kms:kme,jms:jme)
    REAL, OPTIONAL, INTENT(IN) :: udm_dry_layer_mass(ims:ime,kms:kme,jms:jme)
@@ -11592,6 +11597,19 @@ CONTAINS
                      ENDDO
                   END IF
                END IF
+               gp_capacity_policy=0; gp_size_policy=0
+               IF(PRESENT(rrtmgp_capacity_policy)) gp_capacity_policy=rrtmgp_capacity_policy
+               IF(PRESENT(rrtmgp_liquid_size_policy)) gp_size_policy=rrtmgp_liquid_size_policy
+               IF(gp_capacity_policy/=0.OR.gp_size_policy/=0) THEN
+                  IF(gp_batch_enabled) CALL rrtmgp_fatal('research policies require scalar columns','research options')
+                  IF(.NOT.PRESENT(qnc3d)) CALL rrtmgp_fatal('research policies require QNC','research options')
+                  IF(ANY(t3d(i,kts:kte,j)<273.15).OR.ANY(qi3d(i,kts:kte,j)>0.).OR. &
+                     ANY(qs3d(i,kts:kte,j)>0.).OR.ANY(qg3d(i,kts:kte,j)>0.).OR.ANY(qh3d(i,kts:kte,j)>0.)) &
+                    CALL rrtmgp_fatal('research policies require an all-warm ice-free column','research options')
+                  CALL rrtmgp_research_column(gp_capacity_policy,gp_size_policy,cp,rvovrd, &
+                    udm_dry_layer_mass(i,kts:kte,j),qv3d(i,kts:kte,j),udm_dry_density(i,kts:kte,j), &
+                    qc3d(i,kts:kte,j),qnc3d(i,kts:kte,j),cldfrac(ncol,kts:kte),gp_rel,gp_capacity)
+               ENDIF
                ! UDM-only: no CAM/P3/other microphysics radius override.
                gp_qh=qh3d(i,kts:kte,j)
                ! Active sizes must be positive; every size must be finite.
@@ -11601,6 +11619,8 @@ CONTAINS
                   CALL trace_raw_start('SW',kte-kts+1)
                   CALL trace_raw('SW','DP_HPA',pdel(ncol,kts:kte))
                   CALL trace_raw('SW','DRY_LAYER_MASS_KG_M2',udm_dry_layer_mass(i,kts:kte,j))
+                  CALL trace_raw('SW','RRTMGP_RESEARCH_POLICIES',[REAL(gp_capacity_policy),REAL(gp_size_policy)])
+                  CALL trace_raw('SW','SOURCE_QV',qv3d(i,kts:kte,j))
                   CALL trace_raw('SW','MCICA_DOMAIN_ID',[REAL(rrtmgp_domain_id)])
                   CALL trace_raw('SW','MCICA_YEAR',[REAL(yr)])
                   CALL trace_raw('SW','MCICA_DAY',[REAL(rrtmgp_calendar_day)])
@@ -12208,6 +12228,7 @@ CONTAINS
                  gp_seed,swuflx,swdflx,swhr,swuflxc,swdflxc,swhrc, &
                  swdkdir,swdkdif,swdkdirc,sibvisdir,sibvisdif,sibnirdir,sibnirdif,rwp=gp_rwp, &
                  native_dry_layer_mass_kg_m2=RESHAPE(udm_dry_layer_mass(i,kts:kte,j),[1,kte-kts+1]), &
+                native_heat_capacity=gp_capacity, &
                  gwp=gp_gwp,hwp=gp_hwp,lambda_g=gp_lambda_g,lambda_h=gp_lambda_h,frozen_context=gp_context, &
                  direct_unscaled=swdkdir_predelta,directc_unscaled=swdkdirc_predelta, &
                  visdir_unscaled=sibvisdir_predelta,nirdir_unscaled=sibnirdir_predelta,workspace=gp_workspace, &
@@ -12218,6 +12239,7 @@ CONTAINS
                  gp_seed,swuflx,swdflx,swhr,swuflxc,swdflxc,swhrc, &
                  swdkdir,swdkdif,swdkdirc,sibvisdir,sibvisdif,sibnirdir,sibnirdif,rwp=gp_rwp, &
                  native_dry_layer_mass_kg_m2=RESHAPE(udm_dry_layer_mass(i,kts:kte,j),[1,kte-kts+1]), &
+                native_heat_capacity=gp_capacity, &
                  gwp=gp_gwp,hwp=gp_hwp,lambda_g=gp_lambda_g,lambda_h=gp_lambda_h,frozen_context=gp_context, &
                  direct_unscaled=swdkdir_predelta,directc_unscaled=swdkdirc_predelta, &
                  visdir_unscaled=sibvisdir_predelta,nirdir_unscaled=sibnirdir_predelta,workspace=gp_workspace,uniform_lwp=gp_uniform_lwp,uniform_rwp=gp_uniform_rwp)
@@ -12229,6 +12251,7 @@ CONTAINS
                  gp_seed,swuflx,swdflx,swhr,swuflxc,swdflxc,swhrc, &
                  swdkdir,swdkdif,swdkdirc,sibvisdir,sibvisdif,sibnirdir,sibnirdif,rwp=gp_rwp, &
                  native_dry_layer_mass_kg_m2=RESHAPE(udm_dry_layer_mass(i,kts:kte,j),[1,kte-kts+1]), &
+                native_heat_capacity=gp_capacity, &
                  direct_unscaled=swdkdir_predelta,directc_unscaled=swdkdirc_predelta, &
                  visdir_unscaled=sibvisdir_predelta,nirdir_unscaled=sibnirdir_predelta,workspace=gp_workspace, &
                  cu_lwp=gp_cu_lwp,cu_iwp=gp_cu_iwp,cu_rel=gp_cu_rel,cu_rei=gp_cu_rei,uniform_lwp=gp_uniform_lwp,uniform_rwp=gp_uniform_rwp)
@@ -12238,6 +12261,7 @@ CONTAINS
                  gp_seed,swuflx,swdflx,swhr,swuflxc,swdflxc,swhrc, &
                  swdkdir,swdkdif,swdkdirc,sibvisdir,sibvisdif,sibnirdir,sibnirdif,rwp=gp_rwp, &
                  native_dry_layer_mass_kg_m2=RESHAPE(udm_dry_layer_mass(i,kts:kte,j),[1,kte-kts+1]), &
+                native_heat_capacity=gp_capacity, &
                  direct_unscaled=swdkdir_predelta,directc_unscaled=swdkdirc_predelta, &
                  visdir_unscaled=sibvisdir_predelta,nirdir_unscaled=sibnirdir_predelta,workspace=gp_workspace,uniform_lwp=gp_uniform_lwp,uniform_rwp=gp_uniform_rwp)
              END IF

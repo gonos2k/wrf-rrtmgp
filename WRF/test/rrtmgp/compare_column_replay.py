@@ -21,7 +21,7 @@ OPTICAL_SECTIONS = {
     "HAIL_TAU_EXT", "HAIL_TAU_SCA", "HAIL_TAU_SCA_G", "FROZEN_TAU", "FROZEN_SSA", "FROZEN_G",
     "NATIVE_CLOUD_TAU", "CU_CLOUD_TAU", "NATIVE_CLOUD_SSA", "NATIVE_CLOUD_G",
     "CU_CLOUD_SSA", "CU_CLOUD_G", "CU_RL_USED", "CU_DI_USED",
-    "AUDIT_EXTRA_PRECIP_TAU", "AUDIT_EXTRA_PRECIP_TAU_RAW",
+    "UNIFORM_CF0_TAU", "AUDIT_EXTRA_PRECIP_TAU", "AUDIT_EXTRA_PRECIP_TAU_RAW",
     "AUDIT_EXTRA_PRECIP_SSA", "AUDIT_EXTRA_PRECIP_G",
 }
 MASK_SECTION = "MASK"
@@ -31,13 +31,13 @@ FLOAT_OUTPUT_SECTIONS = {
     "DIRECT_PREDELTA", "DIRECTC_PREDELTA", "VISDIR_PREDELTA", "NIRDIR_PREDELTA",
     "AUDIT_DIRECT_PREDELTA",
 }
-INTERFACE_SECTIONS = {"UP", "DN", "UPC", "DNC", "DIRECT", "DIFFUSE", "DIRECTC",
+INTERFACE_SECTIONS = {"UP_WP", "DN_WP", "UP", "DN", "UPC", "DNC", "DIRECT", "DIFFUSE", "DIRECTC",
                       "VISDIR", "VISDIF", "NIRDIR", "NIRDIF", "DIRECT_PREDELTA",
                       "DIRECTC_PREDELTA", "VISDIR_PREDELTA", "NIRDIR_PREDELTA",
                       "AUDIT_DIRECT_PREDELTA"}
-LAYER_SCALAR_SECTIONS = {"RL_USED", "DI_USED", "DS_USED", "HR", "HRC", "VMR_N2"}
+LAYER_SCALAR_SECTIONS = {"HEAT_WP_K_S", "RL_USED", "DI_USED", "DS_USED", "HR", "HRC", "VMR_N2"}
 RADIATION_SECTIONS = (OPTICAL_SECTIONS | FLOAT_OUTPUT_SECTIONS | INTERFACE_SECTIONS |
-                      LAYER_SCALAR_SECTIONS | {MASK_SECTION})
+                      LAYER_SCALAR_SECTIONS | {MASK_SECTION, "NATIVE_CAPACITY_J_M2_K"})
 WRF_SURFACE_SECTIONS = {"WRF_GLW", "WRF_OLR", "WRF_GSW", "WRF_SWDDIR", "WRF_SWDDIF"}
 REQUIRED_SECTIONS = {
     "GAS_TAU", "CLOUD_TAU", "PREPARED_TAU", "MASK", "TOTAL_TAU", "RL_USED", "DI_USED",
@@ -121,9 +121,12 @@ def read_result(path: Path) -> dict:
             raise ReplayFormatError(f"{path}:{section_line}: {name} must have shape {(nc, nl, 1)}")
         if name == "VMR_N2" and (phase != "LW" or np.any(array < 0.0) or np.any(array > 1.0)):
             raise ReplayFormatError(f"{path}:{section_line}: VMR_N2 requires LW and finite values in [0,1]")
-        if name in RADIATION_SECTIONS - INTERFACE_SECTIONS - LAYER_SCALAR_SECTIONS:
+        if name in RADIATION_SECTIONS - INTERFACE_SECTIONS - LAYER_SCALAR_SECTIONS - {"NATIVE_CAPACITY_J_M2_K"}:
             if shape[0:2] != (nc, nl):
                 raise ReplayFormatError(f"{path}:{section_line}: {name} must start with shape {(nc, nl)}")
+        if name == "NATIVE_CAPACITY_J_M2_K":
+            if shape[0] != nc or shape[2] != 1 or not 1 <= shape[1] <= nl or np.any(array <= 0.0):
+                raise ReplayFormatError(f"{path}:{section_line}: native capacity must be positive (nc, native_nl<=nl, 1)")
         if name.startswith("WRF_"):
             if name in WRF_SURFACE_SECTIONS:
                 expected_shape = (nc, 1, 1)

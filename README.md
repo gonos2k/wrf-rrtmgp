@@ -13,6 +13,8 @@
 
 ## 현재 상태
 
+기본값 OFF인 `rrtmgp_capacity_policy=1`과 `rrtmgp_liquid_size_policy=1`로 native constant-κ 복사열용량과 최종 Gamma8 액체 광학크기를 각각 선택할 수 있습니다. 단일 주기영역·serial·all-warm 연구 범위와 파일/restart 식별 규약은 [연구용 복사 옵션](WRF/doc/rrtmgp/RESEARCH_RADIATION_OPTIONS.md)에 명시합니다. [통합 실행 근거](validation/rrtmgp37/research-radiation-integration/README_ko.md)는 동일 양의 구름 입력의 네 조합과 복사 호출 사이 checkpoint를 다룹니다. 물리적 생산 승인은 별도입니다.
+
 37번을 실제 WRF 복사 초기화와 LW/SW 호출 경로에 연결했습니다. 압력·온도·기체의 기존 전처리를 재사용하고, 구름·빙정·눈은 RRTMGP 전용 입력 함수에서 준비합니다. 양의 구름분율에서는 수상별 질량을 보존합니다. WRF가 분율을 0으로 진단한 층은 명시적으로 청천 처리하며 제외 질량을 진단합니다. 장파와 단파는 함께 37로 선택하고 에어로졸·화학 피드백은 거부합니다.
 
 WRF 호출의 기본 묶음 크기는 `ncol=1`이며, CPU에서는 `WRF_RRTMGP_BATCH_SIZE=32/64/128`로 여러 기둥을 묶어 계산할 수 있습니다. MPI 4개 rank·OpenMP 2개 thread의 동일 실행파일 시험에서 1·32·64·128개 묶음의 40분 출력과 체크포인트가 일치했습니다. 이는 해당 구성의 수치 회귀 검증이며, 성능 향상·장시간 restart·둥지·실제 예보 정확도는 별도 검증 대상입니다. [묶음 계산 구현과 검증 범위](validation/rrtmgp37/column-batching-source/README.md), [WRF 이식 안내](WRF/doc/rrtmgp/README.md), [검증 기록](WRF/doc/rrtmgp/VALIDATION.md), [NOAA 적용 사례](WRF/doc/rrtmgp/NOAA.md)에 설정과 근거를 기록합니다.

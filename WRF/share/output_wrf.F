@@ -655,6 +655,12 @@ endif
       CALL wrf_put_dom_ti_integer(fid,'UDM_NUMBER_POLICY',ibuf,1,ierr)
       IF (ierr /= 0) CALL wrf_error_fatal('Cannot persist UDM number policy')
     ENDIF
+    ibuf(1)=config_flags%rrtmgp_capacity_policy
+    CALL wrf_put_dom_ti_integer(fid,"RRTMGP_CAPACITY_POLICY",ibuf,1,ierr)
+    IF(ierr/=0) CALL wrf_error_fatal("Cannot persist RRTMGP research policy")
+    ibuf(1)=config_flags%rrtmgp_liquid_size_policy
+    CALL wrf_put_dom_ti_integer(fid,"RRTMGP_LIQUID_SIZE_POLICY",ibuf,1,ierr)
+    IF(ierr/=0) CALL wrf_error_fatal("Cannot persist RRTMGP research policy")
     ibuf(1) = ra_lw_physics
     CALL wrf_put_dom_ti_integer ( fid , 'RA_LW_PHYSICS' ,  ibuf , 1 , ierr )
     ibuf(1) = ra_sw_physics
