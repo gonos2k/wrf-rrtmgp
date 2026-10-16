@@ -214,5 +214,16 @@ class AppliedRadiationEnergyStudyIntegration(unittest.TestCase):
             self.assertEqual(proc.returncode, 0, name)
 
 
+class NativeRadiationCapacityStudyIntegration(unittest.TestCase):
+    def test_explicit_caloric_candidate_and_live_positive_Gamma8(self):
+        package = ROOT / 'validation/rrtmgp37/native-radiation-capacity'
+        for name in ('verify_saved.py', 'test_saved.py'):
+            proc = subprocess.run([sys.executable, '-I', '-S', str(package / name)],
+                                  cwd=ROOT, capture_output=True, text=True, timeout=90)
+            print(proc.stdout, end='')
+            print(proc.stderr, end='')
+            self.assertEqual(proc.returncode, 0, name)
+
+
 if __name__ == '__main__':
     unittest.main()
