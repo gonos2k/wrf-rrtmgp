@@ -192,5 +192,16 @@ class ConsistentWarmInputStudyIntegration(unittest.TestCase):
             self.assertEqual(proc.returncode, 0, name)
 
 
+class HostSourceFixedPSDStudyIntegration(unittest.TestCase):
+    def test_host_source_chain_and_fixed_mass_number_PSD(self):
+        package = ROOT / 'validation/rrtmgp37/host-source-fixed-psd'
+        for name in ('verify_saved.py', 'test_saved.py'):
+            proc = subprocess.run([sys.executable, '-I', '-S', str(package / name)],
+                                  cwd=ROOT, capture_output=True, text=True, timeout=90)
+            print(proc.stdout, end='')
+            print(proc.stderr, end='')
+            self.assertEqual(proc.returncode, 0, name)
+
+
 if __name__ == '__main__':
     unittest.main()
