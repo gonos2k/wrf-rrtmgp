@@ -247,5 +247,16 @@ class SustainedResearchIntegration(unittest.TestCase):
             self.assertEqual(proc.returncode, 0, name)
 
 
+class LUTExposureAssessmentIntegration(unittest.TestCase):
+    def test_path_weighted_contributions_and_bounded_source_window(self):
+        package = ROOT / 'validation/rrtmgp37/lut-exposure-assessment'
+        for name in ('verify_saved.py', 'test_saved.py'):
+            proc = subprocess.run([sys.executable, '-I', '-S', str(package / name)],
+                                  cwd=ROOT, capture_output=True, text=True, timeout=90)
+            print(proc.stdout, end='')
+            print(proc.stderr, end='')
+            self.assertEqual(proc.returncode, 0, name)
+
+
 if __name__ == '__main__':
     unittest.main()
