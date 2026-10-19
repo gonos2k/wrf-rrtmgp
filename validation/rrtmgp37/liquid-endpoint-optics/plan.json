@@ -1,0 +1,11 @@
+{
+  "baseline_main": "66f3f7aff699638a644491cf6df674905db706a3",
+  "scope": "selected upper-limit night54300/day65100; unchanged state and path; diagnostic only",
+  "groups": {"A": "original LUT endpoint", "B": "independent Gamma8 endpoint21.5um", "C": "same independent Gamma8 actual radius"},
+  "independent_definition": {"PSD_number_shape": 8, "effective_variance": 0.1, "water_density_kg_m3": 1000, "refractive_index": "retained Segelstein25C table", "interpolation": "n linear, k log-linear versus wavelength", "optical_temperature_K": 298.15, "SW_weight": "Planck5780K over each original band in wavenumber", "LW_weight": "Planck298.15K over each original band in wavenumber", "LW_consumption": "absorption only, matching current adapter; raw extinction/scattering retained separately", "scope_limit": "isothermal spherical diagnostic, not temperature dependence or publisher LUT provenance certification"},
+  "numerical_criteria": {"coefficient_relative": 0.01, "coefficient_absolute_floor_m2_g": 1e-8, "g_absolute": 0.002, "initial_grids_radius_spectral": [[512,48],[1024,96]], "adaptive_grids": [[2048,192],[4096,384]], "failure_rule": "retain unresolved numerical failures; no accuracy approval", "transport_refinement_max_flux_W_m2": 0.02, "transport_refinement_max_heat_K_day": 0.02, "decomposition_absolute_roundoff": 1e-10},
+  "physical_acceptance": {"out_of_range_scientific_approval": false, "reason": "No independent observational/spectral uncertainty and intended-use tolerance established. Diagnostic equivalence or small differences cannot establish physical approval.", "decision_rule": "retain endpoint as research numerical guard; withhold out-of-range scientific application unless justified independent evidence supplies acceptance criteria; do not deploy new coefficients from this diagnostic alone"},
+  "preserve": ["all state and water paths", "gas", "rain/snow", "CF and mask", "seed", "native capacity", "production radius and source", "all unselected liquid layers", "exactly one SW delta scaling"],
+  "not_requested": ["new24h", "five-minute water retrace", "new production policy", "full LUT replacement", "PBL correction"],
+  "production_accepted": false
+}
