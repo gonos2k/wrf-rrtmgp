@@ -232,7 +232,9 @@ def assert_default_v4_match(actual: Path, expected: Path, phase: str) -> dict[st
     prod_names,ref_names=set(production["sections"]),set(reference["sections"])
     asymmetric=prod_names ^ ref_names
     precip_sections={"PRECIP_TAU", "PRECIP_SSA", "PRECIP_G"}
-    if not asymmetric <= precip_sections:
+    # Optional WP diagnostics are absent from older standalone protocols.
+    auxiliary_sections={"UP_WP", "DN_WP", "HEAT_WP_K_S"}
+    if not asymmetric <= precip_sections | auxiliary_sections:
         fail(f"V5/V4 {phase}: unexpected section-set difference {sorted(asymmetric)}")
     excluded={"DS_USED"} | asymmetric
     common = prod_names & ref_names

@@ -105,6 +105,8 @@
     !  Bundle up the fatal errors in one piece at the end of the file.
 
     INTEGER :: count_fatal_error
+    INTEGER :: gp_file_policy, gp_policy, gp_opt
+    CHARACTER(LEN=32) :: gp_attr
 
     !  Make sure that the input data is consistent with the current code.
 
@@ -160,6 +162,37 @@
     ! A number-bearing input/boundary/checkpoint must declare its representation.
     ! Missing metadata is legacy raw only; never silently reinterpret it as eta.
     IF (switch == input_only .OR. switch == restart_only .OR. switch == boundary_only) THEN
+      ! Independent, default-OFF research definitions; missing tags mean legacy.
+      DO gp_opt=1,2
+        IF(gp_opt==1) THEN
+          gp_policy=config_flags%rrtmgp_capacity_policy
+          gp_attr="RRTMGP_CAPACITY_POLICY"
+        ELSE
+          gp_policy=config_flags%rrtmgp_liquid_size_policy
+          gp_attr="RRTMGP_LIQUID_SIZE_POLICY"
+        ENDIF
+        IF(gp_policy<0.OR.gp_policy>1) CALL wrf_error_fatal("Unknown RRTMGP research policy")
+        gp_file_policy=0
+        CALL wrf_get_dom_ti_integer(fid,TRIM(gp_attr),gp_file_policy,1,icnt,udm_policy_ierr)
+        IF(udm_policy_ierr==0) THEN
+          IF(icnt/=1) CALL wrf_error_fatal("Malformed RRTMGP research metadata")
+        ELSE
+          IF(udm_policy_ierr/=WRF_WARN_MD_NF.AND.udm_policy_ierr/=WRF_WARN_VAR_NF.AND. &
+             udm_policy_ierr/=WRF_WARN_NETCDF) CALL wrf_error_fatal("Malformed RRTMGP research metadata")
+          gp_file_policy=0
+        ENDIF
+        IF(gp_file_policy/=gp_policy) &
+          CALL wrf_error_fatal("RRTMGP research policy differs between file and namelist: "//TRIM(gp_attr))
+      ENDDO
+      IF(config_flags%rrtmgp_capacity_policy==1.OR.config_flags%rrtmgp_liquid_size_policy==1) THEN
+#if defined(DM_PARALLEL) || defined(_OPENMP)
+        CALL wrf_error_fatal("RRTMGP research policies require a serial build")
+#endif
+        IF(config_flags%udm_number_policy/=1.OR.config_flags%udm_population_policy/=2.OR. &
+           config_flags%use_theta_m/=1.OR.config_flags%numtiles/=1.OR. &
+           config_flags%cu_physics/=0.OR.config_flags%shcu_physics/=0) &
+          CALL wrf_error_fatal("RRTMGP research policies require number=1 population=2 theta_m=1 one tile and no cumulus")
+      ENDIF
       IF (config_flags%udm_population_policy<0 .OR. config_flags%udm_population_policy>2) &
         CALL wrf_error_fatal("Unknown udm_population_policy")
       IF (config_flags%udm_population_policy>=1 .AND. config_flags%udm_number_policy/=1) &

@@ -313,6 +313,8 @@ BENCH_START(rad_driver_tim)
      &        ,P8W=grid%p_hyd_w        ,P=grid%p_hyd            ,PI=pi_phy           &
      &        ,UDM_DRY_LAYER_MASS=udm_dry_layer_mass                                  &
      &        ,UDM_DRY_DENSITY=udm_dry_density                                        &
+     &        ,rrtmgp_capacity_policy=config_flags%rrtmgp_capacity_policy &
+     &        ,rrtmgp_liquid_size_policy=config_flags%rrtmgp_liquid_size_policy &
      &        ,UDM_SEED_DAY=day                                                      &
      &        ,RADT=grid%radt          ,RA_CALL_OFFSET=grid%ra_call_offset           &
      &        ,RHO=grid%rho            ,RLWTOA=grid%rlwtoa                           &

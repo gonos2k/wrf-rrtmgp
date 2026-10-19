@@ -34,6 +34,9 @@ def extract(text: str, name: str, function: bool=False) -> str:
 def wrapper_block(text: str) -> str:
     start=text.index("               gp_snow_bootstrap=0.")
     end=text.index("               ! UDM-only:",start)
+    # The snow-only fixture ends before the separate opt-in research block.
+    research=text.find("               gp_capacity_policy=0;",start,end)
+    if research>=0: end=research
     block=text[start:end]
     if block.count("CALL udm_startup_snow_radius")!=1: raise ValueError("missing source fallback call")
     return block
