@@ -1,0 +1,68 @@
+{
+  "schema": "SUSTAINED_RESEARCH_PREREGISTRATION_V1",
+  "registered_on": "2026-10-19",
+  "baseline_commit": "038f53e9f3002f0379a0c54426559424dc278071",
+  "baseline_tree": "d143ddd13e045263603aa28e757a627bd1b0e726",
+  "executable_sha256": "2e1f099ea0a0629ceb1dbc5868dece8658666bd7a82a509473feb5789cb75e41",
+  "input_sha256": "77d5bc1664ddbb5f8d5618a0f1aec57696c5e5a87b8611a6933caa13641ef322",
+  "policies": [
+    [
+      0,
+      0
+    ],
+    [
+      1,
+      1
+    ]
+  ],
+  "fixed": {
+    "dt_seconds": 10,
+    "radiation_interval_seconds": 30,
+    "number_policy": 1,
+    "population_policy": 2,
+    "start": "1999-10-22_19:00:00",
+    "initial_physical_arrays": "identical to PR180 positive-cloud input; only the two policy attributes differ",
+    "physics_and_guards": "unchanged PR180 normal serial build"
+  },
+  "stages": [
+    {
+      "name": "hour",
+      "duration_seconds": 3600,
+      "history_interval_seconds": 60,
+      "checkpoint_interval_seconds": 1810
+    },
+    {
+      "name": "day",
+      "duration_seconds": 86400,
+      "history_interval_seconds": 300,
+      "condition": "both hour integrations complete inside the existing supported scope and diagnostics resolve no unexplained numerical failure",
+      "checkpoint_interval_seconds": 21610,
+      "restart_end_seconds": 86400,
+      "restart_history_overlap": "all common history times after checkpoint (21610 s), first next output 21900 s; retained call at 21630 s"
+    }
+  ],
+  "criteria": {
+    "completion": "SUCCESS COMPLETE WRF, no fatal, finite prognostic and radiative history values through the declared end time; no unexamined negative hydrometeor or number state",
+    "scope_exit": "Existing cold/frozen/unsupported-state fatal is SCOPE_REJECTED, not numerical failure or successful completion. Preserve the original requested duration and first available state; no guard removal, changed input, shortened success window or automatic day run.",
+    "restart": "For a completed hour integration, restart at 1810 s between radiation calls and compare every common Time-dependent history array over overlap byte-for-byte; tags, held clear/all-sky LW/SW/total tendencies, STEPRA and next capture phase must agree.",
+    "day_night": "A completed 24-hour run must include actual daytime and nighttime solar diagnostics and expected radiation call phases. One-hour completion alone cannot pass this item.",
+    "water": "Use same-time host dry layer mass, Delta(m*q), total rain accumulator once, and actual available integrated surface source. Report inventory and source differences without replacing known common PBL/PD accounting by a zero-residual criterion. Missing actual source diagnostics imply NOT_ASSESSED rather than budget PASS.",
+    "radiation_energy": "Reuse same-precision native Q and C*heating contract and the already established held-theta time definition. History-only rounded flux differences cannot certify applied-energy closure. Missing actual-application records imply NOT_ASSESSED.",
+    "comparison": "00/11 state feedback is not a same-state engine comparison and is not an accuracy test. No requirement that differences vanish.",
+    "science": "No observational acceptance, whole-model energy acceptance or original-LUT PSD certification; retain all seven closure conditions and production_accepted=false. No new scientific thresholds inferred from these outcomes."
+  },
+  "stop_rule": "Classify the discriminator first. Scope or numerical rejection ends the day/night campaign for this unchanged input; report the limiting state, not an invented fix or a passing shorter duration.",
+  "production_accepted": false,
+  "restart_output_schedule_amendment": {
+    "registered_before_aligned_restart": true,
+    "reason": "Unmodified output alarm restore uses time-to-next-ring=290 s as recurring output interval. Original full restart is preserved; its eight common history times already match all 214 arrays. A 10-minute existing-option probe confirms corrected output cadence.",
+    "settings": {
+      "override_restart_timers": true,
+      "history_begin_s": 290,
+      "history_interval_s": 300
+    },
+    "physical_state_or_radiation_schedule_changed": false,
+    "acceptance_criteria_changed": false,
+    "note": "Output timer configuration only; retain the preregistered 21610 s checkpoint, 21630 s first next radiation, 86400 s end and every originally expected common history time."
+  }
+}

@@ -236,5 +236,16 @@ class ResearchRadiationIntegration(unittest.TestCase):
             self.assertEqual(proc.returncode, 0, name)
 
 
+class SustainedResearchIntegration(unittest.TestCase):
+    def test_frozen_day_night_trajectory_and_evolved_restart(self):
+        package = ROOT / 'validation/rrtmgp37/sustained-research'
+        for name in ('verify_saved.py', 'test_saved.py'):
+            proc = subprocess.run([sys.executable, '-I', '-S', str(package / name)],
+                                  cwd=ROOT, capture_output=True, text=True, timeout=90)
+            print(proc.stdout, end='')
+            print(proc.stderr, end='')
+            self.assertEqual(proc.returncode, 0, name)
+
+
 if __name__ == '__main__':
     unittest.main()
