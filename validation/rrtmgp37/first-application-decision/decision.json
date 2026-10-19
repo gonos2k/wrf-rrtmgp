@@ -1,0 +1,91 @@
+{
+  "baseline_main": "0ae35fafb5196349cf97b4f6d64b432a86cc5fad",
+  "baseline_tree": "b8ca415354d225ad4dc6d28d8466d5b1f94e9a55",
+  "purpose": {
+    "selection": "fixed_state_radiation_diagnostic",
+    "authority": "analyst_selected_for_this_assessment_after_stated_assumption",
+    "is_approved_user_requirement": false,
+    "excluded_claims": [
+      "observational forecast accuracy",
+      "24h clipping error bound",
+      "all-radius LUT accuracy",
+      "global cloud PSD validity",
+      "all-physics host energy closure"
+    ],
+    "selection_status": "FIXED_FOR_THIS_ASSESSMENT_NOT_A_FINAL_USER_ACCURACY_REQUIREMENT"
+  },
+  "state_scope": {
+    "source_cases": [
+      "night_peak_lw",
+      "day_peak_lw",
+      "day_peak_sw"
+    ],
+    "number_policy": 1,
+    "population_policy": 2,
+    "capacity_policy": 1,
+    "liquid_size_policy": 1,
+    "native_layers": 59,
+    "geometry": "retained serial warm-periodic2x2 host captures; one column per source",
+    "optical_definition": "retained Gamma8 Segelstein25C Planck-band diagnostic; actual host state fixed",
+    "radius_coverage": "discrete evaluated selected radii only; not the interval between them",
+    "CF_and_seed": "retained original CF, mask and seed; not an overlap/occurrence reference or seed ensemble"
+  },
+  "target_contract": {
+    "boundary_quantities": [
+      "up",
+      "down",
+      "net_down"
+    ],
+    "boundaries": {
+      "surface": 0,
+      "native_top": 59
+    },
+    "layer_quantity": "temperature-equivalent heating K/day using same native capacity; all59 layers retained",
+    "phases": [
+      "LW",
+      "SW"
+    ],
+    "night_SW": "NOT_EVALUATED_ZERO_SUN_NOT_A_GENERAL_SW_APPROVAL",
+    "scientific_claim": "Accuracy of the bounded liquid-optics approximation at the named observables, conditional on unchanged gas/transport/CF/seed/capacity; not total-atmosphere absolute accuracy.",
+    "component_reference": "A qualified liquid-optics reference mapped through the same held transport/source is permitted for this component claim. A new independent RTE or Mie engine is not a newly added requirement."
+  },
+  "acceptance": {
+    "out_of_range_scientific_application": "WITHHELD",
+    "conditional_sensitivity_reuse": "SUPPORTED_FOR_RETAINED_DISCRETE_CASES",
+    "endpoint_handling": "RETAIN_RESEARCH_NUMERICAL_GUARD",
+    "production_optics_replacement": false,
+    "reason": "The selected liquid-component application lacks an intended-use error allocation and qualification/uncertainty dossier for its optical reference. Current A/B/C differences support conditional sensitivity; they are not a total-atmosphere error budget.",
+    "liquid_optics_application_accuracy": "WITHHELD",
+    "total_atmospheric_absolute_accuracy": "NOT_THE_FIRST_COMPONENT_CLAIM"
+  },
+  "error_budget": {
+    "epsilon_by_use_case": null,
+    "epsilon_authority": null,
+    "certified_numerical_error_bound": null,
+    "reference_uncertainty_bound": null,
+    "representation_uncertainty_bound": null,
+    "combination_rule": "Only if all terms are certified bounds with matching domains: abs(candidate-reference)+U_num+U_ref+U_repr <= epsilon. No root-sum-square independence assumption. Unknowns never become zero.",
+    "last_two_level_difference_is_true_error_bound": false,
+    "instrument_target_accuracy_is_model_epsilon": false,
+    "sensitivity_is_candidate_reference_error": false,
+    "acceptance_threshold_may_be_fitted_to_results": false,
+    "RFMIP_LBL_PBL_are_serial_prerequisites_for_component_judgment": false
+  },
+  "two_unconverged_absorption_coefficients": {
+    "action": "DEFER_TARGETED_REFINEMENT",
+    "reason": "Neither diagnostic coefficients nor SW absorption accuracy are being adopted; two additional converged values would not resolve reference qualification or intended-use budget.",
+    "if_needed_later": "Only SW11@22.125196um and SW12@21.5um: separate radius/spectral refinement, then examine weak-absorption computation; preserve the historical failure."
+  },
+  "next_decision_evidence": {
+    "single_dossier": "A liquid-optics reference qualification/uncertainty and intended-use error-allocation dossier for the named conditional component claim.",
+    "required_fields": [
+      "scientific intended use and epsilon authority",
+      "matching PSD/moments, RI/temperature, spectral weighting, source/boundary, occurrence",
+      "State independence from the production LUT and shared solver/data limitations accurately; do not demand a new independent kernel or double-count shared-code evidence.",
+      "numerical reference qualification including weak absorption when relevant",
+      "explicit route under original PHY-SIZE condition; no silent replacement of original criterion"
+    ]
+  },
+  "production_accepted": false,
+  "new_physical_gate_added": false
+}

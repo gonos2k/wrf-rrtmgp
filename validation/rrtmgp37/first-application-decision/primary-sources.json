@@ -1,0 +1,103 @@
+{
+  "sources": [
+    {
+      "id": "publisher_readme",
+      "url": "https://raw.githubusercontent.com/earth-system-radiation/rrtmgp-data/ea788bb39876948fa8d2c235665ccff19b4686b5/README.md",
+      "retrieved_UTC": "2026-10-19T23:52:11.478006+00:00",
+      "sha256": "682811f726153957b4e33de139e868e28c2cde44455e67af00556576404eb1d8",
+      "bytes": 877,
+      "status": "ACTUALLY_RETRIEVED_SOURCE_NOT_MODEL_REFERENCE_OUTPUT"
+    },
+    {
+      "id": "Feng2025",
+      "url": "https://repository.library.noaa.gov/view/noaa/67329/noaa_67329_DS1.pdf",
+      "retrieved_UTC": "2026-10-19T23:52:14.668893+00:00",
+      "sha256": "328d71b0f220254746bd25eec58acaa1181411d43e75b1a89b18679d18e5b1a7",
+      "bytes": 7473539,
+      "status": "ACTUALLY_RETRIEVED_SOURCE_NOT_MODEL_REFERENCE_OUTPUT"
+    },
+    {
+      "id": "ARM_SIRS2018",
+      "url": "https://www.arm.gov/publications/tech_reports/handbooks/sirs_handbook.pdf",
+      "retrieved_UTC": "2026-10-19T23:52:17.782972+00:00",
+      "sha256": "fde6dac3178059a9a241c2e2e7410202c25f9d7f575f8a974a1091dbf8c5d450",
+      "bytes": 4435159,
+      "status": "ACTUALLY_RETRIEVED_SOURCE_NOT_MODEL_REFERENCE_OUTPUT"
+    },
+    {
+      "id": "GFDL_compute_liq",
+      "url": "https://github.com/GRIPS-code/cloud_rad_scheme/blob/fe1faba475479c873c88bc98755bcb8c5bb911b1/cloud_rad_scheme/compute_liq.py",
+      "commit": "fe1faba475479c873c88bc98755bcb8c5bb911b1",
+      "sha256": "4c32f495d6e87c932e7900b6e1b75240bef15921d3bcd3ba68b39ba4d9aa3c26",
+      "bytes": 3713,
+      "status": "API_RAW_FILE_READ_NOT_EXECUTED",
+      "is_exact_paper_release_certified": false
+    },
+    {
+      "id": "GFDL_optics",
+      "url": "https://github.com/GRIPS-code/cloud_rad_scheme/blob/fe1faba475479c873c88bc98755bcb8c5bb911b1/cloud_rad_scheme/optics.py",
+      "commit": "fe1faba475479c873c88bc98755bcb8c5bb911b1",
+      "sha256": "9ca85be38321228ee36a50d726015b3e4145af86a68c069a5376d1bb754c02ea",
+      "bytes": 24146,
+      "status": "API_RAW_FILE_READ_NOT_EXECUTED",
+      "is_exact_paper_release_certified": false
+    },
+    {
+      "id": "GFDL_spec_util",
+      "url": "https://github.com/GRIPS-code/cloud_rad_scheme/blob/fe1faba475479c873c88bc98755bcb8c5bb911b1/cloud_rad_scheme/spec_util.py",
+      "commit": "fe1faba475479c873c88bc98755bcb8c5bb911b1",
+      "sha256": "199e2b703ee9ea147d71e7e1b40cb3e04025299b2f7272930e7cf2135f3c9aa1",
+      "bytes": 3602,
+      "status": "API_RAW_FILE_READ_NOT_EXECUTED",
+      "is_exact_paper_release_certified": false
+    },
+    {
+      "id": "GFDL_example",
+      "url": "https://github.com/GRIPS-code/cloud_rad_scheme/blob/fe1faba475479c873c88bc98755bcb8c5bb911b1/example_liq.py",
+      "commit": "fe1faba475479c873c88bc98755bcb8c5bb911b1",
+      "sha256": "9fe2b96668cec2e53976c71554b375bd3364113589462dc67f5cefe439a54627",
+      "bytes": 3234,
+      "status": "API_RAW_FILE_READ_NOT_EXECUTED",
+      "is_exact_paper_release_certified": false
+    }
+  ],
+  "method_facts_and_explicit_inferences": [
+    {
+      "source_ids": [
+        "publisher_readme"
+      ],
+      "finding": "Official pinned data describe cloud optics as an example implementation. This README does not state the exact liquid generating PSD, RI, temperature or band averaging.",
+      "inference": "Authentic publisher bytes and compatible units do not supply a complete population/accuracy certificate."
+    },
+    {
+      "source_ids": [
+        "Feng2025"
+      ],
+      "doi": "10.1029/2024MS004478",
+      "locations": "Sections2.1-2.2, equations2-4, pages4-5; Data Availability",
+      "finding": "The independent published method defines PSD integration and spectral averaging. Its stated LW source temperature for liquid is250K, and SW single-scattering albedo uses thick averaging with a solar spectrum.",
+      "inference": "It is not interchangeable with PR183 thin moment averaging and Planck5780/298.15K weights; reported flux agreement is not a certification of the original LUT."
+    },
+    {
+      "source_ids": [
+        "GFDL_spec_util",
+        "GFDL_compute_liq",
+        "GFDL_optics",
+        "GFDL_example"
+      ],
+      "locations": "spec_util.py lines1-5,87-99; compute_liq.py lines11-41; optics.py thin_average/thick_average; example_liq.py source definitions",
+      "finding": "The companion repository at the pinned commit imports miepython, offers thin/thick averaging, uses its own density and reference source definitions.",
+      "inference": "Potential PSD/band-integration cross-check, not an independent Mie kernel. Shared code must not be counted as two independent kernel references; this does not itself invalidate a component reference or add a new-kernel requirement. Match definitions and qualify uncertainty for the chosen claim."
+    },
+    {
+      "source_ids": [
+        "ARM_SIRS2018"
+      ],
+      "locations": "Section5.1.2 Definition of Uncertainty",
+      "finding": "Measurement uncertainty is evaluated from the measurement equation and instrument contributions.",
+      "inference": "Instrument/site uncertainty must accompany a matched observation; a generic instrument accuracy target is not a model error budget or a layer-heating-rate uncertainty."
+    }
+  ],
+  "original_LUT_definition_certified": false,
+  "qualified_reference_with_uncertainty_obtained": false
+}
