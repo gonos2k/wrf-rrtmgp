@@ -1,0 +1,13 @@
+{
+  "baseline_main":"20690e7cd3d787f723b706301148116334efb2bd",
+  "scope":"Diagnostic same atmospheric state RRTMG4 vs RRTMGP37; no forecast tendency or restart state updates",
+  "state":"Retained day source65100s LW pressure/temperature/VMRs including all121 layers, native prefix59; surface/solar/albedos from corresponding day captures",
+  "arms":{"clear":"all hydrometeor paths and CF zero","liquid":"same atmospheric/surface state, explicit deterministic CF1 liquid only in native layer30, LWP10g/m2 and effective radius21.5um; a diagnostic perturbation, not original WRF cloud sample"},
+  "common_gas_contract":"Same dry-basis VMRs and pressure-derived dry molecular columns. Reproduce native RRTMG4 pressure/VMR column formula at its REAL32 precision; pass an inverted molecule-count bridge to37 via optional gas mass. The bridge is diagnostic gas amount mapping, not host density/mass or UDM correction. Retain actual host mass/capacity separately. Verify actual4 exported COLDRY vs actual37 captured GAS_COL_DRY and gas columns.",
+  "common_surface":"same Tskin, grey emissivity, visible/NIR direct/diffuse albedo, mu0, solar constant; Earth-Sun adjustment1; zero aerosol/ice/snow/rain/CFC",
+  "cloud_sampling":"No stochastic cloud realization comparison: explicit CF0/1 replicated over each engine spectral grid. Distinct seed control does not imply paired partial-cloud sampling.",
+  "native_heating":"retain original engine4 REAL32 K/day and engine37 default pressure-cpd heating. Common Cstar is retained native host constant-kappa capacity from source. Compare Q37-Q4 over Cstar separately from conversion terms; retain native arithmetic residuals.",
+  "executions":"LW/SW x clear/liquid =4 paired processes, plus2 liquid seed controls; 12 engine calls total. One new caller object/link, reuse pinned WRF/RTE libraries, no WRF forecast runs.",
+  "predeclared_numerical_checks":{"gas_relative_match":3e-7,"RRTMG4_source_screen":"256*REAL32_epsilon*max(1,sum(abs(4 bounding fluxes))) W/m2 per layer; numerical consistency screen, not certified error bound or physical tolerance","RRTMGP37_source_screen":"256*REAL64_epsilon*max(1,sum(abs(4 bounding fluxes))) W/m2 per layer","algebra_relative":1e-10,"snapshot":"byte-identical common physical input before/after4/after37; input file unchanged","seed_control":"CF1 identical outputs for alternative seed","failure":"retain observed mismatches; do not alter coefficients, protection guard, atmospheric state or numerical screens to force output agreement"},
+  "physical_4_37_tolerance":null,"original_reference_FAIL_replaced":false,"production_accepted":false,"new_production_option":false
+}
