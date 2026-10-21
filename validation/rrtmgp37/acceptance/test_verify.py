@@ -313,5 +313,16 @@ class SpecifiedNumberBoundaryIntegration(unittest.TestCase):
             self.assertEqual(proc.returncode, 0, name)
 
 
+class SpecifiedRestartFirstStepIntegration(unittest.TestCase):
+    def test_first_native_operator_and_original_restart_criterion(self):
+        package = ROOT / 'validation/rrtmgp37/restart-first-step'
+        for name in ('verify_saved.py', 'test_saved.py'):
+            proc = subprocess.run([sys.executable, '-I', '-S', str(package / name)],
+                                  cwd=ROOT, capture_output=True, text=True, timeout=90)
+            print(proc.stdout, end='')
+            print(proc.stderr, end='')
+            self.assertEqual(proc.returncode, 0, name)
+
+
 if __name__ == '__main__':
     unittest.main()
