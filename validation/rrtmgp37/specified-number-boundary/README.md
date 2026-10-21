@@ -135,3 +135,10 @@ Older PR evidence remains bound to its exact PR187 source snapshot; it is not
 silently retagged as current-source validation. Existing RFMIP/LBLRTM FAILs and
 `production_accepted=false` are preserved. No new spectroscopy, Mie, 1024-angle,
 24-hour warm-column or 4/37 tuning campaign was performed here.
+# Historical source scope after the restart repair
+
+This package preserves PR188's original failed 23/675 host restart. Its runtime
+source is bound to the exact `3ad2efd1` snapshot when it differs from the current
+source; it is not retagged as a current-source pass. The subsequent first-operator
+localization and corrected 675/675 comparison are in
+[`../restart-first-step/README.md`](../restart-first-step/README.md).

@@ -4907,6 +4907,17 @@ BENCH_END(bc_2d_tim)
    !$OMP PARALLEL DO   &
    !$OMP PRIVATE ( ij )
    DO ij = 1 , grid%num_tiles
+      ! Final specified MU changed the edge after its physical halo was filled.
+      ! All final boundary tiles have completed above. Refresh the mass halo
+      ! before the next calc_ww_cp, as restart initialization also does.
+      IF ( config_flags%specified ) THEN
+         CALL set_physical_bc2d( grid%mu_2, 't', config_flags,             &
+                                 ids, ide, jds, jde,                     &
+                                 ims, ime, jms, jme,                     &
+                                 ips, ipe, jps, jpe,                     &
+                                 grid%i_start(ij), grid%i_end(ij),       &
+                                 grid%j_start(ij), grid%j_end(ij) )
+      ENDIF
       CALL set_w_surface( config_flags, grid%znw, fill_w_flag,              &
                            grid%w_2, grid%ht,  grid%u_2, grid%v_2,          &
                            grid%cf1, grid%cf2, grid%cf3, grid%rdx, grid%rdy,&
