@@ -1,0 +1,16 @@
+{
+  "base_commit": "b9fff6ac543e5bd2ec1b6df9eedfabbe9d81f846",
+  "scope": "actual bounded Matthew water operator ledger and radiation source ledger, with available six-hour stock/surface inventory",
+  "forcing": "unmodified PR189 corrected continuous/restart baseline; never combine the separate nonzero manufactured forcing",
+  "window": "2016-10-06 05:59--06:02, three original 60 s steps crossing the next boundary record and radiation call",
+  "production_changes": false,
+  "water_domain": "all physical mass cells, seven water species, area dx*dy/(MAPFAC_MX*MAPFAC_MY); no halo",
+  "water_terms": "measure actual final-RK PD physics, boundary relaxation and specified tendency separately; final-RK advection; microphysics; final MU and moisture overwrites; evaluation bridges and arithmetic residuals reported explicitly",
+  "rk_contract": "only final predictor changes the committed step ledger; first-RK relaxation and specified tendencies enter the final PD update once, using its actual dt",
+  "radiation": "native top distinct from extended TOA; capture fresh flux/pressure heating and actual thermal RHS assembly; held source recorded at each step; missing initial native flux remains missing",
+  "numerical_criteria": "observer histories must be byte equal; ledger is an evaluation, not a preset physical conservation PASS; no residual fitted as a source or tolerance",
+  "physical_water_budget_approved": false,
+  "full_energy_budget_approved": false,
+  "frozen_physical_accuracy_approved": false,
+  "existing_restart_pass": "PR189 675/675 remains complete; no new restart campaign"
+}
