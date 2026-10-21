@@ -654,6 +654,12 @@ endif
       ibuf(1)=config_flags%udm_number_policy
       CALL wrf_put_dom_ti_integer(fid,'UDM_NUMBER_POLICY',ibuf,1,ierr)
       IF (ierr /= 0) CALL wrf_error_fatal('Cannot persist UDM number policy')
+      IF(config_flags%udm_number_policy==1.AND.config_flags%specified) THEN
+        ! The same contract is required on restart, not inferred from defaults.
+        ibuf(1)=1
+        CALL wrf_put_dom_ti_integer(fid,'UDM_SPECIFIED_NUMBER_CONTRACT',ibuf,1,ierr)
+        IF(ierr/=0) CALL wrf_error_fatal('Cannot persist UDM specified number contract')
+      ENDIF
     ENDIF
     ibuf(1)=config_flags%rrtmgp_capacity_policy
     CALL wrf_put_dom_ti_integer(fid,"RRTMGP_CAPACITY_POLICY",ibuf,1,ierr)

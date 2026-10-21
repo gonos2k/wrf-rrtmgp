@@ -225,12 +225,26 @@
         IF (udm_file_number_policy /= config_flags%udm_number_policy) &
           CALL wrf_error_fatal("UDM number representation differs between file and namelist; explicit conversion required")
         IF (config_flags%udm_number_policy == 1) THEN
-          ! No eta producer/transform exists for lateral or nested boundaries.
-          ! Reject on input, before a correctly tagged file can enter that path.
-          IF (config_flags%specified .OR. config_flags%nested .OR. &
-              config_flags%max_dom /= 1 .OR. grid%id /= 1 .OR. &
-              .NOT. config_flags%periodic_x .OR. .NOT. config_flags%periodic_y) &
-            CALL wrf_error_fatal("dry-number-grid-v1 requires one periodic domain; specified/nested boundaries unsupported")
+          ! Native specified files carry S=(c1h*mu_d+c2h)*eta and dS/dt.
+          ! Only this explicitly encoded, single-domain serial contract is new.
+          IF (config_flags%nested .OR. config_flags%max_dom /= 1 .OR. grid%id /= 1) &
+            CALL wrf_error_fatal("dry-number-grid-v1 requires one domain; nested boundaries unsupported")
+          IF (config_flags%specified) THEN
+#if defined(DM_PARALLEL) || defined(_OPENMP)
+            CALL wrf_error_fatal("UDM specified dry-number boundaries require a serial build")
+#endif
+            IF (config_flags%periodic_x.OR.config_flags%periodic_y.OR.config_flags%numtiles/=1.OR. &
+                .NOT.config_flags%have_bcs_scalar.OR..NOT.config_flags%have_bcs_moist.OR. &
+                config_flags%udm_population_policy/=0.OR.config_flags%rrtmgp_capacity_policy/=0.OR. &
+                config_flags%rrtmgp_liquid_size_policy/=0) &
+              CALL wrf_error_fatal("UDM specified dry-number boundaries require one tile, nonperiodic, population0, moisture/scalar BCs and research radiation OFF")
+            gp_file_policy=0
+            CALL wrf_get_dom_ti_integer(fid,"UDM_SPECIFIED_NUMBER_CONTRACT",gp_file_policy,1,icnt,udm_policy_ierr)
+            IF(udm_policy_ierr/=0.OR.icnt/=1.OR.gp_file_policy/=1) &
+              CALL wrf_error_fatal("UDM specified number input/boundary/restart requires encoded S_eta contract=1")
+          ELSE IF (.NOT.config_flags%periodic_x.OR..NOT.config_flags%periodic_y) THEN
+            CALL wrf_error_fatal("dry-number-grid-v1 requires periodic or explicitly encoded specified boundaries")
+          ENDIF
           IF (config_flags%mp_physics /= UDMSCHEME .OR. &
               config_flags%ra_lw_physics /= RRTMGP_LWSCHEME .OR. &
               config_flags%ra_sw_physics /= RRTMGP_SWSCHEME .OR. &

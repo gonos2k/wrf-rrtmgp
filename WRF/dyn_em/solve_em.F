@@ -2965,6 +2965,9 @@ BENCH_END(tracer_adv_tim)
              IF ( config_flags%nested .OR. &
                 ( config_flags%specified .AND. config_flags%have_bcs_scalar ) .OR. &
                 ( ( is .EQ. P_QNWFA .OR. is .EQ. P_QNIFA .OR. is .EQ. P_QNBCA) .AND. config_flags%aer_init_opt .GT. 0) ) THEN
+             ! CCN retains a constant-volume inflow reservoir and native eta
+             ! zero-gradient outflow. Do not relax it toward the file's unused QNCCN.
+             IF(.NOT.(config_flags%specified.AND.config_flags%udm_number_policy==1.AND.is==P_QNN)) THEN
 
                CALL relax_bdy_scalar ( scalar_tend(ims,kms,jms,is),                            &
                                        scalar(ims,kms,jms,is),  grid%mut,                      &
@@ -2997,6 +3000,7 @@ BENCH_END(tracer_adv_tim)
                                        grid%j_start(ij), grid%j_end(ij),                       &
                                        k_start, k_end                                          )
 
+             ENDIF ! CCN/file boundary separation
              ENDIF
            ENDIF ! b.c test for scalars
 
@@ -3061,7 +3065,7 @@ BENCH_END(tracer_adv_tim)
                                   ips,ipe, jps,jpe, kps,kpe,  & ! patch  dims
                                   grid%i_start(ij), grid%i_end(ij),  &
                                   grid%j_start(ij), grid%j_end(ij),  &
-                                  k_start, k_end                    )
+                                  k_start, k_end, dry_inverse_density=grid%alt )
              ELSE IF ( ( ( ( is .EQ. P_QNWFA ) .OR. ( is .EQ. P_QNIFA ) .OR. ( is .EQ. P_QNBCA ) ) .AND. &
                          ( config_flags%aer_init_opt .EQ. 0 ) ) &
                          .OR. &
@@ -4862,7 +4866,10 @@ BENCH_END(bc_2d_tim)
 
      scalar_species_bdy_loop_3 : DO is = PARAM_FIRST_SCALAR , num_3d_s
 
-     IF( ( config_flags%nested ) ) THEN
+     IF( config_flags%nested.OR.(config_flags%specified.AND.config_flags%udm_number_policy==1.AND. &
+         (is==P_QNC.OR.is==P_QNR)) ) THEN
+        ! Final Dirichlet values use the same coupled S_eta interpolation as
+        ! the tendency/relaxation path. Interior generated number is untouched.
         CALL spec_bdy_final   ( scalar(ims,kms,jms,is), grid%muts,                 &
                                 grid%c1h, grid%c2h, grid%msfty,                    &
                                 scalar_bxs(jms,kms,1,is),scalar_bxe(jms,kms,1,is), &

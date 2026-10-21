@@ -1,0 +1,36 @@
+{
+  "scope": "single domain, serial, number1/population0, LW37/SW37, scalar_adv_opt0, research capacity0/size0, have_bcs_moist/scalar true",
+  "boundary_contract": 1,
+  "number_fields": "QNCLOUD/QNRAIN: initial eta; file values S=(C1H*(MU+MUB)+C2H)*eta; file tendency from coupled endpoint differences",
+  "time_interpolation": "linear in stored coupled S, followed by current native mass uncoupling; not constant-volume interpolation",
+  "CCN": "constant volume ccn_conc at inflow converted with current inverse dry density; zero-gradient eta at outflow; no file relaxation or interior reset",
+  "actual_input": "PR187 exact-zero Matthew initial and all lateral condensate/number records, unchanged thermodynamic arrays",
+  "run_seconds": 21720,
+  "time_step_seconds": 60,
+  "forcing_record_seconds": 21600,
+  "restart_seconds": 21540,
+  "history_interval_seconds": 60,
+  "checks": {
+    "finite_nonnegative_numbers": true,
+    "native_boundary_value_and_tendency": true,
+    "continuous_restart_common_time_arrays": "bitwise equality for same build/config; output timer override retained",
+    "default_legacy_regression": "PR187 20-second input/config arrays"
+  },
+  "unsupported": [
+    "nested/multiple domains",
+    "MPI/OpenMP",
+    "specified population1/2",
+    "specified research capacity/size",
+    "general real.exe number1 production without explicit external conversion"
+  ],
+  "physical_accuracy_tolerance": null,
+  "production_accepted": false,
+  "seven_closure_conditions_and_reference_FAILs": "preserved",
+  "frozen_optics_addendum": {
+    "reason": "Original number1 real integration reached existing positive-hail refusal at model 1200 s. No guard change or condensate deletion.",
+    "original_attempt": "build/udm37-specified-number-run-v1",
+    "continuation_configuration": "existing explicit experimental frozen mode1, pinned pre-existing expanded table; not scientific mixed-phase approval",
+    "table": "validation/rrtmgp37/frozen-planck-coverage/expanded/frozen-ice-psd-moments.nc",
+    "sha256": "ebeafb9746164d5414a45eab4061c5c855f0f91e92be77003b3829722514fe6a"
+  }
+}
