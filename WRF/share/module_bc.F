@@ -7,6 +7,7 @@ MODULE module_bc
    USE module_configure
    USE module_wrf_error
    USE module_model_constants
+   USE, INTRINSIC :: ieee_arithmetic, ONLY: ieee_is_finite
    IMPLICIT NONE
 
 !   TYPE bcs
@@ -2464,7 +2465,7 @@ CONTAINS
                                ids,ide, jds,jde, kds,kde,  & ! domain dims
                                ims,ime, jms,jme, kms,kme,  & ! memory dims
                                ips,ipe, jps,jpe, kps,kpe,  & ! patch  dims
-                               its,ite, jts,jte, kts,kte )
+                               its,ite, jts,jte, kts,kte, dry_inverse_density )
 
 !  This subroutine sets zero gradient conditions for outflow and zero value
 !  for inflow in the boundary specified region. Note that field must be unstaggered.
@@ -2486,11 +2487,16 @@ CONTAINS
       REAL,  DIMENSION( ims:ime , kms:kme , jms:jme ), INTENT(IN   ) :: u
       REAL,  DIMENSION( ims:ime , kms:kme , jms:jme ), INTENT(IN   ) :: v
       TYPE( grid_config_rec_type ) config_flags
+      ! For UDM number1 only: ALT=1/rho_d at the current boundary stage.
+      ! Leave legacy calls and their raw-volume convention unchanged.
+      REAL, OPTIONAL, DIMENSION(ims:ime,kms:kme,jms:jme), INTENT(IN) :: dry_inverse_density
 
       INTEGER    :: i, j, k, ibs, ibe, jbs, jbe, itf, jtf, ktf, i_inner, j_inner
       INTEGER    :: b_dist, b_limit
       LOGICAL    :: periodic_x
 
+      IF(config_flags%udm_number_policy==1.AND..NOT.PRESENT(dry_inverse_density)) &
+        CALL wrf_error_fatal('UDM dry CCN inflow requires inverse dry density')
       periodic_x = config_flags%periodic_x
 
       ibs = ids
@@ -2515,7 +2521,13 @@ CONTAINS
               IF(v(i,k,j) .lt. 0.)THEN
                 field(i,k,j) = field(i_inner,k,jbs+spec_zone)
               ELSE
-                field(i,k,j) = ccn_conc ! RAS
+                IF(config_flags%udm_number_policy==1) THEN
+                  IF(.NOT.ieee_is_finite(dry_inverse_density(i,k,j)).OR.dry_inverse_density(i,k,j)<=0.) &
+                    CALL wrf_error_fatal('UDM dry CCN inflow has invalid inverse dry density')
+                  field(i,k,j)=ccn_conc*dry_inverse_density(i,k,j)
+                ELSE
+                  field(i,k,j) = ccn_conc ! legacy volume number
+                ENDIF
               ENDIF
             ENDDO
           ENDDO
@@ -2535,7 +2547,13 @@ CONTAINS
               IF(v(i,k,j+1) .gt. 0.)THEN
                 field(i,k,j) = field(i_inner,k,jbe-spec_zone)
               ELSE
-                field(i,k,j) = ccn_conc ! RAS
+                IF(config_flags%udm_number_policy==1) THEN
+                  IF(.NOT.ieee_is_finite(dry_inverse_density(i,k,j)).OR.dry_inverse_density(i,k,j)<=0.) &
+                    CALL wrf_error_fatal('UDM dry CCN inflow has invalid inverse dry density')
+                  field(i,k,j)=ccn_conc*dry_inverse_density(i,k,j)
+                ELSE
+                  field(i,k,j) = ccn_conc ! legacy volume number
+                ENDIF
               ENDIF
             ENDDO
           ENDDO
@@ -2554,7 +2572,13 @@ CONTAINS
               IF(u(i,k,j) .lt. 0.)THEN
                 field(i,k,j) = field(ibs+spec_zone,k,j_inner)
               ELSE
-                field(i,k,j) = ccn_conc ! RAS
+                IF(config_flags%udm_number_policy==1) THEN
+                  IF(.NOT.ieee_is_finite(dry_inverse_density(i,k,j)).OR.dry_inverse_density(i,k,j)<=0.) &
+                    CALL wrf_error_fatal('UDM dry CCN inflow has invalid inverse dry density')
+                  field(i,k,j)=ccn_conc*dry_inverse_density(i,k,j)
+                ELSE
+                  field(i,k,j) = ccn_conc ! legacy volume number
+                ENDIF
               ENDIF
             ENDDO
           ENDDO
@@ -2572,7 +2596,13 @@ CONTAINS
               IF(u(i+1,k,j) .gt. 0.)THEN
                 field(i,k,j) = field(ibe-spec_zone,k,j_inner)
               ELSE
-                field(i,k,j) = ccn_conc ! RAS
+                IF(config_flags%udm_number_policy==1) THEN
+                  IF(.NOT.ieee_is_finite(dry_inverse_density(i,k,j)).OR.dry_inverse_density(i,k,j)<=0.) &
+                    CALL wrf_error_fatal('UDM dry CCN inflow has invalid inverse dry density')
+                  field(i,k,j)=ccn_conc*dry_inverse_density(i,k,j)
+                ELSE
+                  field(i,k,j) = ccn_conc ! legacy volume number
+                ENDIF
               ENDIF
             ENDDO
           ENDDO

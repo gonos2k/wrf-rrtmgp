@@ -40,12 +40,13 @@ def extract(source,name):
                  'last_line':text[:b].count('\n')+1,'slice_sha256':hashlib.sha256(data.encode()).hexdigest()}
 
 ADAPTER='''module host_scalar_procedures
+use, intrinsic :: ieee_arithmetic, only: ieee_is_finite
 implicit none
 type grid_config_rec_type
  logical::nested=.false.,specified=.false.,periodic_x=.false.,periodic_y=.false.
  logical::symmetric_xs=.false.,symmetric_xe=.false.,symmetric_ys=.false.,symmetric_ye=.false.
  logical::open_xs=.false.,open_xe=.false.,open_ys=.false.,open_ye=.false.,polar=.false.
- integer::rk_ord=3,h_sca_adv_order=2,v_sca_adv_order=2
+ integer::rk_ord=3,h_sca_adv_order=2,v_sca_adv_order=2,udm_number_policy=0
 end type
 character(1024)::wrf_err_message
 contains

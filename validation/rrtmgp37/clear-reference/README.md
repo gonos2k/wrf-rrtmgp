@@ -153,3 +153,8 @@ Five semantic tests reject physical approval promotion, extended-TOA substitutio
 index-only spectral matching, boundary-support promotion and failed refinement.
 The existing acceptance runner adds this replay without making another top-level
 gate. Physical tolerances remain unspecified and were not invented from results.
+
+After the specified-number implementation changes input/boundary sources, this
+PR187 package remains a historical replay. The central historical-source binding
+checks the original bytes/digests and reports `current_runtime_source_matches=false`;
+it does not certify the new specified-boundary implementation.
