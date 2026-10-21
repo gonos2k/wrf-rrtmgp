@@ -125,6 +125,12 @@ Only native-kernel v4 and scope-probe v3 qualify against the current code; earli
 development journals are retained separately. Local producer tests number five;
 saved semantic counterexamples number six. Saved replay adds zero model runs.
 
+The pre-existing source-extraction transport fixture also ran at O0/O2 against
+the changed boundary routine. Its minimal adapter now imports `ieee_is_finite`
+and declares `udm_number_policy=0`; its original legacy arithmetic and boundary
+assertions are unchanged. This adapter update is not a production source change
+or a new WRF forecast. Registration hashes cover the current boundary sources.
+
 Older PR evidence remains bound to its exact PR187 source snapshot; it is not
 silently retagged as current-source validation. Existing RFMIP/LBLRTM FAILs and
 `production_accepted=false` are preserved. No new spectroscopy, Mie, 1024-angle,
