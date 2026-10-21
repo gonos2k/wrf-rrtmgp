@@ -1,0 +1,2707 @@
+{
+  "status": "FIXED_REAL_24H_EVALUATED",
+  "target_period_completed": true,
+  "planned_seconds": 86400,
+  "completed_seconds": 86400,
+  "model_steps": 1440,
+  "history_records": 25,
+  "completed_spatial_comparison": {
+    "status": "SAME_SUPPORT_CU_COMPARISON_COMPLETE",
+    "normalization": "every component uses the same original whole physical-domain area, including interior/outer contributions",
+    "area_m2": 6706117114499.239,
+    "steps": [
+      {
+        "source_time_s": 21540,
+        "start": "2016-10-06_05:59:00",
+        "end": "2016-10-06_06:00:00",
+        "precipitation": {
+          "RAINC": {
+            "all_domain_mean_kg_m2": 0.00521973678963294,
+            "interior_contribution_kg_m2": 0.005214307847031856,
+            "outer_contribution_kg_m2": 5.428942601084002e-06
+          },
+          "RAINNC": {
+            "all_domain_mean_kg_m2": 0.0007119862013179317,
+            "interior_contribution_kg_m2": 0.0007119862013179317,
+            "outer_contribution_kg_m2": 0.0
+          },
+          "RAINSH": {
+            "all_domain_mean_kg_m2": 0.0,
+            "interior_contribution_kg_m2": 0.0,
+            "outer_contribution_kg_m2": 0.0
+          }
+        },
+        "actual_CU_moisture_increment_kg_m2": -0.005152382216169704,
+        "CU_plus_full_precipitation_kg_m2": 6.734950956191151e-05,
+        "CU_plus_interior_precipitation_kg_m2": 6.192563086215158e-05,
+        "outer_precipitation_kept_separately_kg_m2": 5.428942601084002e-06,
+        "native_sum_evaluation_difference_kg_m2": -5.063901324306452e-09,
+        "native_before_microphysics_counter_reconstructed_kg_m2": 0.005219731725728386,
+        "native_during_microphysics_counter_reconstructed_kg_m2": 0.0007119904180382557
+      },
+      {
+        "source_time_s": 21600,
+        "start": "2016-10-06_06:00:00",
+        "end": "2016-10-06_06:01:00",
+        "precipitation": {
+          "RAINC": {
+            "all_domain_mean_kg_m2": 0.005219736928195209,
+            "interior_contribution_kg_m2": 0.005214307985594125,
+            "outer_contribution_kg_m2": 5.428942601084002e-06
+          },
+          "RAINNC": {
+            "all_domain_mean_kg_m2": 0.000715254445799143,
+            "interior_contribution_kg_m2": 0.000715254445799143,
+            "outer_contribution_kg_m2": 0.0
+          },
+          "RAINSH": {
+            "all_domain_mean_kg_m2": 0.0,
+            "interior_contribution_kg_m2": 0.0,
+            "outer_contribution_kg_m2": 0.0
+          }
+        },
+        "actual_CU_moisture_increment_kg_m2": -0.005011945688416399,
+        "CU_plus_full_precipitation_kg_m2": 0.00020779345552459342,
+        "CU_plus_interior_precipitation_kg_m2": 0.0002023622971777262,
+        "outer_precipitation_kept_separately_kg_m2": 5.428942601084002e-06,
+        "native_sum_evaluation_difference_kg_m2": 2.215745783032408e-09,
+        "native_before_microphysics_counter_reconstructed_kg_m2": 0.005219739143946098,
+        "native_during_microphysics_counter_reconstructed_kg_m2": 0.0007152520422299152
+      },
+      {
+        "source_time_s": 21660,
+        "start": "2016-10-06_06:01:00",
+        "end": "2016-10-06_06:02:00",
+        "precipitation": {
+          "RAINC": {
+            "all_domain_mean_kg_m2": 0.005219736944383781,
+            "interior_contribution_kg_m2": 0.005214308001782697,
+            "outer_contribution_kg_m2": 5.428942601084002e-06
+          },
+          "RAINNC": {
+            "all_domain_mean_kg_m2": 0.0007177305532595608,
+            "interior_contribution_kg_m2": 0.0007177305532595608,
+            "outer_contribution_kg_m2": 0.0
+          },
+          "RAINSH": {
+            "all_domain_mean_kg_m2": 0.0,
+            "interior_contribution_kg_m2": 0.0,
+            "outer_contribution_kg_m2": 0.0
+          }
+        },
+        "actual_CU_moisture_increment_kg_m2": -0.004870902591465245,
+        "CU_plus_full_precipitation_kg_m2": 0.00034883417944293817,
+        "CU_plus_interior_precipitation_kg_m2": 0.0003434054103174525,
+        "outer_precipitation_kept_separately_kg_m2": 5.428942601084002e-06,
+        "native_sum_evaluation_difference_kg_m2": -1.734755984694747e-10,
+        "native_before_microphysics_counter_reconstructed_kg_m2": 0.005219736770906424,
+        "native_during_microphysics_counter_reconstructed_kg_m2": 0.0007177288512403004
+      }
+    ],
+    "sum_interior_CU_residual_kg_m2": 0.0006076933383573303,
+    "sum_outer_precipitation_kg_m2": 1.6286827803252005e-05,
+    "finding": "Outer precipitation explains only part of the old CU residual. Increasing interior residual requires the actual tendency/precipitation time contract; not a production defect declaration.",
+    "water_conservation_approved": false,
+    "new_model_runs": 0
+  },
+  "original_three_minute_timing_attribution": [
+    {
+      "source_time_s": 21540,
+      "same_support_CU_residual": 6.192563085953594e-05,
+      "active_paired_residual": 5.9145545442826556e-05,
+      "inactive_positive_rain": 0.0,
+      "source_without_positive_rain": 2.779733032364518e-06,
+      "counter_rounding": 3.5253374200974054e-10,
+      "tendency_addition_rounding": -1.4939859285831033e-13,
+      "column_categories": {
+        "source_time_s": 21540,
+        "CU_driver_scheduled": true,
+        "previous_post_expiry_inactive_rain_kg_m2_for_60s": 0.000879854662271898,
+        "inactive_rain_change_across_step_start_kg_m2": -0.000879854662271898,
+        "columns": [
+          {
+            "category": 1,
+            "source_kg_m2": -0.005155161949052671,
+            "rain_kg_m2": 0.005214307494495498,
+            "columns": 1124,
+            "rain_on_NCA_nonpositive_kg_m2": 0.0
+          },
+          {
+            "category": 2,
+            "source_kg_m2": 0.0,
+            "rain_kg_m2": 0.0,
+            "columns": 0,
+            "rain_on_NCA_nonpositive_kg_m2": 0.0
+          },
+          {
+            "category": 3,
+            "source_kg_m2": 2.779733032364518e-06,
+            "rain_kg_m2": 0.0,
+            "columns": 510,
+            "rain_on_NCA_nonpositive_kg_m2": 0.0
+          },
+          {
+            "category": 4,
+            "source_kg_m2": 0.0,
+            "rain_kg_m2": 0.0,
+            "columns": 6902,
+            "rain_on_NCA_nonpositive_kg_m2": 0.0
+          }
+        ]
+      },
+      "expiry": {
+        "source_time_s": 21540,
+        "expired_interior_columns": 16,
+        "water_tendency_before_kg_s": -15696394.579070123,
+        "water_tendency_after_kg_s": 0.0,
+        "same_selected_PRATEC_kg_s": 15854064.116225822,
+        "new_inactive_positive_rain_kg_m2_per_next_60s": 0.00014184718678963615
+      }
+    },
+    {
+      "source_time_s": 21600,
+      "same_support_CU_residual": 0.00020236229718210614,
+      "active_paired_residual": 5.7734886442952936e-05,
+      "inactive_positive_rain": 0.00014184718678963615,
+      "source_without_positive_rain": 2.7797342698370155e-06,
+      "counter_rounding": 4.911030080266202e-10,
+      "tendency_addition_rounding": -1.4233287981803845e-12,
+      "column_categories": {
+        "source_time_s": 21600,
+        "CU_driver_scheduled": false,
+        "previous_post_expiry_inactive_rain_kg_m2_for_60s": 0.00014184718678963615,
+        "inactive_rain_change_across_step_start_kg_m2": 0.0,
+        "columns": [
+          {
+            "category": 1,
+            "source_kg_m2": -0.005014725421262908,
+            "rain_kg_m2": 0.005072460307705861,
+            "columns": 1108,
+            "rain_on_NCA_nonpositive_kg_m2": 0.0
+          },
+          {
+            "category": 2,
+            "source_kg_m2": 0.0,
+            "rain_kg_m2": 0.00014184718678963615,
+            "columns": 16,
+            "rain_on_NCA_nonpositive_kg_m2": 0.00014184718678963615
+          },
+          {
+            "category": 3,
+            "source_kg_m2": 2.7797342698370155e-06,
+            "rain_kg_m2": 0.0,
+            "columns": 510,
+            "rain_on_NCA_nonpositive_kg_m2": 0.0
+          },
+          {
+            "category": 4,
+            "source_kg_m2": 0.0,
+            "rain_kg_m2": 0.0,
+            "columns": 6902,
+            "rain_on_NCA_nonpositive_kg_m2": 0.0
+          }
+        ]
+      },
+      "expiry": {
+        "source_time_s": 21600,
+        "expired_interior_columns": 21,
+        "water_tendency_before_kg_s": -15764191.606073635,
+        "water_tendency_after_kg_s": 0.0,
+        "same_selected_PRATEC_kg_s": 15931721.261853034,
+        "new_inactive_positive_rain_kg_m2_per_next_60s": 0.00014254198955822455
+      }
+    },
+    {
+      "source_time_s": 21660,
+      "same_support_CU_residual": 0.0003434054103195085,
+      "active_paired_residual": 5.62359928992529e-05,
+      "inactive_positive_rain": 0.0002843891763478607,
+      "source_without_positive_rain": 2.7797324915220544e-06,
+      "counter_rounding": 5.072892515158271e-10,
+      "tendency_addition_rounding": 1.2916216499587462e-12,
+      "column_categories": {
+        "source_time_s": 21660,
+        "CU_driver_scheduled": false,
+        "previous_post_expiry_inactive_rain_kg_m2_for_60s": 0.0002843891763478607,
+        "inactive_rain_change_across_step_start_kg_m2": 0.0,
+        "columns": [
+          {
+            "category": 1,
+            "source_kg_m2": -0.004873682325248389,
+            "rain_kg_m2": 0.004929918318147641,
+            "columns": 1087,
+            "rain_on_NCA_nonpositive_kg_m2": 0.0
+          },
+          {
+            "category": 2,
+            "source_kg_m2": 0.0,
+            "rain_kg_m2": 0.0002843891763478607,
+            "columns": 37,
+            "rain_on_NCA_nonpositive_kg_m2": 0.0002843891763478607
+          },
+          {
+            "category": 3,
+            "source_kg_m2": 2.7797324915220544e-06,
+            "rain_kg_m2": 0.0,
+            "columns": 510,
+            "rain_on_NCA_nonpositive_kg_m2": 0.0
+          },
+          {
+            "category": 4,
+            "source_kg_m2": 0.0,
+            "rain_kg_m2": 0.0,
+            "columns": 6902,
+            "rain_on_NCA_nonpositive_kg_m2": 0.0
+          }
+        ]
+      },
+      "expiry": {
+        "source_time_s": 21660,
+        "expired_interior_columns": 12,
+        "water_tendency_before_kg_s": -11059514.147267867,
+        "water_tendency_after_kg_s": 0.0,
+        "same_selected_PRATEC_kg_s": 11172389.980103333,
+        "new_inactive_positive_rain_kg_m2_per_next_60s": 9.995998986609649e-05
+      }
+    }
+  ],
+  "whole_period_water_terms_kg_m2": {
+    "dW": -0.13523411233206706,
+    "P_full": 8.604889827781943,
+    "E_native_support": 5.033672187144358,
+    "QFX_outer_unapplied": 0.17433666102055867,
+    "advection_operator": 2.32185882146942,
+    "relaxation": 0.7580892614549768,
+    "specified_tendency": -0.08053702340813296,
+    "final_MU": -1.4281550465757355e-09,
+    "final_q": 1.0196866544748108e-07,
+    "PBL": 4.955053254045671,
+    "CU": -6.592715734655462,
+    "microphysics": -1.4950201012548354,
+    "PBL_minus_E": -0.07861893309868713,
+    "CU_plus_RAINC_full": 0.5157145824325645,
+    "CU_plus_RAINC_interior": 0.4931971795085635,
+    "RAINC_outer_kept": 0.022517402924001065,
+    "CU_active_paired_residual": 0.07762347694871632,
+    "CU_inactive_positive_rain": 0.4109073876795157,
+    "CU_tendency_without_positive_rain": 0.0046654862462229855,
+    "microphysics_plus_its_RAINNC": 0.0014394094390816593,
+    "other_physics_mixing": -0.00196775255985506,
+    "PD_arithmetic": 5.3439470577290266e-06,
+    "RK_arithmetic": -2.8191141782107527e-07,
+    "source_assembly_to_PD_change": 0.0,
+    "other_final_RK_source": 0.0,
+    "evaluation_bridges": 0.0,
+    "operator_reconstruction_residual": 4.2662883757770295e-19,
+    "stock_surface_boundary_residual": 0.4365723682487439,
+    "CU_rate_counter_rounding": 8.287133845278521e-07,
+    "CU_addition_rounding": -7.92759972807235e-11,
+    "RAINC_change_outside_advance_ppt": 0.0,
+    "RAINNC_change_outside_microphysics": 0.0,
+    "RAINSH_increment_full": 0.0
+  },
+  "hourly_water": [
+    {
+      "hour": 0,
+      "completed_steps": 60,
+      "start_s": 0,
+      "end_s": 3600,
+      "W_start_kg_m2": 46.78419014100353,
+      "W_end_kg_m2": 46.90539094168371,
+      "dW": 0.12120080068019064,
+      "P_full": 0.13000090634336955,
+      "E_native_support": 0.1890047751137977,
+      "QFX_outer_unapplied": 0.005958570302561565,
+      "advection_operator": 0.07559358636140964,
+      "relaxation": -0.013385663514311336,
+      "specified_tendency": -0.002109413479917328,
+      "final_MU": -1.5156963897966464e-09,
+      "final_q": -6.714621401800917e-08,
+      "PBL": 0.1860918134481424,
+      "CU": -0.09060083936442674,
+      "other_physics_mixing": -0.0002483216920428248,
+      "microphysics": -0.034140414302318844,
+      "PD_arithmetic": 1.4802035242994038e-07,
+      "RK_arithmetic": -2.613478634430542e-08,
+      "source_assembly_to_PD_change": 0.0,
+      "other_final_RK_source": 0.0,
+      "evaluation_bridges": 0.0,
+      "operator_reconstruction_residual": 0.0,
+      "stock_surface_boundary_residual": 0.002098491204491904,
+      "PBL_minus_E": -0.0029129616656553238,
+      "CU_plus_RAINC_full": 0.004342658033427805,
+      "CU_plus_RAINC_interior": 0.004033194276770553,
+      "RAINC_outer_kept": 0.00030946375665725205,
+      "RAINC_change_outside_advance_ppt": 0.0,
+      "RAINNC_change_outside_microphysics": 0.0,
+      "microphysics_plus_its_RAINNC": 0.0009169946431961622,
+      "CU_rate_counter_rounding": 4.268900767781227e-10,
+      "CU_addition_rounding": -4.3160135666548514e-12,
+      "CU_active_paired_residual": 0.0010092337557772253,
+      "CU_inactive_positive_rain": 0.0029636773645910766,
+      "CU_tendency_without_positive_rain": 6.028273382818755e-05,
+      "CU_none": 0.0,
+      "RAINSH_increment_full": 0.0
+    },
+    {
+      "hour": 1,
+      "completed_steps": 60,
+      "start_s": 3600,
+      "end_s": 7200,
+      "W_start_kg_m2": 46.90539094168371,
+      "W_end_kg_m2": 46.87344836644065,
+      "dW": -0.03194257524306345,
+      "P_full": 0.2737109635237226,
+      "E_native_support": 0.1986534714657093,
+      "QFX_outer_unapplied": 0.00603628189919183,
+      "advection_operator": 0.05666417621111272,
+      "relaxation": -0.020577269536959316,
+      "specified_tendency": -0.002109413479917429,
+      "final_MU": -8.537541027461652e-10,
+      "final_q": -4.012989117326136e-08,
+      "PBL": 0.19553648969844,
+      "CU": -0.1827745534917797,
+      "other_physics_mixing": -0.00020336781827747408,
+      "microphysics": -0.07847885004548555,
+      "PD_arithmetic": 2.2025147568094742e-07,
+      "RK_arithmetic": 3.3951972871332995e-08,
+      "source_assembly_to_PD_change": 0.0,
+      "other_final_RK_source": 0.0,
+      "evaluation_bridges": 0.0,
+      "operator_reconstruction_residual": 0.0,
+      "stock_surface_boundary_residual": 0.009137464604359161,
+      "PBL_minus_E": -0.0031169817672692937,
+      "CU_plus_RAINC_full": 0.012407879198859873,
+      "CU_plus_RAINC_interior": 0.01146912052257772,
+      "RAINC_outer_kept": 0.000938758676282152,
+      "RAINC_change_outside_advance_ppt": 0.0,
+      "RAINNC_change_outside_microphysics": 0.0,
+      "microphysics_plus_its_RAINNC": 4.968078759750374e-05,
+      "CU_rate_counter_rounding": -1.0365213792067893e-08,
+      "CU_addition_rounding": -2.8369674333632538e-11,
+      "CU_active_paired_residual": 0.002067642586558302,
+      "CU_inactive_positive_rain": 0.0092896884973031,
+      "CU_tendency_without_positive_rain": 0.00011179983229978278,
+      "CU_none": 0.0,
+      "RAINSH_increment_full": 0.0
+    },
+    {
+      "hour": 2,
+      "completed_steps": 60,
+      "start_s": 7200,
+      "end_s": 10800,
+      "W_start_kg_m2": 46.87344836644065,
+      "W_end_kg_m2": 46.80783439816869,
+      "dW": -0.06561396827196171,
+      "P_full": 0.3055478427888456,
+      "E_native_support": 0.19912041315378853,
+      "QFX_outer_unapplied": 0.006002619612872567,
+      "advection_operator": 0.05302306873063558,
+      "relaxation": -0.023184556000099003,
+      "specified_tendency": -0.002109413479917198,
+      "final_MU": 6.518693940713307e-09,
+      "final_q": -1.799166126090083e-08,
+      "PBL": 0.1959637252387099,
+      "CU": -0.22461521557539954,
+      "other_physics_mixing": -0.00016019019429361394,
+      "microphysics": -0.06453150173799416,
+      "PD_arithmetic": 1.5919652739649212e-07,
+      "RK_arithmetic": -3.297716375289175e-08,
+      "source_assembly_to_PD_change": 0.0,
+      "other_final_RK_source": 0.0,
+      "evaluation_bridges": 0.0,
+      "operator_reconstruction_residual": 0.0,
+      "stock_surface_boundary_residual": 0.013084373585443326,
+      "PBL_minus_E": -0.0031566879150786427,
+      "CU_plus_RAINC_full": 0.016373815733030254,
+      "CU_plus_RAINC_interior": 0.015427801279881397,
+      "RAINC_outer_kept": 0.000946014453148858,
+      "RAINC_change_outside_advance_ppt": 0.0,
+      "RAINNC_change_outside_microphysics": 0.0,
+      "microphysics_plus_its_RAINNC": 2.7309742421685475e-05,
+      "CU_rate_counter_rounding": -1.755220943830783e-08,
+      "CU_addition_rounding": 2.0659500322023366e-11,
+      "CU_active_paired_residual": 0.0025539883892722326,
+      "CU_inactive_positive_rain": 0.012748581623310528,
+      "CU_tendency_without_positive_rain": 0.00012524879884857172,
+      "CU_none": 0.0,
+      "RAINSH_increment_full": 0.0
+    },
+    {
+      "hour": 3,
+      "completed_steps": 60,
+      "start_s": 10800,
+      "end_s": 14400,
+      "W_start_kg_m2": 46.80783439816869,
+      "W_end_kg_m2": 46.70822094932084,
+      "dW": -0.09961344884785203,
+      "P_full": 0.34021702212268573,
+      "E_native_support": 0.19844456110263145,
+      "QFX_outer_unapplied": 0.005974835321711725,
+      "advection_operator": 0.05326821875254344,
+      "relaxation": -0.022953235829562945,
+      "specified_tendency": -0.0021094134799168104,
+      "final_MU": -3.0909093363705453e-09,
+      "final_q": -1.8582353301073435e-08,
+      "PBL": 0.1952961630215159,
+      "CU": -0.25865729128592985,
+      "other_physics_mixing": -0.00012542603807344917,
+      "microphysics": -0.06433258263807405,
+      "PD_arithmetic": 1.5122097271438876e-07,
+      "RK_arithmetic": -1.0898064359218376e-08,
+      "source_assembly_to_PD_change": 0.0,
+      "other_final_RK_source": 0.0,
+      "evaluation_bridges": 0.0,
+      "operator_reconstruction_residual": 0.0,
+      "stock_surface_boundary_residual": 0.013953464402401217,
+      "PBL_minus_E": -0.0031483980811155576,
+      "CU_plus_RAINC_full": 0.017200997213763516,
+      "CU_plus_RAINC_interior": 0.016518177133630553,
+      "RAINC_outer_kept": 0.0006828200801329649,
+      "RAINC_change_outside_advance_ppt": 0.0,
+      "RAINNC_change_outside_microphysics": 0.0,
+      "microphysics_plus_its_RAINNC": 2.6150984918352122e-05,
+      "CU_rate_counter_rounding": -6.3735283131055286e-09,
+      "CU_addition_rounding": 2.953971586629684e-11,
+      "CU_active_paired_residual": 0.002926181598833237,
+      "CU_inactive_positive_rain": 0.013447670129464833,
+      "CU_tendency_without_positive_rain": 0.00014433174932108374,
+      "CU_none": 0.0,
+      "RAINSH_increment_full": 0.0
+    },
+    {
+      "hour": 4,
+      "completed_steps": 60,
+      "start_s": 14400,
+      "end_s": 18000,
+      "W_start_kg_m2": 46.70822094932084,
+      "W_end_kg_m2": 46.60734361035593,
+      "dW": -0.10087733896490457,
+      "P_full": 0.3542477984341398,
+      "E_native_support": 0.19681797982697216,
+      "QFX_outer_unapplied": 0.005944592008729579,
+      "advection_operator": 0.047701410873012905,
+      "relaxation": -0.006291421437318021,
+      "specified_tendency": -0.0021094134799167553,
+      "final_MU": 2.565288483078422e-09,
+      "final_q": -4.097998257528509e-08,
+      "PBL": 0.1936937785055561,
+      "CU": -0.2799957891520282,
+      "other_physics_mixing": -9.663888495625611e-05,
+      "microphysics": -0.05377946065337328,
+      "PD_arithmetic": 2.3173911337615645e-07,
+      "RK_arithmetic": 1.9396996541033776e-09,
+      "source_assembly_to_PD_change": 0.0,
+      "other_final_RK_source": 0.0,
+      "evaluation_bridges": 0.0,
+      "operator_reconstruction_residual": 0.0,
+      "stock_surface_boundary_residual": 0.017251942101179016,
+      "PBL_minus_E": -0.0031242013214160353,
+      "CU_plus_RAINC_full": 0.020454937029758313,
+      "CU_plus_RAINC_interior": 0.01975491601154376,
+      "RAINC_outer_kept": 0.0007000210182145552,
+      "RAINC_change_outside_advance_ppt": 0.0,
+      "RAINNC_change_outside_microphysics": 0.0,
+      "microphysics_plus_its_RAINNC": 1.7611598979966688e-05,
+      "CU_rate_counter_rounding": -2.577427929456719e-08,
+      "CU_addition_rounding": 9.034286576160933e-13,
+      "CU_active_paired_residual": 0.003179175409397706,
+      "CU_inactive_positive_rain": 0.01642179720783963,
+      "CU_tendency_without_positive_rain": 0.0001539691676822869,
+      "CU_none": 0.0,
+      "RAINSH_increment_full": 0.0
+    },
+    {
+      "hour": 5,
+      "completed_steps": 60,
+      "start_s": 18000,
+      "end_s": 21600,
+      "W_start_kg_m2": 46.60734361035593,
+      "W_end_kg_m2": 46.52358273669008,
+      "dW": -0.08376087366585518,
+      "P_full": 0.34974994467759013,
+      "E_native_support": 0.19530638239311576,
+      "QFX_outer_unapplied": 0.005926685271426024,
+      "advection_operator": 0.04219852805064041,
+      "relaxation": 0.013690503248855472,
+      "specified_tendency": -0.0021094134799170237,
+      "final_MU": 7.81258724019648e-09,
+      "final_q": -3.097252425713263e-08,
+      "PBL": 0.19220096837884013,
+      "CU": -0.2855090691616768,
+      "other_physics_mixing": -7.359197806977878e-05,
+      "microphysics": -0.04415886651205435,
+      "PD_arithmetic": 1.8616560605071012e-07,
+      "RK_arithmetic": -9.52181422511078e-08,
+      "source_assembly_to_PD_change": 0.0,
+      "other_final_RK_source": 0.0,
+      "evaluation_bridges": 0.0,
+      "operator_reconstruction_residual": 0.0,
+      "stock_surface_boundary_residual": 0.01690309395897735,
+      "PBL_minus_E": -0.003105414014275658,
+      "CU_plus_RAINC_full": 0.02007024882719257,
+      "CU_plus_RAINC_interior": 0.019545913498904013,
+      "RAINC_outer_kept": 0.0005243353282885558,
+      "RAINC_change_outside_advance_ppt": 0.0,
+      "RAINNC_change_outside_microphysics": 0.0,
+      "microphysics_plus_its_RAINNC": 1.1760176666418995e-05,
+      "CU_rate_counter_rounding": 1.2415951262978162e-09,
+      "CU_addition_rounding": 2.957092860089248e-11,
+      "CU_active_paired_residual": 0.0032877816273254963,
+      "CU_inactive_positive_rain": 0.016100090327271697,
+      "CU_tendency_without_positive_rain": 0.00015804027314076106,
+      "CU_none": 0.0,
+      "RAINSH_increment_full": 0.0
+    },
+    {
+      "hour": 6,
+      "completed_steps": 60,
+      "start_s": 21600,
+      "end_s": 25200,
+      "W_start_kg_m2": 46.52358273669008,
+      "W_end_kg_m2": 46.45765762826312,
+      "dW": -0.06592510842695933,
+      "P_full": 0.3599044262870569,
+      "E_native_support": 0.19400671713951195,
+      "QFX_outer_unapplied": 0.005898616113366688,
+      "advection_operator": 0.052585542002048444,
+      "relaxation": 0.03194377625840311,
+      "specified_tendency": -0.002641909597385307,
+      "final_MU": 1.9707939444458834e-09,
+      "final_q": 3.0040483421387894e-08,
+      "PBL": 0.190917653212083,
+      "CU": -0.29474960619879403,
+      "other_physics_mixing": -5.8354261805102903e-05,
+      "microphysics": -0.043922344081938555,
+      "PD_arithmetic": 1.129159570729459e-07,
+      "RK_arithmetic": -1.0686805335351417e-08,
+      "source_assembly_to_PD_change": 0.0,
+      "other_final_RK_source": 0.0,
+      "evaluation_bridges": 0.0,
+      "operator_reconstruction_residual": 0.0,
+      "stock_surface_boundary_residual": 0.018085160046242003,
+      "PBL_minus_E": -0.003089063927428926,
+      "CU_plus_RAINC_full": 0.02122034128099785,
+      "CU_plus_RAINC_interior": 0.02093650847214165,
+      "RAINC_outer_kept": 0.0002838328088561999,
+      "RAINC_change_outside_advance_ppt": 0.0,
+      "RAINNC_change_outside_microphysics": 0.0,
+      "microphysics_plus_its_RAINNC": 1.2134725326442923e-05,
+      "CU_rate_counter_rounding": 6.896607023723573e-08,
+      "CU_addition_rounding": -2.750125028772047e-11,
+      "CU_active_paired_residual": 0.0034100840678484862,
+      "CU_inactive_positive_rain": 0.017354081922582382,
+      "CU_tendency_without_positive_rain": 0.00017227354314179285,
+      "CU_none": 0.0,
+      "RAINSH_increment_full": 0.0
+    },
+    {
+      "hour": 7,
+      "completed_steps": 60,
+      "start_s": 25200,
+      "end_s": 28800,
+      "W_start_kg_m2": 46.45765762826312,
+      "W_end_kg_m2": 46.40180564919224,
+      "dW": -0.055851979070879,
+      "P_full": 0.36728870050681967,
+      "E_native_support": 0.1925622231562697,
+      "QFX_outer_unapplied": 0.005862210816934613,
+      "advection_operator": 0.06933879864332594,
+      "relaxation": 0.03274284195704365,
+      "specified_tendency": -0.0026419095973854,
+      "final_MU": -3.579343991488343e-09,
+      "final_q": 1.136120368898288e-08,
+      "PBL": 0.18948685852071834,
+      "CU": -0.298122508811128,
+      "other_physics_mixing": -6.086010577962094e-05,
+      "microphysics": -0.04659543550925902,
+      "PD_arithmetic": 2.000065993646838e-07,
+      "RK_arithmetic": 2.804312608610782e-08,
+      "source_assembly_to_PD_change": 0.0,
+      "other_final_RK_source": 0.0,
+      "evaluation_bridges": 0.0,
+      "operator_reconstruction_residual": 0.0,
+      "stock_surface_boundary_residual": 0.019434759494827068,
+      "PBL_minus_E": -0.0030753646355513725,
+      "CU_plus_RAINC_full": 0.0225587740219813,
+      "CU_plus_RAINC_interior": 0.022074551077079514,
+      "RAINC_outer_kept": 0.000484222944901782,
+      "RAINC_change_outside_advance_ppt": 0.0,
+      "RAINNC_change_outside_microphysics": 0.0,
+      "microphysics_plus_its_RAINNC": 1.1982164451314287e-05,
+      "CU_rate_counter_rounding": 1.0454355000085129e-07,
+      "CU_addition_rounding": 1.3494174567723128e-11,
+      "CU_active_paired_residual": 0.003473667466538759,
+      "CU_inactive_positive_rain": 0.018403664746887653,
+      "CU_tendency_without_positive_rain": 0.0001971143066089332,
+      "CU_none": 0.0,
+      "RAINSH_increment_full": 0.0
+    },
+    {
+      "hour": 8,
+      "completed_steps": 60,
+      "start_s": 28800,
+      "end_s": 32400,
+      "W_start_kg_m2": 46.40180564919224,
+      "W_end_kg_m2": 46.34426154831638,
+      "dW": -0.057544100875858074,
+      "P_full": 0.3712272013270743,
+      "E_native_support": 0.1915643210196434,
+      "QFX_outer_unapplied": 0.00584476932358587,
+      "advection_operator": 0.08136164070567536,
+      "relaxation": 0.0237169214550019,
+      "specified_tendency": -0.0026419095973854033,
+      "final_MU": -2.583462188953091e-10,
+      "final_q": 7.464900947191128e-08,
+      "PBL": 0.1884991764510053,
+      "CU": -0.30137252055948105,
+      "other_physics_mixing": -6.743977423208852e-05,
+      "microphysics": -0.047040156100849856,
+      "PD_arithmetic": 1.8337859551304836e-07,
+      "RK_arithmetic": -7.122485103378823e-08,
+      "source_assembly_to_PD_change": 0.0,
+      "other_final_RK_source": 0.0,
+      "evaluation_bridges": 0.0,
+      "operator_reconstruction_residual": 0.0,
+      "stock_surface_boundary_residual": 0.01968205247761775,
+      "PBL_minus_E": -0.0030651445686381094,
+      "CU_plus_RAINC_full": 0.02280331349844802,
+      "CU_plus_RAINC_interior": 0.022163490403542752,
+      "RAINC_outer_kept": 0.0006398230949052687,
+      "RAINC_change_outside_advance_ppt": 0.0,
+      "RAINNC_change_outside_microphysics": 0.0,
+      "microphysics_plus_its_RAINNC": 1.1211168295441253e-05,
+      "CU_rate_counter_rounding": 9.065227946260182e-08,
+      "CU_addition_rounding": -5.971239989188506e-12,
+      "CU_active_paired_residual": 0.0035426253272908413,
+      "CU_inactive_positive_rain": 0.01841196261066675,
+      "CU_tendency_without_positive_rain": 0.00020881181927693074,
+      "CU_none": 0.0,
+      "RAINSH_increment_full": 0.0
+    },
+    {
+      "hour": 9,
+      "completed_steps": 60,
+      "start_s": 32400,
+      "end_s": 36000,
+      "W_start_kg_m2": 46.34426154831638,
+      "W_end_kg_m2": 46.3052570469964,
+      "dW": -0.039004501319981705,
+      "P_full": 0.37728033091056307,
+      "E_native_support": 0.19141367676585566,
+      "QFX_outer_unapplied": 0.0058500706934384045,
+      "advection_operator": 0.09987340416103974,
+      "relaxation": 0.02858449836781378,
+      "specified_tendency": -0.0026419095973856535,
+      "final_MU": 1.1521383936607475e-09,
+      "final_q": 4.3982931175222244e-08,
+      "PBL": 0.18834700094963644,
+      "CU": -0.30816111600080726,
+      "other_physics_mixing": -7.078776342273457e-05,
+      "microphysics": -0.044935904884320255,
+      "PD_arithmetic": 2.528539091052233e-07,
+      "RK_arithmetic": 1.5458485533164506e-08,
+      "source_assembly_to_PD_change": 0.0,
+      "other_final_RK_source": 0.0,
+      "evaluation_bridges": 0.0,
+      "operator_reconstruction_residual": 0.0,
+      "stock_surface_boundary_residual": 0.021046114758188256,
+      "PBL_minus_E": -0.0030666758162191956,
+      "CU_plus_RAINC_full": 0.02417347077689891,
+      "CU_plus_RAINC_interior": 0.023541843398985452,
+      "RAINC_outer_kept": 0.0006316273779134579,
+      "RAINC_change_outside_advance_ppt": 0.0,
+      "RAINNC_change_outside_microphysics": 0.0,
+      "microphysics_plus_its_RAINNC": 9.839248536639701e-06,
+      "CU_rate_counter_rounding": 1.0828523030379095e-07,
+      "CU_addition_rounding": -3.6529929254440285e-11,
+      "CU_active_paired_residual": 0.0036346199297016112,
+      "CU_inactive_positive_rain": 0.01970137807321489,
+      "CU_tendency_without_positive_rain": 0.00020573714736858047,
+      "CU_none": 0.0,
+      "RAINSH_increment_full": 0.0
+    },
+    {
+      "hour": 10,
+      "completed_steps": 60,
+      "start_s": 36000,
+      "end_s": 39600,
+      "W_start_kg_m2": 46.3052570469964,
+      "W_end_kg_m2": 46.289619720274274,
+      "dW": -0.015637326722123694,
+      "P_full": 0.3853218258760892,
+      "E_native_support": 0.19209564377735253,
+      "QFX_outer_unapplied": 0.005873825960253133,
+      "advection_operator": 0.12067787035980107,
+      "relaxation": 0.03873014402933212,
+      "specified_tendency": -0.0026419095973854554,
+      "final_MU": 2.1089979877358735e-09,
+      "final_q": 2.9529233775510505e-08,
+      "PBL": 0.18901770326773895,
+      "CU": -0.31456064870281647,
+      "other_physics_mixing": -7.202134322056992e-05,
+      "microphysics": -0.04678873735371567,
+      "PD_arithmetic": 1.8518531865919952e-07,
+      "RK_arithmetic": 5.579459188256084e-08,
+      "source_assembly_to_PD_change": 0.0,
+      "other_final_RK_source": 0.0,
+      "evaluation_bridges": 0.0,
+      "operator_reconstruction_residual": 0.0,
+      "stock_surface_boundary_residual": 0.02082271894663351,
+      "PBL_minus_E": -0.0030779405096135483,
+      "CU_plus_RAINC_full": 0.023961312458250526,
+      "CU_plus_RAINC_interior": 0.022952214272402703,
+      "RAINC_outer_kept": 0.0010090981858478227,
+      "RAINC_change_outside_advance_ppt": 0.0,
+      "RAINNC_change_outside_microphysics": 0.0,
+      "microphysics_plus_its_RAINNC": 1.1127361306564374e-05,
+      "CU_rate_counter_rounding": 1.207862128875754e-07,
+      "CU_addition_rounding": -4.6823642361961e-11,
+      "CU_active_paired_residual": 0.003737124841960824,
+      "CU_inactive_positive_rain": 0.018998373643140318,
+      "CU_tendency_without_positive_rain": 0.00021659504791232348,
+      "CU_none": 0.0,
+      "RAINSH_increment_full": 0.0
+    },
+    {
+      "hour": 11,
+      "completed_steps": 60,
+      "start_s": 39600,
+      "end_s": 43200,
+      "W_start_kg_m2": 46.289619720274274,
+      "W_end_kg_m2": 46.28192956906635,
+      "dW": -0.007690151207926441,
+      "P_full": 0.4022597118441208,
+      "E_native_support": 0.19508026384397817,
+      "QFX_outer_unapplied": 0.005925095080428401,
+      "advection_operator": 0.1397973634468473,
+      "relaxation": 0.04057799899034071,
+      "specified_tendency": -0.002641909597385251,
+      "final_MU": 2.0447096681853742e-09,
+      "final_q": 3.896841429073578e-08,
+      "PBL": 0.1919489684175043,
+      "CU": -0.32653059789070016,
+      "other_physics_mixing": -7.934545620818007e-05,
+      "microphysics": -0.050762869049183396,
+      "PD_arithmetic": 2.1875528827812913e-07,
+      "RK_arithmetic": -1.983755402260155e-08,
+      "source_assembly_to_PD_change": 0.0,
+      "other_final_RK_source": 0.0,
+      "evaluation_bridges": 0.0,
+      "operator_reconstruction_residual": 0.0,
+      "stock_surface_boundary_residual": 0.021755802939289436,
+      "PBL_minus_E": -0.0031312954264738754,
+      "CU_plus_RAINC_full": 0.024953909154767282,
+      "CU_plus_RAINC_interior": 0.023075398641556413,
+      "RAINC_outer_kept": 0.0018785105132108687,
+      "RAINC_change_outside_advance_ppt": 0.0,
+      "RAINNC_change_outside_microphysics": 0.0,
+      "microphysics_plus_its_RAINNC": 1.2335749469952741e-05,
+      "CU_rate_counter_rounding": 1.2092207599226703e-07,
+      "CU_addition_rounding": -4.3348611114470336e-11,
+      "CU_active_paired_residual": 0.0038522035736326173,
+      "CU_inactive_positive_rain": 0.018992266569727564,
+      "CU_tendency_without_positive_rain": 0.00023080761946884918,
+      "CU_none": 0.0,
+      "RAINSH_increment_full": 0.0
+    },
+    {
+      "hour": 12,
+      "completed_steps": 60,
+      "start_s": 43200,
+      "end_s": 46800,
+      "W_start_kg_m2": 46.28192956906635,
+      "W_end_kg_m2": 46.28724962074721,
+      "dW": 0.005320051680863998,
+      "P_full": 0.4191019493653065,
+      "E_native_support": 0.20636038583887978,
+      "QFX_outer_unapplied": 0.006436511851197639,
+      "advection_operator": 0.1498365946999822,
+      "relaxation": 0.04687285239047723,
+      "specified_tendency": -0.0018151585818485026,
+      "final_MU": -2.873160380444499e-09,
+      "final_q": 2.1459055224201202e-08,
+      "PBL": 0.203069519611151,
+      "CU": -0.3395168407681044,
+      "other_physics_mixing": -8.079798880790384e-05,
+      "microphysics": -0.05304643432976544,
+      "PD_arithmetic": 3.0556214904955006e-07,
+      "RK_arithmetic": -7.500264046574787e-09,
+      "source_assembly_to_PD_change": 0.0,
+      "other_final_RK_source": 0.0,
+      "evaluation_bridges": 0.0,
+      "operator_reconstruction_residual": 0.0,
+      "stock_surface_boundary_residual": 0.023167308112784932,
+      "PBL_minus_E": -0.0032908662277287824,
+      "CU_plus_RAINC_full": 0.02652506014462355,
+      "CU_plus_RAINC_interior": 0.024406607941727495,
+      "RAINC_outer_kept": 0.002118452202896054,
+      "RAINC_change_outside_advance_ppt": 0.0,
+      "RAINNC_change_outside_microphysics": 0.0,
+      "microphysics_plus_its_RAINNC": 1.3614122813067349e-05,
+      "CU_rate_counter_rounding": 1.1448486187955458e-08,
+      "CU_addition_rounding": -3.843597322370169e-11,
+      "CU_active_paired_residual": 0.004007578044375115,
+      "CU_inactive_positive_rain": 0.020167923467503478,
+      "CU_tendency_without_positive_rain": 0.00023109501979868736,
+      "CU_none": 0.0,
+      "RAINSH_increment_full": 0.0
+    },
+    {
+      "hour": 13,
+      "completed_steps": 60,
+      "start_s": 46800,
+      "end_s": 50400,
+      "W_start_kg_m2": 46.28724962074721,
+      "W_end_kg_m2": 46.31829018852978,
+      "dW": 0.031040567782565694,
+      "P_full": 0.4174522489651404,
+      "E_native_support": 0.22088876294110715,
+      "QFX_outer_unapplied": 0.0075569858955794236,
+      "advection_operator": 0.1522397857827177,
+      "relaxation": 0.0543562972196654,
+      "specified_tendency": -0.0018151585818482973,
+      "final_MU": -6.3020913262347405e-09,
+      "final_q": 3.6053090912662048e-09,
+      "PBL": 0.21742316901108896,
+      "CU": -0.33723747180505353,
+      "other_physics_mixing": -6.725431194538045e-05,
+      "microphysics": -0.05385906336634385,
+      "PD_arithmetic": 3.1081601617394126e-07,
+      "RK_arithmetic": -4.42849492567827e-08,
+      "source_assembly_to_PD_change": 0.0,
+      "other_final_RK_source": 0.0,
+      "evaluation_bridges": 0.0,
+      "operator_reconstruction_residual": 0.0,
+      "stock_surface_boundary_residual": 0.022823132082846358,
+      "PBL_minus_E": -0.0034655939300181804,
+      "CU_plus_RAINC_full": 0.02634183865202622,
+      "CU_plus_RAINC_interior": 0.024667526178015275,
+      "RAINC_outer_kept": 0.001674312474010947,
+      "RAINC_change_outside_advance_ppt": 0.0,
+      "RAINNC_change_outside_microphysics": 0.0,
+      "microphysics_plus_its_RAINNC": 1.3875141716781058e-05,
+      "CU_rate_counter_rounding": -6.458724143356801e-08,
+      "CU_addition_rounding": -2.530498721657001e-11,
+      "CU_active_paired_residual": 0.003976936156174779,
+      "CU_inactive_positive_rain": 0.020465156414792372,
+      "CU_tendency_without_positive_rain": 0.00022549821959454242,
+      "CU_none": 0.0,
+      "RAINSH_increment_full": 0.0
+    },
+    {
+      "hour": 14,
+      "completed_steps": 60,
+      "start_s": 50400,
+      "end_s": 54000,
+      "W_start_kg_m2": 46.31829018852978,
+      "W_end_kg_m2": 46.38849682735987,
+      "dW": 0.07020663883009061,
+      "P_full": 0.39793040606403185,
+      "E_native_support": 0.23365949589681342,
+      "QFX_outer_unapplied": 0.008607963163224623,
+      "advection_operator": 0.15557190330312132,
+      "relaxation": 0.058583780610471564,
+      "specified_tendency": -0.001815158581848419,
+      "final_MU": -2.1112161118375e-09,
+      "final_q": -7.81761995874639e-09,
+      "PBL": 0.23006328120151065,
+      "CU": -0.3172677895307539,
+      "other_physics_mixing": -5.8737638544280125e-05,
+      "microphysics": -0.05487088885714527,
+      "PD_arithmetic": 2.797051265650085e-07,
+      "RK_arithmetic": -2.1453011493146447e-08,
+      "source_assembly_to_PD_change": 0.0,
+      "other_final_RK_source": 0.0,
+      "evaluation_bridges": 0.0,
+      "operator_reconstruction_residual": 0.0,
+      "stock_surface_boundary_residual": 0.022137033594400626,
+      "PBL_minus_E": -0.0035962146953028,
+      "CU_plus_RAINC_full": 0.02577713850100312,
+      "CU_plus_RAINC_interior": 0.024573651576732136,
+      "RAINC_outer_kept": 0.0012034869242709828,
+      "RAINC_change_outside_advance_ppt": 0.0,
+      "RAINNC_change_outside_microphysics": 0.0,
+      "microphysics_plus_its_RAINNC": 1.4589175129514068e-05,
+      "CU_rate_counter_rounding": 3.873217073806395e-08,
+      "CU_addition_rounding": -3.811936058656628e-12,
+      "CU_active_paired_residual": 0.0037506496485146834,
+      "CU_inactive_positive_rain": 0.0205824153888692,
+      "CU_tendency_without_positive_rain": 0.00024054781098944295,
+      "CU_none": 0.0,
+      "RAINSH_increment_full": 0.0
+    },
+    {
+      "hour": 15,
+      "completed_steps": 60,
+      "start_s": 54000,
+      "end_s": 57600,
+      "W_start_kg_m2": 46.38849682735987,
+      "W_end_kg_m2": 46.47780675607716,
+      "dW": 0.08930992871728433,
+      "P_full": 0.3848500377361146,
+      "E_native_support": 0.24387914869351607,
+      "QFX_outer_unapplied": 0.00952628673417137,
+      "advection_operator": 0.15741572681226743,
+      "relaxation": 0.05396014993646032,
+      "specified_tendency": -0.001815158581848632,
+      "final_MU": -2.2804738925502605e-09,
+      "final_q": -3.961622768644986e-08,
+      "PBL": 0.24019106132258233,
+      "CU": -0.3048608827841016,
+      "other_physics_mixing": -5.663871685330137e-05,
+      "microphysics": -0.055524561575878026,
+      "PD_arithmetic": 3.1033719306418143e-07,
+      "RK_arithmetic": -3.613583565762299e-08,
+      "source_assembly_to_PD_change": 0.0,
+      "other_final_RK_source": 0.0,
+      "evaluation_bridges": 0.0,
+      "operator_reconstruction_residual": 0.0,
+      "stock_surface_boundary_residual": 0.020720141489705288,
+      "PBL_minus_E": -0.003688087370933716,
+      "CU_plus_RAINC_full": 0.02444762833096972,
+      "CU_plus_RAINC_interior": 0.02359938403352199,
+      "RAINC_outer_kept": 0.000848244297447733,
+      "RAINC_change_outside_advance_ppt": 0.0,
+      "RAINNC_change_outside_microphysics": 0.0,
+      "microphysics_plus_its_RAINNC": 1.6965045165180384e-05,
+      "CU_rate_counter_rounding": 1.9965447424493048e-07,
+      "CU_addition_rounding": 1.960518214597124e-12,
+      "CU_active_paired_residual": 0.0036495798687098224,
+      "CU_inactive_positive_rain": 0.01972658798848418,
+      "CU_tendency_without_positive_rain": 0.00022301651989322386,
+      "CU_none": 0.0,
+      "RAINSH_increment_full": 0.0
+    },
+    {
+      "hour": 16,
+      "completed_steps": 60,
+      "start_s": 57600,
+      "end_s": 61200,
+      "W_start_kg_m2": 46.47780675607716,
+      "W_end_kg_m2": 46.573994911311615,
+      "dW": 0.09618815523446235,
+      "P_full": 0.37664064974687833,
+      "E_native_support": 0.2503957614879243,
+      "QFX_outer_unapplied": 0.010216138443893736,
+      "advection_operator": 0.1586922911873669,
+      "relaxation": 0.04523452661422142,
+      "specified_tendency": -0.0018151585818485996,
+      "final_MU": -2.0114191669626456e-09,
+      "final_q": -1.1801883436971544e-08,
+      "PBL": 0.2466492882313893,
+      "CU": -0.29164280040023266,
+      "other_physics_mixing": -5.876428375867887e-05,
+      "microphysics": -0.06087154335333019,
+      "PD_arithmetic": 3.016626591848926e-07,
+      "RK_arithmetic": 2.797129826384788e-08,
+      "source_assembly_to_PD_change": 0.0,
+      "other_final_RK_source": 0.0,
+      "evaluation_bridges": 0.0,
+      "operator_reconstruction_residual": 0.0,
+      "stock_surface_boundary_residual": 0.020321398086979265,
+      "PBL_minus_E": -0.0037464732565349814,
+      "CU_plus_RAINC_full": 0.024105858888073053,
+      "CU_plus_RAINC_interior": 0.023418387204709915,
+      "RAINC_outer_kept": 0.0006874716833631402,
+      "RAINC_change_outside_advance_ppt": 0.0,
+      "RAINNC_change_outside_microphysics": 0.0,
+      "microphysics_plus_its_RAINNC": 2.044710524242645e-05,
+      "CU_rate_counter_rounding": 5.353210580346163e-08,
+      "CU_addition_rounding": 4.8131642577413586e-11,
+      "CU_active_paired_residual": 0.0035133209559359067,
+      "CU_inactive_positive_rain": 0.019669467837626263,
+      "CU_tendency_without_positive_rain": 0.00023554483091029943,
+      "CU_none": 0.0,
+      "RAINSH_increment_full": 0.0
+    },
+    {
+      "hour": 17,
+      "completed_steps": 60,
+      "start_s": 61200,
+      "end_s": 64800,
+      "W_start_kg_m2": 46.573994911311615,
+      "W_end_kg_m2": 46.67477648577663,
+      "dW": 0.10078157446501253,
+      "P_full": 0.3690759544034642,
+      "E_native_support": 0.25147187778402513,
+      "QFX_outer_unapplied": 0.010539678661063819,
+      "advection_operator": 0.15985938032091151,
+      "relaxation": 0.03966846355614909,
+      "specified_tendency": -0.0018151585818486117,
+      "final_MU": -2.9955020404531108e-09,
+      "final_q": -1.8272179400963233e-08,
+      "PBL": 0.24772920079344957,
+      "CU": -0.2795510868999001,
+      "other_physics_mixing": -6.155492751469237e-05,
+      "microphysics": -0.06504792577995389,
+      "PD_arithmetic": 3.0561120743042935e-07,
+      "RK_arithmetic": -2.835980633751456e-08,
+      "source_assembly_to_PD_change": 0.0,
+      "other_final_RK_source": 0.0,
+      "evaluation_bridges": 0.0,
+      "operator_reconstruction_residual": 0.0,
+      "stock_surface_boundary_residual": 0.02067298705692101,
+      "PBL_minus_E": -0.003742676990575556,
+      "CU_plus_RAINC_full": 0.024453143054488688,
+      "CU_plus_RAINC_interior": 0.023418888195914277,
+      "RAINC_outer_kept": 0.0010342548585744104,
+      "RAINC_change_outside_advance_ppt": 0.0,
+      "RAINNC_change_outside_microphysics": 0.0,
+      "microphysics_plus_its_RAINNC": 2.3798669121478502e-05,
+      "CU_rate_counter_rounding": -1.1279403449983028e-07,
+      "CU_addition_rounding": 2.740637372262769e-11,
+      "CU_active_paired_residual": 0.003365665164939354,
+      "CU_inactive_positive_rain": 0.01983684785606131,
+      "CU_tendency_without_positive_rain": 0.00021648794154173866,
+      "CU_none": 0.0,
+      "RAINSH_increment_full": 0.0
+    },
+    {
+      "hour": 18,
+      "completed_steps": 60,
+      "start_s": 64800,
+      "end_s": 68400,
+      "W_start_kg_m2": 46.67477648577663,
+      "W_end_kg_m2": 46.751238756914944,
+      "dW": 0.07646227113831344,
+      "P_full": 0.36613030365359994,
+      "E_native_support": 0.24708382958529573,
+      "QFX_outer_unapplied": 0.010312775079348272,
+      "advection_operator": 0.14910284111516442,
+      "relaxation": 0.03247130303112975,
+      "specified_tendency": -0.006856355575537837,
+      "final_MU": 1.7070794924306715e-09,
+      "final_q": 1.3391327793222692e-08,
+      "PBL": 0.2434006247271954,
+      "CU": -0.2686042802579886,
+      "other_physics_mixing": -6.786260023511605e-05,
+      "microphysics": -0.07298420522276364,
+      "PD_arithmetic": 1.865497242251038e-07,
+      "RK_arithmetic": 4.273217582094657e-09,
+      "source_assembly_to_PD_change": 0.0,
+      "other_final_RK_source": 0.0,
+      "evaluation_bridges": 0.0,
+      "operator_reconstruction_residual": 0.0,
+      "stock_surface_boundary_residual": 0.02079094153745403,
+      "PBL_minus_E": -0.0036832048581003497,
+      "CU_plus_RAINC_full": 0.024513482816379023,
+      "CU_plus_RAINC_interior": 0.022587629733529804,
+      "RAINC_outer_kept": 0.0019258530828492161,
+      "RAINC_change_outside_advance_ppt": 0.0,
+      "RAINNC_change_outside_microphysics": 0.0,
+      "microphysics_plus_its_RAINNC": 2.833535646866647e-05,
+      "CU_rate_counter_rounding": 5.618765915772409e-08,
+      "CU_addition_rounding": 3.644883336963972e-11,
+      "CU_active_paired_residual": 0.0032357778381301976,
+      "CU_inactive_positive_rain": 0.019134855173329888,
+      "CU_tendency_without_positive_rain": 0.00021694049796173364,
+      "CU_none": 0.0,
+      "RAINSH_increment_full": 0.0
+    },
+    {
+      "hour": 19,
+      "completed_steps": 60,
+      "start_s": 68400,
+      "end_s": 72000,
+      "W_start_kg_m2": 46.751238756914944,
+      "W_end_kg_m2": 46.805415848613194,
+      "dW": 0.05417709169825127,
+      "P_full": 0.36433254616645927,
+      "E_native_support": 0.23749530109005318,
+      "QFX_outer_unapplied": 0.009810131280680381,
+      "advection_operator": 0.12488130624767622,
+      "relaxation": 0.0441507331441183,
+      "specified_tendency": -0.006856355575537806,
+      "final_MU": 1.3365595689673996e-10,
+      "final_q": 3.195413737059398e-08,
+      "PBL": 0.2339131431191084,
+      "CU": -0.2632442438687756,
+      "other_physics_mixing": -5.848224776427373e-05,
+      "microphysics": -0.07860935375634123,
+      "PD_arithmetic": 2.620239811198372e-07,
+      "RK_arithmetic": 5.052399278692777e-08,
+      "source_assembly_to_PD_change": 0.0,
+      "other_final_RK_source": 0.0,
+      "evaluation_bridges": 0.0,
+      "operator_reconstruction_residual": 3.555240313147525e-19,
+      "stock_surface_boundary_residual": 0.018838620870607295,
+      "PBL_minus_E": -0.0035821579709447594,
+      "CU_plus_RAINC_full": 0.022448412891305867,
+      "CU_plus_RAINC_interior": 0.02067995232501009,
+      "RAINC_outer_kept": 0.0017684605662957767,
+      "RAINC_change_outside_advance_ppt": 0.0,
+      "RAINNC_change_outside_microphysics": 0.0,
+      "microphysics_plus_its_RAINNC": 3.053565003655488e-05,
+      "CU_rate_counter_rounding": 6.732523228551052e-08,
+      "CU_addition_rounding": 2.7556218284830882e-11,
+      "CU_active_paired_residual": 0.0031386440985220502,
+      "CU_inactive_positive_rain": 0.017316207184705168,
+      "CU_tendency_without_positive_rain": 0.00022503368899436387,
+      "CU_none": 0.0,
+      "RAINSH_increment_full": 0.0
+    },
+    {
+      "hour": 20,
+      "completed_steps": 60,
+      "start_s": 72000,
+      "end_s": 75600,
+      "W_start_kg_m2": 46.805415848613194,
+      "W_end_kg_m2": 46.83157446509305,
+      "dW": 0.026158616479856497,
+      "P_full": 0.368012556289438,
+      "E_native_support": 0.22436001534338845,
+      "QFX_outer_unapplied": 0.009027645041931041,
+      "advection_operator": 0.09956099019574027,
+      "relaxation": 0.058567716732542574,
+      "specified_tendency": -0.006856355575537764,
+      "final_MU": 1.0434503126810537e-10,
+      "final_q": 3.367143141771113e-08,
+      "PBL": 0.22091482384113578,
+      "CU": -0.26159071747939033,
+      "other_physics_mixing": -4.675101287982927e-05,
+      "microphysics": -0.08439129426100991,
+      "PD_arithmetic": 2.065934751899824e-07,
+      "RK_arithmetic": -3.6329995911198734e-08,
+      "source_assembly_to_PD_change": 0.0,
+      "other_final_RK_source": 0.0,
+      "evaluation_bridges": 0.0,
+      "operator_reconstruction_residual": -1.9998226761454826e-19,
+      "stock_surface_boundary_residual": 0.01853877229738452,
+      "PBL_minus_E": -0.0034451915022526668,
+      "CU_plus_RAINC_full": 0.021996385609208212,
+      "CU_plus_RAINC_interior": 0.020841630656811504,
+      "RAINC_outer_kept": 0.001154754952396707,
+      "RAINC_change_outside_advance_ppt": 0.0,
+      "RAINNC_change_outside_microphysics": 0.0,
+      "microphysics_plus_its_RAINNC": 3.415893982952186e-05,
+      "CU_rate_counter_rounding": -2.3218711090500345e-09,
+      "CU_addition_rounding": -8.303088549113412e-12,
+      "CU_active_paired_residual": 0.0031487029000040055,
+      "CU_inactive_positive_rain": 0.017480100570311057,
+      "CU_tendency_without_positive_rain": 0.0002128295166706425,
+      "CU_none": 0.0,
+      "RAINSH_increment_full": 0.0
+    },
+    {
+      "hour": 21,
+      "completed_steps": 60,
+      "start_s": 75600,
+      "end_s": 79200,
+      "W_start_kg_m2": 46.83157446509305,
+      "W_end_kg_m2": 46.82185344977876,
+      "dW": -0.009721015314294567,
+      "P_full": 0.3702761359984152,
+      "E_native_support": 0.20803468193221103,
+      "QFX_outer_unapplied": 0.008049320854155356,
+      "advection_operator": 0.07264540675968677,
+      "relaxation": 0.06792100448042436,
+      "specified_tendency": -0.006856355575537831,
+      "final_MU": -5.7783064832284147e-11,
+      "final_q": 6.019000907802377e-09,
+      "PBL": 0.20476775666609318,
+      "CU": -0.25636757491402895,
+      "other_physics_mixing": -3.625117331335024e-05,
+      "microphysics": -0.09179529815093752,
+      "PD_arithmetic": 1.9742084392586074e-07,
+      "RK_arithmetic": 9.321125699735959e-08,
+      "source_assembly_to_PD_change": 0.0,
+      "other_final_RK_source": 0.0,
+      "evaluation_bridges": 0.0,
+      "operator_reconstruction_residual": 2.7108707387749875e-19,
+      "stock_surface_boundary_residual": 0.01881037712611848,
+      "PBL_minus_E": -0.003266925266117847,
+      "CU_plus_RAINC_full": 0.022075504063785445,
+      "CU_plus_RAINC_interior": 0.02151008488249186,
+      "RAINC_outer_kept": 0.0005654191812935856,
+      "RAINC_change_outside_advance_ppt": 0.0,
+      "RAINNC_change_outside_microphysics": 0.0,
+      "microphysics_plus_its_RAINNC": 3.7758869663305955e-05,
+      "CU_rate_counter_rounding": 7.532950794612189e-08,
+      "CU_addition_rounding": -3.1314059513398006e-11,
+      "CU_active_paired_residual": 0.0030776525780204594,
+      "CU_inactive_positive_rain": 0.0182114783318121,
+      "CU_tendency_without_positive_rain": 0.00022087867446541425,
+      "CU_none": 0.0,
+      "RAINSH_increment_full": 0.0
+    },
+    {
+      "hour": 22,
+      "completed_steps": 60,
+      "start_s": 79200,
+      "end_s": 82800,
+      "W_start_kg_m2": 46.82185344977876,
+      "W_end_kg_m2": 46.76348756319942,
+      "dW": -0.05836588657933874,
+      "P_full": 0.37132935323694816,
+      "E_native_support": 0.19053906953387884,
+      "QFX_outer_unapplied": 0.0068585723407363275,
+      "advection_operator": 0.042142631189450074,
+      "relaxation": 0.06923002191327604,
+      "specified_tendency": -0.0068563555755377665,
+      "final_MU": -6.392857337267257e-10,
+      "final_q": 1.8359991019809974e-08,
+      "PBL": 0.1874795640836129,
+      "CU": -0.25100552238468216,
+      "other_physics_mixing": -3.0399620213114002e-05,
+      "microphysics": -0.09932594146118838,
+      "PD_arithmetic": 1.8852011267803342e-07,
+      "RK_arithmetic": -9.096487433389392e-08,
+      "source_assembly_to_PD_change": 0.0,
+      "other_final_RK_source": 0.0,
+      "evaluation_bridges": 0.0,
+      "operator_reconstruction_residual": 0.0,
+      "stock_surface_boundary_residual": 0.017908081875836927,
+      "PBL_minus_E": -0.003059505450265918,
+      "CU_plus_RAINC_full": 0.020956436972964766,
+      "CU_plus_RAINC_interior": 0.020753890678909998,
+      "RAINC_outer_kept": 0.00020254629405476611,
+      "RAINC_change_outside_advance_ppt": 0.0,
+      "RAINNC_change_outside_microphysics": 0.0,
+      "microphysics_plus_its_RAINNC": 4.145241811284756e-05,
+      "CU_rate_counter_rounding": -1.4663030867568884e-07,
+      "CU_addition_rounding": -2.7362645973291326e-11,
+      "CU_active_paired_residual": 0.003006598441936462,
+      "CU_inactive_positive_rain": 0.017524502541102382,
+      "CU_tendency_without_positive_rain": 0.00022293635354247293,
+      "CU_none": 0.0,
+      "RAINSH_increment_full": 0.0
+    },
+    {
+      "hour": 23,
+      "completed_steps": 60,
+      "start_s": 82800,
+      "end_s": 86400,
+      "W_start_kg_m2": 46.76348756319942,
+      "W_end_kg_m2": 46.648956028671456,
+      "dW": -0.11453153452795992,
+      "P_full": 0.38300101151406946,
+      "E_native_support": 0.18543342825863898,
+      "QFX_outer_unapplied": 0.006296479270076286,
+      "advection_operator": 0.007826355557242261,
+      "relaxation": 0.06347787383750057,
+      "specified_tendency": -0.006856355575537881,
+      "final_MU": 1.0225365711514339e-09,
+      "final_q": 3.828767386791648e-08,
+      "PBL": 0.18245152232746292,
+      "CU": -0.2561767673674818,
+      "other_physics_mixing": -2.7912727643445954e-05,
+      "microphysics": -0.10522646827161111,
+      "PD_arithmetic": 2.394548534803403e-07,
+      "RK_arithmetic": -6.107295534257603e-08,
+      "source_assembly_to_PD_change": 0.0,
+      "other_final_RK_source": 0.0,
+      "evaluation_bridges": 0.0,
+      "operator_reconstruction_residual": 0.0,
+      "stock_surface_boundary_residual": 0.018588135598055198,
+      "PBL_minus_E": -0.002981905931176041,
+      "CU_plus_RAINC_full": 0.021552035280360683,
+      "CU_plus_RAINC_interior": 0.021246417112172677,
+      "RAINC_outer_kept": 0.0003056181681880069,
+      "RAINC_change_outside_advance_ppt": 0.0,
+      "RAINNC_change_outside_microphysics": 0.0,
+      "microphysics_plus_its_RAINNC": 4.574059461587027e-05,
+      "CU_rate_counter_rounding": 9.707853063287162e-08,
+      "CU_addition_rounding": 1.244571997841467e-11,
+      "CU_active_paired_residual": 0.0030780426793161502,
+      "CU_inactive_positive_rain": 0.01795861220891783,
+      "CU_tendency_without_positive_rain": 0.00020966513296234035,
+      "CU_none": 0.0,
+      "RAINSH_increment_full": 0.0
+    }
+  ],
+  "hourly_radiation": [
+    {
+      "hour": 0,
+      "seconds": 3600,
+      "actual_RHS_radiation_equivalent_J_m2": -688427.5606347735,
+      "raw_source_full_equivalent_J_m2": -720376.2694367866,
+      "raw_source_interior_equivalent_J_m2": -688427.5606396171,
+      "LW": {
+        "observed_phase_seconds": 3600,
+        "missing_phase_seconds": 0,
+        "native_convergence_integral_of_observed_phases_J_m2": -724324.8968579575,
+        "extended_TOA_net_integral_of_observed_phases_J_m2": -946827.3967380957,
+        "observed_column_count_min_max": [
+          8910,
+          8910
+        ],
+        "incomplete_spatial_phase_seconds": 0,
+        "native_interior_convergence_integral_of_observed_phases_J_m2": -692204.550104935,
+        "pressure_mass_heating_integral_of_observed_phases_J_m2": -724324.8967828704,
+        "dry_mass_heating_integral_of_observed_phases_J_m2": -720374.9283841013
+      },
+      "SW": {
+        "observed_phase_seconds": 0,
+        "missing_phase_seconds": 3600,
+        "native_convergence_integral_of_observed_phases_J_m2": 0.0,
+        "extended_TOA_net_integral_of_observed_phases_J_m2": 0.0,
+        "observed_column_count_min_max": null,
+        "incomplete_spatial_phase_seconds": 0,
+        "native_interior_convergence_integral_of_observed_phases_J_m2": 0.0,
+        "pressure_mass_heating_integral_of_observed_phases_J_m2": 0.0,
+        "dry_mass_heating_integral_of_observed_phases_J_m2": 0.0
+      }
+    },
+    {
+      "hour": 1,
+      "seconds": 3600,
+      "actual_RHS_radiation_equivalent_J_m2": -661102.5219554284,
+      "raw_source_full_equivalent_J_m2": -693105.5544608624,
+      "raw_source_interior_equivalent_J_m2": -661102.521955046,
+      "LW": {
+        "observed_phase_seconds": 3600,
+        "missing_phase_seconds": 0,
+        "native_convergence_integral_of_observed_phases_J_m2": -696734.4999590968,
+        "extended_TOA_net_integral_of_observed_phases_J_m2": -908518.1175613246,
+        "observed_column_count_min_max": [
+          8910,
+          8910
+        ],
+        "incomplete_spatial_phase_seconds": 0,
+        "native_interior_convergence_integral_of_observed_phases_J_m2": -664560.2962106882,
+        "pressure_mass_heating_integral_of_observed_phases_J_m2": -696734.4997070212,
+        "dry_mass_heating_integral_of_observed_phases_J_m2": -693105.7744885804
+      },
+      "SW": {
+        "observed_phase_seconds": 0,
+        "missing_phase_seconds": 3600,
+        "native_convergence_integral_of_observed_phases_J_m2": 0.0,
+        "extended_TOA_net_integral_of_observed_phases_J_m2": 0.0,
+        "observed_column_count_min_max": null,
+        "incomplete_spatial_phase_seconds": 0,
+        "native_interior_convergence_integral_of_observed_phases_J_m2": 0.0,
+        "pressure_mass_heating_integral_of_observed_phases_J_m2": 0.0,
+        "dry_mass_heating_integral_of_observed_phases_J_m2": 0.0
+      }
+    },
+    {
+      "hour": 2,
+      "seconds": 3600,
+      "actual_RHS_radiation_equivalent_J_m2": -659538.9339411786,
+      "raw_source_full_equivalent_J_m2": -691523.271384333,
+      "raw_source_interior_equivalent_J_m2": -659538.933948605,
+      "LW": {
+        "observed_phase_seconds": 3600,
+        "missing_phase_seconds": 0,
+        "native_convergence_integral_of_observed_phases_J_m2": -695082.0972030563,
+        "extended_TOA_net_integral_of_observed_phases_J_m2": -904259.7001870619,
+        "observed_column_count_min_max": [
+          8910,
+          8910
+        ],
+        "incomplete_spatial_phase_seconds": 0,
+        "native_interior_convergence_integral_of_observed_phases_J_m2": -662927.4336034656,
+        "pressure_mass_heating_integral_of_observed_phases_J_m2": -695082.0974642319,
+        "dry_mass_heating_integral_of_observed_phases_J_m2": -691523.698512924
+      },
+      "SW": {
+        "observed_phase_seconds": 0,
+        "missing_phase_seconds": 3600,
+        "native_convergence_integral_of_observed_phases_J_m2": 0.0,
+        "extended_TOA_net_integral_of_observed_phases_J_m2": 0.0,
+        "observed_column_count_min_max": null,
+        "incomplete_spatial_phase_seconds": 0,
+        "native_interior_convergence_integral_of_observed_phases_J_m2": 0.0,
+        "pressure_mass_heating_integral_of_observed_phases_J_m2": 0.0,
+        "dry_mass_heating_integral_of_observed_phases_J_m2": 0.0
+      }
+    },
+    {
+      "hour": 3,
+      "seconds": 3600,
+      "actual_RHS_radiation_equivalent_J_m2": -661513.5757515874,
+      "raw_source_full_equivalent_J_m2": -693482.1740528536,
+      "raw_source_interior_equivalent_J_m2": -661513.5757518148,
+      "LW": {
+        "observed_phase_seconds": 3600,
+        "missing_phase_seconds": 0,
+        "native_convergence_integral_of_observed_phases_J_m2": -697022.9959504342,
+        "extended_TOA_net_integral_of_observed_phases_J_m2": -905568.852239639,
+        "observed_column_count_min_max": [
+          8910,
+          8910
+        ],
+        "incomplete_spatial_phase_seconds": 0,
+        "native_interior_convergence_integral_of_observed_phases_J_m2": -664884.609197281,
+        "pressure_mass_heating_integral_of_observed_phases_J_m2": -697022.9958043795,
+        "dry_mass_heating_integral_of_observed_phases_J_m2": -693481.6518205786
+      },
+      "SW": {
+        "observed_phase_seconds": 0,
+        "missing_phase_seconds": 3600,
+        "native_convergence_integral_of_observed_phases_J_m2": 0.0,
+        "extended_TOA_net_integral_of_observed_phases_J_m2": 0.0,
+        "observed_column_count_min_max": null,
+        "incomplete_spatial_phase_seconds": 0,
+        "native_interior_convergence_integral_of_observed_phases_J_m2": 0.0,
+        "pressure_mass_heating_integral_of_observed_phases_J_m2": 0.0,
+        "dry_mass_heating_integral_of_observed_phases_J_m2": 0.0
+      }
+    },
+    {
+      "hour": 4,
+      "seconds": 3600,
+      "actual_RHS_radiation_equivalent_J_m2": -665389.5132502593,
+      "raw_source_full_equivalent_J_m2": -697353.1347222963,
+      "raw_source_interior_equivalent_J_m2": -665389.5132479905,
+      "LW": {
+        "observed_phase_seconds": 3600,
+        "missing_phase_seconds": 0,
+        "native_convergence_integral_of_observed_phases_J_m2": -700922.0218944723,
+        "extended_TOA_net_integral_of_observed_phases_J_m2": -909213.2552436349,
+        "observed_column_count_min_max": [
+          8910,
+          8910
+        ],
+        "incomplete_spatial_phase_seconds": 0,
+        "native_interior_convergence_integral_of_observed_phases_J_m2": -668788.9022941554,
+        "pressure_mass_heating_integral_of_observed_phases_J_m2": -700922.0217308977,
+        "dry_mass_heating_integral_of_observed_phases_J_m2": -697353.2288908537
+      },
+      "SW": {
+        "observed_phase_seconds": 0,
+        "missing_phase_seconds": 3600,
+        "native_convergence_integral_of_observed_phases_J_m2": 0.0,
+        "extended_TOA_net_integral_of_observed_phases_J_m2": 0.0,
+        "observed_column_count_min_max": null,
+        "incomplete_spatial_phase_seconds": 0,
+        "native_interior_convergence_integral_of_observed_phases_J_m2": 0.0,
+        "pressure_mass_heating_integral_of_observed_phases_J_m2": 0.0,
+        "dry_mass_heating_integral_of_observed_phases_J_m2": 0.0
+      }
+    },
+    {
+      "hour": 5,
+      "seconds": 3600,
+      "actual_RHS_radiation_equivalent_J_m2": -666683.3679031854,
+      "raw_source_full_equivalent_J_m2": -698658.7375130444,
+      "raw_source_interior_equivalent_J_m2": -666683.3679179737,
+      "LW": {
+        "observed_phase_seconds": 3600,
+        "missing_phase_seconds": 0,
+        "native_convergence_integral_of_observed_phases_J_m2": -702234.9684403713,
+        "extended_TOA_net_integral_of_observed_phases_J_m2": -909656.2579650129,
+        "observed_column_count_min_max": [
+          8910,
+          8910
+        ],
+        "incomplete_spatial_phase_seconds": 0,
+        "native_interior_convergence_integral_of_observed_phases_J_m2": -670089.6699300876,
+        "pressure_mass_heating_integral_of_observed_phases_J_m2": -702234.9683974856,
+        "dry_mass_heating_integral_of_observed_phases_J_m2": -698659.0686257649
+      },
+      "SW": {
+        "observed_phase_seconds": 0,
+        "missing_phase_seconds": 3600,
+        "native_convergence_integral_of_observed_phases_J_m2": 0.0,
+        "extended_TOA_net_integral_of_observed_phases_J_m2": 0.0,
+        "observed_column_count_min_max": null,
+        "incomplete_spatial_phase_seconds": 0,
+        "native_interior_convergence_integral_of_observed_phases_J_m2": 0.0,
+        "pressure_mass_heating_integral_of_observed_phases_J_m2": 0.0,
+        "dry_mass_heating_integral_of_observed_phases_J_m2": 0.0
+      }
+    },
+    {
+      "hour": 6,
+      "seconds": 3600,
+      "actual_RHS_radiation_equivalent_J_m2": -667144.4199961937,
+      "raw_source_full_equivalent_J_m2": -699139.1385777605,
+      "raw_source_interior_equivalent_J_m2": -667144.419999381,
+      "LW": {
+        "observed_phase_seconds": 3600,
+        "missing_phase_seconds": 0,
+        "native_convergence_integral_of_observed_phases_J_m2": -702721.0655029258,
+        "extended_TOA_net_integral_of_observed_phases_J_m2": -909155.3042681976,
+        "observed_column_count_min_max": [
+          8910,
+          8910
+        ],
+        "incomplete_spatial_phase_seconds": 0,
+        "native_interior_convergence_integral_of_observed_phases_J_m2": -670556.0284725063,
+        "pressure_mass_heating_integral_of_observed_phases_J_m2": -702721.0652649633,
+        "dry_mass_heating_integral_of_observed_phases_J_m2": -699139.0650123452
+      },
+      "SW": {
+        "observed_phase_seconds": 0,
+        "missing_phase_seconds": 3600,
+        "native_convergence_integral_of_observed_phases_J_m2": 0.0,
+        "extended_TOA_net_integral_of_observed_phases_J_m2": 0.0,
+        "observed_column_count_min_max": null,
+        "incomplete_spatial_phase_seconds": 0,
+        "native_interior_convergence_integral_of_observed_phases_J_m2": 0.0,
+        "pressure_mass_heating_integral_of_observed_phases_J_m2": 0.0,
+        "dry_mass_heating_integral_of_observed_phases_J_m2": 0.0
+      }
+    },
+    {
+      "hour": 7,
+      "seconds": 3600,
+      "actual_RHS_radiation_equivalent_J_m2": -671842.7271450787,
+      "raw_source_full_equivalent_J_m2": -703844.6172565437,
+      "raw_source_interior_equivalent_J_m2": -671842.7271496472,
+      "LW": {
+        "observed_phase_seconds": 3600,
+        "missing_phase_seconds": 0,
+        "native_convergence_integral_of_observed_phases_J_m2": -707467.198595953,
+        "extended_TOA_net_integral_of_observed_phases_J_m2": -913857.6130426797,
+        "observed_column_count_min_max": [
+          8910,
+          8910
+        ],
+        "incomplete_spatial_phase_seconds": 0,
+        "native_interior_convergence_integral_of_observed_phases_J_m2": -675296.0420902913,
+        "pressure_mass_heating_integral_of_observed_phases_J_m2": -707467.1979152076,
+        "dry_mass_heating_integral_of_observed_phases_J_m2": -703844.4346819681
+      },
+      "SW": {
+        "observed_phase_seconds": 0,
+        "missing_phase_seconds": 3600,
+        "native_convergence_integral_of_observed_phases_J_m2": 0.0,
+        "extended_TOA_net_integral_of_observed_phases_J_m2": 0.0,
+        "observed_column_count_min_max": null,
+        "incomplete_spatial_phase_seconds": 0,
+        "native_interior_convergence_integral_of_observed_phases_J_m2": 0.0,
+        "pressure_mass_heating_integral_of_observed_phases_J_m2": 0.0,
+        "dry_mass_heating_integral_of_observed_phases_J_m2": 0.0
+      }
+    },
+    {
+      "hour": 8,
+      "seconds": 3600,
+      "actual_RHS_radiation_equivalent_J_m2": -677131.64901623,
+      "raw_source_full_equivalent_J_m2": -709144.1904660943,
+      "raw_source_interior_equivalent_J_m2": -677131.6490108143,
+      "LW": {
+        "observed_phase_seconds": 3600,
+        "missing_phase_seconds": 0,
+        "native_convergence_integral_of_observed_phases_J_m2": -712815.1753139051,
+        "extended_TOA_net_integral_of_observed_phases_J_m2": -919400.8522343114,
+        "observed_column_count_min_max": [
+          8910,
+          8910
+        ],
+        "incomplete_spatial_phase_seconds": 0,
+        "native_interior_convergence_integral_of_observed_phases_J_m2": -680633.8037461019,
+        "pressure_mass_heating_integral_of_observed_phases_J_m2": -712815.1751048104,
+        "dry_mass_heating_integral_of_observed_phases_J_m2": -709144.2825390912
+      },
+      "SW": {
+        "observed_phase_seconds": 0,
+        "missing_phase_seconds": 3600,
+        "native_convergence_integral_of_observed_phases_J_m2": 0.0,
+        "extended_TOA_net_integral_of_observed_phases_J_m2": 0.0,
+        "observed_column_count_min_max": null,
+        "incomplete_spatial_phase_seconds": 0,
+        "native_interior_convergence_integral_of_observed_phases_J_m2": 0.0,
+        "pressure_mass_heating_integral_of_observed_phases_J_m2": 0.0,
+        "dry_mass_heating_integral_of_observed_phases_J_m2": 0.0
+      }
+    },
+    {
+      "hour": 9,
+      "seconds": 3600,
+      "actual_RHS_radiation_equivalent_J_m2": -680914.8766653974,
+      "raw_source_full_equivalent_J_m2": -712932.3076363404,
+      "raw_source_interior_equivalent_J_m2": -680914.8766707212,
+      "LW": {
+        "observed_phase_seconds": 3600,
+        "missing_phase_seconds": 0,
+        "native_convergence_integral_of_observed_phases_J_m2": -716632.6443455177,
+        "extended_TOA_net_integral_of_observed_phases_J_m2": -923306.6582873429,
+        "observed_column_count_min_max": [
+          8910,
+          8910
+        ],
+        "incomplete_spatial_phase_seconds": 0,
+        "native_interior_convergence_integral_of_observed_phases_J_m2": -684446.325507174,
+        "pressure_mass_heating_integral_of_observed_phases_J_m2": -716632.6445876935,
+        "dry_mass_heating_integral_of_observed_phases_J_m2": -712932.1635288198
+      },
+      "SW": {
+        "observed_phase_seconds": 0,
+        "missing_phase_seconds": 3600,
+        "native_convergence_integral_of_observed_phases_J_m2": 0.0,
+        "extended_TOA_net_integral_of_observed_phases_J_m2": 0.0,
+        "observed_column_count_min_max": null,
+        "incomplete_spatial_phase_seconds": 0,
+        "native_interior_convergence_integral_of_observed_phases_J_m2": 0.0,
+        "pressure_mass_heating_integral_of_observed_phases_J_m2": 0.0,
+        "dry_mass_heating_integral_of_observed_phases_J_m2": 0.0
+      }
+    },
+    {
+      "hour": 10,
+      "seconds": 3600,
+      "actual_RHS_radiation_equivalent_J_m2": -667119.9888189465,
+      "raw_source_full_equivalent_J_m2": -697471.6592957918,
+      "raw_source_interior_equivalent_J_m2": -667119.9888170176,
+      "LW": {
+        "observed_phase_seconds": 3600,
+        "missing_phase_seconds": 0,
+        "native_convergence_integral_of_observed_phases_J_m2": -718447.4323950507,
+        "extended_TOA_net_integral_of_observed_phases_J_m2": -924164.6294524733,
+        "observed_column_count_min_max": [
+          8910,
+          8910
+        ],
+        "incomplete_spatial_phase_seconds": 0,
+        "native_interior_convergence_integral_of_observed_phases_J_m2": -686253.4527886396,
+        "pressure_mass_heating_integral_of_observed_phases_J_m2": -718447.4325003552,
+        "dry_mass_heating_integral_of_observed_phases_J_m2": -714746.2748277695
+      },
+      "SW": {
+        "observed_phase_seconds": 3600,
+        "missing_phase_seconds": 0,
+        "native_convergence_integral_of_observed_phases_J_m2": 17353.907298691327,
+        "extended_TOA_net_integral_of_observed_phases_J_m2": 43724.25911769234,
+        "observed_column_count_min_max": [
+          1,
+          3848
+        ],
+        "incomplete_spatial_phase_seconds": 3600,
+        "native_interior_convergence_integral_of_observed_phases_J_m2": 15671.663609280624,
+        "pressure_mass_heating_integral_of_observed_phases_J_m2": 17353.907312461553,
+        "dry_mass_heating_integral_of_observed_phases_J_m2": 17274.928821820413
+      }
+    },
+    {
+      "hour": 11,
+      "seconds": 3600,
+      "actual_RHS_radiation_equivalent_J_m2": -542360.1542502774,
+      "raw_source_full_equivalent_J_m2": -567078.0494362074,
+      "raw_source_interior_equivalent_J_m2": -542360.1542586097,
+      "LW": {
+        "observed_phase_seconds": 3600,
+        "missing_phase_seconds": 0,
+        "native_convergence_integral_of_observed_phases_J_m2": -719060.9365945585,
+        "extended_TOA_net_integral_of_observed_phases_J_m2": -925480.1153175165,
+        "observed_column_count_min_max": [
+          8910,
+          8910
+        ],
+        "incomplete_spatial_phase_seconds": 0,
+        "native_interior_convergence_integral_of_observed_phases_J_m2": -686890.6744807716,
+        "pressure_mass_heating_integral_of_observed_phases_J_m2": -719060.9364660081,
+        "dry_mass_heating_integral_of_observed_phases_J_m2": -715378.2786959994
+      },
+      "SW": {
+        "observed_phase_seconds": 3600,
+        "missing_phase_seconds": 0,
+        "native_convergence_integral_of_observed_phases_J_m2": 149007.05776136406,
+        "extended_TOA_net_integral_of_observed_phases_J_m2": 424163.8587179089,
+        "observed_column_count_min_max": [
+          4730,
+          8842
+        ],
+        "incomplete_spatial_phase_seconds": 3600,
+        "native_interior_convergence_integral_of_observed_phases_J_m2": 141683.7095279108,
+        "pressure_mass_heating_integral_of_observed_phases_J_m2": 149007.05783886652,
+        "dry_mass_heating_integral_of_observed_phases_J_m2": 148300.45446453718
+      }
+    },
+    {
+      "hour": 12,
+      "seconds": 3600,
+      "actual_RHS_radiation_equivalent_J_m2": -327007.6179053774,
+      "raw_source_full_equivalent_J_m2": -342895.04806044,
+      "raw_source_interior_equivalent_J_m2": -327007.6179102117,
+      "LW": {
+        "observed_phase_seconds": 3600,
+        "missing_phase_seconds": 0,
+        "native_convergence_integral_of_observed_phases_J_m2": -714201.9763590926,
+        "extended_TOA_net_integral_of_observed_phases_J_m2": -929820.4300355414,
+        "observed_column_count_min_max": [
+          8910,
+          8910
+        ],
+        "incomplete_spatial_phase_seconds": 0,
+        "native_interior_convergence_integral_of_observed_phases_J_m2": -682690.1194774926,
+        "pressure_mass_heating_integral_of_observed_phases_J_m2": -714201.9764917972,
+        "dry_mass_heating_integral_of_observed_phases_J_m2": -710588.9544234881
+      },
+      "SW": {
+        "observed_phase_seconds": 3600,
+        "missing_phase_seconds": 0,
+        "native_convergence_integral_of_observed_phases_J_m2": 369545.3544177344,
+        "extended_TOA_net_integral_of_observed_phases_J_m2": 1171915.3231570146,
+        "observed_column_count_min_max": [
+          8910,
+          8910
+        ],
+        "incomplete_spatial_phase_seconds": 0,
+        "native_interior_convergence_integral_of_observed_phases_J_m2": 353998.16898223554,
+        "pressure_mass_heating_integral_of_observed_phases_J_m2": 369545.35383731633,
+        "dry_mass_heating_integral_of_observed_phases_J_m2": 367693.9481284074
+      }
+    },
+    {
+      "hour": 13,
+      "seconds": 3600,
+      "actual_RHS_radiation_equivalent_J_m2": -145757.3776031801,
+      "raw_source_full_equivalent_J_m2": -154056.40081481816,
+      "raw_source_interior_equivalent_J_m2": -145757.3776003287,
+      "LW": {
+        "observed_phase_seconds": 3600,
+        "missing_phase_seconds": 0,
+        "native_convergence_integral_of_observed_phases_J_m2": -707250.5404176104,
+        "extended_TOA_net_integral_of_observed_phases_J_m2": -934389.0491138918,
+        "observed_column_count_min_max": [
+          8910,
+          8910
+        ],
+        "incomplete_spatial_phase_seconds": 0,
+        "native_interior_convergence_integral_of_observed_phases_J_m2": -676435.9631786653,
+        "pressure_mass_heating_integral_of_observed_phases_J_m2": -707250.5403026616,
+        "dry_mass_heating_integral_of_observed_phases_J_m2": -703714.6007506067
+      },
+      "SW": {
+        "observed_phase_seconds": 3600,
+        "missing_phase_seconds": 0,
+        "native_convergence_integral_of_observed_phases_J_m2": 552539.1883423711,
+        "extended_TOA_net_integral_of_observed_phases_J_m2": 1934306.9470676659,
+        "observed_column_count_min_max": [
+          8910,
+          8910
+        ],
+        "incomplete_spatial_phase_seconds": 0,
+        "native_interior_convergence_integral_of_observed_phases_J_m2": 530053.8676298859,
+        "pressure_mass_heating_integral_of_observed_phases_J_m2": 552539.1883161427,
+        "dry_mass_heating_integral_of_observed_phases_J_m2": 549658.1594454293
+      }
+    },
+    {
+      "hour": 14,
+      "seconds": 3600,
+      "actual_RHS_radiation_equivalent_J_m2": -9165.846045758857,
+      "raw_source_full_equivalent_J_m2": -12067.513612354609,
+      "raw_source_interior_equivalent_J_m2": -9165.846044455113,
+      "LW": {
+        "observed_phase_seconds": 3600,
+        "missing_phase_seconds": 0,
+        "native_convergence_integral_of_observed_phases_J_m2": -699979.2798082362,
+        "extended_TOA_net_integral_of_observed_phases_J_m2": -938572.8578829492,
+        "observed_column_count_min_max": [
+          8910,
+          8910
+        ],
+        "incomplete_spatial_phase_seconds": 0,
+        "native_interior_convergence_integral_of_observed_phases_J_m2": -669664.456106018,
+        "pressure_mass_heating_integral_of_observed_phases_J_m2": -699979.2798792667,
+        "dry_mass_heating_integral_of_observed_phases_J_m2": -696511.0981911834
+      },
+      "SW": {
+        "observed_phase_seconds": 3600,
+        "missing_phase_seconds": 0,
+        "native_convergence_integral_of_observed_phases_J_m2": 688114.8334051757,
+        "extended_TOA_net_integral_of_observed_phases_J_m2": 2571457.6002032952,
+        "observed_column_count_min_max": [
+          8910,
+          8910
+        ],
+        "incomplete_spatial_phase_seconds": 0,
+        "native_interior_convergence_integral_of_observed_phases_J_m2": 660697.3198002356,
+        "pressure_mass_heating_integral_of_observed_phases_J_m2": 688114.833548415,
+        "dry_mass_heating_integral_of_observed_phases_J_m2": 684443.6327799902
+      }
+    },
+    {
+      "hour": 15,
+      "seconds": 3600,
+      "actual_RHS_radiation_equivalent_J_m2": 81165.40436949555,
+      "raw_source_full_equivalent_J_m2": 81735.18928968119,
+      "raw_source_interior_equivalent_J_m2": 81165.4043729109,
+      "LW": {
+        "observed_phase_seconds": 3600,
+        "missing_phase_seconds": 0,
+        "native_convergence_integral_of_observed_phases_J_m2": -694003.255515647,
+        "extended_TOA_net_integral_of_observed_phases_J_m2": -940572.4045615382,
+        "observed_column_count_min_max": [
+          8910,
+          8910
+        ],
+        "incomplete_spatial_phase_seconds": 0,
+        "native_interior_convergence_integral_of_observed_phases_J_m2": -664054.5182838615,
+        "pressure_mass_heating_integral_of_observed_phases_J_m2": -694003.255251337,
+        "dry_mass_heating_integral_of_observed_phases_J_m2": -690593.1689746779
+      },
+      "SW": {
+        "observed_phase_seconds": 3600,
+        "missing_phase_seconds": 0,
+        "native_convergence_integral_of_observed_phases_J_m2": 776513.5087576957,
+        "extended_TOA_net_integral_of_observed_phases_J_m2": 3010953.810139629,
+        "observed_column_count_min_max": [
+          8910,
+          8910
+        ],
+        "incomplete_spatial_phase_seconds": 0,
+        "native_interior_convergence_integral_of_observed_phases_J_m2": 745967.8311420443,
+        "pressure_mass_heating_integral_of_observed_phases_J_m2": 776513.5083079103,
+        "dry_mass_heating_integral_of_observed_phases_J_m2": 772328.5244638011
+      }
+    },
+    {
+      "hour": 16,
+      "seconds": 3600,
+      "actual_RHS_radiation_equivalent_J_m2": 123152.03034720212,
+      "raw_source_full_equivalent_J_m2": 125278.78392925451,
+      "raw_source_interior_equivalent_J_m2": 123152.0303447494,
+      "LW": {
+        "observed_phase_seconds": 3600,
+        "missing_phase_seconds": 0,
+        "native_convergence_integral_of_observed_phases_J_m2": -689827.5763401595,
+        "extended_TOA_net_integral_of_observed_phases_J_m2": -941397.3620601249,
+        "observed_column_count_min_max": [
+          8910,
+          8910
+        ],
+        "incomplete_spatial_phase_seconds": 0,
+        "native_interior_convergence_integral_of_observed_phases_J_m2": -660089.2160276454,
+        "pressure_mass_heating_integral_of_observed_phases_J_m2": -689827.5767069252,
+        "dry_mass_heating_integral_of_observed_phases_J_m2": -686446.9070359179
+      },
+      "SW": {
+        "observed_phase_seconds": 3600,
+        "missing_phase_seconds": 0,
+        "native_convergence_integral_of_observed_phases_J_m2": 816135.6347955075,
+        "extended_TOA_net_integral_of_observed_phases_J_m2": 3220838.2247389,
+        "observed_column_count_min_max": [
+          8910,
+          8910
+        ],
+        "incomplete_spatial_phase_seconds": 0,
+        "native_interior_convergence_integral_of_observed_phases_J_m2": 784232.8724364784,
+        "pressure_mass_heating_integral_of_observed_phases_J_m2": 816135.6343959772,
+        "dry_mass_heating_integral_of_observed_phases_J_m2": 811725.926432296
+      }
+    },
+    {
+      "hour": 17,
+      "seconds": 3600,
+      "actual_RHS_radiation_equivalent_J_m2": 115158.34753604792,
+      "raw_source_full_equivalent_J_m2": 116936.09898574247,
+      "raw_source_interior_equivalent_J_m2": 115158.34753502836,
+      "LW": {
+        "observed_phase_seconds": 3600,
+        "missing_phase_seconds": 0,
+        "native_convergence_integral_of_observed_phases_J_m2": -687855.1494259371,
+        "extended_TOA_net_integral_of_observed_phases_J_m2": -940469.7656038672,
+        "observed_column_count_min_max": [
+          8910,
+          8910
+        ],
+        "incomplete_spatial_phase_seconds": 0,
+        "native_interior_convergence_integral_of_observed_phases_J_m2": -658159.5797432351,
+        "pressure_mass_heating_integral_of_observed_phases_J_m2": -687855.149600232,
+        "dry_mass_heating_integral_of_observed_phases_J_m2": -684473.0665517238
+      },
+      "SW": {
+        "observed_phase_seconds": 3600,
+        "missing_phase_seconds": 0,
+        "native_convergence_integral_of_observed_phases_J_m2": 805746.9935589593,
+        "extended_TOA_net_integral_of_observed_phases_J_m2": 3171246.7265503304,
+        "observed_column_count_min_max": [
+          8910,
+          8910
+        ],
+        "incomplete_spatial_phase_seconds": 0,
+        "native_interior_convergence_integral_of_observed_phases_J_m2": 774237.9739515979,
+        "pressure_mass_heating_integral_of_observed_phases_J_m2": 805746.9942669809,
+        "dry_mass_heating_integral_of_observed_phases_J_m2": 801409.3515908845
+      }
+    },
+    {
+      "hour": 18,
+      "seconds": 3600,
+      "actual_RHS_radiation_equivalent_J_m2": 57159.682646911424,
+      "raw_source_full_equivalent_J_m2": 56709.70841486732,
+      "raw_source_interior_equivalent_J_m2": 57159.68265580823,
+      "LW": {
+        "observed_phase_seconds": 3600,
+        "missing_phase_seconds": 0,
+        "native_convergence_integral_of_observed_phases_J_m2": -688273.9456918009,
+        "extended_TOA_net_integral_of_observed_phases_J_m2": -938493.8483609606,
+        "observed_column_count_min_max": [
+          8910,
+          8910
+        ],
+        "incomplete_spatial_phase_seconds": 0,
+        "native_interior_convergence_integral_of_observed_phases_J_m2": -658517.595732264,
+        "pressure_mass_heating_integral_of_observed_phases_J_m2": -688273.9456192637,
+        "dry_mass_heating_integral_of_observed_phases_J_m2": -684856.0215814804
+      },
+      "SW": {
+        "observed_phase_seconds": 3600,
+        "missing_phase_seconds": 0,
+        "native_convergence_integral_of_observed_phases_J_m2": 745543.1735549081,
+        "extended_TOA_net_integral_of_observed_phases_J_m2": 2868604.942059863,
+        "observed_column_count_min_max": [
+          8910,
+          8910
+        ],
+        "incomplete_spatial_phase_seconds": 0,
+        "native_interior_convergence_integral_of_observed_phases_J_m2": 716215.786226945,
+        "pressure_mass_heating_integral_of_observed_phases_J_m2": 745543.1735727217,
+        "dry_mass_heating_integral_of_observed_phases_J_m2": 741565.9677223233
+      }
+    },
+    {
+      "hour": 19,
+      "seconds": 3600,
+      "actual_RHS_radiation_equivalent_J_m2": -50228.531714996454,
+      "raw_source_full_equivalent_J_m2": -54684.984741365246,
+      "raw_source_interior_equivalent_J_m2": -50228.53172093482,
+      "LW": {
+        "observed_phase_seconds": 3600,
+        "missing_phase_seconds": 0,
+        "native_convergence_integral_of_observed_phases_J_m2": -690919.3142671641,
+        "extended_TOA_net_integral_of_observed_phases_J_m2": -936448.4598683758,
+        "observed_column_count_min_max": [
+          8910,
+          8910
+        ],
+        "incomplete_spatial_phase_seconds": 0,
+        "native_interior_convergence_integral_of_observed_phases_J_m2": -661056.1667163413,
+        "pressure_mass_heating_integral_of_observed_phases_J_m2": -690919.3140676393,
+        "dry_mass_heating_integral_of_observed_phases_J_m2": -687446.4069502847
+      },
+      "SW": {
+        "observed_phase_seconds": 3600,
+        "missing_phase_seconds": 0,
+        "native_convergence_integral_of_observed_phases_J_m2": 636099.6801242442,
+        "extended_TOA_net_integral_of_observed_phases_J_m2": 2344760.960692207,
+        "observed_column_count_min_max": [
+          8910,
+          8910
+        ],
+        "incomplete_spatial_phase_seconds": 0,
+        "native_interior_convergence_integral_of_observed_phases_J_m2": 610697.3285908323,
+        "pressure_mass_heating_integral_of_observed_phases_J_m2": 636099.6804038477,
+        "dry_mass_heating_integral_of_observed_phases_J_m2": 632761.6164277979
+      }
+    },
+    {
+      "hour": 20,
+      "seconds": 3600,
+      "actual_RHS_radiation_equivalent_J_m2": -203469.0743234895,
+      "raw_source_full_equivalent_J_m2": -213917.9669099265,
+      "raw_source_interior_equivalent_J_m2": -203469.07432384123,
+      "LW": {
+        "observed_phase_seconds": 3600,
+        "missing_phase_seconds": 0,
+        "native_convergence_integral_of_observed_phases_J_m2": -694419.9969943858,
+        "extended_TOA_net_integral_of_observed_phases_J_m2": -932796.4397667676,
+        "observed_column_count_min_max": [
+          8910,
+          8910
+        ],
+        "incomplete_spatial_phase_seconds": 0,
+        "native_interior_convergence_integral_of_observed_phases_J_m2": -664273.8805515675,
+        "pressure_mass_heating_integral_of_observed_phases_J_m2": -694419.9969576952,
+        "dry_mass_heating_integral_of_observed_phases_J_m2": -690892.3203513004
+      },
+      "SW": {
+        "observed_phase_seconds": 3600,
+        "missing_phase_seconds": 0,
+        "native_convergence_integral_of_observed_phases_J_m2": 479415.20634962054,
+        "extended_TOA_net_integral_of_observed_phases_J_m2": 1638911.6346323716,
+        "observed_column_count_min_max": [
+          8910,
+          8910
+        ],
+        "incomplete_spatial_phase_seconds": 0,
+        "native_interior_convergence_integral_of_observed_phases_J_m2": 459759.2213072027,
+        "pressure_mass_heating_integral_of_observed_phases_J_m2": 479415.2061528719,
+        "dry_mass_heating_integral_of_observed_phases_J_m2": 476974.45029975916
+      }
+    },
+    {
+      "hour": 21,
+      "seconds": 3600,
+      "actual_RHS_radiation_equivalent_J_m2": -403263.3934299773,
+      "raw_source_full_equivalent_J_m2": -422039.05916906695,
+      "raw_source_interior_equivalent_J_m2": -403263.3934321897,
+      "LW": {
+        "observed_phase_seconds": 3600,
+        "missing_phase_seconds": 0,
+        "native_convergence_integral_of_observed_phases_J_m2": -698748.2835500443,
+        "extended_TOA_net_integral_of_observed_phases_J_m2": -928961.0190924929,
+        "observed_column_count_min_max": [
+          8910,
+          8910
+        ],
+        "incomplete_spatial_phase_seconds": 0,
+        "native_interior_convergence_integral_of_observed_phases_J_m2": -668154.6192552928,
+        "pressure_mass_heating_integral_of_observed_phases_J_m2": -698748.2835695271,
+        "dry_mass_heating_integral_of_observed_phases_J_m2": -695149.5524829377
+      },
+      "SW": {
+        "observed_phase_seconds": 3600,
+        "missing_phase_seconds": 0,
+        "native_convergence_integral_of_observed_phases_J_m2": 274439.25610243744,
+        "extended_TOA_net_integral_of_observed_phases_J_m2": 838874.7118020399,
+        "observed_column_count_min_max": [
+          7801,
+          8910
+        ],
+        "incomplete_spatial_phase_seconds": 1200,
+        "native_interior_convergence_integral_of_observed_phases_J_m2": 262711.75717922056,
+        "pressure_mass_heating_integral_of_observed_phases_J_m2": 274439.25591161114,
+        "dry_mass_heating_integral_of_observed_phases_J_m2": 273110.81388339907
+      }
+    },
+    {
+      "hour": 22,
+      "seconds": 3600,
+      "actual_RHS_radiation_equivalent_J_m2": -598815.0507759568,
+      "raw_source_full_equivalent_J_m2": -625278.0088826084,
+      "raw_source_interior_equivalent_J_m2": -598815.0507814568,
+      "LW": {
+        "observed_phase_seconds": 3600,
+        "missing_phase_seconds": 0,
+        "native_convergence_integral_of_observed_phases_J_m2": -705273.0563167791,
+        "extended_TOA_net_integral_of_observed_phases_J_m2": -926275.0296436395,
+        "observed_column_count_min_max": [
+          8910,
+          8910
+        ],
+        "incomplete_spatial_phase_seconds": 0,
+        "native_interior_convergence_integral_of_observed_phases_J_m2": -674078.1623370119,
+        "pressure_mass_heating_integral_of_observed_phases_J_m2": -705273.0564140193,
+        "dry_mass_heating_integral_of_observed_phases_J_m2": -701592.6357757522
+      },
+      "SW": {
+        "observed_phase_seconds": 3600,
+        "missing_phase_seconds": 0,
+        "native_convergence_integral_of_observed_phases_J_m2": 76671.6215205892,
+        "extended_TOA_net_integral_of_observed_phases_J_m2": 209874.5843421219,
+        "observed_column_count_min_max": [
+          2502,
+          6919
+        ],
+        "incomplete_spatial_phase_seconds": 3600,
+        "native_interior_convergence_integral_of_observed_phases_J_m2": 72074.27644339218,
+        "pressure_mass_heating_integral_of_observed_phases_J_m2": 76671.62148503175,
+        "dry_mass_heating_integral_of_observed_phases_J_m2": 76315.1722039692
+      }
+    },
+    {
+      "hour": 23,
+      "seconds": 3600,
+      "actual_RHS_radiation_equivalent_J_m2": -674553.6414314457,
+      "raw_source_full_equivalent_J_m2": -705841.8578801422,
+      "raw_source_interior_equivalent_J_m2": -674553.641420715,
+      "LW": {
+        "observed_phase_seconds": 3600,
+        "missing_phase_seconds": 0,
+        "native_convergence_integral_of_observed_phases_J_m2": -712091.6850795398,
+        "extended_TOA_net_integral_of_observed_phases_J_m2": -925929.7697070191,
+        "observed_column_count_min_max": [
+          8910,
+          8910
+        ],
+        "incomplete_spatial_phase_seconds": 0,
+        "native_interior_convergence_integral_of_observed_phases_J_m2": -680257.1598903148,
+        "pressure_mass_heating_integral_of_observed_phases_J_m2": -712091.6851125548,
+        "dry_mass_heating_integral_of_observed_phases_J_m2": -708348.9704915558
+      },
+      "SW": {
+        "observed_phase_seconds": 1800,
+        "missing_phase_seconds": 1800,
+        "native_convergence_integral_of_observed_phases_J_m2": 2518.731988385372,
+        "extended_TOA_net_integral_of_observed_phases_J_m2": 5634.453535527325,
+        "observed_column_count_min_max": [
+          100,
+          1621
+        ],
+        "incomplete_spatial_phase_seconds": 1800,
+        "native_interior_convergence_integral_of_observed_phases_J_m2": 2135.02007722085,
+        "pressure_mass_heating_integral_of_observed_phases_J_m2": 2518.7319875159783,
+        "dry_mass_heating_integral_of_observed_phases_J_m2": 2507.6494644849568
+      }
+    }
+  ],
+  "history_operator_stock_comparison": [
+    {
+      "time": "2016-10-06_00:00:00",
+      "history_minus_operator_stock_kg_m2": -1.1510792319313623e-12
+    },
+    {
+      "time": "2016-10-06_01:00:00",
+      "history_minus_operator_stock_kg_m2": -1.0373923942097463e-12
+    },
+    {
+      "time": "2016-10-06_02:00:00",
+      "history_minus_operator_stock_kg_m2": -1.1084466677857563e-12
+    },
+    {
+      "time": "2016-10-06_03:00:00",
+      "history_minus_operator_stock_kg_m2": -1.0658141036401503e-12
+    },
+    {
+      "time": "2016-10-06_04:00:00",
+      "history_minus_operator_stock_kg_m2": -1.0658141036401503e-12
+    },
+    {
+      "time": "2016-10-06_05:00:00",
+      "history_minus_operator_stock_kg_m2": -1.0871303857129533e-12
+    },
+    {
+      "time": "2016-10-06_06:00:00",
+      "history_minus_operator_stock_kg_m2": -1.0729195309977513e-12
+    },
+    {
+      "time": "2016-10-06_07:00:00",
+      "history_minus_operator_stock_kg_m2": -1.1226575225009583e-12
+    },
+    {
+      "time": "2016-10-06_08:00:00",
+      "history_minus_operator_stock_kg_m2": -1.0658141036401503e-12
+    },
+    {
+      "time": "2016-10-06_09:00:00",
+      "history_minus_operator_stock_kg_m2": -1.0444978215673473e-12
+    },
+    {
+      "time": "2016-10-06_10:00:00",
+      "history_minus_operator_stock_kg_m2": -1.0231815394945443e-12
+    },
+    {
+      "time": "2016-10-06_11:00:00",
+      "history_minus_operator_stock_kg_m2": -1.0089706847793423e-12
+    },
+    {
+      "time": "2016-10-06_12:00:00",
+      "history_minus_operator_stock_kg_m2": -1.0729195309977513e-12
+    },
+    {
+      "time": "2016-10-06_13:00:00",
+      "history_minus_operator_stock_kg_m2": -1.0800249583553523e-12
+    },
+    {
+      "time": "2016-10-06_14:00:00",
+      "history_minus_operator_stock_kg_m2": -1.0800249583553523e-12
+    },
+    {
+      "time": "2016-10-06_15:00:00",
+      "history_minus_operator_stock_kg_m2": -1.1297629498585593e-12
+    },
+    {
+      "time": "2016-10-06_16:00:00",
+      "history_minus_operator_stock_kg_m2": -1.1155520951433573e-12
+    },
+    {
+      "time": "2016-10-06_17:00:00",
+      "history_minus_operator_stock_kg_m2": -1.0658141036401503e-12
+    },
+    {
+      "time": "2016-10-06_18:00:00",
+      "history_minus_operator_stock_kg_m2": -1.0871303857129533e-12
+    },
+    {
+      "time": "2016-10-06_19:00:00",
+      "history_minus_operator_stock_kg_m2": -1.0587086762825493e-12
+    },
+    {
+      "time": "2016-10-06_20:00:00",
+      "history_minus_operator_stock_kg_m2": -9.734435479913373e-13
+    },
+    {
+      "time": "2016-10-06_21:00:00",
+      "history_minus_operator_stock_kg_m2": -1.0942358130705543e-12
+    },
+    {
+      "time": "2016-10-06_22:00:00",
+      "history_minus_operator_stock_kg_m2": -1.0800249583553523e-12
+    },
+    {
+      "time": "2016-10-06_23:00:00",
+      "history_minus_operator_stock_kg_m2": -1.0658141036401503e-12
+    },
+    {
+      "time": "2016-10-07_00:00:00",
+      "history_minus_operator_stock_kg_m2": -1.0942358130705543e-12
+    }
+  ],
+  "frozen_input_exposure": [
+    {
+      "species": "graupel",
+      "LW_calls": 144,
+      "call_hold_weighted_path_kg_s_m2": 279.2148371880767,
+      "endpoint_20000_path_fraction": 0.0019201483969086448,
+      "above_273_15K_ambient_layer_path_fraction": 0.1585855344050133,
+      "outside_table_path_kg_s_m2": 0.0,
+      "lambda_min_max": [
+        1598.043701171875,
+        20000.0
+      ],
+      "ambient_temperature_min_max_K": [
+        177.106201171875,
+        280.7614440917969
+      ],
+      "largest_path_call": {
+        "source_time_s": 7800,
+        "species": "graupel",
+        "path_kg_m2": 0.006884010838177,
+        "positive_layers": 111353,
+        "lambda_min_max": [
+          1638.0301513671875,
+          20000.0
+        ],
+        "temperature_min_max": [
+          187.38015747070312,
+          279.65484619140625
+        ],
+        "outside_table_path_kg_m2": 0.0,
+        "lambda_20000_endpoint_path_kg_m2": 8.509588119638177e-06,
+        "above_273_15K_path_kg_m2": 0.0006187296777575736
+      },
+      "note": "Actual supplied LW input exposure weighted by the source hold interval. Not actual hydrometeor residence-time integration, optical error, or pre-limit PSD proof."
+    },
+    {
+      "species": "hail",
+      "LW_calls": 144,
+      "call_hold_weighted_path_kg_s_m2": 67.51921317115496,
+      "endpoint_20000_path_fraction": 0.00016168457744177665,
+      "above_273_15K_ambient_layer_path_fraction": 0.5567331384192008,
+      "outside_table_path_kg_s_m2": 0.0,
+      "lambda_min_max": [
+        361.8551940917969,
+        20000.0
+      ],
+      "ambient_temperature_min_max_K": [
+        177.106201171875,
+        294.8531799316406
+      ],
+      "largest_path_call": {
+        "source_time_s": 3000,
+        "species": "hail",
+        "path_kg_m2": 0.007011923812980711,
+        "positive_layers": 98933,
+        "lambda_min_max": [
+          361.8551940917969,
+          20000.0
+        ],
+        "temperature_min_max": [
+          179.1830291748047,
+          287.4490966796875
+        ],
+        "outside_table_path_kg_m2": 0.0,
+        "lambda_20000_endpoint_path_kg_m2": 1.3205923031377588e-07,
+        "above_273_15K_path_kg_m2": 0.003872237850394181
+      },
+      "note": "Actual supplied LW input exposure weighted by the source hold interval. Not actual hydrometeor residence-time integration, optical error, or pre-limit PSD proof."
+    }
+  ],
+  "hourly_history_quality": {
+    "QVAPOR": {
+      "min": -3.5453544455776864e-07,
+      "max": 0.022988336160779,
+      "negative_elements": 193,
+      "nonfinite_elements": 0
+    },
+    "QCLOUD": {
+      "min": 0.0,
+      "max": 0.00981428474187851,
+      "negative_elements": 0,
+      "nonfinite_elements": 0
+    },
+    "QRAIN": {
+      "min": 0.0,
+      "max": 0.0164163988083601,
+      "negative_elements": 0,
+      "nonfinite_elements": 0
+    },
+    "QICE": {
+      "min": 0.0,
+      "max": 0.00036720914067700505,
+      "negative_elements": 0,
+      "nonfinite_elements": 0
+    },
+    "QSNOW": {
+      "min": 0.0,
+      "max": 0.0035322096664458513,
+      "negative_elements": 0,
+      "nonfinite_elements": 0
+    },
+    "QGRAUP": {
+      "min": 0.0,
+      "max": 0.0013843202032148838,
+      "negative_elements": 0,
+      "nonfinite_elements": 0
+    },
+    "QHAIL": {
+      "min": 0.0,
+      "max": 0.0025705916341394186,
+      "negative_elements": 0,
+      "nonfinite_elements": 0
+    },
+    "QNCLOUD": {
+      "min": 0.0,
+      "max": 6844140544.0,
+      "negative_elements": 0,
+      "nonfinite_elements": 0
+    },
+    "QNRAIN": {
+      "min": 0.0,
+      "max": 17934454.0,
+      "negative_elements": 0,
+      "nonfinite_elements": 0
+    },
+    "QNCCN": {
+      "min": 0.0,
+      "max": 6920987136.0,
+      "negative_elements": 0,
+      "nonfinite_elements": 0
+    }
+  },
+  "hourly_history_numeric_nonfinite_elements": 0,
+  "hourly_negative_vapor_states": [
+    {
+      "time": "2016-10-06_01:00:00",
+      "elements": 6,
+      "interior_elements": 6,
+      "outer_elements": 0,
+      "negative_water_magnitude_kg_m2": 4.106737935043657e-15,
+      "minimum_kg_kg": -2.937408617124243e-14,
+      "minimum_fortran_k_j_i_1based": [
+        21,
+        39,
+        69
+      ]
+    },
+    {
+      "time": "2016-10-06_02:00:00",
+      "elements": 2,
+      "interior_elements": 2,
+      "outer_elements": 0,
+      "negative_water_magnitude_kg_m2": 2.2634153140431706e-15,
+      "minimum_kg_kg": -3.8185051637589645e-14,
+      "minimum_fortran_k_j_i_1based": [
+        16,
+        88,
+        63
+      ]
+    },
+    {
+      "time": "2016-10-06_03:00:00",
+      "elements": 4,
+      "interior_elements": 4,
+      "outer_elements": 0,
+      "negative_water_magnitude_kg_m2": 1.24222073999425e-15,
+      "minimum_kg_kg": -1.826051415382713e-14,
+      "minimum_fortran_k_j_i_1based": [
+        18,
+        93,
+        77
+      ]
+    },
+    {
+      "time": "2016-10-06_04:00:00",
+      "elements": 6,
+      "interior_elements": 6,
+      "outer_elements": 0,
+      "negative_water_magnitude_kg_m2": 6.5856913592327236e-15,
+      "minimum_kg_kg": -1.1652029167918965e-13,
+      "minimum_fortran_k_j_i_1based": [
+        24,
+        19,
+        17
+      ]
+    },
+    {
+      "time": "2016-10-06_05:00:00",
+      "elements": 6,
+      "interior_elements": 6,
+      "outer_elements": 0,
+      "negative_water_magnitude_kg_m2": 1.3908660904039183e-14,
+      "minimum_kg_kg": -1.2674725906412082e-13,
+      "minimum_fortran_k_j_i_1based": [
+        16,
+        67,
+        5
+      ]
+    },
+    {
+      "time": "2016-10-06_06:00:00",
+      "elements": 3,
+      "interior_elements": 3,
+      "outer_elements": 0,
+      "negative_water_magnitude_kg_m2": 7.138365015682573e-15,
+      "minimum_kg_kg": -9.320083767250242e-14,
+      "minimum_fortran_k_j_i_1based": [
+        16,
+        66,
+        5
+      ]
+    },
+    {
+      "time": "2016-10-06_07:00:00",
+      "elements": 10,
+      "interior_elements": 10,
+      "outer_elements": 0,
+      "negative_water_magnitude_kg_m2": 1.0032904138791598e-14,
+      "minimum_kg_kg": -7.682203262198914e-14,
+      "minimum_fortran_k_j_i_1based": [
+        16,
+        87,
+        78
+      ]
+    },
+    {
+      "time": "2016-10-06_08:00:00",
+      "elements": 8,
+      "interior_elements": 8,
+      "outer_elements": 0,
+      "negative_water_magnitude_kg_m2": 1.267000138758988e-14,
+      "minimum_kg_kg": -1.4369538545166982e-13,
+      "minimum_fortran_k_j_i_1based": [
+        19,
+        81,
+        56
+      ]
+    },
+    {
+      "time": "2016-10-06_09:00:00",
+      "elements": 6,
+      "interior_elements": 6,
+      "outer_elements": 0,
+      "negative_water_magnitude_kg_m2": 2.1253235470655058e-14,
+      "minimum_kg_kg": -1.9690480257579523e-13,
+      "minimum_fortran_k_j_i_1based": [
+        19,
+        92,
+        86
+      ]
+    },
+    {
+      "time": "2016-10-06_10:00:00",
+      "elements": 7,
+      "interior_elements": 7,
+      "outer_elements": 0,
+      "negative_water_magnitude_kg_m2": 1.6008268922064135e-14,
+      "minimum_kg_kg": -1.0728650091810024e-13,
+      "minimum_fortran_k_j_i_1based": [
+        21,
+        48,
+        9
+      ]
+    },
+    {
+      "time": "2016-10-06_11:00:00",
+      "elements": 7,
+      "interior_elements": 7,
+      "outer_elements": 0,
+      "negative_water_magnitude_kg_m2": 2.6555715324800873e-14,
+      "minimum_kg_kg": -4.2756068325579266e-13,
+      "minimum_fortran_k_j_i_1based": [
+        20,
+        45,
+        5
+      ]
+    },
+    {
+      "time": "2016-10-06_12:00:00",
+      "elements": 5,
+      "interior_elements": 5,
+      "outer_elements": 0,
+      "negative_water_magnitude_kg_m2": 9.56905498972546e-09,
+      "minimum_kg_kg": -3.5453544455776864e-07,
+      "minimum_fortran_k_j_i_1based": [
+        22,
+        98,
+        88
+      ]
+    },
+    {
+      "time": "2016-10-06_13:00:00",
+      "elements": 9,
+      "interior_elements": 9,
+      "outer_elements": 0,
+      "negative_water_magnitude_kg_m2": 1.34772240668124e-14,
+      "minimum_kg_kg": -7.620132010197761e-14,
+      "minimum_fortran_k_j_i_1based": [
+        16,
+        88,
+        54
+      ]
+    },
+    {
+      "time": "2016-10-06_14:00:00",
+      "elements": 5,
+      "interior_elements": 5,
+      "outer_elements": 0,
+      "negative_water_magnitude_kg_m2": 5.961411867023818e-15,
+      "minimum_kg_kg": -6.210798612600946e-14,
+      "minimum_fortran_k_j_i_1based": [
+        16,
+        86,
+        72
+      ]
+    },
+    {
+      "time": "2016-10-06_15:00:00",
+      "elements": 10,
+      "interior_elements": 10,
+      "outer_elements": 0,
+      "negative_water_magnitude_kg_m2": 1.3216824078512302e-14,
+      "minimum_kg_kg": -8.905235489992114e-14,
+      "minimum_fortran_k_j_i_1based": [
+        26,
+        31,
+        12
+      ]
+    },
+    {
+      "time": "2016-10-06_16:00:00",
+      "elements": 9,
+      "interior_elements": 9,
+      "outer_elements": 0,
+      "negative_water_magnitude_kg_m2": 5.50325160769637e-14,
+      "minimum_kg_kg": -7.697396322767225e-13,
+      "minimum_fortran_k_j_i_1based": [
+        13,
+        82,
+        34
+      ]
+    },
+    {
+      "time": "2016-10-06_17:00:00",
+      "elements": 15,
+      "interior_elements": 15,
+      "outer_elements": 0,
+      "negative_water_magnitude_kg_m2": 2.7014213363691757e-14,
+      "minimum_kg_kg": -1.555285305925025e-13,
+      "minimum_fortran_k_j_i_1based": [
+        13,
+        85,
+        33
+      ]
+    },
+    {
+      "time": "2016-10-06_18:00:00",
+      "elements": 12,
+      "interior_elements": 12,
+      "outer_elements": 0,
+      "negative_water_magnitude_kg_m2": 5.70271830328177e-14,
+      "minimum_kg_kg": -3.120678357653589e-13,
+      "minimum_fortran_k_j_i_1based": [
+        13,
+        86,
+        32
+      ]
+    },
+    {
+      "time": "2016-10-06_19:00:00",
+      "elements": 8,
+      "interior_elements": 8,
+      "outer_elements": 0,
+      "negative_water_magnitude_kg_m2": 1.034178469959875e-14,
+      "minimum_kg_kg": -7.750659787369649e-14,
+      "minimum_fortran_k_j_i_1based": [
+        14,
+        90,
+        34
+      ]
+    },
+    {
+      "time": "2016-10-06_20:00:00",
+      "elements": 17,
+      "interior_elements": 17,
+      "outer_elements": 0,
+      "negative_water_magnitude_kg_m2": 8.310861302900126e-14,
+      "minimum_kg_kg": -1.5826988157552346e-12,
+      "minimum_fortran_k_j_i_1based": [
+        12,
+        95,
+        32
+      ]
+    },
+    {
+      "time": "2016-10-06_21:00:00",
+      "elements": 9,
+      "interior_elements": 9,
+      "outer_elements": 0,
+      "negative_water_magnitude_kg_m2": 4.240871821647782e-14,
+      "minimum_kg_kg": -4.20816268116575e-13,
+      "minimum_fortran_k_j_i_1based": [
+        15,
+        95,
+        37
+      ]
+    },
+    {
+      "time": "2016-10-06_22:00:00",
+      "elements": 9,
+      "interior_elements": 9,
+      "outer_elements": 0,
+      "negative_water_magnitude_kg_m2": 5.071683149820189e-14,
+      "minimum_kg_kg": -8.033115188668671e-13,
+      "minimum_fortran_k_j_i_1based": [
+        15,
+        95,
+        37
+      ]
+    },
+    {
+      "time": "2016-10-06_23:00:00",
+      "elements": 12,
+      "interior_elements": 12,
+      "outer_elements": 0,
+      "negative_water_magnitude_kg_m2": 3.4033409914172286e-14,
+      "minimum_kg_kg": -3.8114474141918986e-13,
+      "minimum_fortran_k_j_i_1based": [
+        16,
+        95,
+        38
+      ]
+    },
+    {
+      "time": "2016-10-07_00:00:00",
+      "elements": 8,
+      "interior_elements": 8,
+      "outer_elements": 0,
+      "negative_water_magnitude_kg_m2": 6.093694225505417e-14,
+      "minimum_kg_kg": -8.037202088757855e-13,
+      "minimum_fortran_k_j_i_1based": [
+        13,
+        89,
+        29
+      ]
+    }
+  ],
+  "history_temperature_min_max_K": [
+    177.10619564270368,
+    308.0369333511533
+  ],
+  "original_trajectory_overlap": [
+    {
+      "time": "2016-10-06_06:00:00",
+      "compared_arrays": 225,
+      "differences": [],
+      "all_byte_equal": true
+    }
+  ],
+  "off_schedule_CU_memory_checks": 1151,
+  "max_off_schedule_inactive_rain_change_kg_m2": 0.0,
+  "decisions": {
+    "spatial_question": "closed: preserve outer precipitation separately and native counter-sum rounding separately; the remaining interior residual is real as a source/counter comparison",
+    "time_question": "actual native expiry zeros five moisture tendencies while retaining PRATEC; off-schedule next-step positive precipitation on inactive columns is measured separately",
+    "paired_columns": "remaining active paired and source-without-positive-rain differences retained; mass normalization/process adequacy not approved",
+    "runtime_scope": "the planned fixed real-data period is evaluated as recorded; no policy, source, coefficient, time-step or guard changes",
+    "physical_application": "research-only configuration retained; no empirical correction or physical conservation approval"
+  },
+  "water_conservation_approved": false,
+  "whole_energy_approved": false,
+  "frozen_accuracy_approved": false,
+  "forecast_skill_approved": false,
+  "missing": [
+    "independently reconstructed lateral face flux",
+    "isolated radiation-only acoustic state increment",
+    "frozen independent optical accuracy",
+    "observations and purpose-specific physical tolerances"
+  ],
+  "original_seven_conditions_changed": false,
+  "new_model_runs_in_saved_replay": 0
+}
