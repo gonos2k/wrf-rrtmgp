@@ -2303,6 +2303,9 @@ SUBROUTINE advance_ppt(RTHCUTEN,RQVCUTEN,RQCCUTEN,RQRCUTEN,           &
 
    DO J = j_start,j_end
    DO i = i_start,i_end
+      ! Surface physics consumes this interval amount on the next step.
+      ! Refresh it even when KF Eta was not called, before expiring PRATEC below.
+      IF (config_flags%cu_physics == KFETASCHEME) RAINCV(I,J) = PRATEC(I,J)*DT
       RAINC(I,J)  = RAINC(I,J) + PRATEC(I,J)*DT
       RAINSH(I,J) = RAINSH(I,J) + PRATESH(I,J)*DT
       CUPPT(I,J)  = CUPPT(I,J) + (PRATEC(I,J)+PRATESH(I,J))*DT/1000.
@@ -2378,7 +2381,9 @@ SUBROUTINE advance_ppt(RTHCUTEN,RQVCUTEN,RQCCUTEN,RQRCUTEN,           &
               IF ( NINT(NCA(I,J) / DT) .LE. 1 ) THEN
 
               ! set tendency to zero
-!                PRATEC(I,J)=0.
+                 ! This step's rain has already been accumulated. Retain RAINCV
+                 ! for the next surface call, but do not reuse the expired rate.
+                 IF (config_flags%cu_physics == KFETASCHEME) PRATEC(I,J)=0.
 !                RAINCV(I,J)=0.
                  DO k = k_start,k_end
                     RTHCUTEN(i,k,j)=0.

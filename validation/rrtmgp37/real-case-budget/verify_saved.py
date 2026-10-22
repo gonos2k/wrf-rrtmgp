@@ -6,6 +6,7 @@ P=Path(__file__).resolve().parent;R=P.parents[2]
 def load(name,path):
  s=importlib.util.spec_from_file_location(name,path);m=importlib.util.module_from_spec(s);s.loader.exec_module(m);return m
 A=load('real_budget_analysis',P/'analyze.py');I=load('real_budget_instrument',P/'instrument.py')
+H=load('historical_budget_sources',P.parent/'historical-source/binding.py')
 def sha(x):return hashlib.sha256(x).hexdigest()
 def readonly(public,private):
  a=public.splitlines(keepends=True);b=private.splitlines(keepends=True)
@@ -21,16 +22,17 @@ def data():
  with tarfile.open(fileobj=io.BytesIO(gzip.decompress(raw)),mode='r:') as t:
   A.require(set(t.getnames())==set(ident['files']),'unindexed archive');d={n:t.extractfile(n).read() for n in ident['files']}
  for n,pin in ident['files'].items():A.require(sha(d[n])==pin['sha256'] and len(d[n])==pin['bytes'],'payload '+n)
- for n,pin in ident['current_sources'].items():A.require(sha((R/n).read_bytes())==pin['sha256'],'current source '+n)
- for n,s in I.transform(R).items():
+ root=H.HistoricalRoot(R,ident['current_sources'])
+ for n,pin in ident['current_sources'].items():A.require(sha((root/n).read_bytes())==pin['sha256'],'historical source '+n)
+ for n,s in I.transform(root).items():
   A.require(d['build/'+n]==s.encode(),'generated read-only source differs '+n)
-  pub=R/('WRF/dyn_em' if n in ['solve_em.F','module_em.F'] else 'WRF/phys')/n
+  pub=root/('WRF/dyn_em' if n in ['solve_em.F','module_em.F'] else 'WRF/phys')/n
   readonly(pub.read_text(),s)
  A.require([x.rstrip() for x in d['build/probe.f90'].splitlines()]==[x.rstrip() for x in (P/'probe.f90').read_bytes().splitlines()],'compiled helper differs beyond trailing whitespace')
  b=json.loads(d['build/receipt.json']);h=json.loads(d['host/receipt.json'])
  A.require(b['executable']['sha256']==h['executable']['sha256'],'wrong runtime executable')
  for n,pin in b['private_sources'].items():A.require(sha(d['build/'+n])==pin['sha256'],'compiled private source receipt')
- for n,pin in b['public_sources'].items():A.require(sha((R/n).read_bytes())==pin['sha256'],'compiled public source receipt')
+ for n,pin in b['public_sources'].items():A.require(sha((root/n).read_bytes())==pin['sha256'],'compiled historical public source receipt')
  for x in b['commands']+h['commands']:A.require(x['actual_returncode']==0 and not x['timed_out'],'qualified command failed')
  A.require('SUCCESS COMPLETE WRF' in d['host/command-01.stdout'].decode() and 'FATAL CALLED' not in d['host/command-01.stdout'].decode(),'host did not complete')
  old=load('retained_restart_evidence',P.parent/'restart-first-step/verify_saved.py').data();base=json.loads(old['build/receipt.json'])
@@ -65,5 +67,6 @@ def main():
  p=argparse.ArgumentParser();p.add_argument('--write',action='store_true');args=p.parse_args();r=evaluate(data())
  if args.write:(P/'result.json').write_text(json.dumps(r,indent=2)+'\n')
  else:A.require(r==json.loads((P/'result.json').read_text()),'result detached from saved operands')
- print(json.dumps({'status':r['status'],'water_steps':len(r['water_steps']),'radiation_steps':len(r['radiation_steps']),'observer_pairs':675,'current_runtime_source_matches':True,'water_conservation_approved':False,'full_energy_budget_approved':False,'new_model_runs':0}))
+ ident=json.loads((P/'identity.json').read_text());matches=all(sha((R/n).read_bytes())==v['sha256'] for n,v in ident['current_sources'].items())
+ print(json.dumps({'status':r['status'],'water_steps':len(r['water_steps']),'radiation_steps':len(r['radiation_steps']),'observer_pairs':675,'current_runtime_source_matches':matches,'source_scope':'current' if matches else 'historical_PR191_snapshot','water_conservation_approved':False,'full_energy_budget_approved':False,'new_model_runs':0}))
 if __name__=='__main__':main()
