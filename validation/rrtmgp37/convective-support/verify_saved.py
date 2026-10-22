@@ -17,6 +17,7 @@ A = load('convective_runtime', P / 'analyze_run.py')
 M = load('convective_summary', P / 'summarize.py')
 I = load('convective_instrument', P / 'instrument.py')
 V = load('retained_real_budget', P.parent / 'real-case-budget/verify_saved.py')
+H = load('historical_convective_sources', P.parent / 'historical-source/binding.py')
 require = A.require
 
 def sha(raw):
@@ -31,12 +32,13 @@ def data():
         d = {name: tar.extractfile(name).read() for name in identity['files']}
     for name, pin in identity['files'].items():
         require(sha(d[name]) == pin['sha256'] and len(d[name]) == pin['bytes'], 'payload ' + name)
+    root = H.HistoricalRoot(R, identity['current_sources'])
     for name, pin in identity['current_sources'].items():
-        require(sha((R / name).read_bytes()) == pin['sha256'], 'current source ' + name)
-    for name, source in I.transform(R).items():
+        require(sha((root / name).read_bytes()) == pin['sha256'], 'historical source ' + name)
+    for name, source in I.transform(root).items():
         require(d['build/' + name] == source.encode(), 'generated observer source ' + name)
         folder = 'WRF/dyn_em' if name in ['solve_em.F', 'module_em.F'] else 'WRF/phys'
-        V.readonly((R / folder / name).read_text(), source)
+        V.readonly((root / folder / name).read_text(), source)
     require(d['build/probe.f90'] == (P / 'probe.f90').read_bytes(), 'compiled observer helper')
     build = json.loads(d['build/receipt.json'])
     host = json.loads(d['host/receipt.json'])
@@ -44,7 +46,7 @@ def data():
     for name, pin in build['private_sources'].items():
         require(sha(d['build/' + name]) == pin['sha256'], 'compiled private source ' + name)
     for name, pin in build['public_sources'].items():
-        require(sha((R / name).read_bytes()) == pin['sha256'], 'compiled public source ' + name)
+        require(sha((root / name).read_bytes()) == pin['sha256'], 'compiled historical public source ' + name)
     require(all(c['actual_returncode'] == 0 and not c['timed_out'] for c in build['commands']), 'build failed')
     require(len(host['commands']) == 1, 'not one preregistered cold model process')
     require(host['status'] in ['SUCCESS', 'STOPPED'], 'cannot deposit a running evaluation')
@@ -137,7 +139,9 @@ def main():
     else:
         require(result == json.loads((P / 'result.json').read_text()), 'result detached from saved inputs')
     print(json.dumps({k: result[k] for k in ['status', 'target_period_completed', 'completed_seconds', 'model_steps', 'history_records']}))
-    print('current_runtime_source_matches=true new_model_runs=0 water_conservation_approved=false whole_energy_approved=false')
+    identity = json.loads((P / 'identity.json').read_text())
+    matches = all(sha((R / name).read_bytes()) == pin['sha256'] for name, pin in identity['current_sources'].items())
+    print('current_runtime_source_matches=' + str(matches).lower() + ' source_scope=' + ('current' if matches else 'historical_PR192_snapshot') + ' new_model_runs=0 water_conservation_approved=false whole_energy_approved=false')
 
 if __name__ == '__main__':
     main()

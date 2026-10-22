@@ -357,5 +357,16 @@ class ConvectiveSupportRealPeriodIntegration(unittest.TestCase):
             self.assertEqual(proc.returncode, 0, name)
 
 
+class KFETAPrecipitationLifetimeIntegration(unittest.TestCase):
+    def test_last_valid_precipitation_expiry_surface_delivery_and_reactivation(self):
+        package = ROOT / 'validation/rrtmgp37/kfeta-precipitation-lifetime'
+        for name in ('verify_saved.py', 'test_saved.py'):
+            proc = subprocess.run([sys.executable, '-I', '-S', str(package / name)],
+                                  cwd=ROOT, capture_output=True, text=True, timeout=90)
+            print(proc.stdout, end='')
+            print(proc.stderr, end='')
+            self.assertEqual(proc.returncode, 0, name)
+
+
 if __name__ == '__main__':
     unittest.main()
