@@ -355,7 +355,8 @@ CONTAINS
                                  ids,ide, jds,jde, kds,kde,  & ! domain dims
                                  ims,ime, jms,jme, kms,kme,  & ! memory dims
                                  ips,ipe, jps,jpe, kps,kpe,  & ! patch  dims
-                                 its, ite, jts, jte, kts, kte)
+                                 its, ite, jts, jte, kts, kte, &
+                                 positive_dt, positive_mu)
    IMPLICIT NONE
 
    !  Input data.
@@ -378,9 +379,30 @@ CONTAINS
                                                                                scalar_btys,scalar_btye
    REAL , DIMENSION( kms:kme ) , INTENT(IN   ) :: c1h, c2h
    REAL, INTENT(IN   ) :: dtbc
+   ! Optional source budget for positive-definite water-vapor transport.
+   ! This is the full source interval, not dtbc (boundary interpolation time).
+   REAL, OPTIONAL, INTENT(IN) :: positive_dt
+   REAL, OPTIONAL, DIMENSION(ims:ime,jms:jme), INTENT(IN) :: positive_mu
 !Local
    INTEGER :: i,j,k, i_start, i_end, j_start, j_end
    REAL , DIMENSION( ims:ime , kms:kme, jms:jme  ) :: rscalar
+   REAL , DIMENSION( ims:ime , kms:kme, jms:jme  ) :: tend_before
+   REAL :: available, lower
+   LOGICAL :: positive_source
+
+           positive_source = .FALSE.
+           IF (PRESENT(positive_dt) .AND. PRESENT(positive_mu)) THEN
+             positive_source = positive_dt > 0.
+           END IF
+           IF (positive_source) THEN
+             DO j=max(jts,jds),min(jte,jde-1)
+             DO k=kts,min(kte,kde-1)
+             DO i=max(its,ids),min(ite,ide-1)
+               tend_before(i,k,j) = scalar_tend(i,k,j)
+             END DO
+             END DO
+             END DO
+           END IF
 
 ! rscalar will be calculated beyond tile limits because relax_bdytend
 !   requires a 5-point stencil, and this avoids need for inter-tile/patch
@@ -406,6 +428,27 @@ CONTAINS
                                ips,ipe, jps,jpe, kps,kpe,  & ! patch  dims
                                its,ite, jts,jte, kts,kte )
 
+           ! Relaxation is an external exchange.  Limit only its negative
+           ! increment when the incoming source was admissible, using the
+           ! same stored mass and full interval as rk_update_scalar_pd.
+           ! Do not repair an already negative input or an earlier overdraw.
+           IF (positive_source) THEN
+             DO j=max(jts,jds),min(jte,jde-1)
+             DO k=kts,min(kte,kde-1)
+             DO i=max(its,ids),min(ite,ide-1)
+               available = (c1h(k)*positive_mu(i,j)+c2h(k))*scalar(i,k,j)
+               IF (available >= 0.) THEN
+                 lower = -available/positive_dt
+                 DO WHILE (available+positive_dt*lower < 0.)
+                   lower = NEAREST(lower,1.)
+                 END DO
+                 IF (tend_before(i,k,j) >= lower .AND. &
+                     scalar_tend(i,k,j) < lower) scalar_tend(i,k,j) = lower
+               END IF
+             END DO
+             END DO
+             END DO
+           END IF
 
    END SUBROUTINE relax_bdy_scalar
 

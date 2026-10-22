@@ -2326,7 +2326,11 @@ BENCH_START(rlx_bdy_scalar_tim)
                                      ips,ipe, jps,jpe, kps,kpe,  & ! patch  dims
                                      grid%i_start(ij), grid%i_end(ij),      &
                                      grid%j_start(ij), grid%j_end(ij),      &
-                                     k_start, k_end                        )
+                                     k_start, k_end,                       &
+                                     positive_dt=MERGE(grid%dt,0.,im==P_QV .AND. &
+                                       config_flags%moist_adv_opt==POSITIVEDEF .AND. &
+                                       config_flags%specified),                 &
+                                     positive_mu=grid%mu_1+grid%mub )
 
                    CALL spec_bdy_scalar  ( moist_tend(ims,kms,jms,im),                &
                                      moist_bxs(jms,kms,1,im),moist_bxe(jms,kms,1,im), &

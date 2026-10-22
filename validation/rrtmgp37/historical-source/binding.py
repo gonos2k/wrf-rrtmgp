@@ -8,7 +8,7 @@ def historical_bytes(repo,name,expected_sha256):
     if hashlib.sha256(current).hexdigest()==expected_sha256:
         return current
     candidates=[]
-    for receipt in (B/'snapshot.json',B/'snapshot-e26ab7ba.json',B/'snapshot-5f7ac64a.json',B/'snapshot-39780e19.json',B/'snapshot-17668732.json',B/'snapshot-3485400c.json',B/'snapshot-d0058087.json',B/'snapshot-3ad2efd1.json',B/'snapshot-4bb3f428.json'):
+    for receipt in (B/'snapshot.json',B/'snapshot-e26ab7ba.json',B/'snapshot-5f7ac64a.json',B/'snapshot-39780e19.json',B/'snapshot-17668732.json',B/'snapshot-3485400c.json',B/'snapshot-d0058087.json',B/'snapshot-3ad2efd1.json',B/'snapshot-4bb3f428.json',B/'snapshot-11eb25c8.json'):
         rows=json.loads(receipt.read_text())['files']
         if name in rows and rows[name]['sha256']==expected_sha256:
             candidates.append(rows[name])
