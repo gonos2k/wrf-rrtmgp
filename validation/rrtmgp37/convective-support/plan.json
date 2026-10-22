@@ -1,0 +1,17 @@
+{
+  "base_commit": "e513d6144e4208d136cba68b5db7e3f9d1e6584c",
+  "first_analysis": "existing PR191 original real-forcing RAINC/RAINNC/RAINSH spatial fields; full/interior/outer all normalized by the same whole-domain area",
+  "initial_finding": "outer RAINC contributes 5.42894e-6 kg/m2 per 60 s and does not remove the interior CU residual; inspect actual NCA expiry and retained PRATEC only",
+  "evaluation_period": "2016-10-06 00:00:00--2016-10-07 00:00:00, fixed before execution",
+  "configuration": "single domain, serial, one tile, UDM27/LW37/SW37, number1/population0, capacity0/liquid-size0, scalar_adv_opt0, dt60s, radt600s, cudt300s, existing experimental frozen1 and fixed expanded table",
+  "inputs": "original PR189 corrected real initial/boundary fields; not the manufactured nonzero boundary branch",
+  "history": "initial plus hourly outputs; existing step reductions provide actual applied operators without full intermediate fields",
+  "new_diagnostics": "precipitation full/interior/outer counters at actual operator boundaries; column-category sums at CU consumption; NCA expiry/retained precipitation; frozen endpoint and above-melting path weights",
+  "numerical_checks": "original numerical source statements retained; native scalar elapsed intervals counted once; compare available original six-hour overlap; preserve all guard/fatal evidence",
+  "guard_policy": "never disable guards, change time step, remove unfavorable states, or rename an incomplete period as a 24-hour pass",
+  "physical_water_budget_approved": false,
+  "whole_energy_budget_approved": false,
+  "frozen_accuracy_approved": false,
+  "production_changes": false,
+  "original_seven_conditions_unchanged": true
+}
