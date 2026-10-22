@@ -4,6 +4,7 @@ from pathlib import Path
 import argparse,gzip,hashlib,importlib.util,io,json,tarfile
 P=Path(__file__).resolve().parent;R=P.parents[2]
 s=importlib.util.spec_from_file_location('restart_evidence_analysis',P/'analyze_saved.py');A=importlib.util.module_from_spec(s);s.loader.exec_module(A)
+spec=importlib.util.spec_from_file_location('restart_historical_sources',P.parent/'historical-source/binding.py');H=importlib.util.module_from_spec(spec);spec.loader.exec_module(H)
 def sha(raw):return hashlib.sha256(raw).hexdigest()
 def data():
  identity=json.loads((P/'identity.json').read_text());archive=(P/'saved/evidence.tar.gz').read_bytes()
@@ -12,8 +13,9 @@ def data():
   A.require(set(tar.getnames())==set(identity['files']),'unindexed evidence')
   saved={n:tar.extractfile(n).read() for n in identity['files']}
  for n,row in identity['files'].items():A.require(len(saved[n])==row['bytes'] and sha(saved[n])==row['sha256'],'evidence payload '+n)
- for n,row in identity['current_sources'].items():A.require(sha((R/n).read_bytes())==row['sha256'],'current source '+n)
- A.require(saved['build/compiled_solve.F']==(R/'WRF/dyn_em/solve_em.F').read_bytes(),'tested public source differs')
+ root=H.HistoricalRoot(R,identity['current_sources'])
+ for n,row in identity['current_sources'].items():A.require(sha((root/n).read_bytes())==row['sha256'],'historical source '+n)
+ A.require(saved['build/compiled_solve.F']==(root/'WRF/dyn_em/solve_em.F').read_bytes(),'tested public source differs')
  build=json.loads(saved['build/receipt.json']);A.require(build['source']['sha256']==sha(saved['build/compiled_solve.F']),'build source receipt')
  fixed=json.loads(saved['fixed/receipt.json']);A.require(build['executable']['sha256']==fixed['executable']['sha256'],'fixed run used other executable')
  # A source identity pins the complete change, including barrier placement.
@@ -30,5 +32,5 @@ def main():
  result=A.analyze(data().__getitem__,json.loads((P/'plan.json').read_text()))
  if args.write:(P/'result.json').write_text(json.dumps(result,indent=2)+'\n')
  else:A.require(result==json.loads((P/'result.json').read_text()),'saved result differs')
- print(json.dumps({**result,'current_runtime_source_matches':True}))
+ print(json.dumps({**result,'current_runtime_source_matches':all(sha((R/n).read_bytes())==p['sha256'] for n,p in json.loads((P/'identity.json').read_text())['current_sources'].items()),'source_scope':'historical_PR189_snapshot'}))
 if __name__=='__main__':main()
