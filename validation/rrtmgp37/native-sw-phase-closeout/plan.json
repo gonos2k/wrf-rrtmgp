@@ -1,0 +1,21 @@
+{
+  "scope": "actual native SW diagnostic coverage on the existing corrected serial real-data baseline",
+  "source_main": "e5aa8fd55c4752c9c2b23e359cb279c0438493a5",
+  "source_tree": "03aac2176bd869e1d50c4beba78f5c87ed78e2aa",
+  "period": ["2016-10-06_00:00:00", "2016-10-07_00:00:00"],
+  "dt_s": 60,
+  "radiation_interval_s": 600,
+  "production_changes": false,
+  "method": "private optional diagnostic layer-flux arrays plus read-only native SW branch/return and held-source reductions",
+  "criteria": [
+    "actual SW call stamps and audit times agree; every physical column follows exactly one observed day/night branch and one returned-field observation",
+    "actual returned night layer and boundary fluxes, GSW, and heating are finite and zero; no solar-angle-based filling",
+    "day returned native fluxes match native REAL32 assignment of actual solver outputs",
+    "all 144 phases and 1440 held-source step intervals are covered; new call and no-new-call steps distinguished",
+    "all 5625 hourly arrays and all 675 short-run arrays are byte identical to the corrected baseline",
+    "full and applied-interior domains use the same whole-domain area normalization",
+    "pressure-mass heating, dry-mass returned heating, held source and native coupling rounding remain separately reported"
+  ],
+  "not_claimed": ["new physical error tolerance", "certified rounding error bound", "independent spectral accuracy", "isolated radiation acoustic state increment", "whole energy closure", "frozen optical accuracy", "MPI or OpenMP number1 support"],
+  "original_seven_closure_conditions": "preserved"
+}

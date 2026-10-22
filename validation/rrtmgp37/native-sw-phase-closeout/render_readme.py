@@ -1,0 +1,141 @@
+"""Render the completed evidence summary; never generate provisional numerical claims."""
+from pathlib import Path
+import json
+P=Path(__file__).resolve().parent;r=json.loads((P/'result.json').read_text());c=r['prior_observer_reclassification_and_combined_source'];w=r['existing_water_support_decision']['support_split'];tot=r['totals']
+frozen_rows=[]
+for item in r['important_frozen_call_selection']:
+ a,b=item['selected_actual_calls'][:2]
+ frozen_rows.append(f"| {item['species']} | {a['source_time_s']:.0f} | {b['source_time_s']:.0f} | 독립 광학 미평가 |")
+frozen_table='\n'.join(frozen_rows)
+boundary_rows=[]
+for key,title in [('surface_down','지표 하향'),('surface_up','지표 상향'),('surface_net_down','지표 순하향'),('native_top_net_down','Native 상단 순하향'),('extended_TOA_net_down','확장층 TOA 순하향')]:
+ x=r['boundary_integrals_J_m2'][key]
+ boundary_rows.append(f'| {title} | {x[0]/86400:+.8f} | {x[1]/86400:+.8f} |')
+boundary_table='\n'.join(boundary_rows)
+rows=[]
+for name,title in [('native_flux_convergence_J_m2','실제 native 경계 순수렴량'),('pressure_mass_heating_J_m2','동일 native 층의 압력질량 가열량'),('call_returned_dry_heating_J_m2','호출 시 건조질량·반환 가열률'),('raw_SW_dry_source_J_m2','각 step 현재 질량·Exner의 held SW source'),('native_coupled_SW_linear_component_J_m2','native 결합 SW 선형 성분')]:
+ x=tot[name];rows.append(f'| {title} | {x[0]/1e6:+.10f} | {x[1]/1e6:+.10f} |')
+s=f'''# Native SW 반환·호출·유지 source의 하루 관측 공백 마감
+
+기준은 main `e5aa8fd55c4752c9c2b23e359cb279c0438493a5`, 전체 tree
+`03aac2176bd869e1d50c4beba78f5c87ed78e2aa`입니다. 생산 소스·기본값·정책·계수는
+변경하지 않았습니다. #194–196의 음수 수정·수정 cold 하루·새 checkpoint 재시작은
+완료 근거로 유지하고, 같은 원인을 다시 조사하지 않았습니다.
+
+## 실제 반환값으로 채운 공백
+
+같은 2016-10-06 00:00–2016-10-07 00:00 입력·경계·dt=60 s·복사간격 600 s를
+관측용으로 실행했습니다. 단일 영역·직렬·one tile, UDM27/LW37/SW37,
+number1/population0/scalar_adv_opt0, capacity0/liquid-size0, 기존 experimental frozen1입니다.
+
+| 실제 관측 | 결과 |
+|---|---:|
+| SW wrapper 호출 | {r['actual_SW_calls']} |
+| 전 영역 주간 계산 호출 | {r['fully_day_calls']} |
+| 전 영역 야간·실제 0 반환 호출 | {r['fully_night_calls']} |
+| 주간·야간 혼합이지만 전 영역을 관측한 호출 | {r['mixed_complete_calls']} |
+| 새 SW 호출 없이 source를 유지한 step | {r['no_new_call_steps']} |
+| 주간 solver 반환 기주 표본 | {r['day_column_returns']:,} |
+| 실제 0을 확인한 야간 반환 기주 표본 | {r['night_actual_zero_column_returns']:,} |
+| 현재 phase 미관측 | {r['missing_phase_seconds']} s |
+| 공간적으로 부분 관측 | {r['partially_observed_seconds']} s |
+
+기존 관측은 주간 `scatter_sw_column`만 읽었습니다. 이번에는 실제 `dorrsw` 분기와
+반환 배열을 각각 관측합니다. 기존 호출이 생략한 선택형 layer-flux 출력은 **private
+관측 빌드에서만** 기존 public 진단 인수에 임시 배열을 전달했습니다. 기존 native
+초기화·scatter 문장이 실제 채운 배열을 읽으며, 임시 출력은 예보 상태에 적용하지 않습니다.
+야간은 태양각으로 flux를 추정해 0으로 채운 것이 아니라, 실제 반환 층·경계 flux와
+GSW·가열률이 0임을 검사했습니다. 야간에는 solver가 호출되지 않으므로 초기화되지 않은
+로컬 `swhr`·`plev`를 읽지 않습니다. 반환 가열률·층 flux의 실제 0을 확인한 기여만
+0으로 계상하며, SW wrapper 호출을 야간 solver 계산으로 집계하지 않습니다. 주간은 실제 solver 출력의 native REAL32 대입과
+반환 층 flux를 정확히 대조합니다. GSW의 native 뺄셈과 double 재구성 차이는 별도로
+기록하며, 이를 새로운 물리 허용오차로 해석하지 않습니다.
+
+같은 궤적의 기존 관측기가 남긴 **{c['prior_missing_phase_seconds']} s 결측**은 모두
+실제 전 영역 야간 반환이었고, **{c['prior_partial_observation_seconds']} s 부분 관측**은
+완전하게 관측한 혼합 phase의 주간 부분집합과 일치합니다. 새 호출이 없는 step은
+`held`로 구분하며 이전 낮의 값을 새 호출 결과로 재명명하지 않습니다.
+
+대상량은 all-sky native SW의 UP/DN/net과 native 층 가열률입니다.
+
+## 같은 영역·시간의 flux–source 비교
+
+아래는 실제 1,440개 60초 구간 적분이며 단위는 **MJ/m²**입니다. 두 열 모두 **같은
+전체 물리 영역 면적**으로 정규화합니다. 내부 열은 실제 경향 추가에서 제외하는
+바깥 한 줄을 뺀 기여이며, 내부 면적 자체로 평균한 값이 아닙니다. Native 상단과
+확장층 TOA는 다른 반환 경계로 보존합니다.
+
+| 하루 적분 | 전체 물리 영역 | 실제 적용 내부 영역 |
+|---|---:|---:|
+'''+'\n'.join(rows)+f'''
+
+같은 자료의 경계 flux 평균은 다음과 같습니다. 단위는 W/m²이며 내부 열도 전체 면적으로
+정규화한 기여입니다. 세 경계를 서로 바꾸어 사용하지 않습니다.
+
+| 24시간 평균 | 전체 물리 영역 | 실제 적용 내부 기여 |
+|---|---:|---:|
+{boundary_table}
+
+`result.json`은 시간별·호출별·step별 signed 값을 보존합니다. 차이는 native flux의
+반환 산술, 압력질량과 capacity0의 건조질량, 호출 시 source와 현재 step 재가중,
+native source 결합 산술의 차이를 별도로 보존합니다. 네 signed 차이의 합은 장부 항등식이며,
+각 차이를 단일 물리 원인의 순수 효과로 단정하지 않습니다. 호출 시 값과 현재 held 값의
+차이에도 재가중과 산술 정의 차이가 함께 포함됩니다. 마지막 두 source는 선언한 SW **선형 성분**입니다.
+실제 `phy_ra_ten` 추가는 LW+SW 합으로 관측했고, 그 적분은
+**{c['actual_combined_LW_SW_add_equivalent_J_m2']/1e6:+.10f} MJ/m²**입니다.
+독립적으로 관측한 SW 전용 acoustic 상태 증분이나 전체 대기 에너지 폐합이라고
+주장하지 않습니다. 호출 사이 재가중 차이를 숨기거나 압력질량·건조질량을 강제로
+같게 만드는 정책 변경도 하지 않았습니다.
+
+## 관측 무영향과 실행 identity
+
+짧은 관측 대조는 **675/675**, 하루의 **225개 배열×25시각=5,625쌍**은 기존 수정
+기준선과 모두 바이트 동일합니다. 실제 물수지·복사 source 관측 trace도 기존 기준선과
+바이트 동일합니다. 입력·경계·namelist와 실제 가스·구름·frozen 계수 hash를 확인했습니다.
+새 재시작 캠페인은 없으며 #196의 수정 cold checkpoint 재시작 450쌍을 그대로 유지합니다.
+
+생산기는 실제 GNU Fortran 13.3.0/O2의 완료된 관측 archive를 재사용한 incremental
+관측 빌드입니다. main의 clean checkout 전체를 새로 빌드했다고 주장하지 않습니다.
+실제 source·컴파일·archive 대입·링크·실행 명령과 해시를 연결합니다. 선택형 배열이
+없다는 초기 관측 가정 때문에 첫 step 완료 전에 중단한 시도 1회와 private compile
+실패도 개발 기록으로 보존합니다. 적격 WRF 실행은 짧은 대조와 하루 관측 2회,
+중단 시도를 포함한 실제 WRF 프로세스는 3개이며 독립 기상 사례는 1개입니다.
+
+대형 NetCDF는 실제로 판독하고 모든 비교 배열과 파일 hash를 저장했습니다. 저장 CI는
+그 inventory·실제 관측 reduction을 재생하며 새 모델이나 원 NetCDF를 실행·판독하지 않습니다.
+
+## 남은 물수지의 판정 범위
+
+기존 장부의 잔차 **{w['reported_comparison_residual']:+.10f} kg/m²**, 별도 보존한 외곽
+RAINC **{w['reported_outer_RAINC_kept']:+.10f} kg/m²**, 이를 분리해 표시한 나머지는
+**{w['comparison_remainder_after_separating_outer_RAINC']:+.10f} kg/m²**입니다. 마지막 값은
+내부 영역의 상태·경계 flux를 다시 적분한 물수지가 아닙니다. 외곽 강수를 삭제하거나
+PBL·대류의 상쇄로 각 과정의 보존성을 승인하지 않습니다. 기존 자료에 근거한 판정은
+**항을 별도 보존하고 경험적 보정은 하지 않는 것**입니다. 독립적인 측면 face flux,
+과정별 물리 보존 및 전체 에너지 승인은 여전히 별도입니다.
+
+실제 중요 frozen 호출도 기존 trace에서 선별했습니다. 아래 시각은 source 초이며,
+물경로가 큰 조건을 고르는 기준이지 그 성분의 광학 오차 순위가 아닙니다.
+
+| 종 | 최대 물경로 호출 | 최대 따뜻한 주변층 물경로 호출 | 판정 |
+|---|---:|---:|---|
+{frozen_table}
+
+범위 결정은 **현재 고정 직렬 연구 구성의 실험적 성분으로만 유지**하는 것입니다.
+실제 융해 입자 광학의 과학적 승인은 보류합니다. 호출 전체의 λ·온도 극값을 한 입자의
+동시 상태로 만들지 않았고, 독립 대조를 수행했다고 집계하지 않습니다.
+
+이번 마감으로 SW의 반환 관측 공백은 종료합니다. 중요한 실제 frozen1 상태의 독립
+광학 적용성·관측 예보 정확도·기존 reference FAIL은 승인하지 않았고, 원래 일곱 종료
+조건도 변경하지 않았습니다. 특히 따뜻한 주변층의 hail 경로는 실제 융해율·액체 함량·
+광학 오차가 아니므로 해당 과학 판정은 별도 근거가 필요합니다. MPI/OpenMP의
+number1 지정 경계 지원이나 새 limiter·광학 정책을 추가하지 않았습니다.
+
+저장 재생:
+
+```sh
+python3 -I -S validation/rrtmgp37/native-sw-phase-closeout/verify_saved.py
+python3 -I -S validation/rrtmgp37/native-sw-phase-closeout/test_saved.py
+```
+'''
+(P/'README.md').write_text(s)
