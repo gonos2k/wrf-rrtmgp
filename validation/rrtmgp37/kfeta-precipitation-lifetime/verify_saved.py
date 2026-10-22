@@ -4,6 +4,7 @@ P=Path(__file__).resolve().parent;R=P.parents[2]
 def load(n,p):
  s=importlib.util.spec_from_file_location(n,p);m=importlib.util.module_from_spec(s);s.loader.exec_module(m);return m
 A=load('kfeta_analysis',P/'analyze.py');I=load('kfeta_instrument',P/'instrument.py');V=load('kfeta_readonly',P.parent/'real-case-budget/verify_saved.py')
+H=load('kfeta_historical_sources',P.parent/'historical-source/binding.py')
 require=A.require
 def sha(b):return hashlib.sha256(b).hexdigest()
 def data():
@@ -11,9 +12,10 @@ def data():
  with tarfile.open(fileobj=io.BytesIO(gzip.decompress(raw)),mode='r:') as t:
   require(set(t.getnames())==set(ident['files']),'archive roster');d={n:t.extractfile(n).read() for n in ident['files']}
  for n,p in ident['files'].items():require(sha(d[n])==p['sha256'] and len(d[n])==p['bytes'],'payload '+n)
- for n,p in ident['current_sources'].items():require(sha((R/n).read_bytes())==p['sha256'],'current source '+n)
- require(I.transform(R).encode()==d['probe/solve_em.F'],'generated observer')
- V.readonly((R/'WRF/dyn_em/solve_em.F').read_text(),d['probe/solve_em.F'].decode())
+ root=H.HistoricalRoot(R,ident['current_sources'])
+ for n,p in ident['current_sources'].items():require(sha((root/n).read_bytes())==p['sha256'],'historical source '+n)
+ require(I.transform(root).encode()==d['probe/solve_em.F'],'generated observer')
+ V.readonly((root/'WRF/dyn_em/solve_em.F').read_text(),d['probe/solve_em.F'].decode())
  require(d['probe/probe.f90']==(P/'probe.f90').read_bytes(),'compiled observer helper')
  native=json.loads(d['native/receipt.json']);probe=json.loads(d['probe/receipt.json']);host=json.loads(d['host/receipt.json'])
  require(native['source']['sha256']==sha((R/'WRF/phys/module_physics_addtendc.F').read_bytes()),'compiled production source')
@@ -34,5 +36,5 @@ def main():
  p=argparse.ArgumentParser();p.add_argument('--write',action='store_true');args=p.parse_args();r=A.analyze(data())
  if args.write:(P/'result.json').write_text(json.dumps(r,indent=2)+'\n')
  else:require(r==json.loads((P/'result.json').read_text()),'result differs from actual evidence')
- print(json.dumps(r));print('current_runtime_source_matches=true new_model_runs=0')
+ print(json.dumps(r));print(json.dumps({'current_runtime_source_matches':all(sha((R/n).read_bytes())==p['sha256'] for n,p in json.loads((P/'identity.json').read_text())['current_sources'].items()),'source_scope':'historical_PR193_snapshot','new_model_runs':0}))
 if __name__=='__main__':main()

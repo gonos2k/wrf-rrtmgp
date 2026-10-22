@@ -6093,6 +6093,7 @@ SUBROUTINE advect_scalar_pd   ( field, field_old, tendency,    &
 !  WCS, 3 December 2002, 24 February 2003
 
    IMPLICIT NONE
+   INTRINSIC :: EPSILON
    
    ! Input data
    
@@ -6155,7 +6156,7 @@ SUBROUTINE advect_scalar_pd   ( field, field_old, tendency,    &
    INTEGER :: jp1, jp0, jtmp
 
    REAL,DIMENSION( its-1:ite+2, kts:kte, jts-1:jte+2  ) :: flux_out, ph_low
-   REAL :: scale
+   REAL :: scale, pd_mass, pd_low_norm, pd_room
    !REAL :: flux_out, ph_low, scale
    REAL, PARAMETER :: eps=1.e-20
 
@@ -7761,8 +7762,21 @@ SUBROUTINE advect_scalar_pd   ( field, field_old, tendency,    &
    DO k=kts, ktf
 !DIR$ vector always
    DO i=i_start, i_end
-     IF( flux_out(i,k,j) .gt. ph_low(i,k,j) ) THEN
-       scale = max(0.,ph_low(i,k,j)/(flux_out(i,k,j)+eps))
+     ! Leave an arithmetic error budget in the donor cell. The budget covers
+     ! at most 64 rounded operations from stored face fluxes through the native
+     ! RK mass update; EPSILON rather than half EPSILON is conservative. This
+     ! limits shared face fluxes, never clips or adds scalar mass after update.
+     pd_mass = (c1(k)*(mu_old(i,j)+mub(i,j))+c2(k))*field_old(i,k,j)
+     pd_low_norm = abs(dt)*( abs(msftx(i,j)*msfty(i,j))*( &
+                      abs(rdx)*(abs(fqxl(i+1,k,j))+abs(fqxl(i,k,j))) + &
+                      abs(rdy)*(abs(fqyl(i,k,j+1))+abs(fqyl(i,k,j))) ) + &
+                      abs(msfty(i,j)*rdzw(k))*(abs(fqzl(i,k+1,j))+abs(fqzl(i,k,j))) )
+     pd_room = max(0.,ph_low(i,k,j) - &
+               (64.*epsilon(1.)/(1.-64.*epsilon(1.)))* &
+               (abs(pd_mass)+pd_low_norm+flux_out(i,k,j)))
+     IF( flux_out(i,k,j) .gt. pd_room ) THEN
+       scale = max(0.,pd_room/(flux_out(i,k,j)+eps))
+       IF(scale>0.)scale=nearest(scale,-1.)
        IF( fqx (i+1,k,j) .gt. 0.) fqx(i+1,k,j) = scale*fqx(i+1,k,j)
        IF( fqx (i  ,k,j) .lt. 0.) fqx(i  ,k,j) = scale*fqx(i  ,k,j)
        IF( fqy (i,k,j+1) .gt. 0.) fqy(i,k,j+1) = scale*fqy(i,k,j+1)
