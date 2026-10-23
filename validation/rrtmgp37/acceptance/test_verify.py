@@ -401,5 +401,16 @@ class ActualFrozenStateReferenceIntegration(unittest.TestCase):
             self.assertEqual(proc.returncode, 0, name)
 
 
+class ActualIndependentOutputComparison(unittest.TestCase):
+    def test_corrected_surface_output_against_actual_solrad_observations(self):
+        package = ROOT / 'validation/rrtmgp37/real-output-independent-comparison'
+        for name in ('verify_saved.py', 'test_saved.py'):
+            proc = subprocess.run([sys.executable, '-I', '-S', str(package / name)],
+                                  cwd=ROOT, capture_output=True, text=True, timeout=120)
+            print(proc.stdout, end='')
+            print(proc.stderr, end='')
+            self.assertEqual(proc.returncode, 0, name)
+
+
 if __name__ == '__main__':
     unittest.main()

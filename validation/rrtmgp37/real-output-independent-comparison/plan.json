@@ -1,0 +1,21 @@
+{
+  "base_main": "001834648e80efc633562a17cba2b290f49b33b8",
+  "base_tree": "ae48354d312b0e98903525076d5e9309ecf75d50",
+  "scope": "Close the fixed serial engineering research baseline and compare its existing corrected cold output to actual independent surface radiation observations; no model launch or production change",
+  "target": "all-sky downward surface SW, hourly mean from differences of ACSWDNB accumulations",
+  "window_start_utc": "2016-10-06T00:00:00",
+  "window_end_utc": "2016-10-07T00:00:00",
+  "reference": "NOAA SOLRAD Sterling 2016 original archived one-minute QC records",
+  "selection": "reuse the only operating geometrically in-domain SOLRAD station identified in the prior all-eligible-station inventory, before computing current-model scores; nearest actual grid cell, no score-based grid or time tuning",
+  "primary": "DNI*max(cos(supplied period-central SZA),0)+DHI; retain signed measured channels",
+  "secondary": "global PSP reported separately; never used to fill primary",
+  "time_contract": "each hour (start,end] requires all60 period-end QC0 minutes, no interpolation or time shift; model accumulator endpoints exactly match UTC hours",
+  "daylight_hour": "at least30 observed minutes with supplied SZA<90 degrees",
+  "scores": ["bias", "MAE", "RMSE", "maximum absolute hourly error", "integrated energy", "separate all-hour and daylight summaries", "primary versus secondary measurement spread"],
+  "physical_acceptance_tolerance_W_m2": null,
+  "uncertainty_contract": "do not infer calibrated uncertainty from QC0 or inter-channel spread; endpoint REAL32 representation scale is not a total numerical-error bound; instrument, model and point/cell uncertainties remain unquantified",
+  "decision_contract": "complete actual comparison; use external differences to restrict claims at this boundary site; do not grant broad forecast accuracy or tune optics from one coupled result; quantitative acceptance remains deferred without authorized use/tolerance",
+  "baseline": "single domain, serial one tile, UDM27/LW37/SW37, number1/population0, scalar_adv_opt0, capacity0/liquid-size0, experimental frozen1; CU population1 is distinct",
+  "no_new_WRF_Mie_RTE_runs": true,
+  "original_seven_conditions_changed": false
+}
