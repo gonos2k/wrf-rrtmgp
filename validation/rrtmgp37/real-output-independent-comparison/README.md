@@ -63,3 +63,5 @@ python3 -I -S validation/rrtmgp37/real-output-independent-comparison/test_saved.
 의미 반례 7개는 관측 결측/QC 시 PSP 대체 금지, midnight 시간 지원, 음의 측정 보존, 순간 flux와 평균의 구분, 시간 이동/누계 reset, 경계의 내부영역 승격, 사후 tolerance 승격을 확인한다. 과학적 승인을 보류한다는 문서만 추가한 것이 아니라 실제 1,440분과 수정 모델의 24개 시간 구간을 대조한 결과다.
 
 로컬 저장 재생·의미 반례7개·acceptance39개·acceptance index가 통과했다. 기존 NOAA parser/NumPy로 별도 재계산한 24개 주 참조 시간평균은 모두 같았고, bias/RMSE도 산술 정밀도 안에서 일치했다. 이는 같은 원자료의 분석 교차검사이며 새로운 독립 관측이나 모델 실행이 아니다.
+
+후속 분석에서 `ulp32(0)`의 지수 처리 오류를 수정했다. Binary32의 0 간격은 2⁻¹⁴⁹이며 기존 코드는 `frexp(0)` 때문에 2⁻²⁴를 사용했다. 수정은 0 누계 endpoint의 보조 표현 규모12시간에만 영향을 준다. 원래 모든 편차·RMSE·적산·그림·최대 표현 규모는 같으며, zero/normal/subnormal 검사를 추가해 이 패키지 의미시험은 현재8개다. 원 모델 결과나 물리 정책의 변경이 아니다.

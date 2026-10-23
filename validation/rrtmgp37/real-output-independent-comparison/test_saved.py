@@ -32,6 +32,9 @@ class ComparisonBoundaries(unittest.TestCase):
  def test_boundary_site_cannot_be_relabelled_as_interior(self):
   args=copy.deepcopy(self.args);args[1]['spec_bdy_width']=0
   with self.assertRaises(ValueError):A.evaluate(*args)
+ def test_zero_normal_and_subnormal_binary32_spacing(self):
+  for x,expected in [(0.,2.**-149),(-0.,2.**-149),(2.**-149,2.**-149),(2.**-126,2.**-149),(1.,2.**-23),(2.,2.**-22)]:
+   self.assertEqual(A.ulp32(x),expected)
  def test_posthoc_tolerance_cannot_promote_acceptance(self):
   args=copy.deepcopy(self.args);args[3]['physical_acceptance_tolerance_W_m2']=1e6
   with self.assertRaises(ValueError):A.evaluate(*args)

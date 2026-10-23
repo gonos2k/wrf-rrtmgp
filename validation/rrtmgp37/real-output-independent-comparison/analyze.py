@@ -35,6 +35,7 @@ def statistics(rows,field,daylight=False):
 
 def ulp32(x):
  require(struct.unpack('<f',struct.pack('<f',x))[0]==x,'accumulator is not original REAL32')
+ if x==0.:return 2.**-149
  return 2.**max(-149,math.frexp(abs(x))[1]-24)
 
 def match_grid(g):
