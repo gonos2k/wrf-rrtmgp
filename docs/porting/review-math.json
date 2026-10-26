@@ -1,0 +1,118 @@
+{
+  "scope": "report arithmetic and existing evidence only",
+  "check_count": 9,
+  "checks": [
+    {
+      "name": "native_mass_and_cloud_footprint",
+      "kind": "manufactured rational identity",
+      "dry_mass_kg_m2": 183.4862385321101,
+      "grid_path_g_m2": 36.69724770642202,
+      "incloud_path_g_m2": 91.74311926605505
+    },
+    {
+      "name": "dry_gas_column_and_number_units",
+      "kind": "manufactured rational conversion",
+      "one_kg_dry_molecules_cm2": 2.0791813147355337e+21,
+      "number_per_kg_dry": 83333333.33333333,
+      "new_density_volume_number_m3": 120000000.0
+    },
+    {
+      "name": "source_positivity_condition",
+      "kind": "manufactured rational source update",
+      "unlimited_qv": -3.3333333333333334e-08,
+      "threshold_tendency": -0.00015,
+      "threshold_result_qv": 0.0
+    },
+    {
+      "name": "finite_volume_flux_sign_and_telescope",
+      "kind": "manufactured rational two-layer energy identity",
+      "column_convergence_W_m2": 10.0,
+      "temperature_tendency_K_s": [
+        0.00019910403185664509,
+        -4.977600796416127e-05
+      ]
+    },
+    {
+      "name": "coupled_moist_to_dry_finite_change",
+      "kind": "manufactured exact rational identity",
+      "dry_theta_change_K": 1.4473803581991322
+    },
+    {
+      "name": "diameter_PSD_normalization_and_hail_tau_units",
+      "kind": "analytic artificial Qabs plus saved coefficients; no Mie rerun",
+      "tau_current_min_max": [
+        0.49528539765603774,
+        0.5383800800111915
+      ],
+      "tau_reference_min_max": [
+        0.4935997962336948,
+        0.5381639834959947
+      ],
+      "maximum_tau_difference": 0.0016856014223429194
+    },
+    {
+      "name": "stored_hourly_transport_identity",
+      "kind": "independent Decimal recombination of saved terms, not face solver",
+      "sum_residual_g_kg": "-3.80499659E-17",
+      "hourly_horizontal_plus_vertical": [
+        {
+          "hour": 12,
+          "H_plus_V_g_kg": -0.29171269522513066
+        },
+        {
+          "hour": 13,
+          "H_plus_V_g_kg": -0.2328851361755509
+        },
+        {
+          "hour": 14,
+          "H_plus_V_g_kg": -0.19772538216805483
+        },
+        {
+          "hour": 15,
+          "H_plus_V_g_kg": -0.10720192786899324
+        },
+        {
+          "hour": 16,
+          "H_plus_V_g_kg": -0.08855106247261602
+        }
+      ]
+    },
+    {
+      "name": "fixed_station_daily_statistics",
+      "kind": "independent saved CSV recalculation; no new forecast",
+      "RMSE_W_m2": 104.30440690887175,
+      "bias_W_m2": 40.71642516711167,
+      "squared_error_share_17_20UTC": 0.9075058398904804,
+      "model_energy_MJ_m2": 11.995889,
+      "observed_energy_MJ_m2": 8.477989865561552
+    },
+    {
+      "name": "precipitation_one_step_delivery_ledger",
+      "kind": "manufactured rational time-location identity",
+      "rain_total_with_initial10": 70.0,
+      "surface_delivery": 75.0,
+      "pending_endpoint_difference": -15.0
+    }
+  ],
+  "inputs": {
+    "validation/rrtmgp37/frozen-important-state-reference/result.json": {
+      "sha256": "14686c9af660b8265da14c2b84f81310e789d1f356edb1af4fcaea782ec4657a",
+      "bytes": 63655
+    },
+    "validation/rrtmgp37/sterling-transport-state/result.json": {
+      "sha256": "cbbda5679fe260c96b12a4c32a1973cd2781061f3ae55a55941b51e02e9294c0",
+      "bytes": 65141
+    },
+    "validation/rrtmgp37/sterling-interior-day-evaluation/result.json": {
+      "sha256": "3c159c8ee31884e0455451256c72cceff84c1fb4a5f4eb75998cd766512ed1e6",
+      "bytes": 816400
+    },
+    "validation/rrtmgp37/sterling-interior-day-evaluation/hourly-comparison.csv": {
+      "sha256": "14957e17faaa7e4ec127b019fb8f84ea7976a59799c807f4133813724a3e4f40",
+      "bytes": 4433
+    }
+  },
+  "new_model_solver_compiler_NetCDF_calls": 0,
+  "physical_accuracy_approved": false,
+  "new_scientific_closure_conditions": 0
+}
