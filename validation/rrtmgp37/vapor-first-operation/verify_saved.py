@@ -94,7 +94,7 @@ def data():
 
 def main():
  ap=argparse.ArgumentParser();ap.add_argument('--write',action='store_true');args=ap.parse_args();r=E.evaluate(data())
- if args.write:(P/'result.json').write_text(json.dumps(R.summary(r),indent=2)+'\n')
+ if args.write:(P/'result.json').write_text(json.dumps(r,indent=2)+'\n')
  else:require(r==json.loads((P/'result.json').read_text()),'results differ from actual operands')
  print(json.dumps(R.summary({'status':r['status'],'model_steps':r['model_steps'],'vapor_final_nonnegative_criterion_passed':r['vapor_final_nonnegative_criterion_passed'],'expired_rate_criterion_passed':r['KFETA_expired_rate_criterion_passed'],'water_conservation_approved':False,'whole_energy_approved':False,'current_runtime_source_matches':True,'new_model_runs':0})))
 if __name__=='__main__':main()

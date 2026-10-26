@@ -65,4 +65,4 @@ def verify():
  require(contrast['original_station_cell_coordinates_bitwise_equal'] and contrast['nominal_overlap_nearest_rows_and_columns_confirmed'] and not contrast['isolated_domain_effect_measured'],'initial input contrast scope')
  return r
 if __name__=='__main__':
- r=verify();print(json.dumps(R.summary({k:r[k] for k in ['status','hourly_water_number_valid','new_all_hour_RMSE_lower','physical_accuracy_approved','production_changes','new_model_runs_in_saved_replay']})));print(json.dumps(R.summary(r['statistics']['primary'])))
+ r=verify();print(json.dumps(R.summary({k:r[k] for k in ['status','hourly_water_number_valid','new_all_hour_RMSE_lower','physical_accuracy_approved','production_changes','new_model_runs_in_saved_replay']})));print(json.dumps(r['statistics']['primary']))
