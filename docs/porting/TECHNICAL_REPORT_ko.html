@@ -512,6 +512,22 @@ N은 바뀐다. 이것을 입자 생성으로 오인하지 않는다.</p>
 population1/2를 구분한다. 또한 <code>scalar_adv_opt=0</code>은 qv의 실제
 PD 갱신 경로와 동일한 옵션 이름이 아니다. <a href="../../WRF/phys/module_mp_udm.F">UDM 진입·반경·반환</a>, <a href="../../WRF/test/rrtmgp/UDM_SPECIFIED_NUMBER.md">number 경계
 계약</a>.</p>
+<h3 id="udm-population과-대류-진단-population은-별개다">UDM population과
+대류 진단 population은 별개다</h3>
+<p><code>population_policy=0</code>은 UDM 쪽 선택이다. 이것만으로 복사
+호출의 진단 대류 구름이 없다고 판단하지 않는다.
+<code>rrtmgp_build_cu_inputs</code>는 deep+shallow의 CU 분율 합과
+combined CF의 관계를 검사하고, 선언한 진단 CU 입력에 대해 다음 경로를
+구성한다.</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>W</mi><msub><mi>P</mi><mrow><mi>C</mi><mi>U</mi><mo>,</mo><mi>g</mi><mi>r</mi><mi>i</mi><mi>d</mi></mrow></msub><mo>=</mo><mn>1000</mn><mspace width="0.167em"></mspace><msub><mi>m</mi><mi>d</mi></msub><msub><mi>f</mi><mrow><mi>C</mi><mi>U</mi></mrow></msub><mrow><mi mathvariant="normal">max</mi><mo>⁡</mo></mrow><mo stretchy="false" form="prefix">(</mo><msub><mi>q</mi><mrow><mi>C</mi><mi>U</mi></mrow></msub><mo>,</mo><mn>0</mn><mo stretchy="false" form="postfix">)</mo><mo>,</mo><mspace width="2.0em"></mspace><mi>W</mi><msub><mi>P</mi><mrow><mi>C</mi><mi>U</mi><mo>,</mo><mi>i</mi><mi>n</mi></mrow></msub><mo>=</mo><mi>W</mi><msub><mi>P</mi><mrow><mi>C</mi><mi>U</mi><mo>,</mo><mi>g</mi><mi>r</mi><mi>i</mi><mi>d</mi></mrow></msub><mi>/</mi><msub><mi>f</mi><mrow><mi>c</mi><mi>o</mi><mi>m</mi><mi>b</mi><mi>i</mi><mi>n</mi><mi>e</mi><mi>d</mi></mrow></msub><mi>.</mi></mrow><annotation encoding="application/x-tex">WP_{CU,grid}=1000\,m_d f_{CU}\max(q_{CU},0),\qquad
+WP_{CU,in}=WP_{CU,grid}/f_{combined}.</annotation></semantics></math></p>
+<p>여기서 음의 진단 CU 응결물을0으로 처리하는 것은 복사 입력의 필터
+정책이다. 제외량을 별도 기록하며 native UDM 상태나 대류 source를
+수정하는 연산이 아니다. UDM grid-mean 경로의 CF 처리와 같은 표현으로
+섞지 않는다. 같은 상태의 독립 컬럼 비교에서도 CU optional arguments와
+population·occurrence 의미를 함께 보존해야 한다. PR198의 실제 capture
+대조는 이 경로를 포함했다. 진단 population의 물리적 타당성은 발생분율
+종료 조건에 남아 있다.</p>
 <h2 id="기체-column과-습도-표현">4.3 기체 column과 습도 표현</h2>
 <p>건조공기 molecular column은</p>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>N</mi><mi>d</mi></msub><mo>=</mo><msub><mi>m</mi><mi>d</mi></msub><mfrac><msub><mi>N</mi><mi>A</mi></msub><msub><mi>M</mi><mi>d</mi></msub></mfrac><mfrac><mn>1</mn><msup><mn>10</mn><mn>4</mn></msup></mfrac><mspace width="1.0em"></mspace><mo stretchy="false" form="prefix">[</mo><mrow><mi mathvariant="normal">m</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">l</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">c</mi><mi mathvariant="normal">u</mi><mi mathvariant="normal">l</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">s</mi><mspace width="0.167em"></mspace><mi mathvariant="normal">c</mi><msup><mi mathvariant="normal">m</mi><mrow><mi mathvariant="normal">−</mi><mn mathvariant="normal">2</mn></mrow></msup></mrow><mo stretchy="false" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">N_d=m_d\frac{N_A}{M_d}\frac1{10^4}\quad[\mathrm{molecules\,cm^{-2}}]</annotation></semantics></math></p>

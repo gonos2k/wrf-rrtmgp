@@ -124,6 +124,15 @@ UDM 진입 시 같은 호출의 건조밀도로 $N=\rho_d\eta_N$을 복원한다
 
 코드상 변환이 성립해도 population의 grid-mean/in-cloud 의미가 자동으로 결정되지는 않는다. 고정 실자료의 population0와 warm 연구의 population1/2를 구분한다. 또한 `scalar_adv_opt=0`은 qv의 실제 PD 갱신 경로와 동일한 옵션 이름이 아니다. [UDM 진입·반경·반환](../../WRF/phys/module_mp_udm.F), [number 경계 계약](../../WRF/test/rrtmgp/UDM_SPECIFIED_NUMBER.md).
 
+### UDM population과 대류 진단 population은 별개다
+
+`population_policy=0`은 UDM 쪽 선택이다. 이것만으로 복사 호출의 진단 대류 구름이 없다고 판단하지 않는다. `rrtmgp_build_cu_inputs`는 deep+shallow의 CU 분율 합과 combined CF의 관계를 검사하고, 선언한 진단 CU 입력에 대해 다음 경로를 구성한다.
+
+$$WP_{CU,grid}=1000\,m_d f_{CU}\max(q_{CU},0),\qquad
+WP_{CU,in}=WP_{CU,grid}/f_{combined}.$$
+
+여기서 음의 진단 CU 응결물을0으로 처리하는 것은 복사 입력의 필터 정책이다. 제외량을 별도 기록하며 native UDM 상태나 대류 source를 수정하는 연산이 아니다. UDM grid-mean 경로의 CF 처리와 같은 표현으로 섞지 않는다. 같은 상태의 독립 컬럼 비교에서도 CU optional arguments와 population·occurrence 의미를 함께 보존해야 한다. PR198의 실제 capture 대조는 이 경로를 포함했다. 진단 population의 물리적 타당성은 발생분율 종료 조건에 남아 있다.
+
 ## 4.3 기체 column과 습도 표현
 
 건조공기 molecular column은
