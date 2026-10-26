@@ -16,7 +16,7 @@ def main():
   if x['k']==8:context.append(f"| {x['source_hour_UTC']} | {x['dry_theta_east_minus_west_two_native_cells_K']:+.6f} | {x['dry_theta_north_minus_south_two_native_cells_K']:+.6f} | {x['qv_east_minus_west_two_native_cells_g_kg']:+.6f} | {x['qv_north_minus_south_two_native_cells_g_kg']:+.6f} | {x['grid_U_masspoint_mean_of_two_staggered_faces_m_s']:+.6f} | {x['grid_V_masspoint_mean_of_two_staggered_faces_m_s']:+.6f} |")
  old=json.loads((P.parent/'sterling-thermodynamic-tendencies/result.json').read_text());totals=[]
  for x in r['five_hour_layers']:
-  k=x['k'];v=x['sums'];state=next(z for z in old['five_hour_layers'] if z['k']==k);totals.append(f"| {k} | {state['dry_theta_change_K']:+.6f} | {v['dry_theta_paired_horizontal_K']:+.6f} | {v['dry_theta_paired_vertical_K']:+.6f} | {state['qv_change_g_kg']:+.6f} | {v['qv_horizontal_g_kg']:+.6f} | {v['qv_vertical_g_kg']:+.6f} |")
+  k=x['k'];v=x['sums'];layer_state=next(z for z in old['five_hour_layers'] if z['k']==k);totals.append(f"| {k} | {layer_state['dry_theta_change_K']:+.6f} | {v['dry_theta_paired_horizontal_K']:+.6f} | {v['dry_theta_paired_vertical_K']:+.6f} | {layer_state['qv_change_g_kg']:+.6f} | {v['qv_horizontal_g_kg']:+.6f} | {v['qv_vertical_g_kg']:+.6f} |")
  s=h15['sums'];m=h15['means'];count=h15['qv_mass_flux_both_positive_steps'];qneg=h15['qv_pred_above_drier_steps'];wneg=h15['geometric_W_both_negative_steps']
  text=f'''# Sterling native7–8 transport, consumed state and coordinate decision
 
@@ -31,6 +31,8 @@ PR #206의 실제 12–17 UTC 경향 귀속을 완료로 유지하고, 부족했
 | UTC | history θd8−θd7, K | qv8−qv7, g/kg dry | 질량점 높이8−7, m |
 |---|---:|---:|---:|
 {chr(10).join(state)}
+
+이 표는 8−7층 대비이고, 아래 소비 기울기 표의 8층 항은 9−8층 대비다.
 
 7→8층의 건조 온위 대비와 수증기 대비가 강화되지만, 이 시간별 자료 자체를 60초 과정 경향으로 쓰지 않는다. history의 `T+300`은 저장된 dry 온위이고, PR206 주변 기록 및 새 theta face의 field는 moist 온위 섭동이다.
 

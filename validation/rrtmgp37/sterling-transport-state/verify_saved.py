@@ -23,6 +23,18 @@ def inputs(data):
  with tarfile.open(P.parent/'sterling-thermodynamic-tendencies/saved/evidence.tar.gz','r:gz') as t:oldtext=t.extractfile('native/thermodynamic_operations.txt').read().decode();oldex=json.loads(t.extractfile('extract/extracted.json').read());oldrun=json.loads(t.extractfile('run/receipt.json').read());oldbuild=json.loads(t.extractfile('build/receipt.json').read())
  return oldtext,(P.parent/'sterling-thermodynamic-tendencies/step-processes.csv').read_text(),json.loads((P.parent/'sterling-thermodynamic-tendencies/result.json').read_text()),oldex,oldrun,oldbuild
 
+def verify_state_table(result,text):
+ header='| UTC | history θd8−θd7, K | qv8−qv7, g/kg dry | 질량점 높이8−7, m |'
+ require(text.count(header)==1,'README state table header')
+ profiles=result['prior_state_evidence']['hourly_central_states']
+ require([x['hour_UTC'] for x in profiles]==list(range(12,18)),'README state table time support')
+ expected=[header,'|---|---:|---:|---:|']
+ for profile in profiles:
+  lower,upper=[next(x for x in profile['profiles'] if x['record']==k) for k in [7,8]]
+  expected.append(f"| {profile['hour_UTC']} | {upper['dry_theta_K']-lower['dry_theta_K']:+.6f} | {1000*(upper['qv_kg_kg']-lower['qv_kg_kg']):+.6f} | {upper['z_msl_m']-lower['z_msl_m']:.3f} |")
+ actual=text[text.index(header):].split('\n\n',1)[0].splitlines()
+ require(actual==expected,'README state table must contain six numeric rows matching existing JSON')
+
 def verify():
  data=load();j=lambda n:json.loads(data[n]);run=j('run/receipt.json');build=j('build/receipt.json');ex=j('extract/extracted.json');eq=j('extract/history-comparison.json');prior=j('prior/prior-state-and-coordinate.json');oldtext,oldcsv,oldresult,oldex,oldrun,oldbuild=inputs(data)
  require(run['status']=='SUCCESS' and not run['error'] and len(run['commands'])==1 and len(build['commands'])==6 and len(build['sources'])==4,'actual run/build scope')
@@ -55,6 +67,7 @@ def verify():
  published=data['publication/root-README.md'].decode();require('sterling-transport-state/README.md' in published and '12시 기존 상태 오차' in published,'publication progress navigation')
  result,rows=analyze(data['native/transport_faces.txt'].decode(),prior,oldtext,oldcsv,oldresult,eq)
  require(result==json.loads((P/'result.json').read_text()),'result replay')
+ verify_state_table(result,(P/'README.md').read_text())
  with (P/'step-faces.csv').open() as f:stored=list(csv.DictReader(f))
  require(len(stored)==len(rows)==600,'step CSV roster')
  for x,y in zip(stored,rows):
