@@ -17,6 +17,14 @@ class NativeTransportBoundaries(unittest.TestCase):
  def setUpClass(cls):
   cls.data=load();cls.raw=cls.data['native/transport_faces.txt'].decode();cls.first='\n'.join(l for l in cls.raw.splitlines() if int(float(l.split()[0]))==43200)+'\n';cls.prior=json.loads(cls.data['prior/prior-state-and-coordinate.json']);cls.oldtext,cls.oldcsv,cls.oldresult,*_=inputs(cls.data);cls.result=verify()
  def run_first(self,text):return analyze(text,self.prior,self.oldtext,self.oldcsv,self.oldresult,partial=True)
+ def test_generated_state_table_has_six_json_matched_numeric_rows(self):
+  import tempfile,importlib.util,shutil
+  spec=importlib.util.spec_from_file_location('state_table_writer',P/'write_readme.py');writer=importlib.util.module_from_spec(spec);spec.loader.exec_module(writer)
+  with tempfile.TemporaryDirectory() as tmp:
+   root=Path(tmp);writer.P=root/P.name;writer.P.mkdir();shutil.copyfile(P/'result.json',writer.P/'result.json');previous=root/'sterling-thermodynamic-tendencies';previous.mkdir();shutil.copyfile(P.parent/previous.name/'result.json',previous/'result.json');writer.main();text=(writer.P/'README.md').read_text()
+  self.assertEqual(text,(P/'README.md').read_text());verify_state_table(self.result,text)
+  header='| UTC | history θd8−θd7, K | qv8−qv7, g/kg dry | 질량점 높이8−7, m |';block=text[text.index(header):].split('\n\n',1)[0];bad=text.replace(block,header+'\n|---|---:|---:|---:|\nk\ndry_theta_change_K')
+  with self.assertRaisesRegex(ValueError,'six numeric rows'):verify_state_table(self.result,bad)
  def test_geometric_W_cannot_replace_native_eta_mass_flux(self):
   d=parse_for_test(self.first);wrong=d['geometry',8][6];bad=change(self.first,'theta_before',8,2,wrong)
   with self.assertRaisesRegex(ValueError,'theta face'):self.run_first(bad)

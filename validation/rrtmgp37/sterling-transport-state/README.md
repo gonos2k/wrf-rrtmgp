@@ -10,17 +10,14 @@ PR #206의 실제 12–17 UTC 경향 귀속을 완료로 유지하고, 부족했
 
 | UTC | history θd8−θd7, K | qv8−qv7, g/kg dry | 질량점 높이8−7, m |
 |---|---:|---:|---:|
-k
-dry_theta_change_K
-qv_change_g_kg
-T_change_diagnostic_K
-T_theta_part_K
-T_pressure_part_K
-dry_theta_paired_processes_K
-dry_theta_detailed_components_K
-qv_components_g_kg
-dry_theta_identity_residual_K
-qv_identity_residual_g_kg
+| 12 | +2.969147 | -1.223150 | 221.806 |
+| 13 | +3.876434 | -1.520418 | 222.001 |
+| 14 | +4.382019 | -1.683882 | 222.307 |
+| 15 | +4.622101 | -1.837886 | 222.665 |
+| 16 | +4.632141 | -1.939128 | 222.996 |
+| 17 | +4.440918 | -1.919069 | 223.308 |
+
+이 표는 8−7층 대비이고, 아래 소비 기울기 표의 8층 항은 9−8층 대비다.
 
 7→8층의 건조 온위 대비와 수증기 대비가 강화되지만, 이 시간별 자료 자체를 60초 과정 경향으로 쓰지 않는다. history의 `T+300`은 저장된 dry 온위이고, PR206 주변 기록 및 새 theta face의 field는 moist 온위 섭동이다.
 
