@@ -434,5 +434,16 @@ class SterlingBoundaryForcingDecision(unittest.TestCase):
             self.assertEqual(proc.returncode, 0, name)
 
 
+class SterlingInteriorDomainDayEvaluation(unittest.TestCase):
+    def test_actual_prepared_interior_cold24h_and_unchanged_solrad_scoring(self):
+        package = ROOT / 'validation/rrtmgp37/sterling-interior-day-evaluation'
+        for name in ('verify_saved.py', 'test_saved.py'):
+            proc = subprocess.run([sys.executable, '-I', '-S', str(package / name)],
+                                  cwd=ROOT, capture_output=True, text=True, timeout=120)
+            print(proc.stdout, end='')
+            print(proc.stderr, end='')
+            self.assertEqual(proc.returncode, 0, name)
+
+
 if __name__ == '__main__':
     unittest.main()
