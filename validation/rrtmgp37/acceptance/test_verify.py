@@ -445,5 +445,16 @@ class SterlingInteriorDomainDayEvaluation(unittest.TestCase):
             self.assertEqual(proc.returncode, 0, name)
 
 
+class SterlingCloudLossOperation(unittest.TestCase):
+    def test_actual_cloud_loss_operators_and_supported_scope_decision(self):
+        package = ROOT / 'validation/rrtmgp37/sterling-cloud-loss-operation'
+        for name in ('verify_saved.py', 'test_saved.py'):
+            proc = subprocess.run([sys.executable, '-I', '-S', str(package / name)],
+                                  cwd=ROOT, capture_output=True, text=True, timeout=120)
+            print(proc.stdout, end='')
+            print(proc.stderr, end='')
+            self.assertEqual(proc.returncode, 0, name)
+
+
 if __name__ == '__main__':
     unittest.main()
