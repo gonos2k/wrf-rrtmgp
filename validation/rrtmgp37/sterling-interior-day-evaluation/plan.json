@@ -1,0 +1,46 @@
+{
+  "base_main": "eef6e4a593e886162af1e0ff786928dc18b5bbda",
+  "base_tree": "448c3229895270f9969b15ba1d34cd62311b50f5",
+  "fixed_period_UTC": [
+    "2016-10-06_00:00:00",
+    "2016-10-07_00:00:00"
+  ],
+  "task": "Execute prepared interior-domain cold24h using unchanged public WRF, preserve original station/QC/UTC scoring functions, score actual new output and decide one next boundary",
+  "fixed_physics": "serial one tile, UDM27 LW37 SW37, number1 population0 capacity0 liquid-size0 scalar_adv0, dt60s rad600s, existing experimental frozen1 and tables",
+  "inputs": "PR201 exact encoded initial/boundary and forecast namelist, not60s preflight namelist; no WPS/REAL/input regeneration",
+  "original_grid_contract_unchanged": true,
+  "new_grid_contract": {
+    "shape_j_i": [
+      143,
+      90
+    ],
+    "expected_j_i_zero_based": [
+      118,
+      36
+    ],
+    "station_lat_lon_height": [
+      38.97203,
+      -77.4869,
+      85.0
+    ],
+    "nearest_edge_cells": 24
+  },
+  "IO_only_addition": "auxhist7 surface SW all/clear/direct/diffuse/DNI/COSZEN/AC endpoints every60s16:00\u201317:00; auxhist8 cloud/six condensate/CU states and geometric dry mass inputs every600s16:00\u201317:00; retain25hourly native history endpoints",
+  "score": "unchanged observations(),hour(),statistics(),ulp32(); hourly all-sky=(ACSWDNB[h+1]-ACSWDNB[h])/3600; primary minute DNI*cos(SZA)+DHI over (h,h+1]; PSP separate; all signed measurements retained",
+  "comparison_scope": "new domain+WPS4.6+lowres static geography configuration, not isolated boundary-distance or optical-code effect; original station-day scores retained",
+  "predeclared_followup": "if cloudy attenuation and lower station errors emerge, report configuration change and choose matched-preprocessing/domain control only if causal attribution is needed; if clear/high-direct persists, prioritize local saturation/advection/cloud-formation; invalid trajectory requires first actual failure boundary",
+  "physical_tolerance_W_m2": null,
+  "production_changes": false,
+  "new_policy_or_optical_tuning": false,
+  "existing_seven_closure_conditions_changed": false,
+  "new_24h_WRF_process_budget": 1,
+  "standalone_Mie_RTE_builds": 0,
+  "diagnostic_recovery": {
+    "reason": "a blank line in original IO field list stopped native parser before auxiliary masks; cold daily state/scoring trajectory remains valid",
+    "action": "one same-cold11:58checkpoint diagnostic restart to17:00 with only blank lines removed plus time/IO controls",
+    "required_equivalence": "1350overlapping225array\u00d76hour pairs before component use",
+    "new_bounded_WRF_processes": 1,
+    "same_cold24h_repeated": false,
+    "executed_original_plan_preserved": true
+  }
+}
