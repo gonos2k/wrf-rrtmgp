@@ -47,9 +47,21 @@ not change prognostic UDM variables. Positive mass below UDM's 1e-9 process cuto
 is retained. The cutoff selects a size sentinel, never an omission threshold.
 
 The diagnostic PSD slope is reconstructed from returned grid-mean mixing ratio
-and the actual moist air density passed to UDM:
+and the radiation argument `rho3d`:
 
-`lambda = min(20000, (pi * rho_bulk * N0 / (rho_air * q))**0.25)`.
+`lambda = min(20000, (pi * rho_bulk * N0 / (rho_rad * q))**0.25)`.
+
+In the current host preparation, `rho_rad = rho_d * (1 + qv)`, while `q` is a
+mixing ratio per dry-air mass and the UDM entry path explicitly uses dry density
+(`input_density_is_dry=.true.`). The radiation diagnostic density is therefore
+not the same density passed to UDM. This is the fixed experimental diagnostic
+PSD contract, not an assertion of native-UDM PSD consistency. For identical
+unlimited states, using the two density conventions gives
+`lambda_rad / lambda_dry = (1 + qv)**(-1/4)`. The relation excludes the size
+sentinel and upper limit. No density, table or coefficient is changed here.
+A future claim of native process-PSD consistency must qualify this distinction;
+the [conditional fixed-state numerical reference](../../../validation/rrtmgp37/frozen-important-state-reference/README.md)
+remains valid for its declared diagnostic inputs.
 
 Graupel uses N0=4e6 m-4 and bulk density 500 kg m-3; hail uses 4e4 and 912.
 At q<=1e-9 the slope sentinel is 20000 m-1. The reconstruction is a diagnostic

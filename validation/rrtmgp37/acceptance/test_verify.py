@@ -456,5 +456,16 @@ class SterlingCloudLossOperation(unittest.TestCase):
             self.assertEqual(proc.returncode, 0, name)
 
 
+class SterlingIndependentAtmosphere(unittest.TestCase):
+    def test_actual_metar_and_release_timed_sounding_constraints(self):
+        package = ROOT / 'validation/rrtmgp37/sterling-independent-atmosphere'
+        for name in ('verify_saved.py', 'test_saved.py'):
+            proc = subprocess.run([sys.executable, '-I', '-S', str(package / name)],
+                                  cwd=ROOT, capture_output=True, text=True, timeout=120)
+            print(proc.stdout, end='')
+            print(proc.stderr, end='')
+            self.assertEqual(proc.returncode, 0, name)
+
+
 if __name__ == '__main__':
     unittest.main()

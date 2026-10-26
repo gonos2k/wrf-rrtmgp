@@ -52,6 +52,11 @@ Interior generated number is not reset. The cloud/rain outer specified zone
 uses the prescribed file state, including at outflow, as in the native scalar
 specified-boundary contract. CCN may subsequently change through microphysics.
 
-See the [executed evidence and limitations](../../../validation/rrtmgp37/specified-number-boundary/README.md).
-The real next-record test and checkpoint restoration succeeded; full host
-continuous/restarted bitwise equality did not. Defaults remain unchanged.
+The [original boundary evidence](../../../validation/rrtmgp37/specified-number-boundary/README.md)
+preserves the historical 23/675 continuous/restart differences. The subsequent
+[MU-halo order correction](../../../validation/rrtmgp37/restart-first-step/README.md)
+closed that original 05:59 failure: all 675 array pairs agree. The later
+[corrected cold/checkpoint evaluation](../../../validation/rrtmgp37/vapor-first-operation/README.md)
+also matched all 450 compared pairs using the same corrected code. These are
+scoped serial, one-tile array comparisons, not general parallel or full-file
+metadata certification. Defaults remain unchanged.

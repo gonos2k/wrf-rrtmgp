@@ -1,0 +1,23 @@
+{
+  "base_main": "d2223f13c28f06d9886f5d5febaeb2ad18b3a5a0",
+  "purpose": "Compare independent atmospheric observations with the fixed PR202/203 station-day; close stale documentation, then judge cloud persistence and thermodynamic structure without new model runs or coefficient tuning",
+  "target_UTC": ["2016-10-06T17:00:00Z", "2016-10-06T20:00:00Z"],
+  "original_station_and_score_unchanged": true,
+  "primary_surface_station": "IAD",
+  "spatial_context_stations_fixed": ["DCA", "BWI"],
+  "surface_archive": "IEM archived operational METAR/SPECI, original raw message retained; not labelled as NOAA research-quality-controlled surface observations",
+  "radiosonde_station": "USM00072403",
+  "radiosonde_nominal_times": ["2016-10-06T00:00:00Z", "2016-10-06T12:00:00Z", "2016-10-06T18:00:00Z", "2016-10-07T00:00:00Z"],
+  "primary_sounding": "2016-10-06 nominal18UTC, actual release1734UTC; use MMMSS elapsed-time decoding per official IGRA format, not nominal hour as every-level time",
+  "vertical_comparison_pressure_hPa": [975,950,925,900,875,850,825,800],
+  "vertical_comparison_method": "separate measured and derived quantities; log-pressure interpolation between valid data only, no extrapolation; retain each field QC flag and missing marker. No temporal interpolation of bracketing soundings into a manufactured17–20UTC profile",
+  "model": "existing PR202 cold native NetCDF at original fixed cell37,119, plus existing PR203 bounded actual microphysics states; read only, use dry perturbationtheta+300, pressure, native height and density conventions",
+  "humidity": "IGRA reported RH and dewpoint depression retained. Derive comparable water-relative humidity and mixing ratios using unchanged native UDM saturation functions, keeping native-derived values distinct from reported observations",
+  "representativeness": "27km grid and point/balloon observations differ; archive station coordinates are not automatically verified2016launch coordinates; no per-level balloon drift or observed turbulent cloud-water flux is available from these products",
+  "decision": "report actual atmosphere–model differences and retain/limit the current research applicability. Attribute no unique PBL coefficient/optical defect solely from these observational constraints",
+  "new_model_runs": 0,
+  "production_policy_or_coefficient_changes": false,
+  "physical_tolerance": null,
+  "existing_seven_closure_conditions_changed": false,
+  "selection_note": "17–20UTC and original station were selected in the prior review; sounding18 actual release was discovered in fetched source. This is diagnosis of the same station-day, not an independent new forecast skill case"
+}
