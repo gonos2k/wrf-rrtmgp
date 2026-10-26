@@ -17,10 +17,7 @@ def series(folder):
         return list(csv.DictReader(stream))
 
 
-def main():
-    plt.rcParams.update(
-        {"svg.fonttype": "none", "svg.hashsalt": "udm27-rrtmgp37-report-v1", "font.size": 10}
-    )
+def render_forecast():
     old = series("real-output-independent-comparison")
     new = series("sterling-interior-day-evaluation")
     assert [x["primary_W_m2"] for x in old] == [x["primary_W_m2"] for x in new]
@@ -67,6 +64,8 @@ def main():
     fig.savefig(OUT / "forecast-comparison.svg", metadata={"Date": "2026-10-26"})
     plt.close(fig)
 
+
+def render_architecture():
     fig, axis = plt.subplots(figsize=(11, 5.5), layout="constrained")
     axis.set_xlim(0, 11)
     axis.set_ylim(0, 5.5)
@@ -113,6 +112,14 @@ def main():
     )
     fig.savefig(OUT / "architecture.svg", metadata={"Date": "2026-10-26"})
     plt.close(fig)
+
+
+def main():
+    plt.rcParams.update(
+        {"svg.fonttype": "none", "svg.hashsalt": "udm27-rrtmgp37-report-v1", "font.size": 10}
+    )
+    render_forecast()
+    render_architecture()
 
 
 if __name__ == "__main__":
