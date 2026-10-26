@@ -1,0 +1,19 @@
+{
+  "base_main": "f51ad812ed51544e7a246dfc2677d8a17fa29e11",
+  "question": "Locate the development of low-level temperature, moisture and inversion differences using existing source, preprocessing, input, boundary and forecast data; choose one next diagnostic boundary without tuning",
+  "fixed_cell_i_j_one_based": [37,119],
+  "fixed_shape_j_i": [143,90],
+  "model_hours_UTC": [0,6,11,12,13,14,15,16,17,18,19,20,23,24],
+  "source_hours_UTC": [0,6,12,18,24],
+  "comparison_pressure_Pa": [97500,95000,92500,90000,87500,85000,82500,80000],
+  "observation_dependency": "Unchanged PR204 IGRA and METAR; include model11 vs actual morning launch and model23 vs evening launch; retain nominal12/18/24 pairs too. No new observations or invented time interpolation",
+  "source_sampling": "Decode original retained FNL GRIB; retain four surrounding 1degree grid values, deterministic bilinear sample, and identical-location WPS intermediate values. Compare met_em at the fixed model cell, not the nearest best-scoring FNL point",
+  "humidity": "Retain source RH percent. A separate diagnostic uses the actual REAL rh2qv_method1/wrt_liquid formula in REAL64; it is not an independently executed REAL result. Evaluate comparable water RH with unchanged native UDM scalar saturation helper",
+  "boundary_scope": "Decode pressure-coupled QV and moist perturbation theta with actual MU,MUB,C1H,C2H and use_theta_m=1. Present native eta levels and boundary location separately; no invented interior pressure/observation match or causal boundary attribution",
+  "transect_i_j_one_based": [[37,119],[37,123],[37,129],[37,135],[37,139],[37,140],[37,141],[37,142],[37,143]],
+  "new_WRF_WPS_REAL_RTE_Mie_runs": 0,
+  "production_policy_or_coefficient_changes": false,
+  "physical_tolerance": null,
+  "original_seven_closure_conditions_changed": false,
+  "completion": "Identify which differences are already present in forcing and which strengthen during integration; select a bounded next process comparison or explicitly retain unresolved attribution"
+}
