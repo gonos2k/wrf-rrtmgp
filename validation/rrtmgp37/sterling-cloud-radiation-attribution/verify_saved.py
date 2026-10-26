@@ -2,6 +2,11 @@
 from pathlib import Path
 import json,hashlib,tarfile,io,gzip,importlib.util,re
 P=Path(__file__).resolve().parent;R=P.parents[2]
+# Replay the retained cloudy campaign against its exact pre-cloud-off sources.
+# This does not certify the modified runtime; current wrappers have separate tests.
+import runpy
+R = runpy.run_path(str(P.parent/'historical-source/binding.py'))['SnapshotRoot'](
+    R, 'snapshot-789188e2.json')
 def load(n,p):
  s=importlib.util.spec_from_file_location(n,p);m=importlib.util.module_from_spec(s);s.loader.exec_module(m);return m
 A=load('sterling_saved_analysis',P/'analyze.py');I=load('sterling_private_source',P/'instrument.py');require=A.require;sha=lambda b:hashlib.sha256(b).hexdigest()
@@ -48,4 +53,4 @@ def data():
  return d,current,[(P.parent/f'solrad-boundary-site-48h/raw/ste16{n}.dat').read_bytes() for n in [280,281]]
 if __name__=='__main__':
  d,c,o=data();r=A.evaluate(d,c,o);r.update(continuous_cold_array_pairs_equal=1350,ULP_fix_only_diagnostic_scores_unchanged=True);require(r==json.loads((P/'result.json').read_text()),'saved attribution changed')
- print(json.dumps({k:r[k] for k in ['status','actual_target_SW_calls','actual_input_layer_samples','actual_held_column_steps','continuous_cold_array_pairs_equal','received_site_cloud_and_CU_paths_all_zero','boundary_causality_proven','production_changes','new_model_runs_in_saved_replay']}))
+ print(json.dumps(R.summary({k:r[k] for k in ['status','actual_target_SW_calls','actual_input_layer_samples','actual_held_column_steps','continuous_cold_array_pairs_equal','received_site_cloud_and_CU_paths_all_zero','boundary_causality_proven','production_changes','new_model_runs_in_saved_replay']})))

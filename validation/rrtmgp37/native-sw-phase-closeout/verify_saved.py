@@ -2,6 +2,11 @@
 from pathlib import Path
 import gzip,hashlib,importlib.util,io,json,tarfile,math,re
 P=Path(__file__).resolve().parent;R=P.parents[2]
+# Replay the retained cloudy campaign against its exact pre-cloud-off sources.
+# This does not certify the modified runtime; current wrappers have separate tests.
+import runpy
+R = runpy.run_path(str(P.parent/'historical-source/binding.py'))['SnapshotRoot'](
+    R, 'snapshot-789188e2.json')
 def load(n,p):
  s=importlib.util.spec_from_file_location(n,p);m=importlib.util.module_from_spec(s);s.loader.exec_module(m);return m
 A=load('native_sw_analysis',P/'analyze.py');I=load('native_sw_instrument',P/'instrument.py');W=load('native_sw_existing_budget',P/'assess_existing.py');require=A.require
@@ -79,4 +84,4 @@ def evaluate(d):
  return r
 if __name__=='__main__':
  r=evaluate(data());require(r==json.loads((P/'result.json').read_text()),'saved result differs')
- print(json.dumps({k:r[k] for k in ['status','actual_SW_calls','completed_steps','fully_night_calls','fully_day_calls','mixed_complete_calls','missing_phase_seconds','partially_observed_seconds','whole_day_observer_noninterference_pairs','current_runtime_source_matches','whole_energy_approved','new_model_runs_in_saved_replay']}))
+ print(json.dumps(R.summary({k:r[k] for k in ['status','actual_SW_calls','completed_steps','fully_night_calls','fully_day_calls','mixed_complete_calls','missing_phase_seconds','partially_observed_seconds','whole_day_observer_noninterference_pairs','current_runtime_source_matches','whole_energy_approved','new_model_runs_in_saved_replay']})))

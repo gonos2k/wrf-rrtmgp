@@ -3,6 +3,10 @@ from pathlib import Path
 import sys
 sys.path.insert(0,str(Path(__file__).resolve().parent))
 from common import *
+# Exact pre-cloud-off sources bind this historical campaign, not the new runtime.
+import runpy
+R = runpy.run_path(str(P.parent/'historical-source/binding.py'))['SnapshotRoot'](
+    R, 'snapshot-789188e2.json')
 from analyze import analyze
 import json,io,gzip,tarfile,copy,csv
 sha=lambda x:hashlib.sha256(x).hexdigest()
@@ -88,4 +92,4 @@ def verify():
   for n,v in b.items():require(a[n]==('' if v is None else str(v)),'hourly CSV value '+n)
  return result
 if __name__=='__main__':
- r=verify();print(json.dumps({k:r[k] for k in ['status','development_ruling','decision','physical_accuracy_approved','new_model_runs_in_saved_replay']}))
+ r=verify();print(json.dumps(R.summary({k:r[k] for k in ['status','development_ruling','decision','physical_accuracy_approved','new_model_runs_in_saved_replay']})))

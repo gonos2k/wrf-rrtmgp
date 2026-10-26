@@ -10,6 +10,10 @@ import instrument
 
 P = Path(__file__).resolve().parent
 R = P.parents[2]
+# Exact pre-cloud-off sources bind this historical campaign, not the new runtime.
+import runpy
+R = runpy.run_path(str(P.parent/'historical-source/binding.py'))['SnapshotRoot'](
+    R, 'snapshot-789188e2.json')
 sha = lambda x: hashlib.sha256(x).hexdigest()
 
 
@@ -256,7 +260,7 @@ if __name__ == "__main__":
     r = verify()
     print(
         json.dumps(
-            {
+            R.summary({
                 k: r[k]
                 for k in [
                     "status",
@@ -267,6 +271,6 @@ if __name__ == "__main__":
                     "physical_accuracy_approved",
                     "new_model_runs_in_saved_replay",
                 ]
-            }
+            })
         )
     )

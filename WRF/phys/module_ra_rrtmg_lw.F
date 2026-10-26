@@ -12228,7 +12228,8 @@ CONTAINS
         IF(.NOT.f_qc.OR..NOT.f_qi) CALL rrtmgp_fatal('RRTMGP_INPUT_CU_REQUIRES_NATIVE_QC_QI','module_ra_rrtmg_lw.F')
         IF(.NOT.PRESENT(udm_dry_layer_mass)) &
           CALL rrtmgp_fatal('RRTMGP_INPUT_CU_REQUIRES_NATIVE_DRY_MASS','module_ra_rrtmg_lw.F')
-        use_cu_population=.TRUE.
+        ! ICLOUD=0 suppresses both native and diagnosed-CU cloud optics.
+        use_cu_population=(ICLOUD /= 0)
       ELSE IF(cu_population_policy/=0) THEN
         CALL rrtmgp_fatal('RRTMGP_INPUT_CU_POPULATION_POLICY_UNSUPPORTED','module_ra_rrtmg_lw.F')
       END IF
@@ -12347,6 +12348,7 @@ CONTAINS
             QR1D(K)=0.
             QI1D(K)=0.
             QS1D(K)=0.
+            QG1D(K)=0.
             CLDFRA1D(k)=0.
          ENDDO
 
@@ -13078,7 +13080,9 @@ CONTAINS
                     qc3d(i,kts:kte,j),qnc3d(i,kts:kte,j),cldfrac(ncol,kts:kte),gp_rel,gp_capacity)
                ENDIF
                ! UDM-only: no CAM/P3/other microphysics radius override.
-               gp_qh=qh3d(i,kts:kte,j)
+               ! Cloud-off also suppresses uniform experimental frozen G/H optics.
+               gp_qh=0.
+               IF(ICLOUD /= 0) gp_qh=qh3d(i,kts:kte,j)
                ! Active sizes must be positive; every size must be finite.
                WRITE(gp_context,'(A,I0,A,I0,A)') 'LW i=',i,' j=',j,':'
                CALL trace_start('LW',i,j,ids,ide,jds,jde)

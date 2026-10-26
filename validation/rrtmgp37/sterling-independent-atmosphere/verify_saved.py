@@ -5,6 +5,11 @@ sys.path.insert(0,str(Path(__file__).resolve().parent))
 from parse import require,sounding,metars
 from analyze import evaluate
 P=Path(__file__).resolve().parent;R=P.parents[2]
+# Replay the retained cloudy campaign against its exact pre-cloud-off sources.
+# This does not certify the modified runtime; current wrappers have separate tests.
+import runpy
+R = runpy.run_path(str(P.parent/'historical-source/binding.py'))['SnapshotRoot'](
+    R, 'snapshot-789188e2.json')
 sha=lambda b:hashlib.sha256(b).hexdigest()
 f32=lambda x:struct.unpack('<f',struct.pack('<f',x))[0]
 def load():
@@ -72,4 +77,4 @@ def verify():
  prior=json.loads((P.parent/'sterling-cloud-loss-operation/result.json').read_text());result=evaluate(enriched,prior);require(result==json.loads((P/'result.json').read_text()),'atmospheric ruling replay')
  return result
 if __name__=='__main__':
- r=verify();print(json.dumps({k:r[k] for k in ['status','radiosonde_actual_release_UTC','near_loss_vertical_T_structure','decision','physical_accuracy_approved','new_model_runs_in_saved_replay']},ensure_ascii=False))
+ r=verify();print(json.dumps(R.summary({k:r[k] for k in ['status','radiosonde_actual_release_UTC','near_loss_vertical_T_structure','decision','physical_accuracy_approved','new_model_runs_in_saved_replay']}),ensure_ascii=False))

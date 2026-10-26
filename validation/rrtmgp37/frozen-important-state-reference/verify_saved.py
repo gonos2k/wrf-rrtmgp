@@ -2,6 +2,11 @@
 from pathlib import Path
 import gzip,hashlib,io,json,tarfile,importlib.util,math
 P=Path(__file__).resolve().parent;R=P.parents[2]
+# Replay the retained cloudy campaign against its exact pre-cloud-off sources.
+# This does not certify the modified runtime; current wrappers have separate tests.
+import runpy
+R = runpy.run_path(str(P.parent/'historical-source/binding.py'))['SnapshotRoot'](
+    R, 'snapshot-789188e2.json')
 def load(n,p):
  s=importlib.util.spec_from_file_location(n,p);m=importlib.util.module_from_spec(s);s.loader.exec_module(m);return m
 E=load('frozen_evaluate',P/'evaluate.py');I=load('frozen_selection_source',P/'instrument.py');require=E.require
@@ -69,4 +74,4 @@ def data():
 
 if __name__=='__main__':
  r=E.evaluate(data());require(r==json.loads((P/'result.json').read_text()),'saved result changed')
- print(json.dumps({k:r[k] for k in ['status','reference_LW_bands','independent_axis_evaluations','original_direct_evaluations','WRF_capture_array_pairs_equal','only_selected_hail_absorption_changed','frozen_real_particle_accuracy_approved','production_changes','new_model_runs_in_saved_replay']}))
+ print(json.dumps(R.summary({k:r[k] for k in ['status','reference_LW_bands','independent_axis_evaluations','original_direct_evaluations','WRF_capture_array_pairs_equal','only_selected_hail_absorption_changed','frozen_real_particle_accuracy_approved','production_changes','new_model_runs_in_saved_replay']})))

@@ -7,6 +7,11 @@ from analyze import analyze,require
 from report import summarize,step_rows
 import instrument
 P=Path(__file__).resolve().parent;R=P.parents[2]
+# Replay the retained cloudy campaign against its exact pre-cloud-off sources.
+# This does not certify the modified runtime; current wrappers have separate tests.
+import runpy
+R = runpy.run_path(str(P.parent/'historical-source/binding.py'))['SnapshotRoot'](
+    R, 'snapshot-789188e2.json')
 sha=lambda x:hashlib.sha256(x).hexdigest()
 def load():
  ident=json.loads((P/'identity.json').read_text());raw=(P/'saved/evidence.tar.gz').read_bytes();require(sha(raw)==ident['archive']['sha256'] and len(raw)==ident['archive']['bytes'],'archive identity')
@@ -49,4 +54,4 @@ def verify():
   for n,v in y.items():require(x[n]==str(v),'step CSV field '+n)
  return result
 if __name__=='__main__':
- r=verify();print(json.dumps({k:r[k] for k in ['status','source_steps','replay_counts','cold_history_array_pairs_equal','decision','physical_accuracy_approved','new_model_runs_in_saved_replay']}))
+ r=verify();print(json.dumps(R.summary({k:r[k] for k in ['status','source_steps','replay_counts','cold_history_array_pairs_equal','decision','physical_accuracy_approved','new_model_runs_in_saved_replay']})))
