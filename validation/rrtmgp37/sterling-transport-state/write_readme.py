@@ -1,24 +1,110 @@
 """Render a concise science decision from the actual retained native face result."""
+
 from pathlib import Path
 import json
-P=Path(__file__).resolve().parent
 
-def main():
- r=json.loads((P/'result.json').read_text());hs={h['start_hour_UTC']:h['layers'][1] for h in r['hourly']};total=r['five_hour_layers'][1];h15=hs[15];rows=[];flows=[]
- for hour,x in hs.items():
-  s=x['sums'];m=x['means'];rows.append(f"| {hour}–{hour+1} | {s['dry_theta_paired_horizontal_K']:+.6f} | {s['dry_theta_paired_vertical_K']:+.6f} | {s['qv_horizontal_g_kg']:+.6f} | {s['qv_vertical_g_kg']:+.6f} | {s['qv_center_relative_face_g_kg']:+.6f} | {s['qv_center_mass_convergence_g_kg']:+.6f} |")
-  flows.append(f"| {hour}–{hour+1} | {m['qv_eta_mass_flux_lower_native_Pa_s']:+.6f} | {m['qv_eta_mass_flux_upper_native_Pa_s']:+.6f} | {m['qv_pred_above_minus_center_g_kg']:+.6f} | {m['dry_theta_pred_above_minus_center_K']:+.6f} | {m['geometric_W_lower_m_s']:+.6f} | {m['geometric_W_upper_m_s']:+.6f} |")
- g=r['prior_state_evidence']['hourly_central_states'];state=[]
- for h in g:
-  a,b=[next(x for x in h['profiles'] if x['record']==k) for k in [7,8]];state.append(f"| {h['hour_UTC']} | {b['dry_theta_K']-a['dry_theta_K']:+.6f} | {1000*(b['qv_kg_kg']-a['qv_kg_kg']):+.6f} | {b['z_msl_m']-a['z_msl_m']:.3f} |")
- context=[]
- for x in r['source_hour_horizontal_context']:
-  if x['k']==8:context.append(f"| {x['source_hour_UTC']} | {x['dry_theta_east_minus_west_two_native_cells_K']:+.6f} | {x['dry_theta_north_minus_south_two_native_cells_K']:+.6f} | {x['qv_east_minus_west_two_native_cells_g_kg']:+.6f} | {x['qv_north_minus_south_two_native_cells_g_kg']:+.6f} | {x['grid_U_masspoint_mean_of_two_staggered_faces_m_s']:+.6f} | {x['grid_V_masspoint_mean_of_two_staggered_faces_m_s']:+.6f} |")
- old=json.loads((P.parent/'sterling-thermodynamic-tendencies/result.json').read_text());totals=[]
- for x in r['five_hour_layers']:
-  k=x['k'];v=x['sums'];layer_state=next(z for z in old['five_hour_layers'] if z['k']==k);totals.append(f"| {k} | {layer_state['dry_theta_change_K']:+.6f} | {v['dry_theta_paired_horizontal_K']:+.6f} | {v['dry_theta_paired_vertical_K']:+.6f} | {layer_state['qv_change_g_kg']:+.6f} | {v['qv_horizontal_g_kg']:+.6f} | {v['qv_vertical_g_kg']:+.6f} |")
- s=h15['sums'];m=h15['means'];count=h15['qv_mass_flux_both_positive_steps'];qneg=h15['qv_pred_above_drier_steps'];wneg=h15['geometric_W_both_negative_steps']
- text=f'''# Sterling native7–8 transport, consumed state and coordinate decision
+P = Path(__file__).resolve().parent
+
+
+def markdown_row(label, cells):
+    """Format already-unit-converted cells without changing numeric values."""
+    return "| " + " | ".join([str(label), *cells]) + " |"
+
+
+def state_rows(profiles):
+    """Hourly layer 8 minus layer 7: K, g/kg dry, and mass-point meters."""
+    rows = []
+    for profile in profiles:
+        lower, upper = [
+            next(layer for layer in profile["profiles"] if layer["record"] == k) for k in (7, 8)
+        ]
+        rows.append(
+            markdown_row(
+                profile["hour_UTC"],
+                [
+                    f"{upper['dry_theta_K'] - lower['dry_theta_K']:+.6f}",
+                    f"{1000 * (upper['qv_kg_kg'] - lower['qv_kg_kg']):+.6f}",
+                    f"{upper['z_msl_m'] - lower['z_msl_m']:.3f}",
+                ],
+            )
+        )
+    return rows
+
+
+def hourly_rows(hourly_layer8, group, fields):
+    """Present named saved fields in their declared display order."""
+    return [
+        markdown_row(f"{hour}–{hour + 1}", [f"{layer[group][name]:+.6f}" for name in fields])
+        for hour, layer in hourly_layer8.items()
+    ]
+
+
+def context_rows(context):
+    fields = (
+        "dry_theta_east_minus_west_two_native_cells_K",
+        "dry_theta_north_minus_south_two_native_cells_K",
+        "qv_east_minus_west_two_native_cells_g_kg",
+        "qv_north_minus_south_two_native_cells_g_kg",
+        "grid_U_masspoint_mean_of_two_staggered_faces_m_s",
+        "grid_V_masspoint_mean_of_two_staggered_faces_m_s",
+    )
+    return [
+        markdown_row(layer["source_hour_UTC"], [f"{layer[name]:+.6f}" for name in fields])
+        for layer in context
+        if layer["k"] == 8
+    ]
+
+
+def total_rows(current_layers, previous_layers):
+    """Keep observed changes separate from the displayed H/V contributions."""
+    rows = []
+    for current in current_layers:
+        layer_number = current["k"]
+        previous = next(layer for layer in previous_layers if layer["k"] == layer_number)
+        sums = current["sums"]
+        values = (
+            previous["dry_theta_change_K"],
+            sums["dry_theta_paired_horizontal_K"],
+            sums["dry_theta_paired_vertical_K"],
+            previous["qv_change_g_kg"],
+            sums["qv_horizontal_g_kg"],
+            sums["qv_vertical_g_kg"],
+        )
+        rows.append(markdown_row(layer_number, [f"{value:+.6f}" for value in values]))
+    return rows
+
+
+def render_report(result, previous_result):
+    """Render existing evidence; file I/O belongs only to main()."""
+    hourly_layer8 = {hour["start_hour_UTC"]: hour["layers"][1] for hour in result["hourly"]}
+    transport_fields = (
+        "dry_theta_paired_horizontal_K",
+        "dry_theta_paired_vertical_K",
+        "qv_horizontal_g_kg",
+        "qv_vertical_g_kg",
+        "qv_center_relative_face_g_kg",
+        "qv_center_mass_convergence_g_kg",
+    )
+    flow_fields = (
+        "qv_eta_mass_flux_lower_native_Pa_s",
+        "qv_eta_mass_flux_upper_native_Pa_s",
+        "qv_pred_above_minus_center_g_kg",
+        "dry_theta_pred_above_minus_center_K",
+        "geometric_W_lower_m_s",
+        "geometric_W_upper_m_s",
+    )
+    state = state_rows(result["prior_state_evidence"]["hourly_central_states"])
+    rows = hourly_rows(hourly_layer8, "sums", transport_fields)
+    flows = hourly_rows(hourly_layer8, "means", flow_fields)
+    context = context_rows(result["source_hour_horizontal_context"])
+    totals = total_rows(result["five_hour_layers"], previous_result["five_hour_layers"])
+    total = result["five_hour_layers"][1]
+    focus_hour = hourly_layer8[15]
+    s = focus_hour["sums"]
+    count = focus_hour["qv_mass_flux_both_positive_steps"]
+    qneg = focus_hour["qv_pred_above_drier_steps"]
+    wneg = focus_hour["geometric_W_both_negative_steps"]
+    text = f"""# Sterling native7–8 transport, consumed state and coordinate decision
 
 PR #206의 실제 12–17 UTC 경향 귀속을 완료로 유지하고, 부족했던 **실제 수직 face·η 질량 flux·소비 stencil**만 연결했다. 공개 생산 WRF·UDM·RTE, 광학계수·기본 정책은 변경하지 않았다. 기준은 `85af9c7f8e1fec2dd9dbefb8591e4df06197d16a`이며, 고정 기주 `(i,j)=(37,119)`, native7–8층, 2016-10-06 UTC이다.
 
@@ -113,6 +199,15 @@ Ftop − Fbottom
 python -I -S validation/rrtmgp37/sterling-transport-state/verify_saved.py
 python -I -S validation/rrtmgp37/sterling-transport-state/test_saved.py
 ```
-'''
- (P/'README.md').write_text(text)
-if __name__=='__main__':main()
+"""
+    return text
+
+
+def main():
+    result = json.loads((P / "result.json").read_text())
+    previous = json.loads((P.parent / "sterling-thermodynamic-tendencies/result.json").read_text())
+    (P / "README.md").write_text(render_report(result, previous))
+
+
+if __name__ == "__main__":
+    main()

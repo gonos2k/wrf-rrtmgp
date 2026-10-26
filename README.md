@@ -2,6 +2,8 @@
 
 검증 기준선은 [PR #203 병합 main](https://github.com/gonos2k/wrf-rrtmgp/commit/d2223f13c28f06d9886f5d5febaeb2ad18b3a5a0)이다. **아래 고정 직렬 연구 구성의 공학적 포팅은 1차 완료이며, Sterling 오후 구름 지속성과 전천 단파일사 예측의 정량적 적용성은 미승인이다.**
 
+[상세 기술보고서](docs/porting/TECHNICAL_REPORT_ko.md) · [인쇄용 HTML](docs/porting/TECHNICAL_REPORT_ko.html) · [코드 길잡이](docs/porting/CODE_GUIDE_ko.md): 수학·기상학·공학 검토와 계산 보존형 검증·보고 코드 정비를 함께 정리했다.
+
 | 현재 범위 | 완료 근거 또는 남은 판단 |
 |---|---|
 | 검증한 설정 | UDM27/LW37/SW37, 단일 specified 영역·serial·one tile, number1/population0, scalar_adv_opt0, capacity0/liquid-size0, experimental frozen1, dt60s/rad600s |
