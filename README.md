@@ -1,6 +1,20 @@
 # WRF–RRTMGP 37
 
-현재 37번 개발·평가 범위는 **UDM(`mp_physics=27`) 전용**입니다. 장·단파 `37/37`, `use_mp_re=1`을 요구합니다. UDM native radii, qc/qi cloud optics, qr/qs precipitation optics를 연결하며 qg는 제외량 계측, qh는 명시적 미지원으로 처리합니다. [현재 UDM 입력 계약과 검증 한계](WRF/doc/rrtmgp/UDM_ONLY.md) · [UDM 실행·비교 검증 기록](validation/rrtmgp37/udm-only/REPORT_ko.md)를 먼저 확인하십시오. 아래 다른 미세물리 결과는 이전 버전의 검증 기록입니다.
+검증 기준선은 [PR #203 병합 main](https://github.com/gonos2k/wrf-rrtmgp/commit/d2223f13c28f06d9886f5d5febaeb2ad18b3a5a0)이다. **아래 고정 직렬 연구 구성의 공학적 포팅은 1차 완료이며, Sterling 오후 구름 지속성과 전천 단파일사 예측의 정량적 적용성은 미승인이다.**
+
+| 현재 범위 | 완료 근거 또는 남은 판단 |
+|---|---|
+| 검증한 설정 | UDM27/LW37/SW37, 단일 specified 영역·serial·one tile, number1/population0, scalar_adv_opt0, capacity0/liquid-size0, experimental frozen1, dt60s/rad600s |
+| 경계·number·재시작 | [지정경계 계약](WRF/test/rrtmgp/UDM_SPECIFIED_NUMBER.md), [원래 675쌍 재시작 수정](validation/rrtmgp37/restart-first-step/README.md), [수정 cold와 checkpoint 450쌍](validation/rrtmgp37/vapor-first-operation/README.md) |
+| 수치 상태·강수·복사 전달 | [KF Eta 강수율 수명](validation/rrtmgp37/kfeta-precipitation-lifetime/README.md), [최종 음수 수증기 해소](validation/rrtmgp37/vapor-first-operation/README.md), [SW 호출·반환·held source 마감](validation/rrtmgp37/native-sw-phase-closeout/README.md) |
+| 실제 예보·관측·구름 소실 | [내부영역 24시간 및 SOLRAD 평가](validation/rrtmgp37/sterling-interior-day-evaluation/README.md), [PBL 재분배·수송·후속 증발 귀속과 1,800쌍 대조](validation/rrtmgp37/sterling-cloud-loss-operation/README.md) |
+| 독립 대기관측 | [실제 발사시각의 radiosonde·METAR 대조](validation/rrtmgp37/sterling-independent-atmosphere/README.md): 저층 온도·습도·역전 구조의 불일치, PBL 단독 계수 오류는 미확정 |
+| 남은 과학적 판단 | [원래 일곱 종료 조건](validation/rrtmgp37/research-policy-contract/closure-conditions.json) 유지: population/PSD/발생분율, frozen 물성·밀도 계약, RFMIP/LBLRTM 참조, 전체 물·에너지, 용도별 독립 예보 정확도 |
+| 다음 작업 | 기존 입력·경계의 온도/수증기와 상태 발달을 새 관측 profile에 대조. 자료 계보가 지지할 때만 입력 조치를 선택하며, 같은 연산 추적·무변경 하루는 반복하지 않음 |
+
+이 범위는 Gamma8·capacity1의 warm-periodic 연구 옵션이나 일반 MPI/OpenMP·둥지·운영 예보 승인으로 확대하지 않는다. [PR166의 15/22 역사 장부](validation/rrtmgp37/acceptance/review-resolution-checklist.json)는 당시 snapshot을 보존한 기록이며 현재 전체 완료율이 아니다. 아래 설명의 PR20 등 이전 실행은 각 당시 구성의 근거로 읽는다.
+
+현재 37번 개발·평가 범위는 **UDM(`mp_physics=27`) 전용**입니다. 장·단파 `37/37`, `use_mp_re=1`을 요구합니다. UDM native radii, qc/qi cloud optics, qr/qs precipitation optics를 연결하며 기본 frozen0에서는 qg를 제외량 계측, 양의 qh를 명시적 미지원으로 처리합니다. [현재 UDM 입력 계약과 검증 한계](WRF/doc/rrtmgp/UDM_ONLY.md) · [UDM 실행·비교 검증 기록](validation/rrtmgp37/udm-only/REPORT_ko.md)를 먼저 확인하십시오. 아래 다른 미세물리 결과는 이전 버전의 검증 기록입니다.
 
 싸락눈·우박에는 [동질 얼음 PSD 수치 기준](validation/rrtmgp37/frozen-optics-reference/README.md)과 [명시적 실험 모드](WRF/doc/rrtmgp/UDM_FROZEN_EXPERIMENT.md)를 연결했습니다. 기본 모드의 qg 제외·양의 qh 거부는 유지합니다. 실험 모드 1의 PR20 실행파일은 실제 자료로 MPI 4개 rank에서 24시간을 완료했으며, 12시간 체크포인트에서 재시작한 13시간 출력의 모든 수치 배열이 연속 적분과 일치했습니다. 메타데이터 `START_DATE` 차이는 별도로 기록합니다. [실행·비교 근거](validation/rrtmgp37/realdata-parallel/README.md)는 수치 실행 검증이며, 젖은 얼음 입자·관측 정확도 또는 PR21 코드의 24시간 검증을 뜻하지 않습니다.
 

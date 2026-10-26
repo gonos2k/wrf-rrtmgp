@@ -1,0 +1,624 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <link rel="schema.DC" href="http://purl.org/dc/elements/1.1/" />
+<title>Ceilometer</title>
+<meta name="DC.title" content="Ceilometer" />
+<meta name="DC.description" content="Ceilometer" />
+<meta name="DC.creator" content="US Department of Commerce, NOAA, National Weather Service" />
+<meta name="DC.date.created" scheme="ISO8601" content="August 13th 2025 7:13 PM" />
+<meta name="DC.language" scheme="DCTERMS.RFC1766" content="EN-US" />
+<meta name="DC.keywords" content="Ceilometer" />
+<meta name="DC.publisher" content="NOAA's National Weather Service" />
+<meta name="DC.contributor" content="National Weather Service" />
+<meta name="DC.rights" content="/disclaimer.php" />
+<meta name="rating" content="General" />
+<meta name="robots" content="index,follow" />
+
+
+        <link href="/css/weatherstyle.css" rel="stylesheet" type="text/css" />
+        <link href="/css/template.css" rel="stylesheet" type="text/css" />
+        <link href="/css/myfcst.css" rel="stylesheet" type="text/css" />
+        <link href="/css/ForecastSearch.css" rel="stylesheet" type="text/css" />
+        <link href="/css/pointforecast.css" rel="stylesheet" type="text/css" />
+        <link href="/css/jqueryui10_3_1custom/jquery-ui-1.10.3.custom.min.css" rel="stylesheet" type="text/css" />
+
+<script type="text/javascript" src="/js/jquery-1.12.4.min.js"></script>
+        <script type="text/javascript" src="/js/jquery-migrate-1.4.1.js"></script>        <script type="text/javascript" src="/js/jquery-ui-1.10.3.custom.min.js"></script>        <script type="text/javascript" src="/js/jquery.hoverIntent.minified.js"></script>        <script type="text/javascript" src="/js/ForecastSearch.js"></script>        <script type="text/javascript" id="_fed_an_ua_tag" src="https://dap.digitalgov.gov/Universal-Federated-Analytics-Min.js?agency=DOC&sub-agency=NOAA&yt=true&pga4=G-736JJ6NL0V"></script>        <script type="text/javascript" src="/js/topNavMenu.js"></script>        <script type="text/javascript" src="/js/NidsESRI.js"></script>        <script type="text/javascript" src="/js/nwsexit.js"></script>
+
+
+        <link href="/css/widgets.css" rel="stylesheet" type="text/css" />
+        <link href="/css/colorbox/colorbox.css" rel="stylesheet" type="text/css" />
+
+        <script type="text/javascript" src="/js/jquery-1.12.4.min.js"></script>
+        <script type="text/javascript" src="/js/jquery-migrate-1.4.1.js"></script>
+        <script type="text/javascript" src="/js/jquery-ui-1.10.3.custom.min.js"></script>
+        <script type="text/javascript" src="/js/jquery.hoverIntent.minified.js"></script>
+        <script type="text/javascript" src="/js/ForecastSearch.js"></script>
+        <script type="text/javascript" id="_fed_an_ua_tag" src="https://dap.digitalgov.gov/Universal-Federated-Analytics-Min.js?agency=DOC&subagency=NOAA&pua=G-736JJ6NL0V"></script>	
+        <script type="text/javascript" src="/js/topNavMenu.js"></script>
+        <script type="text/javascript" src="/js/NidsESRI.js"></script>
+        <script type="text/javascript" src="/js/widgets.js"></script>
+        <script type="text/javascript" src="/js/jquery.cycle2.min.js"></script>
+        <script type="text/javascript" src="/js/jquery.colorbox-min.js"></script>
+        <script type="text/javascript" src="/js/nwsexit.js"></script>
+
+        
+    </head>
+
+    <body>
+        <div class="header">
+    <div class="header-content">
+        <a href="https://www.weather.gov" class="header-nws"><img src="/bundles/templating/images/header/header.png" alt="National Weather Service"/></a>
+        <a href="http://www.commerce.gov" class="header-doc"><img src="/bundles/templating/images/header/header_doc.png" alt="United States Department of Commerce"/></a>
+        <a href="http://www.noaa.gov" class="header-noaa" title="National Oceanic and Atmospheric Administration"></a>
+    </div>
+    <div style="clear:both"></div>
+</div>
+<div class="header-shadow">
+    <div class="header-shadow-content"></div>
+</div>
+<script>
+    var domains = {
+        weather: "https://www.weather.gov",
+        forecast: "https://forecast.weather.gov",
+        airquality: "https://airquality.weather.gov",
+        aviation: "https://aviationweather.gov",
+        water: "https://water.weather.gov",
+        graphical: "https://graphical.weather.gov",
+        api: "https://api.weather.gov",
+        radar: "https://radar.weather.gov",
+        esriGeocode: "https://geocode.arcgis.com"
+    }
+</script>
+
+
+        <div class="center">
+
+            <div class="content">
+    <div class="topnav">
+        <ul id="topnav">
+            <li>
+                <script type="text/javascript">
+                    function goBack() {
+                        if (document.referrer.toLowerCase().indexOf("weather.gov") != -1) {
+                            history.back();
+                        } else {
+                            document.location.href = "https://www.weather.gov";
+                        }
+                    }
+                </script>
+                <div class="topMenuNavList home">
+                    <a href="#" onclick="goBack();">HOME</a>
+                </div>
+            </li>
+                            <li>
+                    <div class="topMenuNavList section-link">
+                        <a href="https://www.weather.gov/forecastmaps/">FORECAST</a>
+                    </div>
+                                                                        <div style="opacity: 0;" class="sub">
+                                <ul>
+                                                                            <li>
+                                            <a href="https://www.weather.gov">Local</a>
+                                        </li>
+                                                                            <li>
+                                            <a href="https://digital.weather.gov">Graphical</a>
+                                        </li>
+                                                                            <li>
+                                            <a href="https://aviationweather.gov">Aviation</a>
+                                        </li>
+                                                                            <li>
+                                            <a href="https://www.weather.gov/marine/">Marine</a>
+                                        </li>
+                                                                            <li>
+                                            <a href="https://water.noaa.gov">Rivers and Lakes</a>
+                                        </li>
+                                                                            <li>
+                                            <a href="https://www.nhc.noaa.gov">Hurricanes</a>
+                                        </li>
+                                                                            <li>
+                                            <a href="https://www.spc.noaa.gov">Severe Weather</a>
+                                        </li>
+                                                                            <li>
+                                            <a href="https://www.weather.gov/fire/">Fire Weather</a>
+                                        </li>
+                                                                            <li>
+                                            <a href="https://gml.noaa.gov/grad/solcalc/">Sunrise/Sunset</a>
+                                        </li>
+                                                                            <li>
+                                            <a href="https://www.cpc.ncep.noaa.gov">Long Range Forecasts</a>
+                                        </li>
+                                                                            <li>
+                                            <a href="https://www.cpc.ncep.noaa.gov">Climate Prediction</a>
+                                        </li>
+                                                                            <li>
+                                            <a href="https://www.swpc.noaa.gov">Space Weather</a>
+                                        </li>
+                                                                    </ul>
+                            </div>
+                                                            </li>
+                            <li>
+                    <div class="topMenuNavList section-link">
+                        <a href="https://www.weather.gov/wrh/climate">PAST WEATHER</a>
+                    </div>
+                                                                        <div style="opacity: 0;" class="sub">
+                                <ul>
+                                                                            <li>
+                                            <a href="https://www.weather.gov/wrh/climate">Past Weather</a>
+                                        </li>
+                                                                            <li>
+                                            <a href="https://gml.noaa.gov/grad/solcalc/">Astronomical Data</a>
+                                        </li>
+                                                                            <li>
+                                            <a href="https://www.climate.gov/maps-data/dataset/past-weather-zip-code-data-table">Certified Weather Data</a>
+                                        </li>
+                                                                    </ul>
+                            </div>
+                                                            </li>
+                            <li>
+                    <div class="topMenuNavList section-link">
+                        <a href="https://www.weather.gov/safety/">SAFETY</a>
+                    </div>
+                                                                                </li>
+                            <li>
+                    <div class="topMenuNavList section-link">
+                        <a href="https://www.weather.gov/informationcenter">INFORMATION</a>
+                    </div>
+                                                                        <div style="opacity: 0;" class="sub">
+                                <ul>
+                                                                            <li>
+                                            <a href="https://www.weather.gov/wrn/wea">Wireless Emergency Alerts</a>
+                                        </li>
+                                                                            <li>
+                                            <a href="https://www.weather.gov/wrn/">Weather-Ready Nation</a>
+                                        </li>
+                                                                            <li>
+                                            <a href="https://www.weather.gov/owlie/publication_brochures">Brochures</a>
+                                        </li>
+                                                                            <li>
+                                            <a href="https://www.weather.gov/coop/">Cooperative Observers</a>
+                                        </li>
+                                                                            <li>
+                                            <a href="https://www.weather.gov/briefing/">Daily Briefing</a>
+                                        </li>
+                                                                            <li>
+                                            <a href="https://www.weather.gov/hazstat">Damage/Fatality/Injury Statistics</a>
+                                        </li>
+                                                                            <li>
+                                            <a href="http://mag.ncep.noaa.gov">Forecast Models</a>
+                                        </li>
+                                                                            <li>
+                                            <a href="https://www.weather.gov/gis/">GIS Data Portal</a>
+                                        </li>
+                                                                            <li>
+                                            <a href="https://www.weather.gov/nwr">NOAA Weather Radio</a>
+                                        </li>
+                                                                            <li>
+                                            <a href="https://www.weather.gov/publications/">Publications</a>
+                                        </li>
+                                                                            <li>
+                                            <a href="https://www.weather.gov/skywarn/">SKYWARN Storm Spotters</a>
+                                        </li>
+                                                                            <li>
+                                            <a href="https://www.weather.gov/stormready">StormReady</a>
+                                        </li>
+                                                                            <li>
+                                            <a href="https://www.weather.gov/tsunamiready/">TsunamiReady</a>
+                                        </li>
+                                                                            <li>
+                                            <a href="https://www.weather.gov/notification/">Service Change Notices</a>
+                                        </li>
+                                                                    </ul>
+                            </div>
+                                                            </li>
+                            <li>
+                    <div class="topMenuNavList section-link">
+                        <a href="https://www.weather.gov/education/">EDUCATION</a>
+                    </div>
+                                                                                </li>
+                            <li>
+                    <div class="topMenuNavList section-link">
+                        <a href="https://www.weather.gov/news">NEWS</a>
+                    </div>
+                                                                                </li>
+                            <li>
+                    <div class="topMenuNavList section-link">
+                        <a href="https://www.weather.gov/search/">SEARCH</a>
+                    </div>
+                                            <div style="opacity: 0;" class="sub">
+                            <ul class="no-links">
+                            <li><!-- Begin search code -->
+                                <div id="site-search">
+                                    <form method="get" action="https://search.usa.gov/search" style="margin-bottom: 0; margin-top: 0;">
+                                        <input type="hidden" name="v:project" value="firstgov" />
+                                        <label for="query">Search For</label>
+                                        <input type="text" name="query" id="query" size="12" />
+                                        <input type="submit" value="Go" />
+                                        <p>
+                                            <input type="radio" name="affiliate" checked="checked" value="nws.noaa.gov" id="nws" />
+                                            <label for="nws" class="search-scope">NWS</label>
+                                            <input type="radio" name="affiliate" value="noaa.gov" id="noaa" />
+                                            <label for="noaa" class="search-scope">All NOAA</label>
+                                        </p>
+                                    </form>
+                                </div>
+                            </li>
+                            </ul>
+                        </div>
+                                    </li>
+                            <li class="last">
+                    <div class="topMenuNavList section-link">
+                        <a href="https://www.weather.gov/about/">ABOUT</a>
+                    </div>
+                                                                        <div style="opacity: 0;" class="sub">
+                                <ul>
+                                                                            <li>
+                                            <a href="https://www.weather.gov/about/">About NWS</a>
+                                        </li>
+                                                                            <li>
+                                            <a href="https://www.weather.gov/organization">Organization</a>
+                                        </li>
+                                                                            <li>
+                                            <a href="https://sites.google.com/a/noaa.gov/nws-insider/">For NWS Employees</a>
+                                        </li>
+                                                                            <li>
+                                            <a href="https://www.weather.gov/ncep/">National Centers</a>
+                                        </li>
+                                                                            <li>
+                                            <a href="https://www.noaa.gov/nws-careers">Careers</a>
+                                        </li>
+                                                                            <li>
+                                            <a href="https://www.weather.gov/contact">Contact Us</a>
+                                        </li>
+                                                                            <li>
+                                            <a href="https://forecast.weather.gov/glossary.php">Glossary</a>
+                                        </li>
+                                                                            <li>
+                                            <a href="https://www.weather.gov/socialmedia">Social Media</a>
+                                        </li>
+                                                                            <li>
+                                            <a href="https://www.noaa.gov/NWStransformation">NWS Transformation</a>
+                                        </li>
+                                                                    </ul>
+                            </div>
+                                                            </li>
+                    </ul>
+    </div>
+</div>
+
+
+            <div class="center-content">
+
+                
+                
+
+                <div class="full-width-border">
+                    <div class="partial-width-borderbottom">
+
+                        <!-- area for the myforecast widget and wwamap data -->
+
+                        <div class="div-full">    
+                        <div class="div-full breadcrumb">
+    <div class="sitename">
+        <p class="sitename-name">ASOS</p>
+        <p class="sitename-class">National Program</p>
+    </div>
+    <div class="location">
+        <h1 class='location-pagetitle'>Ceilometer</h1>
+        <div class='location-breadcrumb'>
+            <a href="https://www.weather.gov">Weather.gov</a>
+                                                &gt; <a href="https://www.weather.gov/asos">ASOS</a>
+                                &gt; Ceilometer
+                    </div>
+    </div>
+</div>
+
+                        <div class="div-full">
+    <div class="subMenuNav">
+        <ul id="subMenuNav">
+                            <li>
+                    <div class="subMenuNavList section-link">
+                        <a href="https://www.weather.gov/asos">ASOS</a>
+                    </div>
+                                    </li>
+                            <li>
+                    <div class="subMenuNavList section-link">
+                        <a href="https://www.weather.gov/asos/InformationReporting.html">Information Reporting </a>
+                    </div>
+                                            <div class="sub">
+                            <ul>
+                                                                    <li>
+                                        <a href="https://www.weather.gov/asos/TechnicalOverview.html"> Sensor Suite Design</a>
+                                    </li>
+                                                                    <li>
+                                        <a href="https://www.weather.gov/asos/METAR.html"> What&#039; a METAR?</a>
+                                    </li>
+                                                                    <li>
+                                        <a href="https://www.weather.gov/asos/problem.html"> Problem with ASOS form</a>
+                                    </li>
+                                                            </ul>
+                        </div>
+                                    </li>
+                            <li>
+                    <div class="subMenuNavList section-link">
+                        <a href="https://www.weather.gov/asos/links.html">Useful Links</a>
+                    </div>
+                                            <div class="sub">
+                            <ul>
+                                                                    <li>
+                                        <a href="https://www.weather.gov/asos/photogallery.html"> Photo Gallery </a>
+                                    </li>
+                                                                    <li>
+                                        <a href="https://www.weather.gov/asos/CurrentEvents.html"> Current Events </a>
+                                    </li>
+                                                                    <li>
+                                        <a href="https://www.weather.gov/asos/NewsArchive.html"> News Archive</a>
+                                    </li>
+                                                            </ul>
+                        </div>
+                                    </li>
+                    </ul>
+    </div>
+</div>
+
+                        
+                        
+                        <div class="div-full">
+<div class="cms-content"><style type="text/css">/*CSS STYLE SHEET COMMENT*/
+h1 	{
+  color: white;
+  text-align: center;
+  font-size: 34px;
+}
+
+h2 	{
+  color: white;
+  text-align: center;
+  font-size: 30px;
+}
+h3 	{
+  color: black;
+  text-align: center;
+  font-size: 22px;
+  font-weight: bold;
+}
+p, ul, li 	{
+  font-family: Arial, Verdana, and Helvetica;
+  color: black;
+  text-align: justify;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+li {
+  font-family: Arial, Verdana, and Helvetica;
+  color: black;
+  text-align: justify;
+  font-size: 14px;
+  font-weight: bold;
+}
+td {
+font-family: Arial, Verdana, and Helvetica;
+  color: white;
+  background-color: #0085CA; 
+  font-size: 14px;
+  font-weight: bold;
+}
+.city {
+  background-color: #003087;
+  color: white;
+  border: 2px solid black;
+  margin: 20px;
+  padding: 20px;
+}
+.city h1 {
+  color: white;
+  text-align: center;
+  font-size: 40px;
+}
+.city h2 {
+  color: white;
+  text-align: center;
+  font-size: 30px;
+}
+.rail img {
+  display: block;
+  margin: auto;
+  width: 70%;
+}
+
+.btn {
+  text-decoration: none;
+  padding: 0.5rem;
+  border: 1px solid #333333;
+  border-radius: 25px;
+  background: #709493;
+  color: white;
+
+}
+
+
+.default {background-color: #e7e7e7; color: black;} /* Gray */
+.default:hover {background: #ddd;}
+
+.text {
+  background-color: pink;
+  color: black;
+  border: 2px solid black;
+  margin: 20px;
+  padding: 20px;
+}
+
+.text p {
+  color: black;
+  text-align: justify;
+  font-size: 14px;
+}
+
+a:visited {
+  color: orange;
+  padding: 5px 5px;
+  border: 1px solid #1F83FF; 
+  background-color: #0085CA; 
+  font-size: 14px;
+  text-decoration: none;
+  font-weight: bold;
+  border-radius: 10px; 
+  cursor: pointer;
+ 
+}
+
+td a:link {
+  color: white;
+  padding: 5px 5px;
+  border: 1px solid #1F83FF; 
+  background-color: #0085CA; 
+  font-size: 14px;
+  text-decoration: none;
+  font-weight: bold;
+  border-radius: 10px; 
+  cursor: pointer;
+
+}
+td a:hover {
+  color: hotpink;
+  padding: 5px 5px;
+  border: 1px solid #1F83FF; 
+  background-color: #0085CA; 
+  font-size: 14px;
+  text-decoration: none;
+  font-weight: bold;
+  border-radius: 10px; 
+  cursor: pointer;
+}
+td a {
+text-decoration: none;
+}
+
+
+.image-container {
+    float: left; 
+    margin-right: 20px; 
+    margin-bottom: 20px; 
+    margin-left: 0; 
+    padding: 0 20px 0 20px; 
+    max-width: 250px; 
+    text-align: center; 
+}
+
+.image-container img {
+    display: block; 
+    padding: 0; 
+    margin: 0 auto 5px auto; 
+}
+
+.image-container figcaption {
+    font-family: Arial, Verdana, and Helvetica;
+    color: black;
+    text-align: center; 
+    font-size: 12px; 
+    font-weight: bold;
+    margin-top: 5px; 
+}
+</style>
+<div class="city">
+<h1>Ceilometer</h1>
+</div>
+
+<div class="clearfix">
+<figure class="image-container"><a href="/images/asos/2023-11-29%20-%20Ceilometer.jpg"><img alt="Ceilometer" src="/images/asos/2023-11-29%20-%20Ceilometer.jpg" style="width: 200px; height: 267px;" /> </a>
+
+<figcaption>Ceilometer</figcaption>
+</figure>
+
+<p>The ASOS uses a laser beam ceilometer with a vertical measuring range of 12,600 feet and reporting range of 12,000 feet. The ASOS cloud sensor, or CHI, is a vertically pointed laser transmitter and receiver. Its operation is similar to radar in that the time interval between pulse transmission and reflected reception from a cloud base is used to determine the cloud height. Sophisticated time-averaging algorithms in the ACU are also used to interpret &quot;cloud hit&quot; information from the CHI and determine cloud height and amount.</p>
+
+<p>The CHI reports will contain only opaque clouds. Moisture layers, or thin clouds detected by the CHI and considered too thin to be a cloud, will be reported as a restriction to vertical visibility or simply not reported. The reporting of vertical visibility is dependent on the thickness and density of the moisture layer. To correctly classify these signals received by the ceilometer, sensor software processes the data into three categories: &quot;no hit,&quot; &quot;cloud hit,&quot; and &quot;unknown hit.&quot;</p>
+</div>
+
+<p>&nbsp;</p>
+
+<table align="center" border="0" cellpadding="1" cellspacing="1">
+	<tbody>
+		<tr>
+			<td style="text-align: center; background-color: white;"><a href="https://www.weather.gov/asos/TechnicalOverviewcopy.html">Back to Sensor Suite Design</a></td>
+		</tr>
+	</tbody>
+</table>
+
+<p>&nbsp;</p>
+
+</div>
+</div>
+<div style="clear:both"></div>
+                        </div>
+  
+                    </div><!-- end of <div class="partial-width-borderbottom"> -->
+                </div><!-- <div class="full-width-border"> -->
+
+                <div class="partial-width-borderbottom feature-block">
+                    <!-- area for features, frontpage thumbs, and custom page -->
+                    
+                    
+                </div><!-- end of <div class="partial-width-borderbottom feature-block"> -->
+
+                <div class="full-width-first">
+                    
+                </div>
+
+
+                <div style="clear:both;"></div>
+
+            </div><!-- <div class="center-content"> -->
+
+        </div><!-- end of <div class="center"> -->
+
+        <!-- sitemap area -->
+        <div class="footer">
+            
+        </div><!-- end of <div class="footer"> -->
+
+        <!-- legal footer area -->
+        <div class="footer-legal">
+            <div class="footer-legal">
+    <div class="footer-legal-content">
+
+        <div class="one-sixth-first" id="footer_legal_gov">
+            <a href="http://www.usa.gov"><img src="/bundles/templating/images/footer/usa_gov.png" alt="usa.gov" width="110" height="30" /></a>
+        </div>
+
+        <div class="one-half-first" id="footer_legal_info">
+            <p>
+                <a href="http://www.commerce.gov">US Dept of Commerce</a><br />
+                <a href="http://www.noaa.gov">National Oceanic and Atmospheric Administration</a><br />
+                <a href="https://www.weather.gov">National Weather Service</a><br />
+                ASOS<br />                1325 East West Highway<br />
+                                Silver Spring, MD 20910
+                <br /><br />
+                <br /><a href="https://www.weather.gov/asos/contactus.html">Comments? Questions? Please Contact Us.</a>
+            </p>
+        </div>
+
+        <div class="one-third-last" id="footer_required_links">
+            <div class="div-half">
+                <a href="https://www.weather.gov/disclaimer">Disclaimer</a><br />
+                <a href="http://www.cio.noaa.gov/services_programs/info_quality.html">Information Quality</a><br />
+                <a href="https://www.weather.gov/help">Help</a><br />
+                <a href="/glossary">Glossary</a>
+            </div>
+
+            <div class="div-half">
+                <a href="https://www.weather.gov/privacy">Privacy Policy</a><br />
+                <a href="https://www.noaa.gov/foia-freedom-of-information-act">Freedom of Information Act (FOIA)</a><br />
+                <a href="https://www.weather.gov/about">About Us</a><br />
+                <a href="https://www.weather.gov/careers">Career Opportunities</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+        </div><!-- end of <div class="footer-legal"> -->
+
+        <script type="text/javascript" src="//www.weather.gov/js/govshutdown.js"></script>
+    </body>
+</html>
