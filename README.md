@@ -9,8 +9,10 @@
 | 수치 상태·강수·복사 전달 | [KF Eta 강수율 수명](validation/rrtmgp37/kfeta-precipitation-lifetime/README.md), [최종 음수 수증기 해소](validation/rrtmgp37/vapor-first-operation/README.md), [SW 호출·반환·held source 마감](validation/rrtmgp37/native-sw-phase-closeout/README.md) |
 | 실제 예보·관측·구름 소실 | [내부영역 24시간 및 SOLRAD 평가](validation/rrtmgp37/sterling-interior-day-evaluation/README.md), [PBL 재분배·수송·후속 증발 귀속과 1,800쌍 대조](validation/rrtmgp37/sterling-cloud-loss-operation/README.md) |
 | 독립 대기관측 | [실제 발사시각의 radiosonde·METAR 대조](validation/rrtmgp37/sterling-independent-atmosphere/README.md): 저층 온도·습도·역전 구조의 불일치, PBL 단독 계수 오류는 미확정 |
+| 입력 계보·저층 상태 | [기존 입력과 시간별 온습도 구조 대조 완료](validation/rrtmgp37/sterling-low-level-evolution/README.md): 실제 발사에 가까운11·23시 및13–16시 보완, 초기·경계와 예보 발달 연결 |
+| 층별 실제 경향 | [12–17 UTC native5–12층의 온도·수증기 연산 귀속](validation/rrtmgp37/sterling-thermodynamic-tendencies/README.md): 12시 기존 오차 보존, 6층 물리 냉각과7–8층 수송 온난·건조화 구분, cold와1,350쌍 동일 |
 | 남은 과학적 판단 | [원래 일곱 종료 조건](validation/rrtmgp37/research-policy-contract/closure-conditions.json) 유지: population/PSD/발생분율, frozen 물성·밀도 계약, RFMIP/LBLRTM 참조, 전체 물·에너지, 용도별 독립 예보 정확도 |
-| 다음 작업 | 기존 입력·경계의 온도/수증기와 상태 발달을 새 관측 profile에 대조. 자료 계보가 지지할 때만 입력 조치를 선택하며, 같은 연산 추적·무변경 하루는 반복하지 않음 |
+| 다음 작업 | native7–8층 수직수송과 인접 온위·수증기 기울기, 좌표 정의에 맞는 수직운동 상태를 기존 구동·독립 대기 근거와 대조. 12시 기존 상태 오차와 원 점수는 보존하며 PBL·광학 계수는 조정하지 않음 |
 
 이 범위는 Gamma8·capacity1의 warm-periodic 연구 옵션이나 일반 MPI/OpenMP·둥지·운영 예보 승인으로 확대하지 않는다. [PR166의 15/22 역사 장부](validation/rrtmgp37/acceptance/review-resolution-checklist.json)는 당시 snapshot을 보존한 기록이며 현재 전체 완료율이 아니다. 아래 설명의 PR20 등 이전 실행은 각 당시 구성의 근거로 읽는다.
 
