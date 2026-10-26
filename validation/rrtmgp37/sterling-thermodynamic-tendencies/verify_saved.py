@@ -25,11 +25,27 @@ def load():
  require(sha((P/'probe.f90').read_bytes())==ident['probe_source']['sha256'] and data['plan.json']==(P/'plan.json').read_bytes(),'probe/plan')
  require(not any(ident[n] for n in ['new_cold24h_WRF_processes','production_calculation_changes','coefficient_or_policy_changes','physical_accuracy_approved','original_seven_conditions_changed','new_model_runs_in_saved_replay']),'scope promotion')
  return data
+def rebind_replay_tools(expected):
+ # Only current replay code and the identities that depend on it changed.
+ # Archive/output/production pins and every other metadata field stay exact.
+ names={
+  'validation/rrtmgp37/historical-source/binding.py',
+  'validation/rrtmgp37/sterling-independent-atmosphere/verify_saved.py',
+  'validation/rrtmgp37/sterling-low-level-evolution/verify_saved.py',
+  'validation/rrtmgp37/sterling-interior-day-evaluation/identity.json',
+  'validation/rrtmgp37/sterling-cloud-loss-operation/identity.json',
+  'validation/rrtmgp37/sterling-boundary-forcing-decision/identity.json',
+ }
+ for group in ['current_sources','dependencies']:
+  for name in names & expected.get(group,{}).keys():
+   raw=(R/name).read_bytes();expected[group][name]['sha256']=sha(raw)
+   if 'bytes' in expected[group][name]:expected[group][name]['bytes']=len(raw)
+
 def documents(data):
  before204=json.loads(data['before/validation/rrtmgp37/sterling-independent-atmosphere/identity.json']);after204=json.loads((P.parent/'sterling-independent-atmosphere/identity.json').read_text());expected=copy.deepcopy(before204);old=expected['current_documents'].pop('README.md');snap='validation/rrtmgp37/historical-source/root-README-after-PR204.md';current=after204['current_documents'][snap]
  require(old['sha256']==sha(data['before/README.md'])==sha((R/snap).read_bytes()) and old['bytes']==len(data['before/README.md']),'exact old root README snapshot')
- old['path']=current['path'];require(old['path'].endswith(snap),'historical doc locator');expected['current_documents'][snap]=old;expected['historical_document_scope']=after204['historical_document_scope'];require(expected==after204 and after204['historical_document_scope']['exact_snapshot_path']==snap,'PR204 identity changed beyond doc relocation')
- before205=json.loads(data['before/validation/rrtmgp37/sterling-low-level-evolution/identity.json']);after205=json.loads((P.parent/'sterling-low-level-evolution/identity.json').read_text());expected=copy.deepcopy(before205);n='validation/rrtmgp37/sterling-independent-atmosphere/identity.json';raw=(R/n).read_bytes();expected['dependencies'][n].update(sha256=sha(raw),bytes=len(raw));expected['documentation_dependency_rebinding']=after205['documentation_dependency_rebinding'];require(expected==after205,'PR205 dependency changed beyond doc identity pin')
+ old['path']=current['path'];require(old['path'].endswith(snap),'historical doc locator');expected['current_documents'][snap]=old;expected['historical_document_scope']=after204['historical_document_scope'];rebind_replay_tools(expected);require(expected==after204 and after204['historical_document_scope']['exact_snapshot_path']==snap,'PR204 identity changed beyond doc relocation')
+ before205=json.loads(data['before/validation/rrtmgp37/sterling-low-level-evolution/identity.json']);after205=json.loads((P.parent/'sterling-low-level-evolution/identity.json').read_text());expected=copy.deepcopy(before205);n='validation/rrtmgp37/sterling-independent-atmosphere/identity.json';raw=(R/n).read_bytes();expected['dependencies'][n].update(sha256=sha(raw),bytes=len(raw));expected['documentation_dependency_rebinding']=after205['documentation_dependency_rebinding'];rebind_replay_tools(expected);require(expected==after205,'PR205 dependency changed beyond doc identity pin')
  published=data['publication/root-README.md'].decode();require('sterling-low-level-evolution/README.md' in published and 'sterling-thermodynamic-tendencies/README.md' in published and '12시 기존 상태 오차' in published,'root publication progress/navigation missing')
 def verify():
  data=load();j=lambda n:json.loads(data[n]);documents(data);run=j('run/receipt.json');build=j('build/receipt.json');ex=j('extract/extracted.json');eq=j('extract/history-comparison.json')
