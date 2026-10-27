@@ -2,6 +2,10 @@
 from pathlib import Path
 import json,hashlib,io,tarfile,gzip,importlib.util,re,csv
 P=Path(__file__).resolve().parent;R=P.parents[2]
+# Historical cloudy output: current cloud-off runtime is verified separately.
+import runpy
+R = runpy.run_path(str(P.parent/'historical-source/binding.py'))['SnapshotRoot'](
+    R, 'snapshot-789188e2.json')
 def load(p):
  s=importlib.util.spec_from_file_location('external_comparison',p);m=importlib.util.module_from_spec(s);s.loader.exec_module(m);return m
 A=load(P/'analyze.py');require=A.require
@@ -44,4 +48,4 @@ def data():
 if __name__=='__main__':
  r=A.evaluate(*data());require(r==json.loads((P/'result.json').read_text()),'comparison results changed')
  buf=io.StringIO(newline='');writer=csv.DictWriter(buf,fieldnames=list(r['hourly'][0]),lineterminator='\n');writer.writeheader();writer.writerows(r['hourly']);require(buf.getvalue()==(P/'hourly-comparison.csv').read_text(),'CSV does not represent actual support-matched comparison')
- print(json.dumps({'status':r['status'],'complete_hours':r['complete_hours'],'primary_all':r['statistics']['primary']['all'],'primary_daylight':r['statistics']['primary']['daylight'],'engineering_baseline_scope_closed':True,'general_forecast_accuracy_approved':False,'new_model_build_solver_processes':0}))
+ print(json.dumps(R.summary({'status':r['status'],'complete_hours':r['complete_hours'],'primary_all':r['statistics']['primary']['all'],'primary_daylight':r['statistics']['primary']['daylight'],'engineering_baseline_scope_closed':True,'general_forecast_accuracy_approved':False,'new_model_build_solver_processes':0})))

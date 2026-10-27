@@ -30,6 +30,8 @@
 
 공식 WRF v4.8.0의 장파·단파 복사 옵션 `37/37`에 RTE+RRTMGP CPU 계산을 연결하는 개발 저장소입니다.
 
+[Cloud-off 입력 수정·자동 CI 연결](docs/porting/CLOUD_OFF_FIX_ko.md): `icloud=0`에서 G/H·CU를 포함한 수상체 광학을 제외하며, 기존 실자료 실행 근거는 수정 전 소스에 연결해 보존한다.
+
 ## 현재 상태
 
 기본값 OFF인 `rrtmgp_capacity_policy=1`과 `rrtmgp_liquid_size_policy=1`로 native constant-κ 복사열용량과 최종 Gamma8 액체 광학크기를 각각 선택할 수 있습니다. 단일 주기영역·serial·all-warm 연구 범위와 파일/restart 식별 규약은 [연구용 복사 옵션](WRF/doc/rrtmgp/RESEARCH_RADIATION_OPTIONS.md)에 명시합니다. [통합 실행 근거](validation/rrtmgp37/research-radiation-integration/README_ko.md)는 동일 양의 구름 입력의 네 조합과 복사 호출 사이 checkpoint를 다룹니다. 물리적 생산 승인은 별도입니다.

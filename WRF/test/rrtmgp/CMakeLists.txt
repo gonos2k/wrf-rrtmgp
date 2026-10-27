@@ -30,6 +30,9 @@ if(CMAKE_Fortran_COMPILER_ID STREQUAL "GNU")
     "${CMAKE_CURRENT_SOURCE_DIR}/test_phase_diagnostic_contract.py"
     --compiler "${CMAKE_Fortran_COMPILER}"
     --output-root "${CMAKE_CURRENT_BINARY_DIR}/phase-diagnostic-wrapper-runs")
+  add_test(NAME cloud_off_wrapper_inputs COMMAND "${Python3_EXECUTABLE}" -I -S
+    "${CMAKE_CURRENT_SOURCE_DIR}/test_cloud_off_inputs.py"
+    --compiler "${CMAKE_Fortran_COMPILER}")
   add_test(NAME fractional_seaice_state_contract COMMAND "${Python3_EXECUTABLE}"
     "${CMAKE_CURRENT_SOURCE_DIR}/test_fractional_seaice_state.py"
     --repo "${WRF_ROOT}/.."

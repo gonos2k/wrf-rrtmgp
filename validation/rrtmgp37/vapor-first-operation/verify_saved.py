@@ -2,6 +2,11 @@
 from pathlib import Path
 import argparse,gzip,hashlib,importlib.util,io,json,re,tarfile
 P=Path(__file__).resolve().parent;R=P.parents[2]
+# Replay the retained cloudy campaign against its exact pre-cloud-off sources.
+# This does not certify the modified runtime; current wrappers have separate tests.
+import runpy
+R = runpy.run_path(str(P.parent/'historical-source/binding.py'))['SnapshotRoot'](
+    R, 'snapshot-789188e2.json')
 def load(n,p):
  s=importlib.util.spec_from_file_location(n,p);m=importlib.util.module_from_spec(s);s.loader.exec_module(m);return m
 E=load('vapor_evaluation',P/'evaluate.py');I=load('vapor_observer',P/'instrument.py');H=load('vapor_historical',P.parent/'historical-source/binding.py');V=load('vapor_readonly',P.parent/'real-case-budget/verify_saved.py');require=E.require
@@ -91,5 +96,5 @@ def main():
  ap=argparse.ArgumentParser();ap.add_argument('--write',action='store_true');args=ap.parse_args();r=E.evaluate(data())
  if args.write:(P/'result.json').write_text(json.dumps(r,indent=2)+'\n')
  else:require(r==json.loads((P/'result.json').read_text()),'results differ from actual operands')
- print(json.dumps({'status':r['status'],'model_steps':r['model_steps'],'vapor_final_nonnegative_criterion_passed':r['vapor_final_nonnegative_criterion_passed'],'expired_rate_criterion_passed':r['KFETA_expired_rate_criterion_passed'],'water_conservation_approved':False,'whole_energy_approved':False,'current_runtime_source_matches':True,'new_model_runs':0}))
+ print(json.dumps(R.summary({'status':r['status'],'model_steps':r['model_steps'],'vapor_final_nonnegative_criterion_passed':r['vapor_final_nonnegative_criterion_passed'],'expired_rate_criterion_passed':r['KFETA_expired_rate_criterion_passed'],'water_conservation_approved':False,'whole_energy_approved':False,'current_runtime_source_matches':True,'new_model_runs':0})))
 if __name__=='__main__':main()
